@@ -13,6 +13,8 @@ import {
   Row,
   Col,
   Input,
+  Select,
+  Checkbox
 } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
@@ -21,26 +23,35 @@ import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import SdlDatePicker from '@/pages/AutoFormManager/SdlDatePicker';
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 
 import Cookie from 'js-cookie';
-import Styles from './index.less';
-
+const { Option } = Select;
 const FormItem = Form.Item;
+const pageUrl = {
+    getRegions: 'autoForm/getRegions',
+    GetEntByRegion:'exceedDataAlarmModel/GetEntByRegion',
+    GetPointByEntCode:'StopRecordModel/GetPointByEntCode',
+}
 /**
  * 报警记录
  * xpy 2019.07.26
  */
-@connect(({ loading, alarmrecord }) => ({
+@connect(({ loading, alarmrecord,autoForm,exceedDataAlarmModel,StopRecordModel }) => ({
   pollutantlist: alarmrecord.pollutantlist,
   isloading: loading.effects['alarmrecord/querypollutantlist'],
   dataloading: loading.effects['alarmrecord/queryoverdatalist'],
   data: alarmrecord.overdata,
   total: alarmrecord.overtotal,
   overdataparams: alarmrecord.overdataparams,
+  regionList: autoForm.regionList,
+  entList: exceedDataAlarmModel.priseList,
+  pointList:StopRecordModel.PointByEntList,
+  divisorList: alarmrecord.divisorList,
   btnisloading: loading.effects['alarmrecord/AddExceptionVerify'],
 }))
 @Form.create()
-class AlarmRecord extends Component {
+class AlarmRecordList extends Component {
   constructor(props) {
     super(props);
     const firsttime = moment(new Date()).add(-1, 'month');
@@ -56,83 +67,46 @@ class AlarmRecord extends Component {
       selectedRowKeys: [],
       visible: false,
       uid: cuid(),
+      checkedValues: [],
     };
   }
 
   componentDidMount() {
-    const { DGIMN, firsttime, lasttime, initLoadData } = this.props;
-    if (initLoadData) {
-      let {
-        overdataparams,
-      } = this.props;
-      overdataparams = {
-        ...overdataparams,
-        DGIMN,
-        beginTime: firsttime ? moment(firsttime).format('YYYY-MM-DD HH:mm:ss') : this.state.firsttime.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: lasttime ? moment(lasttime).format('YYYY-MM-DD HH:mm:ss') : this.state.lasttime.format('YYYY-MM-DD HH:mm:ss'),
-      }
-      console.log('firsttime=', firsttime);
-      console.log('lasttime=', lasttime);
-      console.log('this.props.DGIMN=', this.props.DGIMN);
-      if (firsttime && lasttime) {
-        this.setState({
-          rangeDate: [firsttime, lasttime],
-        })
-      } else {
-        this.setState({
-          rangeDate: this.state.rangeDate,
-        })
-      }
-
-      this.changeDgimn(this.props.DGIMN, overdataparams)
-    }
+    this.initData();
   }
 
-  componentWillReceiveProps = nextProps => {
-    const { DGIMN, lasttime, firsttime } = this.props;
-    if (nextProps.lasttime !== undefined && nextProps.firsttime !== undefined) {
-      // 如果传入参数有变化，则重新加载数据
-      if (nextProps.DGIMN !== DGIMN || moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss') !==
-        moment(lasttime).format('YYYY-MM-DD HH:mm:ss') ||
-        moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss') !== moment(firsttime).format('YYYY-MM-DD HH:mm:ss')) {
-        let {
-          overdataparams,
-        } = this.props;
-        overdataparams = {
-          ...overdataparams,
-          pageIndex: 1,
-          pageSize: 20,
-          DGIMN: nextProps.DGIMN,
-          beginTime: moment(nextProps.firsttime).format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment(nextProps.lasttime).format('YYYY-MM-DD HH:mm:ss'),
-        }
-        this.setState({
-          rangeDate: [nextProps.firsttime, nextProps.lasttime],
-        })
-        if (nextProps.DGIMN !== '') {
-          this.changeDgimn(nextProps.DGIMN, overdataparams);
-        }
-      }
-    } else {
-      // 如果传入参数有变化，则重新加载数据
-      if (nextProps.DGIMN !== DGIMN) {
-        const { rangeDate } = this.state;
-        let {
-          overdataparams,
-        } = this.props;
-        overdataparams = {
-          ...overdataparams,
-          DGIMN: nextProps.DGIMN,
-          beginTime: moment(rangeDate[0]).format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment(rangeDate[1]).format('YYYY-MM-DD HH:mm:ss'),
-        }
-        if (nextProps.DGIMN !== '') {
-          this.changeDgimn(nextProps.DGIMN, overdataparams);
-        }
-      }
-    }
-  }
+  /**初始化查询条件 */
+  initData = () => {
+    //获取行政区列表
+    this.props.dispatch({
+        type: pageUrl.getRegions,
+        payload: {
+            PointMark: '2',
+            RegionCode: ''
+        },
+    });
+    this.props.dispatch({
+        //获取企业列表
+        type: pageUrl.GetEntByRegion,
+        payload: { RegionCode: '' },
+    });
+    this.getPollutantByType(false);
+};
 
+  /**根据企业类型查询监测因子 */
+  getPollutantByType = (reload) => {
+    this.props.dispatch({
+      type: "alarmrecord/getPollutantByType",
+      payload: {
+        type: this.props.form.getFieldValue("PollutantType")
+      },
+      callback: (res) => {
+        this.setState({ checkedValues: res.map(item => item.PollutantCode) }, () => {
+          reload && this.props.form.setFieldsValue({ PollutantList: this.state.checkedValues })
+        })
+      }
+    })
+  }
   /** 切换排口 */
   changeDgimn = (dgimn, params) => {
     this.setState({
@@ -187,17 +161,7 @@ class AlarmRecord extends Component {
   };
 
 
-  /** 如果是数据列表则没有选择污染物，而是展示全部污染物 */
-  getpollutantSelect = () => {
-    const { pollutantlist } = this.props;
-    return (<PollutantSelect
-      optionDatas={pollutantlist}
-      allpollutant
-      style={{ width: 150, marginRight: 10 }}
-      onChange={this.ChangePollutant}
-      placeholder="请选择污染物"
-    />);
-  }
+
 
   /**切换污染物 */
   ChangePollutant = (value, selectedOptions) => {
@@ -323,8 +287,8 @@ class AlarmRecord extends Component {
   render() {
     const userCookie = Cookie.get('currentUser');
     const UserName = JSON.parse(userCookie).User_Name;
-    const { selectedRowKeys } = this.state;
-    const { dataHeight } = this.props;
+    const { selectedRowKeys,checkedValues } = this.state;
+    const { dataHeight,divisorList,regionList,entList,pointList } = this.props;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -364,12 +328,6 @@ class AlarmRecord extends Component {
       key: 'AlarmCount',
       align: 'center',
     },
-    // {
-    //   title: '报警值',
-    //   dataIndex: 'AlarmValue',
-    //   key: 'AlarmValue',
-
-    // },
     {
       title: '处置状态',
       width: 100,
@@ -382,16 +340,6 @@ class AlarmRecord extends Component {
         }
         return <span> <Badge status="default" text="已处置" /> </span>;
       },
-      // filters: [{
-      //   text: '未核实',
-      //   value: '0',
-      // },
-      // {
-      //   text: '已核实',
-      //   value: '1',
-      // },
-      // ],
-      // onFilter: (value, record) => record.State.indexOf(value) === 0,
     },
     {
       title: '报警信息',
@@ -406,7 +354,9 @@ class AlarmRecord extends Component {
       overdataparams,
       form,
       btnisloading,
+      dataloading,
     } = this.props;
+    let _regionList = regionList.length ? regionList[0].children : [];
     const {
       getFieldDecorator,
     } = this.props.form;
@@ -418,34 +368,115 @@ class AlarmRecord extends Component {
         span: 14,
       },
     };
-    // if (isloading) {
-    //   return (<Spin
-    //     style={{
-    //       width: '100%',
-    //       height:'calc(100vh/2)',
-    //       display: 'flex',
-    //       alignItems: 'center',
-    //       justifyContent: 'center',
-    //     }}
-    //     size="large"
-    //   />);
-    // }
     return (
-      <div className={Styles.check}>
-        <Card
-          extra={
-            <div>
-              {!this.props.isloading && this.state.selectDisplay && this.getpollutantSelect()}
-              <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
-                dataType="minute"
-                dateValue={this.state.rangeDate}
-                callback={dates => this._handleDateChange(dates)}
-              />
-              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />处置</Button>
-            </div>
-          }
+    <BreadcrumbWrapper>
+      <div>
+        <Card>
+        <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Row gutter={16}>
+              <Col md={4}>
+                <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
+                  {getFieldDecorator('PollutantType', {
+                    initialValue: '1',
+                  })(
+                    <Select placeholder="请选择企业类型" onChange={(value) => {
+                      this.setState({ pollutantType: value }, () => {
+                        this.getPollutantByType(true)
+                      })
+                    }}>
+                      <Option value="1">废水</Option>
+                      <Option value="2">废气</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={7}>
+                <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="日期查询" style={{ width: '100%' }}>
+                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
+                        dataType="minute"
+                        dateValue={this.state.rangeDate}
+                        callback={dates => this._handleDateChange(dates)}
+                    />
+                </FormItem>
+              </Col>
+              <Col md={4}>
+                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                  {getFieldDecorator('RegionCode', {
+                  })(
+                    <Select allowClear placeholder="请选择行政区">
+                      {
+                        _regionList.map(item => {
+                          return <Option key={item.key} value={item.value}>
+                            {item.title}
+                          </Option>
+                        })
+                      }
+                    </Select>,
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={5}>
+                <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
+                  {getFieldDecorator('EntCode', {
+                    initialValue: undefined,
+                  })(
+                    <Select allowClear placeholder="请选择企业">
+                      {
+                        entList.map(item => {
+                          return <Option key={item.EntCode} value={item.EntCode}>
+                            {item.EntName}
+                          </Option>
+                        })
+                      }
+                    </Select>,
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={4}>
+                <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
+                  {getFieldDecorator('DGIMN', {
+                  })(
+                    <Select allowClear placeholder="请选择监测点">
+                    {
+                      pointList.map(item => {
+                        return <Option key={item.DGIMN} value={item.DGIMN}>
+                          {item.PointName}
+                        </Option>
+                      })
+                    }
+                  </Select>,
+                  )}
+                </FormItem>
+              </Col>
 
-        >
+              <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+                <div class="ant-form-item-label" style={{ width: '5.3%' }}>
+                  <label for="RegionCode" class="" title="监测因子">监测因子</label>
+                </div>
+                {getFieldDecorator('PollutantList', {
+                  initialValue: checkedValues,
+                })(
+                  <Checkbox.Group style={{ maxWidth: "calc(100% - 5.3% - 168px)" }} onChange={this.onCheckboxChange}>
+                    {
+                      divisorList.map(item => {
+                        return <Checkbox key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                      })
+                    }
+                  </Checkbox.Group>
+                )}
+                <Button loading={dataloading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
+                  查询
+                      </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon="export"
+                  onClick={this.exportExceptionList}
+                >
+                  导出
+                      </Button>
+              </Col>
+            </Row>
+          </Form>
           <SdlTable
             loading={this.props.dataloading}
             columns={columns}
@@ -533,7 +564,8 @@ class AlarmRecord extends Component {
           </Modal>
         </Card>
       </div>
+      </BreadcrumbWrapper>
     );
   }
 }
-export default AlarmRecord;
+export default AlarmRecordList;
