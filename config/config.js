@@ -1371,7 +1371,7 @@ export default {
                       //流量分析
                       path: '/Intelligentanalysis/sewageDisposal/flow',
                       component: './Intelligentanalysis/sewageDisposal/flow',
-                    },
+                    }
                   ],
                 },
                 {

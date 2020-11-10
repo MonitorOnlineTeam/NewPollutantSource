@@ -364,12 +364,6 @@ class AlarmRecord extends Component {
       key: 'AlarmCount',
       align: 'center',
     },
-    // {
-    //   title: '报警值',
-    //   dataIndex: 'AlarmValue',
-    //   key: 'AlarmValue',
-
-    // },
     {
       title: '处置状态',
       width: 100,
@@ -382,16 +376,6 @@ class AlarmRecord extends Component {
         }
         return <span> <Badge status="default" text="已处置" /> </span>;
       },
-      // filters: [{
-      //   text: '未核实',
-      //   value: '0',
-      // },
-      // {
-      //   text: '已核实',
-      //   value: '1',
-      // },
-      // ],
-      // onFilter: (value, record) => record.State.indexOf(value) === 0,
     },
     {
       title: '报警信息',

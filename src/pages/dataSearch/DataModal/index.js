@@ -24,11 +24,14 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+
         alarmVisible:false,
         alarmType:'1',
         exceedVisible:false,
         dateTime:[moment().add(-48, "hour"), moment()],
         exceedType:'',
+        exceedDataType:'Hour',
+        exceedPollutant:'zs01',  //101  zs01
         exceedTime:[moment().add(-7, "day"), moment()],
         flowVisible:false,
         flowTime:[moment().add(-30, "day"), moment()],
@@ -92,7 +95,7 @@ class index extends PureComponent {
     })
   }
   render() {
-    const { alarmVisible, dateTime, exceedVisible, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime,OverVisible } = this.state
+    const { alarmVisible, dateTime, exceedVisible,exceedDataType,exceedPollutant, exceedType, exceedTime, flowVisible, flowTime, flowEntCode, TVisible,pollutantType,TBeginTime,TEndTime,OverVisible,alarmType } = this.state
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
@@ -117,8 +120,10 @@ class index extends PureComponent {
                 参数:
                 exceedTime  时间参数  默认是7天
                 exceedType  企业类型  '1'是废水  '2' 是废气
+                exceedDataType  数据类型   小时/日均
+                exceedPollutant 监测因子
               */}
-            {exceedVisible ? <ExceedData exceedTime={exceedTime} exceedVisible={exceedVisible} exceedType={exceedType} exceedCancle={() => {
+            {exceedVisible ? <ExceedData exceedTime={exceedTime} exceedDataType ={exceedDataType} exceedPollutant={exceedPollutant} exceedVisible={exceedVisible} exceedType={exceedType} exceedCancle={() => {
               this.setState({ exceedVisible: false });
             }} /> : null}
 
