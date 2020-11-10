@@ -4,7 +4,8 @@ import {
   queryoverdatalist,
   UpdateExceptionProcessing,
   GetAlarmRecordDetails,
-  AlarmVerifyAdd
+  AlarmVerifyAdd,
+  getPollutantByType
 } from '../services/alarmRecordApi';
 import { getAlarmNotices } from '@/services/globalApi';
 import {
@@ -31,6 +32,7 @@ export default Model.extend({
       pageSize: 20,
     },
     AlarmRecordList: [],
+    divisorList:[],
   },
   effects: {
     * querypollutantlist({ payload,
@@ -138,5 +140,17 @@ export default Model.extend({
         });
       }
     },
+        // 根据企业类型查询监测因子
+        *getPollutantByType({ payload, callback }, { call, put, update, select }) {
+          const response = yield call(getPollutantByType, { ...payload });
+          if (response.IsSuccess) {
+            yield update({
+              divisorList: response.Datas,
+            });
+            callback && callback(response.Datas)
+          } else {
+            message.error(response.Message)
+          }
+        },
   },
 });
