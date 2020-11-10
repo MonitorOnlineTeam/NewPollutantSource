@@ -4,7 +4,7 @@
  * 创建人：贾安波
  * 创建时间：2020.11
  */
-import React, { Component } from 'react';
+import React, { Component,PureComponent } from 'react';
 import {
   Card,
   Table,
@@ -66,7 +66,7 @@ const pageUrl = {
   hover1:home.hover1
 }))
 @Form.create()
-export default class Index extends Component {
+export default class Index extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -76,7 +76,9 @@ export default class Index extends Component {
       TEndTime: moment().endOf("day"),
       OverVisible: false,
       currentTabKey:'1',
-      popoverVisible:false
+      popoverVisible:false,
+      missingRateVisible:false,
+      missDataTime:[moment().subtract(7, "days").startOf("day"), moment().endOf("day")]
     };
 
   }
@@ -142,14 +144,14 @@ export default class Index extends Component {
   }
   tabCallback2 = (value) => {
     const { dispatch, dataQueryPar } = this.props;
-    this.setState({ currentTabKey: value })
+    this.setState({ currentTabKey: value  })
     let parData = {
       ...dataQueryPar,
       BeginTime: value == 1 ? moment().add('day', -7).format('YYYY-MM-DD 00:00:00') : moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
     };
 
-
+ 
     dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
 
   }
@@ -189,7 +191,7 @@ export default class Index extends Component {
   entClick=()=>{
    this.setState({type:'ent'},()=>{
      this.setState({
-      workOrderVisible:true,
+      missingRateVisible:true,
       popoverVisible:false
      })
    })
@@ -197,7 +199,7 @@ export default class Index extends Component {
   airClick=()=>{
    this.setState({type:'air'},()=>{
     this.setState({
-      workOrderVisible:true,
+      missingRateVisible:true,
       popoverVisible:false
      })
    })
@@ -207,11 +209,17 @@ export default class Index extends Component {
       popoverVisible:false
      })  
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    // if(this.state.popoverVisible !=nextState.popoverVisible){
+    //   return false
+    // }
+    // return true
+  }
   render() {
     const {
       alarmResponseLoading
     } = this.props;
-    const { clicktStatus, stopStatus,workOrderVisible,visible_WJQ, ECXYLTime, currentTabKey,OverVisible,TBeginTime,TEndTime,type,popoverVisible } = this.state;
+    const { clicktStatus,missDataTime, stopStatus,missingRateVisible,visible_WJQ, ECXYLTime, currentTabKey,OverVisible,TBeginTime,TEndTime,type,popoverVisible } = this.state;
 
     return (
       <Card title={this.cardTitle3()} className={styles.alarmCard} bordered={false} >
@@ -229,11 +237,13 @@ export default class Index extends Component {
                   click: (event) => {
                     let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
                     // 响应率
-                    this.setState({
-                      TBeginTime: time[0],
-                      TEndTime:time[1],
-                      OverVisible: true,
-                    })
+
+                      this.setState({
+                        TBeginTime: time[0],
+                        TEndTime:time[1],
+                        OverVisible: true,
+                      })
+
                   }
                 }}
               />
@@ -272,9 +282,14 @@ export default class Index extends Component {
                 theme="my_theme"
                 onEvents={{
                   click: (event) => {
+                    let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+
                     // 响应率
                     this.setState({
-                      popoverVisible: true,
+                      missDataTime:time,
+                      
+                    },()=>{
+                      this.setState({popoverVisible: true,})
                     })
                   }
                 }}
@@ -288,11 +303,11 @@ export default class Index extends Component {
             </Col>
           </Row>
         </Skeleton>
-        {workOrderVisible?
+        {missingRateVisible?
         <MissingDataRateModel type={type} 
-          time={ currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]}
-          workOrderVisible={workOrderVisible} workOrderCancel={()=>{
-          this.setState({workOrderVisible:false})
+          time={missDataTime}
+          missingRateVisible={missingRateVisible} missingRateCancel={()=>{
+          this.setState({missingRateVisible:false})
         }}/>
         :null}
                 {/**超标报警核实率 */}

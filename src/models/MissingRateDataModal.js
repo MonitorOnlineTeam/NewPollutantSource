@@ -22,9 +22,11 @@ export default Model.extend({
     loading: false,
     queryPar: {
       beginTime: moment()
-        .subtract(30, 'day')
+        .subtract(7, 'day')
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      beginTime:'',
+      endTime:'',
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',

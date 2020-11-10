@@ -11,7 +11,6 @@ import { connect } from 'dva';
 
 
 
-
 export default class Index extends Component {
   constructor(props) {
     super(props);
@@ -25,13 +24,13 @@ export default class Index extends Component {
 
    }
   render() {
-      const {workOrderVisible,workOrderCancel,type,time} = this.props;
+      const {missingRateVisible,missingRateCancel,type,time} = this.props;
     return (
         <Modal
         title={type=='air'? '数据缺失报警响应率(空气站)':'数据缺失报警响应率(企业)'}
         width={'90%'}
-        visible={workOrderVisible}
-        onCancel={workOrderCancel}
+        visible={missingRateVisible}
+        onCancel={missingRateCancel}
         footer={null}
     >
            <MissingRateModelData  Atmosphere={type=='air'?true:false} time={time} types={type} isModel={true} />
