@@ -209,12 +209,12 @@ export default class Index extends PureComponent {
       popoverVisible:false
      })  
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  // shouldComponentUpdate(nextProps, nextState) {
     // if(this.state.popoverVisible !=nextState.popoverVisible){
     //   return false
     // }
     // return true
-  }
+  // }
   render() {
     const {
       alarmResponseLoading
