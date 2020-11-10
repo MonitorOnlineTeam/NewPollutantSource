@@ -125,7 +125,6 @@ export default class airMissing extends Component {
           title: <span>巡检工单</span>,
           dataIndex: 'pointCount',
           key: 'pointCount',
-          width: 210,
           align: 'center',
           children: [
             {
@@ -145,6 +144,7 @@ export default class airMissing extends Component {
                 return (
                   <a
                     onClick={() => {
+                      record.TaskType='0',
                       this.photonDetail(record);
                     }}
                   >
@@ -179,7 +179,6 @@ export default class airMissing extends Component {
           title: <span>质控工单</span>,
           dataIndex: 'pointCount',
           key: 'pointCount',
-          width: 210,
           align: 'center',
           children: [
             {
@@ -219,6 +218,7 @@ export default class airMissing extends Component {
                 return (
                   <a
                     onClick={() => {
+                      record.TaskType='1',
                       this.photonDetail(record);
                     }}
                   >
@@ -233,11 +233,11 @@ export default class airMissing extends Component {
     };
   }
   photonDetail = record => {
-    
     setTimeout(() => {
       this.setState({
         photoVisible: true,
         requestData: JSON.stringify({
+          TaskType:record.TaskType,
           RegionCode: record.RegionCode,
           BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
           EndTime: this.props.noAccountAirStatisticsForm.EndTime,
@@ -349,8 +349,8 @@ export default class airMissing extends Component {
               <Form.Item>
                 日期查询：
                 <RangePicker_
-                  onRef={this.onRef1}
                   dataType={dataType}
+                  allowClear={false}
                   style={{ minWidth: '200px', marginRight: '10px' }}
                   dateValue={[moment(BeginTime), moment(EndTime)]}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}

@@ -31,6 +31,7 @@ import moment from 'moment';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import styles from '../style.less'
+import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
 
 const { Meta } = Card;
 const pageUrl = {
@@ -48,6 +49,7 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
+      alarmVisible:false
     }
   }
 
@@ -114,17 +116,23 @@ export default class Index extends Component {
       scroll_div.scrollLeft = scroll_div.scrollLeft + 1;
     }
   }
-
+  overAlarm=()=>{
+    this.setState({alarmVisible:true})
+  }
+  realTime=()=>{
+    return <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>当日超标报警</span>
+    
+  }
   render() {
     const {
       alarmDataList,
       loading
     } = this.props;
-
+    const {alarmVisible} = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.realTimeAlarm}>
 
-        <Card title="当日超标报警" style={{ width: '100%' }} bordered={false} >
+        <Card title={this.realTime()}  style={{ width: '100%' }} bordered={false} >
           <Skeleton loading={loading} avatar active>
             <Row id='scroll_div' type="flex" style={{ overflowX: 'hidden', flexFlow: 'row nowrap', flexShrink: 0 }}>
               <div id='scroll_begin'>
@@ -160,7 +168,12 @@ export default class Index extends Component {
               {/* : */}
               {/* null}  */}
             </Row>
-          </Skeleton>
+          </Skeleton>      
+          {alarmVisible? <ExceedDataAlarm
+           dateTime={[moment().subtract(1, "day").startOf('day'),
+               moment()]} alarmType={''}  alarmVisible={alarmVisible} alarmCancle={()=>{
+                    this.setState({alarmVisible:false});
+                }}/>:null}
         </Card>
       </div>
     );

@@ -106,6 +106,7 @@ export default Model.extend({
     getSewageFlowList: [],
     getSewageFlowLoading: true,
     waterType:[],
+    hover1:false,
     // ---------wjq-----------
     airDayReportData: {
       datas: [

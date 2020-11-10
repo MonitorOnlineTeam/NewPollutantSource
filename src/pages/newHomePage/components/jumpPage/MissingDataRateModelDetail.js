@@ -1,7 +1,7 @@
 /**
  * 功  能：缺失报警响应率详情
  * 创建人：贾安波
- * 创建时间：2020.10
+ * 创建时间：2020.11
  */
 import React, { Component } from 'react';
 import {
@@ -39,22 +39,22 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'MissingRateData/updateState',
-  getData: 'MissingRateData/getDefectPointDetailRate',
+  updateState: 'MissingRateDataModal/updateState',
+  getData: 'MissingRateDataModal/getDefectPointDetailRate',
 };
-@connect(({ loading, MissingRateData,autoForm }) => ({
-  priseList: MissingRateData.priseList,
-  exloading:MissingRateData.exloading,
+@connect(({ loading, MissingRateDataModal,autoForm }) => ({
+  priseList: MissingRateDataModal.priseList,
+  exloading:MissingRateDataModal.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: MissingRateData.total,
-  tableDatas: MissingRateData.tableDatil,
-  queryPar: MissingRateData.queryPar,
+  total: MissingRateDataModal.total,
+  tableDatas: MissingRateDataModal.tableDatil,
+  queryPar: MissingRateDataModal.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateData.attentionList,
-  type:MissingRateData.type,
+  attentionList:MissingRateDataModal.attentionList,
+  type:MissingRateDataModal.type,
 }))
 @Form.create()
-export default class EntTransmissionEfficiency extends Component {
+export default class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -141,9 +141,9 @@ export default class EntTransmissionEfficiency extends Component {
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+     dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
  
-     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -211,7 +211,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'MissingRateData/exportDefectPointDetail',
+      type: 'MissingRateDataModal/exportDefectPointDetail',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -354,7 +354,7 @@ export default class EntTransmissionEfficiency extends Component {
     >
       导出
     </Button>
-    <Button  onClick={() => { this.props.history.go(-1);  }} >
+    <Button  onClick={() => { this.props.detailBack()  }} >
          <Icon type="rollback" />
                 返回
      </Button>
@@ -377,13 +377,8 @@ export default class EntTransmissionEfficiency extends Component {
     // } = this.props;
   //  debugger;
     
-    return (
-        <BreadcrumbWrapper title={this.props.location.query.queryPar? JSON.parse(this.props.location.query.queryPar).EntType==='1'? "缺失数据报警响应率详情(企业)":"缺失数据报警响应率详情(空气站)":""}>
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline">
+    return (<div> <>
+              <Form layout="inline" style={{paddingBottom:15}}>
                 
                 {this.reponseComp()}
                  {this.btnCompents()}
@@ -450,8 +445,6 @@ export default class EntTransmissionEfficiency extends Component {
               } */}
               </Form>
             </>
-          }
-        >
           <>
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
@@ -471,8 +464,7 @@ export default class EntTransmissionEfficiency extends Component {
               }}
             />
           </>
-        </Card>
-        </BreadcrumbWrapper>
+          </div>
     );
   }
 }
