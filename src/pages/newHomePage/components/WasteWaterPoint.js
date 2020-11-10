@@ -379,8 +379,8 @@ export default class Index extends Component {
           pollutantTypeCode={pollutantType}
         /> : null}
        {airWorkOrderVisible? <AirWorkOrderStatisticsModal airWorkOrderVisible={airWorkOrderVisible} airWorkOrderCancelFun={()=>{this.setState({airWorkOrderVisible:false})}}/> : null}
-        {/**近七日废水超标监测点*/}
-        {exceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={exceedVisible} exceedType={overListPar.PollutantType} exceedCancle={() => {
+        {/**近七日废水超标监测点*/}        
+        {exceedVisible ? <ExceedData exceedDataType={overListPar.DataType=='HourData' ? 'Hour' : 'Day'}  exceedPollutant={overListPar.pollutantCode} exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={exceedVisible} exceedType={overListPar.PollutantType} exceedCancle={() => {
               this.setState({ exceedVisible: false });
             }} /> : null}
             {/**超标报警*/}

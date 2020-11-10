@@ -38,20 +38,20 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'MissingRateData/updateState',
-  getData: 'MissingRateData/getDefectModel',
+  updateState: 'MissingRateDataModal/updateState',
+  getData: 'MissingRateDataModal/getDefectModel',
 };
-@connect(({ loading, MissingRateData,autoForm,common}) => ({
-  priseList: MissingRateData.priseList,
-  exloading:MissingRateData.exloading,
+@connect(({ loading, MissingRateDataModal,autoForm,common}) => ({
+  priseList: MissingRateDataModal.priseList,
+  exloading:MissingRateDataModal.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: MissingRateData.total,
-  tableDatas: MissingRateData.tableDatas,
-  queryPar: MissingRateData.queryPar,
+  total: MissingRateDataModal.total,
+  tableDatas: MissingRateDataModal.tableDatas,
+  queryPar: MissingRateDataModal.queryPar,
   regionList: autoForm.regionList,
-  attentionList:MissingRateData.attentionList,
+  attentionList:MissingRateDataModal.attentionList,
   atmoStationList:common.atmoStationList,
-  type:MissingRateData.type
+  type:MissingRateDataModal.type
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -118,11 +118,14 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,types } = this.props;
-      this.updateQueryState({
-        RegionCode: '',
-        EntType: types==='ent'? "1":"2",
-      });
+    const { dispatch, location,Atmosphere,types,time } = this.props;
+
+    this.updateQueryState({
+      RegionCode: '',
+      EntType: types==='ent'? "1":"2",
+      beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: time[1].format('YYYY-MM-DD 23:59:59'),
+    });
 
 
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
@@ -131,9 +134,9 @@ export default class EntTransmissionEfficiency extends Component {
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+     dispatch({ type: 'MissingRateDataModal/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
  
-     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'MissingRateDataModal/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -212,7 +215,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'MissingRateData/exportDefectDataSummary',
+      type: 'MissingRateDataModal/exportDefectDataSummary',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -277,24 +280,9 @@ export default class EntTransmissionEfficiency extends Component {
     } = this.props;
 
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
+      <div>
               <Form layout="inline"> 
-              <Row>
-              {/* <Form.Item label='数据类型'>
-              <Select
-                    placeholder="数据类型"
-                    onChange={this._handleDateTypeChange}
-                    value={dataType}
-                    style={{ width: 100 }}
-                  >  
-                 <Option key='0' value='HourData'>小时数据</Option>
-                 <Option key='1' value='DayData'> 日数据</Option>
-
-                  </Select>
-              </Form.Item> */}
+              <Row style={{paddingBottom:15}}>
                 <Form.Item>
                   日期查询：
                   <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
@@ -350,10 +338,6 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 </Row>
               </Form>
-            </>
-          }
-        >
-          <>
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
@@ -361,19 +345,8 @@ export default class EntTransmissionEfficiency extends Component {
               bordered={false}
               dataSource={this.props.tableDatas}
               pagination={false}
-              // pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                // defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              // }}
             />
-          </>
-        </Card>
+        </div>
     );
   }
 }
