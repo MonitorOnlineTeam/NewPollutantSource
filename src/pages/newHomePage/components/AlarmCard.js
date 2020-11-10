@@ -4,7 +4,7 @@
  * 创建人：贾安波
  * 创建时间：2020.11
  */
-import React, { Component } from 'react';
+import React, { Component,PureComponent } from 'react';
 import {
   Card,
   Table,
@@ -46,7 +46,7 @@ import AttentList from '@/components/AttentList'
 import { EnumPropellingAlarmSourceType } from '@/utils/enum'
 import DetailsModal_WJQ from "./DetailsModal_WJQ"
 import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
-
+import MissingDataRateModel from '../components/jumpPage/MissingDataRateModel'
 import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -62,10 +62,11 @@ const pageUrl = {
 @connect(({ loading, home, autoForm }) => ({
   alarmResponseList: home.alarmResponseList,
   alarmResponseLoading: home.alarmResponseLoading,
-  dataQueryPar:home.dataQueryPar
+  dataQueryPar:home.dataQueryPar,
+  hover1:home.hover1
 }))
 @Form.create()
-export default class Index extends Component {
+export default class Index extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -74,7 +75,10 @@ export default class Index extends Component {
       TBeginTime:  moment().subtract(7, "days").startOf("day"),
       TEndTime: moment().endOf("day"),
       OverVisible: false,
-      currentTabKey:'1'
+      currentTabKey:'1',
+      popoverVisible:false,
+      missingRateVisible:false,
+      missDataTime:[moment().subtract(7, "days").startOf("day"), moment().endOf("day")]
     };
 
   }
@@ -85,7 +89,6 @@ export default class Index extends Component {
   initData = () => {
     let { dispatch } = this.props;
     dispatch({ type: 'home/getAlarmResponse', payload: { BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'), } });//数据报警响应
-
   }
   percentage = (data) => {
     return `${data}%`
@@ -141,14 +144,14 @@ export default class Index extends Component {
   }
   tabCallback2 = (value) => {
     const { dispatch, dataQueryPar } = this.props;
-    this.setState({ currentTabKey: value })
+    this.setState({ currentTabKey: value  })
     let parData = {
       ...dataQueryPar,
       BeginTime: value == 1 ? moment().add('day', -7).format('YYYY-MM-DD 00:00:00') : moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
     };
 
-
+ 
     dispatch({ type: 'home/getAlarmResponse', payload: { ...parData } });//数据报警响应
 
   }
@@ -156,18 +159,67 @@ export default class Index extends Component {
     return <Row type='flex' align="middle" justify='space-between'>
       <span>数据报警响应统计</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
-        <TabPane tab="近7天" key="1">
+        <TabPane  tab="近7天" key="1">
         </TabPane>
         <TabPane tab="近30天" key="2">
         </TabPane>
       </Tabs>
     </Row>
   }
+  onMouseOver1=()=>{
+    // sessionStorage.setItem('hover1',true)
+    const {dispatch} = this.props;
+     dispatch({ type:pageUrl.updateState,payload: {  hover1:true }})
+  }
+  onMouseOver2=()=>{
+  }
+  onMouseOut1=()=>{
+    const {dispatch} = this.props;
+     dispatch({ type:pageUrl.updateState,payload: {  hover1:false }})
+
+  }
+  onMouseOut2=()=>{
+
+  }
+  content=()=>{
+    // const { hover1 } = this.props;
+    return <div>
+     <div><a  onClick={this.entClick}>企业</a></div>
+     <div   style={{paddingTop:8}}> <a onClick={this.airClick}>空气站</a></div>
+  </div>
+  }
+  entClick=()=>{
+   this.setState({type:'ent'},()=>{
+     this.setState({
+      missingRateVisible:true,
+      popoverVisible:false
+     })
+   })
+  }
+  airClick=()=>{
+   this.setState({type:'air'},()=>{
+    this.setState({
+      missingRateVisible:true,
+      popoverVisible:false
+     })
+   })
+  }
+  onVisibleChange=()=>{
+    this.setState({
+      popoverVisible:false
+     })  
+  }
+  // shouldComponentUpdate(nextProps, nextState) {
+    // if(this.state.popoverVisible !=nextState.popoverVisible){
+    //   return false
+    // }
+    // return true
+  // }
   render() {
     const {
       alarmResponseLoading
     } = this.props;
-    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey,OverVisible,TBeginTime,TEndTime } = this.state;
+    const { clicktStatus,missDataTime, stopStatus,missingRateVisible,visible_WJQ, ECXYLTime, currentTabKey,OverVisible,TBeginTime,TEndTime,type,popoverVisible } = this.state;
 
     return (
       <Card title={this.cardTitle3()} className={styles.alarmCard} bordered={false} >
@@ -175,6 +227,7 @@ export default class Index extends Component {
 
           <Row type='flex' align='middle' justify='space-between'>
             <Col span={8} align='middle'>
+           
               <ReactEcharts
                 option={this.getChartData(1)}
                 className="echarts-for-echarts"
@@ -184,11 +237,13 @@ export default class Index extends Component {
                   click: (event) => {
                     let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
                     // 响应率
-                    this.setState({
-                      TBeginTime: time[0],
-                      TEndTime:time[1],
-                      OverVisible: true
-                    })
+
+                      this.setState({
+                        TBeginTime: time[0],
+                        TEndTime:time[1],
+                        OverVisible: true,
+                      })
+
                   }
                 }}
               />
@@ -220,19 +275,41 @@ export default class Index extends Component {
               </div>
             </Col>
             <Col span={8} align='middle'>
+            <Popover onVisibleChange={this.onVisibleChange}  visible={popoverVisible}  placement="top" content={this.content()} title="选择类型" trigger="click">
               <ReactEcharts
                 option={this.getChartData(3)}
                 className="echarts-for-echarts"
                 theme="my_theme"
+                onEvents={{
+                  click: (event) => {
+                    let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+
+                    // 响应率
+                    this.setState({
+                      missDataTime:time,
+                      
+                    },()=>{
+                      this.setState({popoverVisible: true,})
+                    })
+                  }
+                }}
                 style={{ width: '100%', height: 122 }}
               />
               <div>
                 <div className={styles.title1}>响应率</div>
                 <div className={styles.title2}>数据缺失报警</div>
               </div>
+              </Popover>
             </Col>
           </Row>
         </Skeleton>
+        {missingRateVisible?
+        <MissingDataRateModel type={type} 
+          time={missDataTime}
+          missingRateVisible={missingRateVisible} missingRateCancel={()=>{
+          this.setState({missingRateVisible:false})
+        }}/>
+        :null}
                 {/**超标报警核实率 */}
                 {
               OverVisible ?

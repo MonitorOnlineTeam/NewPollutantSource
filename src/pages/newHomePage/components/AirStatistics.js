@@ -153,7 +153,7 @@ export default class Index extends Component {
   cardTitle1 = () => {
     return <Row type='flex' justify='space-between'>
       <span style={{ color: '#fff' }}>空气日报统计</span>
-      <span style={{ color: '#fff', fontWeight: 'bold' }}>{moment().format("YYYY-MM-DD")}</span>
+      <span style={{ color: '#fff', fontWeight: 'bold' }}>{moment().add(-1,'days').format("YYYY-MM-DD")}</span>
     </Row>
   }
 
