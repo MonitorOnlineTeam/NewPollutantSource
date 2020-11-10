@@ -84,7 +84,7 @@ class index extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
-            exportRegion:''
+            exportRegion:'1'
         };
     }
 
@@ -158,6 +158,7 @@ class index extends PureComponent {
     // 导出
     exportReport = () => {
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
+        console.log
         if(exportRegion != '1')
         {
             this.props.dispatch({
@@ -686,8 +687,6 @@ class index extends PureComponent {
                         return key = item.key
                     }
                 })
-                console.log(key)
-                console.log(activeKey)
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
@@ -761,7 +760,8 @@ class index extends PureComponent {
         else{
             activeKey = '1'
         }
-        this.setState({ panes, activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ panes, activeKey,exportRegion:arr[0] });
       };
       //切换标签
     onChangeHandle=(activeKey)=>{
@@ -1178,7 +1178,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1307,7 +1307,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1427,7 +1427,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1561,7 +1561,7 @@ class index extends PureComponent {
                        record.verifyImage.map(item=>{
                            let obj = {
                                name:item.FileName,
-                               attach:item.FileName
+                               attach:'/upload/'+item.FileName
                            }
                            sourc.push(obj)
                        })

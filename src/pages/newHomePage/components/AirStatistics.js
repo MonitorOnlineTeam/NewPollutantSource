@@ -35,6 +35,8 @@ import Link from 'umi/link';
 import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
 import ScrollTable from './ScrollTable'
+import FlowModal from '@/pages/IntelligentAnalysis/sewageDisposal/flow/flowModal'
+
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -60,7 +62,8 @@ export default class Index extends Component {
       EntCode:'',
       dataTypes:'HourData',
       airTime:moment().add('hour',-1).format('YYYY-MM-DD HH:00:00'),
-      airDate:moment().add('day',-1).format("YYYY-MM-DD")
+      airDate:moment().add('day',-1).format("YYYY-MM-DD"),
+      flowVisible:false
     }
 
   }
@@ -150,7 +153,7 @@ export default class Index extends Component {
   cardTitle1 = () => {
     return <Row type='flex' justify='space-between'>
       <span style={{ color: '#fff' }}>空气日报统计</span>
-      <span style={{ color: '#fff', fontWeight: 'bold' }}>{moment().format("YYYY-MM-DD")}</span>
+      <span style={{ color: '#fff', fontWeight: 'bold' }}>{moment().add(-1,'days').format("YYYY-MM-DD")}</span>
     </Row>
   }
 
@@ -174,7 +177,7 @@ export default class Index extends Component {
 
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>污水处理厂流量分析</span>
+      <span style={{cursor:'pointer'}} onClick={this.flow}>污水处理厂流量分析</span>
       <Tabs defaultActiveKey="1">
         <TabPane tab="近30天" key="1">
         </TabPane>
@@ -182,7 +185,11 @@ export default class Index extends Component {
 
     </Row>
   }
-
+  flow=()=>{
+    this.setState({
+      flowVisible:true
+    })
+  }
   tabCallback = (value) => {
   let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
    
@@ -387,7 +394,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 9, 0, 9]
+              padding: [0, 7, 0, 9]
             },
             value: {
               color: '#000',
@@ -453,7 +460,7 @@ export default class Index extends Component {
 
   render() {
     const { realTimeAlarmLoading,getAQIList,getAQILoading,airDayReportloading,getSewageFlowLoading} = this.props;
-    const {EntCode } = this.state;
+    const {EntCode,flowVisible } = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.airStatistics}  >
         <Row type='flex' justify='space-between' >
@@ -502,6 +509,9 @@ export default class Index extends Component {
             </Card>
           </Col>
         </Row>
+        {flowVisible ? <FlowModal flowTime={[moment().add(-30, "day").startOf(), moment()]} flowEntCode={EntCode} flowVisible={flowVisible} flowCancle={() => {
+              this.setState({ flowVisible: false });
+            }} /> : null}
       </div>
     );
   }

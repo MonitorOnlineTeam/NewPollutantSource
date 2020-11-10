@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, DatePicker, Form, Row, Col, Select, Input, Upload, Icon } from "antd";
+import { Modal, DatePicker, Form, Row, Col, Select, Input, Upload, Icon, message } from "antd";
 import { connect } from "dva"
 import cuid from 'cuid';
 import moment from 'moment'
@@ -45,7 +45,7 @@ class AddExceptionModal extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.id && prevState.fileList !== this.props.fileList) {
+    if (this.props.id && prevProps.fileList !== this.props.fileList) {
       this.props.form.setFieldsValue({ "Attachments": this.props.fileList })
       this.setState({
         fileList: this.props.fileList,
@@ -65,7 +65,10 @@ class AddExceptionModal extends PureComponent {
   onSubmit = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log("values=", values);
+        if (values.ExceptionBeginTime >= values.ExceptionEndTime) {
+          message.error("截至时间必须大于开始时间，请重新选择时间！");
+          return;
+        }
         // return;
         this.props.dispatch({
           type: "entExceptionReported/saveAndUpdateException",
@@ -76,6 +79,8 @@ class AddExceptionModal extends PureComponent {
             Attachments: this.state.cuid,
             ExceptionType: values.ExceptionType.toString(),
             PollutantCodes: values.PollutantCodes.toString(),
+            ExceptionBeginTime: values.ExceptionBeginTime ? moment(values.ExceptionBeginTime).format("YYYY-MM-DD HH:mm:ss") : undefined,
+            ExceptionEndTime: values.ExceptionEndTime ? moment(values.ExceptionEndTime).format("YYYY-MM-DD HH:mm:ss") : undefined,
           },
           callback: () => {
             this.props.onSuccess && this.props.onSuccess()
@@ -97,7 +102,7 @@ class AddExceptionModal extends PureComponent {
   }
 
   render() {
-    const { form: { getFieldDecorator }, pollutantListByDgimn, addExceptionModalVisible, id, loading, exceptionReportedData } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, pollutantListByDgimn, addExceptionModalVisible, id, loading, exceptionReportedData } = this.props;
     const { cuid, fileList } = this.state;
     const props = {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
@@ -110,9 +115,12 @@ class AddExceptionModal extends PureComponent {
         this.setState({
           fileList: info.fileList
         })
+        if (!info.fileList.length) {
+          this.props.form.setFieldsValue({ Attachments: [] })
+        }
       },
-      onRemove(file) {
-        dispatch({
+      onRemove: (file) => {
+        this.props.dispatch({
           type: "autoForm/deleteAttach",
           payload: {
             Guid: file.uid,

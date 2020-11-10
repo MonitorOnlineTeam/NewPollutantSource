@@ -134,7 +134,7 @@ class Test extends PureComponent {
         ExceptionBEtime,
         ExceptionEBtime,
         ExceptionEEtime,
-        DataType: values.DataType,
+        DataType: values.DataType ? values.DataType.toString() : undefined,
         DGIMN: this.state.DGIMN,
       }
     })
@@ -146,6 +146,9 @@ class Test extends PureComponent {
       type: "entExceptionReported/deleteExceptionItem",
       payload: {
         ID: id
+      },
+      callback: () => {
+        this.getTableData()
       }
     })
   }

@@ -563,7 +563,7 @@ class index extends Component {
                     this.getRealTimeDataView()
                   })
                 }}>
-                  <Checkbox value="0">正常</Checkbox>
+                  <Checkbox value="0">生产</Checkbox>
                   <Checkbox value="1">停运</Checkbox>
                 </Checkbox.Group>
               </Row>

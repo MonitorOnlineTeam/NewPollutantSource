@@ -167,6 +167,9 @@ export default class OverVerifyLst extends Component {
                 dataIndex: item.PollutantCode + '_RespondedRate',
                 key: item.PollutantCode + '_RespondedRate',
                 align: 'center',
+                render: (text, record) => {
+                  return <div>{text == '-' ? text : `${text}%`}</div>;
+                },
               },
             ],
           });
@@ -176,6 +179,9 @@ export default class OverVerifyLst extends Component {
           dataIndex: 'AllRespondedRate',
           key: 'AllRespondedRate',
           align: 'center',
+          render: (text, record) => {
+            return <div>{text == '-' ? text : `${text}%`}</div>;
+          },
         });
         this.setState(
           { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
@@ -380,6 +386,9 @@ export default class OverVerifyLst extends Component {
               dataIndex: item.PollutantCode + '_RespondedRate',
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
+              render: (text, record) => {
+                return <div>{text == '-' ? text : `${text}%`}</div>;
+              },
             },
           ],
         });
@@ -391,6 +400,9 @@ export default class OverVerifyLst extends Component {
       dataIndex: 'AllRespondedRate',
       key: 'AllRespondedRate',
       align: 'center',
+      render: (text, record) => {
+        return <div>{text == '-' ? text : `${text}%`}</div>;
+      },
     });
     this.setState({
       columns: newCloum,

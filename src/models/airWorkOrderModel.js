@@ -21,7 +21,7 @@ export default Model.extend({
         taskStaticTitle: [], // 运维工单统计 表头
         taskStatic: [], // 运维工单统计 数据
         beginTime: moment()
-            .subtract(1, 'months')
+            .subtract(30, 'days')
             .hour(0)
             .minute(0)
             .second(0),
