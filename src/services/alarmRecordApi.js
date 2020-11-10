@@ -41,3 +41,8 @@ export async function AlarmVerifyAdd(params)
   const result = await post('/api/rest/PollutantSourceApi/MonitorAlarmApi/AlarmVerifyAdd', params, null);
   return result;
 }
+// 根据企业类型查询监测因子
+export async function getPollutantByType(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`, {});
+  return result;
+}
