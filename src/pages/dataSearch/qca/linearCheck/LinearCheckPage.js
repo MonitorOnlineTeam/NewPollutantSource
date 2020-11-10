@@ -213,9 +213,9 @@ class LinearCheckPage extends PureComponent {
       {
         title: <span>
           线性系数
-        <QuestionTooltip overlayStyle={{maxWidth: 350}} content={<>
-          <img style={{width: '100%'}} src="/linearCheck.png" alt=""/>
-        </>} />
+        <QuestionTooltip overlayStyle={{ maxWidth: 350 }} content={<>
+            <img style={{ width: '100%' }} src="/linearCheck.png" alt="" />
+          </>} />
         </span>,
         dataIndex: 'Ratio',
       },
@@ -475,7 +475,8 @@ class LinearCheckPage extends PureComponent {
           }
         },
         formatter: (params) => {
-          return `
+          if (params && params[0] && params[1]) {
+            return `
             ${params[0].name}
             <br />
             ${params[0].marker}
@@ -484,6 +485,8 @@ class LinearCheckPage extends PureComponent {
             ${params[1].marker}
             ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
           `
+          }
+          return "";
         }
       },
       toolbox: {

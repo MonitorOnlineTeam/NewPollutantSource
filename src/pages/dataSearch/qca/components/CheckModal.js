@@ -214,11 +214,28 @@ class CheckModal extends PureComponent {
         <Spin spinning={!!loading} delay={500}>
           <Space size={44} style={{ marginBottom: 24 }}>
             <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
-            <span>标准气浓度：{currentRowData.StandardValue}{currentRowData.Unit}</span>
-            <span>测量值：{currentRowData.Check}{currentRowData.Unit}</span>
-            <span>量程范围：{currentRowData.SpanValue}{currentRowData.Unit}</span>
-            <span>相对误差：{currentRowData.Offset}%</span>
-            <span>技术要求：{currentRowData.standard}</span>
+            {
+              QCAType != '3104' && QCAType != '3103' && <Space size={44}>
+                <span>标准气浓度：{currentRowData.StandardValue}{currentRowData.Unit}</span>
+                <span>测量值：{currentRowData.Check}{currentRowData.Unit}</span>
+                <span>量程范围：{currentRowData.SpanValue}{currentRowData.Unit}</span>
+                <span>相对误差：{currentRowData.Offset}%</span>
+                <span>技术要求：{currentRowData.standard}</span>
+              </Space>
+            }
+            {   // 线性核查
+              QCAType == '3104' && <Space size={44}>
+                <span>线性系数：{currentRowData.Ratio}</span>
+                <span>示值误差：{currentRowData.MaxOffset}{currentRowData.Unit}</span>
+                <span>标准要求：{currentRowData.standard}</span>
+              </Space>
+            }
+            {  // 响应时间核查
+              QCAType == '3103' && <Space size={44}>
+                <span>平均时间：{currentRowData.AvgTime}s</span>
+                <span>技术要求：{currentRowData.standard}</span>
+              </Space>
+            }
             <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
             <span>质控时间：{currentRowData.MonitorTime}</span>
           </Space>

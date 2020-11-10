@@ -13,6 +13,12 @@ import CheckModal from "@/pages/dataSearch/qca/components/CheckModal"
 import ViewQCProcess from "./ViewQCProcess"
 import { LoadingOutlined, CheckCircleFilled, CloseCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import PageLoading from "@/components/PageLoading"
+import { gasPollutantList } from "@/utils/CONST"
+const pollutantCodeList = {
+  "a21026": { name: "SO2", unit: "mg/m3" },
+  "a21002": { name: "NOx", unit: "mg/m3" },
+  "a19001": { name: "O2", unit: "%" }
+}
 
 const { confirm } = Modal;
 // 空闲（绿色），运行（蓝色），维护（黄色），故障（红色），断电（红色），离线（灰色）
@@ -254,6 +260,13 @@ class ManualQualityPage extends Component {
     }
   }
 
+  getPollutantName = (code) => {
+    if (code) {
+      return pollutantCodeList[code].name
+    }
+    return "";
+  }
+
   getAnswer = (QCLogsAnswer) => {
     const { QCLogsResult } = this.props;
     let str = QCLogsAnswer.Str;
@@ -262,15 +275,15 @@ class ManualQualityPage extends Component {
         return <span style={{ color: "#f81d22" }}>通讯超时。</span>
       }
       if (QCLogsAnswer.Result === false) {
-        return <span>收到{QCLogsAnswer.Comment}，<span style={{ color: "#f81d22" }}>{str}。</span></span>
+        return <span>收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，<span style={{ color: "#f81d22" }}>{str}。</span></span>
       }
       if (QCLogsAnswer.Result) {
         return <span>
           {/* 收到{QCLogsAnswer.Comment}，准备执行请求。 */}
-          收到{QCLogsAnswer.Comment}，{QCLogsAnswer.Str}。
+          收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，{QCLogsAnswer.Str}。
           {
             !QCLogsResult.str && <Tag color="#87d068" onClick={() => {
-              this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
+              this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment })
               this.updateModalState({ qcImageVisible: true })
             }}>查看质控过程</Tag>
           }
@@ -359,7 +372,7 @@ class ManualQualityPage extends Component {
     if (loading) {
       return <PageLoading />
     }
-    const { QCAType, currentRowData, MYMax, MYMin } = this.state;
+    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType } = this.state;
     return (
       <Card>
         <Row>
@@ -408,7 +421,7 @@ class ManualQualityPage extends Component {
             <span className={styles.text}>
               {QCLogsStart.Str ?
                 <>
-                  {`${QCLogsStart.User}向【${pointName}】，发送${QCLogsStart.Str}`}
+                  {`${QCLogsStart.User}向【${pointName}】，发送${this.getPollutantName(QCLogsStart.PollutantCode)}${QCLogsStart.Str}`}
                 </> : ""}
             </span>
           </div>
@@ -475,7 +488,7 @@ class ManualQualityPage extends Component {
         {/* 核查结果弹窗 */}
         {checkModalVisible && <CheckModal QCAType={QCAType} DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
         {/* 质控过程弹窗 */}
-        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} />}
+        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} QCATypeName={modalQCAType} />}
         {/*{true && <ViewQCProcess />}*/}
         <Modal
           title="盲样核查"

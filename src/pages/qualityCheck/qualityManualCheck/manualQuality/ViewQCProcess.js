@@ -458,12 +458,12 @@ class ViewQCProcess extends PureComponent {
   }
 
   render() {
-    const { qcImageVisible, pointName, pollutantCode, currentPollutantCode } = this.props;
+    const { qcImageVisible, pointName, pollutantCode, currentPollutantCode, QCATypeName } = this.props;
     console.log("pollutantCode=", pollutantCode)
     let code = pollutantCode || currentPollutantCode;
     return (
       <Modal
-        title={`${pointName} - ${pollutantCodeList[code].name}质控过程`}
+        title={`【${pointName}】${pollutantCodeList[code].name}${QCATypeName} - 质控过程`}
         width="80vw"
         footer={false}
         visible={qcImageVisible}
