@@ -18,7 +18,7 @@ export default Model.extend({
     title:"",
     pollutantlist :[],
     tableDatas: [],
-    columns:[],
+    // columns:[],
     summary:[],
     total:"",
     pollLoading:true,
@@ -35,7 +35,7 @@ export default Model.extend({
       pollutantCodes: null,
       pollutantNames: null,
       unit: null,
-      isAsc: true,
+      isAsc: false,
       Flag:0//1 显示 0 不显示
     },
     chartparams:{
@@ -52,7 +52,15 @@ export default Model.extend({
     pollutantDefault:[],
     pollType:"",
     tableloading:true,
-    singFlag:true
+    singFlag:true,
+    columns : [
+      {title: '监测时间',
+      dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
+      defaultSortOrder: 'descend',
+      // sortOrder: 'descend',
+      sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
+      width:120,
+      children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
   },
   effects: {
      // 获取数据获取率 - 详情污染物列表
@@ -80,16 +88,23 @@ export default Model.extend({
       // if (!onlyOneEnt) {
       //   gwidth += 300;
       // }
+      
       const result = yield call(getAllTypeDataList, { ...body });
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
-        let columns = [
-          {title: '监测时间',
-          dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
-          defaultSortOrder: 'descend',
-          sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
-          width:95,
-          children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:95,align: 'center'}]}]
+        const { sortOrder } = yield select(_ => _.historyData); //获取state的值
+        const { columns } = yield select(_ => _.historyData); //获取state的值
+         
+
+
+        // let columns = [
+        //   {title: '监测时间',
+        //   dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
+        //   // defaultSortOrder: 'descend',
+        //   sortOrder: sortOrder,
+        //   sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
+        //   width:120,
+        //   children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
         // if (pollutantlist.length > 6) {
         //   width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
         //   if (width < 200) {

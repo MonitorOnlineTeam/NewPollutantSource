@@ -53,10 +53,13 @@ class TableData extends React.Component {
     }
     componentDidMount(){
     }
+    handleChange = (pagination, filters, sorter) => {
+      // const {dispatch,columns} = this.props;
+    //  dispatch({ type: 'historyData/updateState', payload: { columns:[...columns] } })
+    }; 
   render() {
 
     const { tableloading,total,tableDatas,columns} = this.props;
-    // const { tableDatas,columns } = this.state;
     return (<>
     {
       tableloading ?
@@ -72,7 +75,7 @@ class TableData extends React.Component {
               defaultWidth={80}
               scroll={{ y:'calc(100vh - 65px - 180px - 180px)' || undefined}}
               pagination={{ total:total, showSizeChanger:true , showQuickJumper:true , defaultPageSize:20}}
-              
+              onChange={this.handleChange}
               // loading={ tableloading }
               // summary={() => (
               //   <Table.Summary.Row>
