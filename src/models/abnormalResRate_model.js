@@ -1,5 +1,5 @@
 import Model from '@/utils/model';
-import * as services from './service';
+import * as services from '../services/abnormalResRate_Api';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({

@@ -52,6 +52,7 @@ class index extends PureComponent {
     checkedValues: [],
     secondQueryCondition: {},
     queryCondition: {},
+    exceptionTime: this.props.time || this.props.exceptionTime,
   }
   _SELF_ = {
     columns: [
@@ -66,7 +67,8 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.RegionCode;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
-            router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
+            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+              router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
         }
       },
@@ -195,7 +197,7 @@ class index extends PureComponent {
     let values = this.props.form.getFieldsValue();
     console.log("values=", values)
     let beginTime, endTime;
-    values.time = this.props.exceptionTime;
+    values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -229,7 +231,7 @@ class index extends PureComponent {
   onExport = () => {
     let values = this.props.form.getFieldsValue();
     let beginTime, endTime;
-    values.time = this.props.exceptionTime;
+    values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
       beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
     }
@@ -268,17 +270,20 @@ class index extends PureComponent {
         exceptionTime: date,
       },
     })
+    this.setState({
+      exceptionTime: date
+    })
   }
 
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, exceptionTime, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, tableDataSource, loading, exportLoading } = this.props;
+    const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, tableDataSource, loading, exportLoading } = this.props;
     const { columns, detailsColumns } = this._SELF_;
-    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition } = this.state;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
