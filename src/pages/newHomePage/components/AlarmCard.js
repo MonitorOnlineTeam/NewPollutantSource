@@ -121,8 +121,7 @@ export default class Index extends PureComponent {
         {
           name: type == 1 ? '数据超标报警核实率' : type == 2 ? '数据异常报警响应率' : '数据缺失报警响应率',
           type: 'pie',
-          // center: ['50%', '50%'],
-          radius: ['50%', '70%'],
+          radius: ['62%', '83%'],
           avoidLabelOverlap: false,
           label: {
             normal: {

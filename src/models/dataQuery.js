@@ -598,7 +598,7 @@ export default Model.extend({
             // width,
             render: (value, record, index) => {
               let text = value;
-              if (item.PollutantName === '风向') {
+              if (item.PollutantName === '风向') {z
                 text = getDirLevel(text);
               }
               return formatPollutantPopover(text, record[`${item.PollutantCode}_params`]);
@@ -670,18 +670,18 @@ export default Model.extend({
         }
         columns = columns.concat(pollutantcols);
 
-        if(result && result[0] && result[0].PollutantType !== '5IQI' && result[0].PollutantType !== '5AQI')
-        {
-          tablewidth=tablewidth+50
-          columns=columns.concat({
-            title: '是否停产',
-            dataIndex: 'stop',
-            key: 'stop',
-            width: 50,
-            // fixed: 'left',
-            align: 'center',
-          });
-        }
+        // if(result && result[0] && result[0].PollutantType !== '5IQI' && result[0].PollutantType !== '5AQI')
+        // {
+        //   tablewidth=tablewidth+50
+        //   columns=columns.concat({
+        //     title: '是否停产',
+        //     dataIndex: 'stop',
+        //     key: 'stop',
+        //     width: 50,
+        //     // fixed: 'left',
+        //     align: 'center',
+        //   });
+        // }
       }
       let option = null;
       if (arr && arr.length > 0) {
@@ -779,6 +779,19 @@ export default Model.extend({
           },
           series: arr,
         };
+      }
+
+      if(result && result[0] && result[0].PollutantType !== '5IQI' && result[0].PollutantType !== '5AQI')
+      {
+        tablewidth=tablewidth+50
+        columns=columns.concat({
+          title: '是否停运',
+          dataIndex: 'stop',
+          key: 'stop',
+          width: 50,
+          // fixed: 'left',
+          align: 'center',
+        });
       }
       yield update({
         tablewidth,
