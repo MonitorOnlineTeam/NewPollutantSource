@@ -83,8 +83,13 @@ export default Model.extend({
       const result = yield call(getAllTypeDataList, { ...body });
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
-        let columns = [{title: '监测时间', dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', children: [
-                         { title: '标准值', dataIndex: 'MonitorTime',key: 'MonitorTime',align: 'center'}]}]
+        let columns = [
+          {title: '监测时间',
+          dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
+          width:95,
+          children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:95,align: 'center'}]}]
         // if (pollutantlist.length > 6) {
         //   width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
         //   if (width < 200) {
