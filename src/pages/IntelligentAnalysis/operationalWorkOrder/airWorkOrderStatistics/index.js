@@ -2,7 +2,7 @@
  * @Description:运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-26 10:52:49
- * @LastEditTime: 2020-11-06 14:42:50
+ * @LastEditTime: 2020-11-10 17:51:19
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/index.js
  */
 import React, { PureComponent } from 'react';
@@ -45,7 +45,7 @@ export default class index extends PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch, divisorList, beginTime, endTime } = this.props;
+    const { dispatch, divisorList, beginTime, endTime, RegionCode } = this.props;
     // 获取行政区列表
     dispatch({
       type: 'autoForm/getRegions',
@@ -60,7 +60,7 @@ export default class index extends PureComponent {
       payload: {
         PollutantTypeCode: '5',
         AttentionCode: '',
-        RegionCode: '',
+        RegionCode: typeof RegionCode == 'undefined' ? '' : RegionCode,
         EntCode: '',
         BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
         EndTime: endTime.format('YYYY-MM-DD 23:59:59'),

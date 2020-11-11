@@ -83,7 +83,7 @@ class exceedDataAlarmModal extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
-            exportRegion:''
+            exportRegion:'1'
         };
     }
 
@@ -759,7 +759,8 @@ class exceedDataAlarmModal extends PureComponent {
         else{
             activeKey = '1'
         }
-        this.setState({ panes, activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ panes, activeKey,exportRegion:arr[0] });
       };
       //切换标签
     onChangeHandle=(activeKey)=>{
@@ -1178,7 +1179,7 @@ class exceedDataAlarmModal extends PureComponent {
                        record.verifyImage.map(item=>{
                            let obj = {
                                name:item.FileName,
-                               attach:item.FileName
+                               attach:'/upload/'+item.FileName
                            }
                            sourc.push(obj)
                        })
@@ -1306,7 +1307,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1426,7 +1427,7 @@ class exceedDataAlarmModal extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1560,7 +1561,7 @@ class exceedDataAlarmModal extends PureComponent {
                        record.verifyImage.map(item=>{
                            let obj = {
                                name:item.FileName,
-                               attach:item.FileName
+                               attach:'/upload/'+item.FileName
                            }
                            sourc.push(obj)
                        })
@@ -1575,7 +1576,7 @@ class exceedDataAlarmModal extends PureComponent {
                         
                     <Modal
                         centered
-                        title='实时报警'
+                        title='超标报警'
                         visible={alarmVisible}
                         footer={null}
                         width={1600}

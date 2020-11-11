@@ -2,7 +2,7 @@
  * @Description: 运维工单统计-空气站
  * @LastEditors: hxf
  * @Date: 2020-10-27 16:38:28
- * @LastEditTime: 2020-11-06 18:41:15
+ * @LastEditTime: 2020-11-10 17:47:38
  * @FilePath: /NewPollutantSource/src/models/airWorkOrderModel.js
  */
 import Model from '@/utils/model';
@@ -21,7 +21,7 @@ export default Model.extend({
         taskStaticTitle: [], // 运维工单统计 表头
         taskStatic: [], // 运维工单统计 数据
         beginTime: moment()
-            .subtract(1, 'months')
+            .subtract(30, 'days')
             .hour(0)
             .minute(0)
             .second(0),
@@ -57,6 +57,9 @@ export default Model.extend({
         // 获取运维工单统计 数据
         *getTaskStatic({ payload }, { call, put, update, select }) {
             const response = yield call(services.GetTaskStatic, { ...payload });
+            if (payload.RegionCode != '' && response.Datas.length > 0) {
+                response.Datas[response.Datas.length - 1]['00_RegionCode'] = payload.RegionCode;
+            }
             if (response.IsSuccess) {
                 yield update({
                     taskStatic: response.Datas,

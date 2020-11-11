@@ -239,18 +239,18 @@ class index extends PureComponent {
     }
 
     GetEntDetail = (regionCode, hasData) => {
-
+        const {regionValue,attentionValue} = this.state
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
-                RegionCode: regionCode == '0'?'':regionCode,
+                AttentionCode:attentionValue,
+                RegionCode: regionCode == '0'? (regionValue==undefined?'':regionValue) :regionCode,
                 HasData: hasData,
                 EntCode: '',
                 EntType: 1,
                 PollutantType:this.state.outletValue
             }
         }).then(() => {
-            console.log(this.props.EntOrPointDetail)
             this.setState({
                 EntList: this.props.EntOrPointDetail,
                 visible: true,
@@ -261,17 +261,18 @@ class index extends PureComponent {
     }
 
     GetPointDetail = (regionCode, hasData) => {
+        const {regionValue,attentionValue} = this.state
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
-                RegionCode: regionCode == '0'?'':regionCode,
+                AttentionCode:attentionValue,
+                RegionCode: regionCode == '0'?(regionValue==undefined?'':regionValue):regionCode,
                 HasData: hasData,
                 EntCode: '1',
                 EntType: 1,
                 PollutantType:this.state.outletValue
             }
         }).then(() => {
-            console.log(this.props.EntOrPointDetail)
             this.setState({
                 PointList: this.props.EntOrPointDetail,
                 visibleMoni: true,
@@ -295,6 +296,7 @@ class index extends PureComponent {
 
     pageContent = () => {
         const { attentionSummaryList } = this.props
+        const {regionValue} = this.state
         const fixed = false
         const columns = [
             {
@@ -306,7 +308,7 @@ class index extends PureComponent {
                 key: 'reginName',
                 render: (text, record) => {
                     return <a onClick={
-                        () => this.props.dispatch(routerRedux.push(`/dataSearch/enterpriseInquiryDetail/${record.regionCode}`))
+                        () => this.props.dispatch(routerRedux.push(`/dataSearch/enterpriseInquiryDetail/${record.regionCode=='0'?(regionValue==undefined?'':regionValue):record.regionCode}`))
                     } > {text} </a>
                 }
             },

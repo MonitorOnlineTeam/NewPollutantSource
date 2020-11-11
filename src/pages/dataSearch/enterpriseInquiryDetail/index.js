@@ -25,7 +25,7 @@ const pageUrl = {
 }
 @connect(({ loading, flowanalysisModel ,enterpriseMonitoringModel}) => ({
     loading:loading.effects["enterpriseMonitoringModel/GetPointSummary"],
-    priseList: flowanalysisModel.priseList,
+    priseList: enterpriseMonitoringModel.priseList,
     pointSummaryList:enterpriseMonitoringModel.pointSummaryList,
     total:enterpriseMonitoringModel.total,
     PageSize:enterpriseMonitoringModel.PageSize,
@@ -46,10 +46,9 @@ class index extends PureComponent {
     }
 
     initData = () => {
-        console.log(this.props.match.params.RegionCode)
         this.props.dispatch({
             //获取企业列表
-            type: 'flowanalysisModel/getEntByRegion',
+            type: 'enterpriseMonitoringModel/getEntByRegion',
             payload: { RegionCode: '' },
         });
 
