@@ -19,7 +19,7 @@ const { CheckableTag } = Tag;
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
-const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2, label: "超标", color: "#f04d4d" }, { value: 0, label: "离线", color: "#999999" }, { value: 3, label: "异常", color: "#e94" }];
+const statusList = [{ value: 1, label: "正常", color: "#34c066" }, { value: 2, label: "超标", color: "#f04d4d" }, { value: 0, label: "离线", color: "#999999" }, { value: 3, label: "异常", color: "#e94" }, { value: 4, label: "停产", color: "#40474e" }];
 
 @connect(({ loading, overview, global, autoForm }) => ({
   noticeList: global.notices,
@@ -249,10 +249,10 @@ class index extends Component {
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
         time: searchTime,
-        stopStatus: stopStatus,
+        // stopStatus: stopStatus,
         regionCode: regionCode,
         entCode: entCode,
-        status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3]
+        status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3, 4]
       },
     });
   };
@@ -400,7 +400,6 @@ class index extends Component {
                   }
                   }
                   initCallback={defaultPollutantCode => {
-                    console.log("123123123123")
                     this.getPageData(this.props.defaultPollutantCode || defaultPollutantCode);
                   }}
                 // defaultValue={selectpollutantTypeCode}
@@ -553,7 +552,7 @@ class index extends Component {
                     })
                   }
                 </Select>
-                <Checkbox.Group value={stopStatus} style={{ width: 180, textAlign: 'center' }} onChange={(value) => {
+                {/* <Checkbox.Group value={stopStatus} style={{ width: 180, textAlign: 'center' }} onChange={(value) => {
                   console.log("value=", value)
                   if (!value.length) {
                     message.error("至少勾选一个！");
@@ -565,7 +564,7 @@ class index extends Component {
                 }}>
                   <Checkbox value="0">生产</Checkbox>
                   <Checkbox value="1">停运</Checkbox>
-                </Checkbox.Group>
+                </Checkbox.Group> */}
               </Row>
             </>
           }
@@ -587,7 +586,23 @@ class index extends Component {
                   </CheckableTag>
                 })
               }
-
+              {/* <CheckableTag
+                style={{ backgroundColor: !stopStatus.includes('0') ? "transparent" : "#40474e", padding: "2px 10px", cursor: 'pointer', borderRadius: 0, marginRight: 0 }}
+                // checked={!stopStatus.includes('0')}
+                onChange={checked => {
+                  this.setState({
+                    stopStatus: stopStatus.length === 2 ? ['1'] : ['0', '1']
+                  }, () => {
+                    this.getRealTimeDataView()
+                  })
+                }}
+              >
+                <i style={{
+                  backgroundColor: '#40474e', width: 4, height: 4, display: !stopStatus.includes('0') ? 'inline-block' : "none",
+                  borderRadius: "50%", margin: "0 4px 4px 0",
+                }}></i>
+                <span style={{ fontSize: 14, color: !stopStatus.includes('0') ? "#40474e" : "#fff", fontWeight: "bold" }}>停运</span>
+              </CheckableTag> */}
             </div>
           }
         >

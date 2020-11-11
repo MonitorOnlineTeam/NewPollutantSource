@@ -164,7 +164,7 @@ class RegionDetails extends PureComponent {
     let beginTime = queryCondition.dataType === "HourData" ? moment(queryCondition.beginTime).format("YYYY-MM-DD HH时") : moment(queryCondition.beginTime).format("YYYY-MM-DD")
     let endTime = queryCondition.dataType === "HourData" ? moment(queryCondition.endTime).format("YYYY-MM-DD HH时") : moment(queryCondition.endTime).format("YYYY-MM-DD")
     return (
-      <BreadcrumbWrapper title="数据异常报警响应率详情">
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="数据异常报警响应率详情">
         <Card>
           <Row style={{ fontWeight: "bold", marginBottom: 20 }}>
             {`${queryCondition.RegionName}${beginTime}至${endTime}数据异常报警响应情况`}
@@ -185,7 +185,11 @@ class RegionDetails extends PureComponent {
             <Button style={{ marginRight: '5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
-            <Button onClick={() => router.push("/Intelligentanalysis/dataAlarm/abnormal")}>
+            <Button onClick={() => {
+              this.props.onBack ? this.props.onBack() :
+                router.push("/Intelligentanalysis/dataAlarm/abnormal")
+            }}
+            >
               <Icon type="rollback" />
               返回
             </Button>

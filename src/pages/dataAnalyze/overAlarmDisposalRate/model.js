@@ -2,7 +2,7 @@
  * @Description:超标报警处置率
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:57:56
- * @LastEditTime: 2020-10-27 17:03:17
+ * @LastEditTime: 2020-11-10 18:24:45
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/model.js
  */
 import Model from '@/utils/model';
@@ -86,6 +86,9 @@ export default Model.extend({
     *getAlarmManagementRate({ payload }, { call, put, update, select }) {
       const { RegionCode } = yield select(state => state.overAlarmDisposalRate);
       const result = yield call(services.getAlarmManagementRate, { ...payload });
+      if (payload.RegionCode != '' && result.Datas.data.length > 0) {
+        result.Datas.data[result.Datas.data.length - 1]['regionCode'] = payload.RegionCode;
+      }
       if (result.IsSuccess) {
         yield update({
           alarmManagementRateDataSource: result.Datas.data,
