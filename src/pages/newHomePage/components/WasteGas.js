@@ -53,7 +53,7 @@ const pageUrl = {
   overWasteGasList: home.overWasteGasList,
   alarmResponseList: home.alarmResponseList,
   alarmResponseLoading: home.alarmResponseLoading,
-  gasOverListPar:home.gasOverListPar
+  gasOverListPar: home.gasOverListPar
 }))
 @Form.create()
 export default class Index extends Component {
@@ -61,16 +61,16 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-        gasOverListPar: {
-          PollutantType: "2",
-          BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
-          EndTime: moment().format('YYYY-MM-DD 23:59:59'),
-          pollutantCode: '01',
-          DataType: 'HourData'
-        },
-        OverVisible:false,
-        gasAlarmVisible:false,
-        gasExceedVisible:false
+      gasOverListPar: {
+        PollutantType: "2",
+        BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
+        EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+        pollutantCode: '01',
+        DataType: 'HourData'
+      },
+      OverVisible: false,
+      gasAlarmVisible: false,
+      gasExceedVisible: false
 
     }
   }
@@ -78,13 +78,13 @@ export default class Index extends Component {
 
     this.initData()
   }
-  
+
   componentDidUpdate() {
 
   }
-  overWasteGas=()=>{
-    this.setState({gasExceedVisible:true})
-   }
+  overWasteGas = () => {
+    this.setState({ gasExceedVisible: true })
+  }
   initData = () => {
     const { dataQueryPar, dispatch } = this.props;
     let pointStatusPar = { ...dataQueryPar, PollutantType: 2 };
@@ -106,7 +106,7 @@ export default class Index extends Component {
     const { gasOverListPar } = this.state;
 
     let parData = { ...gasOverListPar, DataType: e.target.value }
-     
+
     this.setState({ gasOverListPar: parData }, () => {
       this.getTableData(parData);
     })
@@ -126,7 +126,7 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{cursor:'pointer'}} onClick={this.overWasteGas}>近七日超标废气监测点</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>近七日超标废气监测点</span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>
@@ -209,11 +209,11 @@ export default class Index extends Component {
 
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
-    if(type==1){
+    if (type == 1) {
       this.setState({
         gasAlarmVisible: true
-      }) 
-    }else{
+      })
+    } else {
       this.setState({
         clicktStatus: type,
         stopStatus: stopStatus,
@@ -233,7 +233,7 @@ export default class Index extends Component {
       alarmResponseLoading,
     } = this.props;
 
-    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey,gasAlarmVisible,pollutantType,gasOverListPar,gasExceedVisible } = this.state;
+    const { clicktStatus, stopStatus, visible_WJQ, ECXYLTime, currentTabKey, gasAlarmVisible, pollutantType, gasOverListPar, gasExceedVisible } = this.state;
 
     return (
       <div style={{ width: '100%' }} className={`${styles.wasteWaterPoint} ${styles.wasteGasPoint}`}  >
@@ -247,7 +247,7 @@ export default class Index extends Component {
                   <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span onClick={() => this.onPointStatusClick(2)} style={{ background: '#f0565d' }} className={styles.colorBlock}>{wasteGasStatusList.overCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{wasteGasStatusList.unLine}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)} style={{ background: '#f5a86a' }} className={styles.colorBlock}>{wasteGasStatusList.exceptionCount}</span></Row></li>
-                  <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span onClick={() => this.onPointStatusClick(undefined, "1")} style={{ background: '#40474e' }} className={styles.colorBlock}>{wasteGasStatusList.stopCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span onClick={() => this.onPointStatusClick(4)} style={{ background: '#40474e' }} className={styles.colorBlock}>{wasteGasStatusList.stopCount}</span></Row></li>
                 </ul>
               </Skeleton>
             </Card>
@@ -260,10 +260,10 @@ export default class Index extends Component {
             </Card>
           </Col>
           <Col span={6}>
-           
+
 
             <AlarmCard />
-              {/* <Skeleton loading={alarmResponseLoading} active paragraph={{ rows: 5 }}>
+            {/* <Skeleton loading={alarmResponseLoading} active paragraph={{ rows: 5 }}>
                 <Row type='flex' align='middle' justify='space-between'>
                   <Col span={8} align='middle'>
                     <ReactEcharts
@@ -313,19 +313,19 @@ export default class Index extends Component {
                   </Col>
                 </Row>
               </Skeleton> */}
-           
+
           </Col>
         </Row>
         {/**超标报警*/}
-        {gasAlarmVisible? <ExceedDataAlarm
-           dateTime={[moment().subtract(1, "hour"),
-               moment()]} alarmType={pollutantType}  alarmVisible={gasAlarmVisible} alarmCancle={()=>{
-                    this.setState({gasAlarmVisible:false});
-                }}/>:null}
-       {/**近七日废气超标监测点*/}
-        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(),moment()]} exceedVisible={gasExceedVisible} exceedDataType={gasOverListPar.DataType=='HourData' ? 'Hour' : 'Day'}  exceedPollutant={gasOverListPar.pollutantCode} exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
-              this.setState({ gasExceedVisible: false });
-            }} /> : null}
+        {gasAlarmVisible ? <ExceedDataAlarm
+          dateTime={[moment().subtract(1, "hour"),
+          moment()]} alarmType={pollutantType} alarmVisible={gasAlarmVisible} alarmCancle={() => {
+            this.setState({ gasAlarmVisible: false });
+          }} /> : null}
+        {/**近七日废气超标监测点*/}
+        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(), moment()]} exceedVisible={gasExceedVisible} exceedDataType={gasOverListPar.DataType == 'HourData' ? 'Hour' : 'Day'} exceedPollutant={gasOverListPar.pollutantCode} exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
+          this.setState({ gasExceedVisible: false });
+        }} /> : null}
         {
           visible_WJQ && <DetailsModal_WJQ time={ECXYLTime} status={clicktStatus} stopStatus={stopStatus} defaultPollutantCode={2} onCancel={() => {
             this.setState({
