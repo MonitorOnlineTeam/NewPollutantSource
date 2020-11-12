@@ -444,7 +444,7 @@ export default class EntTransmissionEfficiency extends Component {
                 // showSizeChanger: true,
                 // showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
+                // total: this.props.total,
                 defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,

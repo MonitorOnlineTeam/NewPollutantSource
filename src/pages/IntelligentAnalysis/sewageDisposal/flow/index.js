@@ -70,8 +70,8 @@ class index extends PureComponent {
         type: pageUrl.ExportSewageFlowList,
         payload: {
           EntCode: this.state.pollutantValue,
-          BeginTime: moment(this.state.time[0]),
-          EndTime: moment(this.state.time[1]),
+          BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+          EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
         }
       })

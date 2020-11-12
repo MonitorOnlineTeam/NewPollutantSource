@@ -69,7 +69,7 @@ class index extends PureComponent {
             visible: false,
             visibleMoni: false,
             visibleEnt:false,
-            time: [moment().add(-24, "hour"), moment()],
+            time: [moment().add(-90, "day"), moment()],
             dataType: "Hour",
             entType:'1',
             pollutionWaterList:[],
@@ -136,11 +136,15 @@ class index extends PureComponent {
                     pollutantList.push({PollutantCode:item.PollutantCode})
                     selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode})
                 })
-                
-                this.setState({
-                    selectPollution:selectPollution
-                })
                 const { entType, dataType, time } = this.state
+                this.setState({
+                    selectPollution:selectPollution,
+                    PollutantList:pollutantList,
+                    BeginTime:moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+                    DataType:dataType == 'Hour'?'HourData':'DayData',
+                    EndTime:moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
+                    PollutantTypeCode:entType
+                })
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
                     payload: {
@@ -478,6 +482,7 @@ class index extends PureComponent {
             visible:true,
            
         })
+        console.log(PollutantList)
         let arr = []
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
@@ -566,6 +571,7 @@ class index extends PureComponent {
         }
         const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode} = this.state
         let arr = []
+        console.log(PollutantList)
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
             {

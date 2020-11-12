@@ -146,11 +146,14 @@ class index extends PureComponent {
                 
                 this.setState({
                     selectPollution:selectPollution,
-                    dataType:exceedDataType,
                     pollutant:exceedPollutant,
-                    entType:exceedType
+                    entType:exceedType,
+                    PollutantTypeCode:exceedType,
+                    BeginTime:moment(exceedTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                    EndTime:moment(exceedTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                    DataType:exceedDataType== 'Hour' ? 'HourData' : 'DayData',
+                    PollutantList:pollutantList
                 })
-                console.log(this.state.pollutant)
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
                     payload: {
@@ -171,7 +174,6 @@ class index extends PureComponent {
         const { PollutantByType } = this.props
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(values)
           if (!err) {
             let pollutionData = []
             let selectPollution = []
@@ -496,7 +498,6 @@ class index extends PureComponent {
                 return arr.push(item)
             }
         })
-
         let modalSelectPollution  = []
         selectPollution.map(item=>{
             if(item.PollutantCode == arr[0].PollutantCode)
@@ -558,7 +559,6 @@ class index extends PureComponent {
     }
     //超标次数弹框
     exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
-        console.log(EntCode)
         if(flag)
         {
             this.setState({
@@ -1267,7 +1267,6 @@ class index extends PureComponent {
             columns.push(addColumns)
         })
 
-        console.log(columns)
         let widthArr = []
         columns.map(x=>{
             if(x.width != undefined)
@@ -1481,7 +1480,6 @@ class index extends PureComponent {
     //超标次数按钮分页
     ExButtonCountHandlePageChange=(PageIndex, PageSize)=>{
         const {AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime ,modalPollutantList,enterpriseValue,modalregionCode,pagePollutantType} = this.state
-        console.log(modalregionCode)
       this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{

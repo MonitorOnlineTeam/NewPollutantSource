@@ -99,11 +99,11 @@ class index extends PureComponent {
     }
     // 导出
     EntexportReport = () => {
-        const {outletValue} = this.state
+        const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
-                RegionCode:this.state.regionCode=='0'?'': this.state.regionCode,
+                RegionCode:this.state.regionCode=='0'?regionValue==undefined?'':regionValue: this.state.regionCode,
                 HasData: this.state.hasCode,
                 EntCode: '',
                 EntType: 1,
@@ -113,11 +113,11 @@ class index extends PureComponent {
     }
     // 导出
     PointexportReport = () => {
-        const {outletValue} = this.state
+        const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
-                RegionCode:this.state.regionCode=='0'?'': this.state.regionCode,
+                RegionCode:this.state.regionCode=='0'?regionValue==undefined?'':regionValue: this.state.regionCode,
                 HasData: this.state.hasCode,
                 EntCode: '1',
                 EntType: 1,

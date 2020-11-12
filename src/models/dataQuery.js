@@ -154,7 +154,7 @@ export default Model.extend({
           return item != '风向';
         })
         .toString();
-
+debugger;
       const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
         if (item !== 'a01008') {
@@ -495,7 +495,20 @@ export default Model.extend({
         }
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : '';
+          let unit = item.Unit ? `(${item.Unit})` : '';
+          if( _historyparams.datatype=="realtime")
+          {
+            if(item.PollutantCode=="b01")
+            {
+               unit="(L/s)";
+            }
+            else if(item.PollutantCode=="b02")
+            {
+              unit="(m³/s)";
+            }
+          }
+        
+        
           pollutantcols = pollutantcols.concat({
             title: (
               <>
@@ -583,7 +596,19 @@ export default Model.extend({
         columns = columns.concat(pollutantcols);
       } else {
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : '';
+          let unit = item.Unit ? `(${item.Unit})` : '';
+          if( _historyparams.datatype=="realtime")
+          {
+            if(item.PollutantCode=="b01")
+            {
+               unit="(L/s)";
+            }
+            else if(item.PollutantCode=="b02")
+            {
+              unit="(m³/s)";
+            }
+          }
+          debugger;
           pollutantcols = pollutantcols.concat({
             title: (
               <>

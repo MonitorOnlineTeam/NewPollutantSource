@@ -107,23 +107,27 @@ class AddExceptionModal extends PureComponent {
     const props = {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
+        let fileList = info.fileList;
         if (info.file.status === 'done') {
-          // this.props.form.setFieldsValue({ Attachments: cuid })
+          this.props.form.setFieldsValue({ Attachments: cuid })
+          info.fileList[info.fileList.length - 1].url = "/upload/" + info.fileList[info.fileList.length - 1].response.Datas
+          delete info.fileList[info.fileList.length - 1].thumbUrl
         } else if (info.file.status === 'error') {
           message.error('上传文件失败！')
         }
         this.setState({
           fileList: info.fileList
+        }, () => {
+          if (!info.fileList.length) {
+            this.props.form.setFieldsValue({ Attachments: [] })
+          }
         })
-        if (!info.fileList.length) {
-          this.props.form.setFieldsValue({ Attachments: [] })
-        }
       },
       onRemove: (file) => {
         this.props.dispatch({
           type: "autoForm/deleteAttach",
           payload: {
-            Guid: file.uid,
+            Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
           }
         })
       },
@@ -134,7 +138,6 @@ class AddExceptionModal extends PureComponent {
         FileActualType: '0',
       },
     };
-    console.log("fileList=", fileList)
     return (
       <Modal
         title={id ? "编辑" : "添加"}
@@ -244,12 +247,14 @@ class AddExceptionModal extends PureComponent {
                     }
                   ],
                 })(
-                  <Upload fileList={this.state.fileList} {...props}>
-                    <div>
-                      <Icon type="plus" />
-                      <div className="ant-upload-text">文件上传</div>
-                    </div>
-                  </Upload>
+                  <>
+                    <Upload fileList={this.state.fileList} {...props}>
+                      <div>
+                        <Icon type="plus" />
+                        <div className="ant-upload-text">文件上传</div>
+                      </div>
+                    </Upload>
+                  </>
                 )}
               </FormItem>
             </Col>

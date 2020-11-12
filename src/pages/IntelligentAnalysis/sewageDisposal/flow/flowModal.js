@@ -4,7 +4,7 @@
  * 创建时间：2020.10.10
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs ,Icon} from 'antd'
+import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs ,Icon ,Modal} from 'antd'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -36,8 +36,7 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      defalutPollutantType: props.match.params.type,
-      pollutantValue: [],
+      pollutantValue: '',
       time: [moment().add(-24, "hour"), moment()],
       dataType: "Hour",
       showType: "chart",
@@ -49,6 +48,7 @@ class index extends PureComponent {
   }
 
   initData = () => {
+    const {flowTime,flowEntCode} = this.props
     this.props.dispatch({
       //获取企业列表
       type: 'flowanalysisModel/getEntByRegion',
@@ -57,8 +57,17 @@ class index extends PureComponent {
     this.props.dispatch({
         type:pageUrl.GetFlowList,
         payload:{
-
+          EntCode: flowEntCode,
+          DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
+          BeginTime: moment(flowTime[0]).format("YYYY-MM-DD HH:mm:ss"),
+          EndTime: moment(flowTime[1]).format("YYYY-MM-DD HH:mm:ss"),
+          PageSize: 20,
+          PageIndex: 1,
         }
+    })
+    this.setState({
+      time:flowTime,
+      pollutantValue:flowEntCode
     })
 
   };
@@ -70,8 +79,8 @@ class index extends PureComponent {
         type: pageUrl.ExportSewageFlowList,
         payload: {
           EntCode: this.state.pollutantValue,
-          BeginTime: moment(this.state.time[0]),
-          EndTime: moment(this.state.time[1]),
+          BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+          EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
         }
       })
@@ -118,7 +127,7 @@ class index extends PureComponent {
   };
   cardTitle = () => {
     const { pollutantValue, time, dataType, format } = this.state;
-
+    const {flowTime,flowEntCode} = this.props
     return (
       <>
         <Select
@@ -126,6 +135,7 @@ class index extends PureComponent {
           showSearch
           style={{ width: 200, marginLeft: 10,marginRight: 10}}
           placeholder="污水处理厂列表"
+          defaultValue={flowEntCode}
           maxTagCount={2}
           maxTagTextLength={5}
           maxTagPlaceholder="..."
@@ -156,7 +166,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                   </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} callback={
+        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={flowTime} callback={
             (dates, dataType)=>{
                 this.setState({
                     time:dates

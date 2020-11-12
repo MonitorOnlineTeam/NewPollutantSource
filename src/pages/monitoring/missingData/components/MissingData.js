@@ -291,7 +291,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="数据类型"
                     onChange={this._handleDateTypeChange}
                     value={dataType}
-                    style={{ width: 150 }}
+                    style={{ width: 181 }}
                   >  
                  <Option key='0' value='HourData'>小时</Option>
                  <Option key='1' value='DayData'> 日均</Option>
@@ -309,7 +309,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="行政区"
                     onChange={this.changeRegion}
                     value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 150 }}
+                    style={{ width: 181 }}
                   >
                     {this.regchildren()}
                   </Select>
@@ -335,7 +335,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="关注程度"
                     onChange={this.changeAttent}
                     value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 150 }}
+                    style={{ width: 181 }}
                   >
                     {this.attentchildren()}
                   </Select>
@@ -347,7 +347,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="企业类型"
                     onChange={this.typeChange}
                     value={PollutantType?PollutantType:undefined}
-                    style={{ width: 150 }}
+                    style={{ width: 181 }}
                   >
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
