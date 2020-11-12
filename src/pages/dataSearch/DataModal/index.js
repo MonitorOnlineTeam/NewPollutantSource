@@ -31,8 +31,8 @@ class index extends PureComponent {
         dateTime:[moment().add(-48, "hour"), moment()],
         exceedType:'',
         exceedDataType:'Hour',
-        exceedPollutant:'zs01',  //101  zs01
-        exceedTime:[moment().add(-7, "day"), moment()],
+        exceedPollutant:'101',  //101  zs01
+        exceedTime:[moment().add(-90, "day"), moment()],
         flowVisible:false,
         flowTime:[moment().add(-30, "day"), moment()],
         flowEntCode:'00557cc5-53d5-4bd2-81d5-1b81deba7018',
@@ -107,7 +107,7 @@ class index extends PureComponent {
             }
             className="contentContainer"
           >
-            {/* 实时数据
+            {/* 超标报警
 
                 参数:
                 dateTime  时间参数
