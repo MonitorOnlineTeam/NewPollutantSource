@@ -21,15 +21,15 @@ export default Model.extend({
     exloading: false,
     loading: false,
     queryPar: {
-      beginTime: moment()
+      BeginTime: moment()
         .subtract(1, 'day')
         .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
       PollutantType:'',
-      dataType:'HourData',
+      DataType:'HourData',
       EntType:''
     },
     tableDatas: [],

@@ -55,7 +55,6 @@ export default Model.extend({
   effects: {
     *getEmissionsTrendList({ payload }, { call, put, update, select }) {
       //列表
-
       yield update({ loading:true }); 
       const response = yield call(GetEmissionsTrendList, { ...payload });
       if (response.IsSuccess) {
