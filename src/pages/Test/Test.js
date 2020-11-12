@@ -35,7 +35,7 @@ class Test extends PureComponent {
       if (!this.WebControl) this.WebControl = window.WebControl;
       return Promise.resolve();
     } else {
-      return loader('/js/jsWebControl.js')
+      return loader('/js/jsWebControl.js', 'WebControl')
         .then(() => {
           this.WebControl = window.WebControl;
           this.initPlugin();
@@ -52,39 +52,41 @@ class Test extends PureComponent {
 
   // 创建播放实例
   initPlugin = () => {
-    this.oWebControl = new WebControl({
+    console.log(" window.WebControl=", window.WebControl)
+    this.oWebControl = new window.WebControl({
       szPluginContainer: "playWnd",                       // 指定容器id
       iServicePortStart: 15900,                           // 指定起止端口号，建议使用该值
       iServicePortEnd: 15909,
       szClassId: "23BF3B0A-2C56-4D97-9C03-0CB103AA8F11",   // 用于IE10使用ActiveX的clsid
-      cbConnectSuccess: function () {                     // 创建WebControl实例成功											
+      cbConnectSuccess: () => {
+        console.log("this.oWebControl=",this.oWebControl)                     // 创建WebControl实例成功											
         this.oWebControl.JS_StartService("window", {         // WebControl实例创建成功后需要启动服务
           dllPath: "./VideoPluginConnect.dll"         // 值"./VideoPluginConnect.dll"写死 
-        }).then(function () {                           // 启动插件服务成功
+        }).then(() => {                           // 启动插件服务成功
           this.oWebControl.JS_SetWindowControlCallback({   // 设置消息回调
-            cbIntegrationCallBack: cbIntegrationCallBack
+            // cbIntegrationCallBack: this.cbIntegrationCallBack()
           });
 
-          this.oWebControl.JS_CreateWnd("playWnd", 1000, 600).then(function () { //JS_CreateWnd创建视频播放窗口，宽高可设定
-            init();  // 创建播放实例成功后初始化
+          this.oWebControl.JS_CreateWnd("playWnd", 1000, 600).then(() => { //JS_CreateWnd创建视频播放窗口，宽高可设定
+            this.init();  // 创建播放实例成功后初始化
           });
         }, function () { // 启动插件服务失败
         });
       },
-      cbConnectError: function () { // 创建WebControl实例失败
+      cbConnectError: () => { // 创建WebControl实例失败
         this.oWebControl = null;
         $("#playWnd").html("插件未启动，正在尝试启动，请稍候...");
-        WebControl.JS_WakeUp("VideoWebPlugin://"); // 程序未启动时执行error函数，采用wakeup来启动程序
+        window.WebControl.JS_WakeUp("VideoWebPlugin://"); // 程序未启动时执行error函数，采用wakeup来启动程序
         this.initCount++;
         if (this.initCount < 3) {
-          setTimeout(function () {
+          setTimeout(() => {
             initPlugin();
           }, 3000)
         } else {
           $("#playWnd").html("插件启动失败，请检查插件是否安装！");
         }
       },
-      cbConnectClose: function (bNormalClose) {
+      cbConnectClose: (bNormalClose) => {
         // 异常断开：bNormalClose = false
         // JS_Disconnect正常断开：bNormalClose = true	
         console.log("cbConnectClose");
@@ -95,11 +97,11 @@ class Test extends PureComponent {
 
   //初始化
   init = () => {
-    getPubKey(function () {
+    this.getPubKey(() => {
       ////////////////////////////////// 请自行修改以下变量值	////////////////////////////////////		
-      var appkey = "28730366";                           //综合安防管理平台提供的appkey，必填
-      var secret = setEncrypt("HSZkCJpSJ7gSUYrO6wVi");   //综合安防管理平台提供的secret，必填
-      var ip = "10.19.132.75";                           //综合安防管理平台IP地址，必填
+      var appkey = "25286180";                           //综合安防管理平台提供的appkey，必填
+      var secret = this.setEncrypt("uiLDe0abqlg6Txjmf8Sc");   //综合安防管理平台提供的secret，必填
+      var ip = "172.16.12.234";                           //综合安防管理平台IP地址，必填
       var playMode = 0;                                  //初始播放模式：0-预览，1-回放
       var port = 443;                                    //综合安防管理平台端口，若启用HTTPS协议，默认443
       var snapDir = "D:\\SnapDir";                       //抓图存储路径
@@ -129,8 +131,18 @@ class Test extends PureComponent {
           showSmart: showSmart,                      //是否显示智能信息
           buttonIDs: buttonIDs                       //自定义工具条按钮
         })
-      }).then(function (oData) {
+      }).then((oData) => {
         this.oWebControl.JS_Resize(1000, 600);  // 初始化后resize一次，规避firefox下首次显示窗口后插件窗口未与DIV窗口重合问题
+        this.oWebControl.JS_RequestInterface({
+          funcName: "startPreview",
+          argument: JSON.stringify({
+              cameraIndexCode:'18507478f7cf4c2883a75c030d59b847',                //监控点编号
+              streamMode: 0,                         //主子码流标识
+              transMode: 1,                           //传输协议
+              gpuMode: 0,                               //是否开启GPU硬解
+              wndId:-1                                     //可指定播放窗口
+          })
+      })
       });
     });
   }
@@ -142,7 +154,7 @@ class Test extends PureComponent {
       argument: JSON.stringify({
         keyLength: 1024
       })
-    }).then(function (oData) {
+    }).then((oData) => {
       if (oData.responseMsg.data) {
         this.pubKey = oData.responseMsg.data;
         callback()
@@ -153,7 +165,7 @@ class Test extends PureComponent {
   //RSA加密
   setEncrypt = (value) => {
     var encrypt = new this.JSEncrypt();
-    encrypt.setPublicKey(pubKey);
+    encrypt.setPublicKey(this.pubKey);
     return encrypt.encrypt(value);
   }
 
