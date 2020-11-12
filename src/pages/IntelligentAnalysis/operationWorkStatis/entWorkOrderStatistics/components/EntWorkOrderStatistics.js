@@ -47,6 +47,7 @@ class EntWorkOrderStatistics extends PureComponent {
             BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
             EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
           }
+          if(query.RegionCode == 'all') query.RegionCode = '';
           return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
                    {text}
                </Link>
