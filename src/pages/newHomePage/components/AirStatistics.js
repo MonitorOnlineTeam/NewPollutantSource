@@ -378,7 +378,7 @@ export default class Index extends Component {
         y:'center',
         data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
         formatter: function (name) {
-          return `{title|${name}}{shu||}{rate|${objData[name].rate}.142%}{value|${objData[name].value}个}`
+          return `{title|${name}}{shu||}{rate|${objData[name].rate}%}{value|${objData[name].value}个}`
         },
         textStyle: {
           rich: {
