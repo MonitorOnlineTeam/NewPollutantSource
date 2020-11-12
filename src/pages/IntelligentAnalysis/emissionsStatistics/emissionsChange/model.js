@@ -18,21 +18,22 @@ export default Model.extend({
   namespace: 'emissionsChange',
   state: {
     exloading: false,
-    loading: false,
+    loading: true,
     queryPar: {
+      EntCode:'',
       DGIMN:'',
-      RegionCode: "",
-      EntCode: "",
-      ImportantType: "",
-      PollutantType: "",
+      PollutantList:[],
+      PollutantType: "1",
       AttentionCode: "",
       beginTime: moment()
       .subtract(1, 'day')
-      .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      DataType: "",
-      DGIMN:'',
-      PollutantList:[]
+      .format('YYYY-MM-DD HH:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
+      DataType: "HourData",
+      
+    },
+    conditionQueryPar:{
+
     },
     pointName:'COD',
     tableDatas: [],
@@ -54,7 +55,6 @@ export default Model.extend({
   effects: {
     *getEmissionsTrendList({ payload }, { call, put, update, select }) {
       //列表
-
       yield update({ loading:true }); 
       const response = yield call(GetEmissionsTrendList, { ...payload });
       if (response.IsSuccess) {
@@ -87,13 +87,21 @@ export default Model.extend({
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
         if(parmarType==='RegionCode'){
-          yield update({ EntList: response.Datas.EntList,PointList:[],PollutantList:[], queryPar:{...queryPar,EntCode:'',DGIMN:'',PollutantList:[]} });
+          yield update({ EntList: response.Datas.EntList, queryPar:{...queryPar,EntCode:response.Datas.EntList.length>0?response.Datas.EntList[0][0].EntCode:"",DGIMN:'',PollutantList:[]} });
+          callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
         }
         if(parmarType==='EntCode'){
-          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:'',PollutantList:[]}});
+          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN:"",PollutantList:[]}});
+           callback(response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN :'')
         }
         if( parmarType==='DGIMN'){
-          yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:[]}});
+          if (response.Datas.PollutantList.length > 0) {
+            const selecePoll =  response.Datas.PollutantList.map(item=>{
+              return item.PollutantCode
+            })
+            yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:selecePoll}});
+             callback(response.Datas.PollutantList)
+          }
         }
       }
     },
