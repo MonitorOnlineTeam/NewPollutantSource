@@ -16,6 +16,7 @@ import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 import { downloadFile } from '@/utils/utils';
+import FileDown from '@/components/AttachmentView/index'
 import { compose } from 'redux';
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -115,15 +116,15 @@ class exceedDataAlarmModal extends PureComponent {
         }).then(()=>{
             if(this.props.pollutantCodeList.length > 0)
             {
-                const {outletValue,dataType,time} = this.state
+                const {dataType} = this.state
                 const {dateTime,alarmType}= this.props
-                console.log(dateTime)
+                console.log(alarmType)
                 this.props.dispatch({
                     type: pageUrl.GetAlarmVerifyRate,
                     payload: {
                         RegionCode: '',
                         attentionCode: '',
-                        PollutantType: alarmType,
+                        PollutantType: alarmType == ''?'1':alarmType,
                         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
                         BeginTime: dateTime[0],
                         EndTime: dateTime[1],
@@ -133,7 +134,9 @@ class exceedDataAlarmModal extends PureComponent {
                     }
                 })
                 this.setState({
-                    pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode)
+                    pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
+                    outletValue:alarmType == ''?'1':alarmType,
+                    time:dateTime
                 })
             }
         })
@@ -298,7 +301,7 @@ class exceedDataAlarmModal extends PureComponent {
                     placeholder="排口类型"
                     maxTagCount={2}
                     maxTagTextLength={5}
-                    defaultValue={alarmType}
+                    defaultValue={alarmType==''?'1':alarmType}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
                         //获取监测因子列表
@@ -580,7 +583,7 @@ class exceedDataAlarmModal extends PureComponent {
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRateDetail,
             payload: {
-                RegionCode: region,
+                RegionCode: region==""?regionValue:region,
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
@@ -1572,7 +1575,7 @@ class exceedDataAlarmModal extends PureComponent {
         ]
         return (
             <>
-                <div id="siteParamsPage" className={style.cardTitle}>
+                <div id="siteParamsPage">
                         
                     <Modal
                         centered
@@ -1581,16 +1584,20 @@ class exceedDataAlarmModal extends PureComponent {
                         footer={null}
                         width={1600}
                         onCancel={alarmCancle}
+                        destroyOnClose
                     >
                         <Card
+                        className={style.title}
+                        //className={style.dataTable}
                         extra={
+                            
                             <>
                                 {
                                     this.cardTitle()
                                 }
                             </>
                         }
-                        className={style.dataTable}
+                        
                     >
 
                             {this.pageContent()}

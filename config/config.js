@@ -862,7 +862,7 @@ export default {
                 {
                   name: 'alarmrecord',
                   path: '/alarmmanager/alarmrecord',
-                  component: './monitoring/alarmrecord/index',
+                  component: './monitoring/alarmrecord/AlarmRecordList',
                 },
                 {
                   name: 'alarmverifyrecord',

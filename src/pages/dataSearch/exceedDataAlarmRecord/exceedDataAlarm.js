@@ -581,7 +581,7 @@ class index extends PureComponent {
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRateDetail,
             payload: {
-                RegionCode: region,
+                RegionCode: region==""?regionValue:region,
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
