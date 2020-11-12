@@ -118,10 +118,10 @@ export default class EntTransmissionEfficiency extends Component {
     types==='ent'? this.columns.splice(1,0,entObj) : null;
 
     this.updateQueryState({
-      // beginTime: moment()
+      // BeginTime: moment()
       //   .subtract(1, 'day')
       //   .format('YYYY-MM-DD HH:mm:ss'),
-      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+      // EndTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       // AttentionCode: '',
       // EntCode: '',
       // RegionCode: '',
@@ -265,15 +265,15 @@ export default class EntTransmissionEfficiency extends Component {
     }
   dateChange=(date,dataType)=>{
       this.updateQueryState({
-        dataType:dataType,
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        DataType:dataType,
+        BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
   render() {
     const {
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: {  BeginTime, EndTime,EntCode, RegionCode,AttentionCode,DataType,PollutantType },
       types,
       tableDatas
     } = this.props;
@@ -290,7 +290,7 @@ export default class EntTransmissionEfficiency extends Component {
               <Select
                     placeholder="数据类型"
                     onChange={this._handleDateTypeChange}
-                    value={dataType}
+                    value={DataType}
                     style={{ width: 181 }}
                   >  
                  <Option key='0' value='HourData'>小时</Option>
@@ -300,7 +300,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
                 <Form.Item>
                   日期查询：
-                  <RangePicker_   allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  <RangePicker_   allowClear={false} onRef={this.onRef1} dataType={DataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
