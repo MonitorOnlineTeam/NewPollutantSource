@@ -17,6 +17,9 @@ import {
   GetAQIList,
   GetAlarmResponse,
   GetSewageFlowList,
+  ExportOverDataRate,//超标率导出
+  ExportDeviceDataRate,//运转率导出
+  ExportExceptionDataRate,//故障率导出
   GetOperationWorkOrderList,
   getAirDayReportData,
   getAlarmDataList,
@@ -36,8 +39,8 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      BeginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+      BeginTime: moment().subtract(7, 'day').format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       EntCode: "",
       RegionCode: "",
       PollutantTypeCode: [],
@@ -47,6 +50,8 @@ export default Model.extend({
     tableDatas: [],
     entTableDatas: [],
     pointTableDatas: [],
+    regionLoading:true,
+    pointLoading:true,
     total: '',
     attentionList: [],
     priseList: [],
@@ -79,6 +84,13 @@ export default Model.extend({
       MonitorTime: "",
       pollutantCode: ""
     },
+    gasOverListPar: {
+      PollutantType: 2,
+      BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      pollutantCode: '01',
+      DataType: 'HourData'
+    },
     overWasteWaterLoading: true,
     overWasteWaterList: [],
     overWasteGasLoading: true,
@@ -93,6 +105,8 @@ export default Model.extend({
     priseList:[],
     getSewageFlowList: [],
     getSewageFlowLoading: true,
+    waterType:[],
+    hover1:false,
     // ---------wjq-----------
     airDayReportData: {
       datas: [
@@ -153,10 +167,7 @@ export default Model.extend({
 
 
       //超标监测点
-      yield update({
-        overWasteWaterLoading: true,
-        overWasteGasLoading: true,
-      });
+      payload.PollutantType == 1?  yield update({ overWasteWaterLoading: true}) :   yield update({   overWasteGasLoading: true}) ;
       const response = yield call(GetOverList, { ...payload });
       if (response.IsSuccess) {
         if (payload.PollutantType == 1) {
@@ -221,8 +232,9 @@ export default Model.extend({
       const response = yield call(GetSewageFlowList, { ...payload });
       if (response.IsSuccess) {
           yield update({
-            getSewageFlowList: response.Datas,
+            getSewageFlowList: response.Datas.data,
             getSewageFlowLoading: false,
+            waterType:response.Datas.waterType
           });
         }else{
 
@@ -232,65 +244,70 @@ export default Model.extend({
 
     *getOverDataRate({ payload }, { call, put, update, select }) {
       //列表  超标率
-
-      yield update({ loading: true });
-      const response = yield call(GetOverDataRate, { ...payload });
       let { ModelType } = yield select(_ => _.home);
+      ModelType == 'All'?  yield update({ loading: true  }):
+       ModelType == 'Region'? yield update({ regionLoading: true  })
+       :yield update({ pointLoading: true  })
+      const response = yield call(GetOverDataRate, { ...payload });
+     
 
       if (response.IsSuccess) {
 
         if (ModelType == 'All') {
           yield update({ tableDatas: response.Datas, loading: false });
         } else if (ModelType == 'Region') {
-          yield update({ entTableDatas: response.Datas, loading: false });
+          yield update({ entTableDatas: response.Datas, regionLoading: false });
         } else {
-          yield update({ pointTableDatas: response.Datas, loading: false });
+          yield update({ pointTableDatas: response.Datas, pointLoading: false });
         }
 
       } else {
-        yield update({ loading: false });
+        yield update({ loading: false, regionLoading: false, pointLoading: false });
       }
     },
     *getDeviceDataRate({ payload }, { call, put, update, select }) {
       //列表  运转率
-
-      yield update({ loading: true });
-      const response = yield call(GetDeviceDataRate, { ...payload });
       let { ModelType } = yield select(_ => _.home);
+      ModelType == 'All'?  yield update({ loading: true  }):
+      ModelType == 'Region'? yield update({ regionLoading: true  })
+      :yield update({ pointLoading: true  });
+      const response = yield call(GetDeviceDataRate, { ...payload });
 
       if (response.IsSuccess) {
 
         if (ModelType == 'All') {
           yield update({ tableDatas: response.Datas, loading: false });
         } else if (ModelType == 'Region') {
-          yield update({ entTableDatas: response.Datas, loading: false });
+          yield update({ entTableDatas: response.Datas, regionLoading: false });
         } else {
-          yield update({ pointTableDatas: response.Datas, loading: false });
+          yield update({ pointTableDatas: response.Datas, pointLoading: false });
         }
 
       } else {
-        yield update({ loading: false });
+        yield update({ loading: false, regionLoading: false, pointLoading: false });
       }
     },
     *getExceptionDataRate({ payload }, { call, put, update, select }) {
       //列表  异常率
 
-      yield update({ loading: true });
-      const response = yield call(GetExceptionDataRate, { ...payload });
       let { ModelType } = yield select(_ => _.home);
+      ModelType == 'All'?  yield update({ loading: true  }):
+      ModelType == 'Region'? yield update({ regionLoading: true  })
+      :yield update({ pointLoading: true  });
+      const response = yield call(GetExceptionDataRate, { ...payload });
 
       if (response.IsSuccess) {
 
         if (ModelType == 'All') {
           yield update({ tableDatas: response.Datas, loading: false });
         } else if (ModelType == 'Region') {
-          yield update({ entTableDatas: response.Datas, loading: false });
+          yield update({ entTableDatas: response.Datas, regionLoading: false });
         } else {
-          yield update({ pointTableDatas: response.Datas, loading: false });
+          yield update({ pointTableDatas: response.Datas, pointLoading: false });
         }
 
       } else {
-        yield update({ loading: false });
+        yield update({ loading: false, regionLoading: false, pointLoading: false });
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -312,10 +329,36 @@ export default Model.extend({
         response.Datas.length>0? callback(response.Datas[0].EntCode) : null
       }
     },
-    *exportSewageHistoryList({ callback, payload }, { call, put, update, select }) {
+    *exportOverDataRate({ callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
-      //导出
-      const response = yield call(ExportSewageHistoryList, { ...payload });
+      //超标率导出
+      const response = yield call(ExportOverDataRate, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        callback(response.Datas);
+        yield update({ exloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exloading: false });
+      }
+    },
+    *exportExceptionDataRate({ callback, payload }, { call, put, update, select }) {
+      yield update({ exloading: true });
+      //故障率导出
+      const response = yield call(ExportExceptionDataRate, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        callback(response.Datas);
+        yield update({ exloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exloading: false });
+      }
+    },
+    *exportDeviceDataRate({ callback, payload }, { call, put, update, select }) {
+      yield update({ exloading: true });
+      //运转率导出
+      const response = yield call(ExportDeviceDataRate, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

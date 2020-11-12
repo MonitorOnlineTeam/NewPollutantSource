@@ -36,6 +36,12 @@ import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
 import ScrollTable from './ScrollTable'
 import DetailsModal_WJQ from "./DetailsModal_WJQ"
+import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
+import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
+
+import EntWorkOrderModal from '@/pages/IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/EntWorkOrderModal'
+
+import AirWorkOrderStatisticsModal from '@/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/AirWorkOrderStatisticsModal'
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -51,6 +57,7 @@ const pageUrl = {
   overWasteWaterList: home.overWasteWaterList,
   workOrderList: home.workOrderList,
   workOrderLoading: home.workOrderLoading,
+  gasOverListPar: home.gasOverListPar
 }))
 @Form.create()
 export default class Index extends Component {
@@ -59,12 +66,17 @@ export default class Index extends Component {
 
     this.state = {
       overListPar: {
-        PollutantType: 1,
+        PollutantType: "1",
         BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'),
         EndTime: moment().format('YYYY-MM-DD 23:59:59'),
         pollutantCode: '011',
         DataType: 'HourData'
-      }
+      },
+      pollutantType: '1',
+      exceedVisible: false,
+      waterAlarmVisible: false,
+      orderModalVisible: false,
+      airWorkOrderVisible: false
     }
 
   }
@@ -82,9 +94,15 @@ export default class Index extends Component {
   initData = () => {
     const { dispatch, dataQueryPar } = this.props;
 
-    let pointStatusPar = { ...dataQueryPar, PollutantType: 1 };
+    let pointStatusPar = { ...dataQueryPar, PollutantType: 1, };
     dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar }, });//监测点状态
-    dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...pointStatusPar }, });//运维工单统计
+    dispatch({
+      type: 'home/getOperationWorkOrderList', payload: {
+        ...pointStatusPar,
+        BeginTime: moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
+        EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      },
+    });//运维工单统计
 
     const { overListPar } = this.state;
 
@@ -111,8 +129,11 @@ export default class Index extends Component {
   }
   tabCallback2 = (value) => {
     const { dispatch, dataQueryPar } = this.props;
-
-    let parData = { ...dataQueryPar, PollutantType: value };
+    this.setState({ pollutantType: value })
+    let parData = {
+      ...dataQueryPar, PollutantType: value, BeginTime: moment().add('day', -30).format('YYYY-MM-DD 00:00:00'),
+      EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+    };
 
     dispatch({ type: 'home/getOperationWorkOrderList', payload: { ...parData }, });//运维工单统计
   }
@@ -142,7 +163,7 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>近七日超标废水监测点</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.overWasteWater}>近七日超标废水监测点</span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>
@@ -164,7 +185,7 @@ export default class Index extends Component {
   }
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>运维工单统计</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.workOrder}>近30日运维工单统计</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
         <TabPane tab="废水" key="1">
         </TabPane>
@@ -176,19 +197,38 @@ export default class Index extends Component {
 
     </Row>
   }
+  workOrder = () => {
+    const { pollutantType } = this.state;
 
+    if (pollutantType == '5') {
+      this.setState({
+        airWorkOrderVisible: true
+      })
+    } else {
+      this.setState({
+        orderModalVisible: true
+      })
+    }
+
+  }
   // 监测点状态点击事件
   onPointStatusClick = (type, stopStatus) => {
-    console.log("1111")
-    this.setState({
-      clicktStatus: type,
-      stopStatus: stopStatus,
-      visible_WJQ: true
-    })
+    if (type == 1) {
+      this.setState({
+        waterAlarmVisible: true
+      })
+    } else {
+      this.setState({
+        clicktStatus: type,
+        stopStatus: stopStatus,
+        visible_WJQ: true
+      })
+    }
   }
 
   getChartData = () => {
     const { workOrderList } = this.props;
+    const { pollutantType } = this.state;
     let color = ['#64b0fd', '#9d6ff1', '#42dab8']
     let option = {
       color: ['#64b0fd', '#9d6ff1', '#42dab8'],
@@ -222,7 +262,7 @@ export default class Index extends Component {
       },
       yAxis: {
         type: 'category',
-        data: ['巡检', '维修维护', '校准', '校验测试'],
+        data: pollutantType == '5' ? ['维修维护', '质控', '巡检'] : ['校验测试', '维修维护', '校准', '巡检'],
         // show:false,//不显示坐标轴线、坐标轴刻度线和坐标轴上的文字
         axisTick: {
           show: false//不显示坐标轴刻度线
@@ -252,7 +292,11 @@ export default class Index extends Component {
               if (params.value === 0) { return "" } else { return params.value }
             }
           },
-          data: [workOrderList.calibrationComplete, workOrderList.calibrationComplete, workOrderList.maintenanceRepairComplete, workOrderList.onSiteInspectionComplete],
+          data: pollutantType == '5' ?
+            [workOrderList.maintenanceRepairComplete, workOrderList.qualityControlComplete, workOrderList.onSiteInspectionComplete]
+            :
+            [workOrderList.verificationTestComplete, workOrderList.maintenanceRepairComplete, workOrderList.calibrationComplete, workOrderList.onSiteInspectionComplete]
+          ,
         },
         {
           name: '未完成',
@@ -271,13 +315,19 @@ export default class Index extends Component {
           },
 
           position: 'right',
-          data: [workOrderList.calibrationUnfinished, workOrderList.calibrationUnfinished, workOrderList.maintenanceRepairUnfinished, workOrderList.onSiteInspectionUnfinished]
+          data: pollutantType == '5' ?
+            [workOrderList.maintenanceRepairUnfinished, workOrderList.qualityControlUnfinished, workOrderList.onSiteInspectionUnfinished]
+            :
+            [workOrderList.verificationTestUnfinished, workOrderList.maintenanceRepairUnfinished, workOrderList.calibrationUnfinished, workOrderList.onSiteInspectionUnfinished]
         },
 
       ]
     };
 
     return option;
+  }
+  overWasteWater = () => {
+    this.setState({ exceedVisible: true })
   }
   render() {
     const {
@@ -286,9 +336,10 @@ export default class Index extends Component {
       overWasteWaterLoading,
       overWasteWaterList,
       workOrderLoading,
+
     } = this.props;
 
-    const { clicktStatus, stopStatus, visible_WJQ } = this.state;
+    const { clicktStatus, stopStatus, visible_WJQ, overListPar, waterAlarmVisible, pollutantType, airWorkOrderVisible, exceedVisible, orderModalVisible } = this.state;
     const { pointStatusList } = this.props;
     return (
       <div style={{ width: '100%' }} className={styles.wasteWaterPoint}  >
@@ -298,11 +349,11 @@ export default class Index extends Component {
             <Card title={this.cardTitle1()} className={styles.wasteWateCard} bordered={false} >
               <Skeleton loading={pointStatusLoading} active paragraph={{ rows: 5 }} >
                 <ul className={styles.listSty}>
-                  <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span style={{ background: '#f25fc7' }} className={styles.colorBlock}>{pointStatusList.alarmCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/chaobiaobaojing.png' />超标报警</div> <span onClick={() => this.onPointStatusClick(1)} style={{ background: '#f25fc7' }} className={styles.colorBlock}>{pointStatusList.alarmCount}</span></Row></li>
                   <li><Row type='flex' justify='space-between'><div><img src='/chaobiao.png' />超标</div> <span onClick={() => this.onPointStatusClick(2)} style={{ background: '#f0565d' }} className={styles.colorBlock}>{pointStatusList.overCount}</span></Row></li>
-                  <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#f5a86a' }} className={styles.colorBlock}>{pointStatusList.unLine}</span></Row></li>
-                  <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{pointStatusList.exceptionCount}</span></Row></li>
-                  <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span onClick={() => this.onPointStatusClick(undefined, "1")} style={{ background: '#40474e' }} className={styles.colorBlock}>{pointStatusList.stopCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/lixian.png' />离线</div> <span onClick={() => this.onPointStatusClick(0)} style={{ background: '#bdc4cc' }} className={styles.colorBlock}>{pointStatusList.unLine}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/guzhang.png' />异常</div> <span onClick={() => this.onPointStatusClick(3)} style={{ background: '#f5a86a' }} className={styles.colorBlock}>{pointStatusList.exceptionCount}</span></Row></li>
+                  <li><Row type='flex' justify='space-between'><div><img src='/tingyun.png' />停运</div> <span onClick={() => this.onPointStatusClick(4)} style={{ background: '#40474e' }} className={styles.colorBlock}>{pointStatusList.stopCount}</span></Row></li>
                 </ul>
               </Skeleton>
             </Card>
@@ -310,7 +361,7 @@ export default class Index extends Component {
           <Col span={12} className={styles.sevenCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={overWasteWaterLoading} active paragraph={{ rows: 5 }}>
-                <ScrollTable type='wasteWater' data={overWasteWaterList} column={['市师', '企业名称', '监测点名称', '最大超标倍数']} />
+                <ScrollTable type='wasteWater' data={overWasteWaterList} column={['师市', '企业名称', '监测点名称', '最大超标倍数']} />
               </Skeleton>
             </Card>
           </Col>
@@ -321,12 +372,29 @@ export default class Index extends Component {
                   option={this.getChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 215 }}
+                  style={{ height: 214 }}
                 />
               </Skeleton>
             </Card>
           </Col>
         </Row>
+        {orderModalVisible ?
+          <EntWorkOrderModal
+            showModal={orderModalVisible}
+            onCloseListener={() => { this.setState({ orderModalVisible: false }) }}
+            pollutantTypeCode={pollutantType}
+          /> : null}
+        {airWorkOrderVisible ? <AirWorkOrderStatisticsModal airWorkOrderVisible={airWorkOrderVisible} airWorkOrderCancelFun={() => { this.setState({ airWorkOrderVisible: false }) }} /> : null}
+        {/**近七日废水超标监测点*/}
+        {exceedVisible ? <ExceedData exceedDataType={overListPar.DataType == 'HourData' ? 'Hour' : 'Day'} exceedPollutant={overListPar.pollutantCode} exceedTime={[moment().add('day', -7).startOf(), moment()]} exceedVisible={exceedVisible} exceedType={overListPar.PollutantType} exceedCancle={() => {
+          this.setState({ exceedVisible: false });
+        }} /> : null}
+        {/**超标报警*/}
+        {waterAlarmVisible ? <ExceedDataAlarm
+          dateTime={[moment().subtract(1, "hour"),
+          moment()]} alarmType={pollutantType} alarmVisible={waterAlarmVisible} alarmCancle={() => {
+            this.setState({ waterAlarmVisible: false });
+          }} /> : null}
         {
           visible_WJQ && <DetailsModal_WJQ status={clicktStatus} stopStatus={stopStatus} defaultPollutantCode={1} onCancel={() => {
             this.setState({

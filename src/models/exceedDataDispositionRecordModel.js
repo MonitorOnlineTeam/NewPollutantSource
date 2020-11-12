@@ -117,7 +117,7 @@ export default Model.extend({
             PollutantCode: payload.PollutantCode,
             Status:payload.Status,
             EntCode:payload.EntCode,
-            PollutantCodeList:payload.PollutantCodeList,
+            VerifyStatus:payload.VerifyStatus,
         }
         const result = yield call(GetAlarmManagementDetail, body, null)
         if (result.IsSuccess) {
@@ -212,7 +212,7 @@ export default Model.extend({
           PollutantCode: payload.PollutantCode,
           Status:payload.Status,
           EntCode:payload.EntCode,
-          PollutantCodeList:payload.PollutantCodeList,
+          VerifyStatus:payload.VerifyStatus,
       }
       const result = yield call(ExportAlarmManagementDetail, body, null)
       if (result.IsSuccess) {

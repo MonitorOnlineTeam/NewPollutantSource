@@ -38,6 +38,7 @@
   :global {
     .ant-card-head .ant-tabs {
       margin-bottom: 0;
+      
     }
 
     .ant-card-head .ant-tabs-bar {
@@ -53,6 +54,7 @@
 
       padding: 10px 5px 8px 5px;
       font-size: 12px;
+      margin: 0 8px 0 0;
     }
   }
 }
@@ -94,6 +96,9 @@
   width: 1px;
   position: absolute;
   right: 24px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 
 .brokenLine {
@@ -167,7 +172,7 @@
     :global{
       .ant-skeleton{
       padding: 0;
-      height: 212px;
+      height: 214px;
     }
    }
   }
@@ -189,10 +194,10 @@
   .alarmCard{
     :global{
       .ant-card-body{
-        padding: 30px 0 40px 0;
+        padding: 30px 0 37px 0;
       } 
       .ant-skeleton{
-        padding-bottom: 0;
+        padding-bottom: 2px;
         height: 12px;
       }
      }

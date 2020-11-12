@@ -107,9 +107,7 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'EntNum',
             align: 'center',
             width:100,
-            render: (text, record) => {
-              return <a onClick={()=>{this.entNumDetail(record)}}>{text}</a>;
-            },
+
             
           },
           {
@@ -118,6 +116,9 @@ export default class EntTransmissionEfficiency extends Component {
             key: 'EntNotNum',
             align: 'center',
             width:150,
+            render: (text, record) => {
+              return <a onClick={()=>{this.entNumDetail(record)}}>{text}</a>;
+            },
           },        
       ]
       },
@@ -160,7 +161,7 @@ export default class EntTransmissionEfficiency extends Component {
             align: 'center',
             width:150,
             render: (text, record) => {
-              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
+              return <a onClick={()=>{this.workNumDetail(record,"0")}}>{text}</a>;
             },
           },        
       ]
@@ -184,7 +185,7 @@ export default class EntTransmissionEfficiency extends Component {
             align: 'center',
             width:150,
             render: (text, record) => {
-              return <a onClick={()=>{this.workNumDetail(record)}}>{text}</a>;
+              return <a onClick={()=>{this.workNumDetail(record,"1")}}>{text}</a>;
             },
           },        
       ]
@@ -381,12 +382,13 @@ export default class EntTransmissionEfficiency extends Component {
     })
   }
 
-  workNumDetail=(row)=>{
+  workNumDetail=(row,type)=>{
     const { dispatch,queryPar } = this.props;
     dispatch({
       type: pageUrl.updateState,
-      payload: { workNumQueryPar: { ...queryPar,ModelType:"TaskNums", RegionCode:row.RegionCode },
-      RegionName:row.Region,},
+      payload: { workNumQueryPar: { ...queryPar,ModelType:"TaskNums", RegionCode:row.RegionCode,TaskType: type },
+      RegionName:row.Region,
+    },
     });
     setTimeout(()=>{
       this.setState({workNumVisible:true})

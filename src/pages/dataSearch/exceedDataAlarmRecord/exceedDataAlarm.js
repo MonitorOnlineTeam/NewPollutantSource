@@ -84,7 +84,7 @@ class index extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
-            exportRegion:''
+            exportRegion:'1'
         };
     }
 
@@ -146,9 +146,9 @@ class index extends PureComponent {
         }).then(()=>{
             if(this.props.AlarmDealTypeList.length > 0)
             {
-                // this.setState({
-                //     AlarmDealTypeList:this.props.AlarmDealTypeList.map(poll=>poll.code)
-                // })
+                this.setState({
+                    AlarmDealTypeList:this.props.AlarmDealTypeList.map(poll=>poll.code)
+                })
             }
         })
 
@@ -158,6 +158,7 @@ class index extends PureComponent {
     // 导出
     exportReport = () => {
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
+        console.log
         if(exportRegion != '1')
         {
             this.props.dispatch({
@@ -362,7 +363,7 @@ class index extends PureComponent {
     }
     //行政区 报警次数
     AlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -388,7 +389,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'',
                 EntCode:'',
-                VerifyStatus:[]
+                VerifyStatus:AlarmDealTypeList
             }
         })
         
@@ -396,7 +397,7 @@ class index extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
         this.setState({
             regVisibleAlready:true,
             regionCode:regionCode,
@@ -422,14 +423,14 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:'',
-                VerifyStatus:[]
+                VerifyStatus:AlarmDealTypeList
             }
         })
         
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -455,14 +456,14 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:'',
-                VerifyStatus:[]
+                VerifyStatus:AlarmDealTypeList
             }
         })
         
     }
     // 企业弹框
     EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
-        const {attentionValue,outletValue,dataType,time,regionCode} = this.state
+        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList} = this.state
 
         let deal = ''
         if(status == '')
@@ -514,7 +515,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:status,
                 EntCode:entCode == undefined?'':entCode,
-                VerifyStatus:[]
+                VerifyStatus:AlarmDealTypeList
             }
         })
         
@@ -686,8 +687,6 @@ class index extends PureComponent {
                         return key = item.key
                     }
                 })
-                console.log(key)
-                console.log(activeKey)
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
@@ -761,7 +760,8 @@ class index extends PureComponent {
         else{
             activeKey = '1'
         }
-        this.setState({ panes, activeKey });
+        let arr = activeKey.split('new')
+        this.setState({ panes, activeKey,exportRegion:arr[0] });
       };
       //切换标签
     onChangeHandle=(activeKey)=>{
@@ -986,7 +986,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                PollutantCodeList:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList
             }
         })
     }
@@ -1007,7 +1007,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                PollutantCodeList:[]
+                VerifyStatus:[]
             }
         })
     }
@@ -1026,7 +1026,7 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                PollutantCodeList:[]
+                VerifyStatus:[]
             }
         })
     }
@@ -1043,7 +1043,8 @@ class index extends PureComponent {
                 EndTime: time[1],
                 PollutantCode: PollutantCode,
                 Status:status,
-                EntCode:entCode
+                EntCode:entCode,
+                VerifyStatus:[]
             }
         })
     }
@@ -1177,7 +1178,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1306,7 +1307,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1426,7 +1427,7 @@ class index extends PureComponent {
                         record.verifyImage.map(item=>{
                             let obj = {
                                 name:item.FileName,
-                                attach:item.FileName
+                                attach:'/upload/'+item.FileName
                             }
                             sourc.push(obj)
                         })
@@ -1560,7 +1561,7 @@ class index extends PureComponent {
                        record.verifyImage.map(item=>{
                            let obj = {
                                name:item.FileName,
-                               attach:item.FileName
+                               attach:'/upload/'+item.FileName
                            }
                            sourc.push(obj)
                        })
@@ -1631,7 +1632,7 @@ class index extends PureComponent {
                                 </Radio.Group>
                                 <div style={{marginTop:10}}>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
-                                    <Checkbox.Group  onChange={this.AlarmDealCheckBoxChange}>
+                                    <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)}  onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
                                                 <Checkbox value={poll.code}>{poll.name}</Checkbox>
@@ -1680,7 +1681,7 @@ class index extends PureComponent {
                                 <Button onClick={this.AlreadyButtonHandleExpor}><Icon type="export" /> 导出</Button>
                                 <div style={{marginTop:10}}>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
-                                    <Checkbox.Group onChange={this.AlarmDealCheckBoxChange}>
+                                    <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
                                                 <Checkbox value={poll.code}>{poll.name}</Checkbox>

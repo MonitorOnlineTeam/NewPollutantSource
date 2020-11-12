@@ -35,6 +35,8 @@ import Link from 'umi/link';
 import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
 import ScrollTable from './ScrollTable'
+import FlowModal from '@/pages/IntelligentAnalysis/sewageDisposal/flow/flowModal'
+
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -49,6 +51,7 @@ const pageUrl = {
   priseList: home.priseList,
   getSewageFlowList: home.getSewageFlowList,
   getSewageFlowLoading: home.getSewageFlowLoading,
+  waterType:home.waterType
 }))
 @Form.create()
 export default class Index extends Component {
@@ -56,7 +59,11 @@ export default class Index extends Component {
     super(props);
 
     this.state = {
-      EntCode:''
+      EntCode:'',
+      dataTypes:'HourData',
+      airTime:moment().add('hour',-1).format('YYYY-MM-DD HH:00:00'),
+      airDate:moment().add('day',-1).format("YYYY-MM-DD"),
+      flowVisible:false
     }
 
   }
@@ -80,9 +87,16 @@ export default class Index extends Component {
       }
 
     });//获取企业列表
-   
+    //  let _this = this;
+    //   this.timer=setInterval(()=>{
+    //       _this.setState({
+    //         airTime:moment().add('hour',-2).format('YYYY-MM-DD HH:mm:ss')
+    //       })
+    // },1000)
   }
-
+ componentWillUnmount(){
+   clearInterval(this.timer)
+ }
   // 获取空气日报统计数据
   getAirDayReportData = () => {
     this.props.dispatch({
@@ -91,18 +105,27 @@ export default class Index extends Component {
         MonitorTime: moment().format("YYYY-MM-DD HH:mm:ss")
       }
     })
+
+    let time = moment().add('hour',-2).format("YYYY-MM-DD 00:00:00");
+    // let time = "2020-11-01 00:00:00";
+    let dataType ='HourData'
+    this.getAQIList(time,dataType);
+   
+  }
+  getAQIList=(time,type)=>{
     this.props.dispatch({
       type: "home/getAQIList",
       payload: {
-        DataType: 'HourData'
+        MonitorTime: time,
+        DataType:type
       }
     })
   }
-
   getLineData=(data)=>{
     let parData ={
       BeginTime:moment().add('day',-30).format('YYYY-MM-DD 00:00:00'),
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
+      DataType:'DayData',
     };
     this.props.dispatch({
       type: "home/getSewageFlowList",
@@ -130,27 +153,31 @@ export default class Index extends Component {
   cardTitle1 = () => {
     return <Row type='flex' justify='space-between'>
       <span style={{ color: '#fff' }}>空气日报统计</span>
-      <span style={{ color: '#fff', fontWeight: 'bold' }}>{moment().format("YYYY-MM-DD")}</span>
+      <span style={{ color: '#fff', fontWeight: 'bold' }}>{moment().add(-1,'days').format("YYYY-MM-DD")}</span>
     </Row>
   }
 
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
+    const {dataTypes,airTime,airDate} = this.state;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>空气质量实时数据</span>
+      <span>{dataTypes=='HourData'? '空气质量实时数据' :'空气质量日数据'}</span>
+      <Row type='flex' align="middle" >
+      <span style={{color:'#666',paddingRight:20}}>{dataTypes=='HourData'? airTime:airDate}</span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback}>
         <TabPane tab="实时" key="HourData">
         </TabPane>
         <TabPane tab="日报" key="DayData">
         </TabPane>
       </Tabs>
+      </Row>
 
     </Row>
   }
 
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span>污水处理厂流量分析</span>
+      <span style={{cursor:'pointer'}} onClick={this.flow}>污水处理厂流量分析</span>
       <Tabs defaultActiveKey="1">
         <TabPane tab="近30天" key="1">
         </TabPane>
@@ -158,19 +185,59 @@ export default class Index extends Component {
 
     </Row>
   }
-
+  flow=()=>{
+    this.setState({
+      flowVisible:true
+    })
+  }
   tabCallback = (value) => {
-    this.props.dispatch({
+  let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
+   
+  if(value == 'HourData'){
+   this.setState({dataTypes:'HourData'})
+  }else{
+    this.setState({dataTypes:'DayData'})
+
+  }
+   
+  this.props.dispatch({
       type: "home/getAQIList",
       payload: {
-        DataType: value
+        MonitorTime: time,
+        DataType:value
       }
     })
   }
 
   getLineChartData = () => {
 
-    const { getSewageFlowList } = this.props;
+    let { getSewageFlowList,waterType } = this.props;
+   
+    let backValue ='',exportValue='', importValue=''
+    waterType&&waterType.length>0&&getSewageFlowList&&getSewageFlowList.length>0?waterType.map(item=>{
+      if(item=='回水口'){
+        backValue = getSewageFlowList.map(item=>{
+          return item.backValue
+       }) 
+      }
+      if(item=='出水口'){
+        exportValue = getSewageFlowList.map(item=>{
+          return item.exportValue
+         })
+      }
+
+      if(item=='进水口'){
+        importValue = getSewageFlowList.map(item=>{
+          return item.importValue
+         })
+      }
+    }):null;
+     
+  
+
+     let MonitorTime = getSewageFlowList.map(item=>{
+      return moment(item.MonitorTime).format("MM.DD")
+     }) 
     let color = ['#64b0fd', '#9d6ff1', '#42dab8']
     let option = {
       color: ['#64b0fd', '#9d6ff1', '#42dab8'],
@@ -178,7 +245,7 @@ export default class Index extends Component {
         trigger: 'axis'
       },
       legend: {
-        data: ['进水口', '回水口', '出水口'],
+        data: waterType&&waterType.length>=0? waterType:[],
         left: 'center',
         bottom: 0,
         icon: 'rect',
@@ -198,7 +265,7 @@ export default class Index extends Component {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        data: MonitorTime,
         axisLine: { //x轴
           lineStyle: {
             color: '#d9d9d9',
@@ -238,21 +305,21 @@ export default class Index extends Component {
         {
           name: '进水口',
           type: 'line',
-          data: [120, 132, 101, 134, 90, 230, 210],
+          data: importValue,
           showSymbol: false,//隐藏所有数据点
           // smooth: true,
         },
         {
           name: '回水口',
           type: 'line',
-          data: [220, 182, 191, 234, 290, 330, 310],
+          data: backValue,
           showSymbol: false,
           // smooth: true,
         },
         {
           name: '出水口',
           type: 'line',
-          data: [150, 232, 201, 154, 190, 330, 410],
+          data: exportValue,
           showSymbol: false,
           // smooth: true,
         },
@@ -263,7 +330,7 @@ export default class Index extends Component {
 
   getPancakeChartData = () => {
     let objData = this.array2obj(this.props.airDayReportData.datas, 'name')
-    console.log("objData-", objData)
+    // console.log("objData-", objData)
     let option = {
       color: ["#4bd075", "#fdd22b", "#f39d16", "#f17170", "#d15695", "#a14458", "#000000"],
       grid: {
@@ -305,8 +372,10 @@ export default class Index extends Component {
         itemWidth: 18,
         itemHeight: 10,
         borderRadius: 0,
+        icon: 'rect',
         right: 10,
-        itemGap: 21,
+        itemGap: 12,
+        y:'center',
         data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
         formatter: function (name) {
           return `{title|${name}}{shu||}{rate|${objData[name].rate}%}{value|${objData[name].value}个}`
@@ -315,7 +384,7 @@ export default class Index extends Component {
           rich: {
             shu: {
               color: '#d2d2d2',
-              padding: [0, 4, 0, 4]
+              padding: [0, 2, 0, 2]
             },
             title: {
               width: 30,
@@ -325,7 +394,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 14, 0, 10]
+              padding: [0, 7, 0, 9]
             },
             value: {
               color: '#000',
@@ -383,7 +452,7 @@ export default class Index extends Component {
     };
   
   changeEnt=(value)=>{
-    this.setState({EntCode:code},()=>{
+    this.setState({EntCode:value},()=>{
       this.getLineData(value)
     })
    
@@ -391,7 +460,7 @@ export default class Index extends Component {
 
   render() {
     const { realTimeAlarmLoading,getAQIList,getAQILoading,airDayReportloading,getSewageFlowLoading} = this.props;
-    const {EntCode } = this.state;
+    const {EntCode,flowVisible } = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.airStatistics}  >
         <Row type='flex' justify='space-between' >
@@ -410,7 +479,7 @@ export default class Index extends Component {
           <Col span={12} className={styles.airTableCard}>
             <Card title={this.cardTitle2()} bordered={false} >
               <Skeleton loading={getAQILoading} paragraph={{ rows: 5   }} active>
-                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','检测点','首要污染物','等级','AQI']}/>
+                <ScrollTable type='airStatistics' data={getAQIList}  column={['大气站','监测点','首要污染物','等级','AQI']}/>
               </Skeleton>
             </Card>
           </Col>
@@ -440,6 +509,9 @@ export default class Index extends Component {
             </Card>
           </Col>
         </Row>
+        {flowVisible ? <FlowModal flowTime={[moment().add(-30, "day").startOf(), moment()]} flowEntCode={EntCode} flowVisible={flowVisible} flowCancle={() => {
+              this.setState({ flowVisible: false });
+            }} /> : null}
       </div>
     );
   }

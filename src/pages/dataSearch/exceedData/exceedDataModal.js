@@ -97,8 +97,9 @@ class index extends PureComponent {
             entCountModalTotle:'',
             entCountModalTotle2:'',
             pagePollutantType:'',
-            exportRegion:''
-
+            exportRegion:'',
+            modalEntCode:'',
+            pollutant:''
         };
     }
 
@@ -107,7 +108,7 @@ class index extends PureComponent {
     }
 
     initData = () => {
-        const {exceedType,exceedTime} = this.props
+        const {exceedDataType,exceedPollutant,exceedTime,exceedType } = this.props
         //获取行政区列表
         this.props.dispatch({
             type: pageUrl.getRegions,
@@ -128,31 +129,37 @@ class index extends PureComponent {
                 type:exceedType
             },
         }).then(()=>{
-            console.log(this.props.PollutantByType)
             if(this.props.PollutantByType.length > 0)
             {
+                
                 let selectPollution = []
                 let pollutantList =[]
                 this.props.PollutantByType.map(item =>{
-                    pollutantList.push({PollutantCode:item.PollutantCode})
-                    selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode})
+                    
+                    if(item.PollutantCode == exceedPollutant)
+                    {
+                        pollutantList.push({PollutantCode:item.PollutantCode})
+                        selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode})
+                    }
+                    
                 })
                 
-                //首页弹框参数
-                //const {exceedType,exceedTime} = this.props
                 this.setState({
-                    selectPollution:selectPollution
+                    selectPollution:selectPollution,
+                    dataType:exceedDataType,
+                    pollutant:exceedPollutant,
+                    entType:exceedType
                 })
-                const {  dataType } = this.state
+                console.log(this.state.pollutant)
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
                     payload: {
                         RegionCode: '',
                         AttentionCode: '',
                         PollutantTypeCode: exceedType,
-                        DataType: dataType == 'Hour'?'HourData':'DayData',
-                        BeginTime: exceedTime[0],
-                        EndTime: exceedTime[1],
+                        DataType: exceedDataType== 'Hour' ? 'HourData' : 'DayData',
+                        BeginTime: moment(exceedTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                        EndTime: moment(exceedTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                         TabType: exceedType,
                         PollutantList: pollutantList
                     }
@@ -164,6 +171,7 @@ class index extends PureComponent {
         const { PollutantByType } = this.props
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            console.log(values)
           if (!err) {
             let pollutionData = []
             let selectPollution = []
@@ -171,7 +179,7 @@ class index extends PureComponent {
                 let obj = {}
                 let Min = null
                 let Max = null
-                if (values[item.PollutantCode] != '') {
+                if (values[item.PollutantCode] != '' &&values[item.PollutantCode].toString() == item.PollutantCode) {
                     let pollution = {}
                     pollution['PollutantName'] = item.PollutantName
                     pollution['PollutantCode'] = values[item.PollutantCode].toString()
@@ -542,6 +550,7 @@ class index extends PureComponent {
                 this.setState({
                     
                     modalSelectPollution:modalSelectPollution,
+                    regionCode:rCode,
                     entModalTitle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至' + moment(EndTime).format('YYYY年MM月DD日 HH时') + modalSelectPollution[0].PollutantName+'值超标情况统计:'
                 })
             }
@@ -549,17 +558,21 @@ class index extends PureComponent {
     }
     //超标次数弹框
     exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
+        console.log(EntCode)
         if(flag)
         {
             this.setState({
                 visibleEnt:true,
-                modalregionCode:rCode
+                modalregionCode:rCode,
+                modalEntCode:EntCode
+
             })
         }
         if(!flag){
             this.setState({
                 visibleMoni:true,
-                modalregionCode:rCode
+                modalregionCode:rCode,
+                modalEntCode:EntCode
             })
         }
         const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode} = this.state
@@ -669,6 +682,7 @@ class index extends PureComponent {
                 {
                     this.setState({
                         //visibleEnt:true,
+                        regionCode:rCode,
                         modalSelectPollution2:modalSelectPollution,
                         entCountModalTotle2:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     }) 
@@ -676,6 +690,7 @@ class index extends PureComponent {
                 else{
                     this.setState({
                         //visibleMoni:true,
+                        regionCode:rCode,
                         modalSelectPollution2:modalSelectPollution,
                         entCountModalTotle:"" + moment(BeginTime).format('YYYY年MM月DD日 HH时') +'至'+  moment(EndTime).format('YYYY年MM月DD日 HH时')+modalSelectPollution[0].PollutantName+'超标次数统计'
                     })
@@ -733,9 +748,9 @@ class index extends PureComponent {
 
     cardTitle = () => {
         const { PollutantByType } = this.props
-        //首页弹框参数
-        const {exceedType,exceedTime} = this.props
         const { getFieldDecorator  } = this.props.form;
+        const {pollutant} = this.state
+        const {exceedDataType,exceedPollutant,exceedTime,exceedType } = this.props
         return (
             <>
                 <Form onSubmit={this.handleSummit} layout="inline">
@@ -824,7 +839,7 @@ class index extends PureComponent {
                     <Form.Item label='数据类型' >
                         {
                             getFieldDecorator('dataType', {
-                                initialValue: 'Hour'
+                                initialValue: exceedDataType
                             })(
                                 <Radio.Group style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
                                     this.setState({
@@ -875,7 +890,7 @@ class index extends PureComponent {
                                                 <Form.Item>
                                                     {
                                                         getFieldDecorator(item.PollutantCode, {
-                                                            initialValue: item.PollutantCode
+                                                            initialValue: pollutant.split(',')
                                                         })
                                                             (
                                                                 <Checkbox.Group>
@@ -916,7 +931,7 @@ class index extends PureComponent {
                                             <Form.Item>
                                                 {
                                                     getFieldDecorator(item.PollutantCode, {
-                                                        initialValue: item.PollutantCode
+                                                        initialValue: pollutant.split(',')
                                                     })
                                                         (
                                                             <Checkbox.Group>
@@ -964,7 +979,7 @@ class index extends PureComponent {
                                             <Form.Item>
                                                 {
                                                     getFieldDecorator(item.PollutantCode, {
-                                                        initialValue: item.PollutantCode
+                                                        initialValue: pollutant.split(',')
                                                     })
                                                         (
                                                             <Checkbox.Group>
@@ -1015,7 +1030,7 @@ class index extends PureComponent {
                                             <Form.Item>
                                                 {
                                                     getFieldDecorator(item.PollutantCode, {
-                                                        initialValue: item.PollutantCode
+                                                        initialValue: pollutant.split(',')
                                                     })
                                                         (
                                                             <Checkbox.Group>
@@ -1406,7 +1421,7 @@ class index extends PureComponent {
     }
     EntButtonCountShowSizeChange=(PageIndex, PageSize)=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-       
+        
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
             payload:{
@@ -1426,12 +1441,12 @@ class index extends PureComponent {
     }
     //超标次数按钮查询
     ExButtonCountHandle =()=>{
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode ,AttentionCode,modalEntCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
       
         this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:enterpriseValue==undefined? modalEntCode:enterpriseValue,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1447,11 +1462,11 @@ class index extends PureComponent {
     }
     //超标次数按钮导出
     ExButtonCountHandleExport =()=>{
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode,modalEntCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:enterpriseValue==undefined? modalEntCode:enterpriseValue,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1505,12 +1520,11 @@ class index extends PureComponent {
         })
     }
     EntexportReport =()=>{
-        const { panes,ModelRcode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
-        console.log(modalregionCode)
+        const { panes,ModelRcode,modalEntCode,modalregionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:modalEntCode,
                 RegionCode: ModelRcode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1524,11 +1538,11 @@ class index extends PureComponent {
     }
     //分页
     EntPageChange=(PageIndex, PageSize)=>{
-        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,modalEntCode} = this.state
          this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:modalEntCode,
                 RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1543,12 +1557,12 @@ class index extends PureComponent {
         })
     }
     EntPageShowSizeChange = (PageIndex, PageSize)=>{
-        const {  AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,modalregionCode,PollutantList  ,modalPollutantList,enterpriseValue} = this.state
+        const {  AttentionCode,modalEntCode ,PollutantTypeCode,DataType,BeginTime,EndTime,modalregionCode,PollutantList  ,modalPollutantList,enterpriseValue} = this.state
         
          this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
-                EntCode:enterpriseValue,
+                EntCode:modalEntCode,
                 RegionCode: modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
@@ -1565,7 +1579,7 @@ class index extends PureComponent {
     render() {
         const { loading,EntCountList ,loadingEnt,ExceedNumList,loadingCount,RegionPageIndex} = this.props
         const {modalSelectPollution,modalSelectPollution2} = this.state
-        const {exceedVisible,exceedCancle} = this.props 
+        const {exceedVisible,exceedCancle,exceedType} = this.props 
         const fixed = false
 
         const columns = [
@@ -1739,11 +1753,13 @@ class index extends PureComponent {
                 <div id="siteParamsPage" className={style.cardTitle}>
                     <Modal
                     centered
-                    title='近七日超标废水监测点'
+                    title= {exceedType=='1'?'近七日超标废水监测点':'近七日超标废气监测点'}
                     visible={exceedVisible}
                     footer={null}
                     width={1600}
+                    destroyOnClose
                     onCancel={exceedCancle}>
+                        
                         <Card
                             extra={
                                 <>

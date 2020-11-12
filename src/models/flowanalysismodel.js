@@ -49,11 +49,11 @@ export default Model.extend({
         EndTime: payload.EndTime,
       }
       const result2 = yield call(GetSewageFlowList, body2, null)
-
+      
       if(result2.IsSuccess)
       {
         yield update({
-          FlowListArr:result2.Datas
+          FlowListArr:result2.Datas.data
         })
       }
       else{
@@ -65,7 +65,7 @@ export default Model.extend({
 
       if (result.IsSuccess) {
         yield update({
-          FlowList: result.Datas,
+          FlowList: result.Datas.data,
           total: result.Total,
           PageIndex: payload.PageIndex || 1,
           PageSize:payload.PageSize

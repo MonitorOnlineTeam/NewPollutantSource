@@ -120,9 +120,9 @@ class index extends Component {
           render: (value, record, index) => index + 1,
         },
         {
-          title: '设备状态',
-          dataIndex: 'Status',
-          key: 'Status',
+          title: '状态',
+          dataIndex: 'status',
+          key: 'status',
           width: 70,
           // width: 120,
           align: 'center',

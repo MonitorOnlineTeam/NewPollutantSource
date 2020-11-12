@@ -61,7 +61,7 @@ const pageUrl = {
 @connect(({ loading, home,autoForm }) => ({
   priseList: home.priseList,
   exloading:home.exloading,
-  loading: home.loading,
+  loading: home.pointLoading,
   total: home.total,
   tableDatas: home.tableDatas,
   queryPar: home.queryPar,
@@ -80,7 +80,7 @@ const pageUrl = {
   entQuery:home.entQuery,
   pointQuery:home.pointQuery,
   pointTableDatas:home.pointTableDatas,
-  entCode:home.EntCode
+  entCode:home.entCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -104,27 +104,38 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
+        render:(text,row)=>{
+              return <div style={{textAlign:'left'}}>{text}</div>
+        }
       },
       {
-        title: <span>运转率</span>,
+        title: <span>{this.props.isWorkRate? '运转率' : this.props.isOverRate ? '超标率' : '故障率'}</span>,
         dataIndex: 'Rate',
         key: 'Rate',
         align: 'center',
+        sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
-            return <span>停运</span>;
-          }
-          const percent = interceptTwo(Number(text) * 100);
-          if (percent >= 90) {
-            return <div>
-                <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
-                  format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+          // const percent = interceptTwo(Number(text) * 100);
+          const percent = text;
+          if(this.props.isWorkRate){ // 运转率 
+            if (percent >= 90) {
+              return <div>
+                  <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
+                    format={percent => <span style={{ color: 'black' }}>{percent}%</span>}  />
+                </div>
+            }else{
+            return  <div>
+                <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+                  style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent==0?'0.00':percent}%</span>} />
               </div>
-          }
-          return  <div>
-              <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
-                style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
-            </div>
+            }
+  
+           }else{
+            return <div>
+            <Progress  successPercent={0}   percent={percent}  status="exception"   size="small"
+              style={{width:'90%'}}  format={percent => <span style={{ color: 'black' }}>{percent}%</span>} />
+          </div>
+           }
          },
       }
     ];
@@ -185,11 +196,11 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantType: value,
-    });
-  };
+  // typeChange = value => {
+  //   this.updateQueryState({
+  //     PollutantType: value,
+  //   });
+  // };
 
   changeRegion = (value) => { //行政区事件
     
@@ -253,7 +264,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantCode,PollutantType },
+      queryPar: {  BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType },
       Atmosphere,
       pointVisible,
       isWorkRate,
@@ -275,7 +286,7 @@ export default class EntTransmissionEfficiency extends Component {
             </span>
             <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
             <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-              ≤90%未达标
+            {`<90%未达标`}
             </span>
           </div> 
           :

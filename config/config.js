@@ -921,6 +921,11 @@ export default {
                   redirect: '/monitoring/mapview/realtimeDataView',
                 },
                 {
+                  name: 'outputstopmanage',
+                  path: '/monitoring/outputstopmanage/:configId',
+                  component: './platformManager/outputstopManager/',
+                },
+                {
                   name: 'exceptionrecord',
                   path: '/monitoring/missingData/exceptionrecord',
                   // component: './monitoring/exceptionrecord',
@@ -1371,7 +1376,7 @@ export default {
                       //流量分析
                       path: '/Intelligentanalysis/sewageDisposal/flow',
                       component: './Intelligentanalysis/sewageDisposal/flow',
-                    },
+                    }
                   ],
                 },
                 {

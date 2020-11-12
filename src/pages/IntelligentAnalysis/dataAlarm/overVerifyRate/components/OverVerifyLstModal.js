@@ -31,7 +31,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
-
+import PointVerifyLst from '../pointVerifyRate/components/PointVerifyLstModal'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -73,13 +73,15 @@ const pageUrl = {
     });
   },
 })
-export default class OverVerifyLst extends Component {
+export default class OverVerifyLstModal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       checkedValues: [],
       columns: [],
+      beginTime:props.beginTime,
+      endTime:props.endTime,
     };
   }
 
@@ -105,16 +107,15 @@ export default class OverVerifyLst extends Component {
             align: 'center',
 
             render: (text, record) => {
-              return (
-                <Link
-                  to={{
-                    pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                    query: { regionCode: record.regionCode },
-                  }}
-                >
-                  {text}
-                </Link>
-              );
+              let RegionCode = text =='全部合计'? '': record.regionCode;
+              return <a onClick={()=>{
+                this.setState({
+                  showDetails: true,
+                  RegionCode: RegionCode
+                })
+              }}>
+                {text}
+              </a>
             },
           },
           {
@@ -167,9 +168,6 @@ export default class OverVerifyLst extends Component {
                 dataIndex: item.PollutantCode + '_RespondedRate',
                 key: item.PollutantCode + '_RespondedRate',
                 align: 'center',
-                render: (text, record) => {
-                  return <div>{text == '-' ? text : `${text}%`}</div>;
-                },
               },
             ],
           });
@@ -179,9 +177,6 @@ export default class OverVerifyLst extends Component {
           dataIndex: 'AllRespondedRate',
           key: 'AllRespondedRate',
           align: 'center',
-          render: (text, record) => {
-            return <div>{text == '-' ? text : `${text}%`}</div>;
-          },
         });
         this.setState(
           { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
@@ -300,6 +295,10 @@ export default class OverVerifyLst extends Component {
   };
 
   dateChange = (date, dataType) => {
+    this.setState({
+      beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    })
     this.updateQueryState({
       dataType: dataType,
       beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -315,16 +314,15 @@ export default class OverVerifyLst extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => {
-          return (
-            <Link
-              to={{
-                pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/missDataSecond',
-                query: { regionCode: record.regionCode },
-              }}
-            >
-              {text}
-            </Link>
-          );
+          let RegionCode = text =='全部合计'? '': record.regionCode;
+          return <a onClick={()=>{
+            this.setState({
+              showDetails: true,
+              RegionCode: RegionCode
+            })
+          }}>
+            {text}
+          </a>
         },
       },
       {
@@ -386,9 +384,6 @@ export default class OverVerifyLst extends Component {
               dataIndex: item.PollutantCode + '_RespondedRate',
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
-              render: (text, record) => {
-                return <div>{text == '-' ? text : `${text}%`}</div>;
-              },
             },
           ],
         });
@@ -400,9 +395,6 @@ export default class OverVerifyLst extends Component {
       dataIndex: 'AllRespondedRate',
       key: 'AllRespondedRate',
       align: 'center',
-      render: (text, record) => {
-        return <div>{text == '-' ? text : `${text}%`}</div>;
-      },
     });
     this.setState({
       columns: newCloum,
@@ -417,7 +409,8 @@ export default class OverVerifyLst extends Component {
       },
     });
   };
-  render() {
+  /**显示弹出 */
+  showModal=()=>{
     const {
       exloading,
       form: { getFieldDecorator, getFieldValue },
@@ -447,7 +440,7 @@ export default class OverVerifyLst extends Component {
                     onRef={this.onRef1}
                     dataType={dataType}
                     style={{ minWidth: '200px', marginRight: '10px' }}
-                    dateValue={[moment(beginTime), moment(endTime)]}
+                    dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
                     callback={(dates, dataType) => this.dateChange(dates, dataType)}
                   />
                 </Form.Item>
@@ -544,5 +537,30 @@ export default class OverVerifyLst extends Component {
         />
       </Card>
     );
+  }
+  render() {
+    const {TVisible,TCancle,TTVisible} = this.props
+    return(
+      <Modal
+          centered
+          title='超标报警核实率'
+          visible={TVisible}
+          footer={null}
+          width={'95%'}
+          destroyOnClose
+          onCancel={TCancle}>
+            {
+              !this.state.showDetails && this.showModal()
+            }
+            {
+              this.state.showDetails && <PointVerifyLst  RegionCode= {this.state.RegionCode }  onBack={() => {
+                this.setState({
+                  showDetails: false,
+                  RegionCode: undefined
+                })
+              }} />
+            }
+          </Modal>
+    )
   }
 }

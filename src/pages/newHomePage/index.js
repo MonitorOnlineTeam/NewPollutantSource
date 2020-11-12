@@ -44,65 +44,65 @@ export default class Index extends Component {
       payload: { queryPar: { ...queryPar, ...payload } },
     });
   };
-   workNextPage=(type)=>{ //运转率
-    const { dispatch,location } = this.props;
+  //  workNextPage=(type)=>{ //运转率
+  //   const { dispatch } = this.props;
 
-    this.updateQueryState({
-      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
-      EntCode: "",
-      RegionCode: "",
-      PollutantTypeCode: [],
-      ModelType: "All"
-    });
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { isWorkRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
-    });
-    setTimeout(()=>{
-      this.setState({regionVisible:true})
+  //   this.updateQueryState({
+  //     BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+  //     EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+  //     EntCode: "",
+  //     RegionCode: "",
+  //     PollutantTypeCode: [],
+  //     ModelType: "All"
+  //   });
+  //   dispatch({
+  //     type: pageUrl.updateState,
+  //     payload: { isWorkRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
+  //   });
+  //   setTimeout(()=>{
+  //     this.setState({regionVisible:true})
       
-    })
-   }
+  //   })
+  //  }
 
-   faultNextPage=(type)=>{ //故障率
-    const { dispatch } = this.props;
-    this.updateQueryState({
-      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
-      EntCode: "",
-      RegionCode: "",
-      PollutantTypeCode: [],
-      ModelType: "All"
-    });
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { isFaultRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
-    });
-    setTimeout(()=>{
-      this.setState({regionVisible:true})
+  //  faultNextPage=(type)=>{ //故障率
+  //   const { dispatch } = this.props;
+  //   this.updateQueryState({
+  //     BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+  //     EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+  //     EntCode: "",
+  //     RegionCode: "",
+  //     PollutantTypeCode: [],
+  //     ModelType: "All"
+  //   });
+  //   dispatch({
+  //     type: pageUrl.updateState,
+  //     payload: { isFaultRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
+  //   });
+  //   setTimeout(()=>{
+  //     this.setState({regionVisible:true})
       
-    })
-   }
-   overNextPage=(type)=>{ //超标率
-    const { dispatch } = this.props;
-    this.updateQueryState({
-      BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      EndTime: moment().format('YYYY-MM-DD HH:59:59'),
-      EntCode: "",
-      RegionCode: "",
-      PollutantTypeCode: [],
-      ModelType: "All"
-    });
-    dispatch({
-      type: pageUrl.updateState,
-      payload: { isOverRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
-    });
-    setTimeout(()=>{
-      this.setState({regionVisible:true})
+  //   })
+  //  }
+  //  overNextPage=(type)=>{ //超标率
+  //   const { dispatch } = this.props;
+  //   this.updateQueryState({
+  //     BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+  //     EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+  //     EntCode: "",
+  //     RegionCode: "",
+  //     PollutantTypeCode: [],
+  //     ModelType: "All"
+  //   });
+  //   dispatch({
+  //     type: pageUrl.updateState,
+  //     payload: { isOverRate: true,Atmosphere:type=='air'?true:false,ModelType:'All'},
+  //   });
+  //   setTimeout(()=>{
+  //     this.setState({regionVisible:true})
       
-    })
-   }
+  //   })
+  //  }
 
    regionCancel=()=>{ //行政区页面
     const { dispatch } = this.props;
