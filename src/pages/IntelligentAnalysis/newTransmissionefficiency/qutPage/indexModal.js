@@ -472,8 +472,7 @@ export default class EntTransmissionEfficiency extends Component {
                   }}
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  {' '}
-                  ≤90%未达标
+                   {`<90%未达标`}
                 </span>
               </div>
             </>

@@ -174,7 +174,7 @@ debugger;
    
 
     this.updateQueryState({
-      // beginTime: moment()
+      // BeginTime: moment()
       // .subtract(1, 'day')
       // .format('YYYY-MM-DD 00:00:00'),
       // endTime: moment().format('YYYY-MM-DD 23:59:59'),
@@ -182,7 +182,7 @@ debugger;
       // EntCode: '',
       // RegionCode: '',
       // PollutantType:'',
-      // dataType:'HourData',
+      // DataType:'HourData',
       // EntType:'',
       RegionCode:location.query.regionCode,
       Status:'',
@@ -307,15 +307,15 @@ debugger;
    
     if( value === 'HourData'){
       this.updateQueryState({
-        dataType: value,
-        beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        DataType: value,
+        BeginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
        
         });
       }else{
         this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+          DataType: value,
+          BeginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
           endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
           
           });
@@ -323,7 +323,7 @@ debugger;
     }
   dateChange=(date)=>{
       this.updateQueryState({
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
@@ -332,13 +332,13 @@ debugger;
    }
   // queryComponents=(type)=>{
   //   const { 
-  //      queryPar: {  beginTime, endTime, RegionCode,AttentionCode,dataType, },
+  //      queryPar: {  BeginTime, EndTime, RegionCode,AttentionCode,DataType, },
   //   } = this.props;
   //   return  <><Form.Item label='数据类型'>
   //   <Select
   //         placeholder="数据类型"
   //         onChange={this._handleDateTypeChange}
-  //         value={dataType}
+  //         value={DataType}
   //         style={{ width: 200  }}
   //       >  
   //      <Option key='0' value='HourData'>小时数据</Option>
@@ -352,7 +352,7 @@ debugger;
   //             showTime={{ format: 'HH:mm:ss' }}
   //             format="YYYY-MM-DD HH:mm:ss"
   //             placeholder={['开始时间', '结束时间']}
-  //             value={[moment(beginTime),moment(endTime)]}
+  //             value={[moment(BeginTime),moment(endTime)]}
   //             onChange={this.dateChange}
   //             onOk={this.dateOk}
   //        />

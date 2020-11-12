@@ -373,8 +373,8 @@ export default class Index extends Component {
         itemHeight: 10,
         borderRadius: 0,
         icon: 'rect',
-        right: 8,
-        itemGap: 13,
+        right: 5,
+        itemGap: 13.5,
         y:'center',
         data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
         formatter: function (name) {
@@ -394,7 +394,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 15, 0, 5]
+              padding: [0, 20, 0, 4]
             },
             value: {
               color: '#000',
@@ -471,7 +471,7 @@ export default class Index extends Component {
                   option={this.getPancakeChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 235 }}
+                  style={{ height: 235}}
                 />
               </Skeleton>
             </Card>
