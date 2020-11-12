@@ -93,7 +93,7 @@ export default class Index extends Component {
        },
       },
       {
-        title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次超标时间' : '首次缺失时间' }</span>,
+        title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
         dataIndex: 'firstTime',
         key: 'firstTime',
         // width: '10%',

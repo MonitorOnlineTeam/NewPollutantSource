@@ -50,6 +50,7 @@ class NewRangePicker extends Component {
      */
     getDefault = () => {
         const { dateValue } = this.props;
+        console.log(dateValue)
         if (dateValue) {
             return this.getFormatDate(dateValue[0], dateValue[1]);
         }
@@ -237,6 +238,11 @@ class NewRangePicker extends Component {
 
     onDataTypeChange = dataType => {
         const dateValue = this.getFormatDate(1, 1, dataType);
+        this.setState({
+            dateValue,
+        });
+    }
+    onDataValueChange = dateValue => {
         this.setState({
             dateValue,
         });

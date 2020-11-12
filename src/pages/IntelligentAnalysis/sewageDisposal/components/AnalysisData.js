@@ -31,7 +31,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import { downloadFile, GetDataType, toDecimal3 } from '@/utils/utils';
+import { downloadFile, GetDataType, toDecimal3,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import ReactEcharts from 'echarts-for-react';
 import { blue, red } from '@ant-design/colors';
@@ -141,7 +141,15 @@ export default class EntTransmissionEfficiency extends Component {
           },
         ],
       },
-
+      {
+        title: '去除率(%)',
+        dataIndex: 'removalRate',
+        key: 'removalRate',
+        align: 'center',
+        render: (text, record) => {
+          return <span>{text&&text!='-'?`${interceptTwo(text)}%` : '-'}</span>;
+        },
+      },
     ]
   }
 
