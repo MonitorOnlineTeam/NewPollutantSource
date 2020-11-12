@@ -39,13 +39,15 @@ class EntWorkOrderStatistics extends PureComponent {
         key: '00_RegionName',
         render: (text, record) => { 
           const values = this.props.form.getFieldsValue();
+          const {initialForm:{RegionCode}} = this.props;
           const query={
-            RegionCode :record["00_RegionCode"],            
+            RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
             PollutantTypeCode: values.PollutantTypeCode,
             AttentionCode: values.AttentionCode?values.AttentionCode:"",
             BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
             EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
           }
+          if(query.RegionCode == 'all') query.RegionCode = '';
           return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
                    {text}
                </Link>
@@ -67,8 +69,10 @@ class EntWorkOrderStatistics extends PureComponent {
               key: '00_Opsenters',
               render: (text, record) => { 
                 const values = this.props.form.getFieldsValue();
+                const {initialForm:{RegionCode}} = this.props;
+
                 const query={
-                  RegionCode :record["00_RegionCode"],            
+                  RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
                   PollutantTypeCode: values.PollutantTypeCode,
                   AttentionCode: values.AttentionCode?values.AttentionCode:"",
                   BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),

@@ -73,6 +73,7 @@ const pageUrl = {
   PollutantList:emissionsChange.PollutantList,
   column:emissionsChange.column,
   chartTime:emissionsChange.timeList,
+  parmarType:emissionsChange.parmarType
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -92,30 +93,59 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location,queryPar } = this.props;
-    
+   this.updateQueryState({
+      // DGIMN:'',
+      // RegionCode: "",
+      // EntCode: "",
+      PollutantType: "1",
+      // AttentionCode: "",
+      beginTime: moment().subtract(1, 'day') .format('YYYY-MM-DD HH:00:00'),
+      endTime: moment().format('YYYY-MM-DD HH:59:59'),
+      DataType: "HourData",
+      // DGIMN:'',
+      // PollutantList:[]
+    });
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
      dispatch({ type: 'emissionsChange/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
 
-     dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', payload: { RegionCode: '' }});//获取企业列表
 
-
-     this.child.onDataTypeChange('hour')
-     this.updateQueryState({
-      beginTime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD HH:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantTypeCode:'1',
-      ModelType: "All"
+     dispatch({
+      type: pageUrl.updateState,
+      payload: { parmarType:'RegionCode' },
     });
-    // setTimeout(() => {
-      // this.getTableData();
-    // });
-  
+       //获取企业列表
+     dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant',
+      payload: {  RegionCode: '',PollutantType:'1',AttentionCode:'' },
+        callback:(res)=>{  
+          dispatch({type: pageUrl.updateState, payload: { parmarType:'EntCode' }, });
+          dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
+            payload: {  EntCode: res },
+            callback:(data)=>{
+               dispatch({  type: pageUrl.updateState, payload: { parmarType:'DGIMN' } });
+                dispatch({ 
+                 type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
+                  payload: {  DGIMN: data },
+                  callback:(res)=>{
+                   setTimeout(() => {
+                      this.child.onDataTypeChange('HourData')
+                      this.getTableData();
+                    });                
+                  }
+                 })
+            
+            }
+        })
+      }
+    
+    });
+
+
+
+
+
 
   };
   updateQueryState = payload => {
@@ -171,25 +201,21 @@ export default class EntTransmissionEfficiency extends Component {
   pollListChildren=()=>{
     const { PollutantList } = this.props;
     const selectList = [];
+
     if (PollutantList.length > 0) {
       PollutantList.map(item => {
         selectList.push(
-        <Checkbox key={item[0].PollutantCode} value={item[0].PollutantCode}>{item[0].PollutantName}</Checkbox>,
+        <Checkbox key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Checkbox>,
         );
       });
       return selectList;
     }
   
   }
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantType: value,
-    });
-  };
+
 
   changeRegion = (value) => { //行政区事件
-      
-    const {dispatch } = this.props;
+    const {dispatch,queryPar } = this.props;
     this.updateQueryState({
       RegionCode: value,
     });
@@ -197,13 +223,45 @@ export default class EntTransmissionEfficiency extends Component {
       type: pageUrl.updateState,
       payload: { parmarType: 'RegionCode'},
     });
-    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', payload: { RegionCode: value }});//获取参数列表
-  };
-  changeAttent=(value)=>{
+  
+    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant',
+     payload: { RegionCode: value,PollutantType:queryPar.PollutantType,AttentionCode:queryPar.AttentionCode },
+     callback:(res)=>{
+
+     }});//获取参数列表
+    };
+  changeAttent=(value)=>{ //关注程度事件
+    const {dispatch, queryPar} = this.props;
     this.updateQueryState({
       AttentionCode: value,
     });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { parmarType: 'RegionCode'},
+    });
+    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', payload: {
+      RegionCode:queryPar.RegionCode,
+      PollutantType:queryPar.PollutantType,
+      AttentionCode: value },
+      callback:(res)=>{}
+    });//获取参数列表
+
   }
+
+  typeChange = value => { //企业类型事件
+    const {dispatch, queryPar} = this.props;
+    this.updateQueryState({
+      PollutantType: value,
+    });
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { parmarType: 'RegionCode'},
+    });
+    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', 
+    payload: { RegionCode: queryPar.RegionCode,PollutantType:value,AttentionCode:queryPar.AttentionCode },
+    callback:(res)=>{}
+    });//获取参数列表
+  };
   changeEnt=(value,data)=>{ //企业事件
     const {dispatch } = this.props;
     
@@ -214,7 +272,13 @@ export default class EntTransmissionEfficiency extends Component {
       type: pageUrl.updateState,
       payload: { parmarType: 'EntCode'},
     });
-    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', payload: { EntCode: value }});//获取参数列表 监测点
+    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', 
+      payload: { EntCode: value },
+      callback:(res)=>{
+
+      }
+    
+    });//获取参数列表 监测点
   }
 
 
@@ -229,7 +293,12 @@ export default class EntTransmissionEfficiency extends Component {
       payload: { parmarType: 'DGIMN'},
     });
 
-      dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', payload: { DGIMN: value }});//获取参数列表 监测因子
+      dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant',
+               payload: { DGIMN: value },
+               callback:(res)=>{
+        
+              }
+              });//获取参数列表 监测因子
 
 
   }
@@ -381,22 +450,19 @@ export default class EntTransmissionEfficiency extends Component {
     this.child = ref;
   }
   onChange3=(e)=>{
-   console.log(e)
+  //  console.log(e)
   }
 
   render() {
     const {
       exloading,
       loading,
-      queryPar: { RegionCode,EntCode,ImportantType,PollutantType,AttentionCode, beginTime,endTime, DataType,PollutantList,DGIMN},
+      queryPar: { RegionCode,EntCode,PollutantType,AttentionCode, beginTime,endTime, DataType,PollutantList,DGIMN},
       column,
       EntList,
-      PointList
+      PointList,
     } = this.props;
     const { TabPane } = Tabs;
-    console.log(EntCode);
-    console.log(EntList);
-    console.log(EntCode ? EntCode : (EntList.length>0?EntList[0][0].EntCode:undefined));
     let columns = [{
       title: `监测时间`,
       dataIndex: 'DateTime',
@@ -419,6 +485,7 @@ export default class EntTransmissionEfficiency extends Component {
       })
     })
   }
+
     return (
         <Card
           bordered={false}
@@ -435,10 +502,10 @@ export default class EntTransmissionEfficiency extends Component {
                <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
               </Form.Item>
               <Form.Item label='企业类型'>
-               <EntType typeChange={this.typeChange}  PollutantType={PollutantType} PollutantType="1" />
+               <EntType  typeChange={this.typeChange}  PollutantType={PollutantType} PollutantType="1" />
               </Form.Item>
 
-                <Form.Item label='重点类型'>
+                {/* <Form.Item label='重点类型'>
                   <Select
                     allowClear
                     placeholder="重点类型"
@@ -451,7 +518,7 @@ export default class EntTransmissionEfficiency extends Component {
                  <Option key='3' value='3'>气重点</Option>
                  <Option key='4' value='4'>垃圾焚烧</Option>
                   </Select>
-                </Form.Item> 
+                </Form.Item>  */}
 
                 <Form.Item label='企业列表'>
                  <Select
@@ -461,7 +528,7 @@ export default class EntTransmissionEfficiency extends Component {
                  placeholder="企业列表"
                  onChange={this.changeEnt}
                  value={EntCode ? EntCode : (EntList.length>0?EntList[0][0].EntCode:undefined)}
-                 style={{width:'200px'}}
+                 style={{width:'288px'}}
                 >
                  {this.children()}
                   </Select>
@@ -472,7 +539,7 @@ export default class EntTransmissionEfficiency extends Component {
                  <Select
                     placeholder="监测点名称"
                     onChange={this.changePoint}
-                    value={DGIMN? DGIMN :  ( PointList.length>0?PointList[0][0].DGIMN: undefined )}
+                    value={DGIMN? DGIMN : undefined }
                     style={{ width: 150  }}
                   >
                   {this.pointChildren()}
@@ -510,7 +577,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Row>
                 <Row>
                 <Form.Item label='监测因子'>
-                  <Checkbox.Group  onChange={this.changePoll}>
+                  <Checkbox.Group value={PollutantList} onChange={this.changePoll}>
                      {this.pollListChildren()}
                  </Checkbox.Group>
                  </Form.Item>
@@ -529,13 +596,14 @@ export default class EntTransmissionEfficiency extends Component {
                         option={this.getChartData()}
                         className="echarts-for-echarts"
                         theme="my_theme"
-                        style ={{height:"calc(100vh - 350px)"}}
+                        style ={{height:"calc(100vh - 350px)",paddingTop:10}}
                       />
 
             }
             </TabPane>
             <TabPane tab="数据详情" key="2">
              <SdlTable
+              style={{paddingTop:10}}
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
               columns={columns.length>1?columns:[]}

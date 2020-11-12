@@ -373,8 +373,8 @@ export default class Index extends Component {
         itemHeight: 10,
         borderRadius: 0,
         icon: 'rect',
-        right: 10,
-        itemGap: 12,
+        right: 8,
+        itemGap: 13,
         y:'center',
         data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
         formatter: function (name) {
@@ -384,7 +384,7 @@ export default class Index extends Component {
           rich: {
             shu: {
               color: '#d2d2d2',
-              padding: [0, 2, 0, 2]
+              padding: [0, 1, 0, 2]
             },
             title: {
               width: 30,
@@ -394,7 +394,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 7, 0, 9]
+              padding: [0, 15, 0, 5]
             },
             value: {
               color: '#000',
