@@ -60,10 +60,7 @@ export default Model.extend({
     }, { call, update, select }) {
       const { overdataparams } = yield select(a => a.alarmrecord);
       const postData = {
-        ...overdataparams,
-        DGIMN: payload.dgimn ? payload.dgimn : overdataparams.DGIMN,
-        beginTime: payload.beginTime ? payload.beginTime : overdataparams.beginTime,
-        endTime: payload.endTime ? payload.endTime : overdataparams.endTime,
+        ...payload,
       }
 
       const res = yield call(queryoverdatalist, postData);

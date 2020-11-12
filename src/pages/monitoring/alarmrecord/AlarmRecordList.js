@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useDebugValue } from 'react';
 import moment from 'moment';
 import { formatMoment, handleFormData } from '@/utils/utils';
 import {
@@ -90,11 +90,11 @@ class AlarmRecordList extends Component {
         type: pageUrl.GetEntByRegion,
         payload: { RegionCode: '' },
     });
-    this.getPollutantByType(false);
+    this.getPollutantByType(false,this.reloaddatalist());
 };
 
   /**根据企业类型查询监测因子 */
-  getPollutantByType = (reload) => {
+  getPollutantByType = (reload,cb) => {
     this.props.dispatch({
       type: "alarmrecord/getPollutantByType",
       payload: {
@@ -107,99 +107,45 @@ class AlarmRecordList extends Component {
       }
     })
   }
-  /** 切换排口 */
-  changeDgimn = (dgimn, params) => {
-    this.setState({
-      selectDisplay: true,
-      selectedRowKeys: [],
-    })
-    const {
-      dispatch,
-    } = this.props;
-    params = {
-      ...params,
-      pollutantCode: '',
-      pageIndex: 1,
-      pageSize: 20,
+  onCheckboxChange = (checkedValues) => {
+    if (checkedValues.length < 1) {
+      message.warning("最少勾选一个监测因子！")
+      return;
     }
-    dispatch({
-      type: 'alarmrecord/updateState',
-      payload: {
-        overdataparams: params,
-      },
-    })
-    this.getpointpollutants(dgimn);
   }
 
-  /** 获取污染物 */
-  getpointpollutants = dgimn => {
-    this.props.dispatch({
-      type: 'alarmrecord/querypollutantlist',
-      payload: {
-        overdata: false,
-        dgimn,
-      },
-    })
-  };
 
   /** 时间更改 */
   _handleDateChange = (date, dateString) => {
-    let { overdataparams } = this.props;
-    overdataparams = {
-      ...overdataparams,
-      beginTime: date[0] && formatMoment(date[0]),
-      endTime: date[0] && formatMoment(date[1]),
-      pageIndex: 1,
-      pageSize: 20,
-    }
     this.setState({
       rangeDate: date,
     })
-    if (overdataparams.DGIMN !== null && overdataparams.DGIMN !== '') {
-      this.reloaddatalist(overdataparams);
-    }
   };
-
-
-
-
-  /**切换污染物 */
-  ChangePollutant = (value, selectedOptions) => {
-    let {
-      overdataparams,
-    } = this.props;
-    if (value === -1) {
-      value = null;
-    }
-    overdataparams = {
-      ...overdataparams,
-      pollutantCode: value,
-      pageIndex: 1,
-      pageSize: 20,
-    }
-    this.reloaddatalist(overdataparams);
-  };
-
-
-  /** 分页 */
-  pageIndexChange = (page, pageSize) => {
-    const { overdataparams } = this.props;
-    overdataparams.pageIndex = page;
-    this.reloaddatalist(overdataparams);
-  }
 
   /** 刷新数据 */
-  reloaddatalist = overdataparams => {
+  reloaddatalist = () => {
+      debugger;
     const { dispatch } = this.props;
-    dispatch({
-      type: 'alarmrecord/updateState',
-      payload: {
-        overdataparams,
-      },
-    })
+    let values = this.props.form.getFieldsValue();
+    console.log("values=", values)
+    let beginTime, endTime;
+    const{rangeDate}=this.state;
+    if (rangeDate && rangeDate[0]) {
+        beginTime = moment(rangeDate[0]).format("YYYY-MM-DD HH:MM:ss")
+      }
+      if (rangeDate && rangeDate[1]) {
+        endTime = moment(rangeDate[1]).format("YYYY-MM-DD HH:MM:ss")
+      }
     dispatch({
       type: 'alarmrecord/queryoverdatalist',
       payload: {
+        PollutantCode:values.PollutantList.toString(),
+        DGIMN:values.DGIMN,
+        PollutantType:values.PollutantType,
+        EntCode:values.EntCode,
+        RegionCode:values.RegionCode,
+        beginTime:beginTime,
+        endTime:endTime,
       },
     });
   }
@@ -227,26 +173,7 @@ class AlarmRecordList extends Component {
     }
   }
 
-  /** 分页 */
-  onShowSizeChange = (pageIndex, pageSize) => {
-    let { overdataparams } = this.props;
-    overdataparams = {
-      ...overdataparams,
-      pageIndex,
-      pageSize,
-    }
-    this.reloaddatalist(overdataparams);
-  }
 
-  onChange = (pageIndex, pageSize) => {
-    let { overdataparams } = this.props;
-    overdataparams = {
-      ...overdataparams,
-      pageIndex,
-      pageSize,
-    }
-    this.reloaddatalist(overdataparams);
-  }
 
   /** 保存核实单 */
   handleOk = e => {
@@ -299,11 +226,33 @@ class AlarmRecordList extends Component {
       hideDefaultSelections: true,
     };
     console.log('object')
-    const columns = [{
+    const columns = [
+      {
+        title: '行政区',
+        width: 100,
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        align: 'center',
+      },
+      {
+        title: '企业名称',
+        width: 100,
+        dataIndex: 'EntName',
+        key: 'EntName',
+        align: 'left',
+      },
+      {
+        title: '监测点名称',
+        width: 100,
+        dataIndex: 'PointName',
+        key: 'PointName',
+        align: 'center',
+      },
+      {
       title: '报警时间',
       dataIndex: 'FirstTime',
       align: 'center',
-      width: 160,
+      width: 100,
       key: 'FirstTime',
     },
     {
@@ -396,6 +345,7 @@ class AlarmRecordList extends Component {
                         dataType="minute"
                         dateValue={this.state.rangeDate}
                         callback={dates => this._handleDateChange(dates)}
+                        allowClear={false}
                     />
                 </FormItem>
               </Col>
@@ -420,7 +370,16 @@ class AlarmRecordList extends Component {
                   {getFieldDecorator('EntCode', {
                     initialValue: undefined,
                   })(
-                    <Select allowClear placeholder="请选择企业">
+                    <Select allowClear placeholder="请选择企业"  onChange={(value) => {
+                        //获取监测点
+                        this.props.dispatch({
+                            type: pageUrl.GetPointByEntCode,
+                            payload: {
+                                EntCode:value
+                            },
+                        });
+                        this.props.form.setFieldsValue({ DGIMN: undefined })
+                    }}>
                       {
                         entList.map(item => {
                           return <Option key={item.EntCode} value={item.EntCode}>
@@ -464,15 +423,18 @@ class AlarmRecordList extends Component {
                     }
                   </Checkbox.Group>
                 )}
-                <Button loading={dataloading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
+                <Button loading={dataloading} type="primary" style={{ marginLeft: 10 }} onClick={()=>{
+                    this.reloaddatalist()
+                }}>
                   查询
                       </Button>
                 <Button
                   style={{ margin: '0 5px' }}
-                  icon="export"
-                  onClick={this.exportExceptionList}
+                  type="danger"
+                  icon="edit"
+                  onClick={this.BtnVerify}
                 >
-                  导出
+                  处置
                       </Button>
               </Col>
             </Row>
@@ -483,19 +445,7 @@ class AlarmRecordList extends Component {
             dataSource={this.props.data}
             rowKey="ID"
             rowSelection={rowSelection}
-            pagination={
-              {
-                size: 'small',
-                // showSizeChanger: true,
-                showQuickJumper: true,
-                total: this.props.total,
-                pageSize: 20, // this.props.overdataparams.pageSize,
-                current: this.props.overdataparams.pageIndex,
-                onChange: this.onChange,
-                onShowSizeChange: this.onShowSizeChange,
-                pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200', '400', '500', '1000'],
-              }
-            }
+            align="center"
             onRow={(record, index) => ({
               onClick: event => {
                 const { selectedRowKeys } = this.state;
