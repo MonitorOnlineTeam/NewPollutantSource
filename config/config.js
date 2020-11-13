@@ -239,7 +239,7 @@ export default {
             {
               name: 'test',
               path: '/test',
-              component: './Test/Test',
+              component: './Test',
             },
             {
               path: '/:parentcode/autoformmanager/:configId',
