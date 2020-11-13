@@ -121,6 +121,7 @@ class SdlForm extends PureComponent {
     if (isEdit) {
       // 获取上传组件文件列表
       if (uid) {
+        debugger;
         this.props.form.setFieldsValue({ cuid: uid })
         dispatch({
           type: 'autoForm/getAttachmentList',

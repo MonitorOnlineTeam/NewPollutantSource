@@ -16,3 +16,9 @@ export async function deleteoutputstop(params) {
   const result = post(`/api/rest/PollutantSourceApi/OutputStopApi/DeleteOutputStopById?ID=${params.ID}`, '', null);
   return result;
 }
+/** 编辑停产 */
+export async function editoutputstop(params) {
+  debugger;
+  const result = post('/api/rest/PollutantSourceApi/OutputStopApi/UpdateOutputStop', params.FormData, null);
+  return result;
+}
