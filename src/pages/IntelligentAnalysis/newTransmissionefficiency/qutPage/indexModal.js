@@ -29,7 +29,7 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import EnterpriseModel from '../components/enterpriseModel';
+import EnterpriseModels from '../components/EnterpriseModel';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -508,7 +508,7 @@ export default class EntTransmissionEfficiency extends Component {
                 this.setState({ visible: false });
               }}
             >
-              <EnterpriseModel />
+              <EnterpriseModels />
             </Modal>
           </>
         </Card>
