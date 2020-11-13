@@ -110,13 +110,14 @@ class AddExceptionModal extends PureComponent {
         let fileList = info.fileList;
         if (info.file.status === 'done') {
           this.props.form.setFieldsValue({ Attachments: cuid })
-          info.fileList[info.fileList.length - 1].url = "/upload/" + info.fileList[info.fileList.length - 1].response.Datas
-          delete info.fileList[info.fileList.length - 1].thumbUrl
+          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
+          // delete fileList[fileList.length - 1].thumbUrl
         } else if (info.file.status === 'error') {
           message.error('上传文件失败！')
         }
         this.setState({
-          fileList: info.fileList
+          fileList: fileList
         }, () => {
           if (!info.fileList.length) {
             this.props.form.setFieldsValue({ Attachments: [] })
@@ -130,6 +131,13 @@ class AddExceptionModal extends PureComponent {
             Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
           }
         })
+      },
+      onPreview: (file) => {
+        if (file.url) {
+          window.open(file.url)
+        } else {
+          message.error("出现错误")
+        }
       },
       multiple: true,
       listType: "picture-card",
