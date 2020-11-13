@@ -78,6 +78,9 @@ export default class EntIndexModal extends Component {
   }
 
   componentWillMount() {
+    this.updateState({
+      pollutantType:this.state.PollutantType,
+    });
     this.getTableData();
     this.props.dispatch({
       type: 'autoForm/getRegions',
@@ -226,7 +229,7 @@ export default class EntIndexModal extends Component {
   //     }
   // })
   showChildModal=()=>{
-    console.log('this.state.pollutantType',this.state.pollutantType);
+    // console.log('this.state.pollutantType',this.state.pollutantType);
     this.setState({
       TVisible:false,
       TTVisible:true,
