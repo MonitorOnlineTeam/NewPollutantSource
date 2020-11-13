@@ -13,45 +13,6 @@ class Camera extends PureComponent {
     this._loadWebControlFile();
   }
 
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   let back = false;
-  //   if (this.props.backFlag !== prevProps.backFlag) {
-  //     // 历史回放
-  //     back = true;
-  //     this.oWebControl.JS_RequestInterface({
-  //       funcName: "startPlayback",
-  //       argument: JSON.stringify({
-  //         cameraIndexCode: cameraIndexCode,                   //监控点编号
-  //         startTimeStamp: Math.floor(startTimeStamp / 1000).toString(),  //录像查询开始时间戳，单位：秒
-  //         endTimeStamp: Math.floor(endTimeStamp / 1000).toString(),      //录像结束开始时间戳，单位：秒
-  //         recordLocation: recordLocation,                     //录像存储类型：0-中心存储，1-设备存储
-  //         transMode: 1,                               //传输协议：0-UDP，1-TCP
-  //         gpuMode: 0,                                   //是否启用GPU硬解，0-不启用，1-启用
-  //         wndId: -1                                         //可指定播放窗口
-  //       })
-  //     })
-  //   }
-  //   if(this.props.)
-  // }
-
-  onBackPlay = (cameraIndexCode, startTime, entTime, otherParams = {}) => {
-    this.oWebControl.JS_RequestInterface({
-      funcName: "startPlayback",
-      argument: JSON.stringify({
-        cameraIndexCode: cameraIndexCode || '18507478f7cf4c2883a75c030d59b847',                   //监控点编号
-        startTimeStamp: startTime.valueOf(),  //录像查询开始时间戳，单位：秒
-        endTimeStamp: entTime.valueOf(),      //录像结束开始时间戳，单位：秒
-        recordLocation: 1,                     //录像存储类型：0-中心存储，1-设备存储
-        transMode: 1,                               //传输协议：0-UDP，1-TCP
-        gpuMode: 0,                                   //是否启用GPU硬解，0-不启用，1-启用
-        wndId: -1,                                         //可指定播放窗口
-        ...otherParams
-      })
-    })
-  }
-
-
   realtimePlay = () => {
     // 实时
     this.oWebControl.JS_RequestInterface({

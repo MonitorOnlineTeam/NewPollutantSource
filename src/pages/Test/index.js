@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Card, DatePicker, Button } from "antd"
-import Camera from "./Camera"
+import Preview from "./Preview"
+import Playback from "./Playback"
 
 const { RangePicker } = DatePicker;
 
@@ -14,7 +15,8 @@ class index extends PureComponent {
   }
 
   onBack = () => {
-    this.camera.onBack("18507478f7cf4c2883a75c030d59b847", date[0], date[1])
+    const { date } = this.state;
+    this.playback.onBack("18507478f7cf4c2883a75c030d59b847", date[0], date[1])
   }
 
   render() {
@@ -22,7 +24,7 @@ class index extends PureComponent {
     return (
       <Card>
         <Row>
-          <Select defaultValue="lucy" style={{ width: 120 }} onChange={(value) => {
+          <Select defaultValue="realtime" style={{ width: 120 }} onChange={(value) => {
             this.setState({
               playMode: value
             })
@@ -47,7 +49,10 @@ class index extends PureComponent {
             </>
           }
         </Row>
-        <Camera ref={camera => this.camera = camera} style={{}} />
+        {
+          playMode === "realtime" ? <Preview style={{}} /> :
+            <Playback ref={playback => this.playback = playback} style={{}} />
+        }
       </Card>
     );
   }
