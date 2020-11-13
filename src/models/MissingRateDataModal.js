@@ -12,7 +12,7 @@ import {
   ExportDefectPointDetailRate,
   ExportDefectDataSummary,
   GetDefectPointDetailRate
-} from '@/pages/IntelligentAnalysis/dataAlarm/missingDataRate/service';
+} from '@/services/missingData';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({

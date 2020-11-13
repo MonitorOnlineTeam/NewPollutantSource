@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：
+ * 创建人：
+ * 创建时间：
  */
 import React, { Component } from 'react';
 import {
@@ -29,7 +29,7 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import EnterpriseModel from '../components/enterpriseModel';
+import EnterpriseModel from '../components/EnterpriseModel';
 import { downloadFile, interceptTwo } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
