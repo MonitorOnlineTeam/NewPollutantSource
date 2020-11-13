@@ -514,10 +514,11 @@ class index extends Component {
               </Row>
               <Row style={{ marginTop: 10 }}>
                 <Select style={{ width: 140 }} allowClear placeholder="请选择行政区" onChange={(value) => {
+                  let val = value !== undefined ? value : "";
                   this.setState({
-                    regionCode: value
+                    regionCode: val
                   }, () => {
-                    this.getEntByRegion(value);
+                    this.getEntByRegion(val);
                     this.getRealTimeDataView()
                   })
                 }}>
