@@ -186,7 +186,7 @@ export default class Index extends Component {
             </Row>  
           </Skeleton>      
           {alarmVisible? <ExceedDataAlarm
-           dateTime={[moment().subtract(1, "day").startOf('day'),
+           dateTime={[moment().startOf('day'),
                moment()]} alarmType={''}  alarmVisible={alarmVisible} alarmCancle={()=>{
                     this.setState({alarmVisible:false});
                 }}/>:null}

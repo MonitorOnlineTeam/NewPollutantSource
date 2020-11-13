@@ -213,11 +213,10 @@ export default class EntTransmissionEfficiency extends Component {
       PollutantTypeCode:"1",
       ModelType: "All"
     });
-   
     setTimeout(() => {
       this.getTableData();
     });
-  
+    this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
 
   };
   updateQueryState = payload => {
@@ -404,6 +403,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { TabPane } = Tabs;
    
     const {  regionVisible, entNumVisible, workNumVisible} = this.state;
+
     return (
         <Card
           bordered={false}
@@ -416,7 +416,11 @@ export default class EntTransmissionEfficiency extends Component {
 
               <Form.Item label=''>
                <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+              callback={(dates, dataType)=>this.dateChange(dates, dataType)}
+              onRef={(ref) => {
+                this.child = ref;
+              }} 
+              />
                 </Form.Item>
               <Form.Item label=''>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>

@@ -249,7 +249,8 @@ export default class Index extends Component {
       nextData:{startTime,endTimes,msg},
       entTableDatas,
       entVisible,
-      entCancel
+      entCancel,
+      entName
     } = this.props;
     const { TabPane } = Tabs;
     let columns = [{
@@ -272,7 +273,7 @@ export default class Index extends Component {
 
     return (
         <Modal
-          title="这是企业"
+          title={entName}
           footer={null}
           width='95%'
           visible={entVisible}  
