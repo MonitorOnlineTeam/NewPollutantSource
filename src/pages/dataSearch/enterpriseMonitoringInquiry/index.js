@@ -308,7 +308,7 @@ class index extends PureComponent {
                 key: 'reginName',
                 render: (text, record) => {
                     return <a onClick={
-                        () => this.props.dispatch(routerRedux.push(`/dataSearch/enterpriseInquiryDetail/${record.regionCode=='0'?(regionValue==undefined?'':regionValue):record.regionCode}`))
+                        () => this.props.dispatch(routerRedux.push(`/dataSearch/enterpriseInquiryDetail/${record.regionCode}`))
                     } > {text} </a>
                 }
             },

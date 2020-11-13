@@ -1,5 +1,5 @@
 /**
- * 功  能：无台账工单统计
+ * 功  能：企业异常记录
  * 创建人：贾安波
  * 创建时间：2019.10.26
  */
@@ -75,7 +75,7 @@ const pageUrl = {
   entName:entAbnormalRecord.entName,
   pollutantList:entAbnormalRecord.pollutantList,
   EntList: entAbnormalRecord.EntList,
-  pointList:common.pointListByEntCode
+  pointList:common.pointListByEntCode,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -84,6 +84,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     this.state = {
       entVisible:false,
+      entName:''
     };
     
     this.columns = [
@@ -134,6 +135,7 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'DataType',
         key: 'DataType',
         align: 'center',
+        width:95,
         render: (text, record) => {
           return <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>;
         },
@@ -155,8 +157,8 @@ export default class EntTransmissionEfficiency extends Component {
       },  
       {
         title: '凭证',
-        dataIndex: 'Attachment',
-        key: 'Attachment',
+        dataIndex: 'Attachments',
+        key: 'Attachments',
         align: 'center',
         render: (text, record) => {
           const attachmentDataSource = this.getAttachmentDataSource(text);
@@ -191,14 +193,14 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   getAttachmentDataSource(value) {
-    const fileInfo = value ? value.split(';') : [];
-    return fileInfo.map(item => {
-      const itemList = item.split('|');
+    const fileInfo = value ? value.split(',') : [];
+    let fileList =  fileInfo.map(item => {
       return {
-        name: itemList[0],
-        attach: itemList[0]
+        name: item,
+        attach: item
       }
     })
+   return fileList;
   }
   initData = () => {
     const { dispatch, location } = this.props;
@@ -212,16 +214,18 @@ export default class EntTransmissionEfficiency extends Component {
      
 
      this.updateQueryState({
-      ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionBBtime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
       ExceptionBEtime: moment().format('YYYY-MM-DD HH:59:59'),
-      ExceptionEBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      ExceptionEBtime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
       ExceptionEEtime: moment().format('YYYY-MM-DD HH:59:59'),
       DGIMN: "",
       RegionCode: "",
       EntCode: "",
       Status: ""
     });
-   
+    this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
+    this.child2.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
+
     setTimeout(() => {
       this.getTableData();
     });
@@ -386,7 +390,7 @@ export default class EntTransmissionEfficiency extends Component {
     
     dispatch({
       type: pageUrl.updateState,
-      payload: { entQueryPar: {ID:row.ID},nextData:{startTime:row.BeginTime,endTimes:row.EndTime,msg:row.Msg} },
+      payload: {entName:row.EntName, entQueryPar: {ID:row.ID},nextData:{startTime:row.BeginTime,endTimes:row.EndTime,msg:row.Msg} },
     });
     setTimeout(()=>{
       this.setState({entVisible:true})
@@ -398,7 +402,6 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       loading,
       queryPar: {ExceptionBBtime,ExceptionBEtime, ExceptionEBtime, ExceptionEEtime, DGIMN,RegionCode, EntCode,Status},
-
     } = this.props;
 
     const { entVisible } = this.state
@@ -407,7 +410,6 @@ export default class EntTransmissionEfficiency extends Component {
     const {  regionVisible, entNumVisible, workNumVisible} = this.state;
 
 
-    
 
     return (
         <Card
@@ -419,11 +421,19 @@ export default class EntTransmissionEfficiency extends Component {
               <Row>
               <Form.Item label='异常开始时间'>
                <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+              callback={(dates, dataType)=>this.dateChange(dates, dataType)}
+              onRef={(ref) => {
+                this.child = ref;
+              }} 
+              />
                 </Form.Item>
                 <Form.Item label='异常截止时间'>
                <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionEBtime),moment(ExceptionEEtime)]} 
-              callback={(dates, dataType)=>this.dateChange2(dates, dataType)}/>
+              callback={(dates, dataType)=>this.dateChange2(dates, dataType)}
+              onRef={(ref) => {
+                this.child2 = ref;
+              }} 
+              />
                 </Form.Item>
                 </Row>
             <Form.Item label='行政区'>

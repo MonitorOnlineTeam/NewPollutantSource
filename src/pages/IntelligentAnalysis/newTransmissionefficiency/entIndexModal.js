@@ -78,6 +78,9 @@ export default class EntIndexModal extends Component {
   }
 
   componentWillMount() {
+    this.updateState({
+      pollutantType:this.state.PollutantType,
+    });
     this.getTableData();
     this.props.dispatch({
       type: 'autoForm/getRegions',
@@ -226,11 +229,12 @@ export default class EntIndexModal extends Component {
   //     }
   // })
   showChildModal=()=>{
+    // console.log('this.state.pollutantType',this.state.pollutantType);
     this.setState({
       TVisible:false,
       TTVisible:true,
     },()=>{
-
+      
     })
   }
   interceptTwo=(value)=>{
@@ -239,6 +243,7 @@ export default class EntIndexModal extends Component {
     return result;
   }
   showModal=()=>{
+    
     const { eName } = this.state;
     const { regionList, exRegionloading, RegionCode } = this.props;
     const columns = [
@@ -447,7 +452,7 @@ export default class EntIndexModal extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
+                  <Button type="primary" onClick={this.getTableData}>
                     查询
                   </Button>
                   <Button
@@ -516,6 +521,8 @@ export default class EntIndexModal extends Component {
     </>
   }
   render() {
+    console.log("props.pollutantType=",this.props.pollutantType)
+    console.log("state.pollutantType=",this.state.PollutantType)
   const {TVisible,TCancle,TTVisible} = this.props
   return (
     <>
@@ -532,7 +539,7 @@ export default class EntIndexModal extends Component {
               !this.state.showDetails && this.showModal()
             }
             {
-              this.state.showDetails && <QutPage hideBreadcrumb location={{ query: { RegionCode: this.state.RegionCode } }} onBack={() => {
+              this.state.showDetails && <QutPage hideBreadcrumb location={{ query: { RegionCode: this.state.RegionCode } }} _pollutantType={this.state.PollutantType} onBack={() => {
                 this.setState({
                   showDetails: false,
                   RegionCode: undefined

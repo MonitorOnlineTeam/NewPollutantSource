@@ -136,14 +136,13 @@ class index extends PureComponent {
                 let pollutantList =[]
                 this.props.PollutantByType.map(item =>{
                     
-                    if(item.PollutantCode == exceedPollutant)
+                    if(item.PollutantCode == exceedPollutant || item.PollutantCode == `zs${exceedPollutant}`)
                     {
                         pollutantList.push({PollutantCode:item.PollutantCode})
                         selectPollution.push({PollutantName:item.PollutantName,PollutantCode:item.PollutantCode})
                     }
                     
                 })
-                
                 this.setState({
                     selectPollution:selectPollution,
                     pollutant:exceedPollutant,
@@ -214,7 +213,6 @@ class index extends PureComponent {
                 }
             })
 
-
               this.setState({
                   selectPollution: selectPollution,
                   RegionCode: values.Region == undefined ? '' : values.Region,
@@ -235,8 +233,8 @@ class index extends PureComponent {
                     AttentionCode: values.attention == undefined ? '' : values.attention,
                     PollutantTypeCode: values.outlet == undefined ? '' : values.outlet,
                     DataType: values.dataType == undefined ? '' : values.dataType == 'Hour'?'HourData':'DayData',
-                    BeginTime: values.dateTime[0],
-                    EndTime: values.dateTime[1],
+                    BeginTime: moment(values.dateTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+                    EndTime: moment(values.dateTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData
                 }
@@ -632,8 +630,8 @@ class index extends PureComponent {
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pollutantTypeCode,
                 DataType: DataType,
-                BeginTime: BeginTime,
-                EndTime: EndTime,
+                BeginTime: moment(BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(EndTime).format('YYYY-MM-DD HH:mm:ss'),
                 TabType: '',
                 PollutantList: arr,
                 PageSize:20,
@@ -972,7 +970,7 @@ class index extends PureComponent {
                         {
                             this.state.entType == '2' &&
                             PollutantByType.map((item, i) =>
-                                (i + 1) % 6 == 0 ? <span>
+                                (i + 1) % 6 == 0 || i==0 ? <span>
                                     <br />
                                     <Form.Item >
                                         <span>
@@ -1030,7 +1028,7 @@ class index extends PureComponent {
                                             <Form.Item>
                                                 {
                                                     getFieldDecorator(item.PollutantCode, {
-                                                        initialValue: pollutant.split(',')
+                                                        initialValue: [`zs${pollutant}`]
                                                     })
                                                         (
                                                             <Checkbox.Group>
@@ -1450,8 +1448,8 @@ class index extends PureComponent {
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
-                BeginTime: BeginTime,
-                EndTime: EndTime,
+                BeginTime: moment(BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(EndTime).format('YYYY-MM-DD HH:mm:ss'),
                 TabType: '',
                 PollutantList: modalPollutantList,
                 PageSize:20,
@@ -1484,12 +1482,12 @@ class index extends PureComponent {
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: modalregionCode,
+                RegionCode: modalregionCode == 'All'?'':modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pagePollutantType,
                 DataType: DataType,
-                BeginTime: BeginTime,
-                EndTime: EndTime,
+                BeginTime: moment(BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(EndTime).format('YYYY-MM-DD HH:mm:ss'),
                 TabType: '',
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
@@ -1508,8 +1506,8 @@ class index extends PureComponent {
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pagePollutantType,
                 DataType: DataType,
-                BeginTime: BeginTime,
-                EndTime: EndTime,
+                BeginTime: moment(BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(EndTime).format('YYYY-MM-DD HH:mm:ss'),
                 TabType: '',
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
@@ -1537,16 +1535,17 @@ class index extends PureComponent {
     //分页
     EntPageChange=(PageIndex, PageSize)=>{
         const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType ,modalregionCode ,regionCode,modalPollutantList,modalEntCode} = this.state
-         this.props.dispatch({
+         alert(modalregionCode)
+        this.props.dispatch({
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:modalEntCode,
-                RegionCode: modalregionCode,
+                RegionCode: modalregionCode=='All'?'': modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
-                BeginTime: BeginTime,
-                EndTime: EndTime,
+                BeginTime: moment(BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(EndTime).format('YYYY-MM-DD HH:mm:ss'),
                 TabType: '',
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
@@ -1561,12 +1560,12 @@ class index extends PureComponent {
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:modalEntCode,
-                RegionCode: modalregionCode,
+                RegionCode:  modalregionCode=='All'?'': modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: PollutantTypeCode,
                 DataType: DataType,
-                BeginTime: BeginTime,
-                EndTime: EndTime,
+                BeginTime: moment(BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+                EndTime: moment(EndTime).format('YYYY-MM-DD HH:mm:ss'),
                 TabType: '',
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
@@ -1863,8 +1862,8 @@ class index extends PureComponent {
                                 <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
-                                    pageSize: this.props. ModalPageSize,
-                                    current: this.props. ModalPageIndex,
+                                    pageSize: this.props.ModalPageSize,
+                                    current: this.props.ModalPageIndex,
                                     onChange: this.ExButtonCountHandlePageChange,
                                     onShowSizeChange:this.ExButtonCountShowSizeChange,
                                     pageSizeOptions: ['20', '30', '40', '100'],
@@ -1888,12 +1887,12 @@ class index extends PureComponent {
                                 <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
-                                    pageSize: this.props. ModalPageSize,
-                                    current: this.props. ModalPageIndex,
+                                    pageSize: this.props.ModalPageSize,
+                                    current: this.props.ModalPageIndex,
                                     onChange: this.EntPageChange,
                                     onShowSizeChange:this.EntPageShowSizeChange,
                                     pageSizeOptions: ['20', '30', '40', '100'],
-                                    total: this.props. Modaltotal,
+                                    total: this.props.Modaltotal,
                                   }} />
                             }
                             

@@ -105,7 +105,8 @@ export default class EntTransmissionEfficiency extends Component {
       // DGIMN:'',
       // PollutantList:[]
     });
-
+    // this.child.onDataValueChange([moment().subtract(1, 'day').startOf('hour'),moment().endOf('hour')])
+    this.child.onDataTypeChange('HourData')
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
@@ -130,7 +131,7 @@ export default class EntTransmissionEfficiency extends Component {
                   payload: {  DGIMN: data },
                   callback:(res)=>{
                    setTimeout(() => {
-                      this.child.onDataTypeChange('HourData')
+                  
                       this.getTableData();
                     });                
                   }
@@ -559,7 +560,9 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
                 <Form.Item label='查询日期'>
                <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={DataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+              callback={(dates, dataType)=>this.dateChange(dates, dataType)}
+              
+              />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
