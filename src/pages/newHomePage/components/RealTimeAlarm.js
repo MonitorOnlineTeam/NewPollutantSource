@@ -158,9 +158,8 @@ export default class Index extends Component {
             <Row id='scroll_div'  style={{position:'static',whiteSpace: "nowrap", overflowX:'hidden'}}>
             <div id='scroll_begin' style={{display:'inline-block'}}>
               {alarmDataList.map((item, index) => {
-                    return <div style={{display:'inline-block',padding:'5px 0',position:'relative',width: 'calc(100vw / 3)'}}>
-                       <div style={{
-                          display:'inline-block'}}>  
+                    return <div style={{display:'inline-block',position:'relative',width: 'calc(100vw / 3)'}}>
+                       <div style={{display:'inline-block', verticalAlign: 'middle'}}>  
                           <Avatar size={64} src={'/overalarm.png'} /> 
                            </div>  
                        <div style={{
@@ -169,14 +168,15 @@ export default class Index extends Component {
                            wordBreak: 'break-all',
                            verticalAlign: 'middle',
                            width:'58%',
+                           fontSize:14,
                            paddingLeft:23
                        }}>{item.content}</div>
                         {
-                        item.verify ? <img src='/verify.png' style={{ padding: '0 0 10px 5px' }} />
-                        : <img src='/daiheshi.png' style={{ padding: '0 0 10px 5px' }} />
+                        item.verify ? <img src='/verify.png' style={{ paddingLeft: '5px',paddingBottom:9, verticalAlign: 'middle' }} />
+                        : <img src='/daiheshi.png' style={{ paddingLeft: '5px',paddingBottom:9,verticalAlign: 'top' }} />
                       }
                        { index+1 < alarmDataList.length ||alarmDataList.length>3 ? <div
-                       style={{display:'inline-block'}}
+                       style={{display:'inline-block',verticalAlign: 'middle',}}
                         className={styles.hr}></div> : null}
                        </div>
                   })}
