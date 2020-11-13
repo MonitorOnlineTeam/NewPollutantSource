@@ -158,7 +158,7 @@ export default class Index extends Component {
             <Row id='scroll_div'  style={{position:'static',whiteSpace: "nowrap", overflowX:'hidden'}}>
             <div id='scroll_begin' style={{display:'inline-block'}}>
               {alarmDataList.map((item, index) => {
-                    return <div style={{display:'inline-block',padding:'10px 0 6px 0',position:'relative',width: 'calc(100vw / 3)'}}>
+                    return <div style={{display:'inline-block',padding:'5px 0',position:'relative',width: 'calc(100vw / 3)'}}>
                        <div style={{
                           display:'inline-block'}}>  
                           <Avatar size={64} src={'/overalarm.png'} /> 

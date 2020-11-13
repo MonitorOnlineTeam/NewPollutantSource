@@ -76,7 +76,7 @@ class index extends PureComponent {
             statusAlram:'',
             pollutantCodeList:[],
             AlarmDealTypeList:[],
-            DealType:'2',
+            DealType:'1',
             enterpriseValue:'',
             ModalTitle:'',
             PollutantCode:'',
@@ -125,8 +125,8 @@ class index extends PureComponent {
                         attentionCode: '',
                         PollutantType: outletValue == undefined ? '' : outletValue,
                         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
-                        BeginTime: time[0],
-                        EndTime: time[1],
+                        BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                        EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                         PageSize: 20,
                         PageIndex: 1,
                         PollutantCodeList: this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
@@ -168,8 +168,8 @@ class index extends PureComponent {
                     attentionCode: attentionValue == undefined?'':attentionValue,
                     PollutantType: outletValue == undefined?'':outletValue,
                     DataType: dataType == 'Hour'?'HourData':'DayData',
-                    BeginTime: time[0],
-                    EndTime: time[1],
+                    BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                    EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                     PollutantCodeList: pollutantCodeList,
                 }
             })
@@ -182,8 +182,8 @@ class index extends PureComponent {
                     attentionCode: attentionValue == undefined?'':attentionValue,
                     PollutantType: outletValue == undefined?'':outletValue,
                     DataType: dataType == 'Hour'?'HourData':'DayData',
-                    BeginTime: time[0],
-                    EndTime: time[1],
+                    BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                    EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                     PollutantCodeList: pollutantCodeList,
                 }
             })
@@ -202,8 +202,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
@@ -382,12 +382,12 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
-                Status:'',
+                Status:'1',
                 EntCode:'',
                 VerifyStatus:AlarmDealTypeList
             }
@@ -416,8 +416,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -449,8 +449,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -508,8 +508,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                // PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -585,8 +585,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime:moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
@@ -920,8 +920,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -941,8 +941,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PollutantCode: PollutantCode,
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
@@ -960,8 +960,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -981,8 +981,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime:moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
@@ -1000,8 +1000,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime:moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -1021,8 +1021,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime:moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
@@ -1039,8 +1039,8 @@ class index extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime:moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PollutantCode: PollutantCode,
                 Status:status,
                 EntCode:entCode,
@@ -1621,16 +1621,18 @@ class index extends PureComponent {
                                 </Select>
                                 <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
                                 <Button onClick={this.ButtonHandleExpor}><Icon type="export" /> 导出</Button>
-                                <Radio.Group defaultValue="2" style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
+                                <Radio.Group defaultValue="1" style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
                                     this.setState({
                                         DealType: e.target.value,
                                     })
                                 }}>
-                                    <Radio.Button value="2">全部</Radio.Button>
+                                    {/* <Radio.Button value="2">全部</Radio.Button> */}
                                     <Radio.Button value="1">已核实</Radio.Button>
                                     <Radio.Button value="0">待核实</Radio.Button>
                                 </Radio.Group>
                                 <div style={{marginTop:10}}>
+                                {this.state.DealType === '1'?
+                                    <div>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
                                     <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)}  onChange={this.AlarmDealCheckBoxChange}>
                                         {
@@ -1639,6 +1641,8 @@ class index extends PureComponent {
                                             )
                                         }
                                     </Checkbox.Group>
+                                    </div>
+                                    :null }
                                 </div>
                             </div>
                             {

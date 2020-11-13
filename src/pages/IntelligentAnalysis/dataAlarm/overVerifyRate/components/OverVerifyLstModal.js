@@ -196,7 +196,9 @@ export default class OverVerifyLstModal extends Component {
     dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
-
+    this.updateQueryState({
+      PollutantType: '1',
+    });
     setTimeout(() => {
       this.getTableData();
     });
