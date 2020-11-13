@@ -61,7 +61,7 @@ export default Model.extend({
             OperationsUserId: '',
             TaskType: '',
             CompleteTime: '',
-            CreateTime: '',
+            CreateTime:[moment().add(-6, 'd'), moment()],
             pageIndex: 1,
             pageSize: 20,
             total: 0,

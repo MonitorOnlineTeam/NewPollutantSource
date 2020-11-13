@@ -521,13 +521,18 @@ getTaskTypeInfo=() => {
                       </FormItem>
                   </Col>
                   <Col md={8} sm={24}>
-                      <FormItem {...formLayout} label="任务单号" style={{ width: '100%' }}>
-                          {getFieldDecorator('TaskCode', {
-                            initialValue: gettasklistqueryparams.TaskCode,
+                      <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
+                          {getFieldDecorator('CreateTime', {
+                            initialValue: gettasklistqueryparams.CreateTime,
                           })(
-                            <Input placeholder="请输入" allowClear />,
+                            <RangePicker_
+                            dateValue={ gettasklistqueryparams.CreateTime}
+                            style={{ width: '100%' }}
+                            format="YYYY-MM-DD HH:MM"
+                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:MM" />,
                           )}
                       </FormItem>
+                     
                   </Col>
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="运维状态" style={{ width: '100%' }}>
@@ -612,15 +617,11 @@ getTaskTypeInfo=() => {
                       </FormItem>
                   </Col>
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
-                      <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
-                          {getFieldDecorator('CreateTime', {
-                            initialValue: gettasklistqueryparams.CreateTime,
+                      <FormItem {...formLayout} label="任务单号" style={{ width: '100%' }}>
+                          {getFieldDecorator('TaskCode', {
+                            initialValue: gettasklistqueryparams.TaskCode,
                           })(
-                            <RangePicker_
-                            dateValue={ gettasklistqueryparams.CreateTime}
-                            style={{ width: '100%' }}
-                            format="YYYY-MM-DD HH:MM"
-                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:MM" />,
+                            <Input placeholder="请输入" allowClear />,
                           )}
                       </FormItem>
                   </Col>
