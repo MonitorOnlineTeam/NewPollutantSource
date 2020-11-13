@@ -15,18 +15,17 @@ class Playback extends PureComponent {
 
   componentWillUnmount() {
     this.onStopPlay();
-    
-      if (this.oWebControl != null){
-        this.oWebControl.JS_HideWnd();   // 先让窗口隐藏，规避插件窗口滞后于浏览器消失问题
-              this.oWebControl.JS_Disconnect().then(function(){}, function() {});
-          }
+    if (this.oWebControl != null) {
+      this.oWebControl.JS_HideWnd();   // 先让窗口隐藏，规避插件窗口滞后于浏览器消失问题
+      this.oWebControl.JS_Disconnect().then(function () { }, function () { });
+    }
   }
 
-  onStopPlay = () =>{
-// 停止回放
-this.oWebControl.JS_RequestInterface({
-  funcName: "stopAllPlayback"
-})
+  onStopPlay = () => {
+    // 停止回放
+    this.oWebControl.JS_RequestInterface({
+      funcName: "stopAllPlayback"
+    })
   }
 
   onBackPlay = (cameraIndexCode, startTime, entTime, otherParams = {}) => {

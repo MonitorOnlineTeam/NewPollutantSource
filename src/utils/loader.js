@@ -80,7 +80,6 @@ loader.loadImage = function loadImage(fileId, URI, appendDOM){
 }
 // 加载js
 loader.loadScript = function loadScript(fileId, URI, flagArr){
-    debugger
     if(!loader.file.script[fileId]) loader.file.script[fileId] = {};
     const thisFile = loader.file.script[fileId];
     if(thisFile.status === 2){ // 加载完毕
