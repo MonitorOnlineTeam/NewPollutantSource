@@ -518,6 +518,8 @@ export default class EntIndexModal extends Component {
     </>
   }
   render() {
+    console.log("props.pollutantType=",this.props.pollutantType)
+    console.log("state.pollutantType=",this.state.PollutantType)
   const {TVisible,TCancle,TTVisible} = this.props
   return (
     <>
@@ -534,7 +536,7 @@ export default class EntIndexModal extends Component {
               !this.state.showDetails && this.showModal()
             }
             {
-              this.state.showDetails && <QutPage hideBreadcrumb location={{ query: { RegionCode: this.state.RegionCode } }} pollutantType={this.state.PollutantType} onBack={() => {
+              this.state.showDetails && <QutPage hideBreadcrumb location={{ query: { RegionCode: this.state.RegionCode } }} _pollutantType={this.state.PollutantType} onBack={() => {
                 this.setState({
                   showDetails: false,
                   RegionCode: undefined
