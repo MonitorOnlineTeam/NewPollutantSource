@@ -14,16 +14,20 @@ class Camera extends PureComponent {
   }
 
   componentWillUnmount() {
+    this.onStopPlay();
+    if (this.oWebControl != null) {
+      this.oWebControl.JS_HideWnd();   // 先让窗口隐藏，规避可能的插件窗口滞后于浏览器消失问题 
+      this.oWebControl.JS_Disconnect().then(function () {  // 断开与插件服务连接成功
+      },
+        function () {  // 断开与插件服务连接失败
+        });
+    }
+  }
+
+  onStopPlay = () => {
     this.oWebControl.JS_RequestInterface({
       funcName: "stopAllPreview"
-  });
-  if (this.oWebControl != null){
-    this.oWebControl.JS_HideWnd();   // 先让窗口隐藏，规避可能的插件窗口滞后于浏览器消失问题 
-          this.oWebControl.JS_Disconnect().then(function(){  // 断开与插件服务连接成功
-    }, 
-    function() {  // 断开与插件服务连接失败
     });
-      }
   }
 
   realtimePlay = () => {
@@ -75,7 +79,7 @@ class Camera extends PureComponent {
 
   // 创建播放实例
   initPlugin = () => {
-    console.log(" window.WebControl=", window.WebControl)
+    const { height, width } = this.props;
     this.oWebControl = new window.WebControl({
       szPluginContainer: "playWnd",                       // 指定容器id
       iServicePortStart: 15900,                           // 指定起止端口号，建议使用该值
@@ -86,7 +90,7 @@ class Camera extends PureComponent {
         this.oWebControl.JS_StartService("window", {         // WebControl实例创建成功后需要启动服务
           dllPath: "./VideoPluginConnect.dll"         // 值"./VideoPluginConnect.dll"写死 
         }).then(() => {                           // 启动插件服务成功
-          this.oWebControl.JS_CreateWnd("playWnd", 1000, 600).then(() => { //JS_CreateWnd创建视频播放窗口，宽高可设定
+          this.oWebControl.JS_CreateWnd("playWnd", width, height).then(() => { //JS_CreateWnd创建视频播放窗口，宽高可设定
             this.init();  // 创建播放实例成功后初始化
           });
         }, function () { // 启动插件服务失败
@@ -102,7 +106,12 @@ class Camera extends PureComponent {
             this.initPlugin();
           }, 3000)
         } else {
-          $("#playWnd").html("插件启动失败，请检查插件是否安装！");
+          $("#playWnd").html(`
+            <div>
+              插件启动失败，请检查插件是否安装！
+              <a href="" download>下载插件</a>
+            </div>
+          `);
         }
       },
       cbConnectClose: (bNormalClose) => {
@@ -151,7 +160,7 @@ class Camera extends PureComponent {
           buttonIDs: buttonIDs                       //自定义工具条按钮
         })
       }).then((oData) => {
-        this.oWebControl.JS_Resize(1000, 600);  // 初始化后resize一次，规避firefox下首次显示窗口后插件窗口未与DIV窗口重合问题
+        this.oWebControl.JS_Resize(this.props.width, this.props.height);  // 初始化后resize一次，规避firefox下首次显示窗口后插件窗口未与DIV窗口重合问题
         this.realtimePlay()
       });
     });
@@ -181,7 +190,7 @@ class Camera extends PureComponent {
 
   render() {
     return (
-      <div id="playWnd" style={this.props.style}></div>
+      <div id="playWnd" style={{ width: '100%', height: '100%', ...this.props.style }}></div>
     );
   }
 }
@@ -189,6 +198,8 @@ class Camera extends PureComponent {
 Camera.defaultProps = {
   style: {},
   defaultPlay: false,
+  width: 1000,
+  height: 600
 }
 
 export default Camera;

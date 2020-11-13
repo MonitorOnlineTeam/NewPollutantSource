@@ -59,7 +59,7 @@ class RegionDetails extends PureComponent {
           dataIndex: 'OperationName',
           key: 'OperationName',
           render: (text, record) => {
-            if (record.CompleteTime === "0001-01-01 00-00-00") {
+            if (record.CompleteTime === "0001-01-01 00:00:00") {
               return "-"
             }
             return text ? text : "-"
@@ -71,7 +71,7 @@ class RegionDetails extends PureComponent {
           key: 'CompleteTime',
           align: 'center',
           render: (text, record) => {
-            if (record.CompleteTime === "0001-01-01 00-00-00") {
+            if (record.CompleteTime === "0001-01-01 00:00:00") {
               return "-"
             }
             return text ? text : "-"
