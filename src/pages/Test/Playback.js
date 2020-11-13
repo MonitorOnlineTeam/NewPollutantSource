@@ -13,6 +13,22 @@ class Playback extends PureComponent {
     this._loadWebControlFile();
   }
 
+  componentWillUnmount() {
+    this.onStopPlay();
+    
+      if (this.oWebControl != null){
+        this.oWebControl.JS_HideWnd();   // 先让窗口隐藏，规避插件窗口滞后于浏览器消失问题
+              this.oWebControl.JS_Disconnect().then(function(){}, function() {});
+          }
+  }
+
+  onStopPlay = () =>{
+// 停止回放
+this.oWebControl.JS_RequestInterface({
+  funcName: "stopAllPlayback"
+})
+  }
+
   onBackPlay = (cameraIndexCode, startTime, entTime, otherParams = {}) => {
     this.oWebControl.JS_RequestInterface({
       funcName: "startPlayback",
@@ -48,7 +64,10 @@ class Playback extends PureComponent {
   // 文件加载
   _loadWebControlFile = () => {
     if (window.WebControl) {
-      if (!this.WebControl) this.WebControl = window.WebControl;
+      if (!this.WebControl) {
+        this.WebControl = window.WebControl;
+        this.initPlugin();
+      }
       return Promise.resolve();
     } else {
       return loader('/js/jsWebControl.js', 'WebControl')
@@ -168,6 +187,7 @@ class Playback extends PureComponent {
   }
 
   render() {
+    console.log("ptops123123=", this.props)
     return (
       <div id="playWnd" style={this.props.style}></div>
     );

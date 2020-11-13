@@ -13,6 +13,19 @@ class Camera extends PureComponent {
     this._loadWebControlFile();
   }
 
+  componentWillUnmount() {
+    this.oWebControl.JS_RequestInterface({
+      funcName: "stopAllPreview"
+  });
+  if (this.oWebControl != null){
+    this.oWebControl.JS_HideWnd();   // 先让窗口隐藏，规避可能的插件窗口滞后于浏览器消失问题 
+          this.oWebControl.JS_Disconnect().then(function(){  // 断开与插件服务连接成功
+    }, 
+    function() {  // 断开与插件服务连接失败
+    });
+      }
+  }
+
   realtimePlay = () => {
     // 实时
     this.oWebControl.JS_RequestInterface({
@@ -139,7 +152,7 @@ class Camera extends PureComponent {
         })
       }).then((oData) => {
         this.oWebControl.JS_Resize(1000, 600);  // 初始化后resize一次，规避firefox下首次显示窗口后插件窗口未与DIV窗口重合问题
-        this.props.defaultPlay && this.realtimePlay()
+        this.realtimePlay()
       });
     });
   }

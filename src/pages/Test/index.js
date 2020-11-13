@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Card, DatePicker, Button } from "antd"
+import { Card, DatePicker, Button, Row, Select } from "antd"
 import Preview from "./Preview"
 import Playback from "./Playback"
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+
 
 const { RangePicker } = DatePicker;
+const { Option } = Select
 
 class index extends PureComponent {
   constructor(props) {
@@ -16,12 +19,14 @@ class index extends PureComponent {
 
   onBack = () => {
     const { date } = this.state;
-    this.playback.onBack("18507478f7cf4c2883a75c030d59b847", date[0], date[1])
+    console.log("this.playback=", this.playback)
+    this.playback.onBackPlay("18507478f7cf4c2883a75c030d59b847", date[0], date[1])
   }
 
   render() {
     const { playMode } = this.state;
     return (
+      <BreadcrumbWrapper>
       <Card>
         <Row>
           <Select defaultValue="realtime" style={{ width: 120 }} onChange={(value) => {
@@ -30,7 +35,7 @@ class index extends PureComponent {
             })
           }}>
             <Option value="realtime">实时视频</Option>
-            <Option value="back">视频回访</Option>
+            <Option value="back">视频回放</Option>
           </Select>
           {
             playMode === 'back' &&
@@ -44,16 +49,17 @@ class index extends PureComponent {
                 }}
               />
               <Button type="primary" onClick={() => {
-
+                this.onBack()
               }}>回放</Button>
             </>
           }
         </Row>
         {
-          playMode === "realtime" ? <Preview style={{}} /> :
-            <Playback ref={playback => this.playback = playback} style={{}} />
+          playMode === "realtime" ? <Preview cameraIndexCode={'18507478f7cf4c2883a75c030d59b847'} style={{marginTop: 300}} /> :
+            <Playback ref={playback => this.playback = playback} style={{marginTop: 300}} />
         }
       </Card>
+      </BreadcrumbWrapper>
     );
   }
 }
