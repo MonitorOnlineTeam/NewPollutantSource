@@ -87,7 +87,7 @@ export default class EntTransmissionEfficiency extends Component {
       PageIndex: 1,
       PageSize: 20,
       EntCode: '',
-      PollutantType: this.props.pollutantType,
+      PollutantType: this.props._pollutantType || this.props.pollutantType,
       Assessment: this.props.assessment
     });
 
@@ -114,7 +114,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar,  PollutantType: this.props._pollutantType || this.props.pollutantType, },
     });
   };
 
@@ -233,6 +233,7 @@ export default class EntTransmissionEfficiency extends Component {
     return result;
   }
   render() {
+    console.log("_pollutantType=", this.props._pollutantType)
     const { eName } = this.state;
     const {
       exEntloading,
