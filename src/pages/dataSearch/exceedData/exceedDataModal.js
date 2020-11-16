@@ -212,7 +212,6 @@ class index extends PureComponent {
                     pollutionData.push(obj)
                 }
             })
-
               this.setState({
                   selectPollution: selectPollution,
                   RegionCode: values.Region == undefined ? '' : values.Region,
@@ -225,7 +224,7 @@ class index extends PureComponent {
                   PollutantList: pollutionData,
                   entType: values.outlet == undefined ? '' : values.outlet,
               })
-
+   
             this.props.dispatch({
                 type:pageUrl.GetExceedDataList,
                 payload:{
@@ -249,7 +248,7 @@ class index extends PureComponent {
 
     // 导出
     exportReport = (e) => {
-
+                
         const { PollutantByType } = this.props
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -260,7 +259,7 @@ class index extends PureComponent {
                 let obj = {}
                 let Min = null
                 let Max = null
-                if (values[item.PollutantCode] != '') {
+                if (values[item.PollutantCode] != '' &&values[item.PollutantCode].toString() == item.PollutantCode) {
                     let pollution = {}
                     pollution['PollutantName'] = item.PollutantName
                     pollution['PollutantCode'] = values[item.PollutantCode].toString()
@@ -970,7 +969,8 @@ class index extends PureComponent {
                         {
                             this.state.entType == '2' &&
                             PollutantByType.map((item, i) =>
-                                (i + 1) % 6 == 0 || i==0 ? <span>
+                                
+                                (i) % 2 == 0 || i==0 ? <span>
                                     <br />
                                     <Form.Item >
                                         <span>
@@ -1379,6 +1379,7 @@ class index extends PureComponent {
     }
     //企业数查询导出
     EntButtonCountHandleExpor=()=>{
+
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedDataList,

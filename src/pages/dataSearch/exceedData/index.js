@@ -1479,7 +1479,7 @@ class index extends PureComponent {
             type:pageUrl.GetExceedNum,
             payload:{
                 EntCode:enterpriseValue,
-                RegionCode: modalregionCode,
+                RegionCode:modalregionCode=='All'?'': modalregionCode,
                 AttentionCode: AttentionCode,
                 PollutantTypeCode: pagePollutantType,
                 DataType: DataType,

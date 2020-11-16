@@ -351,7 +351,7 @@ class index extends PureComponent {
                             )
                         }
                     </Checkbox.Group>
-                    <span style={{ fontSize: 14, color: 'red' }}>核实结果为工艺超标、工艺设备故障的超标预警,由监管人员进行处置</span>
+                    <span style={{ fontSize: 14, color: 'red' }}>核实结果为工艺超标、工艺设备故障的超标报警,由监管人员进行处置</span>
                 </div>
                 
             </>
@@ -1646,7 +1646,7 @@ class index extends PureComponent {
                                     <Radio.Button value="0">待处置</Radio.Button>
                                 </Radio.Group>
                                 <div style={{marginTop:10}}>
-                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
+                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
                                     <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
@@ -1695,7 +1695,7 @@ class index extends PureComponent {
                                 <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
                                 <Button onClick={this.AlreadyButtonHandleExpor}><Icon type="export" /> 导出</Button>
                                 <div style={{marginTop:10}}>
-                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
+                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
                                     <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)}  onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>

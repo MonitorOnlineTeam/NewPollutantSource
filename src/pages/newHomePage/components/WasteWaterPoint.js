@@ -95,7 +95,10 @@ export default class Index extends Component {
     const { dispatch, dataQueryPar } = this.props;
 
     let pointStatusPar = { ...dataQueryPar, PollutantType: 1, };
-    dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar }, });//监测点状态
+    dispatch({ type: 'home/getPointStatusList', 
+    payload: { ...pointStatusPar,DataType: "HourData", BeginTime: moment().add('hour', -1).format('YYYY-MM-DD HH:00:00'),
+    EndTime: moment().format('YYYY-MM-DD 23:59:59'), }, });//监测点状态
+
     dispatch({
       type: 'home/getOperationWorkOrderList', payload: {
         ...pointStatusPar,
@@ -391,7 +394,7 @@ export default class Index extends Component {
         }} /> : null}
         {/**超标报警*/}
         {waterAlarmVisible ? <ExceedDataAlarm
-          dateTime={[moment().subtract(1, "hour"),
+          dateTime={[moment().subtract(1, "hour").startOf("hour"),
           moment()]} alarmType={pollutantType} alarmVisible={waterAlarmVisible} alarmCancle={() => {
             this.setState({ waterAlarmVisible: false });
           }} /> : null}

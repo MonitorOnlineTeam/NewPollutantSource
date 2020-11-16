@@ -76,7 +76,7 @@ class index extends PureComponent {
             statusAlram:'',
             pollutantCodeList:[],
             AlarmDealTypeList:[],
-            DealType:'1',
+            DealType:'2',
             enterpriseValue:'',
             ModalTitle:'',
             PollutantCode:'',
@@ -370,6 +370,7 @@ class index extends PureComponent {
             payload: { RegionCode: regionCode },
         });
         this.setState({
+            DealType:'2',
             regVisible:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
@@ -387,7 +388,7 @@ class index extends PureComponent {
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
-                Status:'1',
+                Status:'',
                 EntCode:'',
                 VerifyStatus:AlarmDealTypeList
             }
@@ -399,6 +400,7 @@ class index extends PureComponent {
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
         const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
         this.setState({
+            DealType:'1',
             regVisibleAlready:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
@@ -437,6 +439,7 @@ class index extends PureComponent {
             payload: { RegionCode: regionCode },
         });
         this.setState({
+            DealType:'0',
             regVisibleStay:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
@@ -513,7 +516,7 @@ class index extends PureComponent {
                 //PageSize: 10,
                // PageIndex: 1,
                 PollutantCode: PollutantCode,
-                Status:status,
+                Status:status=="2"?"":status,
                 EntCode:entCode == undefined?'':entCode,
                 VerifyStatus:AlarmDealTypeList
             }
@@ -576,8 +579,7 @@ class index extends PureComponent {
         const {column,AlarmDetailList} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
-        
-        
+
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRateDetail,
             payload: {
@@ -687,9 +689,10 @@ class index extends PureComponent {
                         return key = item.key
                     }
                 })
+                let alarmDetailList = this.props.AlarmDetailList.filter(item=>item.regionName !== "全部合计" )
                 if (key != '') {
                     let obj = {
-                        title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
+                        title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -715,7 +718,7 @@ class index extends PureComponent {
                 }
                 if (key == '') {
                     panes.push({
-                        title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
+                        title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -1042,7 +1045,7 @@ class index extends PureComponent {
                 BeginTime:moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
                 EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PollutantCode: PollutantCode,
-                Status:status,
+                Status:status=="2"?"":status,
                 EntCode:entCode,
                 VerifyStatus:[]
             }
@@ -1621,12 +1624,12 @@ class index extends PureComponent {
                                 </Select>
                                 <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
                                 <Button onClick={this.ButtonHandleExpor}><Icon type="export" /> 导出</Button>
-                                <Radio.Group defaultValue="1" style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
+                                <Radio.Group value={this.state.DealType} style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
                                     this.setState({
                                         DealType: e.target.value,
                                     })
                                 }}>
-                                    {/* <Radio.Button value="2">全部</Radio.Button> */}
+                                    <Radio.Button value="2">全部</Radio.Button>
                                     <Radio.Button value="1">已核实</Radio.Button>
                                     <Radio.Button value="0">待核实</Radio.Button>
                                 </Radio.Group>

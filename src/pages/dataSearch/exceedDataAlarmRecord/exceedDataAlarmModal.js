@@ -111,14 +111,13 @@ class exceedDataAlarmModal extends PureComponent {
         this.props.dispatch({
             type:pageUrl.GetPollutantCodeList,
             payload:{
-                PollutantType:this.state.outletValue
+                PollutantType:this.props.alarmType
             }
         }).then(()=>{
             if(this.props.pollutantCodeList.length > 0)
             {
                 const {dataType} = this.state
                 const {dateTime,alarmType}= this.props
-                console.log(alarmType)
                 this.props.dispatch({
                     type: pageUrl.GetAlarmVerifyRate,
                     payload: {
@@ -136,7 +135,8 @@ class exceedDataAlarmModal extends PureComponent {
                 this.setState({
                     pollutantCodeList:this.props.pollutantCodeList.map(poll=>poll.PollutantCode),
                     outletValue:alarmType == ''?'1':alarmType,
-                    time:dateTime
+                    time:dateTime,
+                    entType:alarmType
                 })
             }
         })
@@ -372,6 +372,7 @@ class exceedDataAlarmModal extends PureComponent {
             payload: { RegionCode: regionCode },
         });
         this.setState({
+            DealType:'2',
             regVisible:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
@@ -384,8 +385,8 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -401,6 +402,7 @@ class exceedDataAlarmModal extends PureComponent {
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
         const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
         this.setState({
+            DealType:'1',
             regVisibleAlready:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
@@ -418,8 +420,8 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -439,6 +441,7 @@ class exceedDataAlarmModal extends PureComponent {
             payload: { RegionCode: regionCode },
         });
         this.setState({
+            DealType:'0',
             regVisibleStay:true,
             regionCode:regionCode,
             PollutantCode:PollutantCode,
@@ -451,8 +454,8 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -484,8 +487,8 @@ class exceedDataAlarmModal extends PureComponent {
         {
             this.setState({
                 entVisible: true,
-                ModalTitle: '全部合计' + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
-                status:status,
+                ModalTitle: '全部合计' + '于' + moment(moment(time[0]).format("YYYY-MM-DD HH:mm:ss")).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
+                status:status=='2'?"":status,
                 PollutantCode:PollutantCode
     
             })
@@ -495,7 +498,7 @@ class exceedDataAlarmModal extends PureComponent {
             this.setState({
                 entVisible: true,
                 ModalTitle: entName + '-' + pointName + '于' + moment(time[0]).format('YYYY年MM月DD号HH时') + '至' + moment(time[1]).format('YYYY年MM月DD号HH时') + '超标报警' + deal,
-                status:status,
+                status:status=='2'?"":status,
                 entCode:entCode,
                 regionCode:reCode,
                 PollutantCode:PollutantCode
@@ -510,12 +513,12 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                // PageIndex: 1,
                 PollutantCode: PollutantCode,
-                Status:status,
+                Status:status=='2'?"":status,
                 EntCode:entCode == undefined?'':entCode,
                 VerifyStatus:AlarmDealTypeList
             }
@@ -587,8 +590,8 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
@@ -689,9 +692,11 @@ class exceedDataAlarmModal extends PureComponent {
                         return key = item.key
                     }
                 })
+                let alarmDetailList = this.props.AlarmDetailList.filter(item=>item.regionName !== "全部合计" )
+
                 if (key != '') {
                     let obj = {
-                        title: text, content: <SdlTable loading={loadingRateDetail} columns={columns} dataSource={this.props.AlarmDetailList}
+                        title: text, content: <SdlTable loading={loadingRateDetail} columns={columns} dataSource={alarmDetailList}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -923,8 +928,8 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 //PageSize: 10,
                 //PageIndex: 1,
                 PollutantCode: PollutantCode,
@@ -944,8 +949,8 @@ class exceedDataAlarmModal extends PureComponent {
                 attentionCode: attentionValue == undefined?'':attentionValue,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
-                BeginTime: time[0],
-                EndTime: time[1],
+                BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
+                EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                 PollutantCode: PollutantCode,
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
@@ -1641,7 +1646,7 @@ class exceedDataAlarmModal extends PureComponent {
                                 </Select>
                                 <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
                                 <Button onClick={this.ButtonHandleExpor}><Icon type="export" /> 导出</Button>
-                                <Radio.Group defaultValue="2" style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
+                                <Radio.Group value={this.state.DealType} style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
                                     this.setState({
                                         DealType: e.target.value,
                                     })
@@ -1651,6 +1656,8 @@ class exceedDataAlarmModal extends PureComponent {
                                     <Radio.Button value="0">待核实</Radio.Button>
                                 </Radio.Group>
                                 <div style={{marginTop:10}}>
+                                {this.state.DealType === '1'?
+                                    <div>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>核实结果:</label>
                                     <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)}  onChange={this.AlarmDealCheckBoxChange}>
                                         {
@@ -1659,6 +1666,8 @@ class exceedDataAlarmModal extends PureComponent {
                                             )
                                         }
                                     </Checkbox.Group>
+                                    </div>
+                                    :null }
                                 </div>
                             </div>
                             {
