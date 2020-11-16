@@ -105,8 +105,8 @@ export default {
           component: './home/Home',
         },
         {
-          name: 'projectSummary',
-          path: '/projectSummary',
+          name: 'summaryProject',
+          path: '/summaryProject',
           component: './projectSummary',
         },
         // appoperation
