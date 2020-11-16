@@ -168,6 +168,9 @@ export default class OverVerifyLstModal extends Component {
                 dataIndex: item.PollutantCode + '_RespondedRate',
                 key: item.PollutantCode + '_RespondedRate',
                 align: 'center',
+                render: (text, record) => {
+                  return <div>{text == '-' ? text : `${text}%`}</div>;
+                },
               },
             ],
           });
@@ -177,6 +180,9 @@ export default class OverVerifyLstModal extends Component {
           dataIndex: 'AllRespondedRate',
           key: 'AllRespondedRate',
           align: 'center',
+          render: (text, record) => {
+            return <div>{text == '-' ? text : `${text}%`}</div>;
+          },
         });
         this.setState(
           { checkedValues: res.map(item => item.PollutantCode), columns: newCloum },
@@ -386,6 +392,9 @@ export default class OverVerifyLstModal extends Component {
               dataIndex: item.PollutantCode + '_RespondedRate',
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
+              render: (text, record) => {
+                return <div>{text == '-' ? text : `${text}%`}</div>;
+              },
             },
           ],
         });
@@ -397,6 +406,9 @@ export default class OverVerifyLstModal extends Component {
       dataIndex: 'AllRespondedRate',
       key: 'AllRespondedRate',
       align: 'center',
+      render: (text, record) => {
+        return <div>{text == '-' ? text : `${text}%`}</div>;
+      },
     });
     this.setState({
       columns: newCloum,
@@ -440,6 +452,7 @@ export default class OverVerifyLstModal extends Component {
                   日期查询：
                   <RangePicker_
                     onRef={this.onRef1}
+                    allowClear = {false}
                     dataType={dataType}
                     style={{ minWidth: '200px', marginRight: '10px' }}
                     dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
