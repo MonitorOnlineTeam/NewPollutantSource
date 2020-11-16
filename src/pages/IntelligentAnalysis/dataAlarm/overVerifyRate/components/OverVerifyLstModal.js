@@ -452,6 +452,7 @@ export default class OverVerifyLstModal extends Component {
                   日期查询：
                   <RangePicker_
                     onRef={this.onRef1}
+                    allowClear = {false}
                     dataType={dataType}
                     style={{ minWidth: '200px', marginRight: '10px' }}
                     dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
