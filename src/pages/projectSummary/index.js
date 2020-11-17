@@ -28,14 +28,15 @@ import Time from "@/components/Time"
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import moment from 'moment';
 import { router } from "umi"
+import { positionList } from "./position"
 
 const statusList = [
-  { text: "在线", checked: false, color: "#52c41a", value: 1, count: 33, className: "green" },
-  { text: "离线", checked: false, color: "#d9d9d9", value: "0", count: 4, className: "default" },
-  { text: "超标", checked: false, color: "#f5222d", value: 2, count: 4, className: "red" },
-  { text: "异常", checked: false, color: "#fa8c16", value: 3, count: 6, className: "orange" },
-  { text: "备案不符", checked: false, color: "#fa8c16", value: 5, count: 1, className: "volcano" },
-  { text: "监测不合格", checked: false, color: "#faad14", value: 4, count: 2, className: "magenta" },
+  { text: "在线", checked: false, color: "#52c41a", value: 1, count: 17, className: "green" },
+  { text: "离线", checked: false, color: "#d9d9d9", value: "0", count: 3, className: "default" },
+  { text: "超标", checked: false, color: "#f5222d", value: 2, count: 3, className: "red" },
+  { text: "异常", checked: false, color: "#fa8c16", value: 3, count: 2, className: "orange" },
+  { text: "备案不符", checked: false, color: "#fa8c16", value: 5, count: 2, className: "volcano" },
+  { text: "监测不合格", checked: false, color: "#faad14", value: 4, count: 3, className: "magenta" },
 ];
 
 const RadioButton = Radio.Button;
@@ -203,12 +204,12 @@ class ProjectSummary extends Component {
 
   randomMarker = (len) => (
     Array(len).fill(true).map((e, idx) => ({
-      position: {
+          position: {
         longitude: 112 + Math.random() * 6,
         latitude: 37 + Math.random() * 5,
-      },
-      status: this.getRandomNum(0, 3),
-      type: this.getRandomNum(1, 2)
+        },
+        status: this.getRandomNum(0, 3),
+        type: this.getRandomNum(1, 2)
     }))
   );
 
@@ -228,11 +229,12 @@ class ProjectSummary extends Component {
   render() {
     const { mapCenter, ponitList } = this.state;
     const { month } = this._SELF_;
+    console.log("positionList=",positionList.length)
     return (
       <div className={styles.homeWrapper}>
         <header className={styles.homeHeader}>
           <div>
-            <img className={styles.headerImg} src="/ProjectSummary/homeheader.png" alt="" />
+            <img className={styles.headerImg} src="/ProjectSummary/top.png" alt="" />
             <div className={styles['left-button']}>
               <span onClick={() => this.onMenuClick("172.16.12.135:50310")}>监控中心</span>
               <span onClick={() => this.onMenuClick("172.16.12.152:50082")}>质控中心</span>
@@ -261,7 +263,7 @@ class ProjectSummary extends Component {
               offset={[4, -35]}
             >{this.state.currentTitle}</InfoWindow>
             <Markers
-              markers={this.randomMarker(50)}
+              markers={positionList}
               events={this.markersEvents}
               className={this.state.special}
               render={this.renderMarkers}
@@ -340,7 +342,7 @@ class ProjectSummary extends Component {
               <Time style={{ marginLeft: 10 }} />
             </div>
             <p className={styles.total}>
-              当前监测排口总数量<span>50</span>个
+              当前监测排口总数量<span>30</span>个
               </p>
             <ul className={styles.number}>
               {
