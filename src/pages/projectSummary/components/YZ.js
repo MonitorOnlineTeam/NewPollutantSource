@@ -95,7 +95,7 @@ class YZ extends PureComponent {
         }],
         series: [
           {
-            name: '液位异常报警',
+            name: '运转率',
             type: 'line',
             showAllSymbol: true,
             symbol: 'none',

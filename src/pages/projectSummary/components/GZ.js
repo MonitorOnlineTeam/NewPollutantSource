@@ -95,7 +95,7 @@ class GZ extends PureComponent {
         }],
         series: [
           {
-            name: '液位异常报警',
+            name: '故障率',
             type: 'line',
             showAllSymbol: true,
             symbol: 'none',
