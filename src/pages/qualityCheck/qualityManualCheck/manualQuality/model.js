@@ -46,7 +46,7 @@ export default Model.extend({
   effects: {
     // 获取气瓶数据
     *getBottleDataList({ payload, }, { call, update, put, take, select }) {
-      const result = yield call(services.getBottleDataList, payload);
+      const result = yield call(services.getBottleDataList, { ...payload, State: 1 });
       if (result.IsSuccess) {
         let gasData = {};
         result.Datas.map(item => {
