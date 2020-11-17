@@ -548,13 +548,12 @@ class Index extends React.Component {
           }else{
             this.setState({ paraPlaceholder:'请选择参数名称' })
           }
-
           if(!isSaveFlag && !editingKey){
 
 
-            addItem = {...addItem,key:count};
+            addItem = {...addItem,key:count,ParaName:getParaCodeList,Unit:getParaCodeList.length>0?getParaCodeList[0].Unit:'',Type:getParaCodeList.length>0?getParaCodeList[0].Type:''};
+
             count+=1;
-      
            if(current===1){ //第一页时
       
             tableDatas = [

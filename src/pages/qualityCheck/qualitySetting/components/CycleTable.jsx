@@ -332,7 +332,6 @@ class Index extends React.Component {
     payload: { addParams },
      }); 
 
-    console.log(addParams)
   }
   cycleClick = (value) =>{ //质控周期事件
 
