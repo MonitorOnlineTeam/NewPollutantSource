@@ -9,82 +9,135 @@ class QCAQualifiedDays extends PureComponent {
   }
 
   getOption = () => {
-    var scale = 1;
-    var echartData = [{
-      value: 31,
-      name: '合格30天'
-    }, {
-      value: 35,
-      name: '合格20天-30天'
-    }, {
-      value: 38,
-      name: '合格10天-20天'
-    }, {
-      value: 21,
-      name: '合格0天-10天'
-    }]
-    var rich = {
-      yellow: {
-        color: "#3bc7ff",
-        fontSize: 13 * scale,
-        padding: [8, 0],
-        align: 'center'
-      },
-      total: {
-        color: "#A2C7F3",
-        fontSize: 60 * scale,
-        align: 'center'
-      },
-      white: {
-        // color: "#a2c7f3",
-        align: 'center',
-        fontSize: 14 * scale,
-        padding: [8, 0]
-      },
-      blue: {
-        color: '#3bc7ff',
-        fontSize: 14 * scale,
-        align: 'center'
-      },
-      hr: {
-        borderColor: '#a2c7f3',
-        width: '100%',
-        borderWidth: 1,
-        height: 0,
-      }
-    }
     let option = {
-      tooltip: {},
+      backgroundColor: '#00000000',
+      // legend: {
+      //   orient: 'vertical', // 'vertical'
+      //   x: 'left', // 'center' | 'left' | {number},
+      //   y: '80', // 'center' | 'bottom' | {number}
+      //   padding: 10, // [5, 10, 15, 20]
+      //   itemGap: 20,
+      //   textStyle: {
+      //     color: '#c3cad9'
+      //   },
+      // },
+      grid: {
+        left: '-10%',
+        right: '4%',
+        bottom: '-10%',
+        containLabel: true
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: "{b} : {c} ({d}%)"
+      },
+      visualMap: {
+        show: false,
+        min: 500,
+        max: 600,
+        inRange: {
+          //colorLightness: [0, 1]
+        }
+      },
       series: [{
-        name: '质控合格天数',
+        name: '访问来源',
         type: 'pie',
-        radius: ['32%', '50%'],
-        // hoverAnimation: false,
-        color: ['#fc962c', '#d83472', '#0F9AF8', '#2B63D5', '#2039C3', '#2ECACE', '#6F81DA'],
+        left: 10,
+        top: 10,
+        right: 10,
+        bottom: 10,
+        radius: [0, '75%'],
+        selectedMode: 'single',
+        // selectedOffset: 10,
+        clockwise: true,
+        center: ['50%', '50%'],
+        color: ['#43cadd', '#3893e5', '#FCC708', '#03B48E'], //'#FBFE27','rgb(11,228,96)','#FE5050'
+        // HGDaysData = [{
+        //   value: 21,
+        //   name: '0天-10天',
+        //   time: "2020-11"
+        // }, {
+        //   value: 38,
+        //   name: '10天-20天',
+        //   time: "2020-11"
+        // }, {
+        //   value: 35,
+        //   name: '20天-30天',
+        //   time: "2020-11"
+        // }, {
+        //   value: 31,
+        //   name: '30天',
+        //   time: "2020-11"
+        // }]
+        data: [{
+          value: 21,
+          name: '0天-10天',
+        },
+        {
+          value: 38,
+          name: '10天-20天'
+        },
+        {
+          value: 35,
+          name: '20天-30天',
+        },
+        {
+          value: 31,
+          name: '30天'
+        },
+        ].sort(function (a, b) {
+          return a.value - b.value
+        }),
+        roseType: 'radius',
         label: {
           normal: {
-            formatter: function (params, ticket, callback) {
-              var total = 0; //考生总数量
-              var percent = 0; //考生占比
-              echartData.forEach(function (value, index, array) {
-                total += value.value;
-              });
-              percent = ((params.value / total) * 100).toFixed(1);
-              return '{white|' + params.name + '}\n{hr|}\n{yellow|' + params.value + '个/}{blue|' + percent + '%}';
+            // formatter: ['{c|{b}{d}%}', '{b|{b}}'].join('\n'),
+            // formatter: ['{b|{b}{d}%}', '{c|{c}万元}'].join('\n'),
+            rich: {
+              b: {
+                color: '#d9efff',
+                fontSize: 15,
+                height: 40
+              },
+              c: {
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 'bold',
+                lineHeight: 5
+              },
             },
-            rich: rich
+          }
+        },
+        itemStyle: {
+          borderWidth: '20',
+          color: 'pink',
+          borderColor: '#FFF',
+          normal: {
+            borderWidth: '10',
+            borderColor: '#00000000',
+            label: {
+              formatter: function (params) {
+                if (params.name !== '') {
+                  return params.name + params.value + '次';
+                } else {
+                  return '';
+                }
+              },
+            }
           },
         },
         labelLine: {
           normal: {
-            length: 20 * scale,
-            length2: 0,
+            backgroundColor: 'yellow',
+            borderColor: 'skyblue',
+            borderWidth: 10,
             lineStyle: {
-              color: '#a2c7f3'
+              borderColor: 'skyblue',
+              borderWidth: 10,
+              backgroundColor: 'yellow',
             }
-          }
-        },
-        data: echartData
+          },
+        }
       }]
     };
 

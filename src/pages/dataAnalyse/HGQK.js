@@ -76,7 +76,7 @@ class ZXRate extends PureComponent {
         },
         grid: {
           show: false,
-          left: 0,
+          left: 20,
           right: 10,
           bottom: 30,
           top: 40,
@@ -131,7 +131,7 @@ class ZXRate extends PureComponent {
             type: 'bar',
             stack: 'one',
             data: HGQKTableData.map(item => item.hgNum),
-            barMaxWidth: '16%',
+            barMaxWidth: '70',
             itemStyle: {
               normal: {
                 color: new this.myChart.echartsLib.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -151,7 +151,7 @@ class ZXRate extends PureComponent {
             name: '不合格',
             type: 'bar',
             stack: 'one',
-            barMaxWidth: '16%',
+            barMaxWidth: '70',
             data: HGQKTableData.map(item => item.bhgNum),
             itemStyle: {
               normal: {

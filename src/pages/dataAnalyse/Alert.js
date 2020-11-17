@@ -123,7 +123,7 @@ class Alert extends PureComponent {
             type: 'bar',
             stack: 'one',
             data: alertData.map(item => item.value),
-            barMaxWidth: '40',
+            barMaxWidth: '70',
             itemStyle: {
               normal: {
                 color: new this.myChart.echartsLib.graphic.LinearGradient(0, 0, 0, 1, [{

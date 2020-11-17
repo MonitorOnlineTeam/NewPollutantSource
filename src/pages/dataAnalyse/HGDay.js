@@ -122,7 +122,7 @@ class HGDay extends PureComponent {
             type: 'bar',
             stack: 'one',
             data: HGDaysData.map(item => item.value),
-            barMaxWidth: '40',
+            barMaxWidth: '70',
             itemStyle: {
               normal: {
                 color: new this.myChart.echartsLib.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -162,7 +162,7 @@ class HGDay extends PureComponent {
           >
             <Form.Item
               name="time"
-              label="开始/结束时间"
+              label="时间"
             >
               <DatePicker picker="month" style={{width: 200}} />
             </Form.Item>
@@ -183,7 +183,7 @@ class HGDay extends PureComponent {
               {/* <Button type="primary">导出</Button> */}
             </Space>
           </Form>
-          <div className={styles.barChart}>
+          <div className={styles.alertBarChart}>
             <QCAQualifiedDays />
           </div>
           <ReactEcharts
