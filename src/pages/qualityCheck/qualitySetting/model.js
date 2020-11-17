@@ -81,7 +81,18 @@ export default Model.extend({
           message.error(result.Message)
         }
       },
-
+       // 质控核查 质控核查设置 删除 没下发之前的删除
+       *deleteCycleQuality({callback, payload }, { call, update }) {
+        yield update({ tableLoading:true })
+        const result = yield call(DeleteCycleQualityControl, payload);
+        if (result.IsSuccess) {
+          message.success(result.Message)
+          yield update({ tableLoading:false })
+          callback(result.IsSuccess)
+        } else {
+          message.error(result.Message)
+        }
+      },
          // 质控核查 质控核查设置 下发
       *issueMessage({callback, payload }, { call, update }) {
           yield update({ issueLoading:true })

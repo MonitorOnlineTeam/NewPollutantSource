@@ -227,7 +227,7 @@ class Index extends React.Component {
                  }else{
                   return <div> 
                              <Popconfirm title="即将下发命令到现场质控仪?" onConfirm={this.issueClick.bind(this,row,value,index)}  ><a  href="#" >下发</a>  </Popconfirm>
-                            <Popconfirm title="即将下发命令删除定时质控?" onConfirm={this.deleteClick.bind(this,row,value)}  > <a href="#" style={{paddingLeft:10}}>删除</a> </Popconfirm>
+                            <Popconfirm title="即将下发命令删除定时质控?" onConfirm={this.deleteClick.bind(this,row,value,true)}  > <a href="#" style={{paddingLeft:10}}>删除</a> </Popconfirm>
                             </div>
                  }
               }
@@ -402,9 +402,19 @@ timeClick=(value)=>{//质控时间
 
 
   }
-  deleteClick=(row,value)=>{ //删除
+  deleteClick=(row,value,isDown)=>{ //删除
     let {dispatch,dgimn} = this.props;
     const ID = { ID :row.ID,DGIMN: dgimn}
+    if(isDown){ //没下发之前
+      dispatch({
+        type: 'qualitySet/deleteCycleQuality',
+        payload: { ...ID  },
+        callback:()=>{
+          this.reloadList();
+        }
+    });
+    }else{
+
      dispatch({
         type: 'qualitySet/deleteCycleQualityControl',
         payload: { ...ID  },
@@ -412,6 +422,7 @@ timeClick=(value)=>{//质控时间
           // this.reloadList();
         }
     });
+   }
   }
   issueClick=(row,value,index)=>{ //下发
     let {dispatch,tableDatas} = this.props;
