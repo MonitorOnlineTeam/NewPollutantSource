@@ -24,17 +24,17 @@ const Model = {
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
         if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if(response.Datas.MenuDatas[0].name === "首页"){
+          if (response.Datas.MenuDatas[0].name === "首页") {
             systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-          }else{
-            if(response.Datas.MenuDatas[0].children.length){
+          } else {
+            if (response.Datas.MenuDatas[0].children.length) {
               systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
-            }else{
+            } else {
               systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
             }
           }
         }
-        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
+        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ? response.Datas.MenuDatas[0].children[0].NavigateUrl : response.Datas.MenuDatas[0].NavigateUrl;
 
 
         delete response.Datas.MenuDatas;
@@ -49,7 +49,7 @@ const Model = {
         }
         //大屏
         if (payload.redirctUrl) {
-          router.push('/homepage');
+          router.push(payload.redirctUrl);
           return;
           //defaultNavigateUrl = payload.redirctUrl;
         }

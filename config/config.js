@@ -104,6 +104,11 @@ export default {
           path: '/home',
           component: './home/Home',
         },
+        {
+          name: 'summaryProject',
+          path: '/summaryProject',
+          component: './projectSummary',
+        },
         // appoperation
         {
           path: '/appoperation',
@@ -362,8 +367,8 @@ export default {
                   name: 'videoMonitor',
                   path: '/dataSearch/videoMonitor/index',
                   component: `${config.VideoServer === 0
-                      ? './dataSearch/videoMonitor/videopreview/hkvideo'
-                      : './dataSearch/videoMonitor/videopreview/ysyvideo'
+                    ? './dataSearch/videoMonitor/videopreview/hkvideo'
+                    : './dataSearch/videoMonitor/videopreview/ysyvideo'
                     }`,
                 },
                 {
@@ -1162,8 +1167,8 @@ export default {
                   name: 'videopreview', //视频监控
                   path: '/monitoring/videopreview',
                   component: `${config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
                     }`,
                 },
                 {

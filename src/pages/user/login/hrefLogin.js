@@ -17,16 +17,25 @@ export default class hrefLogin extends Component {
 
   componentDidMount() {
     // const { username, pwd } = this.props.match.params;
+    // const hostname = window.location.hostname;
+    // const begin = hostname.split(".")[0];
+    // begin !== "61" ? this.props.dispatch({
+    //   type: "userLogin/login",
+    //   payload: {
+    //     userName: "system",
+    //     password: "111111",
+    //     redirctUrl:'/homepage'
+    //   }
+    // }) : router.push("/user/login")
     const hostname = window.location.hostname;
-    const begin = hostname.split(".")[0];
-    begin !== "61" ? this.props.dispatch({
+    this.props.dispatch({
       type: "userLogin/login",
       payload: {
         userName: "system",
         password: "111111",
-        redirctUrl:'/homepage'
+        redirctUrl: '/home'
       }
-    }) : router.push("/user/login")
+    })
   }
   render() {
     return (
