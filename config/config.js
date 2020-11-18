@@ -567,6 +567,38 @@ export default {
               name: 'knowledge',
               component: './KBS/Knowledge',
             },
+            // 数据分析
+            {
+              path: '/dataAnalyse',
+              name: 'dataAnalyse',
+              routes: [
+                {
+                  name: 'ZXRate',  // 报备管理
+                  path: '/dataAnalyse/ZXRate',
+                  component: './dataAnalyse/ZXRate',
+                },
+                {
+                  name: 'HGRate',  // 合格率
+                  path: '/dataAnalyse/HGRate',
+                  component: './dataAnalyse/HGRate',
+                },
+                {
+                  name: 'HGQK',  // 合格情况
+                  path: '/dataAnalyse/HGQK',
+                  component: './dataAnalyse/HGQK',
+                },
+                {
+                  name: 'HGDay',  // 合格天数
+                  path: '/dataAnalyse/HGDay',
+                  component: './dataAnalyse/HGDay',
+                },
+                {
+                  name: 'alert',  // 报警
+                  path: '/dataAnalyse/alert',
+                  component: './dataAnalyse/Alert',
+                },
+              ]
+            },
             // 基础配置
             {
               path: '/basicsManage',
