@@ -35,7 +35,7 @@ const statusList = [
   { text: "超标", checked: false, color: "#f5222d", value: 2, count: 4, className: "red" },
   { text: "异常", checked: false, color: "#fa8c16", value: 3, count: 6, className: "orange" },
   { text: "备案不符", checked: false, color: "#fa8c16", value: 5, count: 1, className: "volcano" },
-  { text: "监测不合格", checked: false, color: "#faad14", value: 4, count: 2, className: "magenta" },
+  { text: "检测不合格", checked: false, color: "#faad14", value: 4, count: 2, className: "magenta" },
 ];
 
 const RadioButton = Radio.Button;

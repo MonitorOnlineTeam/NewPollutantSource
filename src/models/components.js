@@ -15,7 +15,7 @@ export default Model.extend({
       { text: "超标", checked: false, color: "error", value: 2, count: 0, className: "red" },
       { text: "异常", checked: false, color: "warning", value: 3, count: 0, className: "orange" },
       { text: "备案不符", checked: false, color: "orange", value: 5, count: 0, className: "volcano" },
-      { text: "监测不合格", checked: false, color: "gold", value: 4, count: 0, className: "magenta" },
+      { text: "检测不合格", checked: false, color: "gold", value: 4, count: 0, className: "magenta" },
     ],
     // 站点详情
     siteData: {},
@@ -37,7 +37,7 @@ export default Model.extend({
             { text: "超标", checked: false, color: "error", value: 2, count: ExceptLine, className: "red" },
             { text: "异常", checked: false, color: "warning", value: 3, count: OverLine, className: "orange" },
             { text: "备案不符", checked: false, color: "orange", value: 5, count: NoKeepRecord, className: "volcano" },
-            { text: "监测不合格", checked: false, color: "gold", value: 4, count: Unqualified, className: "magenta" },
+            { text: "检测不合格", checked: false, color: "gold", value: 4, count: Unqualified, className: "magenta" },
           ];
           status.statusList = statusList;
         }
