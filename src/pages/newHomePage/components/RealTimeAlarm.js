@@ -187,7 +187,7 @@ export default class Index extends Component {
           </Skeleton>      
           {alarmVisible? <ExceedDataAlarm
            dateTime={[moment().startOf('day'),
-               moment()]} alarmType={''}  alarmVisible={alarmVisible} alarmCancle={()=>{
+               moment()]} alarmType={'1'}  alarmVisible={alarmVisible} alarmCancle={()=>{
                     this.setState({alarmVisible:false});
                 }}/>:null}
         </Card>

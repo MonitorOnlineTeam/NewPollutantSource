@@ -873,16 +873,16 @@ class index extends PureComponent {
                     <Form.Item >
                         <Button style={{ marginRight: 10 }} htmlType='submit' onClick={this.exportReport}><Icon type="export" />导出</Button>
                     </Form.Item>
-                    <div >
-                        <Form.Item label='监测因子'></Form.Item>
+                    <div className={style.pollSty}>
+                        {/* <Form.Item label='监测因子'></Form.Item> */}
 
                         {
                             this.state.entType == '1' &&
                             PollutantByType.map((item, i) =>
                                 (i + 1) % 6 == 0 ?
                                     <span>
-                                        <br />
-                                        <Form.Item >
+                                        {/* <br /> */}
+                                        <Form.Item>
                                             <span>
                                                 <Form.Item>
                                                     {
@@ -971,7 +971,7 @@ class index extends PureComponent {
                             PollutantByType.map((item, i) =>
                                 
                                 (i) % 2 == 0 || i==0 ? <span>
-                                    <br />
+                                    {/* <br /> */}
                                     <Form.Item >
                                         <span>
                                             <Form.Item>

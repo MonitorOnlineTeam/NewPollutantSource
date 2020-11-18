@@ -353,7 +353,7 @@ class exceedDataAlarmModal extends PureComponent {
                         )
                     }
                     </Checkbox.Group>
-                    <span style={{ fontSize: 14, color: 'red' }}>已核实指监测点运维负责人已核实超标信息</span>
+                    <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span>
                 </div>
             </>
         )
@@ -1320,7 +1320,8 @@ class exceedDataAlarmModal extends PureComponent {
                             sourc.push(obj)
                         })
                      }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                     return  <FileDown dataSource={sourc}/>
+                    //  return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
         ]
