@@ -20,6 +20,7 @@ import {
   Form,
   Checkbox,
   Select,
+  message
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -53,6 +54,7 @@ const pageUrl = {
   atmoStationList: common.atmoStationList,
   overVerifyRateForm: overVerifyRate.overVerifyRateForm,
   divisorList: overVerifyRate.divisorList,
+  pollutantByType:overVerifyRate.pollutantByType
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -88,7 +90,7 @@ export default class OverVerifyLstModal extends Component {
   componentDidMount() {
     this.initData();
     // 根据企业类型查询监测因子
-    this.getPollutantByType('1', this.getExceptionList);
+    this.getPollutantByType(this.props.pollutantByType, this.getExceptionList);
   }
   // 根据企业类型查询监测因子
   getPollutantByType = (val, cb) => {
@@ -229,6 +231,12 @@ export default class OverVerifyLstModal extends Component {
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
+    });
+    this.props.dispatch({
+      type: 'overVerifyRate/updateState',
+      payload: {
+        pollutantByType:value,
+      },
     });
     this.getPollutantByType(value, this.getExceptionList);
     setTimeout(() => {
