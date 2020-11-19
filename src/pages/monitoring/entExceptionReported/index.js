@@ -176,14 +176,14 @@ class Test extends PureComponent {
                 <Row>
                   <FormItem label={<span >异常开始时间</span>}>
                     {getFieldDecorator('time1', {
-                      // initialValue: [moment().subtract(14, 'days'), moment().subtract(7, 'days')]
+                      initialValue: [moment().subtract(1, 'month'), moment()]
                     })(
                       <RangePicker showTime format="YYYY-MM-DD HH" />
                     )}
                   </FormItem>
                   <FormItem label={<span>异常结束时间</span>}>
                     {getFieldDecorator('time2', {
-                      // initialValue: [moment().subtract(6, 'days'), moment()]
+                      // initialValue: [moment().subtract(1, 'month'), moment()]
                     })(
                       <RangePicker showTime format="YYYY-MM-DD HH" />
                     )}

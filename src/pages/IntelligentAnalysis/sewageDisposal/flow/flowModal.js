@@ -133,7 +133,7 @@ class index extends PureComponent {
         <Select
           allowClear
           showSearch
-          style={{ width: 200, marginLeft: 10,marginRight: 10}}
+          style={{ width: 200,marginRight: 10}}
           placeholder="污水处理厂列表"
           defaultValue={flowEntCode}
           maxTagCount={2}
@@ -166,7 +166,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                   </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={flowTime} callback={
+        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{marginRight: '10px'}} dateValue={flowTime} callback={
             (dates, dataType)=>{
                 this.setState({
                     time:dates
@@ -453,7 +453,7 @@ class index extends PureComponent {
                         <ReactEcharts
                           option={option}
                           lazyUpdate={true}
-                          style={{ height: 'calc(100vh - 250px)', width: '100%' }}
+                          style={{ height: 'calc(100vh - 518px)', width: '100%',marginTop:10 }}
                           className="echarts-for-echarts"
                           theme="my_theme"
                       />:<PageLoading />
@@ -463,6 +463,8 @@ class index extends PureComponent {
                     {
                         <SdlTable columns={columns} dataSource={FlowList}
                         loading={loading}
+                        scroll={{ y: 'calc(100vh - 640px)'}}
+                        style={{marginTop:10}}
                         pagination={{
                           showSizeChanger: true,
                           showQuickJumper: true,
@@ -490,10 +492,10 @@ class index extends PureComponent {
             title='污水处理厂流量分析'
             visible={flowVisible}
             footer={null}
-            width={1600}
+            width={'90%'}
             onCancel={flowCancle}>
             <Card
-              extra={
+              title={
                 <>
                   {this.cardTitle()}
                 </>

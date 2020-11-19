@@ -31,12 +31,12 @@ import styles from './style.less';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import IndexModal from './qutPage/indexModal';
+import IndexModal from './qutPage/IndexModal';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
-import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage/index"
+import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage"
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',

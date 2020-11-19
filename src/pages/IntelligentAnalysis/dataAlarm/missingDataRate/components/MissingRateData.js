@@ -107,7 +107,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'responseRate',
         align: 'center',
         render:(text,row)=>{
-          return <span>{`${interceptTwo(Number(text))}%`}</span>
+          return row.regionName=='全部合计'? '-' : <span>{`${interceptTwo(Number(text))}%`}</span>
         }
       
       },

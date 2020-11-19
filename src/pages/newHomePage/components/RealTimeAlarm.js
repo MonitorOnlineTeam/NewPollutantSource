@@ -66,7 +66,7 @@ export default class Index extends Component {
     this.props.dispatch({
       type: "home/getAlarmDataList",
       payload: {
-        BeginTime: moment().subtract(1, "day").format("YYYY-MM-DD 00:00:00"),
+        BeginTime: moment().format("YYYY-MM-DD 00:00:00"),
         EndTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       }
     })
@@ -187,7 +187,7 @@ export default class Index extends Component {
           </Skeleton>      
           {alarmVisible? <ExceedDataAlarm
            dateTime={[moment().startOf('day'),
-               moment()]} alarmType={''}  alarmVisible={alarmVisible} alarmCancle={()=>{
+               moment()]} alarmType={'1'}  alarmVisible={alarmVisible} alarmCancle={()=>{
                     this.setState({alarmVisible:false});
                 }}/>:null}
         </Card>

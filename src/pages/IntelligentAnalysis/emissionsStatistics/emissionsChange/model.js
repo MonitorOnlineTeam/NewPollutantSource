@@ -49,7 +49,8 @@ export default Model.extend({
     PollutantList:[],
     parmarType:'RegionCode',
     column:[],
-    timeList:[]
+    timeList:[],
+    pointLoading:''
   },
   subscriptions: {},
   effects: {
@@ -83,24 +84,27 @@ export default Model.extend({
 
       const  parmarType = yield select(_ =>_.emissionsChange.parmarType)
       const  queryPar = yield select(_ =>_.emissionsChange.queryPar)
-
+      yield update({ pointLoading: true });
+      
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
         if(parmarType==='RegionCode'){
-          yield update({ EntList: response.Datas.EntList, queryPar:{...queryPar,EntCode:response.Datas.EntList.length>0?response.Datas.EntList[0][0].EntCode:"",DGIMN:'',PollutantList:[]} });
+          yield update({ pointLoading: false,EntList: response.Datas.EntList, queryPar:{...queryPar,EntCode:response.Datas.EntList.length>0?response.Datas.EntList[0][0].EntCode:"",DGIMN:'',PollutantList:[]} });
           callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
         }
         if(parmarType==='EntCode'){
-          yield update({ PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN:"",PollutantList:[]}});
+          yield update({pointLoading: false, PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN:"",PollutantList:[]}});
            callback(response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN :'')
+
         }
         if( parmarType==='DGIMN'){
           if (response.Datas.PollutantList.length > 0) {
             const selecePoll =  response.Datas.PollutantList.map(item=>{
               return item.PollutantCode
             })
-            yield update({ PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:selecePoll}});
-             callback(response.Datas.PollutantList)
+            yield update({pointLoading: false, PollutantList: response.Datas.PollutantList,queryPar:{...queryPar,PollutantList:selecePoll}});
+            callback(response.Datas.PollutantList)
+
           }
         }
       }
