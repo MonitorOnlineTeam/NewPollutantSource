@@ -42,9 +42,9 @@ class GZ extends PureComponent {
         },
         grid: {
           top: '15%',
-          left: '12%',
+          left: '52px',
           right: '5%',
-          bottom: '15%',
+          bottom: '20px',
           // containLabel: true
         },
         xAxis: [{

@@ -25,6 +25,7 @@ class Industry extends PureComponent {
       legend: {
         show: true,
         icon: "circle",
+        // top: 100,
         bottom: 0,
         center: 0,
         itemWidth: 14,
@@ -37,7 +38,6 @@ class Industry extends PureComponent {
           color: '#8C8C8C'
         },
       },
-
       radar: {
         // shape: 'circle',
         radius: '80%',

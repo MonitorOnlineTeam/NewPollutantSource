@@ -31,12 +31,12 @@ import { router } from "umi"
 import { positionList } from "./position"
 
 const statusList = [
-  { text: "在线", checked: false, color: "#52c41a", value: 1, count: 17, className: "green" },
+  { text: "在线", checked: false, color: "#52c41a", value: 1, count: 21, className: "green" },
   { text: "离线", checked: false, color: "#d9d9d9", value: "0", count: 3, className: "default" },
   { text: "超标", checked: false, color: "#f5222d", value: 2, count: 3, className: "red" },
-  { text: "异常", checked: false, color: "#fa8c16", value: 3, count: 2, className: "orange" },
-  { text: "备案不符", checked: false, color: "#fa8c16", value: 5, count: 2, className: "volcano" },
-  { text: "监测不合格", checked: false, color: "#faad14", value: 4, count: 3, className: "magenta" },
+  { text: "异常", checked: false, color: "#fa8c16", value: 3, count: 1, className: "orange" },
+  { text: "备案不符", checked: false, color: "#fa8c16", value: 5, count: 1, className: "volcano" },
+  { text: "检测不合格", checked: false, color: "#faad14", value: 4, count: 1, className: "magenta" },
 ];
 
 const RadioButton = Radio.Button;
@@ -329,7 +329,7 @@ class ProjectSummary extends Component {
             <div className={`${styles.category} ${styles.category3}`}>
               <div className={styles.title}>
                 <p>
-                  备案信息
+                  企业备案情况
                   <img src="/01.png" alt="" />
                 </p>
               </div>
@@ -379,7 +379,7 @@ class ProjectSummary extends Component {
             <div className={styles.category} style={{ marginLeft: 8 }}>
               <div className={styles.title}>
                 <p>
-                  {month}月质控类别合格情况
+                  {month}月运维任务完成情况
                   <img src="/01.png" alt="" />
                 </p>
               </div>
@@ -388,7 +388,7 @@ class ProjectSummary extends Component {
             <div className={styles.category} style={{ marginLeft: 8 }}>
               <div className={styles.title}>
                 <p>
-                  {month}数据报警响应率统计
+                  {month}月运维考核指标统计
                   <img src="/01.png" alt="" />
                 </p>
               </div>
