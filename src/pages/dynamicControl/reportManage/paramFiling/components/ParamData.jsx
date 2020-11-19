@@ -133,17 +133,17 @@ class Index extends React.Component {
                  if(row.Type==2){
 
                    return  <Row align='middle' justify='center'><Form.Item style={{marginBottom:0,paddingRight:2}} name='lowLimit' rules={[{ required: true, message: '请输入备案值' }]}>
-                    <InputNumber style={{width:70}} min={0} max={99999} defaultValue={value} onChange={this.lowLimitChange} /> 
+                    <InputNumber style={{width:70}} max={99999} defaultValue={value} onChange={this.lowLimitChange} /> 
                     </Form.Item>
                         ~
                        <Form.Item style={{marginBottom:0,paddingLeft:2}} name='topLimit'  rules={[{ required: true, message: '请输入备案值' }]}>
-                       <InputNumber style={{width:70}} min={0} max={99999} defaultValue={row.TopLimit} onChange={this.topLimitChange} /> 
+                       <InputNumber style={{width:70}}  max={99999} defaultValue={row.TopLimit} onChange={this.topLimitChange} /> 
                      </Form.Item>
                      </Row>
                  }else{
                     return   <Row align='middle' justify='center'>
                             <Form.Item style={{marginBottom:0}} name='lowLimits' rules={[{ required: true, message: '请输入备案值' }]}>
-                             <InputNumber style={{width:70}} min={0} max={99999} defaultValue={row.TopLimit} onChange={this.lowLimitChange} /> 
+                             <InputNumber style={{width:70}} max={99999} defaultValue={row.TopLimit} onChange={this.lowLimitChange} /> 
                             </Form.Item>
                             </Row>
 

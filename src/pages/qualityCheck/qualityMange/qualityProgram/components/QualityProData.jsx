@@ -55,11 +55,11 @@ class TableData extends React.Component {
             align: 'center',
              render: text => {
                return  <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} overlayStyle={{maxWidth:300}}>
-                      <span>{text}</span>
+                      <span style={{display:'inline-block'}} className='text-ellipeis'>{text}</span>
                      </Tooltip>
              },
-             ellipsis: true,
-            //  width:150
+            //  ellipsis: true,
+             width:160
           },
           {
             title: '创建人',
