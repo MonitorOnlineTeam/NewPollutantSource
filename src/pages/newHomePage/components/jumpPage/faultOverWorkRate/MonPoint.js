@@ -116,7 +116,7 @@ export default class EntTransmissionEfficiency extends Component {
         sorter: (a, b) => a.Rate - b.Rate,
         render: (text, record) => {
           // const percent = interceptTwo(Number(text) * 100);
-          const percent = text;
+          const percent = interceptTwo(text);
           if(this.props.isWorkRate){ // 运转率 
             if (percent >= 90) {
               return <div>
