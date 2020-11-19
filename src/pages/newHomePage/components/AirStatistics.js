@@ -247,7 +247,7 @@ export default class Index extends Component {
       legend: {
         data: waterType&&waterType.length>=0? waterType:[],
         left: 'center',
-        bottom: 0,
+        bottom: 10,
         icon: 'rect',
         itemWidth: 20,//图例的宽度
         itemHeight: 10,//图例的高度
@@ -257,10 +257,10 @@ export default class Index extends Component {
       },
       grid: {
         top: 30,
-        left: 0,
+        left: 60,
         right: 20,
-        bottom: 30,
-        containLabel: true
+        bottom: 60,
+        // containLabel: true
       },
       xAxis: {
         type: 'category',
@@ -268,14 +268,15 @@ export default class Index extends Component {
         data: MonitorTime,
         axisLine: { //x轴
           lineStyle: {
-            color: '#d9d9d9',
+            color: '#d9d9d9',   
+            
             width: 1
           },
         },
         axisLabel: {
           textStyle: {
-            color: '#999'
-          }
+            color: '#999',
+          },
         },
       },
       yAxis: {

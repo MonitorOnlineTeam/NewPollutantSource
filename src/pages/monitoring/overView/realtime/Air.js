@@ -152,7 +152,7 @@ class index extends Component {
           align: 'center',
         },
         {
-          title: '企业名称',
+          title: '空气站',
           width: 200,
           dataIndex: 'entName',
           key: 'entName',
