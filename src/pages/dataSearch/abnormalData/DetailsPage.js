@@ -24,11 +24,13 @@ class DetailsPage extends PureComponent {
         title: '企业名称',
         dataIndex: 'EntName',
         key: 'EntName',
+        align: 'left'
       },
       {
         title: '监测点名称',
         dataIndex: 'PointName',
         key: 'PointName',
+        align: 'left'
       },
       {
         title: '数据类型',
@@ -71,11 +73,13 @@ class DetailsPage extends PureComponent {
         title: '企业名称',
         dataIndex: 'EntName',
         key: 'EntName',
+        align: 'left'
       },
       {
         title: '监测点名称',
         dataIndex: 'PointName',
         key: 'PointName',
+        align: 'left'
       },
       {
         title: '数据类型',
