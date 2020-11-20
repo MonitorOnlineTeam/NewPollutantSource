@@ -309,11 +309,11 @@ export  function interceptTwo(value){
   return result;
 } 
 
-//保持小数点 最少后三位
+//保持小数点 后三位
 export function toDecimal3(x) {
-  if(x){
+  if(x && x!='-'){
     let res = '', data = x.toString()
-    res = data.indexOf(".") ==-1? `${ Number(x).toFixed(3)}` :  data.split(".")[1].length<3 ?  res = data + '0' : data; // 如果是整数 toFixed(3) 补三位
+    res = data.indexOf(".") ==-1 || data.split(".")[1].length<3 ? `${ Number(x).toFixed(3)}` :   data.substring(0,data.indexOf(".")+4); // 如果是整数 toFixed(3) 补三位
     return res;
   }else{
     return x;
