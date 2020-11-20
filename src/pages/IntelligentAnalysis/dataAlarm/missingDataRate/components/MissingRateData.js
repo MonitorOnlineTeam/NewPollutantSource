@@ -107,7 +107,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'responseRate',
         align: 'center',
         render:(text,row)=>{
-          return row.regionName=='全部合计'? '-' : <span>{`${interceptTwo(Number(text))}%`}</span>
+          return  <span>{`${interceptTwo(Number(text))}%`}</span>
         }
       
       },
@@ -121,6 +121,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, location,Atmosphere,types } = this.props;
       this.updateQueryState({
         RegionCode: '',
+        EntCode:'',
         EntType: types==='ent'? "1":"2",
       });
 

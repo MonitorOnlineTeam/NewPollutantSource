@@ -60,7 +60,7 @@ export default Model.extend({
           regionCode:'',
           entCount:entCount,
           pointCount:pointCount,
-          responseRate:responseRate,
+          responseRate:(xiangyingCount/exceptionCount)*100,
           exceptionCount:exceptionCount,
           weixiangyingCount:weixiangyingCount,
           xiangyingCount:xiangyingCount

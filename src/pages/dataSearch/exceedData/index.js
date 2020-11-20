@@ -71,7 +71,7 @@ class index extends PureComponent {
             visible: false,
             visibleMoni: false,
             visibleEnt:false,
-            time: [moment().add(-90, "day"), moment()],
+            time: [moment().add(-1, "day").startOf('day'), moment().endOf('day')],
             dataType: "Hour",
             entType:'1',
             pollutionWaterList:[],
@@ -154,8 +154,8 @@ class index extends PureComponent {
                         AttentionCode: '',
                         PollutantTypeCode: entType,
                         DataType: dataType == 'Hour'?'HourData':'DayData',
-                        BeginTime: time[0],
-                        EndTime: time[1],
+                        BeginTime: moment(time[0]).format('YYYY-MM-DD HH:mm:ss'),
+                        EndTime: moment(time[1]).format('YYYY-MM-DD HH:mm:ss'),
                         TabType: entType,
                         PollutantList: pollutantList
                     }
