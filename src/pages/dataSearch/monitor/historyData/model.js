@@ -93,36 +93,19 @@ export default Model.extend({
       if (result.IsSuccess) {
         const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
         const { sortOrder } = yield select(_ => _.historyData); //获取state的值
-        const { columns } = yield select(_ => _.historyData); //获取state的值
+        // const { columns } = yield select(_ => _.historyData); //获取state的值
          
 
 
-        // let columns = [
-        //   {title: '监测时间',
-        //   dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
-        //   // defaultSortOrder: 'descend',
-        //   sortOrder: sortOrder,
-        //   sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
-        //   width:120,
-        //   children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
-        // if (pollutantlist.length > 6) {
-        //   width = (window.screen.availWidth - 200 - 120) / pollutantlist.length;
-        //   if (width < 200) {
-        //     width = 200;
-        //   }
-        //   tablewidth = width * pollutantlist.length + 200;
+        let columns = [
+          {title: '监测时间',
+          dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
+          // defaultSortOrder: 'descend',
+          sortOrder: sortOrder,
+          sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
+          width:120,
+          children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
 
-        // gwidth += 200 * result.Datas[0].length;
-        // let colwidth = 200;
-        // const scroll = document.body.scrollWidth - 40;
-        // if (gwidth < scroll && result.Datas[0]) {
-        //     gwidth = scroll;
-        //     let oneent = 600;
-        //     if (onlyOneEnt) {
-        //         oneent = 300;
-        //     }
-        //     colwidth = (scroll - (oneent + csyxl + 70)) / coldata.length;
-        // }
         pollutantlist.length>0 ? pollutantlist.map((item,index)=>{
           result.Datas.length > 0 ? Object.keys(result.Datas[0]).map(items =>{
               if(item.PollutantCode == items){
