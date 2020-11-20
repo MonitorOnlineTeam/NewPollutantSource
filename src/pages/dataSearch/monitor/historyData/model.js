@@ -100,8 +100,8 @@ export default Model.extend({
         let columns = [
           {title: '监测时间',
           dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
-          // defaultSortOrder: 'descend',
-          sortOrder: sortOrder,
+          defaultSortOrder: 'descend',
+          // sortOrder: sortOrder,
           sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
           width:120,
           children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
