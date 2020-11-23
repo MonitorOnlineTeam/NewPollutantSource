@@ -181,7 +181,7 @@ class TaskRecord extends Component {
                     OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
                     TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                     CompleteTime: baseReportSearchForm.CompleteTime,
-                    CreateTime: baseReportSearchForm.CompleteTime,
+                    CreateTime: baseReportSearchForm.CreateTime,
                     pageIndex,
                     pageSize,
                 },
@@ -211,7 +211,7 @@ onChange = (pageIndex, pageSize) => {
                   OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
                   TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                   CompleteTime: baseReportSearchForm.CompleteTime,
-                    CreateTime: baseReportSearchForm.CompleteTime,
+                    CreateTime: baseReportSearchForm.CreateTime,
                   pageIndex,
                   pageSize,
               },
@@ -528,8 +528,8 @@ getTaskTypeInfo=() => {
                             <RangePicker_
                             dateValue={ gettasklistqueryparams.CreateTime}
                             style={{ width: '100%' }}
-                            format="YYYY-MM-DD HH:MM"
-                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:MM" />,
+                            format="YYYY-MM-DD HH:mm:ss"
+                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:mm:ss" />,
                           )}
                       </FormItem>
                      

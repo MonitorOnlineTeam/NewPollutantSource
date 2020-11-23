@@ -812,7 +812,7 @@ class NavigationTree extends Component {
         } if (item.Type == '1') {
           return <TreeNode style={{ width: '100%' }} title={
             <div style={{ width: '253px', position: 'relative' }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50" style={{marginLeft:-33}}>停运</Tag> : ''}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: 'red' }} />
                 </div>

@@ -90,7 +90,7 @@ export default Model.extend({
                     nodataEntWasteWaterCount += item.nodataEntWasteWaterCount;
                     nodataWasteWaterCount += item.nodataWasteWaterCount;
                 })
-
+               
                 const obj = {
                     reginName:'全部合计',
                     regionCode:'0',
@@ -113,7 +113,7 @@ export default Model.extend({
                     nodataEntWasteWaterCount:nodataEntWasteWaterCount,
                     nodataWasteWaterCount: nodataWasteWaterCount,
                 }
-                resultList.push(obj)
+                result.Datas.length>0? resultList.push(obj) : null
                 yield update({
                     attentionSummaryList:resultList,
                     //total:result.Total,

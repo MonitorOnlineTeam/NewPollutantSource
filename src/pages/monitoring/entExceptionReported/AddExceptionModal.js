@@ -14,7 +14,7 @@ const layout = {
     span: 8,
   },
   wrapperCol: {
-    span: 15,
+    span: 14,
   },
 }
 @connect(({ loading, common, entExceptionReported, autoForm }) => ({
@@ -177,7 +177,7 @@ class AddExceptionModal extends PureComponent {
                     }
                   ],
                 })(
-                  <DatePicker showTime format="YYYY-MM-DD HH:00:00" />
+                  <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:00:00" />
                 )}
               </FormItem>
             </Col>
@@ -192,7 +192,7 @@ class AddExceptionModal extends PureComponent {
                     }
                   ],
                 })(
-                  <DatePicker showTime format="YYYY-MM-DD HH:00:00" />
+                  <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:00:00" />
                 )}
               </FormItem>
             </Col>
@@ -236,7 +236,7 @@ class AddExceptionModal extends PureComponent {
               </FormItem>
             </Col>
             <Col span={24}>
-              <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} label="异常描述" style={{ width: '100%' }}>
+              <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 19 }} label="异常描述" style={{ width: '100%' }}>
                 {getFieldDecorator("ExceptionMsg", {
                   initialValue: id ? exceptionReportedData.ExceptionMsg : undefined,
                 })(
@@ -245,7 +245,7 @@ class AddExceptionModal extends PureComponent {
               </FormItem>
             </Col>
             <Col span={24}>
-              <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} label="异常报告" style={{ width: '100%' }}>
+              <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 19 }} label="异常报告" style={{ width: '100%' }}>
                 {getFieldDecorator("Attachments", {
                   initialValue: id ? exceptionReportedData.Attachments : [],
                   rules: [

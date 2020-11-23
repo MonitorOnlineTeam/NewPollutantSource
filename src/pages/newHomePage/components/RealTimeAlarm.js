@@ -122,7 +122,12 @@ export default class Index extends Component {
     this.setState({alarmVisible:true})
   }
   realTime=()=>{
-    return <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>当日超标报警</span>
+    return <div>
+         <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>
+           当日超标报警
+           <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} /> 
+           </span>
+         </div>
     
   }
   render() {
@@ -187,7 +192,7 @@ export default class Index extends Component {
           </Skeleton>      
           {alarmVisible? <ExceedDataAlarm
            dateTime={[moment().startOf('day'),
-               moment()]} alarmType={''}  alarmVisible={alarmVisible} alarmCancle={()=>{
+               moment()]} alarmType={'1'}  alarmVisible={alarmVisible} alarmCancle={()=>{
                     this.setState({alarmVisible:false});
                 }}/>:null}
         </Card>
