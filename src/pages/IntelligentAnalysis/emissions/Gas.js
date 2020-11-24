@@ -208,12 +208,6 @@ class Gas extends PureComponent {
     ];
     let EntColumns = [
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 150,
-      },
-      {
         title: '序号',
         key: 'index',
         width: 80,
@@ -222,10 +216,17 @@ class Gas extends PureComponent {
         }
       },
       {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 150,
+      },
+      {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
         width: 200,
+        align: 'left'
       },
       {
         title: '关注程度',
@@ -295,12 +296,6 @@ class Gas extends PureComponent {
     ]
     let PointColumns = [
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 130,
-      },
-      {
         title: '序号',
         key: 'index',
         width: 70,
@@ -309,10 +304,17 @@ class Gas extends PureComponent {
         }
       },
       {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 130,
+      },
+      {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
         width: 220,
+        align: 'left'
       },
       {
         title: '关注程度',
@@ -346,6 +348,7 @@ class Gas extends PureComponent {
         dataIndex: 'PointName',
         key: 'PointName',
         width: 220,
+        align: 'left'
       },
       {
         title: '是否参与企业排放量计算',
@@ -533,13 +536,13 @@ class Gas extends PureComponent {
           {/* <Divider /> */}
           <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
             <TabPane tab="师市排放量" key="region">
-              <SdlTable loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
+              <SdlTable loading={regionLoading} scroll={{ y: 622 }} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entLoading} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
+              <SdlTable loading={entLoading} scroll={{ y: 622 }} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointLoading} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
+              <SdlTable loading={pointLoading} scroll={{ y: 622 }} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
             </TabPane>
           </Tabs>
         </Card>

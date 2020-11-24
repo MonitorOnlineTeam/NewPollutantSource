@@ -192,6 +192,7 @@ class SdlTable extends PureComponent {
         : fixedHeight
           ? clientHeight - fixedHeight - headAndFooterHeight
           : '';
+    console.log("scrollYHeight=", scrollYHeight)
     // 没有分页高度 + 40
     const scrollY = pagination === false ? scrollYHeight + 40 : scrollYHeight;
     // 处理表格长度，防止错位
