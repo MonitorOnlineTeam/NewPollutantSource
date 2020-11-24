@@ -164,11 +164,13 @@ class index extends PureComponent {
         title: '企业名称',
         dataIndex: 'entName',
         key: 'entName',
+        align: 'left'
       },
       {
         title: '监测点名称',
         dataIndex: 'pointName',
         key: 'pointName',
+        align: 'left'
       },
       {
         title: '污染物',
@@ -179,6 +181,9 @@ class index extends PureComponent {
         title: `排放标准（${this.state.unit}）`,
         dataIndex: 'standValue',
         key: 'standValue',
+        render: (text, record, index) => {
+          return text ? (text * 1).toFixed(3) : text;
+        }
       },
       {
         title: `小时均值超标浓度范围（${this.state.unit}）`,
@@ -365,7 +370,12 @@ class index extends PureComponent {
               <FormItem label={<span style={{ ..._style }}>企业列表</span>}>
                 {getFieldDecorator('EntCode', {
                 })(
-                  <Select style={{ width: 200 }} allowClear placeholder="请选择企业列表"
+                  <Select style={{ width: 200 }}
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    allowClear placeholder="请选择企业列表"
                     onChange={(value) => {
                       this.getPointByEntCode(value)
                     }}
@@ -441,7 +451,7 @@ class index extends PureComponent {
             <Row>
               {
                 getFieldValue("PollutantType") === "1" ?
-                  <span style={{ color: "red" }}>废水折算采用折算值，非折算采用实测值；排除停运期间的数据。</span> :
+                  '' :
                   <span style={{ color: "red" }}>废气折算采用折算值，非折算采用实测值；排除停运期间的数据。</span>
               }
             </Row>
