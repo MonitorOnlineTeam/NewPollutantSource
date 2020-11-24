@@ -156,7 +156,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                   </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} callback={
+        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  marginRight: '10px'}} dateValue={time} callback={
             (dates, dataType)=>{
                 this.setState({
                     time:dates
