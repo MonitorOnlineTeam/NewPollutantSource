@@ -128,7 +128,10 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>近七日超标废气监测点</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>
+        近七日超标废气监测点
+        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />  
+        </span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>

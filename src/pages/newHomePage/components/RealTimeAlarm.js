@@ -122,7 +122,12 @@ export default class Index extends Component {
     this.setState({alarmVisible:true})
   }
   realTime=()=>{
-    return <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>当日超标报警</span>
+    return <div>
+         <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>
+           当日超标报警
+           <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} /> 
+           </span>
+         </div>
     
   }
   render() {
@@ -158,7 +163,7 @@ export default class Index extends Component {
             <Row id='scroll_div'  style={{position:'static',whiteSpace: "nowrap", overflowX:'hidden'}}>
             <div id='scroll_begin' style={{display:'inline-block'}}>
               {alarmDataList.map((item, index) => {
-                    return <div style={{display:'inline-block',position:'relative',width: 'calc(100vw / 3)'}}>
+                    return <div style={{display:'inline-block',position:'relative',width: 'calc(100vw / 3)',minWidth:500}}>
                        <div style={{display:'inline-block', verticalAlign: 'middle'}}>  
                           <Avatar size={64} src={'/overalarm.png'} /> 
                            </div>  

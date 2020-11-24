@@ -126,7 +126,8 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere } = this.props;
+    const { dispatch, location,Atmosphere,
+            location:{ query: {regionCode, queryPar:{EntCode,PollutantType }}}, } = this.props;
 
     this.updateQueryState({
       // beginTime: moment()
@@ -134,9 +135,9 @@ export default class EntTransmissionEfficiency extends Component {
       //   .format('YYYY-MM-DD HH:mm:ss'),
       // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       // AttentionCode: '',
-      // EntCode: '',
-      // RegionCode: '',
-      RegionCode:location.query.regionCode,
+      EntCode: EntCode,
+      RegionCode: '',
+      RegionCode:regionCode,
       Status:'',
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
@@ -343,9 +344,9 @@ export default class EntTransmissionEfficiency extends Component {
   btnCompents=()=>{
     const { exloading } = this.props;
    return  <Form.Item>
-    {/* <Button type="primary" onClick={this.queryClick}>
+     <Button type="primary" onClick={this.queryClick}>
       查询
-    </Button> */}
+    </Button> 
     <Button
       style={{ margin: '0 5px' }}
       icon="export"
@@ -371,10 +372,9 @@ export default class EntTransmissionEfficiency extends Component {
   </Form.Item> 
   }
   render() {
-    // const {
-    // // location:{ queryPar: { EntCode,PollutantType }},
-    //   type
-    // } = this.props;
+    const {
+      queryPar:{EntCode}
+    } = this.props;
   //  debugger;
     
     return (
@@ -385,7 +385,20 @@ export default class EntTransmissionEfficiency extends Component {
             <>
               <Form layout="inline">
                 
-                {this.reponseComp()}
+                {/* {this.reponseComp()} */}
+                <Form.Item label=''>
+                <Select
+                    showSearch
+                    optionFilterProp="children"
+                    allowClear
+                    placeholder="企业列表"
+                    onChange={this.changeEnt}
+                    value={EntCode ? EntCode : undefined}
+                    style={{ width: 350  }}
+                  >
+                    {this.children()}
+                  </Select>
+                  </Form.Item> 
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>

@@ -44,7 +44,7 @@ class index extends PureComponent {
   render() {
     const { columns } = this._SELF_;
     const { dataSource } = this.props;
-    console.log(dataSource)
+    // console.log(dataSource)
     const content = (
       <Table style={{ fontSize: 20 }} dataSource={dataSource} columns={columns} size="small" bordered={false} pagination={false} />
     );
