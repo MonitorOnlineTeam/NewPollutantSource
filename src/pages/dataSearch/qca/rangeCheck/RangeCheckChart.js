@@ -101,6 +101,7 @@ class RangeCheckChart extends PureComponent {
         min: Math.ceil(min)
       },
       series: [{
+        name: "相对误差",
         data: rangeChartData.dataList,
         type: 'line',
         symbol: 'triangle',

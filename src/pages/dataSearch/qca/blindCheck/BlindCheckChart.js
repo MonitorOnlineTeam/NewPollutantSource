@@ -96,6 +96,7 @@ class BlindCheckChart extends PureComponent {
         min: Math.ceil(min)
       },
       series: [{
+        name: "相对误差",
         data: blindChartData.dataList,
         type: 'line',
         symbol: 'triangle',
