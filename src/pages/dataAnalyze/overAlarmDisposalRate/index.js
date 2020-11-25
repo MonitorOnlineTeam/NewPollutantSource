@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-11-10 18:21:03
+ * @LastEditTime: 2020-11-24 13:55:29
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -18,6 +18,8 @@ import { router } from 'umi';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+
 
 @connect(({ loading, autoForm, overAlarmDisposalRate }) => ({
   checkedValues: overAlarmDisposalRate.checkedValues,
@@ -296,6 +298,19 @@ class index extends PureComponent {
           align: 'center',
         },
         ...titlePollutant,
+        {
+          title: '处置率',
+          dataIndex: 'AllRespondedRate',
+          key: 'AllRespondedRate',
+          align: 'center',
+          render: (text, record) => {
+            if (text == '-') {
+              return <div>{`${text}`}</div>;
+            } else {
+              return <div>{`${text}%`}</div>;
+            }
+          },
+        },
       ];
     } else {
       columns = [
@@ -381,7 +396,7 @@ class index extends PureComponent {
                   {getFieldDecorator('time', {
                     initialValue: [beginTime, endTime],
                   })(
-                    <RangePicker
+                    <RangePicker_
                       allowClear={false}
                       // showTime={showTime}
                       format={format}

@@ -208,12 +208,6 @@ class Gas extends PureComponent {
     ];
     let EntColumns = [
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 150,
-      },
-      {
         title: '序号',
         key: 'index',
         width: 80,
@@ -222,10 +216,17 @@ class Gas extends PureComponent {
         }
       },
       {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 150,
+      },
+      {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
         width: 200,
+        align: 'left'
       },
       {
         title: '关注程度',
@@ -295,12 +296,6 @@ class Gas extends PureComponent {
     ]
     let PointColumns = [
       {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
-        width: 130,
-      },
-      {
         title: '序号',
         key: 'index',
         width: 70,
@@ -309,10 +304,17 @@ class Gas extends PureComponent {
         }
       },
       {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        width: 130,
+      },
+      {
         title: '企业',
         dataIndex: 'EntName',
         key: 'EntName',
         width: 220,
+        align: 'left'
       },
       {
         title: '关注程度',
@@ -346,6 +348,7 @@ class Gas extends PureComponent {
         dataIndex: 'PointName',
         key: 'PointName',
         width: 220,
+        align: 'left'
       },
       {
         title: '是否参与企业排放量计算',

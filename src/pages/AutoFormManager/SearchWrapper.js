@@ -84,8 +84,8 @@ class SearchWrapper extends Component {
     };
     this._SELF_ = {
       formLayout: props.formLayout || {
-        labelCol: { span: 6 },
-        wrapperCol: { span: 18 },
+        labelCol: { span: 7 },
+        wrapperCol: { span: 17 },
       },
       inputPlaceholder: "请输入",
       selectPlaceholder: "请选择",
