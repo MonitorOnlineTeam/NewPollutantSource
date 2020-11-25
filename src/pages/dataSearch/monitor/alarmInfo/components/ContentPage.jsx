@@ -271,7 +271,7 @@ class TableData extends React.Component {
       treeDefaultExpandAll: true,
       treeCheckable: true,
       treeNodeFilterProp: "title",
-      placeholder: '请选择企业排口！',
+      placeholder: '请选择企业排口',
       allowClear: true,
       // value:'62020131jhdp03',
       maxTagCount:2,
