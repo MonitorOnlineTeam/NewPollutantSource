@@ -330,12 +330,17 @@ class ViewQCProcess extends PureComponent {
         {/* 标气浓度 */}
         <div className={styles.sum}>
           <p>配气流量</p>
-          <span>
-            {totalFlow ? `${totalFlow}ml/min` : undefined}
-          </span>
         </div>
+
+        <span className={styles.flowNum}>
+          {totalFlow ?
+            <Tooltip title={`${totalFlow}ml/min`}>
+              {`${totalFlow}ml/min`}
+            </Tooltip>
+            : undefined}
+        </span>
       </div>
-    </MapInteractionCSS>
+    </MapInteractionCSS >
   }
 
 
