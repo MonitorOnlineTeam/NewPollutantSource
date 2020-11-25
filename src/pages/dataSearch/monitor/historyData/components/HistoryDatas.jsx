@@ -394,7 +394,8 @@ class HistoryDatas extends React.Component {
           <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} > 
           <Col  xxl={4} xl={4}  md={12} sm={24} xs={24}>
               <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
-                   {isSingerChat ?
+                   {/* {isSingerChat ? */}
+                   {true ?
                   
                    <Select onChange={this.changeReportType } value={chatDatatype}> 
                      <Select.Option key="hour">小时</Select.Option>      

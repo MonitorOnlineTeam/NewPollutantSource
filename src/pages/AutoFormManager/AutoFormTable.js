@@ -698,7 +698,7 @@ class AutoFormTable extends PureComponent {
             showSizeChanger: true,
             showQuickJumper: true,
             pageSize,
-            current,
+            // current,
             // onShowSizeChange: this.onTableChange,
             onShowSizeChange: this.onTableChange,
             pageSizeOptions: ['10', '20', '30', '40'],

@@ -148,19 +148,22 @@ class DataExtractPage extends PureComponent {
             <>
               <Tag color="#87d068">成功</Tag>
               {`, 提取结果。`}
-              <Tag color="#87d068"
-                onClick={() => {
-                  if (QCLogsResult.Type === "data") {
-                    router.push("/dataSearch/monitor/history") // 历史数据
-                  }
-                  if (QCLogsResult.Type === "system") {
-                    router.push("/dataSearch/monitor/datavisualization") // 数据可视化
-                  }
-                  if (QCLogsResult.Type === "qcainfo") {
-                    router.push("/qualityCheck/qualityMange/standardAtmosMange") // 标准气体管理页面
-                  }
-                }}
-              >查看提取结果</Tag>
+              {
+                (QCLogsResult.Type === 'data' || QCLogsResult.Type === "system" || QCLogsResult.Type === "qcainfo") ?
+                  <Tag color="#87d068"
+                    onClick={() => {
+                      if (QCLogsResult.Type === "data") {
+                        router.push("/dataSearch/monitor/history") // 历史数据
+                      }
+                      if (QCLogsResult.Type === "system") {
+                        router.push("/dataSearch/monitor/datavisualization") // 数据可视化
+                      }
+                      if (QCLogsResult.Type === "qcainfo") {
+                        router.push("/qualityCheck/qualityMange/standardAtmosMange") // 标准气体管理页面
+                      }
+                    }}
+                  >查看提取结果</Tag> : ""
+              }
             </>
             :
             <Tag color="#f81d22">失败</Tag>
