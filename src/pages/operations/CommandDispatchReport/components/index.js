@@ -128,6 +128,7 @@ class Dispatchreport extends Component {
             case '超标报警': return 'bell';
             case '异常报警': return 'exclamation-circle-o';
             case '系统关闭': return 'poweroff';
+            case '缺失数据报警':return 'question-circle-o';
             default: return 'schedule';
         }
     }
@@ -157,6 +158,7 @@ class Dispatchreport extends Component {
                 case '2': return Style.imgstyle2;
                 case '3': return Style.imgstyle3;
                 case '4': return Style.imgstyle4;
+                case '5': return Style.imgstyle5;
                 default: return '';
             }
         } else {
@@ -165,6 +167,7 @@ class Dispatchreport extends Component {
                 case '2': return '异常报警';
                 case '3': return '人工派单';
                 case '4': return '超标报警';
+                case '5': return '缺失数据报警';
                 default: return '';
             }
         }
@@ -395,6 +398,9 @@ class Dispatchreport extends Component {
               if (text === '3') {
                   return <span>人工派单</span>;
               }
+              if (text === '5') {
+                return <span>缺失数据报警</span>;
+            }
               return <span> 超标报警</span>;
             },
             },
@@ -444,6 +450,7 @@ class Dispatchreport extends Component {
                                     <Option value="2">异常报警</Option>
                                     <Option value="3">人工派单</Option>
                                     <Option value="4">超标报警</Option>
+                                    <Option value="5">缺失数据报警</Option>
                             </Select>
                         </Col>
                         <Col xl={{ span: 11 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
