@@ -79,14 +79,21 @@ class SdlUpload extends Component {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
+        let fileList = info.fileList;
         if (info.file.status === 'done') {
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
+          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
         } else if (info.file.status === 'error') {
-          message.error('上传文件失败！')
+          let msg = fileList[fileList.length - 1].response.Message;
+          message.error(msg || '上传文件失败！')
+        }
+        if (!fileList.length) {
+          this.props.uploadSuccess && this.props.uploadSuccess(undefined);
         }
         this.setState({
-          fileList: info.fileList
+          fileList: fileList
         })
       },
       onRemove(file) {

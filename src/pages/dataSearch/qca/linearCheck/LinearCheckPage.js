@@ -375,6 +375,7 @@ class LinearCheckPage extends PureComponent {
   // 线性系数图表配置
   linearCheckOption = () => {
     const { linearCheckChartData } = this.props;
+    const { currentRowData } = this.state;
     let markLineOpt = {
       animation: false,
       label: {
@@ -415,7 +416,7 @@ class LinearCheckPage extends PureComponent {
       tooltip: {
         formatter: function (params, ticket, callback) {
           console.log('params=', params)
-          return `测量浓度:    ${params.value[0]}mg/m³ <br />标准气浓度:    ${params.value[1]}mg/m³`
+          return `测量浓度:    ${params.value[0]}${currentRowData.Unit} <br />标准气浓度:    ${params.value[1]}${currentRowData.Unit}`
         }
       },
       toolbox: {
@@ -431,14 +432,14 @@ class LinearCheckPage extends PureComponent {
         }
       },
       xAxis: [
-        { name: '测量浓度(mg/m³)', gridIndex: 0, min: linearCheckChartData.coordMin[0], max: linearCheckChartData.coordMax[0] },
+        { name: `测量浓度(${currentRowData.Unit})`, gridIndex: 0, min: linearCheckChartData.coordMin[0], max: linearCheckChartData.coordMax[0] },
       ],
       yAxis: [
-        { name: '标准气浓度(mg/m³)', gridIndex: 0, min: linearCheckChartData.coordMin[1] < 0 ? linearCheckChartData.coordMin[1] - 5 : linearCheckChartData.coordMin[1], max: linearCheckChartData.coordMax[1] + 5 },
+        { name: `标准气浓度(${currentRowData.Unit})`, gridIndex: 0, min: linearCheckChartData.coordMin[1] < 0 ? linearCheckChartData.coordMin[1] - 5 : linearCheckChartData.coordMin[1], max: linearCheckChartData.coordMax[1] + 5 },
       ],
       series: [
         {
-          name: 'I',
+          name: '测量浓度 标准气浓度',
           type: 'scatter',
           xAxisIndex: 0,
           yAxisIndex: 0,
@@ -610,7 +611,7 @@ class LinearCheckPage extends PureComponent {
               <Space size={44} style={{ marginBottom: 24 }}>
                 <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
                 <span>线性系数：{currentRowData.Ratio}</span>
-                <span>示值误差：{currentRowData.MaxOffset}{currentRowData.Unit}</span>
+                <span>示值误差：{currentRowData.MaxOffset}%</span>
                 <span>标准要求：{currentRowData.standard}</span>
                 <span>工作模式：{workMode[currentRowData.WorkMode]}</span>
                 <span>质控时间：{currentRowData.MonitorTime}</span>

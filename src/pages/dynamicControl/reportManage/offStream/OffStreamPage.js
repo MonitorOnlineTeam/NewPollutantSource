@@ -152,7 +152,8 @@ class OffStreamPage extends PureComponent {
           }}
           onAdd={() => {
             this.setState({
-              visible: true
+              visible: true,
+              uuid: cuid(),
             })
           }}
         />

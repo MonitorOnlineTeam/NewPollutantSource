@@ -99,6 +99,7 @@ class ZeroCheckChart extends PureComponent {
         min: Math.ceil(min)
       },
       series: [{
+        name: "相对误差",
         data: zeroChartData.dataList,
         type: 'line',
         symbol: 'triangle',
@@ -144,7 +145,6 @@ class ZeroCheckChart extends PureComponent {
         }
       }]
     };
-
   }
 
   render() {

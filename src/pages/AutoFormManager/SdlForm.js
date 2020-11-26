@@ -403,7 +403,7 @@ class SdlForm extends PureComponent {
                 dispatch({
                   type: "autoForm/deleteAttach",
                   payload: {
-                    Guid: file.uid,
+                    FileName: file.response.Datas,
                   }
                 })
               },
@@ -417,7 +417,7 @@ class SdlForm extends PureComponent {
             };
             element = <SdlUpload {...imageProps} fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
-              setFieldsValue({ [fieldName]: uid })
+              setFieldsValue({ [fieldName]: cuid })
             }} />
             // element = <Upload {...props} fileList={this.state.fileList}>
             //   <div>

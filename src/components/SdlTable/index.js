@@ -45,6 +45,7 @@ class SdlTable extends PureComponent {
     super(props);
     this.state = {
       _props: {},
+      pageSize: 20,
       columns: props.columns,
       computeHeight: null,
       headAndFooterHeight: 110,
@@ -165,9 +166,16 @@ class SdlTable extends PureComponent {
     }
   }
 
+  // 分页页数change
+  onTableChange = (current, pageSize) => {
+    this.setState({
+      current: current, pageSize: pageSize
+    })
+  }
+
   render() {
     const { defaultWidth, resizable, clientHeight, pagination } = this.props;
-    const { _props, columns, headAndFooterHeight } = this.state;
+    const { _props, columns, headAndFooterHeight, pageSize, current } = this.state;
 
     const fixedHeight = this.state.computeHeight;
     const scrollYHeight = (this.props.scroll && this.props.scroll.y) ? this.props.scroll.y : (fixedHeight ? clientHeight - fixedHeight - headAndFooterHeight : '');
@@ -208,7 +216,15 @@ class SdlTable extends PureComponent {
             }
           }
           bordered
-          pagination={{ pageSize: 20 }}
+          pagination={{
+            pageSize: pageSize,
+            // current: current,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            // onShowSizeChange: this.onTableChange,
+            onShowSizeChange: this.onTableChange,
+            pageSizeOptions: ['10', '20', '30', '40'],
+          }}
           {...this.props}
           defaultWidth={80}
           scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollY }}

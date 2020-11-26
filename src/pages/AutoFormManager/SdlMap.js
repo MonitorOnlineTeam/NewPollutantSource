@@ -2,8 +2,8 @@ import React, { PureComponent, Fragment } from 'react'
 import PropTypes, { array } from 'prop-types';
 import { GlobalOutlined } from '@ant-design/icons';
 import { Input, Modal, Button, message } from 'antd';
-// import { Map, MouseTool, Marker, Polygon } from 'react-amap';
-import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
+import { Map, MouseTool, Marker, Polygon } from 'react-amap';
+// import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
 import styles from './MapContent.less';
 import config from '@/config'
