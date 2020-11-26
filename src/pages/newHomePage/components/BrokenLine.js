@@ -337,7 +337,21 @@ export default class Index extends Component {
     let option = {
       color: ['#64b0fd', '#9d6ff1', '#42dab8'],
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis', 
+        formatter: function (params, ticket, callback) {
+
+          //x轴名称
+          let name = params[0].name
+          //值
+            let value = ''
+
+            params.map(item=>{
+            value += item.marker + item.seriesName+": "+item.value+'%' + '<br />'
+          })
+          
+          return  name + '<br />' + value
+      }
+  
       },
       legend: {
         // data: ['邮件营销', '联盟广告', '视频广告'],
