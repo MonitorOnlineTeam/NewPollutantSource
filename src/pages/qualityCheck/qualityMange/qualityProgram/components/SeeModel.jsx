@@ -83,8 +83,8 @@ class EditorAddMode extends React.Component {
     qualityProg=()=>{
       const type = 'docx'
       let {seeEchoData} = this.props;
-      // console.log(`/upload/${seeEchoData.ProgrammeFileName}`)
-      return   <FileViewer
+      let { visible } = this.state;
+      return  <FileViewer
       style={{width:"100%"}}
       fileType={type}
       filePath={`/upload/${seeEchoData.ProgrammeFileName}`}
@@ -160,6 +160,8 @@ class EditorAddMode extends React.Component {
 
     const { visible } = this.state;
     return <div>
+
+       
         <Modal
           width	="90%"
           visible={visible}
@@ -167,7 +169,7 @@ class EditorAddMode extends React.Component {
           onCancel={this.handleCancel}
           className="qualitySee"
         >
-        <CemsTabs type='line' panes={this.state.panes} tabChange={this.tabChange}/>
+       {visible? <CemsTabs type='line' panes={this.state.panes} tabChange={this.tabChange}/> :null}
         </Modal>
      </div>;
   }
