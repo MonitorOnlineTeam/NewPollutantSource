@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Tooltip } from "antd";
-import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Tooltip } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
