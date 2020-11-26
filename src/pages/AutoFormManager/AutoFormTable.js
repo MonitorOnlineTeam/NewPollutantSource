@@ -230,8 +230,8 @@ class AutoFormTable extends PureComponent {
               onClick={() => {
                 //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
                 this.props.onAdd ?
-                this.props.onAdd() :
-                dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
+                  this.props.onAdd() :
+                  dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
               }}
             >添加
             </Button>
@@ -650,8 +650,9 @@ class AutoFormTable extends PureComponent {
         </Row>
         <SdlTable
           rowKey={(record, index) => {
-            if (keys[configId]) {
-              // return record[keys[configId][0]];
+            if (keys[configId] && keys[configId][0]) {
+              return record[keys[configId][0]];
+            } else {
               return `${current}-${index}`
             }
           }}
@@ -675,6 +676,9 @@ class AutoFormTable extends PureComponent {
             onClick: event => {
               const { selectedRowKeys } = this.state;
               let rowkey = `${current}-${index}`;
+              if (this.props.keys[configId] && this.props.keys[configId][0]) {
+                rowkey = record[this.props.keys[configId][0]];
+              }
               let rows = this.state.selectedRows || [];
               let keys = selectedRowKeys;
               if (selectedRowKeys.some(item => item == rowkey)) {

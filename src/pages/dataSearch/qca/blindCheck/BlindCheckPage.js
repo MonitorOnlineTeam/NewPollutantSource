@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag } from "antd";
+import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Tooltip } from "antd";
+import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Tooltip } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
@@ -44,7 +45,9 @@ class BlindCheckPage extends PureComponent {
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
-            return <a style={{ color: "#7b7b7b" }}>无效</a>
+            return <Tooltip title={record.FlagName}>
+              <a style={{ color: "#7b7b7b" }}>无效</a>
+            </Tooltip>
           }
           return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
             this.setState({
@@ -74,6 +77,9 @@ class BlindCheckPage extends PureComponent {
       {
         title: '测量浓度',
         dataIndex: 'Check',
+        render: (text, record) => {
+          return this.getFlagText(text, record)
+        }
       },
       {
         title: '量程范围',
@@ -123,6 +129,19 @@ class BlindCheckPage extends PureComponent {
     if (prevProps.DGIMN !== this.props.DGIMN) {
       this.getPollutantList();
     }
+  }
+
+  getFlagText = (text, record) => {
+    let WorkMode = '', workModeLabel = '';
+    if (record.WorkMode === 2) { WorkMode = 'rd'; workModeLabel = '远程质控' };
+    if (record.WorkMode === 3) { WorkMode = 'hd'; workModeLabel = '现场质控' }
+    return WorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
+      <p>{workModeLabel}</p>
+      <p>质控人：{record.PersonName}</p>
+    </div>}>
+      {text}
+      <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
+    </Tooltip> : text
   }
 
   // 获取污染物类型

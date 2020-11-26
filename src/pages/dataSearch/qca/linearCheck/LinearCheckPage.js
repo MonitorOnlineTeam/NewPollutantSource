@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Spin } from "antd";
+import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Spin, Tooltip } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
@@ -50,7 +50,9 @@ class LinearCheckPage extends PureComponent {
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
-            return <a style={{ color: "#7b7b7b" }}>无效</a>
+            return <Tooltip title={record.FlagName}>
+              <a style={{ color: "#7b7b7b" }}>无效</a>
+            </Tooltip>
           }
           return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
             this.setState({

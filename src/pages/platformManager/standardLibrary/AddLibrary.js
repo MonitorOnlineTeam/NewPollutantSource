@@ -1,6 +1,6 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-05 17:18:32 
+ * @Author: Jiaqi
+ * @Date: 2019-11-05 17:18:32
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2019-11-08 11:26:10
  * @desc: 标准库管理
@@ -50,7 +50,7 @@ class AddLibrary extends Component {
     this.state = {
       libraryId: props.match.params.id,
       dataSource: [],
-      cuid: props.match.params.cuid !== "null" ? props.match.params.cuid : cuid(),
+      cuid: (props.match.params.cuid && props.match.params.cuid !== "null") ? props.match.params.cuid : cuid(),
       fileList: [],
       columns: [
         {
@@ -87,13 +87,14 @@ class AddLibrary extends Component {
           title: '污染物类型',
           dataIndex: 'PollutantType',
           render: (text, record, index) => {
-            if (text) {
+            let PollutantType = this.props.form.getFieldValue("PollutantType");
+            if (PollutantType) {
               // this.props.pollutantTypelist.map(item => {
               //   if (item.pollutantTypeCode == text) {
               //     return item.pollutantTypeName
               //   }
               // })
-              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == text)[0].pollutantTypeName
+              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == PollutantType)[0].pollutantTypeName
             }
             // return "";
           }
@@ -248,16 +249,17 @@ class AddLibrary extends Component {
       key: key,
       PollutantCode: null,
       PollutantName: null,
+      // PollutantType: pollutantType,
       Type: type.pollutantTypeCode ? type.pollutantTypeCode : null,
       UpperLimit: null,
       AlarmType: null,
     })
-    this.setState({dataSource: [...dataSource]})
+    this.setState({ dataSource: [...dataSource] })
   }
 
   // 删除污染物
   handleDelete = (index) => {
-    let tempDataSource =  _.cloneDeep(this.state.dataSource);
+    let tempDataSource = _.cloneDeep(this.state.dataSource);
     tempDataSource.splice(index, 1);
     let newId = this.state.id;
     this.setState({
@@ -287,13 +289,19 @@ class AddLibrary extends Component {
         }
       })
       if (!isErr) {
+        let _dataSource = this.state.dataSource.map(item => {
+          return {
+            ...item,
+            PollutantType: fieldsValue.PollutantType,
+          }
+        });
         let payload = {
           AttachmentID: this.state.cuid,
           Name: fieldsValue.Name,
           IsUsed: fieldsValue.IsUsed ? 1 : 0,
           Type: fieldsValue.Type,
           PollutantType: fieldsValue.PollutantType,
-          StandardLibraryPollutantData: this.state.dataSource
+          StandardLibraryPollutantData: _dataSource
         }
         let actionType = "standardLibraryManager/addLibrary"
 
@@ -320,7 +328,6 @@ class AddLibrary extends Component {
     const { form: { getFieldDecorator, setFieldsValue }, libraryEditData } = this.props;
     const { formItemLayout, title, uploadFormItemLayout } = this._SELF_;
     const { dataSource, columns, cuid, fileList } = this.state;
-
     return (
       <BreadcrumbWrapper title={title}>
         <Card title="标准库维护" className="contentContainer">
@@ -396,10 +403,10 @@ class AddLibrary extends Component {
                     // initialValue: libraryEditData.IsUsed,
                     // valuePropName: 'checked',
                   })(
-                    <SdlUpload fileList={this.props.fileList} cuid={cuid} uploadSuccess={(cuid) => {
+                    <SdlUpload fileList={this.props.fileList} cuid={cuid} uploadSuccess={(id) => {
                       // setFieldsValue({ cuid: cuid })
                       this.setState({
-                        cuid: cuid
+                        cuid: id
                       })
                     }} />
                   )}
