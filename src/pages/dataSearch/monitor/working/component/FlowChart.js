@@ -455,7 +455,6 @@ class FlowChart extends PureComponent {
   
 
            if(item.PollutantCode === "a21026" ){ //SO2
-
             if(item.DynamicType !=="3"){
               this.setState({isSo2:true})
              }
@@ -654,7 +653,83 @@ class FlowChart extends PureComponent {
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.props.DGIMN !== prevProps.DGIMN) {
-      this.getVisualizationData(this.props.DGIMN);
+      this.setState({
+        yan:"-",
+        pi:"-",
+        kong:"-",
+        su:"-",
+        tan:"-",
+        guan:"-",
+        so2b:"-",
+        nob:"-",
+        o2b:"-",
+        leng:"-",
+        isStop:"-",
+        yanw:"-",
+        yanj:"-",
+        yans:"-",
+        yanls:"-",
+        yanll:"-",
+        ycnd:'-',
+
+        so2ju:"-",
+        so2x:"-",
+        so2l1:"-",
+        so2l2:"-",
+        so2l:"-",
+        so2lcj:"-",
+        so2jc:'-',
+
+
+        noju:"-",
+        nox:"-",
+        nol1:"-",
+        nol2:"-",
+        nol:"-",
+        nolcj:"-",
+        nojc:"-",
+
+        no2ju:"-",
+        no2x:"-",
+        no2l1:"-",
+        no2l2:"-",
+        no2l:"-",
+        no2lcj:"-",
+        no2jc:"-",
+
+
+        o2ju:"-",
+        o2x:"-",
+        o2l1:"-",
+        o2l2:"-",
+        o2l:"-",
+        o2lcj:"-",
+        o2jc:"-",
+
+        kelix:"-",
+        kelil1:"-",
+        kelil2:"-",
+        kelij:"-",
+
+        zhikongmenState:"-",
+        tongxunState:"-",
+
+        zhiyso2:"-",
+        zhiynox:"-",
+        zhiyo2:"-",
+        zhiyn2:"-",
+
+
+        noxb:"-",
+        isNo:false,
+        isNo2:false,
+        isSo2:false,
+        isKe:false,
+        isO2:false,
+      },()=>{
+        this.getVisualizationData(this.props.DGIMN);
+
+      })
     }
   }
   render() {
