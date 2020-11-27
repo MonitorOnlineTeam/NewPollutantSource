@@ -2,7 +2,7 @@
  * @Description:超标报警处置率-一级
  * @LastEditors: hxf
  * @Date: 2020-10-16 16:16:39
- * @LastEditTime: 2020-11-24 13:55:29
+ * @LastEditTime: 2020-11-27 17:03:34
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/index.js
  */
 
@@ -444,7 +444,7 @@ class index extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col md={5}>
+              {/* <Col md={5}>
                 <FormItem {...formLayout} label="关注程度" style={{ width: '100%' }}>
                   {getFieldDecorator('AttentionCode', {
                     initialValue: AttentionCode,
@@ -472,7 +472,7 @@ class index extends PureComponent {
                     </Select>,
                   )}
                 </FormItem>
-              </Col>
+              </Col> */}
             </Row>
             <Row gutter={24}>
               <Col md={4} style={{ marginTop: 10 }}>
