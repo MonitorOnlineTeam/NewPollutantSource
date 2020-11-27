@@ -258,7 +258,8 @@ class HistoryDatas extends React.Component {
   
   changeReportType=(value)=>{
     
-    this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
+    // this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
+    this.setState({chatDatatype:value})
     this.children.onDataTypeChange(value)//修改日期选择日期  
     sessionStorage.setItem("dataType",value)
 
