@@ -568,13 +568,13 @@ class Water extends PureComponent {
           {/* <Divider /> */}
           <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
             <TabPane tab="师市排放量" key="region">
-              <SdlTable loading={regionLoading} scroll={{ y: 622 }} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
+              <SdlTable loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entLoading} scroll={{ y: 622 }} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
+              <SdlTable loading={entLoading} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointLoading} scroll={{ y: 622 }} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
+              <SdlTable loading={pointLoading} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
             </TabPane>
           </Tabs>
         </Card>

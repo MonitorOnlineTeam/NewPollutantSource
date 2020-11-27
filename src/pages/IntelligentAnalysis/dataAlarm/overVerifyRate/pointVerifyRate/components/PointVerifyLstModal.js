@@ -267,9 +267,10 @@ export default class PointVerifyLst extends Component {
       >
         <SdlTable
           rowKey={(record, index) => `complete${index}`}
-          loading={this.props.loading}
+          loading={this.props.loading} 
           columns={this.state.columns}
           dataSource={this.props.tableDatil.data}
+          scroll={{  y: 'calc(100vh - 510px)',}}
           pagination={{
             // showSizeChanger: true,
             // showQuickJumper: true,

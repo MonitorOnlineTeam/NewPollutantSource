@@ -209,7 +209,8 @@ class index extends Component {
     }
     if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
       // 排序后在展示
-      const realTimeDataView = _.sortBy(nextProps.realTimeDataView, item => -item.AQI);
+      // const realTimeDataView = _.sortBy(nextProps.realTimeDataView, item => -item.AQI);
+      const realTimeDataView = nextProps.realTimeDataView;
       this.setState({
         realTimeDataView,
       });

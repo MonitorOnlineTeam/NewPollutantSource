@@ -70,12 +70,17 @@ class SdlTable extends PureComponent {
       // let fr=this.refs.polytableframe;
       if (!this._calledComponentWillUnmount) {
         // let otherHeight = this.props.pagination ? 136 : 96;
-
-        this.setState({
-          computeHeight: (this.sdlTableFrame && this.getOffsetTop(this.sdlTableFrame) || 0),
-        }, () => {
-          // console.log("computeHeight=", this.state.computeHeight)
-        });
+        if (this.sdlTableFrame) {
+          const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
+          const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
+          const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
+          const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
+          const count = tableTheadHeight + 65 + tableFooterHeight;
+          this.setState({
+            headAndFooterHeight: count > 110 ? count : 110,
+            computeHeight: this.getOffsetTop(this.sdlTableFrame) || 0,
+          });
+        }
       }
     }, 50);
   }
