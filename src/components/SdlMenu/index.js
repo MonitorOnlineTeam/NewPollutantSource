@@ -11,7 +11,7 @@ const { SubMenu } = Menu;
 @connect(({ loading, user }) => ({
   menuList: user.currentMenu,
 }))
-class Test extends Component {
+class SdlMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,8 +36,23 @@ class Test extends Component {
     return Icon ? <Icon /> : "";
   }
 
+  componentDidMount() {
+    this.getMenuCurrentKey();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.getMenuCurrentKey()
+    }
+  }
+
+  getMenuCurrentKey = () => {
+    let current = this.props.location.pathname.split('/')[1]
+    this.setState({ current: '/' + current });
+  }
+
   onMenuItemClick = (menuItemData, menuKey) => {
-    this.setState({ current: menuItemData.id });
+    this.getMenuCurrentKey();
     router.push(menuItemData.NavigateUrl)
   }
   // #1890ff
@@ -88,14 +103,13 @@ class Test extends Component {
   render() {
     const { current } = this.state;
     const { menuList, match } = this.props;
-
     return (
       <div className={`${styles.menuWrapper} ant-pro-top-nav-header-menu`}>
         <Menu selectedKeys={[current]} mode="horizontal">
           {
             menuList.map((item, index) => {
               return (
-                <Menu.Item key={item.id} icon={this.getIcon(item.icon)}
+                <Menu.Item key={item.NavigateUrl} icon={this.getIcon(item.icon)}
                   onClick={() => {
                     if (!item.children.length) {
                       this.onMenuItemClick(item, item)
@@ -121,4 +135,4 @@ class Test extends Component {
   }
 }
 
-export default Test;
+export default SdlMenu;

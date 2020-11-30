@@ -290,7 +290,7 @@ class BasicLayout extends Component {
     }
     return (
       <>
-        <SdlMenu match={this.props.match} />
+        <SdlMenu match={this.props.match} location={this.props.location} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}

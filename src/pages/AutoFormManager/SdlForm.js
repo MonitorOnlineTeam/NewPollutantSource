@@ -319,7 +319,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude') !== undefined ? getFieldValue('Longitude') : formData.Longitude}
             latitude={getFieldValue('Latitude') !== undefined ? getFieldValue('Latitude') : formData.Latitude}
-            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
+            path={getFieldValue(`CoordinateSet`) !== undefined ? getFieldValue(`CoordinateSet`) : formData['CoordinateSet'] || corporationCode}
             handleMarker
             onChange={(e) => {
               initialValue = e.target.value;
@@ -338,7 +338,7 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude') !== undefined ? getFieldValue('Longitude') : formData.Longitude}
             latitude={getFieldValue('Latitude') !== undefined ? getFieldValue('Latitude') : formData.Latitude}
-            path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
+            path={getFieldValue(`CoordinateSet`) !== undefined ? getFieldValue(`CoordinateSet`) : formData['CoordinateSet'] || corporationCode}
             handleMarker
             onChange={(e) => {
               initialValue = e.target.value;
@@ -355,7 +355,11 @@ class SdlForm extends PureComponent {
             }}
             longitude={getFieldValue('Longitude')}
             latitude={getFieldValue('Latitude')}
-            path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
+            path={getFieldValue(`${fieldName}`) !== undefined ? getFieldValue(`${fieldName}`) : formData[fieldName] || corporationCode}
+            onChange={e => {
+              initialValue = e.target.value;
+              setFieldsValue({ [fieldName]: e.target.value })
+            }}
             showMarker={true}
             handlePolygon
           />;
