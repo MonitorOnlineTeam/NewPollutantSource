@@ -416,7 +416,7 @@ export default Model.extend({
 
         return {
           ...state,
-          QCStatus: payload.Value,
+          QCStatus: QCStatus,
           QCAResultLoading: QCAResultLoading,
           p2Exception,
           p1Exception,

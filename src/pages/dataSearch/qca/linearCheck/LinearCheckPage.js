@@ -478,18 +478,22 @@ class LinearCheckPage extends PureComponent {
           }
         },
         formatter: (params) => {
-          if (params && params[0] && params[1]) {
-            return `
-            ${params[0].name}
-            <br />
-            ${params[0].marker}
-            ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
-            <br />
-            ${params[1].marker}
-            ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
-          `
+          if (params) {
+            let params0 = "", params1 = "";
+            if (params[0]) {
+              params0 = `
+              ${params[0].name}
+              <br />
+              ${params[0].marker}
+              ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+              <br />`
+            }
+            if (params[1]) {
+              params1 = `${params[1].marker}
+${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRowData.Unit : ""}`
+            }
+            return params0 + params1;
           }
-          return "";
         }
       },
       toolbox: {
@@ -599,7 +603,24 @@ class LinearCheckPage extends PureComponent {
             </Space>
           </Row>
         </Form>
-        <SdlTable loading={tableLoading} dataSource={linearCheckTableData} columns={columns} />
+        <SdlTable loading={tableLoading} dataSource={linearCheckTableData} columns={columns}
+          onRow={record => {
+            return {
+              onClick: event => {
+                if (record.Result == 2) {
+                  return;
+                }
+                this.setState({
+                  currentRowData: record,
+                  visible: true
+                }, () => {
+                  this.getqcaLogAndProcess();
+                  this.getKeyParameterList();
+                })
+              }
+            }
+          }}
+        />
         {
           visible && <Modal
             destroyOnClose

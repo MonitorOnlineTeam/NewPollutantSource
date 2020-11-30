@@ -275,6 +275,10 @@ class AddLibrary extends Component {
       if (err) {
         return;
       }
+      if(!this.state.dataSource.length) {
+        message.error('请添加污染物！');
+        return;
+      }
       let isErr = false;
       this.state.dataSource.map(item => {
         if (item.PollutantCode == null || item.PollutantCode == undefined) {

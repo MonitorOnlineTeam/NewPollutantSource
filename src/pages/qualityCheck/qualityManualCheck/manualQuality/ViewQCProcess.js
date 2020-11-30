@@ -364,16 +364,34 @@ class ViewQCProcess extends PureComponent {
             backgroundColor: '#6a7985',
           }
         },
+        // formatter: (params) => {
+        //   return `
+        //     ${params[0].name}
+        //     <br />
+        //     ${params[0].marker}
+        //     ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
+        //     <br />
+        //     ${params[1].marker}
+        //     ${params[1].seriesName}：${params[1].value}${standardValueUtin ? standardValueUtin : ""}
+        //   `
+        // },
         formatter: (params) => {
-          return `
-            ${params[0].name}
-            <br />
-            ${params[0].marker}
-            ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
-            <br />
-            ${params[1].marker}
-            ${params[1].seriesName}：${params[1].value}${standardValueUtin ? standardValueUtin : ""}
-          `
+          if (params) {
+            let params0 = "", params1 = "";
+            if (params[0]) {
+              params0 = `
+              ${params[0].name}
+              <br />
+              ${params[0].marker}
+              ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
+              <br />`
+            }
+            if (params[1]) {
+              params1 = `${params[1].marker}
+${params[1].seriesName} ：${params[1].value} ${standardValueUtin ? standardValueUtin : ""}`
+            }
+            return params0 + params1;
+          }
         }
       },
       toolbox: {

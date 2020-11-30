@@ -108,6 +108,11 @@ class DataExtractPage extends PureComponent {
         Type: type,
         PollutantCode: (type === "qcainfo" || type === "qcaflow") ? currentPollutantCode : undefined,
         DGIMN: this.props.DGIMN
+      },
+      callback: () => {
+        this.setState({
+          currentPollutantCode: "a21026",
+        })
       }
     })
   }
@@ -166,7 +171,8 @@ class DataExtractPage extends PureComponent {
               }
             </>
             :
-            <Tag color="#f81d22">失败</Tag>
+            // <Tag color="#f81d22">失败</Tag>
+            <span style={{ color: "#f81d22" }}>{QCLogsResult.ErrorStr}</span>
         }
       </>
     }

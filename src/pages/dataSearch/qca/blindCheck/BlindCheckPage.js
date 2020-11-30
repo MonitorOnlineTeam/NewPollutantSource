@@ -237,10 +237,29 @@ class BlindCheckPage extends PureComponent {
         </Form>
         <Spin spinning={tableLoading}>
           <Tabs type="card">
-            <TabPane tab="盲样数据" key="1">
-              <SdlTable loading={tableLoading} dataSource={blindCheckTableData} columns={columns} />
+            <TabPane tab="盲样核查" key="1">
+              <SdlTable loading={tableLoading} dataSource={blindCheckTableData} columns={columns}
+                onRow={record => {
+                  return {
+                    onClick: event => {
+                      if (record.Result == 2) {
+                        return;
+                      }
+                      this.setState({
+                        currentRowData: record
+                      })
+                      this.props.dispatch({
+                        type: "qcaCheck/updateState",
+                        payload: {
+                          checkModalVisible: true
+                        }
+                      })
+                    }, // 点击行
+                  };
+                }}
+              />
             </TabPane>
-            <TabPane tab="盲样数据图表" key="2">
+            <TabPane tab="盲样核查数据图表" key="2">
               <BlindCheckChart pollutantCodeList={pollutantCodeList} />
             </TabPane>
           </Tabs>

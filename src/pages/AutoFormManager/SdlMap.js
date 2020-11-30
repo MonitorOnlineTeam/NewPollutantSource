@@ -524,7 +524,9 @@ class SdlMap extends PureComponent {
                   })
                 }
                 // thisMap.clearMap()
-              }}>清除全部</Button>
+              }}>{
+                handlePolygon ? '清除厂界' : "清除坐标"
+              }</Button>
 
               {handleMarker && <Button style={{ marginLeft: 10 }} onClick={() => {
                 this.setState({

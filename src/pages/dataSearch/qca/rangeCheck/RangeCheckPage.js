@@ -302,7 +302,26 @@ class RangeCheckPage extends PureComponent {
         <Spin spinning={tableLoading}>
           <Tabs type="card">
             <TabPane tab="量程核查" key="1">
-              <SdlTable loading={tableLoading} dataSource={rangeCheckTableData} columns={columns} />
+              <SdlTable loading={tableLoading} dataSource={rangeCheckTableData} columns={columns}
+                onRow={record => {
+                  return {
+                    onClick: event => {
+                      if (record.Result == 2) {
+                        return;
+                      }
+                      this.setState({
+                        currentRowData: record
+                      })
+                      this.props.dispatch({
+                        type: "qcaCheck/updateState",
+                        payload: {
+                          checkModalVisible: true
+                        }
+                      })
+                    }, // 点击行
+                  };
+                }}
+              />
             </TabPane>
             <TabPane tab="24小时量程漂移" key="2">
               <SdlTable loading={tableLoading} dataSource={rangeCheck24TableData} columns={columns24} />
