@@ -30,4 +30,10 @@ export async function updateOperatorUser(params) {
   return result;
 }
 
+// 删除运维人照片
+export async function deletePhoto(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelOperatorPhoto', params, null);
+  return result;
+}
+
 

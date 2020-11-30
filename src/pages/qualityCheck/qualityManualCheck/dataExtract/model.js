@@ -14,10 +14,11 @@ export default Model.extend({
   },
   effects: {
     // 数据提取
-    *sendDataExtract({ payload, }, { call, update, put, take, select }) {
+    *sendDataExtract({ payload, callback }, { call, update, put, take, select }) {
       const result = yield call(services.sendDataExtract, payload);
       if (result.IsSuccess) {
         message.success("操作成功, 请查看提取日志")
+        callback && callback()
         // yield update({ bottleDataList: result.Datas, gasData: gasData })
       } else {
         message.error(result.Message)

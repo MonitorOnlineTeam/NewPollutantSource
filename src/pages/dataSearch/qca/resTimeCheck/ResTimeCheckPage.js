@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Spin } from "antd";
+import { Card, Tabs, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Spin, Tooltip } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
@@ -50,7 +50,9 @@ class resTimeCheckPage extends PureComponent {
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
-            return <a style={{ color: "#7b7b7b" }}>无效</a>
+            return <Tooltip title={record.FlagName}>
+              <a style={{ color: "#7b7b7b" }}>无效</a>
+            </Tooltip>
           }
           return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
             this.setState({
@@ -310,21 +312,21 @@ class resTimeCheckPage extends PureComponent {
     })
   }
 
-    // 导出
-    onExport = () => {
-      const { DGIMN } = this.props;
-      const fieldsValue = this.formRef.current.getFieldsValue();
-      this.props.dispatch({
-        type: "qcaCheck/qcaCheckExport",
-        payload: {
-          beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
-          endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
-          DGIMN: DGIMN,
-          PollutantCode: fieldsValue["PollutantCode"],
-          exportType: "exportResponseDataList"
-        }
-      })
-    }
+  // 导出
+  onExport = () => {
+    const { DGIMN } = this.props;
+    const fieldsValue = this.formRef.current.getFieldsValue();
+    this.props.dispatch({
+      type: "qcaCheck/qcaCheckExport",
+      payload: {
+        beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+        DGIMN: DGIMN,
+        PollutantCode: fieldsValue["PollutantCode"],
+        exportType: "exportResponseDataList"
+      }
+    })
+  }
 
   // 折线图配置项
   lineOption = () => {
@@ -350,15 +352,22 @@ class resTimeCheckPage extends PureComponent {
           }
         },
         formatter: (params) => {
-          return `
-            ${params[0].name}
-            <br />
-            ${params[0].marker}
-            ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
-            <br />
-            ${params[1].marker}
-            ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
-          `
+          if (params) {
+            let params0 = "", params1 = "";
+            if (params[0]) {
+              params0 = `
+              ${params[0].name}
+              <br />
+              ${params[0].marker}
+              ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+              <br />`
+            }
+            if (params[1]) {
+              params1 = `${params[1].marker}
+${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRowData.Unit : ""}`
+            }
+            return params0 + params1;
+          }
         }
       },
       toolbox: {
@@ -468,7 +477,24 @@ class resTimeCheckPage extends PureComponent {
             </Space>
           </Row>
         </Form>
-        <SdlTable loading={tableLoading} dataSource={resTimeCheckTableData} columns={columns} />
+        <SdlTable loading={tableLoading} dataSource={resTimeCheckTableData} columns={columns}
+          onRow={record => {
+            return {
+              onClick: event => {
+                if (record.Result == 2) {
+                  return;
+                }
+                this.setState({
+                  currentRowData: record,
+                  visible: true
+                }, () => {
+                  this.getqcaLogAndProcess();
+                  this.getKeyParameterList();
+                })
+              }, // 点击行
+            };
+          }}
+        />
         {
           visible && <Modal
             title={`${currentRowData.PollutantName}响应时间核查详情【${pointName}】`}

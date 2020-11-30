@@ -233,12 +233,13 @@ class SdlMap extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.path !== nextProps.path) {
-      nextProps.path && this.setState({
+      nextProps.path ? this.setState({
         path: nextProps.path,
         polygon: this.props.path,
         mapCenter: nextProps.path[0][0][0],
-      }, () => {
-        // thisMap.setFitView()
+      }) : this.setState({
+        path: [],
+        polygon: [],
       })
     }
     if (this.props.handleMarker !== this.props.handleMarker) {
@@ -524,7 +525,9 @@ class SdlMap extends PureComponent {
                   })
                 }
                 // thisMap.clearMap()
-              }}>清除全部</Button>
+              }}>{
+                  handlePolygon ? '清除厂界' : "清除坐标"
+                }</Button>
 
               {handleMarker && <Button style={{ marginLeft: 10 }} onClick={() => {
                 this.setState({

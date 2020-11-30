@@ -49,8 +49,15 @@ class ViewLibrary extends Component {
             <AutoFormTable
               configId={tableConfigId}
               getPageConfig
+              searchParams={[
+                {
+                  Key: 'dbo__T_Base_StandardLibraryPollutant__StandardLibraryID',
+                  Value: this.props.match.params.guid,
+                  Where: '$=',
+                },
+              ]}
               rowKey={(record, index) => index}
-              // scroll={{ y: 'calc(100vh - 600px)' }}
+            // scroll={{ y: 'calc(100vh - 600px)' }}
             />
           </Card>
         </Card>

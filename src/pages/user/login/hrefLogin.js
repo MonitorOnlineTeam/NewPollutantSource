@@ -33,7 +33,7 @@ export default class hrefLogin extends Component {
       payload: {
         userName: "system",
         password: "111111",
-        redirctUrl: '/home'
+        redirctUrl: '/dataSearch/qca/zeroCheck'
       }
     })
   }

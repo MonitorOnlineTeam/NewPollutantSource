@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag } from "antd";
+import { Card, Tabs, Spin, Form, DatePicker, Row, Col, Button, Space, Input, Select, Modal, Tag, Tooltip } from "antd";
 import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
@@ -45,7 +45,9 @@ class ZeroCheckPage extends PureComponent {
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
-            return <a style={{ color: "#7b7b7b" }}>无效</a>
+            return <Tooltip title={record.FlagName}>
+              <a style={{ color: "#7b7b7b" }}>无效</a>
+            </Tooltip>
           }
           return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
             this.setState({
@@ -75,6 +77,9 @@ class ZeroCheckPage extends PureComponent {
       {
         title: '测量浓度',
         dataIndex: 'Check',
+        render: (text, record) => {
+          return this.getFlagText(text, record)
+        }
       },
       {
         title: '量程范围',
@@ -108,7 +113,9 @@ class ZeroCheckPage extends PureComponent {
         dataIndex: 'Result',
         render: (text, record, index) => {
           if (text == 2) {
-            return <a style={{ color: "#7b7b7b" }}>无效</a>
+            return <Tooltip title={record.FlagName}>
+              <a style={{ color: "#7b7b7b" }}>无效</a>
+            </Tooltip>
           }
           return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }}>{text == 0 ? "合格" : "不合格"}</a>
         }
@@ -124,11 +131,17 @@ class ZeroCheckPage extends PureComponent {
       {
         title: '本次测量浓度',
         dataIndex: 'StandardValue',
+        render: (text, record) => {
+          return this.getFlagText(text, record)
+        }
       },
       {
         title: '24小时前测量浓度',
         dataIndex: 'Check',
         width: 150,
+        render: (text, record) => {
+          return this.getFlagText(text, record)
+        }
       },
       {
         title: '量程范围',
@@ -181,6 +194,19 @@ class ZeroCheckPage extends PureComponent {
     if (prevProps.DGIMN !== this.props.DGIMN) {
       this.getPollutantList();
     }
+  }
+
+  getFlagText = (text, record) => {
+    let WorkMode = '', workModeLabel = '';
+    if (record.WorkMode === 2) { WorkMode = 'rd'; workModeLabel = '远程质控' };
+    if (record.WorkMode === 3) { WorkMode = 'hd'; workModeLabel = '现场质控' }
+    return WorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
+      <p>{workModeLabel}</p>
+      <p>质控人：{record.PersonName}</p>
+    </div>}>
+      {text}
+      <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
+    </Tooltip> : text
   }
 
   // 获取污染物类型
@@ -275,19 +301,38 @@ class ZeroCheckPage extends PureComponent {
             </Space>
           </Row>
         </Form>
-        <Spin spinning={tableLoading}>
-          <Tabs type="card">
-            <TabPane tab="零点核查" key="1">
-              <SdlTable loading={tableLoading} dataSource={zeroCheckTableData} columns={columns} />
-            </TabPane>
-            <TabPane tab="24小时零点漂移" key="2">
-              <SdlTable loading={tableLoading} dataSource={zeroCheck24TableData} columns={columns24} />
-            </TabPane>
-            <TabPane tab="24小时零点漂移图表" key="3">
-              <ZeroCheckChart pollutantCodeList={pollutantCodeList} />
-            </TabPane>
-          </Tabs>
-        </Spin>
+        {/* <Spin spinning={tableLoading}> */}
+        <Tabs type="card">
+          <TabPane tab="零点核查" key="1">
+            <SdlTable loading={tableLoading} dataSource={zeroCheckTableData} columns={columns}
+              onRow={record => {
+                return {
+                  onClick: event => {
+                    if (record.Result == 2) {
+                      return;
+                    }
+                    this.setState({
+                      currentRowData: record
+                    })
+                    this.props.dispatch({
+                      type: "qcaCheck/updateState",
+                      payload: {
+                        checkModalVisible: true
+                      }
+                    })
+                  }, // 点击行
+                };
+              }}
+            />
+          </TabPane>
+          <TabPane tab="24小时零点漂移" key="2">
+            <SdlTable loading={tableLoading} dataSource={zeroCheck24TableData} columns={columns24} />
+          </TabPane>
+          <TabPane tab="24小时零点漂移图表" key="3">
+            <ZeroCheckChart pollutantCodeList={pollutantCodeList} />
+          </TabPane>
+        </Tabs>
+        {/* </Spin> */}
         {/* 详情弹窗 */}
         {checkModalVisible && <CheckModal QCAType="3101" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>

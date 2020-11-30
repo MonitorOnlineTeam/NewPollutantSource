@@ -564,7 +564,7 @@ class DepartIndex extends Component {
             this.setState({
                 newEntAndPoint: [{
                     title: "全部",
-                    // key: '0-0',
+                    key: '0-0',
                     children: nextProps.EntAndPoint
                 }]
             })
@@ -645,7 +645,7 @@ class DepartIndex extends Component {
         this.props.dispatch({
             type: 'departinfo/insertpointfilterbydepid',
             payload: {
-                DGIMN: this.state.checkedKeys,
+                DGIMN: this.state.checkedKeys.filter(item => item !== '0-0'),
                 UserGroup_ID: this.state.selectedRowKeys.key,
                 Type: this.state.pollutantType,
                 callback: res => {

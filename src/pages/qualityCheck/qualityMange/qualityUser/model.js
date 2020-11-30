@@ -62,7 +62,13 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
-
+    // 删除运维人照片
+    *deletePhoto({ payload, edit }, { call, update, put, take, select }) {
+      const result = yield call(services.deletePhoto, payload);
+      if (result.IsSuccess) {
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 });

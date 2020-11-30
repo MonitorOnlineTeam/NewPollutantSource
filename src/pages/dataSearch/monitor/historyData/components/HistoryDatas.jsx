@@ -52,10 +52,10 @@ const { TabPane } = Tabs;
 }))
 // loadingAll:loading.models.mySpace,
 // //当mySpace这个models有数据请求行为的时候，loading为true，没有请求的时候为false
-  
+
 
 class HistoryDatas extends React.Component {
-  
+
   // formRef = React.createRef();
 
   constructor(props) {
@@ -90,19 +90,19 @@ class HistoryDatas extends React.Component {
   componentDidMount() {
     sessionStorage.setItem("dataType",this.state.dataType)
     this.props.initLoadData &&this.changeDgimn(this.props.dgimn)
-   
+
   }
   static getDerivedStateFromProps(props, state) {
     // 只要当前 dgimn  变化，
     // 重置所有跟 dgimn 相关的状态。
     if (props.dgimn !== state.dgimn) {
-      
+
       return {
         dgimn: props.dgimn
       };
     }
     //  if (props.pollutantlist !== state.pollutantlist) {
-      
+
     //   return {
     //     pollutantSelect: props.pollutantlist.map((item,index)=>{
     //                       return  item.PollutantCode
@@ -124,7 +124,7 @@ class HistoryDatas extends React.Component {
     if(prevProps.dgimn !==  this.props.dgimn) {
           this.changeDgimn(this.props.dgimn);
       }
-}  
+}
 
 
 
@@ -146,7 +146,7 @@ class HistoryDatas extends React.Component {
               unit: pollutantSelectUnit.toString(),
               DGIMN: dgimn,
               DGIMNs: dgimn,
-            } 
+            }
           dispatch({
            type: 'historyData/updateState',
            payload: { historyparams:{ ...historyparamData} },
@@ -160,7 +160,7 @@ class HistoryDatas extends React.Component {
 
 
           setTimeout(()=>{ this.onFinish()})
-  
+
   }
 
 
@@ -208,10 +208,10 @@ class HistoryDatas extends React.Component {
 
 
   //导出数据
-  exportData = () => { 
+  exportData = () => {
     let { historyparams, dispatch,} = this.props;
 
-   
+
      dispatch({
       type: "historyData/exportHistoryReports",
       payload: {...historyparams},
@@ -226,7 +226,7 @@ class HistoryDatas extends React.Component {
  */
   dateCallback = (dates, dataType) => { //更新日期
 
-   
+
     let { historyparams,chartparams, dispatch } = this.props;
     this.setState({
       dateValue: dates
@@ -255,11 +255,12 @@ class HistoryDatas extends React.Component {
     })
 
   }
-  
+
   changeReportType=(value)=>{
-    
+
     this.state.isSingerChat ? this.setState({chatDatatype:value}) : this.setState({dataType:value});
-    this.children.onDataTypeChange(value)//修改日期选择日期  
+    // this.setState({chatDatatype:value})
+    this.children.onDataTypeChange(value)//修改日期选择日期
     sessionStorage.setItem("dataType",value)
 
     // let { historyparams,chartparams, dispatch } = this.props;
@@ -296,7 +297,7 @@ class HistoryDatas extends React.Component {
   onFinish = () => { //查询
     let { historyparams,chartparams, dispatch,polltype,singFlag } = this.props;
 
-   
+
      dispatch({
       type: "historyData/getAllTypeDataList",
       payload: {...historyparams},
@@ -318,19 +319,19 @@ class HistoryDatas extends React.Component {
        }
      })
 
-     
+
   }
   tabChange = (key) =>{
     const {chatDatatype,dataType} = this.state;
     if(key ==='tableData'){
       this.setState({isSwitch:true,isSingerChat:false})
     }else{
-      this.setState({isSwitch:false,isSingerChat:false})
+      this.setState({isSwitch:false,isSingerChat:true})
       if(key === "singleChart"){
         this.setState({isSingerChat:true},()=>{
           if(dataType==="realtime" || dataType === "minute"){
              this.changeReportType(chatDatatype)
-              setTimeout(()=>{ 
+              setTimeout(()=>{
                 let { chartparams, dispatch,polltype,singFlag } = this.props;
                 chartparams = {
                   ...chartparams,
@@ -356,7 +357,7 @@ class HistoryDatas extends React.Component {
         })
 
       }
-   
+
    }
   }
 
@@ -391,36 +392,35 @@ class HistoryDatas extends React.Component {
     return <div>
       <div style={{ marginTop: 10 }}>
         <Form className="search-form-container" ref={this.formRef} layout="inline"  onFinish={this.onFinish}>
-          <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} > 
+          <Row gutter={[{ xl: 8, md: 16, sm: 16 },8]} style={{flex:1,alignItems:"center"}} >
           <Col  xxl={4} xl={4}  md={12} sm={24} xs={24}>
               <Form.Item  {...formItemLayout} label="数据类型" className='queryConditionForm'>
-                   {/* {isSingerChat ? */}
-                   {true ?
-                  
-                   <Select onChange={this.changeReportType } value={chatDatatype}> 
-                     <Select.Option key="hour">小时</Select.Option>      
-                     <Select.Option key="day">日均</Select.Option>  
-                   </Select> 
-                   : 
-                   <Select onChange={this.changeReportType } value={dataType}> 
-                   <Select.Option key="realtime">实时</Select.Option> 
-                    <Select.Option key="minute">分钟</Select.Option> 
-                    <Select.Option key="hour">小时</Select.Option>      
-                    <Select.Option key="day">日均</Select.Option>  
-                  </Select> 
+                   {isSingerChat ?
+
+                   <Select onChange={this.changeReportType } value={chatDatatype}>
+                     <Select.Option key="hour">小时</Select.Option>
+                     <Select.Option key="day">日均</Select.Option>
+                   </Select>
+                   :
+                   <Select onChange={this.changeReportType } value={dataType}>
+                   <Select.Option key="realtime">实时</Select.Option>
+                    <Select.Option key="minute">分钟</Select.Option>
+                    <Select.Option key="hour">小时</Select.Option>
+                    <Select.Option key="day">日均</Select.Option>
+                  </Select>
             }
               </Form.Item>
               </Col>
             <Col  xxl={8} xl={6}    md={12} sm={24} xs={24}>
               <Form.Item label="监测时间" {...formItemLayout} className='queryConditionForm'>
-                  <RangePicker_ 
+                  <RangePicker_
                   dateValue={dateValue}
                   dataType={dataType}
                   isVerification={true}
                   className='textEllipsis'
                   onRef={this.onRef1}
                   callback={(dates, dataType) => this.dateCallback(dates,dataType)} //父组件事件回调子组件的值
-                  allowClear={false} showTime={true} style={{width:"100%"}} /> 
+                  allowClear={false} showTime={true} style={{width:"100%"}} />
               </Form.Item>
             </Col>
               <Col  xxl={6} xl={8}  md={12} sm={24} xs={24}>
@@ -428,11 +428,11 @@ class HistoryDatas extends React.Component {
                { pollLoading?  <Spin size="small" /> : <GetpollutantSelect /> }
               </Form.Item>
             </Col>
-          
+
               {isSwitch ?  <Col xxl={1}  xl={2}   md={12} sm={24} xs={12}> <Checkbox  defaultChecked={defaultChecked}  onChange={this.identChange}>标识</Checkbox></Col> : null}
-            
+
             <Col  xxl={3} xl={2}   md={12} sm={24} xs={12}>
-              <Form.Item {...formItemLayout} className='queryConditionForm'> 
+              <Form.Item {...formItemLayout} className='queryConditionForm'>
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>
               </Form.Item>
@@ -471,7 +471,7 @@ class HistoryDatas extends React.Component {
       <div id="HistoryDatas">
         <Card title={<QueryCriteria />} >
            <CemsTabs panes={this.state.panes}  tabChange={this.tabChange} />
-           
+
          {/* <Tabs defaultActiveKey="1" type="card" tabChange={this.tabChange}>
           <TabPane tab="Card Tab 1" key="1">
           <TableData />

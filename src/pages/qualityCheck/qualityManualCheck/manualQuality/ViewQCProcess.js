@@ -42,6 +42,10 @@ const pollutantCodeList = {
   p1Pressure: qcManual.p1Pressure,
   p3Pressure: qcManual.p3Pressure,
   p4Pressure: qcManual.p4Pressure,
+  p1Exception: qcManual.p1Exception,
+  p2Exception: qcManual.p2Exception,
+  p3Exception: qcManual.p3Exception,
+  p4Exception: qcManual.p4Exception,
   standardValue: qcManual.standardValue,
   qualityControlName: qcManual.qualityControlName,
   standardValueUtin: qcManual.standardValueUtin,
@@ -66,7 +70,7 @@ class ViewQCProcess extends PureComponent {
   }
 
   pageContent = (type) => {
-    const { gasData, CEMSStatus, QCStatus, marginData, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, realtimeStabilizationTime, standardValue, qualityControlName } = this.props;
+    const { gasData, CEMSStatus, QCStatus, marginData, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, p1Exception, p2Exception, p3Exception, p4Exception, realtimeStabilizationTime, standardValue, qualityControlName } = this.props;
     let props = {};
     if (type === "modal") {
       props = {
@@ -245,7 +249,7 @@ class ViewQCProcess extends PureComponent {
         {p1Pressure.value != undefined ? `${p1Pressure.value}MPa` : undefined}
       </div>
       {
-        p1Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} src="p1Exception.png" /></Tooltip> : null
+        p1Exception === '1' ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} src="/qualityControl/p1Exception.png" /></Tooltip> : null
         // true ? <img className={styles.exceptionPressure} src="p1Exception.png" /> : null
       }
 
@@ -254,7 +258,7 @@ class ViewQCProcess extends PureComponent {
         {p2Pressure.value != undefined ? `${p2Pressure.value}MPa` : undefined}
       </div>
       {
-        p2Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /></Tooltip> : null
+        p2Exception === '1' ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 407 }} src="/qualityControl/p2Exception.png" /></Tooltip> : null
         // true ? <img className={styles.exceptionPressure} style={{ top: 407 }} src="p2Exception.png" /> : null
       }
 
@@ -263,7 +267,7 @@ class ViewQCProcess extends PureComponent {
         {p3Pressure.value != undefined ? `${p3Pressure.value}MPa` : undefined}
       </div>
       {
-        p3Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Pressure.png" /></Tooltip> : null
+        p3Exception === '1' ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 247 }} src="/qualityControl/p3Exception.png" /></Tooltip> : null
         // true ? <img className={styles.exceptionPressure} style={{ top: 247 }} src="p3Exception.png" /> : null
       }
 
@@ -272,7 +276,7 @@ class ViewQCProcess extends PureComponent {
         {p4Pressure.value != undefined ? `${p4Pressure.value}MPa` : undefined}
       </div>
       {
-        p4Pressure.isException ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /></Tooltip> : null
+        p4Exception === '1' ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 88 }} src="/qualityControl/p4Exception.png" /></Tooltip> : null
         //  true ? <img className={styles.exceptionPressure} style={{ top: 88 }} src="p4Exception.png" /> : null
       }
       {console.log("CEMSOpen=", CEMSOpen)}
@@ -360,16 +364,34 @@ class ViewQCProcess extends PureComponent {
             backgroundColor: '#6a7985',
           }
         },
+        // formatter: (params) => {
+        //   return `
+        //     ${params[0].name}
+        //     <br />
+        //     ${params[0].marker}
+        //     ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
+        //     <br />
+        //     ${params[1].marker}
+        //     ${params[1].seriesName}：${params[1].value}${standardValueUtin ? standardValueUtin : ""}
+        //   `
+        // },
         formatter: (params) => {
-          return `
-            ${params[0].name}
-            <br />
-            ${params[0].marker}
-            ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
-            <br />
-            ${params[1].marker}
-            ${params[1].seriesName}：${params[1].value}${standardValueUtin ? standardValueUtin : ""}
-          `
+          if (params) {
+            let params0 = "", params1 = "";
+            if (params[0]) {
+              params0 = `
+              ${params[0].name}
+              <br />
+              ${params[0].marker}
+              ${params[0].seriesName}：${params[0].value}${standardValueUtin ? standardValueUtin : ""}
+              <br />`
+            }
+            if (params[1]) {
+              params1 = `${params[1].marker}
+${params[1].seriesName} ：${params[1].value} ${standardValueUtin ? standardValueUtin : ""}`
+            }
+            return params0 + params1;
+          }
         }
       },
       toolbox: {

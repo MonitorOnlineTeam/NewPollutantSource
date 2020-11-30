@@ -96,15 +96,22 @@ class CheckModal extends PureComponent {
           }
         },
         formatter: (params) => {
-          return `
-            ${params[0].name}
-            <br />
-            ${params[0].marker}
-            ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
-            <br />
-            ${params[1].marker}
-            ${params[1].seriesName}：${params[1].value}${currentRowData.Unit ? currentRowData.Unit : ""}
-          `
+          if (params) {
+            let params0 = "", params1 = "";
+            if (params[0]) {
+              params0 = `
+              ${params[0].name}
+              <br />
+              ${params[0].marker}
+              ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+              <br />`
+            }
+            if (params[1]) {
+              params1 = `${params[1].marker}
+${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRowData.Unit : ""}`
+            }
+            return params0 + params1;
+          }
         }
       },
       toolbox: {
@@ -205,7 +212,7 @@ class CheckModal extends PureComponent {
     const { paramsColumns, logColumns } = this._SELF_;
     return (
       <Modal
-        title={`${currentRowData.PollutantName ? currentRowData.PollutantName : ""}${QCATypes[QCAType]}详情【${pointName}】`}
+        title={`${currentRowData.PollutantName ? currentRowData.PollutantName : ""} ${QCATypes[QCAType]} 详情【${pointName} 】`}
         width={"90vw"}
         visible={checkModalVisible}
         footer={false}

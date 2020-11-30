@@ -28,7 +28,11 @@ export default Model.extend({
     p1Pressure: {},
     p3Pressure: {},
     p4Pressure: {},
-    QCStatus: undefined, // 质控仪状态
+    p1Exception: '0',
+    p2Exception: '0',
+    p3Exception: '0',
+    p4Exception: '0',
+    QCStatus: '0', // 质控仪状态
     standardValueUtin: null, // 单位
     pollutantValueListInfo: [],
     realtimeStabilizationTime: {},
@@ -262,38 +266,37 @@ export default Model.extend({
           let p1Pressure = state.p1Pressure;
           let p3Pressure = state.p3Pressure;
           let p4Pressure = state.p4Pressure;
-          if (code === "32003" || code === "33043") {
+          if (code === "33043") {
             // p2气瓶压力
             p2Pressure = {
               value: payload.Value + "",
-              isException: payload.IsException,
+              // isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
-
           }
-          if (code === "32006" || code === "33046") {
+          if (code === "33046") {
             // p1气瓶压力
             p1Pressure = {
               value: payload.Value + "",
-              isException: payload.IsException,
+              // isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
           }
 
-          if (code === "32004" || code === "33044") {
+          if (code === "33044") {
             // p3气瓶压力
             p3Pressure = {
               value: payload.Value + "",
-              isException: payload.IsException,
+              // isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
           }
 
-          if (code === "32005" || code === "33045") {
+          if (code === "33045") {
             // p4气瓶压力
             p4Pressure = {
               value: payload.Value + "",
-              isException: payload.IsException,
+              // isException: payload.IsException,
               pollutantCode: payload.PollutantCode
             };
           }
@@ -373,19 +376,52 @@ export default Model.extend({
     changeQCStatus(state, { payload }) {
       if (payload.DataGatherCode === state.currentDGIMN) {
         let QCAResultLoading = state.QCAResultLoading;
+        let QCStatus = state.QCStatus;
         if (payload.Code === "i32002") {
-          console.log("32002=", payload)
+          QCStatus = payload.Value;
           // if (payload.Value == 1) {
           //   QCAResultLoading = true
           // }
           // } else {
           //   QCAResultLoading = false
           // }
-          return {
-            ...state,
-            QCStatus: payload.Value,
-            QCAResultLoading: QCAResultLoading
-          }
+        }
+        // 压力异常
+        let p2Exception = state.p2Exception;
+        let p1Exception = state.p1Exception;
+        let p3Exception = state.p3Exception;
+        let p4Exception = state.p4Exception;
+        if (payload.Code === "i32003") {
+          console.log('32003=', payload)
+          // p2气瓶压力
+          p2Exception = payload.Value
+        }
+        if (payload.Code === "i32006") {
+          console.log('32006=', payload)
+          // p1气瓶压力
+          p1Exception = payload.Value
+        }
+
+        if (payload.Code === "i32004") {
+          console.log('32004=', payload)
+          // p3气瓶压力
+          p3Exception = payload.Value
+        }
+
+        if (payload.Code === "i32005") {
+          console.log('32005=', payload)
+          // p4气瓶压力
+          p4Exception = payload.Value
+        }
+
+        return {
+          ...state,
+          QCStatus: QCStatus,
+          QCAResultLoading: QCAResultLoading,
+          p2Exception,
+          p1Exception,
+          p3Exception,
+          p4Exception,
         }
       }
       return { ...state }

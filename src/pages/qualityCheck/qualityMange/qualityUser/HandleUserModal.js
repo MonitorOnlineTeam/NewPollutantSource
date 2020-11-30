@@ -115,6 +115,7 @@ class HandleUserModal extends Component {
   }
 
   closeModal = () => {
+    this.deletePhoto();
     this.props.dispatch({
       type: "qualityUser/updateState",
       payload: {
@@ -171,6 +172,15 @@ class HandleUserModal extends Component {
       fileList: fileList
     })
   };
+
+  deletePhoto = () => {
+    this.props.dispatch({
+      type: "qualityUser/deletePhoto",
+      payload: {
+        UserID: this.state.uuid
+      }
+    })
+  }
 
 
   render() {
