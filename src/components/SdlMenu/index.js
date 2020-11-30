@@ -37,7 +37,7 @@ class Test extends Component {
   }
 
   onMenuItemClick = (menuItemData, menuKey) => {
-    this.setState({ current: menuKey });
+    this.setState({ current: menuItemData.id });
     router.push(menuItemData.NavigateUrl)
   }
   // #1890ff

@@ -235,7 +235,7 @@ class BlindCheckPage extends PureComponent {
             </Space>
           </Row>
         </Form>
-        <Spin spinning={tableLoading}>
+        {/* <Spin spinning={tableLoading}> */}
           <Tabs type="card">
             <TabPane tab="盲样核查" key="1">
               <SdlTable loading={tableLoading} dataSource={blindCheckTableData} columns={columns}
@@ -263,7 +263,7 @@ class BlindCheckPage extends PureComponent {
               <BlindCheckChart pollutantCodeList={pollutantCodeList} />
             </TabPane>
           </Tabs>
-        </Spin>
+        {/* </Spin> */}
         {/* 详情弹窗 */}
         {checkModalVisible && <CheckModal QCAType="3105" DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
       </Card>
