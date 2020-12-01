@@ -68,11 +68,6 @@ class Index extends Component {
         };
     }
 
-    /** 初始化加载 */
-    componentDidMount() {
-
-    }
-
     /** 根据排口dgimn获取它下面的所有污染物 */
     getpointpollutants=dgimn => {
         this.props.dispatch({

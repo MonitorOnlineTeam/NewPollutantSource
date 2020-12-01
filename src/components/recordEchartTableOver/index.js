@@ -53,6 +53,7 @@ class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            code:[],
             rangeDate: this.props.noticeState == 0 ? [this.props.firsttime, this.props.lasttime] : [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
             format: this.props.noticeState == 0 ? 'YYYY-MM-DD HH' : 'YYYY-MM-DD HH:mm:ss',
             bar: [],
@@ -116,7 +117,7 @@ class Index extends Component {
                 this.setState({
                 beginTime:startTime,
                 endTime: endTime,
-                code:paraCodeList.split(),
+                code:paraCodeList.split(","),
                 dataType:DATATYPE[location.query.dataType]
                 
                }, () => {
@@ -264,7 +265,7 @@ class Index extends Component {
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
                 dataType,
-                PollutantList: code,
+                PollutantList: this.state.code,
                 DGIMN: [this.props.DGIMN],
             },
         })
@@ -274,11 +275,14 @@ class Index extends Component {
     onRef1 = ref => {
         this.children = ref;
     }
+    pollChange=(value)=>{
+      this.setState({code:value})
+    }
     getpollutantSelect = () => {
         const { DGIMN,location} = this.props;
          const {code } = this.state;
         if(location&&location.query&&location.query.type==="alarm"){ //报警信息
-            return   code ? <PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />:null  ; 
+            return   code.length>0 ? <PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />:null  ; 
         }else{
             return   <PollutantDownSelect style={{ width: 200, marginRight: 10 }}  isdefaulltall={1}   onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />  ; 
         }

@@ -138,6 +138,7 @@ class TableData extends React.Component {
       </div>
      
     } else {
+        const dataType = record.DataDtype.split(",").length>1? record.DataDtype.split(",")[0] : record.DataDtype;
 
       return <div style={{ overflow: "hidden" }}>
         <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} overlayStyle={{ maxWidth: 550}}  >
@@ -148,10 +149,9 @@ class TableData extends React.Component {
         </Tooltip>
         <span style={{float:"left"}}>
           {record.AlarmType === "2" ? // 数据超标
-             
-            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
+            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
             record.AlarmType === "0" ? //数据异常
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : 
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : 
               record.AlarmType === "12" ? //备案不符
                 <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
                  <></>
