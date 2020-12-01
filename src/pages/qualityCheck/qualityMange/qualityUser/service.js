@@ -36,4 +36,9 @@ export async function deletePhoto(params) {
   return result;
 }
 
+// 导出运维人
+export async function exportOperaPerson(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportOperaPerson', params, null);
+  return result;
+}
 

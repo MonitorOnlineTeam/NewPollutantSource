@@ -70,5 +70,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 导出运维人
+    *exportOperaPerson({ payload, edit }, { call, update, put, take, select }) {
+      const result = yield call(services.exportOperaPerson, payload);
+      if (result.IsSuccess) {
+        window.open('/upload' + result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 });

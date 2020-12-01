@@ -22,11 +22,11 @@ import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SelectPollutantType from '@/components/SelectPollutantType';
 import SdlTable from '@/components/SdlTable';
-import { getPointStatusImg,getPointStatusText } from '@/utils/getStatusImg';
+import { getPointStatusImg, getPointStatusText } from '@/utils/getStatusImg';
 import { LegendIcon } from '@/utils/icon';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
 import { router } from 'umi';
-import { formatPollutantPopover, getDirLevel,formatPollutantPopoverText } from '@/utils/utils';
+import { formatPollutantPopover, getDirLevel, formatPollutantPopoverText } from '@/utils/utils';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -65,39 +65,39 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      // let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
-      const fixed = false;
+      let fixed = (nextProps.realtimeColumns.length * 94 + 120 + 210 + 210 + 140) > window.innerWidth;
+      // const fixed = false;
       const width = 200;
 
       const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
-          title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
-          dataIndex: item.field,
-          name: item.name,
-          // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
-          width: item.width || undefined,
-          sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
-          defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
-          show: true,
-          align: 'center',
-          wrw: item.wrw !== undefined ? item.wrw : true,
-          render: (text, record) => {
-            if (item.field === 'AQI') {
-              return AQIPopover(text, record);
-            }
-            if (record[`${item.field}_Value`] !== undefined) {
-              return IAQIPopover(text, record, item.field);
-            }
-            if (item.title === '空气质量') {
-              return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
-            }
-            // 风向转换
-            if (item.name === '风向') {
-              const _text = text ? `${getDirLevel(text)}` : '-';
-              return formatPollutantPopoverText(_text, record[`${item.field}_params`],record[`${item.field}_flagCN`]);
-            }
-            return formatPollutantPopoverText(text, record[`${item.field}_params`],record[`${item.field}_flagCN`]);
-          },
-        }));
+        title: item.unit ? <>{item.name}<br />({item.unit})</> : item.title,
+        dataIndex: item.field,
+        name: item.name,
+        // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
+        width: item.width || undefined,
+        sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
+        defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
+        show: true,
+        align: 'center',
+        wrw: item.wrw !== undefined ? item.wrw : true,
+        render: (text, record) => {
+          if (item.field === 'AQI') {
+            return AQIPopover(text, record);
+          }
+          if (record[`${item.field}_Value`] !== undefined) {
+            return IAQIPopover(text, record, item.field);
+          }
+          if (item.title === '空气质量') {
+            return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
+          }
+          // 风向转换
+          if (item.name === '风向') {
+            const _text = text ? `${getDirLevel(text)}` : '-';
+            return formatPollutantPopoverText(_text, record[`${item.field}_params`], record[`${item.field}_flagCN`]);
+          }
+          return formatPollutantPopoverText(text, record[`${item.field}_params`], record[`${item.field}_flagCN`]);
+        },
+      }));
 
       let statusFilters = [
         {
@@ -159,14 +159,14 @@ class index extends Component {
       // 大气站状态筛选
       if (this.state.pollutantCode === 5 || this.state.pollutantCode === 12) {
         statusFilters = airLevel.map(item => ({
-            text: (
-              <span>
-                <LegendIcon style={{ color: item.color }} />
-                {item.text}
-              </span>
-            ),
-            value: item.levelText,
-          }));
+          text: (
+            <span>
+              <LegendIcon style={{ color: item.color }} />
+              {item.text}
+            </span>
+          ),
+          value: item.levelText,
+        }));
         statusFilters.unshift({
           text: (
             <span>
@@ -256,9 +256,9 @@ class index extends Component {
             }
             return (
               <span>
-                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停产</Tag> : 
-                record.outPutFlag == 2?<Tag color="#f50">停炉</Tag>:record.outPutFlag == 3?
-                <Tag color="#f50">停运</Tag>: ''}
+                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停产</Tag> :
+                  record.outPutFlag == 2 ? <Tag color="#f50">停炉</Tag> : record.outPutFlag == 3 ?
+                    <Tag color="#f50">停运</Tag> : ''}
               </span>
             );
           },
@@ -391,19 +391,19 @@ class index extends Component {
         }
       </>
     }
-      return <>
-        {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
+    return <>
+      {/* {(this.state.pollutantCode != 5 && this.state.pollutantCode != 12) && (
           <Radio.Button key={2} value="MinuteData">
             分钟
           </Radio.Button>
         )} */}
-        <Radio.Button key={3} value="HourData">
-          小时
+      <Radio.Button key={3} value="HourData">
+        小时
                   </Radio.Button>
-        <Radio.Button key={4} value="DayData">
-          日均
+      <Radio.Button key={4} value="DayData">
+        日均
                   </Radio.Button>
-      </>
+    </>
   }
 
   render() {
@@ -435,12 +435,12 @@ class index extends Component {
                     })
                     dataType = DateTypeList[dateTypeList[0] - 1];
                   } else if (e.target.value == 5 || e.target.value == 12) {
-                      this.setState({
-                        currentDataType: 'HourData',
-                        filteredInfo: null,
-                      });
-                      dataType = 'HourData';
-                    }
+                    this.setState({
+                      currentDataType: 'HourData',
+                      filteredInfo: null,
+                    });
+                    dataType = 'HourData';
+                  }
 
                   // 更新model - dataType 用来接收实时数据
                   this.props.dispatch({
@@ -459,7 +459,7 @@ class index extends Component {
                 }}
               // defaultValue={selectpollutantTypeCode}
               />
-      
+
               {
                 wrwList.length ? <Popover
                   content={
@@ -492,11 +492,11 @@ class index extends Component {
                     this.setState({ visible });
                   }}
                 >
-                  <Button  type="primary">污染物</Button>
+                  <Button type="primary">污染物</Button>
                 </Popover> : null
               }
-                      <Radio.Group
-                      style={{ marginLeft: 20 }}
+              <Radio.Group
+                style={{ marginLeft: 20 }}
                 value={currentDataType}
                 onChange={e => {
                   this.props.dispatch({
@@ -597,18 +597,18 @@ class index extends Component {
               />
             </>
           }
-          // extra={
-          //   <Radio.Group
-          //     value="data"
-          //     buttonStyle="solid"
-          //     onChange={e => {
-          //       e.target.value === 'map' && router.push('/monitoring/mapview?tabName=数据总览 - 地图');
-          //     }}
-          //   >
-          //     <Radio.Button value="data">数据</Radio.Button>
-          //     <Radio.Button value="map">地图</Radio.Button>
-          //   </Radio.Group >
-          // }
+        // extra={
+        //   <Radio.Group
+        //     value="data"
+        //     buttonStyle="solid"
+        //     onChange={e => {
+        //       e.target.value === 'map' && router.push('/monitoring/mapview?tabName=数据总览 - 地图');
+        //     }}
+        //   >
+        //     <Radio.Button value="data">数据</Radio.Button>
+        //     <Radio.Button value="map">地图</Radio.Button>
+        //   </Radio.Group >
+        // }
         >
           <SdlTable
             rowClassName={(record, index, indent) => {
