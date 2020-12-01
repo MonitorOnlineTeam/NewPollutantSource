@@ -787,6 +787,11 @@ export default {
                       component: './authorized/user',
                     },
                     {
+                      name: 'newUserInfo',
+                      path: '/rolesmanager/user/newUserInfo',
+                      component: './authorized/newUser',
+                    },
+                    {
                       name: 'add',
                       path: '/rolesmanager/user/userinfoadd',
                       component: './authorized/user/UserInfoAdd',
