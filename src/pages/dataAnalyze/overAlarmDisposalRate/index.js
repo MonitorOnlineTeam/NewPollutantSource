@@ -447,7 +447,7 @@ class index extends PureComponent {
               <Col md={5}>
                 <FormItem {...formLayout} label="关注程度" style={{ width: '100%' }}>
                   {getFieldDecorator('AttentionCode', {
-                    initialValue: AttentionCode,
+                    initialValue: AttentionCode? AttentionCode : undefined,
                   })(
                     <Select
                       allowClear
@@ -457,12 +457,12 @@ class index extends PureComponent {
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
-                            AttentionCode: value,
+                            AttentionCode: value? value : '',
                           },
                         });
                       }}
                     >
-                      <Option value=""></Option>
+                      {/* <Option value=""></Option> */}
                       {attentionList.map(item => {
                         return (
                           <Option key={item.AttentionCode} value={item.AttentionCode}>
