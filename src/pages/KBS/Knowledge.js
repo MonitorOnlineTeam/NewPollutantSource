@@ -57,12 +57,16 @@ class Knowledge extends PureComponent {
   }
 
   onOpenViewFileModal = () => {
-    this.props.dispatch({
-      type: "KBS/updateState",
-      payload: {
-        viewFileModalVisible: true
-      }
+    // this.props.dispatch({
+    //   type: "KBS/updateState",
+    //   payload: {
+    //     viewFileModalVisible: true
+    //   }
+    // })
+    this.setState({
+      visible: true
     })
+
   }
 
   onViewFile = (data) => {
@@ -89,7 +93,7 @@ class Knowledge extends PureComponent {
 
   render() {
     const { KBSData, KBSMoreModalVisible, viewFileModalVisible } = this.props;
-    const { searchParams, fileType, filePath } = this.state;
+    const { searchParams, fileType, filePath, visible } = this.state;
     return (
       <div>
         <div className={styles.banner}>
@@ -152,7 +156,11 @@ class Knowledge extends PureComponent {
           }
         </Row>
         {KBSMoreModalVisible && <KBSMoreModal searchParams={searchParams} />}
-        {viewFileModalVisible && <OpenFileModal fileType={fileType} filePath={filePath} />}
+        {visible && <OpenFileModal fileType={fileType} filePath={filePath} onClose={() => {
+          this.setState({
+            visible: false
+          })
+        }} />}
       </div>
     );
   }

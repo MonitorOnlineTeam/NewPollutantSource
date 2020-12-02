@@ -25,24 +25,24 @@ class OpenFileModal extends PureComponent {
   }
 
   onCloseModal = () => {
-    this.props.dispatch({
-      type: "KBS/updateState",
-      payload: {
-        viewFileModalVisible: false
-      }
-    })
+    // this.props.dispatch({
+    //   type: "KBS/updateState",
+    //   payload: {
+    //     viewFileModalVisible: false
+    //   }
+    // })
+    this.props.onClose && this.props.onClose();
   }
 
   render() {
     const { fileType, filePath, viewFileModalVisible } = this.props;
     const { searchParams } = this.state;
-
     return (
       <Modal
         width={"70vw"}
         bodyStyle={{ height: "72vh" }}
         footer={false}
-        visible={viewFileModalVisible}
+        visible={true}
         onCancel={this.onCloseModal}
       >
         <FileViewer
