@@ -89,20 +89,22 @@ class SdlUpload extends Component {
           let msg = fileList[fileList.length - 1].response.Message;
           message.error(msg || '上传文件失败！')
         }
-        if (!fileList.length) {
-          this.props.uploadSuccess && this.props.uploadSuccess(undefined);
-        }
         this.setState({
           fileList: fileList
         })
+        if (!fileList.length) {
+          this.props.uploadSuccess && this.props.uploadSuccess(undefined);
+        }
       },
       onRemove(file) {
-        dispatch({
-          type: "autoForm/deleteAttach",
-          payload: {
-            FileName: file.response.Datas,
-          }
-        })
+        if (file.status !== "error") {
+          dispatch({
+            type: "autoForm/deleteAttach",
+            payload: {
+              FileName: file.response.Datas,
+            }
+          })
+        }
       },
       // onPreview: this.handlePreview,
       ...imageProps,

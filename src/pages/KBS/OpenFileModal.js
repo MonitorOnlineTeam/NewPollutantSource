@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import { Modal, Tooltip, Divider, message } from 'antd';
 import FileViewer from 'react-file-viewer';
 import { connect } from 'dva'
+import { CustomErrorComponent } from 'custom-error';
 
 @connect(({ KBS, loading }) => ({
   viewFileModalVisible: KBS.viewFileModalVisible,
@@ -48,9 +49,10 @@ class OpenFileModal extends PureComponent {
           fileType={fileType}
           filePath={`/upload/${filePath}`}
           // errorComponent={message.error("文件打开失败")}
-          // onError={() => {
-          //   message.error("文件打开失败11")
-          // }}
+          errorComponent={CustomErrorComponent}
+          onError={() => {
+            message.error("文件打开失败")
+          }}
         />
       </Modal>
     );
