@@ -2,7 +2,7 @@
  * @Description:运维工单统计-空气站 模态窗
  * @LastEditors: hxf
  * @Date: 2020-10-26 10:52:49
- * @LastEditTime: 2020-11-10 17:45:11
+ * @LastEditTime: 2020-12-02 12:04:01
  * @FilePath: /NewPollutantSource/src/pages/IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/AirWorkOrderStatisticsModal.js
  */
 import React, { PureComponent } from 'react';
@@ -15,10 +15,15 @@ import moment from 'moment';
 import { router } from 'umi';
 
 import { checkParent } from './utils';
+import RegionAirQualityMonitoringStationContent from './components/RegionAirQualityMonitoringStationContent';
+import StationAirQualityMonitoringStationContent from './components/StationAirQualityMonitoringStationContent';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+const WORK_ORDER = 0;
+const REGION = 1;
+const STATION = 2;
 
 @connect(({ airWorkOrderStatistics, autoForm, loading }) => ({
     RegionCode: airWorkOrderStatistics.RegionCode,
@@ -35,6 +40,9 @@ export default class index extends PureComponent {
         showTime: true,
         format: 'YYYY-MM-DD HH:mm:ss',
         checkedValues: [],
+        currentView: WORK_ORDER,
+        regionParams: {},
+        stationParams: {}
     };
 
     _SELF_ = {
@@ -110,11 +118,12 @@ export default class index extends PureComponent {
                                 params.regionCode = record['00_RegionCode'];
                                 params.beginTime = beginTime.format('YYYY-MM-DD');
                                 params.endTime = endTime.format('YYYY-MM-DD');
-                                router.push(
-                                    `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation?params=${JSON.stringify(
-                                        params,
-                                    )}`,
-                                );
+                                // router.push(
+                                //     `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation?params=${JSON.stringify(
+                                //         params,
+                                //     )}`,
+                                // );
+                                this.setState({ regionParams: params, currentView: REGION });
                             }}
                         >
                             {text}
@@ -139,11 +148,12 @@ export default class index extends PureComponent {
                                 params.regionCode = record['00_RegionCode'];
                                 params.beginTime = beginTime.format('YYYY-MM-DD');
                                 params.endTime = endTime.format('YYYY-MM-DD');
-                                router.push(
-                                    `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation?params=${JSON.stringify(
-                                        params,
-                                    )}`,
-                                );
+                                // router.push(
+                                //     `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation?params=${JSON.stringify(
+                                //         params,
+                                //     )}`,
+                                // );
+                                this.setState({ stationParams: params, currentView: STATION });
                             }}
                         >
                             {text}
@@ -161,6 +171,23 @@ export default class index extends PureComponent {
             align: 'center',
         };
     };
+
+    renderContent = () => {
+        switch (this.state.currentView) {
+            case WORK_ORDER:
+                break;
+            case REGION:
+                break;
+            case STATION:
+                break;
+            default:
+                break;
+        }
+    }
+
+    backFun = () => {
+        this.setState({ currentView: WORK_ORDER });
+    }
 
     render() {
         const {
@@ -200,6 +227,8 @@ export default class index extends PureComponent {
                 columns[itemIndex].children.push(this.createColum(item));
             }
         });
+        // regionCode beginTime endTime
+        // regionCode entCode beginTime endTime
         return (
             <Modal
                 width={'90%'}
@@ -208,78 +237,80 @@ export default class index extends PureComponent {
                 onCancel={airWorkOrderCancelFun}
                 footer={null}
             >
-                <Card>
-                    <Form layout="inline" style={{ marginBottom: 20 }}>
-                        <Row gutter={24}>
-                            <Col md={7}>
-                                <FormItem
-                                    {...formLayout}
-                                    labelCol={{ span: 4 }}
-                                    wrapperCol={{ span: 20 }}
-                                    label="日期查询"
-                                    style={{ width: '100%' }}
-                                >
-                                    {getFieldDecorator('time', {
-                                        initialValue: [beginTime, endTime],
-                                    })(
-                                        <RangePicker
-                                            allowClear={false}
-                                            // showTime={showTime}
-                                            format={format}
+                {this.state.currentView == REGION ? <RegionAirQualityMonitoringStationContent  {...this.state.regionParams} backFun={this.backFun} />
+                    : this.state.currentView == STATION ? <StationAirQualityMonitoringStationContent  {...this.state.stationParams} backFun={this.backFun} />
+                        : <Card>
+                            <Form layout="inline" style={{ marginBottom: 20 }}>
+                                <Row gutter={24}>
+                                    <Col md={7}>
+                                        <FormItem
+                                            {...formLayout}
+                                            labelCol={{ span: 4 }}
+                                            wrapperCol={{ span: 20 }}
+                                            label="日期查询"
                                             style={{ width: '100%' }}
-                                            onChange={(dates, dateStrings) => {
-                                                this.setState({ beginTime: dates[0], endTime: dates[1] }, () => { });
-                                                dispatch({
-                                                    type: 'airWorkOrderStatistics/updateState',
-                                                    payload: {
-                                                        beginTime: dates[0],
-                                                        endTime: dates[1],
-                                                    },
-                                                });
-                                            }}
-                                        />,
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col md={4}>
-                                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                                    {getFieldDecorator('RegionCode', {
-                                        initialValue: RegionCode,
-                                    })(
-                                        <Select
-                                            allowClear
-                                            placeholder="请选择行政区"
-                                            onChange={value => {
-                                                this.setState({ RegionCode: value }, () => { });
-                                                dispatch({
-                                                    type: 'airWorkOrderStatistics/updateState',
-                                                    payload: {
-                                                        RegionCode: value,
-                                                    },
-                                                });
-                                            }}
                                         >
-                                            {_regionList.map(item => {
-                                                return (
-                                                    <Option key={item.key} value={item.value}>
-                                                        {item.title}
-                                                    </Option>
-                                                );
-                                            })}
-                                        </Select>,
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col md={9} style={{ marginTop: 3 }}>
-                                <Button
-                                    loading={loading}
-                                    type="primary"
-                                    style={{ marginLeft: 10 }}
-                                    onClick={this.getTaskStatic}
-                                >
-                                    查询
+                                            {getFieldDecorator('time', {
+                                                initialValue: [beginTime, endTime],
+                                            })(
+                                                <RangePicker
+                                                    allowClear={false}
+                                                    // showTime={showTime}
+                                                    format={format}
+                                                    style={{ width: '100%' }}
+                                                    onChange={(dates, dateStrings) => {
+                                                        this.setState({ beginTime: dates[0], endTime: dates[1] }, () => { });
+                                                        dispatch({
+                                                            type: 'airWorkOrderStatistics/updateState',
+                                                            payload: {
+                                                                beginTime: dates[0],
+                                                                endTime: dates[1],
+                                                            },
+                                                        });
+                                                    }}
+                                                />,
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col md={4}>
+                                        <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                                            {getFieldDecorator('RegionCode', {
+                                                initialValue: RegionCode,
+                                            })(
+                                                <Select
+                                                    allowClear
+                                                    placeholder="请选择行政区"
+                                                    onChange={value => {
+                                                        this.setState({ RegionCode: value }, () => { });
+                                                        dispatch({
+                                                            type: 'airWorkOrderStatistics/updateState',
+                                                            payload: {
+                                                                RegionCode: value,
+                                                            },
+                                                        });
+                                                    }}
+                                                >
+                                                    {_regionList.map(item => {
+                                                        return (
+                                                            <Option key={item.key} value={item.value}>
+                                                                {item.title}
+                                                            </Option>
+                                                        );
+                                                    })}
+                                                </Select>,
+                                            )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col md={9} style={{ marginTop: 3 }}>
+                                        <Button
+                                            loading={loading}
+                                            type="primary"
+                                            style={{ marginLeft: 10 }}
+                                            onClick={this.getTaskStatic}
+                                        >
+                                            查询
                 </Button>
-                                {/* <Button
+                                        {/* <Button
                   style={{ marginLeft: 10 }}
                   icon="export"
                   onClick={this.exportAlarmManagementRate}
@@ -287,16 +318,17 @@ export default class index extends PureComponent {
                 >
                   导出
                 </Button> */}
-                            </Col>
-                        </Row>
-                    </Form>
-                    <SdlTable
-                        scroll={{ xScroll: 'scroll' }}
-                        dataSource={taskStatic}
-                        columns={columns}
-                        loading={loading}
-                    />
-                </Card>
+                                    </Col>
+                                </Row>
+                            </Form>
+                            <SdlTable
+                                scroll={{ xScroll: 'scroll' }}
+                                dataSource={taskStatic}
+                                columns={columns}
+                                loading={loading}
+                            />
+                        </Card>}
+
             </Modal>
         );
     }
