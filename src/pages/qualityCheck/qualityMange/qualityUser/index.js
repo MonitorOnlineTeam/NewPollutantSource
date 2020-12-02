@@ -127,6 +127,17 @@ class index extends PureComponent {
     })
   }
 
+  exportOperaPerson = () => {
+    const fieldsValue = this.formRef.current.getFieldsValue();
+    this.props.dispatch({
+      type: "qualityUser/exportOperaPerson",
+      payload: {
+        UserName: fieldsValue.userName,
+        Phone: fieldsValue.phone
+      }
+    })
+  }
+
   render() {
     const { columns } = this.state;
     const { handleUserModalVisible, viewUserModalVisible, qualityUserList, tableLoading } = this.props;
@@ -163,7 +174,7 @@ class index extends PureComponent {
                   this.setState({ id: undefined })
                   this.showModal({ handleUserModalVisible: true })
                 }}>添加</Button>
-                <Button type="primary">导出</Button>
+                <Button type="primary" onClick={this.exportOperaPerson}>导出</Button>
               </Space>
             </Row>
           </Form>

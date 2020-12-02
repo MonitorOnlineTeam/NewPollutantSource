@@ -499,7 +499,7 @@ export default Model.extend({
       if (result.IsSuccess) {
 
       } else {
-        message.error(result.Datas)
+        message.error(result.Message)
       }
     },
     // 校验重复

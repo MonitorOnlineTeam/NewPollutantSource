@@ -34,8 +34,8 @@ export default Model.extend({
           let statusList = [
             { text: "正常", checked: false, color: "success", value: 1, count: OnLine, className: "green" },
             { text: "离线", checked: false, color: "default", value: "0", count: OffLine, className: "default" },
-            { text: "超标", checked: false, color: "error", value: 2, count: ExceptLine, className: "red" },
-            { text: "异常", checked: false, color: "warning", value: 3, count: OverLine, className: "orange" },
+            { text: "超标", checked: false, color: "error", value: 2, count: OverLine, className: "red" },
+            { text: "异常", checked: false, color: "warning", value: 3, count: ExceptLine, className: "orange" },
             { text: "备案不符", checked: false, color: "orange", value: 5, count: NoKeepRecord, className: "volcano" },
             { text: "检测不合格", checked: false, color: "gold", value: 4, count: Unqualified, className: "magenta" },
           ];

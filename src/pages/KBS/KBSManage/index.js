@@ -55,11 +55,14 @@ class index extends PureComponent {
 
 
   onOpenViewFileModal = () => {
-    this.props.dispatch({
-      type: "KBS/updateState",
-      payload: {
-        viewFileModalVisible: true
-      }
+    // this.props.dispatch({
+    //   type: "KBS/updateState",
+    //   payload: {
+    //     viewFileModalVisible: true
+    //   }
+    // })
+    this.setState({
+      openFileVisible: true
     })
   }
 
@@ -126,7 +129,7 @@ class index extends PureComponent {
   }
 
   render() {
-    const { visible, fileType, filePath } = this.state;
+    const { visible, fileType, filePath, openFileVisible } = this.state;
     const { form, viewFileModalVisible } = this.props;
     return (
       <BreadcrumbWrapper>
@@ -170,7 +173,11 @@ class index extends PureComponent {
           >
           </SdlForm>
         </Modal>
-        {viewFileModalVisible && <OpenFileModal fileType={fileType} filePath={filePath} />}
+        {openFileVisible && <OpenFileModal fileType={fileType} filePath={filePath} onClose={() => {
+          this.setState({
+            openFileVisible: false
+          })
+        }} />}
       </BreadcrumbWrapper>
     );
   }

@@ -275,7 +275,7 @@ class AddLibrary extends Component {
       if (err) {
         return;
       }
-      if(!this.state.dataSource.length) {
+      if (!this.state.dataSource.length) {
         message.error('请添加污染物！');
         return;
       }
@@ -288,6 +288,11 @@ class AddLibrary extends Component {
         }
         if (item.AlarmType == null || item.AlarmType == undefined) {
           message.error("请选择报警类型")
+          isErr = true;
+          return;
+        }
+        if (item.LowerLimit > item.UpperLimit) {
+          message.error("上限不能低于下限！")
           isErr = true;
           return;
         }
