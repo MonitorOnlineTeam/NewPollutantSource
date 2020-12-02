@@ -1,23 +1,28 @@
 
 import { async } from 'q';
 import {
-    post,get
+    post, get
 }
     from '@/utils/request';
-// 用户列表
-export async function getList(params) {
-    const body = {
-        pageIndex: params.pageIndex,
-        pageSize: params.pageSize,
-        User_Account: params.UserAccount,
-        DeleteMark: params.DeleteMark,
-    };
 
-    const result = post('/api/rest/PollutantSourceApi/PUserInfo/GetAllUserInfo', body, null);
-    return result === null ? {
-        data: null
-    } : result;
+
+// 部门列表
+export async function GetDepInfoByTree(params) {
+    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepInfoByTree', params, null);
+    return result;
 }
+
+// 角色列表
+export async function GetRolesTree(params) {
+    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRolesTree', params, null);
+    return result;
+}
+// 用户列表
+export async function GetUserList(params) {
+    const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
+    return result;
+}
+
 // 删除用户
 export async function deleteuser(params) {
     const body = {
@@ -97,10 +102,10 @@ export async function getrolestree(params) {
 }
 // 获取当前用户的角色
 export async function getrolebyuserid(params) {
-    const body={
+    const body = {
         User_ID: params.User_ID,
-        Role:null,
-        Depart:null
+        Role: null,
+        Depart: null
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetRoleByUserID', body, null);
     return result === null ? {
@@ -109,10 +114,10 @@ export async function getrolebyuserid(params) {
 }
 // 获取当前用户的部门
 export async function getdepbyuserid(params) {
-    const body={
+    const body = {
         User_ID: params.User_ID,
-        Role:null,
-        Depart:null
+        Role: null,
+        Depart: null
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepByUserID', body, null);
     return result === null ? {
@@ -124,8 +129,8 @@ export async function insertroledep(params) {
     console.log(params);
     const body = {
         User_ID: params.User_ID,
-        Role:params.Roles_ID,
-        Depart:params.UserGroup_ID
+        Role: params.Roles_ID,
+        Depart: params.UserGroup_ID
     };
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRoleDepForUser', body, null);
     return result === null ? {
@@ -226,9 +231,9 @@ export async function mymessagelist(params) {
         beginTime: params.beginTime,
         endTime: params.endTime
     };
-    if(params.isView !== undefined)
+    if (params.isView !== undefined)
         //保存是否已读
-        body.isAsc=params.isView;
+        body.isAsc = params.isView;
     const result = post('/api/rest/PollutantSourceApi/PUserInfo/GetMyMessageList', body, null);
     return result === null ? {
         data: null

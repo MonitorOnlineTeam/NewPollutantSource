@@ -2,13 +2,17 @@ import Model from '@/utils/model';
 import {
     getList, deleteuser, enableduser, isexistenceuser, adduser, getuser, edituser, editpersonaluser, getmypielist, mymessagelist,
     setEnterpriseDataRole, getEnterpriseDataRoles, getdeparttree, getrolestree, insertroledep, getrolebyuserid, getdepbyuserid,deluserandroledep
-    ,resetpwd
+    ,resetpwd,
+    GetDepInfoByTree,
+    GetRolesTree,
+    GetUserList
 } from './service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
+import { sdlMessage } from '@/utils/utils';
 /*
 用户管理相关接口
-add by xpy
+add by jab
 modify by
 */
 export default Model.extend({
@@ -34,7 +38,15 @@ export default Model.extend({
         UserDep: [],
         UserRolesName:'',
         UserDepName:'',
-        tableDatas:[]
+        tableDatas:[],
+        depInfoList:[],
+        rolesList:[],
+        userPar:{
+            roleListID:'',
+            groupListID:'',
+            userName:'',	
+            userAccount:'',
+        }
     },
     subscriptions: {
         setup({
@@ -47,13 +59,38 @@ export default Model.extend({
     },
 
     effects: {
+          *getDepInfoByTree({ payload,callback }, { call, put, update, select }) {
+            //部门列表
+            const response = yield call(GetDepInfoByTree, { ...payload });
+            if (response.IsSuccess) {
+              yield update({
+                depInfoList: response.Datas.children,
+              });
+              callback(response.Datas)
+            }
+          },
+          *getRolesTree({ payload }, { call, put, update, select }) {
+            //角色列表
+            const response = yield call(GetRolesTree, { ...payload });
+            if (response.IsSuccess) {
+              yield update({
+                rolesList: response.Datas.children,
+              });
+            }
+          },
+          *getUserList({ payload }, { call, put, update, select }) {
+            //用户列表
+            yield update({ loading:true }); 
+            const response = yield call(GetUserList, { ...payload });
+            if (response.IsSuccess) {
+              yield update({
+                tableDatas: response.Datas,
+                loading:false
+              });
+            }
+          },
         /*获取用户列表**/
-        * fetchuserlist({
-            payload
-        }, {
-            call,
-            update,
-        }) {
+        * fetchuserlist({ payload }, {call,update,  }) {
             const result = yield call(getList, { ...payload });
             if (result.requstresult === '1') {
                 yield update({
@@ -261,7 +298,8 @@ export default Model.extend({
                     }
                 })
             } else {
-                // message.error(result.Message);
+                sdlMessage(result.Message,'error')
+
             }
         },
         * edit({ payload }, { call, update, put }) {
@@ -282,7 +320,8 @@ export default Model.extend({
                     }
                 })
             } else {
-                // message.error(result.Message);
+                sdlMessage(result.Message,'error')
+
             }
         },
          /*添加角色和部门**/
@@ -296,7 +335,7 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess == true) {
-                message.success("成功");
+                sdlMessage('操作成功','success')
                 history.go(-1);
             }
             // yield update({
@@ -314,8 +353,10 @@ export default Model.extend({
             const result = yield call(resetpwd, {
                 ...payload
             });
-            if (result.IsSuccess == true) {
-                message.success("重置成功");
+            if (result.IsSuccess) {
+
+                sdlMessage('重置成功','success')
+                callback()
             }
             // yield update({
             //     requstresult: result.requstresult,
@@ -324,24 +365,19 @@ export default Model.extend({
         },
         /*删除角色和部门**/
         * deluserandroledep({
+            callback,
             payload
         }, {
             call,
             update,
             put 
         }) {
-            console.log("payload=",payload)
             const result = yield call(deluserandroledep, {
                 ...payload
             });
             if (result.IsSuccess == true) {
-                message.success("删除成功");
-                yield put({
-                    type:"autoForm/getAutoFormData",
-                    payload:{
-                        configId:"UserInfo"
-                    }
-                })
+                sdlMessage('删除成功','success')
+                callback()
             }
             // yield update({
             //     requstresult: result.requstresult,
