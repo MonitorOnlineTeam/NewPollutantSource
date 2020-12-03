@@ -34,7 +34,7 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import AutoFormTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
-import { sdlMessage } from '@/utils/utils';
+import { sdlMessage,downloadFile } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 import SdlTable from '@/components/SdlTable';
 

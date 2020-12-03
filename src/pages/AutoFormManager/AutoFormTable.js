@@ -608,7 +608,6 @@ class AutoFormTable extends PureComponent {
               </Button>
             </Dropdown> : null
           }
-             <span style={{color:'#f5222d'}}>新增账户的默认密码及账户重置后的密码均是Password@123</span>
           {/* {
             React.Children.map(this.props.children, (child, i) => {
               // if (child.props["data-position"] === "top") {
