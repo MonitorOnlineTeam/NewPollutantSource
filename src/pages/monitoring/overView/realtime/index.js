@@ -75,21 +75,22 @@ class index extends Component {
         name: item.name,
         // width: item.title.indexOf("(") > -1 ? item.title.length * 10 : item.title.length * 20,
         width: item.width || undefined,
-        sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
-        defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
+        // sorter: item.wrw !== false ? (a, b) => a[item.field] - b[item.field] : false,
+        sorter: (a, b) => a[item.field] - b[item.field],
+        // defaultSortOrder: item.field === 'AQI' ? 'descend' : null,
         show: true,
         align: 'center',
         wrw: item.wrw !== undefined ? item.wrw : true,
         render: (text, record) => {
-          if (item.field === 'AQI') {
-            return AQIPopover(text, record);
-          }
-          if (record[`${item.field}_Value`] !== undefined) {
-            return IAQIPopover(text, record, item.field);
-          }
-          if (item.title === '空气质量') {
-            return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
-          }
+          // if (item.field === 'AQI') {
+          //   return AQIPopover(text, record);
+          // }
+          // if (record[`${item.field}_Value`] !== undefined) {
+          //   return IAQIPopover(text, record, item.field);
+          // }
+          // if (item.title === '空气质量') {
+          //   return text ? <span style={{ color: record.AQI_Color }}>{text}</span> : '-'
+          // }
           // 风向转换
           if (item.name === '风向') {
             const _text = text ? `${getDirLevel(text)}` : '-';
@@ -200,7 +201,7 @@ class index extends Component {
           align: 'center',
           fixed,
           show: true,
-          sorter: (a, b) => a.status - b.status,
+          // sorter: (a, b) => a.status - b.status,
           sortDirections: ['descend'],
           sortOrder: 'descend',
           showSorterTooltip: false,
@@ -283,7 +284,8 @@ class index extends Component {
     }
     if (this.props.realTimeDataView !== nextProps.realTimeDataView) {
       // 排序后在展示
-      const realTimeDataView = _.sortBy(nextProps.realTimeDataView, item => -item.AQI);
+      // const realTimeDataView = _.sortBy(nextProps.realTimeDataView, item => -item.AQI);
+      const realTimeDataView = nextProps.realTimeDataView;
       this.setState({
         realTimeDataView,
       });
