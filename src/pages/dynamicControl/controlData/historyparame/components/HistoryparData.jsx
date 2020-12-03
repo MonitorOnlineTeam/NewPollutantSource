@@ -36,9 +36,10 @@ const columns =  [
     render: (text, record) => {
       switch (text) {
           case "0":
-            return  "备案不符"
+          case 0: 
+            return   <span style={{color:green[5]}} >正常</span>
           default:
-            return <span style={{color:green[5]}} > 正常</span>
+            return <span>备案不符</span>
       }
 
     }
