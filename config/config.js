@@ -628,6 +628,36 @@ export default {
                       path: '/basicsManage/wry/videomanager',
                       component: './basicsManage/videomanager',
                     },
+                    {
+                      //监测标准
+                      name: 'monitortarget',
+                      path: '/basicsManage/wry/monitoringstandard',
+                      component: './platformManager/monitoringstandard',
+                    },
+                    // 标准库管理
+                    {
+                      name: 'StandardLibrary',
+                      path: '/basicsManage/wry/StandardLibrary',
+                      component: './platformManager/standardLibrary',
+                    },
+                    // 添加标准库
+                    {
+                      name: 'addLibrary',
+                      path: '/basicsManage/wry/StandardLibrary/addLibrary',
+                      component: './platformManager/standardLibrary/AddLibrary',
+                    },
+                    // 编辑标准库
+                    {
+                      name: 'editLibrary',
+                      path: '/basicsManage/wry/StandardLibrary/editLibrary/:id/:cuid',
+                      component: './platformManager/standardLibrary/AddLibrary',
+                    },
+                    // 查看标准库
+                    {
+                      name: 'viewLibrary',
+                      path: '/basicsManage/wry/StandardLibrary/viewLibrary/:guid',
+                      component: './platformManager/standardLibrary/ViewLibrary',
+                    },
                   ]
                 },
                 {
@@ -818,12 +848,7 @@ export default {
                   path: '/platformconfig/certificatemanage/:configId',
                   component: './OperationSysManager/CertificateManage/',
                 },
-                {
-                  //监测标准
-                  name: 'monitortarget',
-                  path: '/platformconfig/monitoringstandard',
-                  component: './platformManager/monitoringstandard',
-                },
+
                 {
                   //视频管理
                   name: 'videomanager',
@@ -836,30 +861,8 @@ export default {
                   path: '/platformconfig/maintenancecycle',
                   component: './platformManager/maintenancecycle',
                 },
-                // 标准库管理
-                {
-                  name: 'StandardLibrary',
-                  path: '/platformconfig/StandardLibrary',
-                  component: './platformManager/standardLibrary',
-                },
-                // 添加标准库
-                {
-                  name: 'addLibrary',
-                  path: '/platformconfig/StandardLibrary/addLibrary',
-                  component: './platformManager/standardLibrary/AddLibrary',
-                },
-                // 编辑标准库
-                {
-                  name: 'editLibrary',
-                  path: '/platformconfig/StandardLibrary/editLibrary/:id/:cuid',
-                  component: './platformManager/standardLibrary/AddLibrary',
-                },
-                // 编辑标准库
-                {
-                  name: 'viewLibrary',
-                  path: '/platformconfig/StandardLibrary/viewLibrary/:guid',
-                  component: './platformManager/standardLibrary/ViewLibrary',
-                },
+
+
                 {
                   name: 'equipmentinfomanage',
                   path: '/platformconfig/equipmentinfomanage/:configId',
