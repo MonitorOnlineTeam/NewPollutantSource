@@ -115,7 +115,9 @@ class HandleUserModal extends Component {
   }
 
   closeModal = () => {
-    this.deletePhoto();
+    if (!this.props.id) {
+      this.deletePhoto();
+    }
     this.props.dispatch({
       type: "qualityUser/updateState",
       payload: {
