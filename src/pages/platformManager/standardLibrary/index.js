@@ -40,7 +40,7 @@ class index extends Component {
   render() {
     return (
       <BreadcrumbWrapper>
-      
+
         <Card>
           <SearchWrapper
             configId={this._SELF_.configId}
@@ -52,7 +52,7 @@ class index extends Component {
             // }}
             onAdd={() => {
               router.push({
-                pathname: "/platformconfig/StandardLibrary/addLibrary",
+                pathname: "/basicsManage/wry/StandardLibrary/addLibrary",
                 query: {
                   tabName: '标准库管理 - 添加',
                 }
@@ -61,7 +61,7 @@ class index extends Component {
             onEdit={(record, key) => {
               const cuid = getRowCuid(record, "dbo.T_Base_StandardLibrary.AttachmentID")
               router.push({
-                pathname: `/platformconfig/StandardLibrary/editLibrary/${key}/${cuid}`,
+                pathname: `/basicsManage/wry/StandardLibrary/editLibrary/${key}/${cuid}`,
                 query: {
                   tabName: '标准库管理 - 编辑',
                 }
@@ -69,7 +69,7 @@ class index extends Component {
             }}
             onView={(record, key) => {
               router.push({
-                pathname: `/platformconfig/StandardLibrary/viewLibrary/${key}`,
+                pathname: `/basicsManage/wry/StandardLibrary/viewLibrary/${key}`,
                 query: {
                   tabName: '标准库管理 - 详情',
                 }
@@ -77,7 +77,7 @@ class index extends Component {
             }}
           />
         </Card>
-       
+
       </BreadcrumbWrapper>
     );
   }
