@@ -207,6 +207,7 @@ class Index extends React.Component {
             dataIndex: 'save',
             key: 'save',
             align: 'center',
+            width:85,
             render: (value,row,index) => {
 
               const { editingKey } = this.props;
