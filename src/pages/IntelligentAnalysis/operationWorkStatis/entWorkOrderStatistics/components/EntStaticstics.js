@@ -153,7 +153,6 @@ class EntStaticstics extends PureComponent {
 
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
     return (
-      <BreadcrumbWrapper>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
@@ -179,7 +178,18 @@ class EntStaticstics extends PureComponent {
                 </FormItem>
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                    <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
+                    <Button 
+                      icon="left" 
+                      style={{ marginLeft: 10 }} 
+                      onClick={()=>{
+                        if(this.props.goBack)
+                          this.props.goBack();
+                        else
+                          history.go(-1)
+                      }}
+                    >
+                      返回
+                    </Button>
                     {
                       /*   
                     <Button
@@ -196,16 +206,13 @@ class EntStaticstics extends PureComponent {
             </Row>
           </Form>
           <SdlTable align="center" dataSource={thirdTableDataSource} columns={columns} loading={loading} />
+          <PointStaticstics title = {this.state.modalTitle} showModal = {this.state.showModal}
+            onCloseListener ={()=>{
+              this.setState({showModal:false});
+            }}
+          >
+          </PointStaticstics>
         </Card>
-
-        <PointStaticstics title = {this.state.modalTitle} showModal = {this.state.showModal}
-          onCloseListener ={()=>{
-            this.setState({showModal:false});
-          }}
-        >
-        </PointStaticstics>
-
-      </BreadcrumbWrapper>
     );
   }
 }
