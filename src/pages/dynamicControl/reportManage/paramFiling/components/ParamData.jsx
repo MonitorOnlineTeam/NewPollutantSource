@@ -550,7 +550,6 @@ class Index extends React.Component {
           }
           if(!isSaveFlag && !editingKey){
 
-
             addItem = {...addItem,key:count,ParaName:getParaCodeList,Unit:getParaCodeList.length>0?getParaCodeList[0].Unit:'',Type:getParaCodeList.length>0?getParaCodeList[0].Type:''};
 
             count+=1;
@@ -576,6 +575,7 @@ class Index extends React.Component {
             DGIMN:dgimn,
             RecordTime:moment(addItem.RecordTime).format('YYYY-MM-DD HH:mm:ss'),
             RecordorID:JSON.parse(Cookie.get('currentUser')).UserId,
+            Type:getParaCodeList[0].Type,
             ID:"",
             InstrumentID:""
          }
