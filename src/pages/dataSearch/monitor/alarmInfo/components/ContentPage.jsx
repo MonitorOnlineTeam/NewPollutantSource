@@ -138,7 +138,7 @@ class TableData extends React.Component {
       </div>
      
     } else {
-        const dataType = record.DataDtype.split(",").length>1? record.DataDtype.split(",")[0] : record.DataDtype;
+        const dataType = record.DataDtype.split(",").length>1? '' : record.DataDtype;
 
       return <div style={{ overflow: "hidden" }}>
         <Tooltip title={this.tooltipText.bind(this,text)} color={"#fff"} overlayStyle={{ maxWidth: 550}}  >

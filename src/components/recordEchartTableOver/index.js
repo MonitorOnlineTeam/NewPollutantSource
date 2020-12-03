@@ -118,7 +118,7 @@ class Index extends Component {
                 beginTime:startTime,
                 endTime: endTime,
                 code:paraCodeList.split(","),
-                dataType:DATATYPE[location.query.dataType]
+                dataType:location.query.dataType? DATATYPE[location.query.dataType] :''
                 
                }, () => {
                 initLoadData && this.getLoadData(this.props.DGIMN);

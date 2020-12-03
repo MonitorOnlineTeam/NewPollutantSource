@@ -105,11 +105,12 @@ class Index extends Component {
              HourData:"hour",
              DayData : 'day'
         }
+       
         this.setState({
             beginTime: startTime,
             endTime: endTime,
             code:paraCodeList.split(),
-            dataType:DATATYPE[location.query.dataType]
+            dataType:location.query.dataType? DATATYPE[location.query.dataType] : ''
         }, () => {
          
             initLoadData && this.getLoadData(this.props);
