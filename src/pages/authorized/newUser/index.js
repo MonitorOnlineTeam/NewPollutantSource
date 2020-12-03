@@ -266,14 +266,14 @@ export default class UserInfoIndex extends Component {
     const {dispatch,userPar } = this.props;
     dispatch({
       type: 'newuserinfo/updateState',
-      payload: {userPar:{...userPar,userName:e.target.value}},
+      payload: {userPar:{...userPar,userAccount:e.target.value}},
    })
   }
   realNameChange=(e)=>{
     const {dispatch,userPar } = this.props;
     dispatch({
       type: 'newuserinfo/updateState',
-      payload: {userPar:{...userPar,userAccount:e.target.value}},
+      payload: {userPar:{...userPar,userName:e.target.value}},
    })
   }
     /** 选中部门加载树 */
@@ -380,10 +380,10 @@ export default class UserInfoIndex extends Component {
           <Card>
           <Form layout="inline">
                 <Form.Item label='登录名'>
-                  <Input allowClear placeholder='请输入登录名' value={userName} onChange={this.loginNameChange}/>
+                  <Input allowClear placeholder='请输入登录名' value={userAccount} onChange={this.loginNameChange}/>
                 </Form.Item>
                 <Form.Item label='真实姓名'>
-                  <Input allowClear  value={userAccount}  placeholder='请输入真实姓名'   onChange={this.realNameChange}/>
+                  <Input allowClear  value={userName}  placeholder='请输入真实姓名'   onChange={this.realNameChange}/>
                 </Form.Item>
                 <Form.Item label='部门'>
                 <TreeSelect

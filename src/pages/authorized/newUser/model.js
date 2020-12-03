@@ -345,6 +345,7 @@ export default Model.extend({
         },
          /*重置密码**/
          * resetpwd({
+            callback,
             payload
         }, {
             call,
