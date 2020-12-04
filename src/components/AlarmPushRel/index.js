@@ -201,6 +201,9 @@ class Index extends Component {
         this.props.dispatch({
             type: 'user/insertAlarmPushAuthor',
             payload: data,
+            callback: () => {
+                this.props.cancelModal && this.props.cancelModal()
+            }
         });
         this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false, checkedCS: false, checkedXT: false });
     }
