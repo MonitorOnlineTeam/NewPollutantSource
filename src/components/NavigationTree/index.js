@@ -144,7 +144,7 @@ class NavigationTree extends Component {
       payload: {
         Status: screenList,
         RunState: state,
-        PollutantTypes: this.state.PollutantTypes,
+        PollutantTypes: this.props.polShow&&this.props.type=='ent'? '1,2' :this.props.polShow&&this.props.type=='air'&&this.props.type=='air'?'5' : this.state.PollutantTypes,
         isFilter: this.props.isMap,
       },
       callback: data => {
@@ -381,9 +381,9 @@ class NavigationTree extends Component {
 
   // 污染物筛选
   handleChange = value => {
-    value = value.toString()
+    value = value? value.toString() : '';
     if (value == '') {
-      value = this.props.ConfigInfo.SystemPollutantType
+      value = this.props.type=='ent'? '1,2' : this.props.ConfigInfo.SystemPollutantType
     }
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
@@ -861,7 +861,7 @@ class NavigationTree extends Component {
             </Row>
           </div>
 
-          {!this.props.polShow ? <SelectPollutantType
+         {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}
             showDefaultValue={this.props.defaultPollutant === 'undefined'}
@@ -869,6 +869,14 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           />
             : ''}
+            
+               {  this.props.type=='ent' ? 
+               <Select  style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择污染物类型" >
+                <Option key={1} value={1}>废水</Option>
+                <Option key={2} value={2}>废气</Option>
+              </Select> : 
+               null
+                } 
           {/* {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect */}
           {false ? <EnterprisePointCascadeMultiSelect
             searchRegion

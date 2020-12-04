@@ -130,7 +130,9 @@ export default class EntTransmissionEfficiency extends Component {
       EntCode: '',
       RegionCode: '',
       Atmosphere:Atmosphere,
-      dataType:'HourData'
+      dataType:'HourData',
+      PageSize:20,
+      PageIndex:1
     });
     // this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
 
@@ -315,11 +317,30 @@ export default class EntTransmissionEfficiency extends Component {
      </Button>
    </Form.Item>
    }
+   onChange = (PageIndex, PageSize) => {
+    this.updateQueryState({
+      PageIndex:PageIndex,
+      PageSize: PageSize,
+    });
+    setTimeout(()=>{
+      this.queryClick();
+    })
+   }
+
+   onShowSizeChange= (PageIndex, PageSize) => {
+    this.updateQueryState({
+      PageIndex:PageIndex,
+      PageSize: PageSize,
+    });
+    setTimeout(()=>{
+      this.queryClick();
+    })
+   }
   render() {
     const {
       Atmosphere,
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex },
     } = this.props;
 
 
@@ -443,13 +464,15 @@ export default class EntTransmissionEfficiency extends Component {
               // bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
+                showSizeChanger: true,
+                showQuickJumper: true,
                 // sorter: true,
-                // total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
+                total: this.props.total,
+                // defaultPageSize:20,
+                pageSize: PageSize,
+                current: PageIndex,
+                onChange: this.onChange,
+                onShowSizeChange:this.onShowSizeChange,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />

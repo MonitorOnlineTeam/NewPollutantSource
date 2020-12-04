@@ -998,6 +998,11 @@ export default {
                   component: './monitoring/dataquery/index',
                 },
                 {
+                  name: 'dataquery',
+                  path: '/monitoring/dataquery/air',
+                  component: './monitoring/dataquery/air',
+                },
+                {
                   path: '/monitoring/videoMonitor',
                   redirect: '/monitoring/videoMonitor/ent',
                 },

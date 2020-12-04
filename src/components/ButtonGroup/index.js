@@ -26,7 +26,7 @@ class Index extends Component {
         </Radio.Button>
         {ifShowOther ?
           <span>
-            <Radio.Button key={5} style={{ display: showOtherTypes }} value="month">
+            <Radio.Button key={5} style={{ display: showOtherTypes,marginLeft:-1, borderRadius:0 }} value="month">
               月均
         </Radio.Button>
             <Radio.Button key={6} style={{ display: showOtherTypes }} value="quarter">
