@@ -437,7 +437,11 @@ class DataQuery extends Component {
     this.children = ref;
   };
   tabCallback=(key)=>{
+    let { dgimn } = this.state;
     this.props.dispatch({ type: 'dataquery/updateState', payload: { tabType:key }  })
+      setTimeout(()=>{
+        this.getpointpollutants(dgimn);
+      })
 
   }
 
