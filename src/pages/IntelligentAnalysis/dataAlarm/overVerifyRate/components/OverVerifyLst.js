@@ -157,7 +157,7 @@ export default class OverVerifyLst extends Component {
                 align: 'center',
               },
               {
-                title: <span>未核实报警次数</span>,
+                title: <span>待核实报警次数</span>,
                 width: 110,
                 dataIndex: item.PollutantCode + '_noRespondedCount',
                 key: item.PollutantCode + '_noRespondedCount',
@@ -382,7 +382,7 @@ export default class OverVerifyLst extends Component {
               align: 'center',
             },
             {
-              title: <span>未核实报警次数</span>,
+              title: <span>待核实报警次数</span>,
               width: 110,
               dataIndex: item.PollutantCode + '_noRespondedCount',
               key: item.PollutantCode + '_noRespondedCount',
@@ -468,7 +468,7 @@ export default class OverVerifyLst extends Component {
                     value={AttentionCode}
                     style={{ width: 110 }}
                   >
-                    <Option value="">全部</Option>
+                    <Option value=""></Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
