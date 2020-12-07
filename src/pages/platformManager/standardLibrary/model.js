@@ -27,7 +27,7 @@ export default Model.extend({
       const result = yield call(services.addStandardLibrary, payload);
       if (result.IsSuccess) {
         message.success("添加成功");
-        router.push("/platformconfig/StandardLibrary")
+        router.push("/basicsManage/wry/StandardLibrary")
         // yield put({ type: "autoForm/getAutoFormData" })
       } else {
         message.error(result.Message)
@@ -55,7 +55,7 @@ export default Model.extend({
       const result = yield call(services.updateStandardLibrary, payload);
       if (result.IsSuccess) {
         message.success("修改成功");
-        router.push("/platformconfig/StandardLibrary")
+        router.push("/basicsManage/wry/StandardLibrary")
       } else {
         message.error(result.Message)
       }
