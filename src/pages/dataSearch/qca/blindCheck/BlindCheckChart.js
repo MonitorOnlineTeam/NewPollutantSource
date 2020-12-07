@@ -45,13 +45,13 @@ class BlindCheckChart extends PureComponent {
     const { blindChartData } = this.props;
     const valueMax = _.max(blindChartData.dataList) ? _.max(blindChartData.dataList) : 0;
     const standardMax = _.max([blindChartData.standard.top, blindChartData.standard.lower]) ? _.max([blindChartData.standard.top, blindChartData.standard.lower]) : 0
-    let max =  _.max([valueMin, valueMax]) + 5
-    max = max > 100 ? 100 : max;
+    let max = _.max([valueMin, valueMax]) + 5
+    // max = max > 100 ? 100 : max;
 
     const valueMin = _.min(blindChartData.dataList) ? _.min(blindChartData.dataList) : 0;
     const standardMin = _.min([blindChartData.standard.top, blindChartData.standard.lower]) ? _.min([blindChartData.standard.top, blindChartData.standard.lower]) : 0
     let min = _.min([valueMin, standardMin]) + -5
-    min = min < -100 ? -100 : min;
+    // min = min < -100 ? -100 : min;
 
     return {
       title: {
@@ -95,6 +95,27 @@ class BlindCheckChart extends PureComponent {
         max: Math.ceil(max),
         min: Math.ceil(min)
       },
+      visualMap: [{
+        show: false,
+        pieces: [{
+          gt: 0,
+          lte: blindChartData.standard.top,
+          color: '#248000'
+        }, {
+          gt: blindChartData.standard.lower,
+          lte: 0,
+          color: '#248000'
+        }, {
+          gt: blindChartData.standard.top,
+          lte: Math.ceil(max),
+          color: '#ff0000'
+        }, {
+          gt: Math.ceil(min),
+          lte: blindChartData.standard.lower,
+          color: '#ff0000'
+        }],
+        seriesIndex: 0
+      }],
       series: [{
         name: "相对误差",
         data: blindChartData.dataList,
@@ -102,7 +123,7 @@ class BlindCheckChart extends PureComponent {
         symbol: 'triangle',
         symbolSize: 20,
         lineStyle: {
-          color: '#248000',
+          // color: '#248000',
           width: 2,
           type: 'dashed'
         },
