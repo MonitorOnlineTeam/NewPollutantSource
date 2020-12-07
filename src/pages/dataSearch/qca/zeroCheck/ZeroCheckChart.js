@@ -47,12 +47,12 @@ class ZeroCheckChart extends PureComponent {
     const valueMax = _.max(zeroChartData.dataList) ? _.max(zeroChartData.dataList) : 0;
     const standardMax = _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
     let max = _.max([valueMin, valueMax]) + 5
-    max = max > 100 ? 100 : max;
+    // max = max > 100 ? 100 : max;
 
     const valueMin = _.min(zeroChartData.dataList) ? _.min(zeroChartData.dataList) : 0;
     const standardMin = _.min([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.min([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
     let min = _.min([valueMin, standardMin]) + -5
-    min = min < -100 ? -100 : min;
+    // min = min < -100 ? -100 : min;
 
     console.log('max=', max)
     console.log('min=', min)
@@ -98,6 +98,27 @@ class ZeroCheckChart extends PureComponent {
         max: Math.ceil(max),
         min: Math.ceil(min)
       },
+      visualMap: [{
+        show: false,
+        pieces: [{
+          gt: 0,
+          lte: zeroChartData.standard.top,
+          color: '#248000'
+        }, {
+          gt: zeroChartData.standard.lower,
+          lte: 0,
+          color: '#248000'
+        }, {
+          gt: zeroChartData.standard.top,
+          lte: Math.ceil(max),
+          color: '#ff0000'
+        }, {
+          gt: Math.ceil(min),
+          lte: zeroChartData.standard.lower,
+          color: '#ff0000'
+        }],
+        seriesIndex: 0
+      }],
       series: [{
         name: "相对误差",
         data: zeroChartData.dataList,
@@ -105,7 +126,15 @@ class ZeroCheckChart extends PureComponent {
         symbol: 'triangle',
         symbolSize: 20,
         lineStyle: {
-          color: '#248000',
+          // color: function (params) {
+          //   let color;
+          //   if (params.data > zeroChartData.standard.top || params.data < zeroChartData.standard.lower) {
+          //     color = "#ff0000"
+          //   } else {
+          //     color = "#248000"
+          //   }
+          //   return color;
+          // },
           width: 2,
           type: 'dashed'
         },
