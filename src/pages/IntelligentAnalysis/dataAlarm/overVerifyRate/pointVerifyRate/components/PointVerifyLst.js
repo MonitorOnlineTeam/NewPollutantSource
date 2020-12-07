@@ -95,6 +95,7 @@ export default class PointVerifyLst extends Component {
       },
     ];
     this.props.divisorList.map((item, key) => {
+      debugger;
       let index = this.props.overVerifyRateForm.PollutantList.findIndex(
         (checkedItem, checkedKey) => {
           if (item.PollutantCode == checkedItem) {

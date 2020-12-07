@@ -318,7 +318,7 @@ export default class OverVerifyLst extends Component {
           return (
             <Link
               to={{
-                pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/missDataSecond',
+                pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                 query: { regionCode: record.regionCode },
               }}
             >
