@@ -20,7 +20,7 @@ import {
   Form,
   Checkbox,
   Select,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -54,7 +54,7 @@ const pageUrl = {
   atmoStationList: common.atmoStationList,
   overVerifyRateForm: overVerifyRate.overVerifyRateForm,
   divisorList: overVerifyRate.divisorList,
-  pollutantByType:overVerifyRate.pollutantByType
+  pollutantByType: overVerifyRate.pollutantByType,
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -229,10 +229,10 @@ export default class OverVerifyLst extends Component {
     this.updateQueryState({
       PollutantType: value,
     });
-     this.props.dispatch({
+    this.props.dispatch({
       type: 'overVerifyRate/updateState',
       payload: {
-        pollutantByType:value,
+        pollutantByType: value,
       },
     });
     this.getPollutantByType(value, this.getExceptionList);
@@ -316,7 +316,6 @@ export default class OverVerifyLst extends Component {
   };
   // 监测因子change
   onCheckboxChange = checkedValues => {
-
     let newCloum = [
       {
         title: <span>行政区</span>,
@@ -454,7 +453,7 @@ export default class OverVerifyLst extends Component {
                   日期查询：
                   <RangePicker_
                     onRef={this.onRef1}
-                    allowClear = {false}
+                    allowClear={false}
                     dataType={dataType}
                     style={{ minWidth: '200px', marginRight: '10px' }}
                     dateValue={[moment(beginTime), moment(endTime)]}
@@ -467,6 +466,7 @@ export default class OverVerifyLst extends Component {
                     onChange={this.changeAttent}
                     value={AttentionCode}
                     style={{ width: 110 }}
+                    allowClear
                   >
                     <Option value=""></Option>
                     {this.attentchildren()}
