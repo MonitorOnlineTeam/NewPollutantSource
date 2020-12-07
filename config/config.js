@@ -16,7 +16,7 @@ const plugins = [
     {
       antd: true,
       dva: {
-        hmr: false,
+        hmr: true,
         immer: false,
       },
       locale: {
@@ -34,11 +34,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -982,10 +982,11 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videopreview/hkvideo/index'
-                    : './monitoring/videopreview/ysyvideo/index'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videopreview/hkvideo/index'
+                      : './monitoring/videopreview/ysyvideo/index'
+                  }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1009,10 +1010,11 @@ export default {
                 {
                   name: 'videoMonitor',
                   path: '/monitoring/videoMonitor/videopreview',
-                  component: `${config.VideoServer === 0
-                    ? './monitoring/videoMonitor/videopreview/hkvideo'
-                    : './monitoring/videoMonitor/videopreview/ysyvideo'
-                    }`,
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videoMonitor/videopreview/hkvideo'
+                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  }`,
                 },
                 {
                   //视频监控 企业
@@ -1361,9 +1363,6 @@ export default {
                   component: './dataAnalyze/DataGainRatePage',
                 }, // 数据获取率`
 
-
-
-
                 {
                   name: 'quartDataCaptureRate',
                   path: '/Intelligentanalysis/quartDataCaptureRate',
@@ -1386,7 +1385,7 @@ export default {
                       //流量分析
                       path: '/Intelligentanalysis/sewageDisposal/flow',
                       component: './Intelligentanalysis/sewageDisposal/flow',
-                    }
+                    },
                   ],
                 },
                 {
@@ -1410,7 +1409,6 @@ export default {
                 {
                   path: '/Intelligentanalysis/dataAlarm',
                   name: 'dataAlarm',
-
                   routes: [
                     /* 缺失数据报警统计 */
                     {
@@ -1596,17 +1594,20 @@ export default {
                   component: './dataSearch/dischargeStandard',
                 },
                 {
-                  name: 'abnormalData', //异常数据
+                  name: 'abnormalData',
+                  //异常数据
                   path: '/dataSearch/abnormalData',
                   component: './dataSearch/abnormalData',
                 },
                 {
-                  name: 'abnormalDetailsData', //异常数据 - 二级
+                  name: 'abnormalDetailsData',
+                  //异常数据 - 二级
                   path: '/dataSearch/abnormalData/details',
                   component: './dataSearch/abnormalData/DetailsPage',
                 },
                 {
-                  name: 'enterpriseMonitoringInquiry', //企业监测点查询
+                  name: 'enterpriseMonitoringInquiry',
+                  //企业监测点查询
                   path: '/dataSearch/enterpriseMonitoringInquiry',
                   component: './dataSearch/enterpriseMonitoringInquiry',
                 },
@@ -1623,7 +1624,8 @@ export default {
                   component: './dataSearch/airStation',
                 },
                 {
-                  name: 'exceedData', //超标数据查询
+                  name: 'exceedData',
+                  //超标数据查询
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
                 },
