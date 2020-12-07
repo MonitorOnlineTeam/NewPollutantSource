@@ -97,7 +97,7 @@ class LinearCheckPage extends PureComponent {
           {
             title: <span>
               相对误差（%）
-              <QuestionTooltip content="测量浓度-标准浓度/量程范围*100%" />
+              <QuestionTooltip content="（测量浓度-标准浓度）/量程范围*100%" />
             </span>,
             dataIndex: 'Offset1',
             width: 140,
@@ -129,7 +129,7 @@ class LinearCheckPage extends PureComponent {
           {
             title: <span>
               相对误差（%）
-              <QuestionTooltip content="测量浓度-标准浓度/量程范围*100%" />
+              <QuestionTooltip content="（测量浓度-标准浓度）/量程范围*100%" />
             </span>,
             dataIndex: 'Offset2',
             width: 140,
@@ -161,7 +161,7 @@ class LinearCheckPage extends PureComponent {
           {
             title: <span>
               相对误差（%）
-              <QuestionTooltip content="测量浓度-标准浓度/量程范围*100%" />
+              <QuestionTooltip content="（测量浓度-标准浓度）/量程范围*100%" />
             </span>,
             dataIndex: 'Offset3',
             width: 140,
@@ -193,7 +193,7 @@ class LinearCheckPage extends PureComponent {
           {
             title: <span>
               相对误差（%）
-              <QuestionTooltip content="测量浓度-标准浓度/量程范围*100%" />
+              <QuestionTooltip content="（测量浓度-标准浓度）/量程范围*100%" />
             </span>,
             dataIndex: 'Offset4',
             width: 140,

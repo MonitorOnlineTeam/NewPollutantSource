@@ -140,7 +140,7 @@ class RangeCheckPage extends PureComponent {
         dataIndex: 'Check',
         width: 150,
         render: (text, record) => {
-          return this.getFlagText(text, record)
+          return this.getFlagText(text, record, true)
         }
       },
       {
@@ -194,13 +194,15 @@ class RangeCheckPage extends PureComponent {
     }
   }
 
-  getFlagText = (text, record) => {
+  getFlagText = (text, record, is24) => {
     let WorkMode = '', workModeLabel = '';
-    if (record.WorkMode === 2) { WorkMode = 'rd'; workModeLabel = '远程质控' };
-    if (record.WorkMode === 3) { WorkMode = 'hd'; workModeLabel = '现场质控' }
-    return WorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
+    let recordWorkMode = is24 ? record.WorkMode24 : record.WorkMode;
+    let PersonName = is24 ? record.PersonName24 : record.PersonName;
+    if (recordWorkMode === 2) { WorkMode = 'rd'; workModeLabel = '远程质控' };
+    if (recordWorkMode === 3) { WorkMode = 'hd'; workModeLabel = '现场质控' }
+    return recordWorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
       <p>{workModeLabel}</p>
-      <p>质控人：{record.PersonName}</p>
+      <p>质控人：{PersonName}</p>
     </div>}>
       {text}
       <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
