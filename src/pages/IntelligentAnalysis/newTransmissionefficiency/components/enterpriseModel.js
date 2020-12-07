@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2018.12.08
+ * 功  能：
+ * 创建人：
+ * 创建时间：
  */
 import React, { Component } from 'react';
 import {
@@ -253,7 +253,7 @@ export default class enterpriseEfficiency extends Component {
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
-        sorter: true,
+        sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
           if (record.ShouldNumber==0) {
             return <span className={styles.normaldata}>停运</span>;

@@ -1,5 +1,5 @@
 /**
- * 功  能：传输有效率
+ * 功  能：缺失数据
  * 创建人：贾安波
  * 创建时间：2020.09.27
  */
@@ -28,6 +28,8 @@ export default Model.extend({
       RegionCode: '',
       Atmosphere:'',
       PollutantType:'',
+      PageSize:20,
+      PageIndex:1,
       dataType:'HourData'
     },
     tableDatas: [],

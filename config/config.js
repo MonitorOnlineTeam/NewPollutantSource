@@ -230,11 +230,17 @@ export default {
               name: 'home',
               path: '/home',
               component: './newHome',
-            }, // {
-            //   name: 'test',
-            //   path: '/test',
-            //   component: './Test/Test',
-            // },
+            },
+            {
+              name: 'homepage',
+              path: '/newHomePage',
+              component: './newHomePage',
+            },
+            {
+              name: 'test',
+              path: '/test',
+              component: './Test',
+            },
             {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
@@ -490,6 +496,12 @@ export default {
                   path: '/platformconfig/yearCheckEnt',
                   component: './platformManager/yearCheckEnt/',
                 },
+                //企业排放量统计
+                {
+                  name: 'emissionEnt',
+                  path: '/platformconfig/emissionEnt',
+                  component: './platformManager/emissionEnt/',
+                },
               ],
             },
             {
@@ -509,6 +521,30 @@ export default {
                 //   path: '/report/summary/:reportType',
                 //   component: './report/summaryReportPage',
                 // },
+                // 综合指数报表
+                {
+                  name: 'report',
+                  path: '/report/airReport/zhzs/:type',
+                  component: './dataAnalyze/Report',
+                },
+                // 综合指数范围报表
+                {
+                  name: 'compositeIndexReport',
+                  path: '/report/airReport/compositeIndex/:reportType',
+                  component: './dataAnalyze/CompositeIndexReport',
+                },
+                // 综合指数对比
+                {
+                  name: 'compositeIndexRangeReport',
+                  path: '/report/airReport/compositeIndexRange',
+                  component: './dataAnalyze/CompositeRangeReport',
+                },
+                // 季度有效数据捕集率
+                {
+                  name: 'compositeIndexContrast',
+                  path: '/report/airReport/compositeIndexContrast',
+                  component: './dataAnalyze/CompositeIndexContrast',
+                },
                 {
                   name: 'wryReport',
                   path: '/report/wry',
@@ -529,6 +565,30 @@ export default {
                       component: './report/summaryReportPage',
                     },
                   ],
+                },
+                //小时平均值日报
+                {
+                  name: 'DailyReport',
+                  path: '/report/DailyReport',
+                  component: './report/DailyReport/DailyReport',
+                },
+                //日平均值月报
+                {
+                  name: 'MonthReport',
+                  path: '/report/MonthReport',
+                  component: './report/MonthReport/MonthReport',
+                },
+                //月平均值季报
+                {
+                  name: 'SeasonReport',
+                  path: '/report/SeasonReport',
+                  component: './report/SeasonReport/SeasonReport',
+                },
+                //月平均值年报
+                {
+                  name: 'YearReport',
+                  path: '/report/YearReport',
+                  component: './report/YearReport/YearReport',
                 },
                 {
                   name: 'smokeReportPage',
@@ -727,6 +787,11 @@ export default {
                       component: './authorized/user',
                     },
                     {
+                      name: 'newUserInfo',
+                      path: '/rolesmanager/user/newUserInfo',
+                      component: './authorized/newUser',
+                    },
+                    {
                       name: 'add',
                       path: '/rolesmanager/user/userinfoadd',
                       component: './authorized/user/UserInfoAdd',
@@ -802,12 +867,22 @@ export default {
                 {
                   name: 'alarmrecord',
                   path: '/alarmmanager/alarmrecord',
-                  component: './monitoring/alarmrecord/index',
+                  component: './monitoring/alarmrecord/AlarmRecordList',
                 },
                 {
                   name: 'alarmverifyrecord',
                   path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
                   component: './monitoring/alarmverifyrecord/index',
+                },
+                {
+                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                  path: '/alarmmanager/exceedDataAlarmRecord',
+                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                },
+                {
+                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                  path: '/alarmmanager/exceedDataDispositionRecord',
+                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
                 },
               ],
             },
@@ -817,19 +892,9 @@ export default {
               routes: [
                 {
                   path: '/dataquerymanager',
-                  redirect: '/dataquerymanager/exceptionrecord',
+                  redirect: '/monitoring/dataquerymanager/exceptionrecord',
                 },
-                {
-                  name: 'exceptionrecord',
-                  path: '/dataquerymanager/exceptionrecord',
-                  // component: './monitoring/exceptionrecord',
-                  component: './monitoring/exceptionrecordNew',
-                },
-                {
-                  name: 'exceptionrecordDetails',
-                  path: '/dataquerymanager/exceptionrecord/details',
-                  component: './monitoring/exceptionrecordNew/RegionDetails',
-                },
+
                 {
                   name: 'overrecord',
                   path: '/dataquerymanager/overrecord',
@@ -861,10 +926,43 @@ export default {
                   redirect: '/monitoring/mapview/realtimeDataView',
                 },
                 {
+                  name: 'outputstopmanage',
+                  path: '/monitoring/outputstopmanage/:configId',
+                  component: './platformManager/outputstopManager/',
+                },
+                {
+                  name: 'exceptionrecord',
+                  path: '/monitoring/missingData/exceptionrecord',
+                  // component: './monitoring/exceptionrecord',
+                  component: './monitoring/exceptionrecordNew',
+                },
+                {
+                  name: 'exceptionrecordDetails',
+                  path: '/monitoring/missingData/exceptionrecord/details',
+                  component: './monitoring/exceptionrecordNew/RegionDetails',
+                },
+                // 企业异常上报
+                {
+                  name: 'entExceptionReported',
+                  path: '/monitoring/entExceptionReported',
+                  component: './monitoring/entExceptionReported',
+                },
+                {
                   name: 'realtimedata',
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 }, // 数据一览 - 实时
+                // 实时监控 - 企业
+                {
+                  name: 'realtimedataent',
+                  path: '/monitoring/realtimedata/ent',
+                  component: './monitoring/overView/realtime/Ent',
+                },
+                {
+                  name: 'air',
+                  path: '/monitoring/realtimedata/air',
+                  component: './monitoring/overView/realtime/Air',
+                },
                 {
                   name: 'realtimeDataView',
                   path: '/monitoring/mapview/realtimeDataView',
@@ -878,7 +976,8 @@ export default {
                 {
                   name: 'mapview',
                   path: '/monitoring/mapview',
-                  component: './monitoring/mapview',
+                  // component: './monitoring/mapview',
+                  component: './newHome/ElectronicMap',
                 },
                 {
                   name: 'videopreview',
@@ -898,6 +997,49 @@ export default {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'dataquery',
+                  path: '/monitoring/dataquery/air',
+                  component: './monitoring/dataquery/air',
+                },
+                {
+                  path: '/monitoring/videoMonitor',
+                  redirect: '/monitoring/videoMonitor/ent',
+                },
+                {
+                  name: 'videoMonitor',
+                  path: '/monitoring/videoMonitor/videopreview',
+                  component: `${
+                    config.VideoServer === 0
+                      ? './monitoring/videoMonitor/videopreview/hkvideo'
+                      : './monitoring/videoMonitor/videopreview/ysyvideo'
+                  }`,
+                },
+                {
+                  //视频监控 企业
+                  path: '/monitoring/videoMonitor/ent',
+                  component: './monitoring/videoMonitor/ent',
+                },
+                {
+                  //视频监控 大气
+                  path: '/monitoring/videoMonitor/air',
+                  component: './monitoring/videoMonitor/air',
+                },
+                {
+                  //缺失数据报警  企业
+                  path: '/monitoring/missingData/ent',
+                  component: './monitoring/missingData/ent',
+                },
+                {
+                  //缺失数据报警 空气站
+                  path: '/monitoring/missingData/air',
+                  component: './monitoring/missingData/air',
+                },
+                {
+                  //缺失数据报警 二级页面
+                  path: '/monitoring/missingData/missDataSecond',
+                  component: './monitoring/missingData/missDataSecond',
                 },
               ],
             },
@@ -1066,6 +1208,42 @@ export default {
                 },
               ],
             },
+            // {  //监控中心  视频监控
+            //   path: '/monitorCenter',
+            //   name: 'MonitorCenter',
+            //   routes: [
+            //     {
+            //       path: '/monitorCenter/videoMonitor',
+            //       redirect: '/monitorCenter/videoMonitor/ent',
+            //     },
+            //     {
+            //       //视频监控 企业
+            //       path: '/monitorCenter/videoMonitor/ent',
+            //       component: './monitorCenter/videoMonitor/ent',
+            //     },
+            //     {
+            //       //视频监控 大气
+            //       path: '/monitorCenter/videoMonitor/air',
+            //       component: './monitorCenter/videoMonitor/air',
+            //     },
+            //     {
+            //       //缺失数据报警 企业
+            //       path: '/monitorCenter/missingData/ent',
+            //       component: './monitorCenter/missingData/ent',
+            //     },
+            //     {
+            //       //缺失数据报警 空气站
+            //       path: '/monitorCenter/missingData/air',
+            //       component: './monitorCenter/missingData/air',
+            //     },
+            //     {
+            //       //缺失数据报警 二级页面
+            //       path: '/monitorCenter/missingData/missDataSecond',
+            //       component: './monitorCenter/missingData/missDataSecond',
+            //     },
+            //   ],
+
+            // },
             {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
@@ -1115,6 +1293,11 @@ export default {
                 //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
                 // },
                 {
+                  name: 'ChaoStatistic',
+                  path: '/Intelligentanalysis/chaoStatistics',
+                  component: './IntelligentAnalysis/chaoStatistics',
+                },
+                {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
                   component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
@@ -1127,7 +1310,37 @@ export default {
                 {
                   name: 'emissions',
                   path: '/Intelligentanalysis/emissions',
-                  component: './Intelligentanalysis/emissions',
+                  // component: './Intelligentanalysis/emissions',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissions',
+                      redirect: '/Intelligentanalysis/emissions/gas',
+                    },
+                    {
+                      // 废气排放量统计
+                      name: 'gas',
+                      path: '/Intelligentanalysis/emissions/gas',
+                      component: './IntelligentAnalysis/emissions/Gas',
+                    },
+                    {
+                      // 废水排放量统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterEmissions',
+                      component: './IntelligentAnalysis/emissions/Water',
+                    },
+                    {
+                      // 废气排放量对比统计
+                      name: 'gasContrast',
+                      path: '/Intelligentanalysis/emissions/gasContrast',
+                      component: './IntelligentAnalysis/emissions/GasContrast',
+                    },
+                    {
+                      // 废水排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterContrast',
+                      component: './IntelligentAnalysis/emissions/WaterContrast',
+                    },
+                  ],
                 },
                 {
                   name: 'effluentFee',
@@ -1149,26 +1362,7 @@ export default {
                   path: '/Intelligentanalysis/dataGainRatePage',
                   component: './dataAnalyze/DataGainRatePage',
                 }, // 数据获取率`
-                {
-                  name: 'report',
-                  path: '/Intelligentanalysis/report/:type',
-                  component: './dataAnalyze/Report',
-                }, // 综合指数报表
-                {
-                  name: 'compositeIndexReport',
-                  path: '/Intelligentanalysis/compositeIndex/:reportType',
-                  component: './dataAnalyze/CompositeIndexReport',
-                }, // 综合指数范围报表
-                {
-                  name: 'compositeIndexRangeReport',
-                  path: '/Intelligentanalysis/compositeIndexRange',
-                  component: './dataAnalyze/CompositeRangeReport',
-                }, // 综合指数对比
-                {
-                  name: 'compositeIndexContrast',
-                  path: '/Intelligentanalysis/compositeIndexContrast',
-                  component: './dataAnalyze/CompositeIndexContrast',
-                }, // 季度有效数据捕集率
+
                 {
                   name: 'quartDataCaptureRate',
                   path: '/Intelligentanalysis/quartDataCaptureRate',
@@ -1193,7 +1387,25 @@ export default {
                       component: './Intelligentanalysis/sewageDisposal/flow',
                     },
                   ],
-                }, //数据报警统计
+                },
+                {
+                  //排放量分析
+                  path: '/Intelligentanalysis/emissionsStatistics',
+                  name: 'EmissionsStatistics',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissionsStatistics',
+                      redirect: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                    {
+                      //排放量变化统计
+                      path: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                      component: './Intelligentanalysis/emissionsStatistics/emissionsChange',
+                    },
+                  ],
+                },
+
+                //数据报警统计
                 {
                   path: '/Intelligentanalysis/dataAlarm',
                   name: 'dataAlarm',
@@ -1203,22 +1415,9 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm',
                       redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
                     },
-                    {
-                      //缺失数据报警 企业
-                      path: '/Intelligentanalysis/dataAlarm/missingData/ent',
-                      component: './Intelligentanalysis/dataAlarm/missingData/ent',
-                    },
-                    {
-                      //缺失数据报警 空气站
-                      path: '/Intelligentanalysis/dataAlarm/missingData/air',
-                      component: './Intelligentanalysis/dataAlarm/missingData/air',
-                    },
-                    {
-                      //缺失数据报警 二级页面
-                      path: '/Intelligentanalysis/dataAlarm/missingData/missDataSecond',
-                      component: './Intelligentanalysis/dataAlarm/missingData/missDataSecond',
-                    },
+
                     /* 缺失数据报警响应率 */
+
                     {
                       //缺失数据报警响应率 企业
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
@@ -1240,7 +1439,119 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
+                    },
+                    {
+                      // 数据异常报警响应率
+                      path: '/Intelligentanalysis/dataAlarm/abnormal/details',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
+                    },
+                    {
+                      //超标数据核实率二级页面
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    },
                   ],
+                },
+
+                //统计-运维工单
+                {
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis',
+                  routes: [
+                    {
+                      // 运维工单统计（企业）
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                    },
+                    {
+                      //行政区运维工单统计（企业）
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                    },
+                    {
+                      //企业运维工单统计（企业）
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                    },
+                    /* 缺失台账工单统计 */
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },
+
+                    /* 缺失台账工单详情 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    },
+                    /* 缺失台账照片统计 */
+                    {
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    },
+                    {
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                    {
+                      /** 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 排口 */
+                      name: 'RegionAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单站点 运维工单统计-空气站 排口 */
+                      name: 'SingleStationAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                    },
+                  ],
+                },
+                {
+                  //超标报警处置率
+                  name: 'overAlarmDisposalRate',
+                  path: '/Intelligentanalysis/baojing/4',
+                  component: './dataAnalyze/overAlarmDisposalRate',
+                },
+                {
+                  //超标报警处置率-二级
+                  name: 'RegionOverAlarmDisposalRate',
+                  path:
+                    '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                  component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
               ],
             },
@@ -1272,8 +1583,7 @@ export default {
                   ],
                 },
                 {
-                  name: 'abnormalStandard',
-                  //异常标准
+                  name: 'abnormalStandard', //异常标准
                   path: '/dataSearch/abnormalStandard',
                   component: './dataSearch/abnormalStandard',
                 },
@@ -1318,6 +1628,22 @@ export default {
                   //超标数据查询
                   path: '/dataSearch/exceedData',
                   component: './dataSearch/exceedData',
+                },
+                //停运记录
+                {
+                  name: 'StopRecord',
+                  path: '/dataSearch/StopRecord',
+                  component: './report/StopRecord/stopRecord',
+                },
+                {
+                  name: 'entAbnormalRecord', //企业异常记录
+                  path: '/dataSearch/entAbnormalRecord',
+                  component: './dataSearch/entAbnormalRecord',
+                },
+                {
+                  name: 'components', //弹框
+                  path: '/dataSearch/DataModal',
+                  component: './dataSearch/DataModal',
                 },
               ],
             },
@@ -1575,4 +1901,3 @@ export default {
     },
   },
 };
-

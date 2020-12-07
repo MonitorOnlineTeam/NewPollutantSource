@@ -98,7 +98,40 @@ class ChangePwdView extends PureComponent {
         }
         callback();
     };
+    validatePassStrenth=(rule,value,callback)=>{
 
+        // let strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+        // let mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z])) | ((?=.*[A-Z])(?=.*[0-9])) | ((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+        // let enoughRegex = new RegExp("(?=.{6,}).*", "g");
+  
+        // let strength=1;
+        // if (enoughRegex.test(value) == false) {
+        //     //密码小于六位的时候，密码强度图片都为灰色
+        //     strength=1;
+        // } else if (strongRegex.test(value)) {
+        //     //强,密码为八位及以上并且字母数字特殊字符三项都包括
+        //     strength=3;
+        // } else if (mediumRegex.test(value)) {
+        //     //中等,密码为七位及以上并且字母、数字、特殊字符三项中有两项，强度是中等
+        //     strength=2;
+        // } else {
+        //     //弱,如果密码为6为及以下，就算字母、数字、特殊字符三项都包括，强度也是弱的
+        //     strength=1;
+        // }
+
+
+
+        // let regex =  /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、])[\da-zA-Z~!@#$%^&*]{7,}$/
+        //(?!...)某位置右边不能有!后匹配的字符，
+        let regex = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{7,}$/
+        if (regex.test(value)) {
+            //中等,密码为七位及以上并且字母、数字、特殊字符三项中有两项
+            callback();
+        }else{
+            callback("密码强度不够，密码要求7位以上并且包含字母、数字、特殊字符三项中有两项");
+        }
+  
+    }
     compareToFirstPassword = (rule, value, callback) => {
         const form = this.props.form;
         if (value && value !== form.getFieldValue('password')) {
@@ -154,9 +187,11 @@ class ChangePwdView extends PureComponent {
                             },
                             {
                                 validator: this.validateToNextPassword,
-                            },
+                            }, {
+                                validator: this.validatePassStrenth
+                            }
                         ],
-                    })(<Input type="password" placeholder="请输入新密码" />)}
+                    })(<Input type="text" placeholder="请输入新密码" />)}
                 </FormItem>
                 <FormItem {...formItemLayout} label="确认密码">
                     {getFieldDecorator('confirm', {

@@ -68,9 +68,9 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
+      //   render: (text, record) => {     
+      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+      //  },
       },
       {
         title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
@@ -129,8 +129,13 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      Atmosphere:Atmosphere
+      Atmosphere:Atmosphere,
+      dataType:'HourData',
+      PageSize:20,
+      PageIndex:1
     });
+    // this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
+
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
       //获取企业列表 or  大气站列表
@@ -312,11 +317,30 @@ export default class EntTransmissionEfficiency extends Component {
      </Button>
    </Form.Item>
    }
+   onChange = (PageIndex, PageSize) => {
+    this.updateQueryState({
+      PageIndex:PageIndex,
+      PageSize: PageSize,
+    });
+    setTimeout(()=>{
+      this.queryClick();
+    })
+   }
+
+   onShowSizeChange= (PageIndex, PageSize) => {
+    this.updateQueryState({
+      PageIndex:PageIndex,
+      PageSize: PageSize,
+    });
+    setTimeout(()=>{
+      this.queryClick();
+    })
+   }
   render() {
     const {
       Atmosphere,
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex },
     } = this.props;
 
 
@@ -440,13 +464,15 @@ export default class EntTransmissionEfficiency extends Component {
               // bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
+                showSizeChanger: true,
+                showQuickJumper: true,
                 // sorter: true,
                 total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
+                // defaultPageSize:20,
+                pageSize: PageSize,
+                current: PageIndex,
+                onChange: this.onChange,
+                onShowSizeChange:this.onShowSizeChange,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />

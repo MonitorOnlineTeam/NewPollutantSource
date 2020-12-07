@@ -13,6 +13,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { red } from '@ant-design/colors';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -26,6 +27,7 @@ const pageUrl = {
     loading:loading.effects["flowanalysisModel/GetSewageFlowList"],
     priseList:flowanalysisModel.priseList,
     FlowList:flowanalysisModel.FlowList,
+    FlowListArr:flowanalysisModel.FlowListArr,
     total:flowanalysisModel.total,
     PageSize:flowanalysisModel.PageSize,
     PageIndex:flowanalysisModel.PageIndex
@@ -68,8 +70,8 @@ class index extends PureComponent {
         type: pageUrl.ExportSewageFlowList,
         payload: {
           EntCode: this.state.pollutantValue,
-          BeginTime: moment(this.state.time[0]),
-          EndTime: moment(this.state.time[1]),
+          BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+          EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
         }
       })
@@ -91,10 +93,10 @@ class index extends PureComponent {
       type: pageUrl.GetFlowList,
       payload: {
         EntCode:this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
-        BeginTime: moment(this.state.time[0]),
-        EndTime: moment(this.state.time[1]),
+        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         DataType: this.state.dataType == 'Hour'?'HourData':'DayData',
-        PageSize:25,
+        PageSize:20,
         PageIndex:1,
       }
     })
@@ -102,7 +104,6 @@ class index extends PureComponent {
 
   children = () => {
     const { priseList } = this.props;
-    console.log(priseList)
     const selectList = [];
     if (priseList.length > 0) {
       priseList.map(item => {
@@ -155,7 +156,7 @@ class index extends PureComponent {
                     <Radio.Button value="Day">日均</Radio.Button>
                   </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} callback={
+        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{  marginRight: '10px'}} dateValue={time} callback={
             (dates, dataType)=>{
                 this.setState({
                     time:dates
@@ -168,65 +169,139 @@ class index extends PureComponent {
       </>
     )
   }
-  onChange = (PageIndex, PageSize) => {
+  onChange = (current,pageSize) => {
     this.props.dispatch({
       type: pageUrl.GetFlowList,
       payload: {
         EntCode: this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
-        BeginTime: moment(this.state.time[0]),
-        EndTime: moment(this.state.time[1]),
+        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         DataType: this.state.dataType == 'Hour' ? 'HourData' : 'DayData',
-        PageSize: PageSize,
-        PageIndex: PageIndex,
+        PageSize: pageSize,
+        PageIndex: current,
+      }
+    })
+  }
+  onChangeHandle= (current,pageSize) => {
+    this.props.dispatch({
+      type: pageUrl.GetFlowList,
+      payload: {
+        EntCode: this.state.pollutantValue==undefined?'': this.state.pollutantValue.toString(),
+        BeginTime: moment(this.state.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        EndTime: moment(this.state.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        DataType: this.state.dataType == 'Hour' ? 'HourData' : 'DayData',
+        PageSize: pageSize,
+        PageIndex: current,
       }
     })
   }
   
   pageContent =()=>{
     const { showType,dataType } = this.state;
-    const {FlowList,loading} = this.props
+    const {FlowList,loading ,FlowListArr} = this.props
     const hourTime = []
     const importValue = [] //进水口
     const exportValue = [] //出水口
     const backValue = [] //回口
-
-    FlowList.map(item=>{
-        if(item.backValue == "-")
-        {
+    const legend = []
+    const series=[]
+    
+    console.log(FlowList)
+    if(FlowListArr.length >0 )
+    {
+      FlowListArr.map(item => {
+        if (item.backValue != '-') {
+          if (item.backValue == null) {
             backValue.push(0)
+          }
+          else {
+            backValue.push(Number(item.backValue))
+          }
         }
-        else
-        {
-            backValue.push(item.backValue)
-        }
-        if(item.exportValue == null)
-        {
+        if (item.exportValue != '-') {
+          if (item.exportValue == null) {
             exportValue.push(0)
+          }
+          else {
+            exportValue.push(Number(item.exportValue))
+          }
         }
-        else
-        {
-            exportValue.push(item.exportValue)
-        }
-        if(item.importValue == null)
-        {
+        if (item.importValue != '-') {
+          if (item.importValue == null) {
             importValue.push(0)
-        }
-        else
-        {
-            importValue.push(item.importValue)
+          }
+          else {
+            importValue.push(Number(item.importValue))
+          }
         }
         hourTime.push(item.MonitorTime)
-    })
-
+      })
+      if(backValue.length > 0)
+      {
+        legend.push('回水口-流量')
+        series.push({
+          name: '回水口-流量',
+          type: 'line',
+          data: backValue
+        })
+      }
+      if(importValue.length > 0)
+      {
+        legend.push('进水口-流量')
+        series.push({
+          name: '进水口-流量',
+          type: 'line',
+          data: importValue,
+          itemStyle:{
+            normal:{
+                color:'red'
+            }
+        },
+        })
+      }
+      if(exportValue.length > 0)
+      {
+        legend.push('出水口-流量')
+        series.push({
+          name: '出水口-流量',
+          type: 'line',
+          data: exportValue,
+          itemStyle:{
+            normal:{
+              color:'black'
+            }
+          }
+        })
+      }
+    }
+    else{
+      legend.push('进水口-流量', '回水口-流量', '出水口-流量')
+      series.push({
+        name: '进水口-流量',
+        type: 'line',
+        data: importValue
+      },
+      {
+        name: '回水口-流量',
+        type: 'line',
+        data: backValue
+      },
+      {
+        name: '出水口-流量',
+        type: 'line',
+        data: exportValue
+      },
+      )
+    }
       const option = {
         title: {
-            //text: '折线图堆叠'
+            //text: this.state.pollutantValue
         },
         tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data: ['进水口-流量', '回水口-流量', '出水口-流量']
+            data: legend
         },
         grid: {
             left: '3%',
@@ -248,28 +323,8 @@ class index extends PureComponent {
             name:'流量(m³)',
             type: 'value'
         },
-        series: [
-            {
-                name: '进水口-流量',
-                type: 'line',
-                stack: '总量',
-                data: importValue
-            },
-            {
-                name: '回水口-流量',
-                type: 'line',
-                stack: '总量',
-                data: backValue
-            },
-            {
-                name: '出水口-流量',
-                type: 'line',
-                stack: '总量',
-                data: exportValue
-            }
-        ]
+        series: series
       }  
-
       const fixed = false
       const columns = [
         {
@@ -302,7 +357,7 @@ class index extends PureComponent {
                     key: 'importValue',
                     dataIndex: 'importValue',
                     render:(text)=>{
-                      return  text === null ? '-' :text
+                      return  (text == null|| text == '') ? '-' :text
                     }
                 },
                 {
@@ -332,7 +387,7 @@ class index extends PureComponent {
                     key: 'backValue',
                     dataIndex: 'backValue',
                     render:(text)=>{
-                        return  text == '-' ? '-' :text
+                        return  (text == null|| text == '') ? '-' :text
                     }
                 },
                 {
@@ -362,7 +417,7 @@ class index extends PureComponent {
                     key: 'exportValue',
                     dataIndex: 'exportValue',
                     render:(text)=>{
-                        return text == null ? '-' :text
+                        return (text == null|| text == '') ? '-' :text
                     }
                 },
                 {
@@ -396,17 +451,18 @@ class index extends PureComponent {
                 </TabPane>
                 <TabPane tab="数据详情" key="2">
                     {
-                      !loading ?
-                        <SdlTable columns={columns} dataSource={FlowList} pagination={{
+                        <SdlTable columns={columns} dataSource={FlowList}
+                        loading={loading}
+                        pagination={{
                           showSizeChanger: true,
                           showQuickJumper: true,
                           pageSize: this.props.PageSize,
                           current: this.props.PageIndex,
-                          onChange: this.onChange,
-                          pageSizeOptions: ['25', '30', '40', '100'],
+                          onChange:this.onChangeHandle,
+                          onShowSizeChange: this.onChange,
+                          pageSizeOptions: ['20', '30', '40', '100'],
                           total: this.props.total,
                         }} />
-                        :<PageLoading />
                     }
                 </TabPane>
             </Tabs>
@@ -417,12 +473,12 @@ class index extends PureComponent {
   render() {
     return (
       <>
-        <div id="siteParamsPage">
+        <div id="siteParamsPage" className={style.cardTitle}>
           <BreadcrumbWrapper title="流量对比分析">
             <Card
-              title={this.cardTitle()}
               extra={
                 <>
+                                    {this.cardTitle()}
                 </>
               }
               className="contentContainer"

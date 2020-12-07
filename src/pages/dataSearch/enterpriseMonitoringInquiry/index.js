@@ -14,6 +14,7 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -98,25 +99,29 @@ class index extends PureComponent {
     }
     // 导出
     EntexportReport = () => {
+        const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
-                RegionCode:this.state.regionCode=='0'?'': this.state.regionCode,
+                RegionCode:this.state.regionCode=='0'?regionValue==undefined?'':regionValue: this.state.regionCode,
                 HasData: this.state.hasCode,
                 EntCode: '',
-                EntType: 1
+                EntType: 1,
+                PollutantType:outletValue == undefined ?'':outletValue
             }
         })
     }
     // 导出
     PointexportReport = () => {
+        const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
-                RegionCode:this.state.regionCode=='0'?'': this.state.regionCode,
+                RegionCode:this.state.regionCode=='0'?regionValue==undefined?'':regionValue: this.state.regionCode,
                 HasData: this.state.hasCode,
                 EntCode: '1',
-                EntType: 1
+                EntType: 1,
+                PollutantType:outletValue == undefined ?'':outletValue
             }
         })
     }
@@ -234,17 +239,18 @@ class index extends PureComponent {
     }
 
     GetEntDetail = (regionCode, hasData) => {
-
+        const {regionValue,attentionValue} = this.state
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
-                RegionCode: regionCode == '0'?'':regionCode,
+                AttentionCode:attentionValue,
+                RegionCode: regionCode == '0'? (regionValue==undefined?'':regionValue) :regionCode,
                 HasData: hasData,
                 EntCode: '',
-                EntType: 1
+                EntType: 1,
+                PollutantType:this.state.outletValue
             }
         }).then(() => {
-            console.log(this.props.EntOrPointDetail)
             this.setState({
                 EntList: this.props.EntOrPointDetail,
                 visible: true,
@@ -255,16 +261,18 @@ class index extends PureComponent {
     }
 
     GetPointDetail = (regionCode, hasData) => {
+        const {regionValue,attentionValue} = this.state
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
-                RegionCode: regionCode == '0'?'':regionCode,
+                AttentionCode:attentionValue,
+                RegionCode: regionCode == '0'?(regionValue==undefined?'':regionValue):regionCode,
                 HasData: hasData,
                 EntCode: '1',
-                EntType: 1
+                EntType: 1,
+                PollutantType:this.state.outletValue
             }
         }).then(() => {
-            console.log(this.props.EntOrPointDetail)
             this.setState({
                 PointList: this.props.EntOrPointDetail,
                 visibleMoni: true,
@@ -288,6 +296,7 @@ class index extends PureComponent {
 
     pageContent = () => {
         const { attentionSummaryList } = this.props
+        const {regionValue} = this.state
         const fixed = false
         const columns = [
             {
@@ -530,7 +539,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
                 key: 'entName',
@@ -549,7 +558,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
                 key: 'entName',
@@ -557,7 +566,7 @@ class index extends PureComponent {
             {
                 title: "监测点",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'pointName',
                 key: 'pointName',
@@ -565,12 +574,12 @@ class index extends PureComponent {
         ]
         return (
             <>
-                <div id="siteParamsPage">
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="企业监测点查询">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                    {this.cardTitle()}
                                 </>
                             }
                             className="contentContainer"
@@ -586,7 +595,7 @@ class index extends PureComponent {
                             width={800}
                             onCancel={this.CancelHandel}
                         >
-                            <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} />
+                            <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
                             <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
                                 <Button style={{ float: 'right' }} onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
                             </div>
@@ -599,7 +608,7 @@ class index extends PureComponent {
                             width={800}
                             onCancel={this.CancelHandel}
                         >
-                            <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} />
+                            <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
                             <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
                                 <Button style={{ float: 'right' }} onClick={this.PointexportReport}><Icon type="export" />导出</Button>
                             </div>

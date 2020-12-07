@@ -19,8 +19,10 @@
 // 新疆系统的废气要显示成图片
 const XinJiang = true;
 
-// const apiHost = 'http://localhost:52198/';
+//  const apiHost = 'http://localhost:52198/';
+// const apiHost = 'http://220.171.32.30:8180/';
 const apiHost = 'http://172.16.12.135:50206/';
+
 
 // 文件上传地址
 const uploadHost = apiHost;
@@ -40,21 +42,21 @@ module.exports = {
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  offlineMapUrl: {
-    domain: '',
-    srcPath: '/amap-master/amap/js/maps.js',
-  },
-
-  // 离线地图配置：
   // offlineMapUrl: {
-  //   domain: 'http://10.230.28.70:8184',
+  //   domain: '',
   //   srcPath: '/amap-master/amap/js/maps.js',
   // },
+
+  // 离线地图配置：
+  offlineMapUrl: {
+    domain: 'http://10.230.28.70:8184',
+    srcPath: '/amap-master/amap/js/maps.js',
+  },
   isShowTabs: true,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
   zoom: 12,
-  iconFontUrl: '//at.alicdn.com/t/font_1298443_vc1qjv19g1.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '/iconFont/iconfont.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',

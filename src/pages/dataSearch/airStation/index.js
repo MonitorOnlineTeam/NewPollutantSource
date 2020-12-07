@@ -13,6 +13,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -52,12 +53,11 @@ class index extends PureComponent {
           RegionCode:''
       },
   });
-    //获取行政区列表
     this.props.dispatch({
       type: pageUrl.GetPointSummary,
       payload: {
         RegionCode: '',
-        PageSize: 25,
+        PageSize: 20,
         PageIndex: 1,
         EntType: 2
       },
@@ -84,7 +84,7 @@ class index extends PureComponent {
       type: pageUrl.GetPointSummary,
       payload: {
         RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
-        PageSize: 25,
+        PageSize: 20,
         PageIndex: 1,
         EntType: 2
       },
@@ -101,6 +101,18 @@ class index extends PureComponent {
             EntType:2
         }
     })
+}
+onChangeHandle=(PageIndex, PageSize)=>{
+  this.props.dispatch({
+      
+      type: pageUrl.GetPointSummary,
+      payload: {
+          RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
+          PageSize:PageSize,
+          PageIndex:PageIndex,
+          EntType:2
+      }
+  })
 }
   children = () => {
     const { regionList } = this.props;
@@ -167,7 +179,7 @@ class index extends PureComponent {
       {
         title: "企业名称",
         width: 100,
-        align: 'center',
+        align: 'left',
         fixed: fixed,
         dataIndex: 'entName',
         key: 'entName'
@@ -175,7 +187,7 @@ class index extends PureComponent {
       {
         title: "空气监测点名称",
         width: 100,
-        align: 'center',
+        align: 'left',
         fixed: fixed,
         dataIndex: 'pointName',
         key: 'pointName'
@@ -191,7 +203,7 @@ class index extends PureComponent {
       {
         title: "监测因子设置",
         width: 100,
-        align: 'center',
+        align: 'left',
         fixed: fixed,
         dataIndex: 'pollutantNames',
         key: 'pollutantNames'
@@ -210,14 +222,16 @@ class index extends PureComponent {
     ]
 
     return <>{
-      loading?<PageLoading/>:
-      <SdlTable columns={columns} dataSource={airStationList} pagination={{
+      <SdlTable columns={columns} dataSource={airStationList}
+       loading={loading}
+       pagination={{
         showSizeChanger: true,
         showQuickJumper: true,
         pageSize: this.props.PageSize,
         current: this.props.PageIndex,
         onChange: this.onChange,
-        pageSizeOptions: ['25', '30', '40', '100'],
+        onShowSizeChange: this.onChangeHandle,
+        pageSizeOptions: ['20', '30', '40', '100'],
         total: this.props.total,
       }} />
     }
@@ -227,12 +241,12 @@ class index extends PureComponent {
   render() {
     return (
       <>
-        <div id="siteParamsPage">
+        <div id="siteParamsPage" className={style.cardTitle}>
           <BreadcrumbWrapper title="空气站查询">
             <Card
-              title={this.cardTitle()}
               extra={
                 <>
+                    {this.cardTitle()}
                 </>
               }
               className="contentContainer"

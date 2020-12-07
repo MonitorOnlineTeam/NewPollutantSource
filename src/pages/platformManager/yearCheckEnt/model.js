@@ -26,8 +26,8 @@ export default Model.extend({
     entData: [],
     entDataTotal: 0,
     noSelectEnt: [],
-    AssessYear:null,
-    AssessYearStr:null,
+    AssessYear:moment(),
+    AssessYearStr:moment().format('YYYY'),
     selectEnt: [],
     exRegionloading: false,
     exEntloading: false,
@@ -44,7 +44,7 @@ export default Model.extend({
     entTotal: 0,
     RegionCode: '',
     EnterpriseName: '',
-    pollutantType: '',
+    pollutantType: '1',
 
     qutletQueryPar: {
       beginTime: moment()
@@ -209,7 +209,20 @@ export default Model.extend({
 
     *ExportAnnualAssessmentEnt({ payload }, { call, put, update, select }) {
       //企业
-      const response = yield call(ExportAnnualAssessmentEnt, { ...payload });
+      const {
+        RegionCode,
+        pollutantType,
+        entCode,
+        qutletQueryPar,
+        AssessYearStr
+      } = yield select(state => state.yearCheckEnt);
+      let body = {
+        RegionCode: RegionCode,
+        AssessYear: AssessYearStr,
+        PollutantType: pollutantType,
+        EntCode: qutletQueryPar.EntCode,
+      };
+      const response = yield call(ExportAnnualAssessmentEnt, { ...body });
       if (response.IsSuccess) {
         message.success("导出成功")
         window.open(response.Datas)

@@ -30,7 +30,8 @@ export default Model.extend({
       RegionCode: '',
       // Atmosphere:'',
       PollutantType:'',
-      EntType:''
+      EntType:'',
+      Rate:"1"
       // dataType:'HourData'
     },
     tableDatas: [],
@@ -59,7 +60,7 @@ export default Model.extend({
           regionCode:'',
           entCount:entCount,
           pointCount:pointCount,
-          responseRate:responseRate,
+          responseRate:Number(xiangyingCount)/Number(exceptionCount)*100,
           exceptionCount:exceptionCount,
           weixiangyingCount:weixiangyingCount,
           xiangyingCount:xiangyingCount

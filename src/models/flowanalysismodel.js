@@ -19,11 +19,12 @@ export default Model.extend({
     priseList: [],
     columns: [],
     FlowList: [],
+    FlowListArr:[],
     EntCode: '',
     DataType: '',
     BeginTime: moment().add(-24, 'hour'),
     EndTime: moment(),
-    PageSize: 25,
+    PageSize: 20,
     PageIndex: 1,
     total: 0,
   },
@@ -40,11 +41,34 @@ export default Model.extend({
         PageIndex: payload.PageIndex,
       }
       const result = yield call(GetSewageFlowList, body, null)
+      console.log(result)
+      const body2 = {
+        EntCode: payload.EntCode,
+        DataType: payload.DataType,
+        BeginTime: payload.BeginTime,
+        EndTime: payload.EndTime,
+      }
+      const result2 = yield call(GetSewageFlowList, body2, null)
+      
+      if(result2.IsSuccess)
+      {
+        yield update({
+          FlowListArr:result2.Datas.data
+        })
+      }
+      else{
+        yield update({
+          FlowListArr:[]
+        })
+      }
+
+
       if (result.IsSuccess) {
         yield update({
-          FlowList: result.Datas,
+          FlowList: result.Datas.data,
           total: result.Total,
           PageIndex: payload.PageIndex || 1,
+          PageSize:payload.PageSize
         })
       }
       else {
@@ -52,6 +76,7 @@ export default Model.extend({
           FlowList: [],
           total: 0,
           PageIndex: payload.PageIndex || 1,
+          PageSize:payload.PageSize
         })
       }
     },

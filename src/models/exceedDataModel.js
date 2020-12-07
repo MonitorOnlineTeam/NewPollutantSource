@@ -17,9 +17,18 @@ export default Model.extend({
     DataType: '',
     BeginTime: moment().add(-24, 'hour'),
     EndTime: moment(),
-    PageSize: 25,
+    PageSize: 20,
     PageIndex: 1,
     total: 0,
+    ReginPageSize:0,
+    RegionPageIndex:0,
+    RegionTotal:0,
+    ModalPageSize:20,
+    ModalPageIndex: 1,
+    Modaltotal: 0,
+    ExceedPageSize:20,
+    ExceedPageIndex: 1,
+    ExceedTotal: 0,
     ExceedDataList: [],
     RegionDataList: [],
     EntCountList: [],
@@ -73,17 +82,20 @@ export default Model.extend({
         PageSize: payload.PageSize,
         EntCode:payload.EntCode
       }
-
-      console.log(body)
       const result = yield call(GetExceedNum, body, null)
       if (result.IsSuccess) {
         yield update({
-          ExceedNumList: result.Datas
+          ExceedNumList: result.Datas,
+          Modaltotal: result.Total,
+          ModalPageIndex: payload.PageIndex || 1,
+          ModalPageSize:payload.PageSize
         })
       }
       else {
         yield update({
-          ExceedNumList: []
+          ExceedNumList: [],
+          Modaltotal: 0,
+          ModalPageIndex: payload.PageIndex || 1
         })
       }
     },//超标数据列表
@@ -98,25 +110,22 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
-        PageIndex: payload.PageIndex,
-        PageSize: payload.PageSize
+        //PageIndex: payload.PageIndex,
+        //PageSize: payload.PageSize
       }
-      console.log(body)
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
         if (payload.TabType == '1' || payload.TabType == '2') {
 
           yield update({
             ExceedDataList: result.Datas,
-            total: result.Total,
-            PageIndex: payload.PageSize || 1
           })
         }
         else {
           yield update({
             RegionDataList: result.Datas,
-            total: result.Total,
-            PageIndex: payload.PageSize || 1
+            RegionTotal: result.Total,
+            //RegionPageIndex: payload.PageIndex || 1
           })
         }
 
@@ -124,8 +133,8 @@ export default Model.extend({
       else {
         yield update({
           ExceedDataList: [],
-          total: 0,
-          PageIndex: payload.PageSize || 1
+          RegionTotal: 0,
+          RegionPageIndex: payload.PageIndex || 1
         })
       }
     },//弹框企业超标数据
@@ -144,20 +153,20 @@ export default Model.extend({
         PageSize: payload.PageSize,
         EntCode:payload.EntCode
       }
-      console.log(body)
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
         yield update({
           EntCountList: result.Datas,
-          total: result.Total,
-          PageIndex: payload.PageSize || 1
+          ExceedTotal: result.Total,
+          ExceedPageIndex: payload.PageIndex || 1,
+          ExceedPageSize:payload.PageSize
         })
       }
       else {
         yield update({
           EntCountList: [],
-          total: 0,
-          PageIndex: payload.PageSize || 1
+          Modaltotal: 0,
+          ModalPageIndex: payload.PageIndex || 1
         })
       }
     },//导出超标数据列表
@@ -173,7 +182,6 @@ export default Model.extend({
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
       }
-      console.log(body)
       const result = yield call(ExportExceedDataList, body, null)
       if (result.IsSuccess) {
         if (payload.TabType == '1' || payload.TabType == '2') {
@@ -187,7 +195,6 @@ export default Model.extend({
       }
     },//导出超标次数
     *ExportExceedNum({ payload }, { call, put, update, select }) {
-      console.log(body)
       const body = {
         RegionCode: payload.RegionCode,
         AttentionCode: payload.AttentionCode,

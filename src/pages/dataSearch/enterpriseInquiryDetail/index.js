@@ -14,6 +14,7 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { red } from '@ant-design/colors';
 import { routerRedux } from 'dva/router';
+import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -24,7 +25,7 @@ const pageUrl = {
 }
 @connect(({ loading, flowanalysisModel ,enterpriseMonitoringModel}) => ({
     loading:loading.effects["enterpriseMonitoringModel/GetPointSummary"],
-    priseList: flowanalysisModel.priseList,
+    priseList: enterpriseMonitoringModel.priseList,
     pointSummaryList:enterpriseMonitoringModel.pointSummaryList,
     total:enterpriseMonitoringModel.total,
     PageSize:enterpriseMonitoringModel.PageSize,
@@ -45,20 +46,18 @@ class index extends PureComponent {
     }
 
     initData = () => {
-        console.log(this.props.match.params.RegionCode)
         this.props.dispatch({
             //获取企业列表
-            type: 'flowanalysisModel/getEntByRegion',
+            type: 'enterpriseMonitoringModel/getEntByRegion',
             payload: { RegionCode: '' },
         });
 
         this.props.dispatch({
-            //获取企业列表
             type: pageUrl.GetPointSummary,
             payload: { 
                 RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
                 EntCode:'',
-                PageSize:25,
+                PageSize:20,
                 PageIndex:1,
                 EntType:1
              },
@@ -86,7 +85,7 @@ class index extends PureComponent {
             payload: {
                 EntCode: this.state.enterpriseValue ==undefined?'':this.state.enterpriseValue.toString(),
                 RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
-                PageSize:25,
+                PageSize:20,
                 PageIndex:1,
                 EntType:1
             }
@@ -154,6 +153,19 @@ class index extends PureComponent {
             }
         })
     }
+    onChangeHandle=(PageIndex, PageSize)=>{
+        this.props.dispatch({
+            
+            type: pageUrl.GetPointSummary,
+            payload: {
+                EntCode: this.state.enterpriseValue ==undefined?'':this.state.enterpriseValue.toString(),
+                RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
+                PageSize:PageSize,
+                PageIndex:PageIndex,
+                EntType:1
+            }
+        })
+    }
 
     pageContent = () => {
         const {pointSummaryList ,loading} = this.props
@@ -171,7 +183,7 @@ class index extends PureComponent {
             {
                 title: "企业名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
                 key: 'entName'
@@ -179,7 +191,7 @@ class index extends PureComponent {
             {
                 title: "监测点名称",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'pointName',
                 key: 'pointName'
@@ -214,7 +226,7 @@ class index extends PureComponent {
             {
                 title: "污染物设置",
                 width: 100,
-                align: 'center',
+                align: 'left',
                 fixed: fixed,
                 dataIndex: 'pollutantNames',
                 key: 'pollutantNames'
@@ -233,15 +245,16 @@ class index extends PureComponent {
             },
         ]
         return <>{
-            loading ?<PageLoading/>:
             <SdlTable columns={columns} dataSource={pointSummaryList} 
+            loading={loading}
             pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
                 pageSize: this.props.PageSize,
                 current: this.props.PageIndex,
                 onChange: this.onChange,
-                pageSizeOptions: ['25', '30', '40', '100'],
+                onShowSizeChange: this.onChangeHandle,
+                pageSizeOptions: ['20', '30', '40', '100'],
                 total: this.props.total,
               }}
             />
@@ -252,15 +265,14 @@ class index extends PureComponent {
     render() {
         return (
             <>
-                <div id="siteParamsPage">
+                <div id="siteParamsPage" className={style.cardTitle}>
                     <BreadcrumbWrapper title="企业监测点详细信息">
                         <Card
-                            title={this.cardTitle()}
                             extra={
                                 <>
+                                    {this.cardTitle()}
                                 </>
                             }
-                            className="contentContainer"
                         >
                             {this.pageContent()}
                         </Card>

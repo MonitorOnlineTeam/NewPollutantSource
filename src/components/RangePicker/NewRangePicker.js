@@ -50,6 +50,7 @@ class NewRangePicker extends Component {
      */
     getDefault = () => {
         const { dateValue } = this.props;
+        console.log(dateValue)
         if (dateValue) {
             return this.getFormatDate(dateValue[0], dateValue[1]);
         }
@@ -65,10 +66,10 @@ class NewRangePicker extends Component {
         const { isVerification, callback, callbackDataQuery, fieldName } = this.props;
         const dataType = Type || this.props.dataType;
         if (!beginTime || !endTime) {
-            // callback && callback([beginTime, endTime], dataType, fieldName);
+             callback && callback([beginTime, endTime], dataType, fieldName);
             return;
         }
-
+ 
 
         switch (dataType) {
             case 'realtime':
@@ -197,6 +198,7 @@ class NewRangePicker extends Component {
 
     onDateChange = (dates, dateStrings) => {
         const dateValue = this.getFormatDate(dates[0], dates[1]);
+        this.props.onChange&&this.props.onChange(dateValue, dateStrings)
         if (dates && dates.length && dates[0] && dates[1]) {
             if (dateValue) {
                 this.setState({
@@ -236,6 +238,11 @@ class NewRangePicker extends Component {
 
     onDataTypeChange = dataType => {
         const dateValue = this.getFormatDate(1, 1, dataType);
+        this.setState({
+            dateValue,
+        });
+    }
+    onDataValueChange = dateValue => {
         this.setState({
             dateValue,
         });

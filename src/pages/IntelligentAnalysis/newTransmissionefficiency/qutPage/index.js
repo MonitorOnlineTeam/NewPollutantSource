@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：
+ * 创建人：
+ * 创建时间：
  */
 import React, { Component } from 'react';
 import {
@@ -29,8 +29,8 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import EnterpriseModel from '../components/enterpriseModel';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import EnterpriseModel from '../components/EnterpriseModel';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -51,8 +51,10 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   entName: newtransmissionefficiency.entName,
   pageSize: newtransmissionefficiency.pageSize,
   pageIndex: newtransmissionefficiency.pageIndex,
-  beginTime:newtransmissionefficiency.beginTime,
-  endTime:newtransmissionefficiency.endTime
+  beginTime: newtransmissionefficiency.beginTime,
+  endTime: newtransmissionefficiency.endTime,
+  pollutantType: newtransmissionefficiency.pollutantType,
+  assessment: newtransmissionefficiency.assessment,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -76,7 +78,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,beginTime,endTime } = this.props;
+    const { dispatch, location, beginTime, endTime } = this.props;
 
     this.updateQueryState({
       RegionCode: location.query.RegionCode,
@@ -85,7 +87,8 @@ export default class EntTransmissionEfficiency extends Component {
       PageIndex: 1,
       PageSize: 20,
       EntCode: '',
-      PollutantType: '',
+      PollutantType: this.props._pollutantType || this.props.pollutantType,
+      Assessment: this.props.assessment
     });
 
     dispatch({
@@ -111,7 +114,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar,  PollutantType: this.props._pollutantType || this.props.pollutantType, },
     });
   };
 
@@ -153,6 +156,7 @@ export default class EntTransmissionEfficiency extends Component {
   typeChange = value => {
     this.updateQueryState({
       PollutantType: value,
+
     });
   };
 
@@ -171,7 +175,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'newtransmissionefficiency/exportTransmissionEfficiencyForEnt',
-      payload: {...queryPar},
+      payload: { ...queryPar },
       callback: data => {
         downloadFile(data);
       },
@@ -193,16 +197,17 @@ export default class EntTransmissionEfficiency extends Component {
     //企业下  排口有效传输效率
     const {
       dispatch,
-      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode },
+      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode, Assessment },
       entName,
     } = this.props;
 
     let priseQueryPar = {
       beginTime: beginTime,
       endTime: endTime,
-      PollutantType: '',
+      PollutantType: PollutantType,
       RegionCode: RegionCode,
       EntCode: row.EntCode,
+      Assessment: Assessment
       // PageIndex: 4,
       // PageSize: 5
     };
@@ -222,12 +227,13 @@ export default class EntTransmissionEfficiency extends Component {
       });
     });
   };
-  interceptTwo=(value)=>{
-     const data = value.toString();
-     const result = data.substring(0,data.indexOf(".")+3)
-     return result;
-   }
+  interceptTwo = (value) => {
+    const data = value.toString();
+    const result = data.substring(0, data.indexOf(".") + 3)
+    return result;
+  }
   render() {
+    console.log("_pollutantType=", this.props._pollutantType)
     const { eName } = this.state;
     const {
       exEntloading,
@@ -245,7 +251,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '20%',
         align: 'center',
         render: (text, record) => {
-        return <span>{text}</span>;
+          return <span>{text}</span>;
         },
       },
       {
@@ -253,13 +259,13 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'EntName',
         key: 'EntName',
         align: 'center',
-        render: (text, record) => {     
-           return   <div style={{textAlign:'left',width:'100%'}}>
-            <a href="javascript:;"  onClick={this.priseClick.bind(this, text, record)}>
-            {text}
+        render: (text, record) => {
+          return <div style={{ textAlign: 'left', width: '100%' }}>
+            <a href="javascript:;" onClick={this.priseClick.bind(this, text, record)}>
+              {text}
             </a>
-            </div>
-      
+          </div>
+
         },
       },
       {
@@ -281,7 +287,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgEffectiveRate <= text) {
@@ -311,7 +317,7 @@ export default class EntTransmissionEfficiency extends Component {
         // width: '10%',
         align: 'center',
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           if (record.AvgTransmissionRate <= text) {
@@ -342,7 +348,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber == 0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
@@ -354,7 +360,7 @@ export default class EntTransmissionEfficiency extends Component {
                   successPercent={percent}
                   percent={percent}
                   size="small"
-                  style={{width:'85%'}}
+                  style={{ width: '85%' }}
                   format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
                 />
               </div>
@@ -367,7 +373,7 @@ export default class EntTransmissionEfficiency extends Component {
                 percent={percent}
                 status="exception"
                 size="small"
-                style={{width:'85%'}}
+                style={{ width: '85%' }}
                 format={percent => <span style={{ color: 'black' }}>{percent}%</span>}
               />
             </div>
@@ -377,15 +383,14 @@ export default class EntTransmissionEfficiency extends Component {
     ];
 
     return (
-      <BreadcrumbWrapper title="有效传输率">
+      <BreadcrumbWrapper title="有效传输率" hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
-                <Form.Item>
+                {/* <Form.Item>
                   时间选择：
-                  {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
                     dateValue={[moment(beginTime), moment(endTime)]}
                     format="YYYY-MM-DD"
@@ -404,7 +409,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <Select
                     showSearch
@@ -432,7 +437,8 @@ export default class EntTransmissionEfficiency extends Component {
                   </Button>
                   <Button
                     onClick={() => {
-                      this.props.history.go(-1);
+                      this.props.onBack ? this.props.onBack() :
+                        this.props.history.go(-1);
                     }}
                   >
                     <Icon type="rollback" />
@@ -470,7 +476,7 @@ export default class EntTransmissionEfficiency extends Component {
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                   {' '}
-                  ≤90%未达标
+                   {`<90%未达标`}
                 </span>
               </div>
             </>
@@ -484,7 +490,7 @@ export default class EntTransmissionEfficiency extends Component {
               bordered={false}
               onChange={this.handleTableChange}
               dataSource={this.props.tableDatas}
-              // scroll={{ y: 'calc(100vh - 450px)' }}
+              scroll={this.props.isModal?{ y: 'calc(100vh - 550px)'}:''}
               // scroll={{ y: 550 }}
               width={'100%'}
               pagination={{

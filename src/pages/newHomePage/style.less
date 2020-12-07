@@ -1,0 +1,255 @@
+@titleColor: #333333;
+@blue: #64b0fb;
+
+.pageContainer {
+  // display: flex;
+  color: @titleColor;
+  // height: 100vh;
+  height: calc(100vh - 64px);
+  // width: 100%;
+  transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  min-width: 1366px;
+  background-color: #f2f2f2;
+  margin: -24px;
+  overflow: auto;
+  padding: 10px 15px;
+
+  :global {
+    .ant-card-head {
+      border-bottom: 0;
+      margin-bottom: 0;
+      min-height: 44px;
+      line-height: 44px;
+    }
+
+    .ant-card-head-title {
+      padding: 0;
+      color: @titleColor;
+    }
+
+    .ant-card-body {
+      padding: 0 24px 24px;
+    }
+    .ant-skeleton{
+      padding:  0 24px 24px;
+    }
+  }
+
+  :global {
+    .ant-card-head .ant-tabs {
+      margin-bottom: 0;
+      
+    }
+
+    .ant-card-head .ant-tabs-bar {
+      border-bottom: 0 !important;
+    }
+
+    .ant-tabs-nav .ant-tabs-tab:active,
+    .ant-tabs-nav .ant-tabs-tab-active {
+      color: @titleColor
+    }
+
+    .ant-tabs-nav .ant-tabs-tab {
+
+      padding: 10px 5px 8px 5px;
+      font-size: 12px;
+      margin: 0 8px 0 0;
+    }
+  }
+}
+
+.realTimeAlarm {
+  overflow-x: hidden;
+
+  :global {
+    .ant-card-body {
+      padding:0  24px  5px;
+    }
+  }
+
+}
+
+.alarmTotal {
+  width: calc(100% / 3);
+  position: relative;
+  flex-wrap: nowrap;
+  min-height: 90px;
+  // flex-basis: calc(100% / 3);
+  flex-shrink: 0;
+  min-width: 470px;
+}
+
+.alarmContent {
+  font-size: 14px;
+  color: #666666;
+  padding-left: 24px;
+  word-break: break-all;
+  width: 58%;
+  min-width: 246px;
+
+}
+
+.hr {
+  background-color: #bdc4cc;
+  height: 56px;
+  width: 1px;
+  position: absolute;
+  right: 24px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.brokenLine {
+  .lineCard {
+    background-color: #fff;
+    // width:200px;
+    // width: calc( (100% - 20px) / 4) 
+  }
+
+}
+
+.wasteWaterPoint {
+  
+  :global{
+    .ant-skeleton{
+      height: 236px;
+    }
+  }
+  .wasteWateCard {
+    :global {
+      .ant-card-head {
+        background-color: @blue;
+        color: #fff;
+        padding-right: 50px;
+
+      }
+
+      .ant-card-body {
+        padding: 0;
+      }
+
+    }
+
+    .listSty {
+      li {
+        padding: 11px 50px;
+        border-bottom: 1px dashed #e0e0e0;
+
+        img {
+          padding-right: 10px
+        }
+      }
+
+      li:last-child {
+        border: none
+      }
+
+      .colorBlock {
+        width: 40px;
+        height: 24px;
+        color: #fff;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .sevenCard {
+    :global {
+      .ant-card {
+        margin: 0 10px;
+      }
+
+      .ant-card-body {
+        padding: 0;
+      }
+    }
+  }
+  .workOrderStatCard{
+    :global{
+      .ant-skeleton{
+      padding: 0;
+      height: 214px;
+    }
+   }
+  }
+}
+
+.wasteGasPoint {
+  .wasteGasCard {
+    :global {
+      .ant-card-head {
+        background-color: #9d6ff1;
+
+      }
+
+      .ant-card-body{
+        padding: 0;
+      }
+   }
+  }
+  .alarmCard{
+    :global{
+      .ant-card-body{
+        padding: 30px 0 37px 0;
+      } 
+      .ant-skeleton{
+        padding-bottom: 2px;
+        height: 12px;
+      }
+     }
+    .title1{
+      font-size: 18px;
+      color: #333;
+    }
+    .title2{
+      font-size: 14px;
+      color: #333;
+    }
+  }
+}
+.airStatistics{
+  :global{
+    .ant-skeleton{
+      padding-bottom: 34px;
+  }
+  }
+  .airCard{
+  :global{
+    .ant-card-head{
+      background-color:#42dab8;
+      color: #fff;
+      padding-right: 50px;
+     
+    }
+    .ant-card-body{
+      padding: 0;
+      padding-top: 1px;
+    }
+  }
+}
+.airTableCard{
+  :global{
+    .ant-card-body{
+      padding: 0;
+    }
+    .ant-card {
+      margin: 0 10px;
+    }
+    .ant-skeleton{
+      padding-bottom: 36px;
+    }
+    }
+  }
+}
+.airLineCard{
+  :global{
+    .ant-card-body{
+      padding-bottom: 3px;
+    }
+
+}
+}

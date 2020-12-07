@@ -1,7 +1,7 @@
 import Model from '@/utils/model';
 
 import * as services from '@/services/autoformapi';
-import { DeleteOperationSys, addoutputstop, deleteoutputstop } from '@/services/operationsysmanage';
+import { DeleteOperationSys, addoutputstop, deleteoutputstop,editoutputstop } from '@/services/operationsysmanage';
 
 export default Model.extend({
   namespace: 'operationsysmanage',
@@ -40,6 +40,12 @@ export default Model.extend({
        /** 添加停产 */
        * addoutputstop({ payload }, { call }) {
         const result = yield call(addoutputstop, { ...payload, FormData: payload.FormData });
+        payload.callback(result);
+        },
+        /** 编辑停产 */
+       * editoutputstop({ payload }, { call }) {
+        debugger;
+        const result = yield call(editoutputstop, { ...payload, FormData: payload.FormData });
         payload.callback(result);
         },
        /** 删除停产 */

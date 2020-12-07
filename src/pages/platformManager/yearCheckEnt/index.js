@@ -80,10 +80,42 @@ const leftTableColumns = [
     {
         dataIndex: 'EntName',
         title: '企业名称',
+        render: (text, record, index) => {
+            if(text.length>10)
+            {
+                return text.substr(0,10)+'...';
+            }else
+            {
+                return text;
+            }
+        }
     },
     {
         dataIndex: 'PointName',
         title: '监测点名称',
+        render: (text, record, index) => {
+            if (text.length > 10) {
+                return text.substr(0, 10) + '...';
+            } else {
+                return text;
+            }
+        }
+    },
+    {
+        dataIndex: 'PollutantType',
+        title: '监测点类型',
+        render: (text, record, index) => {
+            var str = ''
+            switch (text) {
+                case '1':
+                    str = '废水';
+                    break;
+                case '2':
+                    str = '废气';
+                    break;
+            }
+            return str;
+        }
     },
 ];
 const rightTableColumns = [
@@ -94,11 +126,44 @@ const rightTableColumns = [
     {
         dataIndex: 'EntName',
         title: '企业名称',
+        render: (text, record, index) => {
+            if(text.length>10)
+            {
+                return text.substr(0,10)+'...';
+            }else
+            {
+                return text;
+            }
+        }
     },
     {
         dataIndex: 'PointName',
         title: '监测点名称',
+        render: (text, record, index) => {
+            if (text.length > 10) {
+                return text.substr(0, 10) + '...';
+            } else {
+                return text;
+            }
+        }
     },
+    {
+        dataIndex: 'PollutantType',
+        title: '监测点类型',
+        render: (text, record, index) => {
+            var str = ''
+            switch (text) {
+                case '1':
+                    str = '废水';
+                    break;
+                case '2':
+                    str = '废气';
+                    break;
+            }
+            return str;
+        }
+    },
+    
 ];
 
 @connect(({ loading, yearCheckEnt, autoForm }) => ({
@@ -146,6 +211,7 @@ class yearCheckEnt extends Component {
             },
         });
         this.getEntData();
+        this.initData('');
     }
 
     onChangeTranTable = nextTargetKeys => {
@@ -322,36 +388,66 @@ class yearCheckEnt extends Component {
                 title: '行政区',
                 dataIndex: 'RegionName',
                 key: 'RegionName',
+                width: '10%',
+                align: 'center',
             },
             {
                 title: '考核年份',
                 dataIndex: 'AssessYear',
                 key: 'AssessYear',
+                width: '5%',
+                align: 'center',
             },
             {
                 title: '考核企业名称',
                 dataIndex: 'EntName',
                 key: 'EntName',
+                width: '20%',
             },
             {
                 title: '考核监测点名称',
                 dataIndex: 'PointName',
                 key: 'PointName',
+                width: '20%',
+            },
+            {
+                title: '监测点类型',
+                dataIndex: 'PollutantType',
+                key: 'PollutantType',
+                width: '5%',
+                render: (text, record, index) => {
+                    var str = ''
+                    switch (text) {
+                        case '1':
+                            str = '废水';
+                            break;
+                        case '2':
+                            str = '废气';
+                            break;
+                    }
+                    return str;
+                }
             },
             {
                 title: '考核开始时间',
                 dataIndex: 'BeginTime',
                 key: 'BeginTime',
+                width: '15%',
+                align: 'center',
             },
             {
                 title: '考核结束时间',
                 dataIndex: 'EndTime',
                 key: 'EndTime',
+                width: '15%',
+                align: 'center',
             },
             {
                 title: '操作',
                 dataIndex: 'action',
                 key: 'action',
+                width: '10%',
+                align: 'center',
                 render: (text, record, index) => {
                     const TaskID = record.ID;
                     return <Tooltip title="删除"><Popconfirm
@@ -373,8 +469,7 @@ class yearCheckEnt extends Component {
                 <Card className="contentContainer">
                     <Form layout="inline" style={{ marginBottom: '10' }}>
                         <Row >
-                            <Col md={4} sm={24}>
-                                <FormItem label="考核年份" style={{ width: '100%' }}>
+                                <FormItem label="考核年份" >
                                     <YearPicker
                                         allowClear={false}
                                         // style={{ width: '100%' }}
@@ -389,9 +484,7 @@ class yearCheckEnt extends Component {
                                         }}
                                     />
                                 </FormItem>
-                            </Col>
-                            <Col md={4} sm={24}>
-                                <FormItem label="行政区" style={{ width: '100%' }}>
+                                <FormItem label="行政区" >
                                     <Select
                                         allowClear
                                         placeholder="请选择行政区"
@@ -402,24 +495,21 @@ class yearCheckEnt extends Component {
                                         {this.children()}
                                     </Select>
                                 </FormItem>
-                            </Col>
-                            <Col md={4} sm={24}>
-                                <FormItem label="企业类型" style={{ width: '100%' }}>
+                                <FormItem label="监测点类型" >
                                     <Select
-                                        placeholder="请选择企业类型"
+                                        allowClear
+                                        placeholder="请选择监测点类型"
                                         onChange={this.typeChange}
                                         value={this.props.pollutantType}
                                         style={{ width: 200, marginLeft: 10 }}
                                     >
-                                        <Option value="">全部</Option>
                                         <Option value="1">废水</Option>
                                         <Option value="2">废气</Option>
                                     </Select>
                                 </FormItem>
-                            </Col>
 
                         </Row>
-                        <Row style={{marginTop:10,marginBottom:10}}>
+                        <Row style={{ marginTop: 10, marginBottom: 10 }}>
                             <FormItem label="企业列表" >
                                 <Select
                                     showSearch
@@ -428,15 +518,15 @@ class yearCheckEnt extends Component {
                                     placeholder="企业列表"
                                     onChange={this.changeEnt}
                                     value={EntCode ? EntCode : undefined}
-                                    style={{ width: 200, marginLeft: 10 }}
+                                    style={{ width: 177 }}
                                 >
                                     {this.entChildren()}
                                 </Select>
                             </FormItem>
-                            <Button type="primary" style={{marginLeft:10}} onClick={() => {
+                            <Button type="primary" style={{ marginLeft: 46 }} onClick={() => {
                                 this.getEntData()
                             }}>查询</Button>
-                            <Button type="primary" style={{marginLeft:10}} onClick={() => {
+                            <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
                                 if (this.props.AssessYear == null) {
                                     message.error("请选择考核年份")
                                 } else {
@@ -451,13 +541,22 @@ class yearCheckEnt extends Component {
                                 }
 
                             }}>添加</Button>
-                            <Button type="primary" style={{marginLeft:10}} onClick={() => {
+                            {/* <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
                                 this.props.dispatch({
                                     type: 'yearCheckEnt/ExportAnnualAssessmentEnt',
                                     payload: {
                                     }
                                 })
-                            }}>导出</Button>
+                            }}>导出</Button> */}
+                            <Button style={{ marginLeft: 10 }} onClick={() => {
+                                this.props.dispatch({
+                                    type: 'yearCheckEnt/ExportAnnualAssessmentEnt',
+                                    payload: {
+                                        
+                                    }
+                                })
+                            }}><Icon type="export" />导出</Button>
+                             <span style={{color:'red',marginLeft:20,fontSize:12}}>设置年度参与国家有效传输率考核的企业监测点名单</span>
                         </Row>
                     </Form>
                     <SdlTable
@@ -478,7 +577,7 @@ class yearCheckEnt extends Component {
                 <Modal
                     title={'添加考核企业监测点-' + this.props.AssessYearStr + '年'}
                     visible={this.state.visible}
-                    width={1600}
+                    width={1200}
                     destroyOnClose
                     //   confirmLoading={loading}
                     onOk={this.addEntAndPoint}
@@ -495,7 +594,7 @@ class yearCheckEnt extends Component {
                         showSearch={true}
                         onChange={this.onChangeTranTable}
                         filterOption={(inputValue, item) =>
-                            item.PointName.indexOf(inputValue) !== -1 || item.DGIMN.indexOf(inputValue) !== -1
+                            item.EntName.indexOf(inputValue) !== -1 
                         }
                         leftColumns={leftTableColumns}
                         rightColumns={rightTableColumns}

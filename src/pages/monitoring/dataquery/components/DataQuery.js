@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
-import { Card, Spin, message, Empty, Radio, Row, Col, Button, Form } from 'antd';
+import { Card, Spin, message, Empty, Radio, Row, Col, Button, Form,Tabs } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import PollutantSelect from '@/components/PollutantSelect';
 import SdlTable from '@/components/SdlTable';
-
+const { TabPane } = Tabs;
 @Form.create()
 /**
  * 数据查询组件
@@ -25,6 +25,7 @@ import SdlTable from '@/components/SdlTable';
   total: dataquery.total,
   tablewidth: dataquery.tablewidth,
   historyparams: dataquery.historyparams,
+  tabType: dataquery.tabType,
 }))
 class DataQuery extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class DataQuery extends Component {
       // selectP: '',
       dgimn: '',
       dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      dataType: 'realtime',
+      dataType: 'realtime'
     };
   }
 
@@ -207,7 +208,7 @@ class DataQuery extends Component {
           onChange={this.handlePollutantChange}
           placeholder="请选择污染物"
           maxTagCount={3}
-          maxTagTextLength={5}  
+          maxTagTextLength={5}
           maxTagPlaceholder="..."
           style={{ width: 350 }}
         />
@@ -338,12 +339,20 @@ class DataQuery extends Component {
         </div>
       );
     }
+
+    let column = []; 
+    if(columns&&columns.length>0){
+      column = columns.filter(item=>{
+        return item.dataIndex!=='AQI' && item.dataIndex!='AirQuality'
+     })
+    }
+   console.log(this.props.tabType)
     return (
       // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
       <SdlTable
         rowKey={(record, index) => `complete${index}`}
         dataSource={datatable}
-        columns={columns}
+        columns={this.props.tabType=='shi'? columns : column}
         resizable
         defaultWidth={80}
         scroll={{ y: this.props.tableHeight || undefined }}
@@ -371,8 +380,8 @@ class DataQuery extends Component {
     });
     historyparams = {
       ...historyparams,
-      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: dates[0] ? dates[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+      endTime: dates[1] ? dates[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
       datatype: dataType,
     };
     dispatch({
@@ -381,7 +390,7 @@ class DataQuery extends Component {
         historyparams,
       },
     });
-    this.reloaddatalist(historyparams);
+  this.reloaddatalist(historyparams);
   };
   dateCallbackDataQuery = (dates, dataType) => {
     let { historyparams, dispatch } = this.props;
@@ -427,8 +436,12 @@ class DataQuery extends Component {
   onRef1 = ref => {
     this.children = ref;
   };
+  tabCallback=(key)=>{
+    this.props.dispatch({ type: 'dataquery/updateState', payload: { tabType:key }  })
 
-  render() {
+  }
+
+  content=(tabType)=>{
     const { dataType, dateValue, displayType } = this.state;
     const { pointName, entName, pollutantlist } = this.props;
     let flag = '',
@@ -450,6 +463,97 @@ class DataQuery extends Component {
         mode = [];
         break;
     }
+   return <div style={{ marginTop: 10 }}>
+    <Form layout="inline">
+      <Form.Item style={{ marginRight: 5 }}>
+        {!this.props.isloading && this.getpollutantSelect()}
+      </Form.Item>
+      <Form.Item style={{ marginRight: 5 }}>
+        {
+          // mode.length !== 0 ?
+          <RangePicker_
+            style={{ width: 360 }}
+            // dateValue={dateValue}
+            dataType={dataType}
+            format={this.state.format}
+            onRef={this.onRef1}
+            isVerification={true}
+            mode={mode}
+            dataQuery={true}
+            // onChange={this._handleDateChange}
+            callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+            callbackDataQuery={(dates, dataType) =>
+              this.dateCallbackDataQuery(dates, dataType)
+            }
+            allowClear={false}
+            showTime={this.state.format}
+          />
+          //     :
+          // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
+          //     dataType={dataType}
+          //     format={this.state.format}
+          //     onRef={this.onRef1}
+          //     isVerification={true}
+          //     // onChange={this._handleDateChange}
+          //     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+          //     allowClear={false} showTime={this.state.format} />
+        }
+      </Form.Item>
+      <Form.Item style={{ marginRight: 5 }}>
+        <Button
+          type="primary"
+          loading={false}
+          onClick={() => {
+            this.reloaddatalist();
+          }}
+          style={{ marginRight: 10 }}
+        >
+          查询
+        </Button>
+        <Button
+          type="primary"
+          loading={this.props.exportLoading}
+          onClick={() => {
+            this.exportReport();
+          }}
+        >
+          导出
+        </Button>
+      </Form.Item>
+      {/* <Form.Item style={{ marginRight: 5 }}>
+                            <ButtonGroup_ style={{ width: '100%' }} checked="realtime" showOtherTypes={flag} onChange={this._handleDateTypeChange} />
+                        </Form.Item> */}
+      <Form.Item style={{ marginRight: 5 }}>
+        <Radio.Group
+          style={{ width: '100%' }}
+          defaultValue={displayType}
+          buttonStyle="solid"
+          onChange={e => {
+            this.displayChange(e.target.value);
+          }}
+        >
+          <Radio.Button value="chart">图表</Radio.Button>
+          <Radio.Button value="data">数据</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
+    </Form>
+    <div>
+    <ButtonGroup_
+        style={{ width: '100%',padding:'10px 0' }}
+        checked="realtime"
+        showOtherTypes={ flag}
+        ifShowOther={tabType=='biao'? false:true}
+        onChange={this._handleDateTypeChange}
+      />
+    </div>
+    <div>
+    {this.loaddata()}
+    </div>
+  </div>
+  }
+  render() {
+    const { pointName, entName,type } = this.props;
+
     return (
       <div>
         <Card
@@ -457,94 +561,20 @@ class DataQuery extends Component {
           title={
             <div>
               <div>{entName + '-' + pointName}</div>
-              <div style={{ marginTop: 10 }}>
-                <Form layout="inline">
-                  <Form.Item style={{ marginRight: 5 }}>
-                    {!this.props.isloading && this.getpollutantSelect()}
-                  </Form.Item>
-                  <Form.Item style={{ marginRight: 5 }}>
-                    {
-                      // mode.length !== 0 ?
-                      <RangePicker_
-                        style={{ width: 360 }}
-                        // dateValue={dateValue}
-                        dataType={dataType}
-                        format={this.state.format}
-                        onRef={this.onRef1}
-                        isVerification={true}
-                        mode={mode}
-                        dataQuery={true}
-                        // onChange={this._handleDateChange}
-                        callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                        callbackDataQuery={(dates, dataType) =>
-                          this.dateCallbackDataQuery(dates, dataType)
-                        }
-                        allowClear={false}
-                        showTime={this.state.format}
-                      />
-                      //     :
-                      // <RangePicker_ style={{ width: 360 }} dateValue={dateValue}
-                      //     dataType={dataType}
-                      //     format={this.state.format}
-                      //     onRef={this.onRef1}
-                      //     isVerification={true}
-                      //     // onChange={this._handleDateChange}
-                      //     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                      //     allowClear={false} showTime={this.state.format} />
-                    }
-                  </Form.Item>
-                  <Form.Item style={{ marginRight: 5 }}>
-                    <Button
-                      type="primary"
-                      loading={false}
-                      onClick={() => {
-                        this.reloaddatalist();
-                      }}
-                      style={{ marginRight: 10 }}
-                    >
-                      查询
-                    </Button>
-                    <Button
-                      type="primary"
-                      loading={this.props.exportLoading}
-                      onClick={() => {
-                        this.exportReport();
-                      }}
-                    >
-                      导出
-                    </Button>
-                  </Form.Item>
-                  {/* <Form.Item style={{ marginRight: 5 }}>
-                                        <ButtonGroup_ style={{ width: '100%' }} checked="realtime" showOtherTypes={flag} onChange={this._handleDateTypeChange} />
-                                    </Form.Item> */}
-                  <Form.Item style={{ marginRight: 5 }}>
-                    <Radio.Group
-                      style={{ width: '100%' }}
-                      defaultValue={displayType}
-                      buttonStyle="solid"
-                      onChange={e => {
-                        this.displayChange(e.target.value);
-                      }}
-                    >
-                      <Radio.Button value="chart">图表</Radio.Button>
-                      <Radio.Button value="data">数据</Radio.Button>
-                    </Radio.Group>
-                  </Form.Item>
-                </Form>
-                <div>
-                  <ButtonGroup_
-                    style={{ width: '100%' }}
-                    checked="realtime"
-                    showOtherTypes={flag}
-                    ifShowOther={true}
-                    onChange={this._handleDateTypeChange}
-                  />
-                </div>
-              </div>
             </div>
           }
         >
-          {this.loaddata()}
+          {type == 'air'? <Tabs defaultActiveKey="shi" onChange={this.tabCallback}>
+                 <TabPane tab="实况" key="shi">
+                     {this.content('shi')}
+                  </TabPane>
+                 <TabPane tab="标况" key="biao">
+                 {this.content('biao')}
+                </TabPane>
+              </Tabs>
+              :
+              <div>{this.content('shi')} </div>
+        }
         </Card>
       </div>
     );

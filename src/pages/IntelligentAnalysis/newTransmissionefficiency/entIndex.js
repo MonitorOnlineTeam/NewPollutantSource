@@ -52,6 +52,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   beginTime: newtransmissionefficiency.beginTime,
   endTime: newtransmissionefficiency.endTime,
   pollutantType: newtransmissionefficiency.pollutantType,
+  assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
 }))
 @Form.create()
@@ -157,6 +158,12 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
+  asseChange = value => {
+    this.updateState({
+      assessment: value,
+    });
+  };
+
   changeRegion = value => {
     this.updateState({
       RegionCode: value,
@@ -222,7 +229,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => { 
            return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                       query: { RegionCode:text=='全部合计'? '': record.RegionCode },
+                       query: { RegionCode:text=='全部合计'? '': record.RegionCode},
                        }}
                        >
                     {text}
@@ -297,16 +304,8 @@ export default class EntTransmissionEfficiency extends Component {
           if (record.AvgTransmissionRate <= text) {
             return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>;
           }
-          // const content = (
-          //   <span>
-          //     <Icon type="warning" style={{ color: '#EEC900' }} />
-          //     平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}
-          //   </span>
-          // );
           return (
-            // <Popover content={content} trigger="hover">
             <span className={styles.avgtext}>
-              {/* <Badge className={styles.warningdata} status="warning" /> */}
               {`${interceptTwo(Number(text) * 100)}%`}
             </span>
             // </Popover>
@@ -352,7 +351,6 @@ export default class EntTransmissionEfficiency extends Component {
             </div>
           );
         },
-        // ...this.getColumnSearchProps('TransmissionEffectiveRate'),
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>低于90%的监测点个数</span>,
@@ -397,6 +395,17 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item>
+                  <Select
+                    placeholder="请选择考核类型"
+                    onChange={this.asseChange}
+                    value={this.props.assessment}
+                    style={{ width: 200, marginLeft: 10 }}
+                  >
+                    <Option value="1">国家考核</Option>
+                    <Option value="2">兵团考核</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item>
@@ -458,8 +467,9 @@ export default class EntTransmissionEfficiency extends Component {
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                   {' '}
-                  ≤90%未达标
+                   {`<90%未达标`}
                 </span>
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
               </div>
             </>
           }

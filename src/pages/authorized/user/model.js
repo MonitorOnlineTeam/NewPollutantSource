@@ -13,7 +13,6 @@ modify by
 */
 export default Model.extend({
     namespace: 'userinfo',
-
     state: {
         editUser: null,
         requstresult: null,

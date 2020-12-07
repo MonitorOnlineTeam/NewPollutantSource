@@ -23,7 +23,7 @@ import {
   message,
   Modal,
   Carousel,
-  Tabs 
+  Tabs
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
@@ -121,6 +121,7 @@ class SdlForm extends PureComponent {
     if (isEdit) {
       // 获取上传组件文件列表
       if (uid) {
+        debugger;
         this.props.form.setFieldsValue({ cuid: uid })
         dispatch({
           type: 'autoForm/getAttachmentList',
@@ -204,7 +205,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading,corporationCode } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];

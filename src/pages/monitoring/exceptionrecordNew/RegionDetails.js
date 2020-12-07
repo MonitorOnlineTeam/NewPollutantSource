@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
-import { Card, Row, Button, Divider, Radio } from 'antd';
+import { Card, Row, Button, Divider, Radio, Modal, Icon } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi'
+import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 
 @connect(({ loading, autoForm, exceptionrecordNew }) => ({
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
@@ -14,6 +15,7 @@ class RegionDetails extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      visible: false,
       queryCondition: JSON.parse(this.props.location.query.queryCondition),
       columns: [
         {
@@ -53,9 +55,15 @@ class RegionDetails extends PureComponent {
           key: 'ResponseStatusName',
         },
         {
-          title: '运维负责人',
+          title: '响应人',
           dataIndex: 'OperationName',
           key: 'OperationName',
+          render: (text, record) => {
+            if (record.CompleteTime === "0001-01-01 00:00:00") {
+              return "-"
+            }
+            return text ? text : "-"
+          }
         },
         {
           title: '响应时间',
@@ -63,6 +71,9 @@ class RegionDetails extends PureComponent {
           key: 'CompleteTime',
           align: 'center',
           render: (text, record) => {
+            if (record.CompleteTime === "0001-01-01 00:00:00") {
+              return "-"
+            }
             return text ? text : "-"
           }
         },
@@ -70,8 +81,10 @@ class RegionDetails extends PureComponent {
           title: '处理详情',
           align: 'center',
           render: (text, record) => {
-            if (record.CompleteTime) {
-              return <a>详情</a>
+            if (record.TaskId && record.DGIMN) {
+              return <a onClick={() => {
+                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => { this.setState({ visible: true }) })
+              }}>详情</a>
             }
             return "-"
           }
@@ -116,9 +129,9 @@ class RegionDetails extends PureComponent {
 
   render() {
     const { exceptionAlarmListForEntDataSource, loading, exportLoading } = this.props;
-    const { columns } = this.state;
+    const { columns, DGIMN, TaskID } = this.state;
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="异常数据报警详情">
         <Card>
           <Row style={{ marginBottom: 10 }}>
             <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
@@ -126,15 +139,29 @@ class RegionDetails extends PureComponent {
               <Radio.Button value="1">已响应</Radio.Button>
               <Radio.Button value="0">待响应</Radio.Button>
             </Radio.Group>
-            <Button type="primary" loading={exportLoading} onClick={this.onExport}>
+            <Button style={{ margin: '0 5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
-            <Divider type="vertical" />
-            <Button type="dashed" onClick={() => router.push("/dataquerymanager/exceptionrecord")}>
+            <Button onClick={() => {
+              this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
+            }}>
+              <Icon type="rollback" />
               返回
             </Button>
           </Row>
-          <SdlTable loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={columns} />
+          <SdlTable align="center" loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={columns} />
+          <Modal
+            // title="Basic Modal"
+            visible={this.state.visible}
+            footer={false}
+            width="100vw"
+            height="100vh"
+            destroyOnClose
+            bodyStyle={{ padding: 0 }}
+            onCancel={() => this.setState({ visible: false })}
+          >
+            <EmergencyDetailInfo DGIMN={DGIMN} TaskID={TaskID} goback={"none"} />
+          </Modal>
         </Card>
       </BreadcrumbWrapper>
     );

@@ -4,7 +4,7 @@
  * 创建时间：2020.10.12
  */
 import Model from '@/utils/model';
-import { GetAttentionDegreeList, GetEntSummary,GetPointSummary ,GetEntOrPointDetail,ExportEntSummary,ExportPointSummary,ExportEntOrPointDetail} from '../services/enterpriseMonitoringInquiryApi'
+import { GetAttentionDegreeList, GetEntSummary,GetPointSummary ,GetEntByRegion,GetEntOrPointDetail,ExportEntSummary,ExportPointSummary,ExportEntOrPointDetail} from '../services/enterpriseMonitoringInquiryApi'
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
@@ -18,10 +18,11 @@ export default Model.extend({
         RegionCode: '',
         AttentionCode: '',
         PollutantType: '',
-        PageSize:25,
+        PageSize:20,
         PageIndex:1,
         total:0,
-        EntOrPointDetail:[]
+        EntOrPointDetail:[],
+        priseList:[]
     },
     subscriptions: {},
     effects: { 
@@ -45,7 +46,6 @@ export default Model.extend({
                 //PageIndex: payload.PageIndex
             }
             const result = yield call(GetEntSummary,body,null)
-            console.log(result)
             if(result.IsSuccess)
             {
                 
@@ -90,7 +90,7 @@ export default Model.extend({
                     nodataEntWasteWaterCount += item.nodataEntWasteWaterCount;
                     nodataWasteWaterCount += item.nodataWasteWaterCount;
                 })
-
+               
                 const obj = {
                     reginName:'全部合计',
                     regionCode:'0',
@@ -113,7 +113,7 @@ export default Model.extend({
                     nodataEntWasteWaterCount:nodataEntWasteWaterCount,
                     nodataWasteWaterCount: nodataWasteWaterCount,
                 }
-                resultList.push(obj)
+                result.Datas.length>0? resultList.push(obj) : null
                 yield update({
                     attentionSummaryList:resultList,
                     //total:result.Total,
@@ -140,13 +140,13 @@ export default Model.extend({
                 EntType:payload.EntType
             }
             const result = yield call(GetPointSummary,body,null)
-            console.log(result)
             if(result.IsSuccess)
             {
                 yield update({
                     pointSummaryList:result.Datas,
                     total:result.Total,
                     PageIndex: payload.PageIndex || 1,
+                    PageSize:payload.PageSize
                 })
             }
             else
@@ -155,18 +155,20 @@ export default Model.extend({
                     pointSummaryList:[],
                     total:0,
                     PageIndex: payload.PageIndex || 1,
+                    PageSize:payload.PageSize
                 })
             }
         },
         //企业数 和 监测点数
         *GetEntOrPointDetail({ payload }, { call, put, update, select }){
             const body = {
+                AttentionCode: payload.AttentionCode,
                 RegionCode: payload.RegionCode,
                 HasData:payload.HasData,
                 EntCode:payload.EntCode,
-                EntType:payload.EntType
+                EntType:payload.EntType,
+                PollutantType:payload.PollutantType,
             }
-            console.log(body)
             const result = yield call(GetEntOrPointDetail,body,null)
             if(result.IsSuccess)
             {
@@ -204,7 +206,6 @@ export default Model.extend({
                 RegionCode:payload.RegionCode,
                 EntType:payload.EntType
             }
-            console.log(body)
             const result = yield call(ExportPointSummary,body,null)
             if(result.IsSuccess)
             {
@@ -217,16 +218,29 @@ export default Model.extend({
                 RegionCode: payload.RegionCode,
                 HasData:payload.HasData,
                 EntCode:payload.EntCode,
-                EntType:payload.EntType
+                EntType:payload.EntType,
+                PollutantType:payload.PollutantType
             }
-            console.log(body)
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)
             {
                 downloadFile(`/upload${result.Datas}`)
             }
 
-        }
+        },
+        *getEntByRegion({ payload }, { call, put, update, select }) {
+            const body ={
+                RegionCode:payload.RegionCode
+            }
+            //获取企业列表
+            const response = yield call(GetEntByRegion, body);
+      
+            if (response.IsSuccess) {
+              yield update({
+                priseList: response.Datas,
+              });
+            }
+          },
     },
 
 });

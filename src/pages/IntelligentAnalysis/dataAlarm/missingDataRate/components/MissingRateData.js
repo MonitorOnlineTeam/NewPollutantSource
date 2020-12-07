@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：缺失数据报警响应率
+ * 创建人：贾安波
+ * 创建时间：2020.10
  */
 import React, { Component } from 'react';
 import {
@@ -68,7 +68,8 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',query: {regionCode :record.regionCode} }} >
+          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+          query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
                    {text}
                </Link>
                  
@@ -106,7 +107,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'responseRate',
         align: 'center',
         render:(text,row)=>{
-          return <span>{`${interceptTwo(Number(text) * 100)}%`}</span>
+          return  <span>{`${interceptTwo(Number(text))}%`}</span>
         }
       
       },
@@ -118,19 +119,17 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location,Atmosphere,types } = this.props;
+      this.updateQueryState({
+        RegionCode: '',
+        EntCode:'',
+        EntType: types==='ent'? "1":"2",
+      });
 
 
-    this.updateQueryState({
-      // beginTime: moment()
-      //   .subtract(1, 'day')
-      //   .format('YYYY-MM-DD HH:mm:ss'),
-      // endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      // AttentionCode: '',
-      // EntCode: '',
-      RegionCode: '',
-      EntType: types==='ent'? "1":"2",
-      // Atmosphere:Atmosphere
-    });
+    let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
+
+    types ==='ent'? this.columns.splice(1,0,entObj) : null;
+
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表

@@ -35,6 +35,7 @@ export default Model.extend({
     dataAuditDataSource: [],
     dataFlagDataSource: [],
     tagTableTotal: 0,
+    tabType:'shi',
   },
   effects: {
     *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {
@@ -154,7 +155,7 @@ export default Model.extend({
           return item != '风向';
         })
         .toString();
-
+debugger;
       const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
         if (item !== 'a01008') {
@@ -455,7 +456,6 @@ export default Model.extend({
           i++;
         }
       });
-      debugger;
       result.map((item1, key) => {
         switch (historyparams.datatype) {
           case 'month':
@@ -496,7 +496,20 @@ export default Model.extend({
         }
         tablewidth = width * pollutantlist.length + 200;
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : '';
+          let unit = item.Unit ? `(${item.Unit})` : '';
+          if( _historyparams.datatype=="realtime")
+          {
+            if(item.PollutantCode=="b01")
+            {
+               unit="(L/s)";
+            }
+            else if(item.PollutantCode=="b02")
+            {
+              unit="(m³/s)";
+            }
+          }
+        
+        
           pollutantcols = pollutantcols.concat({
             title: (
               <>
@@ -584,7 +597,19 @@ export default Model.extend({
         columns = columns.concat(pollutantcols);
       } else {
         pollutantlist.map((item, key) => {
-          const unit = item.Unit ? `(${item.Unit})` : '';
+          let unit = item.Unit ? `(${item.Unit})` : '';
+          if( _historyparams.datatype=="realtime")
+          {
+            if(item.PollutantCode=="b01")
+            {
+               unit="(L/s)";
+            }
+            else if(item.PollutantCode=="b02")
+            {
+              unit="(m³/s)";
+            }
+          }
+          debugger;
           pollutantcols = pollutantcols.concat({
             title: (
               <>
@@ -599,7 +624,7 @@ export default Model.extend({
             // width,
             render: (value, record, index) => {
               let text = value;
-              if (item.PollutantName === '风向') {
+              if (item.PollutantName === '风向') {z
                 text = getDirLevel(text);
               }
               return formatPollutantPopover(text, record[`${item.PollutantCode}_params`]);
@@ -670,6 +695,19 @@ export default Model.extend({
           });
         }
         columns = columns.concat(pollutantcols);
+
+        // if(result && result[0] && result[0].PollutantType !== '5IQI' && result[0].PollutantType !== '5AQI')
+        // {
+        //   tablewidth=tablewidth+50
+        //   columns=columns.concat({
+        //     title: '是否停产',
+        //     dataIndex: 'stop',
+        //     key: 'stop',
+        //     width: 50,
+        //     // fixed: 'left',
+        //     align: 'center',
+        //   });
+        // }
       }
       let option = null;
       if (arr && arr.length > 0) {
@@ -767,6 +805,19 @@ export default Model.extend({
           },
           series: arr,
         };
+      }
+
+      if(result && result[0] && result[0].PollutantType !== '5IQI' && result[0].PollutantType !== '5AQI')
+      {
+        tablewidth=tablewidth+50
+        columns=columns.concat({
+          title: '是否停运',
+          dataIndex: 'stop',
+          key: 'stop',
+          width: 50,
+          // fixed: 'left',
+          align: 'center',
+        });
       }
       yield update({
         tablewidth,

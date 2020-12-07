@@ -318,7 +318,7 @@ export default class Index extends Component {
           title={
             <>
               <Form layout="inline">
-               <Form.Item label='行政区'>
+               <Form.Item label='行政区' >
                   <Select
                     allowClear
                     placeholder="行政区"
@@ -327,20 +327,6 @@ export default class Index extends Component {
                     style={{ width: 170 }}
                   >
                     {this.regchildren()}
-                  </Select>
-                </Form.Item>
-
-                <Form.Item label='企业列表'>
-                  <Select
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    placeholder="企业名称"
-                    onChange={this.changeEnt}
-                    value={EntCode? EntCode : undefined }
-                    style={{ width: 170  }}
-                  >
-                    {this.children()}
                   </Select>
                 </Form.Item>
                 <Form.Item label='关注程度'>
@@ -366,6 +352,20 @@ export default class Index extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item>
+                <Form.Item label='企业列表'>
+                  <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="企业名称"
+                    onChange={this.changeEnt}
+                    value={EntCode? EntCode : undefined }
+                    style={{ width: 170  }}
+                  >
+                    {this.children()}
+                  </Select>
+                </Form.Item>
+
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>
