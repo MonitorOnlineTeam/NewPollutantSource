@@ -328,9 +328,11 @@ dateCallback = (dates, dataType) => { //更新日期
       //查询条件
   queryCriteria = () => {
     const { dateValue } = this.state;
+    const { location } = this.props;
     const ParameName = this.parameName;
     return <div>
       <div style={{ marginTop: 10 }}>
+       {location.query&&location.query.type==='alarm'? <div style={{paddingBottom:15}}>{location.query.title}</div> : null }
         <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
           <Row gutter={[8,8]} style={{flex:1}} > 
           <Col xxl={7} xl={10}   lg={14} md={16} sm={24} xs={24}>

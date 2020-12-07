@@ -43,7 +43,7 @@ class Index extends Component {
         return (
             <div id='historyparData'>
               {location.query&&location.query.type==='alarm' ? null :  <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> }
-
+              {/* <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> */}
                 <BreadcrumbWrapper extraName={ `${ title}`}>
                 {location.query&&location.query.type==='alarm' ? <HistoryparData dgimn={location.query.dgimn} initLoadData location={this.props.location}/>  : dgimn?    <HistoryparData dgimn={dgimn} initLoadData location={this.props.location}/> : <PageLoading /> }  
                 </BreadcrumbWrapper>

@@ -95,7 +95,7 @@ export default Model.extend({
         const { sortOrder } = yield select(_ => _.historyData); //获取state的值
         // const { columns } = yield select(_ => _.historyData); //获取state的值
          
-
+        console.log(pollutantlist)
 
         let columns = [
           {title: '监测时间',
@@ -107,8 +107,8 @@ export default Model.extend({
           children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
 
         pollutantlist.length>0 ? pollutantlist.map((item,index)=>{
-          result.Datas.length > 0 ? Object.keys(result.Datas[0]).map(items =>{
-              if(item.PollutantCode == items){
+          // result.Datas.length > 0 ? Object.keys(result.Datas[0]).map(items =>{
+          //     if(item.PollutantCode == items){
                 columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `,  dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
                 children: [
                   {
@@ -132,15 +132,15 @@ export default Model.extend({
                 
 
                       } else {
-                        return  <span>{value}</span>
+                        return  <span>{value?value:'-'}</span> 
 
                       }
 
                     }
                   }],      
                 })
-              }
-            }) : null;
+            //   }
+            // }) : null;
            
 
 
