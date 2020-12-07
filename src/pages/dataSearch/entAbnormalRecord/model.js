@@ -25,9 +25,9 @@ export default Model.extend({
     Entloading:false,
     queryPar: {
       ExceptionBBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      ExceptionBEtime: moment().format('YYYY-MM-DD HH:59:59'),
-      ExceptionEBtime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      ExceptionEEtime: moment().format('YYYY-MM-DD HH:59:59'),
+      ExceptionBEtime: moment().format('YYYY-MM-DD 23:59:59'),
+      ExceptionEBtime:'',
+      ExceptionEEtime: '',
       DGIMN: "",
       RegionCode: "",
       EntCode: "",

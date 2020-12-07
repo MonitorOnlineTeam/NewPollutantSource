@@ -34,6 +34,7 @@ export default Model.extend({
       Rate: 1,
       EntCode: '',
     },
+    pollutantByType:'1',
     divisorList: [],
     tableDatas: { data: [] },
     total: '',

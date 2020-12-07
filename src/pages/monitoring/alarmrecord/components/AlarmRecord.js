@@ -242,7 +242,6 @@ class AlarmRecord extends Component {
 
   /** 多选 */
   onSelectChange = selectedRowKeys => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({
       selectedRowKeys,
     });

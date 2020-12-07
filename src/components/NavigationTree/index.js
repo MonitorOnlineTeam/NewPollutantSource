@@ -144,7 +144,7 @@ class NavigationTree extends Component {
       payload: {
         Status: screenList,
         RunState: state,
-        PollutantTypes: this.state.PollutantTypes,
+        PollutantTypes: this.props.polShow&&this.props.type=='ent'? '1,2' :this.props.polShow&&this.props.type=='air'&&this.props.type=='air'?'5' : this.state.PollutantTypes,
         isFilter: this.props.isMap,
       },
       callback: data => {
@@ -381,9 +381,9 @@ class NavigationTree extends Component {
 
   // 污染物筛选
   handleChange = value => {
-    value = value.toString()
+    value = value? value.toString() : '';
     if (value == '') {
-      value = this.props.ConfigInfo.SystemPollutantType
+      value = this.props.type=='ent'? '1,2' : this.props.ConfigInfo.SystemPollutantType
     }
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
@@ -812,7 +812,7 @@ class NavigationTree extends Component {
         } if (item.Type == '1') {
           return <TreeNode style={{ width: '100%' }} title={
             <div style={{ width: '253px', position: 'relative' }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
+              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}</div>{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50" style={{marginLeft:-33}}>停运</Tag> : ''}{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: 'red' }} />
                 </div>
@@ -861,7 +861,7 @@ class NavigationTree extends Component {
             </Row>
           </div>
 
-          {!this.props.polShow ? <SelectPollutantType
+         {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}
             showDefaultValue={this.props.defaultPollutant === 'undefined'}
@@ -869,6 +869,14 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           />
             : ''}
+            
+               {  this.props.type=='ent' ? 
+               <Select  style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择污染物类型" >
+                <Option key={1} value={1}>废水</Option>
+                <Option key={2} value={2}>废气</Option>
+              </Select> : 
+               null
+                } 
           {/* {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect */}
           {false ? <EnterprisePointCascadeMultiSelect
             searchRegion

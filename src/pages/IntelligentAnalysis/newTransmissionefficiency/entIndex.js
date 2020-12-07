@@ -469,6 +469,7 @@ export default class EntTransmissionEfficiency extends Component {
                   {' '}
                    {`<90%未达标`}
                 </span>
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span>
               </div>
             </>
           }

@@ -490,7 +490,7 @@ export default class EntTransmissionEfficiency extends Component {
               bordered={false}
               onChange={this.handleTableChange}
               dataSource={this.props.tableDatas}
-              // scroll={{ y: 'calc(100vh - 450px)' }}
+              scroll={this.props.isModal?{ y: 'calc(100vh - 550px)'}:''}
               // scroll={{ y: 550 }}
               width={'100%'}
               pagination={{

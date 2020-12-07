@@ -305,6 +305,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select
+                    allowClear
                     placeholder="关注程度"
                     onChange={this.changeAttent}
                     value={AttentionCode?AttentionCode:undefined} 

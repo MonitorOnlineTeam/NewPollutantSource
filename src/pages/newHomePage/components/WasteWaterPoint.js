@@ -95,7 +95,10 @@ export default class Index extends Component {
     const { dispatch, dataQueryPar } = this.props;
 
     let pointStatusPar = { ...dataQueryPar, PollutantType: 1, };
-    dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar }, });//监测点状态
+    dispatch({ type: 'home/getPointStatusList', 
+    payload: { ...pointStatusPar,DataType: "HourData", BeginTime: moment().add('hour', -1).format('YYYY-MM-DD HH:00:00'),
+    EndTime: moment().format('YYYY-MM-DD 23:59:59'), }, });//监测点状态
+
     dispatch({
       type: 'home/getOperationWorkOrderList', payload: {
         ...pointStatusPar,
@@ -163,7 +166,10 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.overWasteWater}>近七日超标废水监测点</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.overWasteWater}>
+        近七日超标废水监测点
+        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} /> 
+        </span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>
@@ -185,7 +191,10 @@ export default class Index extends Component {
   }
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.workOrder}>近30日运维工单统计</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.workOrder}>
+        近30日运维工单统计
+        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />
+        </span>
       <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
         <TabPane tab="废水" key="1">
         </TabPane>
@@ -239,7 +248,7 @@ export default class Index extends Component {
         }
       },
       legend: {
-        data: ['已完成', '未完成'],
+        data: ['完成工单'],
         right: 0,
         bottom: 0,
         icon: 'rect',
@@ -278,7 +287,7 @@ export default class Index extends Component {
       },
       series: [
         {
-          name: '已完成',
+          name: '完成工单',
           type: 'bar',
           stack: '总量',
           barWidth: 25,//柱子宽度
@@ -298,28 +307,28 @@ export default class Index extends Component {
             [workOrderList.verificationTestComplete, workOrderList.maintenanceRepairComplete, workOrderList.calibrationComplete, workOrderList.onSiteInspectionComplete]
           ,
         },
-        {
-          name: '未完成',
-          type: 'bar',
-          stack: '总量',
-          barWidth: 25,//柱子宽度
-          label: {
-            show: true,
-            position: 'right',
-            textStyle: {
-              color: color[1],
-            },
-            formatter: (params) => {
-              if (params.value === 0) { return "" } else { return params.value }
-            }
-          },
+        // {
+        //   name: '未完成',
+        //   type: 'bar',
+        //   stack: '总量',
+        //   barWidth: 25,//柱子宽度
+        //   label: {
+        //     show: true,
+        //     position: 'right',
+        //     textStyle: {
+        //       color: color[1],
+        //     },
+        //     formatter: (params) => {
+        //       if (params.value === 0) { return "" } else { return params.value }
+        //     }
+        //   },
 
-          position: 'right',
-          data: pollutantType == '5' ?
-            [workOrderList.maintenanceRepairUnfinished, workOrderList.qualityControlUnfinished, workOrderList.onSiteInspectionUnfinished]
-            :
-            [workOrderList.verificationTestUnfinished, workOrderList.maintenanceRepairUnfinished, workOrderList.calibrationUnfinished, workOrderList.onSiteInspectionUnfinished]
-        },
+        //   position: 'right',
+        //   data: pollutantType == '5' ?
+        //     [workOrderList.maintenanceRepairUnfinished, workOrderList.qualityControlUnfinished, workOrderList.onSiteInspectionUnfinished]
+        //     :
+        //     [workOrderList.verificationTestUnfinished, workOrderList.maintenanceRepairUnfinished, workOrderList.calibrationUnfinished, workOrderList.onSiteInspectionUnfinished]
+        // },
 
       ]
     };
@@ -391,7 +400,7 @@ export default class Index extends Component {
         }} /> : null}
         {/**超标报警*/}
         {waterAlarmVisible ? <ExceedDataAlarm
-          dateTime={[moment().subtract(1, "hour"),
+          dateTime={[moment().subtract(1, "hour").startOf("hour"),
           moment()]} alarmType={pollutantType} alarmVisible={waterAlarmVisible} alarmCancle={() => {
             this.setState({ waterAlarmVisible: false });
           }} /> : null}

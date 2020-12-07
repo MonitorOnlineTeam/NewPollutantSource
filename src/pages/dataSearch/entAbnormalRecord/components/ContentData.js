@@ -215,16 +215,15 @@ export default class EntTransmissionEfficiency extends Component {
 
      this.updateQueryState({
       ExceptionBBtime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
-      ExceptionBEtime: moment().format('YYYY-MM-DD HH:59:59'),
-      ExceptionEBtime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      ExceptionEEtime: moment().format('YYYY-MM-DD HH:59:59'),
+      ExceptionBEtime: moment().format('YYYY-MM-DD 23:59:59'),
+      ExceptionEBtime: '',
+      ExceptionEEtime: '',
       DGIMN: "",
       RegionCode: "",
       EntCode: "",
       Status: ""
     });
-    this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
-    this.child2.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
+    this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment().endOf('day')])
 
     setTimeout(() => {
       this.getTableData();
@@ -372,14 +371,14 @@ export default class EntTransmissionEfficiency extends Component {
 
   dateChange=(date)=>{
       this.updateQueryState({
-        ExceptionBBtime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        ExceptionBEtime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        ExceptionBBtime: date[0]? date[0].format('YYYY-MM-DD HH:mm:ss') : '',
+        ExceptionBEtime: date[1]? date[1].format('YYYY-MM-DD HH:mm:ss') : '',
       });
     }
     dateChange2=(date)=>{
       this.updateQueryState({
-        ExceptionEBtime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        ExceptionEEtime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        ExceptionEBtime: date[0]? date[0].format('YYYY-MM-DD HH:mm:ss') : '',
+        ExceptionEEtime: date[1]? date[1].format('YYYY-MM-DD HH:mm:ss') : '',
       });
     }
 
@@ -420,7 +419,7 @@ export default class EntTransmissionEfficiency extends Component {
               { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
               <Row>
               <Form.Item label='异常开始时间'>
-               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
+               <RangePicker_   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}
               onRef={(ref) => {
                 this.child = ref;
@@ -428,7 +427,7 @@ export default class EntTransmissionEfficiency extends Component {
               />
                 </Form.Item>
                 <Form.Item label='异常截止时间'>
-               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionEBtime),moment(ExceptionEEtime)]} 
+               <RangePicker_    style={{minWidth: '200px', marginRight: '10px'}} dateValue={['','']} 
               callback={(dates, dataType)=>this.dateChange2(dates, dataType)}
               onRef={(ref) => {
                 this.child2 = ref;

@@ -46,7 +46,8 @@ class index extends PureComponent {
         this.newTabIndex = 0
         this.state = {
             Begintime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
-            Endtime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            // Endtime: [moment(moment().add(-1, "month").format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            Endtime:[],
             regionValue: '',
             entValue:'',
             voucher:'',
@@ -106,10 +107,10 @@ class index extends PureComponent {
         this.props.dispatch({
             type:pageUrl.GetStopList,
             payload:{
-                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+                BeginTime: Begintime[0]? moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
+                BeginTimeEnd:Begintime[1]? moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss') : null,
+                EndTime:Endtime[0] ? moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss') : null,
+                EndTimeEnd:Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss') :null,
                 RegionCode: regionValue == undefined ?'':regionValue,
                 EntCode: entValue== undefined ?'':entValue,
                 DGIMN: pointValue== undefined ?'':pointValue,
@@ -118,7 +119,7 @@ class index extends PureComponent {
                 PageIndex:1
             }
         })
-       this.loadData(0,0);
+    //    this.loadData(0,0);
     }
     //行政区
     children = () => {
@@ -196,7 +197,9 @@ class index extends PureComponent {
                         })
                     }
                 } />
-                <label style={{fontSize:14}}>停运结束时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Endtime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
+                <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
+                onRef={this.onRef1} isVerification={true} dateValue={Endtime} 
+                style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                     (dates, dataType) => {
                         console.log(dates,dataType)
                         this.setState({

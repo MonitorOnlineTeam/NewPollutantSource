@@ -102,7 +102,7 @@ export default class Index extends Component {
     this.props.dispatch({
       type: "home/getAirDayReportData",
       payload: {
-        MonitorTime: moment().format("YYYY-MM-DD HH:mm:ss")
+        MonitorTime: moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
       }
     })
 
@@ -177,7 +177,10 @@ export default class Index extends Component {
 
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{cursor:'pointer'}} onClick={this.flow}>污水处理厂流量分析</span>
+      <span style={{cursor:'pointer'}} onClick={this.flow}>
+        污水处理厂流量分析
+        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />
+        </span>
       <Tabs defaultActiveKey="1">
         <TabPane tab="近30天" key="1">
         </TabPane>
@@ -247,7 +250,7 @@ export default class Index extends Component {
       legend: {
         data: waterType&&waterType.length>=0? waterType:[],
         left: 'center',
-        bottom: 0,
+        bottom: 10,
         icon: 'rect',
         itemWidth: 20,//图例的宽度
         itemHeight: 10,//图例的高度
@@ -257,10 +260,10 @@ export default class Index extends Component {
       },
       grid: {
         top: 30,
-        left: 0,
+        left: 60,
         right: 20,
-        bottom: 30,
-        containLabel: true
+        bottom: 60,
+        // containLabel: true
       },
       xAxis: {
         type: 'category',
@@ -268,14 +271,15 @@ export default class Index extends Component {
         data: MonitorTime,
         axisLine: { //x轴
           lineStyle: {
-            color: '#d9d9d9',
+            color: '#d9d9d9',   
+            
             width: 1
           },
         },
         axisLabel: {
           textStyle: {
-            color: '#999'
-          }
+            color: '#999',
+          },
         },
       },
       yAxis: {

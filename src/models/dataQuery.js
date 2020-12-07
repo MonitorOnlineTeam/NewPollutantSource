@@ -35,6 +35,7 @@ export default Model.extend({
     dataAuditDataSource: [],
     dataFlagDataSource: [],
     tagTableTotal: 0,
+    tabType:'shi',
   },
   effects: {
     *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {

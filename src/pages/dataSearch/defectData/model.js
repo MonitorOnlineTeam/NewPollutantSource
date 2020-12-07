@@ -28,6 +28,8 @@ export default Model.extend({
       RegionCode: '',
       Atmosphere:'',
       PollutantType:'',
+      PageSize:20,
+      PageIndex:1,
       dataType:'HourData'
     },
     tableDatas: [],

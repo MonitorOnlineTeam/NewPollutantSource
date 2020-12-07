@@ -70,8 +70,8 @@ export default class Index extends Component {
       },
       OverVisible: false,
       gasAlarmVisible: false,
-      gasExceedVisible: false
-
+      gasExceedVisible: false,
+      pollutantType:'2'
     }
   }
   componentDidMount() {
@@ -88,7 +88,9 @@ export default class Index extends Component {
   initData = () => {
     const { dataQueryPar, dispatch } = this.props;
     let pointStatusPar = { ...dataQueryPar, PollutantType: 2 };
-    dispatch({ type: 'home/getPointStatusList', payload: { ...pointStatusPar }, });//监测点状态
+    dispatch({ type: 'home/getPointStatusList', 
+    payload: { ...pointStatusPar,DataType: "HourData", BeginTime: moment().add('hour', -1).format('YYYY-MM-DD HH:00:00'),
+    EndTime: moment().format('YYYY-MM-DD 23:59:59'), }, });//监测点状态
     dispatch({ type: 'home/getAlarmResponse', payload: { ...dataQueryPar, BeginTime: moment().add('day', -7).format('YYYY-MM-DD 00:00:00'), EndTime: moment().format('YYYY-MM-DD 23:59:59'), } });//数据报警响应
 
 
@@ -126,7 +128,10 @@ export default class Index extends Component {
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>近七日超标废气监测点</span>
+      <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>
+        近七日超标废气监测点
+        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />  
+        </span>
       <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
         <Radio.Button value="HourData">小时</Radio.Button>
         <Radio.Button value="DayData">日均</Radio.Button>
@@ -136,7 +141,7 @@ export default class Index extends Component {
         </TabPane>
         <TabPane tab="二氧化硫" key="02">
         </TabPane>
-        <TabPane tab="二氧化氮" key="03">
+        <TabPane tab="氮氧化物" key="03">
         </TabPane>
       </Tabs>
 
@@ -318,12 +323,13 @@ export default class Index extends Component {
         </Row>
         {/**超标报警*/}
         {gasAlarmVisible ? <ExceedDataAlarm
-          dateTime={[moment().subtract(1, "hour"),
+          dateTime={[moment().subtract(1, "hour").startOf("hour"),
           moment()]} alarmType={pollutantType} alarmVisible={gasAlarmVisible} alarmCancle={() => {
             this.setState({ gasAlarmVisible: false });
           }} /> : null}
         {/**近七日废气超标监测点*/}
-        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(), moment()]} exceedVisible={gasExceedVisible} exceedDataType={gasOverListPar.DataType == 'HourData' ? 'Hour' : 'Day'} exceedPollutant={gasOverListPar.pollutantCode} exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
+        {gasExceedVisible ? <ExceedData exceedTime={[moment().add('day', -7).startOf(), moment()]} exceedVisible={gasExceedVisible} exceedDataType={gasOverListPar.DataType == 'HourData' ? 'Hour' : 'Day'} exceedPollutant={gasOverListPar.pollutantCode} 
+         exceedType={gasOverListPar.PollutantType} exceedCancle={() => {
           this.setState({ gasExceedVisible: false });
         }} /> : null}
         {

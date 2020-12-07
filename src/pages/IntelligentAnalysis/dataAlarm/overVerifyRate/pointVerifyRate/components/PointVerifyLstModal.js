@@ -96,7 +96,9 @@ export default class PointVerifyLst extends Component {
       },
     ];
     this.props.divisorList.map((item, key) => {
-      let index = this.props.overVerifyRateForm.PollutantList.findIndex(
+      let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
+      this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
+      let index = pollutantList.findIndex(
         (checkedItem, checkedKey) => {
           if (item.PollutantCode == checkedItem) {
             return true;
@@ -265,9 +267,10 @@ export default class PointVerifyLst extends Component {
       >
         <SdlTable
           rowKey={(record, index) => `complete${index}`}
-          loading={this.props.loading}
+          loading={this.props.loading} 
           columns={this.state.columns}
           dataSource={this.props.tableDatil.data}
+          scroll={{  y: 'calc(100vh - 510px)',}}
           pagination={{
             // showSizeChanger: true,
             // showQuickJumper: true,

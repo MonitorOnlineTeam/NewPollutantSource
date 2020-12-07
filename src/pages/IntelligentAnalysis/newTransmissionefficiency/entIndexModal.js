@@ -31,12 +31,12 @@ import styles from './style.less';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import IndexModal from './qutPage/indexModal';
+import IndexModal from './qutPage/IndexModal';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
-import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage/index"
+import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage"
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -102,7 +102,9 @@ export default class EntIndexModal extends Component {
     this.props.dispatch({
       type: pageUrl.getData,
       payload: {
-        PollutantType: this.state.PollutantType
+        PollutantType: this.state.PollutantType,
+        beginTime:this.state.beginTime,
+        endTime:this.state.endTime,
       }
     });
   };
@@ -511,7 +513,7 @@ export default class EntIndexModal extends Component {
             bordered={false}
             // onChange={this.handleTableChange}
             dataSource={this.props.tableDatas}
-            // scroll={{ y: 'calc(100vh - 450px)' }}
+            scroll={{ y: 'calc(100vh - 450px)'}}
             // scroll={{ y: 550 }}
             pagination={false}
           />
@@ -539,7 +541,7 @@ export default class EntIndexModal extends Component {
               !this.state.showDetails && this.showModal()
             }
             {
-              this.state.showDetails && <QutPage hideBreadcrumb location={{ query: { RegionCode: this.state.RegionCode } }} _pollutantType={this.state.PollutantType} onBack={() => {
+              this.state.showDetails && <QutPage hideBreadcrumb isModal={true} location={{ query: { RegionCode: this.state.RegionCode } }} _pollutantType={this.state.PollutantType} onBack={() => {
                 this.setState({
                   showDetails: false,
                   RegionCode: undefined

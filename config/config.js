@@ -787,6 +787,11 @@ export default {
                       component: './authorized/user',
                     },
                     {
+                      name: 'newUserInfo',
+                      path: '/rolesmanager/user/newUserInfo',
+                      component: './authorized/newUser',
+                    },
+                    {
                       name: 'add',
                       path: '/rolesmanager/user/userinfoadd',
                       component: './authorized/user/UserInfoAdd',
@@ -991,6 +996,11 @@ export default {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'dataquery',
+                  path: '/monitoring/dataquery/air',
+                  component: './monitoring/dataquery/air',
                 },
                 {
                   path: '/monitoring/videoMonitor',
@@ -1472,13 +1482,6 @@ export default {
                         '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
                       component:
                         './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                    },
-                    {
-                      //站点运维工单统计（企业）
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/PointStaticstics',
                     },
                     /* 缺失台账工单统计 */
                     {
