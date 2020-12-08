@@ -2,7 +2,7 @@ import { post, get, getNew } from '@/utils/request';
 
 // 获取历史数据 数据类型
 export async function getAllTypeDataList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/M onDataApi/GetAllTypeDataList', params, null);
   return result.Datas === null ? {
    ...result, Datas: [],
   } : result;
