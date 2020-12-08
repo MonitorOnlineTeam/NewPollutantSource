@@ -386,7 +386,7 @@ export default class Index extends Component {
         },
         textStyle: {
           rich: {
-            shu: {
+            shu: {   
               color: '#d2d2d2',
               padding: [0, 1, 0, 2]
             },
@@ -398,7 +398,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 20, 0, 4]
+              padding: [0, 25, 0, 2]
             },
             value: {
               color: '#000',
