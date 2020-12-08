@@ -204,7 +204,7 @@ class Index extends Component {
                 endTime: this.state.endTime,
                 dataType: this.state.dataType,
                 DGIMN: [this.props.DGIMN],
-                Pollutant: e.name,
+                Pollutant: e.name?e.name:e.value,
             },
         })
     }
