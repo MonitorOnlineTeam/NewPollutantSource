@@ -8,6 +8,7 @@ const DataExtract = () => {
   const [pointName, setPointName] = useState()
   const [DGIMN, setDGIMN] = useState()
   const [pointType, setPointType] = useState()
+  const [status, setStatus] = useState()
 
   return (
     <>
@@ -15,10 +16,11 @@ const DataExtract = () => {
         setPointName(`${item.EntName} - ${item.title}`)
         setDGIMN(value)
         setPointType(item.PointType)
+        setStatus(item.Status)
       }} />
       <BreadcrumbWrapper id="manualQuality" extraName={pointName}>
         {
-          DGIMN ? <DataExtractPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} /> : <PageLoading />
+          DGIMN ? <DataExtractPage DGIMN={DGIMN} pointType={pointType} pointName={pointName} status={status} /> : <PageLoading />
         }
       </BreadcrumbWrapper>
     </>

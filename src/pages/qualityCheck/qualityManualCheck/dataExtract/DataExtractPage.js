@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, DatePicker, Row, Col, Space, Button, ConfigProvider, Modal, Spin, Select, Tag, Empty } from 'antd'
+import { Card, DatePicker, Row, Col, Space, Button, ConfigProvider, Modal, Spin, Select, Tag, Empty, message } from 'antd'
 import QuestionTooltip from "@/components/QuestionTooltip"
 import styles from './index.less';
 import { LoadingOutlined } from "@ant-design/icons"
@@ -10,7 +10,7 @@ import locale from 'antd/es/locale/zh_CN';
 import { gasPollutantList } from "@/utils/CONST"
 import { router } from "umi"
 
-const { confirm } = Modal;
+const { confirm } = Modal; 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -76,6 +76,10 @@ class DataExtractPage extends PureComponent {
 
 
   sendDataExtract = (type) => {
+    if (this.props.status === 0) {
+      message.error("设备已离线，不能进行数据提取!");
+      return;
+    }
     //  清空数据
     this.props.dispatch({
       type: "dataExtract/resetModalState"
