@@ -53,6 +53,7 @@ export default Model.extend({
     pollType:"",
     tableloading:true,
     singFlag:true,
+    selectpoll:[],
     columns : [
       {title: '监测时间',
       dataIndex: 'MonitorTime', key: 'MonitorTime',align: 'center', 
@@ -68,7 +69,7 @@ export default Model.extend({
           yield update({ pollLoading:true  })
           const result = yield call(querypollutantlist, payload);
           if (result.IsSuccess) {
-            yield update({ pollutantlist: result.Datas,pollLoading:false  })
+            yield update({ pollutantlist: result.Datas,selectPoll: result.Datas, pollLoading:false  })
             callback(result.IsSuccess)
 
           } else {
@@ -91,11 +92,10 @@ export default Model.extend({
       
       const result = yield call(getAllTypeDataList, { ...body });
       if (result.IsSuccess) {
-        const { pollutantlist } = yield select(_ => _.historyData); //获取state的值
+        const { selectPoll } = yield select(_ => _.historyData); //获取state的值
         const { sortOrder } = yield select(_ => _.historyData); //获取state的值
         // const { columns } = yield select(_ => _.historyData); //获取state的值
          
-        console.log(pollutantlist)
 
         let columns = [
           {title: '监测时间',
@@ -105,8 +105,7 @@ export default Model.extend({
           sorter: (a, b) => Number(moment( new Date(a.MonitorTime)).valueOf()) -   Number(moment( new Date(b.MonitorTime)).valueOf()),
           width:120,
           children: [ { title: '标准值',dataIndex: 'MonitorTime',key: 'MonitorTime',width:120,align: 'center'}]}]
-
-        pollutantlist.length>0 ? pollutantlist.map((item,index)=>{
+          selectPoll.length>0 ? selectPoll.map((item,index)=>{
           // result.Datas.length > 0 ? Object.keys(result.Datas[0]).map(items =>{
           //     if(item.PollutantCode == items){
                 columns.push({title:` ${item.PollutantName}  ${item.Unit? "("+item.Unit+")": ""} `,  dataIndex: item.PollutantCode, key: item.PollutantCode ,align: 'center',
@@ -145,11 +144,11 @@ export default Model.extend({
 
 
              
-        }) : null;
+        }) : columns=[];
         yield update({columns: columns, tableDatas: result.Datas, total: result.Total,tableloading:false}); //更新state的值
       
       }else {
-        yield update({tableloading:false}); //更新state的值
+        yield update({tableloading:false,columns:[],tableDatas:[]}); //更新state的值
         message.error(result.Message)
       }
     },
