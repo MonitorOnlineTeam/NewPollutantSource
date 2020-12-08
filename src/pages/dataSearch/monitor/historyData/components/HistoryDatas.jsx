@@ -47,7 +47,8 @@ const { TabPane } = Tabs;
   // dgimn:historyData.dgimn,
   alreadySelect:historyData.alreadySelect,
   pollutantDefault:historyData.pollutantDefault,
-  singFlag:historyData.singFlag
+  singFlag:historyData.singFlag,
+  // selectPoll:historyData.selectPoll
   // pollType:historyData.pollType
 }))
 // loadingAll:loading.models.mySpace,
@@ -183,27 +184,41 @@ class HistoryDatas extends React.Component {
 
   handlePollutantChange = (value,selectedOptions) =>{ //污染物列表change事件
       //污染物类型
-  let  { dispatch,historyparams,chartparams} = this.props;
-  const res = [];
+  let  { dispatch,historyparams,chartparams,pollutantlist} = this.props;
+                           
+    const res = [];
   if (selectedOptions.length > 0) {
     selectedOptions.map((item, key) => {
         res.push(item.props.children);
+    })
+    let selectOptions = []
+    pollutantlist.map((item,index)=>{
+      value.map(items=>{
+         if(item.PollutantCode === items ){
+          selectOptions.push(item)
+         }
+      })
+    })
+    dispatch({
+      type: 'historyData/updateState',
+      payload: { selectPoll:selectOptions.length>0?selectOptions:[] },
     })
 }
 //  this.forceUpdate() // 强制刷新数据
   historyparams = {
     ...historyparams,
-    pollutantCodes: value.length > 0 ? value.toString() : null,
+    pollutantCodes: value.length > 0 ? value.toString() : [],
     pollutantNames: res.length > 0 ? res.toString() : '',
   }
   dispatch({type: 'historyData/updateState',payload: { historyparams } });
 
   chartparams = {
     ...chartparams,
-    PollutantCode: value.length > 0 ? value : null,
+    PollutantCode: value.length > 0 ? value : [],
     // pollutantNames: res.length > 0 ? res.toString() : '',
   }
   dispatch({type: 'historyData/updateState',payload: { chartparams } });
+   
   }
 
 
@@ -368,8 +383,11 @@ class HistoryDatas extends React.Component {
           return  item.PollutantCode
          });
         return (<DropDownSelect
+          // allowClear
+          autoClearSearchValue
           ispollutant = {1}
           mode = "multiple"
+          // onClear={this.onClear}
           optiondatas={pollutantlist}
           defaultValue={pollDefaultSelect}
           style={{minWidth:"125px"}}
