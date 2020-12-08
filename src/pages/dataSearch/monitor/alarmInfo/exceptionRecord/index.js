@@ -48,7 +48,7 @@ class Index extends Component {
         return (
             <div id="record">
                {location&&location.query.type==='alarm'? null : <NavigationTree onTreeSelect={(value,selectItem) => {  this.changeDgimn(value,selectItem) }} /> }
-                <BreadcrumbWrapper extraName={ `${ title}`}>
+                <BreadcrumbWrapper title={ `${ title}`}>
                { location&&location.query.type==='alarm'? <RecordEchartTable DGIMN={location.query.dgimn} initLoadData location={location}/> : dgimn ? <RecordEchartTable DGIMN={dgimn} initLoadData location={location}/> : <PageLoading /> }
                 </BreadcrumbWrapper> 
             </div>

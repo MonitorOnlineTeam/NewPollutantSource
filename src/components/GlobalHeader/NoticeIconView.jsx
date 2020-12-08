@@ -47,9 +47,8 @@ export default class GlobalHeaderRight extends PureComponent {
     getAlarmList = () => {
 
       const { dispatch, getAlarmNoticesParameters } = this.props;
-      
       dispatch({
-        type: "alarmInfoData/getAlarmType", //获取报警类型
+        type: "global/getAlarmType", //获取报警类型
         payload: {},
         callback: (res) => {
           const defaultValue = res.map((item)=>{
