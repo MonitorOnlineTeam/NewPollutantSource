@@ -46,7 +46,7 @@ class AvatarDropdown extends React.Component {
     const { currentUser = {}, menu, changePwdVisible } = this.props;
     if (!menu) {
       return (
-        <span className={`${styles.action} ${styles.account}`}>
+        <span className={`${styles.action} ${styles.account} ${styles.userinfo}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
           <span className={styles.name}>{currentUser.name}</span>
         </span>
@@ -81,7 +81,7 @@ class AvatarDropdown extends React.Component {
     );
     return currentUser && currentUser.UserName ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
-        <span className={`${styles.action} ${styles.account}`}>
+        <span className={`${styles.action} ${styles.account} ${styles.userinfo}`}>
           <ChangePwdView visible={changePwdVisible} />
 
           <Avatar
