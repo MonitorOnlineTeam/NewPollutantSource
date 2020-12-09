@@ -92,49 +92,61 @@ class Index extends Component {
     /** 初始化加载 */
     componentDidMount() {
 
-        const { location,initLoadData,dispatch } = this.props;
-        if(location.query&&location.query.type==="alarm"){ //报警信息
-           const paraCodeList  = location.query.code;
-           const startTime = location.query.startTime;
-           const endTime = location.query.endTime;
-        this.children.onDateChange([ moment(moment(startTime)), moment( moment(endTime))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
-        
-        const DATATYPE = {
-             RealTimeData:"realtime",
-             MinuteData:"minute",
-             HourData:"hour",
-             DayData : 'day'
-        }
-       
+    this.initData();
+
+    }
+   initData=()=>{
+    const { location,initLoadData,dispatch } = this.props;
+    if(location.query&&location.query.type==="alarm"){ //报警信息
+       const paraCodeList  = location.query.code;
+       const startTime = location.query.startTime;
+       const endTime = location.query.endTime;
+    this.children.onDateChange([ moment( moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  .onDateChange([ moment(moment(new Date()).format('YYYY-MM-DD 00:00:00')), moment( moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))])//修改日期选择日期  
+    
+    const DATATYPE = {
+         RealTimeData:"realtime",
+         MinuteData:"minute",
+         HourData:"hour",
+         DayData : 'day',
+         loadtype:''
+    }
+    this.setState({loadtype:location.query.loadtype?location.query.loadtype:''},()=>{
         this.setState({
-            beginTime: startTime,
-            endTime: endTime,
+            beginTime:  moment(new Date()).format('YYYY-MM-DD 00:00:00'),
+            endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
             code:paraCodeList.split(),
-            dataType:location.query.dataType? DATATYPE[location.query.dataType] : ''
+            dataType:location.query.dataType? DATATYPE[location.query.dataType] : '',
+            loadtype:location.query.loadtype?location.query.loadtype:''
         }, () => {
          
             initLoadData && this.getLoadData(this.props);
         })
-        }else{
-            const beginTime = moment(new Date()).add(-60, 'minutes');
-            const endTime = moment(new Date());
-            this.setState({
-                dataType:'realtime',
-                beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
-                endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-            }, () => {
-             initLoadData && this.getLoadData(this.props);
-            })
 
-        }
+    })
+
+    }else{
+        const beginTime = moment(new Date()).add(-60, 'minutes');
+        const endTime = moment(new Date());
+        this.setState({
+            dataType:'realtime',
+            beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
+            endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+        }, () => {
+         initLoadData && this.getLoadData(this.props);
+        })
 
     }
-
+   }
+    
     componentWillReceiveProps(nextProps) {
+        
+        const {  location } = this.props;
 
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.getLoadData(nextProps);
-           
+        }
+        if (location.query.startTime != nextProps.location.query.startTimeMN) {
+            this.initData();
         }
     }
     getLoadData = nextProps => {
@@ -145,8 +157,8 @@ class Index extends Component {
             this.props.dispatch({
                 type: 'recordEchartTable/getexmodellist',
                 payload: {
-                    beginTime: this.state.beginTime == '' ? location.query&&location.query.type==="alarm"? location.query.startTime :  beginTime.format('YYYY-MM-DD HH:mm:ss') : this.state.beginTime,
-                    endTime: this.state.endTime == '' ? endTime.format('YYYY-MM-DD HH:mm:ss') : this.state.endTime,
+                    beginTime: this.state.beginTime,
+                    endTime:  this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN:[nextProps.DGIMN], 
                     PollutantList: this.state.code
@@ -234,7 +246,9 @@ class Index extends Component {
    * 回调获取时间并重新请求数据
    */
     dateCallback = (dates, dataType) => {
+
         if (!this.props.DGIMN) { return; }
+        if(this.state.loadtype){ return; }
         if(this.state.code&&this.state.dataType){
         this.setState({
             beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),

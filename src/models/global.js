@@ -6,7 +6,7 @@ import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 
-import { getAlarmType,GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
+import { GetAlarmType,GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
 
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
@@ -83,7 +83,16 @@ export default Model.extend({
         },
       })
     },
-
+  // 报警类型
+ *getAlarmType({callback, payload }, { call, update,select }) {
+          yield update({ alarmTypeLoading: true})
+          const result = yield call(GetAlarmType, payload);  
+          if (result.IsSuccess) {
+           callback(result.Datas)
+          } else {
+            message.error(result.Message)
+          }
+        },
     // 获取按钮权限
     *getBtnAuthority({ payload }, { call, put, select }) {
       const result = yield call(getBtnAuthority, payload);
