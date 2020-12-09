@@ -15,6 +15,7 @@ export const REGEXP = {
   ip: /^(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5]).(d{1,2}|1dd|2[0-4]d|25[0-5])$/,
   positiveInteger: /^[0-9]*$/, // 正整数
   loginName: /^\w+$/, // 数字、字母、下划线
+  // loginName: /^[a-zA-Z0-9_]+$/, // 数字、字母、下划线
   port: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/, // 端口
   qq: /^[1-9][0-9]{4,}$/,
   judgeNumber: /^[0-9\-]+$/, // 数字和横杠
@@ -81,8 +82,8 @@ export const checkRules = {
     message: '身份证格式不正确。',
   },
   loginName: {
-    pattern: REGEXP.name,
-    message: '只允许汉字、英文字母、数字及下划线。',
+    pattern: REGEXP.loginName,
+    message: '只允许字母、数字及下划线。',
   },
   ip: {
     pattern: REGEXP.ip,
