@@ -20,8 +20,8 @@
 const XinJiang = true;
 
 //  const apiHost = 'http://localhost:52198/';
-const apiHost = 'http://220.171.32.30:8180/';
-// const apiHost = 'http://172.16.12.135:50206/';
+// const apiHost = 'http://220.171.32.30:8180/';
+const apiHost = 'http://172.16.12.135:50206/';
 
 
 // 文件上传地址

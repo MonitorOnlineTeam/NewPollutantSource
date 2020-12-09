@@ -36,12 +36,12 @@ class Index extends Component {
                         this.state.dgimn ?
                             (
                                 this.props.location.query.type == 1 ? <DataQuery2 DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
-                                    <DataQuery DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData />
+                                    <DataQuery type='air' DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData />
                             )
                             : <PageLoading />
                     }
                 </BreadcrumbWrapper>
-                <NavigationTree polShow={true} type='ent' runState='1' domId="#dataquery" choice={false} onItemClick={value => {
+                <NavigationTree polShow={true} type='air' runState='1' domId="#dataquery" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value)
                     }

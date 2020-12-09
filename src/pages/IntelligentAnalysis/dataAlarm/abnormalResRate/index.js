@@ -120,6 +120,9 @@ class index extends PureComponent {
             key: 'LingRate',
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return record.LingAlarmCount === 0 ? '-' : text
+            }
           },
         ]
       },
@@ -153,6 +156,9 @@ class index extends PureComponent {
             key: 'ChaoRate',
             width: 120,
             align: 'center',
+            render: (text, record) => {
+              return record.ChaoAlarmCount === 0 ? '-' : text
+            }
           },
         ]
       },
@@ -162,6 +168,9 @@ class index extends PureComponent {
         key: 'AllRate',
         width: 120,
         sorter: (a, b) => a.AllRate.replace("%", "") - b.AllRate.replace("%", ""),
+        render: (text, record) => {
+          return (record.ChaoAlarmCount + record.LingAlarmCount === 0) ? '-' : text
+        }
       },
     ],
   }
@@ -365,7 +374,7 @@ class index extends PureComponent {
                 >
                   导出
                       </Button>
-                <span style={{ color: "red", marginLeft: 20 }}>已响应指：监测点运维负责人，响应报警并完成响应，生成的运维工单。</span>
+                <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span>
               </div>
             </Row>
           </Form>

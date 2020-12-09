@@ -102,7 +102,7 @@ export default class Index extends Component {
     this.props.dispatch({
       type: "home/getAirDayReportData",
       payload: {
-        MonitorTime: moment().format("YYYY-MM-DD HH:mm:ss")
+        MonitorTime: moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
       }
     })
 
@@ -177,7 +177,10 @@ export default class Index extends Component {
 
   cardTitle3 = () => {
     return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{cursor:'pointer'}} onClick={this.flow}>污水处理厂流量分析</span>
+      <span style={{cursor:'pointer'}} onClick={this.flow}>
+        污水处理厂流量分析
+        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />
+        </span>
       <Tabs defaultActiveKey="1">
         <TabPane tab="近30天" key="1">
         </TabPane>
@@ -383,7 +386,7 @@ export default class Index extends Component {
         },
         textStyle: {
           rich: {
-            shu: {
+            shu: {   
               color: '#d2d2d2',
               padding: [0, 1, 0, 2]
             },
@@ -395,7 +398,7 @@ export default class Index extends Component {
               color: '#666',
               fontSize: 14,
               width: 30,
-              padding: [0, 20, 0, 4]
+              padding: [0, 25, 0, 2]
             },
             value: {
               color: '#000',

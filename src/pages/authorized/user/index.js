@@ -246,6 +246,7 @@ export default class UserInfoIndex extends Component {
             // ]}
             // dataSource={dataSource}
             />
+           
           </Card>
         {/* </div> */}
       </BreadcrumbWrapper>

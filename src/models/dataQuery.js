@@ -35,11 +35,16 @@ export default Model.extend({
     dataAuditDataSource: [],
     dataFlagDataSource: [],
     tagTableTotal: 0,
+    tabType:'shi',
   },
   effects: {
     *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {
+
+      let  { tabType }  = yield select(_ => _.dataquery);
+
       const body = {
         DGIMNs: payload.dgimn,
+        dataType:tabType=='biao'? 'air' : undefined,
       };
       const result = yield call(querypollutantlist, body);
       let { historyparams } = yield select(_ => _.dataquery);

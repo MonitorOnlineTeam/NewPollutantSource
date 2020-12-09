@@ -51,7 +51,7 @@ class IndustryTree extends PureComponent {
   render() {
     const { industryTreeList } = this.state;
     return (
-      <Cascader options={industryTreeList} placeholder="请选择产业" showSearch={this.filter} {...this.props} />
+      <Cascader options={industryTreeList} placeholder="请选择行业" showSearch={this.filter} {...this.props} />
     );
   }
 }

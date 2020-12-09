@@ -88,7 +88,6 @@ class RegionStaticstics extends PureComponent {
 
     const columns = this.getColumns();
     return (
-      <BreadcrumbWrapper>
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
@@ -113,7 +112,18 @@ class RegionStaticstics extends PureComponent {
                 </FormItem>
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                  <Button icon="left" style={{ marginLeft: 10 }} onClick={()=>{history.go(-1)}}>返回</Button>
+                  <Button 
+                    icon="left" 
+                    style={{ marginLeft: 10 }} 
+                    onClick={()=>{
+                      if(this.props.goBack)
+                        this.props.goBack();
+                      else
+                        history.go(-1)
+                    }}
+                  >
+                    返回
+                  </Button>
                   {
                     /*       
                     <Button
@@ -132,7 +142,6 @@ class RegionStaticstics extends PureComponent {
           </Form>
           <SdlTable align="center" dataSource={secondTableDataSource} columns={columns} loading={loading} />
         </Card>
-      </BreadcrumbWrapper>
     );
   }
 }

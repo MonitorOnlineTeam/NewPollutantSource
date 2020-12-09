@@ -341,9 +341,9 @@ class index extends PureComponent {
               </Col>
 
               <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
-                <div class="ant-form-item-label" style={{ width: '5.3%' }}>
+                {/* <div class="ant-form-item-label" style={{ width: '5.3%' }}>
                   <label for="RegionCode" class="" title="监测因子">监测因子</label>
-                </div>
+                </div> */}
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(

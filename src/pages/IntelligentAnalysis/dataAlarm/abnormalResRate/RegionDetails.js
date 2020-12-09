@@ -31,11 +31,13 @@ class RegionDetails extends PureComponent {
           title: '企业名称',
           dataIndex: 'EntName',
           key: 'EntName',
+          align: 'left'
         },
         {
           title: '监测点名称',
           dataIndex: 'PointName',
           key: 'PointName',
+          align: 'left'
         },
         {
           title: '零值报警',
@@ -67,6 +69,9 @@ class RegionDetails extends PureComponent {
               key: 'LingRate',
               width: 120,
               align: 'center',
+              render: (text, record) => {
+                return record.LingAlarmCount === 0 ? '-' : text
+              }
             },
           ]
         },
@@ -100,6 +105,9 @@ class RegionDetails extends PureComponent {
               key: 'ChaoRate',
               width: 120,
               align: 'center',
+              render: (text, record) => {
+                return record.ChaoAlarmCount === 0 ? '-' : text
+              }
             },
           ]
         },
@@ -109,7 +117,9 @@ class RegionDetails extends PureComponent {
           key: 'AllRate',
           width: 120,
           sorter: (a, b) => a.AllRate.replace("%", "") - b.AllRate.replace("%", ""),
-          // sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+          render: (text, record) => {
+            return (record.ChaoAlarmCount + record.LingAlarmCount === 0) ? '-' : text
+          }
         },
       ],
     };

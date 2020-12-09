@@ -68,13 +68,9 @@ const GlobalHeaderRight = props => {
         </a>
       </Tooltip> */}
       {
+        /*
         configInfo && configInfo.IsShowQRcode === 'true' &&
         <Popover content={<div>
-          {/* <img
-          width={272}
-          alt="logo"
-          src={`/api/upload/phoneQRCode.png`}
-        /> */}
           <QRCode value={getIp} size={200} />
         </div>} title="手机端下载" trigger="hover">
           <a
@@ -83,11 +79,11 @@ const GlobalHeaderRight = props => {
           >
             <Icon type="qrcode" />
           </a>
-        </Popover>
+        </Popover>*/
       }
 
-      {/** 污水处理厂权限去掉铃铛 */}
-      <NoticeIconView />
+      {/** 污水处理厂权限去掉铃铛<NoticeIconView /> */}
+      
       <Avatar menu {...props} />
       {/* <SelectLang className={styles.action} /> */}
     </div>

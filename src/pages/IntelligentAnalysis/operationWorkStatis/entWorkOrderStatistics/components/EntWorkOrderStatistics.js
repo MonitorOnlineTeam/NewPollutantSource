@@ -39,7 +39,7 @@ class EntWorkOrderStatistics extends PureComponent {
         key: '00_RegionName',
         render: (text, record) => { 
           const values = this.props.form.getFieldsValue();
-          const {initialForm:{RegionCode}} = this.props;
+          const {initialForm:{RegionCode},changePage} = this.props;
           const query={
             RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
             PollutantTypeCode: values.PollutantTypeCode,
@@ -48,9 +48,14 @@ class EntWorkOrderStatistics extends PureComponent {
             EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
           }
           if(query.RegionCode == 'all') query.RegionCode = '';
-          return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
-                   {text}
-               </Link>
+          if(changePage){
+            return <a onClick={()=>{changePage({page:'RegionStaticstics',query})}}>{text}</a>
+          }else{
+            return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
+              {text}
+            </Link>
+
+          }
         },
         width: 120,
       },{
@@ -69,7 +74,7 @@ class EntWorkOrderStatistics extends PureComponent {
               key: '00_Opsenters',
               render: (text, record) => { 
                 const values = this.props.form.getFieldsValue();
-                const {initialForm:{RegionCode}} = this.props;
+                const {initialForm:{RegionCode},changePage} = this.props;
 
                 const query={
                   RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
@@ -78,9 +83,13 @@ class EntWorkOrderStatistics extends PureComponent {
                   BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
                   EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
                 }
-                return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
-                         {text}
-                     </Link>
+                if(changePage){
+                  return <a onClick={()=>{changePage({page:'EntStaticstics',query})}}>{text}</a>
+                }else{
+                  return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
+                          {text}
+                      </Link>
+                }
               },
               width: 120,
               align:'center',
