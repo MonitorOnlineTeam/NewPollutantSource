@@ -89,7 +89,7 @@ class ZeroCheckPage extends PureComponent {
         title: <span>
           相对误差（%）
       <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入零点气体，
-仪器的读数与零点气体初始测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式测量浓度-标准浓度/量程范围*100%" />
+仪器的读数与零点气体初始测量值之间的偏差相对于满量程的百分比。参考75标准，计算公式（测量浓度-标准浓度）/量程范围*100%" />
         </span>,
         dataIndex: 'Offset',
         width: 180,
