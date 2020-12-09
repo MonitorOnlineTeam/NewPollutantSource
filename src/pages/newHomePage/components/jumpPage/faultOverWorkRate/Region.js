@@ -303,7 +303,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   nextPage=(row)=>{
     const { isWorkRate,dispatch } = this.props;
-     
+    const { queryPar: { RegionCode} } = this.props;
    
      dispatch({
        type: pageUrl.updateState,

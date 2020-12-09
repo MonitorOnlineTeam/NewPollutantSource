@@ -229,7 +229,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => { 
            return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                       query: { RegionCode:text=='全部合计'? '': record.RegionCode},
+                       query: { RegionCode: record.RegionCode},
                        }}
                        >
                     {text}
