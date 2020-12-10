@@ -155,7 +155,6 @@ class SearchWrapper extends Component {
         payload: {
           configId: resultConfigId || configId,
           searchParams: searchParams,
-          dateFormatValues: this.state.dateFormatValues
         }
       });
     }, 0)
@@ -164,7 +163,6 @@ class SearchWrapper extends Component {
   // 重置表单
   _resetForm() {
     this.props.form.resetFields();
-    this.setState({ dateFormatValues: {} })
     this.props.dispatch({
       type: 'autoForm/updateState',
       payload: {
@@ -230,29 +228,9 @@ class SearchWrapper extends Component {
 
     // return <RangePicker_ style={{ width: '100%' }} />
     if (format) {
-      return <RangePicker showTime style={{ width: '100%' }} format={format} onChange={(dates, dateString) => {
-        this.handleDateValues(dates, format, fieldName)
-      }} />
+      return <RangePicker showTime style={{ width: '100%' }} format={format} />
     }
     return <RangePicker showTime style={{ width: '100%' }} />
-  }
-
-  handleDateValues = (dates, format, fieldName) => {
-    const { dateFormatValues } = this.state;
-    let _dateFormatValues = {};
-    if (dates && dates.length) {
-      _dateFormatValues = {
-        [fieldName]: {
-          value: [moment(moment(dates[0]).format(format)), moment(moment(dates[1]).format(format))]
-        }
-      }
-    }
-    this.setState({
-      dateFormatValues: {
-        ...dateFormatValues,
-        ..._dateFormatValues
-      }
-    })
   }
 
   /**时间控件回调 */
@@ -445,9 +423,9 @@ class SearchWrapper extends Component {
               }}>
                 查询
               </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>
+              {/* <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>
                 重置
-                          </Button>
+                          </Button> */}
               {
                 this.state.isShowExpand &&
                 <React.Fragment>

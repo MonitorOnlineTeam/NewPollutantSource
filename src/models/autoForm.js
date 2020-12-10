@@ -14,10 +14,6 @@ function getQueryParams(state, payload) {
   const group = [];
   const { configId } = payload;
   let searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
-  searchForm = {
-    ...searchForm,
-    ...payload.dateFormatValues
-  }
   if (searchForm) {
     for (const key in searchForm) {
       let groupItem = {};
@@ -26,22 +22,23 @@ function getQueryParams(state, payload) {
         // 是否是moment对象
         const isMoment = moment.isMoment(searchForm[key].value);
         const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
+        let format = state.dateFormat[configId][key] || 'YYYY-MM-DD HH:mm:ss';
         if (isArrMoment) {
           console.log("searchForm[key]=", searchForm[key])
           groupItem = [{
             Key: key,
-            Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
+            Value: moment(searchForm[key].value[0]).format(format),
             Where: '$gte',
           }, {
             Key: key,
-            Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
+            Value: moment(searchForm[key].value[1]).format(format),
             Where: '$lte',
           }]
           group.push(...groupItem);
         } else {
           groupItem = {
             Key: key,
-            Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
+            Value: isMoment ? moment(searchForm[key].value).format(format) : searchForm[key].value.toString(),
           };
           for (const whereKey in state.whereList[configId]) {
             if (key === whereKey) {
@@ -112,6 +109,7 @@ export default Model.extend({
     regionList: [], // 联动数据
     fileList: null, // 文件列表
     formLayout: {}, // 添加编辑布局
+    dateFormat: {}, // 日期格式化
   },
   effects: {
     // 获取数据
@@ -242,6 +240,7 @@ export default Model.extend({
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};
+        let dateFormat = {};
         let dateInitialValues = {};
         const searchConditions = result.Datas.ColumnFields.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
           index === 0 ? whereList[configId] = {} : '';
@@ -251,6 +250,12 @@ export default Model.extend({
               [item.FullFieldNameVerticalBar]: {
                 value: [moment().subtract(item.LIST_TIME * -1, item.DF_QUERY_TIME_TYPE), moment()]
               }
+            }
+          }
+          // 日期格式化
+          if (item.DF_DATEFORMAT) {
+            dateFormat = {
+              [item.FullFieldNameVerticalBar]: item.DF_DATEFORMAT
             }
           }
           return {
@@ -345,6 +350,10 @@ export default Model.extend({
           whereList: {
             ...state.whereList,
             ...whereList
+          },
+          dateFormat: {
+            ...state.dateFormat,
+            [configId]: dateFormat,
           },
           keys: {
             ...state.keys,
