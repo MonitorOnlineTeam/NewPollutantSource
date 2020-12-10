@@ -41,7 +41,7 @@ class DiffHorizontal extends PureComponent {
       xAxis: [
         {
           type: 'category',
-          data: diffHorizontalData.map(item => item.Abbreviation.replace('(', '︵').replace('（', '︵').replace('）', '︶').replace(')', '︶')),
+          data: diffHorizontalData.map(item => item.Abbreviation),
           // data: ['阿拉尔艾特水务', '首创水务（一期）', '首创水务（二期）', '藤原水务', '绿环水务', '西山污水厂', '阿拉尔供排水公司'],
           axisTick: {
             alignWithLabel: true,
@@ -54,16 +54,9 @@ class DiffHorizontal extends PureComponent {
           },
           axisLabel: {
             formatter(value) {
-              // console.log('value=', value)
-              // let val = value;
-              // if (value === "(") {
-              //   val = "︵"
-              // }
-              // if (value === ")") {
-              //   val = "︶"
-              // }
-              const val = value.split('').join('\n');
-              return val
+              const val = value.replace('（', '︵').replace('(', '︵').replace('）', '︶').replace(')', '︶')
+              const label = val.split('').join('\n');
+              return label
             },
           },
           // axisLabel: {

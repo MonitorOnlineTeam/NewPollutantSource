@@ -27,7 +27,7 @@ import {
     Transfer, Switch, Tag, Tree, Radio, Tooltip,
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -430,7 +430,7 @@ class DepartIndex extends Component {
             message.error('请选中一行')
             return
         }
-        let keys = this.state.selectedRowKeys.key
+        const keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'departinfo/getalluser',
             payload: {},
@@ -461,7 +461,7 @@ class DepartIndex extends Component {
             message.error('请选中一行')
             return
         }
-        let keys = this.state.selectedRowKeys.key
+        const keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'departinfo/getregioninfobytree',
             payload: {},
@@ -486,24 +486,26 @@ class DepartIndex extends Component {
         // this.setState({
         //     pollutantType: type,
         // })
+        console.log('this.state.pollutantType=', this.state.pollutantType);
         if (this.state.selectedRowKeys.length == 0) {
             message.error('请选中一行')
             return
         }
-        let keys = this.state.selectedRowKeys.key
+        const keys = this.state.selectedRowKeys.key
         this.props.dispatch({
             type: 'departinfo/getregioninfobytree',
             payload: {},
         })
         this.setState({
             visibleData: true,
+            DataTreeValue: [],
             checkedKey: this.props.RegionByDepID,
         })
         this.props.dispatch({
             type: 'departinfo/getentandpoint',
             payload: {
                 PollutantType: this.state.pollutantType,
-                RegionCode: this.state.DataTreeValue.toString(),
+                RegionCode: '',
             },
         })
         this.props.dispatch({
@@ -511,6 +513,7 @@ class DepartIndex extends Component {
             payload: {
                 UserGroup_ID: keys.toString(),
                 PollutantType: this.state.pollutantType,
+                RegionCode: [],
             },
         })
 
@@ -547,10 +550,10 @@ class DepartIndex extends Component {
         if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
             this.setState({
                 newEntAndPoint: [{
-                    title: "全部",
+                    title: '全部',
                     // key: '0-0',
-                    children: nextProps.EntAndPoint
-                }]
+                    children: nextProps.EntAndPoint,
+                }],
             })
         }
         // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
@@ -622,7 +625,7 @@ class DepartIndex extends Component {
     };
 
     handleDataOK = e => {
-        console.log('regioncode=', this.state.checkedKeySel)
+        console.log('regioncode=', this.state.DataTreeValue.toString())
         console.log('DGIMN=', this.state.checkedKeys)
         console.log('selectedRowKeys=', this.state.selectedRowKeys.key)
         // return;
@@ -632,6 +635,7 @@ class DepartIndex extends Component {
                 DGIMN: this.state.checkedKeys,
                 UserGroup_ID: this.state.selectedRowKeys.key,
                 Type: this.state.pollutantType,
+                RegionCode: this.state.DataTreeValue.toString(),
                 callback: res => {
                     if (res.IsSuccess) {
                         message.success('成功');
@@ -644,16 +648,16 @@ class DepartIndex extends Component {
         })
     };
 
+    /** 数据过滤切换污染物 */
     handleSizeChange = e => {
-        let keys = this.state.selectedRowKeys.key
-
-
+        const keys = this.state.selectedRowKeys.key
         this.setState({ pollutantType: e.target.value });
         this.props.dispatch({
             type: 'departinfo/getpointbydepid',
             payload: {
                 UserGroup_ID: keys.toString(),
                 PollutantType: e.target.value,
+                RegionCode: this.state.DataTreeValue.toString(),
             },
         })
         this.props.dispatch({
@@ -665,18 +669,49 @@ class DepartIndex extends Component {
         })
     };
 
+    /** 数据过滤切换行政区 */
     onChangeTree = value => {
-        console.log('onChange ', value);
-        this.setState({
-            DataTreeValue: value,
-        });
-        this.props.dispatch({
-            type: 'departinfo/getentandpoint',
-            payload: {
-                RegionCode: value.toString(),
-                PollutantType: this.state.pollutantType,
-            },
-        })
+        console.log('onChange================= ', value);
+        const keys = this.state.selectedRowKeys.key
+        if (value == undefined) {
+            this.setState({
+                DataTreeValue: '',
+            });
+            this.props.dispatch({
+                type: 'departinfo/getentandpoint',
+                payload: {
+                    RegionCode: '',
+                    PollutantType: this.state.pollutantType,
+                },
+            })
+            this.props.dispatch({
+                type: 'departinfo/getpointbydepid',
+                payload: {
+                    UserGroup_ID: keys.toString(),
+                    PollutantType: this.state.pollutantType,
+                    RegionCode: [],
+                },
+            })
+        } else {
+            this.setState({
+                DataTreeValue: value,
+            });
+            this.props.dispatch({
+                type: 'departinfo/getentandpoint',
+                payload: {
+                    RegionCode: value.toString(),
+                    PollutantType: this.state.pollutantType,
+                },
+            })
+            this.props.dispatch({
+                type: 'departinfo/getpointbydepid',
+                payload: {
+                    UserGroup_ID: keys.toString(),
+                    PollutantType: this.state.pollutantType,
+                    RegionCode: this.state.DataTreeValue.toString(),
+                },
+            })
+        }
     };
 
     handleSubmit = e => {
@@ -846,7 +881,7 @@ class DepartIndex extends Component {
                                     onClick: event => {
                                         this.setState({
                                             selectedRowKeys: record,
-                                            rowKeys: [record.key]
+                                            rowKeys: [record.key],
                                         })
                                     },
                                 })}
@@ -934,7 +969,7 @@ class DepartIndex extends Component {
                                 }
                             </Modal>
                             <Modal
-                                title={'分配用户-' + this.state.selectedRowKeys.UserGroup_Name}
+                                title={`分配用户-${this.state.selectedRowKeys.UserGroup_Name}`}
                                 visible={this.state.visibleUser}
                                 onOk={this.handleCancel}
                                 destroyOnClose="true"
@@ -972,7 +1007,7 @@ class DepartIndex extends Component {
 
                             </Modal>
                             <Modal
-                                title={'区域过滤-' + this.state.selectedRowKeys.UserGroup_Name}
+                                title={`区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
                                 visible={this.state.visibleRegion}
                                 onOk={this.handleRegionOK}
                                 destroyOnClose="true"
@@ -1017,7 +1052,7 @@ class DepartIndex extends Component {
                             </Modal>
 
                             <Modal
-                                title={'数据过滤-' + this.state.selectedRowKeys.UserGroup_Name}
+                                title={`数据过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
                                 visible={this.state.visibleData}
                                 onOk={this.handleDataOK}
                                 // destroyOnClose="true"
@@ -1051,7 +1086,7 @@ class DepartIndex extends Component {
                                                 // showAll
                                                 onChange={this.handleSizeChange}
                                             />
-                                            <TreeSelect className={styles.placeHolderClass} {...tProps} />
+                                            <TreeSelect className={styles.placeHolderClass} {...tProps} treeCheckable={false} allowClear/>
                                         </Row>{
                                             (this.props.CheckPointLoading || this.props.getentandpointLoading) ? <Spin
                                                 style={{

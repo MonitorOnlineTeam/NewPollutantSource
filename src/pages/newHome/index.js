@@ -4,9 +4,9 @@ import { Card, Drawer, Icon, Tooltip, Button, Spin, Input, message, DatePicker, 
 // import { Map, Marker, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
 import { getDirLevel } from '@/utils/utils'
+import mapStyles from "@/pages/monitoring/mapview/styles.less"
 
-// import "animate.css";
-// import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import "animate.css";
 import ReactEcharts from 'echarts-for-react';
 import { router } from 'umi'
 import Cookie from 'js-cookie';
@@ -73,6 +73,7 @@ let aMap = null;
   LEVEL: newHome.LEVEL,
   INIT_LEVEL: newHome.INIT_LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
+  noticeList: global.notices,
 }))
 class NewHome extends PureComponent {
   constructor(props) {
@@ -324,7 +325,7 @@ class NewHome extends PureComponent {
   }
 
   // 渲染所有企业
-  renderEntMarkers = (entAndPointList, notFitView, division) => {
+  renderEntMarkers = (entAndPointList, notFitView) => {
     const entMarkers = entAndPointList.map(item => ({
       position: {
         longitude: item.Longitude,
@@ -342,9 +343,6 @@ class NewHome extends PureComponent {
       const timer = setInterval(() => {
         if (aMap) {
           !notFitView && aMap.setFitView();
-          if (division) {
-            aMap.setZoomAndCenter(this.state.initZoom, this.state.initCenter)
-          }
           clearInterval(timer)
         }
       }, 200);
@@ -438,28 +436,35 @@ class NewHome extends PureComponent {
     switch (extData.position.MonitorObjectType) {
       case '1':
         // 企业
-        return <div style={{ color: '#525151' }}>
+        let isShow = 'none';
+        extData.position.children && extData.position.children.map(item => {
+          if (this.props.noticeList.find(itm => itm.DGIMN === item.DGIMN)) {
+            isShow = 'block';
+          }
+        })
+        return <div style={{ color: '#525151', position: "relative" }} onClick={() => {
+          // 企业点击显示监测点
+          if (extData.children) {
+            const pointMarkers = extData.children.map(item => ({
+              position: {
+                longitude: item.Longitude,
+                latitude: item.Latitude,
+                ...item,
+              },
+            }))
+            this.setState({
+              coordinateSet: extData.position.CoordinateSet,
+              markersList: pointMarkers,
+              infoWindowHoverVisible: false,
+              displayType: 1,
+            })
+          }
+        }}>
+          <div className={mapStyles.pulse1} style={{ left: -11, top: aMap.getZoom() >= 10 ? 18 : -12, display: isShow }}></div>
           {
             aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>
           }
-          <EntIcon style={{ fontSize: 28 }} onClick={() => {
-            // 企业点击显示监测点
-            if (extData.children) {
-              const pointMarkers = extData.children.map(item => ({
-                position: {
-                  longitude: item.Longitude,
-                  latitude: item.Latitude,
-                  ...item,
-                },
-              }))
-              this.setState({
-                coordinateSet: extData.position.CoordinateSet,
-                markersList: pointMarkers,
-                infoWindowHoverVisible: false,
-                displayType: 1,
-              })
-            }
-          }} />
+          <EntIcon style={{ fontSize: 28 }} />
         </div>
       case '2':
         // 大气站
@@ -479,32 +484,14 @@ class NewHome extends PureComponent {
           }} />
         </div>
       case '师':
-        // #3c99d8
-        // return <ReactCSSTransitionGroup
-        //   transitionEnter={true}
-        //   transitionLeave={true}
-        //   transitionEnterTimeout={2500}
-        //   transitionLeaveTimeout={1500}
-        //   transitionName="animated"
-        // >
-        return <div style={{ color: '#525151' }}>
+        return <div className={this.state.clickedDivision ? "animate__animated animate__bounce animate__infinite animate__slow" : ""} style={{ color: '#525151' }}>
           <div className={styles.pop}>{extData.position.title}</div>
           <CustomIcon key="amache"
             className={this.props.currentDivisionPosition.includes(`${extData.position.Longitude},${extData.position.Latitude}`) ? 'animate__animated animate__bounce animate__infinite' : ''}
             type="icon-ditu" style={{ fontSize: 32 }}
             onClick={() => {
-              // this.setState({
-              //   clickedDivision: extData.position,
-              // })
-              // this.props.dispatch({
-              //   type: 'newHome/updateState',
-              //   payload: {
-              //     currentDivisionName: extData.position.title,
-              //   },
-              // })
-              // this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: extData.position.RegionCode } })
+              this.divisionClick(extData.position)
             }} />
-          {/* </ReactCSSTransitionGroup> */}
         </div>
       case '服务站':
         return <CustomIcon type="icon-cangku" style={{ ...style, fontSize: 28 }} onClick={() => {
@@ -518,24 +505,44 @@ class NewHome extends PureComponent {
   // 渲染企业下监测点
   getPollutantIcon = extData => {
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle }
+    let pollutantElement = "";
     if (extData.position.outPutFlag == 1) {
       // 停产
-      return <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />
+      pollutantElement = <CustomIcon type="icon-tingzhishangbao" style={{ ...style }} />
     }
     switch (extData.position.PollutantType) {
       case '1':
-        return this.getWaterIcon(extData.position.Status)
+        pollutantElement = this.getWaterIcon(extData.position.Status)
+        break;
       case '2':
-        return this.getGasIcon(extData.position.Status)
+        pollutantElement = this.getGasIcon(extData.position.Status)
+        break;
       case '10':
-        return <VocIcon style={style} />
+        pollutantElement = <VocIcon style={style} />
+        break;
       case '12':
-        return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
+        pollutantElement = <CustomIcon type="icon-yangchen1" style={{ ...style }} />
+        break;
       case '5':
-        return <a><CustomIcon type="icon-fangwu" style={style} /></a>
+        pollutantElement = <a><CustomIcon type="icon-fangwu" style={style} /></a>
+        break;
       case '37':
-        return <CustomIcon type="icon-dian2" style={{ ...style }} />
+        pollutantElement = <CustomIcon type="icon-dian2" style={{ ...style }} />
+        break;
     }
+
+    return <div style={{ color: '#525151' }}>
+      {/* {true && */}
+      {!!this.props.noticeList.find(m => m.DGIMN === extData.position.DGIMN) &&
+
+        <>
+          {/* <div className={styles.pulse}></div> */}
+          <div className={mapStyles.pulse1} style={{ top: 17 }}></div>
+        </>
+      }
+      <div className={styles.pop}>{extData.position.title}</div>
+      {pollutantElement}
+    </div>
   }
 
   // 绘制厂界
@@ -776,7 +783,7 @@ class NewHome extends PureComponent {
         }
       }
     })
-    this.renderEntMarkers(filterEntList, true, true);
+    this.renderEntMarkers(filterEntList);
     this.props.dispatch({ type: 'newHome/changeRegionCode', payload: { regionCode: item.RegionCode } })
   }
 
@@ -806,6 +813,7 @@ class NewHome extends PureComponent {
           <div className={styles.pageContainer}>
             <Drawer
               // getContainer={false}
+              zIndex={1}
               placement="left"
               closable={false}
               width={340}
@@ -830,6 +838,7 @@ class NewHome extends PureComponent {
             </Drawer>
             <Drawer
               // getContainer={false}
+              zIndex={1}
               placement="right"
               closable={false}
               width={340}

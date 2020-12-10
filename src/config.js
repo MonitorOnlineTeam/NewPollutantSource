@@ -19,8 +19,8 @@
 // 新疆系统的废气要显示成图片
 const XinJiang = true;
 
-const apiHost = 'http://localhost:52198/';
-// const apiHost = 'http://172.16.12.183:50059/';
+// const apiHost = 'http://localhost:52198/';
+const apiHost = 'http://172.16.12.183:50059/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
@@ -52,7 +52,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
   zoom: 12,
-  iconFontUrl: '//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_vc1qjv19g1.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',

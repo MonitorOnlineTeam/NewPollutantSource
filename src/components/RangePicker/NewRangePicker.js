@@ -54,15 +54,15 @@ class NewRangePicker extends Component {
             return this.getFormatDate(dateValue[0], dateValue[1]);
         }
 
-            return this.getFormatDate(null, null);
+        return this.getFormatDate(null, null);
     }
 
     /**
      * 获取格式化的时间
      */
-    getFormatDate = (beginTime, endTime, Type) => {
+    getFormatDate = (beginTime, endTime, Type, dataQueryFlag) => {
         // 验证、回调、form中的字段名
-        const { isVerification, callback, fieldName } = this.props;
+        const { isVerification, callback, callbackDataQuery, fieldName } = this.props;
         const dataType = Type || this.props.dataType;
         if (!beginTime || !endTime) {
             callback && callback([beginTime, endTime], dataType, fieldName);
@@ -157,32 +157,51 @@ class NewRangePicker extends Component {
                 break;
             case 'month':
                 if (beginTime == 1 || endTime == 1) {
-                    beginTime = moment(moment(new Date()).add(-3, 'month').format('YYYY-MM-01 01:00:00'));
+                    // beginTime = moment(moment(new Date()).add(-3, 'month').format('YYYY-MM-01 01:00:00'));
+                    // endTime = moment(moment().add(1, 'month').format('YYYY-MM-01 00:00:00')).add(-1, 'second');
+                    beginTime = moment(moment().add(-11, 'month').format('YYYY-MM-01 00:00:00'));
                     endTime = moment(moment().add(1, 'month').format('YYYY-MM-01 00:00:00')).add(-1, 'second');
                 } else {
                     beginTime = moment(beginTime.format('YYYY-MM-01 00:00:00'));
                     endTime = moment(endTime.add(1, 'month').format('YYYY-MM-01 00:00:00')).add(-1, 'second');
                 }
+                break;
+            case 'quarter':
+            case 'year':
+                if (beginTime == 1 || endTime == 1) {
+                    beginTime = moment(moment().add(-1, 'year').format('YYYY-01-01 00:00:00'));
+                    endTime = moment(moment().format('YYYY-12-31 23:59:59'));
+                }
+                else {
+                    beginTime = moment(beginTime.format('YYYY-01-01 00:00:00'));
+                    endTime = moment(endTime.format('YYYY-12-31 23:59:59'));
+                }
+                break;
+        }
+        if (dataQueryFlag) {
+            callbackDataQuery && callbackDataQuery([beginTime, endTime], dataType, fieldName);
+        }
+        else {
+            callback && callback([beginTime, endTime], dataType, fieldName);
+
         }
 
-        callback && callback([beginTime, endTime], dataType, fieldName);
         return [beginTime, endTime];
     }
 
     onDateChange = (dates, dateStrings) => {
-        debugger;
         const dateValue = this.getFormatDate(dates[0], dates[1]);
         if (dates && dates.length && dates[0] && dates[1]) {
             if (dateValue) {
- this.setState({
+                this.setState({
                     dateValue,
                 });
-} else {
+            } else {
                 this.setState({
                     dateValue: [undefined, undefined],
                 });
             }
-        } 
+        }
         else {
             this.setState({
                 dateValue: [undefined, undefined],
@@ -196,12 +215,13 @@ class NewRangePicker extends Component {
 
 
     onPanelChange = (dates, mode) => {
-        const dateValue = this.getFormatDate(dates[0], dates[1]);
+
+        const dateValue = this.getFormatDate(dates[0], dates[1], null, this.props.dataQuery);
         if (dateValue) {
- this.setState({
+            this.setState({
                 dateValue,
             });
-} else {
+        } else {
             this.setState({
                 dateValue: [undefined, undefined],
             });
@@ -214,7 +234,6 @@ class NewRangePicker extends Component {
             dateValue,
         });
     }
-
     render() {
         return (
 
