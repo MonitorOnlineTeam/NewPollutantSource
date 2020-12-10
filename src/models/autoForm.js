@@ -13,7 +13,11 @@ import * as services from '@/services/autoformapi';
 function getQueryParams(state, payload) {
   const group = [];
   const { configId } = payload;
-  const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
+  let searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
+  searchForm = {
+    ...searchForm,
+    ...payload.dateFormatValues
+  }
   if (searchForm) {
     for (const key in searchForm) {
       let groupItem = {};
@@ -23,6 +27,7 @@ function getQueryParams(state, payload) {
         const isMoment = moment.isMoment(searchForm[key].value);
         const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
         if (isArrMoment) {
+          console.log("searchForm[key]=", searchForm[key])
           groupItem = [{
             Key: key,
             Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
@@ -237,9 +242,17 @@ export default Model.extend({
         const checkboxOrRadio = result.Datas.MulType;
 
         const whereList = {};
+        let dateInitialValues = {};
         const searchConditions = result.Datas.ColumnFields.filter(itm => itm.DF_ISQUERY === 1).map((item, index) => {
           index === 0 ? whereList[configId] = {} : '';
           whereList[result.Datas.ConfigId][item.FullFieldNameVerticalBar] = item.DF_CONDITION;
+          if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
+            dateInitialValues = {
+              [item.FullFieldNameVerticalBar]: {
+                value: [moment().subtract(item.LIST_TIME * -1, item.DF_QUERY_TIME_TYPE), moment()]
+              }
+            }
+          }
           return {
             type: item.DF_QUERY_CONTROL_TYPE,
             labelText: item.DF_NAME_CN,
@@ -304,7 +317,15 @@ export default Model.extend({
         yield put({
           type: 'saveConfigIdList',
         })
+        console.log("dateInitialValues-", dateInitialValues)
         yield update({
+          searchForm: {
+            ...state.searchForm,
+            [configId]: {
+              ...state.searchForm[configId],
+              ...dateInitialValues
+            },
+          },
           searchConfigItems: {
             ...state.searchConfigItems,
             [configId]: searchConditions,

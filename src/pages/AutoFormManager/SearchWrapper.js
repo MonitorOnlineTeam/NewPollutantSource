@@ -106,6 +106,11 @@ class SearchWrapper extends Component {
     this._handleExpand = this._handleExpand.bind(this);
   }
 
+  componentDidMount() {
+    this.onSubmitForm();
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.searchConfigItems[nextProps.configId] !== nextProps.searchConfigItems[nextProps.configId]) {
       this.setState({
@@ -149,7 +154,8 @@ class SearchWrapper extends Component {
         type: 'autoForm/getAutoFormData',
         payload: {
           configId: resultConfigId || configId,
-          searchParams: searchParams
+          searchParams: searchParams,
+          dateFormatValues: this.state.dateFormatValues
         }
       });
     }, 0)
@@ -158,6 +164,7 @@ class SearchWrapper extends Component {
   // 重置表单
   _resetForm() {
     this.props.form.resetFields();
+    this.setState({ dateFormatValues: {} })
     this.props.dispatch({
       type: 'autoForm/updateState',
       payload: {
@@ -196,7 +203,7 @@ class SearchWrapper extends Component {
   }
 
   // 时间范围控件
-  _rtnRangePickerEl = item => {
+  _rtnRangePickerEl = (item) => {
     const { dateFormat } = item;
     const { fieldName } = item;
     const format = dateFormat ? dateFormat : "";
@@ -223,9 +230,29 @@ class SearchWrapper extends Component {
 
     // return <RangePicker_ style={{ width: '100%' }} />
     if (format) {
-      return <RangePicker showTime style={{ width: '100%' }} format={format} />
+      return <RangePicker showTime style={{ width: '100%' }} format={format} onChange={(dates, dateString) => {
+        this.handleDateValues(dates, format, fieldName)
+      }} />
     }
     return <RangePicker showTime style={{ width: '100%' }} />
+  }
+
+  handleDateValues = (dates, format, fieldName) => {
+    const { dateFormatValues } = this.state;
+    let _dateFormatValues = {};
+    if (dates && dates.length) {
+      _dateFormatValues = {
+        [fieldName]: {
+          value: [moment(moment(dates[0]).format(format)), moment(moment(dates[1]).format(format))]
+        }
+      }
+    }
+    this.setState({
+      dateFormatValues: {
+        ...dateFormatValues,
+        ..._dateFormatValues
+      }
+    })
   }
 
   /**时间控件回调 */
@@ -242,7 +269,7 @@ class SearchWrapper extends Component {
 
   // 渲染FormItem
   _renderFormItem() {
-    const { dispatch, form: { getFieldDecorator }, searchConfigItems, configId } = this.props;
+    const { dispatch, form: { getFieldDecorator, setFieldsValue }, searchConfigItems, configId } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder } = this._SELF_;
     const searchConditions = searchConfigItems[configId] || [];
     let element = '';
@@ -253,6 +280,7 @@ class SearchWrapper extends Component {
       let { placeholder } = item;
       const { fieldName } = item;
       const { labelText } = item;
+      let initialValue = undefined;
       let zIndex = 1;
 
       // 判断类型
@@ -302,11 +330,15 @@ class SearchWrapper extends Component {
           break;
         case "日期框":
           placeholder = placeholder || inputPlaceholder;
-          element = this._rtnDateEl(item);
+          element = this._rtnDateEl(item, fieldName);
           break;
         case "日期范围":
           placeholder = placeholder || inputPlaceholder;
-          element = this._rtnRangePickerEl(item);
+          if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
+            initialValue = [moment().subtract(item.LIST_TIME * -1, item.DF_QUERY_TIME_TYPE), moment()]
+            // setFieldsValue({ [fieldName]: initialValue })
+          }
+          element = this._rtnRangePickerEl(item, fieldName);
           break;
         case "单选":
           element = (
@@ -333,7 +365,9 @@ class SearchWrapper extends Component {
         element &&
         <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
           <FormItem {...formLayout} label={labelText} style={{ width: '100%', marginBottom: 0 }}>
-            {getFieldDecorator(`${fieldName}`, {})(
+            {getFieldDecorator(`${fieldName}`, {
+              initialValue: initialValue
+            })(
               element
             )}
           </FormItem>

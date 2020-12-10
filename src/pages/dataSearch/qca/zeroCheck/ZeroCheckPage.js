@@ -205,7 +205,7 @@ class ZeroCheckPage extends PureComponent {
     return recordWorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
       <p>{workModeLabel}</p>
       <p>质控人：{PersonName}</p>
-    </div>}>
+    </div>}> 
       {text}
       <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
     </Tooltip> : text
