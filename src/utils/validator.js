@@ -82,6 +82,10 @@ export const checkRules = {
     message: '身份证格式不正确。',
   },
   loginName: {
+    pattern: REGEXP.name,
+    message: '只允许中文、字母、数字及下划线。',
+  },
+  userName: {
     pattern: REGEXP.loginName,
     message: '只允许字母、数字及下划线。',
   },
