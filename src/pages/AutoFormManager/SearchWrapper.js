@@ -313,7 +313,7 @@ class SearchWrapper extends Component {
         case "日期范围":
           placeholder = placeholder || inputPlaceholder;
           if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
-            initialValue = [moment().subtract(item.LIST_TIME * -1, item.DF_QUERY_TIME_TYPE), moment()]
+            initialValue = [moment().subtract(item.LIST_TIME * 1, item.DF_QUERY_TIME_TYPE), moment()]
             // setFieldsValue({ [fieldName]: initialValue })
           }
           element = this._rtnRangePickerEl(item, fieldName);

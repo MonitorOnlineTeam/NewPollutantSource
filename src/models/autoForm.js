@@ -248,7 +248,7 @@ export default Model.extend({
           if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
             dateInitialValues = {
               [item.FullFieldNameVerticalBar]: {
-                value: [moment().subtract(item.LIST_TIME * -1, item.DF_QUERY_TIME_TYPE), moment()]
+                value: [moment().subtract(item.LIST_TIME, item.DF_QUERY_TIME_TYPE), moment()]
               }
             }
           }
