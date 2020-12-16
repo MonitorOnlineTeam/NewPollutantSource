@@ -122,6 +122,7 @@ export async function getentandpoint(params) {
     const body = {
         PollutantTypes: params.PollutantType,
         RegionCode: params.RegionCode,
+        Status: [],
     }
     const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', body);
     return result === null ? {
