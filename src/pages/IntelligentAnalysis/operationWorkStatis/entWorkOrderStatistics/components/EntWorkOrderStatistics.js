@@ -37,6 +37,7 @@ class EntWorkOrderStatistics extends PureComponent {
         title: '行政区',
         dataIndex: '00_RegionName',
         key: '00_RegionName',
+        align:'center',
         render: (text, record) => { 
           const values = this.props.form.getFieldsValue();
           const {initialForm:{RegionCode},changePage} = this.props;
@@ -97,6 +98,7 @@ class EntWorkOrderStatistics extends PureComponent {
           ],
       },{
         title: '监测点',
+        align:'center',
         children: [
           {
             title: '监测点数',
@@ -189,6 +191,7 @@ class EntWorkOrderStatistics extends PureComponent {
           dataIndex: item.ID,
           key: item.ID,
           width: 120,
+          align:'center'
         });
       }
     })
