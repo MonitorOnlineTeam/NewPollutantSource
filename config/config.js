@@ -920,12 +920,12 @@ export default {
                       path: '/dataquerymanager/dischargeStandard',
                       component: './monitoring/dischargeStandard',
                     },
-                     //停运记录
-                     {
+                    //停运记录
+                    {
                       name: 'stopRecord',
                       path: '/dataquerymanager/stopRecord',
                       component: './monitoring/StopRecord/stopRecord',
-                     },
+                    },
                   ],
                 },
               ],
@@ -1279,8 +1279,8 @@ export default {
                       component:
                         './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                     }]
-                  },
-              //统计-运维工单
+                },
+                //统计-运维工单
                 {
                   path: '/Intelligentanalysis/operationWorkStatis',
                   name: 'operationWorkStatis',
@@ -1422,37 +1422,42 @@ export default {
                   component: './dataAnalyze/QuartDataCaptureRate',
                 },
                 {
-                  name: 'emissions',
-                  path: '/Intelligentanalysis/emissions',
+                  name: 'emissionsStatistics',
+                  path: '/Intelligentanalysis/emissionsStatistics',
                   // component: './Intelligentanalysis/emissions',
                   routes: [
                     {
-                      path: '/Intelligentanalysis/emissions',
+                      path: '/Intelligentanalysis/emissionsStatistics',
                       redirect: '/Intelligentanalysis/emissionStatistical/gas',
                     },
                     {
                       // 废气排放量统计
                       name: 'gas',
-                      path: '/Intelligentanalysis/emissions/gas',
+                      path: '/Intelligentanalysis/emissionsStatistics/gas',
                       component: './IntelligentAnalysis/emissionStatistical/Gas',
                     },
                     {
                       // 废水排放量统计
                       name: 'water',
-                      path: '/Intelligentanalysis/emissions/waterEmissions',
+                      path: '/Intelligentanalysis/emissionsStatistics/waterEmissions',
                       component: './IntelligentAnalysis/emissionStatistical/Water',
                     },
                     {
                       // 废气排放量对比统计
                       name: 'gasContrast',
-                      path: '/Intelligentanalysis/emissions/gasContrast',
+                      path: '/Intelligentanalysis/emissionsStatistics/gasContrast',
                       component: './IntelligentAnalysis/emissionStatistical/GasContrast',
                     },
                     {
                       // 废水排放量对比统计
                       name: 'water',
-                      path: '/Intelligentanalysis/emissions/waterContrast',
+                      path: '/Intelligentanalysis/emissionsStatistics/waterContrast',
                       component: './IntelligentAnalysis/emissionStatistical/WaterContrast',
+                    },
+                    {
+                      //排放量变化统计
+                      path: '/Intelligentanalysis/emissionsStatistics/emissionsChange',
+                      component: './IntelligentAnalysis/emissionsStatistics/emissionsChange',
                     },
                   ],
                 },
