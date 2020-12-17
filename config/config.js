@@ -852,6 +852,11 @@ export default {
                   redirect: '/monitoring/mapview/realtimeDataView',
                 },
                 {
+                  name: 'outputstopmanage',
+                  path: '/monitoring/outputstopmanage/:configId',
+                  component: './platformManager/outputstopManager/',
+                },
+                {
                   name: 'realtimedata',
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
