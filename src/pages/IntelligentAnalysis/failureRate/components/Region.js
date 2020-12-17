@@ -5,6 +5,7 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import {
   Card,
   Table,
@@ -363,7 +364,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
               {types==='ent'?
                 <Form.Item label={'企业类型'}>
-                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
+                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode.join()} />
                 </Form.Item>
                 :
                 null

@@ -872,30 +872,7 @@ export default {
                 }
               ],
             },
-            {
-              name: 'alarmInfo',
-              path: '/alarmInfo',
-              redirect:'/dataquerymanager/defectData',
-              routes: [
-                {
-                  name: 'defectData',
-                  //数据缺失
-                  path: '/dataquerymanager/defectData',
-                  component: './monitoring/defectData/ent',
-                },
-                {
-                  //缺失数据报警  企业
-                  path: '/alarmInfo/missingData',
-                  component: './monitoring/missingData/ent',
-                },
-                {
-                  //缺失数据报警 二级页面
-                  path: '/alarmmanager/missingData/missDataSecond',
-                  component: './monitoring/missingData/missDataSecond',
-                },
 
-              ],
-            },
             {
               name: 'dataquerymanager',
               path: '/dataquerymanager',
@@ -989,6 +966,31 @@ export default {
                   path: '/monitoring/entExceptionReported',
                   component: './monitoring/entExceptionReported',
                 },
+                {
+                  name: 'alarmInfo',
+                  path: '/monitoring/alarmInfo',
+                  routes: [
+                    {
+                      name: 'defectData',
+                      //数据缺失
+                      path: '/monitoring/alarmInfo/defectData',
+                      component: './monitoring/defectData/ent',
+                    },
+                    {
+                      //缺失数据报警  企业
+                      name:'missingData',
+                      path: '/monitoring/alarmInfo/missingData',
+                      component: './monitoring/missingData/ent',
+                    },
+                    {
+                      //缺失数据报警 二级页面
+                      name:'missDataSecond',
+                      path: '/alarmmanager/missingData/missDataSecond',
+                      component: './monitoring/missingData/missDataSecond',
+                    },
+    
+                  ],
+                }, 
                 // 企业异常记录
                 {
                   name: 'entAbnormalRecord',
@@ -1239,20 +1241,8 @@ export default {
                 {
                   name: 'FailureRate',
                   path: '/Intelligentanalysis/failureRate',
-                  routes: [
-                    {
-                      path: '/Intelligentanalysis/failureRate/ent',
-                      component: './Intelligentanalysis/failureRate/Enterprise',
-                    },
-                    {
-                      path: '/Intelligentanalysis/failureRate/air',
-                      component: './Intelligentanalysis/failureRate/Air',
-                    }
-
-                  ]
+                  component: './Intelligentanalysis/failureRate/Enterprise',
                 },
-
-
                 {
                   //缺失数据报警响应率 企业
                   name:'missingDataRate',
