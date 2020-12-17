@@ -175,7 +175,7 @@ export default class EntTransmissionEfficiency extends Component {
     !isWorkRate? this.columns.pop() : null;
     Atmosphere? this.columns.splice(1,1) : null;
     
-    this.columns
+    // this.columns
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
