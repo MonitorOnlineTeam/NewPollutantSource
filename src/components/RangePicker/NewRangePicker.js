@@ -72,6 +72,8 @@ class NewRangePicker extends Component {
 
         switch (dataType) {
             case 'realtime':
+            case 'Realtime':
+            case 'RealtimeData':     
                 if (beginTime == 1 || !endTime == 1) {
                     beginTime = moment(new Date()).add(-60, 'minutes');
                     endTime = moment(new Date());
@@ -85,6 +87,7 @@ class NewRangePicker extends Component {
                 }
                 break;
             case 'minute':
+            case 'MinuteData':
                 if (beginTime == 1 || !endTime == 1) {
                     beginTime = moment(moment(new Date()).add(-1, 'day').format('YYYY-MM-DD HH:mm:00'));
                     endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:mm:59'));
@@ -103,6 +106,7 @@ class NewRangePicker extends Component {
                 break;
             case 'hour':
             case 'Hour':
+            case 'HourData':
                 if (beginTime == 1 || endTime == 1) {
                     beginTime = moment(moment(new Date()).add(-1, 'day').format('YYYY-MM-DD HH:00:00'));
                     endTime = moment(moment(new Date()).format('YYYY-MM-DD HH:59:59'));
@@ -120,6 +124,7 @@ class NewRangePicker extends Component {
                 break;
             case 'day':
             case 'Day':
+            case 'DayData':
                 if (beginTime == 1 || endTime == 1) {
                     beginTime = moment(moment(new Date()).add(-1, 'month').format('YYYY-MM-DD 00:00:00'));
                     endTime = moment(moment(new Date()).format('YYYY-MM-DD 23:59:59'));

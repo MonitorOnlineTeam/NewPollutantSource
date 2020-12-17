@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Card, Row, Col, Tag, Modal, Tabs, Statistic, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
-// import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
-import { Map, Markers, InfoWindow, Polygon } from '@/components/ReactAmap';
+import { Form, Select, Input, Button, Card, Row, Col, Tag, Modal, Divider, Tabs, Statistic, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
+import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
+// import { Map, Markers, InfoWindow, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -20,6 +20,9 @@ import { airLevel } from '@/pages/monitoring/overView/tools'
 import config from '@/config'
 import defaultSettings from '../../../../config/defaultSettings.js'
 import MapUI from './MapUI'
+import OperDetails from './component/OperDetails'
+import SdlMap from '@/pages/AutoFormManager/SdlMap'
+
 
 
 const { TabPane } = Tabs;
@@ -40,6 +43,7 @@ const iconStyle = {
   defaultMapInfo: mapView.defaultMapInfo,
   tableList: mapView.tableList,
   chartData: mapView.chartData,
+  infoWindowData: mapView.infoWindowData,
   monitorTime: mapView.monitorTime,
   loading: loading.effects['mapView/getAllEntAndPoint'],
   pointLoading: loading.effects['mapView/getPointTableData'],
@@ -592,7 +596,7 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator }, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
+    const { form: { getFieldDecorator }, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
@@ -764,6 +768,12 @@ class MapView extends Component {
     // 离线地图设置做大缩放级别
     if (config.offlineMapUrl.domain) {
       mapStaticAttribute.zooms = [3, 14]
+    }
+
+
+    let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
+    if (infoWindowData.photo) {
+      imgName = config.uploadHost + "upload" + imgName;
     }
 
     return (
@@ -954,15 +964,20 @@ class MapView extends Component {
                               }
                               {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
                               <a className={styles.pointDetails} size="small" onClick={() => {
+                                // 获取infoWindow数据
+                                this.props.dispatch({
+                                  type: "mapView/getInfoWindowData",
+                                  payload: {
+                                    DGIMNs: currentKey,
+                                    dataType: "HourData",
+                                    isLastest: true,
+                                    // type: PollutantType,
+                                    isAirOrSite: true,
+                                    pollutantTypes: this.state.currentPointInfo.PollutantType
+                                  }
+                                })
                                 this.setState({
                                   pointVisible: true,
-                                  //   DGIMN: "",
-                                  // }, () => {
-                                  //   setTimeout(() => {
-                                  //     this.setState({
-                                  //       DGIMN: this.state.currentKey
-                                  //     })
-                                  //   }, 200);
                                 })
                               }}>监测点详情</a>
                             </>)
@@ -1046,6 +1061,18 @@ class MapView extends Component {
                     notMerge
                     lazyUpdate />
                   <a className={styles.pointDetails} style={{ marginTop: -6 }} size="small" onClick={() => {
+                    // 获取infoWindow数据
+                    this.props.dispatch({
+                      type: "mapView/getInfoWindowData",
+                      payload: {
+                        DGIMNs: currentKey,
+                        dataType: "HourData",
+                        isLastest: true,
+                        // type: PollutantType,
+                        isAirOrSite: true,
+                        pollutantTypes: this.state.currentPointInfo.PollutantType
+                      }
+                    })
                     this.setState({
                       pointVisible: true,
                     })
@@ -1119,11 +1146,17 @@ class MapView extends Component {
                   <DataQuery DGIMN={currentKey} initLoadData chartHeight="calc(100vh - 427px)" style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight="calc(100vh - 34vh - 55px - 48px - 90px - 64px)" pointName={this.state.pointName} pollutantTypes={this.state.pollutantTypes} entName={this.state.entName} />
                 </TabPane>
               }
+              <TabPane tab="运维记录" key="6">
+                <OperDetails DGIMN={currentKey} />
+              </TabPane>
               {
                 menuDescList.includes('视频预览') && <TabPane tab="视频预览" key="2">
                   <YsyShowVideo DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
                 </TabPane>
               }
+              {/* <TabPane tab="超标核实" key="6">
+                <AlarmRecord DGIMN={currentKey} initLoadData />
+              </TabPane> */}
               {
                 menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标处置" key="3">
@@ -1141,6 +1174,45 @@ class MapView extends Component {
                   <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} noticeState={1} />
                 </TabPane>
               }
+              <TabPane tab="基本信息" key="7">
+                <div style={{ height: "60vh", overflow: 'auto' }}>
+                  <div className={styles.basisInfo}>
+                    <div>
+                      <img src={imgName} alt="" width="100%" />
+                    </div>
+                    <div>
+                      <Descriptions title={infoWindowData.pointName}>
+                        <Descriptions.Item label="区域">{infoWindowData.Abbreviation}</Descriptions.Item>
+                        <Descriptions.Item label="经度">{infoWindowData.longitude}</Descriptions.Item>
+                        <Descriptions.Item label="纬度">{infoWindowData.latitude}</Descriptions.Item>
+                        <Descriptions.Item label="运维负责人">{infoWindowData.operationPerson}</Descriptions.Item>
+                        <Descriptions.Item label="污染物类型">{infoWindowData.pollutantType}</Descriptions.Item>
+                      </Descriptions>
+                    </div>
+                  </div>
+                  <Divider />
+                  {
+                    this.state.currentPointInfo.PollutantType !== "5" && <Descriptions title="企业信息">
+                      <Descriptions.Item label="企业名称">{infoWindowData.entName}</Descriptions.Item>
+                      <Descriptions.Item label="行业">{infoWindowData.industryName}</Descriptions.Item>
+                      <Descriptions.Item label="控制级别名称">{infoWindowData.attentionName}</Descriptions.Item>
+                      <Descriptions.Item label="环保负责人">{infoWindowData.entlinkman}</Descriptions.Item>
+                      <Descriptions.Item label="移动电话">{infoWindowData.entphone}</Descriptions.Item>
+                      <Descriptions.Item label="企业地址">{infoWindowData.entadress}</Descriptions.Item>
+                    </Descriptions>
+                  }
+                  <SdlMap
+                    mode="map"
+                    longitude={infoWindowData.longitude}
+                    latitude={infoWindowData.latitude}
+                    path={infoWindowData.entCoordinateSet || []}
+                    handleMarker={true}
+                    handlePolygon={true}
+                    style={{ height: this.state.currentPointInfo.PollutantType !== "5" ? 300 : 430 }}
+                    zoom={12}
+                  />
+                </div>
+              </TabPane>
             </Tabs>
           </Modal>
         </div>

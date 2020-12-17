@@ -47,3 +47,9 @@ export async function getPointChartData(params) {
     data: null
   } : result;
 }
+
+// 获取监测点infoWindow数据
+export async function getInfoWindowData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList', params, null);
+  return result;
+}
