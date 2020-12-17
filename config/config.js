@@ -32,11 +32,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -99,7 +99,7 @@ export default {
           path: '/homepage',
           component: './home',
         },
-        
+
         // appoperation
         {
           path: '/appoperation',
@@ -522,6 +522,42 @@ export default {
                   ],
                 },
                 {
+                  name: 'wryReport',
+                  path: '/report/water',
+                  // component: "./operations/CalendarPage",
+                  routes: [
+                    {
+                      path: '/report/water',
+                      redirect: '/report/water/DailyReport',
+                    },
+                    //小时平均值日报
+                    {
+                      name: 'DailyReport',
+                      path: '/report/water/DailyReport',
+                      component: './report/DailyReport/DailyReport',
+                    },
+                    //日平均值月报
+                    {
+                      name: 'MonthReport',
+                      path: '/report/water/MonthReport',
+                      component: './report/MonthReport/MonthReport',
+                    },
+                    //月平均值季报
+                    {
+                      name: 'SeasonReport',
+                      path: '/report/water/SeasonReport',
+                      component: './report/SeasonReport/SeasonReport',
+                    },
+                    //月平均值年报
+                    {
+                      name: 'YearReport',
+                      path: '/report/water/YearReport',
+                      component: './report/YearReport/YearReport',
+                    },
+                  ]
+                },
+
+                {
                   name: 'smokeReportPage',
                   path: '/report/smoke',
                   routes: [
@@ -926,11 +962,10 @@ export default {
                 {
                   name: 'videopreview',
                   path: '/monitoring/videopreview',
-                  component: `${
-                    config.VideoServer === 0
-                      ? './monitoring/videopreview/hkvideo/index'
-                      : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                  component: `${config.VideoServer === 0
+                    ? './monitoring/videopreview/hkvideo/index'
+                    : './monitoring/videopreview/ysyvideo/index'
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -941,6 +976,12 @@ export default {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
+                },
+                // 企业异常上报
+                {
+                  name: 'entExceptionReported',
+                  path: '/monitoring/entExceptionReported',
+                  component: './monitoring/entExceptionReported',
                 },
                 // {
                 //   name: 'exceptionrecord',
@@ -1206,7 +1247,7 @@ export default {
                       path: '/Intelligentanalysis/failureRate/air',
                       component: './IntelligentAnalysis/failureRate/Air',
                     }
-                    
+
                   ]
                 },
                 //数据报警统计
@@ -1238,7 +1279,7 @@ export default {
                       component:
                         './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                     }]
-                  }, 
+                  },
               //统计-运维工单
                 {
                   path: '/Intelligentanalysis/operationWorkStatis',
@@ -1321,7 +1362,7 @@ export default {
                         './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
                     },
                   ],
-                },               
+                },
                 {
                   name: 'emissions',
                   path: '/Intelligentanalysis/emissions',
@@ -1379,6 +1420,41 @@ export default {
                   name: 'quartDataCaptureRate',
                   path: '/Intelligentanalysis/quartDataCaptureRate',
                   component: './dataAnalyze/QuartDataCaptureRate',
+                },
+                {
+                  name: 'emissions',
+                  path: '/Intelligentanalysis/emissions',
+                  // component: './Intelligentanalysis/emissions',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/emissions',
+                      redirect: '/Intelligentanalysis/emissionStatistical/gas',
+                    },
+                    {
+                      // 废气排放量统计
+                      name: 'gas',
+                      path: '/Intelligentanalysis/emissions/gas',
+                      component: './IntelligentAnalysis/emissionStatistical/Gas',
+                    },
+                    {
+                      // 废水排放量统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterEmissions',
+                      component: './IntelligentAnalysis/emissionStatistical/Water',
+                    },
+                    {
+                      // 废气排放量对比统计
+                      name: 'gasContrast',
+                      path: '/Intelligentanalysis/emissions/gasContrast',
+                      component: './IntelligentAnalysis/emissionStatistical/GasContrast',
+                    },
+                    {
+                      // 废水排放量对比统计
+                      name: 'water',
+                      path: '/Intelligentanalysis/emissions/waterContrast',
+                      component: './IntelligentAnalysis/emissionStatistical/WaterContrast',
+                    },
+                  ],
                 },
               ],
             },
