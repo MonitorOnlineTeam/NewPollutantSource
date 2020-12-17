@@ -255,7 +255,7 @@ export default class EntIndexModal extends Component {
         key: 'RegionName',
         align: 'center',
         render: (text, record) => { 
-          let RegionCode = text =='全部合计'? '': record.RegionCode;
+          let RegionCode = record.RegionCode;
           return <a onClick={()=>{
             this.setState({
               showDetails: true,

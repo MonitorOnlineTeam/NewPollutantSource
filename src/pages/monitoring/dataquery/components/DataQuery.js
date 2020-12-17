@@ -40,7 +40,8 @@ class DataQuery extends Component {
       // selectP: '',
       dgimn: '',
       dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-      dataType: 'realtime'
+      dataType: 'realtime',
+      // checkDataType
     };
   }
 
@@ -64,6 +65,10 @@ class DataQuery extends Component {
         notLoad: true,
       },
       callback: () => {
+        const { dataType } = this.state;
+        if(this.props.tabType==='biao'&&dataType!=='realtime'&&dataType!=='minute'&&dataType!=='hour'&&dataType!=='day'){
+          this.setState({dataType:'realtime'})
+        }
         this.children.onDataTypeChange(this.state.dataType);
       },
     });
@@ -437,7 +442,11 @@ class DataQuery extends Component {
     this.children = ref;
   };
   tabCallback=(key)=>{
+    let { dgimn } = this.state;
     this.props.dispatch({ type: 'dataquery/updateState', payload: { tabType:key }  })
+      setTimeout(()=>{
+        this.getpointpollutants(dgimn);
+      })
 
   }
 
@@ -540,7 +549,7 @@ class DataQuery extends Component {
     <div>
     <ButtonGroup_
         style={{ width: '100%',padding:'10px 0' }}
-        checked="realtime"
+        checked={this.state.dataType}
         showOtherTypes={ flag}
         ifShowOther={tabType=='biao'? false:true}
         onChange={this._handleDateTypeChange}

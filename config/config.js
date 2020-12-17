@@ -995,11 +995,11 @@ export default {
                 },
                 {
                   name: 'dataquery',
-                  path: '/monitoring/dataquery',
+                  path: '/monitoring/dataquery/ent',
                   component: './monitoring/dataquery/index',
                 },
                 {
-                  name: 'dataquery',
+                  name: 'airDataquery',
                   path: '/monitoring/dataquery/air',
                   component: './monitoring/dataquery/air',
                 },
