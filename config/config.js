@@ -491,6 +491,23 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
+                {
+                  name: 'dischargeStandard',
+                  //排放标准
+                  path: '/platformconfig/dischargeStandard',
+                  component: './monitoring/dischargeStandard',
+                },
+                {
+                  name: 'abnormalStandard', //异常标准
+                  path: '/platformconfig/abnormalStandard',
+                  component: './monitoring/abnormalStandard',
+                },
+                 //停运记录
+                 {
+                  name: 'stopRecord',
+                  path: '/platformconfig/stopRecord',
+                  component: './monitoring/StopRecord/stopRecord',
+                 },
               ],
             },
             {
@@ -741,85 +758,6 @@ export default {
                 },
               ],
             },
-            //统计分析
-            {
-              
-                path: '/statisticalAnalysis',
-                name: 'StatisticalAnalysis',
-                router:[
-                //缺失数据报警响应率统计
-                {
-                  path: '/statisticalAnalysis/dataAlarm',
-                  name: 'dataAlarm',
-                  routes: [
-
-                    /* 缺失数据报警响应率 */
-                    {
-                      //缺失数据报警响应率 企业
-                      path: '/statisticalAnalysis/dataAlarm/missingDataRate',
-                      component: './IntelligentAnalysis/dataAlarm/missingDataRate/ent',
-                    },
-                    {
-                      //缺失数据报警响应率 二级页面
-                      path: '/statisticalAnalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                      component:
-                        './IntelligentAnalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                    }]
-                  }, 
-              //统计-运维工单
-                {
-                  path: '/statisticalAnalysis/operationWorkStatis',
-                  name: 'operationWorkStatis',
-                  routes: [
-                    {
-                      // 运维工单统计（企业）
-                      path: '/statisticalAnalysis/operationWorkStatis/entWorkOrderStatistics',
-                      component: './IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics',
-                    },
-                    {
-                      //行政区运维工单统计（企业）
-                      path:
-                        '/statisticalAnalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                      component:
-                        './IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                    },
-                    {
-                      //企业运维工单统计（企业）
-                      path:
-                        '/statisticalAnalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                      component:
-                        './IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                    },
-                    /* 缺失台账工单统计 */
-                    {
-                      path: '/statisticalAnalysis/operationWorkStatis/noAccountAirStatistics',
-                      component: './IntelligentAnalysis/operationWorkStatis/noAccountAirStatistics',
-                    },
-
-                    /* 缺失台账工单详情 */
-                    {
-                      path:
-                        '/statisticalAnalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                      component:
-                        './IntelligentAnalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                    },
-  
-                  ],
-                },
-                 //传输有效率
-                       {
-                        name: 'Intelligentanalysis',
-                        path: '/Intelligentanalysis/transmissionefficiency',
-                        component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
-                     },
-                      {
-                           name: 'Intelligentanalysis',
-                           path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                           component: './IntelligentAnalysis/newTransmissionefficiency/qutPage',
-                    },
-                ]
-              
-            },
             {
               path: '/rolesmanager',
               name: 'rolesmanager',
@@ -937,7 +875,14 @@ export default {
             {
               name: 'alarmInfo',
               path: '/alarmInfo',
+              redirect:'/dataquerymanager/defectData',
               routes: [
+                {
+                  name: 'defectData',
+                  //数据缺失
+                  path: '/dataquerymanager/defectData',
+                  component: './monitoring/defectData/ent',
+                },
                 {
                   //缺失数据报警  企业
                   path: '/alarmInfo/missingData',
@@ -948,12 +893,7 @@ export default {
                   path: '/alarmmanager/missingData/missDataSecond',
                   component: './monitoring/missingData/missDataSecond',
                 },
-                {
-                  name: 'defectData',
-                  //数据缺失
-                  path: '/dataquerymanager/defectData',
-                  component: './monitoring/defectData/ent',
-                },
+
               ],
             },
             {
@@ -988,58 +928,7 @@ export default {
                   name: 'dataFlag',
                   path: '/dataquerymanager/dataFlag',
                   component: './monitoring/dataquery/DataTagPage',
-                },
-                {
-                  name: 'abnormalStandard', //异常标准
-                  path: '/monitoring/abnormalStandard',
-                  component: './monitoring/abnormalStandard',
-                },
-                {
-                  name: 'dischargeStandard',
-                  //排放标准
-                  path: '/dataquerymanager/dischargeStandard',
-                  component: './monitoring/dischargeStandard',
-                  name: 'defectData',
-                  //数据缺失
-                  path: '/dataquerymanager/defectData',
-                  routes: [
-                    {
-                      name: 'defectDatEnt',
-                      //数据缺失 - 企业
-                      path: '/dataquerymanager/defectData/ent',
-                      component: './monitoring/defectData/ent',
-                    },
-                    {
-                      name: 'defectDatAir',
-                      //数据缺失 - 空气站
-                      path: '/dataquerymanager/defectData/air',
-                      component: './monitoring/defectData/air',
-                    },
-                    {
-                      name: 'abnormalStandard', //异常标准
-                      path: '/monitoring/abnormalStandard',
-                      component: './monitoring/abnormalStandard',
-                    },
-                    {
-                      name: 'dischargeStandard',
-                      //排放标准
-                      path: '/dataquerymanager/dischargeStandard',
-                      component: './monitoring/dischargeStandard',
-                    },
-                    //停运记录
-                    {
-                      name: 'stopRecord',
-                      path: '/dataquerymanager/stopRecord',
-                      component: './monitoring/StopRecord/stopRecord',
-                    },
-                  ],
-                },
-                 //停运记录
-                 {
-                  name: 'stopRecord',
-                  path: '/dataquerymanager/stopRecord',
-                  component: './monitoring/StopRecord/stopRecord',
-                 },
+                }
               ],
             },
             {
@@ -1095,6 +984,12 @@ export default {
                   path: '/monitoring/entExceptionReported',
                   component: './monitoring/entExceptionReported',
                 },
+                // 企业异常记录
+                {
+                  name: 'entAbnormalRecord',
+                  path: '/monitoring/entAbnormalRecord',
+                  component: './monitoring/entAbnormalRecord',
+                },                
                 // {
                 //   name: 'exceptionrecord',
                 //   path: '/monitoring/exceptionrecord',
@@ -1351,119 +1246,72 @@ export default {
 
                   ]
                 },
-                //数据报警统计
+
+
                 {
-                  path: '/Intelligentanalysis/dataAlarm',
-                  name: 'dataAlarm',
-                  routes: [
-                    /* 缺失数据报警统计 */
-                    {
-                      path: '/Intelligentanalysis/dataAlarm',
-                      redirect: '/Intelligentanalysis/dataAlarm/missingData/ent',
-                    },
-
-                    /* 缺失数据报警响应率 */
-
-                    {
-                      //缺失数据报警响应率 企业
-                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                    },
-                    {
-                      //缺失数据报警响应率 空气站
-                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
-                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
-                    },
-                    {
-                      //缺失数据报警响应率 二级页面
-                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                      component:
-                        './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                    }]
+                  //缺失数据报警响应率 企业
+                  name:'missingDataRate',
+                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                  component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
                 },
-                //统计-运维工单
                 {
-                  path: '/Intelligentanalysis/operationWorkStatis',
-                  name: 'operationWorkStatis',
-                  routes: [
-                    {
-                      // 运维工单统计（企业）
-                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                    },
-                    {
-                      //行政区运维工单统计（企业）
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                    },
-                    {
-                      //企业运维工单统计（企业）
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                    },
-                    /* 缺失台账工单统计 */
-                    {
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                    },
-
-                    /* 缺失台账工单详情 */
-                    {
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                    },
-                    /* 缺失台账照片统计 */
-                    {
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                    },
-                    {
-                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                    },
-                    {
-                      /** 运维工单统计-空气站 */
-                      name: 'AirWorkOrderStatistics',
-                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
-                    },
-                    {
-                      /** 单区域 运维工单统计-空气站 排口 */
-                      name: 'RegionAirQualityMonitoringStation',
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
-                    },
-                    {
-                      /** 单站点 运维工单统计-空气站 排口 */
-                      name: 'SingleStationAirQualityMonitoringStation',
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
-                    },
-                    {
-                      /** 单区域 运维工单统计-空气站 */
-                      name: 'AirWorkOrderStatistics',
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
-                    },
-                  ],
+                  //缺失数据报警响应率 二级页面
+                  name:'missRateDataSecond',
+                  path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                  component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                 },
+                {
+                  // 运维工单统计（企业）
+                  name:'entWorkOrderStatistics',
+                  path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                  component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                },
+                {
+                  //行政区运维工单统计（企业）
+                  name:'regionStaticstics',
+                  path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                  component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                },
+                {
+                  //企业运维工单统计（企业）
+                  name:'entWorkOrderStatistics',
+                  path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                  component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                },
+                /* 缺失台账工单统计 */
+                {
+                  name:'noAccountAirStatistics',
+                  path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                  component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                },
+                {
+                  name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                  path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                  component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                },
+               /* 缺失台账照片统计 */
+               {
+                name:'noAccountAirStatisticsPhoto',
+                path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                component:'./Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+              },
+                /* 缺失台账工单详情 */
+                {
+                  name:'noAccountAirStatisticsDetails',
+                  path:  '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                  component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                },
+                  //传输有效率统计
+                  {
+                    name: 'Intelligentanalysis',
+                     path: '/Intelligentanalysis/transmissionefficiency',
+                    component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
+                 },
+                  {
+                    name: 'IntelligentanalysisDetail',
+                    path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                    component: './IntelligentAnalysis/newTransmissionefficiency/qutPage',
+                  },
 
                 {
                   name: 'emissions',

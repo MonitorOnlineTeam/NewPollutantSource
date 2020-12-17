@@ -25,9 +25,7 @@ export default Model.extend({
       PollutantList:[],
       PollutantType: "1",
       AttentionCode: "",
-      beginTime: moment()
-      .subtract(1, 'day')
-      .format('YYYY-MM-DD HH:00:00'),
+      beginTime: moment().subtract(1, 'day') .format('YYYY-MM-DD HH:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:59:59'),
       DataType: "HourData",
       
