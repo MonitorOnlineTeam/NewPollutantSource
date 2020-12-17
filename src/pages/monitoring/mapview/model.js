@@ -23,7 +23,11 @@ export default Model.extend({
       xAxisData: [],
       legend: []
     },
-    monitorTime: null
+    monitorTime: null,
+    infoWindowData: { // infoWindow数据
+      list: [],
+      time: undefined
+    },
   },
   effects: {
     *getAllEntAndPoint({ payload = {} }, {
@@ -334,6 +338,54 @@ export default Model.extend({
           windowPointInfo: result.Data
         })
       }
-    }
+    },
+    // 获取监测点infoWindow数据
+    *getInfoWindowData({
+      payload,
+    }, { call, update, select, put }) {
+      console.log("12312312323=", payload)
+      const result = yield call(services.getPollutantList, { pollutantTypes: payload.pollutantTypes });
+      if (result.IsSuccess) {
+        yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取监测点infoWindow数据
+    *getInfoWindowPollutantList({ payload, pollutantList }, { call, update, select, put }) {
+      console.log("payload=", payload)
+      const result = yield call(services.getInfoWindowData, payload);
+      console.log("pollutantList=", pollutantList)
+      if (result.IsSuccess) {
+        let list = [];
+        pollutantList.map(item => {
+          result.Datas.map(itm => {
+            if (itm[item.field]) {
+              list.push({
+                label: item.name,
+                value: itm[item.field],
+                key: item.field,
+                title: item.title,
+                status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null,
+                level: itm[item.field + "_Level"],
+                levelColor: itm[item.field + "_LevelColor"],
+                levelValue: itm[item.field + "_LevelValue"],
+                // ...itm,
+              })
+            }
+          })
+        })
+        console.log("list=", list)
+        let data = result.Datas[0] ? result.Datas[0] : [];
+        yield update({
+          infoWindowData: {
+            list: list,
+            ...data
+          }
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 })

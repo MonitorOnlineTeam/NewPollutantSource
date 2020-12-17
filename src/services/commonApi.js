@@ -1,5 +1,38 @@
 import { post, get } from '@/utils/request';
 
+//根据行政区获取 大气站列表
+
+export async function GetStationByRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetStationByRegion?RegionCode=' +
+    params.RegionCode,
+    null,
+    null,
+  );
+  return result;
+}
+
+//根据行政区获取 企业列表
+export async function GetEntByRegion(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+    params.RegionCode,
+    null,
+    null,
+  );
+  return result;
+}
+
+//关注列表
+export async function GetAttentionDegreeList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
+    params,
+    null,
+  );
+  return result;
+}
+
 // 行政区划
 export async function getEnterpriseAndPoint(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetXuRegions', params, null);
@@ -45,6 +78,18 @@ export async function getEntAndPoint(params) {
   return result;
 }
 
+// 根据企业获取排口
+export async function getPointByEntCode(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode', params, null);
+  return result;
+}
+
+// 根据mn号获取站点下的所有污染物因子
+export async function getPollutantListByDgimn(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  return result;
+}
+
 /**
  * 基本信息-更新监测点的运营开始结束时间
  * @param {传递参数} 传递参数
@@ -53,7 +98,7 @@ export async function getEntAndPoint(params) {
 export async function CreatQRCode(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/CreateQRCode', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
