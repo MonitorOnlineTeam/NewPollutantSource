@@ -346,22 +346,25 @@ getTaskTypeInfo=() => {
     console.log('gettasklistqueryparams', gettasklistqueryparams);
     const columns = [
       {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        align:'center'
+      },
+      {
       title: '企业名称',
       dataIndex: 'EntName',
       key: 'EntName',
-
       },
       {
         title: '监测点名称',
         dataIndex: 'PointName',
         key: 'PointName',
-
       },
       {
         title: '任务单号',
         dataIndex: 'TaskCode',
         key: 'TaskCode',
-
       },
       {
         title: '运维状态',
