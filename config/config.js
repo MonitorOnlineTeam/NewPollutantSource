@@ -479,6 +479,17 @@ export default {
                   name: 'outputstopmanage',
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
+                }, //年度考核企业
+                {
+                  name: 'yearCheckEnt',
+                  path: '/platformconfig/yearCheckEnt',
+                  component: './platformManager/yearCheckEnt/',
+                },
+                //企业排放量统计
+                {
+                  name: 'emissionEnt',
+                  path: '/platformconfig/emissionEnt',
+                  component: './platformManager/emissionEnt/',
                 },
               ],
             },
