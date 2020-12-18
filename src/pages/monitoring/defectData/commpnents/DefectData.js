@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能：缺失数据
+ * 创建人：贾安波
+ * 创建时间：
  */
 import React, { Component } from 'react';
 import {
@@ -31,6 +31,7 @@ import styles from '../style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
+import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -380,15 +381,7 @@ export default class EntTransmissionEfficiency extends Component {
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width:  Atmosphere? 100 : 150}}
-                  >
-                    {this.regchildren()}
-                  </Select>
+                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 {Atmosphere?
                   <Form.Item label='大气站列表'>

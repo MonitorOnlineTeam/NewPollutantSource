@@ -1227,16 +1227,27 @@ export default {
                     },
                   ],
                 },
-                {
-                  name: 'Intelligentanalysis',
-                  path: '/Intelligentanalysis/transmissionefficiency',
-                  component: './Intelligentanalysis/transmissionefficiency/entIndex',
-                },
-                {
-                  name: 'Intelligentanalysis',
-                  path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
-                  component: './Intelligentanalysis/transmissionefficiency/pointIndex',
-                },
+                // {
+                //   name: 'Intelligentanalysis',
+                //   path: '/Intelligentanalysis/transmissionefficiency',
+                //   component: './Intelligentanalysis/transmissionefficiency/entIndex',
+                // },
+                // {
+                //   name: 'Intelligentanalysis',
+                //   path: '/Intelligentanalysis/transmissionefficiency/point/:entcode/:entname',
+                //   component: './Intelligentanalysis/transmissionefficiency/pointIndex',
+                // },
+             //传输有效率统计
+                  {
+                    name: 'Intelligentanalysis',
+                     path: '/Intelligentanalysis/transmissionefficiency',
+                    component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
+                 },
+                  {
+                    name: 'IntelligentanalysisDetail',
+                    path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                    component: './IntelligentAnalysis/newTransmissionefficiency/qutPage',
+                  },
                 //故障率
                 {
                   name: 'FailureRate',
@@ -1296,17 +1307,7 @@ export default {
                   path:  '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
                   component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
                 },
-                  //传输有效率统计
-                  {
-                    name: 'Intelligentanalysis',
-                     path: '/Intelligentanalysis/transmissionefficiency',
-                    component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
-                 },
-                  {
-                    name: 'IntelligentanalysisDetail',
-                    path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                    component: './IntelligentAnalysis/newTransmissionefficiency/qutPage',
-                  },
+
 
                 {
                   name: 'emissions',
