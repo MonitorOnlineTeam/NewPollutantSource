@@ -9,6 +9,7 @@ class Index extends Component {
     return (
       <Radio.Group
         defaultValue={this.props.checked}
+        value={this.props.checked}
         onChange={this.props.onChange}
         style={this.props.style}
       >
