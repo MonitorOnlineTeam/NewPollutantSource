@@ -867,7 +867,7 @@ class MapView extends Component {
             plugins={plugins}
             id="mapId"
             // zoom={this.state.zoom}
-            mapStyle="amap://styles/fresh"
+            mapStyle="amap://styles/normal"
             // isHotspot={true}
             // features={['bg','point','building']}
             // center={this.state.mapCenter}
