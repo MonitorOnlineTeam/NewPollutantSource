@@ -28,6 +28,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { blue,red } from '@ant-design/colors';
+import RegionList from '@/components/RegionList'
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -319,15 +321,7 @@ export default class Index extends Component {
             <>
               <Form layout="inline">
                <Form.Item label='行政区' >
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 170 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
+                  <RegionList   style={{ width: 170 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 <Form.Item label='关注程度'>
                   <Select

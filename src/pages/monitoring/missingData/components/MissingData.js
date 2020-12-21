@@ -31,6 +31,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
+import RegionList from '@/components/RegionList'
 
 
 const { Search } = Input;
@@ -76,7 +77,7 @@ export default class EntTransmissionEfficiency extends Component {
              ()=>{ 
                sessionStorage.setItem("missDataDetailPageIndex",1)
                sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
+               this.props.dispatch(routerRedux.push({pathname:'/monitoring/alarmInfo/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
               }}>{text}</a>      
        },
       },
@@ -304,15 +305,7 @@ export default class EntTransmissionEfficiency extends Component {
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 181 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
+                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 {types!=='ent'? <Form.Item>
                 <Button type="primary" onClick={this.queryClick}>

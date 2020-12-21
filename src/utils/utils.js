@@ -4,6 +4,9 @@ import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
+export const encryptKey =
+  'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCC0hrRIjb3noDWNtbDpANbjt5Iwu2NFeDwU16Ec87ToqeoIm2KI+cOs81JP9aTDk/jkAlU97mN8wZkEMDr5utAZtMVht7GLX33Wx9XjqxUsDfsGkqNL8dXJklWDu9Zh80Ui2Ug+340d5dZtKtd+nv09QZqGjdnSp9PTfFDBY133QIDAQAB';
+
 const isUrl = path => reg.test(path);
 
 const isAntDesignPro = () => {
@@ -279,24 +282,42 @@ export const GetDataType = dataType => {
 export function timeDifference(beginDates, endDates) {
   //时间格式为yyyy-mm-dd时
 
-  const beginDate = new Date(beginDates.replace(/-/g, '/')),endDate = new Date(endDates.replace(/-/g, '/'));
+  const beginDate = new Date(beginDates.replace(/-/g, '/')),
+    endDate = new Date(endDates.replace(/-/g, '/'));
 
-  let newYear = beginDate.getFullYear(), newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
+  let newYear = beginDate.getFullYear(),
+    newMonth = beginDate.getMonth() + 2; //先计算其实日期2个月后的日期
 
-  if (newMonth >= 11) { // 当年月份设置范围为0 ~ 11
+  if (newMonth >= 11) {
+    // 当年月份设置范围为0 ~ 11
 
-      newYear += 1;
-      newMonth -= 12;
+    newYear += 1;
+    newMonth -= 12;
   }
-    beginDate.setFullYear(newYear);
-    beginDate.setMonth(newMonth);
+  beginDate.setFullYear(newYear);
+  beginDate.setMonth(newMonth);
 
   if (beginDate.getTime() >= endDate.getTime()) {
-
     return true; //不超过2个月  开始时间加两个月的基础上不超过结束时间说明时间范围未超过
   } else {
-
     return false;
-    
+  }
+}
+//截取小数点后两位  
+export  function interceptTwo(value){
+  const data = value.toString();
+  // data.indexOf(".") ==-1 是整数时  补零
+  const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.split(".")[1].length<=1? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
+  return result;
+} 
+
+//保持小数点 后三位
+export function toDecimal3(x) {
+  if(x && x!='-'){
+    let res = '', data = x.toString()
+    res = data.indexOf(".") ==-1 || data.split(".")[1].length<3 ? `${ Number(x).toFixed(3)}` :   data.substring(0,data.indexOf(".")+4); // 如果是整数 toFixed(3) 补三位
+    return res;
+  }else{
+    return x;
   }
 }

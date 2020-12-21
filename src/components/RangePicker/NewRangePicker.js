@@ -239,6 +239,11 @@ class NewRangePicker extends Component {
             dateValue,
         });
     }
+    onDataValueChange = dateValue => {
+        this.setState({
+            dateValue,
+        });
+    }
     render() {
         return (
 

@@ -1,9 +1,12 @@
 import request, { post, get } from '@/utils/request';
-
+import Base64 from 'crypto-js/enc-base64';
+import Utf8 from 'crypto-js/enc-utf8';
 
 import Cookie from 'js-cookie';
 
 import { async } from 'q';
+import { JSEncrypt } from 'jsencrypt';
+import { encryptKey } from '@/utils/utils';
 
 export async function query() {
   return request('/api/users');
@@ -12,7 +15,7 @@ export async function queryCurrent() {
   return request('/api/currentUser');
 }
 export async function queryNotices() {
-  return [];// request('/api/notices');
+  return []; // request('/api/notices');
 }
 
 /**
@@ -36,8 +39,8 @@ export async function getUserInfo(params) {
   const result = post('/api/rest/PollutantSourceApi/PUserInfo/GetUserInfo', body, null);
   return result === null
     ? {
-      data: null,
-    }
+        data: null,
+      }
     : result;
 }
 
@@ -71,22 +74,35 @@ export async function getSystemConfigInfo() {
   );
   return result === null
     ? {
-      data: null,
-    }
+        data: null,
+      }
     : result;
 }
 
 // 验证旧密码是否一致
 export async function vertifyOldPwd(params) {
+  const results = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
+  //获取配置，判断配置是否开启弱口令0开启 1禁止
+  if (results.Datas.ClearTransmission == 0) {
+    var encrypt = new window.JSEncrypt();
+    encrypt.setPublicKey(encryptKey);
+    params.pwd = encrypt.encrypt(params.pwd);
+  }
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/VertifyOldPwd', params);
-
   return result;
 }
 
 // 修改密码
 export async function changePwd(params) {
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/ChangePwd', params);
-
+  const body = Object.assign(params);
+  const results = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
+  //获取配置，判断配置是否开启弱口令0开启 1禁止
+  if (results.Datas.ClearTransmission == 0) {
+    var encrypt = new window.JSEncrypt();
+    encrypt.setPublicKey(encryptKey);
+    body.pwd = encrypt.encrypt(params.pwd);
+  }
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/ChangePwd', body);
   return result;
 }
 
@@ -112,7 +128,11 @@ export async function getAlarmState(params) {
  * 获取企业
  */
 export async function getEnterpriseList(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList?regionCode=${params.regionCode}&pollutantTypeCode=${params.pollutantTypeCode}`, {}, null);
+  const result = await post(
+    `/api/rest/PollutantSourceApi/MonitorTargetApi/GetTargetList?regionCode=${params.regionCode}&pollutantTypeCode=${params.pollutantTypeCode}`,
+    {},
+    null,
+  );
   return result === null ? { data: null } : result;
 }
 
@@ -120,6 +140,9 @@ export async function getEnterpriseList(params) {
  * 获取下载手机端二维码信息
  */
 export async function GetAndroidOrIosSettings(params) {
-  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetAndroidOrIosSettings', params);
+  const result = await get(
+    '/api/rest/PollutantSourceApi/SystemSettingApi/GetAndroidOrIosSettings',
+    params,
+  );
   return result;
 }
