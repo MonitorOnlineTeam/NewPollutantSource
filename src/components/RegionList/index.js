@@ -37,14 +37,14 @@ export default class Index extends Component {
         selectList.push(
           <TreeNode value={item.RegionCode} title={item.RegionName} key={item.RegionCode}>
             
-            {item.children? item.children.map(childItem=>{
+            {item.children&&item.children.map(childItem=>{
                return  <TreeNode value={childItem.RegionCode} title={childItem.RegionName} key={childItem.RegionCode}>
                   {childItem.children&&childItem.children.map(grandsonItem=>{
                        return  <TreeNode value={grandsonItem.RegionCode} title={grandsonItem.RegionName} key={grandsonItem.RegionCode} />  
                    })
                   }
                     </TreeNode>
-            }) :null
+            })
           
           }
 
