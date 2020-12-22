@@ -34,7 +34,6 @@ import SearchWrapper from './SearchWrapper';
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
-  searchForm: autoForm.searchForm,
   routerConfig: autoForm.routerConfig
 }))
 
@@ -58,6 +57,16 @@ export default class AutoFormIndex extends Component {
     }
   }
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (this.props.routerConfig !== nextProps.routerConfig) {
+  //     return false;
+  //   }
+  //   if (this.props.configId !== nextProps.configId) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
   reloadPage = (configId) => {
     const { dispatch } = this.props;
     dispatch({
@@ -75,10 +84,8 @@ export default class AutoFormIndex extends Component {
   }
 
   render() {
-    const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
-    const searchConditions = searchConfigItems[configId] || []
-    const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
-    if (this.props.loading) {
+    const { tableInfo, match: { params: { configId } } } = this.props;
+    if (this.props.loading !== false ) {
       return (<Spin
         style={{
           width: '100%',
@@ -91,34 +98,13 @@ export default class AutoFormIndex extends Component {
       />);
     }
     return (
-      // <MonitorContent breadCrumbList={
-      //   [
-      //     { Name: '首页', Url: '/' },
-      //     { Name: '系统管理', Url: '' },
-      //     { Name: 'AutoForm', Url: '' }
-      //   ]
-      // }>
       <BreadcrumbWrapper>
         <div className={styles.cardTitle}>
           <Card>
-            <SearchWrapper
-              // formItemList={searchConditions}
-              // formChangeActionType=""
-              // searchFormState={{
-              // }}
-              onSubmitForm={(form) => this.loadReportList(form)}
-              configId={configId}
-            // loadDataSourceParams={[
-            //   {
-            //     Key: "test",
-            //     Value: false,
-            //     Where: "$like"
-            //   }
-            // ]}
-            ></SearchWrapper>
+            <SearchWrapper configId={configId} />
             <SdlTable
               style={{ marginTop: 10 }}
-              // columns={columns}
+              noload
               configId={configId}
               rowChange={(key, row) => {
                 this.setState({
@@ -126,38 +112,10 @@ export default class AutoFormIndex extends Component {
                 })
               }}
               {...this.props}
-              // onAdd={()=>{
-              //   console.log("点击了添加")
-              // }}
-              // appendHandleRows={row => {
-              //   return <Fragment>
-              //     <Divider type="vertical" />
-              //     <a onClick={() => {
-              //       console.log('row=', row)
-              //     }}>测试</a>
-              //   </Fragment>
-              // }}
-              // appendHandleButtons={(selectedRowKeys, selectedRows) => {
-              //   return <Fragment>
-              //     <Button icon="printer" type="primary" onClick={() => {
-              //       console.log('selectedRowKeys=', selectedRowKeys);
-              //       console.log('selectedRows=', selectedRows);
-              //     }}>维护点信息</Button>
-              //   </Fragment>
-              // }}
-            // searchParams={[
-            //   {
-            //     Key: "test",
-            //     Value: false,
-            //     Where: "$like"
-            //   }
-            // ]}
-            // dataSource={dataSource}
             />
           </Card>
         </div>
-        </BreadcrumbWrapper>
-      // </MonitorContent>
+      </BreadcrumbWrapper>
     );
   }
 }

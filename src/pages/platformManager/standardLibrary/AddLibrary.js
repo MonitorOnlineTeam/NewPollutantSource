@@ -100,6 +100,36 @@ class AddLibrary extends Component {
           }
         },
         {
+          title: '检出上限',
+          dataIndex: 'CheckUpper',
+          render: (text, record, index) => {
+            return (
+              // <Form.Item>
+              //   {this.props.form.getFieldDecorator('UpperLimit' + index, {
+              //     initialValue: text ? text : undefined
+              //   })(
+              <InputNumber value={text} step={0.1} onChange={(value) => { this.changeDataSource(value, index, "CheckUpper") }} />
+              //   )}
+              // </Form.Item>
+            )
+          }
+        },
+        {
+          title: '检出下限',
+          dataIndex: 'CheckLower',
+          render: (text, record, index) => {
+            return (
+              // <Form.Item>
+              //   {this.props.form.getFieldDecorator('LowerLimit' + index, {
+              //     initialValue: text ? text : undefined
+              //   })(
+              <InputNumber value={text} step={0.1} onChange={(value) => { this.changeDataSource(value, index, "CheckLower") }} />
+              //   )}
+              // </Form.Item>
+            )
+          }
+        },
+        {
           title: '上限',
           dataIndex: 'UpperLimit',
           render: (text, record, index) => {
@@ -293,6 +323,11 @@ class AddLibrary extends Component {
         }
         if (item.LowerLimit > item.UpperLimit) {
           message.error("上限不能低于下限！")
+          isErr = true;
+          return;
+        }
+        if (item.CheckLower > item.CheckUpper) {
+          message.error("检出上限不能低于检出下限！")
           isErr = true;
           return;
         }

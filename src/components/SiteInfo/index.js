@@ -94,11 +94,33 @@ class index extends PureComponent {
         title: '检出上限',
         dataIndex: 'AbnormalUpperLimit',
         key: 'AbnormalUpperLimit',
+        render: (text, record) => {
+          return text !== undefined ? text : '-'
+        }
       },
       {
         title: '检出下限',
         dataIndex: 'AbnormalLowerLimit',
         key: 'AbnormalLowerLimit',
+        render: (text, record) => {
+          return text !== undefined ? text : '-'
+        }
+      },
+      {
+        title: '报警上限',
+        dataIndex: 'UpperLimit',
+        key: 'UpperLimit',
+        render: (text, record) => {
+          return text !== undefined ? text : '-'
+        }
+      },
+      {
+        title: '报警下限',
+        dataIndex: 'LowerLimit',
+        key: 'LowerLimit',
+        render: (text, record) => {
+          return text !== undefined ? text : '-'
+        }
       },
       {
         title: '标准值',
