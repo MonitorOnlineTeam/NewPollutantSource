@@ -188,9 +188,9 @@ class YsyShowVideo extends Component {
       payloadpollutantCode: value,
       payloadpollutantName: selectedOptions.props.children,
     }
-    this.reloaddatalist(historyparams);
+    console.log(historyparams)
+    // this.reloaddatalist(historyparams);
   };
-
   /** 获取第一个摄像头  */
   getpropspollutantcode = () => {
     if (this.props.videoList[0]) {

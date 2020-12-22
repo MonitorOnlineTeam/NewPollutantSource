@@ -69,6 +69,21 @@ class YSYManagerIndex extends Component {
                 CameraMonitorID: id,
                 // PointCode: this.props.match.params.Pointcode,
             },
+            callback:res=>{
+                const { dispatch } = this.props;
+                dispatch({
+                    type: 'autoForm/getPageConfig',
+                    payload: {
+                        configId: 'CameraMonitor',
+                    },
+                });
+                dispatch({
+                    type: 'autoForm/getPageConfig',
+                    payload: {
+                        configId: 'VideoCamera',
+                    },
+                });
+            }
         });
     }
 
