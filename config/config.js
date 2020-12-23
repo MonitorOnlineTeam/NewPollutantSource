@@ -984,8 +984,8 @@ export default {
                     },
                     {
                       //缺失数据报警 二级页面
-                      name: 'missDataSecond',
-                      path: '/alarmmanager/missingData/missDataSecond',
+                      name:'missDataSecond',
+                      path: '/monitoring/alarmInfo/missDataSecond',
                       component: './monitoring/missingData/missDataSecond',
                     },
 
