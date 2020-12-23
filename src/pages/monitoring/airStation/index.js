@@ -13,7 +13,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
-import style from '@/pages/dataSearch/tableClass.less'
+import style from '../tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
