@@ -905,7 +905,43 @@ export default {
                   name: 'dataFlag',
                   path: '/dataquerymanager/dataFlag',
                   component: './monitoring/dataquery/DataTagPage',
-                }
+                },
+                {
+                  name: 'defectData',
+                  //数据缺失
+                  path: '/dataquerymanager/alarmInfo/defectData',
+                  component: './monitoring/defectData/ent',
+                },
+                {
+                  name: 'defectDataAir',
+                  //数据缺失(空气站)
+                  path: '/dataquerymanager/alarmInfo/defectDataAir',
+                  component: './monitoring/defectData/air',
+                },
+                {
+                  name: 'airStation',
+                  //空气站查询
+                  path: '/dataquerymanager/airStation',
+                  component: './monitoring/airStation',
+                },
+                {
+                  name: 'exceedData',
+                  //超标数据查询
+                  path: '/dataquerymanager/exceedData',
+                  component: './monitoring/exceedData',
+                },
+                {
+                  name: 'abnormalData',
+                  //异常数据
+                  path: '/dataquerymanager/abnormalData',
+                  component: './monitoring/abnormalData',
+                },
+                {
+                  name: 'abnormalDetailsData',
+                  //异常数据 - 二级
+                  path: '/dataquerymanager/abnormalData/details',
+                  component: './monitoring/abnormalData/DetailsPage',
+                },
               ],
             },
             {
@@ -970,17 +1006,18 @@ export default {
                   name: 'alarmInfo',
                   path: '/monitoring/alarmInfo',
                   routes: [
-                    {
-                      name: 'defectData',
-                      //数据缺失
-                      path: '/monitoring/alarmInfo/defectData',
-                      component: './monitoring/defectData/ent',
-                    },
+
                     {
                       //缺失数据报警  企业
                       name:'missingData',
                       path: '/monitoring/alarmInfo/missingData',
                       component: './monitoring/missingData/ent',
+                    },
+                    {
+                      //缺失数据报警(空气站)
+                      name:'missingData',
+                      path: '/monitoring/alarmInfo/missingDataAir',
+                      component: './monitoring/missingData/air',
                     },
                     {
                       //缺失数据报警 二级页面
@@ -1266,48 +1303,166 @@ export default {
                   path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                   component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
                 },
-                {
-                  // 运维工单统计（企业）
-                  name:'entWorkOrderStatistics',
-                  path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                  component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                },
-                {
-                  //行政区运维工单统计（企业）
-                  name:'regionStaticstics',
-                  path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                  component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                },
-                {
-                  //企业运维工单统计（企业）
-                  name:'entWorkOrderStatistics',
-                  path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                  component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                },
-                /* 缺失台账工单统计 */
-                {
-                  name:'noAccountAirStatistics',
-                  path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                  component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                },
-                {
-                  name: 'noAccountStatisticsEnt', //无台账上传统计 企业
-                  path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                  component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                },
-               /* 缺失台账照片统计 */
-               {
-                name:'noAccountAirStatisticsPhoto',
-                path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                component:'./Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-              },
-                /* 缺失台账工单详情 */
-                {
-                  name:'noAccountAirStatisticsDetails',
-                  path:  '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                  component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                },
 
+
+
+
+                
+                // 统计-运维工单
+                {
+                  path: '/Intelligentanalysis/operationWorkStatis',
+                  name: 'operationWorkStatis',
+                  routes: [
+                    {
+                      // 运维工单统计（企业）
+                      name:'entWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                    },
+                    {
+                      //行政区运维工单统计（企业）
+                      name:'regionStaticstics',
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                    },
+                    {
+                      //企业运维工单统计（企业）
+                      name:'entWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                    },
+                    /* 缺失台账工单统计 */
+                    {
+                      name:'noAccountAirStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },
+                    {
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                   /* 缺失台账照片统计 */
+                   {
+                    name:'noAccountAirStatisticsPhoto',
+                    path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    component:'./Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                  },
+                    /* 缺失台账工单详情 */
+                    {
+                      name:'noAccountAirStatisticsDetails',
+                      path:  '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    },
+                    {
+                      /** 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 排口 */
+                      name: 'RegionAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单站点 运维工单统计-空气站 排口 */
+                      name: 'SingleStationAirQualityMonitoringStation',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                    },
+                    {
+                      /** 单区域 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path:
+                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                    },                    
+                //     {
+                //       // 运维工单统计（企业）
+                //       path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                //       component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                //     },
+                //     {
+                //       //行政区运维工单统计（企业）
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                //       component:
+                //         './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                //     },
+                //     {
+                //       //企业运维工单统计（企业）
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                //       component:
+                //         './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                //     },
+                //     /* 缺失台账工单统计 */
+                //     {
+                //       path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                //       component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                //     },
+
+                //     /* 缺失台账工单详情 */
+                //     {
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                //       component:
+                //         './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                //     },
+                //     /* 缺失台账照片统计 */
+                //     {
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                //       component:
+                //         './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                //     },
+                //     {
+                //       name: 'noAccountStatisticsEnt', //无台账上传统计 企业
+                //       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                //       component:
+                //         './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                //     },
+                //     {
+                //       /** 运维工单统计-空气站 */
+                //       name: 'AirWorkOrderStatistics',
+                //       path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                //       component:
+                //         './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                //     },
+                //     {
+                //       /** 单区域 运维工单统计-空气站 排口 */
+                //       name: 'RegionAirQualityMonitoringStation',
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                //       component:
+                //         './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                //     },
+                //     {
+                //       /** 单站点 运维工单统计-空气站 排口 */
+                //       name: 'SingleStationAirQualityMonitoringStation',
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                //       component:
+                //         './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                //     },
+                //     {
+                //       /** 单区域 运维工单统计-空气站 */
+                //       name: 'AirWorkOrderStatistics',
+                //       path:
+                //         '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                //       component:
+                //         './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                //     },
+                  ],
+                },
 
                 {
                   name: 'emissions',
