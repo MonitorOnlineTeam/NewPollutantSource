@@ -1384,7 +1384,7 @@ export default {
                         '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
                       component:
                         './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
-                    },                    
+                    },                   
                   ],
                 },
 
