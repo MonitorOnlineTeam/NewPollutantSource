@@ -1314,6 +1314,11 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
                     },
                     {
+                      //缺失数据报警响应率 空气站
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    },
+                    {
                       //缺失数据报警响应率 二级页面
                       name: 'missRateDataSecond',
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
@@ -1325,9 +1330,27 @@ export default {
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
                     },
                     {
-                      // 数据异常报警响应率
+                      // 数据异常报警响应率 详情
                       path: '/Intelligentanalysis/dataAlarm/abnormal/details',
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
+                    },
+                    {
+                      //超标数据核实率
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate',
+                    },
+                    {
+                      //超标报警处置率
+                      name: 'overAlarmDisposalRate',
+                      path: '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
+                      component: './Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
+                    },
+                    {
+                      //超标报警处置率-二级
+                      name: 'RegionOverAlarmDisposalRate',
+                      path:
+                        '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                      component: './Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                     },
                   ]
                 },
@@ -1354,7 +1377,7 @@ export default {
                       path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
                       component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
                     },
-                    /* 缺失台账工单统计 */
+                    /* 缺失台账工单统计 空气站 */
                     {
                       name: 'noAccountAirStatistics',
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
