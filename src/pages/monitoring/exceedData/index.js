@@ -15,7 +15,7 @@ import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
 import CheckboxGroup from 'antd/lib/checkbox/Group';
-import style from '@/pages/dataSearch/tableClass.less'
+import style from '../tableClass.less'
 import point from '@/models/point';
 import { toDecimal3 } from '@/utils/utils';
 
