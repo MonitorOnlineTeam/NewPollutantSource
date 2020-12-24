@@ -101,12 +101,16 @@ class index extends PureComponent {
       dispatch,
       dataType,
       AttentionCode,
-      RegionCode,
+      // RegionCode,
       beginTime,
       endTime,
       PollutantType,
       checkedValues,
+     
     } = this.props;
+
+  const RegionCode  = this.props.form.getFieldValue('RegionCode');
+ 
     dispatch({
       type: 'overAlarmDisposalRate/getAlarmManagementRate',
       payload: {
@@ -128,12 +132,15 @@ class index extends PureComponent {
       dispatch,
       dataType,
       AttentionCode,
-      RegionCode,
+      // RegionCode,
       beginTime,
       endTime,
       PollutantType,
       checkedValues,
     } = this.props;
+
+  const RegionCode  = this.props.form.getFieldValue('RegionCode');
+
     dispatch({
       type: 'overAlarmDisposalRate/exportAlarmManagementRate',
       payload: {
@@ -425,6 +432,7 @@ class index extends PureComponent {
                     //   allowClear
                     //   placeholder="请选择行政区"
                     //   onChange={value => {
+                    //     alert(value)
                     //     this.setState({ RegionCode: value }, () => { });
                     //     dispatch({
                     //       type: 'overAlarmDisposalRate/updateState',
@@ -442,15 +450,7 @@ class index extends PureComponent {
                     //     );
                     //   })}
                     // </Select>,
-                    <RegionList changeRegion={(value) => {
-                       this.setState({ RegionCode: value });
-                        dispatch({
-                          type: 'overAlarmDisposalRate/updateState',
-                          payload: {
-                            RegionCode: value,
-                          },
-                        });
-                    }}  RegionCode={getFieldDecorator('RegionCode')}/>
+                    <RegionList changeRegion={(value) => {}}  RegionCode={this.props.form.getFieldValue('RegionCode')}/>
                   )}
                 </FormItem>
               </Col>

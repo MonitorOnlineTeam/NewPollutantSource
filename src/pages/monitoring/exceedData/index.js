@@ -777,7 +777,7 @@ class index extends PureComponent {
                                 //     {this.children()}
                                 // </Select>
                             <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                                changeRegion={(value) => {}}  RegionCode={getFieldDecorator('Region')}/>
+                                changeRegion={(value) => {}}  RegionCode={this.props.form.getFieldValue('Region')}/>
                             )
                         }
 
