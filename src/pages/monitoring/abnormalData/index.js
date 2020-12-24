@@ -6,6 +6,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -294,15 +295,16 @@ class index extends PureComponent {
                   {getFieldDecorator('RegionCode', {
                     // initialValue: 'siteDaily',
                   })(
-                    <Select allowClear placeholder="请选择行政区">
-                      {
-                        _regionList.map(item => {
-                          return <Option key={item.key} value={item.value}>
-                            {item.title}
-                          </Option>
-                        })
-                      }
-                    </Select>,
+                    // <Select allowClear placeholder="请选择行政区">
+                    //   {
+                    //     _regionList.map(item => {
+                    //       return <Option key={item.key} value={item.value}>
+                    //         {item.title}
+                    //       </Option>
+                    //     })
+                    //   }
+                    // </Select>,
+                    <RegionList  changeRegion={(value) => {}}  RegionCode={getFieldDecorator('Region')}/>
                   )}
                 </FormItem>
               </Col>

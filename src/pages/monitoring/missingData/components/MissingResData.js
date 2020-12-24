@@ -1,5 +1,5 @@
 /**
- * 功  能：缺失数据报警
+ * 功  能：缺失数据报警响应
  * 创建人：贾安波
  * 创建时间：2020.10
  */
@@ -77,7 +77,7 @@ export default class EntTransmissionEfficiency extends Component {
              ()=>{ 
                sessionStorage.setItem("missDataDetailPageIndex",1)
                sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/monitoring/alarmInfo/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
+               this.props.dispatch(routerRedux.push({pathname:'/monitoring/alarmInfo/missDataResSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
               }}>{text}</a>      
        },
       },
@@ -93,18 +93,18 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'exceptionCount',
         align: 'center'
       },
-      // {
-      //   title: <span>已响应报警次数</span>,
-      //   dataIndex: 'xiangyingCount',
-      //   key: 'xiangyingCount',
-      //   align: 'center',
-      // },
-      // {
-      //   title: <span>待响应报警次数</span>,
-      //   dataIndex: 'weixiangyingCount',
-      //   key: 'weixiangyingCount',
-      //   align: 'center',
-      // },
+      {
+        title: <span>已响应报警次数</span>,
+        dataIndex: 'xiangyingCount',
+        key: 'xiangyingCount',
+        align: 'center',
+      },
+      {
+        title: <span>待响应报警次数</span>,
+        dataIndex: 'weixiangyingCount',
+        key: 'weixiangyingCount',
+        align: 'center',
+      },
     ];
   }
 

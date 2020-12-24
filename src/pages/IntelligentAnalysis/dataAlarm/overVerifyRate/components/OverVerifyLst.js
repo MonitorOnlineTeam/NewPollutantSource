@@ -32,6 +32,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
+import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -473,7 +474,7 @@ export default class OverVerifyLst extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item label="行政区">
-                  <Select
+                  {/* <Select
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
@@ -482,7 +483,10 @@ export default class OverVerifyLst extends Component {
                   >
                     <Option value="">全部</Option>
                     {this.regchildren()}
-                  </Select>
+                  </Select> */}
+
+                  <RegionList  style={{ width: 100 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+
                 </Form.Item>
                 <Form.Item label="企业类型">
                   <Select

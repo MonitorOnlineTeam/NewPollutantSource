@@ -14,6 +14,8 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import style from '../tableClass.less'
+import RegionList from '@/components/RegionList'
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -129,10 +131,9 @@ onChangeHandle=(PageIndex, PageSize)=>{
           }
   };
   cardTitle = () => {
-
     return (
       <>
-        <Select
+        {/* <Select
           allowClear
           showSearch
           style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -154,7 +155,14 @@ onChangeHandle=(PageIndex, PageSize)=>{
             })
           }}>
           {this.children()}
-        </Select>
+        </Select> */}
+        <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+         changeRegion={(value)=>{
+          this.setState({
+            regionValue: value
+          })
+        }} RegionCode={this.state.regionValue}/>
+
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
         <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
       </>

@@ -15,6 +15,7 @@ import moment from 'moment';
 import { router } from 'umi';
 
 import { checkParent } from './utils';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -238,27 +239,28 @@ export default class index extends PureComponent {
                   {getFieldDecorator('RegionCode', {
                     initialValue: RegionCode,
                   })(
-                    <Select
-                      allowClear
-                      placeholder="请选择行政区"
-                      onChange={value => {
-                        this.setState({ RegionCode: value }, () => { });
-                        dispatch({
-                          type: 'airWorkOrderStatistics/updateState',
-                          payload: {
-                            RegionCode: value,
-                          },
-                        });
-                      }}
-                    >
-                      {_regionList.map(item => {
-                        return (
-                          <Option key={item.key} value={item.value}>
-                            {item.title}
-                          </Option>
-                        );
-                      })}
-                    </Select>,
+                    // <Select
+                    //   allowClear
+                    //   placeholder="请选择行政区"
+                    //   onChange={value => {
+                    //     this.setState({ RegionCode: value }, () => { });
+                    //     dispatch({
+                    //       type: 'airWorkOrderStatistics/updateState',
+                    //       payload: {
+                    //         RegionCode: value,
+                    //       },
+                    //     });
+                    //   }}
+                    // >
+                    //   {_regionList.map(item => {
+                    //     return (
+                    //       <Option key={item.key} value={item.value}>
+                    //         {item.title}
+                    //       </Option>
+                    //     );
+                    //   })}
+                    // </Select>,
+                    <RegionList  changeRegion={(value) => {}}  RegionCode={getFieldDecorator('RegionCode')}/>
                   )}
                 </FormItem>
               </Col>

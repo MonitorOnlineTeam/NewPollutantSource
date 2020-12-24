@@ -14,6 +14,7 @@ import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -420,27 +421,36 @@ class index extends PureComponent {
                   {getFieldDecorator('RegionCode', {
                     initialValue: RegionCode,
                   })(
-                    <Select
-                      allowClear
-                      placeholder="请选择行政区"
-                      onChange={value => {
-                        this.setState({ RegionCode: value }, () => { });
+                    // <Select
+                    //   allowClear
+                    //   placeholder="请选择行政区"
+                    //   onChange={value => {
+                    //     this.setState({ RegionCode: value }, () => { });
+                    //     dispatch({
+                    //       type: 'overAlarmDisposalRate/updateState',
+                    //       payload: {
+                    //         RegionCode: value,
+                    //       },
+                    //     });
+                    //   }}
+                    // >
+                    //   {_regionList.map(item => {
+                    //     return (
+                    //       <Option key={item.key} value={item.value}>
+                    //         {item.title}
+                    //       </Option>
+                    //     );
+                    //   })}
+                    // </Select>,
+                    <RegionList changeRegion={(value) => {
+                       this.setState({ RegionCode: value });
                         dispatch({
                           type: 'overAlarmDisposalRate/updateState',
                           payload: {
                             RegionCode: value,
                           },
                         });
-                      }}
-                    >
-                      {_regionList.map(item => {
-                        return (
-                          <Option key={item.key} value={item.value}>
-                            {item.title}
-                          </Option>
-                        );
-                      })}
-                    </Select>,
+                    }}  RegionCode={getFieldDecorator('RegionCode')}/>
                   )}
                 </FormItem>
               </Col>

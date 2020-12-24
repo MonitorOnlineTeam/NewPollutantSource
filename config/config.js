@@ -1026,6 +1026,26 @@ export default {
                       component: './monitoring/missingData/missDataSecond',
                     },
 
+                    {
+                      //缺失数据报警响应  企业
+                      name: 'missingData',
+                      path: '/monitoring/alarmInfo/missingDataRes',
+                      component: './monitoring/missingData/entRes',
+                    },
+                    {
+                      //缺失数据报警响应(空气站)
+                      name: 'missingData',
+                      path: '/monitoring/alarmInfo/missingDataAirRes',
+                      component: './monitoring/missingData/airRes',
+                    },
+                    {
+                      //缺失数据报警响应 二级页面
+                      name: 'missDataSecond',
+                      path: '/monitoring/alarmInfo/missDataResSecond',
+                      component: './monitoring/missingData/missDataResSecond',
+                    },
+
+
                   ],
                 },
                 // 企业异常记录
@@ -1335,18 +1355,23 @@ export default {
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
                     },
                     {
-                      //超标数据核实率
+                      //超标报警核实率
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
                     {
-                      //超标报警处置率
+                      //超标报警核实率二级页面
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    },
+                    {
+                      //工艺超标报警处置率
                       name: 'overAlarmDisposalRate',
                       path: '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
                       component: './Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
                     },
                     {
-                      //超标报警处置率-二级
+                      //工艺超标报警处置率-二级
                       name: 'RegionOverAlarmDisposalRate',
                       path:
                         '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
