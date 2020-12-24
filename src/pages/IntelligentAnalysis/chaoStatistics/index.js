@@ -7,6 +7,7 @@ import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import IndustryTree from '@/components/IndustryTree'
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -326,17 +327,23 @@ class index extends PureComponent {
                 {getFieldDecorator('RegionCode', {
                   // initialValue: 'siteDaily',
                 })(
-                  <Select style={{ width: 120 }} allowClear placeholder="请选择行政区" onChange={(value) => {
-                    this.getEntByRegionList(value)
-                  }}>
-                    {
-                      _regionList.map(item => {
-                        return <Option key={item.key} value={item.value}>
-                          {item.title}
-                        </Option>
-                      })
-                    }
-                  </Select>
+                  // <Select style={{ width: 120 }} allowClear placeholder="请选择行政区" onChange={(value) => {
+                  //   this.getEntByRegionList(value)
+                  // }}>
+                  //   {
+                  //     _regionList.map(item => {
+                  //       return <Option key={item.key} value={item.value}>
+                  //         {item.title}
+                  //       </Option>
+                  //     })
+                  //   }
+                  // </Select>
+                  <RegionList
+                    changeRegion={(value) => {
+                      this.getEntByRegionList(value)
+                    }}
+                    RegionCode={this.props.form.getFieldValue('RegionCode')}
+                  />
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>

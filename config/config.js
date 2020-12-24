@@ -1044,7 +1044,30 @@ export default {
                       path: '/monitoring/alarmInfo/missDataResSecond',
                       component: './monitoring/missingData/missDataResSecond',
                     },
-
+                    {
+                      //超标数据报警核实记录查询
+                      name: 'exceedDataAlarm',
+                      path: '/monitoring/alarmInfo/exceedDataAlarmRecord',
+                      component: './monitoring/alarmInfo/exceedDataAlarmRecord/exceedDataAlarm',
+                    },
+                    {
+                      //超标数据报警记录查询
+                      name: 'exceedDataAlarm',
+                      path: '/monitoring/alarmInfo/exceedDataAlarmOnlyQuery',
+                      component: './monitoring/alarmInfo/exceedDataAlarmRecord/exceedDataAlarm_onlyQuery',
+                    },
+                    {
+                      //异常报警响应查询
+                      name: 'exceptionrecord',
+                      path: '/monitoring/alarmInfo/exceptionrecord',
+                      component: './monitoring/alarmInfo/exceptionrecordNew',
+                    },
+                    {
+                      //超标报警处置查询
+                      name: 'exceedDataDispositionRecord',
+                      path: '/monitoring/alarmInfo/exceedDataDispositionRecord',
+                      component: './monitoring/alarmInfo/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                    },
 
                   ],
                 },
@@ -1355,23 +1378,18 @@ export default {
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails',
                     },
                     {
-                      //超标报警核实率
+                      //超标数据核实率
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
                     {
-                      //超标报警核实率二级页面
-                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                    },
-                    {
-                      //工艺超标报警处置率
+                      //超标报警处置率
                       name: 'overAlarmDisposalRate',
                       path: '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
                       component: './Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
                     },
                     {
-                      //工艺超标报警处置率-二级
+                      //超标报警处置率-二级
                       name: 'RegionOverAlarmDisposalRate',
                       path:
                         '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
