@@ -102,7 +102,7 @@ export default class EntIndexModal extends Component {
     this.props.dispatch({
       type: pageUrl.getData,
       payload: {
-        PollutantType: this.state.PollutantType,
+        PollutantType: this.state.PollutantType?this.state.PollutantType:'',
         beginTime:this.state.beginTime,
         endTime:this.state.endTime,
       }
@@ -167,7 +167,7 @@ export default class EntIndexModal extends Component {
   typeChange = value => {
     this.setState({PollutantType: value})
     this.updateState({
-      pollutantType: value,
+      pollutantType: value?value:"",
     });
   };
 
@@ -421,12 +421,12 @@ export default class EntIndexModal extends Component {
                 </Form.Item>
                 <Form.Item>
                   <Select
+                    allowClear
                     placeholder="请选择企业类型"
                     onChange={this.typeChange}
                     value={this.state.PollutantType}
                     style={{ width: 200, marginLeft: 10 }}
                   >
-                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>

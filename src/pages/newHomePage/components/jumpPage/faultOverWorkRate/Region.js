@@ -233,7 +233,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantTypeCode: [value],
+      PollutantTypeCode:value?  [value] : "",
     });
   };
 
@@ -366,7 +366,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
               {!Atmosphere?
                 <Form.Item label={'企业类型'}>
-                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
+                 <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
                 </Form.Item>
                 :
                 null
