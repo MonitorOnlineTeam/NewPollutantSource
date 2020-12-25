@@ -203,6 +203,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   getTableData = () => { 
     const { dispatch, queryPar,isWorkRate,isFaultRate,isOverRate } = this.props;
+    console.log(isWorkRate,isOverRate)
     dispatch({
       type: isWorkRate? pageUrl.getDeviceDataRate : isOverRate ? pageUrl.getOverDataRate : pageUrl.getExceptionDataRate,
       payload: { ...queryPar },
@@ -339,7 +340,9 @@ export default class EntTransmissionEfficiency extends Component {
    
     const { entVisible } = this.state;
     return (
-      <BreadcrumbWrapper title={`故障率-${types==='ent'?'(企业)':'(空气站)'}`}>
+      // <BreadcrumbWrapper title={`故障率${types==='ent'?'(企业)':'(空气站)'}`}>
+      <BreadcrumbWrapper title={`故障率`}>
+
        <div>
         {/* <Modal
           title={isWorkRate?"运转率":isOverRate?"超标率":'故障率'}
