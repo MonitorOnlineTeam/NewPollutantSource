@@ -1,5 +1,5 @@
 /**
- * 功  能：缺失数据报警响应
+ * 功  能：缺失数据报警
  * 创建人：贾安波
  * 创建时间：2020/10
  */
@@ -114,29 +114,29 @@ export default class Index extends Component {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
-      {
-        title: <span>响应状态</span>,
-        dataIndex: 'status',
-        key: 'status',
-        align: 'center',
-        render:(text,record)=>{return text==0?'待响应':'已响应'}
-      },
-      {
-        title: <span>响应人</span>,
-        dataIndex: 'operationName',
-        key: 'operationName',
-        align: 'center',
-        render: (text, record) => {     
-          return  record.status==0? "-":text
-       },
-      },
-      {
-        title: <span>响应时间</span>,
-        dataIndex: 'xiangyingTime',
-        key: 'xiangyingTime',
-        align: 'center',
+      // {
+      //   title: <span>响应状态</span>,
+      //   dataIndex: 'status',
+      //   key: 'status',
+      //   align: 'center',
+      //   render:(text,record)=>{return text==0?'待响应':'已响应'}
+      // },
+      // {
+      //   title: <span>响应人</span>,
+      //   dataIndex: 'operationName',
+      //   key: 'operationName',
+      //   align: 'center',
+      //   render: (text, record) => {     
+      //     return  record.status==0? "-":text
+      //  },
+      // },
+      // {
+      //   title: <span>响应时间</span>,
+      //   dataIndex: 'xiangyingTime',
+      //   key: 'xiangyingTime',
+      //   align: 'center',
       
-      },
+      // },
       {
         title: <span>处理详情</span>,
         dataIndex: 'status',
@@ -155,7 +155,6 @@ export default class Index extends Component {
   }
 
   detail=(record)=>{
-debugger;
      this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
 
       setTimeout(()=>{
@@ -448,7 +447,7 @@ handleTableChange = (pagination, filters, sorter) => {
             <>
               <Form layout="inline">
                 
-                {this.reponseComp()}
+                {/* {this.reponseComp()} */}
                  {this.btnCompents()}
               {/* {type==='ent'?
               <>

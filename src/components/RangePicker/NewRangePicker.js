@@ -196,6 +196,7 @@ class NewRangePicker extends Component {
 
     onDateChange = (dates, dateStrings) => {
         const dateValue = this.getFormatDate(dates[0], dates[1]);
+        this.props.onChange&&this.props.onChange(dateValue, dateStrings)
         if (dates && dates.length && dates[0] && dates[1]) {
             if (dateValue) {
                 this.setState({

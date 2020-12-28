@@ -61,7 +61,7 @@ export default Model.extend({
     entName: '',
     pollutantList: [{ name: 'COD', unit: 'kg', value: '011' }, { name: '氨氮', unit: 'kg', value: '060' }, { name: '总磷', unit: 'kg', value: '101' }, { name: '总氮', unit: 'kg', value: '065' }, { name: '流量', unit: 't', value: '007' }],
     isWorkRate: false,
-    isFaultRate: false,
+    isFaultRate: true,
     isOverRate: false,
     Atmosphere: false,
     entQuery: {},

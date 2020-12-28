@@ -8,6 +8,7 @@ import moment from 'moment'
 import { Link, router } from 'umi'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -37,6 +38,7 @@ class EntWorkOrderStatistics extends PureComponent {
         title: '行政区',
         dataIndex: '00_RegionName',
         key: '00_RegionName',
+        align:'center',
         render: (text, record) => { 
           const values = this.props.form.getFieldsValue();
           const {initialForm:{RegionCode},changePage} = this.props;
@@ -97,6 +99,7 @@ class EntWorkOrderStatistics extends PureComponent {
           ],
       },{
         title: '监测点',
+        align:'center',
         children: [
           {
             title: '监测点数',
@@ -172,7 +175,12 @@ class EntWorkOrderStatistics extends PureComponent {
       },
     });
   }
-
+  changeRegion = (value) => { //行政区事件
+    
+    // this.updateQueryState({
+    //   RegionCode: value,
+    // });
+  };
   // 导出
   onExport = () => {
    
@@ -189,6 +197,7 @@ class EntWorkOrderStatistics extends PureComponent {
           dataIndex: item.ID,
           key: item.ID,
           width: 120,
+          align:'center'
         });
       }
     })
@@ -220,13 +229,15 @@ class EntWorkOrderStatistics extends PureComponent {
                     {getFieldDecorator('RegionCode', {
                       initialValue:initialForm.RegionCode,
                     })(
-                    <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                        {
-                        _regionList.map(item => <Option key={item.key} value={item.value}>
-                            {item.title}
-                            </Option>)
-                        }
-                    </Select>,
+                   <RegionList changeRegion={this.changeRegion} RegionCode={initialForm.RegionCode}/>
+
+                    // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
+                    //     {
+                    //     _regionList.map(item => <Option key={item.key} value={item.value}>
+                    //         {item.title}
+                    //         </Option>)
+                    //     }
+                    // </Select>,
                     )}
                 </FormItem>
 

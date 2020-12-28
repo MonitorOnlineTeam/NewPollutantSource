@@ -1158,8 +1158,8 @@ class MapView extends Component {
                 <AlarmRecord DGIMN={currentKey} initLoadData />
               </TabPane> */}
               {
-                menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
-                <TabPane tab="超标处置" key="3">
+                menuDescList.includes('超标核实') && this.state.currentPointInfo.PollutantType != '5' &&
+                <TabPane tab="超标核实" key="3">
                   <AlarmRecord DGIMN={currentKey} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }

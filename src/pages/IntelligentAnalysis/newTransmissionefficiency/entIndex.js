@@ -1,7 +1,7 @@
 /**
  * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 创建人：贾安波
+ * 创建时间：
  */
 import React, { Component } from 'react';
 import {
@@ -31,6 +31,8 @@ import styles from './style.less';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList'
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -409,15 +411,8 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item>
-                  <Select
-                    allowClear
-                    placeholder="请选择行政区"
-                    onChange={this.changeRegion}
-                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    {this.children()}
-                  </Select>
+                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -499,15 +494,7 @@ export default class EntTransmissionEfficiency extends Component {
           >
             <Form layout="inline">
               <Form.Item>
-                <Select
-                  allowClear
-                  placeholder="请选择行政区"
-                  onChange={this.changeRegion}
-                  value={this.props.RegionCode ? this.props.RegionCode : undefined}
-                  style={{ width: 200, marginLeft: 10 }}
-                >
-                  {this.children()}
-                </Select>
+                <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
               <Form.Item>
                 <RangePicker_

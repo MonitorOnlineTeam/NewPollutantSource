@@ -18,6 +18,8 @@ import { Right } from '@/utils/icon';
 import style from '@/pages/monitoring/tableClass.less'
 import { downloadFile } from '@/utils/utils';
 import FileDown from '@/components/AttachmentView/index'
+import RegionList from '@/components/RegionList'
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { MonthPicker } = DatePicker;
@@ -185,8 +187,14 @@ class index extends PureComponent {
     onRef1 = (ref) => {
         this.childrenHand = ref;
       }
+      changeRegion = (value) => { //行政区事件
+    
+        this.setState({
+            regionValue: value
+        })
+      };
     cardTitle = () => {
-        const { Begintime,Endtime} = this.state;
+        const { Begintime,Endtime,regionValue} = this.state;
         
         return (
             <>
@@ -209,7 +217,10 @@ class index extends PureComponent {
                 } />
                 
                 <div style={{ marginTop: 10,fontSize:14 }}>
-                    <label>行政区:</label><Select
+                    <label>行政区:</label>
+                <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={this.changeRegion} RegionCode={regionValue}/>
+
+                    {/* <Select
                         allowClear
                         showSearch
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -231,7 +242,7 @@ class index extends PureComponent {
                             })
                         }}>
                         {this.children()}
-                    </Select>
+                    </Select> */}
                    
                     <label>企业列表:</label><Select
                         allowClear

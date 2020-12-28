@@ -279,7 +279,7 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   changeRegion = (value) => { //行政区事件
-      
+
     const {dispatch } = this.props;
     this.updateQueryState({
       RegionCode: value? value:'',

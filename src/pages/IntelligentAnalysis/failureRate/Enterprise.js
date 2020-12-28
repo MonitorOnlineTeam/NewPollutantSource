@@ -3,7 +3,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import Region from './components/Region'
 /**
- * 运转率
+ * 故障率
  * jab 2020.12.16
  */
 

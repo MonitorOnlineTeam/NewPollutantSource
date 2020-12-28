@@ -47,7 +47,15 @@ ol {
 }
 
 :global {
+  .ant-table-fixed {
+    table-layout: fixed;  //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
+  }
 
+  .ant-table-tbody>tr>td {
+    //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
+    word-wrap: break-word;
+    word-break: break-all;
+  }
   .react-resizable {
     position: relative;
     background-clip: padding-box;

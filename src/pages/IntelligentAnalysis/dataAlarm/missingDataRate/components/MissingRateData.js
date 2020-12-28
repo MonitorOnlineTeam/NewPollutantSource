@@ -30,6 +30,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
+import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -313,15 +314,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 100 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
+                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                {type==='ent'? <Form.Item label='企业类型'>
                   <Select
