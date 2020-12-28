@@ -1553,7 +1553,16 @@ export default {
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
+
+                {
+                  //空气质量状况统计
+                  name: 'airQualityStatistics',
+                  path: '/Intelligentanalysis/airQualityStatistics',
+                  component: './Intelligentanalysis/airQualityStatistics/air',
+                },
               ],
+
+              
             },
             {
               path: '/dataSearch',
