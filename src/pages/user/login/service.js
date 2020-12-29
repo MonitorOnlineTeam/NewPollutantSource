@@ -5,8 +5,6 @@ import Cookie from 'js-cookie';
 import { async } from 'q';
 import configToken from '@/config';
 import { JSEncrypt } from 'jsencrypt';
-import Base64 from 'crypto-js/enc-base64';
-import Utf8 from 'crypto-js/enc-utf8';
 
 /**
  * 系统登录

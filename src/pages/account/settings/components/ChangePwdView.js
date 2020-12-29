@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Modal, Spin, Divider, Button } from 'antd';
 import Cookie from 'js-cookie';
-import Base64 from 'crypto-js/enc-base64';
-import Utf8 from 'crypto-js/enc-utf8';
 
 const FormItem = Form.Item;
 const response = Cookie.get('currentUser');

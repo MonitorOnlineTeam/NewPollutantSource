@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-05 17:18:32 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-08 11:26:10
+ * @Last Modified time: 2020-12-29 14:45:15
  * @desc: 标准库管理
  */
 import React, { Component } from 'react';
@@ -33,6 +33,7 @@ import SdlUpload from '@/pages/AutoFormManager/SdlUpload'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import cuid from 'cuid';
 import config from '@/config'
+import _ from 'lodash'
 
 @Form.create()
 @connect(({ common, loading, standardLibraryManager, autoForm }) => {
@@ -49,7 +50,7 @@ class AddLibrary extends Component {
     this.state = {
       libraryId: props.match.params.id,
       dataSource: [],
-      cuid: props.match.params.cuid !== "null" ? props.match.params.cuid : cuid(),
+      cuid: (props.match.params.cuid && props.match.params.cuid !== "null") ? props.match.params.cuid : cuid(),
       fileList: [],
       columns: [
         {
@@ -86,13 +87,14 @@ class AddLibrary extends Component {
           title: '污染物类型',
           dataIndex: 'PollutantType',
           render: (text, record, index) => {
-            if (text) {
+            let PollutantType = this.props.form.getFieldValue("PollutantType");
+            if (PollutantType) {
               // this.props.pollutantTypelist.map(item => {
               //   if (item.pollutantTypeCode == text) {
               //     return item.pollutantTypeName
               //   }
               // })
-              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == text)[0].pollutantTypeName
+              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == PollutantType)[0].pollutantTypeName
             }
             // return "";
           }
@@ -235,7 +237,7 @@ class AddLibrary extends Component {
 
   // 添加污染物
   handleAdd = () => {
-    let dataSource = this.state.dataSource;
+    let dataSource = _.cloneDeep(this.state.dataSource);
     const pollutantType = this.props.form.getFieldValue("PollutantType");
     if (!pollutantType) {
       message.error("请先选择污染物类型");
@@ -251,12 +253,12 @@ class AddLibrary extends Component {
       UpperLimit: null,
       AlarmType: null,
     })
-    this.setState({ dataSource })
+    this.setState({ dataSource: [...dataSource] })
   }
 
   // 删除污染物
   handleDelete = (index) => {
-    let tempDataSource = this.state.dataSource;
+    let tempDataSource = _.cloneDeep(this.state.dataSource);
     tempDataSource.splice(index, 1);
     let newId = this.state.id;
     this.setState({
@@ -272,6 +274,10 @@ class AddLibrary extends Component {
       if (err) {
         return;
       }
+      if (!this.state.dataSource.length) {
+        message.error('请添加污染物！');
+        return;
+      }
       let isErr = false;
       this.state.dataSource.map(item => {
         if (item.PollutantCode == null || item.PollutantCode == undefined) {
@@ -284,15 +290,31 @@ class AddLibrary extends Component {
           isErr = true;
           return;
         }
+        if (item.LowerLimit > item.UpperLimit) {
+          message.error("上限不能低于下限！")
+          isErr = true;
+          return;
+        }
+        // if (item.CheckLower > item.CheckUpper) {
+        //   message.error("检出上限不能低于检出下限！")
+        //   isErr = true;
+        //   return;
+        // }
       })
       if (!isErr) {
+        let _dataSource = this.state.dataSource.map(item => {
+          return {
+            ...item,
+            PollutantType: fieldsValue.PollutantType,
+          }
+        });
         let payload = {
           AttachmentID: this.state.cuid,
           Name: fieldsValue.Name,
           IsUsed: fieldsValue.IsUsed ? 1 : 0,
           Type: fieldsValue.Type,
           PollutantType: fieldsValue.PollutantType,
-          StandardLibraryPollutantData: this.state.dataSource
+          StandardLibraryPollutantData: _dataSource
         }
         let actionType = "standardLibraryManager/addLibrary"
 
@@ -395,10 +417,10 @@ class AddLibrary extends Component {
                     // initialValue: libraryEditData.IsUsed,
                     // valuePropName: 'checked',
                   })(
-                    <SdlUpload fileList={this.props.fileList} cuid={cuid} uploadSuccess={(cuid) => {
+                    <SdlUpload fileList={this.props.fileList} cuid={cuid} uploadSuccess={(id) => {
                       // setFieldsValue({ cuid: cuid })
                       this.setState({
-                        cuid: cuid
+                        cuid: id
                       })
                     }} />
                   )}
