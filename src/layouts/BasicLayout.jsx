@@ -11,7 +11,7 @@ import config from '@/config';
 import Item from 'antd/lib/list/Item';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
-import { Tabs, Dropdown, Menu, Icon } from 'antd'
+import { Tabs, Dropdown, Menu, Icon, message } from 'antd'
 import PageLoading from '@/components/PageLoading'
 import _ from 'lodash'
 import styles from './BasicLayout.less';
@@ -50,6 +50,12 @@ class BasicLayout extends Component {
     this.state = {
       panes: [],
     };
+
+    message.config({
+      top: 70,
+      duration: 3,
+      maxCount: 3,
+    });
   }
 
   componentDidMount() {
@@ -201,7 +207,7 @@ class BasicLayout extends Component {
   // tab右侧更多菜单
   onClickHover = e => {
     const { key } = e; let
-{ activeKey, panes } = this.state;
+      { activeKey, panes } = this.state;
     if (key === '1') {
       panes = panes.filter(item => item.key !== activeKey)
       activeKey = [...panes].pop().key
@@ -229,19 +235,19 @@ class BasicLayout extends Component {
 
     const handleMenuCollapse = payload =>
       dispatch &&
-        dispatch({
-          type: 'global/changeLayoutCollapsed',
-          payload,
-        });
+      dispatch({
+        type: 'global/changeLayoutCollapsed',
+        payload,
+      });
 
     const menuDataRender = list => {
       let menuList = currentMenu;
       // 如果只有一个，平铺展示子菜单
       if (currentMenu && currentMenu.length === 1) {
         menuList = currentMenu[0].children.map(item => ({
-            ...item,
-            NavigateUrl: `${currentMenu[0]}/${item.NavigateUrl}`,
-          }))
+          ...item,
+          NavigateUrl: `${currentMenu[0]}/${item.NavigateUrl}`,
+        }))
       }
       // console.log("menuList=", menuList);
       return menuList;
@@ -257,7 +263,7 @@ class BasicLayout extends Component {
           );
       }
 
-        return <div></div>
+      return <div></div>
     };
 
     const menu = (
@@ -299,14 +305,14 @@ class BasicLayout extends Component {
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
           breadcrumbRender={(routers = []) => [
-              {
-                path: '/',
-                breadcrumbName: formatMessage({
-                  id: 'menu.home',
-                  defaultMessage: 'Home',
-                }),
-              },
-              ...routers,
+            {
+              path: '/',
+              breadcrumbName: formatMessage({
+                id: 'menu.home',
+                defaultMessage: 'Home',
+              }),
+            },
+            ...routers,
           ]}
           footerRender={() => <div></div>}
           menuDataRender={menuDataRender}
