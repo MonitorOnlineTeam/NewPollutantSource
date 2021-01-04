@@ -452,6 +452,7 @@ class SdlMap extends PureComponent {
           mode === 'modal' &&
           <Input
             // style={{paddingRight: 40}}
+            className="mapInput"
             suffix={<Icon
               onClick={() => {
                 if (latitude && longitude) {
