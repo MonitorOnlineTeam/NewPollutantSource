@@ -1645,7 +1645,8 @@ class index extends PureComponent {
                                     <Radio.Button value="1">已处置</Radio.Button>
                                     <Radio.Button value="0">待处置</Radio.Button>
                                 </Radio.Group>
-                                <div style={{marginTop:10}}>
+                                
+                                {this.state.DealType==1&&<div style={{marginTop:10}}>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
                                     <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
                                         {
@@ -1654,7 +1655,7 @@ class index extends PureComponent {
                                             )
                                         }
                                     </Checkbox.Group>
-                                </div>
+                                </div>}
                             </div>
                             {
                                 <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />

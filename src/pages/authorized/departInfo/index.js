@@ -37,6 +37,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import AlarmPushRel from '@/components/AlarmPushRel';
+import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 import styles from './index.less';
 
 const { TreeNode } = Tree;
@@ -1159,20 +1160,22 @@ class DepartIndex extends Component {
                   </div>
                 }
               </Modal>
-              <Modal
+              {/* <Modal
                 title="报警关联"
                 visible={this.state.visibleAlarm}
-                footer={null}
+                // footer={null}
+                onOk={this.handleOk}
                 onCancel={this.cancelAlarmModal}
                 destroyOnClose
                 width="70%"
-              >
-                <AlarmPushRel
+              > */}
+                {/* <AlarmPushRel
                   RoleIdOrDepId={this.state.selectedRowKeys.key}
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
-                />
-              </Modal>
+                /> */}
+                <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>
+              {/* </Modal> */}
             </div>
             {/* </MonitorContent> */}
           </BreadcrumbWrapper>
