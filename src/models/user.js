@@ -210,7 +210,7 @@ export default Model.extend({
         });
       }
     },
-    *insertAlarmPushAuthor({ payload }, { put, call, update, select }) {
+    *insertAlarmPushAuthor({ payload, callback }, { put, call, update, select }) {
       // let body = {
       //   pageIndex: alarmPushParam.pageIndex,
       //   pageSize: alarmPushParam.pageSize,
@@ -225,6 +225,7 @@ export default Model.extend({
       console.log('insertAlarmPushAuthor=', result);
       if (result.IsSuccess) {
         sdlMessage('操作成功', 'success');
+        callback && callback();
       } else {
         sdlMessage('操作失败', 'error');
       }

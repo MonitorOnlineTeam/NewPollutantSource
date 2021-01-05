@@ -94,7 +94,7 @@ class Index extends Component {
                 <Divider type="vertical" />
                 <Tooltip title="删除">
                   <Popconfirm
-                    title="确认要删除吗?"
+                    title="确认要删除吗?"  
                     onConfirm={() => {
                       this.delete(
                         row['dbo.T_Bas_VehicleInfo.ID'],

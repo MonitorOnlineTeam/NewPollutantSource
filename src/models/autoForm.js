@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-29 17:13:06
+ * @Last Modified time: 2020-12-29 14:25:29
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -491,7 +491,7 @@ export default Model.extend({
     * deleteAttach({ payload }, { call, update }) {
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
-
+        message.success("删除成功！")
       } else {
         message.error(result.Datas)
       }
