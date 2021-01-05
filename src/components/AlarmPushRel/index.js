@@ -423,7 +423,7 @@ class Index extends Component {
                                                     AlarmTypes="6"
                                                     checked={currentData.filter(m => m.DGIMN === item.DGIMN && (m.AlarmTypes && m.AlarmTypes.indexOf('6') > -1)).length > 0}
                                                     onChange={this.onChangeDGINM}
-                                                >超标核实推送</Checkbox>
+                                                >超标核实超时</Checkbox>
                                             }
 
                                             {/* <Checkbox.Group options={['异常', '超标', '预警']} defaultValue={['异常']} onChange={this.onChangeDGINM} data-d={item.DGIMN} /> */}
