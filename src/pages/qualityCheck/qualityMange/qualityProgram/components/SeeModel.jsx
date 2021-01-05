@@ -75,8 +75,8 @@ class EditorAddMode extends React.Component {
     componentDidMount(){
         const { onRef } = this.props;
         onRef && onRef(this);
-        const blindItem=[{title: '标气浓度', dataIndex: 'Unit',  key: 'Unit',align: 'center'  }]
-        this.blindCol=[...this.columns,...blindItem]
+        // const blindItem=[{title: '标气浓度', dataIndex: 'value',  key: 'value',align: 'center'  }]
+        // this.blindCol=[...this.columns,...blindItem]
     }
 
 
@@ -115,6 +115,7 @@ class EditorAddMode extends React.Component {
       //   3:"响应时间核查",
       //   4:"盲样核查"
       // }
+      console.log()
       return getDetailsLoading? <Spin size="small" />  :
        <>
        { 
@@ -126,7 +127,8 @@ class EditorAddMode extends React.Component {
              <SdlTable
             rowKey={(record, index) => `complete${index}`}
             dataSource={item.qcaList}
-            columns={item.qcaTypeName== "盲样核查"? this.blindItem : this.columns }
+            // columns={item.qcaTypeName== "盲样核查"? this.blindCol : this.columns }
+            columns={this.columns }
             resizable
             pagination={ false }
            />
