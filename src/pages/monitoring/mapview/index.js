@@ -1158,8 +1158,8 @@ class MapView extends Component {
                 <AlarmRecord DGIMN={currentKey} initLoadData />
               </TabPane> */}
               {
-                menuDescList.includes('超标核实') && this.state.currentPointInfo.PollutantType != '5' &&
-                <TabPane tab="超标核实" key="3">
+                menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
+                <TabPane tab="超标处置" key="3">
                   <AlarmRecord DGIMN={currentKey} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
@@ -1173,6 +1173,9 @@ class MapView extends Component {
                 <TabPane tab="超标数据" key="5">
                   <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} noticeState={1} />
                 </TabPane>
+              }
+              {
+                console.log('infoWindowData=', infoWindowData)
               }
               <TabPane tab="基本信息" key="7">
                 <div style={{ height: "60vh", overflow: 'auto' }}>

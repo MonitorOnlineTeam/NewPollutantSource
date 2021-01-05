@@ -226,7 +226,7 @@ class SdlMap extends PureComponent {
             message.error('未查询到相关地址！')
           }
         });
-      });
+      }); 
     }
   }
 
@@ -235,7 +235,7 @@ class SdlMap extends PureComponent {
       nextProps.path ? this.setState({
         path: nextProps.path,
         polygon: this.props.path,
-        mapCenter: nextProps.path[0][0][0],
+        mapCenter: nextProps.path[0] && nextProps.path[0][0] && nextProps.path[0][0][0],
       }) : this.setState({
         path: [],
         polygon: [],

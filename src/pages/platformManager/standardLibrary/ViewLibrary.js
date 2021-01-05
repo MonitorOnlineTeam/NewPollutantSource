@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-06 14:32:53 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-11-06 14:33:15
+ * @Last Modified time: 2021-01-05 16:27:38
  * @desc: 标准库详情页面
  */
 import React, { Component } from 'react';
@@ -48,8 +48,15 @@ class ViewLibrary extends Component {
             <AutoFormTable
               configId={tableConfigId}
               getPageConfig
+              searchParams={[
+                {
+                  Key: 'dbo__T_Base_StandardLibraryPollutant__StandardLibraryID',
+                  Value: this.props.match.params.guid,
+                  Where: '$=',
+                },
+              ]}
               rowKey={(record, index) => index}
-              // scroll={{ y: 'calc(100vh - 600px)' }}
+            // scroll={{ y: 'calc(100vh - 600px)' }}
             />
           </Card>
         </Card>
