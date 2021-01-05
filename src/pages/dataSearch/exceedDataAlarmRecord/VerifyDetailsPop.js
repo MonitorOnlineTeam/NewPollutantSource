@@ -19,9 +19,9 @@ class index extends PureComponent {
   render() {
     const { dataSource } = this.props;
     const content = (
-       <div>
-         <p>备注：{dataSource.length>0&&dataSource[0].remark?dataSource[0].remark:'-'}</p>
-         <p>附件：{dataSource.length>0&&dataSource[0].attach ?<a href={ dataSource[0].attach}>{dataSource[0].name}</a>:'-'} </p>
+       <div >
+        备注：<p style={{maxWidth:300,display:'inline-block',verticalAlign:'Top'}}>{dataSource.length>0&&dataSource[0].remark?dataSource[0].remark:'-'}</p>
+       <p>附件：{dataSource.length>0&&dataSource[0].attach ?<a href={ dataSource[0].attach}>{dataSource[0].name}</a>:'-'} </p>
        </div>
     );
     return (
