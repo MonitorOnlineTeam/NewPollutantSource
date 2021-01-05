@@ -17,6 +17,8 @@ import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 import { downloadFile } from '@/utils/utils';
 import FileDown from '@/components/AttachmentView/index'
+import VerifyDetailsPop from './VerifyDetailsPop'
+
 import { compose } from 'redux';
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -1178,21 +1180,23 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                    if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
-                    {
-                       sourc = []
-                    }
-                    else
-                    {
-                       record.verifyImage.map(item=>{
-                           let obj = {
-                               name:item.FileName,
-                               attach:'/upload/'+item.FileName
-                           }
-                           sourc.push(obj)
-                       })
-                    }
-                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                     if(!record.verifyImage&&!record.remark )
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
+                                name:item.FileName,
+                                attach:'/upload/'+item.FileName
+                            }
+                        })
+                        obj.remark = text;
+                        sourc.push(obj)
+                     }
+                     return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
                 }
             },
         ]
@@ -1306,23 +1310,24 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     if(!record.verifyImage&&!record.remark )
                      {
                         sourc = []
                      }
                      else
                      {
-                        record.verifyImage.map(item=>{
-                            let obj = {
+                        let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
                                 name:item.FileName,
                                 attach:'/upload/'+item.FileName
                             }
-                            sourc.push(obj)
                         })
+                        obj.remark = text;
+                        sourc.push(obj)
                      }
-                     return  <FileDown dataSource={sourc}/>
-                    //  return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
-                    }
+                     return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
+                }
             },
         ]
         const columns4 = [
@@ -1427,22 +1432,24 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
+                     if(!record.verifyImage&&!record.remark )
                      {
                         sourc = []
                      }
                      else
                      {
-                        record.verifyImage.map(item=>{
-                            let obj = {
+                        let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
                                 name:item.FileName,
                                 attach:'/upload/'+item.FileName
                             }
-                            sourc.push(obj)
                         })
+                        obj.remark = text;
+                        sourc.push(obj)
                      }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
-                    }
+                     return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
+                }
             },
         ]
         const columns5 = [
@@ -1561,21 +1568,23 @@ class exceedDataAlarmModal extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                    if(record.verifyImage == null || record.verifyImage == '' || record.status == 0)
-                    {
-                       sourc = []
-                    }
-                    else
-                    {
-                       record.verifyImage.map(item=>{
-                           let obj = {
-                               name:item.FileName,
-                               attach:'/upload/'+item.FileName
-                           }
-                           sourc.push(obj)
-                       })
-                    }
-                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                     if(!record.verifyImage&&!record.remark )
+                     {
+                        sourc = []
+                     }
+                     else
+                     {
+                        let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
+                                name:item.FileName,
+                                attach:'/upload/'+item.FileName
+                            }
+                        })
+                        obj.remark = text;
+                        sourc.push(obj)
+                     }
+                     return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
                 }
             },
         ]

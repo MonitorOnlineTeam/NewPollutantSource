@@ -18,7 +18,6 @@ class index extends PureComponent {
 
   render() {
     const { dataSource } = this.props;
-    console.log(dataSource)
     const content = (
        <div>
          <p>备注：{dataSource.length>0&&dataSource[0].remark?dataSource[0].remark:'-'}</p>
