@@ -154,11 +154,11 @@ export default class MonitorTarget extends Component {
                 return  <Fragment>
                           <Tooltip title="编辑">
                                  <a onClick={() => {
-                                        if (moment(row['MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
+                                        // if (moment(row['MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
                                             dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['ID']}/${selectmonth}/${entcode}`));
-                                        } else {
-                                            sdlMessage('只能修改本月的数据', 'error')
-                                        }
+                                        // } else {
+                                        //     sdlMessage('只能修改本月的数据', 'error')
+                                        // }
                                     }}>   <EditIcon /> </a>
                 </Tooltip>
                 <Divider type="vertical" />
@@ -278,7 +278,7 @@ export default class MonitorTarget extends Component {
         const that = this;
         const { dispatch, match } = this.props;
         // if (moment(row['dbo.T_Bas_DataReporting.MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
-        if (moment(row['MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
+        // if (moment(row['MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
 
             confirm({
                 title: '确定要删除该条数据吗？',
@@ -302,9 +302,9 @@ export default class MonitorTarget extends Component {
 
                 },
             });
-        } else {
-            sdlMessage('只能删除本月的数据', 'error')
-        }
+        // } else {
+        //     sdlMessage('只能删除本月的数据', 'error')
+        // }
     }
 
     onRef1 = ref => {
