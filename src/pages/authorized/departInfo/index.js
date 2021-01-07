@@ -1160,7 +1160,7 @@ class DepartIndex extends Component {
                   </div>
                 }
               </Modal>
-              {/* <Modal
+              <Modal
                 title="报警关联"
                 visible={this.state.visibleAlarm}
                 footer={null}
@@ -1174,8 +1174,8 @@ class DepartIndex extends Component {
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
                 /> 
-              </Modal>  */}
-              <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>
+              </Modal>  
+              {/* <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/> */}
 
             </div>
             {/* </MonitorContent> */}
