@@ -14,25 +14,25 @@ export async function getPollutantByType(params) {
 
 // 获取table数据 - 师一级
 export async function getExceptionAlarmListForRegion(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionAlarmListForRegion`, params);
+  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionAlarmListForRegion`, params);
   return result;
 }
 
 // 异常数据报警-师一级
 export async function exportExceptionAlarm(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmListForRegion`, params);
+  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionAlarmListForRegion`, params);
   return result;
 }
 
 // 异常数据报警 - 二级页面
 export async function getExceptionAlarmListForEnt(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionAlarmListForEnt`, params);
+  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionAlarmListForEnt`, params);
   return result;
 }
 
 // 异常数据报警导出 - 二级页面
 export async function exportExceptionAlarmListForEnt(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmListForEnt`, params);
+  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionAlarmListForEnt`, params);
   return result;
 }
 

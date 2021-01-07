@@ -9,7 +9,7 @@ import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
 import MonitoringStandard from '@/components/MonitoringStandard';
-import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest,getEnterpriseCorporationCode } from '@/services/pointApi';
+import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode } from '@/services/pointApi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -22,7 +22,7 @@ export default Model.extend({
         TestComponent: [], // 测试项目
         MainInstrumentName: [], // 主要仪器名称
         CemsList: [], //
-        CorporationCode:null,
+        CorporationCode: null,
     },
     effects: {
 
@@ -33,7 +33,7 @@ export default Model.extend({
             const dd = yield select(state => state.common);
             const result = yield call(getEnterpriseCorporationCode, payload);
             yield update({
-                CorporationCode:result.Datas
+                CorporationCode: result.Datas
             })
             payload.callback(dd.defaultPollutantCode);
         },
@@ -149,10 +149,11 @@ export default Model.extend({
             }
         },
         /** 添加Cem */
-        *AddAnalyzer({ payload }, { call, put, update, select }) {
+        *AddAnalyzer({ payload, callback }, { call, put, update, select }) {
             const result = yield call(AddAnalyzer, payload);
             if (result.IsSuccess) {
-                sdlMessage('添加成功', 'success');
+                callback && callback();
+                sdlMessage('操作成功', 'success');
             } else {
                 sdlMessage(result.Message, 'error');
             }

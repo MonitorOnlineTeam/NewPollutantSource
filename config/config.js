@@ -1069,6 +1069,11 @@ export default {
                       component: './monitoring/alarmInfo/exceptionrecordNew/OnlyQuery',
                     },
                     {
+                      name: 'exceptionrecordDetails',
+                      path: '/monitoring/alarmInfo/exceptionrecord/details',
+                      component: './monitoring/alarmInfo/exceptionrecordNew/RegionDetails',
+                    },
+                    {
                       //超标报警处置查询
                       name: 'exceedDataDispositionRecord',
                       path: '/monitoring/alarmInfo/exceedDataDispositionRecord',

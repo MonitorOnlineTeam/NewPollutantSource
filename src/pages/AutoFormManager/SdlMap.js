@@ -226,7 +226,7 @@ class SdlMap extends PureComponent {
             message.error('未查询到相关地址！')
           }
         });
-      }); 
+      });
     }
   }
 
@@ -317,40 +317,42 @@ class SdlMap extends PureComponent {
           if (this.props.path) {
             // console.log("this.props.path=", this.props.path)
             let path = JSON.parse(this.props.path)
-            let innerArr = path[0][0];
-            // console.log("innerArr=",)
-            let longitudeArr = innerArr.map(item => item[0]) // 经度
-            let latitudeArr = innerArr.map(item => item[1]) // 纬度
-            let longMax = _.max(longitudeArr);
-            let longMin = _.min(longitudeArr);
+            if (path.length) {
+              let innerArr = path[0][0];
+              // console.log("innerArr=",)
+              let longitudeArr = innerArr.map(item => item[0]) // 经度
+              let latitudeArr = innerArr.map(item => item[1]) // 纬度
+              let longMax = _.max(longitudeArr);
+              let longMin = _.min(longitudeArr);
 
-            let latMax = _.max(latitudeArr);
-            let latMin = _.min(latitudeArr);
-            let lngFlag = false;
-            let latFlag = false;
+              let latMax = _.max(latitudeArr);
+              let latMin = _.min(latitudeArr);
+              let lngFlag = false;
+              let latFlag = false;
 
-            if (e.lnglat.lng >= longMin && e.lnglat.lng <= longMax) {
-              lngFlag = true;
-            } else {
-              lngFlag = false;
-            }
-
-            if (e.lnglat.lat >= latMin && e.lnglat.lat <= latMax) {
-              latFlag = true;
-            } else {
-              latFlag = false;
-            }
-
-            if (lngFlag && latFlag) {
-              const position = {
-                longitude: e.lnglat.lng,
-                latitude: e.lnglat.lat,
+              if (e.lnglat.lng >= longMin && e.lnglat.lng <= longMax) {
+                lngFlag = true;
+              } else {
+                lngFlag = false;
               }
-              this.setState({
-                position,
-              })
-            } else {
-              message.error("设置点不在厂界范围内！")
+
+              if (e.lnglat.lat >= latMin && e.lnglat.lat <= latMax) {
+                latFlag = true;
+              } else {
+                latFlag = false;
+              }
+
+              if (lngFlag && latFlag) {
+                const position = {
+                  longitude: e.lnglat.lng,
+                  latitude: e.lnglat.lat,
+                }
+                this.setState({
+                  position,
+                })
+              } else {
+                message.error("设置点不在厂界范围内！")
+              }
             }
           } else {
             const position = {
@@ -515,6 +517,13 @@ class SdlMap extends PureComponent {
                     polygon: [],
                     path: undefined,
                   })
+                  thisMap.clearMap();
+                  this.setState({
+                    position: {
+                      latitude: this.props.latitude,
+                      longitude: this.props.longitude
+                    }
+                  })
                 } else {
                   this.setState({
                     position: {
@@ -524,7 +533,6 @@ class SdlMap extends PureComponent {
                     address: undefined,
                   })
                 }
-                // thisMap.clearMap()
               }}>{
                   handlePolygon ? '清除厂界' : "清除坐标"
                 }</Button>
