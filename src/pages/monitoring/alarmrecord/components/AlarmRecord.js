@@ -236,6 +236,7 @@ class AlarmRecord extends Component {
     dispatch({
       type: 'alarmrecord/queryoverdatalist',
       payload: {
+        ...overdataparams
       },
     });
   }

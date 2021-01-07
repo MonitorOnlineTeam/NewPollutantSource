@@ -1174,7 +1174,7 @@ class DepartIndex extends Component {
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
                 /> 
-              </Modal> 
+              </Modal>  
               {/* <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/> */}
 
             </div>

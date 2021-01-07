@@ -159,7 +159,7 @@ class AutoFormViewItems extends Component {
       return (<Spin
         style={{
           width: '100%',
-          height: 'calc(100vh/2)',
+          height: '10vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
