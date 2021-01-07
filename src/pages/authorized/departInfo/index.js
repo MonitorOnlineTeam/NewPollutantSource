@@ -1160,24 +1160,26 @@ class DepartIndex extends Component {
                   </div>
                 }
               </Modal>
-              {/* <Modal
+              <Modal
                 title="报警关联"
                 visible={this.state.visibleAlarm}
-                // footer={null}
+                footer={null}
                 onOk={this.handleOk}
                 onCancel={this.cancelAlarmModal}
                 destroyOnClose
                 width="70%"
-              > */}
-                {/* <AlarmPushRel
+              >
+                 <AlarmPushRel
                   RoleIdOrDepId={this.state.selectedRowKeys.key}
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
-                /> */}
-                <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>
-              {/* </Modal> */}
+                /> 
+              </Modal>  
+              {/* <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/> */}
+
             </div>
             {/* </MonitorContent> */}
+            
           </BreadcrumbWrapper>
         }
       </Fragment>

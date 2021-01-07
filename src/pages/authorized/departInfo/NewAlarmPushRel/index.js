@@ -191,9 +191,9 @@ class Index extends Component {
                                       onChange={this.changeCheckboxGroup}
                                      />
 
-                                  <Radio.Group onChange={this.changeCheckboxGroup} >
+                                  {/* <Radio.Group onChange={this.changeCheckboxGroup} >
                                       {this.getAlarmRadioOptions()}
-                                        </Radio.Group>
+                                        </Radio.Group> */}
                                      </div>
                                 </Row>
                             </Card>

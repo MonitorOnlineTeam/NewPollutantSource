@@ -242,7 +242,11 @@ export default Model.extend({
     *getStatisticsReportDataList({ payload }, { call, update, select }) {
       const params = yield select(a => a.report.StatisticsReportDataWhere);
       const result = yield call(services.getStatisticsReportDataList, params);
-      yield update({ statisticsReportDataList: result.Datas, total: result.Total })
+      yield update({ statisticsReportDataList: result.Datas, 
+        StatisticsReportDataWhere:{
+          ...params,
+          total: result.Total
+      }  })
     },
     // 污水处理厂列表
     *getEntSewageList({ payload }, { call, update }) {

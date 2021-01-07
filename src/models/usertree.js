@@ -40,7 +40,7 @@ export default Model.extend({
         });
         if (result.IsSuccess) {
           yield update({
-            RolesTree: result.Datas,
+            RolesTree: result.Datas[0].children,
           });
         }
       },
@@ -56,7 +56,7 @@ export default Model.extend({
             });
             if (result.IsSuccess) {
                 yield update({
-                    DepartTree: result.Datas,
+                    DepartTree: result.Datas[0].children,
                 });
             }
         },
