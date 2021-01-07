@@ -593,7 +593,11 @@ class index extends Component {
                   });
                 }}
                 onSearch={val => {
-                  this.getRealTimeDataView();
+                  this.setState({
+                    pointName: val
+                  }, () => {
+                    this.getRealTimeDataView();
+                  })
                 }}
                 placeholder="请输入监控目标/监测点名称"
               />
