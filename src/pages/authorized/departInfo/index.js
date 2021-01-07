@@ -1163,7 +1163,7 @@ class DepartIndex extends Component {
               <Modal
                 title="报警关联"
                 visible={this.state.visibleAlarm}
-                // footer={null}
+                footer={null}
                 onOk={this.handleOk}
                 onCancel={this.cancelAlarmModal}
                 destroyOnClose
@@ -1173,7 +1173,7 @@ class DepartIndex extends Component {
                   RoleIdOrDepId={this.state.selectedRowKeys.key}
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
-                /> */}
+                /> 
               </Modal> 
               {/* <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/> */}
 

@@ -1,15 +1,13 @@
 /**
  * 功  能：空气质量状况统计
  * 创建人：贾安波
- * 创建时间：2020.12.28
+ * 创建时间：2021.01.07
  */
 
 import Model from '@/utils/model';
 import {
-  GetTaskFormBookSta,
-  GetEntByRegion,
-  GetAttentionDegreeList,
-  ExportTaskFormBookSta,
+  GetCityStationAQI,
+  ExportCityStationAQI,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -21,11 +19,6 @@ export default Model.extend({
     queryPar: {
       beginTime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantTypeCode:'1',
-      ModelType: "All"
     },
     entQueryPar: {  },
     entNumQueryPar: { },
@@ -49,52 +42,24 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *getTaskFormBookSta({callback, payload }, { call, put, update, select }) {
-      //无台账工单统计（企业） 列表
 
-
-      payload.ModelType==='All'? yield update({ loading:true })   : payload.ModelType==='Region'? yield update({ Regionloading:true }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:true }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:true }) :  yield update({ TaskNumsloading:true })
-
-       const response = yield call(GetTaskFormBookSta, { ...payload });
-      if (response.IsSuccess) {
-        if(payload.ModelType==='All'){
-          yield update({
-            tableDatas:response.Datas,
-            loading:false  
-          });
-        }else{
-          payload.ModelType==='Region'? yield update({ Regionloading:false }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:false }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:false }) :  yield update({ TaskNumsloading:false })
-        }
-        callback(response.Datas)
-      }else{
-      
-        yield update({ loading:false }); 
-      }
-    },
-    *getAttentionDegreeList({ payload }, { call, put, update, select }) {
-      //关注列表
-      const response = yield call(GetAttentionDegreeList, { ...payload });
+    *getCityStationAQI({ payload }, { call, put, update, select }) {
+      //空气质量状况统计 列表
+      yield update({
+        loading: true,
+      });
+      const response = yield call(GetCityStationAQI, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          attentionList: response.Datas,
+          tableDatas: response.Datas,
+          loading:false
         });
       }
     },
-    *getEntByRegion({ callback,payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.removalFlowRate);
-      //获取所有污水处理厂
-      const response = yield call(GetEntByRegion, { ...payload });
-      if (response.IsSuccess) {
-        yield update({
-          priseList: response.Datas,
-        });
-        callback(response.Datas[0].EntCode)
-      }
-    },
-    *exportTaskFormBookSta({callback, payload }, { call, put, update, select }) {
+    *exportCityStationAQI({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出
-      const response = yield call(ExportTaskFormBookSta, { ...payload });
+      const response = yield call(ExportCityStationAQI, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

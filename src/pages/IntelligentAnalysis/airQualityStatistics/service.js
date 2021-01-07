@@ -1,35 +1,12 @@
 import { post } from '@/utils/request';
 
 /**
- * 无台账工单统计（企业） 列表
+ * 空气质量状况统计 列表
  *
  */
-export async function GetTaskFormBookSta(params) {
+export async function GetCityStationAQI(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookSta',
-    params,
-    null,
-  );
-
-  return result;
-}
-
-//关注列表
-export async function GetAttentionDegreeList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
-  );
-
-  return result;
-}
-
-//导出
-
-export async function ExportTaskFormBookSta(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookSta',
+    '/api/rest/PollutantSourceApi/EmissionsApi/GetCityStationAQI',
     params,
     null,
   );
@@ -38,15 +15,17 @@ export async function ExportTaskFormBookSta(params) {
 }
 
 
-//根据行政区获取 污水处理厂
 
-export async function GetEntByRegion(params) {
+//空气质量状况 导出
+
+export async function ExportCityStationAQI(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
-      params.RegionCode,
-    null,
+    '/api/rest/PollutantSourceApi/EmissionsApi/ExportCityStationAQI',
+    params,
     null,
   );
 
   return result;
 }
+
+

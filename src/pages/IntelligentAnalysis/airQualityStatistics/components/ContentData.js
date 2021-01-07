@@ -51,7 +51,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'airQualityStatistics/updateState',
-  getData: 'airQualityStatistics/getTaskFormBookSta',
+  getData: 'airQualityStatistics/getCityStationAQI',
 };
 @connect(({ loading, airQualityStatistics,autoForm }) => ({
   priseList: airQualityStatistics.priseList,
@@ -87,14 +87,15 @@ export default class Index extends Component {
         dataIndex: 'Region',
         key: 'Region',
         align: 'center',
+        width:165,
         render: (text, record) => {
           return <div>{`${moment(text).format('YYYY-MM-DD')} - ${moment(text).format('YYYY-MM-DD')}` }</div>;
         },
       },
       {
         title: '区域',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'CityName',
+        key: 'CityName',
         align: 'center',
       },
       {
@@ -103,15 +104,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'EntNum',
-            key: 'EntNum',
+            dataIndex: 'youDay',
+            key: 'youDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'EntNotNum',
-            key: 'EntNotNum',
+            dataIndex: 'youRate',
+            key: 'youRate',
             align: 'center',
             width:100,
           },        
@@ -123,15 +124,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'EntNum',
-            key: 'EntNum',
+            dataIndex: 'youliangDay',
+            key: 'youliangDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'EntNotNum',
-            key: 'EntNotNum',
+            dataIndex: 'youliangRate',
+            key: 'youliangRate',
             align: 'center',
             width:100,
           },        
@@ -143,15 +144,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'EntNum',
-            key: 'EntNum',
+            dataIndex: 'qingDay',
+            key: 'qingDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'EntNotNum',
-            key: 'EntNotNum',
+            dataIndex: 'qingRate',
+            key: 'qingRate',
             align: 'center',
             width:100,
           },        
@@ -163,15 +164,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'EntNum',
-            key: 'EntNum',
+            dataIndex: 'zhongDay',
+            key: 'zhongDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'EntNotNum',
-            key: 'EntNotNum',
+            dataIndex: 'zhongRate',
+            key: 'zhongRate',
             align: 'center',
             width:100,
           },        
@@ -183,15 +184,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'EntNum',
-            key: 'EntNum',
+            dataIndex: 'zhongduDay',
+            key: 'zhongduDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'EntNotNum',
-            key: 'EntNotNum',
+            dataIndex: 'zhongduRate',
+            key: 'zhongduRate',
             align: 'center',
             width:100,
           },        
@@ -203,15 +204,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'EntNum',
-            key: 'EntNum',
+            dataIndex: 'yanzhongDay',
+            key: 'yanzhongDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'EntNotNum',
-            key: 'EntNotNum',
+            dataIndex: 'yanzhongRate',
+            key: 'yanzhongRate',
             align: 'center',
             width:100,
           },        
@@ -219,24 +220,21 @@ export default class Index extends Component {
       },
       {
         title: '总天数',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'countDay',
+        key: 'countDay',
         align: 'center',
       },
       {
         title: '优良天数',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'youliangDay',
+        key: 'youliangDay',
         align: 'center',
       },
       {
         title: '优良率',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'youliangRate',
+        key: 'youliangRate',
         align: 'center',
-        render: (text, record) => {
-          return <div>{`${Number(text*100)}%`}</div>;
-        },
       },           
     ]
   }
@@ -251,11 +249,6 @@ export default class Index extends Component {
      this.updateQueryState({
       beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantTypeCode:"1",
-      ModelType: "All"
     });
     setTimeout(() => {
       this.getTableData();
@@ -289,11 +282,11 @@ export default class Index extends Component {
 
 
 
-  typeChange = value => {
-    this.updateQueryState({
-      PollutantTypeCode: value,
-    });
-  };
+  // typeChange = value => {
+  //   this.updateQueryState({
+  //     PollutantTypeCode: value,
+  //   });
+  // };
 
 
 
@@ -302,10 +295,10 @@ export default class Index extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'airQualityStatistics/exportTaskFormBookSta',
+      type: 'airQualityStatistics/exportCityStationAQI',
       payload: { ...queryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
+          downloadFile(`${data}`);
         },
     });
   };
@@ -343,9 +336,9 @@ export default class Index extends Component {
         endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
       });
     }
-    dateOk=()=>{ 
+  //   dateOk=()=>{ 
 
-   }
+  //  }
 
 
 
@@ -353,7 +346,7 @@ export default class Index extends Component {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantCode,PollutantTypeCode },
+      queryPar: {  beginTime, endTime },
 
     } = this.props;
     const { TabPane } = Tabs;
