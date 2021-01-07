@@ -199,7 +199,7 @@ export default class MonitorTarget extends Component {
         dispatch({
             type: 'newDatareport/getDataReportList',
             payload: {
-                MonitorTime: moment(getFieldsValue().MonitorTime).format('YYYY-MM-01'),
+                MonitorTime: moment(getFieldsValue().MonitorTime).format('YYYY-MM-01 00:00:00'),
             },
         })  
     }
