@@ -31,10 +31,14 @@ import styles from '@/pages/authorized/departInfo/index.less';
 
 const { Search } = Input;
 const FormItem = Form.Item;
+// Customize Table Transfer
 
-@connect(({ loading,departinfo, user, autoForm, report }) => ({
-    loadingGetData: loading.effects['user/getAlarmPushAuthor'],
-    loadingInsertData: loading.effects['user/insertAlarmPushAuthor'],
+@connect(({ loading,alarmPush, user, autoForm, report}) => ({
+    alarmPushLoading:alarmPush.alarmPushLoading,
+    alarmPushDepOrRoleList:alarmPush.alarmPushDepOrRoleList,
+    alarmPushSelect:alarmPush.alarmPushSelect,
+    alarmPushParam:alarmPush.alarmPushParam,
+    alarmPushFlag:alarmPush.alarmPushFlag,
 }))
 
 @Form.create()
@@ -45,103 +49,147 @@ class Index extends Component {
         this.state = {
             mockData: [],
             targetKeys: [],
+            confirmLoading:false,
             options:[
                 { label: '异常', value: '1' },
                 { label: '超标', value: '2' },
                 { label: '预警', value: '5' },
                 { label: '超标核实推送', value: '6' },
-                { label: '外显', value: '7' },
+                { label: '处置', value: '7' },
                 { label: '核实', value: '8' },
 
-              ]
+              ],
+              
         };
+        this.leftTableColumns = [
+            {
+              dataIndex: 'RegionName',
+              title: '行政区',
+            },
+            {
+              dataIndex: 'EntName',
+              title: '企业名称',
+            },
+            {
+              dataIndex: 'PointName',
+              title: '监测点名称',
+            },
+          ];
+          this.rightTableColumns = [
+            {
+                dataIndex: 'RegionName',
+                title: '行政区',
+              },
+              {
+                dataIndex: 'EntName',
+                title: '企业名称',
+              },
+              {
+                dataIndex: 'PointName',
+                title: '监测点名称',
+              },
+          ];
     }
 
     /** 初始化加载 */
     componentDidMount() {
-        const { dispatch, alarmPushParam, FlagType, RoleIdOrDepId } = this.props;
-        this.getData();
+        const { dispatch, alarmPushParam, FlagType,type,alarmPushData } = this.props;
+       
         dispatch({
-            type: 'user/updateState',
+            type: 'alarmPush/updateState',
             payload: {
                 alarmPushParam: {
-                    ...alarmPushParam,
-                    pageSize: 12,
-                    pageIndex: 1,
-                    searchContent: '',
-                    flagType: FlagType,
-                    authorId: RoleIdOrDepId,
-                    entCode: '',
+                    Type: type,
+                    RegionCode: "",
+                    ID:alarmPushData.key,
+                    AlarmType: ""
                 },
             },
-        });
+        })
+        setTimeout(()=>{
+            this.getData();
+
+        })
 
     }
 
     componentWillReceiveProps(nextProps) {
-
+ 
     }
 
+    TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+        <Transfer {...restProps} showSelectAll={false}>
+          {({
+            direction,
+            filteredItems,
+            onItemSelectAll,
+            onItemSelect,
+            selectedKeys: listSelectedKeys,
+            disabled: listDisabled,
+          }) => {
+            const columns = direction === 'left' ? leftColumns : rightColumns;
+      
+            const rowSelection = {
+              getCheckboxProps: item => ({ disabled: listDisabled || item.disabled }),
+              onSelectAll(selected, selectedRows) {
+                const treeSelectedKeys = selectedRows
+                  .filter(item => !item.disabled)
+                  .map(({ key }) => key);
+                const diffKeys = selected
+                  ? difference(treeSelectedKeys, listSelectedKeys)
+                  : difference(listSelectedKeys, treeSelectedKeys);
+                onItemSelectAll(diffKeys, selected);
+              },
+              onSelect({ key }, selected) {
+                onItemSelect(key, selected);
+              },
+              selectedRowKeys: listSelectedKeys,
+            };
+      
+            return (
+              <Table
+                rowSelection={rowSelection}
+                columns={columns}
+                dataSource={filteredItems}
+                size="small"
+                loading={this.props.alarmPushLoading}
+                style={{ pointerEvents: listDisabled ? 'none' : null }}
+                onRow={({ key, disabled: itemDisabled }) => ({
+                  onClick: () => {
+                    if (itemDisabled || listDisabled) return;
+                    onItemSelect(key, !listSelectedKeys.includes(key));
+                  },
+                })}
+              />
+            );
+          }}
+        </Transfer>
+      );
 
 
 
 
-
-
-    // 搜索
-    onSearch = e => {
-        // debugger //searchContent
-        const { dispatch, alarmPushParam } = this.props;
-
-        // if (e !== alarmPushParam.searchContent) {
-        dispatch({
-            type: 'user/updateState',
-            payload: {
-                alarmPushParam: {
-                    ...alarmPushParam,
-                    pageSize: 12,
-                    pageIndex: 1,
-                    searchContent: e,
-                },
-            },
-        });
-        dispatch({
-            type: 'user/getAlarmPushAuthor',
-            payload: {},
-        })
-        this.setState({ checkedYC: false, checkedCB: false, checkedYJ: false,checkedCS:false });
-
-    }
 
 
     getData = () => {
-        const targetKeys = [];
-        const mockData = [];
-        for (let i = 0; i < 20; i++) {
-          const data = {
-            key: i.toString(),
-            title: `content${i + 1}`,
-            description: `description of content${i + 1}`,
-            chosen: Math.random() * 2 > 1,
-          };
-          if (data.chosen) {
-            targetKeys.push(data.key);
-          }
-          mockData.push(data);
-        }
-        this.setState({ mockData, targetKeys });
+        const { dispatch, alarmPushParam } = this.props;
+        dispatch({
+            type: 'alarmPush/getAlarmPushDepOrRole',
+            payload: { ...alarmPushParam },
+            callback:(targetKeys)=>{
+                this.setState({targetKeys})
+            }
+        });
+
       };
     
-      filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1;
+      filterOption = (inputValue, option) => option.EntName.indexOf(inputValue) > -1;
     
       handleChange = (targetKeys, direction, moveKeys) => { //穿梭框change事件
-        console.log(targetKeys, direction, moveKeys)
+        console.log(targetKeys)
         this.setState({ targetKeys });
       };
     
-      handleSearch = (dir, value) => {
-        console.log('search:', dir, value);
-      };
 
       getAlarmRadioOptions=()=>{
           const { options } = this.state;
@@ -150,68 +198,127 @@ class Index extends Component {
              return <Radio.Button value={item.value}>{item.label}</Radio.Button>
          })
       }
-   changeCheckboxGroup=()=>{
-      }
-    changeRegion=()=>{
 
+
+
+    updateQueryState = payload => {
+        const { alarmPushParam, dispatch } = this.props;
+    
+        dispatch({
+          type: "alarmPush/updateState",
+          payload: { alarmPushParam: { ...alarmPushParam, ...payload } },
+        });
+      };
+    changeRegion=(value)=>{
+        this.updateQueryState({
+            RegionCode: value,
+          });
+    }
+    changeCheckboxGroup=(data)=>{
+      
+       if(data.target){ //单选
+           const {alarmPushParam:{AlarmType}} = this.props;
+        
+           const selectType = data.target.value
+
+           this.updateQueryState({AlarmType: selectType });
+        //    if(AlarmType&&AlarmType === selectType){
+        //     this.updateQueryState({AlarmType: '' });
+        //  }
+       }else{
+        this.updateQueryState({ AlarmType: data.join(","), });
+
+       }
     }
     handleOk=()=>{
-     console.log(1111)
+
+        const { dispatch,FlagType,type,alarmPushParam:{AlarmType}, alarmPushData} = this.props;
+        
+        const { targetKeys } = this.state;
+        
+       let parData =  targetKeys.map(item=>{
+          return  {  
+                    RoleIdOrDepId: alarmPushData.key,
+                    FlagType: type,
+                    DGIMN: item,
+                    AlarmType: AlarmType,
+                    // Id: "",
+                    // CreateUserId: "",
+                    // CreateUserName: alarmPushData.CreateUserName,
+                    // CreateDate: alarmPushData.CreateDate
+                  }
+        })
+        this.setState({confirmLoading:true })
+        dispatch({
+            type: 'alarmPush/insertAlarmDepOrRole',
+            payload: { Datas:[...parData]},
+            callback:()=>{
+                this.setState({
+                    confirmLoading:false
+                },()=>{
+                    this.props.cancelAlarmModal();
+
+                })
+            }
+        });
+
+ 
     }
+
     render() {
         // const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
         // const { currentData, checkedYC, checkedCB, checkedYJ,checkedCS } = this.state;
-        const { loadingInsertData,visibleAlarm,cancelAlarmModal } = this.props;
-        const { options,mockData,targetKeys } = this.state;
+        const { loadingInsertData,visibleAlarm,cancelAlarmModal,alarmPushDepOrRoleList,alarmPushFlag,alarmPushParam:{RegionCode,AlarmType} } = this.props;
+        const { options,targetKeys,confirmLoading } = this.state;
+
+        const TableTransfer = this.TableTransfer;
         return (
             <Modal
             title="报警关联"
             visible={visibleAlarm}
             onOk={this.handleOk}
             onCancel={cancelAlarmModal}
+            confirmLoading={confirmLoading}
             destroyOnClose
             width="70%"
+            okText='保存'
           >
             <div className={styles.newAlarmPushRel}>
                 <div>
                     <Row>
                         <Col>
-                            <Card >
                                 <Row>
-                                        <Search
-                                            placeholder="输入字符模糊搜索"
-                                            allowClear
-                                            onSearch={value => this.onSearch(value)}
-                                            style={{ width: '200px' }}
-                                        />
-                                    <RegionList style={{ marginLeft: 10,width: 150  }} changeRegion={this.changeRegion} RegionCode={""}/>
-                                    <div style={{display:'inline-block', paddingLeft: 10 }}>
-                                    <Checkbox.Group
+                                    <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                                    <div style={{display:'inline-block', padding: '0 10px' }}>
+                                    {alarmPushFlag?  <Checkbox.Group
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />
 
-                                  {/* <Radio.Group onChange={this.changeCheckboxGroup} >
+                                  : <Radio.Group onChange={this.changeCheckboxGroup} >
                                       {this.getAlarmRadioOptions()}
-                                        </Radio.Group> */}
+                                        </Radio.Group>}
                                      </div>
+
+                                     <Button type="primary" onClick={()=>{this.getData()}}>查询</Button>
                                 </Row>
-                            </Card>
                         </Col>
                     </Row>
 
                 </div>
                
-                <Transfer
-                    style={{marginTop:10,width:"100%"}}
-                    dataSource={mockData}
+                <TableTransfer
+                    rowKey={record => record.DGIMN}
+                    style={{marginTop:20,width:"100%"}}
+                    dataSource={alarmPushDepOrRoleList}
                     showSearch
                     filterOption={this.filterOption}
+                    searchPlaceholder={"请输入企业名称"}
                     targetKeys={targetKeys}
                     onChange={this.handleChange}
-                    onSearch={this.handleSearch}
-                    render={item => `${item.key} - ${item.title}`}
-                 />
+                    leftColumns={this.leftTableColumns}
+                    rightColumns={this.rightTableColumns}
+                 /> 
             </div >
             </Modal>
             );

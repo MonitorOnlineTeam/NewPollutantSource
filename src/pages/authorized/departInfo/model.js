@@ -1,7 +1,8 @@
 import Model from '@/utils/model';
 import {
     getdepartinfobytree, getdepartinfobyid, insertdepartinfo, deldepartinfo, upddepartinfo, getdeparttreeandobj, getalluser, getuserbydepid, insertdepartbyuser,
-    insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid, getGroupRegionFilter
+    insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid, getGroupRegionFilter,
+    GetAlarmPushDepOrRole,InsertAlarmDepOrRole
 } from './service';
 import { message } from 'antd';
 /*
@@ -11,7 +12,6 @@ modify by
 */
 export default Model.extend({
     namespace: 'departinfo',
-
     state: {
         DepartInfoTree: [],
         DepartInfoOne: [],
@@ -22,6 +22,16 @@ export default Model.extend({
         RegionInfoTree: [],
         EntAndPoint: [],
         CheckPoint: [],
+        alarmPushLoading:true,
+        alarmPushFlag:true,
+        alarmPushParam:{
+            Type: "",
+            RegionCode: "",
+            ID: "",
+            AlarmType: ""
+          },
+        alarmPushDepOrRoleList:[],
+        alarmPushSelect:[],
     },
     subscriptions: {
         setup({
@@ -32,8 +42,37 @@ export default Model.extend({
             });
         },
     },
-
     effects: {
+        *getAlarmPushDepOrRole({callback, payload }, { call, put, update, select }) {
+            //报警关联 列表
+            yield update({ alarmPushLoading: true});
+
+            const response = yield call(GetAlarmPushDepOrRole, { ...payload });
+            if (response.IsSuccess) {
+                let totalData = response.Datas.queryAll;
+                let selectData = response.Datas.query.map(item=>{
+                    return item.DGIMN
+                });
+              yield update({
+                alarmPushDepOrRoleList: totalData,
+                alarmPushLoading:false,
+                alarmPushFlag:response.Datas.IsFlag,
+                alarmPushSelect:selectData
+              });
+              console.log(selectData)
+              callback(selectData);
+            }
+          },
+          *insertAlarmDepOrRole({ callback,payload }, { call, put, update, select }) {
+            //报警关联 选择
+            const response = yield call(InsertAlarmDepOrRole, { ...payload });
+            if (response.IsSuccess) {
+                message.success(response.Message)
+                callback()
+            }else{
+                message.error(response.Message)
+            }
+          },
         /*获取部门详细信息及层级关系**/
         * getdepartinfobytree({
             payload

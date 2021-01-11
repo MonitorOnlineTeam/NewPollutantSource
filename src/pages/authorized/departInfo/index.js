@@ -190,6 +190,8 @@ class DepartIndex extends Component {
       visibleData: false,
       pollutantType: '',
       DataTreeValue: [],
+      rolesID:'',
+      alarmPushData:'',
       columns: [
         {
           title: '部门名称',
@@ -226,7 +228,6 @@ class DepartIndex extends Component {
               <Tooltip title="编辑">
                 <a
                   onClick={() => {
-                    console.log(record.UserGroup_ID);
                     this.props.dispatch({
                       type: 'departinfo/getdepartinfobyid',
                       payload: {
@@ -826,10 +827,15 @@ class DepartIndex extends Component {
     });
   };
 
-  showAlarmModal = e => {
+  showAlarmModal = record => {
     this.setState({
-      visibleAlarm: true,
-    });
+      alarmPushData:record
+    },()=>{
+      this.setState({
+        visibleAlarm: true
+      });
+    })
+
   };
 
   render() {
@@ -1160,7 +1166,7 @@ class DepartIndex extends Component {
                   </div>
                 }
               </Modal>
-              <Modal
+              {/* <Modal
                 title="报警关联"
                 visible={this.state.visibleAlarm}
                 footer={null}
@@ -1174,8 +1180,8 @@ class DepartIndex extends Component {
                   FlagType="Dept"
                   cancelModal={this.cancelAlarmModal}
                 /> 
-              </Modal>  
-              {/* <NewAlarmPushRel visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/> */}
+              </Modal>   */}
+             {this.state.visibleAlarm&&<NewAlarmPushRel type='Dep'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
 
             </div>
             {/* </MonitorContent> */}
