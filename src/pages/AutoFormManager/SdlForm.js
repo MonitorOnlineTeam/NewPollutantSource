@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-18 10:51:39
+ * @Last Modified time: 2021-01-08 10:59:59
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -23,7 +23,7 @@ import {
   message,
   Modal,
   Carousel,
-  Tabs 
+  Tabs
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
@@ -204,7 +204,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading,corporationCode } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -264,6 +264,7 @@ class SdlForm extends PureComponent {
             <SdlCascader
               itemName={item.configDataItemName}
               itemValue={item.configDataItemValue}
+              configId={item.configId}
               data={item.value}
               placeholder={placeholder}
             />

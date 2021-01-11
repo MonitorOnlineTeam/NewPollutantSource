@@ -1199,7 +1199,7 @@ class MapView extends Component {
                       <Descriptions.Item label="企业名称">{infoWindowData.entName}</Descriptions.Item>
                       <Descriptions.Item label="行业">{infoWindowData.industryName}</Descriptions.Item>
                       <Descriptions.Item label="控制级别名称">{infoWindowData.attentionName}</Descriptions.Item>
-                      <Descriptions.Item label="环保负责人">{infoWindowData.entlinkman}</Descriptions.Item>
+                      <Descriptions.Item label="环保负责人">{infoWindowData.EnvironmentPrincipal}</Descriptions.Item>
                       <Descriptions.Item label="移动电话">{infoWindowData.entphone}</Descriptions.Item>
                       <Descriptions.Item label="企业地址">{infoWindowData.entadress}</Descriptions.Item>
                     </Descriptions>

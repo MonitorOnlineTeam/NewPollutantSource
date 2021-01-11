@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-12-29 14:25:29
+ * @Last Modified time: 2021-01-08 10:22:15
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -405,6 +405,7 @@ export default Model.extend({
           labelText: item.DF_NAME_CN,
           fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
           // configId: item.DT_CONFIG_ID,
+          isHide: item.DF_HIDDEN,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
           configDataItemValue: item.FOREIGN_DF_ID,
