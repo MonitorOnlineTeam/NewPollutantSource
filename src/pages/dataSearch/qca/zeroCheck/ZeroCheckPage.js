@@ -104,10 +104,10 @@ class ZeroCheckPage extends PureComponent {
         title: '核查时间',
         dataIndex: 'MonitorTime',
       },
-      {
-        title: '结束时间',
-        dataIndex: 'EndTime',
-      },
+      // {
+      //   title: '结束时间',
+      //   dataIndex: 'EndTime',
+      // },
       {
         title: '合格情况',
         dataIndex: 'Result',
