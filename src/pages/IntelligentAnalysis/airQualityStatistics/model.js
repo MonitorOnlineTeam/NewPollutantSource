@@ -17,8 +17,8 @@ export default Model.extend({
     exloading: false,
     loading: true,
     queryPar: {
-      beginTime: moment() .subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      beginTime: moment().subtract("days", '30').format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().subtract("days", '1').format('YYYY-MM-DD 23:59:59'),
     },
     entQueryPar: {  },
     entNumQueryPar: { },

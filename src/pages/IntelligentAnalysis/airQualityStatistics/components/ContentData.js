@@ -247,13 +247,13 @@ export default class Index extends Component {
 
 
      this.updateQueryState({
-      beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
+      beginTime: moment().subtract("days", '30').format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().subtract("days", '1').format('YYYY-MM-DD 23:59:59'),
     });
     setTimeout(() => {
       this.getTableData();
     });
-    this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
+    this.child.onDataValueChange([moment().subtract("days", '30'),moment().subtract("days", '1')])
 
   };
   updateQueryState = payload => {
@@ -360,7 +360,7 @@ export default class Index extends Component {
             <>
               <Form layout="inline">
              <Form.Item label=''>
-               <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+               <RangePicker_ format='YYYY-MM-DD' showTime={false} allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
               callback={(dates, dataType)=>this.dateChange(dates, dataType)}
               onRef={(ref) => {
                 this.child = ref;
