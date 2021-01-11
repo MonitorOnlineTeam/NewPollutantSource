@@ -248,7 +248,7 @@ export default Model.extend({
             payload.callback(result);
         },
         /** 删除摄像头 */
-        * DeleteCamera({ payload }, { call, put }) {
+        * DeleteCamera({ callback,payload }, { call, put }) {
             const result = yield call(DeleteCamera, { ...payload });
             const pointDataWhere = [
                 {
@@ -264,13 +264,14 @@ export default Model.extend({
             ];
             if (result.Datas) {
                 message.success('删除成功！');
-                yield put({
-                    type: 'autoForm/getAutoFormData',
-                    payload: {
-                        configId: 'CameraMonitor',
-                        searchParams: pointDataWhere,
-                    },
-                });
+                callback(result)
+                // yield put({
+                //     type: 'autoForm/getAutoFormData',
+                //     payload: {
+                //         configId: 'CameraMonitor',
+                //         searchParams: pointDataWhere,
+                //     },
+                // });
             }
         },
     },
