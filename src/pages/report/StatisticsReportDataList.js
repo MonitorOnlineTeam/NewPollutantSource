@@ -60,7 +60,12 @@ class StatisticsReportDataList extends PureComponent {
 
   componentDidMount() {
     this.statisticsReport();
-     
+       //获取污水处理厂数据
+    this.props.dispatch({
+      type:"report/getEntSewageList",
+      payload:{
+      }
+  })
   }
 
   
@@ -73,13 +78,6 @@ class StatisticsReportDataList extends PureComponent {
         payload:{
         }
     })
-    //获取污水处理厂数据
-    dispatch({
-        type:"report/getEntSewageList",
-        payload:{
-        }
-    })
-    
   }
 
   // 报表导出

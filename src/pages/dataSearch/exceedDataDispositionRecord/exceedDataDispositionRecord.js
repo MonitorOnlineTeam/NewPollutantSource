@@ -13,6 +13,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
+import FileDown from '@/components/AttachmentView/index'
 import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 import Group from 'antd/lib/input/Group';

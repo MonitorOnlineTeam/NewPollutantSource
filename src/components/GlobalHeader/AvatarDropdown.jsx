@@ -68,10 +68,10 @@ class AvatarDropdown extends React.Component {
           修改密码
         </Menu.Item>
         <Menu.Divider /> */}
-        <Menu.Item key="center">
+        {/* <Menu.Item key="center">
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="logout">
           <Icon type="logout" />
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
