@@ -84,7 +84,7 @@ const errorHandler = error => {
 const ssoToken = `${getCookie(configToken.cookieName)}`;
 const request = extend({
   errorHandler,
-  timeout: 30000,
+  // timeout: 30000,
   headers: {
     Accept: 'application/json',
     Authorization: (Cookie.get(configToken.cookieName) != "null" && Cookie.get(configToken.cookieName) != "") && `Bearer ${Cookie.get(configToken.cookieName)}`,

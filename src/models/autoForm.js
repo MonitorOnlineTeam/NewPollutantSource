@@ -527,9 +527,9 @@ export default Model.extend({
     * deleteAttach({ payload }, { call, update }) {
       const result = yield call(services.deleteAttach, { ...payload });
       if (result.IsSuccess) {
-
+        message.success("删除成功！")
       } else {
-        message.error(result.Message)
+        message.error(result.Datas)
       }
     },
     // 校验重复
