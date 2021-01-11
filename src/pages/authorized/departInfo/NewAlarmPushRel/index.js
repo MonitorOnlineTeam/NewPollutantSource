@@ -94,7 +94,7 @@ class Index extends Component {
 
     /** 初始化加载 */
     componentDidMount() {
-        const { dispatch, alarmPushParam, FlagType,type,alarmPushData } = this.props;
+        const { dispatch, alarmPushParam, FlagType,type,alarmPushData,alarmPushFlag } = this.props;
        
         dispatch({
             type: 'alarmPush/updateState',
@@ -103,7 +103,7 @@ class Index extends Component {
                     Type: type,
                     RegionCode: "",
                     ID:alarmPushData.key,
-                    AlarmType: ""
+                    AlarmType: alarmPushFlag?["1","2","5","6","7","8"] : '1'
                 },
             },
         })
@@ -294,11 +294,12 @@ class Index extends Component {
                                     <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {alarmPushFlag?  <Checkbox.Group
+                                      defaultValue={AlarmType}
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />
 
-                                  : <Radio.Group onChange={this.changeCheckboxGroup} >
+                                  : <Radio.Group  defaultValue={AlarmType} onChange={this.changeCheckboxGroup} >
                                       {this.getAlarmRadioOptions()}
                                         </Radio.Group>}
                                      </div>
