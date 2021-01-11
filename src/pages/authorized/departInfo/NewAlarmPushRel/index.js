@@ -28,6 +28,7 @@ import moment from 'moment';
 // import SdlCascader from '../../pages/AutoFormManager/SdlCascader'
 import RegionList from '@/components/RegionList'
 import styles from '@/pages/authorized/departInfo/index.less';
+import difference from 'lodash/difference';
 
 const { Search } = Input;
 const FormItem = Form.Item;
@@ -154,6 +155,8 @@ class Index extends Component {
                 size="small"
                 loading={this.props.alarmPushLoading}
                 style={{ pointerEvents: listDisabled ? 'none' : null }}
+                scroll={{y:'calc(100vh - 550px)'}}
+                pagination={false}
                 onRow={({ key, disabled: itemDisabled }) => ({
                   onClick: () => {
                     if (itemDisabled || listDisabled) return;
