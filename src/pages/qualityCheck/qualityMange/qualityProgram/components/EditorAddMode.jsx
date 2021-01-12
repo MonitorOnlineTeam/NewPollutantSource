@@ -89,6 +89,7 @@ class EditorAddMode extends React.Component {
       ...addOrupdatePar,
       DesignatedPerson:JSON.parse(Cookie.get('currentUser')).UserName,
       CreateTime:moment(new Date).format('YYYY-MM-DD HH:mm:ss'),
+      ID:'',
       DetailsFile:"",
       ProgrammeFile:""
     }
