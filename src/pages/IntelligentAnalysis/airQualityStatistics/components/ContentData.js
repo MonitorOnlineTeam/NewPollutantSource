@@ -84,12 +84,12 @@ export default class Index extends Component {
     this.columns = [
       {
         title: '时间',
-        dataIndex: 'Region',
-        key: 'Region',
+        dataIndex: 'Time',
+        key: 'Time',
         align: 'center',
         width:165,
         render: (text, record) => {
-          return <div>{`${moment(text).format('YYYY-MM-DD')} - ${moment(text).format('YYYY-MM-DD')}` }</div>;
+          return <div>{text.replace(/日/g,'').replace(/年|月/g,'/') }</div>;
         },
       },
       {
