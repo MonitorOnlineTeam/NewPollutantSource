@@ -124,15 +124,15 @@ export default class Index extends Component {
         children: [
           {
             title:'天数',
-            dataIndex: 'youliangDay',
-            key: 'youliangDay',
+            dataIndex: 'liangDay',
+            key: 'liangDay',
             align: 'center',
             width:100,    
           },
           {
             title:'比率',
-            dataIndex: 'youliangRate',
-            key: 'youliangRate',
+            dataIndex: 'liangRate',
+            key: 'liangRate',
             align: 'center',
             width:100,
           },        
