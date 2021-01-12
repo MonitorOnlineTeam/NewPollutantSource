@@ -17,7 +17,6 @@ import { Tabs, Dropdown, Menu, Icon, message } from 'antd'
 import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
-import routerConfig from "../../config/config"
 import webConfig from "../../public/webConfig"
 
 
