@@ -33,6 +33,7 @@ import difference from 'lodash/difference';
 import SelectPollutantType from '@/components/SelectPollutantType';
 import AlarmPushRel from '@/components/AlarmPushRel';
 import styles from './index.less';
+import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
@@ -789,11 +790,16 @@ class DepartIndex extends Component {
         });
     }
 
-    showAlarmModal = e => {
+    showAlarmModal = record => {
         this.setState({
-            visibleAlarm: true,
-        });
-    }
+          alarmPushData:record
+        },()=>{
+          this.setState({
+            visibleAlarm: true
+          });
+        })
+    
+      };
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -1126,7 +1132,7 @@ class DepartIndex extends Component {
 
 
                             </Modal>
-                            <Modal
+                            {/* <Modal
                                 title="报警关联"
                                 visible={this.state.visibleAlarm}
                                 footer={null}
@@ -1136,7 +1142,9 @@ class DepartIndex extends Component {
                             >
 
                                 <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType="Dept" cancelModal={this.cancelAlarmModal} />
-                            </Modal>
+                            </Modal> */}
+                          {this.state.visibleAlarm&&<NewAlarmPushRel type='Dep'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
+
                         </div>
                         {/* </MonitorContent> */}
                     </BreadcrumbWrapper>
