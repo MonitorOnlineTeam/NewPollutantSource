@@ -261,11 +261,11 @@ class InstrumentInfo extends Component {
       },
       {
         title: '操作',
-        render: (text, record) => {
+        render: (text, record, index) => {
           if (record.handleType === "add") {
             return <Space>
               <Button type="link" onClick={() => { this.onSave() }}>保存</Button>
-              <Button type="link" onClick={() => { this.onCancel() }}>取消</Button>
+              <Button type="link" onClick={() => { this.onCancel(index) }}>取消</Button>
             </Space>
           }
           return <Popconfirm
