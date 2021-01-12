@@ -40,6 +40,7 @@ const FormItem = Form.Item;
     alarmPushSelect:alarmPush.alarmPushSelect,
     alarmPushParam:alarmPush.alarmPushParam,
     alarmPushFlag:alarmPush.alarmPushFlag,
+    alarmPushParLoading:alarmPush.alarmPushParLoading
 }))
 
 @Form.create()
@@ -96,21 +97,29 @@ class Index extends Component {
     componentDidMount() {
         const { dispatch, alarmPushParam, FlagType,type,alarmPushData,alarmPushFlag } = this.props;
        
-        dispatch({
-            type: 'alarmPush/updateState',
-            payload: {
-                alarmPushParam: {
-                    Type: type,
-                    RegionCode: "",
-                    ID:alarmPushData.key,
-                    AlarmType: alarmPushFlag?["1","2","5","6","7","8"] : '1'
-                },
-            },
-        })
-        setTimeout(()=>{
-            this.getData();
 
-        })
+        dispatch({
+          type: 'alarmPush/getFirstAlarmpar',
+          payload: { ...alarmPushParam,AlarmType:  `"1","2","5","6","7","8"` },
+          callback:(flag)=>{
+             dispatch({
+              type: 'alarmPush/updateState',
+              payload: {
+                  alarmPushParam: {
+                      Type: type,
+                      RegionCode: "",
+                      ID:alarmPushData.key,
+                      AlarmType: !flag? `"1","2","5","6","7","8"` : '1'
+                  },
+              },
+            })
+           setTimeout(()=>{
+                this.getData();
+  
+          })
+          }
+        });
+
 
     }
 
@@ -271,9 +280,9 @@ class Index extends Component {
     render() {
         // const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
         // const { currentData, checkedYC, checkedCB, checkedYJ,checkedCS } = this.state;
-        const { loadingInsertData,visibleAlarm,cancelAlarmModal,alarmPushDepOrRoleList,alarmPushFlag,alarmPushParam:{RegionCode,AlarmType} } = this.props;
+        const { loadingInsertData,visibleAlarm,cancelAlarmModal,alarmPushDepOrRoleList,alarmPushParLoading,alarmPushFlag,alarmPushParam:{RegionCode,AlarmType} } = this.props;
         const { options,targetKeys,confirmLoading } = this.state;
-
+        
         const TableTransfer = this.TableTransfer;
         return (
             <Modal
@@ -293,16 +302,19 @@ class Index extends Component {
                                 <Row>
                                     <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
-                                    {alarmPushFlag?  <Checkbox.Group
-                                      defaultValue={AlarmType}
+                                    {!alarmPushParLoading?  <>{!alarmPushFlag?  <Checkbox.Group
+                                      defaultValue={["1","2","5","6","7","8"]}
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />
 
-                                  : <Radio.Group  defaultValue={AlarmType} onChange={this.changeCheckboxGroup} >
+                                  : <Radio.Group  defaultValue={"1"} onChange={this.changeCheckboxGroup} >
                                       {this.getAlarmRadioOptions()}
-                                        </Radio.Group>}
+                                        </Radio.Group>} </>
+                                        :
+                                        <Spin size="small" /> } 
                                      </div>
+                                    
 
                                      <Button type="primary" onClick={()=>{this.getData()}}>查询</Button>
                                 </Row>

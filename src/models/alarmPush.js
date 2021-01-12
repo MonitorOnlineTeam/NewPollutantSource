@@ -20,6 +20,7 @@ export default Model.extend({
         EntAndPoint: [],
         CheckPoint: [],
         alarmPushLoading:true,
+        alarmPushParLoading:true,
         alarmPushFlag:true,
         alarmPushParam:{
             Type: "",
@@ -40,6 +41,19 @@ export default Model.extend({
         },
     },
     effects: {
+        *getFirstAlarmpar({callback, payload }, { call, put, update, select }) {
+            //获取报警关联报警列表 参数
+            yield update({ alarmPushParLoading: true});
+
+            const response = yield call(GetAlarmPushDepOrRole, { ...payload });
+            if (response.IsSuccess) {
+              yield update({
+                alarmPushParLoading:false,
+                alarmPushFlag:response.Datas.IsFlag,
+              });
+              callback(response.Datas.IsFlag);
+            }
+          },
         *getAlarmPushDepOrRole({callback, payload }, { call, put, update, select }) {
             //报警关联 列表
             yield update({ alarmPushLoading: true});
@@ -53,10 +67,8 @@ export default Model.extend({
               yield update({
                 alarmPushDepOrRoleList: totalData,
                 alarmPushLoading:false,
-                alarmPushFlag:response.Datas.IsFlag,
                 alarmPushSelect:selectData
               });
-              console.log(selectData)
               callback(selectData);
             }
           },
