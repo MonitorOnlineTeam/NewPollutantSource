@@ -16,6 +16,7 @@ import SdlMap from './SdlMap'
 import ReturnName from './ReturnName'
 import { getAttachmentDataSource } from './utils'
 import AttachmentView from '@/components/AttachmentView'
+import PageLoading from '@/components/PageLoading'
 import styles from '../../components/DescriptionList/index.less';
 
 const FormItem = Form.Item;
@@ -109,7 +110,7 @@ class AutoFormViewItems extends Component {
             longitude={formData.Longitude}
             latitude={formData.Latitude}
             path={showText}
-            handleMarker
+            // handleMarker
             handlePolygon
             style={{ height: 400 }}
             zoom={12}
@@ -125,7 +126,7 @@ class AutoFormViewItems extends Component {
       }
 
       return (
-        <Col span={6} style={{ marginBottom: 10 }} key={item.fieldName}>
+        <Col span={6} style={{ marginBottom: 10, display: item.isHide ? "none" : "block" }} key={item.fieldName}>
           <div className={styles.term}>{item.labelText}</div>
           {el}
         </Col>
@@ -137,11 +138,11 @@ class AutoFormViewItems extends Component {
   _renderAppendDataSource() {
     const { appendDataSource } = this.props;
     return appendDataSource.map((item, index) => (
-        <Col span={6} style={{ marginBottom: 10 }} key={index}>
-          <div className={styles.term}>{item.label}</div>
-          <div className={styles.detail}>{item.value}</div>
-        </Col>
-      ))
+      <Col span={6} style={{ marginBottom: 10 }} key={index}>
+        <div className={styles.term}>{item.label}</div>
+        <div className={styles.detail}>{item.value}</div>
+      </Col>
+    ))
   }
 
   renderContent() {
@@ -156,16 +157,19 @@ class AutoFormViewItems extends Component {
     const { loadingData, loadingConfig, dispatch, history, breadcrumb } = this.props;
     const { configId } = this._SELF_;
     if (loadingData || loadingConfig) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        size="large"
-      />);
+      return (
+        // <Spin
+        //   style={{
+        //     width: '100%',
+        //     height: 'calc(100vh/2)',
+        //     display: 'flex',
+        //     alignItems: 'center',
+        //     justifyContent: 'center',
+        //   }}
+        //   size="large"
+        // />
+        <PageLoading />
+      );
     }
     return (
       <Fragment>

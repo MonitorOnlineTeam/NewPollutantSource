@@ -18,72 +18,21 @@ import ContentList from '@/pages/platformManager/manualupload/components/Content
 const configinfopage = '/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo';
 
 /**
- * 【AutoForm】系统登录
- * @params {"UserAccount": "system","UserPwd": "system","RememberMe": true}
- */
-export async function systemLogin(params) {
-  const defaults = {
-    RememberMe: true,
-    UserAccount: params.userName,
-    UserPwd: params.password,
-  };
-  const body = Object.assign(defaults);
-  const results = await get(configinfopage);
-  //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
-    var encrypt = new window.JSEncrypt();
-    encrypt.setPublicKey(encryptKey);
-    body.UserAccount = encrypt.encrypt(body.UserAccount);
-    body.UserPwd = encrypt.encrypt(body.UserPwd);
-  }
-  const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);
-  if (result.IsSuccess && result.Datas) {
-    Cookie.set(configToken.cookieName, result.Datas.Ticket);
-  } else {
-    Cookie.set(configToken.cookieName, '');
-  }
-  return result;
-}
-
-/**
- * 【AutoForm】获取页面高级查询表单
- * @params {"configId": "TestCommonPoint"}
- */
-export async function getConditions() {
-  const params = {
-    configId: 'TestCommonPoint',
-  };
-  const defaults = {};
-  const body = Object.assign(defaults, params);
-  const results = await get(configinfopage);
-  //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
-    var encrypt = new window.JSEncrypt();
-    encrypt.setPublicKey(encryptKey);
-    body.configId = encrypt.encrypt(params.configId);
-  }
-  const result = await get('/api/rest/PollutantSourceApi/AutoFormDataApi/GetConditions', body);
-  // ;
-  return result;
-}
-
-/**
  * 【AutoForm】获取页面配置信息
  * @params {"configId": "TestCommonPoint"}
  */
-export async function getPageConfigInfo(params) {
+export async function getPageConfigInfo(payload) {
   const param = {
     configId: 'TestCommonPoint',
-    ...params,
+    ...payload.params,
   };
   const defaults = {
     PageIndex: 1,
     PageSize: 200,
   };
   const body = Object.assign(defaults, param);
-  const results = await get(configinfopage);
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     body.configId = encrypt.encrypt(body.configId);
@@ -100,32 +49,10 @@ export async function getPageConfigInfo(params) {
  * 【AutoForm】获取页面高级查询表单
  * @params {"configId": "TestCommonPoint"}
  */
-export async function getListPager(params) {
-  // const defaults = {
-  //     configId: params.configId,
-  //     ConditionWhere: params.ConditionWhere,
-  //   };
-  //   const body = Object.assign(defaults);
-
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCC0hrRIjb3noDWNtbDpANbjt5Iwu2NFeDwU16Ec87ToqeoIm2KI+cOs81JP9aTDk/jkAlU97mN8wZkEMDr5utAZtMVht7GLX33Wx9XjqxUsDfsGkqNL8dXJklWDu9Zh80Ui2Ug+340d5dZtKtd+nv09QZqGjdnSp9PTfFDBY133QIDAQAB");
-  //   params.configId = encrypt.encrypt(params.configId);//加密后的字符串
-  //   params.ConditionWhere =encrypt.encryptLong(params.ConditionWhere);//加密后的字符串
-
-  //   encrypt.encrypt()
-  // const postData = {
-  //     configId: "TestCommonPoint",
-  //     ...params,
-  //     // ConditionWhere: JSON.stringify(params.ConditionWhere),
-  // };
-  // const defaults = {
-  //     PageIndex:1,
-  //     PageSize:200
-  // };
-  // const body=Object.assign(param,params);
-  const results = await get(configinfopage);
+export async function getListPager(payload) {
+  let params = payload.params;
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     params.configId = Base64.stringify(Utf8.parse(params.configId));
     if (params.ConditionWhere == undefined) {
       params.ConditionWhere = null;
@@ -141,61 +68,13 @@ export async function getListPager(params) {
   return result;
 }
 
-/**
- * 【AutoForm】获取添加页面表单元素
- * @params {"configId": "TestCommonPoint"}
- */
-export async function getAutoFromAddView() {
-  const params = {
-    configId: 'TestCommonPoint',
-  };
-  const defaults = {};
-  const body = Object.assign(defaults, params);
-  const results = await get(configinfopage);
-  //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
-    var encrypt = new window.JSEncrypt();
-    encrypt.setPublicKey(encryptKey);
-    body.configId = encrypt.encrypt(params.configId);
-  }
-  const result = await get(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/GetAutoFromAddView',
-    body,
-    null,
-  );
-  return result;
-}
-
-/**
- * 【AutoForm】获取修改页面表单元素
- * @params {"configId": "TestCommonPoint"}
- */
-export async function getAutoFromUpdateView() {
-  const params = {
-    configId: 'TestCommonPoint',
-  };
-  const defaults = {};
-  const body = Object.assign(defaults, params);
-  const results = await get(configinfopage);
-  //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
-    var encrypt = new window.JSEncrypt();
-    encrypt.setPublicKey(encryptKey);
-    body.configId = encrypt.encrypt(params.configId);
-  }
-  const result = await get(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/GetAutoFromUpdateView',
-    body,
-    null,
-  );
-  return result;
-}
 
 /**
  * 【AutoForm】获取编辑或添加页面表单元素的值
  * @params {"configId": "TestCommonPoint"}
  */
-export async function getFormData(params) {
+export async function getFormData(payload) {
+  let params = payload.params;
   const defaults = {
     configId: 'TestCommonPoint',
   };
@@ -203,9 +82,8 @@ export async function getFormData(params) {
     ...params,
     ...defaults,
   };
-  const results = await get(configinfopage);
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     params.configId = encrypt.encrypt(params.configId);
@@ -225,16 +103,16 @@ export async function getFormData(params) {
  * 【AutoForm】数据删除（支持批量）
  * @params {"configId": "TestCommonPoint"}
  */
-export async function postAutoFromDataDelete(params) {
+export async function postAutoFromDataDelete(payload) {
+  let params = payload.params;
   const postData = {
     configId: 'TestCommonPoint',
     ...params,
   };
   // const defaults = {};
   // const body=Object.assign(defaults,params);
-  const results = await get(configinfopage);
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     body.configId = encrypt.encrypt(params.configId);
@@ -251,10 +129,10 @@ export async function postAutoFromDataDelete(params) {
  * 【AutoForm】数据添加
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
-export async function postAutoFromDataAdd(params) {
-  const results = await get(configinfopage);
+export async function postAutoFromDataAdd(payload) {
+  let params = payload.params;
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     params.configId = encrypt.encrypt(params.configId);
@@ -272,10 +150,10 @@ export async function postAutoFromDataAdd(params) {
  * 【AutoForm】修改
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
-export async function postAutoFromDataUpdate(params) {
-  const results = await get(configinfopage);
+export async function postAutoFromDataUpdate(payload) {
+  let params = payload.params;
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     params.configId = encrypt.encrypt(params.configId);
@@ -315,10 +193,10 @@ export async function getAttachmentList(params) {
  * 【AutoForm】导出
  * @params {"configId": "String"}
  */
-export async function exportDataExcel(params) {
-  const results = await get(configinfopage);
+export async function exportDataExcel(payload) {
+  let params = payload.params;
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     params.configId = encrypt.encrypt(params.configId);
@@ -335,10 +213,11 @@ export async function exportDataExcel(params) {
  * 【AutoForm】下载导入模板
  * @params {"configId": "String"}
  */
-export async function exportTemplet(params) {
+export async function exportTemplet(payload) {
+  let params = payload.params;
   const results = await get(configinfopage);
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     params.configId = encrypt.encrypt(params.configId);
@@ -367,10 +246,10 @@ export async function deleteAttach(params) {
 }
 // rest/PollutantSourceApi/AutoFormDataApi/VerificationData
 // 校验重复
-export async function checkRepeat(params) {
-  const results = await get(configinfopage);
+export async function checkRepeat(payload) {
+  let params = payload.params;
   //判断配置是否开启明文传输0开启 1关闭
-  if (results.Datas.ClearTransmission == 0) {
+  if (payload.sysConfig.ClearTransmission == 0) {
     var encrypt = new window.JSEncrypt();
     encrypt.setPublicKey(encryptKey);
     params.DT_Name = encrypt.encrypt(params.DT_Name);

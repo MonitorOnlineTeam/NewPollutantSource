@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-8-29 15:30:25 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-29 15:30:51
+ * @Last Modified time: 2021-01-04 14:34:49
  * @desc: 查看附件组件
  */
 import React, { PureComponent } from 'react';
@@ -47,13 +47,16 @@ class index extends PureComponent {
     const content = (
       <Table style={{ fontSize: 20 }} dataSource={dataSource} columns={columns} size="small" bordered={false} pagination={false} />
     );
-    return (
-      <Popover content={content} title="附件详情" trigger="click">
-        <a onClick={(e) => {
-          e.stopPropagation()
-        }}>查看附件</a>
-      </Popover>
-    );
+    if (dataSource && dataSource.length) {
+      return (
+        <Popover content={content} title="附件详情" trigger="click">
+          <a onClick={(e) => {
+            e.stopPropagation()
+          }}>查看附件</a>
+        </Popover>
+      );
+    }
+    return '-'
   }
 }
 

@@ -123,8 +123,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-    '-'
-  );
+        '-'
+      );
 }
 export function asc(a, b) {
   //数字类型
@@ -304,20 +304,37 @@ export function timeDifference(beginDates, endDates) {
   }
 }
 //截取小数点后两位  
-export  function interceptTwo(value){
+export function interceptTwo(value) {
   const data = value.toString();
   // data.indexOf(".") ==-1 是整数时  补零
-  const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.split(".")[1].length<=1? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
+  const result = data.indexOf(".") == -1 ? `${value.toFixed(2)}` : data.split(".")[1].length <= 1 ? `${value.toFixed(2)}` : data.substring(0, data.indexOf(".") + 3)
   return result;
-} 
+}
 
 //保持小数点 后三位
 export function toDecimal3(x) {
-  if(x && x!='-'){
+  if (x && x != '-') {
     let res = '', data = x.toString()
-    res = data.indexOf(".") ==-1 || data.split(".")[1].length<3 ? `${ Number(x).toFixed(3)}` :   data.substring(0,data.indexOf(".")+4); // 如果是整数 toFixed(3) 补三位
+    res = data.indexOf(".") == -1 || data.split(".")[1].length < 3 ? `${Number(x).toFixed(3)}` : data.substring(0, data.indexOf(".") + 4); // 如果是整数 toFixed(3) 补三位
     return res;
-  }else{
+  } else {
     return x;
+  }
+}
+
+//判断经纬度是否在多边形中
+export function isInsidePolygon(lng, lat, poly) {
+  if (poly[0].lng) {
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+      ((poly[i].lng <= lng && lng < poly[j].lng) || (poly[j].lng <= lng && lng < poly[i].lng)) &&
+        (lat < (poly[j].lat - poly[i].lat) * (lng - poly[i].lng) / (poly[j].lng - poly[i].lng) + poly[i].lat) &&
+        (c = !c);
+    return c;
+  } else {
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+      ((poly[i][0] <= lng && lng < poly[j][0]) || (poly[j][0] <= lng && lng < poly[i][0])) &&
+        (lat < (poly[j][1] - poly[i][1]) * (lng - poly[i][0]) / (poly[j][0] - poly[i][0]) + poly[i][1]) &&
+        (c = !c);
+    return c;
   }
 }

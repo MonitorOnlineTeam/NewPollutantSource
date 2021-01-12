@@ -241,10 +241,11 @@ class NavigationTree extends Component {
       // 选中元素的scrollTop
       const selEleOffsetTop = $('.clickRowStyl').offset().top;
       // table容器高度
-      const tableHeight = $('.ant-table-wrapper').height();
+      // const tableHeight = $('.ant-table-wrapper').height();
+      const tableHeight = $('#treeTableWrapper .ant-table-wrapper').height();
       if (selEleOffsetTop - 176 > tableHeight) {
-        const scrollTop = selEleOffsetTop - tableHeight + (tableHeight / 4.5);
-        $('.ant-table-wrapper').scrollTop(scrollTop)
+        const scrollTop = selEleOffsetTop - tableHeight * 0.8;
+        $('#treeTableWrapper .ant-table-wrapper').scrollTop(scrollTop)
       }
     }
   }
@@ -428,7 +429,7 @@ class NavigationTree extends Component {
   // }
 
   // 搜索框改变查询数据
-  onChangeSearch =(e, data) => {
+  onChangeSearch = (e, data) => {
     // this.state.panelDataList.splice(0, this.state.panelDataList.length)
     // console.log('1111')
     // console.log('pan1=',this.state.panelDataList);
@@ -723,6 +724,7 @@ class NavigationTree extends Component {
           IsTree: false,
         },
       })
+      // this.controlsScrollBarOffsetTop2();
     }
   }
 
@@ -939,8 +941,8 @@ class NavigationTree extends Component {
                     justifyContent: 'center',
                   }}
                   size="large"
-                /> : <div> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
+                /> : <div id="treeTableWrapper" style={{  }}> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto',cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 

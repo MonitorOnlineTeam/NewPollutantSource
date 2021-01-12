@@ -175,9 +175,10 @@ export default Model.extend({
     },
 
     // 获取产业级联
-    *getIndustryTree({ payload }, { call, update }) {
+    *getIndustryTree({ payload, callback }, { call, update }) {
       const result = yield call(services.getIndustryTree, payload);
       if (result.IsSuccess) {
+        callback && callback(result.Datas);
         yield update({
           industryTreeList: result.Datas,
         });

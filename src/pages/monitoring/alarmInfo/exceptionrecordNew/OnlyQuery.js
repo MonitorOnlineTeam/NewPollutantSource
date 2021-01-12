@@ -73,7 +73,7 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-              router.push(`/monitoring/alarmInfo/exceptionrecord/details?queryCondition=${queryCondition}`);
+              router.push(`/monitoring/alarmInfo/exceptionrecord/details?queryCondition=${queryCondition}&onlyQuery=true`);
           }}>{text}</a>
         }
       },
@@ -96,98 +96,32 @@ class index extends PureComponent {
         width: 200,
       },
       {
-        title: '零值报警',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'LingAlarmCount',
-            key: 'LingAlarmCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, '1', undefined)
-              }}>{text}</a>
-            }
-          },
-          {
-            title: '已响应报警次数',
-            dataIndex: 'LingResponsedCount',
-            key: 'LingResponsedCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "1", '1')
-              }}>{text}</a>
-            }
-          },
-          {
-            title: '待响应报警次数',
-            dataIndex: 'LingNoResponseCount',
-            key: 'LingNoResponseCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "1", '0')
-              }}>{text}</a>
-            }
-          },
-        ]
+        title: '零值报警次数',
+        dataIndex: 'LingAlarmCount',
+        key: 'LingAlarmCount',
+        width: 120,
+        align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => {
+            this.setState({ RegionName: record.RegionName })
+            let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+            this.onTableClick(RegionCode, '1', undefined)
+          }}>{text}</a>
+        }
       },
       {
-        title: '超量程报警',
-        children: [
-          {
-            title: '报警次数',
-            dataIndex: 'ChaoAlarmCount',
-            key: 'ChaoAlarmCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "2", undefined)
-              }}>{text}</a>
-            }
-          },
-          {
-            title: '已响应报警次数',
-            dataIndex: 'ChaoResponsedCount',
-            key: 'ChaoResponsedCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "2", '1')
-              }}>{text}</a>
-            }
-          },
-          {
-            title: '待响应报警次数',
-            dataIndex: 'ChaoNoResponseCount',
-            key: 'ChaoNoResponseCount',
-            width: 120,
-            align: 'center',
-            render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({ RegionName: record.RegionName })
-                let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
-                this.onTableClick(RegionCode, "2", '0')
-              }}>{text}</a>
-            }
-          },
-        ]
+        title: '超量程报警次数',
+        dataIndex: 'ChaoAlarmCount',
+        key: 'ChaoAlarmCount',
+        width: 120,
+        align: 'center',
+        render: (text, record) => {
+          return <a onClick={() => {
+            this.setState({ RegionName: record.RegionName })
+            let RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+            this.onTableClick(RegionCode, "2", undefined)
+          }}>{text}</a>
+        }
       },
     ],
     detailsColumns: [
@@ -221,34 +155,6 @@ class index extends PureComponent {
         dataIndex: 'AlarmMsg',
         key: 'AlarmMsg',
         width: 300
-      },
-      {
-        title: '响应状态',
-        dataIndex: 'ResponseStatusName',
-        key: 'ResponseStatusName',
-      },
-      {
-        title: '响应人',
-        dataIndex: 'OperationName',
-        key: 'OperationName',
-        render: (text, record) => {
-          if (record.CompleteTime === "0001-01-01 00:00:00") {
-            return "-"
-          }
-          return text ? text : "-"
-        }
-      },
-      {
-        title: '响应时间',
-        dataIndex: 'CompleteTime',
-        key: 'CompleteTime',
-        align: 'center',
-        render: (text, record) => {
-          if (record.CompleteTime === "0001-01-01 00:00:00") {
-            return "-"
-          }
-          return text ? text : "-"
-        }
       },
     ],
   }
@@ -460,22 +366,8 @@ class index extends PureComponent {
                   // initialValue: 'siteDaily',
                 })(
                   <RegionList
-                    // changeRegion={(value) => {
-                    //   this.setState({
-                    //     regionValue: value
-                    //   })
-                    // }}
                     RegionCode={this.props.form.getFieldValue('RegionCode')}
                   />
-                  // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                  //   {
-                  //     _regionList.map(item => {
-                  //       return <Option key={item.key} value={item.value}>
-                  //         {item.title}
-                  //       </Option>
-                  //     })
-                  //   }
-                  // </Select>
                 )}
               </FormItem>
             </Row>
@@ -521,7 +413,6 @@ class index extends PureComponent {
                 >
                   导出
                       </Button>
-                <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span>
               </div>
             </Row>
           </Form>

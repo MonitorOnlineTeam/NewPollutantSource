@@ -1,6 +1,4 @@
 import request, { post, get } from '@/utils/request';
-import Base64 from 'crypto-js/enc-base64';
-import Utf8 from 'crypto-js/enc-utf8';
 
 import Cookie from 'js-cookie';
 

@@ -13,11 +13,10 @@ import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
-import { Tabs, Dropdown, Menu, Icon } from 'antd'
+import { Tabs, Dropdown, Menu, Icon, message } from 'antd'
 import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
-import routerConfig from "../../config/config"
 import webConfig from "../../public/webConfig"
 
 
@@ -52,6 +51,12 @@ class BasicLayout extends Component {
     this.state = {
       panes: [],
     };
+
+    message.config({
+      top: 70,
+      duration: 3,
+      maxCount: 3,
+    });
   }
 
   componentDidMount() {
@@ -231,10 +236,10 @@ class BasicLayout extends Component {
 
     const handleMenuCollapse = payload =>
       dispatch &&
-        dispatch({
-          type: 'global/changeLayoutCollapsed',
-          payload,
-        });
+      dispatch({
+        type: 'global/changeLayoutCollapsed',
+        payload,
+      });
 
     const menuDataRender = list => {
       let menuList = currentMenu;
@@ -304,14 +309,14 @@ class BasicLayout extends Component {
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
           breadcrumbRender={(routers = []) => [
-              {
-                path: '/',
-                breadcrumbName: formatMessage({
-                  id: 'menu.home',
-                  defaultMessage: 'Home',
-                }),
-              },
-              ...routers,
+            {
+              path: '/',
+              breadcrumbName: formatMessage({
+                id: 'menu.home',
+                defaultMessage: 'Home',
+              }),
+            },
+            ...routers,
           ]}
           footerRender={() => {
             return <div></div>;

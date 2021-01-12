@@ -212,7 +212,7 @@ export default class MonitorPoint extends Component {
         visible: true,
         isEdit: false,
         selectedPointCode: '',
-        FormData:null,
+        FormData: null,
         tabKey: "1"
       });
     }
@@ -332,11 +332,11 @@ export default class MonitorPoint extends Component {
     console.log('res=', re)
   }
 
-  modelClose=()=>{
+  modelClose = () => {
     this.setState({
       visible: false,
-      FormData:null,
-      tabKey:"1"
+      FormData: null,
+      tabKey: "1"
     })
   }
 
@@ -345,23 +345,21 @@ export default class MonitorPoint extends Component {
    * 站点信息维护tabchange
    */
   onTabPaneChange = (key) => {
- 
+
     const { selectedPointCode, FormData } = this.state;
     if (key == "2") {
-   
-       if(this.state.selectedPointCode || FormData)
-       {
-          // this.props.dispatch({
-          //   type: 'autoForm/getPageConfig',
-          //   payload: {
-          //     configId: 'service_StandardLibrary',
-          //   },
-          //  });
-       }else
-       {
-         message.error("请先保存站点信息！")
-         return;
-       }
+
+      if (this.state.selectedPointCode || FormData) {
+        // this.props.dispatch({
+        //   type: 'autoForm/getPageConfig',
+        //   payload: {
+        //     configId: 'service_StandardLibrary',
+        //   },
+        //  });
+      } else {
+        message.error("请先保存站点信息！")
+        return;
+      }
 
     }
     this.setState({
@@ -370,12 +368,12 @@ export default class MonitorPoint extends Component {
   }
 
   getTabInfo = () => {
- 
+
     const { FormData } = this.state;
-    console.log("FormData=",FormData)
+    console.log("FormData=", FormData)
     if (FormData)
-      return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]} 
-      pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
+      return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]}
+        pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
   render() {
     const {
@@ -461,7 +459,7 @@ export default class MonitorPoint extends Component {
                 }}
                 onAdd={() => {
                   this.showModal();
-                  
+
                   // this.setState({
                   //   cuid: getRowCuid(columns, row)
                   // })
@@ -506,7 +504,7 @@ export default class MonitorPoint extends Component {
                     </Tooltip>
                     {
                       row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
-                        <Tooltip title="设置Cems参数">
+                        <Tooltip title="设置CEMS参数">
                           <a onClick={() => {
                             this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
                           }}><Icon type="tool" /></a>
@@ -527,7 +525,7 @@ export default class MonitorPoint extends Component {
             onCancel={this.handleCancel}
             width="60%"
             destroyOnClose
-            bodyStyle={{paddingBottom:0}}
+            bodyStyle={{ paddingBottom: 0 }}
             footer={[
               !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
                 取消
@@ -535,47 +533,47 @@ export default class MonitorPoint extends Component {
                 <> <Button key="submit" type="primary" loading={!this.state.isEdit ? saveLoadingAdd : saveLoadingEdit} onClick={this.onSubmitForm.bind(this)}>
                   确定
             </Button><Button key="submit" onClick={this.modelClose}>
-                  取消
+                    取消
             </Button></>) : '',
             ]}
           >{
-            !this.state.isView?(
-              <Tabs activeKey={this.state.tabKey} onChange={this.onTabPaneChange}>
-              <TabPane tab={this.state.isView ? '详情' : this.state.isEdit ? '编辑监测点' : '添加监测点'} key="1">
-                  <SdlForm
-                    corporationCode={this.props.CorporationCode}
+              !this.state.isView ? (
+                <Tabs activeKey={this.state.tabKey} onChange={this.onTabPaneChange}>
+                  <TabPane tab={this.state.isView ? '详情' : this.state.isEdit ? '编辑监测点' : '添加监测点'} key="1">
+                    <SdlForm
+                      corporationCode={this.props.CorporationCode}
+                      configId={pointConfigIdEdit}
+                      onSubmitForm={this.onSubmitForm.bind(this)}
+                      form={this.props.form}
+                      noLoad
+                      hideBtns
+                      uid={this.state.cuid}
+                      isEdit={this.state.isEdit}
+                      keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                    />
+                  </TabPane>
+                  <TabPane tab="污染物信息" key="2">
+                    {this.getTabInfo()}
+                  </TabPane>
+                </Tabs>
+              ) : (
+                  <AutoFormViewItems
                     configId={pointConfigIdEdit}
-                    onSubmitForm={this.onSubmitForm.bind(this)}
-                    form={this.props.form}
-                    noLoad
-                    hideBtns
-                    uid={this.state.cuid}
-                    isEdit={this.state.isEdit}
                     keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
                   />
-              </TabPane>
-              <TabPane tab="污染物信息" key="2">
-                {this.getTabInfo()}
-              </TabPane>
-            </Tabs>
-            ):(
-              <AutoFormViewItems
-                configId={pointConfigIdEdit}
-                keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-              />
-            )
-          }
-          
+                )
+            }
+
           </Modal>
           <Modal
-            title="设置Cems参数"
+            title="设置CEMS参数"
             visible={this.state.Mvisible}
             onCancel={this.handleMCancel}
             width="90%"
             destroyOnClose
             footer={false}
           >
-            <AnalyzerManage DGIMN={this.state.DGIMN} />
+            <AnalyzerManage DGIMN={this.state.DGIMN} onClose={() => { this.setState({ Mvisible: false }) }} />
           </Modal>
         </div>
         {/* </MonitorContent> */}

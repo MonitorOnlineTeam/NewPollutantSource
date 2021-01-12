@@ -366,6 +366,7 @@ class MonitoringStandard extends Component {
                     {
                         <AutoFormTable
                             style={{ marginTop: 10 }}
+                            getPageConfig
                             configId={'service_StandardLibrary'}
                             searchParams={[
                                 {
