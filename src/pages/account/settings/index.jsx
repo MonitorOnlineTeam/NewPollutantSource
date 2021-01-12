@@ -20,9 +20,9 @@ class Settings extends Component {
   constructor(props) {
     super(props);
     const menuMap = {
-      base: (
-        <FormattedMessage id="account-settings.menuMap.basic" defaultMessage="Basic Settings" />
-      ),
+      // base: (
+      //   <FormattedMessage id="account-settings.menuMap.basic" defaultMessage="Basic Settings" />
+      // ),
       changePwd: ("修改密码"),
       // security: (
       //   <FormattedMessage
@@ -43,7 +43,7 @@ class Settings extends Component {
     this.state = {
       mode: 'inline',
       menuMap,
-      selectKey: 'base',
+      selectKey: 'changePwd',
     };
   }
 
