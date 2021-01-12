@@ -100,7 +100,7 @@ class Index extends Component {
 
         dispatch({
           type: 'alarmPush/getFirstAlarmpar',
-          payload: { ...alarmPushParam,AlarmType:  `"1","2","5","6","7","8"` },
+          payload: { ...alarmPushParam,AlarmType:  "1,2,5,6,7,8" },
           callback:(flag)=>{
              dispatch({
               type: 'alarmPush/updateState',
@@ -109,7 +109,7 @@ class Index extends Component {
                       Type: type,
                       RegionCode: "",
                       ID:alarmPushData.key,
-                      AlarmType: flag? `"1","2","5","6","7","8"` : '1'
+                      AlarmType: flag? "1,2,5,6,7,8" : '1'
                   },
               },
             })
