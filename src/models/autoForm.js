@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-12-29 14:25:29
+ * @Last Modified time: 2021-01-12 15:34:19
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -177,7 +177,8 @@ export default Model.extend({
       // }) : '';
 
       const postData = getQueryParams(state, payload);
-      const result = yield call(services.getListPager, { ...postData });
+      const sysConfig = yield select(state => state.global.configInfo);
+      const result = yield call(services.getListPager, { params: postData, sysConfig });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
 
@@ -204,7 +205,12 @@ export default Model.extend({
     },
     // 根据configId 获取数据
     * getConfigIdList({ payload }, { call, update, select }) {
-      const result = yield call(services.getListPager, { ...payload });
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: payload,
+        sysConfig
+      };
+      const result = yield call(services.getListPager, postData);
       if (result.IsSuccess) {
         const configIdList = yield select(state => state.autoForm.configIdList);
         yield update({
@@ -218,7 +224,12 @@ export default Model.extend({
     // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
     * getPageConfig({ payload }, { call, put, update, select }) {
-      const result = yield call(services.getPageConfigInfo, { ...payload });
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: { ...payload },
+        sysConfig
+      };
+      const result = yield call(services.getPageConfigInfo, postData);
       if (result.IsSuccess) {
         const configId = result.Datas.ConfigId;
         const columns = result.Datas.ColumnFields.filter(itm => itm.FOREIGH_DT_CONFIGID === '' && itm.DF_WIDTH !== '0').map((item, index) => ({
@@ -336,8 +347,13 @@ export default Model.extend({
       }
     },
 
-    * del({ payload }, { call, update, put }) {
-      const result = yield call(services.postAutoFromDataDelete, { ...payload, searchParams: undefined });
+    * del({ payload }, { call, update, put, select }) {
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: { ...payload, searchParams: undefined },
+        sysConfig
+      };
+      const result = yield call(services.postAutoFromDataDelete, postData);
       if (result.IsSuccess) {
         message.success('删除成功！');
         yield put({
@@ -350,8 +366,13 @@ export default Model.extend({
       }
     },
 
-    * add({ payload }, { call, update, put }) {
-      const result = yield call(services.postAutoFromDataAdd, { ...payload, FormData: JSON.stringify(payload.FormData) });
+    * add({ payload }, { call, update, put, select }) {
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: { ...payload, FormData: JSON.stringify(payload.FormData) },
+        sysConfig
+      };
+      const result = yield call(services.postAutoFromDataAdd, postData);
       if (result.IsSuccess) {
         message.success('添加成功！');
         yield put({
@@ -367,8 +388,13 @@ export default Model.extend({
       }
     },
 
-    * saveEdit({ payload }, { call, update, put }) {
-      const result = yield call(services.postAutoFromDataUpdate, { ...payload, FormData: JSON.stringify(payload.FormData) });
+    * saveEdit({ payload }, { call, update, put, select }) {
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: { ...payload, FormData: JSON.stringify(payload.FormData) },
+        sysConfig
+      };
+      const result = yield call(services.postAutoFromDataUpdate, postData);
       if (result.IsSuccess) {
         message.success('修改成功！');
         // yield put({
@@ -382,7 +408,13 @@ export default Model.extend({
 
     * getFormData({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
-      const result = yield call(services.getFormData, { ...payload });
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: { ...payload },
+        sysConfig
+      };
+
+      const result = yield call(services.getFormData, postData);
       if (result.IsSuccess && result.Datas.length) {
         yield update({
           editFormData: {
@@ -398,13 +430,19 @@ export default Model.extend({
     // 获取详情页面配置
     * getDetailsConfigInfo({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
-      const result = yield call(services.getPageConfigInfo, { ...payload });
+      const sysConfig = yield select(state => state.global.configInfo);
+      let postData = {
+        params: { ...payload },
+        sysConfig
+      };
+      const result = yield call(services.getPageConfigInfo, postData);
       if (result.IsSuccess) {
         const detailFormItems = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1).map(item => ({
           type: item.DF_CONTROL_TYPE,
           labelText: item.DF_NAME_CN,
           fieldName: item.DF_FOREIGN_TYPE === 2 ? `${item.FullFieldName}_Name` : (item.FOREIGH_DT_CONFIGID ? item.FOREIGN_DF_NAME : item.DF_NAME), // 判断是否是外键或表连接
           // configId: item.DT_CONFIG_ID,
+          isHide: item.DF_HIDDEN,
           configId: item.FOREIGH_DT_CONFIGID,
           configDataItemName: item.FOREIGN_DF_NAME,
           configDataItemValue: item.FOREIGN_DF_ID,
@@ -456,8 +494,13 @@ export default Model.extend({
     },
 
     // 文件上传
-    * fileUpload({ payload }, { call, update }) {
-      const result = yield call(services.exportTemplet, payload);
+    * fileUpload({ payload }, { call, update, select }) {
+      const sysConfig = yield select(state => state.global.configInfo);
+      let body = {
+        params: { ...payload },
+        sysConfig
+      };
+      const result = yield call(services.exportTemplet, body);
       if (result.IsSuccess) {
         // result.Datas && window.open(result.Datas)
       } else {
@@ -469,7 +512,12 @@ export default Model.extend({
     * exportDataExcel({ payload }, { call, select, update }) {
       const state = yield select(state => state.autoForm);
       const postData = getQueryParams(state, payload);
-      const result = yield call(services.exportDataExcel, { ...postData, ...payload });
+      const sysConfig = yield select(state => state.global.configInfo);
+      let body = {
+        params: { ...postData, ...payload },
+        sysConfig
+      };
+      const result = yield call(services.exportDataExcel, body);
       if (result.IsSuccess) {
         console.log('suc=', result)
         result.Datas && window.open(result.Datas)
@@ -478,8 +526,13 @@ export default Model.extend({
       }
     },
     // 下载导入模板
-    * exportTemplet({ payload }, { call, update }) {
-      const result = yield call(services.exportTemplet, { ...payload });
+    * exportTemplet({ payload }, { call, update, select }) {
+      const sysConfig = yield select(state => state.global.configInfo);
+      let body = {
+        params: payload,
+        sysConfig
+      };
+      const result = yield call(services.exportTemplet, body);
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas)
       } else {
@@ -497,8 +550,13 @@ export default Model.extend({
       }
     },
     // 校验重复
-    * checkRepeat({ payload, callback }, { call, update }) {
-      const result = yield call(services.checkRepeat, { ...payload });
+    * checkRepeat({ payload, callback }, { call, update, select }) {
+      const sysConfig = yield select(state => state.global.configInfo);
+      let body = {
+        params: payload,
+        sysConfig
+      };
+      const result = yield call(services.checkRepeat, body);
       if (result.IsSuccess) {
         callback && callback(result.Datas)
       } else {

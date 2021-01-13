@@ -126,7 +126,7 @@ class AutoFormViewItems extends Component {
       }
 
       return (
-        <Col span={6} style={{ marginBottom: 10 }} key={item.fieldName}>
+        <Col span={6} style={{ marginBottom: 10, display: item.isHide ? "none" : "block" }} key={item.fieldName}>
           <div className={styles.term}>{item.labelText}</div>
           {el}
         </Col>

@@ -33,6 +33,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import difference from 'lodash/difference';
 import { Right } from '@/utils/icon';
 import AlarmPushRel from '@/components/AlarmPushRel';
+import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
@@ -171,6 +172,7 @@ class RoleIndex extends Component {
             buttonState: [],
             selectedRowKeysMenu: [],
             expandRows: false,
+            alarmPushData:'',
             menucolumns: [
                 {
                     title: '菜单名称',
@@ -600,11 +602,16 @@ class RoleIndex extends Component {
         });
     }
 
-    showAlarmModal = e => {
+    showAlarmModal = record => {
         this.setState({
-            visibleAlarm: true,
-        });
-    }
+          alarmPushData:record
+        },()=>{
+          this.setState({
+            visibleAlarm: true
+          });
+        })
+    
+      };
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -865,7 +872,7 @@ class RoleIndex extends Component {
                                 </div>
                             </Modal>
 
-                            <Modal
+                            {/* <Modal
                                 title="报警关联"
                                 visible={this.state.visibleAlarm}
                                 footer={null}
@@ -875,7 +882,9 @@ class RoleIndex extends Component {
                             >
 
                                 <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType="Role" cancelModal={this.cancelAlarmModal} />
-                            </Modal>
+                            </Modal> */}
+                  {this.state.visibleAlarm&&<NewAlarmPushRel type='Role'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
+
                         </div>
                         {/* </MonitorContent> */}
                     </BreadcrumbWrapper>

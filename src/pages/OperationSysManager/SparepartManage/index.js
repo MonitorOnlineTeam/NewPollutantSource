@@ -533,7 +533,7 @@ export default class Index extends Component {
                             </Form.Item>
                             <Form.Item>
                                 设备类型：
-                            <Select placeholder="设备类型" style={{ width: 120 }} value={sparepartManageParameters.EquipmentType} onChange={this.EquipmentTypeChange}>
+                            <Select placeholder="设备类型" style={{ width: 120 }} value={sparepartManageParameters.EquipmentType || undefined} onChange={this.EquipmentTypeChange}>
                                     <Option value="1">废水</Option>
                                     <Option value="2">废气</Option>
                                     <Option value="5">环境质量</Option>

@@ -6,6 +6,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -72,7 +73,7 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-              router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
+              router.push(`/monitoring/alarmInfo/exceptionrecord/details?queryCondition=${queryCondition}&onlyQuery=true`);
           }}>{text}</a>
         }
       },
@@ -364,15 +365,9 @@ class index extends PureComponent {
                 {getFieldDecorator('RegionCode', {
                   // initialValue: 'siteDaily',
                 })(
-                  <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                    {
-                      _regionList.map(item => {
-                        return <Option key={item.key} value={item.value}>
-                          {item.title}
-                        </Option>
-                      })
-                    }
-                  </Select>
+                  <RegionList
+                    RegionCode={this.props.form.getFieldValue('RegionCode')}
+                  />
                 )}
               </FormItem>
             </Row>

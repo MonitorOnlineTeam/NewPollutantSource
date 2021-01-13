@@ -32,13 +32,13 @@ export async function GetAlarmVerifyDetail(params)
 //导出超标报警审核
 export async function ExportAlarmVerifyRate(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRate',params,null)
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmList',params,null)
     return result 
 }
 //导出超标报警审核详情
 export async function ExportAlarmVerifyRateDetail(params)
 {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmVerifyRateDetail',params,null)
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmDetaiInfolList',params,null)
     return result 
 }
 //导出超标报警审核详细

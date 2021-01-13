@@ -67,123 +67,115 @@ class AnalyzerManage extends Component {
   }
 
 
- /** 添加主表Cem */
- handleAdd = () => {
-  const { dataSource } = this.state;
-  if (dataSource.length === 3) {
-    return;
-  }
-  const key = dataSource.length + 1;
-  dataSource.push({
-    key,
-    Type: undefined,
-    Manufacturer: undefined,
-    ManufacturerCode: undefined,
-    Component: [],
-  })
-  this.setState({ dataSource })
-}
-
-/** 添加子表 */
-handleAddChild = index => {
-  const { dataSource } = this.state;
-  const key = dataSource[index].Component.length + 1;
-  dataSource[index].Component.push({
-    key: Math.floor(Math.random() * 65535),
-    Name: undefined,
-    AnalyzerCode: undefined,
-    DeviceModel: undefined,
-    Manufacturer: undefined,
-    ManufacturerAbbreviation: undefined,
-    TestComponent: undefined,
-    AnalyzerPrinciple: undefined,
-    AnalyzerRangeMin: undefined,
-    AnalyzerRangeMax: undefined,
-    MeasurementUnit: undefined,
-    Slope: undefined,
-    Intercept: undefined,
-  })
-  this.setState({ dataSource })
-}
-
-/** 主表值改变 */
-changeMainTable = (key, value, index) => {
-  const tempDataSource = this.state.dataSource;
-
-  tempDataSource[index][key] = value;
-  this.setState({
-    dataSource: tempDataSource,
-  })
-}
-
-/** 子表值改变 */
-changeChildTable = (parentIndex, key, value, index) => {
-  const tempDataSource = this.state.dataSource;
-  tempDataSource[parentIndex].Component[index][key] = value;
-  this.setState({
-    dataSource: tempDataSource,
-  })
-}
-
-/** 保存 */
-onSubmitForm = () => {
-  this.props.form.validateFields((err, fieldsValue) => {
-    if (err) {
+  /** 添加主表Cem */
+  handleAdd = () => {
+    const { dataSource } = this.state;
+    if (dataSource.length === 3) {
       return;
     }
+    const key = dataSource.length + 1;
+    dataSource.push({
+      key,
+      Type: undefined,
+      Manufacturer: undefined,
+      ManufacturerCode: undefined,
+      Component: [],
+    })
+    this.setState({ dataSource })
+  }
 
-    const {
-      dataSource,
-    } = this.state;
-    let isErr = false;
-    dataSource.map(item => {
-      if (!item.Component.length) {
-        this.setState({
-          expandedRowKeys: [
-            ...this.state.expandedRowKeys,
-            item.key,
-          ],
+  /** 添加子表 */
+  handleAddChild = index => {
+    const { dataSource } = this.state;
+    const key = dataSource[index].Component.length + 1;
+    dataSource[index].Component.push({
+      key: Math.floor(Math.random() * 65535),
+      Name: undefined,
+      AnalyzerCode: undefined,
+      DeviceModel: undefined,
+      Manufacturer: undefined,
+      ManufacturerAbbreviation: undefined,
+      TestComponent: undefined,
+      AnalyzerPrinciple: undefined,
+      AnalyzerRangeMin: undefined,
+      AnalyzerRangeMax: undefined,
+      MeasurementUnit: undefined,
+      Slope: undefined,
+      Intercept: undefined,
+    })
+    this.setState({ dataSource })
+  }
+
+  /** 主表值改变 */
+  changeMainTable = (key, value, index) => {
+    const tempDataSource = this.state.dataSource;
+
+    tempDataSource[index][key] = value;
+    this.setState({
+      dataSource: tempDataSource,
+    })
+  }
+
+  /** 子表值改变 */
+  changeChildTable = (parentIndex, key, value, index) => {
+    const tempDataSource = this.state.dataSource;
+    tempDataSource[parentIndex].Component[index][key] = value;
+    this.setState({
+      dataSource: tempDataSource,
+    })
+  }
+
+  /** 保存 */
+  onSubmitForm = () => {
+    this.props.form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      }
+
+      const {
+        dataSource,
+      } = this.state;
+      let isErr = false;
+      dataSource.map(item => {
+        if (!item.Component.length) {
+          this.setState({
+            expandedRowKeys: [
+              ...this.state.expandedRowKeys,
+              item.key,
+            ],
+          })
+          isErr = true;
+        }
+      })
+      if (!isErr) {
+        const postData = {
+          DGIMN: this.props.DGIMN,
+          MainTable: dataSource,
+        }
+        console.log('postData=', postData)
+        // return;
+        this.props.dispatch({
+          type: 'point/AddAnalyzer',
+          payload: postData,
+          callback: () => {
+            this.props.onClose && this.props.onClose();
+          }
         })
-        isErr = true;
+      } else {
+        message.error('请添分析仪');
       }
     })
-    if (!isErr) {
-      const postData = {
-        DGIMN: this.props.DGIMN,
-        MainTable: dataSource,
-      }
-      console.log('postData=', postData)
-      // return;
-      this.props.dispatch({
-        type: 'point/AddAnalyzer',
-        payload: postData,
-      })
-    } else {
-      message.error('请添分析仪');
-    }
-  })
-}
+  }
 
-expandedRowRender = (record, index, indent, expanded) => {
-  const { dataSource } = this.state;
-  const columns = [
-    {
-      title: '操作',
-      // fixed: 'left',
-      width: 80,
-      render: (text, record, idx) => <a onClick={() => {
-          const tempDataSource = this.state.dataSource;
-          tempDataSource[index].Component.splice(idx, 1);
-          this.setState({
-            dataSource: [...tempDataSource],
-          })
-        }}>删除</a>,
-    },
-    {
-      title: '分析仪名称',
-      dataIndex: 'TestComponent',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
+  expandedRowRender = (record, index, indent, expanded) => {
+    const { dataSource } = this.state;
+    const columns = [
+
+      {
+        title: '分析仪名称',
+        dataIndex: 'TestComponent',
+        width: 150,
+        render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
           {this.props.form.getFieldDecorator(`TestComponent${record.key}`, {
             rules: [
               { required: true, message: '请选择分析仪名称' },
@@ -199,156 +191,169 @@ expandedRowRender = (record, index, indent, expanded) => {
             </Select>,
           )}
         </FormItem>,
-    },
-    {
-      title: '分析仪原理',
-      dataIndex: 'AnalyzerPrinciple',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
+      },
+      {
+        title: '分析仪原理',
+        dataIndex: 'AnalyzerPrinciple',
+        width: 150,
+        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
           {this.props.form.getFieldDecorator(`AnalyzerPrinciple${record.key}`, {
             initialValue: text || undefined,
           })(
             <Input onChange={e => { this.changeChildTable(index, 'AnalyzerPrinciple', e.target.value, idx) }} />,
           )}
         </FormItem>,
-    },
-    {
-      title: '最小量程',
-      dataIndex: 'AnalyzerRangeMin',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
+      },
+      {
+        title: '最小量程',
+        dataIndex: 'AnalyzerRangeMin',
+        width: 150,
+        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
           {this.props.form.getFieldDecorator(`AnalyzerRangeMin${record.key}`, {
             initialValue: text || undefined,
           })(
             <InputNumber min={-100000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMin', value, idx) }} />,
           )}
         </FormItem>,
-    },
-    {
-      title: '最大量程',
-      dataIndex: 'AnalyzerRangeMax',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
+      },
+      {
+        title: '最大量程',
+        dataIndex: 'AnalyzerRangeMax',
+        width: 150,
+        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
           {this.props.form.getFieldDecorator(`AnalyzerRangeMax${record.key}`, {
             initialValue: text || undefined,
           })(
             <InputNumber min={-100000} onChange={value => { this.changeChildTable(index, 'AnalyzerRangeMax', value, idx) }} />,
           )}
         </FormItem>,
-    },
-    {
-      title: '单位',
-      dataIndex: 'MeasurementUnit',
-      width: 150,
-      render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
+      },
+      {
+        title: '单位',
+        dataIndex: 'MeasurementUnit',
+        width: 150,
+        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
           {this.props.form.getFieldDecorator(`MeasurementUnit${record.key}`, {
             initialValue: text || undefined,
           })(
             <Input onChange={e => { this.changeChildTable(index, 'MeasurementUnit', e.target.value, idx) }} />,
           )}
         </FormItem>,
-    },
-  ];
-  let props = {};
-  if (!dataSource[index].Component.length) {
-    props = {
-      locale: {
-        emptyText: <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
-          <Icon type="plus" /> 添加
-        </div>,
       },
-    };
-  } else {
-    props = {
-      footer: () => <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
+      {
+        title: '操作',
+        // fixed: 'left',
+        width: 80,
+        render: (text, record, idx) => <a onClick={() => {
+          const tempDataSource = this.state.dataSource;
+          tempDataSource[index].Component.splice(idx, 1);
+          this.setState({
+            dataSource: [...tempDataSource],
+          })
+        }}>删除</a>,
+      },
+    ];
+    let props = {};
+    if (!dataSource[index].Component.length) {
+      props = {
+        locale: {
+          emptyText: <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
+            <Icon type="plus" /> 添加
+        </div>,
+        },
+      };
+    } else {
+      props = {
+        footer: () => <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
           <Icon type="plus" /> 添加
       </div>,
-    };
+      };
+    }
+    const scrollXWidth = columns.map(col => col.width || 150).reduce((prev, curr) => prev + curr, 0);
+    this._SELF_.scrollXWidth = scrollXWidth;
+    return <Table
+      {...props}
+      rowKey={record => record.key}
+      columns={columns}
+      dataSource={dataSource[index].Component}
+      scroll={{ x: scrollXWidth }}
+      pagination={false}
+      bordered={false}
+      size="samll"
+    />;
   }
-  const scrollXWidth = columns.map(col => col.width || 150).reduce((prev, curr) => prev + curr, 0);
-  this._SELF_.scrollXWidth = scrollXWidth;
-  return <Table
-    {...props}
-    rowKey={record => record.key}
-    columns={columns}
-    dataSource={dataSource[index].Component}
-    scroll={{ x: scrollXWidth }}
-    pagination={false}
-    bordered={false}
-    size="samll"
-  />;
-}
 
   render() {
     const { dataSource, expandedRowKeys } = this.state;
     const { formItemLayout, id, title, scrollXWidth } = this._SELF_;
     const { form: { getFieldDecorator }, qualityControlFormData, loading } = this.props;
     const columns = [
+
       {
-        title: '操作',
-        // fixed: 'left',
-        width: '10%',
-        render: (text, record, idx) => <a onClick={() => {
-            const tempDataSource = this.state.dataSource;
-            tempDataSource.splice(idx, 1);
-            this.setState({
-              dataSource: [...tempDataSource],
-            })
-          }}>删除</a>,
-      },
-      {
-        title: 'Cem名称',
+        title: 'CEMS名称',
         dataIndex: 'Type',
         width: '20%',
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
-            {getFieldDecorator(`Type${record.key}`, {
-              rules: [
-                { required: true, message: '请选择Cem名称' },
-              ],
-              initialValue: text || undefined,
-            })(
-              <Select style={{ width: '100%' }} onChange={value => {
-                this.changeMainTable('Type', value, idx);
-              }}>
-                {
-                  this.props.CemsList.map(item => <Option disabled={this.state.dataSource.find(itm => itm.Type == item.ChildID)} key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)
-                }
-              </Select>,
-            )}
-          </FormItem>,
+          {getFieldDecorator(`Type${record.key}`, {
+            rules: [
+              { required: true, message: '请选择CEMS名称' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <Select style={{ width: '100%' }} onChange={value => {
+              this.changeMainTable('Type', value, idx);
+            }}>
+              {
+                this.props.CemsList.map(item => <Option disabled={this.state.dataSource.find(itm => itm.Type == item.ChildID)} key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)
+              }
+            </Select>,
+          )}
+        </FormItem>,
       },
       {
         title: '设备生产商',
         dataIndex: 'Manufacturer',
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {getFieldDecorator(`Manufacturer${record.key}`, {
-              rules: [
-                { required: true, message: '请填写设备生产商' },
-              ],
-              initialValue: text || undefined,
-            })(
-                <Input
-                  onChange={e => { this.changeMainTable('Manufacturer', e.target.value, idx) }}
-                />,
-            )}
-          </FormItem>,
+          {getFieldDecorator(`Manufacturer${record.key}`, {
+            rules: [
+              { required: true, message: '请填写设备生产商' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <Input
+              onChange={e => { this.changeMainTable('Manufacturer', e.target.value, idx) }}
+            />,
+          )}
+        </FormItem>,
       },
       {
         title: '规格型号',
         dataIndex: 'ManufacturerCode',
         width: '20%',
         render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-            {getFieldDecorator(`ManufacturerCode${record.key}`, {
-              rules: [
-                { required: true, message: '请填写规格型号' },
-              ],
-              initialValue: text || undefined,
-            })(
-                <Input
-                  onChange={e => { this.changeMainTable('ManufacturerCode', e.target.value, idx) }}
-                />,
-            )}
-          </FormItem>,
+          {getFieldDecorator(`ManufacturerCode${record.key}`, {
+            rules: [
+              { required: true, message: '请填写规格型号' },
+            ],
+            initialValue: text || undefined,
+          })(
+            <Input
+              onChange={e => { this.changeMainTable('ManufacturerCode', e.target.value, idx) }}
+            />,
+          )}
+        </FormItem>,
+      },
+      {
+        title: '操作',
+        // fixed: 'left',
+        width: '10%',
+        render: (text, record, idx) => <a onClick={() => {
+          const tempDataSource = this.state.dataSource;
+          tempDataSource.splice(idx, 1);
+          this.setState({
+            dataSource: [...tempDataSource],
+          })
+        }}>删除</a>,
       },
     ];
     if (loading) {
@@ -357,47 +362,49 @@ expandedRowRender = (record, index, indent, expanded) => {
     return (
       <div>
         <Card
-              title=
-              {<Button onClick={this.handleAdd} type="primary">
-              添加
+          title=
+          {<Button onClick={this.handleAdd} type="primary">
+            添加
               </Button>}
-              type="inner"
+          type="inner"
+          bordered={false}
+        >
+          {
+            !loading && <Table
+              rowKey={record => record.key}
+              // expandedRowKeys={expandedRowKeys}
+              // defaultExpandAllRows={!!id}
+              columns={columns}
+              dataSource={dataSource}
+              scroll={{ x: 300, y: '70vh' }}
+              expandedRowRender={this.expandedRowRender}
+              defaultExpandAllRows
+              onExpand={(expanded, record) => {
+                if (expanded) {
+                  this.setState({
+                    expandedRowKeys: [
+                      ...expandedRowKeys,
+                      record.key,
+                    ],
+                  })
+                } else {
+                  const rowKeys = _.remove(expandedRowKeys, n => n !== record.key);
+                  this.setState({
+                    expandedRowKeys: [
+                      ...rowKeys,
+                    ],
+                  })
+                }
+              }}
+              expandedRows={expandedRows => {
+                console.log('expandedRows=', expandedRows)
+              }}
               bordered={false}
-            >
-              <Table
-                rowKey={record => record.key}
-                expandedRowKeys={expandedRowKeys}
-                defaultExpandAllRows={!!id}
-                columns={columns}
-                dataSource={dataSource}
-                scroll={{ x: 300 }}
-                expandedRowRender={this.expandedRowRender}
-                defaultExpandAllRows
-                onExpand={(expanded, record) => {
-                  if (expanded) {
-                    this.setState({
-                      expandedRowKeys: [
-                        ...expandedRowKeys,
-                        record.key,
-                      ],
-                    })
-                  } else {
-                    const rowKeys = _.remove(expandedRowKeys, n => n !== record.key);
-                    this.setState({
-                      expandedRowKeys: [
-                        ...rowKeys,
-                      ],
-                    })
-                  }
-                }}
-                expandedRows={expandedRows => {
-                  console.log('expandedRows=', expandedRows)
-                }}
-                bordered={false}
-                pagination={false}
-                size="middle"
-              />
-               <Row>
+              pagination={false}
+              size="middle"
+            />
+          }
+          <Row>
             <Divider orientation="right">
               <Button type="primary" loading={this.props.btnloading} onClick={this.onSubmitForm}>保存</Button>
             </Divider>

@@ -90,6 +90,51 @@ class RegionDetails extends PureComponent {
           }
         },
       ],
+      columns_onlyQuery: [
+        {
+          title: '行政区',
+          dataIndex: 'RegionName',
+          key: 'RegionName',
+        },
+        {
+          title: '企业名称',
+          dataIndex: 'EntName',
+          key: 'EntName',
+        },
+        {
+          title: '监测点名称',
+          dataIndex: 'PointName',
+          key: 'PointName',
+        },
+        {
+          title: '数据类型',
+          dataIndex: 'DataType',
+          key: 'DataType',
+        },
+        {
+          title: '首次报警时间',
+          dataIndex: 'FirstTime',
+          key: 'FirstTime',
+        },
+        {
+          title: '报警信息',
+          dataIndex: 'AlarmMsg',
+          key: 'AlarmMsg',
+          width: 300
+        },
+        {
+          title: '处理详情',
+          align: 'center',
+          render: (text, record) => {
+            if (record.TaskId && record.DGIMN) {
+              return <a onClick={() => {
+                this.setState({ TaskID: record.TaskId, DGIMN: record.DGIMN }, () => { this.setState({ visible: true }) })
+              }}>详情</a>
+            }
+            return "-"
+          }
+        },
+      ],
     };
   }
 
@@ -129,27 +174,35 @@ class RegionDetails extends PureComponent {
 
   render() {
     const { exceptionAlarmListForEntDataSource, loading, exportLoading } = this.props;
-    const { columns, DGIMN, TaskID } = this.state;
+    const { columns, DGIMN, TaskID, columns_onlyQuery } = this.state;
+    let _columns = columns;
+    let isOnlyQuery = this.props.location.query.onlyQuery === 'true';
+    if (isOnlyQuery) {
+      _columns = columns_onlyQuery
+    }
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb} title="异常数据报警详情">
         <Card>
           <Row style={{ marginBottom: 10 }}>
-            <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
-              <Radio.Button value="">全部</Radio.Button>
-              <Radio.Button value="1">已响应</Radio.Button>
-              <Radio.Button value="0">待响应</Radio.Button>
-            </Radio.Group>
+            {
+              !isOnlyQuery && <Radio.Group onChange={this.onChange} defaultValue="" style={{ marginRight: 10 }}>
+                <Radio.Button value="">全部</Radio.Button>
+                <Radio.Button value="1">已响应</Radio.Button>
+                <Radio.Button value="0">待响应</Radio.Button>
+              </Radio.Group>
+            }
             <Button style={{ margin: '0 5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
             <Button onClick={() => {
-              this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
+              // this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
+              history.back();
             }}>
               <Icon type="rollback" />
               返回
             </Button>
           </Row>
-          <SdlTable align="center" loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={columns} />
+          <SdlTable align="center" loading={loading} dataSource={exceptionAlarmListForEntDataSource} columns={_columns} />
           <Modal
             // title="Basic Modal"
             visible={this.state.visible}

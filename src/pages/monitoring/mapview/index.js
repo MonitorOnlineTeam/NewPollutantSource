@@ -624,6 +624,7 @@ class MapView extends Component {
       },
       toolbox: {
         show: true,
+        right: 15,
         feature: {
           saveAsImage: {},
         },
@@ -637,7 +638,7 @@ class MapView extends Component {
       yAxis: {
         type: 'value',
         nameTextStyle: {
-          padding: [0, 0, 0, 24],
+          padding: [0, 0, 0, 38],
         },
         name: this.state.chartTitle ? this.state.chartTitle : (this.props.tableList.length && this.props.tableList[0].title),
         axisLabel: {
@@ -669,7 +670,6 @@ class MapView extends Component {
       },
       ],
     };
-
     const airOption = {
       // color: ['#3398DB'],
       title: {
@@ -1199,7 +1199,7 @@ class MapView extends Component {
                       <Descriptions.Item label="企业名称">{infoWindowData.entName}</Descriptions.Item>
                       <Descriptions.Item label="行业">{infoWindowData.industryName}</Descriptions.Item>
                       <Descriptions.Item label="控制级别名称">{infoWindowData.attentionName}</Descriptions.Item>
-                      <Descriptions.Item label="环保负责人">{infoWindowData.entlinkman}</Descriptions.Item>
+                      <Descriptions.Item label="环保负责人">{infoWindowData.EnvironmentPrincipal}</Descriptions.Item>
                       <Descriptions.Item label="移动电话">{infoWindowData.entphone}</Descriptions.Item>
                       <Descriptions.Item label="企业地址">{infoWindowData.entadress}</Descriptions.Item>
                     </Descriptions>

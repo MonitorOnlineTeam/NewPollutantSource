@@ -350,7 +350,7 @@ export default Model.extend({
             orient: 'vertical',
             x: 'right', // 可设定图例在左、右、居中
             y: 'top', // 可设定图例在上、下、居中
-            padding: [40, 40, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+            padding: [40, 16, 0, 0], // 可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
             data: _historyparams.pollutantNames.split(','),
           },
           toolbox: {
@@ -366,6 +366,9 @@ export default Model.extend({
             name: '时间',
             boundaryGap: false,
             data: xAxis,
+            nameTextStyle: {
+              padding: [10, 16]
+            },
             splitLine: {
               show: true,
               lineStyle: {
@@ -391,6 +394,7 @@ export default Model.extend({
             y: 45,
             x2: 45,
             y2: 20,
+            right: 80,
           },
           series: arr,
         };
