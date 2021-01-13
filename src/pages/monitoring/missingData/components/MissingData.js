@@ -217,7 +217,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'missingData/exportDefectDataSummary',
-      payload: { ...queryPar },
+      payload: { ...queryPar, HasOperation:true},
       callback: data => {
          downloadFile(`/upload${data}`);
         },
