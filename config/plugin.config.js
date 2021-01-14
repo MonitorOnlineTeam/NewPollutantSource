@@ -1,7 +1,3 @@
-// Change theme plugin
-// eslint-disable-next-line eslint-comments/abdeils - enable - pair;
-
-/* eslint-disable import/no-extraneous-dependencies */
 import ThemeColorReplacer from 'webpack-theme-color-replacer';
 import generate from '@ant-design/colors/lib/generate';
 import path from 'path';

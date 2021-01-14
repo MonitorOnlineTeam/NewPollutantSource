@@ -107,7 +107,7 @@ export default Model.extend({
         } catch (e) {
           console.log('WebSocketAddress获取失败');
         }
-
+        
         yield put({
           type: 'setConfigInfo',
           payload: {

@@ -827,6 +827,7 @@ class DepartIndex extends Component {
         const tProps = {
             treeData: this.props.RegionInfoTree,
             value: this.state.DataTreeValue,
+            placeholder:'请选择行政区',
             onChange: this.onChangeTree,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,

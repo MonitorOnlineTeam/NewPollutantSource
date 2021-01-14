@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-09-06 15:21:22 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-09-11 11:43:29
+ * @Last Modified time: 2021-01-12 16:59:16
  * @desc: 任务记录页面
  */
 import React, { Component } from 'react';
@@ -14,7 +14,6 @@ import { routerRedux } from 'dva/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
-import EnterprisePointCascadeMultiSelect from '@/components/EnterprisePointCascadeMultiSelect'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
