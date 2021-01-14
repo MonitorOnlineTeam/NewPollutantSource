@@ -1641,7 +1641,7 @@ export default {
                 //停运记录
                 {
                   name: 'StopRecord',
-                  path: '/dataSearch/StopRecord',
+                  path: '/dataSearch/StopRecord', 
                   component: './report/StopRecord/stopRecord',
                 },
                 {

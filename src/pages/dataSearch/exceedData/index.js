@@ -306,7 +306,8 @@ class index extends PureComponent {
                     DataType: values.dataType == undefined ? '' : values.dataType == 'Hour'?'HourData':'DayData',
                     BeginTime: values.dateTime[0],
                     EndTime: values.dateTime[1],
-                    TabType: values.outlet == undefined ? '' : values.outlet,
+                    TabType:this.state.exportRegion? this.state.exportRegion : '1',
+                    // TabType: values.outlet == undefined ? '1' : this.state.exportRegion,
                     PollutantList: pollutionData,
                 }
             })
@@ -404,7 +405,7 @@ class index extends PureComponent {
                                 dataIndex: 'PollutantData.MaxMultiple-'+item.PollutantCode,
                                 key: 'PollutantData.MaxMultiple-'+item.PollutantCode,
                                 render: (text) => {
-                                    return text == null?'-': toDecimal3(text)
+                                    return !text?'-': toDecimal3(text)
                                 }
                             },
                         ]
@@ -1257,7 +1258,7 @@ class index extends PureComponent {
                         dataIndex: 'PollutantData.MaxMultiple-'+item.PollutantCode,
                         key: 'PollutantData.MaxMultiple-'+item.PollutantCode,
                         render: (text) => {
-                            return text == null?'-':toDecimal3(text)
+                            return !text?'-':toDecimal3(text)
                         }
                     },
                 ]
@@ -1649,7 +1650,7 @@ class index extends PureComponent {
                         dataIndex: 'PollutantData.MaxMultiple-'+item.PollutantCode,
                         key: 'PollutantData.MaxMultiple-'+item.PollutantCode,
                         render: (text) => {
-                            return text == null?'-':toDecimal3(text)
+                            return !text?'-':toDecimal3(text)
                         }
                     },
                 ]

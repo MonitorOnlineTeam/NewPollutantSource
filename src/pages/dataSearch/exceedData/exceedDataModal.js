@@ -1292,7 +1292,7 @@ class index extends PureComponent {
                 <TabPane tab={this.state.entType == '1' ? '废水' : '废气'} key='1' closable={false}>
                     {
                             <SdlTable columns={columns} dataSource={ExceedDataList}
-                            scroll={{ x: scrollWith }}
+                            scroll={{ x: scrollWith, y: this.state.entType == '1' ? 'calc(100vh - 600px)' :  'calc(100vh - 650px)'}}
                             loading={loading}
                                 pagination={{
                                     showSizeChanger: true,

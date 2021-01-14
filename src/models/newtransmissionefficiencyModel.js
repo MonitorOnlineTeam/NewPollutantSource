@@ -132,6 +132,7 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
+        Assessment:assessment,
       };
       const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {

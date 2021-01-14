@@ -416,7 +416,7 @@ debugger
                 key: 'beginTime',
             },
             {
-                title: "停运结束时间",
+                title: "停运截止时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
