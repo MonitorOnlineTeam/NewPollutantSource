@@ -42,7 +42,7 @@ const pageUrl = {
 @connect(({ loading, report, enterpriseMonitoringModel, autoForm, wasteWaterReportModel }) => ({
   smokeReportFrom: report.smokeReportFrom,
   entAndPointList: report.entAndPointList,
-  msg:report.msg,
+  msg: report.msg,
   regionList: autoForm.regionList,
   attention: enterpriseMonitoringModel.attention,
   defaultEntAndPoint: report.defaultEntAndPoint,
@@ -58,8 +58,8 @@ class SmokeReportPage extends PureComponent {
     super(props);
     this.state = {
       dataSource: [],
-      
-      columns:  [
+
+      columns: [
         {
           title: '时间',
           dataIndex: 'Time',
@@ -264,8 +264,8 @@ class SmokeReportPage extends PureComponent {
       regionValue: '',
       attentionValue: '',
       outletValue: '',
-      entValue: '',
-      pointValue: ''
+      entValue: undefined,
+      pointValue: undefined
     };
     this._SELF_ = {
       pollutantType: 2,
@@ -286,7 +286,7 @@ class SmokeReportPage extends PureComponent {
     let beginTime;
     let endTime;
     let strMsg;
-    console.log('reportType=',reportType)
+    console.log('reportType=', reportType)
     switch (reportType) {
       case 'day':
         this.title = '小时平均日报表';
@@ -298,7 +298,7 @@ class SmokeReportPage extends PureComponent {
         beginTime = moment().format('YYYY-MM-DD 01:00:00');
         endTime = moment().add(1, 'day').format('YYYY-MM-DD 00:00:00');
         reportType = 'dayanddate';
-        strMsg='排放量为小时均值*小时流量'
+        strMsg = '排放量为小时均值*小时流量'
         break;
       case 'month':
         this.title = '日平均月报表';
@@ -309,7 +309,7 @@ class SmokeReportPage extends PureComponent {
         this.unit2 = '×10⁴m³/h';
         beginTime = moment().format('YYYY-MM-01 00:00:00');
         endTime = moment(moment().format('YYYY-MM-01 00:00:00')).add(1, 'month').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
-        strMsg='排放量为日均值*日流量'
+        strMsg = '排放量为日均值*日流量'
         break;
       case 'quarter':
         this.title = '月平均季报表';
@@ -330,7 +330,7 @@ class SmokeReportPage extends PureComponent {
           beginTime = moment().format('YYYY-10-01 00:00:00');
           endTime = moment().format('YYYY-12-31 23:59:59')
         }
-        strMsg='排放量为日均值*日流量';
+        strMsg = '排放量为日均值*日流量';
         break;
       case 'year':
         this.title = '月平均年报表';
@@ -345,7 +345,7 @@ class SmokeReportPage extends PureComponent {
         beginTime = moment().format('YYYY-01-01 00:00:00');
         endTime = moment(moment().format('YYYY-01-01 00:00:00')).add(1, 'year').add(-1, 'second').format('YYYY-MM-DD 23:59:59');
         this.tableFooter = '';
-        strMsg='排放量为日均值*日流量';
+        strMsg = '排放量为日均值*日流量';
         break;
     }
     this.props.dispatch({
@@ -355,7 +355,7 @@ class SmokeReportPage extends PureComponent {
           beginTime,
           endTime,
         },
-        msg:strMsg
+        msg: strMsg
       },
     })
     this.props.form.setFieldsValue({ "time": moment() })
@@ -391,7 +391,7 @@ class SmokeReportPage extends PureComponent {
     this.props.dispatch({
       //获取企业列表
       type: pageUrl.GetEntByRegionAndAtt,
-      payload: { RegionCode: '', Attention: '',PollutantTypeCode:'2' },
+      payload: { RegionCode: '', Attention: '', PollutantTypeCode: '2' },
     });
   };
 
@@ -459,11 +459,11 @@ class SmokeReportPage extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
       this.switchInfo(nextProps.match.params.reportType);
-      console.log("props=",this.props)
+      console.log("props=", this.props)
       this.props.dispatch({
         type: 'report/updateState',
         payload: {
-          smokeReportData:[],
+          smokeReportData: [],
         },
       })
       // this.getSmokeReportData(nextProps.match.params.reportType);
@@ -564,11 +564,13 @@ class SmokeReportPage extends PureComponent {
                     payload: {
                       RegionCode: value,
                       Attention: this.state.attentionValue,
-                      PollutantTypeCode:'2'
+                      PollutantTypeCode: '2'
                     },
                   });
                   this.setState({
-                    regionValue: value
+                    regionValue: value,
+                    entValue: undefined,
+                    pointValue: undefined
                   })
                 }}>
                 {this.children()}
@@ -587,11 +589,13 @@ class SmokeReportPage extends PureComponent {
                     payload: {
                       RegionCode: this.state.regionValue,
                       Attention: value,
-                      PollutantTypeCode:'2'
+                      PollutantTypeCode: '2'
                     },
                   });
                   this.setState({
                     attentionValue: value,
+                    entValue: undefined,
+                    pointValue: undefined
                   })
                 }}>
                 {this.attention()}
@@ -602,7 +606,7 @@ class SmokeReportPage extends PureComponent {
                 placeholder="企业列表"
                 maxTagCount={2}
                 maxTagTextLength={5}
-                defaultValue={this.state.entType}
+                value={this.state.entValue}
                 maxTagPlaceholder="..."
                 onChange={(value) => {
                   //获取企业列表
@@ -610,11 +614,12 @@ class SmokeReportPage extends PureComponent {
                     type: pageUrl.GetPointByEntCode,
                     payload: {
                       EntCode: value,
-                      PollutantTypeCode:'2'
+                      PollutantTypeCode: '2'
                     },
                   });
                   this.setState({
                     entValue: value,
+                    pointValue:undefined
                   })
                 }}>
                 {this.entList()}
@@ -626,7 +631,7 @@ class SmokeReportPage extends PureComponent {
                   placeholder="监测点列表"
                   maxTagCount={2}
                   maxTagTextLength={5}
-                  defaultValue={this.state.entType}
+                  value={this.state.pointValue}
                   maxTagPlaceholder="..."
                   onChange={(value) => {
                     this.setState({
@@ -648,7 +653,7 @@ class SmokeReportPage extends PureComponent {
                     this.timeEle,
                   )}
                 </FormItem>
-                <Button type="primary" style={{ marginRight: 10 }} onClick={() => {this.getSmokeReportData()}}>查询</Button>
+                <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 <span style={{ fontSize: 14, color: 'red' }}>{this.props.msg}</span>
               </div>
@@ -665,7 +670,7 @@ class SmokeReportPage extends PureComponent {
             // defaultWidth={80}
             scroll={{ x: '1800px' }}
             bordered
-            // footer={() => this.tableFooter}
+          // footer={() => this.tableFooter}
           />
         </Card>
         {/* </Spin> */}
