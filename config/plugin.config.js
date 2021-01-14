@@ -54,39 +54,39 @@ export default config => {
     ]);
   } // optimize chunks
 
-  // config.optimization // share the same chunks across different modules
-  //   .runtimeChunk(false)
-  //   .splitChunks({
-  //     chunks: 'async',
-  //     name: 'vendors',
-  //     maxInitialRequests: Infinity,
-  //     minSize: 0,
-  //     cacheGroups: {
-  //       vendors: {
-  //         test: module => {
-  //           const packageName = getModulePackageName(module);
+  config.optimization // share the same chunks across different modules
+    .runtimeChunk(false)
+    .splitChunks({
+      chunks: 'async',
+      name: 'vendors',
+      maxInitialRequests: Infinity,
+      minSize: 0,
+      cacheGroups: {
+        vendors: {
+          test: module => {
+            const packageName = getModulePackageName(module);
 
-  //           if (packageName) {
-  //             return ['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0;
-  //           }
+            if (packageName) {
+              return ['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0;
+            }
 
-  //           return false;
-  //         },
+            return false;
+          },
 
-  //         name(module) {
-  //           const packageName = getModulePackageName(module);
+          name(module) {
+            const packageName = getModulePackageName(module);
 
-  //           if (packageName) {
-  //             if (['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0) {
-  //               return 'viz'; // visualization package
-  //             }
-  //           }
+            if (packageName) {
+              if (['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0) {
+                return 'viz'; // visualization package
+              }
+            }
 
-  //           return 'misc';
-  //         },
-  //       },
-  //     },
-  //   });
+            return 'misc';
+          },
+        },
+      },
+    });
 };
 
 const getAntdSerials = color => {
