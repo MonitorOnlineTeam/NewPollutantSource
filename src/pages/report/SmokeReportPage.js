@@ -264,8 +264,8 @@ class SmokeReportPage extends PureComponent {
       regionValue: '',
       attentionValue: '',
       outletValue: '',
-      entValue: '',
-      pointValue: ''
+      entValue: undefined,
+      pointValue: undefined
     };
     this._SELF_ = {
       pollutantType: 2,
@@ -568,7 +568,9 @@ class SmokeReportPage extends PureComponent {
                     },
                   });
                   this.setState({
-                    regionValue: value
+                    regionValue: value,
+                    entValue: undefined,
+                    pointValue: undefined
                   })
                 }}>
                 {this.children()}
@@ -592,6 +594,8 @@ class SmokeReportPage extends PureComponent {
                   });
                   this.setState({
                     attentionValue: value,
+                    entValue: undefined,
+                    pointValue: undefined
                   })
                 }}>
                 {this.attention()}
@@ -602,7 +606,7 @@ class SmokeReportPage extends PureComponent {
                 placeholder="企业列表"
                 maxTagCount={2}
                 maxTagTextLength={5}
-                defaultValue={this.state.entType}
+                value={this.state.entValue}
                 maxTagPlaceholder="..."
                 onChange={(value) => {
                   //获取企业列表
@@ -615,6 +619,7 @@ class SmokeReportPage extends PureComponent {
                   });
                   this.setState({
                     entValue: value,
+                    pointValue:undefined
                   })
                 }}>
                 {this.entList()}
@@ -626,7 +631,7 @@ class SmokeReportPage extends PureComponent {
                   placeholder="监测点列表"
                   maxTagCount={2}
                   maxTagTextLength={5}
-                  defaultValue={this.state.entType}
+                  value={this.state.pointValue}
                   maxTagPlaceholder="..."
                   onChange={(value) => {
                     this.setState({
