@@ -37,6 +37,7 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -301,6 +302,10 @@ class yearCheckEnt extends Component {
     this.updateState({
       pageSize: pageSize,
     });
+    this.props.dispatch({
+      type: 'yearCheckEnt/GetAnnualAssessmentEntList',
+      payload: {},
+    });
   };
 
   changeRegion = value => {
@@ -501,7 +506,7 @@ class yearCheckEnt extends Component {
                 />
               </FormItem>
               <FormItem label="行政区">
-                <Select
+                {/* <Select
                   allowClear
                   placeholder="请选择行政区"
                   onChange={this.changeRegion}
@@ -509,14 +514,20 @@ class yearCheckEnt extends Component {
                   style={{ width: 200, marginLeft: 10 }}
                 >
                   {this.children()}
-                </Select>
+                </Select> */}
+                <RegionList
+                    changeRegion={(value) => {
+                      this.changeRegion(value)
+                    }}
+                    RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
+                  />
               </FormItem>
               <FormItem label="监测点类型">
                 <Select
                   allowClear
                   placeholder="请选择监测点类型"
                   onChange={this.typeChange}
-                  value={this.props.pollutantType}
+                  // value={this.props.pollutantType}
                   style={{ width: 200, marginLeft: 10 }}
                 >
                   <Option value="1">废水</Option>

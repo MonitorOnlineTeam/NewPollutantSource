@@ -137,20 +137,20 @@ export default class Index extends Component {
       //   align: 'center',
       
       // },
-      {
-        title: <span>处理详情</span>,
-        dataIndex: 'status',
-        key: 'status',
-        align: 'center',
-        render:(text,record)=>{
-          return text==0?
-           '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
-          }        
+      // {
+      //   title: <span>处理详情</span>,
+      //   dataIndex: 'status',
+      //   key: 'status',
+      //   align: 'center',
+      //   render:(text,record)=>{
+      //     return text==0?
+      //      '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
+      //     }        
         // render:(text,record)=>{
         //   return text==0?
         //    '': <Link to={{  pathname: `/operations/taskRecord/details/${record.TaskID}/${record.DGIMN}` }} > 详情 </Link>
         //   }
-      },
+      // },
     ];
   }
 
@@ -260,7 +260,7 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...queryPar },
+      payload: { ...queryPar, HasOperation:true },
       callback: data => {
          downloadFile(`/upload${data}`);
         },

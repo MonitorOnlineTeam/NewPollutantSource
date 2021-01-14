@@ -156,6 +156,7 @@ class index extends PureComponent {
 
   // 导出
   exportReport = () => {
+    // alert(111)
     const { regionValue, attentionValue, outletValue, dataType, time, pollutantCodeList, exportRegion } = this.state
     console.log
     if (exportRegion != '1') {
