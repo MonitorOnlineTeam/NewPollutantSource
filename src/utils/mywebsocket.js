@@ -1,6 +1,5 @@
 import Cookie from 'js-cookie';
 import config from '../config';
-import { WaterWave } from '@/pages/dashboard/analysis/components/Charts';
 import ReconnectingWebSocket from './reconnecting-websocket'
 
 // cg add 2018.4.1
