@@ -926,7 +926,7 @@ export default {
                   redirect: '/monitoring/mapview/realtimeDataView',
                 },
                 {
-                  name: 'outputstopmanage',
+                name: 'outputstopmanage',
                   path: '/monitoring/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
                 },
@@ -1553,7 +1553,16 @@ export default {
                     '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                   component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
                 },
+
+                {
+                  //空气质量状况统计
+                  name: 'airQualityStatistics',
+                  path: '/Intelligentanalysis/airQualityStatistics',
+                  component: './Intelligentanalysis/airQualityStatistics/air',
+                },
               ],
+
+              
             },
             {
               path: '/dataSearch',
@@ -1632,7 +1641,7 @@ export default {
                 //停运记录
                 {
                   name: 'StopRecord',
-                  path: '/dataSearch/StopRecord',
+                  path: '/dataSearch/StopRecord', 
                   component: './report/StopRecord/stopRecord',
                 },
                 {

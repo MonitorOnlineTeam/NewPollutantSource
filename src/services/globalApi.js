@@ -11,3 +11,24 @@ export async function getSystemConfigInfo() {
 
   return result;
 }
+
+//报警关联列表
+export async function GetAlarmPushDepOrRole(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole',
+    params,
+    null,
+  );
+
+  return result;
+}
+//报警关联  选择
+export async function InsertAlarmDepOrRole(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole',
+    params,
+    null,
+  );
+
+  return result;
+}

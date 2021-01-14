@@ -86,8 +86,8 @@ export default class EntTransmissionEfficiency extends Component {
     this.columns = [
       {
         title: '排口类型',
-        dataIndex: 'PollutantTypeCode',
-        key: 'PollutantTypeCode',
+        dataIndex: 'PointType',
+        key: 'PointType',
         align: 'center',
       },
       {

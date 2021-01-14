@@ -175,7 +175,7 @@ export default class EntTransmissionEfficiency extends Component {
     !isWorkRate? this.columns.pop() : null;
     Atmosphere? this.columns.splice(1,1) : null;
     
-    this.columns
+    // this.columns
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
@@ -233,7 +233,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateQueryState({
-      PollutantTypeCode: [value],
+      PollutantTypeCode:value?  [value] : "",
     });
   };
 
@@ -303,7 +303,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   nextPage=(row)=>{
     const { isWorkRate,dispatch } = this.props;
-     
+    const { queryPar: { RegionCode} } = this.props;
    
      dispatch({
        type: pageUrl.updateState,
@@ -366,7 +366,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
               {!Atmosphere?
                 <Form.Item label={'企业类型'}>
-                 <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
+                 <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
                 </Form.Item>
                 :
                 null

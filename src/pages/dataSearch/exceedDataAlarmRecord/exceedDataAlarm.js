@@ -18,6 +18,7 @@ import style from '@/pages/dataSearch/tableClass.less'
 import { downloadFile } from '@/utils/utils';
 import { compose } from 'redux';
 import FileDown from '@/components/AttachmentView/index'
+import VerifyDetailsPop from './VerifyDetailsPop'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -1172,21 +1173,23 @@ class index extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                     if(!record.verifyImage&&!record.remark )
                      {
                         sourc = []
                      }
                      else
                      {
-                        record.verifyImage.map(item=>{
-                            let obj = {
+                        let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
                                 name:item.FileName,
                                 attach:'/upload/'+item.FileName
                             }
-                            sourc.push(obj)
                         })
+                        obj.remark = text;
+                        sourc.push(obj)
                      }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                     return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
                 //return record.status==''?'-':record.status == 0?'-':<a onClick={this.DetailsHandle.bind(this,record.verifyImage,record.remark)}>详情</a>
                 }
             },
@@ -1300,22 +1303,25 @@ class index extends PureComponent {
                 dataIndex: 'remark',
                 key: 'remark',
                 render:(text,record)=>{
-                    let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                    let sourc = [];
+                   
+                     if(!record.verifyImage&&!record.remark )
                      {
                         sourc = []
                      }
                      else
-                     {
-                        record.verifyImage.map(item=>{
-                            let obj = {
+                     {     
+                        let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
                                 name:item.FileName,
-                                attach:'/upload/'+item.FileName
+                                attach:'/upload/'+item.FileName,
                             }
-                            sourc.push(obj)
                         })
+                        obj.remark = text;
+                        sourc.push(obj)
                      }
-                     return  <FileDown dataSource={sourc}/>
+                     return  <VerifyDetailsPop dataSource={sourc}/>
                     //  return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
                     }
             },
@@ -1422,21 +1428,23 @@ class index extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                     if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                    if(!record.remark && (record.verifyImage == null || record.verifyImage == '' || record.status ==0) )
                      {
                         sourc = []
                      }
                      else
                      {
-                        record.verifyImage.map(item=>{
-                            let obj = {
+                       let obj = {};
+                        record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
                                 name:item.FileName,
                                 attach:'/upload/'+item.FileName
                             }
-                            sourc.push(obj)
                         })
+                        obj.remark = text;
+                        sourc.push(obj)
                      }
-                     return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                     return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
                     }
             },
         ]
@@ -1556,21 +1564,23 @@ class index extends PureComponent {
                 key: 'remark',
                 render:(text,record)=>{
                     let sourc = []
-                    if(record.verifyImage == null || record.verifyImage == '' || record.status ==0)
+                    if(!record.verifyImage&&!record.remark)
                     {
                        sourc = []
                     }
                     else
                     {
-                       record.verifyImage.map(item=>{
-                           let obj = {
+                       let obj = {};
+                       record.verifyImage&&record.verifyImage.map(item=>{
+                            obj = {
                                name:item.FileName,
                                attach:'/upload/'+item.FileName
                            }
-                           sourc.push(obj)
                        })
+                       obj.remark = text;
+                       sourc.push(obj)
                     }
-                    return sourc.length>0? <FileDown dataSource={sourc}/>:'-'
+                    return sourc.length>0? <VerifyDetailsPop dataSource={sourc}/>:'-'
                 }
             },
         ]

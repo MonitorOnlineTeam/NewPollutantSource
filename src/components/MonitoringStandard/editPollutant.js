@@ -66,7 +66,7 @@ class EditPollutant extends Component {
               AlarmDescription: this.props.editpollutant.AlarmDescription,
               AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
               AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
-              ExceptionType: this.props.editpollutant.ExceptionType == '' ? [] : this.props.editpollutant.ExceptionType.split(','),
+              ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType.split(','),
             });
           },
         },

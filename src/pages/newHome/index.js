@@ -1324,7 +1324,7 @@ class NewHome extends PureComponent {
                 id="mapId"
                 events={this.amapEvents}
                 // zoom={4}
-                mapStyle="amap://styles/fresh"
+                mapStyle="amap://styles/normal"
                 useAMapUI={!config.offlineMapUrl.domain}
                 {...mapStaticAttribute}
               >

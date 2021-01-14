@@ -1,6 +1,27 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
 
+
+//报警关联列表
+export async function GetAlarmPushDepOrRole(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/AuthorApi/GetAlarmPushDepOrRole',
+    params,
+    null,
+  );
+
+  return result;
+}
+//报警关联  选择
+export async function InsertAlarmDepOrRole(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/AuthorApi/InsertAlarmDepOrRole',
+    params,
+    null,
+  );
+
+  return result;
+}
 // 获取部门详细信息及层级关系
 export async function getdepartinfobytree(params) {
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetDepInfoByTree', params);
