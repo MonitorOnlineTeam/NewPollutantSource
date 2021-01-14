@@ -32,7 +32,6 @@ import SdlTable from '@/components/SdlTable/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { sdlMessage } from '@/utils/utils';
-import Center from '@/pages/account/center';
 import html2canvas from 'html2canvas';
 
 var QRCode = require('qrcode.react');

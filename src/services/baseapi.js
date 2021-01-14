@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 /**
  * 功  能：基础数据服务
  * 创建人：吴建伟
