@@ -125,6 +125,7 @@ export default Model.extend({
         pageIndex,
         pollutantType,
         entCode,
+        assessment
       } = yield select(state => state.newtransmissionefficiency);
       let body = {
         RegionCode: RegionCode,
@@ -132,6 +133,7 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
+        Assessment:assessment
       };
       const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {

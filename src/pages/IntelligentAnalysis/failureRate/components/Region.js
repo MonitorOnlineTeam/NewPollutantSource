@@ -342,21 +342,15 @@ export default class EntTransmissionEfficiency extends Component {
     return (
       // <BreadcrumbWrapper title={`故障率${types==='ent'?'(企业)':'(空气站)'}`}>
       <BreadcrumbWrapper title={`故障率`}>
-
-       <div>
-        {/* <Modal
-          title={isWorkRate?"运转率":isOverRate?"超标率":'故障率'}
-          footer={null}
-          width='95%'
-          visible={regionVisible}  
-          onCancel={regionCancel}
-        > */}
+    <Card
+          bordered={false}
+          title={
+          <div>
          { entVisible?
           <EntData entVisible={entVisible} onBack={this.entCancel}/>
            : 
-            <div>
             <>
-              <Form layout="inline" style={{paddingBottom:10}}>
+              <Form layout="inline">
               <Row>
               <Form.Item label='查询日期'>
               <RangePicker_  format = 'YYYY-MM-DD' allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
@@ -387,21 +381,10 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 </Row>
               </Form>
-            </>
-          <div id=''>
-          {isWorkRate?
-           <div style={{ paddingBottom: 10 }}>
-                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≥90%达标
-                </span>
-                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  {`<90%未达标`}
-                </span>
-              </div>
-            :null
-          }
+              </>
+            }
+            </div>
+         }>
              <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={loading}
@@ -420,12 +403,8 @@ export default class EntTransmissionEfficiency extends Component {
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
-          </div>
-          </div>
-          }
-          {/* </Modal> */}
 
-          </div>
+       </Card>
      </BreadcrumbWrapper>
     );
   }

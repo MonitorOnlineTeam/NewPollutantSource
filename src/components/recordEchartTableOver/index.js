@@ -392,7 +392,7 @@ class Index extends Component {
 
             },
             grid: {
-                x: 35,
+                x: 50,
                 y: 10,
                 x2: 1,
                 y2: 35,

@@ -228,7 +228,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'defectData/exportGetAlarmDataList',
-      payload: { ...queryPar },
+      payload: { ...queryPar,PageSize:null,PageIndex:null },
       callback: data => {
          downloadFile(`/upload${data}`);
         },

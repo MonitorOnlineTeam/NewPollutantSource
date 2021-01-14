@@ -1394,6 +1394,11 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
                     {
+                      //超标数据核实率二级页面
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    },
+                    {
                       //超标报警处置率
                       name: 'overAlarmDisposalRate',
                       path: '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate',

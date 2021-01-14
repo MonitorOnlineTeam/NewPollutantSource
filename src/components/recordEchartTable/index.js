@@ -283,7 +283,7 @@ class Index extends Component {
         const { name } = e
         const { seriesName } = e
         this.setState({
-            Pollutant: name,
+            Pollutant: e.name?e.name:e.value,
             ExceptionType: seriesName,
         })
         this.props.dispatch({
@@ -293,7 +293,8 @@ class Index extends Component {
                 endTime: this.state.endTime,
                 dataType: this.state.dataType,
                 DGIMN: [this.props.DGIMN],
-                Pollutant: e.name,
+                // Pollutant: e.name,
+                Pollutant: e.name?e.name:e.value,
                 ExceptionType: e.seriesName,
             },
         })
