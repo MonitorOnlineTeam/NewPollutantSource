@@ -1,4 +1,4 @@
-/* eslint-disable import/prefer-default-export */
+
 /**
  * 功  能：监测点服务
  * 创建人：吴建伟

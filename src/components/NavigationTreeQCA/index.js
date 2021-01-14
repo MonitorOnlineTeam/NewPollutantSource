@@ -9,10 +9,8 @@ import React, { Component } from 'react'
 import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin, Tag } from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
-import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
-import Center from '@/pages/account/center';
 import global from '@/global.less'
 import config from '@/config'
 import styles from './index.less'

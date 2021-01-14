@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-07 16:03:14
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-24 10:23:58
+ * @Last Modified time: 2021-01-12 16:57:50
  * @desc: 搜索容器组件
  * @props {string} formChangeActionType formAction
  * @props {store object} searchFormState formState对象
@@ -27,7 +27,6 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-// import EnterprisePointCascadeMultiSelect from '@/components/EnterprisePointCascadeMultiSelect'
 import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
@@ -261,7 +260,6 @@ class SearchWrapper extends Component {
               rtnValType: "DGIMN",
             }
           }
-          // element = <EnterprisePointCascadeMultiSelect {...props}/>
           element = <CascaderMultiple {...this.props} />
           break;
         case '下拉列表框':

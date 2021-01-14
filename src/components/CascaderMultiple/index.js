@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { CascadeMultiSelect } from 'uxcore';
 import { Input, Select, Checkbox, Empty } from 'antd';
 import _ from 'lodash';
 import { connect } from 'dva';
