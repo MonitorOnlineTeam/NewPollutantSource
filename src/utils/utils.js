@@ -418,3 +418,21 @@ export function wryFlagToCN(flag) {
     return '';
   }
 }
+
+//判断经纬度是否在多边形中
+export function isInsidePolygon(lng, lat, poly) {
+  if (poly[0].lng) {
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+      ((poly[i].lng <= lng && lng < poly[j].lng) || (poly[j].lng <= lng && lng < poly[i].lng)) &&
+        (lat < (poly[j].lat - poly[i].lat) * (lng - poly[i].lng) / (poly[j].lng - poly[i].lng) + poly[i].lat) &&
+        (c = !c);
+    return c;
+  } else {
+    debugger
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+      ((poly[i][0] <= lng && lng < poly[j][0]) || (poly[j][0] <= lng && lng < poly[i][0])) &&
+        (lat < (poly[j][1] - poly[i][1]) * (lng - poly[i][0]) / (poly[j][0] - poly[i][0]) + poly[i][1]) &&
+        (c = !c);
+    return c;
+  }
+}

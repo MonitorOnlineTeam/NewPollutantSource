@@ -6,7 +6,7 @@ import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
 
-import { GetAlarmType,GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
+import { GetAlarmType, GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
 
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
@@ -41,7 +41,7 @@ export default Model.extend({
       alarmType: "",
       beginTime: moment().format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
-      mnList:""
+      mnList: ""
     },
     clientHeight: null
   },
@@ -70,8 +70,8 @@ export default Model.extend({
             // title: <span>{item.Title}<br /><span style={{ fontSize: 11 }}>{item.TargetName}</span></span>,
             // description: item.AlarmMsg,
             // exceptiontypes: item.AlarmTypeDescription, // 右侧标签用到，可多个
-            orderby: item.AlarmType === '2' ? 1 : item.AlarmType === '5'||item.AlarmType === '6'||item.AlarmType === '7' ||item.AlarmType === '12'
-             || item.AlarmType === '13' |item.AlarmType === '14'   ? 2 : 3, //    排序    超标  异常 其他
+            orderby: item.AlarmType === '2' ? 1 : item.AlarmType === '5' || item.AlarmType === '6' || item.AlarmType === '7' || item.AlarmType === '12'
+              || item.AlarmType === '13' | item.AlarmType === '14' ? 2 : 3, //    排序    超标  异常 其他
           })),
         );
       }
@@ -83,16 +83,16 @@ export default Model.extend({
         },
       })
     },
-  // 报警类型
- *getAlarmType({callback, payload }, { call, update,select }) {
-          yield update({ alarmTypeLoading: true})
-          const result = yield call(GetAlarmType, payload);  
-          if (result.IsSuccess) {
-           callback(result.Datas)
-          } else {
-            message.error(result.Message)
-          }
-        },
+    // 报警类型
+    *getAlarmType({ callback, payload }, { call, update, select }) {
+      yield update({ alarmTypeLoading: true })
+      const result = yield call(GetAlarmType, payload);
+      if (result.IsSuccess) {
+        callback && result.Datas && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取按钮权限
     *getBtnAuthority({ payload }, { call, put, select }) {
       const result = yield call(getBtnAuthority, payload);

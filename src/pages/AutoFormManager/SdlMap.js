@@ -7,6 +7,7 @@ import { Map, MouseTool, Marker, Polygon } from 'react-amap';
 import { connect } from 'dva';
 import styles from './MapContent.less';
 import config from '@/config'
+import { isInsidePolygon } from '@/utils/utils'
 
 const YOUR_AMAP_KEY = 'c5cb4ec7ca3ba4618348693dd449002d';
 // import MapUI from "@/pages/monitoring/mapview/MapUI"
@@ -318,31 +319,43 @@ class SdlMap extends PureComponent {
           if (this.props.path) {
             // console.log("this.props.path=", this.props.path)
             let path = JSON.parse(this.props.path)
-            let innerArr = path[0][0];
-            // console.log("innerArr=",)
-            let longitudeArr = innerArr.map(item => item[0]) // 经度
-            let latitudeArr = innerArr.map(item => item[1]) // 纬度
-            let longMax = _.max(longitudeArr);
-            let longMin = _.min(longitudeArr);
+            // let innerArr = path[0][0];
+            // // console.log("innerArr=",)
+            // let longitudeArr = innerArr.map(item => item[0]) // 经度
+            // let latitudeArr = innerArr.map(item => item[1]) // 纬度
+            // let longMax = _.max(longitudeArr);
+            // let longMin = _.min(longitudeArr);
 
-            let latMax = _.max(latitudeArr);
-            let latMin = _.min(latitudeArr);
-            let lngFlag = false;
-            let latFlag = false;
+            // let latMax = _.max(latitudeArr);
+            // let latMin = _.min(latitudeArr);
+            // let lngFlag = false;
+            // let latFlag = false;
 
-            if (e.lnglat.lng >= longMin && e.lnglat.lng <= longMax) {
-              lngFlag = true;
-            } else {
-              lngFlag = false;
-            }
+            // if (e.lnglat.lng >= longMin && e.lnglat.lng <= longMax) {
+            //   lngFlag = true;
+            // } else {
+            //   lngFlag = false;
+            // }
 
-            if (e.lnglat.lat >= latMin && e.lnglat.lat <= latMax) {
-              latFlag = true;
-            } else {
-              latFlag = false;
-            }
+            // if (e.lnglat.lat >= latMin && e.lnglat.lat <= latMax) {
+            //   latFlag = true;
+            // } else {
+            //   latFlag = false;
+            // }
 
-            if (lngFlag && latFlag) {
+            // if (lngFlag && latFlag) {
+            //   const position = {
+            //     longitude: e.lnglat.lng,
+            //     latitude: e.lnglat.lat,
+            //   }
+            //   this.setState({
+            //     position,
+            //   })
+            // } else {
+            //   message.error("设置点不在厂界范围内！")
+            // }
+            let _isInsidePolygon = isInsidePolygon(e.lnglat.lng, e.lnglat.lat, path[0][0])
+            if (_isInsidePolygon) {
               const position = {
                 longitude: e.lnglat.lng,
                 latitude: e.lnglat.lat,
