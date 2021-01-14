@@ -204,7 +204,7 @@ class Index extends Component {
             },
         })
         this.setState({
-            Pollutant: name,
+            Pollutant:e.name?e.name:e.value,
         })
         this.props.dispatch({
             type: 'recordEchartTable/getoverdata',
