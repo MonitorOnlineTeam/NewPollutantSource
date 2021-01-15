@@ -103,7 +103,7 @@ class Index extends Component {
         return (
           !pollLoading ?  <Select  {...this.props} defaultValue={defaultValues}>
             {this.getOption()}
-          </Select> : <Spin size="small" />
+          </Select> : <Spin size="small" style={{paddingRight:10}}/>
         
         );
     }

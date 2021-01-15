@@ -257,7 +257,7 @@ class Index extends Component {
     dateCallback = (date, dataType) => {
         if (!this.props.DGIMN) { return; }
         if(this.state.loadtype){ return; }
-        if(this.state.code&&this.state.dataType){
+        if(this.state.dataType){
 
             this.setState({
                 beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -288,13 +288,24 @@ class Index extends Component {
         this.children = ref;
     }
     pollChange=(value)=>{
-      this.setState({code:value})
+      this.setState({code:value},()=>{
+        this.props.dispatch({
+            type: 'recordEchartTable/getovermodellist',
+            payload: {
+                beginTime: this.state.beginTime,
+                endTime: this.state.endTime,
+                dataType:this.state.dataType,
+                PollutantList: value,
+                DGIMN: [this.props.DGIMN],
+            },
+        })
+      })
     }
     getpollutantSelect = () => {
         const { DGIMN,location} = this.props;
-         const {code } = this.state;
+         const {code,dataType } = this.state;
         if(location&&location.query&&location.query.type==="alarm"){ //报警信息
-            return   code.length>0 ? <PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />:null  ; 
+            return   dataType&&<PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />  ; 
         }else{
             return   <PollutantDownSelect style={{ width: 200, marginRight: 10 }}  isdefaulltall={1}   onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />  ; 
         }
