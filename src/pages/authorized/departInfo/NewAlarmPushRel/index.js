@@ -234,11 +234,17 @@ class Index extends Component {
            const selectType = data.target.value
 
            this.updateQueryState({AlarmType: selectType });
+           setTimeout(()=>{
+            this.getData();
+           })
         //    if(AlarmType&&AlarmType === selectType){
         //     this.updateQueryState({AlarmType: '' });
         //  }
        }else{
         this.updateQueryState({ AlarmType: data.join(","), });
+        // setTimeout(()=>{
+        //   this.getData();
+        //  })
 
        }
     }
