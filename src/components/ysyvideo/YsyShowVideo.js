@@ -86,7 +86,7 @@ class YsyShowVideo extends Component {
     if (event !== undefined) {
       if (event.data.key === 'success') {
         // 实时视频
-        message.success('播放成功');
+        // message.success('播放成功');
         this.setState({
           displayRStartBtn: 'none',
           displayREndBtn: 'block',
@@ -94,7 +94,7 @@ class YsyShowVideo extends Component {
       }
       if (event.data.key === 'successhis') {
         // 历史
-        message.success('播放成功');
+        // message.success('播放成功');
         this.setState({
           displayHStartBtn: 'none',
           displayHEndBtn: 'block',
@@ -140,6 +140,7 @@ class YsyShowVideo extends Component {
         }
         const obj = { opt: 2 };
         const frame = document.getElementById('ifm').contentWindow;
+        console.log("config.ysyvideourl",config.ysyvideourl);
         frame.postMessage(obj, config.ysyvideourl);
       }
     }
@@ -225,6 +226,7 @@ class YsyShowVideo extends Component {
           opt: 5,
         };
         const frame = document.getElementById('ifm').contentWindow;
+        console.log("config.ysyvideourl",config.ysyvideourl);
         frame.postMessage(obj, config.ysyvideourl);
 
         this.child.startPlay(
@@ -242,6 +244,7 @@ class YsyShowVideo extends Component {
           opt: 5,
         };
         const frame = document.getElementById('ifm').contentWindow;
+        console.log("config.ysyvideourl",config.ysyvideourl);
         frame.postMessage(obj, config.ysyvideourl);
 
         this.child.startPlay(
@@ -265,6 +268,7 @@ class YsyShowVideo extends Component {
       let obj = { opt };
       obj = { opt: 4 };
       const frame = document.getElementById('ifm').contentWindow;
+      console.log("config.ysyvideourl",config.ysyvideourl);
       frame.postMessage(obj, config.ysyvideourl);
     }
     if (opt === 1) {
@@ -292,6 +296,7 @@ class YsyShowVideo extends Component {
     let obj = { opt };
     obj = { opt };
     const frame = document.getElementById('ifm').contentWindow;
+    console.log("config.ysyvideourl",config.ysyvideourl);
     frame.postMessage(obj, config.ysyvideourl);
   };
 
@@ -332,6 +337,7 @@ class YsyShowVideo extends Component {
       this.getVideoIp(2, this.state.VedioID);
       const obj = { opt: 2 };
       const frame = document.getElementById('ifm').contentWindow;
+      console.log("config.ysyvideourl",config.ysyvideourl);
       frame.postMessage(obj, config.ysyvideourl);
       this.setState({
         displayR: 'none',
@@ -384,11 +390,7 @@ class YsyShowVideo extends Component {
                 </div>
                 <div className={styles.divc} >
                   <Row  gutter={48} style={{ justifyContent: "space-between"}}>
-                    <Col
-                      // className={styles.gutterleft}
-                      // span={8}
-                      style={{ display: this.state.displayRStartBtn }}
-                    >
+                    <Col  style={{ display: this.state.displayRStartBtn }} >
                       <Tooltip placement="top" title="开始播放">
                         <Button
                           type="primary"
@@ -402,11 +404,7 @@ class YsyShowVideo extends Component {
                         开始播放
                       </a>
                     </Col>
-                    <Col
-                      // className={styles.gutterleft}
-                      // span={8}
-                      style={{ display: this.state.displayREndBtn }}
-                    >
+                    <Col style={{ display: this.state.displayREndBtn }} >
                       <Tooltip placement="top" title="暂停播放">
                         <Button
                           type="danger"
@@ -423,10 +421,7 @@ class YsyShowVideo extends Component {
                         暂停播放
                       </a>
                     </Col>
-                    <Col 
-                    // className={styles.gutterleft}
-                    //  span={8}
-                     >
+                    <Col>
                       <Tooltip placement="top" title="刷新视频">
                         <Button
                           type="primary"
@@ -440,10 +435,7 @@ class YsyShowVideo extends Component {
                         刷新视频
                       </a>
                     </Col>
-                    <Col         
-                    // className={styles.gutterleft}      
-                    // span={8}
-                    >
+                    <Col>
                       <Tooltip placement="top" title="抓取图片">
                         <Button
                           type="dashed"
@@ -461,18 +453,16 @@ class YsyShowVideo extends Component {
                       </a>
                     </Col>
                   </Row>
-                  {/* <Divider type="dashed" /> */}
-                  <Row  style={{ display: this.state.displayR,margin:'16px 0' }}>
+                  {/* <Row  style={{ display: this.state.displayR,margin:'16px 0' }}>
                     <Col xl={24} lg={24} md={24} sm={18} xs={18}>选择摄像头：
                       {!this.props.vIsLoading && this.state.selectDisplay && this.getpollutantSelect()}
                     </Col>
-                  </Row>
-                  {/* <Divider type="dashed" /> */}
-                  <Row gutter={48} style={{ display: this.state.displayR }}>
+                  </Row> */}
+                  {/* <Row gutter={48} style={{ display: this.state.displayR }}>
                     <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                       {this.state.displayR && <YsyRealVideoData dgimn={this.state.dgimn} />}
                     </Col>
-                  </Row>
+                  </Row> */}
                 </div>
               </Row>
             </div>
@@ -590,8 +580,7 @@ class YsyShowVideo extends Component {
                       </a>
                   </Col>
                 </Row>
-                {/* <Divider type="horizontal" /> */}
-                <Row gutter={48} style={{ display: this.state.displayH }}>
+                {/* <Row gutter={48} style={{ display: this.state.displayH }}>
                   <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                     {this.state.displayR && (
                       <HistoryVideo
@@ -603,7 +592,7 @@ class YsyShowVideo extends Component {
                       />
                     )}
                   </Col>
-                </Row>
+                </Row> */}
               </div>
             </Row>
             </div>
