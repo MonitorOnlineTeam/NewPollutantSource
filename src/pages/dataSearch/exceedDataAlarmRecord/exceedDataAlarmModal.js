@@ -1597,7 +1597,7 @@ class exceedDataAlarmModal extends PureComponent {
                         title='超标报警'
                         visible={alarmVisible}
                         footer={null}
-                        width={1600}
+                        width={'90%'}
                         onCancel={alarmCancle}
                         destroyOnClose
                     >

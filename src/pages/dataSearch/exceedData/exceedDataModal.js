@@ -1754,7 +1754,7 @@ class index extends PureComponent {
                     title= {exceedType=='1'?'近七日超标废水监测点':'近七日超标废气监测点'}
                     visible={exceedVisible}
                     footer={null}
-                    width={1600}
+                    width={'90%'}
                     destroyOnClose
                     onCancel={exceedCancle}>
                         
@@ -1777,7 +1777,7 @@ class index extends PureComponent {
                             title={this.state.entModalTitle}
                             visible={this.state.visible}
                             footer={null}
-                            width={1300}
+                            width={"90%"}
                             onCancel={this.CancelHandel}
                             destroyOnClose
                         >
@@ -1828,7 +1828,7 @@ class index extends PureComponent {
                             title={this.state.entCountModalTotle}
                             visible={this.state.visibleMoni}
                             footer={null}
-                            width={1300}
+                            width={"90%"}
                             onCancel={this.CancelHandel}
                             destroyOnClose
                         >
@@ -1878,7 +1878,7 @@ class index extends PureComponent {
                             title={this.state.entCountModalTotle2}
                             visible={this.state.visibleEnt}
                             footer={null}
-                            width={1300}
+                            width={"90%"}
                             onCancel={this.entCancelHandel}
                         >
                             <div style={{marginBottom:10}}>
