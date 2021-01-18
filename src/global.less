@@ -5,6 +5,10 @@ body,
 #root {
   height: 100%;
   overflow-y: hidden;
+
+  input {
+    line-height: 1 !important;
+  }
 }
 
 // a:visited {
@@ -40,6 +44,8 @@ ol {
   padding: 0;
 }
 
+
+
 .sdlTable {
   .ant-table-body {
     // min-height: 100px;
@@ -47,6 +53,11 @@ ol {
 }
 
 :global {
+  .ant-modal-wrap {
+    input {
+      line-height: 1;
+    }
+  }
   .ant-table-fixed {
     table-layout: fixed; //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
   }
@@ -316,7 +327,7 @@ a:hover {
 
 
   .ant-layout {
-
+  
     // 面包屑样式 - start
     .ant-page-header {
       padding: 10px 14px;
