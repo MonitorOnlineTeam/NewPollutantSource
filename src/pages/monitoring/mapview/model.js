@@ -75,7 +75,9 @@ export default Model.extend({
       payload,
     }, { call, update, select, put }) {
       const pollutantType = "pollutantType" + payload.type;
+      debugger
       const result = yield call(services.getPollutantList, { pollutantTypes: payload.type });
+      console.log("pollutantType=",pollutantType)
       if (result.IsSuccess) {
         yield update({
           [pollutantType]: result.Datas
@@ -354,6 +356,7 @@ export default Model.extend({
     // 获取监测点infoWindow数据
     *getInfoWindowPollutantList({ payload, pollutantList }, { call, update, select, put }) {
       console.log("payload=", payload)
+      debugger
       const result = yield call(services.getInfoWindowData, payload);
       console.log("pollutantList=", pollutantList)
       if (result.IsSuccess) {
