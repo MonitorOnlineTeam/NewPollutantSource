@@ -1209,8 +1209,7 @@ class MapView extends Component {
                     longitude={infoWindowData.longitude}
                     latitude={infoWindowData.latitude}
                     path={infoWindowData.entCoordinateSet || []}
-                    handleMarker={true}
-                    handlePolygon={true}
+                    handlePolygon
                     style={{ height: this.state.currentPointInfo.PollutantType !== "5" ? 300 : 430 }}
                     zoom={12}
                   />

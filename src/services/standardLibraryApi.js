@@ -386,6 +386,8 @@ export async function editmonitorpointPollutant(params) {
     SerialContinuityCount: params.SerialContinuityCount,
     AbnormalUpperLimit: params.AbnormalUpperLimit,
     AbnormalLowerLimit: params.AbnormalLowerLimit,
+    ExceptionType: params.ExceptionType,
+    IsStatisti: params.IsStatisti,
   };
   const result = post(
     '/api/rest/PollutantSourceApi/StandardLibraryApi/EditMonitorPointPollutant',
@@ -397,4 +399,11 @@ export async function editmonitorpointPollutant(params) {
         data: null,
       }
     : result;
+}
+// 改变考核状态
+export async function changeUseStatisti(params) {
+  const result = post('/api/rest/PollutantSourceApi/StandardLibraryApi/UseStatisti',
+    params,
+  );
+  return result;
 }
