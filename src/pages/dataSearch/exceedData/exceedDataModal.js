@@ -429,6 +429,7 @@ class index extends PureComponent {
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
+                        scroll={{ y: this.state.entType == '1' ? 'calc(100vh - 680px)' :  'calc(100vh - 730px)'}}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -456,6 +457,7 @@ class index extends PureComponent {
                 if (key == '') {
                     panes.push({
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
+                        scroll={{ y: this.state.entType == '1' ? 'calc(100vh - 680px)' :  'calc(100vh - 730px)'}}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -1809,7 +1811,7 @@ class index extends PureComponent {
                                 <Button onClick={this.EntButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
+                                <SdlTable scroll={{  y: this.state.entType == '1' ? 'calc(100vh - 600px)' :  'calc(100vh - 650px)' }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props. ExceedPageSize,
@@ -1860,7 +1862,7 @@ class index extends PureComponent {
                                 <Button onClick={this.ExButtonCountHandleExport}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
+                                <SdlTable scroll={{  y: this.state.entType == '1' ? 'calc(100vh - 600px)' :  'calc(100vh - 650px)' }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props.ModalPageSize,
@@ -1885,7 +1887,7 @@ class index extends PureComponent {
                                 <Button onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
                             </div>
                             {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
+                                <SdlTable scroll={{  y: this.state.entType == '1' ? 'calc(100vh - 600px)' :  'calc(100vh - 650px)' }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
                                     showSizeChanger: true,
                                     showQuickJumper: true,
                                     pageSize: this.props.ModalPageSize,

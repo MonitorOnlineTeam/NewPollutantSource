@@ -10,10 +10,9 @@ import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Ico
 import { connect } from 'dva';
 import $ from 'jquery'
 import _ from 'lodash'
-import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
+// import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import { EntIcon, GasIcon, WaterIcon, LegendIcon, PanelWaterIcon, PanelGasIcon, TreeIcon, PanelIcon, BellIcon, StationIcon, ReachIcon, SiteIcon, DustIcon, VocIcon, QCAIcon, IconConfig } from '@/utils/icon';
-import Center from '@/pages/account/center';
 import global from '@/global.less'
 import config from '@/config'
 import styles from './index.less'
@@ -877,12 +876,11 @@ class NavigationTree extends Component {
               </Select> : 
                null
                 } 
-          {/* {(this.props.QCAUse == undefined && configInfo.GroupRegionState === "1") ? <EnterprisePointCascadeMultiSelect */}
-          {false ? <EnterprisePointCascadeMultiSelect
+          {/* {false ? <EnterprisePointCascadeMultiSelect
             searchRegion
             onChange={this.regionChange}
             placeholder="请选择区域"
-          /> : ''}
+          /> : ''} */}
           <Search
             placeholder="请输入关键字查询"
             onChange={this.onChangeSearch}

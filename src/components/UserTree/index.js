@@ -18,7 +18,6 @@ import {
   TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
-import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import {
   ManIcon,
