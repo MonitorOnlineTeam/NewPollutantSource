@@ -72,6 +72,7 @@ const tableColumns = [
 ];
 
 const { confirm } = Modal;
+const configId = 'SparePartsStation';
 
 @connect(({ loading, autoForm, SparePartsStation }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -97,7 +98,12 @@ class Index extends Component {
 
     componentDidMount() {
         const { match, dispatch } = this.props;
-        this.reloadPage(match.params.configId);
+        dispatch({
+            type: 'autoForm/getPageConfig',
+            payload: {
+                configId,
+            },
+        })
         dispatch({
             type: 'SparePartsStation/GetAllOperationUsers',
             payload: {
@@ -106,27 +112,6 @@ class Index extends Component {
         })
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.location.pathname !== this.props.location.pathname) {
-            if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
-        }
-    }
-
-    reloadPage = configId => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'autoForm/updateState',
-            payload: {
-                routerConfig: configId,
-            },
-        });
-        dispatch({
-            type: 'autoForm/getPageConfig',
-            payload: {
-                configId,
-            },
-        })
-    }
 
     /** 设置关联用户 */
     showModal = SparePartsStationCode => {
@@ -187,7 +172,12 @@ class Index extends Component {
                 callback: result => {
                     if (result.IsSuccess) {
                         message.success(result.Message);
-                        this.reloadPage(match.params.configId);
+                        dispatch({
+                            type: 'autoForm/getPageConfig',
+                            payload: {
+                                configId,
+                            },
+                        })
                     }
                     else {
                         message.error(result.Message)
@@ -216,7 +206,7 @@ class Index extends Component {
     }
 
     render() {
-        const { match: { params: { configId } }, AllUser, SparePartsStationUserLoading } = this.props;
+        const { AllUser, SparePartsStationUserLoading } = this.props;
         const { targetKeys, disabled, showSearch } = this.state;
         if (this.props.loading) {
             return (<Spin
@@ -241,6 +231,7 @@ class Index extends Component {
                         <SdlTable
                             style={{ marginTop: 10 }}
                             configId={configId}
+                            parentcode={'operations/serviceSite'}
                             {...this.props}
                             appendHandleRows={row => (
                                 <span>

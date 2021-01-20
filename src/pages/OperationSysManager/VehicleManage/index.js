@@ -90,11 +90,12 @@ class Index extends Component {
             <AutoFormTable
               style={{ marginTop: 10 }}
               configId={configId}
+              parentcode='operations/carmanager/vehiclemanage'
               appendHandleRows={row => <Fragment>
                 <Divider type="vertical" />
                 <Tooltip title="删除">
                   <Popconfirm
-                    title="确认要删除吗?"  
+                    title="确认要删除吗?"
                     onConfirm={() => {
                       this.delete(
                         row['dbo.T_Bas_VehicleInfo.ID'],
