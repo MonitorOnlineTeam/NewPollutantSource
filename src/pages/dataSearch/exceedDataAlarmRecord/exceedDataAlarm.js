@@ -577,10 +577,9 @@ class index extends PureComponent {
 
     //添加标签
     paneAdd = (text,region)=>{
-        const {column,AlarmDetailList} = this.props
+        const {column,AlarmDetailList,loadingRateDetail} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
-
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRateDetail,
             payload: {
@@ -693,7 +692,8 @@ class index extends PureComponent {
                 let alarmDetailList = this.props.AlarmDetailList.filter(item=>item.regionName !== "全部合计" )
                 if (key != '') {
                     let obj = {
-                        title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}
+                        title: text, content: <SdlTable  columns={columns} dataSource={alarmDetailList}
+                        loading={loadingRateDetail}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -719,7 +719,8 @@ class index extends PureComponent {
                 }
                 if (key == '') {
                     panes.push({
-                        title: text, content: <SdlTable columns={columns} dataSource={alarmDetailList}
+                        title: text, content: <SdlTable  columns={columns} dataSource={alarmDetailList}
+                        loading={loadingRateDetail}
                         pagination={
                             {
                                 showSizeChanger: true,
@@ -871,6 +872,7 @@ class index extends PureComponent {
             >
                 <TabPane tab={this.state.entType == '1'?'废水':'废气'} key='1' closable={false}>
                     <SdlTable columns={columns} dataSource={AlarmList}
+                    loading={loading}
                         // pagination={{
                         //     showSizeChanger: true,
                         //     showQuickJumper: true,
