@@ -1102,12 +1102,14 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
-                title: "首次超标时间",
+                title: "首次报警时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
@@ -1238,6 +1240,9 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+
             },
             {
                 title: "报警因子",
@@ -1366,6 +1371,8 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
@@ -1501,6 +1508,8 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",

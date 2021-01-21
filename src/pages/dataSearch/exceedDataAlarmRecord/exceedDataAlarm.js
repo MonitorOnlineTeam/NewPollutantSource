@@ -1105,6 +1105,8 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
@@ -1236,6 +1238,8 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
