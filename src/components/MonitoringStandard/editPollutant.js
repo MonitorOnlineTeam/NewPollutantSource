@@ -12,6 +12,7 @@ import {
   Divider,
   Collapse,
   Icon,
+  Radio,
 } from 'antd';
 import { connect } from 'dva';
 import { isNullOrUndefined } from 'util';
@@ -60,9 +61,11 @@ class EditPollutant extends Component {
               ZeroContinuityCount: this.props.editpollutant.ZeroContinuityCount,
               SerialContinuityCount: this.props.editpollutant.SerialContinuityCount,
               AlarmType: this.props.editpollutant.AlarmType,
+              IsStatisti: this.props.editpollutant.IsStatisti,
               AlarmDescription: this.props.editpollutant.AlarmDescription,
               AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
               AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
+              ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType.split(','),
             });
           },
         },
@@ -110,6 +113,8 @@ class EditPollutant extends Component {
                   ? 0
                   : values.SerialContinuityCount,
               AlarmDescription: values.AlarmDescription,
+              IsStatisti: values.IsStatisti,
+              ExceptionType: values.ExceptionType.length > 0 ? values.ExceptionType.join(',') : '',
               callback: res => {
                 if (res.IsSuccess) {
                   this.props.oncancel();
@@ -198,14 +203,44 @@ class EditPollutant extends Component {
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警描述">
                     {getFieldDecorator('AlarmDescription')(
-                      <TextArea rows={2} style={{ width: '100' }} />,
+                      <TextArea rows={2} style={{ width: '100' }} maxLength={50} />
+                    )}
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="是否参与考核">
+                    {getFieldDecorator('IsStatisti', {
+                      initialValue: 1,
+                    })(
+                      <Radio.Group>
+                        <Radio value={1}>是</Radio>
+                        <Radio value={0}>否</Radio>
+                      </Radio.Group>
                     )}
                   </FormItem>
                 </Col>
               </Row>
             </Panel>
             <Panel header="异常设置" key="2" style={customPanelStyle}>
-              <Row gutter={48}>
+              <Row>
+                <Col span={24}>
+                  <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 15 }} label="异常类型">
+                    {getFieldDecorator('ExceptionType', {
+                    })(
+                      <Select
+                        mode="multiple"
+                        style={{ width: '100%' }}
+                        placeholder="请选择异常类型"
+                      >
+                        <Option value="1">零值异常</Option>
+                        <Option value="2">超量程异常</Option>
+                        <Option value="3">连续值异常</Option>
+                      </Select>,
+                    )}
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="检出上限">
                     {getFieldDecorator('AbnormalUpperLimit', {
@@ -221,7 +256,7 @@ class EditPollutant extends Component {
                   </FormItem>
                 </Col>
               </Row>
-              <Row gutter={48}>
+              <Row>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="零值计数">
                     {getFieldDecorator('ZeroContinuityCount', {
@@ -236,8 +271,6 @@ class EditPollutant extends Component {
                     })(<InputNumber min={0} max={100000} step={1} />)}
                   </FormItem>
                 </Col>
-              </Row>
-              <Row gutter={48}>
                 <Col span={12}>
                   <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="超限计数">
                     {getFieldDecorator('OverrunContinuityCount', {

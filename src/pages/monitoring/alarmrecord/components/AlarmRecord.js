@@ -287,9 +287,7 @@ class AlarmRecord extends Component {
   handleOk = e => {
     const { dispatch, form, overdataparams, DGIMN, EntCode } = this.props;
     form.validateFields((err, values) => {
-      debugger;
       if (!err) {
-        debugger;
         const formData = handleFormData(values, this.state.uid);
         formData.VerifyPerSon = formData.VerifyPerSon1;
         formData.VerifyTime = formData.VerifyTime1;

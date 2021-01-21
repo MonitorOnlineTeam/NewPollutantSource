@@ -1160,7 +1160,7 @@ class MapView extends Component {
               {
                 menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标处置" key="3">
-                  <AlarmRecord DGIMN={currentKey} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
+                  <AlarmRecord DGIMN={currentKey} EntCode={this.state.currentPointInfo.EntCode} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               {
@@ -1209,8 +1209,7 @@ class MapView extends Component {
                     longitude={infoWindowData.longitude}
                     latitude={infoWindowData.latitude}
                     path={infoWindowData.entCoordinateSet || []}
-                    handleMarker={true}
-                    handlePolygon={true}
+                    handlePolygon
                     style={{ height: this.state.currentPointInfo.PollutantType !== "5" ? 300 : 430 }}
                     zoom={12}
                   />

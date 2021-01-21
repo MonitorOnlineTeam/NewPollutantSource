@@ -223,34 +223,6 @@ export default {
             //   component: './Test/Test',
             // },
             {
-              path: '/:parentcode/autoformmanager/:configId',
-              name: 'AutoFormManager',
-              routes: [
-                // { path: '/:parentcode/autoformmanager/:configId', redirect: '/:parentcode/autoformmanager/:configId/AutoFormList' },
-                {
-                  name: 'index',
-                  path: '/:parentcode/autoformmanager/:configId',
-                  component: './AutoFormManager',
-                },
-                {
-                  name: 'add',
-                  path: '/:parentcode/autoformmanager/:configId/autoformadd',
-                  // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
-                  component: './AutoFormManager/AutoFormAdd',
-                },
-                {
-                  name: 'edit',
-                  path: '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
-                  component: './AutoFormManager/AutoFormEdit',
-                },
-                {
-                  name: 'view',
-                  path: '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
-                  component: './AutoFormManager/AutoFormView',
-                },
-              ],
-            },
-            {
               path: '/:parentcode/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
@@ -276,6 +248,36 @@ export default {
                   name: 'view',
                   path:
                     '/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                  component: './AutoFormManager/AutoFormView',
+                },
+              ],
+            },
+            {
+              path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId',
+              name: 'AutoFormManager',
+              routes: [
+                // { path: '/:parentcode/autoformmanager/:configId', redirect: '/:parentcode/autoformmanager/:configId/AutoFormList' },
+                {
+                  name: 'index',
+                  path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId',
+                  component: './AutoFormManager',
+                },
+                {
+                  name: 'add',
+                  path: '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId/autoformadd',
+                  // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  component: './AutoFormManager/AutoFormAdd',
+                },
+                {
+                  name: 'edit',
+                  path:
+                    '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
+                  component: './AutoFormManager/AutoFormEdit',
+                },
+                {
+                  name: 'view',
+                  path:
+                    '/:parentcode/:parentcode/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
@@ -316,7 +318,7 @@ export default {
               routes: [
                 {
                   path: '/platformconfig',
-                  redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
+                  redirect: '/platformconfig/AEnterpriseTest',
                 },
                 {
                   // 设备管理
@@ -332,13 +334,13 @@ export default {
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId/:targetType',
+                  path: '/platformconfig/AEnterpriseTest',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'dischargepermit',
                   path:
-                    '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                    '/platformconfig/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
                   component: './platformManager/dischargepermit',
                 },
                 {
@@ -346,21 +348,21 @@ export default {
                   path: '/platformconfig/maintain/:configId/',
                   component: './platformManager/maintain',
                 },
-                {
-                  name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
-                  component: './platformManager/monitortarget',
-                },
+                // {
+                //   name: 'monitortarget',
+                //   path: '/platformconfig/:configId/:targetType/:pollutantTypes',
+                //   component: './platformManager/monitortarget',
+                // },
                 {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
+                    '/platformconfig/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {
@@ -607,7 +609,11 @@ export default {
                 },
               ],
             },
-
+            {
+              path: '/operations/test',
+              name: 'index',
+              component: './Test/Test',
+            },
             {
               path: '/operations',
               name: 'operations',
@@ -666,12 +672,12 @@ export default {
                       path: '/operations/materielmanager/handhelddevicesmanage/:configId',
                       component: './OperationSysManager/HandheldDevicesManage/',
                     },
-                    {
-                      name: 'sparepartsstation',
-                      path: '/operations/materielmanager/sparepartsstation/:configId',
-                      component: './OperationSysManager/SparePartsStation/',
-                    },
                   ],
+                },
+                {
+                  name: 'sparepartsstation',
+                  path: '/operations/serviceSite',
+                  component: './OperationSysManager/SparePartsStation',
                 },
                 {
                   name: 'usermanager',

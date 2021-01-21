@@ -82,7 +82,6 @@ class AlarmverifyRecord extends Component {
                         {...this.props}
                         appendHandleRows={row => (
                             <Fragment>
-                                <Divider type="vertical"></Divider>
                                 <Tooltip title="报警记录详情">
                                     <a
                                         onClick={() => {

@@ -19,7 +19,8 @@ import {
     Row,
     Col,
     Empty,
-    Tooltip
+    Tooltip,
+    Switch
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
@@ -70,7 +71,7 @@ class MonitoringStandard extends Component {
         //         configId: 'service_StandardLibrary',
         //     },
         // });
-   
+
         this.getpollutantbydgimn(DGIMN);
     }
 
@@ -127,6 +128,17 @@ class MonitoringStandard extends Component {
         });
     };
 
+    changeUseStatisti = (record, Enalbe) => {
+        this.props.dispatch({
+            type: 'standardLibrary/changeUseStatisti',
+            payload: {
+                DGIMN: this.state.DGIMN,
+                PollutantCode: record.PollutantCode,
+                Enalbe: Enalbe ? Enalbe : (record.IsStatisti == 1 ? 0 : 1)
+            }
+        })
+    }
+
 
     render() {
         const columns = [
@@ -134,7 +146,7 @@ class MonitoringStandard extends Component {
                 title: '污染物编号',
                 dataIndex: 'PollutantCode',
                 key: 'PollutantCode',
-                width: '10%',
+                // width: '10%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -142,7 +154,7 @@ class MonitoringStandard extends Component {
                 title: '污染物名称',
                 dataIndex: 'PollutantName',
                 key: 'PollutantName',
-                width: '10%',
+                // width: '10%',
                 align: 'left',
                 render: (text, record) => text,
             },
@@ -151,7 +163,7 @@ class MonitoringStandard extends Component {
                 title: '报警类型',
                 dataIndex: 'AlarmType',
                 key: 'AlarmType',
-                width: '10%',
+                // width: 200,
                 render: (text, record) => {
                     if (text === 0) {
                         return (
@@ -191,7 +203,7 @@ class MonitoringStandard extends Component {
                 title: '检出上限',
                 dataIndex: 'AbnormalUpperLimit',
                 key: 'AbnormalUpperLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => text,
             },
@@ -199,7 +211,7 @@ class MonitoringStandard extends Component {
                 title: '检出下限',
                 dataIndex: 'AbnormalLowerLimit',
                 key: 'AbnormalLowerLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => text,
             },
@@ -207,7 +219,7 @@ class MonitoringStandard extends Component {
                 title: '报警上限',
                 dataIndex: 'UpperLimit',
                 key: 'UpperLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -221,7 +233,7 @@ class MonitoringStandard extends Component {
                 title: '报警下限',
                 dataIndex: 'LowerLimit',
                 key: 'LowerLimit',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -235,7 +247,7 @@ class MonitoringStandard extends Component {
                 title: '标准值',
                 dataIndex: 'StandardValue',
                 key: 'StandardValue',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === 0) {
@@ -249,7 +261,7 @@ class MonitoringStandard extends Component {
                 title: '监测状态',
                 dataIndex: 'IsUse',
                 key: 'IsUse',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (text === '0') {
@@ -281,8 +293,20 @@ class MonitoringStandard extends Component {
                 },
             },
             {
+                title: '是否参与考核',
+                dataIndex: 'IsStatisti',
+                key: 'IsStatisti',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    return <Switch onChange={() => {
+                        this.changeUseStatisti(record)
+                    }} disabled={record.IsUse === '0'} checkedChildren="是" unCheckedChildren="否" checked={text == 1} />
+                },
+            },
+            {
                 title: '操作',
-                width: '10%',
+                // width: '10%',
                 align: 'center',
                 render: (text, record) => {
                     if (record.IsUse === '1') {
@@ -329,7 +353,7 @@ class MonitoringStandard extends Component {
             <Card
                 bordered={false}
                 style={{ width: '100%' }}
-                bodyStyle={{paddingBottom:0}}
+                bodyStyle={{ paddingBottom: 0 }}
                 extra={
                     <Button
                         onClick={() => {
@@ -349,7 +373,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
-                  //  pagination={{ pageSize: 20 }}
+                //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
                     visible={standardlibraryModal}
@@ -366,7 +390,6 @@ class MonitoringStandard extends Component {
                     {
                         <AutoFormTable
                             style={{ marginTop: 10 }}
-                            getPageConfig
                             configId={'service_StandardLibrary'}
                             searchParams={[
                                 {
