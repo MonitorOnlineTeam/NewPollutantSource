@@ -470,7 +470,14 @@ export default class EntTransmissionEfficiency extends Component {
       },
       toolbox: {
         feature: {
-          saveAsImage: {}
+          toolbox: {
+            feature: {
+                saveAsImage: {
+                   show:true,
+                   emphasis:{iconStyle:{textPadding: [0, 10, 0, 0]}} 
+                  }
+            }
+        },
         }
       },
       xAxis: {

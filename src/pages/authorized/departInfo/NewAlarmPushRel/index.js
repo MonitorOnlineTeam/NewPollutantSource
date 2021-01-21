@@ -254,18 +254,21 @@ class Index extends Component {
         
         const { targetKeys } = this.state;
         
-       let parData =  targetKeys.map(item=>{
+        let parData = targetKeys.length>0 ? targetKeys.map(item=>{
           return  {  
                     RoleIdOrDepId: alarmPushData.key,
                     FlagType: type,
                     DGIMN: item,
                     AlarmType: AlarmType,
-                    // Id: "",
-                    // CreateUserId: "",
-                    // CreateUserName: alarmPushData.CreateUserName,
-                    // CreateDate: alarmPushData.CreateDate
                   }
         })
+        :
+        [{  
+          RoleIdOrDepId: alarmPushData.key,
+          FlagType: type,
+          DGIMN: 'ALL',
+          AlarmType: AlarmType,
+        }]
         this.setState({confirmLoading:true })
         dispatch({
             type: 'alarmPush/insertAlarmDepOrRole',
