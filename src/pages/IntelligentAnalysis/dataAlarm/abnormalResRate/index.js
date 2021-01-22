@@ -293,7 +293,7 @@ class index extends PureComponent {
   render() {
     const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, tableDataSource, loading, exportLoading } = this.props;
     const { columns, detailsColumns } = this._SELF_;
-    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime } = this.state;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,operationpersonnel } = this.state;
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     return (
@@ -325,6 +325,7 @@ class index extends PureComponent {
                     maxTagCount={2}
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
+                    value={operationpersonnel?operationpersonnel:undefined}
                     onChange={(value) => {
                       this.setState({
                           operationpersonnel: value,

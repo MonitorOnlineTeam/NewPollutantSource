@@ -134,7 +134,7 @@ export default class Index extends PureComponent {
       EntType: types==='ent'? "1":"2",
       beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
       endTime: time[1].format('YYYY-MM-DD 23:59:59'),
-      OperationPersonnel:'',
+      // OperationPersonnel:'',
     });
 
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
@@ -217,7 +217,7 @@ export default class Index extends PureComponent {
   }
   changePperation=(value)=>{
     this.updateQueryState({
-      OperationPersonnel: value,
+      OperationPersonnel: value?value:'',
     });
   }
   changeEnt=(value,data)=>{ //企业事件
@@ -326,6 +326,7 @@ export default class Index extends PureComponent {
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                   placeholder="运维状态"
                   maxTagCount={2}
+                  value={OperationPersonnel?OperationPersonnel:undefined}
                   onChange={this.changePperation}
                   maxTagTextLength={5}
                   maxTagPlaceholder="..."

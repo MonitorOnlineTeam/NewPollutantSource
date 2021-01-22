@@ -186,7 +186,7 @@ export default class EntTransmissionEfficiency extends Component {
       // RegionCode: "",
       // PollutantTypeCode: [],
       // ModelType: "All"
-      OperationPersonnel:'',
+      // OperationPersonnel:'',
     });
     setTimeout(() => {
       this.getTableData();
@@ -250,7 +250,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   changePperation=(value)=>{
     this.updateQueryState({
-      OperationPersonnel: value,
+      OperationPersonnel:  value? value:'',
     });
   }
   changeEnt=(value,data)=>{ //企业事件
@@ -373,6 +373,7 @@ export default class EntTransmissionEfficiency extends Component {
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                   placeholder="运维状态"
+                  value={OperationPersonnel?OperationPersonnel:undefined}
                   maxTagCount={2}
                   onChange={this.changePperation}
                   maxTagTextLength={5}
