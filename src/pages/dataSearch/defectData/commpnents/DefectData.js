@@ -132,7 +132,8 @@ export default class EntTransmissionEfficiency extends Component {
       Atmosphere:Atmosphere,
       dataType:'HourData',
       PageSize:20,
-      PageIndex:1
+      PageIndex:1,
+      OperationPersonnel:'',
     });
     // this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
 
@@ -205,7 +206,12 @@ export default class EntTransmissionEfficiency extends Component {
       PollutantType: value,
     });
   };
-
+  changeOperation = value => {
+    this.updateQueryState({
+      operationpersonnel: value,
+    });
+  };
+  
   changeRegion = (value) => { //行政区事件
     
     this.updateQueryState({
@@ -340,7 +346,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       Atmosphere,
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex,OperationPersonnel },
     } = this.props;
 
 
@@ -447,6 +453,20 @@ export default class EntTransmissionEfficiency extends Component {
                 {this.children()}
               </Select>
             </Form.Item>
+            <Form.Item label='运维状态'>
+                <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10}}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={this.changeOperation}
+                    >
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item>
                  <BtnComponents />
                 </Row>
                 :

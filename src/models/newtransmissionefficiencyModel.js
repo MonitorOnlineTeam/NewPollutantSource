@@ -32,6 +32,7 @@ export default Model.extend({
     RegionCode: '',
     EnterpriseName: '',
     pollutantType: '',
+    operationpersonnel:'',
     assessment:'1',
     qutletQueryPar: {
       beginTime: moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'),
@@ -41,7 +42,8 @@ export default Model.extend({
       EntCode: '',
       PollutantType: '',
       RegionCode: '',
-      Assessment:'1'
+      Assessment:'1',
+      OperationPersonnel:'',
     },
     qutleTableDatas: [],
     qutleTotal: '',
@@ -65,6 +67,7 @@ export default Model.extend({
         pollutantType,
         assessment,
         entCode,
+        operationpersonnel,
       } = yield select(state => state.newtransmissionefficiency);
       let body = {
         RegionCode: RegionCode,
@@ -72,11 +75,13 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
+        OperationPersonnel:operationpersonnel,
         Assessment:assessment,
         // PageSize: pageSize,
         // PageIndex: pageIndex,
         ...payload
       };
+      debugger
       const response = yield call(GetTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
         yield update({
@@ -124,7 +129,9 @@ export default Model.extend({
         RegionCode,
         pageIndex,
         pollutantType,
+        assessment,
         entCode,
+        operationpersonnel,
       } = yield select(state => state.newtransmissionefficiency);
       let body = {
         RegionCode: RegionCode,
@@ -133,6 +140,7 @@ export default Model.extend({
         PollutantType: pollutantType,
         EntCode: entCode,
         Assessment:assessment,
+        OperationPersonnel:operationpersonnel,
       };
       const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {

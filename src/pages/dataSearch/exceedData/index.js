@@ -84,6 +84,7 @@ class index extends PureComponent {
             ModelRcode:'',
             AttentionCode: '',
             PollutantTypeCode: '',
+            operationpersonnel:'',
             DataType: '',
             BeginTime: '',
             EndTime: '',
@@ -165,6 +166,7 @@ class index extends PureComponent {
     };
     handleSummit=(e)=>{
         const { PollutantByType } = this.props
+        const {operationpersonnel} = this.state
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
@@ -231,7 +233,8 @@ class index extends PureComponent {
                     BeginTime: values.dateTime[0],
                     EndTime: values.dateTime[1],
                     TabType: values.outlet == undefined ? '' : values.outlet,
-                    PollutantList: pollutionData
+                    PollutantList: pollutionData,
+                    operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
                 }
             })
           }
@@ -245,6 +248,7 @@ class index extends PureComponent {
     // 导出
     exportReport = (e) => {
         const { PollutantByType } = this.props
+        const {operationpersonnel} = this.state
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
@@ -309,6 +313,8 @@ class index extends PureComponent {
                     TabType:this.state.exportRegion? this.state.exportRegion : '1',
                     // TabType: values.outlet == undefined ? '1' : this.state.exportRegion,
                     PollutantList: pollutionData,
+                    operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
+
                 }
             })
           }
@@ -831,6 +837,7 @@ class index extends PureComponent {
                         }
 
                     </Form.Item>
+                  
                     <Form.Item label='数据类型' >
                         {
                             getFieldDecorator('dataType', {
@@ -850,6 +857,23 @@ class index extends PureComponent {
                         }
 
                     </Form.Item>
+                    <Form.Item label='运维状态' >
+                    <Select
+                    allowClear
+                    style={{ width: 200}}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                        this.setState({
+                            operationpersonnel: value,
+                        })
+                    }}>
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
+                    </Form.Item>
                     <Form.Item >
                         {
                             getFieldDecorator('dateTime', {
@@ -865,6 +889,9 @@ class index extends PureComponent {
                             )
                         }
                     </Form.Item>
+   
+
+                
                     <Form.Item >
                         <Button type="primary" style={{ marginRight: 10 }} htmlType='submit' >查询</Button>
                     </Form.Item>
@@ -1383,7 +1410,7 @@ class index extends PureComponent {
     }
     //企业数查询导出
     EntButtonCountHandleExpor=()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedDataList,
             payload:{
@@ -1396,6 +1423,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1463,7 +1491,7 @@ class index extends PureComponent {
     }
     //超标次数按钮导出
     ExButtonCountHandleExport =()=>{
-        const { panes,ModelRcode,modalEntCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,ModelRcode,modalEntCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedNum,
             payload:{
@@ -1476,6 +1504,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
+                operationpersonnel:operationpersonnel,
             }
         })
     }

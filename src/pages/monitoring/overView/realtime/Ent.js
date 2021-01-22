@@ -39,6 +39,7 @@ class index extends Component {
       columns: [],
       selectedTags: this.props.selectedTags || [],
       stopStatus: this.props.stopStatus || ['0', '1'],
+      operationpersonnel:'',
       fixed: false,
       currentDataType: 'HourData',
       realTimeDataView: [],
@@ -231,7 +232,7 @@ class index extends Component {
 
   // 获取表格数据
   getRealTimeDataView = () => {
-    const { pointName, currentDataType, pollutantCode, time, dayTime, regionCode, entCode, stopStatus, selectedTags } = this.state;
+    const { pointName, operationpersonnel,currentDataType, pollutantCode, time, dayTime, regionCode, entCode, stopStatus, selectedTags } = this.state;
     let searchTime;
     // ? moment(this.state.time).format("YYYY-MM-DD HH:00:00") : undefined
     if (currentDataType === 'HourData') {
@@ -252,6 +253,7 @@ class index extends Component {
         // stopStatus: stopStatus,
         regionCode: regionCode,
         entCode: entCode,
+        operationpersonnel:operationpersonnel,
         status: selectedTags && selectedTags.length ? selectedTags : [0, 1, 2, 3, 4]
       },
     });
@@ -553,6 +555,25 @@ class index extends Component {
                     })
                   }
                 </Select>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  onChange={(value) => {
+                    let val = value !== undefined ? value : "";
+                    this.setState({
+                      operationpersonnel: value,
+                    }, () => {
+                      this.getRealTimeDataView()
+                    })
+                  }}>
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+
                 {/* <Checkbox.Group value={stopStatus} style={{ width: 180, textAlign: 'center' }} onChange={(value) => {
                   console.log("value=", value)
                   if (!value.length) {

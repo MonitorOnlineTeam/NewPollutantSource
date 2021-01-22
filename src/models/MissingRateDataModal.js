@@ -20,6 +20,7 @@ export default Model.extend({
   state: {
     exloading: false,
     loading: false,
+    OperationPersonnel:'',
     queryPar: {
       beginTime: moment()
         .subtract(7, 'day')

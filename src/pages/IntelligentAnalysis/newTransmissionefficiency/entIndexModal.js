@@ -68,6 +68,7 @@ export default class EntIndexModal extends Component {
       visible: false,
       eName: '',
       regions: '',
+      operationpersonnel:'',
       effectiveVisible: false,
       effectiveLoading: false,
       TTVisible:false,
@@ -180,6 +181,12 @@ export default class EntIndexModal extends Component {
   changeRegion = value => {
     this.updateState({
       RegionCode: value,
+    });
+  };
+  
+  changeOperation = value => {
+    this.updateState({
+      operationpersonnel: value,
     });
   };
 
@@ -441,6 +448,20 @@ export default class EntIndexModal extends Component {
                     <Option value="1">国家考核</Option>
                     <Option value="2">兵团考核</Option>
                   </Select>
+                </Form.Item>
+                <Form.Item>
+                <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10}}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={this.changeOperation}
+                    >
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
                 </Form.Item>
                 <Form.Item>
                   <Select
