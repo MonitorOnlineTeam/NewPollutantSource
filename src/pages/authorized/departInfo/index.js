@@ -1181,7 +1181,7 @@ class DepartIndex extends Component {
                   cancelModal={this.cancelAlarmModal}
                 /> 
               </Modal>   */}
-             {this.state.visibleAlarm&&<NewAlarmPushRel type='Dep'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
+             {this.state.visibleAlarm&&<NewAlarmPushRel type='Dept'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
 
             </div>
             {/* </MonitorContent> */}
