@@ -469,11 +469,11 @@ export default class EntTransmissionEfficiency extends Component {
         containLabel: true
       },
       toolbox: {
-        right: 20,
+        right:20,
         feature: {
                 saveAsImage: {
                    show:true,
-                  //  emphasis:{iconStyle:{textPadding: [0, 40, 0, 0]}} 
+                  //  emphasis:{iconStyle:{textPadding: [0, 10, 0, 0]}}
                   }
         },
       },
@@ -658,7 +658,7 @@ export default class EntTransmissionEfficiency extends Component {
                 columns={columns.length > 1 ? columns : []}
                 // bordered={false}
                 dataSource={this.props.tableDatas}
-                // style ={{height:"calc(100vh - 300px)"}} 
+                // style ={{height:"calc(100vh - 300px)"}}
                 pagination={{
                   showSizeChanger: true,
                   showQuickJumper: true,
