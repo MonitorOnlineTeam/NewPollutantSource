@@ -149,7 +149,7 @@ export default class UserInfoIndex extends Component {
       );
     }
     return (
-      <BreadcrumbWrapper title="用户管理">
+      <BreadcrumbWrapper>
         {/* <div className={styles.cardTitle}> */}
           <Card>
             <SearchWrapper

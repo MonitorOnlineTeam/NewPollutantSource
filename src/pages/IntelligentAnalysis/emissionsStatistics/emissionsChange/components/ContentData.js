@@ -469,10 +469,11 @@ export default class EntTransmissionEfficiency extends Component {
         containLabel: true
       },
       toolbox: {
+        right: 20,
         feature: {
                 saveAsImage: {
                    show:true,
-                   emphasis:{iconStyle:{textPadding: [0, 10, 0, 0]}} 
+                  //  emphasis:{iconStyle:{textPadding: [0, 40, 0, 0]}} 
                   }
         },
       },

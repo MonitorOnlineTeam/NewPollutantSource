@@ -12,7 +12,7 @@ export default class Index extends Component {
   componentDidMount() {}
   render() {
     return (
-      <BreadcrumbWrapper title="超标报警核实率">
+      <BreadcrumbWrapper>
         <OverVerifyLst />
       </BreadcrumbWrapper>
     );

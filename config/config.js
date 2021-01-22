@@ -223,6 +223,35 @@ export default {
             //   component: './Test/Test',
             // },
             {
+              path: '/:parentcode/autoformmanager/:configId',
+              name: 'AutoFormManager',
+              routes: [
+                {
+                  name: 'index',
+                  path: '/:parentcode/autoformmanager/:configId',
+                  component: './AutoFormManager',
+                },
+                {
+                  name: 'add',
+                  path: '/:parentcode/autoformmanager/:configId/autoformadd',
+                  // redirect: '/platformconfig/autoformmanager/:configId/autoformadd',
+                  component: './AutoFormManager/AutoFormAdd',
+                },
+                {
+                  name: 'edit',
+                  path:
+                    '/:parentcode/autoformmanager/:configId/autoformedit/:keysParams/:uid',
+                  component: './AutoFormManager/AutoFormEdit',
+                },
+                {
+                  name: 'view',
+                  path:
+                    '/:parentcode/autoformmanager/:configId/autoformview/:keysParams',
+                  component: './AutoFormManager/AutoFormView',
+                },
+              ],
+            },
+            {
               path: '/:parentcode/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
@@ -334,13 +363,13 @@ export default {
                 },
                 {
                   name: 'monitortarget',
-                  path: '/platformconfig/AEnterpriseTest',
+                  path: '/platformconfig/monitortarget/:configId/:targetType',
                   component: './platformManager/monitortarget',
                 },
                 {
                   name: 'dischargepermit',
                   path:
-                    '/platformconfig/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                    '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
                   component: './platformManager/dischargepermit',
                 },
                 {
@@ -348,21 +377,21 @@ export default {
                   path: '/platformconfig/maintain/:configId/',
                   component: './platformManager/maintain',
                 },
-                // {
-                //   name: 'monitortarget',
-                //   path: '/platformconfig/:configId/:targetType/:pollutantTypes',
-                //   component: './platformManager/monitortarget',
-                // },
+                {
+                  name: 'monitortarget',
+                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
+                  component: './platformManager/monitortarget',
+                },
                 {
                   name: 'monitorpoint',
                   path:
-                    '/platformconfig/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                   component: './platformManager/point',
                 },
                 {
                   name: 'usestandardlibrary',
                   path:
-                    '/platformconfig/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
+                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
                   component: './platformManager/point/components/setStandard',
                 },
                 {

@@ -250,7 +250,7 @@ onChangeHandle=(PageIndex, PageSize)=>{
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-          <BreadcrumbWrapper title="空气站查询">
+          <BreadcrumbWrapper>
             <Card
               extra={
                 <>

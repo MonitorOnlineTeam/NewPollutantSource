@@ -25,7 +25,7 @@ export default class Index extends Component {
    }
   render() {
     return (
-        <BreadcrumbWrapper title="排放量变化趋势">
+        <BreadcrumbWrapper>
            <ContentData />
         </BreadcrumbWrapper>
     );

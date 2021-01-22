@@ -537,7 +537,7 @@ class index extends PureComponent {
         return (
             <>
                 <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="月平均值季报">
+                    <BreadcrumbWrapper>
                         <Card
                             extra={
                                 <>
