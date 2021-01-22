@@ -165,7 +165,11 @@ export default class EntTransmissionEfficiency extends Component {
       EntCode: value,
     });
   };
-
+  changePperation=(value)=>{
+    this.updateQueryState({
+      OperationPersonnel: value,
+    });
+  }
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar } = this.props;
@@ -197,7 +201,7 @@ export default class EntTransmissionEfficiency extends Component {
     //企业下  排口有效传输效率
     const {
       dispatch,
-      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode, Assessment },
+      queryPar: { RegionCode, PollutantType, beginTime, endTime, EntCode, Assessment,OperationPersonnel },
       entName,
     } = this.props;
 
@@ -423,6 +427,20 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.children()}
                   </Select>
                 </Form.Item>
+                <Form.Item >
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item> 
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

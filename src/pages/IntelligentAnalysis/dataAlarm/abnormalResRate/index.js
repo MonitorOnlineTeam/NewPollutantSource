@@ -52,7 +52,9 @@ class index extends PureComponent {
     checkedValues: [],
     secondQueryCondition: {},
     queryCondition: {},
+    operationpersonnel:'',
     exceptionTime: this.props.time || this.props.exceptionTime,
+    
   }
   _SELF_ = {
     columns: [
@@ -222,6 +224,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
     this.setState({
@@ -232,6 +235,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
   }
@@ -256,6 +260,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
   }
@@ -301,7 +306,7 @@ class index extends PureComponent {
                   initialValue: 'HourData',
                 })(
                   <Select
-                    style={{ width: 200 }}
+                    style={{ width: 180 }}
                     placeholder="请选择数据类型"
                     allowClear
                     onChange={this.onDataTypeChange}
@@ -311,6 +316,25 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
+              <Form.Item label="运维状态">
+              {
+                  <Select
+                    allowClear
+                    style={{ width: 180}}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                      this.setState({
+                          operationpersonnel: value,
+                      })
+                  }}>
+                    <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                  </Select>
+                }
+              </Form.Item>
               <FormItem label="日期查询">
                 <RangePicker_ allowClear={false} onRef={(ref) => {
                   this.rangePicker = ref;
@@ -320,7 +344,7 @@ class index extends PureComponent {
               <FormItem label="行政区">
                 {getFieldDecorator('RegionCode', {
                 })(
-                  <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
+                  <Select style={{ width: 180 }} allowClear placeholder="请选择行政区">
                     {
                       _regionList.map(item => {
                         return <Option key={item.key} value={item.value}>
@@ -337,7 +361,7 @@ class index extends PureComponent {
                 {getFieldDecorator('AttentionCode', {
                   initialValue: undefined,
                 })(
-                  <Select allowClear style={{ width: 200 }} placeholder="请选择关注程度">
+                  <Select allowClear style={{ width: 180 }} placeholder="请选择关注程度">
                     {
                       attentionList.map(item => {
                         return <Option key={item.AttentionCode} value={item.AttentionCode}>
@@ -348,11 +372,12 @@ class index extends PureComponent {
                   </Select>,
                 )}
               </FormItem>
+            
               <FormItem label="企业类型">
                 {getFieldDecorator('PollutantType', {
                   initialValue: '1',
                 })(
-                  <Select style={{ width: 200 }} placeholder="请选择企业类型" onChange={(value) => {
+                  <Select style={{ width: 180 }} placeholder="请选择企业类型" onChange={(value) => {
                     this.setState({ pollutantType: value }, () => {
                     })
                   }}>

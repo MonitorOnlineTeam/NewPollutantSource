@@ -81,6 +81,7 @@ class index extends PureComponent {
             RegionCode: '',
             ModelRcode:'',
             AttentionCode: '',
+            operationpersonnel:'',
             PollutantTypeCode: '',
             DataType: '',
             BeginTime: '',
@@ -151,7 +152,7 @@ class index extends PureComponent {
                     BeginTime:moment(exceedTime[0]).format('YYYY-MM-DD HH:mm:ss'),
                     EndTime:moment(exceedTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                     DataType:exceedDataType== 'Hour' ? 'HourData' : 'DayData',
-                    PollutantList:pollutantList
+                    PollutantList:pollutantList,
                 })
                 this.props.dispatch({
                     type: pageUrl.GetExceedDataList,
@@ -163,7 +164,8 @@ class index extends PureComponent {
                         BeginTime: moment(exceedTime[0]).format('YYYY-MM-DD HH:mm:ss'),
                         EndTime: moment(exceedTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                         TabType: exceedType,
-                        PollutantList: pollutantList
+                        PollutantList: pollutantList,
+                        operationpersonnel:'',
                     }
                 })
             }
@@ -171,6 +173,7 @@ class index extends PureComponent {
     };
     handleSummit=(e)=>{
         const { PollutantByType } = this.props
+        const {operationpersonnel} = this.state
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
@@ -235,7 +238,8 @@ class index extends PureComponent {
                     BeginTime: moment(values.dateTime[0]).format('YYYY-MM-DD HH:mm:ss'),
                     EndTime: moment(values.dateTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                     TabType: values.outlet == undefined ? '' : values.outlet,
-                    PollutantList: pollutionData
+                    PollutantList: pollutionData,
+                    operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
                 }
             })
           }
@@ -250,6 +254,7 @@ class index extends PureComponent {
     exportReport = (e) => {
                 
         const { PollutantByType } = this.props
+        const {operationpersonnel} = this.state
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
@@ -313,6 +318,7 @@ class index extends PureComponent {
                     EndTime: values.dateTime[1],
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
+                    operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
                 }
             })
           }
@@ -762,7 +768,7 @@ class index extends PureComponent {
                                 <Select
                                     allowClear
                                     showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                    style={{ width: 180, marginLeft: 10, marginRight: 20 }}
                                     placeholder="行政区"
                                     maxTagCount={2}
                                     maxTagTextLength={5}
@@ -791,7 +797,7 @@ class index extends PureComponent {
                             })(
                                 <Select
                                     allowClear
-                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                    style={{ width: 180, marginLeft: 10, marginRight: 20 }}
                                     placeholder="关注程度"
                                     maxTagCount={2}
                                     maxTagTextLength={5}
@@ -811,7 +817,7 @@ class index extends PureComponent {
                                 initialValue: exceedType
                             })(
                                 <Select
-                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                    style={{ width: 180, marginLeft: 10, marginRight: 20 }}
                                     //defaultValue={'1'}
                                     placeholder="企业类型"
                                     maxTagCount={2}
@@ -854,6 +860,26 @@ class index extends PureComponent {
                         }
 
                     </Form.Item>
+                    <Form.Item label="运维状态">
+                        {
+                               <Select
+                               allowClear
+                               style={{ width: 180 }}
+                               placeholder="运维状态"
+                               maxTagCount={2}
+                               maxTagTextLength={5}
+                               maxTagPlaceholder="..."
+                               onChange={(value) => {
+                                   this.setState({
+                                       operationpersonnel: value,
+                                   })
+                               }}>
+                                <Option value="1">已设置运维人员</Option>
+                               <Option value="2">未设置运维人员</Option>
+                           </Select>
+                        }
+                    </Form.Item>
+
                     <Form.Item >
                         {
                             getFieldDecorator('dateTime', {
@@ -1360,7 +1386,7 @@ class index extends PureComponent {
     }
     //企业数查询按钮
     EntButtonCountHandle =()=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
        
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
@@ -1373,6 +1399,7 @@ class index extends PureComponent {
                 BeginTime: BeginTime,
                 EndTime: EndTime,
                 TabType: regionCode,
+                OperationPersonnel:operationpersonnel,
                 PollutantList: modalPollutantList,
                 PageSize:20,
                 PageIndex:1
@@ -1382,7 +1409,7 @@ class index extends PureComponent {
     //企业数查询导出
     EntButtonCountHandleExpor=()=>{
 
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportExceedDataList,
             payload:{
@@ -1395,12 +1422,13 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
+                OperationPersonnel:operationpersonnel,
             }
         })
     }
     //企业数查询分页
     EntButtonCountHandlePageChange =(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,modalregionCode} = this.state
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,modalregionCode,operationpersonnel} = this.state
        
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
@@ -1415,12 +1443,13 @@ class index extends PureComponent {
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
-                PageIndex:PageIndex
+                PageIndex:PageIndex,
+                OperationPersonnel:operationpersonnel,
             }
         })
     }
     EntButtonCountShowSizeChange=(PageIndex, PageSize)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue} = this.state
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,modalPollutantList,enterpriseValue,operationpersonnel} = this.state
         
         this.props.dispatch({
             type:pageUrl.GetMoalExceedDataList,
@@ -1435,7 +1464,8 @@ class index extends PureComponent {
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
-                PageIndex:PageIndex
+                PageIndex:PageIndex,
+                OperationPersonnel:operationpersonnel,
             }
         })
     }

@@ -206,6 +206,7 @@ export default class OverVerifyLstModal extends Component {
     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
     this.updateQueryState({
       PollutantType: '1',
+      OperationPersonnel:'',
     });
     setTimeout(() => {
       this.getTableData();
@@ -243,7 +244,11 @@ export default class OverVerifyLstModal extends Component {
       this.getTableData();
     });
   };
-
+  changePperation=(value)=>{
+    this.updateQueryState({
+      OperationPersonnel: value,
+    });
+  }
   changeRegion = value => {
     //行政区事件
 
@@ -503,11 +508,20 @@ export default class OverVerifyLstModal extends Component {
                 </Form.Item>
               </Col>
               <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                <div class="ant-form-item-label" style={{ width: '5.3%' }}>
-                  <label for="RegionCode" class="" title="监测因子">
-                    监测因子
-                  </label>
-                </div>
+              <Form.Item label='运维状态'>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item> 
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(

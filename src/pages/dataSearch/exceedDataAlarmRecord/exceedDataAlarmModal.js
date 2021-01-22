@@ -69,6 +69,7 @@ class exceedDataAlarmModal extends PureComponent {
             regionValue: '',
             attentionValue: '',
             outletValue: '1',
+            operationpersonnel:'',
             regVisible: false,
             regVisibleAlready: false,
             regVisibleStay: false,
@@ -123,6 +124,7 @@ class exceedDataAlarmModal extends PureComponent {
                 this.props.dispatch({
                     type: pageUrl.GetAlarmVerifyRate,
                     payload: {
+                        operationpersonnel:'',
                         RegionCode: '',
                         attentionCode: '',
                         PollutantType: alarmType == ''?'1':alarmType,
@@ -162,7 +164,7 @@ class exceedDataAlarmModal extends PureComponent {
 
     // 导出
     exportReport = () => {
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion,operationpersonnel} = this.state
         if(exportRegion != '1')
         {
             this.props.dispatch({
@@ -175,6 +177,7 @@ class exceedDataAlarmModal extends PureComponent {
                     BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
                     EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
                     PollutantCodeList: pollutantCodeList,
+                    operationpersonnel: operationpersonnel,
                 }
             })
         }
@@ -189,6 +192,7 @@ class exceedDataAlarmModal extends PureComponent {
                     BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
                     EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
                     PollutantCodeList: pollutantCodeList,
+                    operationpersonnel: operationpersonnel,
                 }
             })
         }
@@ -197,13 +201,14 @@ class exceedDataAlarmModal extends PureComponent {
 
     //查询数据
     getChartAndTableData =()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRate,
             payload: {
                 RegionCode: regionValue == undefined?'':regionValue,
                 attentionCode: attentionValue == undefined?'':attentionValue,
+                operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -284,6 +289,7 @@ class exceedDataAlarmModal extends PureComponent {
                     }}>
                     {this.children()}
                 </Select>
+ 
                 <Select
                     allowClear
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -347,7 +353,21 @@ class exceedDataAlarmModal extends PureComponent {
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 <div style={{ marginTop: 10 }}>
-                    <label style={{ fontSize: 14 ,marginRight:10,marginLeft:10}}>监测因子:</label>
+                <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                        this.setState({
+                            operationpersonnel: value,
+                        })
+                    }}>
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
                     <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                     {
                         pollutantCodeList.map(poll=>

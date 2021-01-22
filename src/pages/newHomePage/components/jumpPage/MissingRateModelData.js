@@ -134,6 +134,7 @@ export default class Index extends PureComponent {
       EntType: types==='ent'? "1":"2",
       beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
       endTime: time[1].format('YYYY-MM-DD 23:59:59'),
+      OperationPersonnel:'',
     });
 
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
@@ -214,6 +215,11 @@ export default class Index extends PureComponent {
       AttentionCode: value,
     });
   }
+  changePperation=(value)=>{
+    this.updateQueryState({
+      OperationPersonnel: value,
+    });
+  }
   changeEnt=(value,data)=>{ //企业事件
     this.updateQueryState({
       EntCode: value,
@@ -283,7 +289,7 @@ export default class Index extends PureComponent {
   render() {
     const {
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,OperationPersonnel },
        time,
       type
     } = this.props;
@@ -314,6 +320,20 @@ export default class Index extends PureComponent {
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>
+                <Form.Item label='运维状态'>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item> 
                 <Form.Item label='行政区'>
                   <Select
                     allowClear

@@ -42,6 +42,7 @@ export default Model.extend({
                 AttentionCode: payload.AttentionCode,
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
+                OperationPersonnel:payload.operationpersonnel,
                 //PageSize: payload.PageSize,
                 //PageIndex: payload.PageIndex
             }
@@ -168,6 +169,7 @@ export default Model.extend({
                 EntCode:payload.EntCode,
                 EntType:payload.EntType,
                 PollutantType:payload.PollutantType,
+                OperationPersonnel:payload.operationpersonnel,
             }
             const result = yield call(GetEntOrPointDetail,body,null)
             if(result.IsSuccess)
@@ -191,6 +193,7 @@ export default Model.extend({
                 AttentionCode: payload.AttentionCode,
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
+                OperationPersonnel:payload.operationpersonnel,
             }
             const result = yield call(ExportEntSummary,body,null)
             if(result.IsSuccess)
@@ -219,7 +222,8 @@ export default Model.extend({
                 HasData:payload.HasData,
                 EntCode:payload.EntCode,
                 EntType:payload.EntType,
-                PollutantType:payload.PollutantType
+                PollutantType:payload.PollutantType,
+                OperationPersonnel:payload.operationpersonnel,
             }
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)

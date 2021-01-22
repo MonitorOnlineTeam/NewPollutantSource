@@ -169,6 +169,11 @@ export default class EntTransmissionEfficiency extends Component {
       RegionCode: value,
     });
   };
+  changePperation=(value)=>{
+    this.updateState({
+      operationpersonnel: value,
+    });
+  }
 
   //创建并获取模板   导出
   template = () => {
@@ -220,7 +225,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   render() {
     const { eName } = this.state;
-    const { regionList, exRegionloading, RegionCode } = this.props;
+    const { regionList, exRegionloading, RegionCode ,operationpersonnel} = this.props;
     const columns = [
       {
         title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
@@ -229,7 +234,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => { 
            return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                       query: { RegionCode: record.RegionCode},
+                       query: { RegionCode: record.RegionCode,Operationersonnel:this.props.operationpersonnel},
                        }}
                        >
                     {text}
@@ -418,6 +423,20 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     {this.children()}
                   </Select>
+                </Form.Item>
+                <Form.Item>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>

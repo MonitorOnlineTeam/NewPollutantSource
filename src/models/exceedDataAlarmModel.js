@@ -58,6 +58,7 @@ export default Model.extend({
           PageSize: payload.PageSize,
           PageIndex: payload.PageIndex,
           PollutantCodeList: payload.PollutantCodeList,
+          OperationPersonnel: payload.operationpersonnel,
       }
     const result = yield call(GetAlarmVerifyRate,body,null)
     if(result.IsSuccess)
@@ -178,6 +179,7 @@ export default Model.extend({
           BeginTime: payload.BeginTime,
           EndTime: payload.EndTime,
           PollutantCodeList: payload.PollutantCodeList,
+          OperationPersonnel: payload.operationpersonnel,
       }
     const result = yield call(ExportAlarmVerifyRate,body,null)
     if(result.IsSuccess)
@@ -195,6 +197,7 @@ export default Model.extend({
             BeginTime: payload.BeginTime,
             EndTime: payload.EndTime,
             PollutantCodeList: payload.PollutantCodeList,
+            OperationPersonnel: payload.operationpersonnel,
         }
         const result = yield call(ExportAlarmVerifyRateDetail, body, null)
         if (result.IsSuccess) {
