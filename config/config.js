@@ -185,6 +185,11 @@ export default {
             //   component: './Test/Test',
             // },
             {
+              name: 'historyData',
+              path: '/historyData',
+              component: './HistoryData',
+            },
+            {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
