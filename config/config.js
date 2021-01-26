@@ -242,6 +242,11 @@ export default {
               component: './Test',
             },
             {
+              name: 'VideoSurveillance',
+              path: '/videoSurveillance',
+              component: './videoSurveillance',
+            },
+            {
               path: '/:parentcode/autoformmanager/:configId',
               name: 'AutoFormManager',
               routes: [
