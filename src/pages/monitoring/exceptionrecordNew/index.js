@@ -270,13 +270,14 @@ class index extends PureComponent {
     this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
 
-  onTableClick = (RegionCode, ExceptionType, ResponseStatus) => {
+  onTableClick = (RegionCode, ExceptionType, ResponseStatus,operationpersonnel) => {
     this.setState({
       secondQueryCondition: {
         ...this.state.queryCondition,
         RegionCode: RegionCode,
         ExceptionType: ExceptionType,
-        ResponseStatus: ResponseStatus
+        ResponseStatus: ResponseStatus,
+        OperationPersonnel:this.state.operationpersonnel
       },
       visible: true
     }, () => {
@@ -512,6 +513,7 @@ class index extends PureComponent {
                     maxTagCount={2}
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
+                    value={this.state.operationpersonnel?this.state.operationpersonnel:undefined}
                     onChange={(value) => {
                       this.setState({
                           operationpersonnel: value,

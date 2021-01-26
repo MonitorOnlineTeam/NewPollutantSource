@@ -598,7 +598,7 @@ class index extends PureComponent {
     //添加标签
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList,loadingRateDetail} = this.props
-        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRateDetail,
@@ -612,6 +612,7 @@ class index extends PureComponent {
                 //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
+                OperationPersonnel:operationpersonnel,
             }
         }).then(()=>{
             if(this.props.AlarmDetailList.length > 0)

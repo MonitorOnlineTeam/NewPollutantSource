@@ -387,7 +387,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 报警次数
     AlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -414,7 +414,8 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel,
             }
         })
         
@@ -422,7 +423,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.setState({
             DealType:'1',
             regVisibleAlready:true,
@@ -449,14 +450,15 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel,
             }
         })
         
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -483,14 +485,15 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel: operationpersonnel,
             }
         })
         
     }
     // 企业弹框
     EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
-        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList} = this.state
+        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList,operationpersonnel} = this.state
 
         let deal = ''
         if(status == '')
@@ -542,7 +545,8 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:status=='2'?"":status,
                 EntCode:entCode == undefined?'':entCode,
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel: operationpersonnel,
             }
         })
         
@@ -601,7 +605,7 @@ class exceedDataAlarmModal extends PureComponent {
     //添加标签
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList,loadingRateDetail} = this.props
-        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
         
         
@@ -614,6 +618,7 @@ class exceedDataAlarmModal extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
                 EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                operationpersonnel: operationpersonnel,
                 //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,

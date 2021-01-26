@@ -80,7 +80,8 @@ export default Model.extend({
         PollutantList: payload.PollutantList,
         PageIndex: payload.PageIndex,
         PageSize: payload.PageSize,
-        EntCode:payload.EntCode
+        EntCode:payload.EntCode,
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(GetExceedNum, body, null)
       if (result.IsSuccess) {
@@ -207,7 +208,8 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
-        EntCode:payload.EntCode
+        EntCode:payload.EntCode,
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(ExportExceedNum, body, null)
       if (result.IsSuccess) {

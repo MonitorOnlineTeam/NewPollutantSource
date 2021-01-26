@@ -211,7 +211,8 @@ export default class EntTransmissionEfficiency extends Component {
       PollutantType: PollutantType,
       RegionCode: RegionCode,
       EntCode: row.EntCode,
-      Assessment: Assessment
+      Assessment: Assessment,
+      OperationPersonnel:OperationPersonnel
       // PageIndex: 4,
       // PageSize: 5
     };
@@ -427,7 +428,7 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.children()}
                   </Select>
                 </Form.Item>
-                <Form.Item >
+                {/* <Form.Item >
                 <Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -440,7 +441,7 @@ export default class EntTransmissionEfficiency extends Component {
                   <Option value="1">已设置运维人员</Option>
                   <Option value="2">未设置运维人员</Option>
                 </Select>
-                </Form.Item> 
+                </Form.Item>  */}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

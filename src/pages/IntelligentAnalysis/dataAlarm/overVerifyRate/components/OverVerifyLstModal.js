@@ -246,7 +246,7 @@ export default class OverVerifyLstModal extends Component {
   };
   changePperation=(value)=>{
     this.updateQueryState({
-      OperationPersonnel: value,
+      OperationPersonnel: value?value:'',
     });
   }
   changeRegion = value => {
@@ -450,6 +450,7 @@ export default class OverVerifyLstModal extends Component {
         AttentionCode,
         dataType,
         PollutantType,
+        OperationPersonnel
       },
       type,
     } = this.props;
@@ -514,6 +515,7 @@ export default class OverVerifyLstModal extends Component {
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                   placeholder="运维状态"
                   maxTagCount={2}
+                  value={OperationPersonnel?OperationPersonnel:undefined}
                   onChange={this.changePperation}
                   maxTagTextLength={5}
                   maxTagPlaceholder="..."
