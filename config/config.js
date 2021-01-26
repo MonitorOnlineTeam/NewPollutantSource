@@ -6,7 +6,7 @@ import config from '@/config';
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
+// const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
 const plugins = [
@@ -99,7 +99,16 @@ export default {
           path: '/homepage',
           component: './home',
         },
-
+        {
+          name: 'sysTypeMiddlePage',
+          path: '/sysTypeMiddlePage',
+          component: './sysTypeMiddlePage',
+        },
+        {
+          name: 'sessionMiddlePage',
+          path: '/sessionMiddlePage',
+          component: './sysTypeMiddlePage/SaveSessionPage',
+        },
         // appoperation
         {
           path: '/appoperation',
@@ -211,7 +220,7 @@ export default {
           Routes: ['src/pages/Authorized'],
           // authority: ['admin', 'user'],
           routes: [
-            { path: '/', redirect: defaultNavigateUrl },
+            { path: '/', redirect: '' },
             {
               name: 'home',
               path: '/home',

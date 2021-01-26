@@ -2,7 +2,10 @@ import { post, get, getNew } from '@/utils/request';
 
 // 获取企业及排口
 export async function getEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
+    ...params,
+    PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+  }, null);
   return result;
 }
 

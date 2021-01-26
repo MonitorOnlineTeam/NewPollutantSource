@@ -292,6 +292,10 @@ class BasicLayout extends Component {
     if (!userCookie) {
       router.push("/user/login");
     }
+    let _settings = settings;
+    if (sessionStorage.getItem('sysName')) {
+      _settings.title = sessionStorage.getItem('sysName')
+    }
     return (
       <>
         <ProLayout
@@ -325,7 +329,7 @@ class BasicLayout extends Component {
           // formatMessage={formatMessage}
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
-          {...settings}
+          {..._settings}
         >
           {
             config.isShowTabs && defaultSettings.layout === "sidemenu" ? <div id="sideMenuTabsLayout" style={{ margin: '-24px -24px 0px', padding: '10px', paddingTop: 4 }}><Tabs
@@ -355,7 +359,7 @@ class BasicLayout extends Component {
         </ProLayout>
         {process.env.NODE_ENV === "development" &&
           <SettingDrawer
-            settings={settings}
+            settings={_settings}
             onSettingChange={config =>
               dispatch({
                 type: 'settings/changeSetting',
