@@ -39,7 +39,7 @@ import {
     Tag,
     Select,
     Pagination,
-     Space
+    Space
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '@/components/MonitorContent';
@@ -272,18 +272,22 @@ class RoleIndex extends Component {
                     width: 180,
                     render: (text, record) =>
                         <span>
-                            <Tooltip title="编辑">
-                                <a href="javascript:;" onClick={() => {
-                                    console.log(record.Roles_ID)
-                                    this.props.dispatch({
-                                        type: 'roleinfo/getroleinfobyid',
-                                        payload: {
-                                            Roles_ID: record.Roles_ID,
-                                        },
-                                    })
-                                    this.showModalEdit()
-                                }}><EditOutlined style={{ fontSize: 16 }} /></a>
-                            </Tooltip>
+                            {
+                                record.disabled ?
+                                    <></> :
+                                    <Tooltip title="编辑">
+                                        <a href="javascript:;" onClick={() => {
+                                            console.log(record.Roles_ID)
+                                            this.props.dispatch({
+                                                type: 'roleinfo/getroleinfobyid',
+                                                payload: {
+                                                    Roles_ID: record.Roles_ID,
+                                                },
+                                            })
+                                            this.showModalEdit()
+                                        }}><EditOutlined style={{ fontSize: 16 }} /></a>
+                                    </Tooltip>
+                            }
                             <Divider type="vertical" />
                             <Tooltip title="删除">
                                 <Popconfirm
@@ -646,14 +650,14 @@ class RoleIndex extends Component {
         }
         const rowMenuSelection = {
             selectedRowKeys: this.state.selectButton,
-            checkStrictly:false,
+            checkStrictly: false,
             onChange: (se, selectedRows) => {
                 this.setState({
                     selectButton: se,
                 })
             },
             getCheckboxProps: record => ({
-                disabled: record.name === 'Disabled User', // Column configuration not to be checked
+                disabled: record.disabled, // Column configuration not to be checked
                 name: record.name,
             }),
         };
