@@ -50,6 +50,7 @@
     "lodash-decorators": "^6.0.1",
     "lodash.debounce": "^4.0.8",
     "memoize-one": "^5.0.4",
+    "mockjs": "^1.1.0",
     "module": "^1.2.5",
     "moment": "^2.24.0",
     "nzh": "^1.0.4",

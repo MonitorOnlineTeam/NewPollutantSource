@@ -110,7 +110,7 @@ class SdlUpload extends Component {
 
     return (
       <>
-        <Upload {...props} accept='application/zip,application/rar,image/*' fileList={this.state.fileList}>
+        <Upload {...props}  fileList={this.state.fileList}>
           <div>
             <Icon type="plus" />
             <div className="ant-upload-text">文件上传</div>
