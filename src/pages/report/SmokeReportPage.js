@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-02-18 15:16:30
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-02-20 18:27:44
+ * @Last Modified time: 2021-01-20 17:30:29
  * @desc
  */
 import React, { PureComponent } from 'react'
@@ -536,7 +536,7 @@ class SmokeReportPage extends PureComponent {
 
     // console.log("columns-", _columns)
     return (
-      <BreadcrumbWrapper title={this.title}>
+      <BreadcrumbWrapper>
         {/* <Spin spinning={loading} delay={500}> */}
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>

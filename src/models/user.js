@@ -82,17 +82,18 @@ export default Model.extend({
       //     payload: response,
       // });
     },
-    *fetchCurrent(_, { call, put }) {
+    *fetchCurrent({ payload, callback }, { call, put }) {
       const currentUser = Cookie.get('currentUser');
       if (currentUser) {
         const currentUser = JSON.parse(Cookie.get('currentUser'));
-
-        const response = yield call(getMenuData);
+        const response = yield call(getMenuData, payload);
         // ;
         if (response.IsSuccess) {
-          const cMenu = yield call(formatter, response.Datas);
+          callback && callback(response)
+          const cMenu = formatter(response.Datas);
+          // const cMenu = yield call(formatter, response.Datas);
           if (window.location.pathname === '/') {
-            router.push(Cookie.get('defaultNavigateUrl'))
+            router.push(sessionStorage.getItem('defaultNavigateUrl'))
           }
           const menuList = getMenuList(cMenu);
           let filterDescList = (menuList && menuList.length) ?

@@ -47,14 +47,14 @@ export default class MonitorTarget extends Component {
 
     componentDidMount() {
         const { match, dispatch } = this.props;
-        this.reloadPage('AEnterpriseTest');
+        this.reloadPage(match.params.configId);
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.location.pathname != this.props.location.pathname) {
-    //         if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage('AEnterpriseTest'); }
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location.pathname != this.props.location.pathname) {
+            if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
+        }
+    }
 
     reloadPage = configId => {
         const { dispatch } = this.props;
@@ -80,7 +80,7 @@ export default class MonitorTarget extends Component {
         const { targetId } = target;
         const { targetName } = target;
         router.push({
-            pathname: `/platformconfig/AEnterpriseTest/${1}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`,
+            pathname: `/platformconfig/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`,
             query: {
                 tabName: '维护点信息',
             },
@@ -95,7 +95,7 @@ export default class MonitorTarget extends Component {
         const { targetName } = target;
         const configId = 'PDPermit';
         router.push({
-            pathname: `/platformconfig/AEnterpriseTest/${1}/dischargepermit/${configId}/${targetId}/${targetName}`,
+            pathname: `/platformconfig/monitortarget/AEnterpriseTest/${targetType}/dischargepermit/${configId}/${targetId}/${targetName}`,
             query: {
                 tabName: '排污许可证',
             },
@@ -107,8 +107,7 @@ export default class MonitorTarget extends Component {
         let targetId = '';
         let targetName = '';
 
-        switch (1) {
-            // switch ((+targetType)) {
+        switch ((+targetType)) {
             case 1:// 企业
                 targetId = row['dbo.T_Bas_Enterprise.EntCode'];
                 targetName = row['dbo.T_Bas_Enterprise.EntName'];
@@ -200,8 +199,7 @@ export default class MonitorTarget extends Component {
     };
 
     render() {
-        const { searchConfigItems, searchForm, tableInfo, dispatch } = this.props;
-        let configId = 'AEnterpriseTest';
+        const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
         //   console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
@@ -285,7 +283,7 @@ export default class MonitorTarget extends Component {
                             </Tooltip>
 
                         </Fragment>}
-                        parentcode="platformconfig/AEnterpriseTest"
+                        parentcode="platformconfig/monitortarget"
                         {...this.props}
                     >
                     </AutoFormTable>

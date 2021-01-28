@@ -22,7 +22,10 @@ export async function exportData(params) {
  * 获取系统污染物
  */
 export async function getPollutantTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', {
+    ...params,
+    pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+  }, null);
   return result;
 }
 

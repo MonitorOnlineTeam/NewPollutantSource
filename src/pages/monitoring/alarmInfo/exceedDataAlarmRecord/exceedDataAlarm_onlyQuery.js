@@ -345,7 +345,7 @@ class index extends PureComponent {
 
   }
   //行政区 报警次数
-  AlarmNumHandle = (regionCode, PollutantCode, regionName) => {
+  AlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
     const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
     this.props.dispatch({
       //获取企业列表
@@ -368,6 +368,7 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        DGIMN,
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -380,7 +381,7 @@ class index extends PureComponent {
 
   }
   //行政区 已核实报警次数
-  AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
+  AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
     const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
     this.setState({
       DealType: '1',
@@ -403,6 +404,7 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        DGIMN,
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -414,7 +416,7 @@ class index extends PureComponent {
 
   }
   //行政区 待核实报警次数
-  StayAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
+  StayAlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
     const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
     this.props.dispatch({
       //获取企业列表
@@ -437,6 +439,7 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        DGIMN,
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -448,7 +451,7 @@ class index extends PureComponent {
 
   }
   // 企业弹框
-  EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName) => {
+  EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName, DGIMN) => {
     const { attentionValue, outletValue, dataType, time, regionCode, AlarmDealTypeList } = this.state
 
     let deal = ''
@@ -491,6 +494,7 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        DGIMN,
         //PageSize: 10,
         // PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -619,7 +623,7 @@ class index extends PureComponent {
             align: 'center',
             fixed: fixed,
             render: (text, record) => {
-              return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName)}>{text}</a>
+              return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
             }
           }
           columns.push(addColumns)
@@ -767,7 +771,7 @@ class index extends PureComponent {
         dataIndex: col.PollutantCode + '_alarmCount',
         key: col.PollutantCode + '_alarmCount',
         render: (text, record) => {
-          return <a onClick={this.AlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
+          return <a onClick={this.AlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
         }
       }
       columns.push(addColumns)
@@ -1209,7 +1213,7 @@ class index extends PureComponent {
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-          <BreadcrumbWrapper title="超标报警查询">
+          <BreadcrumbWrapper>
             <Card
               extra={
                 <>

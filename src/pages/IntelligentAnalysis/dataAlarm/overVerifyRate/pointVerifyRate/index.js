@@ -12,7 +12,7 @@ export default class Index extends Component {
   componentDidMount() {}
   render() {
     return (
-      <BreadcrumbWrapper title="企业超标报警核实率">
+      <BreadcrumbWrapper>
         <PointVerifyLst RegionCode={this.props.location.query.regionCode} />
       </BreadcrumbWrapper>
     );

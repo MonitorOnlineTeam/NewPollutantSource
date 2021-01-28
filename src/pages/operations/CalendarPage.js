@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-15 14:35:27
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-22 10:47:21
+ * @Last Modified time: 2021-01-26 10:28:28
  * @desc: 运维日历页面
  */
 import React, { PureComponent } from 'react';
@@ -497,7 +497,7 @@ class CalendarPage extends PureComponent {
     const { currentCellInfo, dateFormat, listData, columns, modalTableCurrent } = this.state;
     const cardTitle = `${currentCellInfo.text} - ${moment(currentCellInfo.date).format(dateFormat)}`;
     return (
-      <BreadcrumbWrapper title="运维日历">
+      <BreadcrumbWrapper>
         <div className={styles.calendarWrapper}>
           <div style={{ display: "flex" }}>
             <div style={{ flex: 5, marginRight: 10 }}>
