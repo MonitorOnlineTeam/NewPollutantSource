@@ -11,9 +11,9 @@ const Model = {
     configInfo: null
   },
   effects: {
-    *login({ payload }, { call, put }) {
+    *login({ payload }, { call, put, select }) {
       const response = yield call(systemLogin, payload);
-
+      const configInfo = yield select(state => state.global.configInfo)
       yield put({
         type: 'changeLoginStatus',
         payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
@@ -24,22 +24,23 @@ const Model = {
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
         if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if(response.Datas.MenuDatas[0].name === "首页"){
+          if (response.Datas.MenuDatas[0].name === "首页") {
             systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-          }else{
-            if(response.Datas.MenuDatas[0].children.length){
+          } else {
+            if (response.Datas.MenuDatas[0].children.length) {
               systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
-            }else{
+            } else {
               systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
             }
           }
         }
-        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
+        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ? response.Datas.MenuDatas[0].children[0].NavigateUrl : response.Datas.MenuDatas[0].NavigateUrl;
 
 
         delete response.Datas.MenuDatas;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
-        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
+        sessionStorage.setItem("defaultNavigateUrl", defaultNavigateUrl)
+        // Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
         try {
           const { ws } = window;
@@ -53,20 +54,12 @@ const Model = {
           return;
           //defaultNavigateUrl = payload.redirctUrl;
         }
-        // router.push('/');
-        router.push(defaultNavigateUrl);
-      }
-    },
-
-    *getSystemLoginConfigInfo({ payload }, { call, put }) {
-
-      const response = yield call(getSystemLoginConfigInfo);
-
-      if (response.IsSuccess) {
-        yield put({
-          type: 'setConfigInfo',
-          payload: response.Datas,
-        });
+        if (configInfo.IsShowSysPage === '1') {
+          // 跳转中间页
+          router.push('/sysTypeMiddlePage');
+        } else {
+          router.push(defaultNavigateUrl);
+        }
       }
     },
     *getCaptcha({ payload }, { call }) {
@@ -79,9 +72,6 @@ const Model = {
       //;
       return { ...state, ...payload };
     },
-    setConfigInfo(state, { payload }) {
-      return { ...state, configInfo: { ...payload } };
-    }
   },
 };
 export default Model;

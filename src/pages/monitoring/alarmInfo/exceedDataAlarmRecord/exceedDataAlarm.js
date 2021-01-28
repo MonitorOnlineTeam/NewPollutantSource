@@ -346,7 +346,7 @@ class index extends PureComponent {
 
   }
   //行政区 报警次数
-  AlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
+  AlarmNumHandle = (regionCode, PollutantCode, regionName) => {
     const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
     this.props.dispatch({
       //获取企业列表
@@ -369,7 +369,6 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -382,7 +381,7 @@ class index extends PureComponent {
 
   }
   //行政区 已核实报警次数
-  AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
+  AlreadyAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
     const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
     this.setState({
       DealType: '1',
@@ -405,7 +404,6 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -417,7 +415,7 @@ class index extends PureComponent {
 
   }
   //行政区 待核实报警次数
-  StayAlarmNumHandle = (regionCode, PollutantCode, regionName, DGIMN) => {
+  StayAlarmNumHandle = (regionCode, PollutantCode, regionName) => {
     const { regionValue, attentionValue, outletValue, dataType, time, AlarmDealTypeList } = this.state
     this.props.dispatch({
       //获取企业列表
@@ -440,7 +438,6 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
         //PageSize: 10,
         //PageIndex: 1,
         PollutantCode: PollutantCode,
@@ -452,7 +449,7 @@ class index extends PureComponent {
 
   }
   // 企业弹框
-  EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName, DGIMN) => {
+  EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName,DGIMN) => {
     const { attentionValue, outletValue, dataType, time, regionCode, AlarmDealTypeList } = this.state
 
     let deal = ''
@@ -481,8 +478,8 @@ class index extends PureComponent {
         status: status,
         entCode: entCode,
         regionCode: reCode,
-        PollutantCode: PollutantCode
-
+        PollutantCode: PollutantCode,
+        DGIMN:DGIMN
       })
     }
 
@@ -495,13 +492,13 @@ class index extends PureComponent {
         DataType: dataType == 'Hour' ? 'HourData' : 'DayData',
         BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
         EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        DGIMN: DGIMN,
         //PageSize: 10,
         // PageIndex: 1,
         PollutantCode: PollutantCode,
         Status: status == "2" ? "" : status,
         EntCode: entCode == undefined ? '' : entCode,
-        VerifyStatus: AlarmDealTypeList
+        VerifyStatus: AlarmDealTypeList,
+        DGIMN:DGIMN
       }
     })
 
@@ -631,7 +628,7 @@ class index extends PureComponent {
                 dataIndex: col.PollutantCode + '_alarmCount',
                 key: col.PollutantCode + '_alarmCount',
                 render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
+                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName,record.EntAlarmHandle)}>{text}</a>
                 }
               },
               {
@@ -642,7 +639,7 @@ class index extends PureComponent {
                 dataIndex: col.PollutantCode + '_respondedCount',
                 key: col.PollutantCode + '_respondedCount',
                 render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '1', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
+                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '1', col.PollutantCode, record.entName, record.pointName)}>{text}</a>
                 }
               },
               {
@@ -653,7 +650,7 @@ class index extends PureComponent {
                 dataIndex: col.PollutantCode + '_noRespondedCount',
                 key: col.PollutantCode + '_noRespondedCount',
                 render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '0', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
+                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '0', col.PollutantCode, record.entName, record.pointName)}>{text}</a>
                 }
               },
             ]
@@ -809,7 +806,7 @@ class index extends PureComponent {
             dataIndex: col.PollutantCode + '_alarmCount',
             key: col.PollutantCode + '_alarmCount',
             render: (text, record) => {
-              return <a onClick={this.AlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
+              return <a onClick={this.AlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
             }
           },
           {
@@ -820,7 +817,7 @@ class index extends PureComponent {
             dataIndex: col.PollutantCode + '_respondedCount',
             key: col.PollutantCode + '_respondedCount',
             render: (text, record) => {
-              return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
+              return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
             }
           },
           {
@@ -831,7 +828,7 @@ class index extends PureComponent {
             dataIndex: col.PollutantCode + '_noRespondedCount',
             key: col.PollutantCode + '_noRespondedCount',
             render: (text, record) => {
-              return <a onClick={this.StayAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
+              return <a onClick={this.StayAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName)}>{text}</a>
             }
           },
         ]
@@ -895,7 +892,7 @@ class index extends PureComponent {
   }
   //报警次数数据按钮查询信息
   AlertsButtonHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList,DGIMN } = this.state
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -910,7 +907,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: DealType == '2' ? '' : DealType,
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
+        VerifyStatus: AlarmDealTypeList,
+        DGIMN:DGIMN
       }
     })
   }
@@ -935,7 +933,7 @@ class index extends PureComponent {
   }
   //已核实报警按钮查询信息
   AlreadyButtonCountHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList,DGIMN } = this.state
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -950,7 +948,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: '1',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
+        VerifyStatus: AlarmDealTypeList,
+        DGIMN:DGIMN
       }
     })
   }
@@ -975,7 +974,7 @@ class index extends PureComponent {
   }
   ////待核实报警按钮查询信息
   StayButtonCountHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode } = this.state
+    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode,DGIMN } = this.state
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -990,7 +989,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: '0',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: []
+        VerifyStatus: [],
+        DGIMN:DGIMN
       }
     })
   }
@@ -1549,7 +1549,7 @@ class index extends PureComponent {
     return (
       <>
         <div id="siteParamsPage" className={style.cardTitle}>
-          <BreadcrumbWrapper>
+          <BreadcrumbWrapper title="超标数据报警核实记录查询">
             <Card
               extra={
                 <>

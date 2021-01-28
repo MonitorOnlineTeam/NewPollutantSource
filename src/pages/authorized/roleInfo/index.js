@@ -638,6 +638,7 @@ class RoleIndex extends Component {
         }
         const rowMenuSelection = {
             selectedRowKeys: this.state.selectButton,
+            checkStrictly: false,
             onChange: (se, selectedRows) => {
                 this.setState({
                     selectButton: se,

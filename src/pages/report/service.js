@@ -20,7 +20,10 @@ export async function getSiteDailyDayReport(params) {
  * 获取系统污染物
  */
 export async function getPollutantTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', {
+    ...params,
+    pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+  }, null);
   return result === null ? { data: null } : result;
 }
 
@@ -120,7 +123,10 @@ export async function getSummaryYearReport(params) {
  * 获取企业及排口
  */
 export async function getEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
+    ...params,
+    PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+  }, null);
   return result;
 }
 

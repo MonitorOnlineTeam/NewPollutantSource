@@ -15,7 +15,10 @@ import { post, get } from '@/utils/request';
 export async function getPollutantTypeList(params) {
   const result = await post(
     '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
-    params,
+    {
+      ...params,
+      pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+    },
     null,
   );
   return result === null ? { data: null } : result.Datas;

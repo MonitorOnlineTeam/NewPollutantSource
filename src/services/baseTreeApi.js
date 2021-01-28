@@ -11,10 +11,11 @@ import { post, get } from '@/utils/request';
 
 // 获取企业+排口
 export async function getentandpoint(params) {
-    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params);
-    return result === null ? {
-        data: null
-    } : result;
+    const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
+        ...params,
+        PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+    });
+    return result;
 }
 /**
  * 【智能监控】获取污染物系统污染物
@@ -23,9 +24,12 @@ export async function getentandpoint(params) {
 export async function getPollutantTypeList(params) {
     const result = await post(
         '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
-        params,
+        {
+            ...params,
+            pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+        },
         null,
     );
-    return result 
+    return result
 }
 

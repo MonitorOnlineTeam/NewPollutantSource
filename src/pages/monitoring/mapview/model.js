@@ -40,12 +40,12 @@ export default Model.extend({
           global = yield select(state => state.global);
           payload = {
             ...payload,
-            PollutantTypes: global.configInfo.SystemPollutantType
+            PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || global.configInfo.SystemPollutantType
           }
         } else {
           payload = {
             ...payload,
-            PollutantTypes: global.configInfo.SystemPollutantType
+            PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || global.configInfo.SystemPollutantType
           }
         }
       }

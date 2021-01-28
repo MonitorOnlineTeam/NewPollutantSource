@@ -41,8 +41,11 @@ export async function getEnterpriseAndPoint(params) {
 
 // 获取污染物类型
 export async function getPollutantTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', params, null);
-  return result === null ? { data: null } : result;
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', {
+    ...params,
+    pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+  }, null);
+  return result;
 }
 let websocket = null;
 /**
@@ -74,7 +77,10 @@ export async function getIndustryTree(params) {
 
 // 获取组件 - 企业及排口
 export async function getEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
+    ...params,
+    PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+  }, null);
   return result;
 }
 
