@@ -138,7 +138,8 @@ export default Model.extend({
                 RegionCode:payload.RegionCode,
                 PageSize: payload.PageSize,
                 PageIndex: payload.PageIndex,
-                EntType:payload.EntType
+                EntType:payload.EntType,
+                OperationPersonnel:payload.operationpersonnel,
             }
             const result = yield call(GetPointSummary,body,null)
             if(result.IsSuccess)

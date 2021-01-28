@@ -81,7 +81,6 @@ export default Model.extend({
         // PageIndex: pageIndex,
         ...payload
       };
-      debugger
       const response = yield call(GetTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
         yield update({
@@ -91,8 +90,16 @@ export default Model.extend({
       }
     },
     *getQutletData({ payload }, { call, put, update, select }) {
+            //行政区
+            const {
+              operationpersonnel,
+            } = yield select(state => state.newtransmissionefficiency);
+      let body = {
+        ...payload,
+        OperationPersonnel:operationpersonnel
+      };
       //企业
-      const response = yield call(GetTransmissionEfficiencyForEnt, { ...payload });
+      const response = yield call(GetTransmissionEfficiencyForEnt, { ...body });
       if (response.IsSuccess) {
         yield update({
           qutleTableDatas: response.Datas,
@@ -101,8 +108,15 @@ export default Model.extend({
       }
     },
     *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
+      const {
+        operationpersonnel,
+      } = yield select(state => state.newtransmissionefficiency);
+      let body = {
+        ...payload,
+        OperationPersonnel: operationpersonnel
+      };
       //排口
-      const response = yield call(GetTransmissionEfficiencyForPoint, { ...payload });
+      const response = yield call(GetTransmissionEfficiencyForPoint, { ...body });
       if (response.IsSuccess) {
         yield update({
           priseTableDatas: response.Datas,
@@ -154,8 +168,15 @@ export default Model.extend({
     },
 
     *exportTransmissionEfficiencyForEnt({ callback,payload }, { call, put, update, select }) {
+      const {
+        operationpersonnel,
+      } = yield select(state => state.newtransmissionefficiency);
+      let body = {
+        ...payload,
+        OperationPersonnel: operationpersonnel
+      };
       //企业级导出
-      const response = yield call(ExportTransmissionEfficiencyForEnt, { ...payload });
+      const response = yield call(ExportTransmissionEfficiencyForEnt, { ...body });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

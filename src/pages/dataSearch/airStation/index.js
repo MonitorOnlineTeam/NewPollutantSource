@@ -81,6 +81,7 @@ class index extends PureComponent {
 
   // 获取图表及表格数据
   getChartAndTableData = () => {
+    debugger
     //获取行政区列表
     this.props.dispatch({
       type: pageUrl.GetPointSummary,
@@ -94,6 +95,7 @@ class index extends PureComponent {
     });
   }
   onChange =(PageIndex, PageSize)=>{
+    debugger
     this.props.dispatch({
         
         type: pageUrl.GetPointSummary,
@@ -107,6 +109,7 @@ class index extends PureComponent {
     })
 }
 onChangeHandle=(PageIndex, PageSize)=>{
+  debugger
   this.props.dispatch({
       
       type: pageUrl.GetPointSummary,

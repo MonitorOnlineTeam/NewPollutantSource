@@ -109,7 +109,7 @@ class index extends PureComponent {
     }
 
     initData = () => {
-        const {exceedDataType,exceedPollutant,exceedTime,exceedType } = this.props
+        const {exceedDataType,exceedPollutant,exceedTime,exceedType,operationpersonnel } = this.props
         //获取行政区列表
         this.props.dispatch({
             type: pageUrl.getRegions,
@@ -165,7 +165,7 @@ class index extends PureComponent {
                         EndTime: moment(exceedTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                         TabType: exceedType,
                         PollutantList: pollutantList,
-                        operationpersonnel:this.state.operationpersonnel,
+                        operationpersonnel:operationpersonnel,
                     }
                 })
             }
@@ -239,7 +239,7 @@ class index extends PureComponent {
                     EndTime: moment(values.dateTime[1]).format('YYYY-MM-DD HH:mm:ss'),
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
-                    operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
+                    operationpersonnel:operationpersonnel,
                 }
             })
           }
@@ -318,7 +318,7 @@ class index extends PureComponent {
                     EndTime: values.dateTime[1],
                     TabType: values.outlet == undefined ? '' : values.outlet,
                     PollutantList: pollutionData,
-                    operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
+                    operationpersonnel:operationpersonnel,
                 }
             })
           }
@@ -340,7 +340,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: region,
                 PollutantList: PollutantList,
-                operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
+                operationpersonnel:operationpersonnel,
                 //PageSize:10,
                 //PageIndex:1
             }
@@ -492,7 +492,8 @@ class index extends PureComponent {
     }
     //超标企业数查询
     exEntHandle =(pointCode,rCode)=>{
-        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
+        debugger
+        const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode,operationpersonnel} = this.state
         this.setState({
             visible:true,
            
@@ -530,7 +531,8 @@ class index extends PureComponent {
                 PollutantList: arr,
                 PageSize:20,
                 PageIndex:1,
-                EntCode:''
+                EntCode:'',
+                operationpersonnel:operationpersonnel,
             }
         }).then(()=>{
             if(this.props.EntCountList.length >0)
@@ -565,6 +567,7 @@ class index extends PureComponent {
     }
     //超标次数弹框
     exCountHandle=(pointCode,rCode,flag,EntCode,name)=>{
+        debugger
         if(flag)
         {
             this.setState({
@@ -581,7 +584,7 @@ class index extends PureComponent {
                 modalEntCode:EntCode
             })
         }
-        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode} = this.state
+        const { AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,PollutantList ,selectPollution ,regionCode,operationpersonnel} = this.state
         let arr = []
         PollutantList.map(item=>{
             if(item.PollutantCode == pointCode)
@@ -632,6 +635,7 @@ class index extends PureComponent {
             payload: { RegionCode: rCode=='All'?'':rCode },
         });
         this.props.dispatch({
+            
             type:pageUrl.GetExceedNum,
             payload:{
                 RegionCode: rCode == 'All' ? '':rCode,
@@ -645,7 +649,7 @@ class index extends PureComponent {
                 PageSize:20,
                 PageIndex:1,
                 EntCode:EntCode == '' ?'':EntCode,
-                OperationPersonnel:this.state.operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         }).then(()=>{
             if(this.props.ExceedNumList.length >0)
@@ -1404,7 +1408,7 @@ class index extends PureComponent {
                 BeginTime: BeginTime,
                 EndTime: EndTime,
                 TabType: regionCode,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
                 PollutantList: modalPollutantList,
                 PageSize:20,
                 PageIndex:1
@@ -1427,7 +1431,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: regionCode,
                 PollutantList: modalPollutantList,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1449,7 +1453,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
                 PageIndex:PageIndex,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1470,7 +1474,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
                 PageIndex:PageIndex,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1492,7 +1496,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:20,
                 PageIndex:1,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1511,7 +1515,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1532,7 +1536,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
                 PageIndex:PageIndex,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1553,7 +1557,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
                 PageIndex:PageIndex,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1571,7 +1575,7 @@ class index extends PureComponent {
                 EndTime: EndTime,
                 TabType: '',
                 PollutantList: modalPollutantList,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1593,7 +1597,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
                 PageIndex:PageIndex,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
@@ -1614,7 +1618,7 @@ class index extends PureComponent {
                 PollutantList: modalPollutantList,
                 PageSize:PageSize,
                 PageIndex:PageIndex,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
     }

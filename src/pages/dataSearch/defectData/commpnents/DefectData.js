@@ -208,7 +208,7 @@ export default class EntTransmissionEfficiency extends Component {
   };
   changeOperation = value => {
     this.updateQueryState({
-      operationpersonnel: value,
+      OperationPersonnel: value,
     });
   };
   

@@ -30,7 +30,8 @@ export default Model.extend({
       PollutantType:'',
       PageSize:20,
       PageIndex:1,
-      dataType:'HourData'
+      dataType:'HourData',
+      OperationPersonnel:''
     },
     tableDatas: [],
     total: '',

@@ -101,7 +101,6 @@ export default Model.extend({
       }
     },//超标数据列表
     *GetExceedDataList({ payload }, { call, put, update, select }) {
-
       const body = {
         RegionCode: payload.RegionCode,
         AttentionCode: payload.AttentionCode,

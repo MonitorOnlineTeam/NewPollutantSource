@@ -76,7 +76,6 @@ export default Model.extend({
     }
   },//超标报警核实详情
     *GetAlarmVerifyRateDetail({ payload }, { call, put, update, select }) {
-
         const body = {
             RegionCode: payload.RegionCode,
             attentionCode: payload.attentionCode,
