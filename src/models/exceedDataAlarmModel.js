@@ -117,6 +117,7 @@ export default Model.extend({
           Status:payload.Status,
           EntCode:payload.EntCode,
           VerifyStatus:payload.VerifyStatus,
+          DGIMN:payload.DGIMN
       }
       console.log(body)
       const result = yield call(GetAlarmVerifyDetail, body, null)

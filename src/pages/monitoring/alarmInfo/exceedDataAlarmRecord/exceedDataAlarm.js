@@ -449,7 +449,7 @@ class index extends PureComponent {
 
   }
   // 企业弹框
-  EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName) => {
+  EntAlarmHandle = (reCode, entCode, status, PollutantCode, entName, pointName,DGIMN) => {
     const { attentionValue, outletValue, dataType, time, regionCode, AlarmDealTypeList } = this.state
 
     let deal = ''
@@ -478,8 +478,8 @@ class index extends PureComponent {
         status: status,
         entCode: entCode,
         regionCode: reCode,
-        PollutantCode: PollutantCode
-
+        PollutantCode: PollutantCode,
+        DGIMN:DGIMN
       })
     }
 
@@ -497,7 +497,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: status == "2" ? "" : status,
         EntCode: entCode == undefined ? '' : entCode,
-        VerifyStatus: AlarmDealTypeList
+        VerifyStatus: AlarmDealTypeList,
+        DGIMN:DGIMN
       }
     })
 
@@ -627,7 +628,7 @@ class index extends PureComponent {
                 dataIndex: col.PollutantCode + '_alarmCount',
                 key: col.PollutantCode + '_alarmCount',
                 render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName)}>{text}</a>
+                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName,record.EntAlarmHandle)}>{text}</a>
                 }
               },
               {
@@ -891,7 +892,7 @@ class index extends PureComponent {
   }
   //报警次数数据按钮查询信息
   AlertsButtonHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList,DGIMN } = this.state
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -906,7 +907,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: DealType == '2' ? '' : DealType,
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
+        VerifyStatus: AlarmDealTypeList,
+        DGIMN:DGIMN
       }
     })
   }
@@ -931,7 +933,7 @@ class index extends PureComponent {
   }
   //已核实报警按钮查询信息
   AlreadyButtonCountHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList } = this.state
+    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode, AlarmDealTypeList,DGIMN } = this.state
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -946,7 +948,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: '1',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: AlarmDealTypeList
+        VerifyStatus: AlarmDealTypeList,
+        DGIMN:DGIMN
       }
     })
   }
@@ -971,7 +974,7 @@ class index extends PureComponent {
   }
   ////待核实报警按钮查询信息
   StayButtonCountHandle = () => {
-    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode } = this.state
+    const { regionValue, attentionValue, outletValue, dataType, time, DealType, regionCode, enterpriseValue, PollutantCode,DGIMN } = this.state
     this.props.dispatch({
       type: pageUrl.GetAlarmVerifyDetail,
       payload: {
@@ -986,7 +989,8 @@ class index extends PureComponent {
         PollutantCode: PollutantCode,
         Status: '0',
         EntCode: enterpriseValue == undefined ? '' : enterpriseValue,
-        VerifyStatus: []
+        VerifyStatus: [],
+        DGIMN:DGIMN
       }
     })
   }
