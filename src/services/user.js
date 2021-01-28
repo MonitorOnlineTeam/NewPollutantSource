@@ -3,7 +3,7 @@ import request, { post, get } from '@/utils/request';
 import Cookie from 'js-cookie';
 
 import { async } from 'q';
-import { JSEncrypt } from 'jsencrypt';
+// import { JSEncrypt } from 'jsencrypt';
 import { encryptKey } from '@/utils/utils';
 
 export async function query() {
@@ -79,13 +79,13 @@ export async function getSystemConfigInfo() {
 
 // 验证旧密码是否一致
 export async function vertifyOldPwd(params) {
-  const results = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
-  //获取配置，判断配置是否开启弱口令0开启 1禁止
-  if (results.Datas.ClearTransmission == 0) {
-    var encrypt = new window.JSEncrypt();
-    encrypt.setPublicKey(encryptKey);
-    params.pwd = encrypt.encrypt(params.pwd);
-  }
+  // const results = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
+  // //获取配置，判断配置是否开启弱口令0开启 1禁止
+  // if (results.Datas.ClearTransmission == 0) {
+  //   var encrypt = new window.JSEncrypt();
+  //   encrypt.setPublicKey(encryptKey);
+  //   params.pwd = encrypt.encrypt(params.pwd);
+  // }
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/VertifyOldPwd', params);
   return result;
 }
@@ -93,13 +93,13 @@ export async function vertifyOldPwd(params) {
 // 修改密码
 export async function changePwd(params) {
   const body = Object.assign(params);
-  const results = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
-  //获取配置，判断配置是否开启弱口令0开启 1禁止
-  if (results.Datas.ClearTransmission == 0) {
-    var encrypt = new window.JSEncrypt();
-    encrypt.setPublicKey(encryptKey);
-    body.pwd = encrypt.encrypt(params.pwd);
-  }
+  // const results = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo');
+  // //获取配置，判断配置是否开启弱口令0开启 1禁止
+  // if (results.Datas.ClearTransmission == 0) {
+  //   var encrypt = new window.JSEncrypt();
+  //   encrypt.setPublicKey(encryptKey);
+  //   body.pwd = encrypt.encrypt(params.pwd);
+  // }
   const result = await post('/api/rest/PollutantSourceApi/AuthorApi/ChangePwd', body);
   return result;
 }

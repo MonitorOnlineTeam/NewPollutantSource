@@ -8,6 +8,7 @@ import Cookie from 'js-cookie';
 import router from 'umi/router';
 import { async } from 'q';
 import configToken from '@/config'
+import CryptoJS from 'crypto-js';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -123,7 +124,7 @@ export async function get(url, params, flag) {
   if (params) {
     const paramsArray = [];
     Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));
-
+    let urlbehind = '';
     if (url.indexOf('?') === -1) {
       if (url.search(/\?/) === -1) {
         url += `?${paramsArray.join('&')}`;
@@ -133,14 +134,37 @@ export async function get(url, params, flag) {
     } else {
       url += `&${paramsArray.join('&')}`;
     }
+    //参数代码开关
+    if (true) {
+      const urlbehinds = url.split('?').map(item => ({ item }));
+      if (urlbehinds.length > 1) {
+        if (Object.keys(urlbehinds[1]).length !== 0) {
+          const AESurlbehind = CryptoJS.AES.encrypt(urlbehinds[1].item, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
+            iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+          }).ciphertext.toString();
+          url = urlbehinds[0].item + "?" + AESurlbehind;
+        }
+      }
+    }
   }
   return requestMy(url, { method: 'GET' });
 }
 
 export async function post(url, params) {
+  let body = JSON.stringify(params);
+  //参数代码开关
+  if (true) {
+    const body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
+      iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    }).ciphertext.toString();
+  }
   return requestMy(url, {
     method: 'POST',
-    body: JSON.stringify(params),
+    body: body,
   });
 }
 
