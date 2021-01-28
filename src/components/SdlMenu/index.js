@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Menu, Popover } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
 import { router } from "umi"
-import $ from 'jquery'
 
 const { SubMenu } = Menu;
 
@@ -18,20 +16,15 @@ class SdlMenu extends Component {
       ICONS: {},
       current: "",
     };
-    // this._SELF_ = {
-    //   ICONS: {}
-    // }
 
     import('@ant-design/icons').then((icons) => {
       this.setState({
         ICONS: icons
       })
-      // this._SELF_.ICONS = icons;
     });
   }
 
   getIcon = (icon) => {
-    // const ICONS = require('@ant-design/icons');
     let Icon = this.state.ICONS[icon];
     return Icon ? <Icon /> : "";
   }
@@ -40,97 +33,55 @@ class SdlMenu extends Component {
     this.getMenuCurrentKey();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
-      this.getMenuCurrentKey()
-    }
-  }
-
   getMenuCurrentKey = () => {
-    let current = this.props.location.pathname.split('/')[1]
-    this.setState({ current: '/' + current });
+    let current = this.props.location.pathname;
+    this.setState({ current: current });
   }
 
-  onMenuItemClick = (menuItemData, menuKey) => {
-    this.getMenuCurrentKey();
-    router.push(menuItemData.NavigateUrl)
-  }
-  // #1890ff
   menuItemContent = (currentMenuData) => {
-    let pathName = window.location.pathname;
-    let menuKey = currentMenuData.id;
-    return (
-      <div className={styles.menu_popover_wrapper}>
-        <ul>
-          {
-            currentMenuData.children.map(menuItem => {
-              if (menuItem.children.length) {
-                return (
-                  <li key={menuItem.name} className={styles.menu_title_container}>
-                    <div className={styles.menu_title}>
-                      {menuItem.name}
-                    </div>
-                    <ul className={styles.menu_item_list}>
-                      {
-                        menuItem.children.map(itm => {
-                          return <li key={itm.name} style={{ cursor: 'pointer', color: pathName === itm.NavigateUrl ? "#1890ff" : "" }} onClick={() => { this.onMenuItemClick(itm, menuKey) }}>
-                            {this.getIcon(itm.icon)}
-                            <span className={styles.menu_name}>{itm.name}</span>
-                          </li>
-                        })
-                      }
-                    </ul>
-                  </li>
-                )
-              } else {
-                return (
-                  <li key={menuItem.name} className={styles.menu_title_container}>
-                    <ul className={styles.menu_item_list}>
-                      <li onClick={() => { this.onMenuItemClick(menuItem, menuKey) }}>
-                        {this.getIcon(menuItem.icon)}
-                        <span className={styles.menu_name}>{menuItem.name}</span>
-                      </li>
-                    </ul>
-                  </li>
-                )
-              }
-            })
-          }
-        </ul>
-      </div>
-    )
+    return currentMenuData.children.map(menuItem => {
+      return <Menu.ItemGroup key={menuItem.path} title={menuItem.name}>
+        {
+          menuItem.children.map(itm => {
+            return <Menu.Item key={itm.path} icon={this.getIcon(itm.icon)}>{itm.name}</Menu.Item>
+          })
+        }
+      </Menu.ItemGroup>
+    })
   }
+
+  onMenuItemClick = (e) => {
+    this.setState({ current: e.key })
+    router.push(e.key)
+  }
+
   render() {
     const { current } = this.state;
     const { menuList, match } = this.props;
     return (
       <div className={`${styles.menuWrapper} ant-pro-top-nav-header-menu`}>
-        <Menu selectedKeys={[current]} mode="horizontal">
+        <Menu selectedKeys={[current]} mode="horizontal" onClick={this.onMenuItemClick}>
           {
             menuList.map((item, index) => {
-              return (
-                <Menu.Item key={item.NavigateUrl} icon={this.getIcon(item.icon)}
+              if (item.children.length) {
+                return <SubMenu popupClassName={styles.wrySubMenu} key={item.NavigateUrl} icon={this.getIcon(item.icon)} title={item.name}>
+                  {this.menuItemContent(item)}
+                </SubMenu>
+              } else {
+                return <Menu.Item key={item.NavigateUrl} icon={this.getIcon(item.icon)}
                   onClick={() => {
                     if (!item.children.length) {
                       this.onMenuItemClick(item, item)
                     }
                   }}
                 >
-                  {
-                    item.children.length ?
-                      // <Popover overlayClassName={styles.menuPopover} placement="bottom" trigger="click" content={this.menuItemContent(item)}>
-                      <Popover mouseEnterDelay={0.2} overlayClassName={styles.menuPopover} placement="bottom" content={this.menuItemContent(item)}>
-                        {item.name}
-                      </Popover> :
-                      item.name
-                  }
+                  {item.name}
                 </Menu.Item>
-              )
+              }
             })
           }
         </Menu>
       </div>
-
     );
   }
 }
