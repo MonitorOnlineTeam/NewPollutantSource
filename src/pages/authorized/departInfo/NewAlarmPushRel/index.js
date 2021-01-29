@@ -65,7 +65,7 @@ class Index extends Component {
                 { label: '超标核实推送', value: '6' },
                 { label: '处置', value: '7' },
                 { label: '核实', value: '8' },
-
+                { label: '响应', value: '9' },
               ],
               
         };

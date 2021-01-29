@@ -144,7 +144,7 @@ export default class Index extends Component {
         key: 'status',
         align: 'center',
         render:(text,record)=>{
-          return text==0?
+          return !text?
            '': <a href='javascript:;' onClick={this.detail.bind(this,record)}>详情</a>
           }        
         // render:(text,record)=>{

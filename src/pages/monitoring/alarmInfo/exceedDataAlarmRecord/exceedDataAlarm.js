@@ -268,7 +268,7 @@ class index extends PureComponent {
     const { time } = this.state;
     const { pollutantCodeList } = this.props
     return <>
-      
+
       <RegionList
         changeRegion={(value) => {
           this.setState({
@@ -870,7 +870,7 @@ class index extends PureComponent {
             //     onChange: this.onChange,
             //     pageSizeOptions: ['20', '30', '40', '100'],
             //     total: this.props.total,
-            // }} 
+            // }}
             pagination={
               false
             }
