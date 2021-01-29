@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-11-05 17:18:49 
+ * @Author: Jiaqi
+ * @Date: 2019-11-05 17:18:49
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-12-09 15:17:22
+ * @Last Modified time: 2020-12-29 14:39:46
  * @desc: 上传组件
  */
 
@@ -34,7 +34,8 @@ class SdlUpload extends Component {
       cuid: this.props.cuid
     }
     this.state = {
-      previewVisible: false
+      previewVisible: false,
+      fileList: []
     };
   }
 
@@ -56,14 +57,13 @@ class SdlUpload extends Component {
     }
   }
 
-  handlePreview = async file => {//图片预览
+  handlePreview = async file => {
     const nameSplit = file.name.split('.');
     const postfix = nameSplit[nameSplit.length - 1];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-    {
+    if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
       this.setState({
         previewImage: file.url || file.preview,
         previewVisible: true,
@@ -74,32 +74,49 @@ class SdlUpload extends Component {
 
 
   render() {
-    const { configId, fileList, dispatch } = this.props;
+    const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
+    let imageProps = {};
+    if (accept) {
+      imageProps.accept = accept;
+    }
     const props = {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
+        let fileList = info.fileList;
+        console.log('info=', info)
         if (info.file.status === 'done') {
           // setFieldsValue({ cuid: cuid })
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
+          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
         } else if (info.file.status === 'error') {
-          message.error('上传文件失败！')
+          let msg = fileList[fileList.length - 1].response.Message;
+          console.log("msg=", msg)
+          message.error(msg || '上传文件失败！')
         }
         this.setState({
-          fileList: info.fileList
+          fileList: fileList
         })
+        if (!fileList.length) {
+          this.props.uploadSuccess && this.props.uploadSuccess(undefined);
+        }
       },
       onRemove(file) {
-        dispatch({
-          type: "autoForm/deleteAttach",
-          payload: {
-            Guid: file.uid,
-          }
-        })
+        if (!file.error) {
+          dispatch({
+            type: "autoForm/deleteAttach",
+            payload: {
+              FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
+              Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+            }
+          })
+        }
       },
-      onPreview: this.handlePreview,
+      // onPreview: this.handlePreview,
+      ...imageProps,
       multiple: true,
       listType: "picture-card",
       data: {
@@ -107,53 +124,56 @@ class SdlUpload extends Component {
         FileActualType: '0',
       },
     };
-
-    return (
-      <>
-        <Upload {...props}  fileList={this.state.fileList}>
-          <div>
-            <Icon type="plus" />
-            <div className="ant-upload-text">文件上传</div>
-          </div>
-        </Upload>
-
-        <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
-          this.setState({ previewVisible: false })
-        }}>
-          {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
-          <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
-            <div className={styles.controller}>
-              <Icon type="left" onClick={() => {
+    return <>
+      <Upload {...props} fileList={this.state.fileList}>
+        {
+          uploadNumber ?
+            (this.state.fileList.length >= uploadNumber ? null : <div>
+              <Icon type="plus" />
+              <div className="ant-upload-text">文件上传</div>
+            </div>)
+            : <div>
+              <Icon type="plus" />
+              <div className="ant-upload-text">文件上传</div>
+            </div>
+        }
+      </Upload>
+      <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
+        this.setState({ previewVisible: false })
+      }}>
+        {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
+        <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
+          <div className={styles.controller}>
+            <Icon type="left"
+              onClick={() => {
                 this.carousel.prev()
               }} />
-              <Icon type="right" onClick={() => {
+            <Icon type="right"
+              onClick={() => {
                 this.carousel.next()
               }} />
-            </div>
-            <MapInteractionCSS>
-              <Carousel
-                dots={false}
-                ref={(carousel) => { this.carousel = carousel; }}
-              >
-                {
-                  this.props.fileList && this.props.fileList.map(item => {
-                    const nameSplit = item.name.split('.');
-                    const postfix = nameSplit[nameSplit.length - 1];
-                    if(postfix === 'gif'|| postfix === 'jpg' || postfix === 'png' || postfix === 'bmp')
-                    {
-                      return <div key={item.Guid}>
+          </div>
+          <MapInteractionCSS>
+            <Carousel
+              dots={false}
+              ref={(carousel) => { this.carousel = carousel; }}
+            >
+              {
+                this.props.fileList && this.props.fileList.map(item => {
+                  const nameSplit = item.name.split('.');
+                  const postfix = nameSplit[nameSplit.length - 1];
+                  if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
+                    return <div key={item.Guid}>
                       <img alt="example" style={{ width: '100%' }} src={item.url} />
                     </div>
-                    }
-                  })
-                }
-              </Carousel>
-            </MapInteractionCSS>
-          </div>
-        </Modal>
-      </>
-
-    );
+                  }
+                })
+              }
+            </Carousel>
+          </MapInteractionCSS>
+        </div>
+      </Modal>
+    </>;
   }
 }
 
