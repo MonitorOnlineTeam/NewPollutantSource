@@ -1102,12 +1102,14 @@ class index extends PureComponent {
                 key: 'dataType',
             },
             {
-                title: "首次超标时间",
+                title: "首次报警时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
@@ -1238,6 +1240,9 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+
             },
             {
                 title: "报警因子",
@@ -1366,6 +1371,8 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
@@ -1501,6 +1508,8 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'firstTime',
                 key: 'firstTime',
+                defaultSortOrder: 'descend',
+                sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
             },
             {
                 title: "报警因子",
@@ -1696,16 +1705,16 @@ class index extends PureComponent {
                                 </Select>
                                 <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
                                 <Button onClick={this.AlreadyButtonHandleExpor}><Icon type="export" /> 导出</Button>
-                                <div style={{marginTop:10}}>
+                                {this.state.DealType==1&&<div style={{marginTop:10}}>
                                     <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
-                                    <Checkbox.Group defaultValue={AlarmDealTypeList.map(item=>item.code)}  onChange={this.AlarmDealCheckBoxChange}>
+                                    <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
                                         {
                                             AlarmDealTypeList.map(poll =>
                                                 <Checkbox value={poll.code}>{poll.name}</Checkbox>
                                             )
                                         }
                                     </Checkbox.Group>
-                                </div>
+                                </div>}
                             </div>
                             {
                                 <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />

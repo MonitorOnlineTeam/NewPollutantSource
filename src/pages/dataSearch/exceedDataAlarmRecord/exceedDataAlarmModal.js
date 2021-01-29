@@ -69,6 +69,7 @@ class exceedDataAlarmModal extends PureComponent {
             regionValue: '',
             attentionValue: '',
             outletValue: '1',
+            operationpersonnel:'',
             regVisible: false,
             regVisibleAlready: false,
             regVisibleStay: false,
@@ -123,6 +124,7 @@ class exceedDataAlarmModal extends PureComponent {
                 this.props.dispatch({
                     type: pageUrl.GetAlarmVerifyRate,
                     payload: {
+                        operationpersonnel:'',
                         RegionCode: '',
                         attentionCode: '',
                         PollutantType: alarmType == ''?'1':alarmType,
@@ -162,7 +164,7 @@ class exceedDataAlarmModal extends PureComponent {
 
     // 导出
     exportReport = () => {
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion,operationpersonnel} = this.state
         if(exportRegion != '1')
         {
             this.props.dispatch({
@@ -175,6 +177,7 @@ class exceedDataAlarmModal extends PureComponent {
                     BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
                     EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
                     PollutantCodeList: pollutantCodeList,
+                    operationpersonnel: operationpersonnel,
                 }
             })
         }
@@ -189,6 +192,7 @@ class exceedDataAlarmModal extends PureComponent {
                     BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
                     EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
                     PollutantCodeList: pollutantCodeList,
+                    operationpersonnel: operationpersonnel,
                 }
             })
         }
@@ -197,13 +201,14 @@ class exceedDataAlarmModal extends PureComponent {
 
     //查询数据
     getChartAndTableData =()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyRate,
             payload: {
                 RegionCode: regionValue == undefined?'':regionValue,
                 attentionCode: attentionValue == undefined?'':attentionValue,
+                operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
                 PollutantType: outletValue == undefined?'':outletValue,
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: time[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -284,6 +289,7 @@ class exceedDataAlarmModal extends PureComponent {
                     }}>
                     {this.children()}
                 </Select>
+ 
                 <Select
                     allowClear
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -347,7 +353,21 @@ class exceedDataAlarmModal extends PureComponent {
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
                 <div style={{ marginTop: 10 }}>
-                    <label style={{ fontSize: 14 ,marginRight:10,marginLeft:10}}>监测因子:</label>
+                <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                        this.setState({
+                            operationpersonnel: value,
+                        })
+                    }}>
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
                     <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                     {
                         pollutantCodeList.map(poll=>
@@ -367,7 +387,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 报警次数
     AlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -394,7 +414,8 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel,
             }
         })
         
@@ -402,7 +423,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.setState({
             DealType:'1',
             regVisibleAlready:true,
@@ -429,14 +450,15 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel,
             }
         })
         
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -463,14 +485,15 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel: operationpersonnel,
             }
         })
         
     }
     // 企业弹框
     EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
-        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList} = this.state
+        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList,operationpersonnel} = this.state
 
         let deal = ''
         if(status == '')
@@ -522,7 +545,8 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:status=='2'?"":status,
                 EntCode:entCode == undefined?'':entCode,
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel: operationpersonnel,
             }
         })
         
@@ -581,7 +605,7 @@ class exceedDataAlarmModal extends PureComponent {
     //添加标签
     paneAdd = (text,region)=>{
         const {column,AlarmDetailList,loadingRateDetail} = this.props
-        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList} = this.state
+        const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
         
         
@@ -594,6 +618,7 @@ class exceedDataAlarmModal extends PureComponent {
                 DataType: dataType == 'Hour'?'HourData':'DayData',
                 BeginTime: moment(time[0]).format("YYYY-MM-DD HH:mm:ss"),
                 EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
+                operationpersonnel: operationpersonnel,
                 //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
@@ -1597,7 +1622,7 @@ class exceedDataAlarmModal extends PureComponent {
                         title='超标报警'
                         visible={alarmVisible}
                         footer={null}
-                        width={1600}
+                        width={'90%'}
                         onCancel={alarmCancle}
                         destroyOnClose
                     >

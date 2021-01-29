@@ -50,8 +50,8 @@ class index extends PureComponent {
             regionValue: '',
             attentionValue: '',
             outletValue: '',
-            entValue:'',
-            pointValue:''
+            entValue:undefined,
+            pointValue:undefined
         };
     }
 
@@ -78,6 +78,12 @@ class index extends PureComponent {
             type: pageUrl.GetEntByRegionAndAtt,
             payload: { RegionCode: '' ,Attention:'',PollutantTypeCode:'1'},
         });
+        this.props.dispatch({
+            type:'wasteWaterReportModel/updateState',
+            payload:{
+                AllTypeDataListWaterList:[]
+            }
+        })
     };
 
 
@@ -222,7 +228,8 @@ class index extends PureComponent {
                         });
                         this.setState({
                             regionValue: value,
-                            entValue:''
+                            entValue:undefined,
+                            pointValue:undefined
                         })
                     }}>
                     {this.children()}
@@ -246,7 +253,8 @@ class index extends PureComponent {
                         });
                         this.setState({
                             attentionValue: value,
-                            entValue:''
+                            entValue:undefined,
+                            pointValue:undefined
                         })
                     }}>
                     {this.attention()}
@@ -257,7 +265,7 @@ class index extends PureComponent {
                     placeholder="企业列表"
                     maxTagCount={2}
                     maxTagTextLength={5}
-                    // defaultValue={this.state.entValue}
+                    value={this.state.entValue}
                     maxTagPlaceholder="..."
                     onChange={(value) => {
                         //获取企业列表
@@ -270,7 +278,7 @@ class index extends PureComponent {
                         });    
                         this.setState({
                             entValue: value,
-                            pointValue:''
+                            pointValue:undefined
                         })
                     }}>
                     {this.entList()}
@@ -282,7 +290,7 @@ class index extends PureComponent {
                         placeholder="监测点列表"
                         maxTagCount={2}
                         maxTagTextLength={5}
-                        // defaultValue={this.state.pointValue}
+                        value={this.state.pointValue}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({

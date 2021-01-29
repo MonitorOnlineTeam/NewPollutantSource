@@ -36,8 +36,7 @@ class index extends PureComponent {
         super(props);
         this.state = {
             defalutPollutantType: props.match.params.type,
-            enterpriseValue: '',
-            
+            enterpriseValue: '',            
         };
     }
 
@@ -46,6 +45,7 @@ class index extends PureComponent {
     }
 
     initData = () => {
+        debugger
         this.props.dispatch({
             //获取企业列表
             type: 'enterpriseMonitoringModel/getEntByRegion',
@@ -55,11 +55,12 @@ class index extends PureComponent {
         this.props.dispatch({
             type: pageUrl.GetPointSummary,
             payload: { 
-                RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
+                getEntByRegion:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
                 EntCode:'',
                 PageSize:20,
                 PageIndex:1,
-                EntType:1
+                EntType:1,
+                operationpersonnel:"1"
              },
         });
     };
@@ -79,15 +80,15 @@ class index extends PureComponent {
 
     // 获取图表及表格数据
     getChartAndTableData = () => {
+        debugger
         this.props.dispatch({
-            
             type: pageUrl.GetPointSummary,
             payload: {
                 EntCode: this.state.enterpriseValue ==undefined?'':this.state.enterpriseValue.toString(),
                 RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
                 PageSize:20,
                 PageIndex:1,
-                EntType:1
+                EntType:1,
             }
         })
 
@@ -141,6 +142,7 @@ class index extends PureComponent {
         )
     }
     onChange =(PageIndex, PageSize)=>{
+        debugger
         this.props.dispatch({
             
             type: pageUrl.GetPointSummary,
@@ -154,6 +156,7 @@ class index extends PureComponent {
         })
     }
     onChangeHandle=(PageIndex, PageSize)=>{
+        debugger
         this.props.dispatch({
             
             type: pageUrl.GetPointSummary,

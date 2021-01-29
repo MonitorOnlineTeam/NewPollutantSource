@@ -44,7 +44,8 @@ export default Model.extend({
       EntCode: "",
       RegionCode: "",
       PollutantTypeCode: [],
-      ModelType: ""
+      ModelType: "",
+      OperationPersonnel:''
     },
     pointName: 'COD',
     tableDatas: [],

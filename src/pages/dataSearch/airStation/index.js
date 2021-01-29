@@ -37,6 +37,7 @@ class index extends PureComponent {
     this.state = {
       defalutPollutantType: props.match.params.type,
       regionValue: '',
+      operationpersonnel:'',
     };
   }
 
@@ -72,13 +73,15 @@ class index extends PureComponent {
       type: pageUrl.ExportPointSummary,
       payload: {
         RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
-        EntType: 2
+        EntType: 2,
+        operationpersonnel:this.state.operationpersonnel,
       },
     });
   }
 
   // 获取图表及表格数据
   getChartAndTableData = () => {
+    debugger
     //获取行政区列表
     this.props.dispatch({
       type: pageUrl.GetPointSummary,
@@ -86,11 +89,13 @@ class index extends PureComponent {
         RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
         PageSize: 20,
         PageIndex: 1,
-        EntType: 2
+        EntType: 2,
+        operationpersonnel:this.state.operationpersonnel,
       },
     });
   }
   onChange =(PageIndex, PageSize)=>{
+    debugger
     this.props.dispatch({
         
         type: pageUrl.GetPointSummary,
@@ -98,11 +103,13 @@ class index extends PureComponent {
             RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
             PageSize:PageSize,
             PageIndex:PageIndex,
-            EntType:2
+            EntType:2,
+            operationpersonnel:this.state.operationpersonnel,
         }
     })
 }
 onChangeHandle=(PageIndex, PageSize)=>{
+  debugger
   this.props.dispatch({
       
       type: pageUrl.GetPointSummary,
@@ -110,7 +117,8 @@ onChangeHandle=(PageIndex, PageSize)=>{
           RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
           PageSize:PageSize,
           PageIndex:PageIndex,
-          EntType:2
+          EntType:2,
+          operationpersonnel:this.state.operationpersonnel,
       }
   })
 }
@@ -154,6 +162,21 @@ onChangeHandle=(PageIndex, PageSize)=>{
             })
           }}>
           {this.children()}
+        </Select>
+        <Select
+          allowClear
+          style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+          placeholder="运维状态"
+          maxTagCount={2}
+          maxTagTextLength={5}
+          maxTagPlaceholder="..."
+          onChange={(value) => {
+            this.setState({
+              operationpersonnel: value,
+            })
+          }}>
+          <Option value="1">已设置运维人员</Option>
+          <Option value="2">未设置运维人员</Option>
         </Select>
         <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
         <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>

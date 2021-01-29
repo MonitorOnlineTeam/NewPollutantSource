@@ -80,7 +80,8 @@ export default Model.extend({
         PollutantList: payload.PollutantList,
         PageIndex: payload.PageIndex,
         PageSize: payload.PageSize,
-        EntCode:payload.EntCode
+        EntCode:payload.EntCode,
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(GetExceedNum, body, null)
       if (result.IsSuccess) {
@@ -100,7 +101,6 @@ export default Model.extend({
       }
     },//超标数据列表
     *GetExceedDataList({ payload }, { call, put, update, select }) {
-
       const body = {
         RegionCode: payload.RegionCode,
         AttentionCode: payload.AttentionCode,
@@ -112,6 +112,7 @@ export default Model.extend({
         PollutantList: payload.PollutantList,
         //PageIndex: payload.PageIndex,
         //PageSize: payload.PageSize
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
@@ -151,7 +152,8 @@ export default Model.extend({
         PollutantList: payload.PollutantList,
         PageIndex: payload.PageIndex,
         PageSize: payload.PageSize,
-        EntCode:payload.EntCode
+        EntCode:payload.EntCode,
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
@@ -181,6 +183,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(ExportExceedDataList, body, null)
       if (result.IsSuccess) {
@@ -204,7 +207,8 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
-        EntCode:payload.EntCode
+        EntCode:payload.EntCode,
+        OperationPersonnel: payload.operationpersonnel,
       }
       const result = yield call(ExportExceedNum, body, null)
       if (result.IsSuccess) {

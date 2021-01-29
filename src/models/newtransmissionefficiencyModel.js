@@ -32,6 +32,7 @@ export default Model.extend({
     RegionCode: '',
     EnterpriseName: '',
     pollutantType: '',
+    operationpersonnel:'',
     assessment:'1',
     qutletQueryPar: {
       beginTime: moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'),
@@ -41,7 +42,8 @@ export default Model.extend({
       EntCode: '',
       PollutantType: '',
       RegionCode: '',
-      Assessment:'1'
+      Assessment:'1',
+      OperationPersonnel:'',
     },
     qutleTableDatas: [],
     qutleTotal: '',
@@ -65,6 +67,7 @@ export default Model.extend({
         pollutantType,
         assessment,
         entCode,
+        operationpersonnel,
       } = yield select(state => state.newtransmissionefficiency);
       let body = {
         RegionCode: RegionCode,
@@ -72,6 +75,7 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
+        OperationPersonnel:operationpersonnel,
         Assessment:assessment,
         // PageSize: pageSize,
         // PageIndex: pageIndex,
@@ -86,8 +90,16 @@ export default Model.extend({
       }
     },
     *getQutletData({ payload }, { call, put, update, select }) {
+            //行政区
+            const {
+              operationpersonnel,
+            } = yield select(state => state.newtransmissionefficiency);
+      let body = {
+        ...payload,
+        OperationPersonnel:operationpersonnel
+      };
       //企业
-      const response = yield call(GetTransmissionEfficiencyForEnt, { ...payload });
+      const response = yield call(GetTransmissionEfficiencyForEnt, { ...body });
       if (response.IsSuccess) {
         yield update({
           qutleTableDatas: response.Datas,
@@ -96,8 +108,15 @@ export default Model.extend({
       }
     },
     *getTransmissionEfficiencyForEnt({ payload }, { call, put, update, select }) {
+      const {
+        operationpersonnel,
+      } = yield select(state => state.newtransmissionefficiency);
+      let body = {
+        ...payload,
+        OperationPersonnel: operationpersonnel
+      };
       //排口
-      const response = yield call(GetTransmissionEfficiencyForPoint, { ...payload });
+      const response = yield call(GetTransmissionEfficiencyForPoint, { ...body });
       if (response.IsSuccess) {
         yield update({
           priseTableDatas: response.Datas,
@@ -124,7 +143,9 @@ export default Model.extend({
         RegionCode,
         pageIndex,
         pollutantType,
+        assessment,
         entCode,
+        operationpersonnel,
       } = yield select(state => state.newtransmissionefficiency);
       let body = {
         RegionCode: RegionCode,
@@ -132,6 +153,8 @@ export default Model.extend({
         endTime: endTime,
         PollutantType: pollutantType,
         EntCode: entCode,
+        Assessment:assessment,
+        OperationPersonnel:operationpersonnel,
       };
       const response = yield call(ExportTransmissionEfficiencyForRegion, { ...body });
       if (response.IsSuccess) {
@@ -145,8 +168,15 @@ export default Model.extend({
     },
 
     *exportTransmissionEfficiencyForEnt({ callback,payload }, { call, put, update, select }) {
+      const {
+        operationpersonnel,
+      } = yield select(state => state.newtransmissionefficiency);
+      let body = {
+        ...payload,
+        OperationPersonnel: operationpersonnel
+      };
       //企业级导出
-      const response = yield call(ExportTransmissionEfficiencyForEnt, { ...payload });
+      const response = yield call(ExportTransmissionEfficiencyForEnt, { ...body });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

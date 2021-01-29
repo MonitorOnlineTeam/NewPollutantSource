@@ -87,8 +87,7 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
-      entVisible:false
-
+      entVisible:false,
     };
     
     this.columns = [
@@ -180,14 +179,15 @@ export default class EntTransmissionEfficiency extends Component {
 
  
      dispatch({ type: 'home/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-    //  this.updateQueryState({
-    //   BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
-    //   EndTime: moment().format('YYYY-MM-DD HH:59:59'),
-    //   EntCode: "",
-    //   RegionCode: "",
-    //   PollutantTypeCode: [],
-    //   ModelType: "All"
-    // });
+     this.updateQueryState({
+      // BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
+      // EndTime: moment().format('YYYY-MM-DD HH:59:59'),
+      // EntCode: "",
+      // RegionCode: "",
+      // PollutantTypeCode: [],
+      // ModelType: "All"
+      // OperationPersonnel:'',
+    });
     setTimeout(() => {
       this.getTableData();
     });
@@ -248,6 +248,11 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: value? value:'',
     });
   }
+  changePperation=(value)=>{
+    this.updateQueryState({
+      OperationPersonnel:  value? value:'',
+    });
+  }
   changeEnt=(value,data)=>{ //企业事件
     this.updateQueryState({
       EntCode: value? value:'',
@@ -257,7 +262,6 @@ export default class EntTransmissionEfficiency extends Component {
   //查询事件
   queryClick = () => {
   
-
     const { pointName, dispatch} = this.props;
     dispatch({
       type: pageUrl.updateState,
@@ -335,7 +339,7 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       loading,
-      queryPar: { BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType},
+      queryPar: { BeginTime, EndTime, EntCode, RegionCode,  PollutantTypeCode,  ModelType,OperationPersonnel},
       Atmosphere, regionVisible,regionCancel, isWorkRate,isOverRate
     } = this.props;
     const { TabPane } = Tabs;
@@ -364,6 +368,21 @@ export default class EntTransmissionEfficiency extends Component {
               <Form.Item label='行政区'>
                <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
+              <Form.Item label='运维状态'>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  value={OperationPersonnel?OperationPersonnel:undefined}
+                  maxTagCount={2}
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item> 
               {!Atmosphere?
                 <Form.Item label={'企业类型'}>
                  <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />

@@ -33,6 +33,7 @@ export default Model.extend({
       PollutantList: [],
       Rate: 1,
       EntCode: '',
+      OperationPersonnel:'',
     },
     pollutantByType:'1',
     divisorList: [],

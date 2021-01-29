@@ -27,7 +27,6 @@ import {
   Tag,
 } from 'antd';
 import { connect } from 'dva';
-import Center from '@/pages/account/center';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import moment from 'moment';
 import { router } from 'umi';

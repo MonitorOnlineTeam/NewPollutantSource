@@ -56,7 +56,7 @@ class SdlUpload extends Component {
     }
   }
 
-  handlePreview = async file => {
+  handlePreview = async file => {//图片预览
     const nameSplit = file.name.split('.');
     const postfix = nameSplit[nameSplit.length - 1];
     if (!file.url && !file.preview) {
@@ -110,7 +110,7 @@ class SdlUpload extends Component {
 
     return (
       <>
-        <Upload {...props} fileList={this.state.fileList}>
+        <Upload {...props}  fileList={this.state.fileList}>
           <div>
             <Icon type="plus" />
             <div className="ant-upload-text">文件上传</div>

@@ -49,6 +49,7 @@ class index extends PureComponent {
     format: 'YYYY-MM-DD HH',
     pollutantType: "1",
     checkedValues: [],
+    operationpersonnel:'',
   }
   _SELF_ = {
     formLayout: {
@@ -164,6 +165,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
     this.setState({
@@ -175,6 +177,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
   }
@@ -202,6 +205,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
   }
@@ -344,6 +348,25 @@ class index extends PureComponent {
                 {/* <div class="ant-form-item-label" style={{ width: '5.3%' }}>
                   <label for="RegionCode" class="" title="监测因子">监测因子</label>
                 </div> */}
+                <Form.Item {...formLayout} label="运维状态" style={{ width: '16%' }}>
+                  {
+                    <Select
+                      allowClear
+                      // style={{ width: 200, marginLeft: 30, marginRight: 10 }}
+                      placeholder="运维状态"
+                      maxTagCount={2}
+                      maxTagTextLength={5}
+                      maxTagPlaceholder="..."
+                      onChange={(value) => {
+                        this.setState({
+                          operationpersonnel: value,
+                        })
+                      }}>
+                      <Option value="1">已设置运维人员</Option>
+                      <Option value="2">未设置运维人员</Option>
+                    </Select>
+                  }
+                </Form.Item>
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(

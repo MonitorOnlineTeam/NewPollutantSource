@@ -127,7 +127,8 @@ export default class EntTransmissionEfficiency extends Component {
       // RegionCode: '',
       // Atmosphere:Atmosphere
       RegionCode: '',
-      EntType: types==='ent'? "1":"2"
+      EntType: types==='ent'? "1":"2",
+      OperationPersonnel:'',
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -206,6 +207,11 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: value,
     });
   }
+  changePperation=(value)=>{
+    this.updateQueryState({
+      OperationPersonnel: value,
+    });
+  }
   changeEnt=(value,data)=>{ //企业事件
     this.updateQueryState({
       EntCode: value,
@@ -273,7 +279,7 @@ export default class EntTransmissionEfficiency extends Component {
   render() {
     const {
       exloading,
-      queryPar: {  BeginTime, EndTime,EntCode, RegionCode,AttentionCode,DataType,PollutantType },
+      queryPar: {  BeginTime, EndTime,EntCode, RegionCode,AttentionCode,DataType,PollutantType,OperationPersonnel },
       types,
       tableDatas
     } = this.props;
@@ -314,6 +320,20 @@ export default class EntTransmissionEfficiency extends Component {
                     {this.regchildren()}
                   </Select>
                 </Form.Item>
+                <Form.Item label='运维状态'>
+                <Select
+                  allowClear
+                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                  placeholder="运维状态"
+                  maxTagCount={2}
+                  onChange={this.changePperation}
+                  maxTagTextLength={5}
+                  maxTagPlaceholder="..."
+                  >
+                  <Option value="1">已设置运维人员</Option>
+                  <Option value="2">未设置运维人员</Option>
+                </Select>
+                </Form.Item> 
                 {types!=='ent'? <Form.Item>
                 <Button type="primary" onClick={this.queryClick}>
                     查询

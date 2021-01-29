@@ -250,7 +250,6 @@ class index extends PureComponent {
                             }
                         }}
                         onChange={(value) => {
-debugger
                             //获取监测点
                             this.props.dispatch({
                                 type: pageUrl.GetPointByEntCode,
@@ -301,7 +300,7 @@ debugger
 
     loadData=(PageIndex, PageSize)=>{
         
-        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state;
         this.props.dispatch({
             type:pageUrl.GetStopList,
             payload:{
@@ -325,22 +324,22 @@ debugger
     }
     ShowSizeChange= (PageIndex, PageSize) => {
         const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
-
-        this.props.dispatch({
-            type:pageUrl.GetStopList,
-            payload:{
-                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                RegionCode: regionValue == undefined ?'':regionValue,
-                EntCode: entValue== undefined ?'':entValue,
-                DGIMN: pointValue== undefined ?'':pointValue,
-                Status: voucher== undefined ?'':voucher,
-                PageSize:PageSize,
-                PageIndex:PageIndex
-            }
-        })
+        this.loadData(PageIndex,PageSize);
+        // this.props.dispatch({
+        //     type:pageUrl.GetStopList,
+        //     payload:{
+        //         BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        //         BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        //         EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        //         EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        //         RegionCode: regionValue == undefined ?'':regionValue,
+        //         EntCode: entValue== undefined ?'':entValue,
+        //         DGIMN: pointValue== undefined ?'':pointValue,
+        //         Status: voucher== undefined ?'':voucher,
+        //         PageSize:PageSize,
+        //         PageIndex:PageIndex
+        //     }
+        // })
     }
 
     lookChange=(fileList)=>{
@@ -416,7 +415,7 @@ debugger
                 key: 'beginTime',
             },
             {
-                title: "停运结束时间",
+                title: "停运截止时间",
                 width: 100,
                 align: 'center',
                 fixed: fixed,

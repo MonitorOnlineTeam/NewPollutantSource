@@ -51,7 +51,8 @@ class index extends PureComponent {
             EntList: [],
             PointList: [],
             regionCode:'',
-            hasCode:''
+            hasCode:'',
+            operationpersonnel:'',
         };
     }
 
@@ -94,11 +95,13 @@ class index extends PureComponent {
                 RegionCode: this.state.regionValue == undefined ? '' : this.state.regionValue,
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
+                operationpersonnel:this.state.operationpersonnel,
             }
         })
     }
     // 导出
     EntexportReport = () => {
+        debugger
         const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
@@ -107,12 +110,14 @@ class index extends PureComponent {
                 HasData: this.state.hasCode,
                 EntCode: '',
                 EntType: 1,
-                PollutantType:outletValue == undefined ?'':outletValue
+                PollutantType:outletValue == undefined ?'':outletValue,
+                operationpersonnel:this.state.operationpersonnel,
             }
         })
     }
     // 导出
     PointexportReport = () => {
+        debugger
         const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
@@ -121,7 +126,8 @@ class index extends PureComponent {
                 HasData: this.state.hasCode,
                 EntCode: '1',
                 EntType: 1,
-                PollutantType:outletValue == undefined ?'':outletValue
+                PollutantType:outletValue == undefined ?'':outletValue,
+                operationpersonnel:this.state.operationpersonnel,
             }
         })
     }
@@ -129,14 +135,14 @@ class index extends PureComponent {
 
     // 获取图表及表格数据
     getChartAndTableData = () => {
-
-
+     debugger
         this.props.dispatch({
             type: pageUrl.GetEntSummary,
             payload: {
                 RegionCode: this.state.regionValue == undefined ? '' : this.state.regionValue,
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
+                operationpersonnel: this.state.operationpersonnel,
                 //PageSize: 25,
                 //PageIndex: 1
             }
@@ -232,6 +238,21 @@ class index extends PureComponent {
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                 </Select>
+                <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                        this.setState({
+                            operationpersonnel: value,
+                        })
+                    }}>
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
             </>
@@ -248,14 +269,16 @@ class index extends PureComponent {
                 HasData: hasData,
                 EntCode: '',
                 EntType: 1,
-                PollutantType:this.state.outletValue
+                PollutantType:this.state.outletValue,
+                operationpersonnel: this.state.operationpersonnel,
             }
         }).then(() => {
             this.setState({
                 EntList: this.props.EntOrPointDetail,
                 visible: true,
                 regionCode:regionCode,
-                hasCode:hasData
+                hasCode:hasData,
+                operationpersonnel: this.state.operationpersonnel,
             })
         })
     }
@@ -270,18 +293,21 @@ class index extends PureComponent {
                 HasData: hasData,
                 EntCode: '1',
                 EntType: 1,
-                PollutantType:this.state.outletValue
+                PollutantType:this.state.outletValue,
+                operationpersonnel: this.state.operationpersonnel,
             }
         }).then(() => {
             this.setState({
                 PointList: this.props.EntOrPointDetail,
                 visibleMoni: true,
                 regionCode:regionCode,
-                hasCode:hasData
+                hasCode:hasData,
+                operationpersonnel: this.state.operationpersonnel,
             })
         })
     }
     onChange = (PageIndex, PageSize) => {
+        debugger
         this.props.dispatch({
             type: pageUrl.GetEntSummary,
             payload: {
@@ -289,7 +315,8 @@ class index extends PureComponent {
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
                 PageSize: PageSize,
-                PageIndex: PageIndex
+                PageIndex: PageIndex,
+                operationpersonnel: this.state.operationpersonnel,
             }
         })
     }

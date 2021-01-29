@@ -54,6 +54,7 @@ class index extends PureComponent {
     secondQueryCondition: {},
     queryCondition: {},
     exceptionTime: this.props.time || this.props.exceptionTime,
+    operationpersonnel:'',
   }
   _SELF_ = {
     formLayout: {
@@ -269,13 +270,14 @@ class index extends PureComponent {
     this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
 
-  onTableClick = (RegionCode, ExceptionType, ResponseStatus) => {
+  onTableClick = (RegionCode, ExceptionType, ResponseStatus,operationpersonnel) => {
     this.setState({
       secondQueryCondition: {
         ...this.state.queryCondition,
         RegionCode: RegionCode,
         ExceptionType: ExceptionType,
-        ResponseStatus: ResponseStatus
+        ResponseStatus: ResponseStatus,
+        OperationPersonnel:this.state.operationpersonnel
       },
       visible: true
     }, () => {
@@ -323,6 +325,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
     this.setState({
@@ -333,6 +336,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
   }
@@ -357,6 +361,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
+        OperationPersonnel:this.state.operationpersonnel
       }
     })
   }
@@ -499,7 +504,26 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
-
+              <Form.Item label="运维状态">
+                {
+                  <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    value={this.state.operationpersonnel?this.state.operationpersonnel:undefined}
+                    onChange={(value) => {
+                      this.setState({
+                          operationpersonnel: value,
+                      })
+                  }}>
+                    <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                  </Select>
+                }
+              </Form.Item>
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
                   查询

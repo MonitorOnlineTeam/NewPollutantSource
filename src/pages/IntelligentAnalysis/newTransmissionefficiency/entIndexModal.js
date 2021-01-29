@@ -56,6 +56,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   // pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
+  operationpersonnel:newtransmissionefficiency.operationpersonnel,
 }))
 @Form.create()
 export default class EntIndexModal extends Component {
@@ -68,6 +69,7 @@ export default class EntIndexModal extends Component {
       visible: false,
       eName: '',
       regions: '',
+      operationpersonnel:'',
       effectiveVisible: false,
       effectiveLoading: false,
       TTVisible:false,
@@ -182,6 +184,12 @@ export default class EntIndexModal extends Component {
       RegionCode: value,
     });
   };
+  
+  changeOperation = value => {
+    this.updateState({
+      operationpersonnel: value,
+    });
+  };
 
   //创建并获取模板   导出
   template = () => {
@@ -247,7 +255,7 @@ export default class EntIndexModal extends Component {
   showModal=()=>{
     
     const { eName } = this.state;
-    const { regionList, exRegionloading, RegionCode } = this.props;
+    const { regionList, exRegionloading, RegionCode,operationpersonnel } = this.props;
     const columns = [
       {
         title: <span style={{ fontWeight: 'bold' }}>行政区</span>,
@@ -259,7 +267,8 @@ export default class EntIndexModal extends Component {
           return <a onClick={()=>{
             this.setState({
               showDetails: true,
-              RegionCode: RegionCode
+              RegionCode: RegionCode,
+              OperationPersonnel:operationpersonnel
             })
           }}>
             {text}
@@ -441,6 +450,21 @@ export default class EntIndexModal extends Component {
                     <Option value="1">国家考核</Option>
                     <Option value="2">兵团考核</Option>
                   </Select>
+                </Form.Item>
+                <Form.Item>
+                <Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10}}
+                    placeholder="运维状态"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    value={this.props.operationpersonnel ? this.props.operationpersonnel : undefined}
+                    onChange={this.changeOperation}
+                    >
+                     <Option value="1">已设置运维人员</Option>
+                    <Option value="2">未设置运维人员</Option>
+                </Select>
                 </Form.Item>
                 <Form.Item>
                   <Select

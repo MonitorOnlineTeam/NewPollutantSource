@@ -18,7 +18,6 @@ import {
   TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
-import EnterprisePointCascadeMultiSelect from '../EnterprisePointCascadeMultiSelect'
 import Setting from '../../../config/defaultSettings'
 import {
   ManIcon,
@@ -157,14 +156,14 @@ class UserTree extends Component {
 
   /** 文本框搜索 */
   onChangeSearch=value => {
-    const { dispatch } = this.props;
+    const { dispatch,RoleID } = this.props;
     this.setState({
       UserName: value,
     }, () => {
       dispatch({
         type: 'usertree/GetUserList',
         payload: {
-          RolesID: this.state.Roles,
+          RolesID: this.state.Roles ? this.state.Roles : (RoleID || null),
           UserGroupID: this.state.Depart,
           UserName: this.state.UserName,
           callback: model => {
@@ -362,7 +361,7 @@ class UserTree extends Component {
             marginTop: 64,
           }}
         >
-         <TreeSelect
+         {/* <TreeSelect
           // showSearch
           style={{ width: 300 }}
           // value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
@@ -388,8 +387,8 @@ class UserTree extends Component {
           treeData={this.props.RolesTreeData}
           style={{ width: '100%' }}
       >
-      </TreeSelect>
-      </div>
+      </TreeSelect> */}
+      {/* </div> */}
           <Search
             placeholder="请输入关键字查询"
             onSearch={this.onChangeSearch}

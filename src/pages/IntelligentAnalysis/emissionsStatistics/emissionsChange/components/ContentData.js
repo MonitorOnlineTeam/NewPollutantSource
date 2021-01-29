@@ -461,8 +461,12 @@ export default class EntTransmissionEfficiency extends Component {
           containLabel: true
       },
       toolbox: {
+          right:20,
           feature: {
-              saveAsImage: {}
+              saveAsImage: {
+                show:true,
+                //  emphasis:{iconStyle:{textPadding: [0, 0, 0, 0]}} 
+                }
           }
       },
       xAxis: {
@@ -477,7 +481,7 @@ export default class EntTransmissionEfficiency extends Component {
         }
     ],
       series: pollSelect
-  };
+    };
    }
 
    onRef1 = (ref) => {

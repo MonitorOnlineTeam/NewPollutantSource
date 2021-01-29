@@ -50,8 +50,8 @@ class index extends PureComponent {
             regionValue: '',
             attentionValue: '',
             outletValue: '',
-            entValue:'',
-            pointValue:''
+            entValue:undefined,
+            pointValue:undefined
         };
     }
 
@@ -78,6 +78,12 @@ class index extends PureComponent {
             type: pageUrl.GetEntByRegionAndAtt,
             payload: { RegionCode: '' ,Attention:'',PollutantTypeCode:'1'},
         });
+        this.props.dispatch({
+            type:'wasteWaterReportModel/updateState',
+            payload:{
+                AllTypeDataListWaterList:[]
+            }
+        })
     };
 
 
@@ -222,7 +228,8 @@ class index extends PureComponent {
                         });
                         this.setState({
                             regionValue: value,
-                            entValue:''
+                            entValue:undefined,
+                            pointValue:undefined
                         })
                     }}>
                     {this.children()}
@@ -246,7 +253,8 @@ class index extends PureComponent {
                         });
                         this.setState({
                             attentionValue: value,
-                            entValue:''
+                            entValue:undefined,
+                            pointValue:undefined
                         })
                     }}>
                     {this.attention()}
@@ -259,7 +267,7 @@ class index extends PureComponent {
                     maxTagCount={2}
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
-                    // value={this.state.entValue}
+                    value={this.state.entValue}
                     optionFilterProp="children"
                     filterOption={(input, option) => {
                         if (option && option.props && option.props.title) {
@@ -279,7 +287,7 @@ class index extends PureComponent {
                         });    
                         this.setState({
                             entValue: value,
-                            // pointValue:''
+                            pointValue:undefined
                         })
                     }}>
                     {this.entList()}
@@ -288,10 +296,10 @@ class index extends PureComponent {
                     <label>监测点:</label><Select
                         allowClear
                         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                        value={this.state.pointValue}
                         placeholder="监测点列表"
                         maxTagCount={2}
                         maxTagTextLength={5}
-                        // value={this.state.pointValue}
                         maxTagPlaceholder="..."
                         onChange={(value) => {
                             this.setState({
