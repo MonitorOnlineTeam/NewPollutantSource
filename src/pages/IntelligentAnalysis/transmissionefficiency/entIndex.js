@@ -4,6 +4,9 @@
  * 创建时间：2019.08.12
  */
 import React, { Component } from 'react';
+import { QuestionCircleTwoTone, WarningOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Card,
     Table,
@@ -12,12 +15,10 @@ import {
     Row,
     Popover,
     Col,
-    Icon,
     Badge,
     Modal,
     Input,
     Button,
-    Form,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -121,7 +122,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <p><Badge status="warning" text="当有效传输率高于90%时有效传输率达标并标记为绿色，否则标记为红色" /></p>
             </Card>
         ),
-        filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />,
+        filterIcon: filtered => <QuestionCircleTwoTone />,
         // onFilter: (value, record) =>
         //   record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
         // onFilterDropdownVisibleChange: visible => {
@@ -175,7 +176,7 @@ export default class EntTransmissionEfficiency extends Component {
                     if (record.AvgTransmissionRate <= text) {
                         return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
+                    const content = (<span><WarningOutlined style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);
@@ -195,7 +196,7 @@ export default class EntTransmissionEfficiency extends Component {
                     if (record.AvgEffectiveRate <= text) {
                         return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
+                    const content = (<span><WarningOutlined style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);

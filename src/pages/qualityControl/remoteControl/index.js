@@ -7,7 +7,21 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Button, Input, Select, Alert, InputNumber, Tabs, Form, Row, Col, Divider, Result } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Button,
+  Input,
+  Select,
+  Alert,
+  InputNumber,
+  Tabs,
+  Row,
+  Col,
+  Divider,
+  Result,
+} from 'antd';
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTree'
 import NavigationTreeQCA from '@/components/NavigationTreeQCA'

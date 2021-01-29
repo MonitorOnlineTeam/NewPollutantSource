@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd';
+import { Card, Select, Timeline, Tag, Pagination, Empty, Modal, Upload, message } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';

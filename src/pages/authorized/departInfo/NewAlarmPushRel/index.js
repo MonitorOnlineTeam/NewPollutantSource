@@ -4,24 +4,30 @@
  * 创建时间：2020.12.30
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-    Form,
-    Input,
-    Button,
-    Icon,
-    Card,
-    Spin,
-    Row,
-    Col,
-    Table,
-    Modal,
-    Checkbox,
-    TreeSelect,
-    message,
-    Divider,
-    Popconfirm,
-    Tooltip,
-    Transfer, Switch, Tag, Select, Pagination, Empty,Radio
+  Input,
+  Button,
+  Card,
+  Spin,
+  Row,
+  Col,
+  Table,
+  Modal,
+  Checkbox,
+  TreeSelect,
+  message,
+  Divider,
+  Popconfirm,
+  Tooltip,
+  Transfer,
+  Switch,
+  Tag,
+  Select,
+  Pagination,
+  Empty,
+  Radio,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';

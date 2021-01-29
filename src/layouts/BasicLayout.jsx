@@ -13,7 +13,8 @@ import Item from 'antd/lib/list/Item';
 import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
-import { Tabs, Dropdown, Menu, Icon, message } from 'antd'
+import { DownOutlined } from '@ant-design/icons';
+import { Tabs, Dropdown, Menu, message } from 'antd';
 import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
@@ -61,7 +62,7 @@ class BasicLayout extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize)
-    const { dispatch } = this.props;
+    const { dispatch, configInfo } = this.props;
     dispatch({
       type: 'global/getSystemConfigInfo',
       payload: {},
@@ -73,9 +74,15 @@ class BasicLayout extends Component {
     dispatch({
       type: "global/updateState",
       payload: {
-        clientHeight: document.body.clientHeight
+        clientHeight: document  .body.clientHeight
       },
     })
+
+    if (!this.props.sysPollutantTypeList.length && configInfo.IsShowSysPage === '1') {
+      dispatch({
+        type: 'global/getSysPollutantTypeList',
+      })
+    }
 
     const contentElement = document.querySelector(".ant-pro-basicLayout-content");
 
@@ -279,7 +286,7 @@ class BasicLayout extends Component {
     const operations = (
       <Dropdown overlay={menu} >
         <a className="ant-dropdown-link" href="#">
-          更多<Icon type="down" />
+          更多<DownOutlined />
         </a>
       </Dropdown>
     );
@@ -381,4 +388,5 @@ export default connect(({ global, settings, user, loading }) => ({
   configInfo: global.configInfo,
   unfoldMenuList: user.unfoldMenuList,
   loading: loading.effects["global/getSystemConfigInfo"],
+  sysPollutantTypeList: global.sysPollutantTypeList,
 }))(BasicLayout);

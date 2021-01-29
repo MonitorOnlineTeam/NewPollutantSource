@@ -1,4 +1,5 @@
-import { Avatar, Icon, Menu, Spin, Modal } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Menu, Spin, Modal } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
 import { connect } from 'dva';
@@ -69,11 +70,11 @@ class AvatarDropdown extends React.Component {
         </Menu.Item>
         <Menu.Divider /> */}
         <Menu.Item key="center">
-          <Icon type="user" />
+          <UserOutlined />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
         <Menu.Item key="logout">
-          <Icon type="logout" />
+          <LogoutOutlined />
           <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
         </Menu.Item>
       </Menu>

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import {
- Card, Form, Col, Row, Select, Input, Checkbox, Button, message, Icon, Modal,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, Button, message, Modal } from 'antd';
 import { connect } from 'dva'
 import moment from 'moment'
 import { Link, router } from 'umi'

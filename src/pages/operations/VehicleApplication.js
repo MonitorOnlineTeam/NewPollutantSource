@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
+import { CarOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Select,
-  Form,
   Row,
   Input,
   Button,
   Popconfirm,
-  DatePicker, Icon, Tag, Col, Empty, Modal, Upload, message, Spin,
+  DatePicker,
+  Tag,
+  Col,
+  Empty,
+  Modal,
+  Upload,
+  message,
+  Spin,
   Tooltip,
-  Divider
+  Divider,
 } from 'antd';
 import Cookie from 'js-cookie';
 import { connect } from 'dva';
@@ -113,7 +122,7 @@ class VehicleApplication extends Component {
                       okText="确认撤销"
                       cancelText="取消"
                     >
-                      <a><Icon type="reload" /></a>
+                      <a><ReloadOutlined /></a>
                     </Popconfirm>
                   </Tooltip>
                 </>
@@ -131,7 +140,7 @@ class VehicleApplication extends Component {
                           ApplicantID: key
                         }
                       })
-                    }}><Icon type="car" /></a>
+                    }}><CarOutlined /></a>
                   </Tooltip>
                 </>
               </>;

@@ -4,6 +4,9 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,15 +15,13 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Checkbox,
   Select,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -530,7 +531,7 @@ export default class OverVerifyLstModal extends Component {
                   </Button>
                   <Button
                     style={{ margin: '0 5px' }}
-                    icon="export"
+                    icon={<ExportOutlined />}
                     onClick={this.template}
                     loading={exloading}
                   >

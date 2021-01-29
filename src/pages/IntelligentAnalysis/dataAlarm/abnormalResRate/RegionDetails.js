@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
-import { Card, Row, Button, Divider, Radio, Modal, Icon, Select } from 'antd';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Card, Row, Button, Divider, Radio, Modal, Select } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi'
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
@@ -192,7 +193,7 @@ class RegionDetails extends PureComponent {
             <Button style={{ margin: '0 5px' }} type="primary" loading={loading} onClick={this.getSecondTableDataSource}>
               查询
             </Button>
-            <Button style={{ marginRight: '5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
+            <Button style={{ marginRight: '5px' }} icon={<ExportOutlined />} loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
             <Button onClick={() => {
@@ -200,7 +201,7 @@ class RegionDetails extends PureComponent {
                 router.push("/Intelligentanalysis/dataAlarm/abnormal")
             }}
             >
-              <Icon type="rollback" />
+              <RollbackOutlined />
               返回
             </Button>
           </Row>

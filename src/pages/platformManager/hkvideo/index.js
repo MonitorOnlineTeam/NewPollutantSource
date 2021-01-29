@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import HkShowVideo from '@/components/hkvideo/HkShowVideo'
-import {
-  Icon,
-  Button,
-} from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 /**
  * 视频预览
  * xpy 2019.07.26
@@ -29,7 +27,7 @@ class Index extends Component {
                   type="link"
                   size="small"
                 >
-                  <Icon type="rollback" />
+                  <RollbackOutlined />
                   返回上级
                 </Button></span>}>
                  <HkShowVideo DGIMN={this.props.match.params.pointcode} initLoadData />

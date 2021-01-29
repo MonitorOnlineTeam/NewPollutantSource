@@ -4,6 +4,9 @@
  * 创建时间：
  */
 import React, { Component } from 'react';
+import { WarningOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Button,
   Modal,
   message,
-  Form,
 } from 'antd';
 import moment from 'moment';
 import styles from '../style.less';
@@ -140,7 +141,7 @@ export default class enterpriseEfficiency extends Component {
           }
           const content = (
             <span>
-              <Icon type="warning" style={{ color: '#EEC900' }} />
+              <WarningOutlined style={{ color: '#EEC900' }} />
               平均值{record.AvgTransmissionNumber}
             </span>
           );

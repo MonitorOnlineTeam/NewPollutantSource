@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FileImageOutlined, PauseCircleOutlined, PlayCircleOutlined, RedoOutlined } from '@ant-design/icons';
 import {
   Row,
   Col,
@@ -389,7 +390,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="play-circle"
+                          icon={<PlayCircleOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 1)}
                         />
@@ -407,7 +408,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="danger"
                           shape="circle"
-                          icon="pause-circle"
+                          icon={<PauseCircleOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 2)}
                         />
@@ -424,7 +425,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="redo"
+                          icon={<RedoOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 1)}
                         />
@@ -438,7 +439,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="dashed"
                           shape="circle"
-                          icon="file-image"
+                          icon={<FileImageOutlined />}
                           size="Small"
                           onClick={this.btnClick.bind(this, 3)}
                         />
@@ -487,7 +488,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="play-circle"
+                          icon={<PlayCircleOutlined />}
                           size="Small"
                           onClick={this.backplay.bind(this)}
                         />
@@ -505,7 +506,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="danger"
                           shape="circle"
-                          icon="pause-circle"
+                          icon={<PauseCircleOutlined />}
                           size="Small"
                           onClick={this.backbtnClick.bind(this, 2)}
                         />
@@ -522,7 +523,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="primary"
                           shape="circle"
-                          icon="redo"
+                          icon={<RedoOutlined />}
                           size="Small"
                           onClick={this.backplay.bind(this)}
                         />
@@ -536,7 +537,7 @@ class YsyShowVideo extends Component {
                         <Button
                           type="dashed"
                           shape="circle"
-                          icon="file-image"
+                          icon={<FileImageOutlined />}
                           size="Small"
                           onClick={this.backbtnClick.bind(this, 3)}
                         />

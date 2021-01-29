@@ -1,5 +1,5 @@
-/* eslint no-useless-escape:0 import/prefer-default-export:0 */
-import { Icon, Badge, Popover, message } from 'antd';
+import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { Badge, Popover, message } from 'antd';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -75,7 +75,7 @@ export function formatPollutantPopover(value, additional) {
       const content = (
         <div>
           <div style={{ marginBottom: 10 }}>
-            <Icon style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} type="warning" />
+            <WarningOutlined style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} />
             <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据超标</span>
           </div>
           <li style={{ listStyle: 'none', marginBottom: 10 }}>
@@ -99,7 +99,7 @@ export function formatPollutantPopover(value, additional) {
       const content = (
         <div>
           <div style={{ marginBottom: 10 }}>
-            <Icon style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} type="close-circle" />
+            <CloseCircleOutlined style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} />
             <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据异常</span>
           </div>
           <li style={{ listStyle: 'none', marginBottom: 10 }}>

@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Modal, DatePicker, Form, Row, Col, Select, Input, Upload, Icon, message } from "antd";
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, DatePicker, Row, Col, Select, Input, Upload, message } from "antd";
 import { connect } from "dva"
 import cuid from 'cuid';
 import moment from 'moment'
@@ -258,7 +261,7 @@ class AddExceptionModal extends PureComponent {
                   <>
                     <Upload fileList={this.state.fileList} {...props}>
                       <div>
-                        <Icon type="plus" />
+                        <PlusOutlined />
                         <div className="ant-upload-text">文件上传</div>
                       </div>
                     </Upload>

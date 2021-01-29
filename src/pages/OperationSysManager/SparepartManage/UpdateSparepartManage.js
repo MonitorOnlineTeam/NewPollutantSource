@@ -1,5 +1,20 @@
 import React, { Component } from 'react';
-import { Input, Select, InputNumber, Form, Button, Upload, DatePicker, Row, Col, Radio, message, Popover, Icon } from 'antd';
+import { QuestionCircleTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Input,
+    Select,
+    InputNumber,
+    Button,
+    Upload,
+    DatePicker,
+    Row,
+    Col,
+    Radio,
+    message,
+    Popover,
+} from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker'
 import moment from 'moment';
@@ -86,7 +101,7 @@ export default class UpdateSparepartManage extends Component {
                                 <Popover
                                     content={DepartInfo}
                                 >
-                                    <Icon style={{ width: '10%' }} type="question-circle" theme="twoTone" />
+                                    <QuestionCircleTwoTone style={{ width: '10%' }} />
                                 </Popover>
                             </FormItem>
                         </Col>

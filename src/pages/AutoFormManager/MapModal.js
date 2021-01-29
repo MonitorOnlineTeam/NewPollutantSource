@@ -1,14 +1,9 @@
 import React, {
     Component
 } from 'react';
-import {
-    Input,
-    Card,
-    Row,
-    Col,
-    Form,
-    Modal
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Card, Row, Col, Modal } from 'antd';
 import { object } from 'prop-types';
 import MapContent from './MapContent';
 

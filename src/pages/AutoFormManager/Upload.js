@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
 
 
-import { Upload, Button, Icon } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+
+
+import { Upload, Button } from 'antd';
 
 class MyUpload extends React.Component {
   state = {
@@ -44,7 +47,7 @@ class MyUpload extends React.Component {
     return (
       <Upload {...props} fileList={this.state.fileList}>
         <Button>
-          <Icon type="upload" /> Upload
+          <UploadOutlined /> Upload
         </Button>
       </Upload>
     );

@@ -4,20 +4,8 @@
  * 创建时间：2019.10.12
  */
 import React, { Component } from 'react';
-import {
-    Card,
-    Table,
-
-    Progress,
-    Row,
-    Popover,
-    Col,
-    Icon,
-    Badge,
-    Input,
-    Button,
-    Statistic
-} from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
+import { Card, Table, Progress, Row, Popover, Col, Badge, Input, Button, Statistic } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
 import { connect } from 'dva';
@@ -498,7 +486,7 @@ export default class effluentfeeIndex extends Component {
                     type="link"
                     size="small"
                 >
-                    <Icon type="rollback" />
+                    <RollbackOutlined />
                     返回上级
 </Button>
             </span>

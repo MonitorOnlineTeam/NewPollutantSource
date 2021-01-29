@@ -8,6 +8,8 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Button,
     Input,
@@ -15,10 +17,18 @@ import {
     Row,
     Col,
     Table,
-    Form,
     Spin,
     Tooltip,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Empty, Switch,
+    Select,
+    Modal,
+    Tag,
+    Divider,
+    Dropdown,
+    Menu,
+    Popconfirm,
+    message,
+    Empty,
+    Switch,
 } from 'antd';
 import { PointIcon } from '@/utils/icon'
 import { routerRedux } from 'dva/router';

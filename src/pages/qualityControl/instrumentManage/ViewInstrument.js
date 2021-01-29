@@ -7,7 +7,21 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Form, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Row,
+  Col,
+  Input,
+  Select,
+  Button,
+  Table,
+  Cascader,
+  InputNumber,
+  Divider,
+  message,
+} from 'antd';
 import { connect } from 'dva';
 import PageLoading from '@/components/PageLoading'
 import moment from "moment"

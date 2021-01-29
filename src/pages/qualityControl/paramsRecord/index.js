@@ -8,7 +8,9 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import NavigationTreeQCA from '@/components/NavigationTreeQCA'
-import { Form, Card, DatePicker, Row, Col, Select, Button, Radio, Popover, Icon } from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, DatePicker, Row, Col, Select, Button, Radio, Popover } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
 import { LegendIcon } from '@/utils/icon';
