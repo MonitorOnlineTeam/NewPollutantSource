@@ -119,8 +119,6 @@ async function requestMy(url, options) {
 }
 
 export async function get(url, params, flag) {
-  // if (flag !== 0)
-  //   url += '?authorCode=48f3889c-af8d-401f-ada2-c383031af92d';
   if (params) {
     const paramsArray = [];
     Object.keys(params).forEach(key => paramsArray.push(`${key}=${params[key]}`));
@@ -133,8 +131,8 @@ export async function get(url, params, flag) {
       }
     } else {
       url += `&${paramsArray.join('&')}`;
-    }
-    //参数代码开关
+    }   
+    //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
     if (true) {
       const urlbehinds = url.split('?').map(item => ({ item }));
       if (urlbehinds.length > 1) {
@@ -154,7 +152,7 @@ export async function get(url, params, flag) {
 
 export async function post(url, params) {
   let body = JSON.stringify(params);
-  //参数代码开关
+  //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
   if (true) {
     const body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
       iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
