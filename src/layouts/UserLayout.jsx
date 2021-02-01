@@ -24,7 +24,7 @@ const UserLayout = props => {
       Cookie.set(config.cookieName, null);
       Cookie.set('currentUser', null);
       dispatch({
-        type: 'login/getSystemLoginConfigInfo',
+        type: 'global/getSystemLoginConfigInfo',
         payload: {},
       });
       dispatch({
@@ -125,4 +125,4 @@ const UserLayout = props => {
   );
 };
 
-export default connect(({ settings, login }) => ({ ...settings, configInfo: login.configInfo, appFlag: login.appFlag }))(UserLayout);
+export default connect(({ settings, login, global }) => ({ ...settings, configInfo: global.configInfo, appFlag: login.appFlag }))(UserLayout);

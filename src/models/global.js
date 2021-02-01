@@ -10,6 +10,7 @@ import moment from 'moment';
 import { array } from 'prop-types';
 import Cookie from 'js-cookie';
 import config from '@/config';
+import { message } from 'antd';
 
 
 /**
@@ -26,7 +27,7 @@ export default Model.extend({
     notices: [],
     btnsAuthority: [],
     changePwdVisible: false,
-    configInfo: null,
+    configInfo: {},
     currentUserNoticeCnt: {
       notifyCount: 0,
       unreadCount: 0,
@@ -118,7 +119,7 @@ export default Model.extend({
         } catch (e) {
           console.log('WebSocketAddress获取失败');
         }
-        
+
         yield put({
           type: 'setConfigInfo',
           payload: {

@@ -40,7 +40,6 @@ class index extends PureComponent {
     const { sysPollutantTypeList, configInfo } = this.props;
     let currentUser = Cookie.get('currentUser');
     let userName = JSON.parse(currentUser).UserName;
-    console.log('userName=',userName)
     return (
       <div className={styles.middleContainer}>
         <header className={styles.header}>
