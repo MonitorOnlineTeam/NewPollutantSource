@@ -235,18 +235,22 @@ class DepartIndex extends Component {
                     width: '280px',
                     render: (text, record) =>
                         <span>
-                            <Tooltip title="编辑">
-                                <a onClick={() => {
-                                    console.log(record.UserGroup_ID)
-                                    this.props.dispatch({
-                                        type: 'departinfo/getdepartinfobyid',
-                                        payload: {
-                                            UserGroup_ID: record.UserGroup_ID,
-                                        },
-                                    })
-                                    this.showModalEdit()
-                                }}><EditOutlined style={{ fontSize: 16 }} /></a>
-                            </Tooltip>
+                            {
+                                record.disabled ?
+                                    <></> :
+                                    <Tooltip title="编辑">
+                                        <a onClick={() => {
+                                            console.log(record.UserGroup_ID)
+                                            this.props.dispatch({
+                                                type: 'departinfo/getdepartinfobyid',
+                                                payload: {
+                                                    UserGroup_ID: record.UserGroup_ID,
+                                                },
+                                            })
+                                            this.showModalEdit()
+                                        }}><EditOutlined style={{ fontSize: 16 }} /></a>
+                                    </Tooltip>
+                            }
                             <Divider type="vertical" />
                             <Tooltip title="删除">
                                 <Popconfirm
@@ -1067,7 +1071,7 @@ class DepartIndex extends Component {
                                                 // showAll
                                                 onChange={this.handleSizeChange}
                                             />
-                                            <TreeSelect  className={styles.placeHolderClass} {...tProps} />
+                                            <TreeSelect className={styles.placeHolderClass} {...tProps} />
                                         </Row>{
                                             (this.props.CheckPointLoading || this.props.getentandpointLoading) ? <Spin
                                                 style={{
