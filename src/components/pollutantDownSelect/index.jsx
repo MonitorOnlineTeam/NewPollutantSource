@@ -56,6 +56,12 @@ class Index extends Component {
        
 
       }
+
+      pollutantlist=()=>{
+        return  this.props.pollutantlist.map(item=>{
+          return item.PollutantCode;
+      })
+      }
     // 在componentDidUpdate中进行异步操作，驱动数据的变化
       componentDidUpdate(prevProps) {
         if(prevProps.dgimn !==  this.props.dgimn) {

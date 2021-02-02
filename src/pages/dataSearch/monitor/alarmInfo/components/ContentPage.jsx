@@ -113,7 +113,6 @@ class TableData extends React.Component {
     const code = [ ...new Set(record.PollutantCode.split(","))].join()
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
     const endTime = date;
-
     const check={
       "3101":`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
       '3102':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
@@ -149,11 +148,11 @@ class TableData extends React.Component {
         </Tooltip>
         <span style={{float:"left"}}>
           {record.AlarmType === "2" ? // 数据超标
-            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
+            <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
             record.AlarmType === "0" ? //数据异常
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> : 
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> : 
               record.AlarmType === "12" ? //备案不符
-                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
+                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
                  <></>
 
           }

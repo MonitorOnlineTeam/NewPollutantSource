@@ -35,6 +35,7 @@ import styles from './index.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
 import PollutantDownSelect from '@/components/PollutantDownSelect'
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 @connect(({ recordEchartTable, loading }) => ({
     exlist: recordEchartTable.exlist,
@@ -111,15 +112,15 @@ class Index extends Component {
          loadtype:''
     }
     this.setState({loadtype:location.query.loadtype?location.query.loadtype:''},()=>{
+
         this.setState({
             beginTime:  moment(new Date()).format('YYYY-MM-DD 00:00:00'),
             endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-            code:paraCodeList.split(),
+            code:paraCodeList=='All'? 'All': paraCodeList.split(),
             dataType:location.query.dataType? DATATYPE[location.query.dataType] : '',
             loadtype:location.query.loadtype?location.query.loadtype:''
         }, () => {
-         
-            initLoadData && this.getLoadData(this.props);
+            initLoadData &&  this.getLoadData(this.props,paraCodeList=='All'? this.selectPollAll :this.state.code );
         })
 
     })
@@ -132,7 +133,7 @@ class Index extends Component {
             beginTime: beginTime.format('YYYY-MM-DD HH:mm:ss'),
             endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
         }, () => {
-         initLoadData && this.getLoadData(this.props);
+         initLoadData && this.getLoadData(this.props,this.state.code);
         })
 
     }
@@ -143,41 +144,59 @@ class Index extends Component {
         const {  location } = this.props;
 
         if (this.props.DGIMN != nextProps.DGIMN) {
-            this.getLoadData(nextProps);
+            this.getLoadData(nextProps,this.state.code);
         }
-        if (location.query.startTime != nextProps.location.query.startTimeMN) {
+        if (location.query.startTime != nextProps.location.query.startTime) {
             this.initData();
         }
     }
-    getLoadData = nextProps => {
-
-        const beginTime =  moment(new Date()).add(-60, 'minutes');
-        const endTime = moment(new Date());
+    getLoadData = (nextProps,code) => {
         const { location } = this.props;
-            this.props.dispatch({
+
+             this.props.dispatch({
                 type: 'recordEchartTable/getexmodellist',
                 payload: {
                     beginTime: this.state.beginTime,
                     endTime:  this.state.endTime,
                     dataType: this.state.dataType,
                     DGIMN:[nextProps.DGIMN], 
-                    PollutantList: this.state.code
+                    PollutantList: code
                 },
             })
+           
+
     }
     onclick = {
         click: this.clickEchartsPie.bind(this),
     }
 
-    pollChange=()=>{
-
+    pollChange=(value)=>{
+        this.setState({code:value},()=>{
+            this.getLoadData(this.props,this.state.code)
+        })  
+    }
+    childSelectAll = ref =>{
+        if(ref.props.pollutantlist){
+          this.selectPollAll = ref.pollutantlist()
+          this.setState({code:ref.pollutantlist()})
+        }
     }
     getpollutantSelect = () => {
         const { DGIMN,location} = this.props;
          const {code } = this.state;
         // isdefaulltall={1} 
         if(location.query&&location.query.type==="alarm"){ //报警信息
-            return   code ? <PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />:null  ; 
+            if(code){
+              if(code=='All'){
+                  return <PollutantDownSelect style={{ width: 200, marginRight: 10 }}  isdefaulltall={1}   onRef={this.childSelectAll} onChange={this.pollChange} dgimn={DGIMN}  />
+              }else{
+                return <PollutantDownSelect style={{ width: 200, marginRight: 10 }} customcode={code}  onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />
+
+              }
+            }else {
+                return null;
+            }
+   
         }else{
             return   <PollutantDownSelect style={{ width: 200, marginRight: 10 }}  isdefaulltall={1}   onRef={this.childSelect} onChange={this.pollChange} dgimn={DGIMN}  />  ; 
         }
