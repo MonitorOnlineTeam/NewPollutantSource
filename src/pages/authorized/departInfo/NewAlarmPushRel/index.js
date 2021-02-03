@@ -283,7 +283,7 @@ class Index extends Component {
                 this.setState({
                     confirmLoading:false
                 },()=>{
-                    this.props.cancelAlarmModal();
+                    // this.props.cancelAlarmModal();
 
                 })
             }
@@ -318,7 +318,7 @@ class Index extends Component {
                                     <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {!alarmPushParLoading?  <>{alarmPushFlag?  <Checkbox.Group
-                                      defaultValue={["1","2","5","6","7","8"]}
+                                      defaultValue={["1","2","5","6","7","8","9"]}
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />
