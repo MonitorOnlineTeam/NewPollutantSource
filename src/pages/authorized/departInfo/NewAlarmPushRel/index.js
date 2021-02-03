@@ -109,7 +109,7 @@ class Index extends Component {
                       Type: type,
                       RegionCode: "",
                       ID:alarmPushData.key,
-                      AlarmType: flag? "1,2,5,6,7,8" : '1'
+                      AlarmType: flag? "1,2,5,6,7,8,9" : '1'
                   },
               },
             })

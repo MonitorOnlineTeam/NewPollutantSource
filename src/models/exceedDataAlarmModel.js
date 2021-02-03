@@ -119,7 +119,6 @@ export default Model.extend({
           VerifyStatus:payload.VerifyStatus,
           DGIMN:payload.DGIMN
       }
-      console.log(body)
       const result = yield call(GetAlarmVerifyDetail, body, null)
       if (result.IsSuccess) {
           yield update({
