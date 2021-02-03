@@ -6,7 +6,7 @@
  * @Description: 完全抽取法cems日常巡检记录表
  */
 import React, { Component } from 'react';
-import { Button, Icon, Spin, Card } from 'antd';
+import { Button, Spin, Card } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./CompleteExtractionRecordContent.less";

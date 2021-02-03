@@ -6,18 +6,10 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import {
-    Tooltip,
-    Card,
-    Spin,
-    Divider,
-    Modal,
-    Form,
-    message,
-    Popconfirm,
-    Icon,
-    Button,
-} from 'antd';
+import { PlayCircleTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Tooltip, Card, Spin, Divider, Modal, message, Popconfirm, Button } from 'antd';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './style.less';
@@ -213,7 +205,7 @@ class YSYManagerIndex extends Component {
                                             );
                                         }}
                                     >
-                                        <Icon type="play-circle" theme="twoTone" />
+                                        <PlayCircleTwoTone />
                                     </a>
                                 </Tooltip>
                             </Fragment>

@@ -7,9 +7,11 @@
  */
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Table,
-  Form,
   Row,
   Col,
   Input,
@@ -18,7 +20,6 @@ import {
   Button,
   DatePicker,
   message,
-  Icon,
   Spin,
   Cascader,
 } from 'antd';
@@ -654,7 +655,7 @@ class SmokeReportPage extends PureComponent {
                   )}
                 </FormItem>
                 <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
+                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
                 <span style={{ fontSize: 14, color: 'red' }}>{this.props.msg}</span>
               </div>
             </Row>

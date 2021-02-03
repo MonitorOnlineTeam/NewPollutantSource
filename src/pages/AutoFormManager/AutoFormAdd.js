@@ -8,15 +8,10 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
 
-import {
-  Form,
-  Input,
-  Button,
-  Card,
-  Spin,
-  Icon,
-  Upload
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import { Input, Button, Card, Spin, Upload } from 'antd';
 import moment from "moment";
 import cuid from 'cuid';
 import { connect } from 'dva';

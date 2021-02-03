@@ -6,6 +6,9 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -14,17 +17,15 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -341,7 +342,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { entVisible } = this.state;
     return (
       // <BreadcrumbWrapper title={`故障率${types==='ent'?'(企业)':'(空气站)'}`}>
-      <BreadcrumbWrapper title={`故障率`}>
+      <BreadcrumbWrapper>
     <Card
           bordered={false}
           title={
@@ -372,7 +373,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Button>
                     <Button
                     style={{ margin: '0 5px' }}
-                    icon="export"
+                    icon={<ExportOutlined />}
                     onClick={this.template}
                     loading={exloading}
                   >

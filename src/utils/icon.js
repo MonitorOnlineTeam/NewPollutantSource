@@ -1,4 +1,4 @@
-import { Icon } from 'antd';
+import { createFromIconfontCN, DeleteOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons';
 import config from '@/config'
 
 // const scriptUrl = '//at.alicdn.com/t/font_1298443_apk5nbu88vo.js';
@@ -16,14 +16,14 @@ const mapStyle = {
   background: "#fff",
   boxShadow: "0px 0px 3px 2px #fff"
 }
-export const EditIcon = () => <Icon type="edit" style={{ ...style }} />
+export const EditIcon = () => <EditOutlined style={{ ...style }} />
 
-export const DetailIcon = () => <Icon type="profile" style={{ ...style }} />
+export const DetailIcon = () => <ProfileOutlined style={{ ...style }} />
 
-export const DelIcon = () => <Icon type="delete" style={{ ...style }} />
+export const DelIcon = () => <DeleteOutlined style={{ ...style }} />
 
 // Icon 公共
-export const IconConfig = Icon.createFromIconfontCN({
+export const IconConfig = createFromIconfontCN({
   scriptUrl,
 })
 

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
+
 import {
-  Row,
-  Col,
-  Button,
-  Card,
-  Divider,
-  Spin,
-  Tabs,
-  DatePicker,
-  message,
-  Icon,
-  Empty,
-} from 'antd';
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  FastForwardOutlined,
+  PauseCircleOutlined,
+  PlayCircleOutlined,
+  StepForwardOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
+
+import { Row, Col, Button, Card, Divider, Spin, Tabs, DatePicker, message, Empty } from 'antd';
 import { Top, Down, Left, Right, Adaption, Lefttop, Righttop, Leftdown, Rightdown } from '@/utils/icon'
 import { connect } from 'dva';
 import moment from 'moment';
@@ -382,7 +382,7 @@ class GBSVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-in"
+                                    icon={<ZoomInOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.PTZChange.bind(this, 'zoomin')}
@@ -392,7 +392,7 @@ class GBSVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-out"
+                                    icon={<ZoomOutOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.PTZChange.bind(this, 'zoomout')}
@@ -407,7 +407,7 @@ class GBSVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-in"
+                                    icon={<ZoomInOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.FLChange.bind(this, 'focusnear')}
@@ -417,7 +417,7 @@ class GBSVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-out"
+                                    icon={<ZoomOutOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.FLChange.bind(this, 'focusfar')}
@@ -432,7 +432,7 @@ class GBSVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-in"
+                                    icon={<ZoomInOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.FLChange.bind(this, 'irisin')}
@@ -442,7 +442,7 @@ class GBSVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-out"
+                                    icon={<ZoomOutOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.FLChange.bind(this, 'irisout')}
@@ -512,10 +512,10 @@ class GBSVideo extends Component {
                       <Col span={24}>
                         <Row style={{ marginTop: '10px' }}>
                           <Col className={styles.gutterleft} span={12}>
-                            <Button icon="play-circle" onClick={this.playBack.bind(this)}>开始回放</Button>
+                            <Button icon={<PlayCircleOutlined />} onClick={this.playBack.bind(this)}>开始回放</Button>
                           </Col>
                           <Col className={styles.gutterleft} span={12}>
-                            <Button icon="close-circle" onClick={this.btnBackClick.bind(this, 1)}>停止回放</Button>
+                            <Button icon={<CloseCircleOutlined />} onClick={this.btnBackClick.bind(this, 1)}>停止回放</Button>
                           </Col>
                         </Row>
                       </Col>
@@ -524,12 +524,12 @@ class GBSVideo extends Component {
                     <Row>
                       <Col span={24}>
                         <Row>
-                          <Col className={styles.gutterleft} span={12}><Button icon="pause-circle" onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
-                          <Col className={styles.gutterleft} span={12}><Button icon="check-circle" onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
+                          <Col className={styles.gutterleft} span={12}><Button icon={<PauseCircleOutlined />} onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
+                          <Col className={styles.gutterleft} span={12}><Button icon={<CheckCircleOutlined />} onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
                         </Row>
                         <Row style={{ marginTop: '30px' }}>
-                          <Col className={styles.gutterleft} span={12}><Button icon="step-forward" onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
-                          <Col className={styles.gutterleft} span={12}><Button icon="fast-forward" onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
+                          <Col className={styles.gutterleft} span={12}><Button icon={<StepForwardOutlined />} onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
+                          <Col className={styles.gutterleft} span={12}><Button icon={<FastForwardOutlined />} onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
                         </Row>
                       </Col>
                     </Row>

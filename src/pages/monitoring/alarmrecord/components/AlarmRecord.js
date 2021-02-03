@@ -1,19 +1,10 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { formatMoment, handleFormData } from '@/utils/utils';
-import {
-  Card,
-  Spin,
-  Button,
-  Modal,
-  Form,
-  message,
-  Badge,
-  Icon,
-  Row,
-  Col,
-  Input,
-} from 'antd';
+import { SettingTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Button, Modal, message, Badge, Row, Col, Input } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -438,7 +429,7 @@ class AlarmRecord extends Component {
                 dateValue={this.state.rangeDate}
                 callback={dates => this._handleDateChange(dates)}
               />
-              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><Icon type="setting" theme="twoTone" />处置</Button>
+              <Button style={{ marginTop: 5 }} onClick={this.BtnVerify}><SettingTwoTone />处置</Button>
             </div>
           }
 

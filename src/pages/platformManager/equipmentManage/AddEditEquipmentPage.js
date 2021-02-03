@@ -6,7 +6,22 @@
  * @desc: 设备管理（添加、编辑页面）
  */
 import React, { PureComponent } from 'react'
-import { Table, Card, Tag, Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Divider, Button } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Table,
+  Card,
+  Tag,
+  Modal,
+  Row,
+  Col,
+  Select,
+  Input,
+  DatePicker,
+  InputNumber,
+  Divider,
+  Button,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from 'dva'
 import { handleFormData } from '@/utils/utils'

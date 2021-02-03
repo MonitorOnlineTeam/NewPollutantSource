@@ -911,7 +911,7 @@ export default {
                 },
                 {
                   name: 'alarmverifyrecord',
-                  path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
+                  path: '/alarmmanager/alarmverifyrecord/exceptionVerify',
                   component: './monitoring/alarmverifyrecord/index',
                 }
               ],

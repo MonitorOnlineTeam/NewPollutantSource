@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Table, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import moment from 'moment';
 import style from './index.less';
@@ -563,7 +566,7 @@ class SummaryReportPage extends PureComponent {
                       生成统计
                     </Button>
                     <Button onClick={this.export} loading={exportLoading}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                     {/* )} */}

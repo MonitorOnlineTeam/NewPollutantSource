@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Table, Card, Form, Row, Col, DatePicker, Button, Icon } from "antd";
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Card, Row, Col, DatePicker, Button } from "antd";
 import SdlTable from '@/components/SdlTable'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -284,7 +287,7 @@ class Report extends PureComponent {
               <Col xl={10} md={12}>
                 <FormItem {...formLayout} label="" style={{ width: '100%' }}>
                   <Button type="primary" loading={searchLoading} style={{ marginRight: 10 }} onClick={this.queryReportData}>生成统计</Button>
-                  <Button onClick={this.export} loading={exportLoading} style={{ marginRight: 10 }}><Icon type="export" />导出</Button>
+                  <Button onClick={this.export} loading={exportLoading} style={{ marginRight: 10 }}><ExportOutlined />导出</Button>
                 </FormItem>
               </Col>
             </Row>

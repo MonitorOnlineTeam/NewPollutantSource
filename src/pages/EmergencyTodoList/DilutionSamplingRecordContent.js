@@ -6,7 +6,7 @@
  * @Description: 稀释采样法cems日常巡检记录表
  */
 import React, { Component } from 'react';
-import { Table, Button, Icon, Spin, Card } from 'antd';
+import { Table, Button, Spin, Card } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./DilutionSamplingRecordContent.less";

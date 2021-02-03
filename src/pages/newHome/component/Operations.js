@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.less'
-import { Divider, Popover, Icon } from 'antd';
+import { Divider, Popover } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import DrillDownTaskModal from "./DrillDownTaskModal"

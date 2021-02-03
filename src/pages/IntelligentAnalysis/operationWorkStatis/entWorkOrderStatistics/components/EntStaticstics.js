@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import {
- Card, Form, Col, Row, Select, Input, Checkbox, Button, message, Icon, Modal,
-} from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, Button, message, Modal } from 'antd';
 import { connect } from 'dva'
 import moment from 'moment'
 import { Link,router } from 'umi'
@@ -153,66 +154,66 @@ class EntStaticstics extends PureComponent {
 
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
     return (
-        <Card>
-          <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row>
-                <FormItem  label="企业">
-                    {getFieldDecorator('EntCode', {
-                     
-                    })(
-                    <Select 
-                        showSearch 
-                        filterOption={
-                          (input, option) =>option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        } 
-                        style={{ width: 200 }} 
-                        onChange={v=>{this.getTableDataSource(v)}} 
-                        allowClear placeholder="请选择企业">
-                        {
-                          entList.map((item,index) => <Option key={'entList${index}'} value={item.EntCode}>
-                            {item.EntName}
-                            </Option>)
-                        }
-                    </Select>,
-                    )}
-                </FormItem>
+      <Card>
+        <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Row>
+              <FormItem  label="企业">
+                  {getFieldDecorator('EntCode', {
+                   
+                  })(
+                  <Select 
+                      showSearch 
+                      filterOption={
+                        (input, option) =>option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      } 
+                      style={{ width: 200 }} 
+                      onChange={v=>{this.getTableDataSource(v)}} 
+                      allowClear placeholder="请选择企业">
+                      {
+                        entList.map((item,index) => <Option key={'entList${index}'} value={item.EntCode}>
+                          {item.EntName}
+                          </Option>)
+                      }
+                  </Select>,
+                  )}
+              </FormItem>
 
-                <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                    <Button 
-                      icon="left" 
-                      style={{ marginLeft: 10 }} 
-                      onClick={()=>{
-                        if(this.props.goBack)
-                          this.props.goBack();
-                        else
-                          history.go(-1)
-                      }}
-                    >
-                      返回
-                    </Button>
-                    {
-                      /*   
-                    <Button
-                        style={{ margin: '0 5px' }}
-                        icon="export"
-                        loading={exportLoading}
-                        onClick={this.onExport}
-                    >
-                        导出
-                    </Button>
-                    */
-                   }
-                </div>
-            </Row>
-          </Form>
-          <SdlTable align="center" dataSource={thirdTableDataSource} columns={columns} loading={loading} />
-          <PointStaticstics title = {this.state.modalTitle} showModal = {this.state.showModal}
-            onCloseListener ={()=>{
-              this.setState({showModal:false});
-            }}
-          >
-          </PointStaticstics>
-        </Card>
+              <div style={{ display: 'inline-block', lineHeight: "40px" }}>
+                  <Button 
+                    icon={<LeftOutlined />} 
+                    style={{ marginLeft: 10 }} 
+                    onClick={()=>{
+                      if(this.props.goBack)
+                        this.props.goBack();
+                      else
+                        history.go(-1)
+                    }}
+                  >
+                    返回
+                  </Button>
+                  {
+                    /*   
+                  <Button
+                      style={{ margin: '0 5px' }}
+                      icon="export"
+                      loading={exportLoading}
+                      onClick={this.onExport}
+                  >
+                      导出
+                  </Button>
+                  */
+                 }
+              </div>
+          </Row>
+        </Form>
+        <SdlTable align="center" dataSource={thirdTableDataSource} columns={columns} loading={loading} />
+        <PointStaticstics title = {this.state.modalTitle} showModal = {this.state.showModal}
+          onCloseListener ={()=>{
+            this.setState({showModal:false});
+          }}
+        >
+        </PointStaticstics>
+      </Card>
     );
   }
 }

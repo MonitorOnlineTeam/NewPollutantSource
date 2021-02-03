@@ -6,7 +6,26 @@
  * @Description: 导航树
  */
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin, Tag } from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Select,
+  Input,
+  Button,
+  Drawer,
+  Radio,
+  Collapse,
+  Table,
+  Badge,
+  Divider,
+  Row,
+  Tree,
+  Empty,
+  Col,
+  Tooltip,
+  Spin,
+  Tag,
+} from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
 import Setting from '../../../config/defaultSettings'
@@ -910,7 +929,7 @@ class NavigationTree extends Component {
             background: '#1890FF',
             borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
             cursor: 'pointer',
-          }} onClick={this.changeState}><a href="#"><Icon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
+          }} onClick={this.changeState}><a href="#"><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
           {this.state.treeVis ? <div >
             {
               this.props.EntAndPointLoading ? <Spin
@@ -964,8 +983,6 @@ class NavigationTree extends Component {
         </Drawer>
 
       </div>
-
-
     );
   }
 }

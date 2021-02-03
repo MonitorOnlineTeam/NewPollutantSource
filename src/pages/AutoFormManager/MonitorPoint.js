@@ -1,4 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import { BarsOutlined, RollbackOutlined, YoutubeOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Button,
     Input,
@@ -6,9 +9,17 @@ import {
     Row,
     Col,
     Table,
-    Form,
     Spin,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber,
+    Select,
+    Modal,
+    Tag,
+    Divider,
+    Dropdown,
+    Menu,
+    Popconfirm,
+    message,
+    DatePicker,
+    InputNumber,
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import styles from './index.less';
@@ -292,9 +303,9 @@ export default class MonitorPoint extends Component {
             <Menu onClick={e => {
                 this.onMenu.bind()(e.key, id, name, code);
             }}>
-                <Menu.Item key="1"><Icon type="bars" />监测标准</Menu.Item>
+                <Menu.Item key="1"><BarsOutlined />监测标准</Menu.Item>
                 {/* <Menu.Item key="2"><Icon type="tool" />停产管理</Menu.Item> */}
-                <Menu.Item key="3"><Icon type="youtube" />视频管理</Menu.Item>
+                <Menu.Item key="3"><YoutubeOutlined />视频管理</Menu.Item>
                 {/* <Menu.Item key="4"><Icon type="home" />进入排口</Menu.Item> */}
             </Menu>
         );
@@ -310,7 +321,7 @@ export default class MonitorPoint extends Component {
                 <div className={styles.cardTitle}>
                     <Card title={<span>{targetName}<Button style={{ marginLeft: 10 }} onClick={() => {
                         history.go(-1);
-                    }} type="link" size="small"><Icon type="rollback" />返回上级</Button></span>} extra={<PollutantType handlePollutantTypeChange={this.getPageConfig} />}>
+                    }} type="link" size="small"><RollbackOutlined />返回上级</Button></span>} extra={<PollutantType handlePollutantTypeChange={this.getPageConfig} />}>
 
                         <SdlTable
                             style={{ marginTop: 10 }}

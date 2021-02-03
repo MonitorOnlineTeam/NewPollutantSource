@@ -5,9 +5,8 @@
  * @Date: 2020年3月23日
  */
 import React, { Component } from 'react';
-import {
-    Button, Modal, Icon,
-} from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { Button, Modal } from 'antd';
 import styles from './AppQRCodeComponent.less';
 import ImgSrc from '../../../public/waTip.png';
 import { connect } from 'dva';
@@ -111,12 +110,11 @@ export default class AppQRCodeComponent extends Component {
                         <h2 class={styles.titleStyleh2}>App 下载</h2>
                         <p class={styles.lead}>推荐使用浏览器或QQ直接下载</p>
                         <p class={styles.classThree}>
-                            <Button type="primary" size="large" class={styles.lgs} className="button-color-sunset" onClick={() => this.QRClick()}> {this.state.text}<Icon type="download" /></Button>
+                            <Button type="primary" size="large" class={styles.lgs} className="button-color-sunset" onClick={() => this.QRClick()}> {this.state.text}<DownloadOutlined /></Button>
                         </p>
                     </div>
                 </div>
             </div>
-
         );
     }
 }

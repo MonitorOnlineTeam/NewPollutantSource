@@ -6,7 +6,26 @@
  * @Description: 超标记录
  */
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin, message } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Select,
+    Input,
+    Button,
+    Drawer,
+    Radio,
+    Collapse,
+    Table,
+    Badge,
+    Divider,
+    Row,
+    Tree,
+    Empty,
+    Col,
+    Card,
+    Spin,
+    message,
+} from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';

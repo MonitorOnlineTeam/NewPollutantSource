@@ -4,7 +4,23 @@
  * 创建时间：2020.10.22
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon ,List, Popover } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Row,
+    Col,
+    Radio,
+    Select,
+    DatePicker,
+    Empty,
+    message,
+    Tabs,
+    Modal,
+    List,
+    Popover,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -196,118 +212,116 @@ class index extends PureComponent {
     cardTitle = () => {
         const { Begintime,Endtime,regionValue} = this.state;
         
-        return (
-            <>
-                <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
-                    (dates, dataType) => {
-                        this.setState({
-                            Begintime: dates
-                        })
-                    }
-                } />
-                <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
-                onRef={this.onRef1} isVerification={true} dateValue={Endtime} 
-                style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
-                    (dates, dataType) => {
-                        console.log(dates,dataType)
-                        this.setState({
-                            Endtime: dates
-                        })
-                    }
-                } />
-                
-                <div style={{ marginTop: 10,fontSize:14 }}>
-                    <label>行政区:</label>
-                <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={this.changeRegion} RegionCode={regionValue}/>
+        return <>
+            <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
+                (dates, dataType) => {
+                    this.setState({
+                        Begintime: dates
+                    })
+                }
+            } />
+            <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
+            onRef={this.onRef1} isVerification={true} dateValue={Endtime} 
+            style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
+                (dates, dataType) => {
+                    console.log(dates,dataType)
+                    this.setState({
+                        Endtime: dates
+                    })
+                }
+            } />
+            
+            <div style={{ marginTop: 10,fontSize:14 }}>
+                <label>行政区:</label>
+            <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={this.changeRegion} RegionCode={regionValue}/>
 
-                    {/* <Select
-                        allowClear
-                        showSearch
-                        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                        placeholder="行政区"
-                        maxTagCount={2}
-                        maxTagTextLength={5}
-                        maxTagPlaceholder="..."
-                        optionFilterProp="children"
-                        filterOption={(input, option) => {
-                            if (option && option.props && option.props.title) {
-                                return option.props.title === input || option.props.title.indexOf(input) !== -1
-                            } else {
-                                return true
-                            }
-                        }}
-                        onChange={(value) => {
-                            this.setState({
-                                regionValue: value
-                            })
-                        }}>
-                        {this.children()}
-                    </Select> */}
-                   
-                    <label>企业列表:</label><Select
-                        allowClear
-                        showSearch
-                        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                        placeholder="企业列表"
-                        maxTagCount={2}
-                        maxTagTextLength={5}
-                        maxTagPlaceholder="..."
-                        optionFilterProp="children"
-                        filterOption={(input, option) => {
-                            if (option && option.props && option.props.title) {
-                                return option.props.title === input || option.props.title.indexOf(input) !== -1
-                            } else {
-                                return true
-                            }
-                        }}
-                        onChange={(value) => {
+                {/* <Select
+                    allowClear
+                    showSearch
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="行政区"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    optionFilterProp="children"
+                    filterOption={(input, option) => {
+                        if (option && option.props && option.props.title) {
+                            return option.props.title === input || option.props.title.indexOf(input) !== -1
+                        } else {
+                            return true
+                        }
+                    }}
+                    onChange={(value) => {
+                        this.setState({
+                            regionValue: value
+                        })
+                    }}>
+                    {this.children()}
+                </Select> */}
+               
+                <label>企业列表:</label><Select
+                    allowClear
+                    showSearch
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="企业列表"
+                    maxTagCount={2}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    optionFilterProp="children"
+                    filterOption={(input, option) => {
+                        if (option && option.props && option.props.title) {
+                            return option.props.title === input || option.props.title.indexOf(input) !== -1
+                        } else {
+                            return true
+                        }
+                    }}
+                    onChange={(value) => {
 debugger
-                            //获取监测点
-                            this.props.dispatch({
-                                type: pageUrl.GetPointByEntCode,
-                                payload: {
-                                    EntCode:value
-                                },
-                            });
-                            this.setState({
-                                entValue: value,
-                                pointValue:''
-                            })
-                        }}>
-                        {this.entList()}
-                    </Select>
-                    <label>监测点:</label><Select
-                        allowClear
-                        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                        placeholder="监测点列表"
-                        maxTagCount={2}
-                        value={this.state.pointValue==''?undefined:this.state.pointValue}
-                        maxTagTextLength={5}
-                        maxTagPlaceholder="..."
-                        onChange={(value) => {
-                            this.setState({
-                                pointValue: value,
-                            })
-                        }}>
-                        {this.PointByEntList()}
-                    </Select>
-                    <label>凭证状态:</label><Select
-                        allowClear
-                        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                        placeholder="凭证状态"
-                        onChange={(value) => {
-                            this.setState({
-                                voucher: value,
-                            })
-                        }}>
-                        <Option value='1'>有凭证</Option>
-                        <Option value='0'>缺失凭证</Option>
-                    </Select>
-                    <Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
-                    <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-                </div>
-            </>
-        )
+                        //获取监测点
+                        this.props.dispatch({
+                            type: pageUrl.GetPointByEntCode,
+                            payload: {
+                                EntCode:value
+                            },
+                        });
+                        this.setState({
+                            entValue: value,
+                            pointValue:''
+                        })
+                    }}>
+                    {this.entList()}
+                </Select>
+                <label>监测点:</label><Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="监测点列表"
+                    maxTagCount={2}
+                    value={this.state.pointValue==''?undefined:this.state.pointValue}
+                    maxTagTextLength={5}
+                    maxTagPlaceholder="..."
+                    onChange={(value) => {
+                        this.setState({
+                            pointValue: value,
+                        })
+                    }}>
+                    {this.PointByEntList()}
+                </Select>
+                <label>凭证状态:</label><Select
+                    allowClear
+                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                    placeholder="凭证状态"
+                    onChange={(value) => {
+                        this.setState({
+                            voucher: value,
+                        })
+                    }}>
+                    <Option value='1'>有凭证</Option>
+                    <Option value='0'>缺失凭证</Option>
+                </Select>
+                <Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
+                <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+            </div>
+        </>;
     }
 
     loadData=(PageIndex, PageSize)=>{

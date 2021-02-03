@@ -5,15 +5,16 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, SettingOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Button,
   Tooltip,
   Popconfirm,
-  Icon,
   Divider,
   Modal,
-  Form,
   Select,
   Input,
   Row,
@@ -466,7 +467,7 @@ class emissionEnt extends Component {
                     style={{ color: '#D1D1D1' }}
                     onClick={() => this.IsEnabled(1, record.ID)}
                   >
-                    <Icon type="exclamation-circle" /> 不参与
+                    <ExclamationCircleOutlined /> 不参与
                   </a>
                 </Button>
               </span>
@@ -478,7 +479,7 @@ class emissionEnt extends Component {
               <Button size="small" color="blue">
                 {' '}
                 <a title="单击设置为不参与" onClick={() => this.IsEnabled(0, record.ID)}>
-                  <Icon type="setting" spin={true} /> 参与
+                  <SettingOutlined spin={true} /> 参与
                 </a>
               </Button>
             </span>
@@ -503,7 +504,7 @@ class emissionEnt extends Component {
                 cancelText="否"
               >
                 <a>
-                  <Icon type="delete" />
+                  <DeleteOutlined />
                 </a>
               </Popconfirm>
             </Tooltip>
@@ -610,7 +611,7 @@ class emissionEnt extends Component {
                   });
                 }}
               >
-                <Icon type="export" />
+                <ExportOutlined />
                 导出
               </Button>
             </Row>

@@ -6,7 +6,8 @@
  * @desc: 质控仪操作记录
  */
 import React, { Component } from 'react';
-import { Card, Modal, Tooltip, Icon } from 'antd';
+import { VideoCameraOutlined } from '@ant-design/icons';
+import { Card, Modal, Tooltip } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
@@ -39,15 +40,17 @@ class MaintainRecord extends Component {
             configId={configId}
             appendHandleRows={(row, key) => {
               if (row["dbo.T_Bas_QCAnalyzerInfo.CameraNO"]) {
-                return <Tooltip title="查看视频">
-                  <a onClick={() => {
-                    this.setState({
-                      visible: true,
-                      VideoNo: row["dbo.T_Bas_QCAnalyzerInfo.CameraNO"],
-                      startTime: row["dbo.T_Bas_QCAnalyzeOperRecord.OpenDoorTime"]
-                    })
-                  }}><Icon type="video-camera" /></a>
-                </Tooltip>
+                return (
+                  <Tooltip title="查看视频">
+                    <a onClick={() => {
+                      this.setState({
+                        visible: true,
+                        VideoNo: row["dbo.T_Bas_QCAnalyzerInfo.CameraNO"],
+                        startTime: row["dbo.T_Bas_QCAnalyzeOperRecord.OpenDoorTime"]
+                      })
+                    }}><VideoCameraOutlined /></a>
+                  </Tooltip>
+                );
               } else {
                 return '-'
               }

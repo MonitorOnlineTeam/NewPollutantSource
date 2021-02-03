@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Steps, Popover, Icon } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Steps, Popover } from 'antd';
 
 const { Step } = Steps;
 class Index extends Component {
@@ -20,7 +21,7 @@ class Index extends Component {
                     status="finish"
                     title={item.TaskStatusText}
                     description={this.description(item)}
-                    icon={<Icon type={
+                    icon={<LegacyIcon type={
                         this.showIcon(item.TaskStatusText)
                     }
                     />}

@@ -3,7 +3,8 @@ import DocumentTitle from 'react-document-title';
 import Link from 'umi/link';
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'dva';
-import { Icon, Modal, Popover, } from 'antd';
+import { QrcodeOutlined } from '@ant-design/icons';
+import { Modal, Popover } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
 import logo from '../../public/sdlicon.png';
@@ -23,7 +24,7 @@ const UserLayout = props => {
       Cookie.set(config.cookieName, null);
       Cookie.set('currentUser', null);
       dispatch({
-        type: 'login/getSystemLoginConfigInfo',
+        type: 'global/getSystemLoginConfigInfo',
         payload: {},
       });
       dispatch({
@@ -111,7 +112,8 @@ const UserLayout = props => {
               </div>
             }
             title="手机端下载" trigger="hover">
-            <Icon type="qrcode" style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }} />
+            <QrcodeOutlined
+              style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }} />
           </Popover>
         }
         {
@@ -123,4 +125,4 @@ const UserLayout = props => {
   );
 };
 
-export default connect(({ settings, login }) => ({ ...settings, configInfo: login.configInfo, appFlag: login.appFlag }))(UserLayout);
+export default connect(({ settings, login, global }) => ({ ...settings, configInfo: global.configInfo, appFlag: login.appFlag }))(UserLayout);

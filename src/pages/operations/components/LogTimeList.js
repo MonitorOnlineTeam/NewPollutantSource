@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { ClockCircleOutlined } from '@ant-design/icons';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
 import {
   Card,
   Select,
   Timeline,
-  Icon,
   Tag,
   Pagination,
   Empty,
@@ -154,7 +155,7 @@ class LogTimeList extends Component {
     this.props.timeLineList.map(item => {
       timelineItems.push(
         <Timeline.Item
-          dot={<Icon type="clock-circle-o" style={{ fontSize: '26px' }} />}
+          dot={<ClockCircleOutlined style={{ fontSize: '26px' }} />}
           position="left"
           key={item.RecordDate}
         >
@@ -172,7 +173,7 @@ class LogTimeList extends Component {
         timelineItems.push(
           <Timeline.Item
             dot={
-              <Icon
+              <LegacyIcon
                 type={node.Icon}
                 style={{ fontSize: '20px', color: this.getStatusColor(node.TypeID) }}
               />

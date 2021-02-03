@@ -9,14 +9,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getBase64 } from './utils'
-import {
-  Upload,
-  Button,
-  Icon,
-  Modal,
-  Carousel,
-  message
-} from 'antd'
+import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { Upload, Button, Modal, Carousel, message } from 'antd';
 import cuid from 'cuid';
 import config from '@/config';
 import { connect } from 'dva';
@@ -129,11 +123,11 @@ class SdlUpload extends Component {
         {
           uploadNumber ?
             (this.state.fileList.length >= uploadNumber ? null : <div>
-              <Icon type="plus" />
+              <PlusOutlined />
               <div className="ant-upload-text">文件上传</div>
             </div>)
             : <div>
-              <Icon type="plus" />
+              <PlusOutlined />
               <div className="ant-upload-text">文件上传</div>
             </div>
         }
@@ -144,11 +138,11 @@ class SdlUpload extends Component {
         {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
         <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
           <div className={styles.controller}>
-            <Icon type="left"
+            <LeftOutlined
               onClick={() => {
                 this.carousel.prev()
               }} />
-            <Icon type="right"
+            <RightOutlined
               onClick={() => {
                 this.carousel.next()
               }} />

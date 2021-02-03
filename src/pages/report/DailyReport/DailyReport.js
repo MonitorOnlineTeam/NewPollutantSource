@@ -4,7 +4,21 @@
  * 创建时间：2020.10.19
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Row,
+    Col,
+    Radio,
+    Select,
+    DatePicker,
+    Empty,
+    message,
+    Tabs,
+    Modal,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -198,124 +212,122 @@ class index extends PureComponent {
     cardTitle = () => {
         const { time} = this.state;
 
-        return (
-            <>
-                <label style={{fontSize:14}}>行政区:</label><Select
+        return <>
+            <label style={{fontSize:14}}>行政区:</label><Select
+                allowClear
+                showSearch
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="行政区"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                    } else {
+                        return true
+                    }
+                }}
+                onChange={(value) => {
+                    //获取关注度列表
+                    this.props.dispatch({
+                        type: pageUrl.GetEntByRegionAndAtt,
+                        payload: {
+                            RegionCode:value,
+                            Attention:this.state.attentionValue,
+                            PollutantTypeCode:'1'
+                        },
+                    });
+                    this.setState({
+                        regionValue: value,
+                        entValue:undefined,
+                        pointValue:undefined
+                    })
+                }}>
+                {this.children()}
+            </Select>
+            <label style={{fontSize:14}}>关注程度:</label><Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="关注度"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    //获取企业列表
+                    this.props.dispatch({
+                        type: pageUrl.GetEntByRegionAndAtt,
+                        payload: {
+                            RegionCode:this.state.regionValue,
+                            Attention:value,
+                            PollutantTypeCode:'1'
+                        },
+                    });
+                    this.setState({
+                        attentionValue: value,
+                        entValue:undefined,
+                        pointValue:undefined
+                    })
+                }}>
+                {this.attention()}
+            </Select>
+            <label style={{fontSize:14}}>企业列表:</label><Select
+                allowClear
+                showSearch
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="企业列表"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                value={this.state.entValue}
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                    } else {
+                        return true
+                    }
+                }}
+                onChange={(value) => {
+                    //获取企业列表
+                    this.props.dispatch({
+                        type: pageUrl.GetPointByEntCode,
+                        payload: {
+                            EntCode:value,
+                            PollutantTypeCode:'1'
+                        },
+                    });    
+                    this.setState({
+                        entValue: value,
+                        pointValue:undefined
+                    })
+                }}>
+                {this.entList()}
+            </Select>
+            <div style={{marginTop:10,fontSize:14}}>
+                <label>监测点:</label><Select
                     allowClear
-                    showSearch
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="行政区"
+                    value={this.state.pointValue}
+                    placeholder="监测点列表"
                     maxTagCount={2}
                     maxTagTextLength={5}
                     maxTagPlaceholder="..."
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        if (option && option.props && option.props.title) {
-                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                        } else {
-                            return true
-                        }
-                    }}
                     onChange={(value) => {
-                        //获取关注度列表
-                        this.props.dispatch({
-                            type: pageUrl.GetEntByRegionAndAtt,
-                            payload: {
-                                RegionCode:value,
-                                Attention:this.state.attentionValue,
-                                PollutantTypeCode:'1'
-                            },
-                        });
                         this.setState({
-                            regionValue: value,
-                            entValue:undefined,
-                            pointValue:undefined
-                        })
+                            pointValue: value,
+                        })  
                     }}>
-                    {this.children()}
+                    {this.pointList()}
                 </Select>
-                <label style={{fontSize:14}}>关注程度:</label><Select
-                    allowClear
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="关注度"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        //获取企业列表
-                        this.props.dispatch({
-                            type: pageUrl.GetEntByRegionAndAtt,
-                            payload: {
-                                RegionCode:this.state.regionValue,
-                                Attention:value,
-                                PollutantTypeCode:'1'
-                            },
-                        });
-                        this.setState({
-                            attentionValue: value,
-                            entValue:undefined,
-                            pointValue:undefined
-                        })
-                    }}>
-                    {this.attention()}
-                </Select>
-                <label style={{fontSize:14}}>企业列表:</label><Select
-                    allowClear
-                    showSearch
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="企业列表"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    value={this.state.entValue}
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        if (option && option.props && option.props.title) {
-                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                        } else {
-                            return true
-                        }
-                    }}
-                    onChange={(value) => {
-                        //获取企业列表
-                        this.props.dispatch({
-                            type: pageUrl.GetPointByEntCode,
-                            payload: {
-                                EntCode:value,
-                                PollutantTypeCode:'1'
-                            },
-                        });    
-                        this.setState({
-                            entValue: value,
-                            pointValue:undefined
-                        })
-                    }}>
-                    {this.entList()}
-                </Select>
-                <div style={{marginTop:10,fontSize:14}}>
-                    <label>监测点:</label><Select
-                        allowClear
-                        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                        value={this.state.pointValue}
-                        placeholder="监测点列表"
-                        maxTagCount={2}
-                        maxTagTextLength={5}
-                        maxTagPlaceholder="..."
-                        onChange={(value) => {
-                            this.setState({
-                                pointValue: value,
-                            })  
-                        }}>
-                        {this.pointList()}
-                    </Select>
-                    <label>监测时间:</label><DatePicker size='default' onChange={this.DatePickerHandle} defaultValue={time}  style={{ marginLeft: 10, marginRight: 10 }}/>
+                <label>监测时间:</label><DatePicker size='default' onChange={this.DatePickerHandle} defaultValue={time}  style={{ marginLeft: 10, marginRight: 10 }}/>
 
-                    <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-                    <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-                    <span style={{fontSize:14,color:'red'}}>排放量为小时均值*小时流量</span>
-                </div>
-            </>
-        )
+                <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+                <span style={{fontSize:14,color:'red'}}>排放量为小时均值*小时流量</span>
+            </div>
+        </>;
     }
 
     onChange = (PageIndex, PageSize) => {

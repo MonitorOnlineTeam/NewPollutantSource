@@ -58,6 +58,7 @@ ol {
       line-height: 1;
     }
   }
+
   .ant-table-fixed {
     table-layout: fixed; //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
   }
@@ -115,7 +116,7 @@ ol {
 
     // 菜单
     .ant-pro-fixed-header.ant-layout-header {
-      z-index: 9999 !important;
+      // z-index: 9999 !important;
     }
   }
 
@@ -231,9 +232,9 @@ a:hover {
 
 :global {
 
-  // 多选下拉样式
-  .ant-form-item-control {
-    // line-height: normal;
+  // formItem 样式
+  .ant-legacy-form-item {
+    margin-bottom: 8px;
   }
 
   // .ant-select-selection--multiple,
@@ -327,7 +328,7 @@ a:hover {
 
 
   .ant-layout {
-  
+
     // 面包屑样式 - start
     .ant-page-header {
       padding: 10px 14px;
@@ -335,7 +336,7 @@ a:hover {
 
       .ant-page-header-heading {
         float: left;
-        margin-top: 1px;
+        margin-top: -4px;
         margin-right: 6px;
         margin-left: 6px;
       }

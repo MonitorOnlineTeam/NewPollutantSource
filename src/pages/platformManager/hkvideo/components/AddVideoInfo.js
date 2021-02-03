@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Input, Form, DatePicker, Row, Col, message } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, DatePicker, Row, Col, message } from 'antd';
 import { connect } from 'dva';
 
 const FormItem = Form.Item;

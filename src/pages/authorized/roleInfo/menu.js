@@ -6,6 +6,8 @@
  * @Description: 菜单权限
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Tabs,
     Layout,
@@ -15,7 +17,6 @@ import {
     Divider,
     Tree,
     Input,
-    Form,
     message,
     Spin,
     Select,

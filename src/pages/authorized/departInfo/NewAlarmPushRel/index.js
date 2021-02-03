@@ -4,24 +4,30 @@
  * 创建时间：2020.12.30
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-    Form,
-    Input,
-    Button,
-    Icon,
-    Card,
-    Spin,
-    Row,
-    Col,
-    Table,
-    Modal,
-    Checkbox,
-    TreeSelect,
-    message,
-    Divider,
-    Popconfirm,
-    Tooltip,
-    Transfer, Switch, Tag, Select, Pagination, Empty,Radio
+  Input,
+  Button,
+  Card,
+  Spin,
+  Row,
+  Col,
+  Table,
+  Modal,
+  Checkbox,
+  TreeSelect,
+  message,
+  Divider,
+  Popconfirm,
+  Tooltip,
+  Transfer,
+  Switch,
+  Tag,
+  Select,
+  Pagination,
+  Empty,
+  Radio,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -59,7 +65,7 @@ class Index extends Component {
                 { label: '超标核实推送', value: '6' },
                 { label: '处置', value: '7' },
                 { label: '核实', value: '8' },
-
+                { label: '响应', value: '9' },
               ],
               
         };
@@ -109,7 +115,7 @@ class Index extends Component {
                       Type: type,
                       RegionCode: "",
                       ID:alarmPushData.key,
-                      AlarmType: flag? "1,2,5,6,7,8" : '1'
+                      AlarmType: flag? "1,2,5,6,7,8,9" : '1'
                   },
               },
             })
@@ -277,7 +283,7 @@ class Index extends Component {
                 this.setState({
                     confirmLoading:false
                 },()=>{
-                    this.props.cancelAlarmModal();
+                    // this.props.cancelAlarmModal();
 
                 })
             }
@@ -312,7 +318,7 @@ class Index extends Component {
                                     <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {!alarmPushParLoading?  <>{alarmPushFlag?  <Checkbox.Group
-                                      defaultValue={["1","2","5","6","7","8"]}
+                                      defaultValue={["1","2","5","6","7","8","9"]}
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />

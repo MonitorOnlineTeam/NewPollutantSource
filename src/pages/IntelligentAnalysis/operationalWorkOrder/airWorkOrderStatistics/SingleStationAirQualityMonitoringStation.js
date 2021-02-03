@@ -8,7 +8,9 @@
 
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'; // 外层cpmponent 包含面包屑
-import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';

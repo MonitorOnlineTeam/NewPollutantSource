@@ -11,6 +11,9 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Button,
   Input,
@@ -18,12 +21,20 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Spin,
   Radio,
   Checkbox,
   TimePicker,
-  Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber
+  Select,
+  Modal,
+  Tag,
+  Divider,
+  Dropdown,
+  Menu,
+  Popconfirm,
+  message,
+  DatePicker,
+  InputNumber,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -409,9 +420,9 @@ class SearchWrapper extends Component {
                 <React.Fragment>
                   {
                     this.state.expand ? <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                      展开 <Icon type="down" />
+                      展开 <DownOutlined />
                     </a> : <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                        收起 <Icon type="up" />
+                        收起 <UpOutlined />
                       </a>
                   }
                 </React.Fragment>

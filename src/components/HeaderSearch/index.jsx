@@ -1,4 +1,5 @@
-import { AutoComplete, Icon, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { AutoComplete, Input } from 'antd';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
@@ -117,7 +118,7 @@ export default class HeaderSearch extends Component {
           }
         }}
       >
-        <Icon type="search" key="Icon" />
+        <SearchOutlined key="Icon" />
         <AutoComplete
           key="AutoComplete"
           {...restProps}

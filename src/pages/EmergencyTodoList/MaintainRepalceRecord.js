@@ -6,7 +6,7 @@
  * @Description: 保养项更换记录表
  */
 import React, { Component } from 'react';
-import { Row, Col, Layout, Table, List, Button, Icon, Spin, Card } from 'antd';
+import { Row, Col, Layout, Table, List, Button, Spin, Card } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./MaintainRepalceRecord.less";

@@ -4,17 +4,8 @@
  * 创建时间：2019.09.25
  */
 import React, { Component } from 'react';
-import {
-    Card,
-    Table,
-    Row,
-    Col,
-    Button,
-    Icon,
-    Select,
-    Modal,
-    Divider
-} from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
+import { Card, Table, Row, Col, Button, Select, Modal, Divider } from 'antd';
 import moment from 'moment';
 import styles from './index.less';
 import ReactEcharts from 'echarts-for-react';
@@ -350,7 +341,7 @@ export default class EntPollutantEmissions extends Component {
                     type="link"
                     size="small"
                 >
-                    <Icon type="rollback" />
+                    <RollbackOutlined />
                     所有企业
 </Button>
             </span>

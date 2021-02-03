@@ -1,4 +1,7 @@
 import React, { Component, Fragment } from 'react';
+import { RollbackOutlined, ToolOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Button,
   Input,
@@ -6,13 +9,11 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Spin,
   Select,
   Modal,
   Divider,
   Dropdown,
-  Icon,
   Menu,
   Popconfirm,
   message,
@@ -421,7 +422,7 @@ export default class MonitorPoint extends Component {
                   type="link"
                   size="small"
                 >
-                  <Icon type="rollback" />
+                  <RollbackOutlined />
                   返回上级
                 </Button>
               </span>
@@ -507,7 +508,7 @@ export default class MonitorPoint extends Component {
                         <Tooltip title="设置CEMS参数">
                           <a onClick={() => {
                             this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
-                          }}><Icon type="tool" /></a>
+                          }}><ToolOutlined /></a>
                         </Tooltip></> : ''
                     }
 

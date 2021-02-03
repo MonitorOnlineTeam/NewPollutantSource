@@ -6,9 +6,7 @@
  * @Description: 运维记录单详情
  */
 import React, { Component } from 'react';
-import {
-    Table, Divider, Icon
-} from 'antd';
+import { Table, Divider } from 'antd';
 import { PointIcon, Right } from '@/utils/icon'
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
