@@ -20,6 +20,7 @@ export default Model.extend({
         selectTreeKeys: [],
         overallselkeys: [],
         overallexpkeys: [],
+        pointInfo:{},
         IsTree: true,
     },
     subscriptions: {
@@ -51,19 +52,26 @@ export default Model.extend({
         }) {
             if (!payload.PollutantTypes || payload.PollutantTypes === "undefined") {
                 let global = yield select(state => state.global);
+                let pollutantTypes;
                 if (!global.configInfo) {
                     yield take('global/getSystemConfigInfo/@@end');
                     global = yield select(state => state.global);
-                    console.log("///=", global.configInfo.SystemPollutantType)
-                    payload = {
-                        ...payload,
-                        PollutantTypes: payload.PollutantTypes === "undefined" ? global.configInfo.SystemPollutantType[0] : global.configInfo.SystemPollutantType
+                    if (global.configInfo.IsShowSysPage === '1') {
+                        pollutantTypes = sessionStorage.getItem('sysPollutantCodes');
+                    } else {
+                        pollutantTypes = payload.PollutantTypes === "undefined" ? global.configInfo.SystemPollutantType[0] : global.configInfo.SystemPollutantType
                     }
+
                 } else {
-                    payload = {
-                        ...payload,
-                        PollutantTypes: payload.PollutantTypes === "undefined" ? global.configInfo.SystemPollutantType[0] : global.configInfo.SystemPollutantType
+                    if (global.configInfo.IsShowSysPage === '1') {
+                        pollutantTypes = sessionStorage.getItem('sysPollutantCodes');
+                    } else {
+                        pollutantTypes = payload.PollutantTypes === "undefined" ? global.configInfo.SystemPollutantType[0] : global.configInfo.SystemPollutantType
                     }
+                }
+                payload = {
+                    ...payload,
+                    PollutantTypes: pollutantTypes
                 }
 
             }

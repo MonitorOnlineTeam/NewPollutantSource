@@ -13,7 +13,7 @@ import { post, get } from '@/utils/request';
 export async function getentandpoint(params) {
     const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
         ...params,
-        PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+        PollutantTypes:  params.PollutantTypes
     });
     return result;
 }

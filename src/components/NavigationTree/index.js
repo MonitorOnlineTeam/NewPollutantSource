@@ -41,6 +41,7 @@ const styleFor = { border: '1px solid', borderRadius: 4, padding: 3, borderColor
   PollutantTypeLoading: loading.effects['navigationtree/getPollutantTypeList'],
   overallexpkeys: navigationtree.overallexpkeys,
   overallselkeys: navigationtree.overallselkeys,
+  pointInfo: navigationtree.pointInfo,
   IsTree: navigationtree.IsTree,
   noticeList: global.notices,
   configInfo: global.configInfo,
@@ -116,6 +117,7 @@ class NavigationTree extends Component {
 
 
   componentDidMount() {
+    
     const dom = document.querySelector(this.props.domId);
     const tabsCardElement = document.querySelector('.ant-tabs-card-bar');
     if (dom) {
@@ -162,6 +164,7 @@ class NavigationTree extends Component {
   }
 
   loadCallback = data => {
+    
     this.setState({
       EntAndPoint: data,
     }, () => {
@@ -295,13 +298,20 @@ class NavigationTree extends Component {
       let where;
       where = this.defaultKey == 0 && node.IsEnt == 0;
       if (where) {
+        this.props.dispatch({
+          type: 'navigationtree/updateState',
+          payload: {
+            pointInfo:{entName:node.EntName,pointName:node.title}
+          },
+        })// 根据传入的状态判断是否更新全局
         this.defaultKey = 1;
         var nowKey = [key]
         let nowExpandKey = [node.EntCode]
-        if (selKeys || this.props.selKeys) {
-          nowKey = [selKeys || this.props.selKeys];
+        if (selKeys) {
+          nowKey = [selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.state.EntAndPoint)]
-          if (overAll || this.props.overAll) {
+          if (overAll) {
+         
             this.props.dispatch({
               type: 'navigationtree/updateState',
               payload: {
@@ -387,6 +397,8 @@ class NavigationTree extends Component {
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,
     })
     value = this.props.checkpPol ? this.props.checkpPol : value;
+    console.log('check=', this.props.checkpPol)
+    console.log('check1=', value)
     this.defaultKey = 0;
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
@@ -674,10 +686,10 @@ class NavigationTree extends Component {
       }
     })
     // 向外部返回选中的数据
-    console.log('rtnKey=', rtnList)
     this.props.onItemClick && this.props.onItemClick(rtnList);
     this.props.onMapClick && this.props.onMapClick(rtnList);
     if (rtnList.length == 0) {
+      console.log('rtnKey1=', rtnList)
       // 更新到model
       this.props.dispatch({
         type: 'navigationtree/updateState',
@@ -685,10 +697,14 @@ class NavigationTree extends Component {
           selectTreeKeys: rtnList,
           overallselkeys: this.state.selectedKeys,
           overallexpkeys: this.state.expandedKeys,
+          // entName: rtnList.entName,
+          // pointName: rtnList.pointName
+
         },
       })
     } else if (this.props.isMap === true && rtnList[0].IsEnt) {
     } else {
+      console.log('rtnKey2=', rtnList)
       // 更新到model
       this.props.dispatch({
         type: 'navigationtree/updateState',
@@ -696,6 +712,8 @@ class NavigationTree extends Component {
           selectTreeKeys: rtnList,
           overallselkeys: this.state.selectedKeys,
           overallexpkeys: this.state.expandedKeys,
+          pointInfo:{entName:rtnList[0].entName,pointName:rtnList[0].pointName}
+
         },
       })
     }
@@ -934,8 +952,8 @@ class NavigationTree extends Component {
                     justifyContent: 'center',
                   }}
                   size="large"
-                /> : <div id="treeTableWrapper" style={{  }}> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto',cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
+                /> : <div id="treeTableWrapper" style={{}}> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 
