@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Modal, Button, Input, Form, Icon, message, Spin } from 'antd';
+import { FileTextOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Button, Input, message, Spin } from 'antd';
 import { debug } from 'util';
 const FormItem = Form.Item;
 @Form.create()
@@ -71,7 +74,7 @@ class UrgentDispatch extends Component {
               })(
                 <Input
                   disabled={true}
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                   placeholder="Username"
                 />,
               )}
@@ -83,7 +86,7 @@ class UrgentDispatch extends Component {
               })(
                 <Input
                   disabled={true}
-                  prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<PhoneOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="phone"
                 />,
               )}
@@ -94,7 +97,7 @@ class UrgentDispatch extends Component {
               })(
                 <Input.TextArea
                   rows="3"
-                  prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={<FileTextOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                   placeholder="备注"
                 />,
               )}

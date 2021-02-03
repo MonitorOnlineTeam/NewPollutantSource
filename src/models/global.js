@@ -4,12 +4,13 @@ import * as services from '@/services/commonApi';
 import Model from '@/utils/model';
 import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
-import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
+import { getAlarmNotices, mymessagelist, getSysPollutantTypeList } from '@/services/globalApi';
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
 import moment from 'moment';
 import { array } from 'prop-types';
 import Cookie from 'js-cookie';
 import config from '@/config';
+import { message } from 'antd';
 
 
 /**
@@ -26,7 +27,7 @@ export default Model.extend({
     notices: [],
     btnsAuthority: [],
     changePwdVisible: false,
-    configInfo: null,
+    configInfo: {},
     currentUserNoticeCnt: {
       notifyCount: 0,
       unreadCount: 0,
@@ -36,7 +37,8 @@ export default Model.extend({
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       DGIMN: '',
     },
-    clientHeight: null
+    clientHeight: null,
+    sysPollutantTypeList: [],
   },
   effects: {
     // 首次加载获取当天报警消息
@@ -73,7 +75,17 @@ export default Model.extend({
         },
       })
     },
-
+    // 获取系统入口
+    *getSysPollutantTypeList({ payload }, { call, update, select }) {
+      const result = yield call(getSysPollutantTypeList);
+      if (result.IsSuccess) {
+        yield update({
+          sysPollutantTypeList: result.Datas,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取按钮权限
     *getBtnAuthority({ payload }, { call, put, select }) {
       const result = yield call(getBtnAuthority, payload);
@@ -107,7 +119,7 @@ export default Model.extend({
         } catch (e) {
           console.log('WebSocketAddress获取失败');
         }
-        
+
         yield put({
           type: 'setConfigInfo',
           payload: {

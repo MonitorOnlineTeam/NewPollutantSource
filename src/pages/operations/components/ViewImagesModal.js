@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Select, Timeline, Icon, Tag, Pagination, Empty, Modal, Upload, message } from 'antd'
+import { Card, Select, Timeline, Tag, Pagination, Empty, Modal, Upload, message } from 'antd';
 import { connect } from 'dva';
 import Lightbox from "react-image-lightbox-rotate";
 import "react-image-lightbox/style.css";

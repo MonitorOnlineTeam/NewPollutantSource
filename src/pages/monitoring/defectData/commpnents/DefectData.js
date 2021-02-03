@@ -4,6 +4,9 @@
  * 创建时间：
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
 } from 'antd';
 import moment from 'moment';
@@ -304,19 +305,21 @@ export default class EntTransmissionEfficiency extends Component {
     }
    btnComponents=()=>{
     const { exloading } = this.props
-     return <Form.Item>
-     <Button type="primary" onClick={this.queryClick}>
-       查询
-     </Button>
-     <Button
-       style={{ margin: '0 5px' }}
-       icon="export"
-       onClick={this.template}
-       loading={exloading}
-     >
-       导出
-     </Button>
-   </Form.Item>
+     return (
+       <Form.Item>
+       <Button type="primary" onClick={this.queryClick}>
+         查询
+       </Button>
+       <Button
+         style={{ margin: '0 5px' }}
+         icon={<ExportOutlined />}
+         onClick={this.template}
+         loading={exloading}
+       >
+         导出
+       </Button>
+     </Form.Item>
+     );
    }
    onChange = (PageIndex, PageSize) => {
     this.updateQueryState({

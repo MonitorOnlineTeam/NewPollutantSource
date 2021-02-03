@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Card, List, Tag, Icon, Button, Popconfirm } from 'antd';
+import { AlertTwoTone } from '@ant-design/icons';
+import { Card, List, Tag, Button, Popconfirm } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -106,7 +107,7 @@ class ExceptionAlarm extends PureComponent {
                     // href: 'http://ant.design',
                     key,
                     // title: `${item.PointName}`,
-                    avatar: (<Icon type="alert" theme="twoTone" />),
+                    avatar: (<AlertTwoTone />),
                     description: (
                         <div>
                             <div>

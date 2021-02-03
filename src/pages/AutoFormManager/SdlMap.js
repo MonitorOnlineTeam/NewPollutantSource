@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import PropTypes, { array } from 'prop-types';
-import { Input, Modal, Icon, Button, message } from 'antd'
+import { GlobalOutlined } from '@ant-design/icons';
+import { Input, Modal, Button, message } from 'antd';
 // import { Map, MouseTool, Marker, Polygon } from 'react-amap';
 import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
@@ -468,7 +469,7 @@ class SdlMap extends PureComponent {
           <Input
             // style={{paddingRight: 40}}
             className="mapInput"
-            suffix={<Icon
+            suffix={<GlobalOutlined
               onClick={() => {
                 if (latitude && longitude) {
                   this.setState({
@@ -492,9 +493,7 @@ class SdlMap extends PureComponent {
                   mapVisible: true,
                 })
               }}
-              type="global"
-              style={{ color: '#2db7f5', cursor: 'pointer' }}
-            />}
+              style={{ color: '#2db7f5', cursor: 'pointer' }} />}
             allowClear
             {...this.props}
             onChange={(e) => { this.props.onChange && this.props.onChange(e) }}

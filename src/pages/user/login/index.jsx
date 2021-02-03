@@ -1,4 +1,4 @@
-import { Alert, Checkbox, Icon } from 'antd';
+import { Alert, Checkbox } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import Link from 'umi/link';
@@ -8,8 +8,9 @@ import styles from './style.less';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
 
-@connect(({ userLogin, loading }) => ({
+@connect(({ userLogin, global, loading }) => ({
   userLogin,
+  configInfo: global.configInfo,
   submitting: loading.effects['userLogin/login'],
 }))
 class Login extends Component {

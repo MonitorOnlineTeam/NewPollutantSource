@@ -1,5 +1,27 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Table, Select, Card, Form, Row, Col, Icon, Upload, message, Modal, Divider, Tabs, Input, Tag, Tooltip, Spin, Radio, Menu, Dropdown } from 'antd';
+import { DownOutlined, ExportOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Button,
+    Table,
+    Select,
+    Card,
+    Row,
+    Col,
+    Upload,
+    message,
+    Modal,
+    Divider,
+    Tabs,
+    Input,
+    Tag,
+    Tooltip,
+    Spin,
+    Radio,
+    Menu,
+    Dropdown,
+} from 'antd';
 import { connect } from 'dva';
 import styles from './Index.less';
 import { downloadFile } from '@/utils/utils';
@@ -142,10 +164,10 @@ export default class Index extends Component {
         };
         return (
             <Upload {...props}>
-                <Icon type="import" />
+                <ImportOutlined />
                 <span style={{ marginLeft: 8 }}>文件导入</span>
             </Upload>
-        )
+        );
     }
     //导入之前确认框
     uploadConfirm = () => {
@@ -566,7 +588,7 @@ export default class Index extends Component {
                     <div style={{ marginBottom: 16, marginTop: 16 }}>
                         <Button
                             style={{ marginRight: 8 }}
-                            icon="plus"
+                            icon={<PlusOutlined />}
                             type="primary"
                             onClick={this.updateModel}
                         >添加
@@ -574,7 +596,7 @@ export default class Index extends Component {
                         <Dropdown overlay={<Menu onClick={this.menuClick}>
                             <Menu.Item>
                                 {/* <Button onClick={() => this.Template()}></Button> */}
-                                <Icon type="export" />模板下载
+                                <ExportOutlined />模板下载
                             </Menu.Item>
                             <Menu.Item>
                                 {
@@ -594,7 +616,7 @@ export default class Index extends Component {
                             </Menu.Item>
                         </Menu>}>
                             <Button>
-                                更多操作 <Icon type="down" />
+                                更多操作 <DownOutlined />
                             </Button>
                         </Dropdown>
                     </div>

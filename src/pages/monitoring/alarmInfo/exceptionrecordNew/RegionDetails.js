@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import SdlTable from '@/components/SdlTable'
 import { connect } from 'dva'
-import { Card, Row, Button, Divider, Radio, Modal, Icon } from 'antd';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Card, Row, Button, Divider, Radio, Modal } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { router } from 'umi'
 import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
@@ -191,14 +192,14 @@ class RegionDetails extends PureComponent {
                 <Radio.Button value="0">待响应</Radio.Button>
               </Radio.Group>
             }
-            <Button style={{ margin: '0 5px' }} icon="export" loading={exportLoading} onClick={this.onExport}>
+            <Button style={{ margin: '0 5px' }} icon={<ExportOutlined />} loading={exportLoading} onClick={this.onExport}>
               导出
             </Button>
             <Button onClick={() => {
               // this.props.onBack ? this.props.onBack() : router.push("/monitoring/missingData/exceptionrecord")
               history.back();
             }}>
-              <Icon type="rollback" />
+              <RollbackOutlined />
               返回
             </Button>
           </Row>

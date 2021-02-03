@@ -6,7 +6,22 @@
  * @desc: 质控比对页面
  */
 import React, { Component } from 'react';
-import { Card, Alert, Row, Col, Select, Button, message, Input, Form, Radio, Popover, Icon,Spin } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Alert,
+  Row,
+  Col,
+  Select,
+  Button,
+  message,
+  Input,
+  Radio,
+  Popover,
+  Spin,
+} from 'antd';
 import { connect } from 'dva'
 import RangePicker_ from '@/components/RangePicker'
 import ReactEcharts from 'echarts-for-react';
@@ -493,145 +508,143 @@ class ResultContrastPage extends Component {
     }
     const echartEle = document.querySelector(".echarts-for-react");
     const echartsHeight = echartEle ? echartEle.offsetHeight - 96 + "px" : 200 + "px"
-    return (
-      <>
-        {/* <div style={{ marginBottom: 10 }}>
-          {
-            (resultContrastData.errorStr === "合格" && dateValue) ? (
-              <Alert
-                type="success"
-                message={
-                  <div>
-                    本次结果比对<span style={{ color: "#51c41b" }}>合格!</span>
-                  </div>
-                }
-                onClose={this.onAlertClose}
-                banner
-              // closable
-              />
-            ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
-              <Alert
-                type="error"
-                message={
-                  <div>
-                    本次结果比对<span style={{ color: "#f5232d" }}>不合格!</span>
-                  </div>
-                }
-                onClose={this.onAlertClose}
-                banner
-              // closable
-              /> : null
-              )
-          }
-        </div> */}
+    return <>
+      {/* <div style={{ marginBottom: 10 }}>
+        {
+          (resultContrastData.errorStr === "合格" && dateValue) ? (
+            <Alert
+              type="success"
+              message={
+                <div>
+                  本次结果比对<span style={{ color: "#51c41b" }}>合格!</span>
+                </div>
+              }
+              onClose={this.onAlertClose}
+              banner
+            // closable
+            />
+          ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
+            <Alert
+              type="error"
+              message={
+                <div>
+                  本次结果比对<span style={{ color: "#f5232d" }}>不合格!</span>
+                </div>
+              }
+              onClose={this.onAlertClose}
+              banner
+            // closable
+            /> : null
+            )
+        }
+      </div> */}
 
-        <Card
-          bodyStyle={{ maxHeight: 'calc(100vh - 400px)', overflowY: "auto", padding: "10px 14px 10px" }}
-          footer={null}
-        >
-          {
+      <Card
+        bodyStyle={{ maxHeight: 'calc(100vh - 400px)', overflowY: "auto", padding: "10px 14px 10px" }}
+        footer={null}
+      >
+        {
 
-            (resultContrastData.errorStr === "合格" && dateValue) ? (
-              <CustomIcon className={styles.QCResult} type="icon-hege" />
-            ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
-              <CustomIcon className={styles.QCResult} type="icon-buhege" /> : <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
-              )
-          }
-
+          (resultContrastData.errorStr === "合格" && dateValue) ? (
+            <CustomIcon className={styles.QCResult} type="icon-hege" />
+          ) : ((resultContrastData.errorStr === "不合格" && dateValue) ?
+            <CustomIcon className={styles.QCResult} type="icon-buhege" /> : <CustomIcon className={styles.QCResult} type="icon-wuxiao" />
+            )
+        }
 
 
-          <Radio.Group style={{
-            position: "absolute",
-            right: 10,
-            zIndex: 1,
-            float: "right",
-            height: 8,
-            position: "relative",
-            marginTop: -2
-          }} defaultValue="chart" buttonStyle="solid" onChange={(e) => {
-            this.setState({
-              showType: e.target.value
-            })
-          }}>
-            <Radio.Button value="chart">图表</Radio.Button>
-            <Radio.Button value="data">报表</Radio.Button>
-          </Radio.Group>
-          {
-            showType === "chart" ? <ReactEcharts
-              // theme="line"
-              // option={() => { this.lightOption() }}
-              option={this.lineOption()}
-              lazyUpdate
-              notMerge
-              id="rightLine"
-              style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
-            /> :(qcaLoading ? <Spin
-              style={{
-                width: '100%',
-                height: 'calc(100vh/2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              size="large"
-            /> : <table
-              className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 400px)', minHeight: '300px', marginTop: 38 }}
-            > 
-                <tbody >
-                  <tr>
-                    <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                      序号
-                  </td>
-                    <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-                      标准气体或校准器件参考值
-                  </td>
-                    <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                      CEMS显示值
-                  </td>
-                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                      CEMS显示值的平均值
-                  </td>
-                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                      示值误差（%）
-                    <Popover content={content} title="计算规则" placement="bottom">
-                        <Icon type="exclamation-circle" />
-                      </Popover>
 
-                    </td>
-                    <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                      备注
-                  </td>
-                  </tr>
-                  {
-                    this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
-                  }
-                  {/* <tr> */}
-                  {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    测定值
-                  </td>
-                  <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    平均值
-                  </td> */}
-                  {/* </tr> */}
-                  {/* <tr> */}
-                  {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    T1
+        <Radio.Group style={{
+          position: "absolute",
+          right: 10,
+          zIndex: 1,
+          float: "right",
+          height: 8,
+          position: "relative",
+          marginTop: -2
+        }} defaultValue="chart" buttonStyle="solid" onChange={(e) => {
+          this.setState({
+            showType: e.target.value
+          })
+        }}>
+          <Radio.Button value="chart">图表</Radio.Button>
+          <Radio.Button value="data">报表</Radio.Button>
+        </Radio.Group>
+        {
+          showType === "chart" ? <ReactEcharts
+            // theme="line"
+            // option={() => { this.lightOption() }}
+            option={this.lineOption()}
+            lazyUpdate
+            notMerge
+            id="rightLine"
+            style={{ width: '100%', height: 'calc(100vh - 430px)', minHeight: '300px' }}
+          /> :(qcaLoading ? <Spin
+            style={{
+              width: '100%',
+              height: 'calc(100vh/2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            size="large"
+          /> : <table
+            className={stylesFor.FormTable} style={{ width: '100%', height: 'calc(100vh - 400px)', minHeight: '300px', marginTop: 38 }}
+          > 
+              <tbody >
+                <tr>
+                  <td style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                    序号
+                </td>
+                  <td style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
+                    标准气体或校准器件参考值
+                </td>
+                  <td style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                    CEMS显示值
+                </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    CEMS显示值的平均值
+                </td>
+                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                    示值误差（%）
+                  <Popover content={content} title="计算规则" placement="bottom">
+                      <ExclamationCircleOutlined />
+                    </Popover>
+
                   </td>
                   <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    T2
-                  </td>
-                  <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                    T=T1+T2
-                  </td> */}
-                  {/* </tr> */}
-                  {}
-                </tbody>
-              </table>)
-            // scroll={{ y: echartsHeight }}
-          }
-        </Card>
-      </>
-    );
+                    备注
+                </td>
+                </tr>
+                {
+                  this.renderData(this.props.qcaReportList !== null ? this.props.qcaReportList : null)
+                }
+                {/* <tr> */}
+                {/* <td colSpan="3" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  测定值
+                </td>
+                <td rowSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  平均值
+                </td> */}
+                {/* </tr> */}
+                {/* <tr> */}
+                {/* <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  T1
+                </td>
+                <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  T2
+                </td>
+                <td style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
+                  T=T1+T2
+                </td> */}
+                {/* </tr> */}
+                {}
+              </tbody>
+            </table>)
+          // scroll={{ y: echartsHeight }}
+        }
+      </Card>
+    </>;
   }
 }
 

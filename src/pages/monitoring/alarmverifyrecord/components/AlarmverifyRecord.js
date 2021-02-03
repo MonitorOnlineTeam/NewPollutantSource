@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card,
-    Spin,
-    Tooltip, Modal, Divider, Icon,
-} from 'antd';
+import { SnippetsTwoTone } from '@ant-design/icons';
+import { Card, Spin, Tooltip, Modal, Divider } from 'antd';
 import {
     PointIcon,
     DetailIcon,
@@ -92,7 +89,7 @@ class AlarmverifyRecord extends Component {
                                             })
                                         }}
                                     >
-                                        <Icon type="snippets" theme="twoTone" />
+                                        <SnippetsTwoTone />
                                     </a>
                                 </Tooltip>
                             </Fragment>

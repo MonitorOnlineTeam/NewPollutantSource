@@ -4,7 +4,20 @@
  * 创建时间：2020.10.13
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Icon } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Row,
+  Col,
+  Radio,
+  Select,
+  DatePicker,
+  Empty,
+  message,
+  Tabs,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -131,42 +144,40 @@ onChangeHandle=(PageIndex, PageSize)=>{
           }
   };
   cardTitle = () => {
-    return (
-      <>
-        {/* <Select
-          allowClear
-          showSearch
-          style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-          placeholder="行政区"
-          maxTagCount={2}
-          maxTagTextLength={5}
-          maxTagPlaceholder="..."
-          optionFilterProp="children"
-          filterOption={(input, option) => {
-            if (option && option.props && option.props.title) {
-              return option.props.title === input || option.props.title.indexOf(input) !== -1
-            } else {
-              return true
-            }
-          }}
-          onChange={(value) => {
-            this.setState({
-              regionValue: value
-            })
-          }}>
-          {this.children()}
-        </Select> */}
-        <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-         changeRegion={(value)=>{
+    return <>
+      {/* <Select
+        allowClear
+        showSearch
+        style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+        placeholder="行政区"
+        maxTagCount={2}
+        maxTagTextLength={5}
+        maxTagPlaceholder="..."
+        optionFilterProp="children"
+        filterOption={(input, option) => {
+          if (option && option.props && option.props.title) {
+            return option.props.title === input || option.props.title.indexOf(input) !== -1
+          } else {
+            return true
+          }
+        }}
+        onChange={(value) => {
           this.setState({
             regionValue: value
           })
-        }} RegionCode={this.state.regionValue}/>
+        }}>
+        {this.children()}
+      </Select> */}
+      <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+       changeRegion={(value)=>{
+        this.setState({
+          regionValue: value
+        })
+      }} RegionCode={this.state.regionValue}/>
 
-        <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-        <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-      </>
-    )
+      <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+      <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+    </>;
   }
   
 

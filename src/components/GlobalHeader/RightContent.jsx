@@ -1,4 +1,5 @@
-import { Icon, Tooltip, Popover } from 'antd';
+import { QrcodeOutlined } from '@ant-design/icons';
+import { Tooltip, Popover, Dropdown, Menu } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -8,9 +9,11 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
 import NoticeIconView from './NoticeIconView'
+import { UnorderedListOutlined } from '@ant-design/icons';
 
 const GlobalHeaderRight = props => {
-  const { theme, layout, configInfo, appFlag } = props;
+
+  const { theme, layout, configInfo, appFlag, sysPollutantTypeList } = props;
   // console.log("changePwdVisible=",props);
   let className = styles.right;
 
@@ -27,61 +30,48 @@ const GlobalHeaderRight = props => {
   else {
     getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
   }
+  const menu = (
+    <Menu selectedKeys={[sessionStorage.getItem('sysMenuId')]}>
+      {
+        sysPollutantTypeList.map(item => {
+          return <Menu.Item key={item.ID}>
+            <a target="_blank" rel="noopener noreferrer" onClick={() => {
+              if (item.ID !== sessionStorage.getItem('sysMenuId')) {
+                window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+              }
+            }}>
+              {item.Name}
+            </a>
+          </Menu.Item>
+        })
+      }
+    </Menu>
+  );
 
   return (
     <div className={className}>
-      {/* <HeaderSearch
-        className={`${styles.action} ${styles.search}`}
-        placeholder={formatMessage({
-          id: 'component.globalHeader.search',
-        })}
-        dataSource={[
-          formatMessage({
-            id: 'component.globalHeader.search.example1',
-          }),
-          formatMessage({
-            id: 'component.globalHeader.search.example2',
-          }),
-          formatMessage({
-            id: 'component.globalHeader.search.example3',
-          }),
-        ]}
-        onSearch={value => {
-          console.log('input', value);
-        }}
-        onPressEnter={value => {
-          console.log('enter', value);
-        }}
-      /> */}
-      {/* <Tooltip
-        title={formatMessage({
-          id: 'component.globalHeader.help',
-        })}
-      >
-        <a
-          target="_blank"
-          href="https://pro.ant.design/docs/getting-started"
-          rel="noopener noreferrer"
-          className={styles.action}
-        >
-          <Icon type="question-circle-o" />
-        </a>
-      </Tooltip> */}
+      {
+        configInfo.IsShowSysPage === '1' && <Dropdown overlay={menu} trigger={['click']}>
+          <Tooltip title="切换系统">
+            <a
+              rel="noopener noreferrer"
+              className={styles.action}
+            >
+              <UnorderedListOutlined />
+            </a>
+          </Tooltip>
+        </Dropdown>
+      }
       {
         configInfo && configInfo.IsShowQRcode === 'true' &&
         <Popover content={<div>
-          {/* <img
-          width={272}
-          alt="logo"
-          src={`/api/upload/phoneQRCode.png`}
-        /> */}
           <QRCode value={getIp} size={200} />
         </div>} title="手机端下载" trigger="hover">
           <a
             rel="noopener noreferrer"
             className={styles.action}
           >
-            <Icon type="qrcode" />
+            <QrcodeOutlined />
           </a>
         </Popover>
       }
@@ -94,8 +84,9 @@ const GlobalHeaderRight = props => {
   );
 };
 
-export default connect(({ settings, login }) => ({
+export default connect(({ settings, login, global }) => ({
   theme: settings.navTheme,
   layout: settings.layout,
-  appFlag: login.appFlag
+  appFlag: login.appFlag,
+  sysPollutantTypeList: global.sysPollutantTypeList,
 }))(GlobalHeaderRight);

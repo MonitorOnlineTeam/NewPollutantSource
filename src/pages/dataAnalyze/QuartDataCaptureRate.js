@@ -7,19 +7,7 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import {
-  Card,
-  Table,
-  DatePicker,
-  Progress,
-  Row,
-  Popover,
-  Col,
-  Icon,
-  Badge,
-  Select,
-  Input
-} from 'antd';
+import { Card, Table, DatePicker, Progress, Row, Popover, Col, Badge, Select, Input } from 'antd';
 import moment from 'moment';
 import { connect } from "dva"
 import SdlTable from '@/components/SdlTable';

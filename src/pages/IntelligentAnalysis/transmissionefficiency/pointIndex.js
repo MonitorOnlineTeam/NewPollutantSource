@@ -4,18 +4,8 @@
  * 创建时间：2018.12.08
  */
 import React, { Component } from 'react';
-import {
-    Card,
-    Table,
-    DatePicker,
-    Progress,
-    Row,
-    Popover,
-    Col,
-    Icon,
-    Badge,
-    Button,
-} from 'antd';
+import { WarningOutlined } from '@ant-design/icons';
+import { Card, Table, DatePicker, Progress, Row, Popover, Col, Badge, Button } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
 import { connect } from 'dva';
@@ -158,7 +148,7 @@ export default class TransmissionEfficiency extends Component {
                     if (record.AvgTransmissionNumber <= text) {
                         return <span className={styles.normaldata}>{text}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{record.AvgTransmissionNumber}</span>)
+                    const content = (<span><WarningOutlined style={{ color: '#EEC900' }} />平均值{record.AvgTransmissionNumber}</span>)
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}> <Badge className={styles.warningdata} status="warning" />{text}
                         </span> </Popover>);
@@ -177,7 +167,7 @@ export default class TransmissionEfficiency extends Component {
                     if (record.AvgEffectiveNumber <= text) {
                         return <span className={styles.normaldata}>{text}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{record.AvgEffectiveNumber}</span>)
+                    const content = (<span><WarningOutlined style={{ color: '#EEC900' }} />平均值{record.AvgEffectiveNumber}</span>)
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{text}
                         </span> </Popover>);
@@ -196,7 +186,7 @@ export default class TransmissionEfficiency extends Component {
                     if (record.AvgTransmissionRate <= text) {
                         return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
+                    const content = (<span><WarningOutlined style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgTransmissionRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);
@@ -216,7 +206,7 @@ export default class TransmissionEfficiency extends Component {
                     if (record.AvgEffectiveRate <= text) {
                         return <span className={styles.normaldata}>{`${(parseFloat(text) * 100).toFixed(2)}%`}</span>;
                     }
-                    const content = (<span><Icon type="warning" style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
+                    const content = (<span><WarningOutlined style={{ color: '#EEC900' }} />平均值{`${(parseFloat(record.AvgEffectiveRate) * 100).toFixed(2)}%`}</span>)
                     return (<Popover content={content} trigger="hover">
                         <span className={styles.avgtext}><Badge className={styles.warningdata} status="warning" />{`${(parseFloat(text) * 100).toFixed(2)}%`}
                         </span> </Popover>);

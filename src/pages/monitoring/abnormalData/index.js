@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
@@ -362,7 +365,7 @@ class index extends PureComponent {
                       </Button>
                 <Button
                   style={{ margin: '0 5px' }}
-                  icon="export"
+                  icon={<ExportOutlined />}
                   onClick={this.exportExceptionList}
                 >
                   导出

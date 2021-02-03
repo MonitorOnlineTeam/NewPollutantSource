@@ -31,3 +31,9 @@ export async function InsertAlarmDepOrRole(params) {
 
   return result;
 }
+
+// 获取系统入口
+export async function getSysPollutantTypeList() {
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysList', {}, null);
+  return result;
+}

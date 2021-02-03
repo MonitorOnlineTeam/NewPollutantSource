@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Card, Tag, Modal, Form } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Card, Tag, Modal } from 'antd';
 import NavigationTree from '@/components/NavigationTree'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';

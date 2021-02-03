@@ -4,6 +4,9 @@
  * 创建时间：2019.08.12
  */
 import React, { Component } from 'react';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
 } from 'antd';
 import moment from 'moment';
@@ -382,136 +383,136 @@ export default class EntTransmissionEfficiency extends Component {
     ];
 
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline">
-                {/* <Form.Item>
-                  时间选择：
-                  <RangePicker_
-                    dateValue={[moment(beginTime), moment(endTime)]}
-                    format="YYYY-MM-DD"
-                    callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                    allowClear={false}
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Select
-                    placeholder="请选择企业类型"
-                    onChange={this.typeChange}
-                    value={PollutantType}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    <Option value="">全部</Option>
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item> */}
-                <Form.Item>
-                  <Select
-                    showSearch
-                    optionFilterProp="children"
-                    allowClear
-                    placeholder="企业列表"
-                    onChange={this.changeRegion}
-                    value={EntCode ? EntCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    {this.children()}
-                  </Select>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exEntloading}
-                  >
-                    导出
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      this.props.history.go(-1);
-                    }}
-                  >
-                    <Icon type="rollback" />
-                    返回
-                  </Button>
-                </Form.Item>
-              </Form>
-              <div style={{ paddingTop: 10 }}>
-                <div
-                  style={{
-                    width: 20,
-                    height: 9,
-                    backgroundColor: '#52c41a',
-                    display: 'inline-block',
-                    borderRadius: '20%',
-                    cursor: 'pointer',
-                    marginRight: 3,
-                  }}
-                />{' '}
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  {' '}
-                  ≥90%达标
-                </span>
-                <div
-                  style={{
-                    width: 20,
-                    height: 9,
-                    backgroundColor: '#f5222d',
-                    display: 'inline-block',
-                    borderRadius: '20%',
-                    cursor: 'pointer',
-                    marginLeft: 10,
-                    marginRight: 3,
-                  }}
-                />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                   {`<90%未达标`}
-                </span>
-              </div>
-            </>
-          }
-        >
+      <Card
+        bordered={false}
+        title={
           <>
-            <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={this.props.loading}
-              columns={columns}
-              bordered={false}
-              onChange={this.handleTableChange}
-              dataSource={this.props.tableDatas}
-              // scroll={{ y: 'calc(100vh - 450px)' }}
-              // scroll={{ y: 550 }}
-              width={'100%'}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                sorter: true,
-                total: this.props.total,
-                pageSize: PageSize,
-                current: PageIndex,
-                pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
-            />
-            <Modal
-              title="企业下有效传输率"
-              visible={this.state.visible}
-              footer={null}
-              width={'95%'}
-              onCancel={() => {
-                this.setState({ visible: false });
-              }}
-            >
-              <EnterpriseModels />
-            </Modal>
+            <Form layout="inline">
+              {/* <Form.Item>
+                时间选择：
+                <RangePicker_
+                  dateValue={[moment(beginTime), moment(endTime)]}
+                  format="YYYY-MM-DD"
+                  callback={(dates, dataType) => this.dateCallback(dates, dataType)}
+                  allowClear={false}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Select
+                  placeholder="请选择企业类型"
+                  onChange={this.typeChange}
+                  value={PollutantType}
+                  style={{ width: 200, marginLeft: 10 }}
+                >
+                  <Option value="">全部</Option>
+                  <Option value="1">废水</Option>
+                  <Option value="2">废气</Option>
+                </Select>
+              </Form.Item> */}
+              <Form.Item>
+                <Select
+                  showSearch
+                  optionFilterProp="children"
+                  allowClear
+                  placeholder="企业列表"
+                  onChange={this.changeRegion}
+                  value={EntCode ? EntCode : undefined}
+                  style={{ width: 200, marginLeft: 10 }}
+                >
+                  {this.children()}
+                </Select>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" onClick={this.queryClick}>
+                  查询
+                </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exEntloading}
+                >
+                  导出
+                </Button>
+                <Button
+                  onClick={() => {
+                    this.props.history.go(-1);
+                  }}
+                >
+                  <RollbackOutlined />
+                  返回
+                </Button>
+              </Form.Item>
+            </Form>
+            <div style={{ paddingTop: 10 }}>
+              <div
+                style={{
+                  width: 20,
+                  height: 9,
+                  backgroundColor: '#52c41a',
+                  display: 'inline-block',
+                  borderRadius: '20%',
+                  cursor: 'pointer',
+                  marginRight: 3,
+                }}
+              />{' '}
+              <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                {' '}
+                ≥90%达标
+              </span>
+              <div
+                style={{
+                  width: 20,
+                  height: 9,
+                  backgroundColor: '#f5222d',
+                  display: 'inline-block',
+                  borderRadius: '20%',
+                  cursor: 'pointer',
+                  marginLeft: 10,
+                  marginRight: 3,
+                }}
+              />
+              <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                 {`<90%未达标`}
+              </span>
+            </div>
           </>
-        </Card>
+        }
+      >
+        <>
+          <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={this.props.loading}
+            columns={columns}
+            bordered={false}
+            onChange={this.handleTableChange}
+            dataSource={this.props.tableDatas}
+            // scroll={{ y: 'calc(100vh - 450px)' }}
+            // scroll={{ y: 550 }}
+            width={'100%'}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              sorter: true,
+              total: this.props.total,
+              pageSize: PageSize,
+              current: PageIndex,
+              pageSizeOptions: ['10', '20', '30', '40', '50'],
+            }}
+          />
+          <Modal
+            title="企业下有效传输率"
+            visible={this.state.visible}
+            footer={null}
+            width={'95%'}
+            onCancel={() => {
+              this.setState({ visible: false });
+            }}
+          >
+            <EnterpriseModels />
+          </Modal>
+        </>
+      </Card>
     );
   }
 }

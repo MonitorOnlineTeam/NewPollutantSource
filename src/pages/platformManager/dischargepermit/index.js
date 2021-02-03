@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import {
-  Card, Spin, Modal, Button, Form, Divider, Tooltip, Popconfirm, Icon,
-} from 'antd';
+import { PlusOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Modal, Button, Divider, Tooltip, Popconfirm } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
 import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
@@ -183,7 +184,7 @@ class Index extends Component {
               type="link"
               size="small"
             >
-              <Icon type="rollback" />
+              <RollbackOutlined />
                   返回上级
                 </Button>
           </span>
@@ -201,7 +202,7 @@ class Index extends Component {
                 parentcode="ddd"
                 searchParams={DataWhere}
                 appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
-                  <Button icon="plus" type="primary" onClick={() => {
+                  <Button icon={<PlusOutlined />} type="primary" onClick={() => {
                     this.setState({
                       visible: true,
                     })

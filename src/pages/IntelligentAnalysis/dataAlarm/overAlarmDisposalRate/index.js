@@ -8,7 +8,10 @@
 
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'; // 外层cpmponent 包含面包屑
-import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';
@@ -375,7 +378,7 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Form layout="inline" style={{ marginBottom: 0 }}>
+          <Form style={{ marginBottom: 0 }}>
             <Row gutter={16}>
               <Col md={4}>
                 <FormItem {...formLayout} label="数据类型" style={{ width: '100%' }}>
@@ -540,7 +543,7 @@ class index extends PureComponent {
                 </Button>
                 <Button
                   style={{ margin: '0 5px' }}
-                  icon="export"
+                  icon={<ExportOutlined />}
                   onClick={this.exportAlarmManagementRate}
                   loading={alarmManagementRateExportLoading}
                 >

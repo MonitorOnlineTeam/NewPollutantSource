@@ -6,6 +6,8 @@
  * @desc: 标准库管理
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Table,
   Card,
@@ -15,7 +17,6 @@ import {
   Row,
   Col,
   Button,
-  Form,
   Input,
   InputNumber,
   Select,
@@ -23,7 +24,6 @@ import {
   Popconfirm,
   message,
   Upload,
-  Icon,
 } from 'antd';
 import NavigationTree from '@/components/NavigationTree'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"

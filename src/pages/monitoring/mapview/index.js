@@ -1,5 +1,25 @@
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Card, Row, Col, Tag, Modal, Divider, Tabs, Statistic, Descriptions, Spin, Empty, Tooltip, Popover, Radio } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Select,
+  Input,
+  Button,
+  Card,
+  Row,
+  Col,
+  Tag,
+  Modal,
+  Divider,
+  Tabs,
+  Statistic,
+  Descriptions,
+  Spin,
+  Empty,
+  Tooltip,
+  Popover,
+  Radio,
+} from 'antd';
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 // import { Map, Markers, InfoWindow, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';

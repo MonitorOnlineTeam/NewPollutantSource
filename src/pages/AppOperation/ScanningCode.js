@@ -4,9 +4,8 @@ import zh_CN from 'antd-mobile/lib/date-picker/locale/zh_CN';
 import moment, { months } from 'moment';
 import styles from './ScanningCode.less';
 import { connect } from 'dva';
-import {
-    Icon, Spin
-} from 'antd';
+import { ExclamationCircleTwoTone } from '@ant-design/icons';
+import { Spin } from 'antd';
 import { router } from 'umi'
 const Item = List.Item;
 const Step = Steps.Step;
@@ -203,7 +202,7 @@ class ScanningCode extends PureComponent {
                                     工单情况
                                 </span>
                                 <span style={{ marginLeft: 10 }}>
-                                    <Icon style={{ fontSize: 13 }} onClick={this.showModal()} type="exclamation-circle" theme="twoTone" />
+                                    <ExclamationCircleTwoTone style={{ fontSize: 13 }} onClick={this.showModal()} />
                                 </span>
                             </span>
                         }

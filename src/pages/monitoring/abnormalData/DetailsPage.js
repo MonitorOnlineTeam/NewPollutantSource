@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Select, Input, Checkbox, DatePicker, Button, Icon, Divider } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, DatePicker, Button, Divider } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
@@ -148,7 +151,7 @@ class DetailsPage extends PureComponent {
             {`${queryCondition.RegionName}${beginTime}至${endTime}${title}情况`}
           </Row>
           <Row style={{ marginBottom: 10 }}>
-            <Button type="primary" ghost icon="export" onClick={this.onExport}>
+            <Button type="primary" ghost icon={<ExportOutlined />} onClick={this.onExport}>
               导出
             </Button>
             <Divider type="vertical" />

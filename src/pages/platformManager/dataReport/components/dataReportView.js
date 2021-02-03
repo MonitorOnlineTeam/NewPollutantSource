@@ -5,6 +5,8 @@
  * @Date: 2020年1月22日9：30
  */
 import React, { Component, Fragment } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Button,
     Input,
@@ -12,10 +14,18 @@ import {
     Row,
     Col,
     Table,
-    Form,
     Spin,
     Tooltip,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber,
+    Select,
+    Modal,
+    Tag,
+    Divider,
+    Dropdown,
+    Menu,
+    Popconfirm,
+    message,
+    DatePicker,
+    InputNumber,
 } from 'antd';
 import styles from '../style.less';
 

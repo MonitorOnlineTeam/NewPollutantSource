@@ -6,7 +6,27 @@
  * @desc: 远程质控
  */
 import React, { Component } from 'react';
-import { Card, Button, Spin, Input, Select, InputNumber, Alert, Tabs, Form, Row, Col, Divider, Modal, message, List, Statistic, Collapse, Icon } from 'antd';
+import { StopOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Button,
+  Spin,
+  Input,
+  Select,
+  InputNumber,
+  Alert,
+  Tabs,
+  Row,
+  Col,
+  Divider,
+  Modal,
+  message,
+  List,
+  Statistic,
+  Collapse,
+} from 'antd';
 import { connect } from 'dva';
 import NavigationTree from '@/components/NavigationTree'
 import moment from 'moment';
@@ -268,7 +288,7 @@ class RemoteControlPage extends Component {
     }
     switch (this.props.DeviceStatus) {
       case "0":
-        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />
+        return <Alert type="error" icon={<StopOutlined />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />;
       case "1":
         return <Alert type="success" style={{ marginBottom: 10 }} message={`质控仪在线中${text}`} banner />
       case "3":

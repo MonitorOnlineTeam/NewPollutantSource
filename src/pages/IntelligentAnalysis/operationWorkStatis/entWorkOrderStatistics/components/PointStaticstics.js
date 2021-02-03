@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import {
- Card, Col, Row, Input, Checkbox, Button, message, Icon, Modal,
-} from 'antd';
+import { Card, Col, Row, Input, Checkbox, Button, message, Modal } from 'antd';
 import { connect } from 'dva'
 import moment from 'moment'
 import { router } from 'umi'

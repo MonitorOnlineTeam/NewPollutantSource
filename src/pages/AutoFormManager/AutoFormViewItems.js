@@ -1,15 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Form,
-  Input,
-  Button,
-  Icon,
-  Card,
-  Spin,
-  Row,
-  Col,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Card, Spin, Row, Col } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import SdlMap from './SdlMap'
