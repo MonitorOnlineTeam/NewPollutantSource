@@ -12,7 +12,7 @@ import {
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
-import { message } from 'antd';
+import { message, Select } from 'antd';
 import { isUrl, sdlMessage } from '@/utils/utils';
 import Model from '@/utils/model';
 import configToken from '@/config'
@@ -82,7 +82,7 @@ export default Model.extend({
       //     payload: response,
       // });
     },
-    *fetchCurrent({ payload, callback }, { call, put }) {
+    *fetchCurrent({ payload, callback }, { call, put, select }) {
       const currentUser = Cookie.get('currentUser');
       if (currentUser) {
         const currentUser = JSON.parse(Cookie.get('currentUser'));
@@ -92,8 +92,19 @@ export default Model.extend({
           callback && callback(response)
           const cMenu = formatter(response.Datas);
           // const cMenu = yield call(formatter, response.Datas);
+
+          let defaultNavigateUrl = sessionStorage.getItem('defaultNavigateUrl')
           if (window.location.pathname === '/') {
-            router.push(sessionStorage.getItem('defaultNavigateUrl'))
+            if (defaultNavigateUrl) {
+              router.push(defaultNavigateUrl);
+            } else {
+              const configInfo = yield select(state => state.global.configInfo)
+              if (configInfo.IsShowSysPage === '1') {
+                router.push('/sysTypeMiddlePage');
+              } else {
+                router.push('/user/login');
+              }
+            }
           }
           const menuList = getMenuList(cMenu);
           let filterDescList = (menuList && menuList.length) ?

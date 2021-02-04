@@ -1,4 +1,5 @@
 @import '~antd/es/style/themes/default.less';
+@contentMargin: 20px; // 内容区域左右边距
 
 html,
 body,
@@ -53,6 +54,29 @@ ol {
 }
 
 :global {
+
+  // 面包屑 -- start
+  .ant-pro-page-header-wrap-page-header-warp {
+    background-color: transparent;
+    line-height: 46px;
+    // margin-left: @contentMargin;
+  }
+
+  .ant-breadcrumb {
+    display: inline-block;
+
+    a {
+      color: #666;
+    }
+  }
+
+  // 面包屑 -- end
+
+  // 内容区域样式
+  .ant-pro-page-header-wrap-children-content {
+    margin: 0 @contentMargin;
+  }
+
   .ant-modal-wrap {
     input {
       line-height: 1;
@@ -95,11 +119,6 @@ ol {
       // margin: 8px;
       // padding-top: 64px;
     }
-
-    .ant-pro-page-header-wrap-children-content {
-      margin: 14px 10px 0;
-    }
-
 
     // table没有数据时，隐藏表头滚动条
     .ant-table-empty .ant-table-body {
@@ -331,8 +350,9 @@ a:hover {
 
     // 面包屑样式 - start
     .ant-page-header {
-      padding: 10px 14px;
+      padding: 11px 20px;
       min-height: 44px;
+      background-color: transparent;
 
       .ant-page-header-heading {
         float: left;

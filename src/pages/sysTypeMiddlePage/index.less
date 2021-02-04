@@ -34,7 +34,7 @@
 }
 
 .pageContainer {
-  padding: 96px 100px 0;
+  padding: 3% 3% 0;
   background: url('/middlePage/bg.jpg') no-repeat;
   background-size: cover;
   height: calc(100vh - 64px);
@@ -68,7 +68,8 @@
         position: relative;
 
         img {
-          width: 112px;
+          max-width: 112px;
+          width: 70%;
           margin-bottom: 20px;
         }
       }
@@ -76,7 +77,7 @@
       .sysName {
         text-align: center;
         color: #fff;
-        font-weight: bold;
+        font-weight: bold; 
         position: absolute;
         bottom: 30px;
         font-size: 16px;
@@ -85,4 +86,13 @@
     }
   }
 
+}
+
+@media (max-height: 960px) {
+  .pageContainer {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

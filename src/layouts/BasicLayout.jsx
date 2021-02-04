@@ -19,7 +19,7 @@ import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
 import defaultSettings from '../../config/defaultSettings.js'
 import webConfig from "../../public/webConfig"
-
+import SdlMenu from "@/components/SdlMenu"
 
 
 
@@ -305,6 +305,7 @@ class BasicLayout extends Component {
     }
     return (
       <>
+        <SdlMenu match={this.props.match} location={this.props.location} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}

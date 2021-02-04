@@ -4,14 +4,31 @@ import { Breadcrumb } from 'antd';
 import config from '@/config'
 import defaultSettings from '../../../config/defaultSettings'
 import webConfig from '../../../public/webConfig'
+import { connect } from "dva"
 
+
+@connect(({ navigationtree }) => ({
+  selectTreeItem: navigationtree.pointInfo,
+}))
 class index extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectTreeItem: {}
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectTreeItem !== this.props.selectTreeItem) {
+      this.setState({
+        selectTreeItem: this.props.selectTreeItem
+      })
+    }
   }
 
   pageHeaderRender = (pageHeaderWrapperProps) => {
+    const { selectTreeItem } = this.state;
+    console.log('selectTreeItem=', selectTreeItem)
     if (pageHeaderWrapperProps.unfoldMenuList.length) {
       let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path === location.pathname)
       // url和菜单能匹配到
@@ -21,11 +38,7 @@ class index extends Component {
         // 面包屑地址
         let breadcrumbPaths = currentMenu.parentUrl.split(',');
         return <div className="ant-page-header">
-          <div className="ant-page-header-heading">
-            <div className="ant-page-header-heading-title">
-              {this.props.title || pageHeaderWrapperProps.title}
-            </div>
-          </div>
+          当前位置：
           <Breadcrumb>
             {
               breadcrumbNames.split('/').map((item, index) => {
@@ -44,14 +57,11 @@ class index extends Component {
                 : ""
             }
           </Breadcrumb>
+          {(selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
         </div>
       } else if (pageHeaderWrapperProps.breadcrumb.routes) {
         return <div className="ant-page-header">
-          <div className="ant-page-header-heading">
-            <div className="ant-page-header-heading-title">
-              {this.props.title || (pageHeaderWrapperProps.breadcrumb.routes[pageHeaderWrapperProps.breadcrumb.routes.length - 1].breadcrumbName)}
-            </div>
-          </div>
+          当前位置：
           <Breadcrumb>
             {
               pageHeaderWrapperProps.breadcrumb.routes.map(item => {
@@ -70,6 +80,7 @@ class index extends Component {
                 : ""
             }
           </Breadcrumb>
+          {(selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
         </div>
       }
     }
@@ -82,7 +93,7 @@ class index extends Component {
     }
     return (
       <PageHeaderWrapper
-        title={this.props.title}
+        title={null}
         className={!webConfig.isShowBreadcrumb ? "hideBreadcrumb" : ""}
         pageHeaderRender={(PageHeaderWrapperProps) => {
           return this.pageHeaderRender(PageHeaderWrapperProps);
