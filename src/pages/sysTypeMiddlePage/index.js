@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'dva'
-import { Card } from 'antd'
+import { Card, Row, Col } from 'antd'
 import styles from './index.less'
 import Cookie from 'js-cookie'
 
@@ -55,18 +55,30 @@ class index extends PureComponent {
         </header>
         <div className={styles.pageContainer}>
           <div className={styles.cardListContainer}>
-            {
-              sysPollutantTypeList.map((item, index) => {
-                return <div className={styles.cardItem} onClick={() => this.onSysItemClick(item)} bordered={false}>
-                  <div className={styles.itemContent}>
-                    <img src={`/middlePage/${index + 1}.png`} alt="" />
-                    <span className={styles.sysName}>
-                      {item.Name}
-                    </span>
-                  </div>
-                </div>
-              })
-            }
+            <Row gutter={[16, 16]}>
+              {
+                sysPollutantTypeList.map((item, index) => {
+                  return (
+                    <Col className="gutter-row" span={6} onClick={() => this.onSysItemClick(item)}>
+                      <div className={styles.itemContent}>
+                        <img src={`/middlePage/${index + 1}.png`} alt="" />
+                        <span className={styles.sysName}>
+                          {item.Name}
+                        </span>
+                      </div>
+                    </Col>
+                  )
+                  // return <div className={styles.cardItem} onClick={() => this.onSysItemClick(item)} bordered={false}>
+                  //   <div className={styles.itemContent}>
+                  //     <img src={`/middlePage/${index + 1}.png`} alt="" />
+                  //     <span className={styles.sysName}>
+                  //       {item.Name}
+                  //     </span>
+                  //   </div>
+                  // </div>
+                })
+              }
+            </Row>
           </div>
         </div>
       </div>

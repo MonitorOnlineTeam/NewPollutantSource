@@ -1667,6 +1667,94 @@ export default {
                 },
               ],
             },
+            // 质控 - 数据查询
+            {
+              path: '/dataSearch',
+              name: 'dataSearch',
+              routes: [
+                {
+                  path: '/dataSearch',
+                  redirect: "/dataSearch/monitor"
+                },
+                {
+                  // 质控查询
+                  path: '/dataSearch/qca',
+                  name: 'qca',
+                  routes: [
+                    {
+                      // 零点核查
+                      name: 'working',
+                      path: '/dataSearch/qca/zeroCheck',
+                      component: './dataSearch/qca/zeroCheck',
+                    },
+                    {
+                      // 量程核查
+                      name: 'range',
+                      path: '/dataSearch/qca/rangeCheck',
+                      component: './dataSearch/qca/rangeCheck',
+                    },
+                    {
+                      // 盲样核查
+                      name: 'blind',
+                      path: '/dataSearch/qca/blindCheck',
+                      component: './dataSearch/qca/blindCheck',
+                    },
+                    {
+                      // 线性核查
+                      name: 'linear',
+                      path: '/dataSearch/qca/linearCheck',
+                      component: './dataSearch/qca/linearCheck',
+                    },
+                    {
+                      // 响应时间核查
+                      name: 'resTimeCheck',
+                      path: '/dataSearch/qca/resTimeCheck',
+                      component: './dataSearch/qca/resTimeCheck',
+                    },
+                  ]
+                },
+                {
+                  // 站点数据查询
+                  path: '/dataSearch/siteData',
+                  name: 'siteData',
+                  routes: [
+                    {
+                      // 站点信息
+                      name: 'siteInfo',
+                      path: '/dataSearch/siteData/siteInfo',
+                      component: './dataSearch/siteData/siteInfoPage',
+                    },
+
+                  ]
+                }
+              ]
+            },
+            //质控核查
+            {
+              path: '/qualityCheck',
+              name: 'qualityCheck',
+              routes: [
+                {
+                  // 质控管理
+                  path: '/qualityCheck/qualityMange',
+                  name: 'qualityMange',
+                  routes: [
+                    {
+                      // 质控运维人管理
+                      name: 'user',
+                      path: '/qualityCheck/qualityMange/qualityUser',
+                      component: './qualityCheck/qualityMange/qualityUser',
+                    },
+                  ]
+                },
+              ]
+            },
+            // 质控 - 知识库
+            {
+              path: '/knowledge',
+              name: 'knowledge',
+              component: './KBS/Knowledge',
+            },
             {
               path: '/account/settings',
               name: 'settings',

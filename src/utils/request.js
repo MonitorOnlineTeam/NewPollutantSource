@@ -111,7 +111,11 @@ async function requestMy(url, options) {
       //     return;
       // }
       if (status >= 404 && status < 422) {
-        router.push('/exception/404');
+        // router.push('/exception/404');
+        notification.error({
+          message: `请求错误 404`, 
+          // description: errortext,
+        });
       }
     });
 

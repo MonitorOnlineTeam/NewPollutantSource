@@ -1,0 +1,85 @@
+.banner {
+  display: flex;
+  /* justify-content: center; */
+  background: url(/u230.png) no-repeat;
+  background-size: cover;
+  height: 230px;
+  position: absolute;
+  width: 100vw;
+  left: -24px;
+  top: -24px;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 38px;
+
+  img {
+    position: absolute;
+    top: -24px;
+    left: -24px;
+    width: 100vw;
+  }
+
+  h1 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 50px;
+  }
+
+  .inputContainer {
+    background: #fff;
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    border-radius: 30px;
+    padding-left: 4px;
+    overflow: hidden;
+
+    input {
+      border: none;
+
+      &:focus {
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+.cardItem{
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+.fileItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  img {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+  }
+
+  p {
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .download {
+    float: right;
+    font-size: 16px;
+    color: #989898;
+    cursor: pointer;
+  }
+}
+
+.input {
+  border: none;
+  &:hover, &:focus {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
