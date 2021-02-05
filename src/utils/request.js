@@ -154,7 +154,7 @@ export async function post(url, params) {
   let body = JSON.stringify(params);
   //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
   if (true) {
-    const body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
+    body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
       iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Pkcs7
