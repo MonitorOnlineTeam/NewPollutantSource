@@ -275,7 +275,7 @@ class FlowChart extends PureComponent {
           <>
           {isStop !=1 && isStop !=2 && isStop !=3?  <span style={{color:green.primary}} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span> 
           : 
-          <span style={{color:gold[5],left:75}} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop ==3? "(停运)" :isStop ==1? "(停产)":isStop ==2?"(停炉)":''}</span>
+          <span style={{color:gold[5],left:75}} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop ==3? "(停产)" :isStop ==1? "(停产)":isStop ==2?"(停产)":''}</span>
           }
            <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span>
            <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span>
