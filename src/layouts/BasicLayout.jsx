@@ -74,7 +74,7 @@ class BasicLayout extends Component {
     dispatch({
       type: "global/updateState",
       payload: {
-        clientHeight: document  .body.clientHeight
+        clientHeight: document.body.clientHeight
       },
     })
 
