@@ -34,7 +34,8 @@ class realtimeParam extends Component {
             entName:  `${value[0].entName} - ${value[0].pointName}`
           })
         }} />
-        <BreadcrumbWrapper extraName={entName} id="working">
+        <div  id="working">
+        <BreadcrumbWrapper extraName={entName}>
           <Card>
                 {
                   DGIMN ? <Params DGIMN={DGIMN} /> : <PageLoading />
@@ -42,6 +43,7 @@ class realtimeParam extends Component {
         
           </Card>
         </BreadcrumbWrapper>
+        </div>
       </>
     );
   }
