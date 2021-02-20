@@ -106,6 +106,11 @@ class SearchWrapper extends Component {
     this._handleExpand = this._handleExpand.bind(this);
   }
 
+  componentDidMount() {
+    this.onSubmitForm();
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.searchConfigItems[nextProps.configId] !== nextProps.searchConfigItems[nextProps.configId]) {
       this.setState({
@@ -196,37 +201,36 @@ class SearchWrapper extends Component {
   }
 
   // 时间范围控件
-  _rtnRangePickerEl = item => {
+  _rtnRangePickerEl = (item) => {
     const { dateFormat } = item;
     const { fieldName } = item;
-    const format = dateFormat ? dateFormat.toUpperCase() : "";
+    const format = dateFormat ? dateFormat : "";
 
     console.log("format=", format)
 
-    switch (format) {
-      case "YYYY-MM-DD HH:MM:SS":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} />
+    // switch (format) {
+    //   case "YYYY-MM-DD HH:MM:SS":
+    //     return <RangePicker_ fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} />
 
-      case "YYYY-MM-DD HH:MM":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="minute" />
+    //   case "YYYY-MM-DD HH:MM":
+    //     return <RangePicker_ fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="minute" />
 
-      case "YYYY-MM-DD HH":
-        return <RangePicker_ fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="hour" />
+    //   case "YYYY-MM-DD HH":
+    //     return <RangePicker_ fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} style={{ width: '100%' }} dataType="hour" />
 
-      default:
-        return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}
-          callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} dataType="day" />
-
-    }
+    //   default:
+    //     return <RangePicker_ style={{ width: '100%' }} fieldName={fieldName}
+    //       callback={(dates, type, fieldName) => this.dateCallBack(dates, type, fieldName)} dataType="day" />
+    // }
 
     // return <RangePicker_ style={{ width: '100%' }} />
-    // if (format) {
-    //   return <RangePicker style={{ width: '100%' }} format={format} />
-    // }
-    // return <RangePicker style={{ width: '100%' }} />
+    if (format) {
+      return <RangePicker showTime style={{ width: '100%' }} format={format} />
+    }
+    return <RangePicker showTime style={{ width: '100%' }} />
   }
 
   /**时间控件回调 */
@@ -243,7 +247,7 @@ class SearchWrapper extends Component {
 
   // 渲染FormItem
   _renderFormItem() {
-    const { dispatch, form: { getFieldDecorator }, searchConfigItems, configId } = this.props;
+    const { dispatch, form: { getFieldDecorator, setFieldsValue }, searchConfigItems, configId } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder } = this._SELF_;
     const searchConditions = searchConfigItems[configId] || [];
     let element = '';
@@ -254,6 +258,7 @@ class SearchWrapper extends Component {
       let { placeholder } = item;
       const { fieldName } = item;
       const { labelText } = item;
+      let initialValue = undefined;
       let zIndex = 1;
 
       // 判断类型
@@ -303,11 +308,15 @@ class SearchWrapper extends Component {
           break;
         case "日期框":
           placeholder = placeholder || inputPlaceholder;
-          element = this._rtnDateEl(item);
+          element = this._rtnDateEl(item, fieldName);
           break;
         case "日期范围":
           placeholder = placeholder || inputPlaceholder;
-          element = this._rtnRangePickerEl(item);
+          if (item.DF_QUERY_TIME_TYPE && item.LIST_TIME) {
+            initialValue = [moment().subtract(item.LIST_TIME * 1, item.DF_QUERY_TIME_TYPE), moment()]
+            // setFieldsValue({ [fieldName]: initialValue })
+          }
+          element = this._rtnRangePickerEl(item, fieldName);
           break;
         case "单选":
           element = (
@@ -334,7 +343,9 @@ class SearchWrapper extends Component {
         element &&
         <Col style={{ display: isHide, marginBottom: 6 }} key={index} md={8} sm={24}>
           <FormItem {...formLayout} label={labelText} style={{ width: '100%', marginBottom: 0 }}>
-            {getFieldDecorator(`${fieldName}`, {})(
+            {getFieldDecorator(`${fieldName}`, {
+              initialValue: initialValue
+            })(
               element
             )}
           </FormItem>
@@ -354,7 +365,7 @@ class SearchWrapper extends Component {
         let tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
         let scrollYHeight = this.props.clientHeight - tableOffsetTop;
         let tableBodyEle = document.getElementById("sdlTable").getElementsByClassName("ant-table-body");
-        if(tableBodyEle && tableBodyEle.length) {
+        if (tableBodyEle && tableBodyEle.length) {
           tableBodyEle[0].style.maxHeight = scrollYHeight + "px";
         }
       }
