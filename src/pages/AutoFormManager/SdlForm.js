@@ -507,6 +507,17 @@ class SdlForm extends PureComponent {
             },
           }
         }
+        colSpan = this.props.colSpan || colSpan;
+        if (this.props.colSpan == 24) {
+          layout = {
+            labelCol: {
+              span: 6,
+            },
+            wrapperCol: {
+              span: 14,
+            },
+          }
+        }
         return (
           <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
