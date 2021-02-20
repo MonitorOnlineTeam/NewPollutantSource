@@ -1726,7 +1726,37 @@ export default {
                     },
 
                   ]
-                }
+                },
+                {
+                  // 监测数据
+                  path: '/dataSearch/monitor',
+                  name: 'monitor',
+                  routes: [
+                    {
+                      // 工况模拟
+                      name: 'working',
+                      path: '/dataSearch/monitor/datavisualization',
+                      component: './dataSearch/monitor/working/index',
+                    },
+                    {
+                      // 报警信息
+                      name: 'alarmInfo',
+                      path: '/dataSearch/monitor/alarm',
+                      component: './dataSearch/monitor/alarmInfo',
+
+                    },
+                    { //超标数据
+                      name: 'alarmOverrecord',
+                      path: '/dataSearch/monitor/alarm/overrecord',
+                      component: './dataSearch/monitor/alarmInfo/overRecord',
+                    },
+                    { //异常数据
+                      name: 'alarmExceptionRecord',
+                      path: '/dataSearch/monitor/alarm/exceptionRecord',
+                      component: './dataSearch/monitor/alarmInfo/exceptionRecord',
+                    },
+                  ]
+                },
               ]
             },
             //质控核查
@@ -1745,9 +1775,54 @@ export default {
                       path: '/qualityCheck/qualityMange/qualityUser',
                       component: './qualityCheck/qualityMange/qualityUser',
                     },
+                    {
+                      // 质控方案管理
+                      name: 'qualityProgram',
+                      path: '/qualityCheck/qualityMange/qualityProgram',
+                      component: './qualityCheck/qualityMange/qualityProgram',
+                    },
+                    {
+                      // 标准气管理
+                      name: 'standardAtmosMange',
+                      path: '/qualityCheck/qualityMange/standardAtmosMange',
+                      component: './qualityCheck/qualityMange/standardAtmosMange',
+                    },
                   ]
                 },
-              ]
+                {
+                  // 质控核查设置
+                  path: '/qualityCheck/qualitySetting',
+                  name: 'qualitySetting',
+                  routes: [
+                    {
+                      name: 'zeroPointSet',  //零点核查设置
+                      path: '/qualityCheck/qualitySetting/zeroPointSet',
+                      component: './qualityCheck/qualitySetting/zeroPointSet',
+                    },
+                    {
+                      name: 'rangeSet',  //量程核查设置
+                      path: '/qualityCheck/qualitySetting/rangeSet',
+                      component: './qualityCheck/qualitySetting/rangeSet',
+                    },
+                    {
+                      name: 'linearSet',  //线性核查设置
+                      path: '/qualityCheck/qualitySetting/linearSet',
+                      component: './qualityCheck/qualitySetting/linearSet',
+                    },
+                    {
+                      name: 'blindSet',  //盲样核查设置
+                      path: '/qualityCheck/qualitySetting/blindSet',
+                      component: './qualityCheck/qualitySetting/blindSet',
+                    },
+                    {
+                      name: 'resTimeSet',  //响应时间设置
+                      path: '/qualityCheck/qualitySetting/resTimeSet',
+                      component: './qualityCheck/qualitySetting/resTimeSet',
+                    },
+                  ]
+                },
+              ],
+              
             },
             // 质控 - 知识库
             {
@@ -1918,6 +1993,42 @@ export default {
                 },
               ],
             },
+                        //动态管控
+          {
+              path: '/dynamicControl',
+              name: 'dynamicControl',
+                 routes: [
+                        {
+                          name: 'reportManage',  // 报备管理
+                          path: '/dynamicControl/reportManage',
+                          routes: [
+                             {
+                                name: 'paramFiling',  //管控参数备案
+                                path: '/dynamicControl/reportManage/paramFiling',
+                                component: './dynamicControl/reportManage/paramFiling',
+                               },
+                            ]
+                           },
+                         {
+                            name: 'dynamicDataManage',  // 管控数据
+                            path: '/dynamicControl/dynamicDataManage',
+                            routes: [
+                              {
+                                name: 'realtimedynamicData',  //实时管控参数
+                                path: '/dynamicControl/dynamicDataManage/realtimedynamicData',
+                                component: './dataSearch/monitor/working/realtimeParam',
+          
+                              },
+                              {
+                                 name: 'historyparame',  //历史管控参数
+                                 path: '/dynamicControl/dynamicDataManage/controlData/historyparame',
+                                 component: './dynamicControl/controlData/historyparame',
+                                },
+                              ]
+                            }
+                     ]
+            
+             },
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
