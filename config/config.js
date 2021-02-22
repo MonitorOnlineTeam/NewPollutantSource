@@ -1733,6 +1733,10 @@ export default {
                   name: 'monitor',
                   routes: [
                     {
+                      path: '/dataSearch/monitor',
+                      redirect: "/dataSearch/monitor/datavisualization"
+                    },
+                    {
                       // 工况模拟
                       name: 'working',
                       path: '/dataSearch/monitor/datavisualization',
