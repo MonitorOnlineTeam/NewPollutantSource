@@ -121,28 +121,34 @@ const leftTableColumns = [
   {
     dataIndex: 'User_Account',
     title: '账号',
+    ellipsis: true,
   },
   {
     dataIndex: 'User_Name',
     title: '名称',
+    ellipsis: true,
   },
   {
     dataIndex: 'Phone',
     title: '手机',
+    ellipsis: true,
   },
 ];
 const rightTableColumns = [
   {
     dataIndex: 'User_Account',
     title: '账号',
+    ellipsis: true,
   },
   {
     dataIndex: 'User_Name',
     title: '名称',
+    ellipsis: true,
   },
   {
     dataIndex: 'Phone',
     title: '手机',
+    ellipsis: true,
   },
 ];
 @connect(({ departinfo, loading, global, common }) => ({
