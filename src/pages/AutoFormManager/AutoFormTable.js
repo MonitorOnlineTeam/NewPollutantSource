@@ -1,4 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { DeleteOutlined, DownOutlined, ExportOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {
   Button,
   Input,
@@ -6,11 +9,18 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Badge,
   Progress,
   Tooltip,
-  Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, Upload,
+  Select,
+  Modal,
+  Tag,
+  Divider,
+  Dropdown,
+  Menu,
+  Popconfirm,
+  message,
+  Upload,
 } from 'antd';
 import { router } from "umi";
 import { connect } from 'dva';
@@ -211,31 +221,35 @@ class AutoFormTable extends PureComponent {
       switch (btn.DISPLAYBUTTON) {
         case 'add':
           // if (btnsAuthority.includes('add')) {
-          return <Button
-            style={{ marginRight: 8 }}
-            key={btn.DISPLAYBUTTON}
-            icon="plus"
-            type="primary"
-            onClick={() => {
-              //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
-              this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
-            }}
-          >添加
-                  </Button>;
+          return (
+            <Button
+              style={{ marginRight: 8 }}
+              key={btn.DISPLAYBUTTON}
+              icon={<PlusOutlined />}
+              type="primary"
+              onClick={() => {
+                //this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${match.params.parentcode || parentcode}/autoformmanager/${configId}/autoformadd`));
+                this.props.onAdd ? this.props.onAdd() : dispatch(routerRedux.push(`/${parentcode || match.params.parentcode}/autoformmanager/${configId}/autoformadd`));
+              }}
+            >添加
+                    </Button>
+          );
           // }
           break;
         case 'alldel':
-          return <Button
-            disabled={this.state.selectedRowKeys.length <= 0}
-            style={{ marginRight: 8 }}
-            icon="delete"
-            key={btn.DISPLAYBUTTON}
-            type="primary"
-            onClick={() => {
-              this.batchDel();
-            }}
-          >批量删除
-                         </Button>;
+          return (
+            <Button
+              disabled={this.state.selectedRowKeys.length <= 0}
+              style={{ marginRight: 8 }}
+              icon={<DeleteOutlined />}
+              key={btn.DISPLAYBUTTON}
+              type="primary"
+              onClick={() => {
+                this.batchDel();
+              }}
+            >批量删除
+                           </Button>
+          );
           break;
         case 'print':
           moreBtns.push({ type: 'printer', text: '打印' })
@@ -243,16 +257,18 @@ class AutoFormTable extends PureComponent {
         // return <Button icon="printer" key={btn.DISPLAYBUTTON} type="primary">打印</Button>;
         case 'exp':
           if (opreationButtons[configId].length === 1) {
-            return <Button
-              style={{ marginRight: 8 }}
-              icon="export"
-              key={btn.DISPLAYBUTTON}
-              type="primary"
-              onClick={() => {
-                this.export();
-              }}
-            >导出
-                         </Button>;
+            return (
+              <Button
+                style={{ marginRight: 8 }}
+                icon={<ExportOutlined />}
+                key={btn.DISPLAYBUTTON}
+                type="primary"
+                onClick={() => {
+                  this.export();
+                }}
+              >导出
+                           </Button>
+            );
           } else {
             moreBtns.push({ type: 'export', text: '导出' })
           }
@@ -596,15 +612,17 @@ class AutoFormTable extends PureComponent {
             this._SELF_.moreBtns.length ? <Dropdown overlay={() => <Menu onClick={this.moreClick}>
               {
                 this._SELF_.moreBtns.map(item => {
-                  return <Menu.Item key={item.type}>
-                    <Icon type={item.type} />
-                    {item.text}
-                  </Menu.Item>
+                  return (
+                    <Menu.Item key={item.type}>
+                      <LegacyIcon type={item.type} />
+                      {item.text}
+                    </Menu.Item>
+                  );
                 })
               }
             </Menu>}>
               <Button>
-                更多操作 <Icon type="down" />
+                更多操作 <DownOutlined />
               </Button>
             </Dropdown> : null
           }
@@ -689,7 +707,7 @@ class AutoFormTable extends PureComponent {
             <Col span={18}>
               <Upload {...props}>
                 <Button>
-                  <Icon type="upload" /> 请选择文件
+                  <UploadOutlined /> 请选择文件
                 </Button>
               </Upload>
             </Col>

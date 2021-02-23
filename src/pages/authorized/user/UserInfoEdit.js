@@ -6,19 +6,9 @@
  * @Description: 用户修改
  */
 import React, { Component } from 'react';
-import {
-    Tabs,
-    Layout,
-    Menu,
-    Card,
-    Button,
-    Divider,
-    Tree,
-    Input,
-    Form,
-    message,
-    Spin,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Tabs, Layout, Menu, Card, Button, Divider, Tree, Input, message, Spin } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"

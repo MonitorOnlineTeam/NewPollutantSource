@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Input, Form, Row, Col } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Row, Col } from 'antd';
 import { connect } from 'dva';
 import {
     routerRedux,

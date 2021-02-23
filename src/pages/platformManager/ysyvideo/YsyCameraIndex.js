@@ -1,16 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import {
-  Tooltip,
-  Card,
-  Spin,
-  Divider,
-  Modal,
-  Form,
-  message,
-  Popconfirm,
-  Icon,
-  Button,
-} from 'antd';
+import { PlayCircleTwoTone, RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Tooltip, Card, Spin, Divider, Modal, message, Popconfirm, Button } from 'antd';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import styles from './index.less';
@@ -157,7 +149,7 @@ class YsyCameraIndex extends Component {
                   type="link"
                   size="small"
                 >
-                  <Icon type="rollback" />
+                  <RollbackOutlined />
                   返回上级
                 </Button></span>}>
             <SearchWrapper configId="VideoCamera" />
@@ -204,7 +196,7 @@ class YsyCameraIndex extends Component {
                       );
                     }}
                   >
-                    <Icon type="play-circle" theme="twoTone" />
+                    <PlayCircleTwoTone />
                   </a>
                   </Tooltip>
                 </Fragment>

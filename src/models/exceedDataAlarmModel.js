@@ -120,6 +120,7 @@ export default Model.extend({
           EntCode:payload.EntCode,
           VerifyStatus:payload.VerifyStatus,
           OperationPersonnel: payload.operationpersonnel,
+          DGIMN:payload.DGIMN
       }
       console.log(body)
       const result = yield call(GetAlarmVerifyDetail, body, null)

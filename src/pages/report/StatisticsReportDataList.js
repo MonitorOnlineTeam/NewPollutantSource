@@ -1,18 +1,8 @@
 import React, { PureComponent } from 'react';
-import {
-  Table,
-  Form,
-  Row,
-  Col,
-  Input,
-  Select,
-  Card,
-  Button,
-  DatePicker,
-  message,
-  Icon,
-  Spin,
-} from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Row, Col, Input, Select, Card, Button, DatePicker, message, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
@@ -134,7 +124,12 @@ class StatisticsReportDataList extends PureComponent {
     const { formLayout, defaultSearchForm, currentDate } = this.SELF;
     const {form: { getFieldDecorator },loading,statisticsReportDataList,EntSewageList,exportLoading,form,StatisticsReportDataWhere,entloading,dispatch }=this.props;
     const columns=[
-        {
+      {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        fixed: 'left',
+        width: 200,
+     }, {
         title: '月份',
         dataIndex: 'MonitorTime',
         width: 200,
@@ -241,7 +236,7 @@ class StatisticsReportDataList extends PureComponent {
       <BreadcrumbWrapper>
           <Spin spinning={exportLoading || entloading} delay={500}> 
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form layout="" style={{ marginBottom: 20 }}>
             <Row>
             <Col xxl={5} xl={7} sm={24} lg={7}>
             <FormItem {...formLayout} label="统计月份" style={{ width: '100%' }}>
@@ -256,7 +251,6 @@ class StatisticsReportDataList extends PureComponent {
                     })(timeEle)}
                   </FormItem>
                 </Col>
-            
             <Col xxl={5} xl={7} sm={24} lg={7}>
                   <FormItem {...formLayout} label="污水处理厂" style={{ width: '100%' }}>
                     {getFieldDecorator('EntList', {
@@ -299,7 +293,7 @@ class StatisticsReportDataList extends PureComponent {
                       生成统计
                     </Button>
                     <Button onClick={this.export} loading={exportLoading}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                   </FormItem>

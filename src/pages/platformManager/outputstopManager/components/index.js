@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card, Spin, Modal, Button, Form, Divider, Tooltip, Popconfirm, message,
-} from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Modal, Button, Divider, Tooltip, Popconfirm, message } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '../../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../../AutoFormManager/SearchWrapper';
@@ -200,93 +201,93 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
             />);
         }
         return (
-                <div>
-                    <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                            searchParams={this.state.DataWhere}
-                        ></SearchWrapper>
-                        <SdlTable
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                            parentcode="ddd"
-                            searchParams={DataWhere}
-                            appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
-                                <Button icon="plus" type="primary" onClick={() => {
-                                    this.setState({
-                                        visible: true,
+            <div>
+                <Card>
+                    <SearchWrapper
+                        onSubmitForm={form => this.loadReportList(form)}
+                        configId={configId}
+                        searchParams={this.state.DataWhere}
+                    ></SearchWrapper>
+                    <SdlTable
+                        style={{ marginTop: 10 }}
+                        configId={configId}
+                        parentcode="ddd"
+                        searchParams={DataWhere}
+                        appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
+                            <Button icon={<PlusOutlined />} type="primary" onClick={() => {
+                                this.setState({
+                                    visible: true,
+                                })
+                            }}>添加</Button>
+                          </Fragment>}
+                           appendHandleRows={row => <Fragment>
+                               <Divider type="vertical" />
+                                <Tooltip title="删除">
+                                <Popconfirm
+                                    title="确认要删除吗?"
+                                    onConfirm={() => {
+                                    this.delete(
+                                        row['dbo.T_Bas_OutputStop.OutputStopID'],
+                                    );
+                                    }}
+                                    onCancel={this.cancel}
+                                    okText="是"
+                                    cancelText="否"
+                                >
+                                    <a href="#"><DelIcon /></a>
+                                </Popconfirm>
+                                </Tooltip>
+                                <Divider type="vertical" />
+                                  <Tooltip title="编辑">
+                                   <a onClick={()=>{
+                                      const cuid = getRowCuid(row, "dbo.T_Bas_OutputStop.Attachment")
+                                      this.setState({
+                                        Evisible: true,
+                                        cuid:cuid,
+                                        ID:row['dbo.T_Bas_OutputStop.OutputStopID'],
                                     })
-                                }}>添加</Button>
-                              </Fragment>}
-                               appendHandleRows={row => <Fragment>
-                                   <Divider type="vertical" />
-                                    <Tooltip title="删除">
-                                    <Popconfirm
-                                        title="确认要删除吗?"
-                                        onConfirm={() => {
-                                        this.delete(
-                                            row['dbo.T_Bas_OutputStop.OutputStopID'],
-                                        );
-                                        }}
-                                        onCancel={this.cancel}
-                                        okText="是"
-                                        cancelText="否"
-                                    >
-                                        <a href="#"><DelIcon /></a>
-                                    </Popconfirm>
-                                    </Tooltip>
-                                    <Divider type="vertical" />
-                                      <Tooltip title="编辑">
-                                       <a onClick={()=>{
-                                          const cuid = getRowCuid(row, "dbo.T_Bas_OutputStop.Attachment")
-                                          this.setState({
-                                            Evisible: true,
-                                            cuid:cuid,
-                                            ID:row['dbo.T_Bas_OutputStop.OutputStopID'],
-                                        })
-                                       }}><EditIcon/></a>
-                                      </Tooltip>
-                                </Fragment>}
-                            {...this.props}
+                                   }}><EditIcon/></a>
+                                  </Tooltip>
+                            </Fragment>}
+                        {...this.props}
+                    >
+                    </SdlTable>
+                    <Modal
+                          title="添加"
+                          visible={this.state.visible}
+                          destroyOnClose // 清除上次数据
+                          onOk={this.handleOk}
+                          confirmLoading={btnloading}
+                          okText="保存"
+                          cancelText="关闭"
+                          onCancel={() => {
+                            this.setState({
+                              visible: false,
+                            });
+                          }}
+                          width="50%"
                         >
-                        </SdlTable>
-                        <Modal
-                              title="添加"
-                              visible={this.state.visible}
-                              destroyOnClose // 清除上次数据
-                              onOk={this.handleOk}
-                              confirmLoading={btnloading}
-                              okText="保存"
-                              cancelText="关闭"
-                              onCancel={() => {
-                                this.setState({
-                                  visible: false,
-                                });
-                              }}
-                              width="50%"
-                            >
-                              <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
-                        </Modal>
-                        <Modal
-                              title="编辑"
-                              visible={this.state.Evisible}
-                              destroyOnClose // 清除上次数据
-                              onOk={this.SaveOk}
-                              confirmLoading={btnloading1}
-                              okText="保存"
-                              cancelText="关闭"
-                              onCancel={() => {
-                                this.setState({
-                                  Evisible: false,
-                                });
-                              }}
-                              width="50%"
-                            >
-                              <SdlForm configId={configId} form={this.props.form} isEdit hideBtns noLoad uid={ this.state.cuid } keysParams={{'dbo.T_Bas_OutputStop.OutputStopID':this.state.ID}}/>
-                        </Modal>
-                    </Card>
-                </div>
+                          <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
+                    </Modal>
+                    <Modal
+                          title="编辑"
+                          visible={this.state.Evisible}
+                          destroyOnClose // 清除上次数据
+                          onOk={this.SaveOk}
+                          confirmLoading={btnloading1}
+                          okText="保存"
+                          cancelText="关闭"
+                          onCancel={() => {
+                            this.setState({
+                              Evisible: false,
+                            });
+                          }}
+                          width="50%"
+                        >
+                          <SdlForm configId={configId} form={this.props.form} isEdit hideBtns noLoad uid={ this.state.cuid } keysParams={{'dbo.T_Bas_OutputStop.OutputStopID':this.state.ID}}/>
+                    </Modal>
+                </Card>
+            </div>
         );
     }
 }

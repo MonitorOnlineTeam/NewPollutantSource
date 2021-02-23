@@ -6,7 +6,8 @@
  * @desc: 质控仪操作记录
  */
 import React, { Component } from 'react';
-import { Card, Modal, Tooltip, Icon } from 'antd';
+import { ProfileOutlined } from '@ant-design/icons';
+import { Card, Modal, Tooltip } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
@@ -48,25 +49,27 @@ class index extends Component {
               if (row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"] == 1&&row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"]!="P") {
                 let endTime = row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"] ? row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"] : moment();
                 let startTime = moment(row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"])
-                return <Tooltip title="查看结果比对">
-                  <a onClick={() => {
-                    this.setState({
-                      visible: true,
-                      // dateValue: [startTime, endTime],
-                      dateValue: row["dbo.T_Bas_QCAnalyzerControlCommand.ID"],
-                      DGIMN: row["dbo.T_Bas_QCAnalyzerControlCommand.DGIMN"],
-                      PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"],
-                      QCType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"],
-                      QCExecuType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCExecuType"], //
-                      QCTime: row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"],
-                      StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"], //
-                      StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"], //
-                      QCAMN: row["dbo.T_Bas_QCAnalyzerControlCommand.QCAMN"],
-                      pointName: row["dbo.View_Point.PointName"], //
-                      entName: row["dbo.View_Point.ParentName"] //
-                    })
-                  }}><Icon type="profile" /></a>
-                </Tooltip>
+                return (
+                  <Tooltip title="查看结果比对">
+                    <a onClick={() => {
+                      this.setState({
+                        visible: true,
+                        // dateValue: [startTime, endTime],
+                        dateValue: row["dbo.T_Bas_QCAnalyzerControlCommand.ID"],
+                        DGIMN: row["dbo.T_Bas_QCAnalyzerControlCommand.DGIMN"],
+                        PollutantCode: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantCode"],
+                        QCType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCType"],
+                        QCExecuType: row["dbo.T_Bas_QCAnalyzerControlCommand.QCExecuType"], //
+                        QCTime: row["dbo.T_Bas_QCAnalyzerControlCommand.QCTime"],
+                        StopTime: row["dbo.T_Bas_QCAnalyzerControlCommand.StopTime"], //
+                        StandardPollutantName: row["dbo.T_Bas_QCAnalyzerControlCommand.StandardPollutantName"], //
+                        QCAMN: row["dbo.T_Bas_QCAnalyzerControlCommand.QCAMN"],
+                        pointName: row["dbo.View_Point.PointName"], //
+                        entName: row["dbo.View_Point.ParentName"] //
+                      })
+                    }}><ProfileOutlined /></a>
+                  </Tooltip>
+                );
               } else {
                 return '-'
               }

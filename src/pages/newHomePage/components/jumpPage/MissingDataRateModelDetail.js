@@ -4,6 +4,9 @@
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,14 +15,12 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
-  Radio
+  Radio,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -342,23 +343,25 @@ export default class Index extends Component {
   // }
   btnCompents=()=>{
     const { exloading } = this.props;
-   return  <Form.Item>
-    {/* <Button type="primary" onClick={this.queryClick}>
-      查询
-    </Button> */}
-    <Button
-      style={{ margin: '0 5px' }}
-      icon="export"
-      onClick={this.template}
-      loading={exloading}
-    >
-      导出
-    </Button>
-    <Button  onClick={() => { this.props.detailBack()  }} >
-         <Icon type="rollback" />
-                返回
-     </Button>
-  </Form.Item>
+   return (
+     <Form.Item>
+      {/* <Button type="primary" onClick={this.queryClick}>
+        查询
+      </Button> */}
+      <Button
+        style={{ margin: '0 5px' }}
+        icon={<ExportOutlined />}
+        onClick={this.template}
+        loading={exloading}
+      >
+        导出
+      </Button>
+      <Button  onClick={() => { this.props.detailBack()  }} >
+           <RollbackOutlined />
+                  返回
+       </Button>
+    </Form.Item>
+   );
   }
   reponseComp = (type)=>{
     const { queryPar:{ Status } } = this.props;

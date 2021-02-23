@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { BellOutlined, PhoneFilled } from '@ant-design/icons';
 import {
   Table,
   Radio,
   Card,
   TimePicker,
-  Icon,
   Button,
   Spin,
   Popover,
@@ -138,7 +138,7 @@ class PdButton extends Component {
             <PdPopconfirm operationUserID={id} addoperationInfo={() => this.addoperationInfo()}>
               <li style={{ listStyle: 'none' }}>
                 <Button onClick={() => this.urge()}>
-                  <Icon type="phone" style={{ color: '#3C9FDA', marginRight: 5 }} theme="filled" />
+                  <PhoneFilled style={{ color: '#3C9FDA', marginRight: 5 }} />
                   督办
                 </Button>
               </li>
@@ -166,7 +166,7 @@ class PdButton extends Component {
                 ghost={true}
                 style={{ float: 'right', marginRight: 30, top: -5 }}
               >
-                <Icon type="bell" />
+                <BellOutlined />
                 督办
               </Button>
             </PdPopconfirm>
@@ -195,7 +195,7 @@ class PdButton extends Component {
           <PdPopconfirm operationUserID={id} addoperationInfo={() => this.addoperationInfo()}>
             <li style={{ listStyle: 'none' }}>
               <Button onClick={() => this.pdshow(id)}>
-                <Icon type="phone" style={{ color: '#3C9FDA', marginRight: 5 }} theme="filled" />
+                <PhoneFilled style={{ color: '#3C9FDA', marginRight: 5 }} />
                 派单
               </Button>
             </li>
@@ -221,7 +221,7 @@ class PdButton extends Component {
               ghost={true}
               style={{ float: 'right', marginRight: 30, top: -5 }}
             >
-              <Icon type="bell" />
+              <BellOutlined />
               派单
             </Button>
           </PdPopconfirm>

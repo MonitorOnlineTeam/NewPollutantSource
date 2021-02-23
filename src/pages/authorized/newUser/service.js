@@ -22,6 +22,12 @@ export async function GetUserList(params) {
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
     return result;
 }
+// 用户列表 导出
+export async function ExportUserList(params) {
+    const result = post('/api/rest/PollutantSourceApi/AuthorApi/ExportUserList', params, null);
+    return result;
+}
+
 
 // 删除用户
 export async function deleteuser(params) {

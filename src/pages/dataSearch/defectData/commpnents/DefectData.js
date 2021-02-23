@@ -4,6 +4,9 @@
  * 创建时间：2019.08.12
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
 } from 'antd';
 import moment from 'moment';
@@ -309,19 +310,21 @@ export default class EntTransmissionEfficiency extends Component {
     }
    btnComponents=()=>{
     const { exloading } = this.props
-     return <Form.Item>
-     <Button type="primary" onClick={this.queryClick}>
-       查询
-     </Button>
-     <Button
-       style={{ margin: '0 5px' }}
-       icon="export"
-       onClick={this.template}
-       loading={exloading}
-     >
-       导出
-     </Button>
-   </Form.Item>
+     return (
+       <Form.Item>
+       <Button style={{ marginLeft: '6px' }} type="primary" onClick={this.queryClick}>
+         查询
+       </Button>
+       <Button
+         style={{ margin: '0 5px' }}
+         icon={<ExportOutlined />}
+         onClick={this.template}
+         loading={exloading}
+       >
+         导出
+       </Button>
+     </Form.Item>
+     );
    }
    onChange = (PageIndex, PageSize) => {
     this.updateQueryState({
@@ -382,7 +385,7 @@ export default class EntTransmissionEfficiency extends Component {
                         onOk={this.dateOk}
                         allowClear={false}
                    /> */}
-                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
@@ -448,7 +451,7 @@ export default class EntTransmissionEfficiency extends Component {
                 placeholder="企业列表"
                 onChange={this.changeEnt}
                 value={EntCode ? EntCode : undefined}
-                style={{ width: 350  }}
+                style={{ width: 394  }}
               >
                 {this.children()}
               </Select>
@@ -456,7 +459,7 @@ export default class EntTransmissionEfficiency extends Component {
             <Form.Item label='运维状态'>
                 <Select
                     allowClear
-                    style={{ width: 200, marginLeft: 10}}
+                    style={{ width: 200}}
                     placeholder="运维状态"
                     maxTagCount={2}
                     maxTagTextLength={5}

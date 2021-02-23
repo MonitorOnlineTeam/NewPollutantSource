@@ -5,7 +5,29 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, Input, Row, Spin, Col, Tag, Badge, TimePicker, Transfer, Switch, Table, message } from 'antd';
+import { DeleteOutlined, ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Card,
+    Button,
+    Tooltip,
+    Popconfirm,
+    Divider,
+    Modal,
+    Select,
+    Input,
+    Row,
+    Spin,
+    Col,
+    Tag,
+    Badge,
+    TimePicker,
+    Transfer,
+    Switch,
+    Table,
+    message,
+} from 'antd';
 import difference from 'lodash/difference';
 import moment from 'moment';
 import Cookie from 'js-cookie';
@@ -450,16 +472,18 @@ class yearCheckEnt extends Component {
                 align: 'center',
                 render: (text, record, index) => {
                     const TaskID = record.ID;
-                    return <Tooltip title="删除"><Popconfirm
-                        title="确定删除吗?"
-                        onConfirm={() => this.confirm(TaskID)}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                    >
-                        <a><Icon type="delete" /></a>
-                    </Popconfirm>
-                    </Tooltip>
+                    return (
+                        <Tooltip title="删除"><Popconfirm
+                            title="确定删除吗?"
+                            onConfirm={() => this.confirm(TaskID)}
+                            onCancel={this.cancel}
+                            okText="是"
+                            cancelText="否"
+                        >
+                            <a><DeleteOutlined /></a>
+                        </Popconfirm>
+                        </Tooltip>
+                    );
 
                 }
             },
@@ -555,7 +579,7 @@ class yearCheckEnt extends Component {
                                         
                                     }
                                 })
-                            }}><Icon type="export" />导出</Button>
+                            }}><ExportOutlined />导出</Button>
                              <span style={{color:'red',marginLeft:20,fontSize:12}}>设置年度参与国家有效传输率考核的企业监测点名单</span>
                         </Row>
                     </Form>

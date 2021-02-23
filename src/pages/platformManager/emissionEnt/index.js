@@ -5,7 +5,29 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, Input, Row, Spin, Col, Tag, Badge, TimePicker, Transfer, Switch, Table, message } from 'antd';
+import { DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, SettingOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Card,
+    Button,
+    Tooltip,
+    Popconfirm,
+    Divider,
+    Modal,
+    Select,
+    Input,
+    Row,
+    Spin,
+    Col,
+    Tag,
+    Badge,
+    TimePicker,
+    Transfer,
+    Switch,
+    Table,
+    message,
+} from 'antd';
 import difference from 'lodash/difference';
 import moment from 'moment';
 import Cookie from 'js-cookie';
@@ -444,7 +466,7 @@ class emissionEnt extends Component {
                                         style={{ color: '#D1D1D1' }}
                                         onClick={() => this.IsEnabled(1, record.ID)}
                                     >
-                                        <Icon type="exclamation-circle" /> 不参与
+                                        <ExclamationCircleOutlined /> 不参与
                   </a>
                                 </Button>
                             </span>
@@ -456,7 +478,7 @@ class emissionEnt extends Component {
                             <Button size="small" color="blue">
                                 {' '}
                                 <a title="单击设置为不参与" onClick={() => this.IsEnabled(0, record.ID)}>
-                                    <Icon type="setting" spin={true} /> 参与
+                                    <SettingOutlined spin={true} /> 参与
                 </a>
                             </Button>
                         </span>
@@ -471,16 +493,18 @@ class emissionEnt extends Component {
                 align: 'center',
                 render: (text, record, index) => {
                     const TaskID = record.ID;
-                    return <Tooltip title="删除"><Popconfirm
-                        title="确定删除吗?"
-                        onConfirm={() => this.confirm(TaskID)}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                    >
-                        <a><Icon type="delete" /></a>
-                    </Popconfirm>
-                    </Tooltip>
+                    return (
+                        <Tooltip title="删除"><Popconfirm
+                            title="确定删除吗?"
+                            onConfirm={() => this.confirm(TaskID)}
+                            onCancel={this.cancel}
+                            okText="是"
+                            cancelText="否"
+                        >
+                            <a><DeleteOutlined /></a>
+                        </Popconfirm>
+                        </Tooltip>
+                    );
 
                 }
             },
@@ -564,7 +588,7 @@ class emissionEnt extends Component {
                                     payload: {
                                     }
                                 })
-                            }}><Icon type="export" />导出</Button>
+                            }}><ExportOutlined />导出</Button>
                         </Row>
                         <span style={{ color: 'red', fontSize: 12 }}>设置参与排放量计算的监测点名单</span>
                     </Form>

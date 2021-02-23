@@ -4,7 +4,25 @@
  * 创建时间：2020.10.14
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon,InputNumber,Form ,Input } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Row,
+    Col,
+    Radio,
+    Select,
+    DatePicker,
+    Empty,
+    message,
+    Tabs,
+    Modal,
+    InputNumber,
+    Input,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -752,203 +770,161 @@ class index extends PureComponent {
     cardTitle = () => {
         const { PollutantByType } = this.props
         const { getFieldDecorator  } = this.props.form;
-        return (
-            <>
-                <Form onSubmit={this.handleSummit} layout="inline">
+        return <>
+            <Form onSubmit={this.handleSummit} layout="inline">
 
-                    <Form.Item label='行政区' >
-                        {
-                            getFieldDecorator('Region', {
+                <Form.Item label='行政区' >
+                    {
+                        getFieldDecorator('Region', {
 
-                            })(
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                    placeholder="行政区"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => {
-                                        if (option && option.props && option.props.title) {
-                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                        } else {
-                                            return true
-                                        }
-                                    }}
-                                    onChange={(value) => {
-
-                                    }}>
-                                    {this.children()}
-                                </Select>
-                            )
-                        }
-
-                    </Form.Item>
-                    <Form.Item label="关注程度" >
-                        {
-                            getFieldDecorator('attention', {
-
-                            })(
-                                <Select
-                                    allowClear
-                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                    placeholder="关注程度"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    onChange={(value) => {
-
-                                    }}>
-                                    {this.attention()}
-                                </Select>
-                            )
-                        }
-
-                    </Form.Item>
-                    <Form.Item label="企业类型" >
-                        {
-                            getFieldDecorator('outlet', {
-                                initialValue: '1'
-                            })(
-                                <Select
-                                    style={{ width: 200, marginLeft: 10, marginRight: 20 }}
-                                    //defaultValue={'1'}
-                                    placeholder="企业类型"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    onChange={(value) => {
-                                        this.props.dispatch({
-                                            type: pageUrl.GetPollutantByType,
-                                            payload: {
-                                                type: value
-                                            }
-                                        })
-                                        this.setState({
-                                            entType:value
-                                        })
-                                    }}>
-                                    <Option value="1">废水</Option>
-                                    <Option value="2">废气</Option>
-                                </Select>
-                            )
-                        }
-
-                    </Form.Item>
-                  
-                    <Form.Item label='数据类型' >
-                        {
-                            getFieldDecorator('dataType', {
-                                initialValue: 'Hour'
-                            })(
-                                <Radio.Group style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
-                                    this.setState({
-                                        dataType: e.target.value,
-                                        time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
-                                    })
-                                    e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-                                }}>
-                                    <Radio.Button value="Hour">小时</Radio.Button>
-                                    <Radio.Button value="Day">日均</Radio.Button>
-                                </Radio.Group>
-                            )
-                        }
-
-                    </Form.Item>
-                    <Form.Item label='运维状态' >
-                    <Select
-                    allowClear
-                    style={{ width: 200}}
-                    placeholder="运维状态"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        this.setState({
-                            operationpersonnel: value,
-                        })
-                    }}>
-                     <Option value="1">已设置运维人员</Option>
-                    <Option value="2">未设置运维人员</Option>
-                </Select>
-                    </Form.Item>
-                    <Form.Item >
-                        {
-                            getFieldDecorator('dateTime', {
-                                initialValue: this.state.time
-                            })(
-                                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
-                                    (dates, dataType) => {
-                                        this.setState({
-                                            time: dates
-                                        })
+                        })(
+                            <Select
+                                allowClear
+                                showSearch
+                                style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                placeholder="行政区"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                optionFilterProp="children"
+                                filterOption={(input, option) => {
+                                    if (option && option.props && option.props.title) {
+                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                    } else {
+                                        return true
                                     }
-                                } />
-                            )
-                        }
-                    </Form.Item>
-   
+                                }}
+                                onChange={(value) => {
 
-                
-                    <Form.Item >
-                        <Button type="primary" style={{ marginRight: 10 }} htmlType='submit' >查询</Button>
-                    </Form.Item>
-                    <Form.Item >
-                        <Button style={{ marginRight: 10 }} htmlType='submit' onClick={this.exportReport}><Icon type="export" />导出</Button>
-                    </Form.Item>
-                    <div>
-                        {/* <Form.Item label='监测因子'></Form.Item> */}
+                                }}>
+                                {this.children()}
+                            </Select>
+                        )
+                    }
 
-                        {
-                            this.state.entType == '1' &&
-                            PollutantByType.map((item, i) =>
-                                (i + 1) % 6 == 0 ?
-                                    <span>
-                                        <br />
-                                        <Form.Item >
-                                            <span>
-                                                <Form.Item>
-                                                    {
-                                                        getFieldDecorator(item.PollutantCode, {
-                                                            initialValue: item.PollutantCode
-                                                        })
-                                                            (
-                                                                <Checkbox.Group>
-                                                                    <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                                </Checkbox.Group>
-                                                            )
-                                                    }
-                                                </Form.Item>
-                                                <Form.Item>
-                                                    <Form.Item>
-                                                        {
-                                                            getFieldDecorator(item.PollutantCode + 'Min', {})(
-                                                                <span style={{ marginLeft: -10 }}>
-                                                                    <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                    <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }}  onChange={(value) => {
-                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                                }}/>
-                                                                    <span style={{ fontSize: 14 }}>至</span>
-                                                                </span>
-                                                            )
-                                                        }
-                                                    </Form.Item>
-                                                    <Form.Item>
-                                                        {
-                                                            getFieldDecorator(item.PollutantCode + 'Max', {})(
-                                                                <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
-                                                            )
-                                                        }
-                                                    </Form.Item>
-                                                </Form.Item>
+                </Form.Item>
+                <Form.Item label="关注程度" >
+                    {
+                        getFieldDecorator('attention', {
 
-                                            </span>
+                        })(
+                            <Select
+                                allowClear
+                                style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                placeholder="关注程度"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                onChange={(value) => {
 
-                                        </Form.Item></span>
+                                }}>
+                                {this.attention()}
+                            </Select>
+                        )
+                    }
 
-                                    : <Form.Item >
+                </Form.Item>
+                <Form.Item label="企业类型" >
+                    {
+                        getFieldDecorator('outlet', {
+                            initialValue: '1'
+                        })(
+                            <Select
+                                style={{ width: 200, marginLeft: 10, marginRight: 20 }}
+                                //defaultValue={'1'}
+                                placeholder="企业类型"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                onChange={(value) => {
+                                    this.props.dispatch({
+                                        type: pageUrl.GetPollutantByType,
+                                        payload: {
+                                            type: value
+                                        }
+                                    })
+                                    this.setState({
+                                        entType:value
+                                    })
+                                }}>
+                                <Option value="1">废水</Option>
+                                <Option value="2">废气</Option>
+                            </Select>
+                        )
+                    }
+
+                </Form.Item>
+              
+                <Form.Item label='数据类型' >
+                    {
+                        getFieldDecorator('dataType', {
+                            initialValue: 'Hour'
+                        })(
+                            <Radio.Group style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
+                                this.setState({
+                                    dataType: e.target.value,
+                                    time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
+                                })
+                                e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                            }}>
+                                <Radio.Button value="Hour">小时</Radio.Button>
+                                <Radio.Button value="Day">日均</Radio.Button>
+                            </Radio.Group>
+                        )
+                    }
+
+                </Form.Item>
+                <Form.Item label='运维状态' >
+                <Select
+                allowClear
+                style={{ width: 200}}
+                placeholder="运维状态"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    this.setState({
+                        operationpersonnel: value,
+                    })
+                }}>
+                 <Option value="1">已设置运维人员</Option>
+                <Option value="2">未设置运维人员</Option>
+            </Select>
+                </Form.Item>
+                <Form.Item >
+                    {
+                        getFieldDecorator('dateTime', {
+                            initialValue: this.state.time
+                        })(
+                            <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                                (dates, dataType) => {
+                                    this.setState({
+                                        time: dates
+                                    })
+                                }
+                            } />
+                        )
+                    }
+                </Form.Item>
+
+
+            
+                <Form.Item >
+                    <Button type="primary" style={{ marginRight: 10 }} htmlType='submit' >查询</Button>
+                </Form.Item>
+                <Form.Item >
+                    <Button style={{ marginRight: 10 }} htmlType='submit' onClick={this.exportReport}><ExportOutlined />导出</Button>
+                </Form.Item>
+                <div>
+                    {/* <Form.Item label='监测因子'></Form.Item> */}
+
+                    {
+                        this.state.entType == '1' &&
+                        PollutantByType.map((item, i) =>
+                            (i + 1) % 6 == 0 ?
+                                <span>
+                                    <br />
+                                    <Form.Item >
                                         <span>
                                             <Form.Item>
                                                 {
@@ -968,9 +944,9 @@ class index extends PureComponent {
                                                         getFieldDecorator(item.PollutantCode + 'Min', {})(
                                                             <span style={{ marginLeft: -10 }}>
                                                                 <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
-                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                                }}/>
+                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }}  onChange={(value) => {
+                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                            }}/>
                                                                 <span style={{ fontSize: 14 }}>至</span>
                                                             </span>
                                                         )
@@ -987,124 +963,164 @@ class index extends PureComponent {
 
                                         </span>
 
-                                    </Form.Item>
+                                    </Form.Item></span>
 
-                            )
-                        }
-                         <Row className={style.exceedDataForm2}>
-                        {
-                           
-                            this.state.entType == '2' &&
-                            PollutantByType.map((item, i) =>
-                                (i + 1) % 6 == 0 ? < Col span={6}>
-                                    {/* <br /> */}
-                                    <div>
+                                : <Form.Item >
+                                    <span>
+                                        <Form.Item>
+                                            {
+                                                getFieldDecorator(item.PollutantCode, {
+                                                    initialValue: item.PollutantCode
+                                                })
+                                                    (
+                                                        <Checkbox.Group>
+                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                        </Checkbox.Group>
+                                                    )
+                                            }
+                                        </Form.Item>
+                                        <Form.Item>
                                             <Form.Item>
                                                 {
-                                                    getFieldDecorator(item.PollutantCode, {
-                                                        initialValue: item.PollutantCode
-                                                    })
-                                                        (
-                                                            <Checkbox.Group>
-                                                                <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                            </Checkbox.Group>
-                                                        )
-                                                }
-                                            </Form.Item>
-
-                                            <Form.Item>
-                                                {/* {
-                                                    getFieldDecorator(item.PollutantCode + 'Value', {})(
-                                                        <span>
+                                                    getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                        <span style={{ marginLeft: -10 }}>
                                                             <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
+                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                            }}/>
                                                             <span style={{ fontSize: 14 }}>至</span>
-                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
                                                         </span>
                                                     )
-                                                } */}
-                                                <Form.Item>
-                                                    {
-                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
-                                                            <span style={{ marginLeft: -10 }}>
-                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
-                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                                }}/>
-                                                                <span style={{ fontSize: 14 }}>至</span>
-                                                            </span>
-                                                        )
-                                                    }
-                                                </Form.Item>
-                                                <Form.Item>
-                                                    {
-                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
-                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
-                                                        )
-                                                    }
-                                                </Form.Item>
+                                                }
                                             </Form.Item>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                    )
+                                                }
+                                            </Form.Item>
+                                        </Form.Item>
+
+                                    </span>
+
+                                </Form.Item>
+
+                        )
+                    }
+                     <Row className={style.exceedDataForm2}>
+                    {
+                       
+                        this.state.entType == '2' &&
+                        PollutantByType.map((item, i) =>
+                            (i + 1) % 6 == 0 ? < Col span={6}>
+                                {/* <br /> */}
+                                <div>
+                                        <Form.Item>
+                                            {
+                                                getFieldDecorator(item.PollutantCode, {
+                                                    initialValue: item.PollutantCode
+                                                })
+                                                    (
+                                                        <Checkbox.Group>
+                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                        </Checkbox.Group>
+                                                    )
+                                            }
+                                        </Form.Item>
+
+                                        <Form.Item>
+                                            {/* {
+                                                getFieldDecorator(item.PollutantCode + 'Value', {})(
+                                                    <span>
+                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
+                                                        <span style={{ fontSize: 14 }}>至</span>
+                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
+                                                    </span>
+                                                )
+                                            } */}
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                        <span style={{ marginLeft: -10 }}>
+                                                            <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                            }}/>
+                                                            <span style={{ fontSize: 14 }}>至</span>
+                                                        </span>
+                                                    )
+                                                }
+                                            </Form.Item>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                    )
+                                                }
+                                            </Form.Item>
+                                        </Form.Item>
+
+                                </div>
+                            </Col>
+                                : < Col span={6}>
+                                    <div>
+                                        <Form.Item>
+                                            {
+                                                getFieldDecorator(item.PollutantCode, {
+                                                    initialValue: item.PollutantCode
+                                                })
+                                                    (
+                                                        <Checkbox.Group>
+                                                            <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                                                        </Checkbox.Group>
+                                                    )
+                                            }
+                                        </Form.Item>
+                                        <Form.Item>
+                                            {/* {
+                                                getFieldDecorator(item.PollutantCode + 'Value', {})(
+                                                    <span>
+                                                        <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                        <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
+                                                        <span style={{ fontSize: 14 }}>至</span>
+                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
+                                                    </span>
+                                                )
+                                            } */}
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Min', {})(
+                                                        <span style={{ marginLeft: -10 }}>
+                                                            <span style={{ fontSize: 14 }}>超标倍数:</span>
+                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
+                                                                this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
+                                                            }}/>
+                                                            <span style={{ fontSize: 14 }}>至</span>
+                                                        </span>
+                                                    )
+                                                }
+                                            </Form.Item>
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(item.PollutantCode + 'Max', {})(
+                                                        <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
+                                                    )
+                                                }
+                                            </Form.Item>
+                                        </Form.Item>
 
                                     </div>
+
                                 </Col>
-                                    : < Col span={6}>
-                                        <div>
-                                            <Form.Item>
-                                                {
-                                                    getFieldDecorator(item.PollutantCode, {
-                                                        initialValue: item.PollutantCode
-                                                    })
-                                                        (
-                                                            <Checkbox.Group>
-                                                                <Checkbox value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                                                            </Checkbox.Group>
-                                                        )
-                                                }
-                                            </Form.Item>
-                                            <Form.Item>
-                                                {/* {
-                                                    getFieldDecorator(item.PollutantCode + 'Value', {})(
-                                                        <span>
-                                                            <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                            <InputNumber size='small' style={{ width: 50, marginRight: 5 }} />
-                                                            <span style={{ fontSize: 14 }}>至</span>
-                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: 5, width: 50 }} />
-                                                        </span>
-                                                    )
-                                                } */}
-                                                <Form.Item>
-                                                    {
-                                                        getFieldDecorator(item.PollutantCode + 'Min', {})(
-                                                            <span style={{ marginLeft: -10 }}>
-                                                                <span style={{ fontSize: 14 }}>超标倍数:</span>
-                                                                <InputNumber size='small' style={{ width: 50, marginRight: 5, marginLeft: 5 }} onChange={(value) => {
-                                                                    this.props.form.setFieldsValue({[item.PollutantCode + 'Min']: value})
-                                                                }}/>
-                                                                <span style={{ fontSize: 14 }}>至</span>
-                                                            </span>
-                                                        )
-                                                    }
-                                                </Form.Item>
-                                                <Form.Item>
-                                                    {
-                                                        getFieldDecorator(item.PollutantCode + 'Max', {})(
-                                                            <InputNumber size='small' style={{ marginRight: 5, marginLeft: -12, width: 50 }} />
-                                                        )
-                                                    }
-                                                </Form.Item>
-                                            </Form.Item>
-
-                                        </div>
-
-                                    </Col>
-                            )
-                           
-                        }
-                         </Row>
-                    </div>
-                </Form>
-            </>
-        )
+                        )
+                       
+                    }
+                     </Row>
+                </div>
+            </Form>
+        </>;
     }
     RegiononChange =(PageIndex, PageSize) => {
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution ,regionCode} = this.state
@@ -1776,153 +1792,151 @@ class index extends PureComponent {
             columns3.push(addColumns)
         })
 
-        return (
-            <>
-                <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="超标数据查询">
-                        <Card
-                            extra={
-                                <>
-                                        {
-                                            this.cardTitle()
-                                        }
-                                </>
-                            }
-                            className={style.dataTable}
-                        >
-                            {/* {loading ? <PageLoading /> : this.pageContent()} */}
-                           { this.pageContent() }
-                        </Card>
-                        <Modal
-                            centered
-                            title={this.state.entModalTitle}
-                            visible={this.state.visible}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.CancelHandel}
-                            destroyOnClose
-                        >
-                            <div style={{marginBottom:10}}>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                                    placeholder="企业列表"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => {
-                                        if (option && option.props && option.props.title) {
-                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                        } else {
-                                            return true
-                                        }
-                                    }}
-                                    onChange={(value) => {
-                                        this.setState({
-                                            enterpriseValue: value
-                                        })
-                                    }}>
-                                    {this.entList()}
-                                </Select>
-                                <Button type='primary' style={{marginRight:10}} onClick={this.EntButtonCountHandle}> 查询</Button>
-                                <Button onClick={this.EntButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
-                            </div>
-                            {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    pageSize: this.props. ExceedPageSize,
-                                    current: this.props. ExceedPageIndex,
-                                    onChange: this.EntButtonCountHandlePageChange,
-                                    onShowSizeChange:this.EntButtonCountShowSizeChange,
-                                    pageSizeOptions: ['20', '30', '40', '100'],
-                                    total: this.props.ExceedTotal,
-                                  }} />
-                            }
-                            
-                            
-                        </Modal>
-                        <Modal
-                            centered
-                            title={this.state.entCountModalTotle}
-                            visible={this.state.visibleMoni}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.CancelHandel}
-                            destroyOnClose
-                        >
-                            <div style={{marginBottom:10}}>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                                    placeholder="企业列表"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => {
-                                        if (option && option.props && option.props.title) {
-                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                        } else {
-                                            return true
-                                        }
-                                    }}
-                                    onChange={(value) => {
-                                        this.setState({
-                                            enterpriseValue: value
-                                        })
-                                    }}>
-                                    {this.entList()}
-                                </Select>
-                                <Button type='primary' style={{marginRight:10}} onClick={this.ExButtonCountHandle}> 查询</Button>
-                                <Button onClick={this.ExButtonCountHandleExport}><Icon type="export" /> 导出</Button>
-                            </div>
-                            {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    pageSize: this.props. ModalPageSize,
-                                    current: this.props. ModalPageIndex,
-                                    onChange: this.ExButtonCountHandlePageChange,
-                                    onShowSizeChange:this.ExButtonCountShowSizeChange,
-                                    pageSizeOptions: ['20', '30', '40', '100'],
-                                    total: this.props.Modaltotal,
-                                  }} />
-                            }
-                            
-                        </Modal>
-                        <Modal
-                            centered
-                            title={this.state.entCountModalTotle2}
-                            visible={this.state.visibleEnt}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.entCancelHandel}
-                        >
-                            <div style={{marginBottom:10}}>
-                                <Button onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
-                            </div>
-                            {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    pageSize: this.props. ModalPageSize,
-                                    current: this.props. ModalPageIndex,
-                                    onChange: this.EntPageChange,
-                                    onShowSizeChange:this.EntPageShowSizeChange,
-                                    pageSizeOptions: ['20', '30', '40', '100'],
-                                    total: this.props. Modaltotal,
-                                  }} />
-                            }
-                            
-                        </Modal>
-                    </BreadcrumbWrapper>
-                </div>
-            </>
-        );
+        return <>
+            <div id="siteParamsPage" className={style.cardTitle}>
+                <BreadcrumbWrapper title="超标数据查询">
+                    <Card
+                        extra={
+                            <>
+                                    {
+                                        this.cardTitle()
+                                    }
+                            </>
+                        }
+                        className={style.dataTable}
+                    >
+                        {/* {loading ? <PageLoading /> : this.pageContent()} */}
+                       { this.pageContent() }
+                    </Card>
+                    <Modal
+                        centered
+                        title={this.state.entModalTitle}
+                        visible={this.state.visible}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.CancelHandel}
+                        destroyOnClose
+                    >
+                        <div style={{marginBottom:10}}>
+                            <Select
+                                allowClear
+                                showSearch
+                                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                                placeholder="企业列表"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                optionFilterProp="children"
+                                filterOption={(input, option) => {
+                                    if (option && option.props && option.props.title) {
+                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                    } else {
+                                        return true
+                                    }
+                                }}
+                                onChange={(value) => {
+                                    this.setState({
+                                        enterpriseValue: value
+                                    })
+                                }}>
+                                {this.entList()}
+                            </Select>
+                            <Button type='primary' style={{marginRight:10}} onClick={this.EntButtonCountHandle}> 查询</Button>
+                            <Button onClick={this.EntButtonCountHandleExpor}><ExportOutlined /> 导出</Button>
+                        </div>
+                        {
+                            <SdlTable scroll={{ y: 500 }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                pageSize: this.props. ExceedPageSize,
+                                current: this.props. ExceedPageIndex,
+                                onChange: this.EntButtonCountHandlePageChange,
+                                onShowSizeChange:this.EntButtonCountShowSizeChange,
+                                pageSizeOptions: ['20', '30', '40', '100'],
+                                total: this.props.ExceedTotal,
+                              }} />
+                        }
+                        
+                        
+                    </Modal>
+                    <Modal
+                        centered
+                        title={this.state.entCountModalTotle}
+                        visible={this.state.visibleMoni}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.CancelHandel}
+                        destroyOnClose
+                    >
+                        <div style={{marginBottom:10}}>
+                            <Select
+                                allowClear
+                                showSearch
+                                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                                placeholder="企业列表"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                optionFilterProp="children"
+                                filterOption={(input, option) => {
+                                    if (option && option.props && option.props.title) {
+                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                    } else {
+                                        return true
+                                    }
+                                }}
+                                onChange={(value) => {
+                                    this.setState({
+                                        enterpriseValue: value
+                                    })
+                                }}>
+                                {this.entList()}
+                            </Select>
+                            <Button type='primary' style={{marginRight:10}} onClick={this.ExButtonCountHandle}> 查询</Button>
+                            <Button onClick={this.ExButtonCountHandleExport}><ExportOutlined /> 导出</Button>
+                        </div>
+                        {
+                            <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                pageSize: this.props. ModalPageSize,
+                                current: this.props. ModalPageIndex,
+                                onChange: this.ExButtonCountHandlePageChange,
+                                onShowSizeChange:this.ExButtonCountShowSizeChange,
+                                pageSizeOptions: ['20', '30', '40', '100'],
+                                total: this.props.Modaltotal,
+                              }} />
+                        }
+                        
+                    </Modal>
+                    <Modal
+                        centered
+                        title={this.state.entCountModalTotle2}
+                        visible={this.state.visibleEnt}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.entCancelHandel}
+                    >
+                        <div style={{marginBottom:10}}>
+                            <Button onClick={this.EntexportReport}><ExportOutlined /> 导出</Button>
+                        </div>
+                        {
+                            <SdlTable scroll={{ y: 500 }} loading={loadingCount} columns={columns3} dataSource={ExceedNumList} pagination={{
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                pageSize: this.props. ModalPageSize,
+                                current: this.props. ModalPageIndex,
+                                onChange: this.EntPageChange,
+                                onShowSizeChange:this.EntPageShowSizeChange,
+                                pageSizeOptions: ['20', '30', '40', '100'],
+                                total: this.props. Modaltotal,
+                              }} />
+                        }
+                        
+                    </Modal>
+                </BreadcrumbWrapper>
+            </div>
+        </>;
     }
 }
 const indexx = Form.create()(index)

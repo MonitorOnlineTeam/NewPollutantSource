@@ -6,7 +6,9 @@
  * @desc: 质控仪流程图页面
  */
 import React, { PureComponent } from 'react';
-import { Button, Card, notification, Modal, Tooltip, Select, message, Badge, Icon, Alert } from 'antd'
+import { FullscreenOutlined, StopOutlined } from '@ant-design/icons';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Button, Card, notification, Modal, Tooltip, Select, message, Badge, Alert } from 'antd';
 import router from 'umi/router';
 import { MapInteractionCSS } from 'react-map-interaction';
 import styles from './index.less'
@@ -161,7 +163,7 @@ class ImagePage extends PureComponent {
           let filterCemsList = nextProps.cemsList.filter(item => item.MNHall != null)
           if (filterCemsList.length > 1) {
             Modal.confirm({
-              icon: null,
+              icon: <LegacyIcon type={null} />,
               zIndex: 99999,
               content: (
                 <>
@@ -230,7 +232,7 @@ class ImagePage extends PureComponent {
     }
     switch (this.props.DeviceStatus) {
       case "0":
-        return <Alert type="error" icon={<Icon type="stop" />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />
+        return <Alert type="error" icon={<StopOutlined />} style={{ background: "#ddd", marginBottom: 10 }} message={`质控仪离线中${text}`} banner />;
       case "1":
         return <Alert type="success" style={{ marginBottom: 10 }} message={`质控仪在线中${text}`} banner />
       case "3":
@@ -557,7 +559,9 @@ class ImagePage extends PureComponent {
     return (
       <div style={{ width: '100%', height: '100%' }} className={styles.imagePage}>
         <Tooltip title="全屏查看">
-          <Icon type="fullscreen" className={styles.fullscreen} onClick={() => { this.setState({ fullscreenVisible: true }) }} />
+          <FullscreenOutlined
+            className={styles.fullscreen}
+            onClick={() => { this.setState({ fullscreenVisible: true }) }} />
         </Tooltip>
         {this.pageContent()}
         <Modal

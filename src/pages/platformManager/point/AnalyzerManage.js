@@ -1,6 +1,23 @@
 
 import React, { Component } from 'react';
-import { Card, Form, Row, Col, Input, Select, Button, Table, Cascader, InputNumber, Divider, message, Icon, TimePicker, DatePicker } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Row,
+  Col,
+  Input,
+  Select,
+  Button,
+  Table,
+  Cascader,
+  InputNumber,
+  Divider,
+  message,
+  TimePicker,
+  DatePicker,
+} from 'antd';
 import { connect } from 'dva';
 import PageLoading from '@/components/PageLoading'
 import _ from 'lodash';
@@ -254,14 +271,14 @@ expandedRowRender = (record, index, indent, expanded) => {
     props = {
       locale: {
         emptyText: <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
-          <Icon type="plus" /> 添加
+          <PlusOutlined /> 添加
         </div>,
       },
     };
   } else {
     props = {
       footer: () => <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
-          <Icon type="plus" /> 添加
+          <PlusOutlined /> 添加
       </div>,
     };
   }

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Popover, Button, Modal } from 'antd';
+import { Spin, Tag, Menu, Avatar, Tooltip, Popover, Button, Modal } from 'antd';
 import { connect } from 'dva';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '../SelectLang';

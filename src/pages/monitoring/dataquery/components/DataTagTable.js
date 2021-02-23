@@ -1,6 +1,21 @@
 import React, { Component, Fragment } from 'react';
 import SdlTable from '@/components/SdlTable';
-import { Popover, Popconfirm, Row, Input, message, Alert, Form, Divider, Table, Checkbox, Button, Modal, Select } from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Popover,
+  Popconfirm,
+  Row,
+  Input,
+  message,
+  Alert,
+  Divider,
+  Table,
+  Checkbox,
+  Button,
+  Modal,
+  Select,
+} from 'antd';
 import { connect } from 'dva'
 import { getDirLevel } from "@/utils/utils"
 import moment from 'moment'

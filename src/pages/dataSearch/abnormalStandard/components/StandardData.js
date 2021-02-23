@@ -1,5 +1,8 @@
 
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -8,14 +11,12 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
-  Tabs
+  Tabs,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -313,92 +314,92 @@ export default class Index extends Component {
     columns = [...this.columns,...addCol]
   }
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline">
-               <Form.Item label='行政区' >
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 170 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
-                </Form.Item>
-                <Form.Item label='关注程度'>
-                  <Select
-                     allowClear
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 170 }}
-                  >
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item>
-                <Form.Item label='企业类型'>
-                  <Select
-                    placeholder="企业类型"
-                    onChange={this.typeChange}
-                    value={PollutantType}
-                    style={{ width: 170 }}
-                  >
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item>
-                <Form.Item label='企业列表'>
-                  <Select
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    placeholder="企业名称"
-                    onChange={this.changeEnt}
-                    value={EntCode? EntCode : undefined }
-                    style={{ width: 170  }}
-                  >
-                    {this.children()}
-                  </Select>
-                </Form.Item>
+      <Card
+        bordered={false}
+        title={
+          <>
+            <Form layout="inline">
+             <Form.Item label='行政区' >
+                <Select
+                  allowClear
+                  placeholder="行政区"
+                  onChange={this.changeRegion}
+                  value={RegionCode ? RegionCode : undefined}
+                  style={{ width: 170 }}
+                >
+                  {this.regchildren()}
+                </Select>
+              </Form.Item>
+              <Form.Item label='关注程度'>
+                <Select
+                   allowClear
+                  placeholder="关注程度"
+                  onChange={this.changeAttent}
+                  value={AttentionCode?AttentionCode:undefined} 
+                  style={{ width: 170 }}
+                >
+                  {this.attentchildren()}
+                </Select>
+              </Form.Item>
+              <Form.Item label='企业类型'>
+                <Select
+                  placeholder="企业类型"
+                  onChange={this.typeChange}
+                  value={PollutantType}
+                  style={{ width: 170 }}
+                >
+                  <Option value="1">废水</Option>
+                  <Option value="2">废气</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item>
+              <Form.Item label='企业列表'>
+                <Select
+                  showSearch
+                  allowClear
+                  optionFilterProp="children"
+                  placeholder="企业名称"
+                  onChange={this.changeEnt}
+                  value={EntCode? EntCode : undefined }
+                  style={{ width: 170  }}
+                >
+                  {this.children()}
+                </Select>
+              </Form.Item>
 
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-              </Form>
-            </>
-          }
-        >
-          <div id=''>
+                <Button type="primary" onClick={this.queryClick}>
+                  查询
+                </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+            </Form>
+          </>
+        }
+      >
+        <div id=''>
 
-             <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={columns}
-              bordered={true}
-              dataSource={tableDatas}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                total: this.props.total,
-                defaultPageSize:20
-              }}
-            />
-          </div>
-        </Card>
+           <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={loading}
+            columns={columns}
+            bordered={true}
+            dataSource={tableDatas}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              total: this.props.total,
+              defaultPageSize:20
+            }}
+          />
+        </div>
+      </Card>
     );
   }
 }

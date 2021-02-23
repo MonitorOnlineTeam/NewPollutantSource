@@ -5,6 +5,9 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,17 +16,15 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -346,104 +347,104 @@ export default class EntTransmissionEfficiency extends Component {
    
     const { entVisible } = this.state;
     return (
-       <div>
-        <Modal
-          title={isWorkRate?"运转率":isOverRate?"超标率":'故障率'}
-          footer={null}
-          width='95%'
-          visible={regionVisible}  
-          onCancel={regionCancel}
-        >
-         { entVisible?
-          <EntData entVisible={entVisible} onBack={this.entCancel}/>
-           : 
-            <div>
-            <>
-              <Form layout="inline" style={{paddingBottom:10}}>
-              <Row>
-              <Form.Item label='查询日期'>
-              <RangePicker_  format = 'YYYY-MM-DD' allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
-                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
-                   </Form.Item>     
-              <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
-              </Form.Item>
-              <Form.Item label='运维状态'>
-                <Select
-                  allowClear
-                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                  placeholder="运维状态"
-                  value={OperationPersonnel?OperationPersonnel:undefined}
-                  maxTagCount={2}
-                  onChange={this.changePperation}
-                  maxTagTextLength={5}
-                  maxTagPlaceholder="..."
-                  >
-                  <Option value="1">已设置运维人员</Option>
-                  <Option value="2">未设置运维人员</Option>
-                </Select>
-                </Form.Item> 
-              {!Atmosphere?
-                <Form.Item label={'企业类型'}>
-                 <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
-                </Form.Item>
-                :
-                null
-              }
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                    <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>  
-                </Form.Item>
-                </Row>
-              </Form>
-            </>
-          <div id=''>
-          {isWorkRate?
-           <div style={{ paddingBottom: 10 }}>
-                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≥90%达标
-                </span>
-                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  {`<90%未达标`}
-                </span>
-              </div>
-            :null
-          }
-             <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={this.columns}
-              // bordered={false}
-              dataSource={this.props.tableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
-            />
-          </div>
-          </div>
-          }
-          </Modal>
+      <div>
+       <Modal
+         title={isWorkRate?"运转率":isOverRate?"超标率":'故障率'}
+         footer={null}
+         width='95%'
+         visible={regionVisible}  
+         onCancel={regionCancel}
+       >
+        { entVisible?
+         <EntData entVisible={entVisible} onBack={this.entCancel}/>
+          : 
+           <div>
+           <>
+             <Form layout="inline" style={{paddingBottom:10}}>
+             <Row>
+             <Form.Item label='查询日期'>
+             <RangePicker_  format = 'YYYY-MM-DD' allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
+                 callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                  </Form.Item>     
+             <Form.Item label='行政区'>
+              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+             </Form.Item>
+             <Form.Item label='运维状态'>
+               <Select
+                 allowClear
+                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                 placeholder="运维状态"
+                 value={OperationPersonnel?OperationPersonnel:undefined}
+                 maxTagCount={2}
+                 onChange={this.changePperation}
+                 maxTagTextLength={5}
+                 maxTagPlaceholder="..."
+                 >
+                 <Option value="1">已设置运维人员</Option>
+                 <Option value="2">未设置运维人员</Option>
+               </Select>
+               </Form.Item> 
+             {!Atmosphere?
+               <Form.Item label={'企业类型'}>
+                <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
+               </Form.Item>
+               :
+               null
+             }
+               <Form.Item>
+                 <Button type="primary" onClick={this.queryClick}>
+                   查询
+                 </Button>
+                   <Button
+                   style={{ margin: '0 5px' }}
+                   icon={<ExportOutlined />}
+                   onClick={this.template}
+                   loading={exloading}
+                 >
+                   导出
+                 </Button>  
+               </Form.Item>
+               </Row>
+             </Form>
+           </>
+         <div id=''>
+         {isWorkRate?
+          <div style={{ paddingBottom: 10 }}>
+               <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
+               <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                 ≥90%达标
+               </span>
+               <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
+               <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                 {`<90%未达标`}
+               </span>
+             </div>
+           :null
+         }
+            <SdlTable
+             rowKey={(record, index) => `complete${index}`}
+             loading={loading}
+             columns={this.columns}
+             // bordered={false}
+             dataSource={this.props.tableDatas}
+             // style ={{height:"calc(100vh - 300px)"}} 
+             pagination={{
+               showSizeChanger: true,
+               showQuickJumper: true,
+               // sorter: true,
+               // total: this.props.total,
+               defaultPageSize:20
+               // pageSize: PageSize,
+               // current: PageIndex,
+               // pageSizeOptions: ['10', '20', '30', '40', '50'],
+             }}
+           />
+         </div>
+         </div>
+         }
+         </Modal>
 
-          </div>
+         </div>
     );
   }
 }

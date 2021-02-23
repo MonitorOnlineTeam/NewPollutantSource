@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.less'
-import { Divider, Popover, Icon } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Divider, Popover } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import DrillDownTaskModal from "./DrillDownTaskModal"
@@ -147,7 +148,7 @@ class TaskStatistics extends PureComponent {
               2、实际运维：实际完成巡检、校准、校验测试次数;<br />
             </div>
           }>
-            <Icon style={{ marginLeft: 6, fontSize: '15px' }} type="exclamation-circle" />
+            <ExclamationCircleOutlined style={{ marginLeft: 6, fontSize: '15px' }} />
           </Popover>
         </div>
         <ReactEcharts

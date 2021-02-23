@@ -5,6 +5,9 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,12 +16,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
@@ -27,7 +28,7 @@ import {
   Skeleton,
   Avatar,
   Dropdown,
-  Menu
+  Menu,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -165,46 +166,50 @@ export default class Index extends Component {
   }
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
-    return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.overWasteWater}>
-        近七日超标废水监测点
-        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} /> 
-        </span>
-      <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
-        <Radio.Button value="HourData">小时</Radio.Button>
-        <Radio.Button value="DayData">日均</Radio.Button>
-      </Radio.Group>
-      <Tabs defaultActiveKey="1" onChange={this.tabCallback1}>
-        <TabPane tab="COD" key="011">
-        </TabPane>
-        <TabPane tab="氨氮" key="060">
-        </TabPane>
-        <TabPane tab="总磷" key="101">
-        </TabPane>
-        <TabPane tab="总氮" key="065">
-        </TabPane>
-        <TabPane tab="PH值" key="001">
-        </TabPane>
-      </Tabs>
+    return (
+      <Row type='flex' align="middle" justify='space-between'>
+        <span style={{ cursor: 'pointer' }} onClick={this.overWasteWater}>
+          近七日超标废水监测点
+          <CaretRightOutlined style={{fontSize:14,paddingLeft:3}} /> 
+          </span>
+        <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
+          <Radio.Button value="HourData">小时</Radio.Button>
+          <Radio.Button value="DayData">日均</Radio.Button>
+        </Radio.Group>
+        <Tabs defaultActiveKey="1" onChange={this.tabCallback1}>
+          <TabPane tab="COD" key="011">
+          </TabPane>
+          <TabPane tab="氨氮" key="060">
+          </TabPane>
+          <TabPane tab="总磷" key="101">
+          </TabPane>
+          <TabPane tab="总氮" key="065">
+          </TabPane>
+          <TabPane tab="PH值" key="001">
+          </TabPane>
+        </Tabs>
 
-    </Row>
+      </Row>
+    );
   }
   cardTitle3 = () => {
-    return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.workOrder}>
-        近30日运维工单统计
-        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />
-        </span>
-      <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
-        <TabPane tab="废水" key="1">
-        </TabPane>
-        <TabPane tab="废气" key="2">
-        </TabPane>
-        <TabPane tab="空气站" key="5">
-        </TabPane>
-      </Tabs>
+    return (
+      <Row type='flex' align="middle" justify='space-between'>
+        <span style={{ cursor: 'pointer' }} onClick={this.workOrder}>
+          近30日运维工单统计
+          <CaretRightOutlined style={{fontSize:14,paddingLeft:3}} />
+          </span>
+        <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
+          <TabPane tab="废水" key="1">
+          </TabPane>
+          <TabPane tab="废气" key="2">
+          </TabPane>
+          <TabPane tab="空气站" key="5">
+          </TabPane>
+        </Tabs>
 
-    </Row>
+      </Row>
+    );
   }
   workOrder = () => {
     const { pollutantType } = this.state;

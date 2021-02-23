@@ -8,7 +8,7 @@
 import React from 'react';
 import moment from 'moment';
 // import { message } from 'antd';
-import { Popover, Badge, Icon, Divider, message } from 'antd';
+import { Popover, Badge, Divider, message } from 'antd';
 import { mainpollutantInfo, mainpoll, enterpriceid, onlyOneEnt } from '@/config';
 import { getPollutantTypeList } from '@/services/baseapi';
 import {

@@ -4,6 +4,9 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Checkbox,
   Select,
 } from 'antd';
@@ -179,45 +180,45 @@ let requestData = JSON.parse(this.props.requestData)
 
   render() {
     return (
-        <Modal
-          title={``}
-          footer={null}
-          width='95%'
-          visible={this.props.regionVisible}  
-          onCancel={this.props.regionCancel}
-        >
-      <Card
-        bordered={false}
-        title={
-          <Form layout="inline">
-            <Row>
-              <Form.Item>
-                <Button style={{ margin: '0 5px' }} icon="export" onClick={this.template}>
-                  导出
-                </Button>
-              </Form.Item>
-            </Row>
-          </Form>
-        }
+      <Modal
+        title={``}
+        footer={null}
+        width='95%'
+        visible={this.props.regionVisible}  
+        onCancel={this.props.regionCancel}
       >
-        <SdlTable
-          rowKey={(record, index) => `complete${index}`}
-          loading={false}
-          columns={this.state.columns}
-          dataSource={this.props.tableDatil}
-          pagination={{
-            // showSizeChanger: true,
-            // showQuickJumper: true,
-            // sorter: true,
-            total: this.props.tableDatilTotal,
-            defaultPageSize: 20,
-            // pageSize: PageSize,
-            // current: PageIndex,
-            // pageSizeOptions: ['10', '20', '30', '40', '50'],
-          }}
-        />
-      </Card>
-      </Modal>
+    <Card
+      bordered={false}
+      title={
+        <Form layout="inline">
+          <Row>
+            <Form.Item>
+              <Button style={{ margin: '0 5px' }} icon={<ExportOutlined />} onClick={this.template}>
+                导出
+              </Button>
+            </Form.Item>
+          </Row>
+        </Form>
+      }
+    >
+      <SdlTable
+        rowKey={(record, index) => `complete${index}`}
+        loading={false}
+        columns={this.state.columns}
+        dataSource={this.props.tableDatil}
+        pagination={{
+          // showSizeChanger: true,
+          // showQuickJumper: true,
+          // sorter: true,
+          total: this.props.tableDatilTotal,
+          defaultPageSize: 20,
+          // pageSize: PageSize,
+          // current: PageIndex,
+          // pageSizeOptions: ['10', '20', '30', '40', '50'],
+        }}
+      />
+    </Card>
+    </Modal>
     );
   }
 }

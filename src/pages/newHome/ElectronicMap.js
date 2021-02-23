@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
+import { CaretDownOutlined, CaretUpOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import {
   Card,
   Drawer,
-  Icon,
   Tooltip,
   Button,
   Spin,
@@ -1179,12 +1179,12 @@ class NewHome extends PureComponent {
                         this.setState({ toggleSelect: !this.state.toggleSelect });
                       }}
                     >
-                      <Icon type="environment" />
+                      <EnvironmentOutlined />
                       <span>当前范围：{clickedDivision ? clickedDivision.title : '全部'}</span>
                       {toggleSelect ? (
-                        <Icon type="caret-up" className={styles.icon} />
+                        <CaretUpOutlined className={styles.icon} />
                       ) : (
-                          <Icon type="caret-down" className={styles.icon} />
+                          <CaretDownOutlined className={styles.icon} />
                         )}
                     </div>
                     {toggleSelect && (

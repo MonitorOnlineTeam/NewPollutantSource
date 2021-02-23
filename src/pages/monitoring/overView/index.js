@@ -14,7 +14,6 @@ import {
     Radio,
     Card,
     TimePicker,
-    Icon,
     Button,
     Spin,
     Popover,
@@ -22,7 +21,7 @@ import {
     Divider,
     Popconfirm,
     Input,
-    List
+    List,
 } from 'antd';
 import moment from 'moment';
 import { routerRedux } from 'dva/router';

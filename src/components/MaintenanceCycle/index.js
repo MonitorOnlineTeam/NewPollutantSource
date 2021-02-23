@@ -5,8 +5,9 @@
  * 创建时间：2019.10.21
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-    Form,
     DatePicker,
     Row,
     Col,
@@ -203,7 +204,6 @@ class MaintenanceCycle extends Component {
             />);
         }
         return (
-
             <Form onSubmit={this.handleSubmit} key={DGIMN}>
                 <Row gutter={24}>
                     <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
@@ -266,7 +266,7 @@ class MaintenanceCycle extends Component {
                     </Divider>
                 </Row>
             </Form>
-        )
+        );
     }
 
     render() {

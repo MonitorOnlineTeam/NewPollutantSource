@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card, Spin, Modal, Button, Form, Divider, Tooltip, Popconfirm,
-} from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Modal, Button, Divider, Tooltip, Popconfirm } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '../../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../../AutoFormManager/SearchWrapper';
@@ -208,99 +209,99 @@ import {
             />);
         }
         return (
-                <div>
-                    <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        <SdlTable
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                            parentcode="ddd"
-                            searchParams={DataWhere}
-                            appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
-                                <Button icon="plus" type="primary" onClick={() => {
-                                    this.setState({
-                                        visible: true,
-                                    })
-                                }}>添加</Button>
-                              </Fragment>}
-                            appendHandleRows={row => <Fragment>
-                                     <Tooltip title="编辑">
-                                        <a onClick={() => {
-                                            const keysParams = {
-                                              'dbo.T_Bas_CertificateInfo.ID': row['dbo.T_Bas_CertificateInfo.ID'],
-                                            };
-                                            const arr = row['dbo.T_Bas_CertificateInfo.AttachmentID'] ? row['dbo.T_Bas_CertificateInfo.AttachmentID'].split('|') : [];
+          <div>
+              <Card>
+                  <SearchWrapper
+                      onSubmitForm={form => this.loadReportList(form)}
+                      configId={configId}
+                  ></SearchWrapper>
+                  <SdlTable
+                      style={{ marginTop: 10 }}
+                      configId={configId}
+                      parentcode="ddd"
+                      searchParams={DataWhere}
+                      appendHandleButtons={(selectedRowKeys, selectedRows) => <Fragment>
+                          <Button icon={<PlusOutlined />} type="primary" onClick={() => {
+                              this.setState({
+                                  visible: true,
+                              })
+                          }}>添加</Button>
+                        </Fragment>}
+                      appendHandleRows={row => <Fragment>
+                               <Tooltip title="编辑">
+                                  <a onClick={() => {
+                                      const keysParams = {
+                                        'dbo.T_Bas_CertificateInfo.ID': row['dbo.T_Bas_CertificateInfo.ID'],
+                                      };
+                                      const arr = row['dbo.T_Bas_CertificateInfo.AttachmentID'] ? row['dbo.T_Bas_CertificateInfo.AttachmentID'].split('|') : [];
 
-                                            this.setState({
-                                             keysParams,
-                                             AttachmentID: arr.length > 0 ? arr[arr.length - 2] : '',
-                                             ID: row['dbo.T_Bas_CertificateInfo.ID'],
-                                            }, () => {
-                                              this.setState({
-                                                Evisible: true,
-                                              })
-                                            })
-                                        }}><EditIcon/></a>
-                                    </Tooltip>
-                                    <Divider type="vertical" />
-                                    <Tooltip title="删除">
-                                    <Popconfirm
-                                        title="确认要删除吗?"
-                                        onConfirm={() => {
-                                        this.delete(
-                                            row['dbo.T_Bas_CertificateInfo.ID'],
-                                        );
-                                        }}
-                                        onCancel={this.cancel}
-                                        okText="是"
-                                        cancelText="否"
-                                    >
-                                        <a href="#"><DelIcon /></a>
-                                    </Popconfirm>
-                                    </Tooltip>
-                                </Fragment>}
-                            {...this.props}
-                        >
-                        </SdlTable>
-                        <Modal
-                              title="添加"
-                              visible={this.state.visible}
-                              destroyOnClose // 清除上次数据
-                              onOk={this.handleOk}
-                              okText="保存"
-                              cancelText="关闭"
-                              confirmLoading={btnloading}
-                              onCancel={() => {
-                                this.setState({
-                                  visible: false,
-                                });
-                              }}
-                              width="50%"
-                            >
-                              <SdlForm configId={configId} form={this.props.form} hideBtns noLoad />
-                        </Modal>
-                          <Modal
-                              title="编辑"
-                              visible={this.state.Evisible}
-                              destroyOnClose // 清除上次数据
-                              onOk={this.SaveOk}
-                               confirmLoading={btnloading1}
-                              okText="保存"
-                              cancelText="关闭"
-                              onCancel={() => {
-                                this.setState({
-                                  Evisible: false,
-                                });
-                              }}
-                              width="50%"
-                            >
-                              <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} hideBtns isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID}/>
-                        </Modal>
-                    </Card>
-                </div>
+                                      this.setState({
+                                       keysParams,
+                                       AttachmentID: arr.length > 0 ? arr[arr.length - 2] : '',
+                                       ID: row['dbo.T_Bas_CertificateInfo.ID'],
+                                      }, () => {
+                                        this.setState({
+                                          Evisible: true,
+                                        })
+                                      })
+                                  }}><EditIcon/></a>
+                              </Tooltip>
+                              <Divider type="vertical" />
+                              <Tooltip title="删除">
+                              <Popconfirm
+                                  title="确认要删除吗?"
+                                  onConfirm={() => {
+                                  this.delete(
+                                      row['dbo.T_Bas_CertificateInfo.ID'],
+                                  );
+                                  }}
+                                  onCancel={this.cancel}
+                                  okText="是"
+                                  cancelText="否"
+                              >
+                                  <a href="#"><DelIcon /></a>
+                              </Popconfirm>
+                              </Tooltip>
+                          </Fragment>}
+                      {...this.props}
+                  >
+                  </SdlTable>
+                  <Modal
+                        title="添加"
+                        visible={this.state.visible}
+                        destroyOnClose // 清除上次数据
+                        onOk={this.handleOk}
+                        okText="保存"
+                        cancelText="关闭"
+                        confirmLoading={btnloading}
+                        onCancel={() => {
+                          this.setState({
+                            visible: false,
+                          });
+                        }}
+                        width="50%"
+                      >
+                        <SdlForm  configId={configId} form={this.props.form} hideBtns noLoad />
+                  </Modal>
+                    <Modal
+                        title="编辑"
+                        visible={this.state.Evisible}
+                        destroyOnClose // 清除上次数据
+                        onOk={this.SaveOk}
+                         confirmLoading={btnloading1}
+                        okText="保存"
+                        cancelText="关闭"
+                        onCancel={() => {
+                          this.setState({
+                            Evisible: false,
+                          });
+                        }}
+                        width="50%"
+                      >
+                        <SdlForm configId={configId} onSubmitForm={this.onSubmitForm} form={this.props.form} hideBtns isEdit keysParams={this.state.keysParams} noLoad uid={this.state.AttachmentID}/>
+                  </Modal>
+              </Card>
+          </div>
         );
     }
 }

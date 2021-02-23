@@ -11,9 +11,12 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import { connect } from 'dva';
 
-import {
-  Spin, Card, Form, Row, Col, DatePicker, Button, Icon
-} from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import { Spin, Card, Row, Col, DatePicker, Button } from 'antd';
 import YearPicker from '@/components/YearPicker';
 import SdlTable from '@/components/SdlTable'
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
@@ -535,7 +538,7 @@ class CompositeIndexReport extends Component {
       <BreadcrumbWrapper>
         <Spin spinning={loading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form layout="" className='searchForm' style={{ marginBottom: 20 }}>
               <Row>
                 <Col span={7}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
@@ -563,7 +566,7 @@ class CompositeIndexReport extends Component {
                       生成统计
                     </Button>
                     <Button loading={exportLoading} onClick={this.exportReport}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                   </FormItem>

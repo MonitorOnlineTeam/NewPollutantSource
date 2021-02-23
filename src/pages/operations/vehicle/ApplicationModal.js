@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Form, Modal, Row, Col, Select, Input } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Row, Col, Select, Input } from 'antd';
 import { connect } from 'dva';
 
 const { TextArea } = Input;

@@ -1,5 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Spin, Divider, Icon } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Row,
+  Col,
+  Radio,
+  Select,
+  DatePicker,
+  Empty,
+  message,
+  Spin,
+  Divider,
+} from 'antd';
 import moment from 'moment'
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -129,11 +143,11 @@ class DataAuditPage extends Component {
             })
           }}>显示数据标识</Checkbox>
           <Button type="primary" style={{ marginLeft: 10 }} onClick={this.getPageData}>查询</Button>
-          <Button onClick={() => { this.getPageData("export") }} loading={exportLoading} style={{ marginLeft: 10 }}><Icon type="export" />导出</Button>
+          <Button onClick={() => { this.getPageData("export") }} loading={exportLoading} style={{ marginLeft: 10 }}><ExportOutlined />导出</Button>
           {/* <Divider type="vertical" /> */}
         </Col>
       </Row >
-    )
+    );
   }
 
   render() {

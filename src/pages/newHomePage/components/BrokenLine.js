@@ -5,6 +5,9 @@
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';
+import { CaretDownOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,12 +16,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
@@ -27,7 +28,7 @@ import {
   Skeleton,
   Avatar,
   Dropdown,
-  Menu
+  Menu,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -257,19 +258,21 @@ export default class Index extends Component {
   }
 
   cardTitle = (title, type) => {
-    return <Row type='flex' align="middle" justify='space-between'>
-      <Dropdown overlay={this.menu(title)} trigger={['click']}>
-        <span onClick={e => e.preventDefault()}>
-          {title} <Icon type="caret-down" style={{ color: '#cbcbcb' }} />
-        </span>
-      </Dropdown>
-      <Tabs defaultActiveKey="7" onChange={(value) => this.tabCallback(value, type)}>
-        <TabPane tab="近7天" key="7">
-        </TabPane>
-        <TabPane tab="近30天" key="30">
-        </TabPane>
-      </Tabs>
-    </Row>
+    return (
+      <Row type='flex' align="middle" justify='space-between'>
+        <Dropdown overlay={this.menu(title)} trigger={['click']}>
+          <span onClick={e => e.preventDefault()}>
+            {title} <CaretDownOutlined style={{ color: '#cbcbcb' }} />
+          </span>
+        </Dropdown>
+        <Tabs defaultActiveKey="7" onChange={(value) => this.tabCallback(value, type)}>
+          <TabPane tab="近7天" key="7">
+          </TabPane>
+          <TabPane tab="近30天" key="30">
+          </TabPane>
+        </Tabs>
+      </Row>
+    );
   }
 
   tabCallback = (value, type) => {

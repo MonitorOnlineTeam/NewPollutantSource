@@ -1,12 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-    Card,
-    Button,
-    Icon,
-    Form,
-    message
-} from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Button, message } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
@@ -123,44 +120,45 @@ export default class addDataReport extends Component {
        isEdit=true;
     }
         return (
-        <BreadcrumbWrapper title="数据上报添加"> 
-        <Card 
-           title={
-            <span>
-              {userandentInfo?userandentInfo.entName:null}
-              <Button
-                style={{ marginLeft: 10 }}
-                onClick={() => {
-                  history.go(-1);
-                }}
-                type="link"
-                size="small"
-              >
-                <Icon type="rollback" />
-                返回上级
-              </Button>
-            </span>
-          }>
-         <SdlForm
-                configId={"DataReporting"}
-                onSubmitForm={this.onSubmitForm.bind(this)}
-                form={this.props.form}
-                noLoad
-                hideBtns
-                uid={this.state.cuid}
-                isEdit={isEdit}
-                keysParams={{ 'dbo.T_Bas_DataReporting.ID': id }}
-              />
-              <div className={styles.footer}>
-                <Button className={styles.button} key="back" onClick={this.handleCancel}>
-                    取消
-                </Button>   
-                <Button key="submit" type="primary" 
-                onClick={this.onSubmitForm.bind(this)}>
-                  确定
-                 </Button>
-            </div>
-        </Card>
-          </BreadcrumbWrapper>)
+          <BreadcrumbWrapper title="数据上报添加"> 
+          <Card 
+             title={
+              <span>
+                {userandentInfo?userandentInfo.entName:null}
+                <Button
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    history.go(-1);
+                  }}
+                  type="link"
+                  size="small"
+                >
+                  <RollbackOutlined />
+                  返回上级
+                </Button>
+              </span>
+            }>
+           <SdlForm
+                  configId={"DataReporting"}
+                  onSubmitForm={this.onSubmitForm.bind(this)}
+                  form={this.props.form}
+                  noLoad
+                  hideBtns
+                  uid={this.state.cuid}
+                  isEdit={isEdit}
+                  keysParams={{ 'dbo.T_Bas_DataReporting.ID': id }}
+                />
+                <div className={styles.footer}>
+                  <Button className={styles.button} key="back" onClick={this.handleCancel}>
+                      取消
+                  </Button>   
+                  <Button key="submit" type="primary" 
+                  onClick={this.onSubmitForm.bind(this)}>
+                    确定
+                   </Button>
+              </div>
+          </Card>
+            </BreadcrumbWrapper>
+        );
     }
 }

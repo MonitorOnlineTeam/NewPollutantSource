@@ -6,7 +6,7 @@
  * @Last Modified time: 2019-12-06 11:08:23
  */
 import React, { PureComponent } from 'react';
-import { Icon } from 'antd';
+import { createFromIconfontCN } from '@ant-design/icons';
 import config from '@/config'
 
 class index extends PureComponent {
@@ -18,7 +18,7 @@ class index extends PureComponent {
     }
   }
   render() {
-    const IconConfig = Icon.createFromIconfontCN({
+    const IconConfig = createFromIconfontCN({
       scriptUrl: this._SELF_.scriptUrl,
     })
     const { style } = this.props;

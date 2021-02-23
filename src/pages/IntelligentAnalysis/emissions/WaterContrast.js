@@ -1,5 +1,20 @@
 import React, { PureComponent } from 'react'
-import { Card, Form, Col, Row, Select, Input, Checkbox, Tabs, Button, message, Divider, DatePicker } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Col,
+  Row,
+  Select,
+  Input,
+  Checkbox,
+  Tabs,
+  Button,
+  message,
+  Divider,
+  DatePicker,
+} from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
@@ -610,7 +625,7 @@ class WaterContrast extends PureComponent {
                       </Button>
                 <Button
                   style={{ margin: '0 5px' }}
-                  icon="export"
+                  icon={<ExportOutlined />}
                   loading={exportLoading}
                   onClick={() => {
                     let values = this.props.form.getFieldsValue();

@@ -5,11 +5,14 @@ import {
     ,resetpwd,
     GetDepInfoByTree,
     GetRolesTree,
-    GetUserList
+    GetUserList,
+    ExportUserList
 } from './service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
 import { sdlMessage } from '@/utils/utils';
+import { downloadFile,interceptTwo } from '@/utils/utils';
+
 /*
 用户管理相关接口
 add by jab
@@ -87,6 +90,16 @@ export default Model.extend({
                 tableDatas: response.Datas,
                 loading:false
               });
+            }
+          },
+          *exportUserList({ callback,payload }, { call, put, update, select }) {
+            //用户列表 导出
+            const response = yield call(ExportUserList, { ...payload });
+            if (response.IsSuccess) {
+              message.success('下载成功');
+              downloadFile(`/upload${data}`);
+            } else {
+              message.warning(response.Message);
             }
           },
         /*获取用户列表**/

@@ -4,6 +4,9 @@
  * 创建时间：2019.10.19
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,18 +15,16 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
   message,
-  Spin
+  Spin,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -526,146 +527,146 @@ export default class EntTransmissionEfficiency extends Component {
   }
 
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline">
+      <Card
+        bordered={false}
+        title={
+          <>
+            <Form layout="inline">
+          
+            <Row>
+            <Form.Item label='行政区'>
+             <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+            </Form.Item>
             
-              <Row>
-              <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
-              </Form.Item>
-              
-              <Form.Item label='关注程度'>
-               <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
-              </Form.Item>
-              <Form.Item label='企业类型'>
-               <EntType  typeChange={this.typeChange}  PollutantType={PollutantType} PollutantType="1" />
-              </Form.Item>
+            <Form.Item label='关注程度'>
+             <AttentList changeAttent={this.changeAttent}  AttentionCode={AttentionCode} />
+            </Form.Item>
+            <Form.Item label='企业类型'>
+             <EntType  typeChange={this.typeChange}  PollutantType={PollutantType} PollutantType="1" />
+            </Form.Item>
 
-                {/* <Form.Item label='重点类型'>
-                  <Select
-                    allowClear
-                    placeholder="重点类型"
-                    onChange={this.changeImportant}
-                    value={ImportantType ? ImportantType : undefined}
-                    style={{ width: 150 }}
-                  >
-                 <Option key='1' value='1'>污染处理厂</Option>
-                 <Option key='2' value='2'>水重点</Option>
-                 <Option key='3' value='3'>气重点</Option>
-                 <Option key='4' value='4'>垃圾焚烧</Option>
-                  </Select>
-                </Form.Item>  */}
-
-                <Form.Item label='企业列表'>
-                 <Select
-                //  allowClear
-                 showSearch
-                 optionFilterProp="children"
-                 placeholder="企业列表"
-                 onChange={this.changeEnt}
-                 value={EntCode ? EntCode : (EntList.length>0?EntList[0][0].EntCode:undefined)}
-                 style={{width:'288px'}}
-                >
-                 {this.children()}
-                  </Select>
-                </Form.Item>
-                </Row>
-                <Row>
-                <Form.Item label='监测点'>
-                 <Select
-                    placeholder="监测点名称"
-                    onChange={this.changePoint}
-                    value={DGIMN? DGIMN : undefined }
-                    style={{ width: 150  }}
-                  >
-                  {this.pointChildren()}
-                  </Select> 
-                </Form.Item>
-                <Form.Item label='趋势类型'>
+              {/* <Form.Item label='重点类型'>
                 <Select
-                    placeholder="趋势类型"
-                    onChange={this._handleDateTypeChange}
-                    value={DataType? DataType:undefined  }
-                    style={{ width: 150  }}
-                  >  
-                 <Option key='0' value='HourData'>小时</Option>
-                 <Option key='1' value='DayData'> 日均</Option>
+                  allowClear
+                  placeholder="重点类型"
+                  onChange={this.changeImportant}
+                  value={ImportantType ? ImportantType : undefined}
+                  style={{ width: 150 }}
+                >
+               <Option key='1' value='1'>污染处理厂</Option>
+               <Option key='2' value='2'>水重点</Option>
+               <Option key='3' value='3'>气重点</Option>
+               <Option key='4' value='4'>垃圾焚烧</Option>
+                </Select>
+              </Form.Item>  */}
 
-                  </Select>
+              <Form.Item label='企业列表'>
+               <Select
+              //  allowClear
+               showSearch
+               optionFilterProp="children"
+               placeholder="企业列表"
+               onChange={this.changeEnt}
+               value={EntCode ? EntCode : (EntList.length>0?EntList[0][0].EntCode:undefined)}
+               style={{width:'288px'}}
+              >
+               {this.children()}
+                </Select>
               </Form.Item>
-                <Form.Item label='查询日期'>
-               <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={DataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}
-              
-              />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-                </Row>
-                <Row>
-                <Form.Item label='监测因子'>
-                {pointLoading? <Spin size="small"/>: <Checkbox.Group value={PollutantList} onChange={this.changePoll}>
-                     {this.pollListChildren()}
-                 </Checkbox.Group>}
-                 </Form.Item>
-                </Row>
-              </Form>
-            </>
-          }
-        >
-          <div id='emissionsChange'>
-              <Tabs>
-            <TabPane tab="变化趋势" key="1">
-            {loading?
-             <PageLoading/>
-              :
-              <ReactEcharts
-                        option={this.getChartData()}
-                        className="echarts-for-echarts"
-                        theme="my_theme"
-                        style ={{height:"calc(100vh - 350px)",paddingTop:10}}
-                      />
+              </Row>
+              <Row>
+              <Form.Item label='监测点'>
+               <Select
+                  placeholder="监测点名称"
+                  onChange={this.changePoint}
+                  value={DGIMN? DGIMN : undefined }
+                  style={{ width: 150  }}
+                >
+                {this.pointChildren()}
+                </Select> 
+              </Form.Item>
+              <Form.Item label='趋势类型'>
+              <Select
+                  placeholder="趋势类型"
+                  onChange={this._handleDateTypeChange}
+                  value={DataType? DataType:undefined  }
+                  style={{ width: 150  }}
+                >  
+               <Option key='0' value='HourData'>小时</Option>
+               <Option key='1' value='DayData'> 日均</Option>
 
-            }
-            </TabPane>
-            <TabPane tab="数据详情" key="2">
-             <SdlTable
-              style={{paddingTop:10}}
-              rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={columns.length>1?columns:[]}
-              // bordered={false}
-              dataSource={this.props.tableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+                </Select>
+            </Form.Item>
+              <Form.Item label='查询日期'>
+             <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={DataType}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+            callback={(dates, dataType)=>this.dateChange(dates, dataType)}
+            
             />
-              </TabPane>
-           </Tabs>
-          </div>
-        </Card>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" onClick={this.queryClick}>
+                  查询
+                </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+              </Row>
+              <Row>
+              <Form.Item label='监测因子'>
+              {pointLoading? <Spin size="small"/>: <Checkbox.Group value={PollutantList} onChange={this.changePoll}>
+                   {this.pollListChildren()}
+               </Checkbox.Group>}
+               </Form.Item>
+              </Row>
+            </Form>
+          </>
+        }
+      >
+        <div id='emissionsChange'>
+            <Tabs>
+          <TabPane tab="变化趋势" key="1">
+          {loading?
+           <PageLoading/>
+            :
+            <ReactEcharts
+                      option={this.getChartData()}
+                      className="echarts-for-echarts"
+                      theme="my_theme"
+                      style ={{height:"calc(100vh - 350px)",paddingTop:10}}
+                    />
+
+          }
+          </TabPane>
+          <TabPane tab="数据详情" key="2">
+           <SdlTable
+            style={{paddingTop:10}}
+            rowKey={(record, index) => `complete${index}`}
+            loading={loading}
+            columns={columns.length>1?columns:[]}
+            // bordered={false}
+            dataSource={this.props.tableDatas}
+            // style ={{height:"calc(100vh - 300px)"}} 
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              // sorter: true,
+              total: this.props.total,
+              defaultPageSize:20
+              // pageSize: PageSize,
+              // current: PageIndex,
+              // pageSizeOptions: ['10', '20', '30', '40', '50'],
+            }}
+          />
+            </TabPane>
+         </Tabs>
+        </div>
+      </Card>
     );
   }
 }

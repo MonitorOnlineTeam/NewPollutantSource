@@ -4,6 +4,9 @@
  * 创建时间：2019.08.12
  */
 import React, { Component } from 'react';
+import { ExportOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
 } from 'antd';
 import moment from 'moment';
@@ -149,7 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
         </p>
       </Card>
     ),
-    filterIcon: filtered => <Icon type="question-circle" theme="twoTone" />,
+    filterIcon: filtered => <QuestionCircleTwoTone />,
   });
 
   typeChange = value => {
@@ -444,7 +445,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Button>
                   <Button
                     style={{ margin: '0 5px' }}
-                    icon="export"
+                    icon={<ExportOutlined />}
                     onClick={this.template}
                     loading={exRegionloading}
                   >

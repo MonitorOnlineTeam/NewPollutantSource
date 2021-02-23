@@ -5,6 +5,9 @@
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,19 +16,17 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
   message,
   Skeleton,
-  Avatar
+  Avatar,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -57,8 +58,10 @@ export default class Index extends Component {
     this.initData()
   }
 
-  componentDidUpdate() {
-
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.loading === false && prevProps.loading === true && this.props.alarmDataList.length>3) {
+      this.scrollImgLeft()
+    }
   }
 
   // 获取实时报警数据
@@ -77,11 +80,7 @@ export default class Index extends Component {
     this.scrollImgLeft()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(this.props.loading === false && prevProps.loading === true && this.props.alarmDataList.length>3) {
-      this.scrollImgLeft()
-    }
-  }
+ 
 
   // 横向滚动
   scrollImgLeft() {
@@ -122,12 +121,14 @@ export default class Index extends Component {
     this.setState({alarmVisible:true})
   }
   realTime=()=>{
-    return <div>
-         <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>
-           当日超标报警
-           <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} /> 
-           </span>
-         </div>
+    return (
+      <div>
+           <span style={{cursor:'pointer'}}  onClick={this.overAlarm}>
+             当日超标报警
+             <CaretRightOutlined style={{fontSize:14,paddingLeft:3}} /> 
+             </span>
+           </div>
+    );
     
   }
   render() {
@@ -160,7 +161,7 @@ export default class Index extends Component {
               <div id='scroll_end'> 
               </div>
             </Row>  */}
-            <Row id='scroll_div'  style={{position:'static',whiteSpace: "nowrap", overflowX:'hidden'}}>
+            <Row id='scroll_div'  style={{ display:'block', position:'static',whiteSpace: "nowrap", overflowX:'hidden'}}>
             <div id='scroll_begin' style={{display:'inline-block'}}>
               {alarmDataList.map((item, index) => {
                     return <div style={{display:'inline-block',position:'relative',width: 'calc(100vw / 3)',minWidth:500}}>

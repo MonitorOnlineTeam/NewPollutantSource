@@ -4,6 +4,9 @@
  * 创建时间：2020.12.28
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,17 +15,15 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -354,59 +355,59 @@ export default class Index extends Component {
     const {  regionVisible, entNumVisible, workNumVisible} = this.state;
 
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline">
-             <Form.Item label=''>
-               <RangePicker_ format='YYYY-MM-DD' showTime={false} allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}
-              onRef={(ref) => {
-                this.child = ref;
-              }} 
-              />
-                </Form.Item>
-
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-              </Form>
-            </>
-          }
-        >
-          <div id='airQualityStatistics'>
-             <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={this.columns}
-              // bordered={false}
-              dataSource={this.props.tableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+      <Card
+        bordered={false}
+        title={
+          <>
+            <Form layout="inline">
+           <Form.Item label=''>
+             <RangePicker_ format='YYYY-MM-DD' showTime={false} allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+            callback={(dates, dataType)=>this.dateChange(dates, dataType)}
+            onRef={(ref) => {
+              this.child = ref;
+            }} 
             />
-          </div>
-         
-        </Card>
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" onClick={this.queryClick}>
+                  查询
+                </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+            </Form>
+          </>
+        }
+      >
+        <div id='airQualityStatistics'>
+           <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={loading}
+            columns={this.columns}
+            // bordered={false}
+            dataSource={this.props.tableDatas}
+            // style ={{height:"calc(100vh - 300px)"}} 
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              // sorter: true,
+              total: this.props.total,
+              defaultPageSize:20
+              // pageSize: PageSize,
+              // current: PageIndex,
+              // pageSizeOptions: ['10', '20', '30', '40', '50'],
+            }}
+          />
+        </div>
+       
+      </Card>
     );
   }
 }

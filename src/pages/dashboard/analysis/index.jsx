@@ -1,4 +1,5 @@
-import { Col, Dropdown, Icon, Menu, Row } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
+import { Col, Dropdown, Menu, Row } from 'antd';
 import React, { Component, Suspense } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { connect } from 'dva';
@@ -120,7 +121,7 @@ class Analysis extends Component {
     const dropdownGroup = (
       <span className={styles.iconGroup}>
         <Dropdown overlay={menu} placement="bottomRight">
-          <Icon type="ellipsis" />
+          <EllipsisOutlined />
         </Dropdown>
       </span>
     );

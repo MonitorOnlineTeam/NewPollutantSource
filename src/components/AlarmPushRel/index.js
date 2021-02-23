@@ -5,11 +5,11 @@
  * 创建时间：2019.10.21
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-    Form,
     Input,
     Button,
-    Icon,
     Card,
     Spin,
     Row,
@@ -22,7 +22,12 @@ import {
     Divider,
     Popconfirm,
     Tooltip,
-    Transfer, Switch, Tag, Select, Pagination, Empty,
+    Transfer,
+    Switch,
+    Tag,
+    Select,
+    Pagination,
+    Empty,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
