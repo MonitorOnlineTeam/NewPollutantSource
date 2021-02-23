@@ -367,6 +367,14 @@ class NewHome extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: "newHome/updateState",
+      payload: { siteDetailsVisible: false }
+    })
+  }
+
+
   // 渲染所有企业
   renderEntMarkers = (entAndPointList, notFitView) => {
     const entMarkers = entAndPointList.map(item => ({

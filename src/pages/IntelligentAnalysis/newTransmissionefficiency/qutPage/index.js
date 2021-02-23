@@ -56,6 +56,8 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   endTime: newtransmissionefficiency.endTime,
   pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
+  operationpersonnel:newtransmissionefficiency.operationpersonnel,
+
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {

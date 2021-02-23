@@ -55,6 +55,7 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   pollutantType: newtransmissionefficiency.pollutantType,
   assessment: newtransmissionefficiency.assessment,
   RegionCode: newtransmissionefficiency.RegionCode,
+  operationpersonnel:newtransmissionefficiency.operationpersonnel,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -172,7 +173,7 @@ export default class EntTransmissionEfficiency extends Component {
   };
   changePperation=(value)=>{
     this.updateState({
-      operationpersonnel: value,
+      operationpersonnel:  value? value:'',
     });
   }
 
@@ -431,6 +432,7 @@ export default class EntTransmissionEfficiency extends Component {
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                   placeholder="运维状态"
                   maxTagCount={2}
+                  value={this.props.operationpersonnel ? this.props.operationpersonnel : undefined }
                   onChange={this.changePperation}
                   maxTagTextLength={5}
                   maxTagPlaceholder="..."

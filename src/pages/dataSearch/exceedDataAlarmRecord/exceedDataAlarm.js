@@ -225,7 +225,7 @@ class index extends PureComponent {
                 PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
-                operationpersonnel:operationpersonnel==undefined?'':operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         })
         this.setState({
@@ -396,7 +396,7 @@ class index extends PureComponent {
     }
     //行政区 报警次数
     AlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -423,7 +423,8 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel,
             }
         })
         
@@ -431,7 +432,7 @@ class index extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.setState({
             DealType:'1',
             regVisibleAlready:true,
@@ -458,14 +459,15 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel
             }
         })
         
     }
     //行政区 待核实报警次数
     StayAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,
@@ -492,15 +494,15 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:'',
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel
             }
         })
         
     }
     // 企业弹框
-    EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName,DGIMN)=>{
-        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList} = this.state
-
+    EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
+        const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList,operationpersonnel} = this.state
         let deal = ''
         if(status == '')
         {
@@ -553,6 +555,7 @@ class index extends PureComponent {
                 EntCode:entCode == undefined?'':entCode,
                 VerifyStatus:AlarmDealTypeList,
                 DGIMN:DGIMN == undefined?'':DGIMN,
+                operationpersonnel:operationpersonnel
             }
         })
         
@@ -625,7 +628,7 @@ class index extends PureComponent {
                 //PageSize: 20,
                 //PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
-                OperationPersonnel:operationpersonnel,
+                operationpersonnel:operationpersonnel,
             }
         }).then(()=>{
             if(this.props.AlarmDetailList.length > 0)
@@ -952,7 +955,7 @@ class index extends PureComponent {
     }
     //报警次数数据按钮查询信息
     AlertsButtonHandle =()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,DGIMN} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -968,13 +971,15 @@ class index extends PureComponent {
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:AlarmDealTypeList,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                operationpersonnel:operationpersonnel
+
             }
         })
     }
     //报警次数数据   导出
     ButtonHandleExpor=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -987,13 +992,15 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel,
             }
         })
     }
     //已核实报警按钮查询信息
     AlreadyButtonCountHandle=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,DGIMN} = this.state
+
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1009,13 +1016,14 @@ class index extends PureComponent {
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:AlarmDealTypeList,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                operationpersonnel:operationpersonnel
             }
         })
     }
     //已核实报警   导出
     AlreadyButtonHandleExpor=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1028,13 +1036,14 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel
             }
         })
     }
     ////待核实报警按钮查询信息
     StayButtonCountHandle=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,DGIMN} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1050,13 +1059,14 @@ class index extends PureComponent {
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:[],
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                operationpersonnel:operationpersonnel
             }
         })
     }
      //待核实报警   导出
     StayButtonHandleExpor=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1069,12 +1079,13 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                VerifyStatus:[]
+                VerifyStatus:[],
+                operationpersonnel:operationpersonnel
             }
         })
     }
     ButtonCountHandleExpor=()=>{
-        const {attentionValue,outletValue,dataType,time,regionCode,PollutantCode,status,entCode} = this.state
+        const {attentionValue,outletValue,dataType,time,regionCode,PollutantCode,status,entCode,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1087,7 +1098,8 @@ class index extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:status=="2"?"":status,
                 EntCode:entCode,
-                VerifyStatus:[]
+                VerifyStatus:[],
+                operationpersonnel:operationpersonnel
             }
         })
     }

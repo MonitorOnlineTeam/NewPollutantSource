@@ -115,6 +115,7 @@ class index extends PureComponent {
     }
     // 导出
     EntexportReport = () => {
+        debugger
         const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
@@ -130,6 +131,7 @@ class index extends PureComponent {
     }
     // 导出
     PointexportReport = () => {
+        debugger
         const {outletValue,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
@@ -147,8 +149,7 @@ class index extends PureComponent {
 
     // 获取图表及表格数据
     getChartAndTableData = () => {
-
-
+     debugger
         this.props.dispatch({
             type: pageUrl.GetEntSummary,
             payload: {
@@ -318,6 +319,7 @@ class index extends PureComponent {
         })
     }
     onChange = (PageIndex, PageSize) => {
+        debugger
         this.props.dispatch({
             type: pageUrl.GetEntSummary,
             payload: {

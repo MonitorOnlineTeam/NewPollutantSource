@@ -34,6 +34,7 @@ import moment from 'moment';
 import styles from './index.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
+import { GetDataType } from '@/utils/utils';
 
 
 @connect(({ recordEchartTable, loading }) => ({
@@ -57,6 +58,7 @@ class Index extends Component {
             format: this.props.noticeState == 0 ? 'YYYY-MM-DD HH' : 'YYYY-MM-DD HH:mm:ss',
             bar: [],
             dataType: this.props.noticeState == 0 ? 'HourData' : 'RealTimeData',
+            _dataType: this.props.noticeState == 0 ? 'hour' : 'realtime',
             DGIMN: [],
             beginTime: this.props.noticeState == 0 ? this.props.firsttime.format('YYYY-MM-DD HH:mm:ss') : '',
             endTime: this.props.noticeState == 0 ? this.props.lasttime.format('YYYY-MM-DD HH:mm:ss') : '',
@@ -363,7 +365,7 @@ class Index extends Component {
     /** 数据类型切换 */
     _handleDateTypeChange = e => {
         const dataType = e.target.value;
-        this.setState({ dataType });
+        this.setState({ dataType, _dataType: dataType });
         this.children.onDataTypeChange(dataType);
     }
 
@@ -372,6 +374,7 @@ class Index extends Component {
    * 回调获取时间并重新请求数据
    */
     dateCallback = (date, dataType) => {
+       
         if (!this.props.DGIMN) { return; }
         this.setState({
             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -459,7 +462,7 @@ splitLine: {
                                 callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                 allowClear={false} showTime={this.state.format} />
 
-                            {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked="realtime" onChange={this._handleDateTypeChange} />}
+                            {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked={this.state._dataType} onChange={this._handleDateTypeChange} />}
                         </div>
                     }
                 >

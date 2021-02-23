@@ -961,7 +961,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //报警次数数据按钮查询信息
     AlertsButtonHandle =()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -977,7 +977,8 @@ class exceedDataAlarmModal extends PureComponent {
                 Status:DealType=='2'?'':DealType,
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:AlarmDealTypeList,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                operationpersonnel:operationpersonnel
             }
         })
     }
@@ -1002,7 +1003,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //已核实报警按钮查询信息
     AlreadyButtonCountHandle=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1018,13 +1019,14 @@ class exceedDataAlarmModal extends PureComponent {
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:AlarmDealTypeList,
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                operationpersonnel:operationpersonnel
             }
         })
     }
     //已核实报警   导出
     AlreadyButtonHandleExpor=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1037,13 +1039,14 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'1',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                VerifyStatus:AlarmDealTypeList
+                VerifyStatus:AlarmDealTypeList,
+                operationpersonnel:operationpersonnel
             }
         })
     }
     ////待核实报警按钮查询信息
     StayButtonCountHandle=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,DGIMN} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1059,13 +1062,14 @@ class exceedDataAlarmModal extends PureComponent {
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
                 VerifyStatus:[],
-                DGIMN:DGIMN
+                DGIMN:DGIMN,
+                operationpersonnel:operationpersonnel
             }
         })
     }
      //待核实报警   导出
     StayButtonHandleExpor=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1078,12 +1082,13 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:'0',
                 EntCode:enterpriseValue == undefined?'':enterpriseValue,
-                VerifyStatus:[]
+                VerifyStatus:[],
+                operationpersonnel:operationpersonnel
             }
         })
     }
     ButtonCountHandleExpor=()=>{
-        const {attentionValue,outletValue,dataType,time,regionCode,PollutantCode,status,entCode} = this.state
+        const {attentionValue,outletValue,dataType,time,regionCode,PollutantCode,status,entCode,operationpersonnel} = this.state
         this.props.dispatch({
             type:pageUrl.ExportAlarmVerifyDetail,
             payload: {
@@ -1096,7 +1101,8 @@ class exceedDataAlarmModal extends PureComponent {
                 PollutantCode: PollutantCode,
                 Status:status,
                 EntCode:entCode,
-                VerifyStatus:[]
+                VerifyStatus:[],
+                operationpersonnel:operationpersonnel
             }
         })
     }

@@ -345,7 +345,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
              {type==='ent'? <Form.Item label='企业类型'>
                 <Select
-                  allowClear
+                  allowClea
                   placeholder="企业类型"
                   onChange={this.typeChange}
                   value={PollutantType?PollutantType:undefined}
@@ -355,7 +355,6 @@ export default class EntTransmissionEfficiency extends Component {
                   <Option value="2">废气</Option>
                 </Select>
               </Form.Item> : null }
-
               <Form.Item>
                 <Button type="primary" onClick={this.queryClick}>
                   查询
