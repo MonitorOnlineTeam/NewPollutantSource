@@ -208,7 +208,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode,flag } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -400,7 +400,8 @@ class SdlForm extends PureComponent {
                 FileActualType: '0',
               },
             };
-            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
+
+            element = <SdlUpload  accept={flag=="img"?"image/*":''} fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />

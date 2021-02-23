@@ -124,11 +124,11 @@ class SdlUpload extends Component {
         {
           uploadNumber ?
             (this.state.fileList.length >= uploadNumber ? null : <div>
-              <Icon type="plus" />
+              <PlusOutlined/>
               <div className="ant-upload-text">文件上传</div>
             </div>)
             : <div>
-              <Icon type="plus" />
+              <PlusOutlined />
               <div className="ant-upload-text">文件上传</div>
             </div>
         }
@@ -140,11 +140,11 @@ class SdlUpload extends Component {
         <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
           <div className={styles.controller}>
 
-            <Icon type="left"
+            <LeftOutlined
               onClick={() => {
                 this.carousel.prev()
               }} />
-            <Icon type="right"
+            <RightOutlined
               onClick={() => {
                 this.carousel.next()
               }} />

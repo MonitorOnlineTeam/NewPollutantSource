@@ -281,7 +281,7 @@ import {
                         }}
                         width="50%"
                       >
-                        <SdlForm  configId={configId} form={this.props.form} hideBtns noLoad />
+                        <SdlForm  flag="img" configId={configId} form={this.props.form} hideBtns noLoad />
                   </Modal>
                     <Modal
                         title="编辑"
