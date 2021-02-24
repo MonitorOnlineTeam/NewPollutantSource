@@ -86,9 +86,9 @@ export default {
   // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
-      path: '/hrefLogin',
+      path: '/autoLogin',
       component: '../layouts/BlankLayout',
-      routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
+      routes: [{ path: '/autoLogin', component: './user/login/hrefLogin' }],
     },
     {
       path: '/',
