@@ -498,19 +498,32 @@ export default Model.extend({
                     payload: { message: obj.Message },
                   });
                   break;
-                case 'QCARealTimeData':
+                case 'QCACheckBack':
+                  // console.log("QCACheckBack=", obj.Message)
+                  // 数据提取 - 提取日志
                   dispatch({
-                    type: 'qualityControlModel/changeRealTimeThanData',
-                    payload: { message: obj.Message },
-                  });
-                  dispatch({
-                    type: 'qualityControl/changeCEMSMonitorValue',
-                    payload: obj.Message[0],
+                    type: 'dataExtract/updateQCLogResult',
+                    payload: obj.Message,
                   });
                   break;
-                case 'ControlData':
+                case 'QCARealTimeData':
+                  // console.log("QCARealTimeData=", obj.Message);
+                  // CEMS污染物数据
                   dispatch({
-                    type: 'qualityControl/changeQCState',
+                    type: 'qcManual/changePollutantValueListInfo',
+                    payload: { message: obj.Message },
+                  });
+                  // 质控图表数据
+                  dispatch({
+                    type: 'qcManual/updateRealChartData',
+                    payload: { message: obj.Message },
+                  });
+                  break;
+                // 阀门状态
+                case 'ControlData':
+                  // console.log("ControlData=", obj.Message[0])
+                  dispatch({
+                    type: 'qcManual/changeQCState',
                     payload: obj.Message[0],
                   })
                   break;
@@ -520,11 +533,11 @@ export default Model.extend({
                     payload: obj.Message[0],
                   })
                   break;
-                case 'QCACemsStatus':
+                case 'State':
                   // 质控仪状态
                   dispatch({
-                    type: 'qualityControl/changeQCStatus',
-                    payload: obj.Message,
+                    type: 'qcManual/changeQCStatus',
+                    payload: obj.Message[0],
                   })
                   break;
                 case 'QCAAlarmMsg':
@@ -537,6 +550,13 @@ export default Model.extend({
                     type: 'changeQCANotices',
                     payload: obj.Message,
                   });
+                  break;
+                case 'QCARtn': //下发
+                  // console.log('msg=',obj)
+                  dispatch({
+                    type: 'qualitySet/issueData',//同步更新数据
+                    payload: obj.Message,
+                  })
                   break;
                 default:
                   break;

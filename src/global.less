@@ -162,7 +162,7 @@ p {
     .ant-pro-grid-content{
       padding-left: 320px;
     }
-  
+
   }
 }
 
@@ -271,32 +271,38 @@ a:hover {
   //   margin-bottom: -10px
   // }
 
-  // table样式
-  .ant-table-middle>.ant-table-title,
-  .ant-table-middle>.ant-table-footer {
-    padding: 10px 8px !important;
+  // 隐藏系统默认菜单
+  .ant-pro-top-nav-header-main .ant-pro-top-nav-header-menu .ant-menu {
+    display: none;
   }
 
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-thead>tr>th {
-    padding: 5px !important;
+  // table 表格
+  .ant-table-tbody {
+    font-size: 13px !important;
   }
 
-  .ant-table-middle>.ant-table-content>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-scroll>.ant-table-body>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-header>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-left>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td,
-  .ant-table-middle>.ant-table-content>.ant-table-fixed-right>.ant-table-body-outer>.ant-table-body-inner>table>.ant-table-tbody>tr>td {
-    padding: 8px !important;
+  .ant-table.ant-table-middle .ant-table-title,
+  .ant-table.ant-table-middle .ant-table-footer,
+  .ant-table.ant-table-middle .ant-table-thead>tr>th,
+  .ant-table.ant-table-middle .ant-table-tbody>tr>td,
+  .ant-table.ant-table-middle tfoot>tr>th,
+  .ant-table.ant-table-middle tfoot>tr>td {
+    padding: 8px;
+  }
+
+  .react-resizable {
+    position: relative;
+    background-clip: padding-box;
+  }
+
+  .react-resizable-handle {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    bottom: 0;
+    right: -5px;
+    cursor: col-resize;
+    z-index: 1;
   }
 
 
@@ -310,9 +316,6 @@ a:hover {
     // border-bottom: 2px solid #1890FF;
   }
 
-  .ant-table {
-    font-size: 13px !important;
-  }
 
   .ant-menu-dark .ant-menu-submenu-selected {
     background-color: transparent;

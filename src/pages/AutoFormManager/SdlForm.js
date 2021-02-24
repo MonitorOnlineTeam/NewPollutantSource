@@ -40,7 +40,6 @@ import Cookie from 'js-cookie';
 import { checkRules } from '@/utils/validator';
 // import config from '../../../config/config'
 // import config from "@/config"
-import MonitorContent from '../../components/MonitorContent/index';
 import SearchSelect from './SearchSelect';
 import SdlCascader from './SdlCascader';
 import SdlRadio from './SdlRadio';
