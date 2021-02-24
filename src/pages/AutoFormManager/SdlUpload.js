@@ -66,9 +66,13 @@ class SdlUpload extends Component {
 
   };
 
-
+   isAssetTypeAnImage(ext) {
+    return [
+    'png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'psd', 'svg', 'tiff'].
+    indexOf(ext.toLowerCase()) !== -1;
+  }
   render() {
-    const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
+    const { configId, fileList, dispatch, accept, uploadNumber,flags } = this.props;
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
     let imageProps = {};
@@ -79,6 +83,20 @@ class SdlUpload extends Component {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
+
+       if(flags==='img')
+       {
+        var index= info.file.name.lastIndexOf(".");
+        var ext = info.file.name.substr(index+1); 
+        if(!this.isAssetTypeAnImage(ext))
+        {
+          message.error('上传文件类型失败！')
+          return
+        }
+
+        // var index= info.file.name.split(".")[];
+       }
+        debugger
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {

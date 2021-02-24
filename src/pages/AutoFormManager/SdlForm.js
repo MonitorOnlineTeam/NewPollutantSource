@@ -401,7 +401,7 @@ class SdlForm extends PureComponent {
               },
             };
 
-            element = <SdlUpload  accept={flag=="img"?"image/*":''} fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
+            element = <SdlUpload  accept={flag=="img"?"image/*":''} fileList={this.props.fileList}  flags={flag} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />
