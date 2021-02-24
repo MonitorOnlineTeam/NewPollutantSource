@@ -111,7 +111,7 @@ export default class Index extends PureComponent {
         key: 'responseRate',
         align: 'center',
         render:(text,row)=>{
-          return <span>{row.regionName=='全部合计'? '-'  : `${interceptTwo(Number(text))}%`}</span>
+          return <span>{`${interceptTwo(Number(text))}%`}</span>
         }
       
       },
