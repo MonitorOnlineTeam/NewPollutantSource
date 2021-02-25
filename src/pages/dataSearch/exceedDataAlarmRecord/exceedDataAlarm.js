@@ -100,7 +100,8 @@ class index extends PureComponent {
             filePath:'',
             entCode:'',
             status:'',
-            exportRegion:'1'
+            exportRegion:'1',
+            DGIMN:''
         };
     }
 
@@ -501,7 +502,7 @@ class index extends PureComponent {
         
     }
     // 企业弹框
-    EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName)=>{
+    EntAlarmHandle =(reCode,entCode,status,PollutantCode,entName,pointName,DGIMN)=>{
         const {attentionValue,outletValue,dataType,time,regionCode,AlarmDealTypeList,operationpersonnel} = this.state
         let deal = ''
         if(status == '')
@@ -955,7 +956,7 @@ class index extends PureComponent {
     }
     //报警次数数据按钮查询信息
     AlertsButtonHandle =()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel,DGIMN} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {

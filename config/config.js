@@ -861,36 +861,7 @@ export default {
             //     // },
             //   ],
             // },
-            {
-              name: 'alarmmanager',
-              path: '/alarmmanager',
-              routes: [
-                {
-                  path: '/alarmmanager',
-                  redirect: '/alarmmanager/alarmrecord',
-                },
-                {
-                  name: 'alarmrecord',
-                  path: '/alarmmanager/alarmrecord',
-                  component: './monitoring/alarmrecord/AlarmRecordList',
-                },
-                {
-                  name: 'alarmverifyrecord',
-                  path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
-                  component: './monitoring/alarmverifyrecord/index',
-                },
-                {
-                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
-                  path: '/alarmmanager/exceedDataAlarmRecord',
-                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
-                },
-                {
-                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
-                  path: '/alarmmanager/exceedDataDispositionRecord',
-                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
-                },
-              ],
-            },
+
             {
               name: 'dataquerymanager',
               path: '/dataquerymanager',
@@ -904,11 +875,6 @@ export default {
                   name: 'overrecord',
                   path: '/dataquerymanager/overrecord',
                   component: './monitoring/overRecord',
-                },
-                {
-                  name: 'originaldata',
-                  path: '/dataquerymanager/originaldata',
-                  component: './monitoring/originaldata',
                 },
                 {
                   name: 'dataAudit',
@@ -945,6 +911,11 @@ export default {
                   name: 'exceptionrecordDetails',
                   path: '/monitoring/missingData/exceptionrecord/details',
                   component: './monitoring/exceptionrecordNew/RegionDetails',
+                },
+                {
+                  name: 'alarmrecord',
+                  path: '/monitoring/alarmrecord',
+                  component: './monitoring/alarmrecord/index',
                 },
                 // 企业异常上报
                 {
@@ -1046,6 +1017,31 @@ export default {
                   path: '/monitoring/missingData/missDataSecond',
                   component: './monitoring/missingData/missDataSecond',
                 },
+                    {
+                      name: 'alarmrecord',
+                      path: '/alarmmanager/alarmrecord',
+                      component: './monitoring/alarmrecord/AlarmRecordList',
+                    },
+                    {
+                      name: 'alarmverifyrecord',
+                      path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
+                      component: './monitoring/alarmverifyrecord/index',
+                    },
+                    {
+                      name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                      path: '/monitoring/missingData/exceedDataAlarmRecord',
+                      component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                    },
+                    {
+                      name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                      path: '/monitoring/missingData/exceedDataDispositionRecord',
+                      component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                    },
+                    {
+                      name: 'originaldata',
+                      path: '/monitoring/missingData/originaldata',
+                      component: './monitoring/originaldata',
+                    },
               ],
             },
             {
@@ -1673,11 +1669,6 @@ export default {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
-                },
-                {
-                  name: 'alarmrecord',
-                  path: '/monitoring/alarmrecord',
-                  component: './monitoring/alarmrecord/index',
                 },
                 {
                   name: 'originaldata',
