@@ -39,6 +39,7 @@ import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
+import InstrumentInfo from './InstrumentInfo'
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 let pointConfigId = '';
@@ -75,7 +76,8 @@ export default class MonitorPoint extends Component {
       PointCode: '',
       DGIMN: '',
       FormData: null,
-      tabKey: "1"
+      tabKey: "1",
+      modalProps: {},
     };
   }
 
@@ -346,10 +348,10 @@ export default class MonitorPoint extends Component {
    * 站点信息维护tabchange
    */
   onTabPaneChange = (key) => {
-
     const { selectedPointCode, FormData } = this.state;
-    if (key == "2") {
-
+    let modalProps = {};
+    if (key != "1") {
+      modalProps = { footer: false }
       if (this.state.selectedPointCode || FormData) {
         // this.props.dispatch({
         //   type: 'autoForm/getPageConfig',
@@ -358,13 +360,14 @@ export default class MonitorPoint extends Component {
         //   },
         //  });
       } else {
-        message.error("请先保存站点信息！")
+        message.error("请先保存监测点信息！")
         return;
       }
 
     }
     this.setState({
-      tabKey: key
+      tabKey: key,
+      modalProps: modalProps
     });
   }
 
@@ -376,6 +379,17 @@ export default class MonitorPoint extends Component {
       return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]}
         pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
+
+  getInstrumentInfo = () => {
+    const { FormData } = this.state;
+    if (FormData) {
+      let DGIMN = FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"];
+      if (DGIMN) {
+        return <InstrumentInfo DGIMN={DGIMN} />
+      }
+    }
+  }
+
   render() {
     const {
       searchConfigItems,
@@ -390,8 +404,10 @@ export default class MonitorPoint extends Component {
       saveLoadingAdd,
       saveLoadingEdit,
     } = this.props;
+    const { modalProps } = this.state;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
+
     if (this.props.loading || this.props.otherloading) {
       return (
         <Spin
@@ -537,6 +553,7 @@ export default class MonitorPoint extends Component {
                     取消
             </Button></>) : '',
             ]}
+            {...modalProps}
           >{
               !this.state.isView ? (
                 <Tabs activeKey={this.state.tabKey} onChange={this.onTabPaneChange}>
@@ -552,6 +569,9 @@ export default class MonitorPoint extends Component {
                       isEdit={this.state.isEdit}
                       keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
                     />
+                  </TabPane>
+                  <TabPane tab="仪器信息" key="3">
+                    {this.getInstrumentInfo()}
                   </TabPane>
                   <TabPane tab="污染物信息" key="2">
                     {this.getTabInfo()}
