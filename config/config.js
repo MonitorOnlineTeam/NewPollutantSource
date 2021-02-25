@@ -1733,6 +1733,10 @@ export default {
                   name: 'monitor',
                   routes: [
                     {
+                      path: '/dataSearch/monitor',
+                      redirect: "/dataSearch/monitor/datavisualization"
+                    },
+                    {
                       // 工况模拟
                       name: 'working',
                       path: '/dataSearch/monitor/datavisualization',
@@ -1821,14 +1825,59 @@ export default {
                     },
                   ]
                 },
+                {
+                  // 手动质控核查
+                  path: '/qualityCheck/qualityManualCheck',
+                  name: 'qualityManualCheck',
+                  routes: [
+                    {
+                      name: 'manualQuality',  // 手动质控
+                      path: '/qualityCheck/qualityManualCheck/manualQuality',
+                      component: './qualityCheck/qualityManualCheck/manualQuality',
+                    },
+                    {
+                      name: 'dataExtract',  // 数据提取
+                      path: '/qualityCheck/qualityManualCheck/dataExtract',
+                      component: './qualityCheck/qualityManualCheck/dataExtract',
+                    }
+                  ]
+                },
               ],
-              
+
             },
             // 质控 - 知识库
             {
               path: '/knowledge',
               name: 'knowledge',
               component: './KBS/Knowledge',
+            },
+            // 质控 - 基础配置
+            {
+              path: '/basicsManage',
+              name: 'basicsManage',
+              routes: [
+                {
+                  name: 'wry',  // 污染源管理
+                  path: '/basicsManage/wry',
+                  routes: [
+                    // {
+                    //   name: 'index',  // 企业管理
+                    //   path: '/basicsManage/wry/entManage',
+                    //   component: './basicsManage/wry/entManage',
+                    // },
+                    // {
+                    //   name: 'index',  // 企业管理 - 排口管理
+                    //   path: '/basicsManage/wry/entManage/point/:entCode/:entName/:coordinateSet',
+                    //   component: './basicsManage/wry/entManage/Point',
+                    // },
+                    {
+                      name: 'KBS',  // 知识库管理
+                      path: '/basicsManage/wry/KBS',
+                      component: './KBS/KBSManage',
+                    },
+                  ]
+                }
+              ],
             },
             {
               path: '/account/settings',
@@ -1993,42 +2042,42 @@ export default {
                 },
               ],
             },
-                        //动态管控
-          {
+            //动态管控
+            {
               path: '/dynamicControl',
               name: 'dynamicControl',
-                 routes: [
-                        {
-                          name: 'reportManage',  // 报备管理
-                          path: '/dynamicControl/reportManage',
-                          routes: [
-                             {
-                                name: 'paramFiling',  //管控参数备案
-                                path: '/dynamicControl/reportManage/paramFiling',
-                                component: './dynamicControl/reportManage/paramFiling',
-                               },
-                            ]
-                           },
-                         {
-                            name: 'dynamicDataManage',  // 管控数据
-                            path: '/dynamicControl/dynamicDataManage',
-                            routes: [
-                              {
-                                name: 'realtimedynamicData',  //实时管控参数
-                                path: '/dynamicControl/dynamicDataManage/realtimedynamicData',
-                                component: './dataSearch/monitor/working/realtimeParam',
-          
-                              },
-                              {
-                                 name: 'historyparame',  //历史管控参数
-                                 path: '/dynamicControl/dynamicDataManage/controlData/historyparame',
-                                 component: './dynamicControl/controlData/historyparame',
-                                },
-                              ]
-                            }
-                     ]
-            
-             },
+              routes: [
+                {
+                  name: 'reportManage',  // 报备管理
+                  path: '/dynamicControl/reportManage',
+                  routes: [
+                    {
+                      name: 'paramFiling',  //管控参数备案
+                      path: '/dynamicControl/reportManage/paramFiling',
+                      component: './dynamicControl/reportManage/paramFiling',
+                    },
+                  ]
+                },
+                {
+                  name: 'dynamicDataManage',  // 管控数据
+                  path: '/dynamicControl/dynamicDataManage',
+                  routes: [
+                    {
+                      name: 'realtimedynamicData',  //实时管控参数
+                      path: '/dynamicControl/dynamicDataManage/realtimedynamicData',
+                      component: './dataSearch/monitor/working/realtimeParam',
+
+                    },
+                    {
+                      name: 'historyparame',  //历史管控参数
+                      path: '/dynamicControl/dynamicDataManage/controlData/historyparame',
+                      component: './dynamicControl/controlData/historyparame',
+                    },
+                  ]
+                }
+              ]
+
+            },
             /* 任务详情 */
             {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
