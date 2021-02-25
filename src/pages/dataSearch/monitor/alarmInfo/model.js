@@ -47,8 +47,9 @@ export default Model.extend({
       const result = yield call(GetAlarmType, payload);  
       const queryParams = yield select(state => state.alarmInfoData.queryParams)
       if (result.IsSuccess) {
-        yield update({ alarmTypeList: result.Datas})
-        const defaultValue = result.Datas.map((item)=>{
+        let alarmTypeListData = result.Datas.filter(item=>item.code!=='0'&&item.code!=='2')
+        yield update({ alarmTypeList: alarmTypeListData})
+        const defaultValue = alarmTypeListData.map((item)=>{
           return item.code
        })
        yield update({ defaultAlarmType: defaultValue,alarmTypeLoading: false,queryParams:{...queryParams,alarmType:defaultValue}})
