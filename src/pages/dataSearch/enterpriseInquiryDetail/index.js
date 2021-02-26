@@ -62,13 +62,13 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: 'enterpriseMonitoringModel/getEntByRegion',
-            payload: { RegionCode: '' },
+            payload: { RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode},
         });
 
         this.props.dispatch({
             type: pageUrl.GetPointSummary,
             payload: { 
-                getEntByRegion:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
+                RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
                 EntCode:'',
                 PageSize:20,
                 PageIndex:1,
