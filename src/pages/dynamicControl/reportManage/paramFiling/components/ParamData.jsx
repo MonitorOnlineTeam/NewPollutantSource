@@ -597,6 +597,8 @@ class Index extends React.Component {
         }
     });
 
+    }else{
+      message.warning("污染物列表为空")
     }
 
 
