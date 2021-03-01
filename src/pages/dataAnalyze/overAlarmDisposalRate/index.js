@@ -276,7 +276,7 @@ class index extends PureComponent {
                   params.PollutantType = values.PollutantType;
                   params.dataType = values.dataType;
                   router.push(
-                    `/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
+                    `/Intelligentanalysis/dataAlarm/baojing/4/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
                       params,
                     )}`,
                   );
@@ -340,7 +340,7 @@ class index extends PureComponent {
                   params.PollutantType = values.PollutantType;
                   params.dataType = values.dataType;
                   router.push(
-                    `/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate?params=${JSON.stringify(
+                    `/Intelligentanalysis/dataAlarm/baojing/overAlarmDisposalRate/4/RegionOverAlarmDisposalRate?params=${JSON.stringify(
                       params,
                     )}`,
                   );
