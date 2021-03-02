@@ -574,25 +574,31 @@ export default {
                 //小时平均值日报
                 {
                   name: 'DailyReport',
-                  path: '/report/DailyReport',
+                  path: '/report/wasteWater',
+                  redirect: '/report/wasteWater/DailyReport',
+                },                
+                //小时平均值日报
+                {
+                  name: 'DailyReport',
+                  path: '/report/wasteWater/DailyReport',
                   component: './report/DailyReport/DailyReport',
                 },
                 //日平均值月报
                 {
                   name: 'MonthReport',
-                  path: '/report/MonthReport',
+                  path: '/report/wasteWater/MonthReport',
                   component: './report/MonthReport/MonthReport',
                 },
                 //月平均值季报
                 {
                   name: 'SeasonReport',
-                  path: '/report/SeasonReport',
+                  path: '/report/wasteWater/SeasonReport',
                   component: './report/SeasonReport/SeasonReport',
                 },
                 //月平均值年报
                 {
                   name: 'YearReport',
-                  path: '/report/YearReport',
+                  path: '/report/wasteWater/YearReport',
                   component: './report/YearReport/YearReport',
                 },
                 {
@@ -969,16 +975,7 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 },
-                {
-                  name: 'dataquery',
-                  path: '/monitoring/dataquery/ent',
-                  component: './monitoring/dataquery/index',
-                },
-                {
-                  name: 'airDataquery',
-                  path: '/monitoring/dataquery/air',
-                  component: './monitoring/dataquery/air',
-                },
+
                 {
                   path: '/monitoring/videoMonitor',
                   redirect: '/monitoring/videoMonitor/ent',
@@ -1344,18 +1341,27 @@ export default {
                   ],
                 },
                 {
+                 name:'aqi',
+                 path:'/Intelligentanalysis/aqi',
+                },
+                {
                   name: 'effluentFee',
-                  path: '/Intelligentanalysis/effluentFee',
+                  path: '/Intelligentanalysis/aqi',
+                  redirect: '/Intelligentanalysis/aqi/effluentFee',
+                }, // 单站多参对比分析
+                {
+                  name: 'effluentFee',
+                  path: '/Intelligentanalysis/aqi/effluentFee',
                   component: './Intelligentanalysis/effluentFee',
                 }, // 单站多参对比分析
                 {
                   name: 'siteParamsPage',
-                  path: '/Intelligentanalysis/siteParamsPage/:type',
+                  path: '/Intelligentanalysis/aqi/siteParamsPage/:type',
                   component: './dataAnalyze/SiteParamsPage',
                 }, // 多站多参对比分析
                 {
                   name: 'multiSiteParamsPage',
-                  path: '/Intelligentanalysis/multiSiteParamsPage/:type',
+                  path: '/Intelligentanalysis/aqi/multiSiteParamsPage/:type',
                   component: './dataAnalyze/MultiSiteParamsPage',
                 }, // 数据获取率
                 {
@@ -1455,6 +1461,19 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                     },
+                    {
+                      //超标报警处置率
+                      name: 'overAlarmDisposalRate',
+                      path: '/Intelligentanalysis/dataAlarm/baojing/4',
+                      component: './dataAnalyze/overAlarmDisposalRate',
+                    },
+                    {
+                      //超标报警处置率-二级
+                      name: 'RegionOverAlarmDisposalRate',
+                      path:
+                        '/Intelligentanalysis/dataAlarm/baojing/4/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                      component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                    },
                   ],
                 },
 
@@ -1541,19 +1560,7 @@ export default {
                     },
                   ],
                 },
-                {
-                  //超标报警处置率
-                  name: 'overAlarmDisposalRate',
-                  path: '/Intelligentanalysis/baojing/4',
-                  component: './dataAnalyze/overAlarmDisposalRate',
-                },
-                {
-                  //超标报警处置率-二级
-                  name: 'RegionOverAlarmDisposalRate',
-                  path:
-                    '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                  component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                },
+
 
                 {
                   //空气质量状况统计
@@ -1569,6 +1576,16 @@ export default {
               path: '/dataSearch',
               name: 'dataSearch',
               routes: [
+                {
+                  name: 'dataquery',
+                  path: '/dataSearch/dataquery/ent',
+                  component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'airDataquery',
+                  path: '/dataSearch/dataquery/air',
+                  component: './monitoring/dataquery/air',
+                },
                 {
                   path: '/dataSearch',
                   redirect: '/dataquery/defectData',
