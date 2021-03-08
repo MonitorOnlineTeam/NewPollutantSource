@@ -178,7 +178,7 @@ class SdlTable extends PureComponent {
       render: (text, record) => text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
         {text}
       </div>,
-      align: align,
+      align: align || 'center',
       ...col,
       width: this.getInitialColWidth(col),
       onHeaderCell: column => ({

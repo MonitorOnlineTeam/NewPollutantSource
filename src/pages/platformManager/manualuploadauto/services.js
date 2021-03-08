@@ -63,7 +63,7 @@ export async function getUploadTemplate(params) {
  * @params {"PollutantType":""}
  */
 export async function getUploadTemplateAutoReference(params) {
-  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/getUploadTemplateAutoReference', params, null);
+  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplateAutoReference', params, null);
   return result;
 }
 

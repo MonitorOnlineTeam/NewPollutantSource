@@ -430,10 +430,19 @@ export default {
                   path: '/platformconfig/manualupload/',
                   component: './platformManager/manualupload',
                 },
+
                 {
                   name: 'manualuploadauto',
                   path: '/platformconfig/manualuploadauto/',
                   component: './platformManager/manualuploadauto',
+                },
+                // 碳排放 - 参比监控数据
+                {
+                  name: 'carbonMonitoringData',
+                  path: '/platformconfig/carbonMonitoringData',
+                  component: './platformManager/manualuploadauto/CarbonMonitoringDataPage',
+
+                  // component: './platformManager/manualuploadauto/CarbonMonitoringData.js',
                 },
                 {
                   name: 'maintenancedatabase',
@@ -1224,11 +1233,13 @@ export default {
                   path: '/platformconfig/manualupload/',
                   component: './platformManager/manualupload',
                 },
-                {
-                  name: 'manualuploadauto',
-                  path: '/platformconfig/manualuploadauto/',
-                  component: './platformManager/manualuploadauto',
-                },
+
+                // {
+                //   name: 'manualuploadauto',
+                //   path: '/platformconfig/manualuploadauto',
+                //   component: './platformManager/manualuploadauto/CarbonMonitoringDataPage',
+                // },
+
                 {
                   name: 'maintenancedatabase',
                   path: '/platformconfig/maintenancedatabase/:configId',
