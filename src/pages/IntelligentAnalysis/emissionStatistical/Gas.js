@@ -119,10 +119,6 @@ class Gas extends PureComponent {
     })
   }
 
-  getColumns = () => {
-
-  }
-
   render() {
     const { form: { getFieldDecorator }, regionExportLoading, entExportLoading, pointExportLoading, regionLoading, entLoading, pointLoading, regionList, attentionList, regionTableDataSource, entTableDataSource, pointTableDataSource } = this.props;
     let loading = regionLoading || entLoading || pointLoading;

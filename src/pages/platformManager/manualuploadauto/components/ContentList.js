@@ -183,9 +183,9 @@ export default class ContentList extends Component {
                     BeginTime: manualUploadautoParameters.BeginTime,
                     EndTime: manualUploadautoParameters.EndTime,
                     Type: manualUploadautoParameters.Type,
-                    callback: (data) => {
-                        downloadFile(data);
-                    }
+                },
+                callback: (data) => {
+                    downloadFile(data);
                 }
             });
         }
@@ -253,8 +253,8 @@ export default class ContentList extends Component {
                     })
                     that.GetManualSupplementList();
                 } else if (info.file.status === 'error') {
-                 
-                        message.error(info.file.response.Message);
+
+                    message.error(info.file.response.Message);
 
                     that.setState({
                         uploadLoading: false
@@ -353,29 +353,29 @@ export default class ContentList extends Component {
         });
     }
 
-     counterConfirm=()=> {
-        const {  dispatch,manualUploadautoParameters } = this.props;
-        var type= manualUploadautoParameters.Type=="day"?"日数据":"小时数据";
+    counterConfirm = () => {
+        const { dispatch, manualUploadautoParameters } = this.props;
+        var type = manualUploadautoParameters.Type == "day" ? "日数据" : "小时数据";
         Modal.confirm({
-          title: '提示?',
-          okText: '确认',
-          cancelText: '取消',
-          width: 500,
-          content: '确认补发'+manualUploadautoParameters.BeginTime+'至'+manualUploadautoParameters.EndTime+'的'+type+'吗？',
-          onOk() {
-            dispatch({
-                type: 'manualuploadauto/CounterSendCMDMsg',
-                payload: {
-                    DGIMN: manualUploadautoParameters.DGIMN,
-                    BeginTime: manualUploadautoParameters.BeginTime,
-                    EndTime: manualUploadautoParameters.EndTime,
-                    DataType: manualUploadautoParameters.Type,
-                }
-            });
-        },
-          onCancel() {},
+            title: '提示?',
+            okText: '确认',
+            cancelText: '取消',
+            width: 500,
+            content: '确认补发' + manualUploadautoParameters.BeginTime + '至' + manualUploadautoParameters.EndTime + '的' + type + '吗？',
+            onOk() {
+                dispatch({
+                    type: 'manualuploadauto/CounterSendCMDMsg',
+                    payload: {
+                        DGIMN: manualUploadautoParameters.DGIMN,
+                        BeginTime: manualUploadautoParameters.BeginTime,
+                        EndTime: manualUploadautoParameters.EndTime,
+                        DataType: manualUploadautoParameters.Type,
+                    }
+                });
+            },
+            onCancel() { },
         });
-      }
+    }
 
     //统计AQI
     StatisticsAQI = e => {
@@ -458,8 +458,8 @@ export default class ContentList extends Component {
                             {/* <Button type="primary" onClick={this.uploadConfirm} >
                                 <Icon type="upload" /> 文件导入
                             </Button> */
-                            // this.upload()
-                                }
+                                // this.upload()
+                            }
 
                             {/* <Spin
                                 delay={500}
