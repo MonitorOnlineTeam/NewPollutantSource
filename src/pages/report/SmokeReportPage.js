@@ -542,7 +542,7 @@ class SmokeReportPage extends PureComponent {
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
-              <label>行政区:</label><Select
+              <label style={{ lineHeight: '32px' }}>行政区:</label><Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -576,7 +576,7 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.children()}
               </Select>
-              <label>关注程度:</label><Select
+              <label style={{ lineHeight: '32px' }}>关注程度:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="关注度"
@@ -601,7 +601,7 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.attention()}
               </Select>
-              <label>企业列表:</label><Select
+              <label style={{ lineHeight: '32px' }}>企业列表:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="企业列表"
@@ -620,13 +620,13 @@ class SmokeReportPage extends PureComponent {
                   });
                   this.setState({
                     entValue: value,
-                    pointValue:undefined
+                    pointValue: undefined
                   })
                 }}>
                 {this.entList()}
               </Select>
               <div style={{ marginTop: 10 }}>
-                <label>监测点:</label><Select
+                <label style={{ lineHeight: '32px' }}>监测点:</label><Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                   placeholder="监测点列表"
@@ -641,7 +641,7 @@ class SmokeReportPage extends PureComponent {
                   }}>
                   {this.pointList()}
                 </Select>
-                <FormItem {...formLayout} label="监测日期" style={{ width: 250 }}>
+                <FormItem {...formLayout} label="监测日期" style={{ width: 250, marginTop: -6 }}>
                   {getFieldDecorator('time', {
                     initialValue: moment(),
                     rules: [

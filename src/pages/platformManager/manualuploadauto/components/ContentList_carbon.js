@@ -424,7 +424,7 @@ export default class ContentList_carbon extends Component {
                         </Form.Item> */}
                         <Form.Item>
                             <Button type="primary" onClick={this.uploadConfirm} >
-                                <UploadOutlined /> 文件导入
+                                <UploadOutlined loading={uploadLoading} /> 文件导入
                             </Button>
                             {/* // this.upload() */}
                         </Form.Item>
