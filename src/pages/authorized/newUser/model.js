@@ -97,7 +97,7 @@ export default Model.extend({
             const response = yield call(ExportUserList, { ...payload });
             if (response.IsSuccess) {
               message.success('下载成功');
-              downloadFile(`/upload${data}`);
+              downloadFile(`/upload${response.Datas}`);
             } else {
               message.warning(response.Message);
             }
