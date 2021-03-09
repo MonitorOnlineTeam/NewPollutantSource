@@ -92,7 +92,7 @@ class CompositeIndexContrast extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           width: 200,
           children: [
             {

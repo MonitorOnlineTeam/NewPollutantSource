@@ -121,7 +121,7 @@ class CompositeIndexReport extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           width: 220,
           children: [
             {

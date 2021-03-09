@@ -268,6 +268,7 @@ class SdlForm extends PureComponent {
             <SdlCascader
               itemName={item.configDataItemName}
               itemValue={item.configDataItemValue}
+              configId={item.configId}
               data={item.value}
               placeholder={placeholder}
             />
