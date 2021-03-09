@@ -175,8 +175,8 @@ class MapUI extends PureComponent {
         bubble: true,
         // strokeColor: strokeColor, //线颜色
         strokeColor: "#5da4e3", //线颜色
-        strokeOpacity: 1, //线透明度
-        strokeWeight: 1, //线宽
+        strokeOpacity: 0.1, //线透明度
+        strokeWeight: 0, //线宽
         // fillColor: fillColor, //填充色
         fillColor: "#f4f4f4", //填充色
         fillOpacity: 0.35, //填充透明度
@@ -190,7 +190,7 @@ class MapUI extends PureComponent {
       // strokeColor: 'black', //线颜色
       strokeColor: '#485f9e', //线颜色
       fillColor: null,
-      strokeWeight: 3, //线宽
+      strokeWeight: 0, //线宽
     });
 
     //更新地图视野以适合区划面
@@ -270,8 +270,8 @@ class MapUI extends PureComponent {
         strokeColor: "#3c500c", //线颜色
         // strokeColor: "#0f509f", //线颜色
         // strokeColor: "#e8cab0", //线颜色
-        strokeOpacity: 1, //线透明度
-        strokeWeight: 2, //线宽
+        strokeOpacity: 0.1, //线透明度
+        strokeWeight: 0, //线宽
         // fillColor: fillColor, //填充色
         fillColor: "#f7f6f0", //填充色
         // fillColor: "#f4f4f4", //填充色
@@ -284,8 +284,8 @@ class MapUI extends PureComponent {
       bubble: true,
       strokeColor: '#3c500c', //线颜色
       // strokeColor: '#485f9e', //线颜色
-      strokeOpacity: 1, //线透明度
-      strokeWeight: 3, //线宽
+      strokeOpacity: 0.1, //线透明度
+      strokeWeight: 0, //线宽
       fillColor: areaNode.getSubFeatures().length ? null : colors[0], //填充色
       // fillColor: areaNode.getSubFeatures().length ? null : "blue", //填充色
       fillOpacity: 0.35, //填充透明度

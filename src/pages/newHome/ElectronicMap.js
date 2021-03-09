@@ -528,7 +528,7 @@ class NewHome extends PureComponent {
               className={mapStyles.pulse1}
               style={{ left: -11, top: aMap.getZoom() >= 10 ? 18 : -12, display: isShow }}
             ></div>
-            {aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>}
+            {aMap.getZoom() > 10 && <div className={styles.pop}>{extData.position.title}</div>}
             <EntIcon style={{ fontSize: 28 }} />
           </div>
         );
@@ -884,7 +884,7 @@ class NewHome extends PureComponent {
           searchInputVal: undefined,
         });
 
-        aMap.setZoomAndCenter(aMap.getZoom() + 2, [
+        aMap.setZoomAndCenter(aMap.getZoom() + 5, [
           filter[0].position.Longitude,
           filter[0].position.Latitude,
         ]);
@@ -894,16 +894,16 @@ class NewHome extends PureComponent {
     }
   };
 
-  divisionInfoWindow = () => {
-    const { currentDivision } = this.props;
-    if (currentDivision && currentDivision.divisionList) {
-      return currentDivision.divisionList.map(item => (
-        <InfoWindow position={[item.longitude, item.latitude]} visible isCustom offset={[4, -36]}>
-          {item.divisionName}
-        </InfoWindow>
-      ));
-    }
-  };
+  // divisionInfoWindow = () => {
+  //   const { currentDivision } = this.props;
+  //   if (currentDivision && currentDivision.divisionList) {
+  //     return currentDivision.divisionList.map(item => (
+  //       <InfoWindow position={[item.longitude, item.latitude]} visible isCustom offset={[4, -36]}>
+  //         {item.divisionName}
+  //       </InfoWindow>
+  //     ));
+  //   }
+  // };
 
   // 重新请求页面数据
   reloadPageData = (startTime = this.props.startTime, endTime = this.props.endTime) => {
@@ -1266,22 +1266,22 @@ class NewHome extends PureComponent {
                 <div className={styles.legendBox}>
                   <ul>
                     <li>
-                      <CustomIcon type="icon-cangku" style={{ ...mapIconStyle }} />
+                      <CustomIcon type="icon-cangku" style={{ ...mapIconStyle, marginRight: 10 }} />
                       <span>服务站</span>
                     </li>
                     <li>
-                      <EntIcon />
+                      <EntIcon style={{ marginRight: 10 }} />
                       <span>企业</span>
                     </li>
                     <li>
-                      <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3 }} />{' '}
+                      <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3, marginRight: 10 }} />{' '}
                       <span>师</span>
                     </li>
                     <li>
-                      <WaterOffline /> <span>废水</span>
+                      <WaterOffline style={{ marginRight: 10 }}  /> <span>废水</span>
                     </li>
                     <li>
-                      <GasOffline /> <span>废气</span>
+                      <GasOffline style={{ marginRight: 10 }}  /> <span>废气</span>
                     </li>
                     <li>
                       <CustomIcon
@@ -1292,6 +1292,7 @@ class NewHome extends PureComponent {
                           background: '#fff',
                           boxShadow: '0px 0px 3px 2px #fff',
                           color: '#999',
+                          marginRight: 10,
                         }}
                       />
                       空气站
@@ -1305,6 +1306,7 @@ class NewHome extends PureComponent {
                           background: '#fff',
                           boxShadow: '0px 0px 3px 2px #fff',
                           color: '#999',
+                          marginRight: 10,
                         }}
                       />
                       停运
