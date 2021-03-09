@@ -348,6 +348,12 @@ export default {
                   component: './platformManager/equipmentManage',
                 },
                 {
+                  // 设备参数
+                  name: 'equipmentManage',
+                  path: '/platformconfig/equipmentParmars',
+                  component: './platformManager/equipmentParmars',
+                },
+                {
                   // 设备管理 - 添加、编辑
                   name: 'addEditEquipment',
                   path: '/platformconfig/equipmentManage/:DGIMN/:id',
@@ -417,11 +423,6 @@ export default {
                   name: 'manualuploadauto',
                   path: '/platformconfig/manualuploadauto/',
                   component: './platformManager/manualuploadauto',
-                },
-                {
-                  name: 'maintenancedatabase',
-                  path: '/platformconfig/maintenancedatabase/:configId',
-                  component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
                 {
                   name: 'sparepartmanage',
@@ -662,32 +663,15 @@ export default {
                   name: 'materielmanager',
                   path: '/operations/materielmanager',
                   routes: [
-                    {
-                      path: '/operations/materielmanager',
-                      redirect: '/operations/materielmanager/sparepartmanage/SparepartManage',
-                    },
-                    {
-                      name: 'sparepartmanage',
-                      path: '/operations/materielmanager/sparepartmanage/:configId',
-                      component: './OperationSysManager/SparepartManage/',
-                    },
-                    {
-                      name: 'standardgasmanage',
-                      path: '/operations/materielmanager/standardgasmanage/:configId',
-                      component: './OperationSysManager/StandardGasManage/',
-                    },
+
                     {
                       name: 'handhelddevicesmanage',
                       path: '/operations/materielmanager/handhelddevicesmanage/:configId',
                       component: './OperationSysManager/HandheldDevicesManage/',
                     },
-                    {
-                      name: 'sparepartsstation',
-                      path: '/operations/materielmanager/sparepartsstation/:configId',
-                      component: './OperationSysManager/SparePartsStation/',
-                    },
                   ],
                 },
+
                 {
                   name: 'usermanager',
                   path: '/operations/usermanager',
@@ -699,9 +683,35 @@ export default {
                     {
                       name: 'certificatemanage',
                       path: '/operations/usermanager/certificatemanage/:configId',
-                      component: './OperationSysManager/CertificateManage/',
+                      component: './OperationSysManager/CertificateManage/',//人员证书
+                    },
+
+                    {
+                      path: '/operations/materielmanager',
+                      redirect: '/operations/materielmanager/sparepartmanage/SparepartManage',
+                    },
+                    {
+                      name: 'sparepartmanage',
+                      path: '/operations/materielmanager/sparepartmanage/:configId',
+                      component: './OperationSysManager/SparepartManage/',
+                    },
+
+                    {
+                      name: 'standardgasmanage',
+                      path: '/operations/materielmanager/standardgasmanage/:configId',
+                      component: './OperationSysManager/StandardGasManage/',
                     },
                   ],
+                },
+                {//运维资料
+                      name: 'maintenancedatabase',
+                      path: '/operations/maintenancedatabase/:configId',
+                      component: './OperationSysManager/MaintenanceDatabaseManage/',
+               },                
+                {
+                  name: 'sparepartsstation',//服务站信息
+                  path: '/operations/sparepartsstation/:configId',
+                  component: './OperationSysManager/SparePartsStation/',
                 },
                 {
                   name: 'carmanager',
@@ -1125,11 +1135,6 @@ export default {
                   name: 'manualuploadauto',
                   path: '/platformconfig/manualuploadauto/',
                   component: './platformManager/manualuploadauto',
-                },
-                {
-                  name: 'maintenancedatabase',
-                  path: '/platformconfig/maintenancedatabase/:configId',
-                  component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
                 {
                   name: 'sparepartmanage',
