@@ -82,7 +82,7 @@ class CompositeRangeReport extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           children: [
             {
               title: '数值',
