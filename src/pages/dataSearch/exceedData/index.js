@@ -148,7 +148,7 @@ class index extends PureComponent {
                 type:'1'
             },
         }).then(()=>{
-            console.log(this.props.PollutantByType)
+            // console.log(this.props.PollutantByType)
             if(this.props.PollutantByType.length > 0)
             {
                 let selectPollution = []
@@ -342,7 +342,6 @@ class index extends PureComponent {
     paneAdd = (region,text)=>{
         const { panes,RegionCode ,AttentionCode ,PollutantTypeCode,DataType,BeginTime,EndTime,TabType,PollutantList ,selectPollution,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
-        
         this.props.dispatch({
             type:pageUrl.GetExceedDataList,
             payload:{
@@ -408,18 +407,23 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'PollutantData.PointNum-'+item.PollutantCode,
-                                key: 'PollutantData.PointNum-'+item.PollutantCode,
+                                dataIndex:'PointNum-'+item.PollutantCode,
+                                key: 'PointNum-'+item.PollutantCode,
+                                render:(text,record)=>{
+                                    return record.PollutantData[`PointNum-${item.PollutantCode}`]
+                                }
                             },
                             {
                                 title: "超标次数",
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
-                                key: 'PollutantData.ExceedNum-'+item.PollutantCode,
+                                dataIndex: 'ExceedNum-'+item.PollutantCode,
+                                key: 'ExceedNum-'+item.PollutantCode,
                                 render: (text,record) => {
-                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>{text}</a>
+                                    return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>
+                                        {record.PollutantData[`ExceedNum-${item.PollutantCode}`]}
+                                        </a>
                                 }
                             },
                             {
@@ -427,10 +431,12 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'PollutantData.MaxMultiple-'+item.PollutantCode,
-                                key: 'PollutantData.MaxMultiple-'+item.PollutantCode,
-                                render: (text) => {
-                                    return !text?'-': toDecimal3(text)
+                                dataIndex: 'MaxMultiple-'+item.PollutantCode,
+                                key: 'MaxMultiple-'+item.PollutantCode,
+                                render:(text,record)=>{
+                                        return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+     
+
                                 }
                             },
                         ]
@@ -447,6 +453,9 @@ class index extends PureComponent {
                         return key = item.key
                     }
                 })
+                // console.log("哈哈哈哈哈哈")
+                // console.log(columns)
+                // console.log(this.props.RegionDataList)
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
@@ -1274,10 +1283,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.EntNum-'+item.PollutantCode,
-                        key: 'PollutantData.EntNum-'+item.PollutantCode,
+                        dataIndex: 'EntNum-'+item.PollutantCode,
+                        key: 'EntNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exEntHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode)}>{text}</a>
+                            return <a onClick={this.exEntHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode)}>
+                                {record.PollutantData[`EntNum-${item.PollutantCode}`]}
+                                </a>
                         }
                     },
                     {
@@ -1285,18 +1296,23 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.PointNum-'+item.PollutantCode,
-                        key: 'PollutantData.PointNum-'+item.PollutantCode,
+                        dataIndex:'PointNum-'+item.PollutantCode,
+                        key: 'PointNum-'+item.PollutantCode,
+                        render:(text,record)=>{
+                            return record.PollutantData[`PointNum-${item.PollutantCode}`]
+                        }
                     },
                     {
                         title: "超标次数",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
-                        key: 'PollutantData.ExceedNum-'+item.PollutantCode,
+                        dataIndex: 'ExceedNum-'+item.PollutantCode,
+                        key: 'ExceedNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,'',item.PollutantName)}>{text}</a>
+                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>
+                                {record.PollutantData[`ExceedNum-${item.PollutantCode}`]}
+                                </a>
                         }
                     },
                     {
@@ -1304,10 +1320,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.MaxMultiple-'+item.PollutantCode,
-                        key: 'PollutantData.MaxMultiple-'+item.PollutantCode,
-                        render: (text) => {
-                            return !text?'-':toDecimal3(text)
+                        dataIndex: 'MaxMultiple-'+item.PollutantCode,
+                        key: 'MaxMultiple-'+item.PollutantCode,
+                        render:(text,record)=>{
+                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+
+
                         }
                     },
                 ]
@@ -1689,18 +1707,23 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.PointNum-'+item.PollutantCode,
-                        key: 'PollutantData.PointNum-'+item.PollutantCode,
+                        dataIndex:'PointNum-'+item.PollutantCode,
+                        key: 'PointNum-'+item.PollutantCode,
+                        render:(text,record)=>{
+                            return record.PollutantData[`PointNum-${item.PollutantCode}`]
+                        }
                     },
                     {
                         title: "超标次数",
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.ExceedNum-'+item.PollutantCode,
-                        key: 'PollutantData.ExceedNum-'+item.PollutantCode,
+                        dataIndex: 'ExceedNum-'+item.PollutantCode,
+                        key: 'ExceedNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,true,record.EntCode)}>{text}</a>
+                            return <a onClick={this.exCountHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode,false,record.EntCode,item.PollutantName)}>
+                                {record.PollutantData[`ExceedNum-${item.PollutantCode}`]}
+                                </a>
                         }
                     },
                     {
@@ -1708,10 +1731,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.MaxMultiple-'+item.PollutantCode,
-                        key: 'PollutantData.MaxMultiple-'+item.PollutantCode,
-                        render: (text) => {
-                            return !text?'-':toDecimal3(text)
+                        dataIndex: 'MaxMultiple-'+item.PollutantCode,
+                        key: 'MaxMultiple-'+item.PollutantCode,
+                        render:(text,record)=>{
+                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+
+
                         }
                     },
                 ]
