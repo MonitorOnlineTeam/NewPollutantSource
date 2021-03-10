@@ -91,7 +91,7 @@ export default class UserInfoIndex extends Component {
         dataIndex: 'groupName',
         key: 'groupName',
         align: 'center',
-        render: (text, record) => {     
+        render: (text, record) => {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
@@ -101,7 +101,7 @@ export default class UserInfoIndex extends Component {
         key: 'roleName',
         align: 'center',
         width:150,
-        render: (text, record) => {     
+        render: (text, record) => {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
@@ -310,7 +310,7 @@ export default class UserInfoIndex extends Component {
     this.props.dispatch({
       type: 'newuserinfo/getUserList',
       payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
-    });  
+    });
   }
   //获取部门列表
   getDepInfoByTree =(params)=> {
@@ -335,9 +335,9 @@ export default class UserInfoIndex extends Component {
     this.setState({ selectedRowKeys, selectedRows });
   };
   addClick=()=>{
-  
+
     const {dispatch } = this.props;
-  
+
     dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
   }
   exports = ()=>{
@@ -362,7 +362,7 @@ export default class UserInfoIndex extends Component {
     } = this.props;
     const searchConditions = searchConfigItems[configId] || [];
     const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
-    
+
     const { selectedRowKeys, selectedRows } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -404,7 +404,7 @@ export default class UserInfoIndex extends Component {
                 <Button onClick={this.restClick} style={{ marginLeft: 8 }} > 重置</Button>
                 </Form.Item>
                 </Form>
-                <Form layout="inline"  style={{padding:'10px 0'}}>  
+                <Form layout="inline"  style={{padding:'10px 0'}}>
                 <Form.Item>
               <Button
               style={{ marginRight: 8 }}
@@ -427,7 +427,7 @@ export default class UserInfoIndex extends Component {
 
                     <Menu.Item>
                     <div  onClick={this.exports}> <ExportOutlined />导出 </div>
-                  </Menu.Item> 
+                  </Menu.Item>
             </Menu>}>
               <Button>
                 更多操作 <DownOutlined />
@@ -513,15 +513,15 @@ export default class UserInfoIndex extends Component {
             /> */}
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
-              rowSelection={rowSelection} 
+              rowSelection={rowSelection}
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                defaultPageSize:20
-              }}
+              // pagination={{
+              //   showSizeChanger: true,
+              //   showQuickJumper: true,
+              //   defaultPageSize:20
+              // }}
             />
           </Card>
       </BreadcrumbWrapper>
