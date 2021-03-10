@@ -348,9 +348,15 @@ export default {
                   component: './platformManager/equipmentManage',
                 },
                 {
-                  // 设备参数
+                  // 设备参数管理 烟气
                   name: 'equipmentManage',
-                  path: '/platformconfig/equipmentParmars',
+                  path: '/platformconfig/equipmentParmars/smokeAir',
+                  component: './platformManager/equipmentParmars',
+                },
+                {
+                  // 设备参数管理 废水
+                  name: 'equipmentManage',
+                  path: '/platformconfig/equipmentParmars/wasteWater',
                   component: './platformManager/equipmentParmars',
                 },
                 {
@@ -1676,6 +1682,18 @@ export default {
                   name: 'components', //弹框
                   path: '/dataSearch/DataModal',
                   component: './dataSearch/DataModal',
+                },
+                {
+                  name: 'dischargeStandard',
+                  //设备参数查询 烟气
+                  path: '/dataSearch/deviceParam/smokeAir',
+                  component: './dataSearch/deviceParam',
+                },
+                {
+                  name: 'dischargeStandard',
+                  //设备参数查询 废水
+                  path: '/dataSearch/deviceParam/wasteWater',
+                  component: './dataSearch/deviceParam',
                 },
               ],
             },
