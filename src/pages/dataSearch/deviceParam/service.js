@@ -6,3 +6,8 @@ export async function GetEquipmentParametersInfo(params) {
   return result;
 }
 
+// 获取 设定 参数列表
+export async function GetEquipmentParameters(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetEquipmentParameters?DGIMN='+params.DGIMN, {}, null);
+  return result;
+}

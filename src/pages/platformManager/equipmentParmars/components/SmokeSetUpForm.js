@@ -1,43 +1,74 @@
+import React, { useState,useEffect  } from 'react';
+
 import { Form, Input, Button, Checkbox,Divider,Row,Col, InputNumber,Card  } from 'antd';
 
 import styles from '../style.less'
 import { connect } from "dva";
+import PageLoading from '@/components/PageLoading'
 
 const { TextArea } = Input;
 const namespace = 'equipmentParmars'
 
 const dvaPropsData =  ({ loading,equipmentParmars }) => ({
-
+   formLoading:loading.effects[`${namespace}/getEquipmentParameters`]
   })
   
 const  dvaDispatch = (dispatch) => {
     return {
-      addOrUpdateEquipmentParametersInfo : (payload,callback) =>{ //添加 设定参数
+      addOrUpdateEquipmentParameters : (payload) =>{ //添加 or 修改 设定参数
         dispatch({
-          type: `${namespace}/addOrUpdateEquipmentParametersInfo`,
+          type: `${namespace}/addOrUpdateEquipmentParameters`,
+          payload:payload,
+        })
+        
+      },
+      getEquipmentParameters : (payload,callback) =>{ //添加 or 修改 设定参数
+        dispatch({
+          type: `${namespace}/getEquipmentParameters`,
           payload:payload,
           callback:callback
         })
         
       },
+      
+      
     }
   }
 
 const SmokeSetUpForm = (props) => {
-    console.log(props)
-   const onFinish = (values) => {
+  const [setform] = Form.useForm();
+  const { DGIMN, formLoading} = props;
+    
+    useEffect(() => {
+    if(DGIMN){
 
-    props.addOrUpdateEquipmentParametersInfo({},()=>{
-      console.log('Success:', values);
-       
-     })
+
+      props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
+
+      setform.setFieldsValue({
+        ID: res.ID,
+        PitotCoefficient: res.PitotCoefficient,
+        VelocityCoefficient: res.VelocityCoefficient,
+        FlueCoefficient: res.FlueCoefficient,
+        Slope: res.Slope,
+        Intercept: res.Intercept,
+        Atmos: res.Atmos,
+        AirCoefficient: res.AirCoefficient,
+        Remark: res.Remark
+       })
+
+      })
+    }
+
+    
+  },[props.DGIMN]);
+   const onFinish = (values) => {
+    props.addOrUpdateEquipmentParameters({...values,DGIMN:props.DGIMN})
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
-
   };
-
   return (
     <Form
       className='smokeSetUpForm'
@@ -48,25 +79,27 @@ const SmokeSetUpForm = (props) => {
       layout='vertical'
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
+      form={setform}
     >  
+     {formLoading? <PageLoading /> : <div>
         <>
         <div className={styles.title}>烟气流量设定</div>
         <div className={styles.divider}> </div>
         </>
         <Row gutter={[40,24]}>
         <Col  span={8}>
-      <Form.Item label="皮托管系数" name="aa" rules={[{ required: true,message: '请输入皮托管系数!', } ]}>
-        <InputNumber />
+      <Form.Item label="皮托管系数" name="PitotCoefficient" rules={[{ required: true,message: '请输入皮托管系数!', } ]}>
+        <InputNumber placeholder='请输入皮托管系数' />
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="速度场系数" name="bb" rules={[{ required: true,message: '请输入速度场系数!', } ]}>
-        <InputNumber />
+      <Form.Item label="速度场系数" name="VelocityCoefficient" rules={[{ required: true,message: '请输入速度场系数!', } ]}>
+        <InputNumber placeholder='请输入速度场系数'/>
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="烟道截面积(㎡)" name="cc" rules={[{ required: true,message: '请输入烟道截面积!', } ]}>
-        <InputNumber />
+      <Form.Item label="烟道截面积(㎡)" name="FlueCoefficient" rules={[{ required: true,message: '请输入烟道截面积!', } ]}>
+        <InputNumber placeholder='请输入烟道截面积'/>
       </Form.Item>
       </Col>
       </Row>
@@ -77,13 +110,13 @@ const SmokeSetUpForm = (props) => {
         </>
         <Row gutter={[40,24]}>
         <Col  span={8}>
-      <Form.Item label="斜率" name="aa" rules={[{ required: true,message: '请输入斜率!', } ]}>
-        <InputNumber />
+      <Form.Item label="斜率" name="Slope" rules={[{ required: true,message: '请输入斜率!', } ]}>
+        <InputNumber placeholder='请输入斜率'/>
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="截距" name="bb" rules={[{ required: true,message: '请输入截距!', } ]}>
-        <InputNumber />
+      <Form.Item label="截距" name="Intercept" rules={[{ required: true,message: '请输入截距!', } ]}>
+        <InputNumber  placeholder='请输入截距'/>
       </Form.Item>
       </Col>
       </Row>
@@ -93,13 +126,18 @@ const SmokeSetUpForm = (props) => {
         </>
       <Row gutter={[40,24]}>
         <Col  span={8}>
-      <Form.Item label="当地大气压(Pa)" name="aa" rules={[{ required: true,message: '请输入当地大气压!', } ]}>
+      <Form.Item label="当地大气压(Pa)" name="Atmos" rules={[{ required: true,message: '请输入当地大气压!', } ]}>
         <InputNumber />
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="标准过量空气系数" name="bb" rules={[{ required: true,message: '请输入标准过量空气系数!', } ]}>
+      <Form.Item label="标准过量空气系数" name="AirCoefficient" rules={[{ required: true,message: '请输入标准过量空气系数!', } ]}>
         <InputNumber />
+      </Form.Item>
+      </Col>
+      <Col>
+      <Form.Item label="" name="ID">
+        <Input type='hidden' />
       </Form.Item>
       </Col>
       </Row>
@@ -110,8 +148,8 @@ const SmokeSetUpForm = (props) => {
         </>
       <Row gutter={[16,24]} style={{paddingBottom:10}}>
         <Col  span={24}>
-      <Form.Item label="" name="aa" >
-        <TextArea rows={2} />
+      <Form.Item label="" name="Remark" >
+        <TextArea placeholder='备注' rows={2} />
       </Form.Item>
       </Col>
       </Row>
@@ -123,7 +161,7 @@ const SmokeSetUpForm = (props) => {
         </Button>
       {/* </Form.Item> */}
       </div>
-
+     </div>}
     </Form>
   );
 };

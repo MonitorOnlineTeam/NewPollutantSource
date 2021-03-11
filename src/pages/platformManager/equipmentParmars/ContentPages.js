@@ -32,15 +32,15 @@ const EditableCell = (parametersList,{
   let inputNode='';
  
   if(inputType==="select"){
-    inputNode = <Select>
+    inputNode = <Select placeholder={`请选择${title}`}>
       {parametersList.map(item=>{
         return  <Option value={item.Name}>{item.Name}</Option>
       })} 
     </Select>
   }else if(inputType === 'number'){
-    inputNode =  <InputNumber />
+    inputNode =  <InputNumber placeholder={`请输入${title}`}/>
   }else{
-    inputNode = <Input />
+    inputNode = <Input placeholder={`请输入${title}`}/>
   }
   return (
     <td {...restProps}>
@@ -48,13 +48,13 @@ const EditableCell = (parametersList,{
       inputType === 'range'? 
       <Form.Item  style={{margin:0}}>
       <Form.Item style={{display:'inline-block',margin: 0 }}  name={`${dataIndex}Min${record.ID}`}>
-         <InputNumber />
+         <InputNumber placeholder={`最小值`}/>
         </Form.Item>
       <span  style={{ display: 'inline-block', width: '24px', lineHeight: '32px', textAlign: 'center' }}>
         -
       </span>
       <Form.Item  style={{display:'inline-block',margin: 0 }} name={`${dataIndex}Max${record.ID}`}>
-         <InputNumber />
+         <InputNumber placeholder={`最大值`}/>
         </Form.Item>
       </Form.Item> : <Form.Item
            name={`${dataIndex}${record.ID}`}
@@ -69,10 +69,6 @@ const EditableCell = (parametersList,{
     </td>
   );
 };
-// const pageUrl = {
-//   GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
-
-// }
 
 
 const dvaPropsData =  ({ loading,equipmentParmars }) => ({
@@ -117,7 +113,6 @@ const EditableTable = (props) => {
 
 
   const [form] = Form.useForm();
-  // const [form] = Form.useForm();
 
   const [data, setData] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
@@ -148,13 +143,7 @@ const EditableTable = (props) => {
   }
 
   const edit = async (record) => {
-    // const EquipmentParametersCode=row[`EquipmentParametersCode${record.ID}`], 
-    // Range1Min = row[`Range1Min${record.ID}`],
-    // Range1Max = row[`Range1Max${record.ID}`],
-    // Range2Min = row[`Range2Min${record.ID}`],
-    // Range2Max=  row[`Range2Max${record.ID}`],
-    // DetectionLimit = record.DetectionLimit ? row[`DetectionLimit${record.ID}`]: '',
-    // Unit = row[`Unit${record.ID}`];
+
     try {
       const row = await form.validateFields();//触发校验
       form.setFieldsValue({
@@ -178,15 +167,12 @@ const EditableTable = (props) => {
     }
   };
 
-  const cancel = (key) => {
-    console.log(key)
+  const cancel = (ID) => {
     const newData = [...data];
-    const index = newData.findIndex((item) => key === item.key);
+    const index = newData.findIndex((item) => ID === item.ID);
     const item = newData[index];
-    console.log(item)
     newData.splice(index, 1, { ...item, type:'' });
     setData(newData);
-    // setEditingKey('');
   };
 
 
@@ -205,7 +191,7 @@ const EditableTable = (props) => {
            DetectionLimit = record.DetectionLimit ? row[`DetectionLimit${record.ID}`]: '',
            Unit = row[`Unit${record.ID}`];
         
-      let pass = type === 'smoke'? EquipmentParametersCode&&Range1Min&&Range1Max&&Range2Min&&Range2Max&&Unit :  EquipmentParametersCode&&Range1Min&&Range1Max&&Range2Min&&Range2Max&&Unit&&DetectionLimit;
+      let pass = type === 'smoke'? EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Range2Min.toString()&&Range2Max.toString()&&Unit:  EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Range2Min.toString()&&Range2Max.toString()&&Unit&&DetectionLimit.toString();
      
       let payload = {
         ID: record.type=='add'? '' : record.ID,
@@ -351,7 +337,7 @@ const EditableTable = (props) => {
             >
               保存 
             </a>
-              <a  onClick={ () => cancel(record.key)}>取消</a>
+              <a  onClick={ () => cancel(record.ID)}>取消</a>
           </span> 
         ) : (
           <>
@@ -405,7 +391,7 @@ const EditableTable = (props) => {
        新增成员
        </Button>
     </Form>
-     {type==='smoke'&&<SmokeSetUpForm />}
+     {type==='smoke'&&<SmokeSetUpForm  DGIMN={DGIMN}/>}
    </Card>
 
   );

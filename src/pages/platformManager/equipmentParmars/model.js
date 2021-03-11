@@ -48,6 +48,19 @@ export default Model.extend({
       }
 
     },
-    
+    *addOrUpdateEquipmentParameters({ payload,callback}, { call, put, update }) { //添加 or 修改
+      const result = yield call(services.AddOrUpdateEquipmentParameters, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+      }
+
+    },
+    *getEquipmentParameters({ payload,callback }, { call, put, update }) { //设定 参数列表
+      const result = yield call(services.GetEquipmentParameters, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas[0])
+      }
+
+    },
   },
 })

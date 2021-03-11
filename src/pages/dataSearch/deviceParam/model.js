@@ -21,7 +21,12 @@ export default Model.extend({
       }
 
     },
-   
+    *getEquipmentParameters({ payload,callback }, { call, put, update }) { //设定 参数列表
+      const result = yield call(services.GetEquipmentParameters, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas[0])
+      }
+    }
     
   },
 })
