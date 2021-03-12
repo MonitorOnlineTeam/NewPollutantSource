@@ -67,6 +67,7 @@ const pageUrl = {
     AlarmDealTypeList:exceedDataAlarmModel.AlarmDealTypeList,
     ManagementDetail:exceedDataAlarmModel.ManagementDetail,
     priseList:exceedDataAlarmModel.priseList,
+    DGIMN:''
 }))
 class exceedDataAlarmModal extends PureComponent {
     constructor(props) {
@@ -428,6 +429,7 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:'',
                 VerifyStatus:AlarmDealTypeList,
                 operationpersonnel:operationpersonnel,
+                DGIMN:DGIMN
             }
         })
         
@@ -435,7 +437,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 已核实报警次数
     AlreadyAlarmNumHandle=(regionCode,PollutantCode,regionName)=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,AlarmDealTypeList,operationpersonnel,DGIMN} = this.state
         this.setState({
             DealType:'1',
             regVisibleAlready:true,
@@ -464,6 +466,7 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:'',
                 VerifyStatus:AlarmDealTypeList,
                 operationpersonnel:operationpersonnel,
+                DGIMN:DGIMN
             }
         })
         
@@ -499,6 +502,7 @@ class exceedDataAlarmModal extends PureComponent {
                 EntCode:'',
                 VerifyStatus:AlarmDealTypeList,
                 operationpersonnel: operationpersonnel,
+                DGIMN:DGIMN
             }
         })
         
@@ -585,6 +589,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //行政区 已核实报警次数=>详情
     DetailsHandle2 =(verifyImage,remark)=>{
+        // alert(111)
         let filename = ''
         if(verifyImage == null || verifyImage == '')
         {
@@ -706,7 +711,7 @@ class exceedDataAlarmModal extends PureComponent {
                                 dataIndex: col.PollutantCode+'_respondedCount',
                                 key: col.PollutantCode+'_respondedCount',
                                 render: (text,record) => {
-                                    return <a onClick={this.EntAlarmHandle.bind(this,record.regionCode,record.entCode,'1',col.PollutantCode,record.entName,record.pointName)}>{text}</a>
+                                    return <a onClick={this.EntAlarmHandle.bind(this,record.regionCode,record.entCode,'1',col.PollutantCode,record.entName,record.pointName,record.DGIMN)}>{text}</a>
                                 }
                             },
                             {
@@ -717,7 +722,7 @@ class exceedDataAlarmModal extends PureComponent {
                                 dataIndex: col.PollutantCode+'_noRespondedCount',
                                 key: col.PollutantCode+'_noRespondedCount',
                                 render: (text,record) => {
-                                    return <a onClick={this.EntAlarmHandle.bind(this,record.regionCode,record.entCode,'0',col.PollutantCode,record.entName,record.pointName)}>{text}</a>
+                                    return <a onClick={this.EntAlarmHandle.bind(this,record.regionCode,record.entCode,'0',col.PollutantCode,record.entName,record.pointName,record.DGIMN)}>{text}</a>
                                 }
                             },
                         ]
@@ -961,7 +966,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //报警次数数据按钮查询信息
     AlertsButtonHandle =()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel,DGIMN} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1003,7 +1008,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     //已核实报警按钮查询信息
     AlreadyButtonCountHandle=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,AlarmDealTypeList,operationpersonnel,DGIMN} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1046,7 +1051,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
     ////待核实报警按钮查询信息
     StayButtonCountHandle=()=>{
-        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,operationpersonnel} = this.state
+        const {regionValue,attentionValue,outletValue,dataType,time,DealType,regionCode,enterpriseValue,PollutantCode,operationpersonnel,DGIMN} = this.state
         this.props.dispatch({
             type:pageUrl.GetAlarmVerifyDetail,
             payload: {
@@ -1701,8 +1706,6 @@ class exceedDataAlarmModal extends PureComponent {
                                 }}>
                                 {this.entList()}
                             </Select>
-                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
-                            <Button onClick={this.ButtonHandleExpor}><ExportOutlined /> 导出</Button>
                             <Radio.Group value={this.state.DealType} style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
                                 this.setState({
                                     DealType: e.target.value,
@@ -1712,6 +1715,8 @@ class exceedDataAlarmModal extends PureComponent {
                                 <Radio.Button value="1">已核实</Radio.Button>
                                 <Radio.Button value="0">待核实</Radio.Button>
                             </Radio.Group>
+                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
+                            <Button onClick={this.ButtonHandleExpor}><ExportOutlined /> 导出</Button>
                             <div style={{marginTop:10}}>
                             {this.state.DealType === '1'?
                                 <div>
