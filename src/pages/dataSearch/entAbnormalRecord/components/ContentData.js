@@ -491,12 +491,12 @@ export default class EntTransmissionEfficiency extends Component {
             dataSource={this.props.tableDatas}
             // style ={{height:"calc(100vh - 300px)"}} 
             scroll={{ x: '115%' }} 
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: this.props.total,
-              defaultPageSize:20
-            }}
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+            //   total: this.props.total,
+              //defaultPageSize:20
+            // }}
           /> 
         </div>
        

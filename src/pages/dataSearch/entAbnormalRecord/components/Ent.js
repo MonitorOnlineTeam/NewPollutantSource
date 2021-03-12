@@ -289,12 +289,12 @@ export default class Index extends Component {
               loading={Entloading}
               columns={columns.length>1?columns:[]}
               dataSource={entTableDatas.hourList}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                total: this.props.total,
-                defaultPageSize:20
-              }}
+              // pagination={{
+              //   showSizeChanger: true,
+              //   showQuickJumper: true,
+              //   total: this.props.total,
+                //defaultPageSize:20
+              // }}
               style={{paddingTop:10}}
             />
         </TabPane>
@@ -304,12 +304,12 @@ export default class Index extends Component {
               loading={Entloading}
               columns={columns.length>1?columns:[]}
               dataSource={entTableDatas.dayList}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                total: this.props.total,
-                defaultPageSize:20
-              }}
+              // pagination={{
+              //   showSizeChanger: true,
+              //   showQuickJumper: true,
+              //   total: this.props.total,
+                //defaultPageSize:20
+              // }}
               style={{paddingTop:10}}
             />
         </TabPane>

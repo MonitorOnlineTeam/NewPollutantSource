@@ -210,16 +210,16 @@ export default class airMissing extends Component {
         loading={false}
         columns={this.state.columns}
         dataSource={this.props.tablePhoto}
-        pagination={{
+        // pagination={{
           // showSizeChanger: true,
           // showQuickJumper: true,
           // sorter: true,
-          total: this.props.tablePhotoTotal,
-          defaultPageSize: 20,
+          // total: this.props.tablePhotoTotal,
+          //defaultPageSize: 20,
           // pageSize: PageSize,
           // current: PageIndex,
           // pageSizeOptions: ['10', '20', '30', '40', '50'],
-        }}
+        // }}
       />
     </Card>
     </Modal>

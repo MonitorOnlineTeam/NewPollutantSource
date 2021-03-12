@@ -391,12 +391,12 @@ export default class Index extends Component {
             columns={columns}
             bordered={true}
             dataSource={tableDatas}
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: this.props.total,
-              defaultPageSize:20
-            }}
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+            //   total: this.props.total,
+            //   defaultPageSize:20
+            // }}
           />
         </div>
       </Card>

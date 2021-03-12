@@ -501,16 +501,16 @@ export default class EntTransmissionEfficiency extends Component {
                 // bordered={false}
                 dataSource={this.props.tableDatas}
                 // style ={{height:"calc(100vh - 300px)"}} 
-                pagination={{
-                  showSizeChanger: true,
-                  showQuickJumper: true,
+                // pagination={{
+                  // showSizeChanger: true,
+                  // showQuickJumper: true,
                   // sorter: true,
-                  total: this.props.total,
-                  defaultPageSize: 20
+                  // total: this.props.total,
+                  //defaultPageSize: 20
                   // pageSize: PageSize,
                   // current: PageIndex,
                   // pageSizeOptions: ['10', '20', '30', '40', '50'],
-                }}
+                // }}
               />
             </TabPane>
           </Tabs>

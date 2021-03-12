@@ -335,11 +335,11 @@ export default class enterpriseEfficiency extends Component {
               scroll={{ x: null }}
               size="small" // small middle
               dataSource={this.props.tableDatas}
-              pagination={{
-                showSizeChanger: false,
-                showQuickJumper: false,
-                // defaultPageSize:20
-              }}
+              // pagination={{
+              //   showSizeChanger: false,
+              //   showQuickJumper: false,
+                // //defaultPageSize:20
+              // }}
             />
           </Card>
         </Row>

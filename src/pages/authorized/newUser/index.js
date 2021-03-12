@@ -520,7 +520,7 @@ export default class UserInfoIndex extends Component {
               // pagination={{
               //   showSizeChanger: true,
               //   showQuickJumper: true,
-              //   defaultPageSize:20
+              //   //defaultPageSize:20
               // }}
             />
           </Card>

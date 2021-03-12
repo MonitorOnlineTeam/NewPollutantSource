@@ -272,13 +272,13 @@ export default class PointVerifyLst extends Component {
           columns={this.state.columns}
           dataSource={this.props.tableDatil.data}
           scroll={{  y: 'calc(100vh - 510px)',}}
-          pagination={{
+          // pagination={{
             // showSizeChanger: true,
             // showQuickJumper: true,
             // sorter: true,
-            total: this.props.total,
-            defaultPageSize: 20,
-          }}
+            // total: this.props.total,
+            //defaultPageSize: 20,
+          // }}
         />
       </Card>
     );

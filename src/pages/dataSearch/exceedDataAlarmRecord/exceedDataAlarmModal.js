@@ -738,14 +738,14 @@ class exceedDataAlarmModal extends PureComponent {
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable loading={loadingRateDetail} columns={columns} dataSource={alarmDetailList}
-                        pagination={
-                            {
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20,
-                                pageSizeOptions: ['20', '30', '40', '50'],
-                            }
-                        }    
+                        // pagination={
+                        //     {
+                        //         showSizeChanger: true,
+                        //         showQuickJumper: true,
+                                //defaultPageSize:20,
+                                // pageSizeOptions: ['20', '30', '40', '50'],
+                            // }
+                        // }    
                         // pagination={{
                             //     showSizeChanger: true,
                             //     showQuickJumper: true,
@@ -764,14 +764,14 @@ class exceedDataAlarmModal extends PureComponent {
                 if (key == '') {
                     panes.push({
                         title: text, content: <SdlTable loading={loadingRateDetail} columns={columns} dataSource={this.props.AlarmDetailList}
-                        pagination={
-                            {
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20,
-                                pageSizeOptions: ['20', '30', '40', '50'],
-                            }
-                        }    
+                        // pagination={
+                        //     {
+                        //         showSizeChanger: true,
+                        //         showQuickJumper: true,
+                                //defaultPageSize:20,
+                                // pageSizeOptions: ['20', '30', '40', '50'],
+                            // }
+                        // }    
                         // pagination={{
                             //     showSizeChanger: true,
                             //     showQuickJumper: true,

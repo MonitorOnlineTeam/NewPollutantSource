@@ -367,12 +367,12 @@ export default class EntTransmissionEfficiency extends Component {
             columns={columns}
             bordered={true}
             dataSource={this.props.disTableDatas}
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              total: this.props.total,
-              defaultPageSize:20
-            }}
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+            //   total: this.props.total,
+              //defaultPageSize:20
+            // }}
           />
         </div>
       </Card>
