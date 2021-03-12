@@ -1,5 +1,4 @@
 /**
- * Created by jindw 2018-10-11
  * @desc 加载指定资源文件 js, css, img 返回promise
  * @func loader
  * @param URI 资源地址
