@@ -12,7 +12,6 @@ const tabList = ["人员列表", "备品备件耗材", "基本信息"];
   officeVisible: newHome.officeVisible,
   officeUserList: newHome.officeUserList,
   officeStockList: newHome.officeStockList,
-  SparePartsStationInfo: newHome.SparePartsStationInfo,
 }))
 class OfficeModal extends PureComponent {
   constructor(props) {
@@ -137,17 +136,6 @@ class OfficeModal extends PureComponent {
   }
 
 
-  componentDidMount() {
-
-    const { SparePartsStationCode } = this.props;
-    this.props.dispatch({
-      type: "newHome/GetSparePartsStation",
-      payload: {
-        SparePartsStationCode
-      }
-    })
-  }
-
   close = () => {
     this.props.dispatch({
       type: "newHome/updateState",
@@ -243,8 +231,6 @@ class OfficeModal extends PureComponent {
                 style={{ height: 450 }}
                 zoom={12}
               />
-
-
             </div>
           }
         </div>

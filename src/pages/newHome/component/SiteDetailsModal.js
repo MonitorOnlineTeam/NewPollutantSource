@@ -130,9 +130,9 @@ class SiteDetailsModal extends PureComponent {
             <DataQuery
               DGIMN={data.key}
               initLoadData
-              chartHeight='calc(100vh - 590px)'
+              chartHeight='calc(60vh - 190px)'
               // style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }}
-              tableHeight={"calc(60vh - 238px)"}
+              tableHeight={"calc(60vh - 318px)"}
               pointName={data.title}
               pollutantTypes={data.PollutantType}
               entName={data.EntName}
