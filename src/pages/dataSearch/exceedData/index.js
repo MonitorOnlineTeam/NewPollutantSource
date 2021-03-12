@@ -434,7 +434,7 @@ class index extends PureComponent {
                                 dataIndex: 'MaxMultiple-'+item.PollutantCode,
                                 key: 'MaxMultiple-'+item.PollutantCode,
                                 render:(text,record)=>{
-                                        return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`].toString()?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                                        return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]&&!record.PollutantData[`MaxMultiple-${item.PollutantCode}`]===0?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
      
 
                                 }
@@ -1323,7 +1323,7 @@ class index extends PureComponent {
                         dataIndex: 'MaxMultiple-'+item.PollutantCode,
                         key: 'MaxMultiple-'+item.PollutantCode,
                         render:(text,record)=>{
-                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`].toString()?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]&&!record.PollutantData[`MaxMultiple-${item.PollutantCode}`]===0?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
 
 
                         }
@@ -1734,7 +1734,7 @@ class index extends PureComponent {
                         dataIndex: 'MaxMultiple-'+item.PollutantCode,
                         key: 'MaxMultiple-'+item.PollutantCode,
                         render:(text,record)=>{
-                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`].toString()?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]&&!record.PollutantData[`MaxMultiple-${item.PollutantCode}`]===0?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
 
 
                         }
