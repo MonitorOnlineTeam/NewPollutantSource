@@ -35,6 +35,8 @@ import { Right } from '@/utils/icon';
 import CheckboxGroup from 'antd/lib/checkbox/Group';
 import style from '@/pages/dataSearch/tableClass.less'
 import point from '@/models/point';
+import { toDecimal3 } from '@/utils/utils';
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -440,7 +442,7 @@ class index extends PureComponent {
                                 dataIndex: 'MaxMultiple-'+item.PollutantCode,
                                 key: 'MaxMultiple-'+item.PollutantCode,
                                 render:(text,record)=>{
-                                        return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                                        return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`].toString()?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
                                 }
                             },
                         ]
@@ -1283,10 +1285,12 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.EntNum-'+item.PollutantCode,
-                        key: 'PollutantData.EntNum-'+item.PollutantCode,
+                        dataIndex: 'EntNum-'+item.PollutantCode,
+                        key: 'EntNum-'+item.PollutantCode,
                         render: (text,record) => {
-                            return <a onClick={this.exEntHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode)}>{text}</a>
+                            return <a onClick={this.exEntHandle.bind(this,record.PollutantData['PolCode-'+item.PollutantCode],record.RegionCode)}>
+                                {record.PollutantData[`EntNum-${item.PollutantCode}`]}
+                                </a>
                         }
                     },
                     {
@@ -1321,7 +1325,7 @@ class index extends PureComponent {
                         dataIndex: 'MaxMultiple-'+item.PollutantCode,
                         key: 'MaxMultiple-'+item.PollutantCode,
                         render:(text,record)=>{
-                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`].toString()?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
                         }
                     },
                 ]
@@ -1730,7 +1734,7 @@ class index extends PureComponent {
                         dataIndex: 'MaxMultiple-'+item.PollutantCode,
                         key: 'MaxMultiple-'+item.PollutantCode,
                         render:(text,record)=>{
-                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`]?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
+                                return !record.PollutantData[`MaxMultiple-${item.PollutantCode}`].toString()?'-':  toDecimal3(record.PollutantData[`MaxMultiple-${item.PollutantCode}`])
                         }
                     },
                 ]
