@@ -455,16 +455,16 @@ export default class Index extends Component {
               columns={this.columns}
               // bordered={false}
               dataSource={this.props.tableDatas}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
+              // pagination={{
+              //   showSizeChanger: true,
+              //   showQuickJumper: true,
                 // sorter: true,
                 // total: this.props.total,
-                defaultPageSize:20
+                //defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+              // }}
             />
           </>
           </div>

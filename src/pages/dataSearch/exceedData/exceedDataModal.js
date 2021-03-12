@@ -455,14 +455,15 @@ class index extends PureComponent {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
                         scroll={{ y: this.state.entType == '1' ? 'calc(100vh - 680px)' :  'calc(100vh - 730px)'}}
-                        pagination={
-                            {
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20,
-                                pageSizeOptions: ['20', '30', '40', '50'],
-                            }
-                        }
+                        // pagination={
+                        //     {
+                        //         showSizeChanger: true,
+                        //         showQuickJumper: true,
+                                //defaultPageSize:20,
+                                // pageSize:20,
+                                // pageSizeOptions: ['20', '30', '40', '50'],
+                            // }
+                        // }
                         // pagination={{
                         //     showSizeChanger: true,
                         //     showQuickJumper: true,
@@ -483,14 +484,14 @@ class index extends PureComponent {
                     panes.push({
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.RegionDataList}
                         scroll={{ y: this.state.entType == '1' ? 'calc(100vh - 680px)' :  'calc(100vh - 730px)'}}
-                        pagination={
-                            {
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20,
-                                pageSizeOptions: ['20', '30', '40', '50'],
-                            }
-                        }
+                        // pagination={
+                        //     {
+                        //         showSizeChanger: true,
+                        //         showQuickJumper: true,
+                                //defaultPageSize:20,
+                                // pageSizeOptions: ['20', '30', '40', '50'],
+                            // }
+                        // }
                         // pagination={{
                         //     showSizeChanger: true,
                         //     showQuickJumper: true,
@@ -1875,8 +1876,8 @@ class index extends PureComponent {
                             <SdlTable scroll={{  y: this.state.entType == '1' ? 'calc(100vh - 600px)' :  'calc(100vh - 650px)' }} loading={loadingEnt} columns={columns} dataSource={EntCountList} pagination={{
                                 showSizeChanger: true,
                                 showQuickJumper: true,
-                                pageSize: this.props. ExceedPageSize,
-                                current: this.props. ExceedPageIndex,
+                                pageSize: this.props.ExceedPageSize,
+                                current: this.props.ExceedPageIndex,
                                 onChange: this.EntButtonCountHandlePageChange,
                                 onShowSizeChange:this.EntButtonCountShowSizeChange,
                                 pageSizeOptions: ['20', '30', '40', '100'],

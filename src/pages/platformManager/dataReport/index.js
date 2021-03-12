@@ -418,11 +418,12 @@ export default class MonitorTarget extends Component {
                                 style={{ marginTop: 10 }}
                                 columns={this.columns}
                                 dataSource={this.props.tableDatas}
-                                pagination={{
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20
-                             }}>
+                                // pagination={{
+                                // showSizeChanger: true,
+                                // showQuickJumper: true,
+                                //defaultPageSize:20
+                            //  }}
+                             >
                         </SdlTable>
 
                         

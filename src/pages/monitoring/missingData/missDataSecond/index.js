@@ -533,7 +533,7 @@ handleTableChange = (pagination, filters, sorter) => {
                 showQuickJumper: true,
                 // sorter: true,
                 // total: this.props.total,
-                defaultPageSize:20,
+                //defaultPageSize:20,
                 pageSize:sessionStorage.getItem("missDataDetailPageSize"),
                 current:parseInt(sessionStorage.getItem("missDataDetailPageIndex")),
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
