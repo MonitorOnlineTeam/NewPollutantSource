@@ -187,7 +187,7 @@ export default class EntTransmissionEfficiency extends Component {
       // RegionCode: "",
       // PollutantTypeCode: [],
       // ModelType: "All"
-      // OperationPersonnel:'',
+      OperationPersonnel:'',
     });
     setTimeout(() => {
       this.getTableData();

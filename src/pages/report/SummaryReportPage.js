@@ -16,7 +16,7 @@ import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
+import RegionList from '@/components/RegionList'
 import { timeDifference } from '@/utils/utils';
 
 const FormItem = Form.Item;
@@ -478,7 +478,7 @@ class SummaryReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 {/* <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}> */}
-                <Col md={5} sm={24} style={{ display: IfShowRegionInReport }}>
+                <Col md={3} sm={24} style={{ display: IfShowRegionInReport }}>
                   <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                     {getFieldDecorator('Regions', {
                       // initialValue: defaultSearchForm.Regions,
@@ -488,14 +488,15 @@ class SummaryReportPage extends PureComponent {
                       //   message: '请选择行政区',
                       // }],
                     })(
-                      <SdlCascader
-                        changeOnSelect={false}
-                        data={regionList}
-                        placeholder="请选择行政区"
-                        onChange={(value, selectedOptions) => {
-                          this.setState({ regions: value.join(',') });
-                        }}
-                      />,
+                      // <SdlCascader
+                      //   changeOnSelect={false}
+                      //   data={regionList}
+                      //   placeholder="请选择行政区"
+                      //   onChange={(value, selectedOptions) => {
+                      //     this.setState({ regions: value.join(',') });
+                      //   }}
+                      // />,
+                      <RegionList style={{width:'100%'}} changeRegion={(value)=>{ this.setState({ regions: value}); }} RegionCode={this.state.regions}/>
                     )}
                   </FormItem>
                 </Col>

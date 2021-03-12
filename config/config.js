@@ -669,11 +669,25 @@ export default {
                   name: 'materielmanager',
                   path: '/operations/materielmanager',
                   routes: [
-
+                    {
+                      path: '/operations/materielmanager',
+                      redirect: '/operations/materielmanager/sparepartmanage/SparepartManage',
+                    },
                     {
                       name: 'handhelddevicesmanage',
                       path: '/operations/materielmanager/handhelddevicesmanage/:configId',
                       component: './OperationSysManager/HandheldDevicesManage/',
+                    },
+                    {
+                      name: 'sparepartmanage',
+                      path: '/operations/materielmanager/sparepartmanage/:configId',
+                      component: './OperationSysManager/SparepartManage/',
+                    },
+
+                    {
+                      name: 'standardgasmanage',
+                      path: '/operations/materielmanager/standardgasmanage/:configId',
+                      component: './OperationSysManager/StandardGasManage/',
                     },
                   ],
                 },
@@ -692,21 +706,6 @@ export default {
                       component: './OperationSysManager/CertificateManage/',//人员证书
                     },
 
-                    {
-                      path: '/operations/materielmanager',
-                      redirect: '/operations/materielmanager/sparepartmanage/SparepartManage',
-                    },
-                    {
-                      name: 'sparepartmanage',
-                      path: '/operations/materielmanager/sparepartmanage/:configId',
-                      component: './OperationSysManager/SparepartManage/',
-                    },
-
-                    {
-                      name: 'standardgasmanage',
-                      path: '/operations/materielmanager/standardgasmanage/:configId',
-                      component: './OperationSysManager/StandardGasManage/',
-                    },
                   ],
                 },
                 {//运维资料

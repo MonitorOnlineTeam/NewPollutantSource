@@ -123,6 +123,7 @@ export default class EntTransmissionEfficiency extends Component {
       this.updateQueryState({
         RegionCode: '',
         EntCode:'',
+        OperationPersonnel:'',
         EntType: types==='ent'? "1":"2",
       });
 
