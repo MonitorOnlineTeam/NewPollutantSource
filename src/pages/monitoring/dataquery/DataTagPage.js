@@ -38,14 +38,13 @@ class DataTagPage extends Component {
       format: "YYYY-MM-DD HH:mm",
       DGIMN: "",
       isShowFlag: true,
-      defalutPollutantType: "1,2",
+      defalutPollutantType: props.location.query.pollutantCode ? '2' : "1,2",
       pageSize: 10,
       pageIndex: 1,
     };
   }
 
   componentDidMount() {
-
   }
 
   getPollutantList = () => {
@@ -167,6 +166,7 @@ class DataTagPage extends Component {
   render() {
     const { loading, dataFlagDataSource, pollutantList, tagTableTotal } = this.props;
     const { dataType, isShowFlag, defalutPollutantType, pageSize, pageIndex } = this.state;
+
     return (
       <>
         <NavigationTree
@@ -211,6 +211,7 @@ class DataTagPage extends Component {
               }
             >
               <DataTagTable
+                location={this.props.location}
                 onRef={(ref) => { this.myTable = ref; }}
                 dataType={dataType}
                 // dataSource={dataFlagDataSource}

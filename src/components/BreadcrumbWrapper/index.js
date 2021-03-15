@@ -30,7 +30,7 @@ class index extends Component {
     const { selectTreeItem } = this.state;
     console.log('selectTreeItem=', selectTreeItem)
     if (pageHeaderWrapperProps.unfoldMenuList.length) {
-      let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path === location.pathname)
+      let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path.split('?')[0] === location.pathname.split('?')[0])
       // url和菜单能匹配到
       if (currentMenu) {
         // 面包屑名称

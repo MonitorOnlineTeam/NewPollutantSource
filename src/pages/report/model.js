@@ -55,6 +55,9 @@ export default Model.extend({
     pointName: '',
     Total: 0,
     // 烟气报表 ----- 结束
+    // 二氧化碳报表 - 开始
+    entByRegionAndAttList: [],
+    // 二氧化碳报表 - 结束
   },
 
   effects: {
@@ -208,7 +211,7 @@ export default Model.extend({
         if (result.Datas.length) {
           data = result.Datas.map(item =>
             // return { ...item, EntName: item.EntName}
-             ({ EntName: item.EntName, ...item.DatasItem }),
+            ({ EntName: item.EntName, ...item.DatasItem }),
           )
         }
         yield update({
@@ -341,6 +344,18 @@ export default Model.extend({
           entAndPontList: filterData,
         })
         callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // 二氧化碳 - 获取企业列表
+    *getEntByRegionAndAtt({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getEntByRegionAndAtt, payload)
+      if (result.IsSuccess) {
+        yield update({
+          entByRegionAndAttList: result.Datas
+        })
       } else {
         message.error(result.Message)
       }

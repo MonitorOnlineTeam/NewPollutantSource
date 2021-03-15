@@ -147,4 +147,10 @@ export async function exportSmokeReport(params) {
 }
 
 
+// 二氧化碳 - 获取企业列表
+export async function getEntByRegionAndAtt(params) {
+  const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegionAndAtt', params, null)
+  return result
+}
+
 

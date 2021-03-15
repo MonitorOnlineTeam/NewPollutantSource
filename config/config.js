@@ -647,6 +647,11 @@ export default {
                       path: '/report/smoke/:reportType',
                       component: './report/SmokeReportPage',
                     },
+                    {
+                      name: 'CO2DayReport',
+                      path: '/report/smoke/CO2/day',
+                      component: './report/CO2/DayReportPage',
+                    },
                   ],
                 },
                 {
@@ -1394,6 +1399,17 @@ export default {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
                   component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
+                },
+                //季度有效数据捕集率 - 碳排放
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/carbonQuartDataCaptureRate',
+                  component: './IntelligentAnalysis/newTransmissionefficiency/CarbonQuartDataCaptureRate',
+                },
+                {
+                  name: 'IntelligentanalysisDetail',
+                  path: '/Intelligentanalysis/carbonQuartDataCaptureRate/qutDetail',
+                  component: './IntelligentAnalysis/newTransmissionefficiency/qutPage',
                 },
                 {
                   name: 'IntelligentanalysisDetail',

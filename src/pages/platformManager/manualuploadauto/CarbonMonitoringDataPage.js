@@ -67,7 +67,7 @@ class CarbonMonitoringData extends Component {
                 <BreadcrumbWrapper >
                     <ContentListCarbon DGIMN={DGIMN} />
                 </BreadcrumbWrapper>
-                <NavigationTree checkpPol="2" runState="1" domId="#manualuploadauto" choice={false} onItemClick={value => {
+                <NavigationTree checkpPol="2" polShow runState="1" domId="#manualuploadauto" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value[0].key)
                     }

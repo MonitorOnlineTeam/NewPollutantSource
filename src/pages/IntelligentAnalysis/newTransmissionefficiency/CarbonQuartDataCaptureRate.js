@@ -33,11 +33,14 @@ import { downloadFile, interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList'
+import YearPicker from '@/components/YearPicker';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
-const monthFormat = 'YYYY-MM';
+const InputGroup = Input.Group;
+
+const currMonth = new Date().getMonth();
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -59,27 +62,26 @@ const content = <div>当有效传输率未到达90%时判定为未达标</div>;
   RegionCode: newtransmissionefficiency.RegionCode,
 }))
 @Form.create()
-export default class EntTransmissionEfficiency extends Component {
+export default class CarbonQuartDataCaptureRate extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      beginTime: moment(new Date()).subtract(1, 'months'),
-      endTime: moment(new Date()),
       EnterpriseCode: '',
       EnterpriseName: '',
       visible: false,
       eName: '',
       regions: '',
-      effectiveVisible: false,
       effectiveLoading: false,
+      yearValue: moment(),
+      currQuarter: Math.floor((currMonth % 3 == 0 ? (currMonth / 3) : (currMonth / 3 + 1))),
     };
   }
 
   componentWillMount() {
     this.updateState({
-      pollutantType: '',
-      assessment:'1',
+      pollutantType: 2,
+      assessment: undefined,
     })
     this.getTableData();
     this.props.dispatch({
@@ -91,6 +93,30 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
 
+  handleQuarterTime = () => {
+    let BeginTime; let EndTime;
+    const { currQuarter, yearValue } = this.state;
+    switch (currQuarter) {
+      case 1:
+        BeginTime = moment(yearValue).format('YYYY-01-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-04-01 00:00:00')
+        break;
+      case 2:
+        BeginTime = moment(yearValue).format('YYYY-04-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-07-01 00:00:00')
+        break;
+      case 3:
+        BeginTime = moment(yearValue).format('YYYY-07-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-10-01 00:00:00')
+        break;
+      case 4:
+        BeginTime = moment(yearValue).format('YYYY-10-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-12-31 59:59:59')
+        break;
+    }
+    return [BeginTime, EndTime];
+  }
+
   updateState = payload => {
     this.props.dispatch({
       type: pageUrl.updateState,
@@ -99,31 +125,24 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => {
+    let time = this.handleQuarterTime();
+    this.updateState({
+      beginTime: time[0],
+      endTime: time[1]
+    })
     this.props.dispatch({
       type: pageUrl.getData,
+      payload: {
+        PollutantType: 2,
+        Assessment: undefined,
+        beginTime: time[0],
+        endTime: time[1]
+      }
     });
   };
 
-  // handleTableChange = (pagination, filters, sorter) => {
-  //     if (sorter.order) {
-  //         this.updateState({
-  //             // transmissionEffectiveRate: sorter.order,
-  //             pageIndex: pagination.current,
-  //             pageSize: pagination.pageSize,
-  //         });
-  //     } else {
-  //         this.updateState({
-  //             // transmissionEffectiveRate: 'ascend',
-  //             pageIndex: pagination.current,
-  //             pageSize: pagination.pageSize,
-  //         });
-  //     }
-  //     this.getTableData(pagination.current);
-  // }
-
   children = () => {
     const { regionList } = this.props;
-
     const selectList = [];
     if (regionList.length > 0) {
       regionList[0].children.map(item => {
@@ -136,6 +155,7 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   };
+
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <Card style={{ paddingBottom: 25, width: '100%', lineHeight: 2 }}>
@@ -192,41 +212,40 @@ export default class EntTransmissionEfficiency extends Component {
       },
     });
   };
-  dateCallback = date => {
-    // console.log(date[0].format("YYYY-MM-DD"))
-    this.updateState({
-      beginTime: date[0].format('YYYY-MM-DD 00:00:00'),
-      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
-    });
-  };
+
   //查询事件
   queryClick = () => {
+    let time = this.handleQuarterTime();
     this.props.dispatch({
       type: pageUrl.getData,
+      payload: {
+        PollutantType: 2,
+        Assessment: undefined,
+        beginTime: time[0],
+        endTime: time[1]
+      }
     });
+    this.updateState({
+      beginTime: time[0],
+      endTime: time[1]
+    })
   };
 
-  //手工生成有效传输效率数据
-  manualData = () => {
-    this.setState({ effectiveVisible: true });
-  };
-  effectiveOk = () => {
-    alert('it is ok');
-  };
-
-  // router.push({
-  //     pathname: `/Intelligentanalysis/newtransmissionefficiency/point/${record.EnterpriseCode}/${record.EnterpriseName}`,
-  //     query: {
-  //         tabName: "有效传输率 - 详情"
-  //     }
-  // })
   interceptTwo = (value) => {
     const data = value.toString();
     const result = data.substring(0, data.indexOf(".") + 3)
     return result;
   }
+
+  // componentWillUnmount() {
+  //   this.props.dispatch({
+  //     type: "newtransmissionefficiency/resetState"
+  //   })
+  // }
+  
+
   render() {
-    const { eName } = this.state;
+    const { eName, yearValue, currQuarter } = this.state;
     const { regionList, exRegionloading, RegionCode } = this.props;
     const columns = [
       {
@@ -236,7 +255,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         render: (text, record) => {
           return <Link to={{
-            pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+            pathname: '/Intelligentanalysis/carbonQuartDataCaptureRate/qutDetail',
             query: { RegionCode: record.RegionCode },
           }}
           >
@@ -385,40 +404,33 @@ export default class EntTransmissionEfficiency extends Component {
               <Form layout="inline">
                 <Form.Item>
                   查询时间：
-                  {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
-                  <RangePicker_
-                    dateValue={[moment(this.props.beginTime), moment(this.props.endTime)]}
-                    format="YYYY-MM-DD"
-                    callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                    allowClear={false}
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Select
-                    placeholder="请选择企业类型"
-                    onChange={this.typeChange}
-                    value={this.props.pollutantType}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    <Option value="">全部</Option>
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item>
-                  <Select
-                    placeholder="请选择考核类型"
-                    onChange={this.asseChange}
-                    value={this.props.assessment}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    <Option value="1">国家考核</Option>
-                    <Option value="2">兵团考核</Option>
-                  </Select>
+                  <div style={{ display: 'inline-block' }}>
+                    <InputGroup compact>
+                      <YearPicker
+                        allowClear={false}
+                        // style={{ width: '100%' }}
+                        value={yearValue}
+                        _onPanelChange={v => {
+                          this.setState({
+                            yearValue: v
+                          })
+                        }}
+                      />
+                      <Select value={currQuarter} onChange={(value) => {
+                        this.setState({
+                          currQuarter: value
+                        })
+                      }}>
+                        <Option value={1}>第一季度</Option>
+                        <Option value={2}>第二季度</Option>
+                        <Option value={3}>第三季度</Option>
+                        <Option value={4}>第四季度</Option>
+                      </Select>
+                    </InputGroup>
+                  </div>
                 </Form.Item>
                 <Form.Item>
                   <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode} />
-
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
@@ -430,12 +442,8 @@ export default class EntTransmissionEfficiency extends Component {
                     onClick={this.template}
                     loading={exRegionloading}
                   >
-                    {/* <Icon type="export" /> */}
                     导出
                   </Button>
-                  {/* <Button type="primary" onClick={this.manualData}>
-                    手工生成有效传输效率数据
-                  </Button> */}
                 </Form.Item>
               </Form>
               <div style={{ paddingTop: 10 }}>
@@ -480,40 +488,10 @@ export default class EntTransmissionEfficiency extends Component {
             loading={this.props.loading}
             columns={columns}
             bordered={false}
-            // onChange={this.handleTableChange}
             dataSource={this.props.tableDatas}
-            // scroll={{ y: 'calc(100vh - 450px)' }}
-            // scroll={{ y: 550 }}
             pagination={false}
           />
-
-          <Modal
-            title="手工生成有效传输效率数据"
-            visible={this.state.effectiveVisible}
-            onOk={this.effectiveOk}
-            okText="计算"
-            width={600}
-            confirmLoading={this.state.effectiveLoading}
-            onCancel={() => {
-              this.setState({ effectiveVisible: false });
-            }}
-          >
-            <Form layout="inline">
-              <Form.Item>
-                <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
-              </Form.Item>
-              <Form.Item>
-                <RangePicker_
-                  dateValue={this.state.rangeDate}
-                  format="YYYY-MM-DD"
-                  callback={(dates, dataType) => this.dateCallback(dates, dataType)}
-                  allowClear={false}
-                />
-              </Form.Item>
-            </Form>
-          </Modal>
         </Card>
-        {/* </div> */}
       </BreadcrumbWrapper>
     );
   }
