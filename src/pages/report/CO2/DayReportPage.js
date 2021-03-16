@@ -8,7 +8,7 @@ import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const columns = [
   {
     title: '时间',
-    dataIndex: 'Time',
+    dataIndex: 'MonitorTime',
     width: 200,
   },
   {
