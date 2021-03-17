@@ -215,6 +215,11 @@ export default {
           ],
         },
         {
+          name: 'oneEntsOneArchives',  //一企一档进入进入页面 企业列表
+          path: '/oneEntsOneArchives/entList',
+          component: './oneEntsOneArchives/entList',
+       },
+        {
           path: '/',
           component: '../layouts/BasicLayout',
           Routes: ['src/pages/Authorized'],
@@ -2083,14 +2088,51 @@ export default {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
               component: './EmergencyTodoList/EmergencyDetailInfoLayout',
             },
-
             {
-              component: '404',
+              name: 'oneEntsOneArchives',  // 一企一档
+              path: '/oneEntsOneArchives',  
+              routes: [
+                {
+                  path: '/oneEntsOneArchives',
+                  redirect: '/oneEntsOneArchives/entList',
+    
+                },
+                {
+                  name: 'EntInfoDetail',  //企业列表详情
+                  path: '/oneEntsOneArchives/entInfoDetail',
+                  component: './oneEntsOneArchives/entInfoDetail',
+                },
+                {
+                  name: 'EntInfoEdit',  //企业列表详情 编辑
+                  path: '/oneEntsOneArchives/entInfoDetail/entInfoEdit',
+                  component: './oneEntsOneArchives/entInfoDetail/EntInfoEdit',
+                },
+                {
+                  name: 'DischargeStandard',  //排污标准限值
+                  path: '/oneEntsOneArchives/dischargeStandard',
+                  component: './platformManager/monitoringstandard',
+                },  
+                {
+                  name: 'MonitoringData',  //监控数据
+                  path: '/oneEntsOneArchives/monitoringData',
+                  component: './monitoring/dataquery',
+                },   
+                {
+                  name: 'EnvironEmergency',  //环境应急预案
+                  path: '/oneEntsOneArchives/environEmergency/:configId',
+                  component: './oneEntsOneArchives/environEmergency',
+                },            
+              ]
             },
-          ],
+          ],  
+        },
+        {
+          component: '404',
         },
       ],
+
     },
+
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

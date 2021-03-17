@@ -27,8 +27,15 @@ class SaveSessionPage extends PureComponent {
       },
       callback: (response) => {
         let defaultNavigateUrl = response.Datas[0].children && response.Datas[0].children.length ? response.Datas[0].children[0].NavigateUrl : response.Datas[0].NavigateUrl;
-        sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
-        router.push(defaultNavigateUrl)
+        let sysName = sessionStorage.getItem("sysName")
+          if( sysName === "一企一档管理系统" ){
+            sessionStorage.setItem('defaultNavigateUrl', '/oneEntsOneArchives/entList')
+            router.push('/oneEntsOneArchives/entList')
+          }else{
+            sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
+            router.push(defaultNavigateUrl)
+        }
+
       }
     });
   }
