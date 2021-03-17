@@ -20,6 +20,9 @@ import YsyRealVideoData from './YsyRealVideoData';
 import config from '@/config';
 import VideoSelect from '../VideoSelect'
 
+import { isInnerIPFn } from '@/utils/utils'
+
+
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 /*
@@ -56,6 +59,7 @@ class YsyShowVideo extends Component {
       // dgimn: '',
       tabsKey: 1,
       VedioID: '',
+      ysyUrl:'Web/YsyVideo/YsyVideo.html'
     };
   }
 
@@ -69,6 +73,8 @@ class YsyShowVideo extends Component {
   }
 
   componentDidMount() {
+    const { ysyUrl } = this.state;
+    // isInnerIPFn()?  config.ysyvideourl =  `http://172.16.12.152:60060/${ysyUrl}`:  `http://61.50.135.114:60060/${ysyUrl}`
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
@@ -77,8 +83,14 @@ class YsyShowVideo extends Component {
       this.setState({
         dgimn: nextProps.DGIMN,
       })
-      this.tabsChange('1');
-      this.changeDgimn(nextProps.DGIMN);
+      // this.tabsChange('1');
+      this.setState({
+        displayR: 'block',
+        displayH: 'none',
+        tabsKey: 1,
+      },()=>{
+        this.changeDgimn(nextProps.DGIMN);
+      });
     }
   }
 
@@ -360,6 +372,9 @@ class YsyShowVideo extends Component {
       } description="暂无视频数据"
         /></div ></Card>);
     }
+    // if (ysyrealtimevideofullurl === 'nodata') {
+    //   this.changeDgimn(this.props.DGIMN) 
+    // }
     return (
       <Card>
         <Tabs
