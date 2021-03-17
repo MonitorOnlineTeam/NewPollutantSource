@@ -35,7 +35,7 @@ class DatePickerTool extends Component {
            case "annals":
                return  <YearPicker  value={this.state.defaultValue} {...this.props}  onPanelChange={this.onChange} />
            //默认是日
-           default: return <DatePicker value={this.state.defaultValue} {...this.props}   onChange={this.onChange}/>
+           default: return <DatePicker value={this.state.defaultValue} {...this.props} picker='date'   onChange={this.onChange}/>
        }
     }
 
