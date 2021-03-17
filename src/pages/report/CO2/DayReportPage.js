@@ -9,12 +9,12 @@ const columns = [
   {
     title: '时间',
     dataIndex: 'MonitorTime',
-    width: 200,
+    width: 160,
   },
   {
     title: '企业',
     dataIndex: 'EntName',
-    width: 200,
+    width: 220,
   },
   {
     title: '排口',
@@ -22,49 +22,52 @@ const columns = [
     width: 200,
   },
   {
-    title: '外购电力二氧化碳排放量(t)',
+    // title: '外购电力二氧化碳排放量(t)',
+    title: <>外购电力二氧化碳<br />排放量(t)</>,
     dataIndex: 'EValue',
-    width: 200,
+    width: 140,
   },
   {
     title: '二氧化碳排放量(t)',
     dataIndex: 'DischargeAndE',
-    width: 200,
+    width: 140,
   },
   {
     title: '供热比',
     dataIndex: 'AValue',
+    width: 100,
   },
   {
-    title: '供热标准耗煤量（t/GJ）',
+    title: <>供热标准耗煤量<br />（t/GJ）</>,
     dataIndex: 'BGR',
-    width: 200,
+    width: 140,
   },
   {
-    title: '供热部分二氧化碳排放量（t）',
+    title: <>供热部分二氧化碳<br />排放量(t)</>,
     dataIndex: 'GGR',
-    width: 210,
+    width: 140,
   },
   {
     title: '单位供热二氧化碳排放（kg/MJ）',
+    title: <>单位供热二氧化碳<br />排放量（kg/MJ）</>,
     dataIndex: 'DeptGGR',
-    width: 220,
+    width: 140,
   },
   {
     title: '发电标准耗煤量（t）',
     dataIndex: 'BFD',
-    width: 200,
+    width: 150,
   },
   {
-    title: '发电部份二氧化碳排放量（t）',
+    title: <>发电部份二氧化碳<br />排放量（t）</>,
     dataIndex: 'GFD',
-    width: 200,
+    width: 140,
 
   },
   {
     title: '单位发电二氧化碳排放[kg/(kWh)]',
     dataIndex: 'DeptGFD',
-    width: 220,
+    width: 150,
   },
 ]
 
