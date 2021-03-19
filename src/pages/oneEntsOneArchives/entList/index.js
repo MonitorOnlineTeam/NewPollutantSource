@@ -33,7 +33,7 @@ class Index extends React.Component {
         };
     }
     componentDidMount(){
-      this.onFinish()     
+      this.getData()     
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
   componentDidUpdate(prevProps) {
@@ -44,7 +44,7 @@ class Index extends React.Component {
       
 
 
-  onFinish = (value)=>{
+  getData = (value)=>{
     let {dispatch,queryParams} = this.props;
      dispatch({
         type: 'entList/getEntsList',
@@ -58,7 +58,7 @@ class Index extends React.Component {
   searchChange = (value)=>{
      
     const { dispatch } = this.props
-    this.onFinish(value)
+    this.getData(value)
   }
 
   // onChange=(value)=>{
@@ -75,12 +75,11 @@ class Index extends React.Component {
       const { loading } = this.props
     return <div>
       <div style={{ marginTop: 10 }}>
-        <Form className="search-form-container" layout="inline"  onFinish={this.onFinish}>
+        <Form className="search-form-container" layout="inline">
           <Row  style={{flex:1,margin:'10px 0'}} > 
             <Col xxl={8} xl={10}   lg={14} md={16} sm={24} xs={24}>
               <Form.Item label="" className='queryConditionForm'>
-                  {/* <Input placeholder="请输入你要查找的字段" onChange={(value)=>this.searchChange(value)}/> */}
-                  <Search  loading={loading} placeholder="请输入你要查找的字段" size="large" enterButton="查询一下" allowClear onSearch={(value)=>this.searchChange(value)} />
+                  <Search  loading={loading} placeholder="请输入你要查找的字段" size="large" enterButton="查询一下" allowClear  onSearch={(value)=>this.searchChange(value)} />
               </Form.Item>
             </Col>
             {/* <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
@@ -143,8 +142,7 @@ class Index extends React.Component {
         <List
           itemLayout="vertical"
           dataSource={this.loop(dataSource)}
-          // dataSource={dataSource}
-          pagination={{
+          pagination={dataSource.length<6? false:{
             onChange: page => {
               console.log(page);
             },

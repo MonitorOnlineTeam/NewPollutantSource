@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import SdlTable from '../../AutoFormManager/AutoFormTable';
+import AutoFormTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import styles from './index.less';
 
@@ -68,16 +68,21 @@ import styles from './index.less';
             <BreadcrumbWrapper>
                 <div className={styles.cardTitle}>
                     <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        <SdlTable
+                    <SearchWrapper
+                        onSubmitForm={form => this.loadReportList(form)}
+                        configId={configId}
+                    />
+                        <AutoFormTable
                             style={{ marginTop: 10 }}
                             configId={configId}
+                            rowChange={(key, row) => {
+                                console.log('key=', key);
+                                this.setState({
+                                    key, row,
+                                })
+                            }}
                             {...this.props}
-                        >
-                        </SdlTable>
+                        />
                     </Card>
                 </div>
             </BreadcrumbWrapper>
