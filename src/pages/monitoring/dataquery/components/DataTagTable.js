@@ -216,6 +216,7 @@ class DataTagTable extends Component {
             return (
               <div className={styles.tdItemBox}>
                 {content}
+                {/*{}*/}
                 {
                   isShowCheckBox && <Checkbox checked={record[item.PollutantCode + "_checked"]} onChange={(e) => {
                     let newDataSource = [...this.state.dataSource];
