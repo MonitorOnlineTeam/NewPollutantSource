@@ -158,8 +158,13 @@ p {
     background: #e6f7ff !important;
   }
 
-  #zeroPointData,#standardData,#paramData,#historyparData,#qualityProgram,#working{
-    .ant-pro-grid-content{
+  #zeroPointData,
+  #standardData,
+  #paramData,
+  #historyparData,
+  #qualityProgram,
+  #working {
+    .ant-pro-grid-content {
       padding-left: 320px;
     }
 
@@ -259,6 +264,12 @@ a:hover {
 
 :global {
 
+  // button - loading
+  .ant-btn > .ant-btn-loading-icon .anticon {
+    margin-right: 8px;
+    padding-right: 0;
+  }
+
   // formItem 样式
   .ant-legacy-form-item {
     margin-bottom: 8px;
@@ -307,6 +318,12 @@ a:hover {
 
 
   // 菜单选中样式
+
+  .ant-menu-item .anticon+span,
+  .ant-menu-submenu-title .anticon+span {
+    font-weight: 500;
+  }
+
   .ant-menu-dark .ant-menu-item:hover,
   .ant-menu-dark .ant-menu-item-active,
   .ant-menu-dark .ant-menu-submenu-active,

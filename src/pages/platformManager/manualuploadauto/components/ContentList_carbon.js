@@ -30,18 +30,18 @@ import cuid from 'cuid';
 import { EditIcon, DelIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
 import { LegendIcon } from '@/utils/icon';
+import { UploadOutlined, DownloadOutlined } from '@ant-design/icons'
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
 @connect(({ manualuploadauto, loading }) => ({
     loading: loading.effects['manualuploadauto/GetManualSupplementList'],
+    templateLoading: loading.effects['manualuploadauto/getUploadTemplate'],
     selectdata: manualuploadauto.selectdata,
     uploaddatalist: manualuploadauto.uploaddatalist,
     total: manualuploadauto.total,
     pointName: manualuploadauto.pointName,
     manualUploadautoParameters: manualuploadauto.manualUploadautoParameters,
-    addSelectPollutantData: manualuploadauto.addSelectPollutantData,
-    columnsSelect: manualuploadauto.columnsSelect,
     columns: manualuploadauto.columns,
     pageCount: manualuploadauto.pageCount,
 }))
@@ -53,7 +53,7 @@ const Option = Select.Option;
  * 创建时间：2019.08.9
  */
 
-export default class ContentList extends Component {
+export default class ContentList_carbon extends Component {
     constructor(props) {
         super(props);
         const _this = this;
@@ -63,7 +63,48 @@ export default class ContentList extends Component {
             uid: cuid(),
             uploadLoading: false,
             format: "YYYY-MM-DD HH",
-
+            columns: [
+                {
+                    title: '监测时间',
+                    dataIndex: 'MonitorTime',
+                    key: 'MonitorTime',
+                    render: (text, record) => {
+                        return text || '-'
+                    }
+                },
+                {
+                    title: '二氧化碳(mg/m³)',
+                    dataIndex: '30',
+                    key: '30',
+                    render: (text, record) => {
+                        return text || '-'
+                    }
+                },
+                {
+                    title: '流速(m/s)',
+                    dataIndex: 's02',
+                    key: 's02',
+                    render: (text, record) => {
+                        return text || '-'
+                    }
+                },
+                {
+                    title: '烟气温度(°C)',
+                    dataIndex: 's03',
+                    key: 's03',
+                    render: (text, record) => {
+                        return text || '-'
+                    }
+                },
+                {
+                    title: '烟气湿度(%)',
+                    dataIndex: 's05',
+                    key: 's05',
+                    render: (text, record) => {
+                        return text || '-'
+                    }
+                },
+            ],
         };
     }
     componentWillReceiveProps = nextProps => {
@@ -118,12 +159,9 @@ export default class ContentList extends Component {
     SelectHandleChange = (value) => {
         const { dispatch, columns } = this.props;
         var pName = '';
-        let columnsNew = [];
-        columnsNew = columnsNew.concat(columns[0]);
         if (value.length !== 0) {
             value.map((item) => {
                 var code = item.split('--')[0];
-                columnsNew = columnsNew.concat(columns.filter(item => item.dataIndex == code))
                 if (code) {
                     pName += code + ','
                 }
@@ -139,7 +177,6 @@ export default class ContentList extends Component {
                             flag: false,
                         }
                     },
-                    columnsSelect: columnsNew
                 }
             });
 
@@ -154,7 +191,6 @@ export default class ContentList extends Component {
                             pollutantCodes: '',
                         }
                     },
-                    columnsSelect: columns
                 }
             });
         }
@@ -173,22 +209,21 @@ export default class ContentList extends Component {
     //创建并获取模板
     Template = () => {
         //获取模板地址
-        const { dispatch, addSelectPollutantData, manualUploadautoParameters } = this.props;
-        if (addSelectPollutantData) {
-            dispatch({
-                type: 'manualuploadauto/getUploadTemplate',
-                payload: {
-                    PollutantTypeCode: addSelectPollutantData[0].PollutantTypeCode,
-                    DGIMN: manualUploadautoParameters.DGIMN,
-                    BeginTime: manualUploadautoParameters.BeginTime,
-                    EndTime: manualUploadautoParameters.EndTime,
-                    Type: manualUploadautoParameters.Type,
-                },
-                callback: (data) => {
-                    downloadFile(data);
-                }
-            });
-        }
+        const { dispatch, manualUploadautoParameters } = this.props;
+        dispatch({
+            type: 'manualuploadauto/getUploadTemplate',
+            payload: {
+                PollutantTypeCode: 2,
+                DGIMN: manualUploadautoParameters.DGIMN,
+                BeginTime: manualUploadautoParameters.BeginTime,
+                EndTime: manualUploadautoParameters.EndTime,
+                Type: manualUploadautoParameters.Type,
+                carbon: true,
+            },
+            callback: (data) => {
+                downloadFile(data);
+            }
+        });
     }
 
     //分页等改变事件
@@ -231,6 +266,7 @@ export default class ContentList extends Component {
         dispatch({
             type: 'manualuploadauto/GetManualSupplementList',
             payload: {
+                carbon: true
             }
         });
     }
@@ -238,10 +274,11 @@ export default class ContentList extends Component {
     //上传文件
     upload = () => {
         var that = this;
-        const { uid } = this.state;
+        const { uid, uploadLoading } = this.state;
         const { manualUploadautoParameters } = this.props;
         const props = {
-            action: config.templateUploadUrlAuto,
+            action: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAutoRefe',
+            // action: config.templateUploadUrlAuto,
             onChange(info) {
                 that.setState({
                     uploadLoading: true,
@@ -279,7 +316,7 @@ export default class ContentList extends Component {
         };
         return (
             <Upload {...props} style={{ marginLeft: 5 }} >
-                <Button type="primary"   >
+                <Button type="primary" loading={uploadLoading}  >
                     文件导入
                 </Button>
             </Upload>
@@ -329,75 +366,7 @@ export default class ContentList extends Component {
         });
         this.GetManualSupplementList();
     }
-    //统计AQI按钮确认框
-    confirm = () => {
-        const { dispatch, manualUploadautoParameters } = this.props;
-        var beginTime = manualUploadautoParameters.BeginTime;
-        var endTime = manualUploadautoParameters.EndTime;
-        if (manualUploadautoParameters.Type != 'daySelecthour') {
-            beginTime = moment(beginTime).format('YYYY-MM-DD');
-            endTime = moment(endTime).format('YYYY-MM-DD');
-        }
-        Modal.confirm({
-            title: '提示',
-            content: '确认清除' + beginTime + '-' + endTime + '范围内的AQI并重新计算吗?',
-            okText: '确认',
-            cancelText: '取消',
-            width: 500,
-            onOk: () => {
-                this.StatisticsAQI()
-            },
-            onCancel: () => {
-                console.log('false')
-            }
-        });
-    }
 
-    counterConfirm = () => {
-        const { dispatch, manualUploadautoParameters } = this.props;
-        var type = manualUploadautoParameters.Type == "day" ? "日数据" : "小时数据";
-        Modal.confirm({
-            title: '提示?',
-            okText: '确认',
-            cancelText: '取消',
-            width: 500,
-            content: '确认补发' + manualUploadautoParameters.BeginTime + '至' + manualUploadautoParameters.EndTime + '的' + type + '吗？',
-            onOk() {
-                dispatch({
-                    type: 'manualuploadauto/CounterSendCMDMsg',
-                    payload: {
-                        DGIMN: manualUploadautoParameters.DGIMN,
-                        BeginTime: manualUploadautoParameters.BeginTime,
-                        EndTime: manualUploadautoParameters.EndTime,
-                        DataType: manualUploadautoParameters.Type,
-                    }
-                });
-            },
-            onCancel() { },
-        });
-    }
-
-    //统计AQI
-    StatisticsAQI = e => {
-        const { dispatch, manualUploadautoParameters } = this.props;
-        let t1 = moment(manualUploadautoParameters.BeginTime);
-        let t2 = moment(manualUploadautoParameters.EndTime);
-        var dayNum = t2.diff(t1, 'day') + 1;
-        console.log(dayNum)
-        if (dayNum > 15) {
-            message.error("日期范围不能超过15天!");
-        } else {
-            dispatch({
-                type: 'manualuploadauto/CalculationAQIData',
-                payload: {
-                }
-            });
-            // console.log('yes')
-        }
-        this.setState({
-            visible: false,
-        });
-    };
     //关闭Modal
     handleCancel = e => {
         this.setState({
@@ -405,8 +374,8 @@ export default class ContentList extends Component {
         });
     };
     render() {
-        const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
-        const { format, visible } = this.state;
+        const { manualUploadautoParameters, pageCount, templateLoading } = this.props;
+        const { format, visible, uploadLoading, columns } = this.state;
         let dataType = manualUploadautoParameters.Type === "daySelecthour" ? "小时" : "日";
         let dateValue = [];
         if (manualUploadautoParameters.BeginTime && manualUploadautoParameters.EndTime) {
@@ -417,22 +386,21 @@ export default class ContentList extends Component {
         if (!this.props.loading) {
             uploaddata = this.props.uploaddatalist ? this.props.uploaddatalist : null;
         }
-        console.log(uploaddata)
         return (
             <Card
-                // extra={
-                //     <Button onClick={() => this.Template()}>
-                //         <Icon type="download" />模板下载
-                //     </Button>
-                // }
+                extra={
+                    <Button loading={templateLoading} onClick={() => this.Template()}>
+                        <DownloadOutlined />模板下载
+                    </Button>
+                }
                 title={
                     <Form layout="inline">
-                        <Form.Item>
+                        {/* <Form.Item>
                             <Select defaultValue={Type} style={{ width: 120 }} onChange={this.handleChange}>
                                 <Option value="daySelecthour">小时数据</Option>
                                 <Option value="day">日数据</Option>
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item>
                             <RangePicker_ style={{ width: 325, textAlign: 'left' }} dateValue={dateValue}
                                 dataType={Type}
@@ -455,40 +423,18 @@ export default class ContentList extends Component {
                             </Select>
                         </Form.Item> */}
                         <Form.Item>
-                            {/* <Button type="primary" onClick={this.uploadConfirm} >
-                                <Icon type="upload" /> 文件导入
-                            </Button> */
-                                // this.upload()
-                            }
-
-                            {/* <Spin
-                                delay={500}
-                                spinning={this.state.uploadLoading}
-                                style={{
-                                    marginLeft: 10,
-                                    height: '100%',
-                                    width: '30px',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            /> */}
-                            <Button onClick={this.counterConfirm}>
-                                补发数据
+                            <Button type="primary" onClick={this.uploadConfirm} >
+                                <UploadOutlined loading={uploadLoading} /> 文件导入
                             </Button>
+                            {/* // this.upload() */}
                         </Form.Item>
-                        <Form.Item>
-                            <Button onClick={this.confirm}>
-                                统计AQI
-                            </Button>
-                        </Form.Item>
-
                     </Form>
                 }
                 bordered={false}>
                 <SdlTable
                     rowKey={(record, index) => index}
-                    loading={this.props.loading}
-                    columns={columnsSelect}
+                    loading={this.props.loading || uploadLoading}
+                    columns={columns}
                     dataSource={!manualUploadautoParameters.DGIMN ? null : uploaddata}
                     // scroll={{ y: 'calc(100vh - 450px)' }}
                     pagination={{

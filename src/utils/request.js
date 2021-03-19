@@ -138,6 +138,7 @@ export async function get(url, params, flag) {
     }   
     //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
     if (process.env.NODE_ENV === 'production' && true) {
+    // if (true) {
       const urlbehinds = url.split('?').map(item => ({ item }));
       if (urlbehinds.length > 1) {
         if (Object.keys(urlbehinds[1]).length !== 0) {
@@ -158,6 +159,7 @@ export async function post(url, params) {
   let body = JSON.stringify(params);
   //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
   if (process.env.NODE_ENV === 'production' && true) {
+  // if (true) {
     body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
       iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
       mode: CryptoJS.mode.CBC,

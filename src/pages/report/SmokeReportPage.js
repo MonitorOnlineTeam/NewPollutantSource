@@ -205,6 +205,31 @@ class SmokeReportPage extends PureComponent {
           ],
         },
         {
+          title: '二氧化碳',
+          // width: 330,
+          children: [
+            {
+              title: '浓度(mg/m³)',
+              dataIndex: '30',
+              width: 140,
+              align: 'center',
+              render: (value, row, index) => {
+                const obj = {
+                  children: value,
+                  props: {},
+                };
+                return obj;
+              },
+            },
+            {
+              title: `排放量(Kg)`,
+              dataIndex: '30sum',
+              width: 140,
+              align: 'center',
+            },
+          ],
+        },
+        {
           title: `流量(m³)`,
           dataIndex: 'b02',
           width: 140,
@@ -541,8 +566,8 @@ class SmokeReportPage extends PureComponent {
         {/* <Spin spinning={loading} delay={500}> */}
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row>
-              <label>行政区:</label><Select
+            <Row style={{ marginBottom: 10 }}>
+              <label style={{ lineHeight: '32px' }}>行政区:</label><Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -576,7 +601,7 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.children()}
               </Select>
-              <label>关注程度:</label><Select
+              <label style={{ lineHeight: '32px' }}>关注程度:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="关注度"
@@ -601,7 +626,7 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.attention()}
               </Select>
-              <label>企业列表:</label><Select
+              <label style={{ lineHeight: '32px' }}>企业列表:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="企业列表"
@@ -620,44 +645,44 @@ class SmokeReportPage extends PureComponent {
                   });
                   this.setState({
                     entValue: value,
-                    pointValue:undefined
+                    pointValue: undefined
                   })
                 }}>
                 {this.entList()}
               </Select>
-              <div style={{ marginTop: 10 }}>
-                <label>监测点:</label><Select
-                  allowClear
-                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                  placeholder="监测点列表"
-                  maxTagCount={2}
-                  maxTagTextLength={5}
-                  value={this.state.pointValue}
-                  maxTagPlaceholder="..."
-                  onChange={(value) => {
-                    this.setState({
-                      pointValue: value,
-                    })
-                  }}>
-                  {this.pointList()}
-                </Select>
-                <FormItem {...formLayout} label="监测日期" style={{ width: 250 }}>
-                  {getFieldDecorator('time', {
-                    initialValue: moment(),
-                    rules: [
-                      {
-                        message: '请填写监测日期',
-                      },
-                    ],
-                  })(
-                    // <DatePicker />
-                    this.timeEle,
-                  )}
-                </FormItem>
-                <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-                <span style={{ fontSize: 14, color: 'red' }}>{this.props.msg}</span>
-              </div>
+            </Row>
+            <Row>
+              <label style={{ lineHeight: '32px' }}>监测点:</label><Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="监测点列表"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                value={this.state.pointValue}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                  this.setState({
+                    pointValue: value,
+                  })
+                }}>
+                {this.pointList()}
+              </Select>
+              <FormItem {...formLayout} label="监测日期" style={{ width: 250, marginTop: -6 }}>
+                {getFieldDecorator('time', {
+                  initialValue: moment(),
+                  rules: [
+                    {
+                      message: '请填写监测日期',
+                    },
+                  ],
+                })(
+                  // <DatePicker />
+                  this.timeEle,
+                )}
+              </FormItem>
+              <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
+              <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+              <span style={{ fontSize: 14, color: 'red', lineHeight: '34px' }}>{this.props.msg}</span>
             </Row>
           </Form>
           <SdlTable

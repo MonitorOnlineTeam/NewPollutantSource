@@ -39,6 +39,16 @@ export async function GetManualSupplementList(params) {
   const result = await get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementListAuto', params, null);
   return result;
 }
+
+/**
+ * 获取列表数据 - 碳中和
+ * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
+ */
+export async function GetManualSupplementListAutoReference(params) {
+  const result = await get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementListAutoReference', params, null);
+  return result;
+}
+
 /**
  * 获取模板地址
  * @params {"PollutantType":""}
@@ -47,6 +57,17 @@ export async function getUploadTemplate(params) {
   const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplateAuto', params, null);
   return result;
 }
+
+/**
+ * 获取模板地址 - 碳排放
+ * @params {"PollutantType":""}
+ */
+export async function getUploadTemplateAutoReference(params) {
+  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplateAutoReference', params, null);
+  return result;
+}
+
+
 /**
  * 删除数据
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":""}

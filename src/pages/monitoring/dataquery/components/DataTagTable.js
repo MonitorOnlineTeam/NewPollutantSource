@@ -216,6 +216,7 @@ class DataTagTable extends Component {
             return (
               <div className={styles.tdItemBox}>
                 {content}
+                {/*{}*/}
                 {
                   isShowCheckBox && <Checkbox checked={record[item.PollutantCode + "_checked"]} onChange={(e) => {
                     let newDataSource = [...this.state.dataSource];
@@ -314,13 +315,13 @@ class DataTagTable extends Component {
       this.props.columnsData.map(item => {
         // 有数据、并且在规定范围之内
         // if (currentListItem[item.PollutantCode] !== undefined && isShowCheckBox) {
-          newDataSource[index][item.PollutantCode + "_checked"] = true;
-          // 选中后新增一条数据
-          // checkedRowList[currentListItem.DataGatherCode + "/" + currentListItem.MonitorTime] = {
-          //   ...currentListItem,
-          //   checkedNum: this.props.columnsData.length
-          // };
-          checkedRowList[currentListItem.DataGatherCode + "/" + currentListItem.MonitorTime] = currentListItem;
+        newDataSource[index][item.PollutantCode + "_checked"] = true;
+        // 选中后新增一条数据
+        // checkedRowList[currentListItem.DataGatherCode + "/" + currentListItem.MonitorTime] = {
+        //   ...currentListItem,
+        //   checkedNum: this.props.columnsData.length
+        // };
+        checkedRowList[currentListItem.DataGatherCode + "/" + currentListItem.MonitorTime] = currentListItem;
         // }
       })
       newDataSource[index]["checkedNum"] = this.props.columnsData.length;
@@ -420,12 +421,10 @@ class DataTagTable extends Component {
   render() {
     const { columns, dataSource, pageIndex, pageSize, checkedRowList } = this.state;
     const { dataType, isShowFlag, form: { getFieldDecorator }, tagTableTotal, updateLoading } = this.props;
-    const flagList = dataType === "hour" ? hourFlag : minuteFlag;
-    const _dataSource = [
-      {
-
-      }
-    ]
+    let flagList = dataType === "hour" ? hourFlag : minuteFlag;
+    if (this.props.location.query.pollutantCode === '2') {
+      flagList = flagList.filter(item => item.value !== 'T');
+    }
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },

@@ -435,10 +435,19 @@ export default {
                   path: '/platformconfig/manualupload/',
                   component: './platformManager/manualupload',
                 },
+
                 {
                   name: 'manualuploadauto',
                   path: '/platformconfig/manualuploadauto/',
                   component: './platformManager/manualuploadauto',
+                },
+                // 碳排放 - 参比监控数据
+                {
+                  name: 'carbonMonitoringData',
+                  path: '/platformconfig/carbonMonitoringData',
+                  component: './platformManager/manualuploadauto/CarbonMonitoringDataPage',
+
+                  // component: './platformManager/manualuploadauto/CarbonMonitoringData.js',
                 },
                 {
                   name: 'maintenancedatabase',
@@ -642,6 +651,11 @@ export default {
                       name: 'smokeReport',
                       path: '/report/smoke/:reportType',
                       component: './report/SmokeReportPage',
+                    },
+                    {
+                      name: 'CO2DayReport',
+                      path: '/report/smoke/CO2/day',
+                      component: './report/CO2/DayReportPage',
                     },
                   ],
                 },
@@ -1229,11 +1243,13 @@ export default {
                   path: '/platformconfig/manualupload/',
                   component: './platformManager/manualupload',
                 },
-                {
-                  name: 'manualuploadauto',
-                  path: '/platformconfig/manualuploadauto/',
-                  component: './platformManager/manualuploadauto',
-                },
+
+                // {
+                //   name: 'manualuploadauto',
+                //   path: '/platformconfig/manualuploadauto',
+                //   component: './platformManager/manualuploadauto/CarbonMonitoringDataPage',
+                // },
+
                 {
                   name: 'maintenancedatabase',
                   path: '/platformconfig/maintenancedatabase/:configId',
@@ -1388,6 +1404,17 @@ export default {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
                   component: './IntelligentAnalysis/newTransmissionefficiency/entIndex',
+                },
+                //季度有效数据捕集率 - 碳排放
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/carbonQuartDataCaptureRate',
+                  component: './IntelligentAnalysis/newTransmissionefficiency/CarbonQuartDataCaptureRate',
+                },
+                {
+                  name: 'IntelligentanalysisDetail',
+                  path: '/Intelligentanalysis/carbonQuartDataCaptureRate/qutDetail',
+                  component: './IntelligentAnalysis/newTransmissionefficiency/qutPage',
                 },
                 {
                   name: 'IntelligentanalysisDetail',
