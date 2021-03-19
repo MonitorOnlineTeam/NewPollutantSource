@@ -2116,7 +2116,7 @@ export default {
               component: './EmergencyTodoList/EmergencyDetailInfoLayout',
             },
             {
-              name: 'oneEntsOneArchives',  // 一企一档
+              name: 'OneEntsOneArchives',  // 一企一档
               path: '/oneEntsOneArchives',  
               routes: [
                 {
@@ -2125,15 +2125,26 @@ export default {
     
                 },
                 {
-                  name: 'EntInfoDetail',  //企业列表详情
-                  path: '/oneEntsOneArchives/entInfoDetail',
-                  component: './oneEntsOneArchives/entInfoDetail',
-                },
-                {
-                  name: 'EntInfoEdit',  //企业列表详情 编辑
-                  path: '/oneEntsOneArchives/entInfoDetail/entInfoEdit',
-                  component: './oneEntsOneArchives/entInfoDetail/EntInfoEdit',
-                },
+                  name: 'EssentialInfo',  // 基本信息
+                  path: '/oneEntsOneArchives/essentialInfo',  
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/essentialInfo',
+                      redirect: '/oneEntsOneArchives/essentialInfo/entInfoDetail',
+                    },
+                    {
+                      name: 'EntInfoDetail',  //企业列表详情
+                      path: '/oneEntsOneArchives/essentialInfo/entInfoDetail',
+                      component: './oneEntsOneArchives/essentialInfo/entInfoDetail',
+                    },
+                    {
+                      name: 'EntInfoEdit',  //企业列表详情 编辑
+                      path: '/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
+                      component: './oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
+                    }, 
+                  ]
+                  },
+
                 {
                   name: 'DischargeStandard',  //排污许可管理
                   path: '/oneEntsOneArchives/sewageDisposal',

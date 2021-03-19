@@ -52,7 +52,7 @@ class UserInfoView extends Component {
                             style={{ float: "right", marginRight: 10 }}
                             type="primary"
                             onClick={() => {
-                                router.push('/oneEntsOneArchives/entInfoDetail/entInfoEdit?p='+ entCode)
+                                router.push('/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit?p='+ entCode)
                             }}
                         ><EditOutlined />编辑
                             </Button>

@@ -94,7 +94,7 @@ class Index extends React.Component {
   }
   itemClick=(item)=>{
 
-      router.push(`/oneEntsOneArchives/entInfoDetail?p=${item.EntCode}`);
+      router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit?p=${item.EntCode}`);
 
   }
 
