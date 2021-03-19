@@ -139,7 +139,8 @@ class MapUI extends PureComponent {
     for (var i = 0, len = polys.length; i < len; i++) {
       polys[i].setOptions({
         fillOpacity: isHover ? 0.4 : 0.2,
-        fillColor: isHover ? "#f2e232" : "#f7f6f0"
+        // fillColor: isHover ? "#f2e232" : "#f7f6f0"
+        fillColor: isHover ? "#f7f6f0" : "#f7f6f0"
       });
     }
   }
