@@ -85,6 +85,10 @@ class SdlCascader extends Component {
       <Cascader
         fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}
+        showSearch={(inputValue, path) => {
+          return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+        }}
+        changeOnSelect
         // changeOnSelect={true}
         {...this.props}
       />
