@@ -34,7 +34,7 @@ const EditableCell = (parametersList,{
   if(inputType==="select"){
     inputNode = <Select placeholder={`请选择${title}`}>
       {parametersList.map(item=>{
-        return  <Option value={item.Name}>{item.Name}</Option>
+        return  <Option value={item.ChildID}>{item.Name}</Option>
       })} 
     </Select>
   }else if(inputType === 'number'){
@@ -182,8 +182,8 @@ const EditableTable = (props) => {
       const row = await form.validateFields();//触发校验
       const newData = [...data];
       const index = newData.findIndex((item) => record.ID === item.ID);
-  
-     const EquipmentParametersCode=row[`EquipmentParametersCode${record.ID}`], 
+ 
+     const EquipmentParametersCode=row[`EquipmentParametersCode${record.ID}`],
            Range1Min = row[`Range1Min${record.ID}`],
            Range1Max = row[`Range1Max${record.ID}`],
            Range2Min = row[`Range2Min${record.ID}`],
@@ -207,12 +207,12 @@ const EditableTable = (props) => {
       if(pass){
         setTableLoading(true)
        props.addOrUpdateEquipmentParametersInfo(payload,()=>{
-      setTableLoading(false)
-     
+       setTableLoading(false)
+      const EquipmentParametersName =  parametersList.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name;
       const newRow = {
         ID: record.type=='add'? '' : record.ID,
         DGIMN: DGIMN,
-        EquipmentParametersCode: EquipmentParametersCode,
+        EquipmentParametersCode: EquipmentParametersName,
         Range1Min: Range1Min,
         Range1Max:Range1Max,
         Range2Min: Range2Min,
@@ -221,8 +221,7 @@ const EditableTable = (props) => {
         Unit:Unit
       }
       const item = newData[index];
-
-      newData.splice(index, 1, { ...item,...payload, type:'' });
+      newData.splice(index, 1, { ...item,...newRow, type:'' });
       setData(newData);
  
     })
