@@ -219,6 +219,11 @@ export default {
           path: '/oneEntsOneArchives/entList',
           component: './oneEntsOneArchives/entList',
        },
+       {
+        name: 'StatisticalAnalysis',  //一企一档进入 统计分析
+        path: '/oneEntsOneArchives/essentialInfo/statisticalAnalysis',
+        component:'./oneEntsOneArchives/essentialInfo/statisticalAnalysis'
+      },
         {
           path: '/',
           component: '../layouts/BasicLayout',
@@ -2124,6 +2129,7 @@ export default {
                   redirect: '/oneEntsOneArchives/entList',
     
                 },
+
                 {
                   name: 'EssentialInfo',  // 基本信息
                   path: '/oneEntsOneArchives/essentialInfo',  
@@ -2142,6 +2148,21 @@ export default {
                       path: '/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
                       component: './oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
                     }, 
+                    {
+                      name: 'OutfallInfo',  //排污口信息管理
+                      path: '/oneEntsOneArchives/essentialInfo/outfallInfo',
+                      component:'./oneEntsOneArchives/essentialInfo/outfallInfo'
+                    },
+                    {
+                      name: 'WasteWaterGovern',  //废水治理设施
+                      path: '/oneEntsOneArchives/essentialInfo/wasteWaterGovern/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    }, 
+                    {
+                      name: 'OutfallInfo',  //废气治理设施
+                      path: '/oneEntsOneArchives/essentialInfo/wasteGasGovern/:configId',
+                      component:'./oneEntsOneArchives/autoformTemplate'
+                    },
                   ]
                   },
 
@@ -2260,6 +2281,21 @@ export default {
                     {
                       name:'AcceptanceCheck', //环评信息管理  建设项目验收
                       path: '/oneEntsOneArchives/eiaInfo/acceptanceCheck/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                  ]
+                }, 
+                {
+                  name: 'PetitionComplaints',  //信访投诉
+                  path: '/oneEntsOneArchives/petitionComplaints',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/petitionComplaints',
+                      redirect:'/oneEntsOneArchives/petitionComplaints/situa/:configId'
+                    },
+                    {
+                      name:'petitionComplaints',   //信访投诉情况
+                      path: '/oneEntsOneArchives/petitionComplaints/situa/:configId',
                       component: './oneEntsOneArchives/autoformTemplate',
                     },
                   ]

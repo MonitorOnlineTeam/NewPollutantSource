@@ -93,10 +93,10 @@ class Index extends React.Component {
     </div>
   }
   itemClick=(item)=>{
-
-      router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit?p=${item.EntCode}`);
-
-  }
+       router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail`);   
+       sessionStorage.setItem("oneEntCode",item.EntCode)
+       sessionStorage.setItem("oneEntName",item.EntName.props.children)
+  } 
 
 
   selectSty = (name)=>{

@@ -31,7 +31,7 @@ class UserInfoView extends Component {
         return (
             <Fragment>
                 <BreadcrumbWrapper>
-                    <Card bordered={false} title="详情" extra={
+                    <Card  bordered={false} title="详情" extra={
                         <>
                         <Button
                             style={{ float: "right", marginRight: 10 }}
