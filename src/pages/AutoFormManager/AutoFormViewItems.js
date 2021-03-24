@@ -44,7 +44,7 @@ class AutoFormViewItems extends Component {
 
   componentDidMount() {
     debugger;
-    const { dispatch, detailConfigInfo, editFormData } = this.props;
+    const { dispatch, detailConfigInfo, editFormData,seeType } = this.props;
     const { configId, keysParams } = this._SELF_;
     // 获取页面配置项
     // if (detailConfigInfo || detailConfigInfo.length === 0) {
@@ -65,6 +65,9 @@ class AutoFormViewItems extends Component {
         ...keysParams,
       },
     });
+    setTimeout(()=>{
+     seeType==='customSty'&&this.props.editFormDatas(editFormData)
+    })
     // }
 
     // }
@@ -117,7 +120,6 @@ class AutoFormViewItems extends Component {
           <AttachmentView dataSource={dataSource} />
         </div>;
       }
-
       return (
         <Col span={6} style={{ marginBottom: 10, display: item.isHide ? "none" : "block" }} key={item.fieldName}>
           <div className={styles.term}>{item.labelText}</div>

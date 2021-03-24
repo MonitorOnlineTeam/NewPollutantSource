@@ -140,14 +140,14 @@ export default Model.extend({
 
     // 智能监控数据
     // TODO: 接口更换
-    *getStatisticsPointStatus({ payload }, { call, update }) {
-      const result = yield call(services.getStatisticsPointStatus, payload);
-      if (result.requstresult) {
-        yield update({
-          pointData: result.data
-        })
-      }
-    },
+    // *getStatisticsPointStatus({ payload }, { call, update }) {
+    //   const result = yield call(services.getStatisticsPointStatus, payload);
+    //   if (result.requstresult) {
+    //     yield update({
+    //       pointData: result.data
+    //     })
+    //   }
+    // },
 
     // 获取报警信息
     *getWarningInfo({ payload }, { call, update, select }) {
@@ -336,32 +336,13 @@ export default Model.extend({
       }
     },
     
-    //  // 获取单个企业或排口下的信息
-    // *getEntOrPointInfo({ payload }, { call, update,select }) {
-    //       const { mounthOverDataParams } = yield select(state => state.home);
-    //       let body = {
-    //         beginTime: mounthOverDataParams.beginTime,
-    //         endTime: mounthOverDataParams.endTime,
-    //         pollutantCode: mounthOverDataParams.pollutantCode,
-    //         EntCode: mounthOverDataParams.entCode,
-    //         ...payload
-    //       };
 
-    //       const result = yield call(services.getRateStatisticsByEnt, {...body });
-
-    //       if (result.IsSuccess) {
-    //         yield update({
-    //           currentEntInfo: result.Datas,
-    //           currentMarkersList: result.Datas,
-    //         })
-    //       }
-    //     },
     //  当月报警统计
     *overStandardAlarmStatistics({ payload }, { call, update, select }) {
       const result = yield call(services.overStandardAlarmStatistics, payload);
       if (result.IsSuccess) {
         yield update({
-          alarmTotalData: result.Datas || {}
+          alarmTotalData: result.Datas || 0
         })
       }
     },
@@ -373,6 +354,15 @@ export default Model.extend({
           entDetailData: result.Datas || {}
         })
       }
-    },    
+    },  
+    // 排口数量和状态
+     *getStatisticsPoint({ payload }, { call, update, select }) {
+          const result = yield call(services.getStatisticsPoint, payload);
+          if (result.IsSuccess) {
+            yield update({
+              pointData: result.Datas
+            })
+          }
+    },  
   }
 })

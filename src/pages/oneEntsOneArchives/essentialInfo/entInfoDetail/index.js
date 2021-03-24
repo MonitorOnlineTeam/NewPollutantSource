@@ -43,7 +43,6 @@ class UserInfoView extends Component {
                   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
                 },
               ]
-            
         };
     }
 
@@ -66,6 +65,12 @@ class UserInfoView extends Component {
         previewVisible: true,
       });
     };
+    editFormDatas=(data)=>{
+       console.log(data.AEnterpriseTest)
+      // this.setState({
+      //   autoFormData:data.AEnterpriseTest
+      // })
+    }
     render() {
         const { entCode,fileList,previewVisible,previewImage } = this.state;
         return (
@@ -101,7 +106,6 @@ class UserInfoView extends Component {
                                    fileList={fileList}
                                    showUploadList={{showRemoveIcon:false}}
                                    onPreview={this.handlePreview}
-                                   onRemove={()=>{return false}}
                                       />
                            </Form.Item>
                            <Modal
@@ -113,8 +117,10 @@ class UserInfoView extends Component {
                             <img alt="example" style={{ width: '100%' }} src={previewImage} />
                            </Modal>
                          <AutoFormViewItems
+                            seeType='customSty'
                             configId="AEnterpriseTest"
                             keysParams={{ "dbo.T_Bas_Enterprise.EntCode": entCode }}
+                            editFormDatas={(data)=>{this.editFormDatas(data)}}
                         /> 
                     </Card>
                 </BreadcrumbWrapper>

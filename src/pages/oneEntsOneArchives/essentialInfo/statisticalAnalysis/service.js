@@ -107,12 +107,18 @@ export async function getPointTax(params) {
 
 // 当月超标报警统计
 export async function overStandardAlarmStatistics(params) {
-  const result = get('rest/PollutantSourceApi/EntRecord/OverStandardAlarmStatistics?' + `entCode=${params.entCode}&dataType=${params.dataType}`, {}, null);
+  const result = post('/api/rest/PollutantSourceApi/EntRecord/OverStandardAlarmStatistics?' + `entCode=${params.entCode}&dataType=${params.dataType}`, {}, null);
   return result;
 }
 
 // 企业属性
 export async function getEntDetails(params) {
-  const result = get('rest/PollutantSourceApi/EntRecord/GetEntDetails' + `entCode=${params.entCode}`, {}, null);
+  const result = post('/api/rest/PollutantSourceApi/EntRecord/GetEntDetails?' + `entCode=${params.entCode}`, {}, null);
+  return result;
+}
+
+// 排口数量
+export async function getStatisticsPoint(params) {
+  const result = post('/api/rest/PollutantSourceApi/EntRecord/GetStatisticsPointStatus?' + `entCode=${params.entCode}`, {}, null);
   return result;
 }

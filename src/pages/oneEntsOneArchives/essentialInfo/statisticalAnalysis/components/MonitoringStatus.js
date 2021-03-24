@@ -11,16 +11,17 @@ class MonitoringStatus extends Component {
         this.state = { 
          };
     }
-    componentDidMount()
-    {
-         this.getData();
+    componentDidMount()  {
+         const { entCode } = this.props;
+         this.getData(entCode);
     }
-    getData=()=>{
+    getData=(entCode)=>{
         const{dispatch}=this.props;
         // 监控现状
         dispatch({
-            type: "home/getStatisticsPointStatus",
+            type: "home/getStatisticsPoint",
             payload: {
+              entCode:entCode
             },
         });
     }

@@ -75,6 +75,7 @@ class index extends Component {
       showType: "ent",
       entCode: null,
       DGIMN: null,
+      pollutantType:'all'
 
     };
     this.mapEvents = {
@@ -174,6 +175,7 @@ class index extends Component {
     
     this.setState({
       did: true,
+      entCode: sessionStorage.getItem('oneEntCode')
     })
   }
 
@@ -242,6 +244,8 @@ class index extends Component {
           currentMarkersList: filterData
         }
       })
+      this.setState({pollutantType:val?val:'all'})
+
     }
   }
 
@@ -287,7 +291,6 @@ class index extends Component {
       did: false,
     })
     if (itemData.position.IsEnt === 1) {
-      console.log('这是企业')
       // 企业
       this.props.dispatch({
         type: "home/updateState",
@@ -297,7 +300,6 @@ class index extends Component {
         }
       })
     } else {
-      console.log('这是监测点')
       this.setState({
         currentPoint: itemData.position,
         DGIMN: itemData.position.key
@@ -322,7 +324,36 @@ class index extends Component {
     }
     return res;
   }
+  renderStatueTypelist=(type)=>{
 
+    let res=[];
+    const statusData = [0,1,2,3];
+    const statusValue = {
+       0:'离线',
+       1:'正常',
+       2:'超标',
+       3:'异常'
+    }
+    if(type==1 || type == 2 ){
+      statusData.map((item,index)=>{
+      res.push(<RadioButton key={index} value={item}>{this.getPollutantIcon(type,item)}{<span style={{paddingLeft:10}}>{statusValue[item]}</span>}</RadioButton>)
+      })
+    }
+    // else if(type=='all'){
+    //   statusData.map((item,index)=>{
+    //     res.push(<>
+    //     <RadioButton key={index + 1} value={item}>{this.getPollutantIcon(1,item)}</RadioButton>
+    //     <RadioButton key={index + 2} value={item}>{this.getPollutantIcon(2,item)}</RadioButton>
+    //     </>)
+    //   })
+    // }
+
+
+    
+
+    return res;
+
+  }
   /**
    * 渲染点
    */
@@ -428,6 +459,8 @@ class index extends Component {
       mounthOverData,
       homePage
     } = this.props;
+
+    const { pollutantType } = this.state;
     let pointposition = position;
     let pointvisible = visible;
     let polygonChange;
@@ -456,6 +489,7 @@ class index extends Component {
     const isLeftLoading = allEntAndPointLoading || rateStatisticsByEntLoading || taskCountLoading || exceptionProcessingLoading || alarmAnalysisLoading || warningInfoLoading;
     const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
     const entName = sessionStorage.getItem('oneEntName')
+
     return (
       <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
         {
@@ -568,10 +602,10 @@ class index extends Component {
           </div>
           <div className={styles.currentInfoWrapper}>
             {
-              currentEntInfo.title && <div>
-                <span>企业</span> <br />
-                <span style={{color:'red'}}>{currentEntInfo.title}</span>
-              </div>
+              // currentEntInfo.title && <div>
+              //   <span>企业</span> <br />
+              //   <span style={{color:'red'}}>{currentEntInfo.title}</span>
+              // </div>
             }
             {
               currentPoint && currentPoint.title && <div>
@@ -592,6 +626,20 @@ class index extends Component {
             >
               <Radio.Group style={{}} defaultValue={this.state.radioDefaultValue} buttonStyle="solid" size="default" onChange={this.onRadioChange}>
                 {this.renderPollutantTypelist()}
+              </Radio.Group>
+            </div>
+          }
+        {
+           pollutantType&&currentEntInfo.children && showType === "point" && <div
+              style={{
+                position: 'absolute',
+                top: '2%',
+                left: 650,
+                zIndex: 100
+              }}
+            >
+              <Radio.Group className='statueType' style={{}}  buttonStyle="solid" size="default" disabled> 
+                {this.renderStatueTypelist(pollutantType)}
               </Radio.Group>
             </div>
           }

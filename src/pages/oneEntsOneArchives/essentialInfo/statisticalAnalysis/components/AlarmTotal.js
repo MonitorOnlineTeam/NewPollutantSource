@@ -12,61 +12,52 @@ class AlarmTotal extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+            dataType:'HourData',
             options : [
-                { label: '小时数据', value: 'hour' },
-                { label: '日均数据', value: 'day' },
+                { label: '小时数据', value: 'HourData' },
+                { label: '日均数据', value: 'DayData' },
               ]
          };
     }
 
-    componentDidMount()
-    {
-         this.getData();
+    componentDidMount(){
+         let { entCode } = this.props;
+         this.getData(entCode);
     }
-    componentWillReceiveProps(nextProps)
-    {
-      if (this.props.DGIMN !== nextProps.DGIMN || this.props.entCode !== nextProps.entCode) {
-         this.getData(nextProps.entCode,nextProps.DGIMN);
+    componentWillReceiveProps(nextProps) {
+      if ( this.props.entCode !== nextProps.entCode) {
+         this.getData(nextProps.entCode);
         }
     }
-    getData=(entCode,DGIMN)=>{
-     const{dispatch}=this.props;
-    // 获取所有企业排污税
-    if (!entCode && !DGIMN) {
-      dispatch({
-        type: "home/getAllTax",
-      })
-    }
 
-    // 获取单个企业排污税
-    if (entCode && !DGIMN) {
+    getData=(entCode)=>{
+     const{dispatch } = this.props;
+     const { dataType } = this.state;
+    // 获取单个企业月超标报警
+    if (entCode && dataType) {
       dispatch({
-        type: "home/getEntTax",
+        type: "home/overStandardAlarmStatistics",
         payload: {
-          targetId: entCode
+          entCode: entCode,
+          dataType:dataType
         }
       })
     }
 
-    // 获取单个排口排污税
-    if (entCode && DGIMN) {
-      dispatch({
-        type: "home/getPointTax",
-        payload: {
-          DGIMN
-        }
-      })
-    }
+
        
     }
 
     onAlarmChange=(e)=>{
-
+      let { entCode } = this.props;
+      this.setState({dataType:e.target.value},()=>{
+          this.getData(entCode)
+      })
     }
 
     render() {
         const {taxInfo}=this.props;
-        const { options } = this.state;
+        const { options,dataType } = this.state;
         return <>
           <div className={styles.title}>
             <p>报警统计</p>
@@ -77,7 +68,7 @@ class AlarmTotal extends Component {
             <Radio.Group
              options={options}
              onChange={this.onAlarmChange}
-             value={'hour'}
+             value={dataType}
              optionType="button"
             />
             </p>
