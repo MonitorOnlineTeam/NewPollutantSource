@@ -26,22 +26,10 @@ class UserInfoView extends Component {
             previewVisible:false,
             previewImage:'',
             fileList: [
-                {
-                  uid: '-1',
-                  url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                },
-                {
-                  uid: '-2',
-                  url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                },
-                {
-                  uid: '-3',
-                  url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                },
-                {
-                  uid: '-4',
-                  url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                },
+                // {
+                //   uid: '-1',
+                //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                // }
               ]
         };
     }
@@ -66,10 +54,22 @@ class UserInfoView extends Component {
       });
     };
     editFormDatas=(data)=>{
-       console.log(data.AEnterpriseTest)
-      // this.setState({
-      //   autoFormData:data.AEnterpriseTest
-      // })
+
+      let datas = data.AEnterpriseTest.Photo;
+
+      if(datas){
+
+       const entPhoto =  datas.split(";").map((item,index)=>{
+         return { 
+               uid:index,
+               url:item
+           }
+       })
+      this.setState({
+        fileList:entPhoto
+      })
+      }
+
     }
     render() {
         const { entCode,fileList,previewVisible,previewImage } = this.state;

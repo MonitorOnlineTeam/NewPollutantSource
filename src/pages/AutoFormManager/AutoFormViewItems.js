@@ -11,6 +11,7 @@ import { getAttachmentDataSource } from './utils'
 import AttachmentView from '@/components/AttachmentView'
 import PageLoading from '@/components/PageLoading'
 import styles from '../../components/DescriptionList/index.less';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const FormItem = Form.Item;
 
@@ -44,7 +45,7 @@ class AutoFormViewItems extends Component {
 
   componentDidMount() {
     debugger;
-    const { dispatch, detailConfigInfo, editFormData,seeType } = this.props;
+    const { dispatch, detailConfigInfo, editFormData } = this.props;
     const { configId, keysParams } = this._SELF_;
     // 获取页面配置项
     // if (detailConfigInfo || detailConfigInfo.length === 0) {
@@ -64,15 +65,21 @@ class AutoFormViewItems extends Component {
         configId,
         ...keysParams,
       },
-    });
-    setTimeout(()=>{
-     seeType==='customSty'&&this.props.editFormDatas(editFormData)
     })
+
+    //  
     // }
 
     // }
   }
 
+  componentDidUpdate(prevProps, prevState){
+
+    const { seeType,editFormData } = this.props;
+    if (prevProps.editFormData !== editFormData) {
+      seeType==='customSty'&& this.props.editFormDatas(editFormData)
+    }
+  }
   _renderFormItem() {
     const { detailConfigInfo, editFormData } = this.props;
     const { formItemLayout, configId, keysParams } = this._SELF_;

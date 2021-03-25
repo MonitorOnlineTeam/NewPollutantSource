@@ -70,6 +70,7 @@ class AlarmTotal extends Component {
              onChange={this.onAlarmChange}
              value={dataType}
              optionType="button"
+             buttonStyle="solid"
             />
             </p>
 

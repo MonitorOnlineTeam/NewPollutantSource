@@ -610,7 +610,7 @@ class index extends Component {
             {
               currentPoint && currentPoint.title && <div>
                 <span>排口</span> <br />
-                <span style={{color:'green'}}>{currentPoint.title}</span>
+                <span>{currentPoint.title}</span>
               </div>
             }
           </div>

@@ -81,7 +81,7 @@ export default Model.extend({
     taxInfo: {},
     homePage:"1",
     alarmTotalData:'',
-    entDetailData:'',
+    entDetailData:{},
   },
   effects: {
     *getHomePage({payload},{call,update}){
@@ -104,7 +104,8 @@ export default Model.extend({
           // currentEntInfo: result.Datas[0],
           // currentMarkersList: result.Datas[0].children,
           currentMarkersList: data[0].children,
-          currentEntInfo:data[0]
+          currentEntInfo:data[0],
+          entDetailData: data
         })
       }
     },
@@ -347,14 +348,14 @@ export default Model.extend({
       }
     },
     // 企业属性
-    *getEntDetails({ payload }, { call, update, select }) {
-      const result = yield call(services.getEntDetails, payload);
-      if (result.IsSuccess) {
-        yield update({
-          entDetailData: result.Datas || {}
-        })
-      }
-    },  
+    // *getEntDetails({ payload }, { call, update, select }) {
+    //   const result = yield call(services.getEntDetails, payload);
+    //   if (result.IsSuccess) {
+    //     yield update({
+    //       entDetailData: result.Datas || {}
+    //     })
+    //   }
+    // },  
     // 排口数量和状态
      *getStatisticsPoint({ payload }, { call, update, select }) {
           const result = yield call(services.getStatisticsPoint, payload);

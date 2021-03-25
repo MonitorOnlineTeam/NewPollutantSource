@@ -14,6 +14,9 @@
 /*滚动条大小*/
 @scrollbar-width: 9px;
 
+@cardBackgroundCol:rgba(0,0,0,.4);
+@mapCol:#fcf9f2;
+
 .homeWrapper {
   background-color: #fff !important;
   font-size       : 14px;
@@ -25,7 +28,8 @@
 
   :global {
     .amap-container {
-      background-color: #001529 !important;
+      // background-color: #001529 !important;
+      background-color: #fcf9f2 !important;
     }
     .statueType .anticon{
       vertical-align: -0.235em;
@@ -101,13 +105,15 @@
   .homeHeader {
     position              : relative;
     text-align            : center;
-    color                 : #fff;
+    // color                 : #fff;
+    color:@cardBackgroundCol;
     font-size             : 30px;
     height                : 64px;
     line-height           : 64px;
     padding               : 0;
     font-weight           : 700;
-    background            : #00152A;
+    // background            : #00152A;
+    background            :@mapCol;
     background-image      : url(/homeheader.png);
     background-repeat     : no-repeat;
     background-size       : contain;
@@ -137,17 +143,23 @@
 
     // 单选按钮样式
     .ant-radio-button-wrapper {
-      background  : #163666;
-      border-color: #3b6aaa;
-      color       : #fff;
+      // background  : #163666;
+      // border-color: #3b6aaa;
+      // color       : #fff;
+      color: #d9d9d9;
+      background-color: @cardBackgroundCol;
+      border-color: #d9d9d9;
     }
 
     .ant-radio-button-wrapper:not(:first-child)::before {
-      background-color: #3b6aaa;
+      background-color: #d9d9d9;
     }
-
     .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-      background: #2b5288;
+      background:  @cardBackgroundCol;
+      border-color: #d9d9d9;
+    }
+    .ant-radio-button-wrapper-disabled{
+      color: #fff;
     }
   }
 
@@ -354,16 +366,16 @@
       // margin    : 0 10px;
       // height    : 100%;
       &>span {
-        line-height: 40px;
-        font-size  : 16px;
+        line-height: 25px;
+        font-size  : 15px;
         color      : #ffcb5b;
         font-weight: 500;
       }
 
       span:last-child {
-        font-weight: 600;
-        font-size  : 16px;
-        color      : white;
+        font-weight: 500;
+        font-size  : 15px;
+        color      : @cardBackgroundCol;
 
       }
     }
@@ -394,15 +406,16 @@
     ::-webkit-scrollbar-track {
 
       border-radius   : 10px;
-      background-color: @scrollbar-track-color;
+      // background-color: @scrollbar-track-color;
     }
 
     ::-webkit-scrollbar-thumb {
       height               : 50px;
-      background-color     : @scrollbar-thumb-color;
+      // background-color     : @scrollbar-thumb-color;
       -webkit-border-radius: 4px;
       outline-offset       : -2px;
-      border               : 2px solid @scrollbar-thumb-color;
+      border-width: 2px;
+      // border               : 2px solid @scrollbar-thumb-color;
     }
 
     ::-webkit-scrollbar-thumb:hover {
@@ -412,12 +425,13 @@
     }
 
     &>div {
-      border       : 1px solid #274073;
+      // border       : 1px solid #274073;
       margin-bottom: 10px;
       color        : #fff;
       padding      : 10px;
       overflow     : hidden;
-      background   : rgba(0, 21, 42, 0.71);
+      // background   : rgba(0, 21, 42, 0.71);
+      background: @cardBackgroundCol;
 
       &>.echartsContent {
         display       : flex;
@@ -470,7 +484,7 @@
           font-size   : 16px;
           display     : block;
           line-height : 20px;
-          background  : #020814 url(/01.png) no-repeat 96px 8px;
+          background  :@cardBackgroundCol url(/01.png) no-repeat 96px 8px;
         }
 
         // &::before {
@@ -555,7 +569,8 @@
 
         &>div.line {
           flex           : 1;
-          background     : #334454;
+          // background     : #334454;
+          background: @cardBackgroundCol;
           display        : flex;
           justify-content: space-between;
           align-items    : center;
