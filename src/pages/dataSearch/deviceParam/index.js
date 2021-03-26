@@ -10,12 +10,13 @@ import { router } from 'umi';
 import ContentPages from './ContentPages'
 
 @connect()
-class EquipmentManage extends Component {
+class DeviceParam extends Component {
   constructor(props) {
     super(props);
     this.state = {
       DGIMN: null,
       path:null,
+      pollType:''
     };
   }
 
@@ -24,22 +25,21 @@ class EquipmentManage extends Component {
   }
 
   render() {
-    const { DGIMN,path } = this.state;
-
-    const  isAir = path === '/dataSearch/deviceParam/smokeAir';
-    
+    const { DGIMN,path,pollType } = this.state;
     return (
       <>
-       {path&&<NavigationTree choice={false} polShow={isAir&&true} type={isAir&&"air"} onItemClick={value => {
+        <NavigationTree polShow={true} type={'ent'} onItemClick={value => {
           if (value && value[0]) {
             this.setState({
-              DGIMN: value[0].key
+              DGIMN: value[0].key,
+              pollType:value[0].Type,
             })
           }
-        }} /> }
-        <div id='contentWrapper'>
+        }} />}
+        
+        <div id='contentWrapper'  className='equipmentParmars'>
           <BreadcrumbWrapper >
-          <ContentPages  DGIMN={DGIMN} type={ isAir?'smoke':'water'}/>
+          <ContentPages  DGIMN={DGIMN} type={  pollType==2?'smoke':'water'}/>
           </BreadcrumbWrapper>
         </div>
       </>
@@ -48,4 +48,4 @@ class EquipmentManage extends Component {
 }
 
 
-export default EquipmentManage;
+export default DeviceParam;

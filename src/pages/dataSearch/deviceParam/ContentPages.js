@@ -6,7 +6,7 @@
 import React, { useState,useEffect  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined } from '@ant-design/compatible/node_modules/@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import SmokeSetUpForm from './components/SmokeSetUpForm'
 import { connect } from "dva";
 

@@ -45,8 +45,8 @@ const SmokeSetUpForm = (props) => {
 
       props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
 
-      setform.setFieldsValue({
-        ID: res.ID,
+        res&&setform.setFieldsValue({
+        ID:res.ID,
         PitotCoefficient: res.PitotCoefficient,
         VelocityCoefficient: res.VelocityCoefficient,
         FlueCoefficient: res.FlueCoefficient,
@@ -136,9 +136,9 @@ const SmokeSetUpForm = (props) => {
       </Form.Item>
       </Col>
       <Col>
-      <Form.Item label="" name="ID">
+       <Form.Item label="" name="ID">
         <Input type='hidden' />
-      </Form.Item>
+      </Form.Item> 
       </Col>
       </Row>
 
@@ -146,7 +146,7 @@ const SmokeSetUpForm = (props) => {
         <div className={styles.title}>其他情况说明</div>
         <div className={styles.divider}> </div>
         </>
-      <Row gutter={[16,24]} style={{paddingBottom:10}}>
+      <Row gutter={[16,24]} style={{paddingBottom:35}}>
         <Col  span={24}>
       <Form.Item label="" name="Remark" >
         <TextArea placeholder='备注' rows={2} />
