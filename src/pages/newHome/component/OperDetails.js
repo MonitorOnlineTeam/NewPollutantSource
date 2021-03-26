@@ -56,7 +56,7 @@ class OperDetails extends PureComponent {
           Value: DGIMN,
           Where: '$=',
         }]}
-        scroll={{ y: "calc(60vh - 200px)" }}
+        scroll={{ y: "calc(60vh - 230px)" }}
         appendHandleRows={(row, key) => {
           const text = row["dbo.T_Bas_Task.CompleteTime"];
           const TaskID = row["dbo.T_Bas_Task.ID"];

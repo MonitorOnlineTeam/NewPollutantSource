@@ -10,6 +10,7 @@ import OperDetails from "./OperDetails"
 import styles from '../index.less'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import config from "@/config"
+import moment from 'moment'
 
 
 const { TabPane } = Tabs;
@@ -102,7 +103,7 @@ class SiteDetailsModal extends PureComponent {
 
     if (data.PollutantType === "5") {
       tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
-    }else{
+    } else {
       tabList = ["历史数据", "运维记录", "视频预览", "超标处置", "异常数据", "超标数据", "基本信息"];
     }
     let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
@@ -158,13 +159,14 @@ class SiteDetailsModal extends PureComponent {
         {
           currentKey === 5 &&
           <div style={{ height: "60vh", overflow: 'auto' }}>
-            <RecordEchartTable DGIMN={data.key} initLoadData />
+            <RecordEchartTable noticeState={0} DGIMN={data.key} hideButtons={['realtime', 'minute']} initLoadData />
           </div>
         }
         {
           currentKey === 6 && data.PollutantType != "5" &&
           <div style={{ height: "60vh", overflow: 'auto' }}>
-            <RecordEchartTableOver DGIMN={data.key} initLoadData noticeState={1} />
+            <RecordEchartTableOver DGIMN={data.key} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
+               lasttime={moment(moment().format('YYYY-MM-DD HH:59:59'))} initLoadData />
           </div>
         }
         {

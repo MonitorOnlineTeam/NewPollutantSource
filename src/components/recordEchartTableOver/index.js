@@ -374,7 +374,7 @@ class Index extends Component {
    * 回调获取时间并重新请求数据
    */
     dateCallback = (date, dataType) => {
-       
+
         if (!this.props.DGIMN) { return; }
         this.setState({
             beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
@@ -435,7 +435,7 @@ class Index extends Component {
             xAxis: { type: 'category', triggerEvent: true },
             yAxis: {
                 triggerEvent: true,
-splitLine: {
+                splitLine: {
                     show: true,
                     lineStyle: {
                         type: 'dashed',
@@ -462,7 +462,7 @@ splitLine: {
                                 callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                 allowClear={false} showTime={this.state.format} />
 
-                            {this.props.noticeState == 0 ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked={this.state._dataType} onChange={this._handleDateTypeChange} />}
+                            {this.props.noticeState == 0 && !this.props.hideButtons ? <Button key={3} value="hour">小时</Button> : <ButtonGroup_ hideButtons={this.props.hideButtons} style={{ marginRight: 20, marginTop: 5 }} checked={this.state._dataType} onChange={this._handleDateTypeChange} />}
                         </div>
                     }
                 >
