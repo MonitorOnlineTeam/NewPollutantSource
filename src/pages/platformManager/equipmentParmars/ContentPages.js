@@ -47,19 +47,25 @@ const EditableCell = (parametersList,{
       {editing ? (
       inputType === 'range'? 
       <Form.Item  style={{margin:0}}>
-      <Form.Item style={{display:'inline-block',margin: 0 }}  name={`${dataIndex}Min${record.ID}`}>
+      <Form.Item style={{display:'inline-block',margin: 0 }}
+       rules={[ {   required: dataIndex==="Range1"&&true,   message: ``  } ]}
+       name={`${dataIndex}Min${record.ID}`}
+      >
          <InputNumber placeholder={`最小值`}/>
         </Form.Item>
       <span  style={{ display: 'inline-block', width: '24px', lineHeight: '32px', textAlign: 'center' }}>
         -
       </span>
-      <Form.Item  style={{display:'inline-block',margin: 0 }} name={`${dataIndex}Max${record.ID}`}>
+      <Form.Item 
+       rules={[ {   required: dataIndex==="Range1"&&true,   message: `` } ]}
+      style={{display:'inline-block',margin: 0 }} name={`${dataIndex}Max${record.ID}`}
+      >
          <InputNumber placeholder={`最大值`}/>
         </Form.Item>
       </Form.Item> : <Form.Item
            name={`${dataIndex}${record.ID}`}
            style={{ margin: 0  }}
-          // rules={[ {   required: true,   message: `Please Input ${title}!`,   } ]}
+           rules={[ {   required: dataIndex==="Unit"||  dataIndex==="EquipmentParametersCode"&&true,  message: ``  } ]}
         >
           {inputNode}
         </Form.Item>
@@ -188,10 +194,10 @@ const EditableTable = (props) => {
            Range1Max = row[`Range1Max${record.ID}`],
            Range2Min = row[`Range2Min${record.ID}`],
            Range2Max=  row[`Range2Max${record.ID}`],
-           DetectionLimit = record.DetectionLimit ? row[`DetectionLimit${record.ID}`]: '',
+           DetectionLimit = type === 'smoke'? row[`DetectionLimit${record.ID}`]: '',
            Unit = row[`Unit${record.ID}`];
-        
-      let pass = type === 'smoke'? EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Range2Min.toString()&&Range2Max.toString()&&Unit:  EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Range2Min.toString()&&Range2Max.toString()&&Unit&&DetectionLimit.toString();
+
+      let pass = EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Unit.toString();
      
       let payload = {
         ID: record.type=='add'? '' : record.ID,
@@ -204,11 +210,15 @@ const EditableTable = (props) => {
         DetectionLimit: DetectionLimit ,
         Unit:Unit
     }
+    // console.log(EquipmentParametersCode.toString(),Range1Min.toString(),Range1Max.toString(),Range2Min.toString(),Range2Max.toString(),Unit:  EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Range2Min.toString()&&Range2Max.toString()&&Unit&&DetectionLimit.toString())
       if(pass){
         setTableLoading(true)
        props.addOrUpdateEquipmentParametersInfo(payload,()=>{
        setTableLoading(false)
-      const EquipmentParametersName =  parametersList.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name;
+      const EquipmentParametersName =  record.type=='add'?
+                                       parametersList.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
+                                       :
+                                       row[`EquipmentParametersCode${record.ID}`]
       const newRow = {
         ID: record.type=='add'? '' : record.ID,
         DGIMN: DGIMN,
@@ -229,6 +239,7 @@ const EditableTable = (props) => {
     message.error("请输入完整的信息")
   }
     } catch (errInfo) {
+      message.error("请输入完整的信息")
       console.log('错误信息:', errInfo);
     }
   };
@@ -293,7 +304,7 @@ const EditableTable = (props) => {
       editable: true,
       align:'center',
       render:(text,record)=>{
-        return `${record.Range2Min} ~ ${record.Range2Max}` 
+        return record.Range2Min&&record.Range2Max? `${record.Range2Min} ~ ${record.Range2Max}` : '';
       }
     },
     {
