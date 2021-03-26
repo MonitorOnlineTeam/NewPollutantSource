@@ -74,7 +74,7 @@ class AlarmTotal extends Component {
             />
             </p>
 
-            <Divider style={{ background: "#1c324c" }} />
+            <Divider style={{ background: "rgba(0,0,0,.2)" }} />
             <div>
               <div style={{ fontSize: 16, fontWeight: 600, color: "#d5d9e2" }}>
               {moment(taxInfo.Date).format('MM') * 1}月超标报警统计：   
