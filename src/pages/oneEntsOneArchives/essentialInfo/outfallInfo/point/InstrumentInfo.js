@@ -6,12 +6,12 @@ import { Space, Button, Select, message, Popconfirm } from "antd";
 const Option = Select.Option;
 
 
-@connect(({ loading, autoForm, common, entManage, global }) => ({
-  pointInstrumentList: entManage.pointInstrumentList,
-  instrumentSelectList: entManage.instrumentSelectList,
-  factorySelectList: entManage.factorySelectList,
-  methodSelectList: entManage.methodSelectList,
-  monitorItem: entManage.monitorItem,
+@connect(({ loading, autoForm, common, entManages, global }) => ({
+  pointInstrumentList: entManages.pointInstrumentList,
+  instrumentSelectList: entManages.instrumentSelectList,
+  factorySelectList: entManages.factorySelectList,
+  methodSelectList: entManages.methodSelectList,
+  monitorItem: entManages.monitorItem,
 }))
 class InstrumentInfo extends Component {
   state = {
@@ -39,7 +39,7 @@ class InstrumentInfo extends Component {
   // 获取仪器信息列表
   getInstrumentInfoTableDataSource = () => {
     this.props.dispatch({
-      type: "entManage/getPointInstrument",
+      type: "entManages/getPointInstrument",
       payload: {
         DGIMN: this.props.DGIMN
       }
@@ -49,7 +49,7 @@ class InstrumentInfo extends Component {
   // 获取仪器下拉列表
   getInstrumentSelectList = () => {
     this.props.dispatch({
-      type: "entManage/getInstrumentSelectList",
+      type: "entManages/getInstrumentSelectList",
       payload: {
         DGIMN: this.props.DGIMN
       }
@@ -59,7 +59,7 @@ class InstrumentInfo extends Component {
   // 根据仪器获取厂商列表
   getFactorySelectList = () => {
     this.props.dispatch({
-      type: "entManage/getFactorySelectList",
+      type: "entManages/getFactorySelectList",
       payload: {
         DGIMN: this.props.DGIMN,
         Name: this.state.name
@@ -70,7 +70,7 @@ class InstrumentInfo extends Component {
   // 根据仪器、厂商获取分析方法
   getMethodSelectList = () => {
     this.props.dispatch({
-      type: "entManage/getMethodSelectList",
+      type: "entManages/getMethodSelectList",
       payload: {
         DGIMN: this.props.DGIMN,
         Name: this.state.Name,
@@ -82,7 +82,7 @@ class InstrumentInfo extends Component {
   // 根据仪器、厂商、分析方法获取监测项目
   getMonitorItem = () => {
     this.props.dispatch({
-      type: "entManage/getMonitorItem",
+      type: "entManages/getMonitorItem",
       payload: {
         DGIMN: this.props.DGIMN,
         Name: this.state.Name,
@@ -95,7 +95,7 @@ class InstrumentInfo extends Component {
   // 保存
   onSave = () => {
     this.props.dispatch({
-      type: "entManage/saveInstrument",
+      type: "entManages/saveInstrument",
       payload: {
         DGIMN: this.props.DGIMN,
         Name: this.state.Name,
@@ -130,7 +130,7 @@ class InstrumentInfo extends Component {
   // 删除
   onDetete = (id) => {
     this.props.dispatch({
-      type: "entManage/deleteInstrument",
+      type: "entManages/deleteInstrument",
       payload: {
         ID: id,
         DGIMN: this.props.DGIMN,
@@ -259,6 +259,30 @@ class InstrumentInfo extends Component {
           return text ? text : "-"
         }
       },
+      {
+        title: '设备型号',
+        dataIndex: 'EquipmentModel',
+        key: 'EquipmentModel',
+        render: (text, record) => {
+          return text ? text : "-"
+        }
+     }, 
+     {
+      title: '联系人',
+      dataIndex: 'Contacts',
+      key: 'Contacts',
+      render: (text, record) => {
+        return text ? text : "-"
+      }
+    },
+    {
+      title: '联系电话',
+      dataIndex: 'ContactsTelephone',
+      key: 'ContactsTelephone',
+      render: (text, record) => {
+        return text ? text : "-"
+      }
+    },
       {
         title: '操作',
         render: (text, record, index) => {

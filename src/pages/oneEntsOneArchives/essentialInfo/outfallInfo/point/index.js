@@ -384,6 +384,8 @@ export default class MonitorPoint extends Component {
     if (FormData) {
       let DGIMN = FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"];
       if (DGIMN) {
+
+        console.log(DGIMN)
         return <InstrumentInfo DGIMN={DGIMN} />
       }
     }
