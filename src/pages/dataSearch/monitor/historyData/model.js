@@ -131,7 +131,7 @@ export default Model.extend({
                 
 
                       } else {
-                        return  <span>{value?value:'-'}</span> 
+                        return  <span>{ value || typeof(value) == "number"  && !value ?value:'-'}</span>
 
                       }
 

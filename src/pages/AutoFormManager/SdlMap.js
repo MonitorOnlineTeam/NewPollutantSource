@@ -258,7 +258,7 @@ class SdlMap extends PureComponent {
     }
   }
 
-  renderMapContent() {
+  renderMapContent = () => {
     const markerEvents = {
       created: instance => {
         thisMap.setFitView(instance)
@@ -315,9 +315,7 @@ class SdlMap extends PureComponent {
       },
       click: e => {
         if (this.state.isChangePos) {
-
-          if (this.props.path) {
-            // console.log("this.props.path=", this.props.path)
+          if (this.props.path && this.props.path !== 'null') {
             let path = JSON.parse(this.props.path)
             // let innerArr = path[0][0];
             // // console.log("innerArr=",)

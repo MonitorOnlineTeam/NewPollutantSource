@@ -5,7 +5,7 @@ import Model from '@/utils/model';
 import * as mywebsocket from '../utils/mywebsocket';
 import { getTimeDistance } from '../utils/utils';
 import { getAlarmNotices, mymessagelist } from '@/services/globalApi';
-
+import { message } from 'antd'
 import { GetAlarmType, GetAlarmDataList } from '../pages/dataSearch/monitor/alarmInfo/service'
 
 import { EnumPropellingAlarmSourceType } from '../utils/enum';
