@@ -1,5 +1,5 @@
 //运维任务列表
-import * as services from './point/service';
+import * as services from './service';
 import Model from '@/utils/model';
 import { message } from 'antd';
 
