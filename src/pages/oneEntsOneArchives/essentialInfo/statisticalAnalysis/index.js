@@ -491,7 +491,7 @@ class index extends Component {
     const entName = sessionStorage.getItem('oneEntName')
 
     return (
-      <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
+      <div className={styles.homeWrapper} style={{ width:  "calc(100% + 48px)", height: 'calc(100vh)' }}>
         {
           isLeftLoading && <Spin
             style={{
@@ -542,12 +542,12 @@ class index extends Component {
             size="large"
           />
         }
-        <header className={styles.homeHeader}>
+        {/* <header className={styles.homeHeader}>
           <p><span className='textOverflow' style={{width:'400px'}} title={entName}>{entName}</span></p>
           <a className={styles.backMenu} onClick={() => {
             history.go(-1)
           }}>返回</a> 
-        </header>
+        </header> */}
         <Map
           resizeEnable={true}
           events={this.mapEvents}

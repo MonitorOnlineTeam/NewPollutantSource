@@ -219,11 +219,6 @@ export default {
           path: '/oneEntsOneArchives/entList',
           component: './oneEntsOneArchives/entList',
        },
-       {
-        name: 'StatisticalAnalysis',  //一企一档进入 统计分析
-        path: '/oneEntsOneArchives/essentialInfo/statisticalAnalysis',
-        component:'./oneEntsOneArchives/essentialInfo/statisticalAnalysis'
-      },
         {
           path: '/',
           component: '../layouts/BasicLayout',
@@ -2163,6 +2158,11 @@ export default {
                       path: '/oneEntsOneArchives/essentialInfo/wasteGasGovern/:configId',
                       component:'./oneEntsOneArchives/autoformTemplate'
                     },
+                    {
+                      name: 'StatisticalAnalysis',  //一企一档进入 统计分析
+                      path: '/oneEntsOneArchives/essentialInfo/statisticalAnalysis',
+                      component:'./oneEntsOneArchives/essentialInfo/statisticalAnalysis'
+                    },
                   ]
                   },
 
@@ -2191,12 +2191,37 @@ export default {
                 {
                   name: 'MonitoringData',  //监控数据
                   path: '/oneEntsOneArchives/monitoringData',
-                  component: './monitoring/dataquery',
+                 
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/monitoringData',
+                      redirect: '/oneEntsOneArchives/monitoringData/monitorExhibition',
+        
+                    },
+                    {
+                      name:'MonitorExhibition',
+                      path: '/oneEntsOneArchives/monitoringData/monitorExhibition',
+                      component: './monitoring/dataquery',
+                    },
+                    
+                  ]
                 },   
                 {
                   name: 'EnvironEmergency',  //环境应急预案
-                  path: '/oneEntsOneArchives/environEmergency/:configId',
-                  component: './oneEntsOneArchives/autoformTemplate',
+                  path: '/oneEntsOneArchives/environEmergency',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/environEmergency',
+                      redirect: '/oneEntsOneArchives/environEmergency/factorSitua/Bas_EnvironmentalEmergencyPlan',
+        
+                    },
+                    {
+                      name:'FactorSitua',
+                      path: '/oneEntsOneArchives/environEmergency/factorSitua/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    
+                  ]
                 },    
                 {
                   name: 'CharacteristicFactor',  //特征因子

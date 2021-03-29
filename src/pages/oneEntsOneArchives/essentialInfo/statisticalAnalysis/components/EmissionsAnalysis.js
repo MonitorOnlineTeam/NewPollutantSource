@@ -14,7 +14,7 @@ class MonitoringStatus extends Component {
     }
     componentDidMount()
     {
-       this.getData();
+       this.getData(this.props.entCode);
     }
 
     componentWillReceiveProps(nextProps)
@@ -138,10 +138,12 @@ class MonitoringStatus extends Component {
       },
       color: color,
       tooltip: {
-        trigger: 'axis',
+        trigger: 'item',
         axisPointer: {
           type: 'shadow'
-        }
+        },
+        x:100,
+        position: ['40%', '10%']
       },
       grid: {
         left: '-10%',

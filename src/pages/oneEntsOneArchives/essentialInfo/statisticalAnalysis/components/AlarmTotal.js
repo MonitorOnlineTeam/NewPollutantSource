@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import styles  from '../index.less';
 import Marquee from '@/components/Marquee';
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretUpOutlined, HomeTwoTone } from '@ant-design/icons';
 import { Statistic, Row, Col, Divider,Radio  } from 'antd';
 import moment from 'moment';
 @connect(({ loading, home }) => ({
     taxInfo: home.taxInfo,
+    alarmTotalData:home.alarmTotalData
   }))
 class AlarmTotal extends Component {
     constructor(props) {
@@ -56,7 +57,7 @@ class AlarmTotal extends Component {
     }
 
     render() {
-        const {taxInfo}=this.props;
+        const { taxInfo,alarmTotalData }=this.props;
         const { options,dataType } = this.state;
         return <>
           <div className={styles.title}>
@@ -81,7 +82,7 @@ class AlarmTotal extends Component {
                   </div>
                   <Statistic
                     valueStyle={{  color: '#fff', fontSize: 22, color: "#FF4E4E", textAlign: "center",  fontWeight: 600 }}
-                    value={taxInfo.ThisQuarter}
+                    value={alarmTotalData}
                   />
             </div>
           </div>
