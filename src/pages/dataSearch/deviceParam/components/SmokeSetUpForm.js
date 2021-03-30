@@ -42,11 +42,10 @@ const SmokeSetUpForm = (props) => {
    });
   const { DGIMN, formLoading} = props;
     
-  console.log(props)
     useEffect(() => {
     if(DGIMN){
       props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
-        setFormList({...res})    
+        res.length>0&&setFormList({...res})    
       })
     }
 
