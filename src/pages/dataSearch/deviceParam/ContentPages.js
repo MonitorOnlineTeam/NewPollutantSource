@@ -88,7 +88,7 @@ const EditableTable = (props) => {
       editable: true,
       align:'center',
       render:(text,record)=>{
-        return `${record.Range2Min} ~ ${record.Range2Max}` 
+        return record.Range2Min&&record.Range2Max? `${record.Range2Min} ~ ${record.Range2Max}` : '';
       }
     },
     {
