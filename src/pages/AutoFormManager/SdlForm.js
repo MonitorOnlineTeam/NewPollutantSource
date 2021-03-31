@@ -279,6 +279,7 @@ class SdlForm extends PureComponent {
           element = this._rtnDateEl(item);
           break;
         case '单选':
+          initialValue = (formData[fieldName] != undefined) && formData[fieldName];
           if (item.value && !initialValue && !isEdit) {
             initialValue = item.value[0].key
           }
