@@ -11,7 +11,8 @@ import config from '@/config';
 import Item from 'antd/lib/list/Item';
 import Cookie from 'js-cookie';
 import Title from 'antd/lib/typography/Title';
-import { Tabs, Dropdown, Menu, Icon, message } from 'antd'
+import { DownOutlined } from '@ant-design/icons';
+import { Tabs, Dropdown, Menu, message } from 'antd';
 import PageLoading from '@/components/PageLoading'
 import _ from 'lodash'
 import styles from './BasicLayout.less';
@@ -275,7 +276,7 @@ class BasicLayout extends Component {
     const operations = (
       <Dropdown overlay={menu} >
         <a className="ant-dropdown-link" href="#">
-          更多<Icon type="down" />
+          更多<DownOutlined />
         </a>
       </Dropdown>
     );
@@ -313,7 +314,8 @@ class BasicLayout extends Component {
               }),
             },
             ...routers,
-          ]}
+          ]
+        }
           footerRender={() => <div></div>}
           menuDataRender={menuDataRender}
           // formatMessage={formatMessage}

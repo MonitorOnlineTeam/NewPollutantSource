@@ -4,6 +4,9 @@
  * 创建时间：2019.10.26
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,17 +15,15 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -411,95 +412,95 @@ export default class EntTransmissionEfficiency extends Component {
 
 
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline">
-              { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
-              <Row>
-              <Form.Item label='异常开始时间'>
-               <RangePicker_   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
-              callback={(dates, dataType)=>this.dateChange(dates, dataType)}
-              onRef={(ref) => {
-                this.child = ref;
-              }} 
-              />
-                </Form.Item>
-                <Form.Item label='异常截止时间'>
-               <RangePicker_    style={{minWidth: '200px', marginRight: '10px'}} dateValue={['','']} 
-              callback={(dates, dataType)=>this.dateChange2(dates, dataType)}
-              onRef={(ref) => {
-                this.child2 = ref;
-              }} 
-              />
-                </Form.Item>
-                </Row>
-            <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+      <Card
+        bordered={false}
+        title={
+          <>
+            <Form layout="inline">
+            { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
+            <Row>
+            <Form.Item label='异常开始时间'>
+             <RangePicker_   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
+            callback={(dates, dataType)=>this.dateChange(dates, dataType)}
+            onRef={(ref) => {
+              this.child = ref;
+            }} 
+            />
               </Form.Item>
-                <Form.Item label='企业列表'>
-                 <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} />
-                </Form.Item>  
-                <Form.Item label='监测点'>
-                 <Select
-                    placeholder="监测点名称"
-                    onChange={this.changePoint}
-                    value={DGIMN? DGIMN :undefined }
-                    style={{ width: 150  }}
-                  >
-                  {this.pointChildren()}
-                  </Select> 
-                </Form.Item>
-              <Form.Item label='凭证状态'>
-              <Select
-                 allowClear
-                 placeholder="凭证状态"
-                 onChange={this.statusChange}
-                 value={Status?Status:undefined}
-                style={{ width: 150 }}
-                 >
-                 <Option value="1">有凭证</Option>
-                  <Option value="0">缺失凭证</Option>
-                 </Select>
+              <Form.Item label='异常截止时间'>
+             <RangePicker_    style={{minWidth: '200px', marginRight: '10px'}} dateValue={['','']} 
+            callback={(dates, dataType)=>this.dateChange2(dates, dataType)}
+            onRef={(ref) => {
+              this.child2 = ref;
+            }} 
+            />
               </Form.Item>
+              </Row>
+          <Form.Item label='行政区'>
+             <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+            </Form.Item>
+              <Form.Item label='企业列表'>
+               <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} />
+              </Form.Item>  
+              <Form.Item label='监测点' style={{paddingLeft:10}}>
+               <Select
+                  placeholder="监测点名称"
+                  onChange={this.changePoint}
+                  value={DGIMN? DGIMN :undefined }
+                  style={{ width: 150  }}
+                >
+                {this.pointChildren()}
+                </Select> 
+              </Form.Item>
+            <Form.Item label='凭证状态'>
+            <Select
+               allowClear
+               placeholder="凭证状态"
+               onChange={this.statusChange}
+               value={Status?Status:undefined}
+              style={{ width: 150 }}
+               >
+               <Option value="1">有凭证</Option>
+                <Option value="0">缺失凭证</Option>
+               </Select>
+            </Form.Item>
 
 
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-              </Form>
-            </>
-          }
-        >
-          <div id='entAbnormalRecord'>
-              <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={this.columns}
-              dataSource={this.props.tableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
-              scroll={{ x: '115%' }} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                total: this.props.total,
-                defaultPageSize:20
-              }}
-            /> 
-          </div>
-         
-        </Card>
+              <Form.Item>
+                <Button type="primary" onClick={this.queryClick}>
+                  查询
+                </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+            </Form>
+          </>
+        }
+      >
+        <div id='entAbnormalRecord'>
+            <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={loading}
+            columns={this.columns}
+            dataSource={this.props.tableDatas}
+            // style ={{height:"calc(100vh - 300px)"}} 
+            scroll={{ x: '115%' }} 
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+            //   total: this.props.total,
+              //defaultPageSize:20
+            // }}
+          /> 
+        </div>
+       
+      </Card>
     );
   }
 }

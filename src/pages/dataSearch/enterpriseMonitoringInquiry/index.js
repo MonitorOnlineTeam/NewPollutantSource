@@ -4,7 +4,21 @@
  * 创建时间：2020.10.12
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Row,
+    Col,
+    Radio,
+    Select,
+    DatePicker,
+    Empty,
+    message,
+    Tabs,
+    Modal,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -182,81 +196,79 @@ class index extends PureComponent {
     cardTitle = () => {
         //const { pollutantValue,} = this.state;
 
-        return (
-            <>
-                <Select
-                    allowClear
-                    showSearch
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="行政区"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        if (option && option.props && option.props.title) {
-                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                        } else {
-                            return true
-                        }
-                    }}
-                    onChange={(value) => {
-                        this.setState({
-                            regionValue: value
-                        })
-                    }}>
-                    {this.children()}
-                </Select>
+        return <>
+            <Select
+                allowClear
+                showSearch
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="行政区"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                    } else {
+                        return true
+                    }
+                }}
+                onChange={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }}>
+                {this.children()}
+            </Select>
 
-                <Select
-                    allowClear
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="关注度"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        this.setState({
-                            attentionValue: value
-                        })
-                    }}>
-                    {this.attention()}
-                </Select>
-                <Select
-                    allowClear
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="排口类型"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        this.setState({
-                            outletValue: value
-                        })
-                    }}>
-                    <Option value="">全部</Option>
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                </Select>
-                <Select
-                    allowClear
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="运维状态"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        this.setState({
-                            operationpersonnel: value,
-                        })
-                    }}>
-                     <Option value="1">已设置运维人员</Option>
-                    <Option value="2">未设置运维人员</Option>
-                </Select>
-                <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-            </>
-        )
+            <Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="关注度"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    this.setState({
+                        attentionValue: value
+                    })
+                }}>
+                {this.attention()}
+            </Select>
+            <Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="排口类型"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    this.setState({
+                        outletValue: value
+                    })
+                }}>
+                <Option value="">全部</Option>
+                <Option value="1">废水</Option>
+                <Option value="2">废气</Option>
+            </Select>
+            <Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="运维状态"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    this.setState({
+                        operationpersonnel: value,
+                    })
+                }}>
+                 <Option value="1">已设置运维人员</Option>
+                <Option value="2">未设置运维人员</Option>
+            </Select>
+            <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+            <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+        </>;
     }
 
     GetEntDetail = (regionCode, hasData) => {
@@ -599,51 +611,49 @@ class index extends PureComponent {
                 key: 'pointName',
             },
         ]
-        return (
-            <>
-                <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="企业监测点查询">
-                        <Card
-                            extra={
-                                <>
-                                    {this.cardTitle()}
-                                </>
-                            }
-                            className="contentContainer"
-                        >
+        return <>
+            <div id="siteParamsPage" className={style.cardTitle}>
+                <BreadcrumbWrapper title="企业监测点查询">
+                    <Card
+                        extra={
+                            <>
+                                {this.cardTitle()}
+                            </>
+                        }
+                        className="contentContainer"
+                    >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
-                        </Card>
-                        <Modal
-                            centered
-                            title="企业列表"
-                            visible={this.state.visible}
-                            footer={null}
-                            width={800}
-                            onCancel={this.CancelHandel}
-                        >
-                            <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
-                            <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
-                                <Button style={{ float: 'right' }} onClick={this.EntexportReport}><Icon type="export" /> 导出</Button>
-                            </div>
-                        </Modal>
-                        <Modal
-                            centered
-                            title="企业监测列表"
-                            visible={this.state.visibleMoni}
-                            footer={null}
-                            width={800}
-                            onCancel={this.CancelHandel}
-                        >
-                            <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
-                            <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
-                                <Button style={{ float: 'right' }} onClick={this.PointexportReport}><Icon type="export" />导出</Button>
-                            </div>
-                        </Modal>
-                    </BreadcrumbWrapper>
-                </div>
-            </>
-        );
+                        {loading ? <PageLoading /> : this.pageContent()}
+                    </Card>
+                    <Modal
+                        centered
+                        title="企业列表"
+                        visible={this.state.visible}
+                        footer={null}
+                        width={800}
+                        onCancel={this.CancelHandel}
+                    >
+                        <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
+                        <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
+                            <Button style={{ float: 'right' }} onClick={this.EntexportReport}><ExportOutlined /> 导出</Button>
+                        </div>
+                    </Modal>
+                    <Modal
+                        centered
+                        title="企业监测列表"
+                        visible={this.state.visibleMoni}
+                        footer={null}
+                        width={800}
+                        onCancel={this.CancelHandel}
+                    >
+                        <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
+                        <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
+                            <Button style={{ float: 'right' }} onClick={this.PointexportReport}><ExportOutlined />导出</Button>
+                        </div>
+                    </Modal>
+                </BreadcrumbWrapper>
+            </div>
+        </>;
     }
 }
 

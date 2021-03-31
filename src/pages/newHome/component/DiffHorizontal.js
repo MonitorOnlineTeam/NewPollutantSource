@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Popover, Icon } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Popover } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import styles from '../index.less';
@@ -108,7 +109,7 @@ class DiffHorizontal extends PureComponent {
               </div>
             }
           >
-            <Icon style={{ marginLeft: 6, fontSize: '15px' }} type="exclamation-circle" />
+            <ExclamationCircleOutlined style={{ marginLeft: 6, fontSize: '15px' }} />
           </Popover>
         </div>
         {diffHorizontalData.length ? (

@@ -4,7 +4,21 @@
  * 创建时间：2020.10.10
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message ,Tabs ,Icon ,Modal} from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Row,
+  Col,
+  Radio,
+  Select,
+  DatePicker,
+  Empty,
+  message,
+  Tabs,
+  Modal,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -128,56 +142,54 @@ class index extends PureComponent {
   cardTitle = () => {
     const { pollutantValue, time, dataType, format } = this.state;
     const {flowTime,flowEntCode} = this.props
-    return (
-      <>
-        <Select
-          allowClear
-          showSearch
-          style={{ width: 200,marginRight: 10}}
-          placeholder="污水处理厂列表"
-          defaultValue={flowEntCode}
-          maxTagCount={2}
-          maxTagTextLength={5}
-          maxTagPlaceholder="..."
-          optionFilterProp="children"
-          filterOption={(input, option)=>{
-            if (option && option.props && option.props.title) {
-              return option.props.title === input || option.props.title.indexOf(input) !== -1
-            } else {
-              return true
-            }
-          }}
-          onChange={(value) => {
-            this.setState({
-              pollutantValue: value
-            })
-          }}>
-              {this.children()}
-        </Select>
+    return <>
+      <Select
+        allowClear
+        showSearch
+        style={{ width: 200,marginRight: 10}}
+        placeholder="污水处理厂列表"
+        defaultValue={flowEntCode}
+        maxTagCount={2}
+        maxTagTextLength={5}
+        maxTagPlaceholder="..."
+        optionFilterProp="children"
+        filterOption={(input, option)=>{
+          if (option && option.props && option.props.title) {
+            return option.props.title === input || option.props.title.indexOf(input) !== -1
+          } else {
+            return true
+          }
+        }}
+        onChange={(value) => {
+          this.setState({
+            pollutantValue: value
+          })
+        }}>
+            {this.children()}
+      </Select>
 
-            <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-                    this.setState({
-                      dataType: e.target.value,
-                      time:e.target.value === 'Day' ?[moment().add(-1, "month")]:[moment().add(-24, "hour"), moment()]
-                    })
-                    e.target.value === "Day" ?this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]):this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-                  }}>
-                    <Radio.Button value="Hour">小时</Radio.Button>
-                    <Radio.Button value="Day">日均</Radio.Button>
-                  </Radio.Group>
+          <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
+                  this.setState({
+                    dataType: e.target.value,
+                    time:e.target.value === 'Day' ?[moment().add(-1, "month")]:[moment().add(-24, "hour"), moment()]
+                  })
+                  e.target.value === "Day" ?this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]):this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                }}>
+                  <Radio.Button value="Hour">小时</Radio.Button>
+                  <Radio.Button value="Day">日均</Radio.Button>
+                </Radio.Group>
 
-        <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{marginRight: '10px'}} dateValue={flowTime} callback={
-            (dates, dataType)=>{
-                this.setState({
-                    time:dates
-                })
-            }
-        }/>
-        <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-        <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-        <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个监测点</span>
-      </>
-    )
+      <RangePicker_  onRef={this.onRef1} isVerification={true} dataType={this.state.dataType}  style={{marginRight: '10px'}} dateValue={flowTime} callback={
+          (dates, dataType)=>{
+              this.setState({
+                  time:dates
+              })
+          }
+      }/>
+      <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+      <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+      <span style={{color:'red',marginLeft:20,fontSize:12}}>"是否停运"列显示 - ,表示没有这个监测点</span>
+    </>;
   }
   onChange = (current,pageSize) => {
     this.props.dispatch({

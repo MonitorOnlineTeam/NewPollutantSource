@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import moment from 'moment';
 import { connect } from 'dva';
-import {
-  Spin, Card, Form, Row, Col, DatePicker, Button, Icon, message
-} from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Spin, Card, Row, Col, DatePicker, Button, message } from 'antd';
 import YearPicker from '@/components/YearPicker';
 import SdlTable from '@/components/SdlTable'
 
@@ -91,7 +92,7 @@ class CompositeIndexContrast extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           width: 200,
           children: [
             {
@@ -311,7 +312,7 @@ class CompositeIndexContrast extends Component {
       <BreadcrumbWrapper>
         <Spin spinning={loading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form layout="" className='searchForm' style={{ marginBottom: 20 }}>
               <Row>
                 <Col span={7}>
                   <FormItem {...formLayout} label="时间段1" style={{ width: '100%' }}>
@@ -345,7 +346,7 @@ class CompositeIndexContrast extends Component {
                       生成统计
                     </Button>
                     <Button loading={exportLoading} onClick={this.exportReport}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                   </FormItem>

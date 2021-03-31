@@ -7,16 +7,10 @@
  */
 import React, { Component, Fragment } from 'react'
 import { connect } from 'dva';
-import {
-    Form,
-    Input,
-    Button,
-    Icon,
-    Card,
-    Spin,
-    Row,
-    Col,
-} from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Card, Spin, Row, Col } from 'antd';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 
@@ -54,7 +48,7 @@ class UserInfoView extends Component {
                             onClick={() => {
                                 history.go(-1);
                             }}
-                        ><Icon type="left" />返回
+                        ><LeftOutlined />返回
                             </Button>
                     }>
                         <AutoFormViewItems

@@ -6,7 +6,26 @@
  * @Description: 异常记录
  */
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Card, Spin, message } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Select,
+    Input,
+    Button,
+    Drawer,
+    Radio,
+    Collapse,
+    Table,
+    Badge,
+    Divider,
+    Row,
+    Tree,
+    Empty,
+    Col,
+    Card,
+    Spin,
+    message,
+} from 'antd';
 import { connect } from 'dva';
 import { EntIcon, GasIcon, WaterIcon, LegendIcon } from '@/utils/icon';
 import ReactEcharts from 'echarts-for-react';
@@ -329,7 +348,7 @@ class Index extends Component {
     /** 数据类型切换 */
     _handleDateTypeChange = e => {
         const dataType = e.target.value;
-        this.setState({ dataType,_dataType: dataType });
+        this.setState({ dataType, _dataType: dataType });
         this.children.onDataTypeChange(dataType);
     }
 
@@ -435,73 +454,73 @@ class Index extends Component {
                                 callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                                 allowClear={false} showTime={this.state.format} />
 
-                            <ButtonGroup_ style={{ marginRight: 20, marginTop: 5 }} checked={this.state._dataType} onChange={this._handleDateTypeChange} />
+                            <ButtonGroup_ hideButtons={this.props.hideButtons} style={{ marginRight: 20, marginTop: 5 }} checked={this.state._dataType} onChange={this._handleDateTypeChange} />
                         </div>
                     }
                 >
                     {/* <Card.Grid style={{ width: '100%', ...this.props.style }}> */}
-                        {
-                            this.props.exmodellistLoading ? <Spin
-                                style={{
-                                    width: '100%',
-                                    height: 'calc(100vh/2)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                                size="large"
-                            /> :
-                                <div>
-                                    {
-                                        this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+                    {
+                        this.props.exmodellistLoading ? <Spin
+                            style={{
+                                width: '100%',
+                                height: 'calc(100vh/2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                            size="large"
+                        /> :
+                            <div>
+                                {
+                                    this.props.exmodellist.length == 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
 
-                                            <ReactEcharts
-                                                theme="light"
-                                                option={option}
-                                                lazyUpdate
-                                                notMerge
-                                                id="rightLine"
-                                                onEvents={this.onclick}
-                                                style={{
-                                                    width: '100%',
-                                                    height: 'calc(100vh - 520px)',
-                                                    maxHeight: 280,
-                                                    // height:130
+                                        <ReactEcharts
+                                            theme="light"
+                                            option={option}
+                                            lazyUpdate
+                                            notMerge
+                                            id="rightLine"
+                                            onEvents={this.onclick}
+                                            style={{
+                                                width: '100%',
+                                                height: 'calc(100vh - 520px)',
+                                                maxHeight: 280,
+                                                // height:130
+                                            }}
+                                        />
+                                        {
+                                            // this.props.exceptionDataLoading ? <Spin
+                                            //     style={{
+                                            //         width: '100%',
+                                            //         height: 'calc(100vh/2)',
+                                            //         display: 'flex',
+                                            //         alignItems: 'center',
+                                            //         justifyContent: 'center'
+                                            //     }}
+                                            //     size="large"
+                                            // /> :
+                                            //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
+                                            <SdlTable
+                                                loading={this.props.exceptionDataLoading}
+                                                // style={{ width: "400px", height: "500px" }}
+                                                style={{ paddingBottom: 0 }}
+                                                columns={column}
+                                                dataSource={this.props.exfirstData}
+                                                pagination={{
+                                                    // showSizeChanger: true,
+                                                    showQuickJumper: true,
+                                                    pageSize: 20, // this.props.pageSize,
+                                                    current: this.props.pageIndex,
+                                                    onChange: this.onTableChange,
+                                                    total: this.props.ExceptionTotal,
                                                 }}
-                                            />
-                                            {
-                                                // this.props.exceptionDataLoading ? <Spin
-                                                //     style={{
-                                                //         width: '100%',
-                                                //         height: 'calc(100vh/2)',
-                                                //         display: 'flex',
-                                                //         alignItems: 'center',
-                                                //         justifyContent: 'center'
-                                                //     }}
-                                                //     size="large"
-                                                // /> :
-                                                //     <div style={{ width: '100%', height: '300px', overflow: "auto" }}>
-                                                <SdlTable
-                                                    loading={this.props.exceptionDataLoading}
-                                                    // style={{ width: "400px", height: "500px" }}
-                                                    style={{ paddingBottom: 0 }}
-                                                    columns={column}
-                                                    dataSource={this.props.exfirstData}
-                                                    pagination={{
-                                                        // showSizeChanger: true,
-                                                        showQuickJumper: true,
-                                                        pageSize: 20, // this.props.pageSize,
-                                                        current: this.props.pageIndex,
-                                                        onChange: this.onTableChange,
-                                                        total: this.props.ExceptionTotal,
-                                                    }}
-                                                >
-                                                </SdlTable>
-                                                // </div>
-                                            }
-                                        </div>
-                                    }</div>
-                        }
+                                            >
+                                            </SdlTable>
+                                            // </div>
+                                        }
+                                    </div>
+                                }</div>
+                    }
 
                     {/* </Card.Grid> */}
                 </Card>

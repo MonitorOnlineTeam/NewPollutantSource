@@ -7,9 +7,11 @@
  */
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Table,
-  Form,
   Row,
   Col,
   Input,
@@ -18,7 +20,6 @@ import {
   Button,
   DatePicker,
   message,
-  Icon,
   Spin,
   Cascader,
 } from 'antd';
@@ -539,8 +540,8 @@ class SmokeReportPage extends PureComponent {
       <BreadcrumbWrapper title={this.title}>
         {/* <Spin spinning={loading} delay={500}> */}
         <Card className="contentContainer">
-          <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row>
+          <Form  style={{ marginBottom: 20 }}>
+            <Row  align='middle'>
               <label>行政区:</label><Select
                 allowClear
                 showSearch
@@ -624,7 +625,9 @@ class SmokeReportPage extends PureComponent {
                 }}>
                 {this.entList()}
               </Select>
-              <div style={{ marginTop: 10 }}>
+              </Row>
+              
+              <Row align='middle' style={{ marginTop: 10 }}>
                 <label>监测点:</label><Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -640,7 +643,7 @@ class SmokeReportPage extends PureComponent {
                   }}>
                   {this.pointList()}
                 </Select>
-                <FormItem {...formLayout} label="监测日期" style={{ width: 250 }}>
+                <FormItem  {...formLayout} label="监测日期" style={{ width: 250,marginBottom:0}}>
                   {getFieldDecorator('time', {
                     initialValue: moment(),
                     rules: [
@@ -653,11 +656,11 @@ class SmokeReportPage extends PureComponent {
                     this.timeEle,
                   )}
                 </FormItem>
-                <Button type="primary" style={{ marginRight: 10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
+                <Button type="primary" style={{ marginRight: 10,marginLeft:10 }} onClick={() => { this.getSmokeReportData() }}>查询</Button>
+                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
                 <span style={{ fontSize: 14, color: 'red' }}>{this.props.msg}</span>
-              </div>
-            </Row>
+              </Row>
+            
           </Form>
           <SdlTable
             rowKey={(record, index) => index}

@@ -46,27 +46,28 @@ module.exports = {
   GBSVideoApiUrl,
   //  离线地图js配置（domain 为 空 -> 在线地图，domain非空 -> 离线地图）
   // 在线地图配置：
-  // offlineMapUrl: {
-  //   domain: '',
-  //   srcPath: '/amap-master/amap/js/maps.js',
-  // },
-
-  // 离线地图配置：
   offlineMapUrl: {
-    domain: 'http://10.230.28.70:8184',
+    domain: '',
     srcPath: '/amap-master/amap/js/maps.js',
   },
+
+  // 离线地图配置：
+  // offlineMapUrl: {
+  //   domain: 'http://10.230.28.70:8184',
+  //   srcPath: '/amap-master/amap/js/maps.js',
+  // },
   isShowTabs: true,
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
   zoom: 12,
-  iconFontUrl: '/iconFont/iconfont.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
   cookieName: 'ssToken9001',
+  
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,

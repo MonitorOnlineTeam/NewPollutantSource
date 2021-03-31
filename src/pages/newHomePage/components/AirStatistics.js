@@ -5,6 +5,9 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,12 +16,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
@@ -27,7 +28,7 @@ import {
   Skeleton,
   Avatar,
   Dropdown,
-  Menu
+  Menu,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -106,7 +107,7 @@ export default class Index extends Component {
       }
     })
 
-    let time = moment().add('hour',-2).format("YYYY-MM-DD 00:00:00");
+    let time = moment().add('hour',-1).format("YYYY-MM-DD HH:00:00");
     // let time = "2020-11-01 00:00:00";
     let dataType ='HourData'
     this.getAQIList(time,dataType);
@@ -176,17 +177,19 @@ export default class Index extends Component {
   }
 
   cardTitle3 = () => {
-    return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{cursor:'pointer'}} onClick={this.flow}>
-        污水处理厂流量分析
-        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />
-        </span>
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="近30天" key="1">
-        </TabPane>
-      </Tabs>
+    return (
+      <Row type='flex' align="middle" justify='space-between'>
+        <span style={{cursor:'pointer'}} onClick={this.flow}>
+          污水处理厂流量分析
+          <CaretRightOutlined style={{fontSize:14,paddingLeft:3}} />
+          </span>
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="近30天" key="1">
+          </TabPane>
+        </Tabs>
 
-    </Row>
+      </Row>
+    );
   }
   flow=()=>{
     this.setState({
@@ -194,7 +197,7 @@ export default class Index extends Component {
     })
   }
   tabCallback = (value) => {
-  let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
+  let time = value == 'HourData'? moment().add('hour',-1).format("YYYY-MM-DD HH:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
    
   if(value == 'HourData'){
    this.setState({dataTypes:'HourData'})

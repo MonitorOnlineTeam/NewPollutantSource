@@ -1,18 +1,8 @@
 import React, { PureComponent } from 'react';
-import {
-  Table,
-  Form,
-  Row,
-  Col,
-  Input,
-  Select,
-  Card,
-  Button,
-  DatePicker,
-  message,
-  Icon,
-  Spin,
-} from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Row, Col, Input, Select, Card, Button, DatePicker, message, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
@@ -405,7 +395,7 @@ class DateReportPage extends PureComponent {
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form layout="" style={{ marginBottom: 20 }}>
               <Row>
                 <Col xxl={4} md={6} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
@@ -576,7 +566,7 @@ class DateReportPage extends PureComponent {
                       生成统计
                     </Button>
                     <Button onClick={this.export} loading={exportLoading}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                   </FormItem>

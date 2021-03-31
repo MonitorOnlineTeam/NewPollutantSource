@@ -4,7 +4,20 @@
  * 创建时间：2020.10.12
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Icon } from 'antd'
+import { ExportOutlined, RollbackOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Row,
+    Col,
+    Radio,
+    Select,
+    DatePicker,
+    Empty,
+    message,
+    Tabs,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -49,13 +62,13 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: 'enterpriseMonitoringModel/getEntByRegion',
-            payload: { RegionCode: '' },
+            payload: { RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode},
         });
 
         this.props.dispatch({
             type: pageUrl.GetPointSummary,
             payload: { 
-                getEntByRegion:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
+                RegionCode:this.props.match.params.RegionCode == '0'?'':this.props.match.params.RegionCode,
                 EntCode:'',
                 PageSize:20,
                 PageIndex:1,
@@ -110,36 +123,34 @@ class index extends PureComponent {
     };
     cardTitle = () => {
 
-        return (
-            <>
-                <Select
-                    allowClear
-                    showSearch
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="企业列表"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        if (option && option.props && option.props.title) {
-                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                        } else {
-                            return true
-                        }
-                    }}
-                    onChange={(value) => {
-                        this.setState({
-                            enterpriseValue: value
-                        })
-                    }}>
-                    {this.children()}
-                </Select>
-                <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-                <Button  style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-                <Button onClick={() => { this.props.history.go(-1); }} ><Icon type="rollback" />返回</Button>
-            </>
-        )
+        return <>
+            <Select
+                allowClear
+                showSearch
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="企业列表"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                    } else {
+                        return true
+                    }
+                }}
+                onChange={(value) => {
+                    this.setState({
+                        enterpriseValue: value
+                    })
+                }}>
+                {this.children()}
+            </Select>
+            <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+            <Button  style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+            <Button onClick={() => { this.props.history.go(-1); }} ><RollbackOutlined />返回</Button>
+        </>;
     }
     onChange =(PageIndex, PageSize)=>{
         debugger

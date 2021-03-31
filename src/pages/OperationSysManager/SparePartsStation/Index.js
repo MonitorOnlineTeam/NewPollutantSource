@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card, Spin, Tooltip, Icon, Divider, Modal, Transfer, Switch, Table, Tag, message
-} from 'antd';
+import { UsergroupAddOutlined } from '@ant-design/icons';
+import { Card, Spin, Tooltip, Divider, Modal, Transfer, Switch, Table, Tag, message } from 'antd';
 import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '../../AutoFormManager/AutoFormTable';
@@ -256,7 +255,7 @@ class Index extends Component {
                                     <Tooltip title="关联用户">
                                         <a onClick={() => {
                                             this.showModal(row['dbo.T_Bas_SparePartsStation.SparePartsStationCode']);
-                                        }}><Icon type="usergroup-add" style={{ fontSize: 16 }} /></a>
+                                        }}><UsergroupAddOutlined style={{ fontSize: 16 }} /></a>
                                     </Tooltip>
                                 </span>
                             )}

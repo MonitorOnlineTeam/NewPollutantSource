@@ -9,14 +9,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getBase64 } from './utils'
-import {
-  Upload,
-  Button,
-  Icon,
-  Modal,
-  Carousel,
-  message
-} from 'antd'
+import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { Upload, Button, Modal, Carousel, message } from 'antd';
 import cuid from 'cuid';
 import config from '@/config';
 import { connect } from 'dva';
@@ -72,9 +66,13 @@ class SdlUpload extends Component {
 
   };
 
-
+   isAssetTypeAnImage(ext) {
+    return [
+    'png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'psd', 'svg', 'tiff'].
+    indexOf(ext.toLowerCase()) !== -1;
+  }
   render() {
-    const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
+    const { configId, fileList, dispatch, accept, uploadNumber,flags } = this.props;
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
     let imageProps = {};
@@ -85,6 +83,20 @@ class SdlUpload extends Component {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
       onChange: (info) => {
+
+       if(flags==='img')
+       {
+        var index= info.file.name.lastIndexOf(".");
+        var ext = info.file.name.substr(index+1); 
+        if(!this.isAssetTypeAnImage(ext))
+        {
+          message.error('上传文件类型失败！')
+          return
+        }
+
+        // var index= info.file.name.split(".")[];
+       }
+        debugger
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {
@@ -124,16 +136,17 @@ class SdlUpload extends Component {
         FileActualType: '0',
       },
     };
+
     return <>
       <Upload {...props} fileList={this.state.fileList}>
         {
           uploadNumber ?
             (this.state.fileList.length >= uploadNumber ? null : <div>
-              <Icon type="plus" />
+              <PlusOutlined/>
               <div className="ant-upload-text">文件上传</div>
             </div>)
             : <div>
-              <Icon type="plus" />
+              <PlusOutlined />
               <div className="ant-upload-text">文件上传</div>
             </div>
         }
@@ -144,11 +157,12 @@ class SdlUpload extends Component {
         {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
         <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
           <div className={styles.controller}>
-            <Icon type="left"
+
+            <LeftOutlined
               onClick={() => {
                 this.carousel.prev()
               }} />
-            <Icon type="right"
+            <RightOutlined
               onClick={() => {
                 this.carousel.next()
               }} />
@@ -162,6 +176,7 @@ class SdlUpload extends Component {
                 this.props.fileList && this.props.fileList.map(item => {
                   const nameSplit = item.name.split('.');
                   const postfix = nameSplit[nameSplit.length - 1];
+
                   if (postfix === 'gif' || postfix === 'jpg' || postfix === 'png' || postfix === 'bmp') {
                     return <div key={item.Guid}>
                       <img alt="example" style={{ width: '100%' }} src={item.url} />

@@ -4,6 +4,9 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Checkbox,
   Select,
 } from 'antd';
@@ -246,7 +247,7 @@ export default class PointVerifyLst extends Component {
               <Form.Item>
                 <Button
                   style={{ margin: '0 5px' }}
-                  icon="export"
+                  icon={<ExportOutlined />}
                   onClick={this.template}
                   loading={this.props.exloading}
                 >
@@ -271,13 +272,13 @@ export default class PointVerifyLst extends Component {
           columns={this.state.columns}
           dataSource={this.props.tableDatil.data}
           scroll={{  y: 'calc(100vh - 510px)',}}
-          pagination={{
+          // pagination={{
             // showSizeChanger: true,
             // showQuickJumper: true,
             // sorter: true,
-            total: this.props.total,
-            defaultPageSize: 20,
-          }}
+            // total: this.props.total,
+            //defaultPageSize: 20,
+          // }}
         />
       </Card>
     );

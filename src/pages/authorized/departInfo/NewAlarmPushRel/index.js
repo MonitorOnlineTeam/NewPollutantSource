@@ -4,24 +4,30 @@
  * 创建时间：2020.12.30
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
-    Form,
-    Input,
-    Button,
-    Icon,
-    Card,
-    Spin,
-    Row,
-    Col,
-    Table,
-    Modal,
-    Checkbox,
-    TreeSelect,
-    message,
-    Divider,
-    Popconfirm,
-    Tooltip,
-    Transfer, Switch, Tag, Select, Pagination, Empty,Radio
+  Input,
+  Button,
+  Card,
+  Spin,
+  Row,
+  Col,
+  Table,
+  Modal,
+  Checkbox,
+  TreeSelect,
+  message,
+  Divider,
+  Popconfirm,
+  Tooltip,
+  Transfer,
+  Switch,
+  Tag,
+  Select,
+  Pagination,
+  Empty,
+  Radio,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -59,7 +65,7 @@ class Index extends Component {
                 { label: '超标核实推送', value: '6' },
                 { label: '处置', value: '7' },
                 { label: '核实', value: '8' },
-
+                { label: '响应', value: '9' },
               ],
               
         };
@@ -97,10 +103,10 @@ class Index extends Component {
     componentDidMount() {
         const { dispatch, alarmPushParam, FlagType,type,alarmPushData,alarmPushFlag } = this.props;
        
-
+        
         dispatch({
           type: 'alarmPush/getFirstAlarmpar',
-          payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType:  "1,2,5,6,7,8" },
+          payload: {   Type: type, RegionCode: "", ID:alarmPushData.key,AlarmType:  "1,2,5,6,7,8,9" },
           callback:(flag)=>{
              dispatch({
               type: 'alarmPush/updateState',
@@ -109,7 +115,7 @@ class Index extends Component {
                       Type: type,
                       RegionCode: "",
                       ID:alarmPushData.key,
-                      AlarmType: flag? "1,2,5,6,7,8" : '1'
+                      AlarmType: flag? "1,2,5,6,7,8,9" : '1'
                   },
               },
             })
@@ -252,7 +258,7 @@ class Index extends Component {
         const { dispatch,FlagType,type,alarmPushParam:{AlarmType}, alarmPushData} = this.props;
         
         const { targetKeys } = this.state;
-        
+      
        let parData = targetKeys.length>0 ? targetKeys.map(item=>{
           return  {  
                     RoleIdOrDepId: alarmPushData.key,
@@ -277,7 +283,7 @@ class Index extends Component {
                 this.setState({
                     confirmLoading:false
                 },()=>{
-                    this.props.cancelAlarmModal();
+                    // this.props.cancelAlarmModal();
 
                 })
             }
@@ -289,13 +295,13 @@ class Index extends Component {
     render() {
         // const { alarmPushData, showAlarmState, alarmPushParam: { pageIndex, pageSize, total }, loadingGetData, loadingGetAlarmState, loadingInsertData } = this.props;
         // const { currentData, checkedYC, checkedCB, checkedYJ,checkedCS } = this.state;
-        const { loadingInsertData,visibleAlarm,cancelAlarmModal,alarmPushDepOrRoleList,alarmPushParLoading,alarmPushFlag,alarmPushParam:{RegionCode,AlarmType} } = this.props;
+        const { loadingInsertData,visibleAlarm,cancelAlarmModal,alarmPushDepOrRoleList,alarmPushParLoading,alarmPushFlag,alarmPushParam:{RegionCode,AlarmType},alarmPushData } = this.props;
         const { options,targetKeys,confirmLoading } = this.state;
         
         const TableTransfer = this.TableTransfer;
         return (
             <Modal
-            title="报警关联"
+            title={`${alarmPushData.UserGroup_Name|| alarmPushData.CreateUserName}-报警关联`}
             visible={visibleAlarm}
             onOk={this.handleOk}
             onCancel={cancelAlarmModal}
@@ -312,7 +318,7 @@ class Index extends Component {
                                     <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {!alarmPushParLoading?  <>{alarmPushFlag?  <Checkbox.Group
-                                      defaultValue={["1","2","5","6","7","8"]}
+                                      defaultValue={["1","2","5","6","7","8","9"]}
                                       options={options}
                                       onChange={this.changeCheckboxGroup}
                                      />

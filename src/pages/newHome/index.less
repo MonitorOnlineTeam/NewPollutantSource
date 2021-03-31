@@ -582,9 +582,10 @@
   // left: 220px;
   // top: 10px;
   float: left;
+  background: @bgColor;
 
   input {
-    background: @bgColor;
+    background: transparent;
     color: #fff;
     border: 0;
   }
@@ -592,6 +593,10 @@
   :global {
     .ant-input-suffix {
       color: #fff;
+
+      span {
+        color: #fff;
+      }
     }
   }
 }
@@ -605,8 +610,8 @@
   margin-right: 6px;
 
   :global {
-    .ant-select-selection {
-      background: @bgColor;
+    .ant-select-selector {
+      background: @bgColor  !important;
       color: #fff;
       border: 1px solid #fff;
     }

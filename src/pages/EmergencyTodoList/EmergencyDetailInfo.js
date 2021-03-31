@@ -1,5 +1,24 @@
 import React, { Component } from 'react';
-import { Card, Divider, Button, Input, Table, Icon, Spin, Modal, Upload, Form, Col, Row, message, Carousel, Steps, Tooltip, Popover } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, LeftOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Card,
+    Divider,
+    Button,
+    Input,
+    Table,
+    Spin,
+    Modal,
+    Upload,
+    Col,
+    Row,
+    message,
+    Carousel,
+    Steps,
+    Tooltip,
+    Popover,
+} from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { CALL_HISTORY_METHOD } from 'react-router-redux';
@@ -174,7 +193,7 @@ class EmergencyDetailInfo extends Component {
         // }
         rtnVal.push(<p key={key} style={{ marginBottom: 0 }}><Button
             style={{ marginBottom: '5px' }}
-            icon="check-circle-o"
+            icon={<CheckCircleOutlined />}
             onClick={() => {
                 if (recordType == '-1') {
                     // 获取详情图片
@@ -203,10 +222,10 @@ class EmergencyDetailInfo extends Component {
     // 获取撤单按钮
     getCancelOrderButton = (createtime, TaskStatus) => {
         if (moment(createtime) > moment(new Date()).add(-7, 'day') && TaskStatus == 3) {
-            return <Button onClick={this.cdShow}><Icon type="close-circle" />打回</Button>;
+            return <Button onClick={this.cdShow}><CloseCircleOutlined />打回</Button>;
         }
 
-        return <Button disabled><Icon type="close-circle" />打回</Button>;
+        return <Button disabled><CloseCircleOutlined />打回</Button>;
     }
 
     cdShow = () => {
@@ -249,7 +268,7 @@ class EmergencyDetailInfo extends Component {
                     status="finish"
                     title={item.TaskStatusText}
                     description={this.description(item)}
-                    icon={<Icon type={
+                    icon={<LegacyIcon type={
                         this.showIcon(item.TaskStatusText)
                     }
                     />}
@@ -329,7 +348,7 @@ class EmergencyDetailInfo extends Component {
                 onClick={() => {
                     history.goBack(-1);
                 }}
-            ><Icon type="left" />退回
+            ><LeftOutlined />退回
             </Button>
         );
     }
@@ -804,7 +823,7 @@ class EmergencyDetailInfo extends Component {
                             {getFieldDecorator('reason', {
                                 rules: [{ required: true, message: '请输入打回说明' }],
                             })(
-                                <Input.TextArea rows="3" prefix={<Icon type="rollback" style={{ color: 'rgba(0,0,0,.25)' }} />} />,
+                                <Input.TextArea rows="3" prefix={<RollbackOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} />,
                             )}
                         </FormItem>
                     </Form>

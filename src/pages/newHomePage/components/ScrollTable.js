@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Input, InputNumber, Popconfirm } from 'antd';
 import styles from './styles/table.less';
 
 

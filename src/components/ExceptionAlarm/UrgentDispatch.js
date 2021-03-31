@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Modal, Button, Input, Form, Icon, message, Spin } from 'antd';
+import { FileTextOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Button, Input, message, Spin } from 'antd';
 const FormItem = Form.Item;
 @Form.create()
 @connect(({ urgentdispatch, loading }) => ({
@@ -59,7 +62,7 @@ class UrgentDispatch extends Component {
                                 initialValue: operationUserInfo ? operationUserInfo.operationUserName : '',
                                 rules: [{ required: true, message: '请输入运维人名称' }],
                             })(
-                                <Input disabled={true} prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                                <Input disabled={true} prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
                             )}
                         </FormItem>
                         <FormItem
@@ -71,7 +74,7 @@ class UrgentDispatch extends Component {
                                 initialValue: operationUserInfo ? operationUserInfo.operationtel : '',
                                 rules: [{ required: true, message: '请输入电话号码' }],
                             })(
-                                <Input disabled={true} prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} type="phone" />
+                                <Input disabled={true} prefix={<PhoneOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} type="phone" />
                             )}
                         </FormItem>
                         <FormItem
@@ -81,7 +84,7 @@ class UrgentDispatch extends Component {
                             {getFieldDecorator('remark', {
                                 initialValue: null,
                             })(
-                                <Input.TextArea rows='3' prefix={<Icon type="file-text" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="备注" />
+                                <Input.TextArea rows='3' prefix={<FileTextOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="备注" />
                             )}
                         </FormItem>
                     </Form>

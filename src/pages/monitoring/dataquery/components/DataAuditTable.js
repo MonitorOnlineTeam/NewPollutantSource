@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import SdlTable from '@/components/SdlTable';
-import { Popover, Popconfirm, Row, Input, message, Alert, Form } from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Popover, Popconfirm, Row, Input, message, Alert } from 'antd';
 import { connect } from 'dva'
 import { getDirLevel } from "@/utils/utils"
 import moment from 'moment'

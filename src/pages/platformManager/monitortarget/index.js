@@ -5,6 +5,9 @@
  * @Date: 2019年7月29日15:11:59
  */
 import React, { Component, Fragment } from 'react';
+import { CalendarTwoTone, QrcodeOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Button,
     Input,
@@ -12,10 +15,18 @@ import {
     Row,
     Col,
     Table,
-    Form,
     Spin,
     Tooltip,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber,
+    Select,
+    Modal,
+    Tag,
+    Divider,
+    Dropdown,
+    Menu,
+    Popconfirm,
+    message,
+    DatePicker,
+    InputNumber,
 } from 'antd';
 import styles from './style.less';
 import { PointIcon, DelIcon } from '@/utils/icon'
@@ -268,18 +279,18 @@ export default class MonitorTarget extends Component {
                                 }}><PointIcon />    </a>
                             </Tooltip>
 
-                            {configId == "Station" ? "" : <><Divider type="vertical" />
+                            {/* {configId == "Station" ? "" : <><Divider type="vertical" />
                                 <Tooltip title="排污许可证">
                                     <a onClick={() => {
                                         this.adddischargepermit('', row);
-                                    }}><Icon type="calendar" style={{ fontSize: 16 }} theme="twoTone" /> </a>
-                                </Tooltip></>}
+                                    }}><CalendarTwoTone style={{ fontSize: 16 }} /> </a>
+                                </Tooltip></>} */}
 
                             <Divider type="vertical" />
                             <Tooltip title="生成监测点二维码">
                                 <a onClick={() => {
                                     this.CreatQRCode(row);
-                                }}><Icon type="qrcode" /></a>
+                                }}><QrcodeOutlined /></a>
                             </Tooltip>
 
                         </Fragment>}

@@ -5,6 +5,9 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,12 +16,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
@@ -27,7 +28,7 @@ import {
   Skeleton,
   Avatar,
   Dropdown,
-  Menu
+  Menu,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -127,25 +128,27 @@ export default class Index extends Component {
   }
   cardTitle2 = () => {
     const ButtonGroup = Button.Group;
-    return <Row type='flex' align="middle" justify='space-between'>
-      <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>
-        近七日超标废气监测点
-        <Icon type="caret-right" style={{fontSize:14,paddingLeft:3}} />  
-        </span>
-      <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
-        <Radio.Button value="HourData">小时</Radio.Button>
-        <Radio.Button value="DayData">日均</Radio.Button>
-      </Radio.Group>
-      <Tabs defaultActiveKey="01" onChange={this.tabCallback1}>
-        <TabPane tab="烟尘" key="01">
-        </TabPane>
-        <TabPane tab="二氧化硫" key="02">
-        </TabPane>
-        <TabPane tab="氮氧化物" key="03">
-        </TabPane>
-      </Tabs>
+    return (
+      <Row type='flex' align="middle" justify='space-between'>
+        <span style={{ cursor: 'pointer' }} onClick={this.overWasteGas}>
+          近七日超标废气监测点
+          <CaretRightOutlined style={{fontSize:14,paddingLeft:3}} />  
+          </span>
+        <Radio.Group defaultValue={"HourData"} onChange={this.btnChange} size='small'>
+          <Radio.Button value="HourData">小时</Radio.Button>
+          <Radio.Button value="DayData">日均</Radio.Button>
+        </Radio.Group>
+        <Tabs defaultActiveKey="01" onChange={this.tabCallback1}>
+          <TabPane tab="烟尘" key="01">
+          </TabPane>
+          <TabPane tab="二氧化硫" key="02">
+          </TabPane>
+          <TabPane tab="氮氧化物" key="03">
+          </TabPane>
+        </Tabs>
 
-    </Row>
+      </Row>
+    );
   }
 
 

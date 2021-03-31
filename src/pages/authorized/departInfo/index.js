@@ -7,11 +7,22 @@
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
+
 import {
-  Form,
+  BellOutlined,
+  DatabaseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FilterOutlined,
+  UsergroupAddOutlined,
+} from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import {
   Input,
   Button,
-  Icon,
   Card,
   Spin,
   Row,
@@ -110,28 +121,34 @@ const leftTableColumns = [
   {
     dataIndex: 'User_Account',
     title: '账号',
+    ellipsis: true,
   },
   {
     dataIndex: 'User_Name',
     title: '名称',
+    ellipsis: true,
   },
   {
     dataIndex: 'Phone',
     title: '手机',
+    ellipsis: true,
   },
 ];
 const rightTableColumns = [
   {
     dataIndex: 'User_Account',
     title: '账号',
+    ellipsis: true,
   },
   {
     dataIndex: 'User_Name',
     title: '名称',
+    ellipsis: true,
   },
   {
     dataIndex: 'Phone',
     title: '手机',
+    ellipsis: true,
   },
 ];
 @connect(({ departinfo, loading, global, common }) => ({
@@ -237,7 +254,7 @@ class DepartIndex extends Component {
                     this.showModalEdit();
                   }}
                 >
-                  <Icon type="edit" style={{ fontSize: 16 }} />
+                  <EditOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
               <Divider type="vertical" />
@@ -268,7 +285,7 @@ class DepartIndex extends Component {
                   cancelText="否"
                 >
                   <a href="#">
-                    <Icon type="delete" style={{ fontSize: 16 }} />
+                    <DeleteOutlined style={{ fontSize: 16 }} />
                   </a>
                 </Popconfirm>
               </Tooltip>
@@ -286,7 +303,7 @@ class DepartIndex extends Component {
                     );
                   }}
                 >
-                  <Icon type="usergroup-add" style={{ fontSize: 16 }} />
+                  <UsergroupAddOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
               <Divider type="vertical" />
@@ -306,7 +323,7 @@ class DepartIndex extends Component {
                         );
                       }}
                     >
-                      <Icon type="filter" style={{ fontSize: 16 }} />
+                      <FilterOutlined style={{ fontSize: 16 }} />
                     </a>
                   </Tooltip>
                   <Divider type="vertical" />
@@ -325,7 +342,7 @@ class DepartIndex extends Component {
                     );
                   }}
                 >
-                  <Icon type="database" style={{ fontSize: 16 }} />
+                  <DatabaseOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
               <Divider type="vertical" />
@@ -344,7 +361,7 @@ class DepartIndex extends Component {
                     );
                   }}
                 >
-                  <Icon type="bell" style={{ fontSize: 16 }} />
+                  <BellOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
             </span>

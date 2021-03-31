@@ -7,7 +7,21 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Tooltip, Popconfirm, Icon, Divider, Modal, Form, Select, Input, Row, Spin } from 'antd';
+import { CloseCircleOutlined, PlusOutlined, ProfileOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Button,
+  Tooltip,
+  Popconfirm,
+  Divider,
+  Modal,
+  Select,
+  Input,
+  Row,
+  Spin,
+} from 'antd';
 import moment from 'moment';
 import Cookie from 'js-cookie';
 import { routerRedux } from 'dva/router';
@@ -222,8 +236,9 @@ getTaskTypeInfo=()=>{
               let reslist=[];
               reslist.push(
                 <Tooltip title="详情">
-                <a><Icon onClick={()=>this.props.dispatch(routerRedux.push
-                  (`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} type="profile"  /></a>
+                <a><ProfileOutlined
+                  onClick={()=>this.props.dispatch(routerRedux.push
+                    (`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} /></a>
                    </Tooltip>
               )
               if (text) {
@@ -241,7 +256,7 @@ getTaskTypeInfo=()=>{
                       }}
                       okText="是"
                       cancelText="否">
-                      <a><Icon type="close-circle" /></a>
+                      <a><CloseCircleOutlined /></a>
                     </Popconfirm>
                   </Tooltip></>)
                 }
@@ -249,13 +264,15 @@ getTaskTypeInfo=()=>{
               return reslist;
             }}
             appendHandleButtons={(keys, rows) => {
-              return <Button icon="plus" type="primary" onClick={() => {
-                this.setState({
-                  visible: true,
-                })
+              return (
+                <Button icon={<PlusOutlined />} type="primary" onClick={() => {
+                  this.setState({
+                    visible: true,
+                  })
 
-                
-              }}>派单</Button>
+                  
+                }}>派单</Button>
+              );
             }}
           />
         </Card>

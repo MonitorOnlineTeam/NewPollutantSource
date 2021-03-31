@@ -4,6 +4,8 @@
  * 创建时间：2019.10.26
  */
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +14,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
@@ -322,16 +322,16 @@ export default class EntTransmissionEfficiency extends Component {
               // bordered={false}
               dataSource={this.state.tableDatas}
               // style ={{height:"calc(100vh - 300px)"}} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
+              // pagination={{
+                // showSizeChanger: true,
+                // showQuickJumper: true,
                 // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
+                // total: this.props.total,
+                //defaultPageSize:20
                 // pageSize: PageSize,
                 // current: PageIndex,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
+              // }}
             />
           </div>
         </Modal>

@@ -1,4 +1,4 @@
-import { Icon, Tooltip, Popover } from 'antd';
+import { Tooltip, Popover } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';

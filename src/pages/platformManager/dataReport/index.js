@@ -5,6 +5,9 @@
  * @Date: 2020年1月22日9：30
  */
 import React, { Component, Fragment } from 'react';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
     Button,
     Input,
@@ -12,10 +15,18 @@ import {
     Row,
     Col,
     Table,
-    Form,
     Spin,
     Tooltip,
-    Select, Modal, Tag, Divider, Dropdown, Icon, Menu, Popconfirm, message, DatePicker, InputNumber,
+    Select,
+    Modal,
+    Tag,
+    Divider,
+    Dropdown,
+    Menu,
+    Popconfirm,
+    message,
+    DatePicker,
+    InputNumber,
 } from 'antd';
 import styles from './style.less';
 
@@ -151,21 +162,23 @@ export default class MonitorTarget extends Component {
               render:(text,row)=>{
                const { match: { params: { configId, monitortime, entcode } }, dispatch, selectmonth } = this.props;
 
-                return  <Fragment>
-                          <Tooltip title="编辑">
-                                 <a onClick={() => {
-                                        // if (moment(row['MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
-                                            dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['ID']}/${selectmonth}/${entcode}`));
-                                        // } else {
-                                        //     sdlMessage('只能修改本月的数据', 'error')
-                                        // }
-                                    }}>   <EditIcon /> </a>
-                </Tooltip>
-                <Divider type="vertical" />
-                <Tooltip title="删除">
-                    <a href="#" onClick={ this.showDeleteConfirm.bind(this,row, row['ID'])}><Icon type="delete" style={{ fontSize: 16 }} /></a>
-                </Tooltip>
-              </Fragment>
+                return (
+                    <Fragment>
+                              <Tooltip title="编辑">
+                                     <a onClick={() => {
+                                            // if (moment(row['MonitorTime']).format('YYYY-MM') == moment().format('YYYY-MM')) {
+                                                dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${row['ID']}/${selectmonth}/${entcode}`));
+                                            // } else {
+                                            //     sdlMessage('只能修改本月的数据', 'error')
+                                            // }
+                                        }}>   <EditIcon /> </a>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    <Tooltip title="删除">
+                        <a href="#" onClick={ this.showDeleteConfirm.bind(this,row, row['ID'])}><DeleteOutlined style={{ fontSize: 16 }} /></a>
+                    </Tooltip>
+                  </Fragment>
+                );
               }
             },
       
@@ -355,7 +368,7 @@ export default class MonitorTarget extends Component {
                   </Form>
                 <Col>
 
-                <Button style={{marginRight:5}} icon="plus"  type="primary" onClick={() =>
+                <Button style={{marginRight:5}} icon={<PlusOutlined />}  type="primary" onClick={() =>
                dispatch(routerRedux.push(`/Intelligentanalysis/SewagePlant/DataReportingAdd/${configId}/${null}/${selectmonth}/${entcode}`))}>添加</Button>
                 
                 {entcode != 1 ?
@@ -405,11 +418,12 @@ export default class MonitorTarget extends Component {
                                 style={{ marginTop: 10 }}
                                 columns={this.columns}
                                 dataSource={this.props.tableDatas}
-                                pagination={{
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20
-                             }}>
+                                // pagination={{
+                                // showSizeChanger: true,
+                                // showQuickJumper: true,
+                                //defaultPageSize:20
+                            //  }}
+                             >
                         </SdlTable>
 
                         

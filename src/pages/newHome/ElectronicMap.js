@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
+import { CaretDownOutlined, CaretUpOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import {
   Card,
   Drawer,
-  Icon,
   Tooltip,
   Button,
   Spin,
@@ -133,11 +133,11 @@ class NewHome extends PureComponent {
       zoomchange: value => {
         const zoom = aMap.getZoom();
         if (this.state.displayType === 0) {
-          if (zoom >= 10 && this.state.hideEntName) {
+          if (zoom >= 9 && this.state.hideEntName) {
             this.setState({ hideEntName: false });
             this.showEntName();
           }
-          if (zoom < 10 && !this.state.hideEntName) {
+          if (zoom <= 9 && !this.state.hideEntName) {
             this.setState({
               hideEntName: true,
             });
@@ -210,6 +210,7 @@ class NewHome extends PureComponent {
       initCenter: [85.35803, 42.229502],
       initZoom: 6,
       SparePartsStationCode: "",
+      SparePartsStationInfo: {},
     };
   }
 
@@ -321,6 +322,7 @@ class NewHome extends PureComponent {
     });
     this.setState({
       modalTitle: extData.position.title,
+      SparePartsStationInfo: extData.position,
     });
   };
 
@@ -528,7 +530,7 @@ class NewHome extends PureComponent {
               className={mapStyles.pulse1}
               style={{ left: -11, top: aMap.getZoom() >= 10 ? 18 : -12, display: isShow }}
             ></div>
-            {aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>}
+            {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>}
             <EntIcon style={{ fontSize: 28 }} />
           </div>
         );
@@ -540,7 +542,7 @@ class NewHome extends PureComponent {
             : '#999';
         return (
           <div style={{ color: '#525151' }}>
-            {aMap.getZoom() >= 10 && <div className={styles.pop}>{extData.position.title}</div>}
+            {aMap.getZoom() >= 9 && <div className={styles.pop}>{extData.position.title}</div>}
             <CustomIcon
               type="icon-fangwu"
               style={{ ...iconStyle, color }}
@@ -589,17 +591,20 @@ class NewHome extends PureComponent {
         );
       case '服务站':
         return (
-          <CustomIcon
-            type="icon-cangku"
-            style={{ ...style, fontSize: 28 }}
-            onClick={() => {
-              debugger
-              this.setState({
-                SparePartsStationCode: extData.position.SparePartsStationCode
-              })
-              this.getOfficeModalData(extData);
-            }}
-          />
+          <>
+            {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>}
+            <CustomIcon
+              type="icon-cangku"
+              style={{ ...style, fontSize: 28 }}
+              onClick={() => {
+                debugger
+                this.setState({
+                  SparePartsStationCode: extData.position.SparePartsStationCode
+                })
+                this.getOfficeModalData(extData);
+              }}
+            />
+          </>
         );
       default:
         return null;
@@ -869,7 +874,7 @@ class NewHome extends PureComponent {
   onSearch = value => {
     if (value) {
       const filter = this.state.markersList.filter(item => {
-        if (item.position.IsEnt === 1) {
+        if (item.position.IsEnt === 1 || item.position.PollutantType == 5) {
           if (
             item.position.title.indexOf(value) > -1 ||
             item.position.EntName.indexOf(value) > -1
@@ -884,7 +889,7 @@ class NewHome extends PureComponent {
           searchInputVal: undefined,
         });
 
-        aMap.setZoomAndCenter(aMap.getZoom() + 2, [
+        aMap.setZoomAndCenter(aMap.getZoom() + 5, [
           filter[0].position.Longitude,
           filter[0].position.Latitude,
         ]);
@@ -894,16 +899,16 @@ class NewHome extends PureComponent {
     }
   };
 
-  divisionInfoWindow = () => {
-    const { currentDivision } = this.props;
-    if (currentDivision && currentDivision.divisionList) {
-      return currentDivision.divisionList.map(item => (
-        <InfoWindow position={[item.longitude, item.latitude]} visible isCustom offset={[4, -36]}>
-          {item.divisionName}
-        </InfoWindow>
-      ));
-    }
-  };
+  // divisionInfoWindow = () => {
+  //   const { currentDivision } = this.props;
+  //   if (currentDivision && currentDivision.divisionList) {
+  //     return currentDivision.divisionList.map(item => (
+  //       <InfoWindow position={[item.longitude, item.latitude]} visible isCustom offset={[4, -36]}>
+  //         {item.divisionName}
+  //       </InfoWindow>
+  //     ));
+  //   }
+  // };
 
   // 重新请求页面数据
   reloadPageData = (startTime = this.props.startTime, endTime = this.props.endTime) => {
@@ -961,6 +966,7 @@ class NewHome extends PureComponent {
       modalTitle,
       clickedDivision,
       SparePartsStationCode,
+      SparePartsStationInfo,
     } = this.state;
     const {
       allEntAndPointList,
@@ -1187,12 +1193,12 @@ class NewHome extends PureComponent {
                         this.setState({ toggleSelect: !this.state.toggleSelect });
                       }}
                     >
-                      <Icon type="environment" />
+                      <EnvironmentOutlined />
                       <span>当前范围：{clickedDivision ? clickedDivision.title : '全部'}</span>
                       {toggleSelect ? (
-                        <Icon type="caret-up" className={styles.icon} />
+                        <CaretUpOutlined className={styles.icon} />
                       ) : (
-                          <Icon type="caret-down" className={styles.icon} />
+                          <CaretDownOutlined className={styles.icon} />
                         )}
                     </div>
                     {toggleSelect && (
@@ -1266,22 +1272,22 @@ class NewHome extends PureComponent {
                 <div className={styles.legendBox}>
                   <ul>
                     <li>
-                      <CustomIcon type="icon-cangku" style={{ ...mapIconStyle }} />
+                      <CustomIcon type="icon-cangku" style={{ ...mapIconStyle, marginRight: 10 }} />
                       <span>服务站</span>
                     </li>
                     <li>
-                      <EntIcon />
+                      <EntIcon style={{ marginRight: 10 }} />
                       <span>企业</span>
                     </li>
                     <li>
-                      <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3 }} />{' '}
+                      <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3, marginRight: 10 }} />{' '}
                       <span>师</span>
                     </li>
                     <li>
-                      <WaterOffline /> <span>废水</span>
+                      <WaterOffline style={{ marginRight: 10 }} /> <span>废水</span>
                     </li>
                     <li>
-                      <GasOffline /> <span>废气</span>
+                      <GasOffline style={{ marginRight: 10 }} /> <span>废气</span>
                     </li>
                     <li>
                       <CustomIcon
@@ -1292,6 +1298,7 @@ class NewHome extends PureComponent {
                           background: '#fff',
                           boxShadow: '0px 0px 3px 2px #fff',
                           color: '#999',
+                          marginRight: 10,
                         }}
                       />
                       空气站
@@ -1305,6 +1312,7 @@ class NewHome extends PureComponent {
                           background: '#fff',
                           boxShadow: '0px 0px 3px 2px #fff',
                           color: '#999',
+                          marginRight: 10,
                         }}
                       />
                       停运
@@ -1326,7 +1334,7 @@ class NewHome extends PureComponent {
                 // features={['bg', 'point', 'building']}
                 id="mapId"
                 events={this.amapEvents}
-                // zoom={4}
+                zoom={8}
                 mapStyle="amap://styles/normal"
                 useAMapUI={!config.offlineMapUrl.domain}
                 {...mapStaticAttribute}
@@ -1404,7 +1412,7 @@ class NewHome extends PureComponent {
             </div>
           </div >
         </Spin >
-        { officeVisible && <OfficeModal title={modalTitle} SparePartsStationCode={SparePartsStationCode} />}
+        { officeVisible && <OfficeModal title={modalTitle} SparePartsStationInfo={SparePartsStationInfo} SparePartsStationCode={SparePartsStationCode} />}
         {/* {true && <OfficeModal />} */}
         { siteDetailsVisible && <SiteDetailsModal data={currentClickObj} />}
       </div >

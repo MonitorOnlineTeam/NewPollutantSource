@@ -5,6 +5,9 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import { RollbackOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,18 +15,16 @@ import {
   Progress,
   Row,
   Popover,
-  Col, 
-  Icon,
+  Col,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
-  message
+  message,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -305,63 +306,63 @@ export default class EntTransmissionEfficiency extends Component {
 
     const { pointVisible }  = this.state;
     return (
-        <div>
-        {/* <Modal
-          title={regionName}
-          footer={null}
-          width='95%'
-          visible={entVisible}  
-          onCancel={entCancel}
-        > */}
-           <Row type='flex' align='middle'>
-           {isWorkRate?
-           <div style={{ paddingBottom: 10 }}>
-                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ≥90%达标
-                </span>
-                <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
-                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
-                {`<90%未达标`}
-                </span>
-              </div>
-              :
-              null
-           }
-             <Button
-                  style={{ marginBottom: 10,marginLeft:isWorkRate?10 : 0 }}
-                    onClick={() => {
-                      this.props.onBack()
-                     } }
-                  >
-                    <Icon type="rollback" />
-                    返回
-                  </Button>
-                  </Row>
-          <div id=''>
+      <div>
+      {/* <Modal
+        title={regionName}
+        footer={null}
+        width='95%'
+        visible={entVisible}  
+        onCancel={entCancel}
+      > */}
+         <Row type='flex' align='middle'>
+         {isWorkRate?
+         <div style={{ paddingBottom: 10 }}>
+              <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
+              <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+                ≥90%达标
+              </span>
+              <div  style={{ width: 20, height: 9, backgroundColor: '#f5222d', display: 'inline-block', borderRadius: '20%', cursor: 'pointer',  marginLeft: 10, marginRight: 3, }} />
+              <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
+              {`<90%未达标`}
+              </span>
+            </div>
+            :
+            null
+         }
+           <Button
+                style={{ marginBottom: 10,marginLeft:isWorkRate?10 : 0 }}
+                  onClick={() => {
+                    this.props.onBack()
+                   } }
+                >
+                  <RollbackOutlined />
+                  返回
+                </Button>
+                </Row>
+        <div id=''>
 
-             <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={loading}
-              columns={this.columns}
-              // bordered={false}
-              dataSource={this.props.entTableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
-            />
-          </div>
-          {/* </Modal> */}
-       {pointVisible ?  <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/> : null}
-       </div>
+           <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={loading}
+            columns={this.columns}
+            // bordered={false}
+            dataSource={this.props.entTableDatas}
+            // style ={{height:"calc(100vh - 300px)"}} 
+            // pagination={{
+            //   showSizeChanger: true,
+            //   showQuickJumper: true,
+              // sorter: true,
+              // total: this.props.total,
+              //defaultPageSize:20
+              // pageSize: PageSize,
+              // current: PageIndex,
+              // pageSizeOptions: ['10', '20', '30', '40', '50'],
+            // }}
+          />
+        </div>
+        {/* </Modal> */}
+     {pointVisible ?  <MonPoint pointVisible={pointVisible} pointCancel={this.pointCancel}/> : null}
+     </div>
     );
   }
 }

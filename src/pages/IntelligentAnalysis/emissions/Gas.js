@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react'
-import { Card, Form, Col, Row, Select, Input, Checkbox, Tabs, Button, message, Divider } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Col, Row, Select, Input, Checkbox, Tabs, Button, message, Divider } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva'
 import SdlTable from '@/components/SdlTable'
@@ -239,10 +242,29 @@ class Gas extends PureComponent {
         dataIndex: 'ImportantType',
         key: 'ImportantType',
         render: (text, record) => {
-          if (text && text != "0") {
-            return ImportantTypeList.find(item => item.value == text)["text"]
+          if (text && text !== "0") {
+            // return ImportantTypeList.find(item => item.value == text)["text"]
+            const ImportantTypeLists = 
+              { "1": "污染处理厂",
+                '2': "水重点",
+                '3': "气重点",
+                '4': "垃圾焚烧"
+              }
+            let importVal = ''
+            let dataArr = text.split(',')
+            dataArr.map(item=>{
+              ImportantTypeList.map(items=>{
+                 if(item == items.value){
+                  importVal += `${ImportantTypeLists[item]}，`
+                 }
+              })
+            })
+           
+            return importVal.substring(0,importVal.length-1)
+            
+          }else{
+            return "-"
           }
-          return "-"
         },
         width: 180,
       },
@@ -521,7 +543,7 @@ class Gas extends PureComponent {
                       </Button>
                 <Button
                   style={{ margin: '0 5px' }}
-                  icon="export"
+                  icon={<ExportOutlined />}
                   loading={exportLoading}
                   onClick={this.onExport}
                 >

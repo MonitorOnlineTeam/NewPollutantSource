@@ -5,6 +5,8 @@
  * 创建时间：2020.11
  */
 import React, { Component, PureComponent } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -13,18 +15,16 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
   Checkbox,
   message,
-  Skeleton
+  Skeleton,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';

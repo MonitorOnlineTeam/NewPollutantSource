@@ -5,9 +5,9 @@
  * 创建时间：2019.10.21
  */
 import React, { Component, Fragment } from 'react';
+import { ExclamationCircleOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons';
 import {
     Card,
-    Icon,
     Divider,
     Table,
     message,
@@ -20,7 +20,7 @@ import {
     Col,
     Empty,
     Tooltip,
-    Switch
+    Switch,
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
@@ -277,7 +277,7 @@ class MonitoringStandard extends Component {
                                         }
                                         }
                                     >
-                                        <Icon type="exclamation-circle" /> 未监测
+                                        <ExclamationCircleOutlined /> 未监测
                                     </a>
                                 </Button>
                             </span >
@@ -292,7 +292,7 @@ class MonitoringStandard extends Component {
                                     // this.changeUseStatisti(record, 1);
                                     this.IsEnabled(0, record)
                                 }}>
-                                    <Icon type="setting" spin={true} /> 监测中
+                                    <SettingOutlined spin={true} /> 监测中
                                 </a >
                             </Button >
                         </span >
@@ -368,7 +368,7 @@ class MonitoringStandard extends Component {
                                 standardlibraryModal: true,
                             });
                         }}
-                        icon="search"
+                        icon={<SearchOutlined />}
                     >
                         查看标准库
             </Button>

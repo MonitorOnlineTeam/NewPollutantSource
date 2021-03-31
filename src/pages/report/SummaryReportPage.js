@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Table, Icon, Form, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Table, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import moment from 'moment';
 import style from './index.less';
@@ -13,7 +16,7 @@ import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
+import RegionList from '@/components/RegionList'
 import { timeDifference } from '@/utils/utils';
 
 const FormItem = Form.Item;
@@ -406,7 +409,7 @@ class SummaryReportPage extends PureComponent {
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form layout="" style={{ marginBottom: 20 }}>
               <Row>
                 <Col md={5} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
@@ -475,7 +478,7 @@ class SummaryReportPage extends PureComponent {
                   </FormItem>
                 </Col>
                 {/* <Col xl={6} sm={24} md={12} style={{ display: configInfo.GroupRegionState === "1" ? "block" : "none" }}> */}
-                <Col md={5} sm={24} style={{ display: IfShowRegionInReport }}>
+                <Col md={3} sm={24} style={{ display: IfShowRegionInReport }}>
                   <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                     {getFieldDecorator('Regions', {
                       // initialValue: defaultSearchForm.Regions,
@@ -485,14 +488,15 @@ class SummaryReportPage extends PureComponent {
                       //   message: '请选择行政区',
                       // }],
                     })(
-                      <SdlCascader
-                        changeOnSelect={false}
-                        data={regionList}
-                        placeholder="请选择行政区"
-                        onChange={(value, selectedOptions) => {
-                          this.setState({ regions: value.join(',') });
-                        }}
-                      />,
+                      // <SdlCascader
+                      //   changeOnSelect={false}
+                      //   data={regionList}
+                      //   placeholder="请选择行政区"
+                      //   onChange={(value, selectedOptions) => {
+                      //     this.setState({ regions: value.join(',') });
+                      //   }}
+                      // />,
+                      <RegionList style={{width:'100%'}} changeRegion={(value)=>{ this.setState({ regions: value}); }} RegionCode={this.state.regions}/>
                     )}
                   </FormItem>
                 </Col>
@@ -563,7 +567,7 @@ class SummaryReportPage extends PureComponent {
                       生成统计
                     </Button>
                     <Button onClick={this.export} loading={exportLoading}>
-                      <Icon type="export" />
+                      <ExportOutlined />
                       导出
                     </Button>
                     {/* )} */}

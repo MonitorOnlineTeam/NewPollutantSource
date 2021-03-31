@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { ProfileOutlined } from '@ant-design/icons';
 import {
     Card,
     Spin,
-    Select, Input, Button, Tooltip, Modal, Form, Icon, Steps, Pagination, Empty, Row, Col,
+    Select,
+    Input,
+    Button,
+    Tooltip,
+    Modal,
+    Steps,
+    Pagination,
+    Empty,
+    Row,
+    Col,
 } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -80,7 +92,7 @@ class Dispatchreport extends Component {
                             <div style={{ float: 'left', marginLeft: '5px', width: '95%' }}>
                                 <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden', lineHeight: '24px' }}>
                 <div style={{ width: '95%', float: 'left', fontWeight: 'bolder' }}><span>{this.CommandDispatchType('', item.CommandDispatchType)}</span><span style={{ fontSize: '10px', color: '#8c8c8c', marginLeft: '10px' }}>{item.CreateTime}</span></div>
-                                    <div style={{ float: 'right' }}><Button type="primary" icon="profile" size="small" onClick={this.Detail.bind(this, item.TaskId, item.Flag, item.FirstTime, item.EndTime, item.EID, item.PID)}>详情</Button></div>
+                                    <div style={{ float: 'right' }}><Button type="primary" icon={<ProfileOutlined />} size="small" onClick={this.Detail.bind(this, item.TaskId, item.Flag, item.FirstTime, item.EndTime, item.EID, item.PID)}>详情</Button></div>
                                 </div>
                                 <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden' }}>
                                     <div style={{ width: '100%', fontWeight: 'bold', fontSize: '12px' }}>{item.Remark}</div>
@@ -104,7 +116,7 @@ class Dispatchreport extends Component {
                         status={item.Status == 1 ? 'finish' : 'wait'}
                         title={item.TaskStatusText}
                         description={this.description(item)}
-                        icon={<Icon type={
+                        icon={<LegacyIcon type={
                             this.showIcon(item.TaskStatusText)
                         }
                         />}

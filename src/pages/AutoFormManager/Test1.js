@@ -1,4 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
+import { PrinterOutlined } from '@ant-design/icons';
 import {
   List, Card, Divider, Button, message
 } from 'antd';
@@ -100,7 +101,7 @@ class Test extends PureComponent {
           // ]}
           >
             <Fragment key="top">
-              <Button icon="printer" type="primary" onClick={() => {
+              <Button icon={<PrinterOutlined />} type="primary" onClick={() => {
                 // dispatch(routerRedux.push(`/autoformmanager/test/TestCommonPoint`))
                 if(this.state.row) {
                   message.success('成功获取数据：'+ JSON.stringify(this.state.row));

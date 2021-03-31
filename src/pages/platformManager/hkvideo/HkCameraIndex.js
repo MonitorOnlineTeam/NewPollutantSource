@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
 import { routerRedux } from 'dva/router';
-import { Table, Card, Button, Modal, message, Divider, Icon, Row, Col, Tooltip, Popconfirm, Form } from 'antd';
+import { PlayCircleTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Table,
+    Card,
+    Button,
+    Modal,
+    message,
+    Divider,
+    Row,
+    Col,
+    Tooltip,
+    Popconfirm,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -150,7 +164,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
                           `/platformconfig/hkshowvideo/${this.props.match.params.DGIMN}`,
                         ),
                       );
-                    }}><Icon type="play-circle" theme="twoTone" /></a></Tooltip>
+                    }}><PlayCircleTwoTone /></a></Tooltip>
                     </span>
                 ),
             },

@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
+
 import {
-  Row,
-  Col,
-  Button,
-  Card,
-  Divider,
-  Spin,
-  Tabs,
-  DatePicker,
-  message,
-  Icon,
-  Empty,
-} from 'antd';
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  FastBackwardOutlined,
+  FastForwardOutlined,
+  FileImageOutlined,
+  PauseCircleOutlined,
+  PictureOutlined,
+  PlayCircleOutlined,
+  StepForwardOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
+
+import { Row, Col, Button, Card, Divider, Spin, Tabs, DatePicker, message, Empty } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './index.less';
@@ -418,7 +421,7 @@ class HkShowVideo extends Component {
                     <Row style={{ textAlign: 'center' }}>
                       <Col span={8}>
                         <Button
-                          icon="file-image"
+                          icon={<FileImageOutlined />}
                           size="Small"
                           onClick={this.CapturePic.bind(this)}
                         > 抓图
@@ -505,7 +508,7 @@ class HkShowVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-in"
+                                    icon={<ZoomInOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.btnZoomClick.bind(this, 11)}
@@ -515,7 +518,7 @@ class HkShowVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-out"
+                                    icon={<ZoomOutOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.btnZoomClick.bind(this, 12)}
@@ -530,7 +533,7 @@ class HkShowVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-in"
+                                    icon={<ZoomInOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.btnFocusClick.bind(this, 15)}
@@ -540,7 +543,7 @@ class HkShowVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-out"
+                                    icon={<ZoomOutOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.btnFocusClick.bind(this, 16)}
@@ -555,7 +558,7 @@ class HkShowVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-in"
+                                    icon={<ZoomInOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.btnIrisClick.bind(this, 19)}
@@ -565,7 +568,7 @@ class HkShowVideo extends Component {
                                 <Col className={styles.gutterleft} span={8}>
                                   <Button
                                     shape="circle"
-                                    icon="zoom-out"
+                                    icon={<ZoomOutOutlined />}
                                     size="Small"
                                     style={{ width: '25px', height: '25px' }}
                                     onClick={this.btnIrisClick.bind(this, 20)}
@@ -638,10 +641,10 @@ class HkShowVideo extends Component {
                       <Col span={24}>
                         <Row style={{ marginTop: '10px' }}>
                           <Col className={styles.gutterleft} span={12}>
-                            <Button icon="play-circle" onClick={this.playBack.bind(this)}>开始回放</Button>
+                            <Button icon={<PlayCircleOutlined />} onClick={this.playBack.bind(this)}>开始回放</Button>
                           </Col>
                           <Col className={styles.gutterleft} span={12}>
-                            <Button icon="close-circle" onClick={this.btnBackClick.bind(this, 1)}>停止回放</Button>
+                            <Button icon={<CloseCircleOutlined />} onClick={this.btnBackClick.bind(this, 1)}>停止回放</Button>
                           </Col>
                         </Row>
                       </Col>
@@ -651,14 +654,14 @@ class HkShowVideo extends Component {
                       <Col span={24}>
                         <Row>
 
-                          <Col className={styles.gutterleft} span={8}><Button icon="pause-circle" onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="check-circle" onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="picture" onClick={this.CapturePic.bind(this)}>抓图</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon={<PauseCircleOutlined />} onClick={this.btnBackClick.bind(this, 2)}>暂停</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon={<CheckCircleOutlined />} onClick={this.btnBackClick.bind(this, 3)}>恢复</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon={<PictureOutlined />} onClick={this.CapturePic.bind(this)}>抓图</Button></Col>
                         </Row>
                         <Row style={{ marginTop: '30px' }}>
-                          <Col className={styles.gutterleft} span={8}><Button icon="step-forward" onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="fast-forward" onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
-                          <Col className={styles.gutterleft} span={8}><Button icon="fast-backward" onClick={this.reverseBack.bind(this)}> 倒放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon={<StepForwardOutlined />} onClick={this.btnBackClick.bind(this, 4)}>慢放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon={<FastForwardOutlined />} onClick={this.btnBackClick.bind(this, 5)}>快放</Button></Col>
+                          <Col className={styles.gutterleft} span={8}><Button icon={<FastBackwardOutlined />} onClick={this.reverseBack.bind(this)}> 倒放</Button></Col>
                         </Row>
                       </Col>
                     </Row>

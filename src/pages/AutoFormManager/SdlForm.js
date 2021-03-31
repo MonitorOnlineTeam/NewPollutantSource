@@ -8,13 +8,16 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
 
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
 import {
-  Form,
   Input,
   Button,
   Card,
   Spin,
-  Icon,
   Upload,
   Row,
   Col,
@@ -23,7 +26,7 @@ import {
   message,
   Modal,
   Carousel,
-  Tabs
+  Tabs,
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
@@ -205,7 +208,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode,flag } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -265,6 +268,7 @@ class SdlForm extends PureComponent {
             <SdlCascader
               itemName={item.configDataItemName}
               itemValue={item.configDataItemValue}
+              configId={item.configId}
               data={item.value}
               placeholder={placeholder}
             />
@@ -398,7 +402,8 @@ class SdlForm extends PureComponent {
                 FileActualType: '0',
               },
             };
-            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
+
+            element = <SdlUpload  accept={flag=="img"?"image/*":''} fileList={this.props.fileList}  flags={flag} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />
@@ -466,7 +471,7 @@ class SdlForm extends PureComponent {
           }
         }
         if (checkRules[vid.replace(/\'/g, '')]) {
-          return checkRules[vid.replace(/\'/g, '')]
+          return checkRules[vid.replace(/\'/g, '')];
         }
         if (vid.indexOf('isExistDiy[]') > -1) {
           return {
@@ -506,8 +511,8 @@ class SdlForm extends PureComponent {
           }
         }
         return (
-          <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
-            <FormItem key={fieldName} {...layout} label={labelText}>
+          <Col className='searchForm' span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
+            <FormItem   key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
                 initialValue: initialValue || undefined,
                 rules: [
@@ -588,82 +593,86 @@ class SdlForm extends PureComponent {
       },
     };
     const loading = this._SELF_.isEdit ? loadingEdit : loadingAdd;
-    return <Card bordered={false}>
-      <Form onSubmit={e => {
-        e.preventDefault();
-        this._onSubmitForm();
-        // onSubmitForm()
-      }} hideRequiredMark={false} style={{ marginTop: 8 }}>
-        <Row>
+    return (
+      <Card bordered={false}>
+        <Form onSubmit={e => {
+          e.preventDefault();
+          this._onSubmitForm();
+          // onSubmitForm()
+        }} hideRequiredMark={false} style={{ marginTop: 8 }}>
+          <Row>
+            {
+              this.renderFormItem()
+            }
+            <Col style={{ display: 'none' }}>
+              <FormItem key="cuid">
+                {getFieldDecorator('cuid', {
+                })(
+                  <Input />,
+                )}
+              </FormItem>
+            </Col>
+          </Row>
           {
-            this.renderFormItem()
+            this.props.children && this.props.children
           }
-          <Col style={{ display: 'none' }}>
-            <FormItem key="cuid">
-              {getFieldDecorator('cuid', {
-              })(
-                <Input />,
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        {
-          this.props.children && this.props.children
-        }
-        {
-          !this.props.hideBtns && <Divider orientation="right">
-            <Button type="primary" htmlType="submit" loading={loading}>保存</Button>
-            <Button
-              style={{ marginLeft: 8 }}
-              onClick={() => {
-                history.go(-1);
-              }}
-            >返回</Button>
-          </Divider>
-        }
-        {/* {(!this.props.hideBtns || this.props.children) ?
-          this.props.children :
-          <Divider orientation="right">
-            <Button type="primary" htmlType="submit">保存</Button>
-            <Button
-              style={{ marginLeft: 8 }}
-              onClick={() => {
-                history.go(-1);
-              }}
-            >返回</Button>
-          </Divider>
-        } */}
-      </Form>
-      <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
-        this.setState({ previewVisible: false })
-      }}>
-        {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
-        <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
-          <div className={styles.controller}>
-            <Icon type="left" onClick={() => {
-              this.carousel.prev()
-            }} />
-            <Icon type="right" onClick={() => {
-              this.carousel.next()
-            }} />
+          {
+            !this.props.hideBtns && <Divider orientation="right">
+              <Button type="primary" htmlType="submit" loading={loading}>保存</Button>
+              <Button
+                style={{ marginLeft: 8 }}
+                onClick={() => {
+                  history.go(-1);
+                }}
+              >返回</Button>
+            </Divider>
+          }
+          {/* {(!this.props.hideBtns || this.props.children) ?
+            this.props.children :
+            <Divider orientation="right">
+              <Button type="primary" htmlType="submit">保存</Button>
+              <Button
+                style={{ marginLeft: 8 }}
+                onClick={() => {
+                  history.go(-1);
+                }}
+              >返回</Button>
+            </Divider>
+          } */}
+        </Form>
+        <Modal visible={this.state.previewVisible} footer={null} onCancel={() => {
+          this.setState({ previewVisible: false })
+        }}>
+          {/* <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} /> */}
+          <div style={{ position: 'relative', display: "flex", alignItems: "center" }}>
+            <div className={styles.controller}>
+              <LeftOutlined
+                onClick={() => {
+                  this.carousel.prev()
+                }} />
+              <RightOutlined
+                onClick={() => {
+                  this.carousel.next()
+                }} />
+            </div>
+            <MapInteractionCSS>
+              <Carousel
+                dots={false}
+                ref={(carousel) => { this.carousel = carousel; }}
+              >
+                {
+                  this.props.fileList && this.props.fileList.map(item => {
+                    return <div>
+                      <img alt="example" style={{ width: '100%' }} src={item.url} />
+                    </div>
+                  })
+                }
+              </Carousel>
+            </MapInteractionCSS>
           </div>
-          <MapInteractionCSS>
-            <Carousel
-              dots={false}
-              ref={(carousel) => { this.carousel = carousel; }}
-            >
-              {
-                this.props.fileList && this.props.fileList.map(item => {
-                  return <div>
-                    <img alt="example" style={{ width: '100%' }} src={item.url} />
-                  </div>
-                })
-              }
-            </Carousel>
-          </MapInteractionCSS>
-        </div>
-      </Modal>
-    </Card>
+        </Modal>
+      </Card>
+    );
   }
 
 

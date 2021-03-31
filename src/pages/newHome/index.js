@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { CaretDownOutlined, CaretUpOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import {
   Card,
   Drawer,
-  Icon,
   Tooltip,
   Button,
   Spin,
@@ -1009,7 +1010,7 @@ class NewHome extends PureComponent {
               bodyStyle={{ padding: 0 }}
             >
               <div className={styles.drawerIcon} onClick={() => this.toggle(true)}>
-                <Icon type={leftVisible ? 'caret-left' : 'caret-right'} className={styles.icon} />
+                <LegacyIcon type={leftVisible ? 'caret-left' : 'caret-right'} className={styles.icon} />
               </div>
               <Spin spinning={isLeftLoading}>
                 <div className={styles.content}>
@@ -1037,7 +1038,7 @@ class NewHome extends PureComponent {
                 className={`${styles.drawerIcon} ${styles.rightDrawerIcon}`}
                 onClick={() => this.toggle()}
               >
-                <Icon type={rightVisible ? 'caret-right' : 'caret-left'} className={styles.icon} />
+                <LegacyIcon type={rightVisible ? 'caret-right' : 'caret-left'} className={styles.icon} />
               </div>
               <Spin spinning={isRightLoading}>
                 <div className={styles.content}>
@@ -1184,12 +1185,12 @@ class NewHome extends PureComponent {
                         this.setState({ toggleSelect: !this.state.toggleSelect });
                       }}
                     >
-                      <Icon type="environment" />
+                      <EnvironmentOutlined />
                       <span>当前范围：{clickedDivision ? clickedDivision.title : '全部'}</span>
                       {toggleSelect ? (
-                        <Icon type="caret-up" className={styles.icon} />
+                        <CaretUpOutlined className={styles.icon} />
                       ) : (
-                          <Icon type="caret-down" className={styles.icon} />
+                          <CaretDownOutlined className={styles.icon} />
                         )}
                     </div>
                     {toggleSelect && (

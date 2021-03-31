@@ -4,7 +4,21 @@
  * 创建时间：2020.10.19
  */
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Tabs, Modal,Icon } from 'antd'
+import { ExportOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Row,
+    Col,
+    Radio,
+    Select,
+    DatePicker,
+    Empty,
+    message,
+    Tabs,
+    Modal,
+} from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
@@ -256,107 +270,105 @@ class index extends PureComponent {
         const {pollutantCodeList} = this.props
         console.log(pollutantCodeList)
         console.log(this.state.pollutantCodeList)
-        return (
-            < >
-                <Select
-                    allowClear
-                    showSearch
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="行政区"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        if (option && option.props && option.props.title) {
-                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                        } else {
-                            return true
-                        }
-                    }}
-                    onChange={(value) => {
-                        this.setState({
-                            regionValue: value
-                        })
-                    }}>
-                    {this.children()}
-                </Select>
-                <Select
-                    allowClear
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="关注程度"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        this.setState({
-                            attentionValue: value,
-                        })
-                    }}>
-                    {this.attention()}
-                </Select>
-                <Select
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="排口类型"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    defaultValue={this.state.entType}
-                    maxTagPlaceholder="..."
-                    onChange={(value) => {
-                        //获取监测因子列表
-                        this.props.dispatch({
-                            type: pageUrl.GetPollutantCodeList,
-                            payload: {
-                                PollutantType: value
-                            }
-                        }).then(() => {
-                            if (this.props.pollutantCodeList.length > 0) {
-                                this.setState({
-                                    pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
-                                })
-                            }
-                        })
-                        this.setState({
-                            outletValue: value,
-                        })
-                    }}>    
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                </Select>
-                <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
-                    this.setState({
-                        dataType: e.target.value,
-                        time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
-                    })
-                    e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
-                }}>
-                    <Radio.Button value="Hour">小时</Radio.Button>
-                    <Radio.Button value="Day">日均</Radio.Button>
-                </Radio.Group>
-
-                <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
-                    (dates, dataType) => {
-                        this.setState({
-                            time: dates
-                        })
+        return < >
+            <Select
+                allowClear
+                showSearch
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="行政区"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                    if (option && option.props && option.props.title) {
+                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                    } else {
+                        return true
                     }
-                } />
-                <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
-                <Button style={{ marginRight: 10 }} onClick={this.exportReport}><Icon type="export" />导出</Button>
-                <div style={{ marginTop: 10 }}>
-                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
-                    <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
-                        {
-                            pollutantCodeList.map(poll =>
-                                <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
-                            )
+                }}
+                onChange={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }}>
+                {this.children()}
+            </Select>
+            <Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="关注程度"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    this.setState({
+                        attentionValue: value,
+                    })
+                }}>
+                {this.attention()}
+            </Select>
+            <Select
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="排口类型"
+                maxTagCount={2}
+                maxTagTextLength={5}
+                defaultValue={this.state.entType}
+                maxTagPlaceholder="..."
+                onChange={(value) => {
+                    //获取监测因子列表
+                    this.props.dispatch({
+                        type: pageUrl.GetPollutantCodeList,
+                        payload: {
+                            PollutantType: value
                         }
-                    </Checkbox.Group>
-                    <span style={{ fontSize: 14, color: 'red' }}>核实结果为工艺超标、工艺设备故障的超标报警,由监管人员进行处置</span>
-                </div>
-                
-            </>
-        )
+                    }).then(() => {
+                        if (this.props.pollutantCodeList.length > 0) {
+                            this.setState({
+                                pollutantCodeList: this.props.pollutantCodeList.map(poll => poll.PollutantCode)
+                            })
+                        }
+                    })
+                    this.setState({
+                        outletValue: value,
+                    })
+                }}>    
+                <Option value="1">废水</Option>
+                <Option value="2">废气</Option>
+            </Select>
+            <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
+                this.setState({
+                    dataType: e.target.value,
+                    time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
+                })
+                e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+            }}>
+                <Radio.Button value="Hour">小时</Radio.Button>
+                <Radio.Button value="Day">日均</Radio.Button>
+            </Radio.Group>
+
+            <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
+                (dates, dataType) => {
+                    this.setState({
+                        time: dates
+                    })
+                }
+            } />
+            <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+            <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+            <div style={{ marginTop: 10 }}>
+                <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>监测因子:</label>
+                <Checkbox.Group defaultValue={pollutantCodeList.map(item => item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
+                    {
+                        pollutantCodeList.map(poll =>
+                            <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
+                        )
+                    }
+                </Checkbox.Group>
+                <span style={{ fontSize: 14, color: 'red' }}>核实结果为工艺超标、工艺设备故障的超标报警,由监管人员进行处置</span>
+            </div>
+            
+        </>;
     }
 
     onChange = (PageIndex, PageSize) => {
@@ -687,15 +699,15 @@ class index extends PureComponent {
                 if (key != '') {
                     let obj = {
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
-                        pagination={
-                            {
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20,
+                        // pagination={
+                            // {
+                                // showSizeChanger: true,
+                                // showQuickJumper: true,
+                                //defaultPageSize:20,
                                // total:this.props.total,
-                                pageSizeOptions: ['20', '30', '40', '50'],
-                            }
-                        } 
+                                // pageSizeOptions: ['20', '30', '40', '50'],
+                            // }
+                        // } 
                             // pagination={{
                             //     showSizeChanger: true,
                             //     showQuickJumper: true,
@@ -714,15 +726,15 @@ class index extends PureComponent {
                 if (key == '') {
                     panes.push({
                         title: text, content: <SdlTable columns={columns} dataSource={this.props.AlarmDetailList}
-                        pagination={
-                            {
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                defaultPageSize:20,
+                        // pagination={
+                            // {
+                            //     showSizeChanger: true,
+                            //     showQuickJumper: true,
+                                //defaultPageSize:20,
                                 //total:this.props.total,
-                                pageSizeOptions: ['20', '30', '40', '50'],
-                            }
-                        } 
+                                // pageSizeOptions: ['20', '30', '40', '50'],
+                            // }
+                        // } 
                             // pagination={{
                             //     showSizeChanger: true,
                             //     showQuickJumper: true,
@@ -1597,228 +1609,226 @@ class index extends PureComponent {
                     }
             },
         ]
-        return (
-            <>
-                <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="超标数据报警处置记录查询">
-                        <Card
-                            extra={
-                                <>
-                                    {this.cardTitle()}
-                                </>
-                            }
-                            className={style.dataTable}
-                        >
+        return <>
+            <div id="siteParamsPage" className={style.cardTitle}>
+                <BreadcrumbWrapper title="超标数据报警处置记录查询">
+                    <Card
+                        extra={
+                            <>
+                                {this.cardTitle()}
+                            </>
+                        }
+                        className={style.dataTable}
+                    >
 
-                            {loading ? <PageLoading /> : this.pageContent()}
-                        </Card>
-                        <Modal
-                            centered
-                            title={this.state.ModalTitle}
-                            visible={this.state.regVisible}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.RegCancelHandel}
-                        >
-                            <div style={{ marginBottom: 10 }}>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                                    placeholder="企业列表"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => {
-                                        if (option && option.props && option.props.title) {
-                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                        } else {
-                                            return true
-                                        }
-                                    }}
-                                    onChange={(value) => {
-                                        this.setState({
-                                            enterpriseValue: value
-                                        })
-                                    }}>
-                                    {this.entList()}
-                                </Select>
-                                <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
-                                <Button onClick={this.ButtonHandleExpor}><Icon type="export" /> 导出</Button>
-                                <Radio.Group defaultValue="2" style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
+                        {loading ? <PageLoading /> : this.pageContent()}
+                    </Card>
+                    <Modal
+                        centered
+                        title={this.state.ModalTitle}
+                        visible={this.state.regVisible}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.RegCancelHandel}
+                    >
+                        <div style={{ marginBottom: 10 }}>
+                            <Select
+                                allowClear
+                                showSearch
+                                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                                placeholder="企业列表"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                optionFilterProp="children"
+                                filterOption={(input, option) => {
+                                    if (option && option.props && option.props.title) {
+                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                    } else {
+                                        return true
+                                    }
+                                }}
+                                onChange={(value) => {
                                     this.setState({
-                                        DealType: e.target.value,
+                                        enterpriseValue: value
                                     })
                                 }}>
-                                    <Radio.Button value="2">全部</Radio.Button>
-                                    <Radio.Button value="1">已处置</Radio.Button>
-                                    <Radio.Button value="0">待处置</Radio.Button>
-                                </Radio.Group>
-                                
-                                {this.state.DealType==1&&<div style={{marginTop:10}}>
-                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
-                                    <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
-                                        {
-                                            AlarmDealTypeList.map(poll =>
-                                                <Checkbox value={poll.code}>{poll.name}</Checkbox>
-                                            )
-                                        }
-                                    </Checkbox.Group>
-                                </div>}
-                            </div>
-                            {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />
-                            }
-                        </Modal>
-                        <Modal
-                            centered
-                            title={this.state.ModalTitle}
-                            visible={this.state.regVisibleAlready}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.RegCancelHandel}
-                        >
-                            <div style={{ marginBottom: 10 }}>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                                    placeholder="企业列表"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => {
-                                        if (option && option.props && option.props.title) {
-                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                        } else {
-                                            return true
-                                        }
-                                    }}
-                                    onChange={(value) => {
-                                        this.setState({
-                                            enterpriseValue: value
-                                        })
-                                    }}>
-                                    {this.entList()}
-                                </Select>
-                                <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
-                                <Button onClick={this.AlreadyButtonHandleExpor}><Icon type="export" /> 导出</Button>
-                                {this.state.DealType==1&&<div style={{marginTop:10}}>
-                                    <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
-                                    <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
-                                        {
-                                            AlarmDealTypeList.map(poll =>
-                                                <Checkbox value={poll.code}>{poll.name}</Checkbox>
-                                            )
-                                        }
-                                    </Checkbox.Group>
-                                </div>}
-                            </div>
-                            {
-                                <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />
-                            }
+                                {this.entList()}
+                            </Select>
+                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlertsButtonHandle}> 查询</Button>
+                            <Button onClick={this.ButtonHandleExpor}><ExportOutlined /> 导出</Button>
+                            <Radio.Group defaultValue="2" style={{ marginRight: 10,marginLeft: 10 }} onChange={(e) => {
+                                this.setState({
+                                    DealType: e.target.value,
+                                })
+                            }}>
+                                <Radio.Button value="2">全部</Radio.Button>
+                                <Radio.Button value="1">已处置</Radio.Button>
+                                <Radio.Button value="0">待处置</Radio.Button>
+                            </Radio.Group>
                             
-                        </Modal>
-                        <Modal
-                            centered
-                            title={this.state.ModalTitle}
-                            visible={this.state.regVisibleStay}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.RegCancelHandel}
-                        >
-                            <div style={{ marginBottom: 10 }}>
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                                    placeholder="企业列表"
-                                    maxTagCount={2}
-                                    maxTagTextLength={5}
-                                    maxTagPlaceholder="..."
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => {
-                                        if (option && option.props && option.props.title) {
-                                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                        } else {
-                                            return true
-                                        }
-                                    }}
-                                    onChange={(value) => {
-                                        this.setState({
-                                            enterpriseValue: value
-                                        })
-                                    }}>
-                                    {this.entList()}
-                                </Select>
-                                <Button type='primary' style={{ marginRight: 10 }} onClick={this.StayButtonCountHandle}> 查询</Button>
-                                <Button onClick={this.StayButtonHandleExpor}><Icon type="export" /> 导出</Button>
+                            {this.state.DealType==1&&<div style={{marginTop:10}}>
+                                <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
+                                <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
+                                    {
+                                        AlarmDealTypeList.map(poll =>
+                                            <Checkbox value={poll.code}>{poll.name}</Checkbox>
+                                        )
+                                    }
+                                </Checkbox.Group>
+                            </div>}
+                        </div>
+                        {
+                            <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns2} dataSource={ManagementDetail} pagination={false} />
+                        }
+                    </Modal>
+                    <Modal
+                        centered
+                        title={this.state.ModalTitle}
+                        visible={this.state.regVisibleAlready}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.RegCancelHandel}
+                    >
+                        <div style={{ marginBottom: 10 }}>
+                            <Select
+                                allowClear
+                                showSearch
+                                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                                placeholder="企业列表"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                optionFilterProp="children"
+                                filterOption={(input, option) => {
+                                    if (option && option.props && option.props.title) {
+                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                    } else {
+                                        return true
+                                    }
+                                }}
+                                onChange={(value) => {
+                                    this.setState({
+                                        enterpriseValue: value
+                                    })
+                                }}>
+                                {this.entList()}
+                            </Select>
+                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.AlreadyButtonCountHandle}> 查询</Button>
+                            <Button onClick={this.AlreadyButtonHandleExpor}><ExportOutlined /> 导出</Button>
+                            {this.state.DealType==1&&<div style={{marginTop:10}}>
+                                <label style={{ fontSize: 14, marginRight: 10, marginLeft: 10 }}>处置结果:</label>
+                                <Checkbox.Group  defaultValue={AlarmDealTypeList.map(item=>item.code)} onChange={this.AlarmDealCheckBoxChange}>
+                                    {
+                                        AlarmDealTypeList.map(poll =>
+                                            <Checkbox value={poll.code}>{poll.name}</Checkbox>
+                                        )
+                                    }
+                                </Checkbox.Group>
+                            </div>}
+                        </div>
+                        {
+                            <SdlTable scroll={{ y: 500 }} loading={loadingDetail} columns={columns3} dataSource={ManagementDetail} pagination={false} />
+                        }
+                        
+                    </Modal>
+                    <Modal
+                        centered
+                        title={this.state.ModalTitle}
+                        visible={this.state.regVisibleStay}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.RegCancelHandel}
+                    >
+                        <div style={{ marginBottom: 10 }}>
+                            <Select
+                                allowClear
+                                showSearch
+                                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                                placeholder="企业列表"
+                                maxTagCount={2}
+                                maxTagTextLength={5}
+                                maxTagPlaceholder="..."
+                                optionFilterProp="children"
+                                filterOption={(input, option) => {
+                                    if (option && option.props && option.props.title) {
+                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
+                                    } else {
+                                        return true
+                                    }
+                                }}
+                                onChange={(value) => {
+                                    this.setState({
+                                        enterpriseValue: value
+                                    })
+                                }}>
+                                {this.entList()}
+                            </Select>
+                            <Button type='primary' style={{ marginRight: 10 }} onClick={this.StayButtonCountHandle}> 查询</Button>
+                            <Button onClick={this.StayButtonHandleExpor}><ExportOutlined /> 导出</Button>
+                        </div>
+                        {
+                            <SdlTable loading={loadingDetail} scroll={{ y: 500 }} columns={columns4} dataSource={ManagementDetail} pagination={false} />
+                        }
+                        
+                    </Modal>
+                    <Modal
+                        centered
+                        title={this.state.ModalTitle}
+                        visible={this.state.entVisible}
+                        footer={null}
+                        width={1300}
+                        onCancel={this.RegCancelHandel}
+                    >
+                        <div style={{ marginBottom: 10 }}>
+                            <Button onClick={this.ButtonCountHandleExpor}><ExportOutlined /> 导出</Button>
+                        </div>
+                        {
+                            <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
+                        }
+                        
+                    </Modal>
+                    <Modal
+                        centered
+                        title="核实信息"
+                        visible={this.state.detailsVisible}
+                        footer={null}
+                        width={500}
+                        onCancel={this.CancelHandel}
+                    >
+                        <div style={{ marginBottom: 10 }}>
+                            <div>
+                                <label>备注:</label>
+                                <span>{this.state.remark}</span>
                             </div>
-                            {
-                                <SdlTable loading={loadingDetail} scroll={{ y: 500 }} columns={columns4} dataSource={ManagementDetail} pagination={false} />
-                            }
-                            
-                        </Modal>
-                        <Modal
-                            centered
-                            title={this.state.ModalTitle}
-                            visible={this.state.entVisible}
-                            footer={null}
-                            width={1300}
-                            onCancel={this.RegCancelHandel}
-                        >
-                            <div style={{ marginBottom: 10 }}>
-                                <Button onClick={this.ButtonCountHandleExpor}><Icon type="export" /> 导出</Button>
+                            <div>
+                                <label>附件:</label>
+                                <a onClick={this.downloadFile.bind(this,this.state.filePath)}>{this.state.filePath}</a>
                             </div>
-                            {
-                                <SdlTable loading={loadingDetail} columns={columns5} scroll={{ y: 500 }} dataSource={ManagementDetail} pagination={false} />
-                            }
-                            
-                        </Modal>
-                        <Modal
-                            centered
-                            title="核实信息"
-                            visible={this.state.detailsVisible}
-                            footer={null}
-                            width={500}
-                            onCancel={this.CancelHandel}
-                        >
-                            <div style={{ marginBottom: 10 }}>
-                                <div>
-                                    <label>备注:</label>
-                                    <span>{this.state.remark}</span>
-                                </div>
-                                <div>
-                                    <label>附件:</label>
-                                    <a onClick={this.downloadFile.bind(this,this.state.filePath)}>{this.state.filePath}</a>
-                                </div>
+                        </div>
+                    </Modal>
+                    <Modal
+                        centered
+                        title="核实信息"
+                        visible={this.state.detailsVisible2}
+                        footer={null}
+                        width={500}
+                        onCancel={this.CancelHandel}
+                    >
+                        <div style={{ marginBottom: 10 }}>
+                            <div>
+                                <label>备注:</label>
+                                <span>{this.state.remark}</span>
                             </div>
-                        </Modal>
-                        <Modal
-                            centered
-                            title="核实信息"
-                            visible={this.state.detailsVisible2}
-                            footer={null}
-                            width={500}
-                            onCancel={this.CancelHandel}
-                        >
-                            <div style={{ marginBottom: 10 }}>
-                                <div>
-                                    <label>备注:</label>
-                                    <span>{this.state.remark}</span>
-                                </div>
-                                <div>
-                                    <label>附件:</label>
-                                    <a onClick={this.downloadFile.bind(this,this.state.filePath)}>{this.state.filePath}</a>
-                                </div>
+                            <div>
+                                <label>附件:</label>
+                                <a onClick={this.downloadFile.bind(this,this.state.filePath)}>{this.state.filePath}</a>
                             </div>
-                        </Modal>
-                    </BreadcrumbWrapper>
-                </div>
-            </>
-        );
+                        </div>
+                    </Modal>
+                </BreadcrumbWrapper>
+            </div>
+        </>;
     }
 }
 

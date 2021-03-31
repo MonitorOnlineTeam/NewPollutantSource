@@ -6,7 +6,26 @@
  * @Description: 导航树
  */
 import React, { Component } from 'react'
-import { Form, Select, Input, Button, Drawer, Radio, Collapse, Table, Badge, Icon, Divider, Row, Tree, Empty, Col, Tooltip, Spin, Tag } from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Select,
+  Input,
+  Button,
+  Drawer,
+  Radio,
+  Collapse,
+  Table,
+  Badge,
+  Divider,
+  Row,
+  Tree,
+  Empty,
+  Col,
+  Tooltip,
+  Spin,
+  Tag,
+} from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
 import _ from 'lodash'
@@ -18,6 +37,7 @@ import config from '@/config'
 import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
+import RegionList from '@/components/RegionList'
 
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
@@ -404,7 +424,27 @@ class NavigationTree extends Component {
       },
     })
   }
+  changeRegion=(value)=>{ //行政区筛选
 
+    this.setState({
+      RegionCode: value? value : '',
+    })
+    this.props.dispatch({
+      type: 'navigationtree/getentandpoint',
+      payload: {
+       PollutantTypes: this.state.PollutantTypes,
+       RegionCode: value,
+       Name: this.state.Name,
+       Status: this.state.screenList,
+       RunState: this.state.RunState,
+       isFilter: this.props.isMap,
+     },
+     callback: data => {
+       this.loadCallback(data)
+     },
+   })
+
+  }
   // 搜索框改变查询数据
   // onTextChange = value => {
   //   this.setState({
@@ -783,7 +823,7 @@ class NavigationTree extends Component {
 
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
-    const { configInfo } = this.props;
+    const { configInfo,pageType } = this.props;
     // 渲染数据及企业排口图标和运行状态
     const loop = data =>
       data.map((item, idx) => {
@@ -829,6 +869,7 @@ class NavigationTree extends Component {
     } else {
       _props = { expandedKeys }
     }
+
     return (
       <div >
 
@@ -859,7 +900,8 @@ class NavigationTree extends Component {
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: '#e94', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />异常</Col>
             </Row>
           </div>
-
+         {  this.props.type!='air' ?   <RegionList placeholder="请选择行政区" style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/> : null}
+        
          {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}
@@ -868,14 +910,15 @@ class NavigationTree extends Component {
             onChange={this.handleChange}
           />
             : ''}
-            
+
                {  this.props.type=='ent' ? 
-               <Select  style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择污染物类型" >
-                <Option key={1} value={1}>废水</Option>
-                <Option key={2} value={2}>废气</Option>
+                <Select  style={{ width: '100%', marginBottom: 10 }} onChange={this.handleChange} allowClear placeholder="请选择监测点类型" >
+                  <Option key={1} value={1}>废水</Option>
+                  <Option key={2} value={2}>废气</Option>
               </Select> : 
                null
                 } 
+              
           {/* {false ? <EnterprisePointCascadeMultiSelect
             searchRegion
             onChange={this.regionChange}
@@ -906,7 +949,7 @@ class NavigationTree extends Component {
             background: '#1890FF',
             borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
             cursor: 'pointer',
-          }} onClick={this.changeState}><a href="#"><Icon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
+          }} onClick={this.changeState}><a href="#"><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
           {this.state.treeVis ? <div >
             {
               this.props.EntAndPointLoading ? <Spin
@@ -960,8 +1003,6 @@ class NavigationTree extends Component {
         </Drawer>
 
       </div>
-
-
     );
   }
 }

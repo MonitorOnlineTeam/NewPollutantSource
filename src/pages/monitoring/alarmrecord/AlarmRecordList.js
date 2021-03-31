@@ -1,20 +1,21 @@
 import React, { Component, useDebugValue } from 'react';
 import moment from 'moment';
 import { formatMoment, handleFormData } from '@/utils/utils';
+import { EditOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Spin,
   Button,
   Modal,
-  Form,
   message,
   Badge,
-  Icon,
   Row,
   Col,
   Input,
   Select,
-  Checkbox
+  Checkbox,
 } from 'antd';
 import { connect } from 'dva';
 import cuid from 'cuid';
@@ -317,203 +318,203 @@ class AlarmRecordList extends Component {
       },
     };
     return (
-    <BreadcrumbWrapper>
-      <div>
-        <Card>
-        <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row gutter={16}>
-              <Col md={4}>
-                <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
-                  {getFieldDecorator('PollutantType', {
-                    initialValue: '1',
-                  })(
-                    <Select placeholder="请选择企业类型" onChange={(value) => {
-                      this.setState({ pollutantType: value }, () => {
-                        this.getPollutantByType(true)
-                      })
-                    }}>
-                      <Option value="1">废水</Option>
-                      <Option value="2">废气</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={7}>
-                <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="日期查询" style={{ width: '100%' }}>
-                    <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
-                        dataType="minute"
-                        dateValue={this.state.rangeDate}
-                        callback={dates => this._handleDateChange(dates)}
-                        allowClear={false}
-                    />
-                </FormItem>
-              </Col>
-              <Col md={4}>
-                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                  {getFieldDecorator('RegionCode', {
-                  })(
-                    <Select allowClear placeholder="请选择行政区">
-                      {
-                        _regionList.map(item => {
-                          return <Option key={item.key} value={item.value}>
-                            {item.title}
-                          </Option>
-                        })
-                      }
-                    </Select>,
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={5}>
-                <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
-                  {getFieldDecorator('EntCode', {
-                    initialValue: undefined,
-                  })(
-                    <Select allowClear placeholder="请选择企业"  onChange={(value) => {
-                        //获取监测点
-                        this.props.dispatch({
-                            type: pageUrl.GetPointByEntCode,
-                            payload: {
-                                EntCode:value
-                            },
-                        });
-                        this.props.form.setFieldsValue({ DGIMN: undefined })
-                    }}>
-                      {
-                        entList.map(item => {
-                          return <Option key={item.EntCode} value={item.EntCode}>
-                            {item.EntName}
-                          </Option>
-                        })
-                      }
-                    </Select>,
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={4}>
-                <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
-                  {getFieldDecorator('DGIMN', {
-                  })(
-                    <Select allowClear placeholder="请选择监测点">
-                    {
-                      pointList.map(item => {
-                        return <Option key={item.DGIMN} value={item.DGIMN}>
-                          {item.PointName}
-                        </Option>
-                      })
-                    }
-                  </Select>,
-                  )}
-                </FormItem>
-              </Col>
-
-              <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
-                <div class="ant-form-item-label" style={{ width: '5.3%' }}>
-                  <label for="RegionCode" class="" title="监测因子">监测因子</label>
-                </div>
-                {getFieldDecorator('PollutantList', {
-                  initialValue: checkedValues,
-                })(
-                  <Checkbox.Group style={{ maxWidth: "calc(100% - 5.3% - 168px)" }} onChange={this.onCheckboxChange}>
-                    {
-                      divisorList.map(item => {
-                        return <Checkbox key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Checkbox>
-                      })
-                    }
-                  </Checkbox.Group>
-                )}
-                <Button loading={dataloading} type="primary" style={{ marginLeft: 10 }} onClick={()=>{
-                    this.reloaddatalist()
-                }}>
-                  查询
-                      </Button>
-                <Button
-                  style={{ margin: '0 5px' }}
-                  type="danger"
-                  icon="edit"
-                  onClick={this.BtnVerify}
-                >
-                  处置
-                      </Button>
-              </Col>
-            </Row>
-          </Form>
-          <SdlTable
-            loading={this.props.dataloading}
-            columns={columns}
-            dataSource={this.props.data}
-            rowKey="ID"
-            rowSelection={rowSelection}
-            align="center"
-            onRow={(record, index) => ({
-              onClick: event => {
-                const { selectedRowKeys } = this.state;
-                let keys = selectedRowKeys;
-                if (selectedRowKeys.some(item => item === record.ID)) {
-                  keys = keys.filter(item => item !== record.ID)
-                } else if (record.State !== '1') {
-                  keys.push(record.ID);
-                }
-                this.setState({
-                  selectedRowKeys: keys,
-                })
-              },
-            })}
-          />
-
-          <Modal
-            title="处置单详情"
-            visible={this.state.visible}
-            destroyOnClose // 清除上次数据
-            onOk={this.handleOk}
-            confirmLoading={btnisloading}
-            okText="保存"
-            cancelText="关闭"
-            onCancel={() => {
-              this.setState({
-                visible: false,
-              });
-            }}
-            width="50%"
-          >
-            <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
-              <Row>
-                <Col span={12}>
-                  <FormItem {...formLayout} label="处置人">
-                    {getFieldDecorator('VerifyPerSon1', {
-                      initialValue: UserName,
-                      rules: [
-                        {
-                          required: true,
-                          message: '处置人不能为空',
-                        },
-                      ],
+      <BreadcrumbWrapper>
+        <div>
+          <Card>
+          <Form layout="" style={{ marginBottom: 20 }}>
+              <Row gutter={16}>
+                <Col md={4}>
+                  <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
+                    {getFieldDecorator('PollutantType', {
+                      initialValue: '1',
                     })(
-                      <Input></Input>,
+                      <Select placeholder="请选择企业类型" onChange={(value) => {
+                        this.setState({ pollutantType: value }, () => {
+                          this.getPollutantByType(true)
+                        })
+                      }}>
+                        <Option value="1">废水</Option>
+                        <Option value="2">废气</Option>
+                      </Select>
                     )}
                   </FormItem>
                 </Col>
-                <Col span={12}>
-                  <FormItem {...formLayout} label="处置时间">
-                    {getFieldDecorator('VerifyTime1', {
-                      initialValue: moment(),
-                      rules: [
-                        {
-                          required: true,
-                          message: '处置时间不能为空',
-                        },
-                      ],
+                <Col md={7}>
+                  <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="日期查询" style={{ width: '100%' }}>
+                      <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
+                          dataType="minute"
+                          dateValue={this.state.rangeDate}
+                          callback={dates => this._handleDateChange(dates)}
+                          allowClear={false}
+                      />
+                  </FormItem>
+                </Col>
+                <Col md={4}>
+                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                    {getFieldDecorator('RegionCode', {
                     })(
-                      <SdlDatePicker />,
+                      <Select allowClear placeholder="请选择行政区">
+                        {
+                          _regionList.map(item => {
+                            return <Option key={item.key} value={item.value}>
+                              {item.title}
+                            </Option>
+                          })
+                        }
+                      </Select>,
                     )}
                   </FormItem>
+                </Col>
+                <Col md={5}>
+                  <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
+                    {getFieldDecorator('EntCode', {
+                      initialValue: undefined,
+                    })(
+                      <Select allowClear placeholder="请选择企业"  onChange={(value) => {
+                          //获取监测点
+                          this.props.dispatch({
+                              type: pageUrl.GetPointByEntCode,
+                              payload: {
+                                  EntCode:value
+                              },
+                          });
+                          this.props.form.setFieldsValue({ DGIMN: undefined })
+                      }}>
+                        {
+                          entList.map(item => {
+                            return <Option key={item.EntCode} value={item.EntCode}>
+                              {item.EntName}
+                            </Option>
+                          })
+                        }
+                      </Select>,
+                    )}
+                  </FormItem>
+                </Col>
+                <Col md={4}>
+                  <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
+                    {getFieldDecorator('DGIMN', {
+                    })(
+                      <Select allowClear placeholder="请选择监测点">
+                      {
+                        pointList.map(item => {
+                          return <Option key={item.DGIMN} value={item.DGIMN}>
+                            {item.PointName}
+                          </Option>
+                        })
+                      }
+                    </Select>,
+                    )}
+                  </FormItem>
+                </Col>
+
+                <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+                  <div class="ant-form-item-label" style={{ width: '5.3%' }}>
+                    <label for="RegionCode" class="" title="监测因子">监测因子</label>
+                  </div>
+                  {getFieldDecorator('PollutantList', {
+                    initialValue: checkedValues,
+                  })(
+                    <Checkbox.Group style={{ maxWidth: "calc(100% - 5.3% - 168px)" }} onChange={this.onCheckboxChange}>
+                      {
+                        divisorList.map(item => {
+                          return <Checkbox key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Checkbox>
+                        })
+                      }
+                    </Checkbox.Group>
+                  )}
+                  <Button loading={dataloading} type="primary" style={{ marginLeft: 10 }} onClick={()=>{
+                      this.reloaddatalist()
+                  }}>
+                    查询
+                        </Button>
+                  <Button
+                    style={{ margin: '0 5px' }}
+                    type="danger"
+                    icon={<EditOutlined />}
+                    onClick={this.BtnVerify}
+                  >
+                    处置
+                        </Button>
                 </Col>
               </Row>
-            </SdlForm>
-          </Modal>
-        </Card>
-      </div>
-      </BreadcrumbWrapper>
+            </Form>
+            <SdlTable
+              loading={this.props.dataloading}
+              columns={columns}
+              dataSource={this.props.data}
+              rowKey="ID"
+              rowSelection={rowSelection}
+              align="center"
+              onRow={(record, index) => ({
+                onClick: event => {
+                  const { selectedRowKeys } = this.state;
+                  let keys = selectedRowKeys;
+                  if (selectedRowKeys.some(item => item === record.ID)) {
+                    keys = keys.filter(item => item !== record.ID)
+                  } else if (record.State !== '1') {
+                    keys.push(record.ID);
+                  }
+                  this.setState({
+                    selectedRowKeys: keys,
+                  })
+                },
+              })}
+            />
+
+            <Modal
+              title="处置单详情"
+              visible={this.state.visible}
+              destroyOnClose // 清除上次数据
+              onOk={this.handleOk}
+              confirmLoading={btnisloading}
+              okText="保存"
+              cancelText="关闭"
+              onCancel={() => {
+                this.setState({
+                  visible: false,
+                });
+              }}
+              width="50%"
+            >
+              <SdlForm configId="ExceptionVerify" form={this.props.form} hideBtns >
+                <Row>
+                  <Col span={12}>
+                    <FormItem {...formLayout} label="处置人">
+                      {getFieldDecorator('VerifyPerSon1', {
+                        initialValue: UserName,
+                        rules: [
+                          {
+                            required: true,
+                            message: '处置人不能为空',
+                          },
+                        ],
+                      })(
+                        <Input></Input>,
+                      )}
+                    </FormItem>
+                  </Col>
+                  <Col span={12}>
+                    <FormItem {...formLayout} label="处置时间">
+                      {getFieldDecorator('VerifyTime1', {
+                        initialValue: moment(),
+                        rules: [
+                          {
+                            required: true,
+                            message: '处置时间不能为空',
+                          },
+                        ],
+                      })(
+                        <SdlDatePicker />,
+                      )}
+                    </FormItem>
+                  </Col>
+                </Row>
+              </SdlForm>
+            </Modal>
+          </Card>
+        </div>
+        </BreadcrumbWrapper>
     );
   }
 }

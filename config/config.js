@@ -348,6 +348,12 @@ export default {
                   component: './platformManager/equipmentManage',
                 },
                 {
+                  // 设备参数管理
+                  name: 'equipmentManage',
+                  path: '/platformconfig/equipmentParmars',
+                  component: './platformManager/equipmentParmars',
+                },
+                {
                   // 设备管理 - 添加、编辑
                   name: 'addEditEquipment',
                   path: '/platformconfig/equipmentManage/:DGIMN/:id',
@@ -417,11 +423,6 @@ export default {
                   name: 'manualuploadauto',
                   path: '/platformconfig/manualuploadauto/',
                   component: './platformManager/manualuploadauto',
-                },
-                {
-                  name: 'maintenancedatabase',
-                  path: '/platformconfig/maintenancedatabase/:configId',
-                  component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
                 {
                   name: 'sparepartmanage',
@@ -574,25 +575,31 @@ export default {
                 //小时平均值日报
                 {
                   name: 'DailyReport',
-                  path: '/report/DailyReport',
+                  path: '/report/wasteWater',
+                  redirect: '/report/wasteWater/DailyReport',
+                },                
+                //小时平均值日报
+                {
+                  name: 'DailyReport',
+                  path: '/report/wasteWater/DailyReport',
                   component: './report/DailyReport/DailyReport',
                 },
                 //日平均值月报
                 {
                   name: 'MonthReport',
-                  path: '/report/MonthReport',
+                  path: '/report/wasteWater/MonthReport',
                   component: './report/MonthReport/MonthReport',
                 },
                 //月平均值季报
                 {
                   name: 'SeasonReport',
-                  path: '/report/SeasonReport',
+                  path: '/report/wasteWater/SeasonReport',
                   component: './report/SeasonReport/SeasonReport',
                 },
                 //月平均值年报
                 {
                   name: 'YearReport',
-                  path: '/report/YearReport',
+                  path: '/report/wasteWater/YearReport',
                   component: './report/YearReport/YearReport',
                 },
                 {
@@ -661,27 +668,24 @@ export default {
                       redirect: '/operations/materielmanager/sparepartmanage/SparepartManage',
                     },
                     {
-                      name: 'sparepartmanage',
-                      path: '/operations/materielmanager/sparepartmanage/:configId',
-                      component: './OperationSysManager/SparepartManage/',
-                    },
-                    {
-                      name: 'standardgasmanage',
-                      path: '/operations/materielmanager/standardgasmanage/:configId',
-                      component: './OperationSysManager/StandardGasManage/',
-                    },
-                    {
                       name: 'handhelddevicesmanage',
                       path: '/operations/materielmanager/handhelddevicesmanage/:configId',
                       component: './OperationSysManager/HandheldDevicesManage/',
                     },
                     {
-                      name: 'sparepartsstation',
-                      path: '/operations/materielmanager/sparepartsstation/:configId',
-                      component: './OperationSysManager/SparePartsStation/',
+                      name: 'sparepartmanage',
+                      path: '/operations/materielmanager/sparepartmanage/:configId',
+                      component: './OperationSysManager/SparepartManage/',
+                    },
+
+                    {
+                      name: 'standardgasmanage',
+                      path: '/operations/materielmanager/standardgasmanage/:configId',
+                      component: './OperationSysManager/StandardGasManage/',
                     },
                   ],
                 },
+
                 {
                   name: 'usermanager',
                   path: '/operations/usermanager',
@@ -693,9 +697,20 @@ export default {
                     {
                       name: 'certificatemanage',
                       path: '/operations/usermanager/certificatemanage/:configId',
-                      component: './OperationSysManager/CertificateManage/',
+                      component: './OperationSysManager/CertificateManage/',//人员证书
                     },
+
                   ],
+                },
+                {//运维资料
+                      name: 'maintenancedatabase',
+                      path: '/operations/maintenancedatabase/:configId',
+                      component: './OperationSysManager/MaintenanceDatabaseManage/',
+               },                
+                {
+                  name: 'sparepartsstation',//服务站信息
+                  path: '/operations/sparepartsstation/:configId',
+                  component: './OperationSysManager/SparePartsStation/',
                 },
                 {
                   name: 'carmanager',
@@ -861,36 +876,7 @@ export default {
             //     // },
             //   ],
             // },
-            {
-              name: 'alarmmanager',
-              path: '/alarmmanager',
-              routes: [
-                {
-                  path: '/alarmmanager',
-                  redirect: '/alarmmanager/alarmrecord',
-                },
-                {
-                  name: 'alarmrecord',
-                  path: '/alarmmanager/alarmrecord',
-                  component: './monitoring/alarmrecord/AlarmRecordList',
-                },
-                {
-                  name: 'alarmverifyrecord',
-                  path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
-                  component: './monitoring/alarmverifyrecord/index',
-                },
-                {
-                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
-                  path: '/alarmmanager/exceedDataAlarmRecord',
-                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
-                },
-                {
-                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
-                  path: '/alarmmanager/exceedDataDispositionRecord',
-                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
-                },
-              ],
-            },
+
             {
               name: 'dataquerymanager',
               path: '/dataquerymanager',
@@ -904,11 +890,6 @@ export default {
                   name: 'overrecord',
                   path: '/dataquerymanager/overrecord',
                   component: './monitoring/overRecord',
-                },
-                {
-                  name: 'originaldata',
-                  path: '/dataquerymanager/originaldata',
-                  component: './monitoring/originaldata',
                 },
                 {
                   name: 'dataAudit',
@@ -945,6 +926,11 @@ export default {
                   name: 'exceptionrecordDetails',
                   path: '/monitoring/missingData/exceptionrecord/details',
                   component: './monitoring/exceptionrecordNew/RegionDetails',
+                },
+                {
+                  name: 'alarmrecord',
+                  path: '/monitoring/alarmrecord',
+                  component: './monitoring/alarmrecord/index',
                 },
                 // 企业异常上报
                 {
@@ -998,16 +984,7 @@ export default {
                   path: '/monitoring/realtimedata',
                   component: './monitoring/realtimedata',
                 },
-                {
-                  name: 'dataquery',
-                  path: '/monitoring/dataquery/ent',
-                  component: './monitoring/dataquery/index',
-                },
-                {
-                  name: 'airDataquery',
-                  path: '/monitoring/dataquery/air',
-                  component: './monitoring/dataquery/air',
-                },
+
                 {
                   path: '/monitoring/videoMonitor',
                   redirect: '/monitoring/videoMonitor/ent',
@@ -1046,6 +1023,31 @@ export default {
                   path: '/monitoring/missingData/missDataSecond',
                   component: './monitoring/missingData/missDataSecond',
                 },
+                    {
+                      name: 'alarmrecord',
+                      path: '/alarmmanager/alarmrecord',
+                      component: './monitoring/alarmrecord/AlarmRecordList',
+                    },
+                    {
+                      name: 'alarmverifyrecord',
+                      path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
+                      component: './monitoring/alarmverifyrecord/index',
+                    },
+                    {
+                      name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                      path: '/monitoring/missingData/exceedDataAlarmRecord',
+                      component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                    },
+                    {
+                      name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                      path: '/monitoring/missingData/exceedDataDispositionRecord',
+                      component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                    },
+                    {
+                      name: 'originaldata',
+                      path: '/monitoring/missingData/originaldata',
+                      component: './monitoring/originaldata',
+                    },
               ],
             },
             {
@@ -1132,11 +1134,6 @@ export default {
                   name: 'manualuploadauto',
                   path: '/platformconfig/manualuploadauto/',
                   component: './platformManager/manualuploadauto',
-                },
-                {
-                  name: 'maintenancedatabase',
-                  path: '/platformconfig/maintenancedatabase/:configId',
-                  component: './OperationSysManager/MaintenanceDatabaseManage/',
                 },
                 {
                   name: 'sparepartmanage',
@@ -1348,18 +1345,27 @@ export default {
                   ],
                 },
                 {
+                 name:'aqi',
+                 path:'/Intelligentanalysis/aqi',
+                },
+                {
                   name: 'effluentFee',
-                  path: '/Intelligentanalysis/effluentFee',
+                  path: '/Intelligentanalysis/aqi',
+                  redirect: '/Intelligentanalysis/aqi/effluentFee',
+                }, // 单站多参对比分析
+                {
+                  name: 'effluentFee',
+                  path: '/Intelligentanalysis/aqi/effluentFee',
                   component: './Intelligentanalysis/effluentFee',
                 }, // 单站多参对比分析
                 {
                   name: 'siteParamsPage',
-                  path: '/Intelligentanalysis/siteParamsPage/:type',
+                  path: '/Intelligentanalysis/aqi/siteParamsPage/:type',
                   component: './dataAnalyze/SiteParamsPage',
                 }, // 多站多参对比分析
                 {
                   name: 'multiSiteParamsPage',
-                  path: '/Intelligentanalysis/multiSiteParamsPage/:type',
+                  path: '/Intelligentanalysis/aqi/multiSiteParamsPage/:type',
                   component: './dataAnalyze/MultiSiteParamsPage',
                 }, // 数据获取率
                 {
@@ -1459,6 +1465,19 @@ export default {
                       path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                     },
+                    {
+                      //超标报警处置率
+                      name: 'overAlarmDisposalRate',
+                      path: '/Intelligentanalysis/dataAlarm/baojing/4',
+                      component: './dataAnalyze/overAlarmDisposalRate',
+                    },
+                    {
+                      //超标报警处置率-二级
+                      name: 'RegionOverAlarmDisposalRate',
+                      path:
+                        '/Intelligentanalysis/dataAlarm/baojing/4/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                      component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
+                    },
                   ],
                 },
 
@@ -1545,19 +1564,7 @@ export default {
                     },
                   ],
                 },
-                {
-                  //超标报警处置率
-                  name: 'overAlarmDisposalRate',
-                  path: '/Intelligentanalysis/baojing/4',
-                  component: './dataAnalyze/overAlarmDisposalRate',
-                },
-                {
-                  //超标报警处置率-二级
-                  name: 'RegionOverAlarmDisposalRate',
-                  path:
-                    '/Intelligentanalysis/baojing/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                  component: './dataAnalyze/overAlarmDisposalRate/RegionOverAlarmDisposalRate',
-                },
+
 
                 {
                   //空气质量状况统计
@@ -1573,6 +1580,16 @@ export default {
               path: '/dataSearch',
               name: 'dataSearch',
               routes: [
+                {
+                  name: 'dataquery',
+                  path: '/dataSearch/dataquery/ent',
+                  component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'airDataquery',
+                  path: '/dataSearch/dataquery/air',
+                  component: './monitoring/dataquery/air',
+                },
                 {
                   path: '/dataSearch',
                   redirect: '/dataquery/defectData',
@@ -1659,6 +1676,12 @@ export default {
                   path: '/dataSearch/DataModal',
                   component: './dataSearch/DataModal',
                 },
+                {
+                  name: 'dischargeStandard',
+                  //设备参数查询
+                  path: '/dataSearch/deviceParam',
+                  component: './dataSearch/deviceParam',
+                },
               ],
             },
             {
@@ -1673,11 +1696,6 @@ export default {
                   name: 'dataquery',
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
-                },
-                {
-                  name: 'alarmrecord',
-                  path: '/monitoring/alarmrecord',
-                  component: './monitoring/alarmrecord/index',
                 },
                 {
                   name: 'originaldata',

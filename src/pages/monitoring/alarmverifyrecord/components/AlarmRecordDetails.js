@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import {
-    Card,
-    Spin,
-    Form,
-    Badge,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Spin, Badge } from 'antd';
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable'
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'

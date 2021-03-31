@@ -1,5 +1,23 @@
 import React, { Component } from 'react';
-import { Card, Table, Row, Col, Radio, Popover, Select, Badge, Icon, Input, Tag, TimePicker, DatePicker, Popconfirm, Button, Checkbox, message } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
+import {
+  Card,
+  Table,
+  Row,
+  Col,
+  Radio,
+  Popover,
+  Select,
+  Badge,
+  Input,
+  Tag,
+  TimePicker,
+  DatePicker,
+  Popconfirm,
+  Button,
+  Checkbox,
+  message,
+} from 'antd';
 import { connect } from 'dva';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import SelectPollutantType from '@/components/SelectPollutantType';
@@ -450,7 +468,7 @@ class index extends Component {
                     style={{ width: 150, marginLeft: 10 }}
                     placeholder="请选择时间"
                     defaultValue={time}
-                    suffixIcon={<Icon type="clock-circle" />}
+                    suffixIcon={<ClockCircleOutlined />}
                     onChange={time => {
                       this.setState(
                         {

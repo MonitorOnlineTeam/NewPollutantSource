@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
-import { Form, Input, Button, Row, Col, Card, Radio, Switch, Select, message, Divider } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Row, Col, Card, Radio, Switch, Select, message, Divider } from 'antd';
 import { connect } from 'dva';
 import { ceshi } from '../../../config';
 

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import { Spin } from 'antd';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 import router from 'umi/router';
-import { Form, Input, Tabs, Button, Icon, Checkbox, Row, Col, Alert } from 'antd';
+import { Input, Tabs, Button, Checkbox, Row, Col, Alert } from 'antd';
 
 
 @connect(state => ({

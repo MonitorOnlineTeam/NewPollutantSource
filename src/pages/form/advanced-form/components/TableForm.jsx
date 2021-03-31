@@ -1,3 +1,4 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Input, Popconfirm, Table, message } from 'antd';
 import React, { Fragment, PureComponent } from 'react';
 import { isEqual } from 'lodash';
@@ -283,7 +284,7 @@ class TableForm extends PureComponent {
           }}
           type="dashed"
           onClick={this.newMember}
-          icon="plus"
+          icon={<PlusOutlined />}
         >
           新增成员
         </Button>

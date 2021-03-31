@@ -4,6 +4,9 @@
  * 创建时间：2019.10.26
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
   Tabs,
   Radio,
@@ -315,51 +316,51 @@ export default class EntTransmissionEfficiency extends Component {
     const { TabPane } = Tabs;
 
     return (
-        <Modal
-          title={`${RegionName=='全部合计'?'所有行政区':RegionName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}企业监测点缺失台账照片统计信息`}
-          footer={null}
-          width='95%'
-          visible={regionVisible}  
-          onCancel={regionCancel}
-        >
-              <Form layout="inline" style={{paddingBottom:10}}>
-            
-                 <Form.Item label='企业列表'>
-                 <EntAtmoList regionCode={RegionCode} changeEnt={this.changeEnt} EntCode={EntCode}/>
-                </Form.Item> 
+      <Modal
+        title={`${RegionName=='全部合计'?'所有行政区':RegionName}${moment(beginTime).format('YYYY/MM/DD')}-${moment(endTime).format('YYYY/MM/DD')}企业监测点缺失台账照片统计信息`}
+        footer={null}
+        width='95%'
+        visible={regionVisible}  
+        onCancel={regionCancel}
+      >
+            <Form layout="inline" style={{paddingBottom:10}}>
+          
+               <Form.Item label='企业列表'>
+               <EntAtmoList regionCode={RegionCode} changeEnt={this.changeEnt} EntCode={EntCode}/>
+              </Form.Item> 
 
-                <Form.Item>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-              </Form>
-          <div id='noAccountStatistics'>
-             <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={Regionloading}
-              columns={this.columns}
-              // bordered={false}
-              dataSource={this.state.tableDatas}
-              // style ={{height:"calc(100vh - 300px)"}} 
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                // sorter: true,
-                total: this.props.total,
-                defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              }}
-            />
-          </div>
-        </Modal>
+              <Form.Item>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+            </Form>
+        <div id='noAccountStatistics'>
+           <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={Regionloading}
+            columns={this.columns}
+            // bordered={false}
+            dataSource={this.state.tableDatas}
+            // style ={{height:"calc(100vh - 300px)"}} 
+            // pagination={{
+              // showSizeChanger: true,
+              // showQuickJumper: true,
+              // sorter: true,
+              // total: this.props.total,
+              //defaultPageSize:20
+              // pageSize: PageSize,
+              // current: PageIndex,
+              // pageSizeOptions: ['10', '20', '30', '40', '50'],
+            // }}
+          />
+        </div>
+      </Modal>
     );
   }
 }

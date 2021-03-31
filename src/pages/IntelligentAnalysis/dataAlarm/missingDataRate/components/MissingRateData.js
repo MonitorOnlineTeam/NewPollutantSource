@@ -4,6 +4,9 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
+import { ExportOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {
   Card,
   Table,
@@ -12,12 +15,10 @@ import {
   Row,
   Popover,
   Col,
-  Icon,
   Badge,
   Modal,
   Input,
   Button,
-  Form,
   Select,
 } from 'antd';
 import moment from 'moment';
@@ -122,6 +123,7 @@ export default class EntTransmissionEfficiency extends Component {
       this.updateQueryState({
         RegionCode: '',
         EntCode:'',
+        OperationPersonnel:'',
         EntType: types==='ent'? "1":"2",
       });
 
@@ -283,118 +285,116 @@ export default class EntTransmissionEfficiency extends Component {
     } = this.props;
 
     return (
-        <Card
-          bordered={false}
-          title={
-            <>
-              <Form layout="inline"> 
-              <Row>
-              {/* <Form.Item label='数据类型'>
-              <Select
-                    placeholder="数据类型"
-                    onChange={this._handleDateTypeChange}
-                    value={dataType}
-                    style={{ width: 100 }}
-                  >  
-                 <Option key='0' value='HourData'>小时数据</Option>
-                 <Option key='1' value='DayData'> 日数据</Option>
+      <Card
+        bordered={false}
+        title={
+          <>
+            <Form layout="inline"> 
+            <Row>
+            {/* <Form.Item label='数据类型'>
+            <Select
+                  placeholder="数据类型"
+                  onChange={this._handleDateTypeChange}
+                  value={dataType}
+                  style={{ width: 100 }}
+                >  
+               <Option key='0' value='HourData'>小时数据</Option>
+               <Option key='1' value='DayData'> 日数据</Option>
 
-                  </Select>
-              </Form.Item> */}
-                <Form.Item>
-                  日期查询：
-                  <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
-                </Form.Item>
-                <Form.Item label='关注程度'>
-                  <Select
-                    allowClear
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 110 }}
-                  >
-                    {this.attentchildren()}
-                  </Select>
-                </Form.Item>
-                <Form.Item label='运维状态'>
+                </Select>
+            </Form.Item> */}
+              <Form.Item>
+                日期查询：
+                <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+              </Form.Item>
+              <Form.Item label='关注程度'>
                 <Select
                   allowClear
-                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                  placeholder="运维状态"
-                  maxTagCount={2}
-                  value={OperationPersonnel?OperationPersonnel:undefined} 
-                  onChange={this.changePperation}
-                  maxTagTextLength={5}
-                  maxTagPlaceholder="..."
-                  >
-                  <Option value="1">已设置运维人员</Option>
-                  <Option value="2">未设置运维人员</Option>
+                  placeholder="关注程度"
+                  onChange={this.changeAttent}
+                  value={AttentionCode?AttentionCode:undefined} 
+                  style={{ width: 110 }}
+                >
+                  {this.attentchildren()}
                 </Select>
-                </Form.Item> 
-                <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width: 100 }}
-                  >
-                    {this.regchildren()}
-                  </Select>
-                </Form.Item>
-               {type==='ent'? <Form.Item label='企业类型'>
-                  <Select
-                    allowClear
-                    placeholder="企业类型"
-                    onChange={this.typeChange}
-                    value={PollutantType?PollutantType:undefined}
-                    style={{ width: 100 }}
-                  >
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item> : null }
-
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
-                    查询
-                  </Button>
-                  <Button
-                    style={{ margin: '0 5px' }}
-                    icon="export"
-                    onClick={this.template}
-                    loading={exloading}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-                </Row>
-              </Form>
-            </>
-          }
-        >
-          <>
-            <SdlTable
-              rowKey={(record, index) => `complete${index}`}
-              loading={this.props.loading}
-              columns={this.columns}
-              bordered={false}
-              dataSource={this.props.tableDatas}
-              pagination={false}
-              // pagination={{
-                // showSizeChanger: true,
-                // showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                // defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              // }}
-            />
+              </Form.Item>
+              <Form.Item label='运维状态'>
+              <Select
+                allowClear
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                placeholder="运维状态"
+                maxTagCount={2}
+                onChange={this.changePperation}
+                maxTagTextLength={5}
+                maxTagPlaceholder="..."
+                >
+                <Option value="1">已设置运维人员</Option>
+                <Option value="2">未设置运维人员</Option>
+              </Select>
+              </Form.Item> 
+              <Form.Item label='行政区'>
+                <Select
+                  allowClear
+                  placeholder="行政区"
+                  onChange={this.changeRegion}
+                  value={RegionCode ? RegionCode : undefined}
+                  style={{ width: 100 }}
+                >
+                  {this.regchildren()}
+                </Select>
+              </Form.Item>
+             {type==='ent'? <Form.Item label='企业类型'>
+                <Select
+                  allowClea
+                  placeholder="企业类型"
+                  onChange={this.typeChange}
+                  value={PollutantType?PollutantType:undefined}
+                  style={{ width: 100 }}
+                >
+                  <Option value="1">废水</Option>
+                  <Option value="2">废气</Option>
+                </Select>
+              </Form.Item> : null }
+              <Form.Item>
+                <Button type="primary" onClick={this.queryClick}>
+                  查询
+                </Button>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+              </Form.Item>
+              </Row>
+            </Form>
           </>
-        </Card>
+        }
+      >
+        <>
+          <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={this.props.loading}
+            columns={this.columns}
+            bordered={false}
+            dataSource={this.props.tableDatas}
+            pagination={false}
+            // pagination={{
+              // showSizeChanger: true,
+              // showQuickJumper: true,
+              // sorter: true,
+              // total: this.props.total,
+              // //defaultPageSize:20
+              // pageSize: PageSize,
+              // current: PageIndex,
+              // pageSizeOptions: ['10', '20', '30', '40', '50'],
+            // }}
+          />
+        </>
+      </Card>
     );
   }
 }

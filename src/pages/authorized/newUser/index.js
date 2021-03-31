@@ -6,6 +6,19 @@
  * @Description: 用户管理 新页面
  */
 import React, { Component, Fragment } from 'react';
+
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  ExportOutlined,
+  PlusOutlined,
+  ProfileOutlined,
+} from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
 import {
   Button,
   Input,
@@ -13,21 +26,19 @@ import {
   Row,
   Col,
   Table,
-  Form,
   Spin,
   Select,
   Modal,
   Tag,
   Divider,
   Dropdown,
-  Icon,
   Menu,
   Popconfirm,
   message,
   DatePicker,
   InputNumber,
   Tooltip,
-  TreeSelect
+  TreeSelect,
 } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { routerRedux } from 'dva/router';
@@ -80,7 +91,7 @@ export default class UserInfoIndex extends Component {
         dataIndex: 'groupName',
         key: 'groupName',
         align: 'center',
-        render: (text, record) => {     
+        render: (text, record) => {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
@@ -90,7 +101,7 @@ export default class UserInfoIndex extends Component {
         key: 'roleName',
         align: 'center',
         width:150,
-        render: (text, record) => {     
+        render: (text, record) => {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
@@ -130,49 +141,51 @@ export default class UserInfoIndex extends Component {
         key: '',
         align: 'center',
         render:(text,row)=>{
-          return  <Fragment>
-          <Tooltip title="编辑">
-            <a
-              onClick={() => {
-                this.props.dispatch(
-                  routerRedux.push(
-                    '/rolesmanager/user/userinfoedit/' + row['ID'] + "?tabName=用户管理 - 编辑",
-                  ),
-                );
-              }}
-            >
-              <Icon type="edit" style={{ fontSize: 16 }} />
-            </a>
-          </Tooltip>
-          <Divider type="vertical" />
-          <Tooltip title="详情">
-            <a
-              onClick={() => {
-                this.props.dispatch(
-                  routerRedux.push(
-                    '/rolesmanager/user/userinfoview/' + row['ID'] + "?tabName=用户管理 - 详情",
-                  ),
-                );
-              }}
-            >
-              <Icon type="profile" style={{ fontSize: 16 }} />
-            </a>
-          </Tooltip>
-          <Divider type="vertical" />
-          <Tooltip title="删除">
-            <Popconfirm
-              title="确认要删除吗?"
-              onConfirm={() => {
-                this.confirm(row['ID']);
-              }}
-              onCancel={this.cancel}
-              okText="是"
-              cancelText="否"
-            >
-              <a href="#"><Icon type="delete" style={{ fontSize: 16 }} /></a>
-            </Popconfirm>
-          </Tooltip>
-        </Fragment>
+          return (
+            <Fragment>
+            <Tooltip title="编辑">
+              <a
+                onClick={() => {
+                  this.props.dispatch(
+                    routerRedux.push(
+                      '/rolesmanager/user/userinfoedit/' + row['ID'] + "?tabName=用户管理 - 编辑",
+                    ),
+                  );
+                }}
+              >
+                <EditOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="详情">
+              <a
+                onClick={() => {
+                  this.props.dispatch(
+                    routerRedux.push(
+                      '/rolesmanager/user/userinfoview/' + row['ID'] + "?tabName=用户管理 - 详情",
+                    ),
+                  );
+                }}
+              >
+                <ProfileOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="删除">
+              <Popconfirm
+                title="确认要删除吗?"
+                onConfirm={() => {
+                  this.confirm(row['ID']);
+                }}
+                onCancel={this.cancel}
+                okText="是"
+                cancelText="否"
+              >
+                <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
+              </Popconfirm>
+            </Tooltip>
+          </Fragment>
+          );
         }
       },
 
@@ -297,7 +310,7 @@ export default class UserInfoIndex extends Component {
     this.props.dispatch({
       type: 'newuserinfo/getUserList',
       payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
-    });  
+    });
   }
   //获取部门列表
   getDepInfoByTree =(params)=> {
@@ -322,35 +335,16 @@ export default class UserInfoIndex extends Component {
     this.setState({ selectedRowKeys, selectedRows });
   };
   addClick=()=>{
-  
+
     const {dispatch } = this.props;
-  
+
     dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
   }
   exports = ()=>{
     const { dispatch, userPar } = this.props;
-    let conditionWhere = {};
-    if (userPar) {
-      conditionWhere = {
-        ConditionWhere: JSON.stringify(
-          {
-            rel: '$and',
-            group: [{
-              rel: '$and',
-              group: [
-                userPar,
-              ],
-            }],
-          }),
-      }
-    }
     dispatch({
-      type: 'autoForm/exportDataExcel',
-      payload: {
-        configId: "UserInfo",
-        IsPaging: false,
-        ...conditionWhere
-      },
+      type: 'newuserinfo/exportUserList',
+      payload: {...userPar},
     })
    }
   render() {
@@ -368,7 +362,7 @@ export default class UserInfoIndex extends Component {
     } = this.props;
     const searchConditions = searchConfigItems[configId] || [];
     const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
-    
+
     const { selectedRowKeys, selectedRows } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -410,11 +404,11 @@ export default class UserInfoIndex extends Component {
                 <Button onClick={this.restClick} style={{ marginLeft: 8 }} > 重置</Button>
                 </Form.Item>
                 </Form>
-                <Form layout="inline"  style={{padding:'10px 0'}}>  
+                <Form layout="inline"  style={{padding:'10px 0'}}>
                 <Form.Item>
               <Button
               style={{ marginRight: 8 }}
-               icon="plus"
+               icon={<PlusOutlined />}
                type="primary"
                 onClick={this.addClick}>添加</Button>
                 </Form.Item>
@@ -432,11 +426,11 @@ export default class UserInfoIndex extends Component {
                 <Dropdown overlay={() => <Menu>
 
                     <Menu.Item>
-                    <div  onClick={this.exports}> <Icon type='export' />导出 </div>
-                  </Menu.Item> 
+                    <div  onClick={this.exports}> <ExportOutlined />导出 </div>
+                  </Menu.Item>
             </Menu>}>
               <Button>
-                更多操作 <Icon type="down" />
+                更多操作 <DownOutlined />
               </Button>
             </Dropdown>
             <span style={{color:'#f5222d',paddingLeft:10}}>新增账户的默认密码及账户重置后的密码均是Password@123</span>
@@ -519,15 +513,15 @@ export default class UserInfoIndex extends Component {
             /> */}
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
-              rowSelection={rowSelection} 
+              rowSelection={rowSelection}
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                defaultPageSize:20
-              }}
+              // pagination={{
+              //   showSizeChanger: true,
+              //   showQuickJumper: true,
+              //   //defaultPageSize:20
+              // }}
             />
           </Card>
       </BreadcrumbWrapper>

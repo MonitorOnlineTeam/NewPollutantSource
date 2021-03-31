@@ -7,7 +7,10 @@
  */
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import { Card, Row, Select, Col, DatePicker, Button, Form, Input, Alert, Icon, Modal, message } from "antd"
+import { ProfileOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Row, Select, Col, DatePicker, Button, Input, Alert, Modal, message } from "antd";
 import SdlTable from '@/components/SdlTable';
 import { connect } from "dva";
 import SelectPollutantType from '@/components/SelectPollutantType'
@@ -112,12 +115,14 @@ class DataGainRatePage extends PureComponent {
             fixed: "right",
             align: "center",
             render: (text, record) => {
-              return <a onClick={() => {
-                this.setState({
-                  visible: true,
-                  DGIMN: record.DGIMN
-                })
-              }}><Icon type="profile" /></a>
+              return (
+                <a onClick={() => {
+                  this.setState({
+                    visible: true,
+                    DGIMN: record.DGIMN
+                  })
+                }}><ProfileOutlined /></a>
+              );
             }
           },
         ]
