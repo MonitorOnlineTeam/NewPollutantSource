@@ -107,7 +107,7 @@ export default class Index extends Component {
       }
     })
 
-    let time = moment().add('hour',-2).format("YYYY-MM-DD 00:00:00");
+    let time = moment().add('hour',-1).format("YYYY-MM-DD HH:00:00");
     // let time = "2020-11-01 00:00:00";
     let dataType ='HourData'
     this.getAQIList(time,dataType);
@@ -197,7 +197,7 @@ export default class Index extends Component {
     })
   }
   tabCallback = (value) => {
-  let time = value == 'HourData'? moment().add('hour',-2).format("YYYY-MM-DD 00:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
+  let time = value == 'HourData'? moment().add('hour',-1).format("YYYY-MM-DD HH:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")
    
   if(value == 'HourData'){
    this.setState({dataTypes:'HourData'})

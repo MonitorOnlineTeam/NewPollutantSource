@@ -38,15 +38,14 @@ const SmokeSetUpForm = (props) => {
     Intercept: '-',
     Atmos: '-',
     AirCoefficient: '-',
-    Remark: '无'
+    Remark: '-'
    });
   const { DGIMN, formLoading} = props;
     
-  console.log(props)
     useEffect(() => {
     if(DGIMN){
       props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
-        setFormList({...res})    
+        res&&setFormList({...res})    
       })
     }
 
@@ -127,7 +126,7 @@ const SmokeSetUpForm = (props) => {
       <Row gutter={[16,24]} style={{paddingBottom:10}}>
         <Col  span={24}>
       <Form.Item label="" name="Remark" >
-         <span> {Remark || '无'} </span>
+         <span> {Remark} </span>
       </Form.Item>
       </Col>
       </Row>

@@ -127,12 +127,12 @@ const SmokeSetUpForm = (props) => {
       <Row gutter={[40,24]}>
         <Col  span={8}>
       <Form.Item label="当地大气压(Pa)" name="Atmos" rules={[{ required: true,message: '请输入当地大气压!', } ]}>
-        <InputNumber />
+        <InputNumber placeholder='请输入当地大气压'/>
       </Form.Item>
       </Col>
       <Col  span={8}>
       <Form.Item label="标准过量空气系数" name="AirCoefficient" rules={[{ required: true,message: '请输入标准过量空气系数!', } ]}>
-        <InputNumber />
+        <InputNumber placeholder='请输入标准过量空气系数'/>
       </Form.Item>
       </Col>
       <Col>

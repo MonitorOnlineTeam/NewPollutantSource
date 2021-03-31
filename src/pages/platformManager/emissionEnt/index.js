@@ -82,7 +82,8 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    style={{ pointerEvents: listDisabled ? 'none' : null }}
+                    style={{ pointerEvents: listDisabled ? 'none' : null,width:554}}
+                    scroll={{ x:1000}}
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
                             if (itemDisabled || listDisabled) return;
@@ -98,32 +99,36 @@ const leftTableColumns = [
     {
         dataIndex: 'RegionName',
         title: '行政区',
+        width:100,
     },
     {
         dataIndex: 'EntName',
         title: '企业名称',
-        render: (text, record, index) => {
-            if (text.length > 10) {
-                return text.substr(0, 10) + '...';
-            } else {
-                return text;
-            }
-        }
+        width: 500,
+        // render: (text, record, index) => {
+        //     if (text.length > 10) {
+        //         return text.substr(0, 10) + '...';
+        //     } else {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PointName',
         title: '监测点名称',
-        render: (text, record, index) => {
-            if (text.length > 10) {
-                return text.substr(0, 10) + '...';
-            } else {
-                return text;
-            }
-        }
+        width:300,
+        // render: (text, record, index) => {
+        //     if (text.length > 10) {
+        //         return text.substr(0, 10) + '...';
+        //     } else {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PollutantType',
         title: '监测点类型',
+        width:100,
         render: (text, record, index) => {
             var str = ''
             switch (text) {
@@ -142,32 +147,36 @@ const rightTableColumns = [
     {
         dataIndex: 'RegionName',
         title: '行政区',
+        width:100,
     },
     {
         dataIndex: 'EntName',
         title: '企业名称',
-        render: (text, record, index) => {
-            if (text.length > 10) {
-                return text.substr(0, 10) + '...';
-            } else {
-                return text;
-            }
-        }
+        width:500,
+        // render: (text, record, index) => {
+        //     if (text.length > 10) {
+        //         return text.substr(0, 10) + '...';
+        //     } else {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PointName',
         title: '监测点名称',
-        render: (text, record, index) => {
-            if (text.length > 10) {
-                return text.substr(0, 10) + '...';
-            } else {
-                return text;
-            }
-        }
+        width:300,
+        // render: (text, record, index) => {
+        //     if (text.length > 10) {
+        //         return text.substr(0, 10) + '...';
+        //     } else {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PollutantType',
         title: '监测点类型',
+        width:100,
         render: (text, record, index) => {
             var str = ''
             switch (text) {
@@ -262,6 +271,7 @@ class emissionEnt extends Component {
             payload: {
             },
         })
+        this.initData();
     }
 
     initData = (RegionCode) => {
@@ -280,7 +290,7 @@ class emissionEnt extends Component {
         dispatch({
             //获取企业列表
             type: 'emissionEnt/getEntByRegion',
-            payload: { RegionCode: RegionCode },
+            payload: { RegionCode: RegionCode?RegionCode:'' },
         });
 
         // setTimeout(() => {
