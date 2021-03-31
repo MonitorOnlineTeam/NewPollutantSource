@@ -296,7 +296,7 @@ class Report extends PureComponent {
             columns={columns}
             dataSource={reportTableData}
             loading={searchLoading}
-            scroll={{ x: '2000px' }}
+            scroll={{ x: '2000px',y: 'calc(100vh - 430px)'}}
             pagination={{
               pageSize: 20
             }}

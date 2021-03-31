@@ -48,7 +48,7 @@ const EditableCell = (parametersList,{
       inputType === 'range'? 
       <Form.Item  style={{margin:0}}>
       <Form.Item style={{display:'inline-block',margin: 0 }}
-       rules={[ {   required: dataIndex==="Range1"&&true,   message: ``  } ]}
+      //  rules={[ {   required: dataIndex==="Range1"&&true,   message: ``  } ]}
        name={`${dataIndex}Min${record.ID}`}
       >
          <InputNumber placeholder={`最小值`}/>
@@ -57,7 +57,7 @@ const EditableCell = (parametersList,{
         -
       </span>
       <Form.Item 
-       rules={[ {   required: dataIndex==="Range1"&&true,   message: `` } ]}
+      //  rules={[ {   required: dataIndex==="Range1"&&true,   message: `` } ]}
       style={{display:'inline-block',margin: 0 }} name={`${dataIndex}Max${record.ID}`}
       >
          <InputNumber placeholder={`最大值`}/>
@@ -65,7 +65,7 @@ const EditableCell = (parametersList,{
       </Form.Item> : <Form.Item
            name={`${dataIndex}${record.ID}`}
            style={{ margin: 0  }}
-           rules={[ {   required: dataIndex==="Unit"||  dataIndex==="EquipmentParametersCode"&&true,  message: ``  } ]}
+          //  rules={[ {   required: dataIndex==="EquipmentParametersCode"&&true,  message: ``  } ]}
         >
           {inputNode}
         </Form.Item>
@@ -163,6 +163,8 @@ const EditableTable = (props) => {
       });
       const newData = [...data];
       const index = newData.findIndex((item) => record.ID === item.ID);
+
+      console.log(index)
       const item = newData[index];
       newData.splice(index, 1, { ...item,...row, type:'modify' });
       setData(newData);
@@ -197,7 +199,7 @@ const EditableTable = (props) => {
            DetectionLimit = type === 'smoke'? row[`DetectionLimit${record.ID}`]: '',
            Unit = row[`Unit${record.ID}`];
 
-      let pass = EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Unit.toString();
+      let pass = EquipmentParametersCode&&EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString();
      
       let payload = {
         ID: record.type=='add'? '' : record.ID,
@@ -236,10 +238,11 @@ const EditableTable = (props) => {
  
     })
   }else{
-    message.error("请输入完整的信息")
+    message.warning("请输入测量参数和设置量程范围1")
   }
     } catch (errInfo) {
-      message.error("请输入完整的信息")
+      message.warning("请输入测量参数和设置量程范围1")
+      // message.error("请输入完整的信息")
       console.log('错误信息:', errInfo);
     }
   };
@@ -288,7 +291,7 @@ const EditableTable = (props) => {
       align:'center'
     },
     {
-      title: '量程范围1',
+      title: '设置量程范围1',
       dataIndex: 'Range1',
       width: 200,
       editable: true,
@@ -298,13 +301,15 @@ const EditableTable = (props) => {
       }
     },
     {
-      title: '量程范围2',
+      title: '设置量程范围2',
       dataIndex: 'Range2',
       width: 200,
       editable: true,
       align:'center',
       render:(text,record)=>{
-        return record.Range2Min&&record.Range2Max? `${record.Range2Min} ~ ${record.Range2Max}` : '';
+        // if(record.Range2Min!=='null'&&record.Range2Max!=='null'){
+          return record.Range2Min!==null&&record.Range2Max!==null? `${record.Range2Min} ~ ${record.Range2Max}` : '';
+        // }
       }
     },
     {

@@ -242,10 +242,29 @@ class Gas extends PureComponent {
         dataIndex: 'ImportantType',
         key: 'ImportantType',
         render: (text, record) => {
-          if (text && text != "0") {
-            return ImportantTypeList.find(item => item.value == text)["text"]
+          if (text && text !== "0") {
+            // return ImportantTypeList.find(item => item.value == text)["text"]
+            const ImportantTypeLists = 
+              { "1": "污染处理厂",
+                '2': "水重点",
+                '3': "气重点",
+                '4': "垃圾焚烧"
+              }
+            let importVal = ''
+            let dataArr = text.split(',')
+            dataArr.map(item=>{
+              ImportantTypeList.map(items=>{
+                 if(item == items.value){
+                  importVal += `${ImportantTypeLists[item]}，`
+                 }
+              })
+            })
+           
+            return importVal.substring(0,importVal.length-1)
+            
+          }else{
+            return "-"
           }
-          return "-"
         },
         width: 180,
       },
