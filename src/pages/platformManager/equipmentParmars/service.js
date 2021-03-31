@@ -8,7 +8,7 @@ export async function GetEquipmentParametersInfo(params) {
 
 // 获取下拉列表框中的测量参数
 export async function GetParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetParametersInfo?PolltantType='+params.PolltantType, {}, null);
+  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetParametersInfo?PolltantType='+params.PolltantType+"&&DGIMN="+params.DGIMN, {}, null);
   return result;
 }
 

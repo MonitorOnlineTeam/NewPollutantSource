@@ -4,7 +4,7 @@
  * 创建时间：2021.3.2
  */
 import React, { useState,useEffect  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined } from '@ant-design/icons';
 import SmokeSetUpForm from './components/SmokeSetUpForm'
@@ -17,7 +17,7 @@ const namespace = 'equipmentParmars'
 
 
 
-const EditableCell = (parametersList,{
+const EditableCell = (parametersLists,parametersInfoChange,{
   editing,
   dataIndex,
   title,
@@ -32,8 +32,9 @@ const EditableCell = (parametersList,{
   let inputNode='';
  
   if(inputType==="select"){
-    inputNode = <Select placeholder={`请选择${title}`}>
-      {parametersList.map(item=>{
+    // loadingGetParametersInfos? <Spin size="small"/>:
+    inputNode =  <Select onChange={parametersInfoChange} placeholder={`请选择${title}`}>
+      {parametersLists.map(item=>{
         return  <Option value={item.ChildID}>{item.Name}</Option>
       })} 
     </Select>
@@ -79,7 +80,8 @@ const EditableCell = (parametersList,{
 
 const dvaPropsData =  ({ loading,equipmentParmars }) => ({
   tableDatas:equipmentParmars.tableDatas,
-  parametersList:equipmentParmars.parametersList
+  parametersList:equipmentParmars.parametersList,
+  loadingGetParametersInfos: loading.effects['equipmentParmars/getParametersInfo'],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -99,10 +101,11 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       })
     },
-    getParametersInfo:(payload)=>{ //下拉列表测量参数
+    getParametersInfo:(payload,callback)=>{ //下拉列表测量参数
       dispatch({
         type: `${namespace}/getParametersInfo`,
-        payload:payload
+        payload:payload,
+        callback:callback
       }) 
     },
     deleteEquipmentParametersInfo:(payload,callback)=>{ //删除
@@ -126,6 +129,7 @@ const EditableTable = (props) => {
   const [editingKey, setEditingKey] = useState('');
   const [count, setCount] = useState(513);
   const [DGIMN,setDGIMN] =  useState('')
+  const [parametersLists,setParametersLists] =  useState([])
  
   const isEditing = (record) => record.key === editingKey;
 
@@ -138,14 +142,14 @@ const EditableTable = (props) => {
         setTableLoading(false)
         setData(res)
       })
-      getParametersInfos();
     }
+    // getParametersInfos(props.DGIMN,(res)=>{setParametersLists(res)});
 
     
   },[props.DGIMN]);
  
-  const getParametersInfos=()=>{
-    props.getParametersInfo({PolltantType:type==='smoke'?2:1})
+  const getParametersInfos=(DGIMN,callback)=>{
+    props.getParametersInfo({PolltantType:type==='smoke'?2:1,DGIMN:DGIMN},callback)
   }
 
   const edit = async (record) => {
@@ -212,29 +216,43 @@ const EditableTable = (props) => {
         DetectionLimit: DetectionLimit ,
         Unit:Unit
     }
-    // console.log(EquipmentParametersCode.toString(),Range1Min.toString(),Range1Max.toString(),Range2Min.toString(),Range2Max.toString(),Unit:  EquipmentParametersCode.toString()&&Range1Min.toString()&&Range1Max.toString()&&Range2Min.toString()&&Range2Max.toString()&&Unit&&DetectionLimit.toString())
+
       if(pass){
         setTableLoading(true)
-       props.addOrUpdateEquipmentParametersInfo(payload,()=>{
-       setTableLoading(false)
-      const EquipmentParametersName =  record.type=='add'?
-                                       parametersList.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
-                                       :
-                                       row[`EquipmentParametersCode${record.ID}`]
-      const newRow = {
-        ID: record.type=='add'? '' : record.ID,
-        DGIMN: DGIMN,
-        EquipmentParametersCode: EquipmentParametersName,
-        Range1Min: Range1Min,
-        Range1Max:Range1Max,
-        Range2Min: Range2Min,
-        Range2Max: Range2Max,
-        DetectionLimit: DetectionLimit ,
-        Unit:Unit
-      }
-      const item = newData[index];
-      newData.splice(index, 1, { ...item,...newRow, type:'' });
-      setData(newData);
+        props.addOrUpdateEquipmentParametersInfo(payload,()=>{
+       
+
+          const newRow = {
+            ID: '',
+            EquipmentParametersCode: '',
+            DGIMN: DGIMN,
+            Range1Min: Range1Min,
+            Range1Max:Range1Max,
+            Range2Min: Range2Min,
+            Range2Max: Range2Max,
+            DetectionLimit: DetectionLimit ,
+            Unit:Unit
+          }
+       getParametersInfos(DGIMN,(res)=>{setParametersLists(res) }); //重新获取下拉列表
+       if(record.type=='add'){
+          const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
+          props.getEquipmentParametersInfo({DGIMN:props.DGIMN},(res)=>{
+           let addID =  res.filter(item=>item.EquipmentParametersCode === EquipmentParametersName&&  item.Range1Min === Range1Min && item.Range1Max === Range1Max)[0].ID
+           const item = newData[index];
+           newData.splice(index, 1, { ...item,...newRow, type:'',ID: addID,EquipmentParametersCode: EquipmentParametersName, });
+           setData(newData);
+           setTableLoading(false)
+         })
+        }else{
+        const EquipmentParametersName  = row[`EquipmentParametersCode${record.ID}`]
+
+        setTableLoading(false)
+        const item = newData[index];
+        newData.splice(index, 1, { ...item,...newRow, type:'',ID: record.ID,EquipmentParametersCode: EquipmentParametersName, });
+        setData(newData);
+       }
+
+
  
     })
   }else{
@@ -278,7 +296,13 @@ const EditableTable = (props) => {
       editable:true,
       type:'add'
      }
-    setData([...data,newData])
+     setData([...data,newData])
+    //  data.filter(item=>item.EquipmentParametersCode === parametersList)
+     getParametersInfos(DGIMN,(res)=>{
+       console.log(res)
+      setParametersLists(res) 
+      // setData([...data,newData])
+     });
    
 
   };
@@ -307,9 +331,9 @@ const EditableTable = (props) => {
       editable: true,
       align:'center',
       render:(text,record)=>{
-        // if(record.Range2Min!=='null'&&record.Range2Max!=='null'){
-          return record.Range2Min!==null&&record.Range2Max!==null? `${record.Range2Min} ~ ${record.Range2Max}` : '';
-        // }
+        if(record.Range2Min&&record.Range2Max || record.Range2Min==0&&record.Range2Max ||record.Range2Min&&record.Range2Max==0 ||  record.Range2Min==0&&record.Range2Max==0){
+          return `${record.Range2Min} ~ ${record.Range2Max}`;
+        }
       }
     },
     {
@@ -370,6 +394,9 @@ const EditableTable = (props) => {
       },
     },
   ];
+  const parametersInfoChange = ()=>{
+    // alert(1111)
+  }
   const mergedColumns = columns.map((col) => {
     const { type } = props;
     if (!col.editable) {
@@ -393,7 +420,7 @@ const EditableTable = (props) => {
         loading = {tableLoading}
         components={{
           body: {
-            cell:EditableCell.bind(this,parametersList),
+            cell:EditableCell.bind(this,parametersLists,parametersInfoChange),
           },
         }}
         bordered
