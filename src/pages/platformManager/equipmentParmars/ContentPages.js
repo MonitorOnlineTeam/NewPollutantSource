@@ -286,6 +286,7 @@ const EditableTable = (props) => {
     props.deleteEquipmentParametersInfo({ID:ID},()=>{
        setTableLoading(false)
        setData(newData)
+       getParametersInfos(DGIMN,(res)=>{setParametersLists(res) }); //重新获取下拉列表
     })
 
   };
