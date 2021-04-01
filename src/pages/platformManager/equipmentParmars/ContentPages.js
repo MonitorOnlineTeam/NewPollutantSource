@@ -33,7 +33,8 @@ const EditableCell = (parametersLists,parametersInfoChange,{
  
   if(inputType==="select"){
     // loadingGetParametersInfos? <Spin size="small"/>:
-    inputNode =  <Select onChange={parametersInfoChange} placeholder={`请选择${title}`}>
+
+    inputNode =  <Select onChange={ parametersInfoChange.bind(this,record)} placeholder={`请选择${title}`}>
       {parametersLists.map(item=>{
         return  <Option value={item.ChildID}>{item.Name}</Option>
       })} 
@@ -130,7 +131,9 @@ const EditableTable = (props) => {
   const [count, setCount] = useState(513);
   const [DGIMN,setDGIMN] =  useState('')
   const [parametersLists,setParametersLists] =  useState([])
- 
+  const [selectParVal,setSelectParVal] =  useState('')
+
+  
   const isEditing = (record) => record.key === editingKey;
 
   const  { type , tableDatas,parametersList } = props; 
@@ -143,7 +146,7 @@ const EditableTable = (props) => {
         setData(res)
       })
     }
-    // getParametersInfos(props.DGIMN,(res)=>{setParametersLists(res)});
+    getParametersInfos(props.DGIMN,(res)=>{setParametersLists(res)});
 
     
   },[props.DGIMN]);
@@ -234,7 +237,14 @@ const EditableTable = (props) => {
             Unit:Unit
           }
        getParametersInfos(DGIMN,(res)=>{setParametersLists(res) }); //重新获取下拉列表
-       if(record.type=='add'){
+       if(record.type=='add'){ //添加
+         for(let key in row){ 
+           if( row[key] === EquipmentParametersCode &&  key !== `EquipmentParametersCode${record.ID}`){
+            form.setFieldsValue({
+              [key]: undefined,
+            });
+           }
+        }
           const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
           props.getEquipmentParametersInfo({DGIMN:props.DGIMN},(res)=>{
            let addID =  res.filter(item=>item.EquipmentParametersCode === EquipmentParametersName&&  item.Range1Min === Range1Min && item.Range1Max === Range1Max)[0].ID
@@ -299,7 +309,7 @@ const EditableTable = (props) => {
      setData([...data,newData])
     //  data.filter(item=>item.EquipmentParametersCode === parametersList)
      getParametersInfos(DGIMN,(res)=>{
-       console.log(res)
+      //  console.log(res)
       setParametersLists(res) 
       // setData([...data,newData])
      });
@@ -394,10 +404,17 @@ const EditableTable = (props) => {
       },
     },
   ];
-  const parametersInfoChange = (value)=>{
-    
-  // const selectParlist = parametersLists.filter(item=>item.ChildID !== value)
-  // setParametersLists(selectParlist) 
+  const parametersInfoChange  = async (record,value)=>{
+
+    // const row = await form.validateFields();//触发校验
+    // console.log(row)
+    // console.log(row[`EquipmentParametersCode${record.ID}`])
+
+
+  
+
+
+
   }
   const mergedColumns = columns.map((col) => {
     const { type } = props;
