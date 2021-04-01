@@ -514,7 +514,7 @@ class SdlForm extends PureComponent {
           <Col className='searchForm' span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem   key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
-                initialValue: initialValue || undefined,
+                initialValue: initialValue !== undefined ? initialValue : undefined,
                 rules: [
                   {
                     required,
