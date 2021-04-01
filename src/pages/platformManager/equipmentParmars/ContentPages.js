@@ -256,10 +256,10 @@ const EditableTable = (props) => {
  
     })
   }else{
-    message.warning("请输入测量参数和设置量程范围1")
+    message.warning("请输入测量参数或设置量程范围1")
   }
     } catch (errInfo) {
-      message.warning("请输入测量参数和设置量程范围1")
+      message.warning("请输入测量参数或设置量程范围1")
       // message.error("请输入完整的信息")
       console.log('错误信息:', errInfo);
     }
