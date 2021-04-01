@@ -236,16 +236,20 @@ const EditableTable = (props) => {
             DetectionLimit: DetectionLimit ,
             Unit:Unit
           }
+          for(let key in row){ 
+            if( row[key] === EquipmentParametersCode &&  key !== `EquipmentParametersCode${record.ID}`){
+             form.setFieldsValue({
+               [key]: undefined,
+             });
+            }
+         }
        getParametersInfos(DGIMN,(res)=>{setParametersLists(res) }); //重新获取下拉列表
+
+       const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
+
        if(record.type=='add'){ //添加
-         for(let key in row){ 
-           if( row[key] === EquipmentParametersCode &&  key !== `EquipmentParametersCode${record.ID}`){
-            form.setFieldsValue({
-              [key]: undefined,
-            });
-           }
-        }
-          const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
+
+          // const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
           props.getEquipmentParametersInfo({DGIMN:props.DGIMN},(res)=>{
            let addID =  res.filter(item=>item.EquipmentParametersCode === EquipmentParametersName&&  item.Range1Min === Range1Min && item.Range1Max === Range1Max)[0].ID
            const item = newData[index];
@@ -254,7 +258,7 @@ const EditableTable = (props) => {
            setTableLoading(false)
          })
         }else{
-        const EquipmentParametersName  = row[`EquipmentParametersCode${record.ID}`]
+        // const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
 
         setTableLoading(false)
         const item = newData[index];
