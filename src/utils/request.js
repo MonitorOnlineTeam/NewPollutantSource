@@ -137,7 +137,7 @@ export async function get(url, params, flag) {
       url += `&${paramsArray.join('&')}`;
     }   
     //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
-    if (process.env.NODE_ENV === 'production' && true) {
+    // if (process.env.NODE_ENV === 'production' && true) {
     // if (true) {
       const urlbehinds = url.split('?').map(item => ({ item }));
       if (urlbehinds.length > 1) {
@@ -150,7 +150,7 @@ export async function get(url, params, flag) {
           url = urlbehinds[0].item + "?" + AESurlbehind;
         }
       }
-    }
+    // }
   }
   return requestMy(url, { method: 'GET' });
 }

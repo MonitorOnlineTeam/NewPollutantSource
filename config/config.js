@@ -215,6 +215,11 @@ export default {
           ],
         },
         {
+          name: 'oneEntsOneArchives',  //一企一档进入进入页面 企业列表
+          path: '/oneEntsOneArchives/entList',
+          component: './oneEntsOneArchives/entList',
+       },
+        {
           path: '/',
           component: '../layouts/BasicLayout',
           Routes: ['src/pages/Authorized'],
@@ -2115,14 +2120,227 @@ export default {
               path: '/taskdetail/emergencydetailinfolayout/:TaskID/:DGIMN',
               component: './EmergencyTodoList/EmergencyDetailInfoLayout',
             },
-
             {
-              component: '404',
+              name: 'OneEntsOneArchives',  // 一企一档
+              path: '/oneEntsOneArchives',  
+              routes: [
+                {
+                  path: '/oneEntsOneArchives',
+                  redirect: '/oneEntsOneArchives/entList',
+    
+                },
+
+                {
+                  name: 'EssentialInfo',  // 基本信息
+                  path: '/oneEntsOneArchives/essentialInfo',  
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/essentialInfo',
+                      redirect: '/oneEntsOneArchives/essentialInfo/entInfoDetail',
+                    },
+                    {
+                      name: 'EntInfoDetail',  //企业列表详情
+                      path: '/oneEntsOneArchives/essentialInfo/entInfoDetail',
+                      component: './oneEntsOneArchives/essentialInfo/entInfoDetail',
+                    },
+                    {
+                      name: 'EntInfoEdit',  //企业列表详情 编辑
+                      path: '/oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
+                      component: './oneEntsOneArchives/essentialInfo/entInfoDetail/EntInfoEdit',
+                    }, 
+                    {
+                      name: 'OutfallInfo',  //排污口信息管理
+                      path: '/oneEntsOneArchives/essentialInfo/outfallInfo',
+                      component:'./oneEntsOneArchives/essentialInfo/outfallInfo'
+                    },
+                    {
+                      name: 'WasteWaterGovern',  //废水治理设施
+                      path: '/oneEntsOneArchives/essentialInfo/wasteWaterGovern/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    }, 
+                    {
+                      name: 'OutfallInfo',  //废气治理设施
+                      path: '/oneEntsOneArchives/essentialInfo/wasteGasGovern/:configId',
+                      component:'./oneEntsOneArchives/autoformTemplate'
+                    },
+                    {
+                      name: 'StatisticalAnalysis',  //一企一档进入 统计分析
+                      path: '/oneEntsOneArchives/essentialInfo/statisticalAnalysis',
+                      component:'./oneEntsOneArchives/essentialInfo/statisticalAnalysis'
+                    },
+                  ]
+                  },
+
+                {
+                  name: 'DischargeStandard',  //排污许可管理
+                  path: '/oneEntsOneArchives/sewageDisposal',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/sewageDisposal', 
+                      redirect: '/oneEntsOneArchives/sewageDisposal/dischargeStandLimit',
+        
+                    },
+                    {
+                      name:'dischargeStandLimit',//排污许可管理 - 排放标准限值
+                      path: '/oneEntsOneArchives/sewageDisposal/dischargeStandLimit',
+                      component: './platformManager/monitoringstandard',
+                    },
+                    {
+                      name:'dischargeNumLimit', //排污许可管理 - 排放量限值
+                      path: '/oneEntsOneArchives/sewageDisposal/dischargeNumLimit/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    }
+
+                  ]
+                },  
+                {
+                  name: 'MonitoringData',  //监控数据
+                  path: '/oneEntsOneArchives/monitoringData',
+                 
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/monitoringData',
+                      redirect: '/oneEntsOneArchives/monitoringData/monitorExhibition',
+        
+                    },
+                    {
+                      name:'MonitorExhibition',
+                      path: '/oneEntsOneArchives/monitoringData/monitorExhibition',
+                      component: './monitoring/dataquery',
+                    },
+                    
+                  ]
+                },   
+                {
+                  name: 'EnvironEmergency',  //环境应急预案
+                  path: '/oneEntsOneArchives/environEmergency',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/environEmergency',
+                      redirect: '/oneEntsOneArchives/environEmergency/factorSitua/Bas_EnvironmentalEmergencyPlan',
+        
+                    },
+                    {
+                      name:'FactorSitua',
+                      path: '/oneEntsOneArchives/environEmergency/factorSitua/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    
+                  ]
+                },    
+                {
+                  name: 'CharacteristicFactor',  //特征因子
+                  path: '/oneEntsOneArchives/characteristicFactor',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/characteristicFactor',
+                      redirect: '/oneEntsOneArchives/characteristicFactor/wasterWater/Bas_WaterEigenfactor',
+        
+                    },
+                    {
+                      name:'Voc',
+                      path: '/oneEntsOneArchives/characteristicFactor/voc/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    {
+                      name:'wasterWater',
+                      path: '/oneEntsOneArchives/characteristicFactor/wasterWater/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    {
+                      name:'wasterAir',
+                      path: '/oneEntsOneArchives/characteristicFactor/wasterAir/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                  ]
+                },   
+                {
+                  name: 'LawInfo',  //执法信息管理
+                  path: '/oneEntsOneArchives/lawInfo',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/lawInfo',
+                      redirect: '/oneEntsOneArchives/lawInfo/administration/:configId',
+        
+                    },
+                    {
+                      name:'Administration', //执法信息管理-行政任务记录
+                      path: '/oneEntsOneArchives/lawInfo/administration/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    {
+                      name:'LawEnforcement',//执法信息管理-执法任务记录
+                      path: '/oneEntsOneArchives/lawInfo/lawEnforcement/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    }
+                  ]
+                },         
+                {
+                  name: 'HazardousWaste',  //危废管理
+                  path: '/oneEntsOneArchives/hazardousWaste',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/hazardousWaste',
+                      redirect:'/oneEntsOneArchives/hazardousWaste/info/:configId'
+                    },
+                    {
+                      name:'HazardousWasteInfo',  //危废管理-危废管理
+                      path: '/oneEntsOneArchives/hazardousWaste/hazardousWasteInfo/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    {
+                      name:'PlatformAccount',//危废管理-危废台账
+                      path: '/oneEntsOneArchives/hazardousWaste/platformAccount/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                  ]
+                },  
+                {
+                  name: 'EiaInfo',  //环评信息管理
+                  path: '/oneEntsOneArchives/eiaInfo',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/hazardousWaste',
+                      redirect:'/oneEntsOneArchives/eiaInfo/Approval/:configId'
+                    },
+                    {
+                      name:'Approval',   //环评信息管理  建设环评审批
+                      path: '/oneEntsOneArchives/eiaInfo/approval/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                    {
+                      name:'AcceptanceCheck', //环评信息管理  建设项目验收
+                      path: '/oneEntsOneArchives/eiaInfo/acceptanceCheck/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                  ]
+                }, 
+                {
+                  name: 'PetitionComplaints',  //信访投诉
+                  path: '/oneEntsOneArchives/petitionComplaints',
+                  routes: [
+                    {
+                      path: '/oneEntsOneArchives/petitionComplaints',
+                      redirect:'/oneEntsOneArchives/petitionComplaints/situa/:configId'
+                    },
+                    {
+                      name:'petitionComplaints',   //信访投诉情况
+                      path: '/oneEntsOneArchives/petitionComplaints/situa/:configId',
+                      component: './oneEntsOneArchives/autoformTemplate',
+                    },
+                  ]
+                }, 
+              ]
             },
-          ],
+          ],  
+        },
+        {
+          component: '404',
         },
       ],
+
     },
+
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

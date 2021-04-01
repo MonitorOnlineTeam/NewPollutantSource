@@ -11,6 +11,7 @@ import { getAttachmentDataSource } from './utils'
 import AttachmentView from '@/components/AttachmentView'
 import PageLoading from '@/components/PageLoading'
 import styles from '../../components/DescriptionList/index.less';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const FormItem = Form.Item;
 
@@ -64,12 +65,21 @@ class AutoFormViewItems extends Component {
         configId,
         ...keysParams,
       },
-    });
+    })
+
+    //  
     // }
 
     // }
   }
 
+  componentDidUpdate(prevProps, prevState){
+
+    const { seeType,editFormData } = this.props;
+    if (prevProps.editFormData !== editFormData) {
+      seeType==='customSty'&& this.props.editFormDatas(editFormData)
+    }
+  }
   _renderFormItem() {
     const { detailConfigInfo, editFormData } = this.props;
     const { formItemLayout, configId, keysParams } = this._SELF_;
@@ -117,7 +127,6 @@ class AutoFormViewItems extends Component {
           <AttachmentView dataSource={dataSource} />
         </div>;
       }
-
       return (
         <Col span={6} style={{ marginBottom: 10, display: item.isHide ? "none" : "block" }} key={item.fieldName}>
           <div className={styles.term}>{item.labelText}</div>
