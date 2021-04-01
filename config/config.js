@@ -675,6 +675,11 @@ export default {
                   redirect: '/operations/log', // 重定向 默认为 运维日志页面
                 },
                 {
+                  path: '/operations/dataImport',
+                  name: 'index',
+                  component: './platformManager/manualuploadauto',
+                },
+                {
                   path: '/operations/calendar',
                   name: 'calendar',
                   // component: "./operations/CalendarPage",

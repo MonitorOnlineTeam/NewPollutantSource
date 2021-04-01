@@ -30,6 +30,7 @@ import cuid from 'cuid';
 import { EditIcon, DelIcon } from '@/utils/icon';
 import Cookie from 'js-cookie';
 import { LegendIcon } from '@/utils/icon';
+import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
@@ -407,6 +408,7 @@ export default class ContentList extends Component {
     render() {
         const { manualUploadautoParameters, columnsSelect, pageCount } = this.props;
         const { format, visible } = this.state;
+        const pathname = window.location.pathname;
         let dataType = manualUploadautoParameters.Type === "daySelecthour" ? "小时" : "日";
         let dateValue = [];
         if (manualUploadautoParameters.BeginTime && manualUploadautoParameters.EndTime) {
@@ -420,11 +422,11 @@ export default class ContentList extends Component {
         console.log(uploaddata)
         return (
             <Card
-                // extra={
-                //     <Button onClick={() => this.Template()}>
-                //         <Icon type="download" />模板下载
-                //     </Button>
-                // }
+                extra={
+                    pathname === '/operations/dataImport' ? <Button onClick={() => this.Template()}>
+                        <DownloadOutlined />模板下载
+                </Button> : null
+                }
                 title={
                     <Form layout="inline">
                         <Form.Item>
@@ -454,34 +456,39 @@ export default class ContentList extends Component {
                                 {this.SelectOptions()}
                             </Select>
                         </Form.Item> */}
-                        <Form.Item>
-                            {/* <Button type="primary" onClick={this.uploadConfirm} >
-                                <Icon type="upload" /> 文件导入
-                            </Button> */
-                                // this.upload()
-                            }
+                        {
+                            pathname === '/operations/dataImport' ?
+                                <Form.Item>
+                                    <Button type="primary" onClick={this.uploadConfirm} >
+                                        <UploadOutlined /> 文件导入
+                                    </Button>
+                                    {/* {this.upload()} */}
+                                    <Spin
+                                        delay={500}
+                                        spinning={this.state.uploadLoading}
+                                        style={{
+                                            marginLeft: 10,
+                                            height: '100%',
+                                            width: '30px',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    />
+                                </Form.Item> :
+                                <>
+                                    <Form.Item>
+                                        <Button onClick={this.counterConfirm}>
+                                            补发数据
+                                        </Button>
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button onClick={this.confirm}>
+                                            统计AQI
+                                        </Button>
+                                    </Form.Item>
+                                </>
 
-                            {/* <Spin
-                                delay={500}
-                                spinning={this.state.uploadLoading}
-                                style={{
-                                    marginLeft: 10,
-                                    height: '100%',
-                                    width: '30px',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            /> */}
-                            <Button onClick={this.counterConfirm}>
-                                补发数据
-                            </Button>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button onClick={this.confirm}>
-                                统计AQI
-                            </Button>
-                        </Form.Item>
-
+                        }
                     </Form>
                 }
                 bordered={false}>
@@ -507,7 +514,7 @@ export default class ContentList extends Component {
                     onOk={() => this.setModal1Visible(false)}
                     onCancel={() => this.handleCancel()}
                     footer={[
-                        <Button key="back" onClick={this.handleCancel}>
+                        <Button key="back" style={{marginRight: 5}} onClick={this.handleCancel}>
                             取消
                         </Button>,
                         this.upload()
