@@ -38,14 +38,25 @@ const  dvaDispatch = (dispatch) => {
 const SmokeSetUpForm = (props) => {
   const [setform] = Form.useForm();
   const { DGIMN, formLoading} = props;
-    
+  const [formList,setFormList] = useState(); 
+
+  const formLists = {
+    ID:'',
+    PitotCoefficient:'',
+    VelocityCoefficient: '',
+    FlueCoefficient: '',
+    Slope: '',
+    Intercept: '',
+    Atmos: '',
+    AirCoefficient: '',
+    Remark: ''
+   }
     useEffect(() => {
     if(DGIMN){
-
-
       props.getEquipmentParameters({DGIMN:DGIMN},(res)=>{
-
-        res&&setform.setFieldsValue({
+         
+        if(res){
+        setform.setFieldsValue({
         ID:res.ID,
         PitotCoefficient: res.PitotCoefficient,
         VelocityCoefficient: res.VelocityCoefficient,
@@ -56,7 +67,9 @@ const SmokeSetUpForm = (props) => {
         AirCoefficient: res.AirCoefficient,
         Remark: res.Remark
        })
-
+      }else{
+        setform.setFieldsValue({...formLists})
+      }
       })
     }
 
