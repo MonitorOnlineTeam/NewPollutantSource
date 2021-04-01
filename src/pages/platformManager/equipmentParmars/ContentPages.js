@@ -256,10 +256,10 @@ const EditableTable = (props) => {
  
     })
   }else{
-    message.warning("请输入测量参数或设置量程范围1")
+    message.warning("请选择测量参数或设置量程范围1")
   }
     } catch (errInfo) {
-      message.warning("请输入测量参数或设置量程范围1")
+      message.warning("请选择测量参数或设置量程范围1")
       // message.error("请输入完整的信息")
       console.log('错误信息:', errInfo);
     }
@@ -394,8 +394,10 @@ const EditableTable = (props) => {
       },
     },
   ];
-  const parametersInfoChange = ()=>{
-    // alert(1111)
+  const parametersInfoChange = (value)=>{
+    
+  // const selectParlist = parametersLists.filter(item=>item.ChildID !== value)
+  // setParametersLists(selectParlist) 
   }
   const mergedColumns = columns.map((col) => {
     const { type } = props;
