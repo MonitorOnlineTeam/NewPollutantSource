@@ -384,6 +384,7 @@ export default Model.extend({
             { value: data.fiveLevel, rate: data.fiveLevelRate, name: '重度' },
             { value: data.sixLevel, rate: data.sixLevelRate, name: '严重' },
             { value: data.sevenLevel, rate: data.sevenLevelRate, name: '爆表' },
+            { value: data.noDataCount, rate: data.noDataRate, name: '离线' },
           ],
           allCount: data.allCount
         }
