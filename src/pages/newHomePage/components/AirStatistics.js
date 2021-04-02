@@ -337,9 +337,8 @@ export default class Index extends Component {
 
   getPancakeChartData = () => {
     let objData = this.array2obj(this.props.airDayReportData.datas, 'name')
-    // console.log("objData-", objData)
     let option = {
-      color: ["#4bd075", "#fdd22b", "#f39d16", "#f17170", "#d15695", "#a14458", "#000000"],
+      color: ["#4bd075", "#fdd22b", "#f39d16", "#f17170", "#d15695", "#a14458", "#000000","#bdc4cc"],
       grid: {
         // top: 20,
         top: '-20%',
@@ -383,7 +382,7 @@ export default class Index extends Component {
         right: 5,
         itemGap: 13.5,
         y:'center',
-        data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表'],
+        data: ['优', '良', '轻度', '中度', '重度', '严重', '爆表','离线'],
         formatter: function (name) {
           return `{title|${name}}{shu||}{rate|${objData[name].rate}%}{value|${objData[name].value}个}`
         },
@@ -478,7 +477,7 @@ export default class Index extends Component {
                   option={this.getPancakeChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 235}}
+                  style={{ height: 243}}
                 />
               </Skeleton>
             </Card>
