@@ -930,7 +930,7 @@ export default {
                 {
                   name: 'alarmrecord',
                   path: '/monitoring/alarmrecord',
-                  component: './monitoring/alarmrecord/index',
+                  component: './monitoring/alarmrecord/AlarmRecordList',
                 },
                 // 企业异常上报
                 {
