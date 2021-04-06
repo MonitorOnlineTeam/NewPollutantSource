@@ -24,7 +24,7 @@ const XinJiang = true;
 // const apiHost = 'http://172.16.12.135:50206/';
 // const apiHost = 'http://localhost:52198/';
 
-const apiHost = 'http://172.16.12.135:50206/';
+const apiHost = 'http://172.16.12.234:8051/';
 
 
 

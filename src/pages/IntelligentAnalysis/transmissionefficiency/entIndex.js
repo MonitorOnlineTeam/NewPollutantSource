@@ -31,6 +31,8 @@ import PointIndex from './pointIndex';
 import styles from './style.less';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import { downloadFile } from '@/utils/utils';
+import RegionList from '@/components/RegionList'
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const monthFormat = 'YYYY-MM';

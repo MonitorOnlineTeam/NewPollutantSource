@@ -38,6 +38,7 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable'
 import YearPicker from '@/components/YearPicker'
+import RegionList from '@/components/RegionList';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -525,7 +526,7 @@ class emissionEnt extends Component {
                     <Form layout="inline" style={{ marginBottom: '10' }}>
                         <Row >
                             <FormItem label="行政区" >
-                                <Select
+                                {/* <Select
                                     allowClear
                                     placeholder="请选择行政区"
                                     onChange={this.changeRegion}
@@ -533,7 +534,8 @@ class emissionEnt extends Component {
                                     style={{ width: 200, marginLeft: 10 }}
                                 >
                                     {this.children()}
-                                </Select>
+                                </Select> */}
+                                 <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                             </FormItem>
                             <FormItem label="监测点类型" >
                                 <Select

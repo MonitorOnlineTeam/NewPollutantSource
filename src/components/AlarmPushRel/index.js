@@ -337,7 +337,7 @@ class Index extends Component {
                                         />
                                     </Col>
                                     <Col xs={24} sm={24} md={24} lg={7} xl={9} xxl={8}>
-                                        <SdlCascader
+                                         <SdlCascader
                                            style={{ width: '100%' }}
                                             changeOnSelect
                                             placeholder="请选择行政区"
@@ -346,7 +346,7 @@ class Index extends Component {
                                             onChange={val => {
                                                 this.getentbyrt(val);
                                             }}
-                                    />
+                                    /> 
                                         {/** <Button type="primary" style={{ marginLeft: '10px' }} onClick={this.onReset}>重置</Button> */}
                                     </Col>
                                     <Col xs={24} sm={24} md={24} lg={10} xl={15} xxl={7}>

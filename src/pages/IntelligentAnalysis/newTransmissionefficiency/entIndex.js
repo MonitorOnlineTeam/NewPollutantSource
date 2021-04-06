@@ -36,6 +36,7 @@ const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
+import RegionList from '@/components/RegionList'
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -416,7 +417,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item>
-                  <Select
+                  {/* <Select
                     allowClear
                     placeholder="请选择行政区"
                     onChange={this.changeRegion}
@@ -424,7 +425,8 @@ export default class EntTransmissionEfficiency extends Component {
                     style={{ width: 200, marginLeft: 10 }}
                   >
                     {this.children()}
-                  </Select>
+                  </Select> */}
+                   <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                 </Form.Item>
                 <Form.Item>
                 <Select
@@ -521,7 +523,7 @@ export default class EntTransmissionEfficiency extends Component {
           >
             <Form layout="inline">
               <Form.Item>
-                <Select
+                {/* <Select
                   allowClear
                   placeholder="请选择行政区"
                   onChange={this.changeRegion}
@@ -529,7 +531,8 @@ export default class EntTransmissionEfficiency extends Component {
                   style={{ width: 200, marginLeft: 10 }}
                 >
                   {this.children()}
-                </Select>
+                </Select> */}
+                <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
               </Form.Item>
               <Form.Item>
                 <RangePicker_

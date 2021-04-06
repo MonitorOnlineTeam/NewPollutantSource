@@ -31,6 +31,7 @@ import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
+import RegionList from '@/components/RegionList'
 
 
 const pageUrl = {
@@ -195,9 +196,9 @@ class index extends PureComponent {
     }
     cardTitle = () => {
         //const { pollutantValue,} = this.state;
-
+        const { regionValue } = this.state;
         return <>
-            <Select
+            {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -219,8 +220,12 @@ class index extends PureComponent {
                     })
                 }}>
                 {this.children()}
-            </Select>
-
+            </Select> */}
+             <RegionList changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={regionValue}/>
             <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}

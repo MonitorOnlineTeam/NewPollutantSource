@@ -34,6 +34,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
 import PointVerifyLst from '../pointVerifyRate/components/PointVerifyLstModal'
+import RegionList from '@/components/RegionList';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -208,6 +210,7 @@ export default class OverVerifyLstModal extends Component {
     this.updateQueryState({
       PollutantType: '1',
       OperationPersonnel:'',
+      RegionCode:''
     });
     setTimeout(() => {
       this.getTableData();
@@ -254,7 +257,7 @@ export default class OverVerifyLstModal extends Component {
     //行政区事件
 
     this.updateQueryState({
-      RegionCode: value,
+      RegionCode: value?value:'',
     });
   };
   changeAttent = value => {
@@ -486,7 +489,7 @@ export default class OverVerifyLstModal extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item label="行政区">
-                  <Select
+                  {/* <Select
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
@@ -495,7 +498,9 @@ export default class OverVerifyLstModal extends Component {
                   >
                     <Option value="">全部</Option>
                     {this.regchildren()}
-                  </Select>
+                  </Select> */}
+               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+
                 </Form.Item>
                 <Form.Item label="企业类型">
                   <Select

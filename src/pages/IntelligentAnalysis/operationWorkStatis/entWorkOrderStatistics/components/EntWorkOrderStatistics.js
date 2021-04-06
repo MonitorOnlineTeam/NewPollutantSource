@@ -8,6 +8,7 @@ import moment from 'moment'
 import { Link, router } from 'umi'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -220,13 +221,14 @@ class EntWorkOrderStatistics extends PureComponent {
                     {getFieldDecorator('RegionCode', {
                       initialValue:initialForm.RegionCode,
                     })(
-                    <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                        {
-                        _regionList.map(item => <Option key={item.key} value={item.value}>
-                            {item.title}
-                            </Option>)
-                        }
-                    </Select>,
+                    // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
+                    //     {
+                    //     _regionList.map(item => <Option key={item.key} value={item.value}>
+                    //         {item.title}
+                    //         </Option>)
+                    //     }
+                    // </Select>,
+                    <RegionList  changeRegion={''} RegionCode={''}/>
                     )}
                 </FormItem>
 

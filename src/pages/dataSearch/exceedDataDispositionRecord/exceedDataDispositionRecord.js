@@ -32,6 +32,8 @@ import { Right } from '@/utils/icon';
 import style from '@/pages/dataSearch/tableClass.less'
 import Group from 'antd/lib/input/Group';
 import { downloadFile } from '@/utils/utils';
+import RegionList from '@/components/RegionList'
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -266,12 +268,12 @@ class index extends PureComponent {
         })
     }
     cardTitle = () => {
-        const { time} = this.state;
+        const { time,regionValue} = this.state;
         const {pollutantCodeList} = this.props
         console.log(pollutantCodeList)
         console.log(this.state.pollutantCodeList)
         return < >
-            <Select
+            {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -293,7 +295,13 @@ class index extends PureComponent {
                     })
                 }}>
                 {this.children()}
-            </Select>
+            </Select> */}
+              <RegionList changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={regionValue}/>
+
             <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}

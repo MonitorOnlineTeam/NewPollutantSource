@@ -20,6 +20,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -335,7 +336,7 @@ class index extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode?values.RegionCode:'',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -346,7 +347,7 @@ class index extends PureComponent {
       queryCondition: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode?values.RegionCode:'',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -371,7 +372,7 @@ class index extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode?values.RegionCode:'',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -477,15 +478,16 @@ class index extends PureComponent {
                 {getFieldDecorator('RegionCode', {
                   // initialValue: 'siteDaily',
                 })(
-                  <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                    {
-                      _regionList.map(item => {
-                        return <Option key={item.key} value={item.value}>
-                          {item.title}
-                        </Option>
-                      })
-                    }
-                  </Select>
+                  // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
+                  //   {
+                  //     _regionList.map(item => {
+                  //       return <Option key={item.key} value={item.value}>
+                  //         {item.title}
+                  //       </Option>
+                  //     })
+                  //   }
+                  // </Select>
+                  <RegionList  changeRegion={''} RegionCode={''}/>
                 )}
               </FormItem>
             </Row>

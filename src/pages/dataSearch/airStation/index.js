@@ -26,6 +26,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
+import RegionList from '@/components/RegionList'
 import style from '@/pages/dataSearch/tableClass.less'
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -150,9 +151,9 @@ onChangeHandle=(PageIndex, PageSize)=>{
           }
   };
   cardTitle = () => {
-
+    const { regionValue } = this.state;
     return <>
-      <Select
+      {/* <Select
         allowClear
         showSearch
         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -174,7 +175,12 @@ onChangeHandle=(PageIndex, PageSize)=>{
           })
         }}>
         {this.children()}
-      </Select>
+      </Select> */}
+         <RegionList changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={regionValue}/>
       <Select
         allowClear
         style={{ width: 200, marginLeft: 10, marginRight: 10 }}

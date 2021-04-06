@@ -237,7 +237,7 @@ export default class index extends PureComponent {
               </Col>
               <Col md={4}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                  {getFieldDecorator('RegionCode', {
+                  {/* {getFieldDecorator('RegionCode', {
                     initialValue: RegionCode,
                   })(
                     <Select
@@ -260,7 +260,16 @@ export default class index extends PureComponent {
                           </Option>
                         );
                       })}
-                    </Select>,
+                    </Select>, */}
+                        <RegionList  changeRegion={value => {
+                                        this.setState({ RegionCode: value }, () => { });
+                                            dispatch({
+                                                type: 'airWorkOrderStatistics/updateState',
+                                                 payload: {
+                                                      RegionCode: value,
+                                                      },
+                                                      });
+                       }} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>                   
                   )}
                 </FormItem>
               </Col>

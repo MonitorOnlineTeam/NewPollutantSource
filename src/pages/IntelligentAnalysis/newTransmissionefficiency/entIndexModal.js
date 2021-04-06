@@ -32,12 +32,13 @@ import styles from './style.less';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import IndexModal from './qutPage/IndexModal';
+// import IndexModal from './IndexModal';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
 import QutPage from "@/pages/IntelligentAnalysis/newTransmissionefficiency/qutPage"
+import RegionList from '@/components/RegionList'
 
 const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
@@ -83,6 +84,7 @@ export default class EntIndexModal extends Component {
   componentWillMount() {
     this.updateState({
       pollutantType:this.state.PollutantType,
+      RegionCode:'',
     });
     this.getTableData();
     this.props.dispatch({
@@ -182,7 +184,7 @@ export default class EntIndexModal extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value,
+      RegionCode: value? value : '',
     });
   };
   
@@ -468,7 +470,7 @@ export default class EntIndexModal extends Component {
                 </Select>
                 </Form.Item>
                 <Form.Item>
-                  <Select
+                  {/* <Select
                     allowClear
                     placeholder="请选择行政区"
                     onChange={this.changeRegion}
@@ -476,7 +478,8 @@ export default class EntIndexModal extends Component {
                     style={{ width: 200, marginLeft: 10 }}
                   >
                     {this.children()}
-                  </Select>
+                  </Select> */}
+                   <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" onClick={this.getTableData}>

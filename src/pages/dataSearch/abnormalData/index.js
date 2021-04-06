@@ -9,6 +9,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -164,7 +165,7 @@ class index extends PureComponent {
         AttentionCode: values.AttentionCode,
         PollutantList: values.PollutantList,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode? values.RegionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -176,7 +177,7 @@ class index extends PureComponent {
         AttentionCode: values.AttentionCode,
         PollutantList: values.PollutantList,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode? values.RegionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -204,7 +205,7 @@ class index extends PureComponent {
         // PollutantList: this.state.checkedValues,
         PollutantList: values.PollutantList,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode? values.RegionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -299,9 +300,9 @@ class index extends PureComponent {
               <Col md={4}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                   {getFieldDecorator('RegionCode', {
-                    // initialValue: 'siteDaily',
+                    initialValue: undefined,
                   })(
-                    <Select allowClear placeholder="请选择行政区">
+                   /*  <Select allowClear placeholder="请选择行政区">
                       {
                         _regionList.map(item => {
                           return <Option key={item.key} value={item.value}>
@@ -309,7 +310,8 @@ class index extends PureComponent {
                           </Option>
                         })
                       }
-                    </Select>,
+                    </Select> */
+                <RegionList changeRegion={''} RegionCode={''}/>
                   )}
                 </FormItem>
               </Col>

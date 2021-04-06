@@ -478,7 +478,7 @@ export default class Index extends Component {
                   option={this.getPancakeChartData()}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  style={{ height: 235}}
+                  style={{ height: 243}}
                 />
               </Skeleton>
             </Card>

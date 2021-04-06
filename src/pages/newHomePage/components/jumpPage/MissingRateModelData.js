@@ -33,6 +33,7 @@ import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import MissingDataRateModelDetail from './MissingDataRateModelDetail'
 import EntType from '@/components/EntType'
+import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -338,7 +339,7 @@ export default class Index extends PureComponent {
               </Select>
               </Form.Item> 
               <Form.Item label='行政区'>
-                <Select
+                {/* <Select
                   allowClear
                   placeholder="行政区"
                   onChange={this.changeRegion}
@@ -346,7 +347,9 @@ export default class Index extends PureComponent {
                   style={{ width: 100 }}
                 >
                   {this.regchildren()}
-                </Select>
+                </Select> */}
+              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+
               </Form.Item>
              {types==='ent'? <Form.Item label='企业类型'>
                 <Select

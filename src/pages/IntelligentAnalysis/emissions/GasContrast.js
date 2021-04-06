@@ -21,6 +21,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import IndustryTree from '@/components/IndustryTree'
+import RegionList from '@/components/RegionList'
 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
@@ -100,7 +101,7 @@ class GasContrast extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode? values.RegionCode : '',
         ImportantType: values.ImportantType,
         PollutantType: 2,
         beginTime: moment(values.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
@@ -129,7 +130,7 @@ class GasContrast extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         TradeCode: values.TradeCode && values.TradeCode.length ? values.TradeCode[values.TradeCode.length - 1] : undefined,
-        RegionCode: values.RegionCode,
+        RegionCode: values.RegionCode? values.RegionCode : '',
         ImportantType: values.ImportantType,
         PollutantType: 2,
         beginTime: moment(values.time1[0]).format('YYYY-MM-DD 00:00:00'),
@@ -594,15 +595,16 @@ class GasContrast extends PureComponent {
               <FormItem label={<span style={{ ..._style }}>行政区</span>}>
                 {getFieldDecorator('RegionCode', {
                 })(
-                  <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                    {
-                      _regionList.map(item => {
-                        return <Option key={item.key} value={item.value}>
-                          {item.title}
-                        </Option>
-                      })
-                    }
-                  </Select>,
+                  // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
+                  //   {
+                  //     _regionList.map(item => {
+                  //       return <Option key={item.key} value={item.value}>
+                  //         {item.title}
+                  //       </Option>
+                  //     })
+                  //   }
+                  // </Select>,
+                  <RegionList changeRegion={''} RegionCode={''}/>
                 )}
               </FormItem>
             </Row>

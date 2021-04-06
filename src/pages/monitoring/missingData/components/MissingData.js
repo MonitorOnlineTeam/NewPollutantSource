@@ -32,6 +32,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
+import RegionList from '@/components/RegionList'
 
 
 const { Search } = Input;
@@ -311,7 +312,7 @@ export default class EntTransmissionEfficiency extends Component {
                 callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
               </Form.Item>
               <Form.Item label='行政区'>
-                <Select
+                {/* <Select
                   allowClear
                   placeholder="行政区"
                   onChange={this.changeRegion}
@@ -319,7 +320,8 @@ export default class EntTransmissionEfficiency extends Component {
                   style={{ width: 181 }}
                 >
                   {this.regchildren()}
-                </Select>
+                </Select> */}
+              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
               <Form.Item label='运维状态'>
               <Select

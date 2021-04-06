@@ -37,6 +37,7 @@ import FileDown from '@/components/AttachmentView/index'
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { MonthPicker } = DatePicker;
+import RegionList from '@/components/RegionList'
 
 const pageUrl = {
     getRegions: 'autoForm/getRegions',
@@ -224,7 +225,8 @@ class index extends PureComponent {
             } />
             
             <div style={{ marginTop: 10,fontSize:14 }}>
-                <label>行政区:</label><Select
+                <label>行政区:</label>
+               {/*  <Select
                     allowClear
                     showSearch
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -246,8 +248,12 @@ class index extends PureComponent {
                         })
                     }}>
                     {this.children()}
-                </Select>
-               
+                </Select> */}
+               <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={this.state.regionValue}/>
                 <label>企业列表:</label><Select
                     allowClear
                     showSearch

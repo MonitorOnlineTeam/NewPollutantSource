@@ -32,6 +32,7 @@ import moment from 'moment';
 
 import $ from 'jquery'
 import styles from '../index.less';
+import RegionList from '@/components/RegionList';
 
 const { CheckableTag } = Tag;
 const CheckboxGroup = Checkbox.Group;
@@ -65,6 +66,7 @@ class index extends Component {
       currentHour: moment().hour(),
       time: moment().hour() > 1 ? moment(new Date()).add(-1, 'hour').format('YYYY-MM-DD HH:00:00') : moment(new Date()).format('YYYY-MM-DD HH:00:00'),
       dayTime: moment(new Date()).add(-1, 'day'),
+      regionCode:''
     };
   }
 
@@ -366,7 +368,7 @@ class index extends Component {
   }
 
   render() {
-    const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode, stopStatus, selectedTags } = this.state;
+    const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode, stopStatus, selectedTags,regionCode } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
     const { dataLoading, columnLoading, entListByRegion, regionList } = this.props;
 
@@ -533,7 +535,7 @@ class index extends Component {
 
               </Row>
               <Row style={{ marginTop: 10 }}>
-                <Select style={{ width: 140 }} allowClear placeholder="请选择行政区" onChange={(value) => {
+                {/* <Select style={{ width: 140 }} allowClear placeholder="请选择行政区" onChange={(value) => {
                   let val = value !== undefined ? value : "";
                   this.setState({
                     regionCode: val
@@ -549,7 +551,17 @@ class index extends Component {
                       </Option>
                     })
                   }
-                </Select>
+                </Select> */}
+                <RegionList  changeRegion={(value) => {
+                  let val = value !== undefined ? value : "";
+                  this.setState({
+                    regionCode: val
+                  }, () => {
+                    this.getEntByRegion(val);
+                    this.getRealTimeDataView()
+                  })
+                }} RegionCode={regionCode}/>
+
                 <Select
                   style={{ width: 200, marginLeft: 10 }}
                   allowClear

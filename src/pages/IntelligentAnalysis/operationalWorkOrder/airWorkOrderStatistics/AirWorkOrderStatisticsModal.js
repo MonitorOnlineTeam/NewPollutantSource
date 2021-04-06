@@ -30,6 +30,7 @@ import { router } from 'umi';
 import { checkParent } from './utils';
 import RegionAirQualityMonitoringStationContent from './components/RegionAirQualityMonitoringStationContent';
 import StationAirQualityMonitoringStationContent from './components/StationAirQualityMonitoringStationContent';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -287,31 +288,43 @@ export default class index extends PureComponent {
                                     </Col>
                                     <Col md={4}>
                                         <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                                            {getFieldDecorator('RegionCode', {
-                                                initialValue: RegionCode,
-                                            })(
-                                                <Select
-                                                    allowClear
-                                                    placeholder="请选择行政区"
-                                                    onChange={value => {
-                                                        this.setState({ RegionCode: value }, () => { });
-                                                        dispatch({
-                                                            type: 'airWorkOrderStatistics/updateState',
-                                                            payload: {
-                                                                RegionCode: value,
-                                                            },
-                                                        });
-                                                    }}
-                                                >
-                                                    {_regionList.map(item => {
-                                                        return (
-                                                            <Option key={item.key} value={item.value}>
-                                                                {item.title}
-                                                            </Option>
-                                                        );
-                                                    })}
-                                                </Select>,
-                                            )}
+                                            {
+                                            // getFieldDecorator('RegionCode', {
+                                            //     initialValue: RegionCode,
+                                            // })(
+                                                // <Select
+                                                //     allowClear
+                                                //     placeholder="请选择行政区"
+                                                //     onChange={value => {
+                                                //         this.setState({ RegionCode: value }, () => { });
+                                                //         dispatch({
+                                                //             type: 'airWorkOrderStatistics/updateState',
+                                                //             payload: {
+                                                //                 RegionCode: value,
+                                                //             },
+                                                //         });
+                                                //     }}
+                                                // >
+                                                //     {_regionList.map(item => {
+                                                //         return (
+                                                //             <Option key={item.key} value={item.value}>
+                                                //                 {item.title}
+                                                //             </Option>
+                                                //         );
+                                                //     })}
+                                                // </Select>,
+                                                <RegionList  changeRegion={value => {
+                                                            this.setState({ RegionCode: value }, () => { });
+                                                            dispatch({
+                                                                type: 'airWorkOrderStatistics/updateState',
+                                                                payload: {
+                                                                    RegionCode: value,
+                                                                },
+                                                            });
+                                                        }} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
+
+                                            // )
+                                            }
                                         </FormItem>
                                     </Col>
                                     <Col md={9} style={{ marginTop: 3 }}>

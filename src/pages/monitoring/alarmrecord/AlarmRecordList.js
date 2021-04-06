@@ -25,6 +25,7 @@ import SdlTable from '@/components/SdlTable'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import SdlDatePicker from '@/pages/AutoFormManager/SdlDatePicker';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
+import RegionList from '@/components/RegionList';
 
 import Cookie from 'js-cookie';
 const { Option } = Select;
@@ -144,7 +145,7 @@ class AlarmRecordList extends Component {
         DGIMN:values.DGIMN,
         PollutantType:values.PollutantType,
         EntCode:values.EntCode,
-        RegionCode:values.RegionCode,
+        RegionCode:values.RegionCode?values.RegionCode:'',
         beginTime:beginTime,
         endTime:endTime,
       },
@@ -353,15 +354,16 @@ class AlarmRecordList extends Component {
                   <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
                     {getFieldDecorator('RegionCode', {
                     })(
-                      <Select allowClear placeholder="请选择行政区">
-                        {
-                          _regionList.map(item => {
-                            return <Option key={item.key} value={item.value}>
-                              {item.title}
-                            </Option>
-                          })
-                        }
-                      </Select>,
+                      // <Select allowClear placeholder="请选择行政区">
+                      //   {
+                      //     _regionList.map(item => {
+                      //       return <Option key={item.key} value={item.value}>
+                      //         {item.title}
+                      //       </Option>
+                      //     })
+                      //   }
+                      // </Select>,
+                    <RegionList  changeRegion={''} RegionCode={''}/>
                     )}
                   </FormItem>
                 </Col>

@@ -17,6 +17,7 @@ import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -114,7 +115,7 @@ class index extends PureComponent {
       payload: {
         AttentionCode,
         PollutantType,
-        RegionCode,
+        RegionCode: RegionCode? RegionCode:'',
         dataType,
         beginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
         endTime: endTime.format('YYYY-MM-DD 23:59:59'),
@@ -420,31 +421,44 @@ class index extends PureComponent {
               </Col>
               <Col md={4}>
                 <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
-                  {getFieldDecorator('RegionCode', {
-                    initialValue: RegionCode,
-                  })(
-                    <Select
-                      allowClear
-                      placeholder="请选择行政区"
-                      onChange={value => {
-                        this.setState({ RegionCode: value }, () => { });
-                        dispatch({
-                          type: 'overAlarmDisposalRate/updateState',
-                          payload: {
-                            RegionCode: value,
-                          },
-                        });
-                      }}
-                    >
-                      {_regionList.map(item => {
-                        return (
-                          <Option key={item.key} value={item.value}>
-                            {item.title}
-                          </Option>
-                        );
-                      })}
-                    </Select>,
-                  )}
+                  
+                  {
+                  // getFieldDecorator('RegionCode', {
+                  //   initialValue: RegionCode,
+                  // })(
+                    // <Select
+                    //   allowClear
+                    //   placeholder="请选择行政区"
+                    //   onChange={value => {
+                    //     this.setState({ RegionCode: value }, () => { });
+                    //     dispatch({
+                    //       type: 'overAlarmDisposalRate/updateState',
+                    //       payload: {
+                    //         RegionCode: value,
+                    //       },
+                    //     });
+                    //   }}
+                    // >
+                    //   {_regionList.map(item => {
+                    //     return (
+                    //       <Option key={item.key} value={item.value}>
+                    //         {item.title}
+                    //       </Option>
+                    //     );
+                    //   })}
+                    // </Select>,
+              <RegionList changeRegion={value => {
+                    this.setState({ RegionCode: value }, () => { });
+                    dispatch({
+                      type: 'overAlarmDisposalRate/updateState',
+                      payload: {
+                        RegionCode: value,
+                      },
+                    });
+                  }} RegionCode={RegionCode}/>
+
+                  // )
+                }
                 </FormItem>
               </Col>
               <Col md={5}>

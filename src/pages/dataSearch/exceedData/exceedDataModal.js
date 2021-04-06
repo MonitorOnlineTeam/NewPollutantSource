@@ -36,6 +36,7 @@ import CheckboxGroup from 'antd/lib/checkbox/Group';
 import style from '@/pages/dataSearch/tableClass.less'
 import point from '@/models/point';
 import { toDecimal3 } from '@/utils/utils';
+import RegionList from '@/components/RegionList'
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -248,7 +249,6 @@ class index extends PureComponent {
                   PollutantList: pollutionData,
                   entType: values.outlet == undefined ? '' : values.outlet,
               })
-   
             this.props.dispatch({
                 type:pageUrl.GetExceedDataList,
                 payload:{
@@ -797,27 +797,28 @@ class index extends PureComponent {
                         getFieldDecorator('Region', {
 
                         })(
-                            <Select
-                                allowClear
-                                showSearch
-                                style={{ width: 180, marginLeft: 10, marginRight: 20 }}
-                                placeholder="行政区"
-                                maxTagCount={2}
-                                maxTagTextLength={5}
-                                maxTagPlaceholder="..."
-                                optionFilterProp="children"
-                                filterOption={(input, option) => {
-                                    if (option && option.props && option.props.title) {
-                                        return option.props.title === input || option.props.title.indexOf(input) !== -1
-                                    } else {
-                                        return true
-                                    }
-                                }}
-                                onChange={(value) => {
+                            // <Select
+                            //     allowClear
+                            //     showSearch
+                            //     style={{ width: 180, marginLeft: 10, marginRight: 20 }}
+                            //     placeholder="行政区"
+                            //     maxTagCount={2}
+                            //     maxTagTextLength={5}
+                            //     maxTagPlaceholder="..."
+                            //     optionFilterProp="children"
+                            //     filterOption={(input, option) => {
+                            //         if (option && option.props && option.props.title) {
+                            //             return option.props.title === input || option.props.title.indexOf(input) !== -1
+                            //         } else {
+                            //             return true
+                            //         }
+                            //     }}
+                            //     onChange={(value) => {
 
-                                }}>
-                                {this.children()}
-                            </Select>
+                            //     }}>
+                            //     {this.children()}
+                            // </Select>
+                            <RegionList changeRegion={''} RegionCode={''}/>
                         )
                     }
 

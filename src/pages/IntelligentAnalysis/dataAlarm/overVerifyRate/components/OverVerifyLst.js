@@ -33,6 +33,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
+import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -204,7 +205,9 @@ export default class OverVerifyLst extends Component {
     dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
-
+    this.updateQueryState({
+      RegionCode:  '',
+    });
     setTimeout(() => {
       this.getTableData();
     });
@@ -250,7 +253,7 @@ export default class OverVerifyLst extends Component {
     //行政区事件
 
     this.updateQueryState({
-      RegionCode: value,
+      RegionCode: value? value : '',
     });
   };
   changeAttent = value => {
@@ -479,7 +482,7 @@ export default class OverVerifyLst extends Component {
                   </Select>
                 </Form.Item>
                 <Form.Item label="行政区">
-                  <Select
+                  {/* <Select
                     allowClear
                     placeholder="行政区"
                     onChange={this.changeRegion}
@@ -488,7 +491,8 @@ export default class OverVerifyLst extends Component {
                   >
                     <Option value="">全部</Option>
                     {this.regchildren()}
-                  </Select>
+                  </Select> */}
+                  <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 <Form.Item label="企业类型">
                   <Select

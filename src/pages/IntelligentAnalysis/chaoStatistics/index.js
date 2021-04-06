@@ -21,6 +21,7 @@ import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import IndustryTree from '@/components/IndustryTree'
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -337,7 +338,7 @@ class index extends PureComponent {
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
               <FormItem label={<span style={{ ..._style }}>行政区</span>}>
-                {getFieldDecorator('RegionCode', {
+                {/* {getFieldDecorator('RegionCode', {
                   // initialValue: 'siteDaily',
                 })(
                   <Select style={{ width: 120 }} allowClear placeholder="请选择行政区" onChange={(value) => {
@@ -351,7 +352,16 @@ class index extends PureComponent {
                       })
                     }
                   </Select>
-                )}
+                )} */}
+                <RegionList changeRegion={value => {
+                    this.setState({ RegionCode: value }, () => { });
+                    dispatch({
+                      type: 'overAlarmDisposalRate/updateState',
+                      payload: {
+                        RegionCode: value,
+                      },
+                    });
+                  }} RegionCode={RegionCode}/>
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>
                 {getFieldDecorator('AttentionCode', {
