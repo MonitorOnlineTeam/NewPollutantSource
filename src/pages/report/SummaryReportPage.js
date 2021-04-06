@@ -54,6 +54,7 @@ class SummaryReportPage extends PureComponent {
         .format('YYYY-MM-DD 23:59:59'),
       pageIndex: 1,
       pageSize: 20,
+      regionCode:''
     };
     this.SELF = {
       formLayout: {
@@ -208,6 +209,7 @@ class SummaryReportPage extends PureComponent {
   statisticsReport() {
     const { form, match } = this.props;
     // const { uid, configId, isEdit, keysParams } = this._SELF_;
+ 
     form.validateFields((err, values) => {
       if (!err) {
         // 获取污染物类型 = 表头
@@ -223,7 +225,7 @@ class SummaryReportPage extends PureComponent {
                   DGIMN: values.PollutantSourceType == '5' ? values.DGIMN : null,
                   type: match.params.reportType,
                   PollutantSourceType: values.PollutantSourceType,
-                  Regions: values.Regions.toString(),
+                  Regions:values.Regions&&values.Regions.length>0? values.Regions.toString() : '',
                   ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
                   BeginTime: this.state.beginTime,
                   EndTime: this.state.endTime,
@@ -368,7 +370,6 @@ class SummaryReportPage extends PureComponent {
         ? ''
         : 'none'
       : 'none';
-    console.log(IfShowRegionInReport);
     switch (reportType) {
       case 'monthly':
         picker = 'month';
@@ -496,7 +497,11 @@ class SummaryReportPage extends PureComponent {
                       //     this.setState({ regions: value.join(',') });
                       //   }}
                       // />,
-                      <RegionList style={{width:'100%'}} changeRegion={(value)=>{ this.setState({ regions: value}); }} RegionCode={this.state.regions}/>
+                      <RegionList style={{width:'100%'}}
+                         changeRegion={(value)=>{ 
+                          this.setState({ regionCode: value}); 
+                         }} 
+                        RegionCode={this.state.regionCode}/>
                     )}
                   </FormItem>
                 </Col>
