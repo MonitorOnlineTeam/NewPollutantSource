@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Table, Row, Col, Input, Select, Card, Button, DatePicker, message, Spin } from 'antd';
+import { Table, Row, Col, Input, Select, Card, Button, DatePicker, message, Spin,TreeSelect } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
@@ -18,6 +18,8 @@ import CascaderMultiple from '@/components/CascaderMultiple';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { timeDifference } from '@/utils/utils';
+import RegionList from '@/components/RegionList'
+
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
@@ -48,6 +50,7 @@ class DateReportPage extends PureComponent {
         .add(-1, 'day')
         .format('YYYY-MM-DD 01:00:00'),
       endTime: moment().format('YYYY-MM-DD 00:00:00'),
+      regions:''
     };
     this.SELF = {
       formLayout: {
@@ -176,7 +179,7 @@ class DateReportPage extends PureComponent {
         {
           title: '时间',
           dataIndex: 'time',
-          align: 'center',
+          align: 'center'
         },
         ...AQIColumn,
         ...nextProps.pollutantList,
@@ -185,6 +188,11 @@ class DateReportPage extends PureComponent {
         ...item,
         align: 'center',
         render: (text, row, index) => {
+          if(item.title === '时间'){
+              return text
+            // return moment(moment(text).format('YYYY-MM-DD HH:00')).format('YYYY-MM-DD HH:00')
+            //   return moment(text).format('YYYY-MM-DD HH:00')
+          }
           if (text) {
             const _text = text.split('|');
             let val = _text[0];
@@ -322,7 +330,9 @@ class DateReportPage extends PureComponent {
       endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
     });
   };
-
+  changeRegion=(value)=>{
+      this.setState({ regions: value}); 
+  }
   render() {
     const {
       form: { getFieldDecorator, getFieldValue },
@@ -429,7 +439,7 @@ class DateReportPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
-                <Col xxl={4} md={4} xs={24}>
+                <Col xxl={3} md={6} xs={24}>
                   <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
                     {getFieldDecorator('PollutantSourceType', {
                       initialValue: pollutantTypeList.length
@@ -482,8 +492,15 @@ class DateReportPage extends PureComponent {
                     )}
                   </FormItem>
                 </Col>
+                <Col xxl={3} md={10} xs={24}>
+                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                  <RegionList style={{width:'100%'}} 
+                  changeRegion={this.changeRegion}
+                   RegionCode={this.state.regions}/>
+                  </FormItem>
+                </Col>
                 {getFieldValue('PollutantSourceType') && (
-                  <Col xxl={7} md={8} xs={24}>
+                  <Col xxl={6} md={8} xs={24}>
                     <FormItem {...formLayout} label="监控目标" style={{ width: '100%' }}>
                       {getFieldDecorator('DGIMN', {
                         initialValue: this.props.form.getFieldValue('DGIMN'),
@@ -496,6 +513,7 @@ class DateReportPage extends PureComponent {
                       })(
                         <CascaderMultiple
                           pollutantTypes={getFieldValue('PollutantSourceType')}
+                          regionCode={this.state.regions}
                           {...this.props}
                         />,
                       )}
@@ -503,8 +521,8 @@ class DateReportPage extends PureComponent {
                   </Col>
                 )}
                 <Col
-                  xxl={5}
-                  md={6}
+                  xxl={4}
+                  md={8}
                   xs={24}
                   style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'block' : 'none' }}
                 >
@@ -538,7 +556,9 @@ class DateReportPage extends PureComponent {
                     })(timeEle)}
                   </FormItem>
                 </Col>
-                <Col xxl={4} md={10} xs={24}>
+
+
+                <Col xxl={3} md={8} xs={24}>
                   <FormItem label="" style={{ width: '100%' }}>
                     <Button
                       type="primary"
