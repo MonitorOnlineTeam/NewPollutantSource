@@ -35,7 +35,7 @@ class Index extends Component {
             const entName = sessionStorage.getItem('oneEntName')
         return (
             <Fragment> 
-                <ContentPages  location= { {query:{tabName:'排污口信息管理'}} }  match= { {params:{targetName:entName, configId:'AEnterpriseTest', pollutantTypes:'1,2',targetId:entCode}} }/>
+                <ContentPages  location= { {query:{tabName:'排污口信息管理'}} }  match= { {params:{targetName:entName, configId:'AEnterpriseTest', pollutantTypes:'1,2,5,6,12',targetId:entCode,targetType:'1'}} }/>
             </Fragment>
         );
     }

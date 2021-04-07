@@ -14,11 +14,14 @@
 /*滚动条大小*/
 @scrollbar-width: 9px;
 
-@cardBackgroundCol:rgba(0,0,0,.4);
+// @cardBackgroundCol:rgba(0,0,0,.4);
+@cardBackgroundCol:#fff;
 @mapCol:#fcf9f2;
+@textCol:#8591a9; 
 
-
-
+//  .circularText{
+//   color:rgb(107, 124, 153);
+// }
 .homeWrapper {
   background-color: #fff !important;
   font-size       : 14px;
@@ -430,7 +433,7 @@
     &>div {
       // border       : 1px solid #274073;
       margin-bottom: 10px;
-      color        : #fff;
+      color        : @textCol;
       padding      : 10px;
       overflow     : hidden;
       // background   : rgba(0, 21, 42, 0.71);
@@ -445,10 +448,11 @@
 
           .echartsTitle {
             text-align: center;
-            color     : #a1d9ff;
+            // color     : #a1d9ff;
+            color: @textCol;
             margin-top: -6px;
           }
-
+         
           // .echarts{
           //   height: calc(100% - 40px);
           //   width : 100%;
@@ -465,8 +469,9 @@
         position       : relative;
         // padding-left: 17px;
         padding-left   : 12px;
-        background     : url(/title_bg.png) no-repeat 0 3px;
-
+        // background     : url(/title_bg.png) no-repeat 0 3px;
+        background     : url(/yellow_bg.png) no-repeat;
+        background-size:20px 20px;
         // padding-left: 10px;
         p {
           // 样式
@@ -480,14 +485,15 @@
           // background  : #020814 url(/01.png) no-repeat 98px;
 
 
-          padding-left: 6px;
+          padding-left: 8px;
           margin-left : 5px;
           /* border   : 1px solid #053569; */
-          color       : #e5e9f3;
+          // color       : #e5e9f3;
+          color: #000;
           font-size   : 16px;
           display     : block;
           line-height : 20px;
-          background  :@cardBackgroundCol url(/01.png) no-repeat 96px 8px;
+          background  :@cardBackgroundCol url(/blue_bg.png) no-repeat 96px 8px;
         }
 
         // &::before {

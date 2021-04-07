@@ -2260,7 +2260,7 @@ export default {
                   routes: [
                     {
                       path: '/oneEntsOneArchives/lawInfo',
-                      redirect: '/oneEntsOneArchives/lawInfo/administration/:configId',
+                      redirect: '/oneEntsOneArchives/lawInfo/administration/Bas_AdministrationTasksRecord',
         
                     },
                     {
@@ -2281,7 +2281,7 @@ export default {
                   routes: [
                     {
                       path: '/oneEntsOneArchives/hazardousWaste',
-                      redirect:'/oneEntsOneArchives/hazardousWaste/info/:configId'
+                      redirect:'/oneEntsOneArchives/hazardousWaste/hazardousWasteInfo/Bas_HazardousWasteManagement'
                     },
                     {
                       name:'HazardousWasteInfo',  //危废管理-危废管理
@@ -2300,8 +2300,8 @@ export default {
                   path: '/oneEntsOneArchives/eiaInfo',
                   routes: [
                     {
-                      path: '/oneEntsOneArchives/hazardousWaste',
-                      redirect:'/oneEntsOneArchives/eiaInfo/Approval/:configId'
+                      path: '/oneEntsOneArchives/eiaInfo',
+                      redirect:'/oneEntsOneArchives/eiaInfo/approval/Bas_ProjectApproval'
                     },
                     {
                       name:'Approval',   //环评信息管理  建设环评审批

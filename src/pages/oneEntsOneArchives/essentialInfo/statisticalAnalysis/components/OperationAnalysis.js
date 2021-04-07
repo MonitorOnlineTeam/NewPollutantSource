@@ -54,7 +54,7 @@ class OperationAnalysis extends Component {
     let seriesData = [];
     if (type === 1) {
       legendData = ['正常', '离线'];
-      color = ['rgb(86,244,133)', 'rgb(32,99,81)'];
+      color = ['rgb(0, 221, 223)', 'rgb(246, 248, 251)'];
       seriesName = '实时联网率';
       seriesData = [
         { value: networkeRate, name: '正常' },
@@ -75,9 +75,9 @@ class OperationAnalysis extends Component {
     } else {
       legendData = ['达标', '未达标'];
       if (parseFloat(transmissionEffectiveRate) >= TransmissionEffectiveRate) {
-        color = ['rgb(86,244,133)', 'rgb(32,99,81)'];
+        color = ['rgb(255, 198, 4)', 'rgb(246, 248, 251)'];//达标
       } else {
-        color = ['rgb(255,78,78)', 'rgb(32,99,81)'];
+        color = ['rgb(255, 78, 78)', 'rgb(246, 248, 251)'];
       }
       seriesName = '传输有效率';
       seriesData = [
@@ -136,7 +136,9 @@ class OperationAnalysis extends Component {
               },
               textStyle: {
                 fontSize: 14,
-                color: '#fff',
+                // color: `${styles.circularText}`,
+                color:'#8591a9',
+                // fontWeight: 'bold'
               }
             },
             emphasis: {

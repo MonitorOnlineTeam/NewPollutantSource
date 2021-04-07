@@ -101,8 +101,8 @@ class EntAttributes extends Component {
            <Col span={12}><span>办公电话：</span> <span>{entDetailData.OfficePhone}</span></Col>
         </Row> 
         <Row style={{paddingTop:22}}>
-           <Col span={12}> <span>经度度数：</span> <span>{entDetailData.Latitude}</span></Col>
-           <Col span={12}><span>纬度度数：</span> <span>{entDetailData.Longitude}</span></Col>
+           <Col span={12}> <span>经度度数：</span> <span>{entDetailData.Longitude}</span></Col>
+           <Col span={12}><span>纬度度数：</span> <span>{entDetailData.Latitude}</span></Col>
         </Row> 
         <Row style={{paddingTop:22}}>
            <Col span={12}><span>单位类型：</span> <span>{entDetailData["dbo.T_Cod_UnitType.UnitTypeName"]}</span></Col>

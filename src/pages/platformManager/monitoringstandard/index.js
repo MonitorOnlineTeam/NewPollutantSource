@@ -27,30 +27,32 @@ class Index extends Component {
         super(props);
         this.state = {
             dgimn: "",
-            pollutantType: ''
+            pollutantType: '',
+            title:''
         };
     }
 
 
     render() {
-        const { pollutantType, dgimn } = this.state;
+        const { pollutantType, dgimn,title } = this.state;
 
         return (
             <div id="record">
                 {/* selKeys="31011537961003" */}
                 <NavigationTree domId="#record" choice={false} onItemClick={value => {
-                    console.log(value);
+                    console.log(value[0]);
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.setState({
                             dgimn: value[0].key,
+                            title:`${value[0].entName} - ${value[0].pointName}`,
                             pollutantType: value[0].Type
                         })
                     }
                 }} />
-                <BreadcrumbWrapper>
-                    {dgimn && <MonitoringStandard DGIMN={dgimn} pollutantType={pollutantType}></MonitoringStandard>}
+           {dgimn&&<BreadcrumbWrapper titles={`【${title}】` }>
+                   <MonitoringStandard DGIMN={dgimn} pollutantType={pollutantType}></MonitoringStandard>
                 </BreadcrumbWrapper>
-
+               }
             </div>
             // <Table
             // columns={columns}

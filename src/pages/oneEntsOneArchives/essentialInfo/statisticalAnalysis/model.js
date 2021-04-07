@@ -42,7 +42,8 @@ export default Model.extend({
     pointData: {},
     // 报警信息参数
     warningInfoParams: {
-      beginTime: moment().format("YYYY-MM-DD 00:00:00"),
+      // beginTime: moment().format("YYYY-MM-DD 00:00:00"),
+      beginTime: moment().add(-7, 'days').format("YYYY-MM-DD 00:00:00"),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       entCode: null,
       pageIndex: 1,

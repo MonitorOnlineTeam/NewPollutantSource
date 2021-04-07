@@ -57,7 +57,10 @@ class index extends Component {
                 : ""
             }
           </Breadcrumb>
-          {(selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
+          {this.props.titles?
+            this.props.titles
+             : 
+            (selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
         </div>
       } else if (pageHeaderWrapperProps.breadcrumb.routes) {
         return <div className="ant-page-header">
@@ -80,7 +83,10 @@ class index extends Component {
                 : ""
             }
           </Breadcrumb>
-          {(selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
+          {this.props.titles?
+           this.props.titles
+            : 
+            (selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""} 
         </div>
       }
     }
