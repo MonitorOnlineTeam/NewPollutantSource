@@ -7,7 +7,7 @@
  */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-
+import { Spin } from 'antd'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import moment from "moment";
@@ -25,7 +25,8 @@ const FormItem = Form.Item;
   loadingAdd: loading.effects['autoForm/add'],
   addFormItems: autoForm.addFormItems,
   editFormData: autoForm.editFormData,
-  tableInfo: autoForm.tableInfo
+  tableInfo: autoForm.tableInfo,
+  loading: loading
 }))
 @Form.create()
 class AutoFormEdit extends Component {
@@ -147,11 +148,15 @@ class AutoFormEdit extends Component {
             // }
             // >
             <BreadcrumbWrapper title="编辑">
-              {this._renderForm()}
+              <Spin spinning={this.props.loading.models.autoForm}>
+                {this._renderForm()}
+              </Spin>
               {/* </MonitorContent> : */}
             </BreadcrumbWrapper> :
             <Fragment>
-              {this._renderForm()}
+              <Spin spinning={this.props.loading.models.autoForm}>
+                {this._renderForm()}
+              </Spin>
             </Fragment>
         }
       </Fragment>
