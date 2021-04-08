@@ -14,6 +14,7 @@ export default Model.extend({
   state: {
     dataSource: [],
     loading:true,
+    total:'',
     queryParams: {
       indexStr: '',
     }
@@ -24,7 +25,7 @@ export default Model.extend({
           yield update({ loading:true  })
           const result = yield call(GetEntsList, payload);
           if (result.IsSuccess) {
-            yield update({ dataSource: result.Datas,loading:false  })
+            yield update({ dataSource: result.Datas,total:result.Datas.length, loading:false  })
             callback()
           } else {
             message.error(result.Message)

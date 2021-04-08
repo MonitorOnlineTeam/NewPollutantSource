@@ -99,19 +99,20 @@ class Index extends React.Component {
   } 
 
 
-  selectSty = (name)=>{
+  selectSty = (name,type)=>{
     const { searchValue } = this.state;
     const index = name&&name.indexOf(searchValue);
     const beforeStr = name&&name.substr(0, index);
     const afterStr = name&&name.substr(index + (searchValue? searchValue.length : 0));
+
     return  index > -1 && name ? (
        <>
          {beforeStr}
-         <div  style={{display:'inline-block'}} className={styles["site-search-value"]}>{searchValue}</div>
+         <div  style={{display:'inline-block'}} className={type==='point'? 'textOverflow'&&styles["site-search-value"] : styles["site-search-value"] }>{searchValue}</div>
          {afterStr}
        </>
      ) : (
-       <div style={{display:'inline-block'}} >{name&&name}</div>
+       <div style={{display:'inline-block'}} title={type==='point'&&name } className={type==='point'&&'textOverflow'} >{name&&name}</div>
      );
   }
   loop = (data)=>{
@@ -122,7 +123,7 @@ class Index extends React.Component {
     const  CorporationCode = this.selectSty(item.CorporationCode)
     const  MobilePhone = this.selectSty(item.MobilePhone)
     const  EntAddress = this.selectSty(item.EntAddress)
-    const  PointName = this.selectSty(item.PointName)
+    const  PointName = this.selectSty(item.PointName,'point')
 
     return { EntName,CorporationName,CorporationCode,MobilePhone,EntAddress,PointName,EntCode:item.EntCode};
    });
@@ -132,7 +133,7 @@ class Index extends React.Component {
 
 
   render() {
-    const {loading,dataSource} = this.props;
+    const {loading,dataSource,total} = this.props;
     const  QueryCriteria = this.queryCriteria;
     
 
@@ -142,12 +143,13 @@ class Index extends React.Component {
         <List
           itemLayout="vertical"
           dataSource={this.loop(dataSource)}
-          pagination={dataSource.length<6? false:{
+          pagination={total<10? false:{
             onChange: page => {
               console.log(page);
             },
-            pageSize: 6,
-            total:loading? 6 : dataSource.length
+            // pageSize: 6,
+            // defaultPageSize:20,
+            total: dataSource.length
           }}
           renderItem={item => (
            <List.Item onClick={()=>this.itemClick(item)}>
@@ -164,7 +166,7 @@ class Index extends React.Component {
          <Col> <span>公司地址：</span> <span>{item.EntAddress}</span></Col>
         </Row>
         <Row>
-         <span>排口名称：</span> <span>{item.PointName}</span>
+         <span>排口名称：</span> <span style={{width:'calc(100% - 80px)'}}>{item.PointName}</span>
         </Row>
         </div> 
         </Skeleton>
