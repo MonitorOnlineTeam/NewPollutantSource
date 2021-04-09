@@ -60,62 +60,103 @@ class EntAttributes extends Component {
             <p>企业属性</p>
           </div>
 
-          {loading?
-          <PageLoading/>:
-          <div className={styles.content} style={{padding:'30px 0'}}>
-
-          {entDetailData&&<><Row style={{paddingTop:6}}>
-            <Col span={24}>
-              <span>公司名称：</span> <span title={entDetailData.EntName} className='textOverflow'  style={{width:301,verticalAlign:'top'}} >{entDetailData.EntName}</span>
+          {/* {loading?
+          <PageLoading/>: */}
+          <div className={styles.content} style={{padding:'12px 10px 10px 10px'}}>
+{/* 公司名称： 阿拉尔艾特克水务有限公司    关注程度：国控  污染源规模：大型一档  注册类型：国有企业    隶属关系：中央  
+办公电话：010-1111111 移动电话：13333333333     所属行业：建筑业,建筑安装业,建筑安装业 */}
+          {entDetailData&&<>
+             <Row className={styles.entRowTop}>
+              <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>公司名称</div> 
+              <div title={entDetailData.EntName} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData.EntName}</div>
+               </div>
+              </Row>
+              </Col>
+              
+              <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>注册类型</div> 
+              <div title={entDetailData["dbo.T_Cod_RegistType.RegistTypeName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_RegistType.RegistTypeName"]}</div>
+               </div>
+              </Row>
               </Col>
         </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={24}>
-              <span>公司地址：</span> <span title={entDetailData.EntAddress} className='textOverflow' style={{width:301,verticalAlign:'top'}}>{entDetailData.EntAddress}</span>
-           </Col>
+
+        <Row className={styles.entRowTop}>
+        <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>隶属关系</div> 
+              <div title={entDetailData['dbo.T_Cod_SubjectionRelation.SubjectionRelationName']} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData['dbo.T_Cod_SubjectionRelation.SubjectionRelationName']}</div>
+               </div>
+              </Row>
+              </Col>
+              
+              <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>所属行业</div> 
+              <div title={entDetailData["dbo.T_Cod_IndustryType.IndustryTypeName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_IndustryType.IndustryTypeName"]}</div>
+               </div>
+              </Row>
+              </Col>
         </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={24}>
-              <span>企业简称：</span> <span title={entDetailData.Abbreviation} className='textOverflow' style={{width:301,verticalAlign:'top'}}>{entDetailData.Abbreviation}</span>
-           </Col>
+        
+        <Row className={styles.entRowTop}>
+        <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>关注程度</div> 
+              <div title={entDetailData['dbo.T_Cod_AttentionDegree.AttentionName'] } className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData['dbo.T_Cod_AttentionDegree.AttentionName']}</div>
+               </div>
+              </Row>
+              </Col>
+              
+              <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>污染源规模</div> 
+              <div title={entDetailData["dbo.T_Cod_PSScale.PSScaleName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_PSScale.PSScaleName"]}</div>
+               </div>
+              </Row>
+              </Col>
         </Row> 
 
-        <Row style={{paddingTop:22}}>
-           <Col span={24}>
-              <span>所属行政：</span> <span title={entDetailData.RegionName} className='textOverflow' style={{width:301,verticalAlign:'top'}}>{entDetailData["dbo.T_Cod_Region.RegionName"]}</span>
-           </Col>
-        </Row> 
-        <Row style={{paddingTop:22}}>
-         <Col span={24}> <span>环保负责：</span> <span title={entDetailData.EnvironmentPrincipal} className='textOverflow' style={{width:301,verticalAlign:'top'}}>{entDetailData.EnvironmentPrincipal}</span></Col>
-        </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={12}> <span>法人姓名：</span> <span>{entDetailData.CorporationName}</span></Col>
-           <Col span={12}><span>法人编号：</span> <span>{entDetailData.CorporationCode}</span></Col>
-        </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={12}><span>企业类型：</span> <span>{entDetailData["dbo.T_Bas_Enterprise.EntType_Name"] }</span></Col>
-           <Col span={12}><span>移动电话：</span> <span>{entDetailData.MobilePhone}</span></Col>
-        </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={12}> <span>关注程度：</span> <span>{entDetailData["dbo.T_Cod_AttentionDegree.AttentionName"]}</span></Col>
-           <Col span={12}><span>办公电话：</span> <span>{entDetailData.OfficePhone}</span></Col>
-        </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={12}> <span>经度度数：</span> <span>{entDetailData.Longitude}</span></Col>
-           <Col span={12}><span>纬度度数：</span> <span>{entDetailData.Latitude}</span></Col>
-        </Row> 
-        <Row style={{paddingTop:22}}>
-           <Col span={12}><span>单位类型：</span> <span>{entDetailData["dbo.T_Cod_UnitType.UnitTypeName"]}</span></Col>
-           <Col span={12}><span>隶属关系：</span> <span>{entDetailData["dbo.T_Cod_SubjectionRelation.SubjectionRelationName"]}</span></Col>
-        </Row>
+        <Row className={styles.entRowTop}>
+        <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>办公电话</div> 
+              <div title={entDetailData["dbo.T_Bas_Enterprise.OfficePhone"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Bas_Enterprise.OfficePhone"]}</div>
+               </div>
+              </Row>
+              </Col>
+              
+              <Col span={12}   className={styles.entCol}>   
+              <Row align='middle' className={styles.entRow}>
+               <img src='/entTest.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>移动电话</div> 
+              <div title={entDetailData["dbo.T_Bas_Enterprise.MobilePhone"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Bas_Enterprise.MobilePhone"]}</div>
+               </div>
+              </Row>
+              </Col>
+        </Row>     
+
         </>}
-
-        {/* <Row style={{paddingTop:22}}>
-         <Col span={12}> <span>环保负责：</span> <span>{entDetailData.EnvironmentPrincipal}</span></Col>
-         <Col span={12}> <span>所属行政：</span> <span>{entDetailData.RegionName}</span></Col>
-        </Row>  */}
           </div>
-        }
+        {/* } */}
           </>;
     }
 }

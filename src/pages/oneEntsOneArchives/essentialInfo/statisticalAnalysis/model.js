@@ -32,6 +32,9 @@ export default Model.extend({
       dyhwdata: [],
       dyhwAnalData: [],
     },
+    ycTitle:'',
+    erhlTitle:'',
+    dyTitle:'',
     // 智能质控
     rateStatisticsByEnt: {
       beginTime: moment().format('YYYY-MM-01 HH:mm:ss'),
@@ -83,6 +86,8 @@ export default Model.extend({
     homePage:"1",
     alarmTotalData:'',
     entDetailData:{},
+    alarmTotalDataHour:'',
+    alarmTotalDataDay:''
   },
   effects: {
     *getHomePage({payload},{call,update}){
@@ -161,7 +166,7 @@ export default Model.extend({
       const result = yield call(services.getWarningInfo, postData);
       if (result.IsSuccess) {
         let data = result.Datas ? result.Datas[0].map(item => {
-          return { "desc": `${item.PointName}：<span style="color: #ffcb5b">${item.PollutantName}</span> 从 <span style="color: #3ccafc">${item.FirstTime}</span> 发生了 <span style="color: #f30201; font-size: 16px">${item.AlarmCount}</span> 次报警。`, url: "" }
+          return { "desc": `<span style="color: #a7b2bd">${item.PointName}：<span>${item.PollutantName}</span> 从 <span style="color: #a7b2bd">${item.FirstTime}</span> 发生了 <span style="color: #333; font-weight:550">${item.AlarmCount}</span> 次报警。</span>`, url: "" }
         }) : [];
         yield update({
           warningInfoList: data
@@ -343,8 +348,11 @@ export default Model.extend({
     *overStandardAlarmStatistics({ payload }, { call, update, select }) {
       const result = yield call(services.overStandardAlarmStatistics, payload);
       if (result.IsSuccess) {
+        payload.dataType === 'HourData' ? yield update({
+          alarmTotalDataHour: result.Datas || 0,
+        }):
         yield update({
-          alarmTotalData: result.Datas || 0
+          alarmTotalDataDay: result.Datas || 0
         })
       }
     },

@@ -475,14 +475,14 @@ class index extends Component {
           position: "absolute",
           width: "100%",
           height: "100%",
-          top: 0,
+          top: 20,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           background: "rgba(0, 0, 0, 0)",
           zIndex: 999,
         }}
-        size="large"
+        size='large'
       />
     }
 
@@ -506,7 +506,7 @@ class index extends Component {
               background: "rgba(0, 0, 0, 0.4)",
               zIndex: 999,
             }}
-            size="large"
+            size='default'
           />
         }
         {
@@ -523,7 +523,7 @@ class index extends Component {
               background: "rgba(0, 0, 0, 0.4)",
               zIndex: 999,
             }}
-            size="large"
+            size='default'
           />
         }
         {
@@ -539,7 +539,7 @@ class index extends Component {
               background: "rgba(0, 0, 0, 0)",
               zIndex: 999,
             }}
-            size="large"
+            size="default"
           />
         }
         {/* <header className={styles.homeHeader}>
@@ -551,7 +551,7 @@ class index extends Component {
         <Map
           resizeEnable={true}
           events={this.mapEvents}
-          mapStyle="amap://styles/normal"
+          mapStyle="amap://styles/macaron"
           amapkey={amapKey}
           center={mapCenter}
         >
@@ -609,8 +609,8 @@ class index extends Component {
             }
             {
               currentPoint && currentPoint.title && <div>
-                <span>排口</span> <br />
-                <span>{currentPoint.title}</span>
+                {/* <span style={{color:'#8591a9'}}>排口</span> <br /> */}
+                <span style={{color:'rgba(133,145,169,.5)'}}>排口-{currentPoint.title}</span>
               </div>
             }
           </div>

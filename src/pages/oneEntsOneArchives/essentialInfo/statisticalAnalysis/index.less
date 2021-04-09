@@ -2,11 +2,14 @@
 @abnormal  : rgb(255, 204, 68); // 异常
 @offline   : rgb(204, 204, 204); // 离线
 @overproof : rgb(253, 108, 108); // 超标
-@NOx       : #40ccdd;
-@smoke     : #0edaad;
-@SO2       : #03b3ff;
-@titleColor: #d5d9e2;
+// @NOx       : #40ccdd;
+// @smoke     : #0edaad;
+// @SO2       : #03b3ff;
 
+@NOx       : #2072ee;
+@smoke     : #ffc604;
+@SO2       : #00dddf;
+@titleColor: #d5d9e2;
 /*滚动条轨道颜色*/
 @scrollbar-track-color: #021e39;
 /*滚动条颜色*/
@@ -19,9 +22,9 @@
 @mapCol:#fcf9f2;
 @textCol:#8591a9; 
 
-//  .circularText{
-//   color:rgb(107, 124, 153);
-// }
+ .textStyle{
+  color:#ccd1d7;
+}
 .homeWrapper {
   background-color: #fff !important;
   font-size       : 14px;
@@ -38,25 +41,32 @@
       background-color: #fcf9f2 !important;
     }
     .statueType .anticon{
-      vertical-align: -0.235em;
+      vertical-align: -0.31em;
     }
   }
 
 
   .normal {
-    color: @normal;
+    // color: @normal;
+    color: @textCol;
   }
 
   .abnormal {
-    color: @abnormal;
+    // color: @abnormal;
+    color: @textCol;
+
   }
 
   .offline {
-    color: @offline;
+    // color: @offline;
+    color: @textCol;
+
   }
 
   .overproof {
-    color: @overproof;
+    // color: @overproof;
+    color: @textCol;
+
   }
 
   .overproofWrapper {
@@ -152,20 +162,21 @@
       // background  : #163666;
       // border-color: #3b6aaa;
       // color       : #fff;
-      color: #d9d9d9;
+      color: rgba(133,145,169,.5);
       background-color: @cardBackgroundCol;
       border-color: #d9d9d9;
     }
 
-    .ant-radio-button-wrapper:not(:first-child)::before {
+    .ant-radio-button-wrapper:not(:first-child)::before { //选中之后的 before内容
       background-color: #d9d9d9;
     }
-    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) { //选中之后  非禁用的按钮
       background:  @cardBackgroundCol;
-      border-color: #d9d9d9;
+      border-color:#d9d9d9;
+      color: @textCol;
     }
-    .ant-radio-button-wrapper-disabled{
-      color: #fff;
+    .ant-radio-button-wrapper-disabled{ //禁用按钮
+      color: @textCol;
     }
   }
 
@@ -175,9 +186,10 @@
 
     &>p {
       padding-left: 10px;
-      font-size   : 15px;
-      font-weight : 600;
-      color       : @titleColor;
+      font-size   : 14px;
+      // font-weight : 600; 
+      // color       : @titleColor;
+      color: rgba(0, 0, 0, .7);
     }
 
     &::before {
@@ -438,7 +450,7 @@
       overflow     : hidden;
       // background   : rgba(0, 21, 42, 0.71);
       background: @cardBackgroundCol;
-
+      box-shadow:  0px 0px 5px 0px rgba(133, 145, 169,.3);
       &>.echartsContent {
         display       : flex;
         flex-direction: row;
@@ -494,6 +506,7 @@
           display     : block;
           line-height : 20px;
           background  :@cardBackgroundCol url(/blue_bg.png) no-repeat 96px 8px;
+          font-weight: 545;
         }
 
         // &::before {
@@ -579,20 +592,23 @@
         &>div.line {
           flex           : 1;
           // background     : #334454;
-          background: @cardBackgroundCol;
+          background: #f5f6f8;
           display        : flex;
           justify-content: space-between;
           align-items    : center;
           padding        : 0 10px;
+          border-radius: 5px;
         }
 
         .circular {
           width        : 104px;
           height       : 104px;
           border-radius: 50%;
-          background   : #40ccdd;
+          // background   : #40ccdd;
+          background-color: #2072ee;
           // #63a6d3 #40ccdd
-          border    : 6px solid #001529;
+          // border    : 6px solid #001529;
+          border    : 6px solid #fff;
           position  : absolute;
           top       : 5px;
           left      : 50%;
@@ -601,9 +617,10 @@
 
           &>span {
             font-size  : 30px;
-            font-weight: 600;
+            font-weight: 545;
             line-height: 53px;
-            color      : #001529;
+            // color      : #001529;
+            color: #fff;
           }
 
           &>span:last-child {
@@ -666,7 +683,7 @@
       &>div.content {
         flex          : 1;
         width         : 100%;
-        min-height    : 164px;
+        min-height    : 154px;
         display       : flex;
         flex-direction: column;
 
@@ -674,7 +691,7 @@
         .pointcontent {
           display: flex;
           flex   : 1;
-          padding: 20px 4px;
+          padding: 0px 4px 20px 4px;
 
           // padding-left: 20px;
           // padding-top : 10px;
@@ -684,18 +701,21 @@
           }
 
           .echartBox {
-            border-bottom: 1px solid #277696;
+            // border-bottom: 1px solid #277696;
+            border-bottom: 1px solid #eaeaea;
           }
 
           .desc {
             /* padding  : 58px 5px 5px; */
             // font-size: 18px;
             // color    : #40ccdd;
-            font-size   : 15px;
-            font-weight : 600;
+            font-size   : 14px;
+            font-weight : 545;
             margin-left : 20px;
-            margin-top  : 6px;
+            // margin-top  : 6px;
+            margin-bottom: 15px;
             align-self  : flex-end;
+            color:#ccd1d7;
           }
         }
 
@@ -781,5 +801,32 @@
       box-shadow                       : 1px 1px 30px red;
     }
   }
-
+  .entRow{
+    background:#f5f6f8;
+    border-radius:10px;
+    padding:11px 10px;
+  }
+  .entCol{
+    padding:0  8px 10px 8px;
+    display:flex;
+    align-items:center
+  }
+  .entImg{
+    width:30px;
+    height: 30px;
+  }
+  .entDetailDataSty{
+     color: #000;
+     padding-top: 7px;
+     width: 102px;
+  }
+  .entNameSty{
+    margin-top: 12px;
+  }
+  .entDivSty{
+    padding-left:10px
+  }
+  .entRowTop{
+    margin-top: 15px;
+  }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import styles  from '../index.less';
-import Marquee from '@/components/Marquee'
+import Marquee from '@/components/Marquees'
 @connect(({ loading, home }) => ({
     warningInfoList: home.warningInfoList,
   }))

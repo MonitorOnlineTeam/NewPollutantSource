@@ -79,7 +79,8 @@ class Index extends React.Component {
           <Row  style={{flex:1,margin:'10px 0'}} > 
             <Col xxl={8} xl={10}   lg={14} md={16} sm={24} xs={24}>
               <Form.Item label="" className='queryConditionForm'>
-                  <Search  loading={loading} placeholder="请输入你要查找的字段" size="large" enterButton="查询一下" allowClear  onSearch={(value)=>this.searchChange(value)} />
+                  <img src='/entSearch.png'/>
+                 <Search  loading={loading} placeholder="请输入你要检索的字段" size="large" enterButton="检索一下" allowClear  onSearch={(value)=>this.searchChange(value)} />
               </Form.Item>
             </Col>
             {/* <Col xxl={4} xl={4} lg={4}  md={3} sm={24} xs={24}>
@@ -95,7 +96,7 @@ class Index extends React.Component {
   itemClick=(item)=>{
        router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail`);   
        sessionStorage.setItem("oneEntCode",item.EntCode)
-       sessionStorage.setItem("oneEntName",item.EntName.props.children)
+       sessionStorage.setItem("oneEntName",item.EntNames)
   } 
 
 
@@ -106,11 +107,11 @@ class Index extends React.Component {
     const afterStr = name&&name.substr(index + (searchValue? searchValue.length : 0));
 
     return  index > -1 && name ? (
-       <>
+       <div>
          {beforeStr}
          <div  style={{display:'inline-block'}} className={type==='point'? 'textOverflow'&&styles["site-search-value"] : styles["site-search-value"] }>{searchValue}</div>
-         {afterStr}
-       </>
+        {afterStr}
+       </div>
      ) : (
        <div style={{display:'inline-block'}} title={type==='point'&&name } className={type==='point'&&'textOverflow'} >{name&&name}</div>
      );
@@ -125,7 +126,7 @@ class Index extends React.Component {
     const  EntAddress = this.selectSty(item.EntAddress)
     const  PointName = this.selectSty(item.PointName,'point')
 
-    return { EntName,CorporationName,CorporationCode,MobilePhone,EntAddress,PointName,EntCode:item.EntCode};
+    return { EntName,CorporationName,CorporationCode,MobilePhone,EntAddress,PointName,EntCode:item.EntCode,EntNames:item.EntName};
    });
    
 
@@ -142,6 +143,7 @@ class Index extends React.Component {
         <Card title={<QueryCriteria />} style={{height:'100%'}}>
         <List
           itemLayout="vertical"
+          split={false}
           dataSource={this.loop(dataSource)}
           pagination={total<10? false:{
             onChange: page => {
@@ -149,26 +151,33 @@ class Index extends React.Component {
             },
             // pageSize: 6,
             // defaultPageSize:20,
-            total: dataSource.length
+            total: dataSource.length,
+            showQuickJumper:true
           }}
+          style={{paddingLeft:124}}
           renderItem={item => (
-           <List.Item onClick={()=>this.itemClick(item)}>
+           <List.Item>
                <Skeleton loading={loading} active paragraph={{ rows: 2 }}>
-            <Row> <h3>{item.EntName}</h3> </Row>    
+            <Row align='middle'> <img src='/ent.png' style={{height:18,paddingRight:6}}/> <span className={styles.titleHover} onClick={()=>this.itemClick(item)} style={{fontSize:16,fontFamily:'SimHei',color:'#3888ff',fontWeight:'bold',cursor:'pointer',lineHeight:'24px'}}>{item.EntName}</span> </Row>    
          <div className='listContent'>
+        <div style={{paddingLeft:24}}>
         <Row>
-          <Col xxl={3} xl={4}   lg={6} md={6} sm={24} xs={24}> <span>法人姓名：</span> <span>{item.CorporationName}</span></Col>
-        <Col><span>法人编号：</span> <span>{item.CorporationCode}</span></Col>
-
+          <Col> 
+          <span>法人姓名：</span> <span className={styles.itemContent}>{item.CorporationName}</span>
+          <span style={{padding:'0 10px'}}>|</span>
+          <span>法人编号：</span> <span className={styles.itemContent}>{item.CorporationCode}</span>
+          <span style={{padding:'0 10px'}}>|</span>
+          <span>法人电话：</span> <span className={styles.itemContent}>{item.MobilePhone}</span>
+          </Col>
         </Row> 
         <Row>
-         <Col xxl={3} xl={4}   lg={6} md={6} sm={24} xs={24}> <span>法人电话：</span> <span>{item.MobilePhone}</span></Col>
-         <Col> <span>公司地址：</span> <span>{item.EntAddress}</span></Col>
+         <Col> <span>公司地址：</span> <span className={styles.itemContent}>{item.EntAddress}</span></Col>
         </Row>
         <Row>
-         <span>排口名称：</span> <span style={{width:'calc(100% - 80px)'}}>{item.PointName}</span>
+         <span>排口名称：</span> <span className={styles.itemContent} style={{width:'calc(100% - 80px)'}}>{item.PointName}</span>
         </Row>
         </div> 
+        </div>
         </Skeleton>
       </List.Item>
     )}

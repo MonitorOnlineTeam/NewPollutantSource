@@ -3,13 +3,20 @@ import { connect } from 'dva';
 import styles  from '../index.less';
 import Marquee from '@/components/Marquee';
 import ReactEcharts from 'echarts-for-react';
+import { Row, Col  } from 'antd';
+
 @connect(({ loading, home }) => ({
     AllMonthEmissionsByPollutant: home.AllMonthEmissionsByPollutant,
+    ycTitle:home.ycTitle,
+    erhlTitle:home.erhlTitle,
+    dyTitle:home.dyTitle,
   }))
+
 class MonitoringStatus extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+          echartTitle : ''
          };
     }
     componentDidMount()
@@ -56,85 +63,107 @@ class MonitoringStatus extends Component {
     let SurplusDisplacement = 0;//剩余排量
     let xAxisData = [];//月
     let seriesData = [];//排量
+    let lineSeriesData = [];//排量 - 折线
     let title = null;
     let i = 1;
-    if (type === 1) {
+    if (type === 1) {//烟尘
       let outed = 0;
       // SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder.toFixed(2) : 0;
       SurplusDisplacement = (ycAnalData.length !== 0 && ycAnalData.Remainder) ? ycAnalData.Remainder : 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
-        title = `余${SurplusDisplacement}(t)`;
+        title = `<p>余 <span style='color:#ffc604;font-size:30px'>${SurplusDisplacement}</span>(t)</p>`;
       } else {
-        title = `超${Math.abs(SurplusDisplacement)}(t)`;
+        title = `<p>超 <span style='color:#ffc604;font-size:30px'>${Math.abs(SurplusDisplacement)}</span>(t)</p>`;
+
       }
+      this.props.dispatch({
+        type: 'home/updateState',
+        payload: {ycTitle:title},
+    })
       ycdata.map((ele) => {
 
         if (Number.parseInt(currentMonth) < i) {
           // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
-          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ 
+            value: outed, itemStyle: { normal: { color: '#ffc604'} } 
+          });
+
         } else {
-          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
+          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#ffc604', barBorderColor: '#ffc604', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
         i++;
       });
       xAxisData = ycdate;
-      color = ['#0edaad'];
-    } else if (type === 2) {
+      color = ['#ffc604'];
+    } else if (type === 2) { //二氧化硫
       let outed = 0;
       // SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder.toFixed(2) : 0;
       SurplusDisplacement = (eyhlAnalData.length !== 0 && eyhlAnalData.Remainder) ? eyhlAnalData.Remainder : 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
         //  title = `余${SurplusDisplacement}(t)`;
-        title = `余${SurplusDisplacement}(t)`;
+        title = `<p>余 <span style='color:#00dddf;font-size:30px'>${SurplusDisplacement}</span>(t)</p>`;
       } else {
-        title = `超${Math.abs(SurplusDisplacement)}(t)`;
+        title = `<p>超 <span style='color:#00dddf;font-size:30px'>${Math.abs(SurplusDisplacement)}</span>(t)</p>`;
       }
+      this.props.dispatch({
+        type: 'home/updateState',
+        payload: {erhlTitle:title},
+    })
       eyhldata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
           // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
-          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: '#00dddf'} } });
         } else {
-          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
+          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#00dddf', barBorderColor: '#00dddf', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
         i++;
       });
       xAxisData = dyhwdate;
-      color = ['#03b3ff'];
+      color = ['#00dddf'];
 
-    } else {
+    } else { //氮氧
       // SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder.toFixed(2) : 0;
       SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder : 0;
       let outed = 0;
       if (SurplusDisplacement > 0) {
         outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
-        title = `余${SurplusDisplacement}(t)`;
+        title = `<p>余 <span style='color:#2072ee;font-size:30px'>${SurplusDisplacement}</span>(t)</p>`;
       } else {
-        title = `超${Math.abs(SurplusDisplacement)}(t)`;
+        title = `<p>超 <span style='color:#2072ee;font-size:30px'>${Math.abs(SurplusDisplacement)}</span>(t)</p>`;
       }
+
+      this.props.dispatch({
+        type: 'home/updateState',
+        payload: {dyTitle:title},
+    })
       dyhwdata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
           // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
-          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push( { value: outed, itemStyle: { normal: { color: '#2072ee'} } } );
         } else {
-          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
+          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#2072ee', barBorderColor: '#2072ee', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
         i++;
       });
       xAxisData = eyhldate;
 
-      color = ['#40ccdd'];
+      color = ['#2072ee'];
     }
+
+
     let option = {
-      title: {
+      title:  {
+        show:false,
         text: this.props.DGIMN ? '' : title,
         x: 'center',
         textStyle: {
-          fontSize: 16,
-          fontWeight: 'bolder',
+          // fontSize: 16,
+          // fontWeight: 'bolder',
+          fontSize:24,
           color: color
-        }
+        },
       },
       color: color,
       tooltip: {
@@ -146,10 +175,12 @@ class MonitoringStatus extends Component {
         position: ['40%', '10%']
       },
       grid: {
-        left: '-10%',
-        right: '4%',
-        bottom: '-10%',
-        containLabel: true
+        // left: '-10%',
+        // right: '4%',
+        // bottom: '-10%',
+        // containLabel: true
+        y:10,
+        y2:20
       },
       xAxis: [
         {
@@ -173,31 +204,40 @@ class MonitoringStatus extends Component {
           type: 'bar',
           barWidth: '60%',
           data: seriesData,
-        }
+        },
+        // {
+        //   name: '约排放',
+        //   type: 'line',
+        //   symbol: 'none',
+        //   smooth:true,
+        //   data: seriesData,
+        // }
       ]
     };
     return option;
   }
- 
     render() {
-        const {AllMonthEmissionsByPollutant,DGIMN}=this.props;
+        const {AllMonthEmissionsByPollutant,DGIMN,ycTitle, erhlTitle,dyTitle,}=this.props;
         const {
             ycAnalData,
             eyhlAnalData,
             dyhwAnalData,
           } = AllMonthEmissionsByPollutant;
+
     // 计算排污许可情况
     let ycLink;
+    // ycLink = `<span style='color:#ffc604'>${91}%</span>(${1.62}/${1.78})`;
+    
     if (ycAnalData && ycAnalData.linkFlag && ycAnalData.length !== 0) {
-      ycLink = `${Math.abs(ycAnalData.linkFlag.toFixed(2))}%(${ycAnalData.monthSum.toFixed(2)}/${ycAnalData.flag.toFixed(2)})`;
+      ycLink = `<span style='color:#ffc604'>${(Math.abs(ycAnalData.linkFlag.toFixed(2)))}%</span>(${ycAnalData.monthSum.toFixed(2)}/${ycAnalData.flag.toFixed(2)})`;
     }
     let dyhwLink;
     if (dyhwAnalData && dyhwAnalData.linkFlag && dyhwAnalData.length !== 0) {
-      dyhwLink = `${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
+      dyhwLink = `<span style='color:#2072ee'>${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%</span>(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
     }
     let eyhlLink;
     if (eyhlAnalData && dyhwAnalData.linkFlag && eyhlAnalData.length !== 0) {
-      eyhlLink = `${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
+      eyhlLink = `<span style='color:#00dddf'>${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%</span>(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
     }
 
     if (DGIMN) {
@@ -218,6 +258,9 @@ class MonitoringStatus extends Component {
                   <div className={styles.contentTitle}>
                     <p>氮氧化物排污许可情况</p>
                   </div>
+                  <div style={{paddingLeft:23,paddingTop:10}}>
+                  <Row align="bottom" dangerouslySetInnerHTML={{ __html:dyTitle }}></Row>
+                  </div>
                   <div className={styles.pointcontent}>
                     <div className={styles.echartBox}>
                       <ReactEcharts
@@ -228,8 +271,10 @@ class MonitoringStatus extends Component {
                       />
                     </div>
                     <div className={styles.desc}>
-                      本年度累计排放量占比 <br />
-                      {dyhwLink}
+                      本年度累计排放量占比
+                       {/* <br />
+                      {dyhwLink} */}
+                      <div dangerouslySetInnerHTML={{ __html:dyhwLink }}></div>
                     </div>
                   </div>
                 </div>
@@ -237,6 +282,12 @@ class MonitoringStatus extends Component {
                 <div className={`${styles.smoke} ${styles.content}`}>
                   <div className={styles.contentTitle}>
                     <p>烟尘物排污许可情况</p>
+                  </div>
+                  {/* <div>
+                  {ycTitle}
+                  </div> */}
+                 <div style={{paddingLeft:23,paddingTop:10}}>
+                  <Row align="bottom" dangerouslySetInnerHTML={{ __html:ycTitle }}></Row>
                   </div>
                   <div className={styles.pointcontent}>
                     <div className={styles.echartBox}>
@@ -248,8 +299,10 @@ class MonitoringStatus extends Component {
                       />
                     </div>
                     <div className={styles.desc}>
-                      本年度累计排放量占比<br />
-                      {ycLink}
+                      {/* <br /> */}
+                      {/* {ycLink} */}
+                      本年度累计排放量占比
+                      <div dangerouslySetInnerHTML={{ __html:ycLink }}></div>
                     </div>
                   </div>
 
@@ -258,6 +311,12 @@ class MonitoringStatus extends Component {
                 <div className={`${styles.SO2} ${styles.content}`}>
                   <div className={styles.contentTitle}>
                     <p>二氧化硫排污许可情况</p>
+                  </div>
+                  {/* <div>
+                  {erhlTitle}
+                  </div> */}
+                  <div style={{paddingLeft:23,paddingTop:10}}>
+                  <Row align="bottom" dangerouslySetInnerHTML={{ __html:erhlTitle }}></Row>
                   </div>
                   <div className={styles.pointcontent} style={{ paddingBottom: 0 }}>
                     <div className={styles.echartBox}>
@@ -269,8 +328,10 @@ class MonitoringStatus extends Component {
                       />
                     </div>
                     <div className={styles.desc}>
-                      本年度累计排放量占比<br />
-                      {eyhlLink}
+                      本年度累计排放量占比
+                      {/* <br /> */}
+                      {/* {eyhlLink} */}
+                      <div dangerouslySetInnerHTML={{ __html:eyhlLink }}></div>
                     </div>
                   </div>
                 </div>

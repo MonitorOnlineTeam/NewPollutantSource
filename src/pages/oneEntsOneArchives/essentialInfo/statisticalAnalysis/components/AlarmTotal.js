@@ -7,17 +7,15 @@ import { Statistic, Row, Col, Divider,Radio  } from 'antd';
 import moment from 'moment';
 @connect(({ loading, home }) => ({
     taxInfo: home.taxInfo,
-    alarmTotalData:home.alarmTotalData
+    alarmTotalDataHour:home.alarmTotalDataHour,
+    alarmTotalDataDay:home.alarmTotalDataDay
   }))
 class AlarmTotal extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            dataType:'HourData',
-            options : [
-                { label: '小时数据', value: 'HourData' },
-                { label: '日均数据', value: 'DayData' },
-              ]
+            dataTypeHour:'HourData',
+            dataTypeDay:'DayData',
          };
     }
 
@@ -33,14 +31,21 @@ class AlarmTotal extends Component {
 
     getData=(entCode)=>{
      const{dispatch } = this.props;
-     const { dataType } = this.state;
+     const { dataTypeHour,dataTypeDay } = this.state;
     // 获取单个企业月超标报警
-    if (entCode && dataType) {
+    if (entCode) {
       dispatch({
         type: "home/overStandardAlarmStatistics",
         payload: {
           entCode: entCode,
-          dataType:dataType
+          dataType:dataTypeHour
+        }
+      })
+      dispatch({
+        type: "home/overStandardAlarmStatistics",
+        payload: {
+          entCode: entCode,
+          dataType:dataTypeDay
         }
       })
     }
@@ -49,42 +54,33 @@ class AlarmTotal extends Component {
        
     }
 
-    onAlarmChange=(e)=>{
-      let { entCode } = this.props;
-      this.setState({dataType:e.target.value},()=>{
-          this.getData(entCode)
-      })
-    }
 
     render() {
-        const { taxInfo,alarmTotalData }=this.props;
+        const { taxInfo,alarmTotalDataHour,alarmTotalDataDay }=this.props;
         const { options,dataType } = this.state;
+
+         let daates = moment(taxInfo.Date).format('MM') * 1
         return <>
           <div className={styles.title}>
             <p>报警统计</p>
           </div>
           <div className={styles.content}>
-            <p style={{paddingTop:20 }}> 
+              <Row justify='center'> 
+                <div style={{margin:'12px 0 20px 0',borderRadius:16, padding:'5px 10px', border:'1px solid #e5e5e5',color: "#333" }}>{daates}月超标报警统计</div>
+              </Row>
 
-            <Radio.Group
-             options={options}
-             onChange={this.onAlarmChange}
-             value={dataType}
-             optionType="button"
-             buttonStyle="solid"
-            />
-            </p>
-
-            <Divider style={{ background: "rgba(0,0,0,.2)" }} />
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: "#d5d9e2" }}>
-              {moment(taxInfo.Date).format('MM') * 1}月超标报警统计：   
-                  </div>
-                  <Statistic
-                    valueStyle={{  color: '#fff', fontSize: 22, color: "#FF4E4E", textAlign: "center",  fontWeight: 600 }}
-                    value={alarmTotalData}
-                  />
-            </div>
+              <Row  style={{background:"#f5f6f8",borderRadius:18,padding:'20px 0'}}> 
+              <Col span={10} className='colCenter'>
+              <div style={{fontSize:30,color:"#333"}}>{alarmTotalDataHour}</div>
+                 <span>小时数据</span>
+              </Col>
+              <Col span={2} className='colCenter'><div style={{width:1,height:'100%',background:'#e5e5e5'}}></div></Col> 
+              
+              <Col span={10} className='colCenter' >
+              <div style={{fontSize:30,color:"#333"}}>{alarmTotalDataDay}</div>
+              <span>日均数据</span>
+              </Col>
+              </Row>
           </div>
           </>;
     }
