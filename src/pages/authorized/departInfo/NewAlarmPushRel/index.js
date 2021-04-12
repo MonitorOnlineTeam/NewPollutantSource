@@ -77,10 +77,12 @@ class Index extends Component {
             {
               dataIndex: 'EntName',
               title: '企业名称',
+              ellipsis:true,
             },
             {
               dataIndex: 'PointName',
               title: '监测点名称',
+              ellipsis:true,
             },
           ];
           this.rightTableColumns = [
@@ -91,10 +93,12 @@ class Index extends Component {
               {
                 dataIndex: 'EntName',
                 title: '企业名称',
+                ellipsis:true,
               },
               {
                 dataIndex: 'PointName',
                 title: '监测点名称',
+                ellipsis:true,
               },
           ];
     }
@@ -229,7 +233,7 @@ class Index extends Component {
       };
     changeRegion=(value)=>{
         this.updateQueryState({
-            RegionCode: value,
+            RegionCode: value? value : '',
           });
     }
     changeCheckboxGroup=(data)=>{
@@ -315,7 +319,7 @@ class Index extends Component {
                     <Row>
                         <Col>
                                 <Row>
-                                    <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                                    <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {!alarmPushParLoading?  <>{alarmPushFlag?  <Checkbox.Group
                                       defaultValue={["1","2","5","6","7","8","9"]}

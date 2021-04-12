@@ -323,7 +323,7 @@ export default class Index extends PureComponent {
                 </Select>
               </Form.Item>
               
-              <Form.Item label='运维状态'>
+              {/* <Form.Item label='运维状态'>
               <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -337,7 +337,7 @@ export default class Index extends PureComponent {
                 <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
               </Select>
-              </Form.Item> 
+              </Form.Item>  */}
               <Form.Item label='行政区'>
                 {/* <Select
                   allowClear

@@ -520,7 +520,7 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
-              <Form.Item label="运维状态">
+              {/* <Form.Item label="运维状态">
                 {
                   <Select
                     allowClear
@@ -539,7 +539,7 @@ class index extends PureComponent {
                     <Option value="2">未设置运维人员</Option>
                   </Select>
                 }
-              </Form.Item>
+              </Form.Item> */}
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
                   查询

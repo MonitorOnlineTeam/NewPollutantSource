@@ -432,7 +432,7 @@ class NavigationTree extends Component {
     this.props.dispatch({
       type: 'navigationtree/getentandpoint',
       payload: {
-       PollutantTypes: this.state.PollutantTypes,
+       PollutantTypes: '1,2',
        RegionCode: value,
        Name: this.state.Name,
        Status: this.state.screenList,

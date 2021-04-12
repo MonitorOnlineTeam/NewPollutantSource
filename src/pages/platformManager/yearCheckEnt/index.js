@@ -316,7 +316,7 @@ class yearCheckEnt extends Component {
 
     changeRegion = value => {
         this.updateState({
-            RegionCode: value,
+            RegionCode: value? value : '',
         });
         this.changeEnt('');
         this.initData(value);
@@ -535,7 +535,7 @@ class yearCheckEnt extends Component {
                                 </FormItem>
 
                         </Row>
-                        <Row style={{ marginTop: 10, marginBottom: 10 }}>
+                        <Row style={{ marginTop: 10, marginBottom: 10 }} align="middle">
                             <FormItem label="企业列表" >
                                 <Select
                                     showSearch
@@ -549,7 +549,7 @@ class yearCheckEnt extends Component {
                                     {this.entChildren()}
                                 </Select>
                             </FormItem>
-                            <Button type="primary" style={{ marginLeft: 46 }} onClick={() => {
+                            <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
                                 this.getEntData()
                             }}>查询</Button>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {

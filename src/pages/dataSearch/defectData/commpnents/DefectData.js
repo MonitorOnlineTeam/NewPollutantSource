@@ -458,7 +458,7 @@ export default class EntTransmissionEfficiency extends Component {
                 {this.children()}
               </Select>
             </Form.Item>
-            <Form.Item label='运维状态'>
+            {/* <Form.Item label='运维状态'>
                 <Select
                     allowClear
                     style={{ width: 200}}
@@ -471,7 +471,7 @@ export default class EntTransmissionEfficiency extends Component {
                      <Option value="1">已设置运维人员</Option>
                     <Option value="2">未设置运维人员</Option>
                 </Select>
-                </Form.Item>
+                </Form.Item> */}
                  <BtnComponents />
                 </Row>
                 :

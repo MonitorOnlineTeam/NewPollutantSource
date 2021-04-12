@@ -77,6 +77,9 @@ export default class EntTransmissionEfficiency extends Component {
   }
 
   componentWillMount() {
+    this.updateState({
+      RegionCode: '',
+    });
     this.getTableData();
     this.props.dispatch({
       type: 'autoForm/getRegions',
@@ -169,7 +172,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   changeRegion = value => {
     this.updateState({
-      RegionCode: value,
+      RegionCode: value? value : '',
     });
   };
   changePperation=(value)=>{
@@ -428,7 +431,7 @@ export default class EntTransmissionEfficiency extends Component {
                   </Select> */}
                    <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                 </Form.Item>
-                <Form.Item>
+               {/*  <Form.Item>
                 <Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -442,7 +445,7 @@ export default class EntTransmissionEfficiency extends Component {
                   <Option value="1">已设置运维人员</Option>
                   <Option value="2">未设置运维人员</Option>
                 </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <Button type="primary" onClick={this.queryClick}>
                     查询

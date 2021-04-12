@@ -577,7 +577,7 @@ getTaskTypeInfo=() => {
                             </Select>,
                           )}
                       </FormItem>
-                  </Col>
+                  </Col> 
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="任务来源" style={{ width: '100%' }}>
                           {getFieldDecorator('TaskFrom', {

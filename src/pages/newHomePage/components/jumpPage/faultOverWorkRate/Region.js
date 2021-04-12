@@ -369,7 +369,7 @@ export default class EntTransmissionEfficiency extends Component {
              <Form.Item label='行政区'>
               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
              </Form.Item>
-             <Form.Item label='运维状态'>
+             {/* <Form.Item label='运维状态'>
                <Select
                  allowClear
                  style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -383,7 +383,7 @@ export default class EntTransmissionEfficiency extends Component {
                  <Option value="1">已设置运维人员</Option>
                  <Option value="2">未设置运维人员</Option>
                </Select>
-               </Form.Item> 
+               </Form.Item>  */}
              {!Atmosphere?
                <Form.Item label={'企业类型'}>
                 <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />

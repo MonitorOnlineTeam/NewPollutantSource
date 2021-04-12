@@ -228,13 +228,14 @@ class SdlForm extends PureComponent {
           initialValue = fieldValue.split(',')
         }
       };
+      let stationPlaceStr = '命名规则：空气站所在地级市名称+空气站、直辖市名+空气站，例如郑州市空气站、北京市空气站'
       // 判断类型
       switch (item.type) {
         case '文本框':
           validator = `${inputPlaceholder}`;
-          placeholder = placeholder || inputPlaceholder;
+          placeholder = item.labelText==='大气站名称'? stationPlaceStr : placeholder || inputPlaceholder;
 
-          element = <Input placeholder={placeholder} allowClear />;
+          element = <Input placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
           break;
         case '下拉列表框':
         case '多选下拉列表':

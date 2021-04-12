@@ -585,7 +585,7 @@ class index extends Component {
                     })
                   }
                 </Select>
-                <Select
+                {/* <Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                   placeholder="运维状态"
@@ -602,7 +602,7 @@ class index extends Component {
                   }}>
                   <Option value="1">已设置运维人员</Option>
                   <Option value="2">未设置运维人员</Option>
-                </Select>
+                </Select> */}
 
                 {/* <Checkbox.Group value={stopStatus} style={{ width: 180, textAlign: 'center' }} onChange={(value) => {
                   console.log("value=", value)

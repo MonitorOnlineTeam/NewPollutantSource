@@ -353,7 +353,7 @@ class index extends PureComponent {
                 {/* <div class="ant-form-item-label" style={{ width: '5.3%' }}>
                   <label for="RegionCode" class="" title="监测因子">监测因子</label>
                 </div> */}
-                <Form.Item {...formLayout} label="运维状态" style={{ width: '16%',marginRight:10 }}>
+                {/* <Form.Item {...formLayout} label="运维状态" style={{ width: '16%',marginRight:10 }}>
                   {
                     <Select
                       allowClear
@@ -371,7 +371,7 @@ class index extends PureComponent {
                       <Option value="2">未设置运维人员</Option>
                     </Select>
                   }
-                </Form.Item>
+                </Form.Item> */}
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(

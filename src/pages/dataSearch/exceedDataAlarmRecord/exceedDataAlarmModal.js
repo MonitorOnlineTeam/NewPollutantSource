@@ -367,7 +367,7 @@ class exceedDataAlarmModal extends PureComponent {
             <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
             <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
             <div style={{ marginTop: 10 }}>
-            <Select
+            {/* <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="运维状态"
@@ -381,7 +381,7 @@ class exceedDataAlarmModal extends PureComponent {
                 }}>
                  <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
-            </Select>
+            </Select> */}
                 <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                 {
                     pollutantCodeList.map(poll=>

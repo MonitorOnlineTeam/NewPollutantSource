@@ -331,7 +331,7 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
-              <Form.Item label="运维状态">
+              {/* <Form.Item label="运维状态">
               {
                   <Select
                     allowClear
@@ -350,7 +350,7 @@ class index extends PureComponent {
                     <Option value="2">未设置运维人员</Option>
                   </Select>
                 }
-              </Form.Item>
+              </Form.Item> */}
               <FormItem label="日期查询">
                 <RangePicker_ allowClear={false} onRef={(ref) => {
                   this.rangePicker = ref;

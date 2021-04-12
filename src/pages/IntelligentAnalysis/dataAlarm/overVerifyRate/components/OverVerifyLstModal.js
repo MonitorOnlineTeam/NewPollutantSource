@@ -515,7 +515,7 @@ export default class OverVerifyLstModal extends Component {
                 </Form.Item>
               </Col>
               <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-              <Form.Item label='运维状态'>
+              {/* <Form.Item label='运维状态'>
                 <Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -529,7 +529,7 @@ export default class OverVerifyLstModal extends Component {
                   <Option value="1">已设置运维人员</Option>
                   <Option value="2">未设置运维人员</Option>
                 </Select>
-                </Form.Item> 
+                </Form.Item>  */}
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(

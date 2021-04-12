@@ -269,7 +269,7 @@ export default class EntTransmissionEfficiency extends Component {
   changeRegion = (value) => { //行政区事件
     
     this.updateQueryState({
-      RegionCode: value,
+      RegionCode: value? value : '',
     });
   };
   changeAttent=(value)=>{
@@ -416,7 +416,7 @@ export default class EntTransmissionEfficiency extends Component {
             {workNumVisible? <WorkNum   workNumVisible={workNumVisible}  workNumCancel={()=>{this.setState({workNumVisible:false})}}/> : null}
 
             <Form.Item label=''>
-             <RangePicker_ allowClear={false}   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+             <RangePicker_ allowClear={false}   style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
             callback={(dates, dataType)=>this.dateChange(dates, dataType)}
             onRef={(ref) => {
               this.child = ref;

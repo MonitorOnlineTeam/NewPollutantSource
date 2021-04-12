@@ -323,7 +323,7 @@ export default class EntTransmissionEfficiency extends Component {
                 </Select> */}
               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
-              <Form.Item label='运维状态'>
+              {/* <Form.Item label='运维状态'>
               <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -336,7 +336,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
               </Select>
-              </Form.Item> 
+              </Form.Item>  */}
               {types!=='ent'? <Form.Item>
               <Button type="primary" onClick={this.queryClick}>
                   查询
