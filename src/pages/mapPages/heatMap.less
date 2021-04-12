@@ -1,0 +1,47 @@
+.pageWrapper {
+  margin: -24px;
+  height: calc(100vh - 64px);
+  padding-right: 430px;
+}
+
+.tooltip {
+  :global {
+    .ant-tooltip-inner {
+      padding: 2px 4px;
+      min-height: 26px;
+    }
+  }
+}
+
+.viewMode {
+  position: absolute;
+  right: 414px;
+  top: 10px;
+  z-index: 1;
+}
+
+.point {
+  background: #e8491a;
+  border-radius: 50%;
+  opacity: 0.6;
+
+  &.level4 {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.level3 {
+    width: 24px;
+    height: 24px;
+  }
+
+  &.level2 {
+    width: 30px;
+    height: 30px;
+  }
+
+  &.level1 {
+    width: 36px;
+    height: 36px;
+  }
+}

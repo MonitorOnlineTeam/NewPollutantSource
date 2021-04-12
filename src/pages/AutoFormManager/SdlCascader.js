@@ -58,6 +58,10 @@ class SdlCascader extends Component {
       }
     })
   }
+
+  filter(inputValue, path) {
+    return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+  }
   render() {
     const { configId, enterpriseAndPointList, data, itemValue, itemName, level } = this.props;
     const { industryTreeList } = this.state;
@@ -85,6 +89,10 @@ class SdlCascader extends Component {
       <Cascader
         fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}
+        showSearch={(inputValue, path) => {
+          return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+        }}
+        changeOnSelect
         // changeOnSelect={true}
         {...this.props}
       />
