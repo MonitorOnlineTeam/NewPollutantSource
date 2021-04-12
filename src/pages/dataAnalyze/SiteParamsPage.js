@@ -207,7 +207,15 @@ class SiteParamsPage extends PureComponent {
   getOptions = () => {
     const { siteParamsData: { timeList, tableList, chartList } } = this.props;
     const { format, dataType } = this.state;
-    const legendData = chartList.map(item => item.PollutantName);
+    let selected = {};
+    const legendData = chartList.map((item, index) => {
+      if (index < 2) {
+        selected[item.PollutantName] = true
+      } else {
+        selected[item.PollutantName] = false
+      }
+      return item.PollutantName
+    });
     console.log(legendData);
     debugger
     // series
@@ -220,6 +228,7 @@ class SiteParamsPage extends PureComponent {
         name: item.PollutantName,
         type: 'line',
         animation: false,
+        barWidth : 30,
         data: item.DataList,
         ...otherProps
       }
@@ -340,7 +349,8 @@ class SiteParamsPage extends PureComponent {
         toolbox: {
           feature: {
             saveAsImage: {},
-            dataView: {}
+            dataView: {},
+            magicType: { show: true, type: ['line', 'bar'] },
           }
         },
         tooltip: {
@@ -349,30 +359,21 @@ class SiteParamsPage extends PureComponent {
           //   type: 'cross',
           //   animation: false,
           // },
-          formatter: function (params, ticket, callback) {
-            // let format = `${params[0].axisValue}: `
-            // params.map((item, index) => {
-            //   if (item.seriesName === "风向") {
-            //     let dirLevel = getDirLevel(item.value);
-            //     format += `<br />${item.marker}${item.seriesName}: ${item.value} (${dirLevel})`
-            //   } else {
-            //     format += `<br />${item.marker}${item.seriesName}: ${item.value}`
-            //   }
-            // })
-            // return format;
-            let format = `${params.name}: `
-            if (params.seriesName === "风向") {
-              let dirLevel = getDirLevel(params.value);
-              format += `<br />${params.marker}${params.seriesName}: ${params.value} (${dirLevel})`
-            } else {
-              format += `<br />${params.marker}${params.seriesName}: ${params.value}`
-            }
-            return format;
-          }
+          // formatter: function (params, ticket, callback) {
+          //   let format = `${params.name}: `
+          //   if (params.seriesName === "风向") {
+          //     let dirLevel = getDirLevel(params.value);
+          //     format += `<br />${params.marker}${params.seriesName}: ${params.value} (${dirLevel})`
+          //   } else {
+          //     format += `<br />${params.marker}${params.seriesName}: ${params.value}`
+          //   }
+          //   return format;
+          // }
           // ...formatter
         },
         legend: {
           data: legendData,
+          selected: { ...selected }
           // padding: [140, 40, 50, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
         },
         xAxis: [
@@ -404,10 +405,10 @@ class SiteParamsPage extends PureComponent {
   pageContent = () => {
     const { showType, columns } = this.state;
     const { siteParamsData: { timeList, tableList, chartList }, loading } = this.props;
-debugger
-    if (loading) {
-      return <PageLoading />
-    }
+    // debugger
+    // if (loading) {
+    //   return <PageLoading />
+    // }
     return <>{
       chartList.length ? (showType === "chart" ?
         <ReactEcharts

@@ -108,6 +108,19 @@ export async function exportRangeCompositeReport(params) {
   const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportTimeSlotCompositeNum', params, null);
   return result;
 }
+
+// 综合指数范围同比报表
+export async function queryCompositeyoyRangeData(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetTimeSlotCompositeCompare', params, null);
+  return result;
+}
+
+// 综合指数范围同比报表 - 导出
+export async function exportCompositeyoyRangeData(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportTimeSlotCompositeCompareNum', params, null);
+  return result;
+}
+
 // 获取综合指数对比报表数据
 export async function queryCompositeRangeContrastData(params) {
   const result = post('/api/rest/PollutantSourceApi/ReportApi/GetTimeComparisonComposite', params, null);
@@ -119,6 +132,44 @@ export async function exportCompositeRangeContrast(params) {
   const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportTimeComparisonCompositeNum', params, null);
   return result;
 }
+
+// 获取优良天数报表 - 数据
+export async function getExcellentDaysReport(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetExcellentDays', params, null);
+  return result;
+}
+
+// 优良天数报表 - 导出
+export async function excellentDaysExportReport(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportExcellentDays', params, null);
+  return result;
+}
+
+// 获取空气质量日排名 - 数据
+export async function getAirDayRank(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetAirRank', params, null);
+  return result;
+}
+
+// 空气质量日排名 - 导出
+export async function exportAirDayRank(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportAirRank', params, null);
+  return result;
+}
+
+
+// 获取累计综合空气质量排名 - 数据
+export async function getAddUpAirRank(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/GetCumulativeAirRank', params, null);
+  return result;
+}
+
+// 累计综合空气质量排名 - 导出
+export async function exportAddUpAirRank(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/ExportCumulativeAirRank', params, null);
+  return result;
+}
+
 
 
 
