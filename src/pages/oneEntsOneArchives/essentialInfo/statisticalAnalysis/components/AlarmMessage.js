@@ -39,7 +39,7 @@ class AlarmMessage extends Component {
         const {warningInfoList}=this.props;
         return (
             <>
-             <div className={styles.title} style={{ marginBottom: 12 }}>
+             <div className={styles.title} style={{ margin:'12px 10px'}}>
                 <p>报警信息</p>
               </div>
               {/* <div className={styles.excessiveAbnormalContent}> */}
@@ -51,7 +51,7 @@ class AlarmMessage extends Component {
                       speed={30}
                       gap={700}
                       height={"100%"}
-                      width={380}
+                      width={400}
                     />
                   ) : <div className={styles.notData}>
                       <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
