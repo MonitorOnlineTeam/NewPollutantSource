@@ -86,6 +86,10 @@ class EmissionsHeatMap extends PureComponent {
   componentDidMount() {
   }
 
+  componentWillUnmount() {
+    heatmap = undefined;
+  }
+
   onSubmit = () => {
     let values = this.formRef.current.getFieldsValue();
     this.getEntEmissionsData(values)
@@ -132,15 +136,22 @@ class EmissionsHeatMap extends PureComponent {
       };
 
       if (!heatmap) {
+
         //初始化heatmap对象
         window.AMap.plugin(['AMap.Heatmap'], () => {
           heatmap = new window.AMap.Heatmap(thisMap, heatmapOpts);
         })
+        heatmap.setDataSet({
+          data: heatmapData,
+          max: 100
+        });
+      } else {
+        heatmap.setDataSet({
+          data: heatmapData,
+          max: 100
+        });
       }
-      heatmap.setDataSet({
-        data: heatmapData,
-        max: 100
-      });
+      console.log('heatmap=', heatmap)
       if (heatmapData.length) {
         thisMap.setCenter([heatmapData[0].lng, heatmapData[1].lat]);
         thisMap.setFitView();
