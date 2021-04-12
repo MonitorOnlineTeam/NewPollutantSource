@@ -54,12 +54,12 @@ class DataQuery extends Component {
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
     if (nextProps.DGIMN !== this.props.DGIMN) {
-      this.changeDgimn(nextProps.DGIMN);
+      this.changeDgimn(nextProps.DGIMN,'switch');
     }
   };
 
   /** 根据排口dgimn获取它下面的所有污染物 */
-  getpointpollutants = dgimn => {
+  getpointpollutants = (dgimn,type) => {
     this.props.dispatch({
       type: 'dataquery/querypollutantlist',
       payload: {
@@ -71,7 +71,8 @@ class DataQuery extends Component {
         if(this.props.tabType==='biao'&&dataType!=='realtime'&&dataType!=='minute'&&dataType!=='hour'&&dataType!=='day'){
           this.setState({dataType:'realtime'})
         }
-        this.children.onDataTypeChange(this.state.dataType);
+        // this.children.onDataTypeChange(this.state.dataType)
+        !type&&this.children.onDataTypeChange(this.state.dataType);
       },
     });
   };
@@ -275,14 +276,14 @@ class DataQuery extends Component {
   };
 
   /** 切换排口 */
-  changeDgimn = dgimn => {
+  changeDgimn = (dgimn,type) => {
     this.setState({
       selectDisplay: true,
       // selectP: '',
       dgimn,
     });
     const { dispatch } = this.props;
-    this.getpointpollutants(dgimn);
+    this.getpointpollutants(dgimn,type);
 
     // let { historyparams } = this.props;
     // this.children.onDataTypeChange(this.state.dataType);
