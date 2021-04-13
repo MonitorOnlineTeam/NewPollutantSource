@@ -146,6 +146,12 @@ export async function exportSmokeReport(params) {
   return result;
 }
 
+// 汇总周报
+export async function getSummaryWeekReport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetSummaryWeekReport', params, null);
+  return result;
+}
+
 // 汇总季报
 export async function getSummaryQuarterReport(params) {
   const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetSummaryQuarterReport', params, null);

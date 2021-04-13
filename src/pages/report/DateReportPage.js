@@ -176,6 +176,7 @@ class DateReportPage extends PureComponent {
         {
           title: '时间',
           dataIndex: 'time',
+          width: 180,
           align: 'center',
         },
         ...AQIColumn,
@@ -190,7 +191,7 @@ class DateReportPage extends PureComponent {
             let val = _text[0];
             const status = _text[1];
             if (item.dataIndex === '风向') {
-              val = getDirLevel(text);
+              val = getDirLevel(_text[0]);
             }
             if (val) {
               return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
@@ -203,7 +204,7 @@ class DateReportPage extends PureComponent {
 
       columns.unshift({
         title: '点名称',
-        width: 150,
+        width: 200,
         dataIndex: 'pointName',
       });
       columns.unshift({
@@ -270,21 +271,25 @@ class DateReportPage extends PureComponent {
     } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"]==="annals") {
-          this.props.dispatch({
-            type: 'report/reportExport',
-            payload: {
-              ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
-              PollutantSourceType: values.PollutantSourceType,
-              DGIMN: values.DGIMN,
-              BeginTime: this.state.beginTime,
-              EndTime: this.state.endTime,
-              Type: values.reportType,
-            },
-          });
-        } else {
-          message.error('导出时间范围不能超过两个月');
+        if (moment(this.state.endTime).diff(moment(this.state.beginTime), 'day') * values.DGIMN.length > 365 && values["reportType"] === "siteDaily") {
+          message.error('站点日报导出：时间间隔 × 排口数量不能超过12个月');
+          return;
         }
+        // if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"] === "annals") {
+        this.props.dispatch({
+          type: 'report/reportExport',
+          payload: {
+            ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
+            PollutantSourceType: values.PollutantSourceType,
+            DGIMN: values.DGIMN,
+            BeginTime: this.state.beginTime,
+            EndTime: this.state.endTime,
+            Type: values.reportType,
+          },
+        });
+        // } else {
+        //   message.error('导出时间范围不能超过两个月');
+        // }
       }
     });
   }

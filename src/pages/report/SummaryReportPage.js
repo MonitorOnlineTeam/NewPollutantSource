@@ -401,7 +401,6 @@ class SummaryReportPage extends PureComponent {
     let picker = '';
     let dateType = '';
     let mode;
-    debugger;
     const IfShowRegionInReport = configInfo.IfShowRegionInReport
       ? configInfo.IfShowRegionInReport === '1'
         ? ''
@@ -645,7 +644,7 @@ class SummaryReportPage extends PureComponent {
                         }}
                       />
                       <Select value={this.state.currQuarter} onChange={(value) => {
-                        let quarterBeginAndEnd = this.handleQuarterTime(val);
+                        let quarterBeginAndEnd = this.handleQuarterTime(value);
                         this.setState({
                           beginTime: quarterBeginAndEnd[0],
                           endTime: quarterBeginAndEnd[1],
