@@ -236,7 +236,7 @@ class CascaderMultiple extends PureComponent {
               <ul>
                 {
                   all ? <li className="ant-select-selection__choice" style={{ userSelect: "none" }}>
-                    <div className="ant-select-selection__choice__content">
+                    <div className="ant-select-selection__choice__content" style={{ display: 'inline-block' }}>
                       全部
                     </div>
                     <span className="ant-select-selection__choice__remove" onClick={(e) => {
