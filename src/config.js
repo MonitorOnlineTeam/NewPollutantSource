@@ -53,7 +53,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
   zoom: 12,
-  iconFontUrl: '//at.alicdn.com/t/font_1298443_vc1qjv19g1.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_v1kuju7woq.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',

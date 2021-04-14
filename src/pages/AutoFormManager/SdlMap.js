@@ -126,7 +126,7 @@ class SdlMap extends PureComponent {
         })
       } else if (this.props.path) {
         this.setState({
-          mapCenter: this.props.path[0][0][0],
+          mapCenter: this.props.path[0] && this.props.path[0][0] && this.props.path[0][0][0],
         })
       }
     }

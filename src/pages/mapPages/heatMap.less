@@ -1,7 +1,7 @@
 .pageWrapper {
   margin: -24px;
   height: calc(100vh - 64px);
-  padding-right: 430px;
+  margin-right: 408px;
 }
 
 .tooltip {
@@ -43,5 +43,31 @@
   &.level1 {
     width: 36px;
     height: 36px;
+  }
+}
+
+.toggleDrawer {
+  :global {
+    .ant-drawer-content {
+      overflow: visible;
+    }
+  }
+
+  .toggleIconContainer {
+    position: absolute;
+    top: 40%;
+    display: flex;
+    width: 14px;
+    height: 42px;
+    size: 16px;
+    text-align: center;
+    background: #1890ff;
+    cursor: pointer;
+
+    .toggleIcon {
+      margin-top: 90%;
+      color: rgb(255, 255, 255);
+      margin-left: 1px;
+    }
   }
 }

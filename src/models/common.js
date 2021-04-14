@@ -21,6 +21,7 @@ export default Model.extend({
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
+    menuNameList: [],
   },
 
   effects: {
@@ -199,6 +200,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           pollutantListByDgimn: result.Datas,
+        });
+      }
+    },
+    // 根据所有菜单名称
+    *getMenuNameList({ payload }, { call, update }) {
+      const result = yield call(services.getMenuNameList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          menuNameList: result.Datas.map(item => item.replace("ReactPD", "")),
         });
       }
     },

@@ -216,8 +216,6 @@ class SiteParamsPage extends PureComponent {
       }
       return item.PollutantName
     });
-    console.log(legendData);
-    debugger
     // series
     const series = chartList.map((item, index) => {
       let otherProps = {}
@@ -233,7 +231,6 @@ class SiteParamsPage extends PureComponent {
         ...otherProps
       }
     })
-    debugger
     const yAxis = chartList.map((item, index) => {
       let otherProps = {}
       if (index === 1) {

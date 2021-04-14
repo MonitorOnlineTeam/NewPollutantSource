@@ -8,6 +8,7 @@ import TableText from '@/components/TableText'
 import config from "@/config";
 import $script from 'scriptjs';
 import { EntIcon } from '@/utils/icon';
+import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
 
 let thisMap;
 let heatmap;
@@ -40,7 +41,7 @@ const columns = [
     }
   },
   {
-    title: '排放量',
+    title: '排放量（t）',
     dataIndex: 'Discharge',
     key: 'Discharge',
     width: 110,
@@ -191,25 +192,105 @@ class EmissionsHeatMap extends PureComponent {
     </div>
   }
 
+  // 配置抽屉及动画效果左右区分
+  changeState = (domId) => {
+    this.setState({
+      visible: !this.state.visible,
+    }, () => {
+      const dom = document.querySelector(domId)
+      if (dom) {
+        const left = this.state.visible ? '432px' : '0';
+        dom.style.width = this.state.visible ? 'calc(100vw - 432px)' : '100vw'
+        dom.style.marginRight = left
+        // floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
+        dom.style.transition = 'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)';
+      }
+    });
+  };
+
   render() {
     const { entEmissionsData, markersEntList, loading } = this.props;
-    const { showType, showMarkers, mode } = this.state;
+    const { showType, showMarkers, mode, visible } = this.state;
     return (
-      <div
-        className={styles.pageWrapper}
-        ref={(div) => { this.div = div }}
-      >
+      <>
+        <div
+          className={styles.pageWrapper}
+          id="heatMap"
+          ref={(div) => { this.div = div }}
+        >
+
+          <Radio.Group className={styles.viewMode} defaultValue="2D" buttonStyle="solid" onChange={e => {
+            heatmap = undefined;
+            this.setState({ mode: e.target.value }, () => {
+              // this.onSubmit()
+            })
+          }}>
+            <Radio.Button value="2D">2D</Radio.Button>
+            <Radio.Button value="3D">3D</Radio.Button>
+          </Radio.Group>
+          {/* <Button onClick={() => {
+          console.log('heatmapData=', this.state.heatmapData)
+
+        }}>2D</Button> */}
+          {
+            mode === '3D' && <Map
+              amapkey={amapKey}
+              events={this.amapEvents}
+              viewMode='3D'
+              zoom={5}
+              pitchEnable={true}
+              pitch={60}
+              expandZoomRange={true}
+              buildingAnimation={true}
+              resizeEnable={true}
+              plugins={this.state.plugins}
+            >
+              <Markers
+                markers={showMarkers && markersEntList.length ? markersEntList : []}
+                // className={this.state.special}
+                render={this.renderMarkers}
+              />
+            </Map>
+          }
+          {
+            mode === '2D' && <Map
+              amapkey={amapKey}
+              events={this.amapEvents}
+              zoom={5}
+            >
+              <Markers
+                markers={showMarkers && markersEntList.length ? markersEntList : []}
+                // className={this.state.special}
+                render={this.renderMarkers}
+              />
+            </Map>
+          }
+        </div>
         <Drawer
           title="排放量分析"
           width={432}
           closable={false}
           // onClose={this.onClose}
-          visible={this.state.visible}
+          visible={visible}
           bodyStyle={{ paddingBottom: 80 }}
-          getContainer={() => this.div}
+          // getContainer={() => this.div}
           mask={false}
           style={{ marginTop: 64 }}
+          className={styles.toggleDrawer}
         >
+          <div
+            className={styles.toggleIconContainer}
+            style={{
+              right: visible ? '432px' : 0,
+              borderRadius: '4px 0px 0px 4px',
+            }} onClick={() => this.changeState('#heatMap')}>
+            <a href="#">
+              {
+                visible ? <CaretRightOutlined className={styles.toggleIcon} />
+                  : <CaretLeftOutlined className={styles.toggleIcon} />
+              }
+            </a>
+          </div>
           <Form
             hideRequiredMark
             ref={this.formRef}
@@ -280,53 +361,7 @@ class EmissionsHeatMap extends PureComponent {
           </Form>
           <Table rowkey={record => record.EntCode} loading={loading} size="small" dataSource={entEmissionsData} columns={columns} pagination={false} scroll={{ y: 'calc(100vh - 460px)' }} />
         </Drawer>
-        <Radio.Group className={styles.viewMode} defaultValue="2D" buttonStyle="solid" onChange={e => {
-          heatmap = undefined;
-          this.setState({ mode: e.target.value }, () => {
-            // this.onSubmit()
-          })
-        }}>
-          <Radio.Button value="2D">2D</Radio.Button>
-          <Radio.Button value="3D">3D</Radio.Button>
-        </Radio.Group>
-        {/* <Button onClick={() => {
-          console.log('heatmapData=', this.state.heatmapData)
-
-        }}>2D</Button> */}
-        {
-          mode === '3D' && <Map
-            amapkey={amapKey}
-            events={this.amapEvents}
-            viewMode='3D'
-            zoom={5}
-            pitchEnable={true}
-            pitch={60}
-            expandZoomRange={true}
-            buildingAnimation={true}
-            resizeEnable={true}
-            plugins={this.state.plugins}
-          >
-            <Markers
-              markers={showMarkers && markersEntList.length ? markersEntList : []}
-              // className={this.state.special}
-              render={this.renderMarkers}
-            />
-          </Map>
-        }
-        {
-          mode === '2D' && <Map
-            amapkey={amapKey}
-            events={this.amapEvents}
-            zoom={5}
-          >
-            <Markers
-              markers={showMarkers && markersEntList.length ? markersEntList : []}
-              // className={this.state.special}
-              render={this.renderMarkers}
-            />
-          </Map>
-        }
-      </div>
+      </>
     );
   }
 }

@@ -6,7 +6,7 @@
 import Model from '@/utils/model';
 import {
     getOriginalData
-} from './service';
+} from '@/pages/monitoring/originaldata/service.js';
 import { formatPollutantPopover } from '@/utils/utils';
 import moment from 'moment';
 
@@ -38,7 +38,7 @@ export default Model.extend({
             const { dgimn, beginTime, endTime, packageType, pageIndex, pageSize, dataType } = yield select(state => state.originalData);
             console.log("dgimn=", dgimn);
             const body = {
-                dgimn: dgimn,
+                dgimn: payload.dgimn || dgimn,
                 beginTime: beginTime,
                 endTime: endTime,
                 packageType: packageType,

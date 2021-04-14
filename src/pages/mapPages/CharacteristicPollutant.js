@@ -9,6 +9,7 @@ import config from "@/config";
 import $script from 'scriptjs';
 import { EntIcon } from '@/utils/icon';
 import PointDetailsModal from './component/PointDetailsModal'
+import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
 
 let thisMap;
 let mapMarkers;
@@ -41,7 +42,7 @@ const columns = [
     }
   },
   {
-    title: '排放量',
+    title: '排放量（t）',
     dataIndex: 'Discharge',
     key: 'Discharge',
     width: 110,
@@ -198,7 +199,7 @@ class CharacteristicPollutant extends PureComponent {
     else if (dis > max75) {
       level = 1;
     }
-    return level; 
+    return level;
   }
 
   renderMarkers = (extData) => {
@@ -245,25 +246,81 @@ class CharacteristicPollutant extends PureComponent {
     })
   }
 
+  // 配置抽屉及动画效果左右区分
+  changeState = (domId) => {
+    this.setState({
+      visible: !this.state.visible,
+    }, () => {
+      const dom = document.querySelector(domId)
+      if (dom) {
+        const left = this.state.visible ? '432px' : '0';
+        dom.style.width = this.state.visible ? 'calc(100vw - 432px)' : '100vw'
+        dom.style.marginRight = left
+        // floats === "topmenu" ? dom.style.marginLeft = left : dom.style.marginRight = left
+        dom.style.transition = 'all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1)';
+      }
+    });
+  };
+
   render() {
     const { entEmissionsData, loading, pointDetailsModalVisible } = this.props;
-    const { showType, radius, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
+    const { showType, radius, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
     return (
-      <div
-        className={styles.pageWrapper}
-        ref={(div) => { this.div = div }}
-      >
+      <>
+        <div
+          className={styles.pageWrapper}
+          ref={(div) => { this.div = div }}
+          id="characteristicPollutant"
+        >
+          <Map
+            amapkey={amapKey}
+            events={this.amapEvents}
+            zoom={5}
+          >
+            <Markers
+              markers={markersList}
+              // className={this.state.special}
+              render={this.renderMarkers}
+            />
+            <Marker position={markerPosition} />
+            {
+              radius && <Circle
+                center={markerPosition}
+                radius={radius * 1000}
+                events={this.circleEvents}
+                visible={radius}
+                style={this.state.style}
+                zIndex={0}
+              />
+            }
+          </Map>
+          {pointDetailsModalVisible && <PointDetailsModal pointInfo={selectedPointInfo} />}
+        </div>
         <Drawer
           title="排放量分析"
           width={432}
           closable={false}
           // onClose={this.onClose}
-          visible={this.state.visible}
+          visible={visible}
           bodyStyle={{ paddingBottom: 80 }}
-          getContainer={() => this.div}
+          // getContainer={() => this.div}
           mask={false}
+          className={styles.toggleDrawer}
           style={{ marginTop: 64 }}
         >
+          <div
+            className={styles.toggleIconContainer}
+            style={{
+              right: visible ? '432px' : 0,
+              borderRadius: '4px 0px 0px 4px',
+            }} onClick={() => this.changeState('#characteristicPollutant')}>
+            <a href="#">
+              {
+                visible ? <CaretRightOutlined className={styles.toggleIcon} />
+                  : <CaretLeftOutlined className={styles.toggleIcon} />
+              }
+            </a>
+          </div>
           <Form
             hideRequiredMark
             ref={this.formRef}
@@ -391,30 +448,7 @@ class CharacteristicPollutant extends PureComponent {
           </Form>
           <Table rowkey={record => record.EntCode} loading={loading} size="small" dataSource={pointList} columns={columns} pagination={false} scroll={{ y: 'calc(100vh - 550px)' }} />
         </Drawer>
-        <Map
-          amapkey={amapKey}
-          events={this.amapEvents}
-          zoom={5}
-        >
-          <Markers
-            markers={markersList}
-            // className={this.state.special}
-            render={this.renderMarkers}
-          />
-          <Marker position={markerPosition} />
-          {
-            radius && <Circle
-              center={markerPosition}
-              radius={radius * 1000}
-              events={this.circleEvents}
-              visible={radius}
-              style={this.state.style}
-              zIndex={0}
-            />
-          }
-        </Map>
-        {pointDetailsModalVisible && <PointDetailsModal pointInfo={selectedPointInfo} />}
-      </div>
+      </>
     );
   }
 }
