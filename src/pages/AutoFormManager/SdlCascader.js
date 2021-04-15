@@ -46,8 +46,20 @@ class SdlCascader extends Component {
     //     PointMark: "2"
     //   }
     // })
-    !data.length && this.props.dispatch({
-      type: "common/getIndustryTree",
+    if(itemName === 'dbo.T_Cod_Region.RegionName'){
+      !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
+      // payload: {
+      //   ConfigId: configId,
+      //   ValueField: itemValue,
+      //   TextField: itemName
+      // },
+      payload: { PointMark: '2'},
+      callback: (res) => {
+        this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
+      }
+    })
+    }else{
+      !data.length && this.props.dispatch({type: "common/getIndustryTree",
       payload: {
         ConfigId: configId,
         ValueField: itemValue,
@@ -57,9 +69,28 @@ class SdlCascader extends Component {
         this.setState({ industryTreeList: res })
       }
     })
+    }
+
   }
+
+
+  industryTreeListFormat = (data,i)=>{
+    const { selectType } = this.props;
+    let levelNum = selectType&&selectType.split(",")[0] || 999;
+  if(data.length>0 && i<= levelNum ){
+    i++;
+    return data.map(item=>{
+      return {
+      label: item.label,
+      value:  item.value,
+      children:item.children&&item.children.length>0? this.industryTreeListFormat(item.children,i) : undefined
+    }
+   })
+  }
+  }
+
   render() {
-    const { configId, enterpriseAndPointList, data, itemValue, itemName, level } = this.props;
+    const { configId, enterpriseAndPointList, data, itemValue, itemName, level,selectType } = this.props;
     const { industryTreeList } = this.state;
     // const options = data.length ? data : enterpriseAndPointList;
     const options = data.length ? data : industryTreeList;
@@ -81,16 +112,18 @@ class SdlCascader extends Component {
     //     </Select>
     //   )
     // }
+    let onSelect = selectType&&selectType.split(",")[1] || '是';
+
     return (
       <Cascader
+        {...this.props}
         fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}
-        showSearch={(inputValue, path) => {
-          return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-        }}
-        changeOnSelect
-        // changeOnSelect={true}
-        {...this.props}
+        // showSearch={(inputValue, path) => {
+        //   return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+        // }}
+        changeOnSelect={onSelect==='是'?true : false }
+        
       />
     );
   }
