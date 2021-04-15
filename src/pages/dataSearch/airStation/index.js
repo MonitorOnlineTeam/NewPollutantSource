@@ -176,7 +176,7 @@ onChangeHandle=(PageIndex, PageSize)=>{
         }}>
         {this.children()}
       </Select> */}
-         <RegionList changeRegion={(value) => {
+         <RegionList  style={{ width: 170, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })
@@ -217,7 +217,7 @@ onChangeHandle=(PageIndex, PageSize)=>{
         key: 'regionName'
       },
       {
-        title: "企业名称",
+        title: "大气站名称",
         width: 100,
         align: 'left',
         fixed: fixed,

@@ -280,12 +280,12 @@ class MaintenanceCycle extends Component {
                         {/* <TabPane tab="系统保养周期提醒" key="234">
                             {this.state.type === '234' ? this.getfromData() : ''}
                         </TabPane> */}
-                        <TabPane tab="校准周期提醒" key="235">
+                        {/* <TabPane tab="校准周期提醒" key="235">
                             {this.state.type === '235' ? this.getfromData() : ''}
                         </TabPane>
                         <TabPane tab="校验周期提醒" key="236">
                             {this.state.type === '236' ? this.getfromData() : ''}
-                        </TabPane>
+                        </TabPane> */}
                     </Tabs>
                 </Card>
             </div>);

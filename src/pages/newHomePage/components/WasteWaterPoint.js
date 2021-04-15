@@ -212,17 +212,18 @@ export default class Index extends Component {
     );
   }
   workOrder = () => {
-    const { pollutantType } = this.state;
 
-    if (pollutantType == '5') {
-      this.setState({
-        airWorkOrderVisible: true
-      })
-    } else {
-      this.setState({
-        orderModalVisible: true
-      })
-    }
+    // const { pollutantType } = this.state;
+
+    // if (pollutantType == '5') {
+    //   this.setState({
+    //     airWorkOrderVisible: true
+    //   })
+    // } else {
+    //   this.setState({
+    //     orderModalVisible: true
+    //   })
+    // }
 
   }
   // 监测点状态点击事件
@@ -341,7 +342,7 @@ export default class Index extends Component {
     return option;
   }
   overWasteWater = () => {
-    this.setState({ exceedVisible: true })
+    // this.setState({ exceedVisible: true })
   }
   render() {
     const {

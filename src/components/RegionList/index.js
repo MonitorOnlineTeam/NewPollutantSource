@@ -5,11 +5,18 @@ import { connect } from 'dva';
 import { Select,TreeSelect} from 'antd';
 
 const { TreeNode } = TreeSelect;
+
+import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
+
 //行政区列表组件
 @connect(({  autoForm }) => ({
     regionList: autoForm.regionList,
 }))
 export default class Index extends Component {
+  static defaultProps = { 
+    levelNum: 2,
+    selectType:'3,是'
+  }
   constructor(props) {
     super(props);
 
@@ -17,65 +24,60 @@ export default class Index extends Component {
     };
     
   }
-  regchildren=()=>{
-    const { regionList } = this.props;
-    const selectList = [];
-    // if (regionList.length > 0) {
-    //   regionList[0].children.map(item => {
-    //     selectList.push(
-    //       <Option key={item.key} value={item.value}>
-    //         {item.title}
-    //       </Option>,
-    //     );
-    //   });
-    //   return selectList;
-    // }
 
-    
-   if (regionList.length > 0) {
-       regionList.map(item => {
-        selectList.push(
-          <TreeNode value={item.RegionCode} title={item.RegionName} key={item.RegionCode}>
-            
-            {item.children&&item.children.map(childItem=>{
-               return  <TreeNode value={childItem.RegionCode} title={childItem.RegionName} key={childItem.RegionCode}>
-                  {childItem.children&&childItem.children.map(grandsonItem=>{
-                       return  <TreeNode value={grandsonItem.RegionCode} title={grandsonItem.RegionName} key={grandsonItem.RegionCode} />  
-                   })
-                  }
-                    </TreeNode>
-            })
-          
-          }
+  regchildren=(data,i)=>{
 
-        
-            </TreeNode>,
-        );
-      });
-      return selectList;
-    }
+    const { levelNum } = this.props;
+
+    if (data&&data.length > 0 && i<= levelNum) {
+      i++;
+      return data.map(item => {
+        // i > levelNum ? item.disabled = false : item.disabled = true;  //设置父级都为禁用模式
+        return <TreeNode key={item.value} value={item.value} title={item.label} key={item.value}>
+             {this.regchildren(item.children,i)}
+           </TreeNode>
+    });
   }
+ 
+
+    // i++;
+//   return data.map(item => {
+//     if (item.children&&item.children.length>0) {
+//        item.disabled = true;  //设置父级都为禁用模式
+//        return (
+//         <TreeNode
+//           key={item.value}
+//           title={item.label}
+//           value={item.value}
+//           disabled={item.disabled}
+//         >
+//           {this.regchildren(item.children,i)}
+//         </TreeNode>
+//       );
+//     }
+//     return <TreeNode {...item} key={item.key} title={item.label} value={item.value} />;
+//   })
+}
+  
+
   componentDidMount() {
-    this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    // this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', }, });  //获取行政区列表
   
    }
   render() {
-      const {RegionCode,changeRegion} = this.props
+      const {selectType,RegionCode,changeRegion,regionList} = this.props
     return (
-      //   <Select
-      //   allowClear
-      //   placeholder="行政区"
-      //   onChange={changeRegion}
-      //   value={RegionCode ? RegionCode : undefined}
-      //   style={{ width: 150 }}
-      //   {...this.props}
-      // >
-      //   {this.regchildren()}
-      // </Select>
+//       <SdlCascader
+//        style={{ width: 170 }}
+//        placeholder="请选择行政区"
+//        allowClear
+//        selectType={selectType}
+//        onChange={changeRegion}
+// /> 
       <TreeSelect
       showSearch
       allowClear
-      searchPlaceholder='输入你想要的字段'
+      searchPlaceholder='输入你查找的字段'
       placeholder="行政区"
       autoExpandParent={false}
       value={RegionCode ? RegionCode : undefined}
@@ -85,7 +87,7 @@ export default class Index extends Component {
       onChange={changeRegion}
       {...this.props}
     >
-       {this.regchildren()}
+       {this.regchildren(regionList,1)}
       </TreeSelect>
     );
   }

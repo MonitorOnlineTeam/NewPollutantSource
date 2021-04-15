@@ -84,7 +84,7 @@ export default class Index extends Component {
 
   }
   overWasteGas = () => {
-    this.setState({ gasExceedVisible: true })
+    // this.setState({ gasExceedVisible: true })
   }
   initData = () => {
     const { dataQueryPar, dispatch } = this.props;

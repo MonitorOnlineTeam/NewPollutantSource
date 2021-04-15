@@ -454,7 +454,7 @@ export default class EntIndexModal extends Component {
                     <Option value="2">兵团考核</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                 <Select
                     allowClear
                     style={{ width: 200, marginLeft: 10}}
@@ -468,7 +468,7 @@ export default class EntIndexModal extends Component {
                      <Option value="1">已设置运维人员</Option>
                     <Option value="2">未设置运维人员</Option>
                 </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   {/* <Select
                     allowClear

@@ -35,6 +35,7 @@ import FileDown from '@/components/AttachmentView/index'
 import VerifyDetailsPop from './VerifyDetailsPop'
 const { Option } = Select;
 const { TabPane } = Tabs;
+import RegionList from '@/components/RegionList'
 
 
 const pageUrl = {
@@ -274,10 +275,10 @@ class index extends PureComponent {
         this.childrenHand = ref;
       }
     cardTitle = () => {
-        const { time} = this.state;
+        const { time,regionValue} = this.state;
         const {pollutantCodeList} = this.props
         return <>
-            <Select
+            {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -299,7 +300,12 @@ class index extends PureComponent {
                     })
                 }}>
                 {this.children()}
-            </Select>
+            </Select> */}
+          <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={regionValue}/>
             <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}

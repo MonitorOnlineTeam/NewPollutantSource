@@ -202,7 +202,6 @@ class SearchWrapper extends Component {
     const { fieldName } = item;
     const format = dateFormat ? dateFormat.toUpperCase() : "";
 
-    console.log("format=", format)
 
     switch (format) {
       case "YYYY-MM-DD HH:MM:SS":
@@ -250,13 +249,13 @@ class SearchWrapper extends Component {
     let element = '';
     // const len = searchConditions.length;
     // const isHide = len > 2;
+   
     return searchConditions.map((item, index) => {
       let isHide = this.state.expand && index > 1 ? "none" : "";
       let { placeholder } = item;
       const { fieldName } = item;
       const { labelText } = item;
       let zIndex = 1;
-
       // 判断类型
       switch (item.type) {
         case '文本框':
@@ -297,9 +296,10 @@ class SearchWrapper extends Component {
               itemName={item.configDataItemName}
               itemValue={item.configDataItemValue}
               configId={item.configId}
-              changeOnSelect={true}
+              // changeOnSelect={true}
               placeholder={placeholder}
-              data={item.value}
+              data={ item.value}
+              selectType={labelText==='行政区'? item.DF_OtherOptions : '999,是'}
             />
           );
           break;

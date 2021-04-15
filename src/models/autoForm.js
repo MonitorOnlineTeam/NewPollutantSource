@@ -9,6 +9,7 @@ import Model from '@/utils/model';
 import config from '@/config';
 import moment from 'moment';
 import * as services from '@/services/autoformapi';
+import * as commonServices from '@/services/commonApi';
 
 function getQueryParams(state, payload) {
   const group = [];
@@ -304,6 +305,7 @@ export default Model.extend({
           dateFormat: item.DF_DATEFORMAT,
           isHide: item.DF_HIDDEN,
           defaultValue: item.DF_DEFAULTVALUE,
+          selectType:item.DF_OtherOptions&&item.DF_OtherOptions
         }));
 
         // 主键
@@ -455,13 +457,12 @@ export default Model.extend({
 
     // 获取联动
     *getRegions({ payload, callback }, { call, update }) {
-      const result = yield call(services.getRegions, { ...payload });
-      console.log('regionList = ', result);
+      const result = yield call(commonServices.getEnterpriseAndPoint, {...payload});
       if (result.IsSuccess) {
         yield update({
-          regionList: result.Datas,
+          regionList: result.Datas.list,
         });
-        callback && callback(result);
+        callback && callback(result.Datas.list);
       }
     },
 

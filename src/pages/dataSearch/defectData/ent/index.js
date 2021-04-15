@@ -25,7 +25,7 @@ export default class Ent extends Component {
 
     return (
       <BreadcrumbWrapper >
-        <DefectData />
+       <DefectData />
       </BreadcrumbWrapper>
     );
   }

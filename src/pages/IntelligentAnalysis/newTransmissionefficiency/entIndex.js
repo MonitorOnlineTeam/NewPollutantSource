@@ -160,7 +160,7 @@ export default class EntTransmissionEfficiency extends Component {
 
   typeChange = value => {
     this.updateState({
-      pollutantType: value,
+      pollutantType: value? value : '',
     });
   };
 
@@ -398,12 +398,12 @@ export default class EntTransmissionEfficiency extends Component {
                 </Form.Item>
                 <Form.Item>
                   <Select
-                    placeholder="请选择企业类型"
+                    placeholder="请选择排口类型"
                     onChange={this.typeChange}
-                    value={this.props.pollutantType}
+                    value={this.props.pollutantType?this.props.pollutantType : undefined }
                     style={{ width: 200, marginLeft: 10 }}
+                    allowClear
                   >
-                    <Option value="">全部</Option>
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
                   </Select>
@@ -415,7 +415,7 @@ export default class EntTransmissionEfficiency extends Component {
                     value={this.props.assessment}
                     style={{ width: 200, marginLeft: 10 }}
                   >
-                    <Option value="1">国家考核</Option>
+                    <Option value="1">全部考核</Option>
                     <Option value="2">兵团考核</Option>
                   </Select>
                 </Form.Item>

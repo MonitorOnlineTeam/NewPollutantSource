@@ -17,6 +17,7 @@ import moment from 'moment';
 import { router } from 'umi';
 
 import { checkParent } from './utils';
+import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -260,7 +261,7 @@ export default class index extends PureComponent {
                           </Option>
                         );
                       })}
-                    </Select>, */}
+                    </Select>)} */}
                         <RegionList  changeRegion={value => {
                                         this.setState({ RegionCode: value }, () => { });
                                             dispatch({
@@ -270,7 +271,7 @@ export default class index extends PureComponent {
                                                       },
                                                       });
                        }} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>                   
-                  )}
+                  
                 </FormItem>
               </Col>
               <Col md={9} style={{ marginTop: 3 }}>

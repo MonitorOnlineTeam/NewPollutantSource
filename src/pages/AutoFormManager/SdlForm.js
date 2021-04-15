@@ -233,6 +233,16 @@ class SdlForm extends PureComponent {
       switch (item.type) {
         case '文本框':
           validator = `${inputPlaceholder}`;
+
+          if( item.labelText==='大气站名称'){
+            placeholder = stationPlaceStr
+          }else if(item.labelText==='经度'){
+            placeholder = `${inputPlaceholder} 例如：112.236514`
+          }else if(item.labelText==='纬度'){
+            placeholder = `${inputPlaceholder} 例如：85.236589`
+          }else{
+            placeholder =  placeholder || inputPlaceholder
+          }
           placeholder = item.labelText==='大气站名称'? stationPlaceStr : placeholder || inputPlaceholder;
 
           element = <Input placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
@@ -271,6 +281,7 @@ class SdlForm extends PureComponent {
               itemValue={item.configDataItemValue}
               configId={item.configId}
               data={item.value}
+              selectType={labelText==='行政区'? item.selectType : '999,是'}
               placeholder={placeholder}
             />
           )
