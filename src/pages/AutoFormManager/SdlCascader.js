@@ -119,9 +119,9 @@ class SdlCascader extends Component {
         {...this.props}
         fieldNames={{ label: "label", value: "value", children: 'children' }}
         options={options}
-        // showSearch={(inputValue, path) => {
-        //   return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-        // }}
+        showSearch={(inputValue, path) => {
+          return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+        }}
         changeOnSelect={onSelect==='是'?true : false }
         
       />
