@@ -29,7 +29,10 @@ class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        searchValue:''
+        searchValue:'',
+        rightList:'',
+        page:1,
+        pageSize:10
         };
     }
     componentDidMount(){
@@ -46,11 +49,18 @@ class Index extends React.Component {
 
   getData = (value)=>{
     let {dispatch,queryParams} = this.props;
+    const {page,pageSize} = this.state;
      dispatch({
         type: 'entList/getEntsList',
         payload: { indexStr:value? value : ''  },
-        callback:()=>{
+        callback:(res)=>{
           this.setState({searchValue:value})
+
+             let rightSliceData = res.slice((page-1)*pageSize,page*pageSize);
+
+          this.setState({
+            rightList: rightSliceData
+          })
         }
     });
   }
@@ -94,11 +104,20 @@ class Index extends React.Component {
     </div>
   }
   itemClick=(item)=>{
-       router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail`);   
        sessionStorage.setItem("oneEntCode",item.EntCode)
        sessionStorage.setItem("oneEntName",item.EntNames)
-  } 
+       router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail`);   
 
+  } 
+  paginationChange = (page,pageSize) =>{
+
+   const {dataSource} = this.props;
+   let rightSliceData = dataSource.slice((page-1)*pageSize,page*pageSize);
+   this.setState({
+     rightList: rightSliceData
+   })
+
+  }
 
   selectSty = (name,type)=>{
     const { searchValue } = this.state;
@@ -136,25 +155,27 @@ class Index extends React.Component {
   render() {
     const {loading,dataSource,total} = this.props;
     const  QueryCriteria = this.queryCriteria;
-    
-
+    const { rightList } = this.state;
+  
 
     return (<div id="entList" className='entList' style={{height:'100%'}}>
         <Card title={<QueryCriteria />} style={{height:'100%'}}>
+        <Row style={{height: "calc(100vh - 200px)",overflowY: "auto"}}>
+        <Col span={13}>
         <List
           itemLayout="vertical"
           split={false}
           dataSource={this.loop(dataSource)}
           pagination={total<10? false:{
-            onChange: page => {
-              console.log(page);
+            onChange: (page, pageSize) => {
+              this.paginationChange(page, pageSize)
             },
             // pageSize: 6,
             // defaultPageSize:20,
             total: dataSource.length,
             showQuickJumper:true
           }}
-          style={{paddingLeft:124}}
+          style={{padding:'0 124px'}}
           renderItem={item => (
            <List.Item>
                <Skeleton loading={loading} active paragraph={{ rows: 2 }}>
@@ -182,6 +203,22 @@ class Index extends React.Component {
       </List.Item>
     )}
   />
+  </Col>
+          <Col span={11}  style={{paddingTop:'76px'}}>
+            <div style={{width:'calc((88px + 28px) * 4)'}}>
+            <Skeleton loading={loading} active paragraph={{ rows: 3}}>
+          {rightList&&rightList.map(item=>{
+            return   <div onClick={()=>this.itemClick(item)} style={{display:'inline-block',verticalAlign:'top', width:'88px',marginLeft:28,marginTop:24,cursor:'pointer'}}>
+             <img src='/entListRight.png'/>
+          <div style={{display:'inline-block',paddingTop:10}}><span style={{color:"#a5a5a5"}}>{item.EntName}</span></div>
+             </div>
+          })}
+          </Skeleton>
+          </div>
+
+        </Col>
+
+        </Row>
         </Card>
      </div>);
   }

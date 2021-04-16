@@ -19,7 +19,7 @@
 
 // @cardBackgroundCol:rgba(0,0,0,.4);
 @cardBackgroundCol:#fff;
-@mapCol:#fcf9f2;
+@mapCol:rgb(243, 248, 255);
 @textCol:#8591a9; 
 
  .textStyle{
@@ -38,7 +38,7 @@
   :global {
     .amap-container {
       // background-color: #001529 !important;
-      background-color: #fcf9f2 !important;
+      background-color: @mapCol !important;
     }
     .statueType .anticon{
       vertical-align: -0.31em;
@@ -802,8 +802,8 @@
   }
   .entRow{
     background:#f5f6f8;
-    border-radius:10px;
-    padding:11px 10px;
+    border-radius:19px;
+    padding:19px 10px;
   }
   .entCol{
     padding:0  8px 10px 8px;
@@ -816,16 +816,17 @@
   }
   .entDetailDataSty{
      color: #000;
-     padding-top: 7px;
+     padding-top: 8px;
      width: 102px;
+     display: block;
   }
   .entNameSty{
-    margin-top: 12px;
+    // margin-top: 12px;
   }
   .entDivSty{
     padding-left:10px
   }
   .entRowTop{
-    margin-top: 15px;
+    margin-top: 16px;
   }
 }
