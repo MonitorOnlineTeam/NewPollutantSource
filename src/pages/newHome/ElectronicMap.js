@@ -26,6 +26,7 @@ import { connect } from 'dva';
 import MapUI from './component/MapUI';
 import config from '@/config';
 import styles from './index.less';
+import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import {
   EntIcon,
   GasIcon,
@@ -203,7 +204,7 @@ class NewHome extends PureComponent {
       infoWindowPos: null, // 点弹窗位置
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
-      selectValue: '', // 筛选
+      selectValue: '1', // 筛选
       month: moment().get('month'),
       toggleSelect: false, //
       hideEntName: true,
@@ -1131,6 +1132,7 @@ class NewHome extends PureComponent {
                 {displayType === 0 && (
                   <Select
                     className={styles.selectShowType}
+                    dropdownClassName={'newHomeWrapDropdown'}
                     value={selectValue}
                     onChange={val => {
                       this.setState({ selectValue: val });
@@ -1166,7 +1168,7 @@ class NewHome extends PureComponent {
                       }
                     }}
                   >
-                    <Option value="">全部</Option>
+                    {/* <Option value="">全部</Option> */}
                     <Option value="服务站">服务站</Option>
                     <Option value="1">企业</Option>
                     <Option value="师">师</Option>
@@ -1181,94 +1183,102 @@ class NewHome extends PureComponent {
                     onChange={e => {
                       this.setState({ searchInputVal: e.target.value });
                     }}
-                    placeholder="输入企业或空气站名称"
+                    placeholder={selectValue==='1'?"请输入企业名称":'请输入空气站名称'}
                     className={styles.searchInput}
                   />
                 )}
-                {displayType === 0 && (
-                  <div className={styles.divisionSelect}>
-                    <div
-                      className={styles.selectDivision}
-                      onClick={() => {
-                        this.setState({ toggleSelect: !this.state.toggleSelect });
-                      }}
-                    >
-                      <EnvironmentOutlined />
-                      <span>当前范围：{clickedDivision ? clickedDivision.title : '全部'}</span>
-                      {toggleSelect ? (
-                        <CaretUpOutlined className={styles.icon} />
-                      ) : (
-                          <CaretDownOutlined className={styles.icon} />
-                        )}
-                    </div>
-                    {toggleSelect && (
-                      <div className={styles.dropDownContent}>
-                        <ul>
-                          <li
-                            className={
-                              !clickedDivision ||
-                                (clickedDivision && clickedDivision.title === '全部')
-                                ? styles.current
-                                : ''
-                            }
-                            onClick={() => {
-                              this.setState({ clickedDivision: undefined });
-                              this.renderEntMarkers(allEntAndPointList);
-                              this.props.dispatch({
-                                type: 'newHome/updateState',
-                                payload: {
-                                  level: INIT_LEVEL,
-                                  LEVEL: INIT_LEVEL,
-                                  regionCode: '660000000',
-                                  currentDivisionName: '',
-                                },
-                              });
-                              setTimeout(() => {
-                                this.reloadPageData();
-                              }, 0);
-                            }}
-                          >
-                            全部
-                          </li>
-                          {constructionCorpsList.map(item => (
-                            <li
-                              className={
-                                clickedDivision &&
-                                clickedDivision.title === item.title &&
-                                styles.current
-                              }
-                              onClick={() => {
-                                this.divisionClick(item);
-                              }}
-                            >
-                              {item.title}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {clickedDivision && (
+                {displayType === 0 &&
+                //  (
+                //   <div className={styles.divisionSelect}>
+                //     <div
+                //       className={styles.selectDivision}
+                //       onClick={() => {
+                //         this.setState({ toggleSelect: !this.state.toggleSelect });
+                //       }}
+                //     >
+                //       <EnvironmentOutlined />
+                //       <span>当前范围：{clickedDivision ? clickedDivision.title : '全部'}</span>
+                //       {toggleSelect ? (
+                //         <CaretUpOutlined className={styles.icon} />
+                //       ) : (
+                //           <CaretDownOutlined className={styles.icon} />
+                //         )}
+                //     </div>
+                //     {toggleSelect && (
+                //       <div className={styles.dropDownContent}>
+                //         <ul>
+                //           <li
+                //             className={
+                //               !clickedDivision ||
+                //                 (clickedDivision && clickedDivision.title === '全部')
+                //                 ? styles.current
+                //                 : ''
+                //             }
+                //             onClick={() => {
+                //               this.setState({ clickedDivision: undefined });
+                //               this.renderEntMarkers(allEntAndPointList);
+                //               this.props.dispatch({
+                //                 type: 'newHome/updateState',
+                //                 payload: {
+                //                   level: INIT_LEVEL,
+                //                   LEVEL: INIT_LEVEL,
+                //                   regionCode: '660000000',
+                //                   currentDivisionName: '',
+                //                 },
+                //               });
+                //               setTimeout(() => {
+                //                 this.reloadPageData();
+                //               }, 0);
+                //             }}
+                //           >
+                //             全部
+                //           </li>
+                //           {constructionCorpsList.map(item => (
+                //             <li
+                //               className={
+                //                 clickedDivision &&
+                //                 clickedDivision.title === item.title &&
+                //                 styles.current
+                //               }
+                //               onClick={() => {
+                //                 this.divisionClick(item);
+                //               }}
+                //             >
+                //               {item.title}
+                //             </li>
+                //           ))}
+                //         </ul>
+                //       </div>
+                //     )}
+                //   </div>
+                // )
+                <div className={styles.divisionSelect}>
+                <SdlCascader
+                 style={{ width: '100%',textAlign:'left' }}
+                 changeOnSelect
+                 placeholder="请选择行政区"
+                 selectType='2,是'
+                 popupClassName='newHomeWrapCascaderPop'
+                //  onChange={val => {
+                //      this.getentbyrt(val);
+                //     }}
+                 />
+                 </div>
+                }
+                {/* { clickedDivision && (
                   <div
                     style={{
                       display: displayType === 1 ? 'none' : 'block',
                     }}
                     className={styles.shibox}
                   >
-                    {/* <span>师局</span><br /> */}
                     <span>{clickedDivision.title}</span>
-                    {/* <span>第九师</span> */}
+
                   </div>
                 )
-                  // true && <div className={styles.shibox}>
-                  //   {/* <span>师局</span><br /> */}
-                  //   <span>第九师</span>
-                  //   {/* <span>第九师</span> */}
-                  // </div>
-                }
+                } */}
               </div>
-              <div className={styles.legendContent}>
+              {/* <div className={styles.legendContent}>
                 <div className={styles.legendBox}>
                   <ul>
                     <li>
@@ -1327,7 +1337,7 @@ class NewHome extends PureComponent {
                     <span style={{ backgroundColor: '#ed9b43' }}>异常</span>
                   </div>
                 )}
-              </div>
+              </div> */}
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
                 // plugins={plugins}

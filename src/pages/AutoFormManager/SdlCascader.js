@@ -46,7 +46,8 @@ class SdlCascader extends Component {
     //     PointMark: "2"
     //   }
     // })
-    if(itemName === 'dbo.T_Cod_Region.RegionName'){
+    if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId){
+      console.log()
       !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
       // payload: {
       //   ConfigId: configId,

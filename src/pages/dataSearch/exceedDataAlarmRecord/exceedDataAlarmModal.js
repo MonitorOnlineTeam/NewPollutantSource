@@ -32,6 +32,7 @@ import style from '@/pages/dataSearch/tableClass.less'
 import { downloadFile } from '@/utils/utils';
 import FileDown from '@/components/AttachmentView/index'
 import VerifyDetailsPop from './VerifyDetailsPop'
+import RegionList from '@/components/RegionList'
 
 import { compose } from 'redux';
 const { Option } = Select;
@@ -277,10 +278,10 @@ class exceedDataAlarmModal extends PureComponent {
         this.childrenHand = ref;
       }
     cardTitle = () => {
-        const { time} = this.state;
+        const { time,regionValue} = this.state;
         const {pollutantCodeList,dateTime,alarmType} = this.props
         return <>
-            <Select
+            {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -302,8 +303,12 @@ class exceedDataAlarmModal extends PureComponent {
                     })
                 }}>
                 {this.children()}
-            </Select>
-
+            </Select> */}
+            <RegionList   style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={regionValue}/>
             <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}

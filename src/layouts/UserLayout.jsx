@@ -8,7 +8,7 @@ import { Button, Popover, Row, Col } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
 import Cookie from 'js-cookie';
-import logo from '../../public/sdlicon.png';
+import logo from '../../public/gg.png';
 import config from '@/config';
 import styles from './UserLayout.less';
 
@@ -53,7 +53,9 @@ const UserLayout = props => {
   } else {
     getIp = `http://${window.location.host}/appoperation/appqrcodemain`;
   }
-  const links = [{ key: '新疆空天地一体化系统', title: '新疆空天地一体化系统', href: 'http://xj.airsensor.top:5000/login', blankTarget: true }];
+  // const links = [{ key: '新疆空天地一体化系统', title: '新疆空天地一体化系统', href: 'http://xj.airsensor.top:5000/login', blankTarget: true }];
+ 
+  const links = [{ key: '', title: '', href: '', blankTarget: false }];
   return (
     <DocumentTitle
       // title={getPageTitle({
@@ -83,7 +85,7 @@ const UserLayout = props => {
               <Link to="/">
 
                 {
-                  configInfo && configInfo.IsShowLogo === 'true' && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/upload/${configInfo.Logo}` : logo} />
+                  configInfo && configInfo.IsShowLogo === 'true' && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/${configInfo.Logo}` : logo} />
                 }
 
                 {/* <span className={styles.title}>污染源智能分析平台</span> */}

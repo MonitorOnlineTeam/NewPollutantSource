@@ -16,7 +16,7 @@ import { Tabs, Dropdown, Menu, message } from 'antd';
 import PageLoading from '@/components/PageLoading'
 import _ from 'lodash'
 import styles from './BasicLayout.less';
-import logo from '../../public/sdlicon.png';
+import logo from '../../public/gg.png';
 import defaultSettings from '../../config/defaultSettings.js'
 import routerConfig from '../../config/config'
 import webConfig from '../../public/webConfig'
@@ -258,9 +258,9 @@ class BasicLayout extends Component {
     const logoRender = Item => {
       if (configInfo && configInfo.IsShowLogo === 'true') {
         return settings.layout === 'topmenu' ? (
-          <img style={{ height: 60 }} src={configInfo.Logo ? `/upload/${configInfo.Logo}` : logo} alt="logo" />
+          <img style={{ height: 60 }} src={configInfo.Logo ? `/${configInfo.Logo}` : logo} alt="logo" />
         ) : (
-            <img src={`/upload/${configInfo.Logo}`} alt="logo" />
+            <img src={`/${configInfo.Logo}`} alt="logo" />
           );
       }
 

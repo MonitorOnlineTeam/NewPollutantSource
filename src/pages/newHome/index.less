@@ -13,6 +13,34 @@
       padding: 10px 4px;
     }
   }
+  :global{
+    .ant-cascader-picker{
+      background-color: rgba(11, 26, 48, 0.5);
+      color: #fff;
+    }
+    .ant-cascader-picker-clear{
+      background: transparent;
+      color: #fff;
+    }
+    .ant-cascader-picker-arrow{
+      color: #fff;
+    }
+    .ant-input{
+      color: #fff;
+    }
+    .ant-select:not(.ant-select-disabled):hover .ant-select-selector,.ant-input-affix-wrapper:hover,.ant-cascader-picker:focus .ant-cascader-input,.ant-input:hover{
+      border-color: #fff;
+     }
+     .ant-input:focus, .ant-input-focused,
+     .ant-cascader-picker:focus .ant-cascader-input,
+     .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused,
+     .ant-select-focused.ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
+      border-color: #fff;
+      // border-right-width: 1px !important;
+      // outline: 0;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);;
+     }
+  }
 }
 
 
@@ -697,7 +725,7 @@
 }
 
 .divisionSelect {
-  width: 340px;
+  width: 266px;
   float: left;
   margin-left: 6px;
 
