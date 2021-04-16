@@ -125,8 +125,8 @@
 // AQI图例
 .airLegend {
   position: absolute;
-  right: 20px;
-  top: 20px;
+  right: 30px;
+  bottom: 40px;
   z-index: 1;
   color: #fff;
   font-weight: bold;
@@ -342,5 +342,36 @@
   &>div:last-child {
     flex: 1;
     margin-left: 30px;
+  }
+}
+
+.mapTools {
+  background-color: #082948;
+  border: 1px solid #3b6aaa;
+  width: 40px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 1;
+
+  li {
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    border-bottom: 1px solid #3b6aaa;
+    box-sizing: border-box;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &.active {
+      background-color: #1890FF;
+    }
+
+    span {
+      font-size: 18px !important;
+    }
   }
 }

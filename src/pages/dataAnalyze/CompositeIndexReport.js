@@ -538,7 +538,7 @@ class CompositeIndexReport extends Component {
       <BreadcrumbWrapper>
         <Spin spinning={loading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form  style={{ marginBottom: 20 }}>
               <Row>
                 <Col span={7}>
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>

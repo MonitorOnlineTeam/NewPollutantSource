@@ -50,14 +50,14 @@ export const airLevel = [
     status: 9,
     levelText: '六级',
   },
-  {
-    color: '#3c0011',
-    text: '爆表',
-    value: 7,
-    standardValue: '≥500',
-    status: 10,
-    levelText: '七级',
-  },
+  // {
+  //   color: '#3c0011',
+  //   text: '爆表',
+  //   value: 7,
+  //   standardValue: '≥500',
+  //   status: 10,
+  //   levelText: '七级',
+  // },
 ];
 
 export const AQIPopover = (text, record) => {

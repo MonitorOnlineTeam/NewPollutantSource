@@ -200,7 +200,25 @@ export default Model.extend({
       payload, reportType,
     }, { call, update, select }) {
       // const summaryForm = yield select(state => state.report.summaryForm);
-      const serviceApi = reportType === 'daily' ? services.getDailySummaryList : (reportType === 'monthly' ? services.getSummaryMonthReport : services.getSummaryYearReport)
+      // let serviceApi = reportType === 'daily' ? services.getDailySummaryList : (reportType === 'monthly' ? services.getSummaryMonthReport : services.getSummaryYearReport)
+      let serviceApi = '';
+      switch (reportType) {
+        case 'daily':
+          serviceApi = services.getDailySummaryList;
+          break;
+        case 'monthly':
+          serviceApi = services.getSummaryMonthReport;
+          break;
+        case 'annals':
+          serviceApi = services.getSummaryYearReport;
+          break;
+        case 'week':
+          serviceApi = services.getSummaryWeekReport;
+          break;
+        case 'quarter':
+          serviceApi = services.getSummaryQuarterReport;
+          break;
+      }
       const result = yield call(serviceApi, {
         ...payload,
         // BeginTime: summaryForm.beginTime,

@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Card, Table, Select, Row, Col, DatePicker, Button, Spin, message } from 'antd';
+import { Card, Table, Select, Row, Col, DatePicker, Input, Button, Spin, message } from 'antd';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import moment from 'moment';
 import style from './index.less';
@@ -22,6 +22,8 @@ import { timeDifference } from '@/utils/utils';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { MonthPicker, RangePicker } = DatePicker;
+const currMonth = new Date().getMonth();
+const InputGroup = Input.Group;
 
 @Form.create()
 @connect(({ loading, report, autoForm, global }) => ({
@@ -43,6 +45,8 @@ class SummaryReportPage extends PureComponent {
     super(props);
     this.state = {
       columns: [],
+      yearValue: moment(),
+      currQuarter: Math.floor((currMonth % 3 == 0 ? (currMonth / 3) : (currMonth / 3 + 1))),
       currentYear: moment().format('YYYY'),
       defaultRegionCode: [],
       currentDate: moment(),
@@ -166,12 +170,13 @@ class SummaryReportPage extends PureComponent {
         {
           title: '排口名称',
           dataIndex: 'PointName',
-          width: 160,
+          width: 200,
         },
         {
           title: '时间',
           dataIndex: 'time',
           align: 'center',
+          width: 250,
         },
         ...AQIColumn,
         ...nextProps.pollutantList,
@@ -185,7 +190,7 @@ class SummaryReportPage extends PureComponent {
             const status = _text[1];
             // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
             if (item.dataIndex === '风向') {
-              val = getDirLevel(text);
+              val = getDirLevel(_text[0]);
             }
             if (val) {
               return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
@@ -240,6 +245,31 @@ class SummaryReportPage extends PureComponent {
     });
   }
 
+  handleQuarterTime = (quarter, year) => {
+    let BeginTime; let EndTime;
+    const yearValue = year || this.state.yearValue;
+    const currQuarter = quarter || this.state.currQuarter;
+    switch (currQuarter) {
+      case 1:
+        BeginTime = moment(yearValue).format('YYYY-01-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-03-31 23:59:59')
+        break;
+      case 2:
+        BeginTime = moment(yearValue).format('YYYY-04-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-06-31 23:59:59')
+        break;
+      case 3:
+        BeginTime = moment(yearValue).format('YYYY-07-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-09-31 23:59:59')
+        break;
+      case 4:
+        BeginTime = moment(yearValue).format('YYYY-10-01 00:00:00')
+        EndTime = moment(yearValue).format('YYYY-12-31 59:59:59')
+        break;
+    }
+    return [BeginTime, EndTime];
+  }
+
   changeReportType = (reportType, type) => {
     const pollutantType = type || this.props.form.getFieldValue('PollutantSourceType');
     const reportTime = this.props.form.getFieldValue('ReportTime');
@@ -251,6 +281,15 @@ class SummaryReportPage extends PureComponent {
       case 'daily':
         beginTime = moment(time).format('YYYY-MM-DD 00:00:00');
         endTime = moment(time).format('YYYY-MM-DD 23:59:59');
+        break;
+      case 'week':
+        beginTime = pollutantType != 5 ? moment(time).format('YYYY-MM-DD 00:00:00') : moment(time).subtract(7, 'day').format('YYYY-MM-DD 00:00:00');
+        endTime = moment(time).format('YYYY-MM-DD 23:59:59');
+        break;
+      case 'quarter':
+        let quarterBeginAndEnd = this.handleQuarterTime();
+        beginTime = quarterBeginAndEnd[0];
+        endTime = quarterBeginAndEnd[1];
         break;
       case 'monthly':
         beginTime = moment(time).format('YYYY-MM-01 00:00:00');
@@ -290,7 +329,7 @@ class SummaryReportPage extends PureComponent {
     } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"]!=="daily") {
+        if (timeDifference(this.state.beginTime, this.state.endTime) || values["reportType"] !== "daily") {
           this.props.dispatch({
             type: 'report/summaryReportExcel',
             payload: {
@@ -357,12 +396,11 @@ class SummaryReportPage extends PureComponent {
     const reportText =
       reportType === 'daily' ? '汇总日报' : reportType === 'monthly' ? '汇总月报' : '汇总年报';
     const format =
-      reportType === 'daily' ? 'YYYY-MM-DD' : reportType === 'monthly' ? 'YYYY-MM' : 'YYYY';
+      (reportType === 'daily' || reportType === 'week') ? 'YYYY-MM-DD' : reportType === 'monthly' ? 'YYYY-MM' : 'YYYY';
     const pollutantSourceType = this.props.form.getFieldValue('PollutantSourceType');
     let picker = '';
     let dateType = '';
     let mode;
-    debugger;
     const IfShowRegionInReport = configInfo.IfShowRegionInReport
       ? configInfo.IfShowRegionInReport === '1'
         ? ''
@@ -379,6 +417,11 @@ class SummaryReportPage extends PureComponent {
         picker = 'year';
         dateType = 'year';
         mode = ['year', 'year'];
+        break;
+      case 'week':
+        picker = 'day';
+        dateType = 'week';
+        mode = [];
         break;
       default:
         picker = 'day';
@@ -409,7 +452,7 @@ class SummaryReportPage extends PureComponent {
       <BreadcrumbWrapper>
         <Spin spinning={exportLoading || entAndPointLoading} delay={500}>
           <Card className="contentContainer">
-            <Form layout="inline" style={{ marginBottom: 20 }}>
+            <Form style={{ marginBottom: 20 }}>
               <Row>
                 <Col md={5} xs={24}>
                   <FormItem {...formLayout} label="报表类型" style={{ width: '100%' }}>
@@ -422,7 +465,9 @@ class SummaryReportPage extends PureComponent {
                         }}
                       >
                         <Option key="daily">汇总日报</Option>
+                        <Option key="week">汇总周报</Option>
                         <Option key="monthly">汇总月报</Option>
+                        <Option key="quarter">汇总季报</Option>
                         <Option key="annals">汇总年报</Option>
                       </Select>,
                     )}
@@ -524,7 +569,7 @@ class SummaryReportPage extends PureComponent {
                 <Col
                   sm={24}
                   md={5}
-                  style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'block' : 'none' }}
+                  style={{ display: getFieldValue('PollutantSourceType') == 5 && reportType != 'quarter' ? 'block' : 'none' }}
                 >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('airReportTime', {
@@ -541,7 +586,7 @@ class SummaryReportPage extends PureComponent {
                 <Col
                   sm={24}
                   md={5}
-                  style={{ display: getFieldValue('PollutantSourceType') == 5 ? 'none' : 'block' }}
+                  style={{ display: getFieldValue('PollutantSourceType') == 5 || reportType == 'quarter' ? 'none' : 'block' }}
                 >
                   <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
                     {getFieldDecorator('ReportTime', {
@@ -554,6 +599,66 @@ class SummaryReportPage extends PureComponent {
                       ],
                     })(timeEle)}
                   </FormItem>
+                </Col>
+                <Col
+                  sm={24}
+                  md={5}
+                  style={{ display: reportType === 'quarter' ? 'block' : 'none' }}
+                >
+                  <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+                    {/* {getFieldDecorator('quarterReportTime', {
+                      initialValue: 1,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择统计时间',
+                        },
+                      ],
+                    })(
+                      <Select onChange={(val) => {
+                        let quarterBeginAndEnd = this.handleQuarterTime(val);
+                        this.setState({
+                          beginTime: quarterBeginAndEnd[0],
+                          endTime: quarterBeginAndEnd[1],
+                        })
+                      }}>
+                        <Option key={1} value={1}>第一季度(1月-3月)</Option>
+                        <Option key={2} value={2}>第二季度(4月-6月)</Option>
+                        <Option key={3} value={3}>第三季度(7月-9月)</Option>
+                        <Option key={4} value={4}>第四季度(10月-12月)</Option>
+                      </Select>
+                    )} */}
+                    <InputGroup compact>
+                      <YearPicker
+                        style={{ width: 80 }}
+                        allowClear={false}
+                        // style={{ width: '100%' }}
+                        value={this.state.yearValue}
+                        _onPanelChange={v => {
+                          let quarterBeginAndEnd = this.handleQuarterTime(this.state.currQuarter, v);
+                          this.setState({
+                            beginTime: quarterBeginAndEnd[0],
+                            endTime: quarterBeginAndEnd[1],
+                            yearValue: v
+                          })
+                        }}
+                      />
+                      <Select value={this.state.currQuarter} onChange={(value) => {
+                        let quarterBeginAndEnd = this.handleQuarterTime(value);
+                        this.setState({
+                          beginTime: quarterBeginAndEnd[0],
+                          endTime: quarterBeginAndEnd[1],
+                          currQuarter: value
+                        })
+                      }}>
+                        <Option value={1}>第一季度</Option>
+                        <Option value={2}>第二季度</Option>
+                        <Option value={3}>第三季度</Option>
+                        <Option value={4}>第四季度</Option>
+                      </Select>
+                    </InputGroup>
+                  </FormItem>
+
                 </Col>
                 <Col md={5} sm={24}>
                   <FormItem label="" style={{ width: '100%', marginLeft: 5 }}>

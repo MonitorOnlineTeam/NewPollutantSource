@@ -28,7 +28,11 @@ export default Model.extend({
     reportTableData: [],
     compositeIndexDataSource: [],
     compositeRangeDataSource: [],
+    compositeyoyRangeDataSource: [],
     compositeContrastDataSource: [],
+    excellentDaysReportData: [],
+    airDayRank: [],
+    addUpAirDayRank: [],
   },
 
   effects: {
@@ -215,6 +219,27 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取综合指数范围同比报表数据
+    *queryCompositeyoyRangeData({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.queryCompositeyoyRangeData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          compositeyoyRangeDataSource: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 导出 - 综合指数范围同比报表数据
+    *exportCompositeyoyRangeData({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.exportCompositeyoyRangeData, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 导出综合指数报表
     *exportRangeCompositeReport({ payload, reportType }, { call, put, update }) {
       const result = yield call(services.exportRangeCompositeReport, payload);
@@ -242,6 +267,70 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success("导出成功")
         window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // 获取优良天数报表 - 数据
+    *getExcellentDaysReport({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.getExcellentDaysReport, payload);
+      if (result.IsSuccess) {
+        yield update({
+          excellentDaysReportData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 优良天数报表 - 导出
+    *excellentDaysExportReport({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.excellentDaysExportReport, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open('/upload' + result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取空气质量日排名 - 数据
+    *getAirDayRank({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.getAirDayRank, payload);
+      if (result.IsSuccess) {
+        yield update({
+          airDayRank: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 优良天数报表 - 导出
+    *exportAirDayRank({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.exportAirDayRank, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open('/upload' + result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取累计综合空气质量排名 - 数据
+    *getAddUpAirRank({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.getAddUpAirRank, payload);
+      if (result.IsSuccess) {
+        yield update({
+          addUpAirDayRank: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 累计综合空气质量排名 - 导出
+    *exportAddUpAirRank({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.exportAddUpAirRank, payload);
+      if (result.IsSuccess) {
+        message.success("导出成功")
+        window.open('/upload' + result.Datas)
       } else {
         message.error(result.Message)
       }

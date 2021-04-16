@@ -108,4 +108,12 @@ export async function CreatQRCode(params) {
   } : result;
 }
 
+// 获取系统菜单名称
+export async function getMenuNameList(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetMenuByLoginUser', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
+
 

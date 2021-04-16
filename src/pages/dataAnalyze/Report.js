@@ -193,8 +193,8 @@ class Report extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      beginTime:moment().add(-1, "day").format('YYYY-MM-DD 00:00:00'),
-      endTime:moment().add(-1, "day").format('YYYY-MM-DD 23:59:59'),
+      beginTime: moment().add(-1, "day").format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().add(-1, "day").format('YYYY-MM-DD 23:59:59'),
       time: moment().add(-1, "day"),
       defalutPollutantType: props.match.params.type * 1
     };
@@ -211,12 +211,12 @@ class Report extends PureComponent {
   }
 
   queryReportData = () => {
-    const {beginTime,endTime}=this.state;
+    const { beginTime, endTime } = this.state;
     this.props.dispatch({
       type: 'dataAnalyze/getGasReport',
       payload: {
-        beginTime:beginTime,
-        endTime:endTime,
+        beginTime: beginTime,
+        endTime: endTime,
         Time: moment(this.props.form.getFieldValue("ReportTime")).format('YYYY-MM-DD 00:00:00'),
         PollutantType: this.state.defalutPollutantType
       }
@@ -224,25 +224,25 @@ class Report extends PureComponent {
   }
 
   export = () => {
-    const {beginTime,endTime}=this.state;
+    const { beginTime, endTime } = this.state;
     this.props.dispatch({
       type: 'dataAnalyze/exportGasReport',
       payload: {
-        beginTime:beginTime,
-        endTime:endTime,
+        beginTime: beginTime,
+        endTime: endTime,
         Time: moment(this.props.form.getFieldValue("ReportTime")).format('YYYY-MM-DD 00:00:00'),
         PollutantType: this.state.defalutPollutantType
       }
     })
   }
 
-  dateOnchange=(dates,beginTime,endTime)=>{
-      const {form:{setFieldsValue}}=this.props;
-      setFieldsValue({"ReportTime":dates});
-      this.setState({
-        beginTime,
-        endTime
-      })
+  dateOnchange = (dates, beginTime, endTime) => {
+    const { form: { setFieldsValue } } = this.props;
+    setFieldsValue({ "ReportTime": dates });
+    this.setState({
+      beginTime,
+      endTime
+    })
   }
 
   render() {
@@ -253,10 +253,10 @@ class Report extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Form layout="inline" style={{ marginBottom: 20 }}>
-            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col xl={6} sm={24} md={12}>
-                <FormItem {...formLayout} label="类型" style={{ width: '100%' }}>
+          <Form style={{ marginBottom: 20 }}>
+            <Row gutter={{ md: 8}}>
+              <Col>
+                <FormItem label="类型" style={{ width: '200px' }}>
                   {getFieldDecorator("PollutantSourceType", {
                     // initialValue: defaultSearchForm.PollutantSourceType,
                     initialValue: defalutPollutantType,
@@ -269,8 +269,8 @@ class Report extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-              <Col xl={8} sm={24} md={12}>
-                <FormItem {...formLayout} label="统计时间" style={{ width: '100%' }}>
+              <Col>
+                <FormItem label="统计时间" style={{ width: '260px' }}>
                   {getFieldDecorator("ReportTime", {
                     initialValue: time,
                     rules: [{
@@ -278,14 +278,14 @@ class Report extends PureComponent {
                       message: '请填写统计时间',
                     }],
                   })(
-                    <DatePickerTool  allowClear={false} style={{ width: "100%" }} callback={
+                    <DatePickerTool allowClear={false} style={{ width: "100%" }} callback={
                       this.dateOnchange
                     } />
                   )}
                 </FormItem>
               </Col>
-              <Col xl={10} md={12}>
-                <FormItem {...formLayout} label="" style={{ width: '100%' }}>
+              <Col>
+                <FormItem label="" style={{ width: '100%' }}>
                   <Button type="primary" loading={searchLoading} style={{ marginRight: 10 }} onClick={this.queryReportData}>生成统计</Button>
                   <Button onClick={this.export} loading={exportLoading} style={{ marginRight: 10 }}><ExportOutlined />导出</Button>
                 </FormItem>

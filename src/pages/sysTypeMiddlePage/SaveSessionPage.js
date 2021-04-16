@@ -20,6 +20,7 @@ class SaveSessionPage extends PureComponent {
 
   // 获取菜单
   getMenuList = (menuId) => {
+    let sysInfo = JSON.parse(this.props.history.location.query.sysInfo)
     this.props.dispatch({
       type: 'user/fetchCurrent',
       payload: {
@@ -28,12 +29,19 @@ class SaveSessionPage extends PureComponent {
       callback: (response) => {
         let defaultNavigateUrl = response.Datas[0].children && response.Datas[0].children.length ? response.Datas[0].children[0].NavigateUrl : response.Datas[0].NavigateUrl;
         let sysName = sessionStorage.getItem("sysName")
-          if( sysName === "一企一档管理系统" ){
-            sessionStorage.setItem('defaultNavigateUrl', '/oneEntsOneArchives/entList')
-            router.push('/oneEntsOneArchives/entList')
-          }else{
+        if (sysName === "一企一档管理系统") {
+          if (sysInfo.EntCode && sysInfo.EntName) {
+            sessionStorage.setItem("oneEntCode", sysInfo.EntCode)
+            sessionStorage.setItem("oneEntName", sysInfo.EntName)
             sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
             router.push(defaultNavigateUrl)
+          } else {
+            sessionStorage.setItem('defaultNavigateUrl', '/oneEntsOneArchives/entList')
+            router.push('/oneEntsOneArchives/entList')
+          }
+        } else {
+          sessionStorage.setItem('defaultNavigateUrl', defaultNavigateUrl)
+          router.push(defaultNavigateUrl)
         }
 
       }

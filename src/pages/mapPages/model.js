@@ -222,11 +222,12 @@ export default Model.extend({
     // 更新图表数据
     * updateChartData({ payload }, { select, update, put }) {
       let key = payload.key
-      const chartData = yield select(state => state.map.chartData);
+      const chartData = yield select(state => state['map'].chartData);
       const xAxisData = [];
       const legend = payload.label;
       let flag = false;
       let seriesData = [];
+      console.log('chartData=', chartData)
       seriesData = chartData.allData.map((item, index) => {
         xAxisData.push(moment(item.MonitorTime).hour())
         if (item[key]) {
@@ -282,9 +283,9 @@ export default Model.extend({
       const result = yield call(services.getFeaturesPolList, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas);
-        
+
         yield update({
-         
+
         })
       } else {
         message.error(result.Message)

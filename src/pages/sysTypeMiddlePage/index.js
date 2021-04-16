@@ -27,6 +27,7 @@ class index extends PureComponent {
 
 
   onSysItemClick = (item) => {
+    console.log('item=', item)
     window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
   }
 

@@ -3,6 +3,7 @@ import styles from '../index.less'
 import { Button, Divider, Tooltip } from 'antd';
 import { connect } from 'dva';
 import ReactEcharts from 'echarts-for-react';
+import { airLevel } from '@/pages/monitoring/overView/tools'
 
 class InfoWindowContent extends PureComponent {
   constructor(props) {
@@ -111,7 +112,7 @@ class InfoWindowContent extends PureComponent {
     return {
       // color: ['#3398DB'],
       title: {
-        text: this.state.currentDescItem.label ? `${this.state.currentDescItem.label} 24小时IAQI柱状图` : '24小时AQI柱状图',
+        text: this.state.currentDescItem.label ? `${this.state.currentDescItem.label} - 24小时IAQI柱状图` : '24小时AQI柱状图',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.75)',
           fontSize: 15,
@@ -247,6 +248,7 @@ class InfoWindowContent extends PureComponent {
 
   render() {
     const { selectedPointInfo, curPointData, tableList } = this.props;
+    console.log('chartData=', this.props.chartData)
     console.log('props=', this.props)
     return (
       <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
@@ -254,21 +256,42 @@ class InfoWindowContent extends PureComponent {
           <h2>
             {selectedPointInfo.Abbreviation || curPointData.entName} - {selectedPointInfo.title}
           </h2>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => {
-              this.props.onShowPointDetails();
-            }}
-          >
-            进入站点
+          <div>
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => {
+                this.props.onShowPointDetails();
+              }}
+            >
+              进入站点
           </Button>
-          <p>
-            站点状态：
+            <Button
+              type="primary"
+              size="small"
+              style={{ marginTop: 10 }}
+              onClick={() => {
+                let params = { ID: "4a805258-b105-49b2-90bb-1189604b589b", Name: "一企一档管理系统", TipsName: "ReactShow", CodeList: "", EntCode: selectedPointInfo.EntCode, EntName: selectedPointInfo.Abbreviation }
+                window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(params)}`)
+              }}
+            >
+              进入企业
+          </Button>
+          </div>
+          {
+            selectedPointInfo.type === '5' && selectedPointInfo.AQI !== '-' ?
+              <p>环境质量：
+                <span style={{ color: selectedPointInfo.Color }}>
+                  {airLevel.find(item => item.value == selectedPointInfo.Level).text}
+                </span>
+              </p> :
+              <p>
+                站点状态：
                 <span style={{ color: this.getColor(selectedPointInfo.status) }}>
-              {this.getStatusText(selectedPointInfo.status)}
-            </span>
-          </p>
+                  {this.getStatusText(selectedPointInfo.status)}
+                </span>
+              </p>
+          }
         </div>
         {/* <div className={styles.desc}>
           <div className={styles['desc-l']}>
@@ -308,7 +331,7 @@ class InfoWindowContent extends PureComponent {
           <ReactEcharts
             className={styles.echartdiv}
             style={{ width: '100%', height: '200px', textAlign: 'center', marginTop: -10 }}
-            option={selectedPointInfo == 5 ? this.getAirChartOptions() : this.getPointChartOptions()}
+            option={selectedPointInfo.type == 5 ? this.getAirChartOptions() : this.getPointChartOptions()}
             notMerge
             lazyUpdate />
           <p>监控时间：{curPointData.MonitorTime}</p>

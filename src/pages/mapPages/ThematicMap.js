@@ -17,6 +17,7 @@ import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import InfoWindowContent from './component/InfoWindowContent'
 import PointDetailsModal from './component/PointDetailsModal'
+import { AppstoreOutlined } from '@ant-design/icons'
 
 const statusList = [
   { text: "正常", checked: false, color: "#52c41a", value: 1, count: 33, className: "green" },
@@ -35,7 +36,7 @@ const mapIconStyle = {
 const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
-
+let ruler;
 
 @connect(({ loading, map }) => ({
   allPoints: map.allPoints,
@@ -76,6 +77,9 @@ class ThematicMap extends PureComponent {
     this.mapEvents = {
       created(m) {
         _thismap = m;
+        window.AMap.plugin(["AMap.RangingTool"], function () {
+          ruler = new window.AMap.RangingTool(m);
+        });
         setTimeout(() => {
           m.setFitView();
         }, 1000)
@@ -103,6 +107,10 @@ class ThematicMap extends PureComponent {
         markersList: this.randomMarker()
       })
     }
+  }
+
+  componentWillUnmount() {
+    _thismap = undefined;
   }
 
   getPollutantIcon = (extData) => {
@@ -151,7 +159,7 @@ class ThematicMap extends PureComponent {
       icon = <CustomIcon type="icon-yangchen1" style={{ ...style }} />
     }
     if (pollutantType == 5) {
-      icon = <div className={styles.AQIBox} style={{ backgroundColor: this.getColor(status) }}>
+      icon = <div className={styles.AQIBox} style={{ backgroundColor: extData.Color !== '-' ? extData.Color : '#999999' }}>
         {extData.AQI}
       </div>
     }
@@ -200,8 +208,10 @@ class ThematicMap extends PureComponent {
         status: item.Status,
         type: item.PollutantType,
         AQI: item.AQI,
-        Abbreviation: item.Abbreviation,
+        Abbreviation: item.Abbreviation || item.EntName,
         EntCode: item.EntCode,
+        Color: item.Color,
+        Level: item.Level,
       }
     })
   };
@@ -247,6 +257,7 @@ class ThematicMap extends PureComponent {
       return;
     }
     let newPoints = allPoints.filter(item => item.PollutantType == activePollutant);
+    console.log('newPoints=', newPoints)
     this.setState({
       pointsList: newPoints
     })
@@ -271,7 +282,7 @@ class ThematicMap extends PureComponent {
 
   onUpdateChart = (params) => {
     this.props.dispatch({
-      type: 'mapView/updateChartData',
+      type: 'map/updateChartData',
       payload: {
         ...params
       }
@@ -306,15 +317,19 @@ class ThematicMap extends PureComponent {
       } else {
         message.error('未找到相关监测点');
       }
+    } else {
+      this.setState({
+        pointsList: this.props.allPoints,
+      });
     }
   };
 
   getLegendIcon = (type) => {
     switch (type) {
       case 1:
-        return <><WaterOffline style={{ marginRight: 8, fontSize: 20, ...iconStyle }} /> <span>废水 <i></i></span></>
+        return <><WaterOffline style={{ marginRight: 8, fontSize: 20, ...iconStyle }} /></>
       case 2:
-        return <><GasOffline style={{ marginRight: 8, fontSize: 20, ...iconStyle }} /> <span>废气</span></>
+        return <><GasOffline style={{ marginRight: 8, fontSize: 20, ...iconStyle }} /></>
       case 5:
         return <>
           <CustomIcon type="icon-fangwu" style={{
@@ -323,7 +338,7 @@ class ThematicMap extends PureComponent {
             fontSize: 20,
             ...mapIconStyle
           }}
-          /> 空气站
+          />
         </>
       case 10:
         return <>
@@ -332,7 +347,7 @@ class ThematicMap extends PureComponent {
             marginRight: 8,
             fontSize: 20,
             ...mapIconStyle
-          }} /> VOC
+          }} />
         </>
       case 12:
         return <>
@@ -344,14 +359,22 @@ class ThematicMap extends PureComponent {
               fontSize: 20,
               ...mapIconStyle
             }}
-          /> 扬尘
+          />
         </>
     }
   }
 
+  onToolsClick = () => {
+    // let ruler1 = new window.AMap.RangingTool(_thismap);
+    this.setState({
+      currentTool: 'ruler'
+    })
+    ruler.turnOn()
+  }
+
   render() {
     const { pollutantTypeCountList, curPointData, tableList, chartData, pointDetailsModalVisible } = this.props;
-    const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList } = this.state;
+    const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
     return (
       <div className={styles.pageWrapper}>
         <div className={styles.mapContent}>
@@ -362,10 +385,28 @@ class ThematicMap extends PureComponent {
               </div>
             })} */}
             <Radio.Group style={{}} defaultValue={this.state.activePollutant} buttonStyle="solid" size="default" onChange={this.onPollutantTypeClick}>
-              <RadioButton key="0" value="0">全部</RadioButton>
+              <RadioButton key="0" value="0">
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <AppstoreOutlined style={{ fontSize: 17, marginRight: 8 }} />
+                  全部
+                </div>
+              </RadioButton>
               {
                 pollutantTypeCountList.map(item => {
-                  return <RadioButton key={item.PollutantTypeCode} value={item.PollutantTypeCode}>{item.PollutantTypeName}</RadioButton>
+                  return <RadioButton key={item.PollutantTypeCode} value={item.PollutantTypeCode}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                      {this.getLegendIcon(item.PollutantTypeCode)}
+                      {item.PollutantTypeName}
+                    </div>
+                  </RadioButton>
                 })
               }
             </Radio.Group>
@@ -382,7 +423,7 @@ class ThematicMap extends PureComponent {
           </div>
           {
             (activePollutant != 5) && <div className={styles.legendContent}>
-              <div className={styles.legendBox}>
+              {/* <div className={styles.legendBox}>
                 <ul>
                   {
                     pollutantTypeCountList.map(item => {
@@ -391,47 +432,8 @@ class ThematicMap extends PureComponent {
                       </li>
                     })
                   }
-                  {/* <li>
-                    <WaterOffline style={{ marginRight: 10, fontSize: 20, ...iconStyle }} /> <span>废水 <i></i></span>
-                  </li>
-                  <li>
-                    <GasOffline style={{ marginRight: 10, fontSize: 20, ...iconStyle }} /> <span>废气</span>
-                  </li>
-                  <li>
-                    <CustomIcon
-                      type="icon-fangwu"
-                      style={{
-                        color: '#999',
-                        marginRight: 10,
-                        fontSize: 20,
-                        ...mapIconStyle
-                      }}
-                    />
-                      空气站
-                    </li>
-                  <li>
-                    <VocIcon style={{
-                      color: '#999',
-                      marginRight: 10,
-                      fontSize: 20,
-                      ...mapIconStyle
-                    }} />
-                  VOC
-                </li>
-                  <li>
-                    <CustomIcon
-                      type="icon-yangchen1"
-                      style={{
-                        color: '#999',
-                        marginRight: 10,
-                        fontSize: 20,
-                        ...mapIconStyle
-                      }}
-                    />
-                      扬尘
-                    </li> */}
                 </ul>
-              </div>
+              </div> */}
               <div className={styles.stateBox}>
                 <span style={{ backgroundColor: '#33c166' }}>在线</span>
                 <span style={{ backgroundColor: '#a29d9d' }}>离线</span>
@@ -453,6 +455,39 @@ class ThematicMap extends PureComponent {
               </ul>
             </div>
           }
+          <div className={styles.mapTools}>
+            <ul>
+              <li className={currentTool === 'ruler' ? styles.active : ''} onClick={() => {
+                if (currentTool === 'ruler') {
+                  this.setState({
+                    currentTool: ''
+                  })
+                  ruler.turnOff()
+                } else {
+                  this.setState({
+                    currentTool: 'ruler'
+                  })
+                  ruler.turnOn()
+                }
+              }}>
+                <Tooltip color="blue" placement="left" title='测距'>
+                  <CustomIcon type="icon-biaohui1" />
+                </Tooltip>
+              </li>
+              <li>
+                <Tooltip color="blue" placement="left" title='标绘'>
+                  <CustomIcon type="icon-biaohui" />
+                </Tooltip>
+              </li>
+              <li onClick={() => {
+                _thismap.clearMap()
+              }}>
+                <Tooltip color="blue" placement="left" title='清除'>
+                  <CustomIcon type="icon-qingchu" />
+                </Tooltip>
+              </li>
+            </ul>
+          </div>
           <Map
             resizeEnable={true}
             events={this.mapEvents}

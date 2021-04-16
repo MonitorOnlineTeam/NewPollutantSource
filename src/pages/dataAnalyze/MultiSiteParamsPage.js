@@ -146,6 +146,7 @@ class MultiSiteParamsPage extends PureComponent {
         data: item.DataList,
         type: 'line',
         name: item.PointName,
+        barWidth : 30,
         _dataType: chartList.PollutantName
       }
     })
@@ -180,6 +181,7 @@ class MultiSiteParamsPage extends PureComponent {
         feature: {
           dataView: {},
           saveAsImage: {},
+          magicType: {show: true, type: ['line', 'bar']},
         }
       },
       tooltip: {
