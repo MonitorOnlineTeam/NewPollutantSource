@@ -62,14 +62,12 @@ class EntAttributes extends Component {
 
           {/* {loading?
           <PageLoading/>: */}
-          <div className={styles.content} style={{padding:'12px 10px 10px 10px'}}>
-{/* 公司名称： 阿拉尔艾特克水务有限公司    关注程度：国控  污染源规模：大型一档  注册类型：国有企业    隶属关系：中央  
-办公电话：010-1111111 移动电话：13333333333     所属行业：建筑业,建筑安装业,建筑安装业 */}
+          <div className={styles.content} style={{padding:'17px 10px 10px 10px'}}>
           {entDetailData&&<>
              <Row className={styles.entRowTop}>
               <Col span={12}   className={styles.entCol}>   
               <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
+               <img src='/ent1.png' className={styles.entImg}/>
               <div  className={styles.entDivSty}>
               <div className={styles.entNameSty}>公司名称</div> 
               <div title={entDetailData.EntName} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData.EntName}</div>
@@ -78,20 +76,48 @@ class EntAttributes extends Component {
               </Col>
               
               <Col span={12}   className={styles.entCol}>   
+
               <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
+               <img src='/ent2.png' className={styles.entImg}/>
               <div  className={styles.entDivSty}>
-              <div className={styles.entNameSty}>注册类型</div> 
-              <div title={entDetailData["dbo.T_Cod_RegistType.RegistTypeName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_RegistType.RegistTypeName"]}</div>
+              <div className={styles.entNameSty}>关注程度</div> 
+              <div title={entDetailData['dbo.T_Cod_AttentionDegree.AttentionName'] } className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData['dbo.T_Cod_AttentionDegree.AttentionName']}</div>
                </div>
               </Row>
               </Col>
         </Row> 
 
         <Row className={styles.entRowTop}>
-        <Col span={12}   className={styles.entCol}>   
+
+              
+              <Col span={12}   className={styles.entCol}>   
+
               <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
+               <img src='/ent3.png' className={styles.entImg}/>
+              <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>污染源规模</div> 
+              <div title={entDetailData["dbo.T_Cod_PSScale.PSScaleName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_PSScale.PSScaleName"]}</div>
+               </div>
+              </Row>
+              </Col>
+
+              <Col span={12}   className={styles.entCol}>   
+
+
+                <Row align='middle' className={styles.entRow}>
+               <img src='/ent4.png' className={styles.entImg}/>
+               <div  className={styles.entDivSty}>
+              <div className={styles.entNameSty}>注册类型</div> 
+              <div title={entDetailData["dbo.T_Cod_RegistType.RegistTypeName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_RegistType.RegistTypeName"]}</div>
+              </div>
+             </Row>
+             </Col>
+        </Row> 
+        
+        <Row className={styles.entRowTop}>
+        <Col span={12}   className={styles.entCol}>   
+          <Row align='middle' className={styles.entRow}>
+               <img src='/ent5.png' className={styles.entImg}/>
               <div  className={styles.entDivSty}>
               <div className={styles.entNameSty}>隶属关系</div> 
               <div title={entDetailData['dbo.T_Cod_SubjectionRelation.SubjectionRelationName']} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData['dbo.T_Cod_SubjectionRelation.SubjectionRelationName']}</div>
@@ -101,32 +127,10 @@ class EntAttributes extends Component {
               
               <Col span={12}   className={styles.entCol}>   
               <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
+               <img src='/ent6.png' className={styles.entImg}/>
               <div  className={styles.entDivSty}>
               <div className={styles.entNameSty}>所属行业</div> 
               <div title={entDetailData["dbo.T_Cod_IndustryType.IndustryTypeName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_IndustryType.IndustryTypeName"]}</div>
-               </div>
-              </Row>
-              </Col>
-        </Row> 
-        
-        <Row className={styles.entRowTop}>
-        <Col span={12}   className={styles.entCol}>   
-              <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
-              <div  className={styles.entDivSty}>
-              <div className={styles.entNameSty}>关注程度</div> 
-              <div title={entDetailData['dbo.T_Cod_AttentionDegree.AttentionName'] } className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData['dbo.T_Cod_AttentionDegree.AttentionName']}</div>
-               </div>
-              </Row>
-              </Col>
-              
-              <Col span={12}   className={styles.entCol}>   
-              <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
-              <div  className={styles.entDivSty}>
-              <div className={styles.entNameSty}>污染源规模</div> 
-              <div title={entDetailData["dbo.T_Cod_PSScale.PSScaleName"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Cod_PSScale.PSScaleName"]}</div>
                </div>
               </Row>
               </Col>
@@ -135,7 +139,7 @@ class EntAttributes extends Component {
         <Row className={styles.entRowTop}>
         <Col span={12}   className={styles.entCol}>   
               <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
+               <img src='/ent7.png' className={styles.entImg}/>
               <div  className={styles.entDivSty}>
               <div className={styles.entNameSty}>办公电话</div> 
               <div title={entDetailData["dbo.T_Bas_Enterprise.OfficePhone"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Bas_Enterprise.OfficePhone"]}</div>
@@ -145,7 +149,7 @@ class EntAttributes extends Component {
               
               <Col span={12}   className={styles.entCol}>   
               <Row align='middle' className={styles.entRow}>
-               <img src='/entTest.png' className={styles.entImg}/>
+               <img src='/ent8.png' className={styles.entImg}/>
               <div  className={styles.entDivSty}>
               <div className={styles.entNameSty}>移动电话</div> 
               <div title={entDetailData["dbo.T_Bas_Enterprise.MobilePhone"]} className={`textOverflow ${styles.entDetailDataSty}`}  >{entDetailData["dbo.T_Bas_Enterprise.MobilePhone"]}</div>

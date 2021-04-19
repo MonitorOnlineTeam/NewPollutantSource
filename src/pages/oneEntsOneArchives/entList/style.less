@@ -3,8 +3,9 @@
 
    :global {
     .entList .ant-list-items{
-      height: calc(100vh - 200px);
-      overflow-y: auto;
+      // height: calc(100vh - 200px);
+      // overflow-y: auto;
+      // padding-bottom: 15px;
     }
     .listContent span{
         color: #999;
@@ -19,11 +20,20 @@
       width: 200px;
       height: 200px;
      }
-     .ant-list-pagination{
+     .entList .ant-list-pagination{
        text-align: left;
+       position: fixed;
+       bottom:50px;
+       padding-top: 10px;
+       background-color: #fff;
+       width: 100%;
      }
      .ant-btn-primary{
        background-color: #3888ff;
+     }
+     .entList .ant-card-body{
+       padding-right:0 !important;
+      //  padding-top:0 !important;
      }
  }
  .site-search-value{

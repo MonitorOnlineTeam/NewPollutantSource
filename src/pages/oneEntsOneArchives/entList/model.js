@@ -26,7 +26,7 @@ export default Model.extend({
           const result = yield call(GetEntsList, payload);
           if (result.IsSuccess) {
             yield update({ dataSource: result.Datas,total:result.Datas.length, loading:false  })
-            callback()
+            callback(result.Datas)
           } else {
             message.error(result.Message)
           }

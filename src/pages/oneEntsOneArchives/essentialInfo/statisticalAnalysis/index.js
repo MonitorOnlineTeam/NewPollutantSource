@@ -161,7 +161,7 @@ class index extends Component {
     dispatch({
       type: "home/getPollutantTypeList",
       payload: {
-        pollutantCodes: "1,2",
+        // pollutantCodes: "1,2",
       },
     });
 
