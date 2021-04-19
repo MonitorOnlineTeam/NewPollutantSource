@@ -495,6 +495,9 @@ export default class MonitorPoint extends Component {
                             cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
                             FormData: row
                           })
+                          this.setState({
+                            modalProps: {}
+                          });
                         }}
                       >
                         <EditIcon />

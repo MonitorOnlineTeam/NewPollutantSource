@@ -348,9 +348,13 @@ class DataQuery extends Component {
                 columns={columns}
                 resizable
                 defaultWidth={80}
-                scroll={{ y: this.props.tableHeight || undefined }}
-                pagination={{ pageSize: 20 }}
-
+                scroll={{ y: "calc(100vh - 380px)" || undefined }}
+                // pagination={{ pageSize: 20 }}
+                pagination={{
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    defaultPageSize: 20
+                }}
             />
             // </Card.Grid>
 
