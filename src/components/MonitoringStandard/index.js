@@ -316,10 +316,11 @@ class MonitoringStandard extends Component {
                 // width: '10%',
                 align: 'center',
                 render: (text, record) => {
+
                     if (record.IsUse === '1') {
                         return (
 
-                            <Tooltip title="编辑污染物">
+                            <Tooltip title= {`编辑污染物`}>
                                 <a
                                     onClick={() =>
                                         this.setState({
@@ -327,6 +328,7 @@ class MonitoringStandard extends Component {
                                             title: '编辑污染物',
                                             width: '50%',
                                             PollutantCode: record.PollutantCode,
+                                            PollutantName:record.PollutantName
                                         })
                                     }
                                 ><EditIcon /></a>
@@ -427,7 +429,7 @@ class MonitoringStandard extends Component {
                 </Modal>
                 <Modal
                     visible={Fvisible}
-                    title={this.state.title}
+                    title={ `${this.state.PollutantName} - ${this.state.title}`}
                     width={this.state.width}
                     footer={false}
                     destroyOnClose={true} // 清除上次数据

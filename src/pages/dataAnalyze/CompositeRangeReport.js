@@ -34,7 +34,7 @@ class CompositeRangeReport extends Component {
       format: props.match.params.reportType === "month" ? "YYYY-MM" : "YYYY",
       columns: [
         {
-          title: '排口名称',
+          title: '监测点名称',
           width: 300,
           dataIndex: 'DGIMN',
         },

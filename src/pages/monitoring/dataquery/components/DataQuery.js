@@ -72,7 +72,11 @@ class DataQuery extends Component {
           this.setState({dataType:'realtime'})
         }
         // this.children.onDataTypeChange(this.state.dataType)
-        !type&&this.children.onDataTypeChange(this.state.dataType);
+        if(type){
+          this.reloaddatalist()
+        }else{
+          this.children.onDataTypeChange(this.state.dataType) 
+        }
       },
     });
   };
