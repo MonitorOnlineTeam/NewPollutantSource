@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-08 10:59:59
+ * @Last Modified time: 2021-04-19 10:57:48
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -161,7 +161,7 @@ class SdlForm extends PureComponent {
       return <MonthPicker style={{ width: '100%' }} format={format} />
     } if (format === 'YYYY') {
       // 年
-      return <DatePicker format={format} style={{ width: '100%' }} />
+      return <DatePicker picker="year" format={format} style={{ width: '100%' }} />
       // return <DatePicker
       //   mode="year"
       //   onPanelChange={(value, mode) => {
