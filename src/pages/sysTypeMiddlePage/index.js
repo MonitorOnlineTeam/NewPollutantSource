@@ -56,7 +56,7 @@ class index extends PureComponent {
         </header>
         <div className={styles.pageContainer}>
           <div className={styles.cardListContainer}>
-            <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]} style={{ width: '100%' }}>
               {
                 sysPollutantTypeList.map((item, index) => {
                   return (

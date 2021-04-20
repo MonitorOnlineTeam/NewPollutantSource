@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import styles from '../index.less'
-import { Button, Divider, Tooltip } from 'antd';
+import { Button, Divider, Tooltip, Empty } from 'antd';
 import { connect } from 'dva';
 import ReactEcharts from 'echarts-for-react';
 import { airLevel } from '@/pages/monitoring/overView/tools'
@@ -59,52 +59,59 @@ class InfoWindowContent extends PureComponent {
   getPollutantGroupContent = () => {
     const { tableList, selectedPointInfo } = this.props;
     let tableList_temp = selectedPointInfo == 5 ? tableList : tableList.filter((itm, index) => index < 6);
-    return <ul>
-      {tableList.map(item => {
-        if (selectedPointInfo.type == 5) {
-          return (
-            <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-              <li
-                onClick={() => {
-                  this.setState({
-                    currentDescItem: item,
-                  })
-                  let key = `${item.key}_IAQI`;
-                  this.props.onUpdateChart({
-                    key,
-                    itemKey: item.key,
-                    label: item.label,
-                    isAirOrSite: true,
-                  })
-                }}
-              >
-                {item.label}：{item.value}
-              </li>
-            </Tooltip>
-          );
-        } else {
-          return (
-            <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
-              <li
-                className={styles.point}
-                onClick={() => {
-                  console.log('item=', item)
-                  this.setState({
-                    currentDescItem: item,
-                  })
-                  this.props.onUpdateChart({
-                    key: item.key,
-                    label: item.label,
-                  })
-                }}
-              >
-                {item.label}：{item.value}
-              </li>
-            </Tooltip>
-          )
-        }
-      })}
-    </ul>
+    console.log('tableList=', tableList)
+    if (tableList && tableList.length) {
+      return <ul>
+        {tableList.map(item => {
+          if (selectedPointInfo.type == 5) {
+            return (
+              <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
+                <li
+                  onClick={() => {
+                    this.setState({
+                      currentDescItem: item,
+                    })
+                    let key = `${item.key}_IAQI`;
+                    this.props.onUpdateChart({
+                      key,
+                      itemKey: item.key,
+                      label: item.label,
+                      isAirOrSite: true,
+                    })
+                  }}
+                >
+                  {item.label}：{item.value}
+                </li>
+              </Tooltip>
+            );
+          } else {
+            return (
+              <Tooltip placement="topLeft" title={`${item.label}：${item.value}`}>
+                <li
+                  className={styles.point}
+                  onClick={() => {
+                    console.log('item=', item)
+                    this.setState({
+                      currentDescItem: item,
+                    })
+                    this.props.onUpdateChart({
+                      key: item.key,
+                      label: item.label,
+                    })
+                  }}
+                >
+                  {item.label}：{item.value}
+                </li>
+              </Tooltip>
+            )
+          }
+        })}
+      </ul>
+    } else {
+      return <div style={{margin: '54px 0'}}>
+        <Empty description="暂无数据" imageStyle={{ maring: '50px 0' }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    }
   }
 
   getAirChartOptions = () => {
@@ -247,7 +254,7 @@ class InfoWindowContent extends PureComponent {
 
 
   render() {
-    const { selectedPointInfo, curPointData, tableList } = this.props;
+    const { selectedPointInfo, curPointData, tableList, chartData } = this.props;
     console.log('chartData=', this.props.chartData)
     console.log('props=', this.props)
     return (
@@ -328,12 +335,15 @@ class InfoWindowContent extends PureComponent {
             </div>
           )}
           {this.getPollutantGroupContent()}
-          <ReactEcharts
-            className={styles.echartdiv}
-            style={{ width: '100%', height: '200px', textAlign: 'center', marginTop: -10 }}
-            option={selectedPointInfo.type == 5 ? this.getAirChartOptions() : this.getPointChartOptions()}
-            notMerge
-            lazyUpdate />
+          {
+            (chartData.xAxisData && chartData.xAxisData.length) ?
+              <ReactEcharts
+                className={styles.echartdiv}
+                style={{ width: '100%', height: '200px', textAlign: 'center', marginTop: -10 }}
+                option={selectedPointInfo.type == 5 ? this.getAirChartOptions() : this.getPointChartOptions()}
+                notMerge
+                lazyUpdate /> : ''
+          }
           <p>监控时间：{curPointData.MonitorTime}</p>
         </div>
       </div>

@@ -153,11 +153,12 @@ class EmissionsHeatMap extends PureComponent {
         //初始化heatmap对象
         window.AMap.plugin(['AMap.Heatmap'], () => {
           heatmap = new window.AMap.Heatmap(thisMap, heatmapOpts);
+          heatmap.setDataSet({
+            data: heatmapData,
+            max: 100
+          });
         })
-        heatmap.setDataSet({
-          data: heatmapData,
-          max: 100
-        });
+
       } else {
         heatmap.setDataSet({
           data: heatmapData,

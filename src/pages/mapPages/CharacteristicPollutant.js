@@ -523,7 +523,7 @@ class CharacteristicPollutant extends PureComponent {
               <Button type="primary" htmlType="submit" style={{ width: 100 }}>查询</Button>
             </Divider>
           </Form>
-          <Table rowkey={record => record.EntCode} loading={loading} size="small" dataSource={pointList} columns={columns} pagination={false} scroll={{ y: 'calc(100vh - 550px)' }} />
+          <Table rowkey={record => record.EntCode} loading={loading} size="small" dataSource={pointList} columns={columns} pagination={false} scroll={{ y: 'calc(100vh - 570px)' }} />
         </Drawer>
       </>
     );

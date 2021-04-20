@@ -81,7 +81,7 @@ class AvatarDropdown extends React.Component {
     );
     return currentUser && currentUser.UserName ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
-        <span className={`${styles.action} ${styles.account}`}>
+        <div className={`${styles.action} ${styles.account}`} style={{ float: 'right' }}>
           <ChangePwdView visible={changePwdVisible} />
 
           <Avatar
@@ -92,7 +92,7 @@ class AvatarDropdown extends React.Component {
             alt="avatar"
           />
           <span className={styles.name}>{currentUser.UserName}</span>
-        </span>
+        </div>
       </HeaderDropdown>
     ) : (
         <Spin

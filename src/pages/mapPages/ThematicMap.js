@@ -120,6 +120,7 @@ class ThematicMap extends PureComponent {
 
   componentWillUnmount() {
     _thismap = undefined;
+    ruler = undefined;
   }
 
   getPollutantIcon = (extData) => {
@@ -249,6 +250,7 @@ class ThematicMap extends PureComponent {
     this.setState({
       activePollutant: e.target.value,
       searchInputVal: undefined,
+      infoWindowVisible: false,
     }, () => {
       let isShowAllPoint = e.target.value === '0' ? true : false;
       this.filterPoints(isShowAllPoint);
@@ -327,8 +329,14 @@ class ThematicMap extends PureComponent {
         message.error('未找到相关监测点');
       }
     } else {
+      let pointsList = this.props.allPoints;
+      if (this.state.activePollutant !== '0') {
+        pointsList = this.props.allPoints.filter(item => item.PollutantType == this.state.activePollutant);
+      }
+      console.log('pointsList=', pointsList)
       this.setState({
-        pointsList: this.props.allPoints,
+        pointsList: pointsList,
+        infoWindowVisible: false,
       });
     }
   };
@@ -384,6 +392,7 @@ class ThematicMap extends PureComponent {
   render() {
     const { pollutantTypeCountList, curPointData, tableList, chartData, pointDetailsModalVisible } = this.props;
     const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
+    console.log('activePollutant=', activePollutant)
     return (
       <div className={styles.pageWrapper}>
         <div className={styles.mapContent}>
