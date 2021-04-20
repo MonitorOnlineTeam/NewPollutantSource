@@ -5,9 +5,10 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 class Index extends Component {
+
     getoption=() => {
         const { optionDatas, allpollutant } = this.props;
-        if (optionDatas) {
+        if (optionDatas&&optionDatas.length>0) {
             const res = [];
             if (allpollutant) {
                 res.push(<Option
@@ -21,6 +22,7 @@ class Index extends Component {
                     value={item.PollutantCode}
                 >{item.PollutantName}</Option>);
             })
+            console.log(res)
             return res;
         }
     }
@@ -38,17 +40,17 @@ class Index extends Component {
           maxTagTextLength,
           maxTagPlaceholder,
         } = this.props;
-        console.log('---------------------------------------------', defaultValue);
+        console.log('------------------默认选中的污染物---------------------------', defaultValue);
         return (
-            <Select
+             <Select
                 mode={mode}
                 onChange={onChange}
                 allowClear={allowClear}
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
-                defaultValue={defaultValue || (allpollutant ? -1 : null)}
-                maxTagCount={maxTagCount}
-                maxTagTextLength={maxTagTextLength}
+                defaultValue={defaultValue || (allpollutant ? -1 : [])}
+                // maxTagCount={maxTagCount}
+                // maxTagTextLength={maxTagTextLength}
                 maxTagPlaceholder={maxTagPlaceholder}
             >
                 {

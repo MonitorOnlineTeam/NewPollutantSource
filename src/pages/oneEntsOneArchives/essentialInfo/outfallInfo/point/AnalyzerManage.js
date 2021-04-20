@@ -179,7 +179,7 @@ class AnalyzerManage extends Component {
           }
         })
       } else {
-        message.error('请添分析仪');
+        message.error('请添加分析仪');
       }
     })
   }

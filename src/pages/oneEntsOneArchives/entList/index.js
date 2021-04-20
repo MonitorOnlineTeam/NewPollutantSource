@@ -210,7 +210,7 @@ class Index extends React.Component {
           {rightList&&rightList.map(item=>{
             return   <div onClick={()=>this.itemClick(item)} style={{display:'inline-block',verticalAlign:'top', width:'88px',marginLeft:28,marginTop:24,cursor:'pointer'}}>
              <img src='/entListRight.png'/>
-          <div style={{display:'inline-block',paddingTop:10}}><span style={{color:"#a5a5a5"}}>{item.EntName}</span></div>
+          <div style={{display:'inline-block',paddingTop:10}}><a style={{color:"#a5a5a5"}}>{item.EntName}</a></div>
              </div>
           })}
           </Skeleton>
