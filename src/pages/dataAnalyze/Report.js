@@ -19,6 +19,7 @@ const columns = [
     dataIndex: 'StationName',
     key: 'StationName',
     width: 90,
+    align:"center"
   },
   {
     title: '监测点名称',

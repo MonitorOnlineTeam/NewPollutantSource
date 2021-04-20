@@ -31,6 +31,7 @@ class CompositeIndexContrast extends Component {
           dataIndex: 'StationName',
           key: 'StationName',
           width: 90,
+          align:"center"
         },
         {
           title: '大气站',
