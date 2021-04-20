@@ -27,6 +27,12 @@ class CompositeIndexContrast extends Component {
       OverTime: moment(),
       columns: [
         {
+          title: '城市',
+          dataIndex: 'StationName',
+          key: 'StationName',
+          width: 90,
+        },
+        {
           title: '大气站',
           width: 200,
           dataIndex: 'DGIMN',

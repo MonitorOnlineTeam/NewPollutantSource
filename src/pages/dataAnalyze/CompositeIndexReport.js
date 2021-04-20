@@ -56,6 +56,12 @@ class CompositeIndexReport extends Component {
       format: props.match.params.reportType === "month" ? "YYYY-MM" : "YYYY",
       columns: [
         {
+          title: '城市',
+          dataIndex: 'StationName',
+          key: 'StationName',
+          width: 90,
+        },
+        {
           title: '监测点名称',
           width: 200,
           dataIndex: 'DGIMN',
