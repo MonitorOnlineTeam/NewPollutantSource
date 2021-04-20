@@ -211,7 +211,7 @@ onChangeHandle=(PageIndex, PageSize)=>{
         key: 'regionName'
       },
       {
-        title: "企业名称",
+        title: "空气站名称",
         width: 100,
         align: 'left',
         fixed: fixed,
