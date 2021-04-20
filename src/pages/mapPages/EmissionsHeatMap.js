@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
+import { Map, Polygon, Markers, InfoWindow, MouseTool } from 'react-amap';
 import { connect } from 'dva'
 import styles from './heatMap.less'
 import { Drawer, Button, Form, DatePicker, Radio, Divider, Table, Tooltip } from 'antd';
@@ -9,10 +9,14 @@ import config from "@/config";
 import $script from 'scriptjs';
 import { EntIcon } from '@/utils/icon';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
+import CustomIcon from '@/components/CustomIcon';
+import mapStyle from './map.less'
 
 let thisMap;
 let heatmap;
 let mapMarkers;
+let ruler;
+
 const { amapKey } = config;
 const dividerStyle = { margin: '10px 0' }
 const initialValues = {
@@ -72,9 +76,17 @@ class EmissionsHeatMap extends PureComponent {
       }],
       mode: '2D'
     };
+    this.toolEvents = {
+      created: (tool) => {
+        this.tool = tool;
+      },
+    }
     this.amapEvents = {
       created: (mapInstance) => {
         thisMap = mapInstance;
+        window.AMap.plugin(["AMap.RangingTool"], function () {
+          ruler = new window.AMap.RangingTool(mapInstance);
+        });
         let values = this.formRef.current.getFieldsValue() || initialValues;
         this.getEntEmissionsData(values)
       },
@@ -210,7 +222,7 @@ class EmissionsHeatMap extends PureComponent {
 
   render() {
     const { entEmissionsData, markersEntList, loading } = this.props;
-    const { showType, showMarkers, mode, visible } = this.state;
+    const { showType, showMarkers, mode, visible, currentTool } = this.state;
     return (
       <>
         <div
@@ -228,6 +240,70 @@ class EmissionsHeatMap extends PureComponent {
             <Radio.Button value="2D">2D</Radio.Button>
             <Radio.Button value="3D">3D</Radio.Button>
           </Radio.Group>
+          <div className={`${mapStyle.mapTools} ${mapStyle.blank}`}>
+            <ul>
+              <li className={currentTool === 'ruler' ? `${mapStyle.active}` : ''} onClick={() => {
+                if (currentTool === 'ruler') {
+                  this.setState({
+                    currentTool: ''
+                  })
+                  ruler.turnOff()
+                } else {
+                  this.tool.close();
+                  this.setState({
+                    currentTool: 'ruler'
+                  })
+                  ruler.turnOn()
+                }
+              }}>
+                <Tooltip color="blue" placement="left" title='测距'>
+                  <CustomIcon type="icon-biaohui1" />
+                </Tooltip>
+              </li>
+              <li className={currentTool === 'biaohui' ? mapStyle.active : ''} onClick={() => {
+                if (currentTool === 'biaohui') {
+                  this.tool.close();
+                  this.setState({
+                    currentTool: ''
+                  })
+                } else {
+                  ruler.turnOff()
+                  this.tool.polygon();
+                  this.setState({
+                    currentTool: 'biaohui'
+                  })
+                }
+              }}>
+                <Tooltip color="blue" placement="left" title='标绘'>
+                  <CustomIcon type="icon-biaohui" />
+                </Tooltip>
+              </li>
+              <li onClick={() => {
+                // ruler = undefined;
+                // ruler = new window.AMap.RangingTool(_thismap);
+                this.tool.close(true)
+                ruler.turnOff()
+                this.setState({
+                  currentTool: ''
+                })
+              }}>
+                <Tooltip color="blue" placement="left" title='清除'>
+                  <CustomIcon type="icon-qingchu" />
+                </Tooltip>
+              </li>
+            </ul>
+          </div>
+          {
+            currentTool === 'biaohui' && <div className={`${mapStyle.drawSelectContent} ${mapStyle.blank}`}>
+              <Radio.Group defaultValue='polygon' onChange={(e) => {
+                this.tool[e.target.value]();
+              }}>
+                <Radio value={'polygon'}>多边形</Radio>
+                <Radio value={'rectangle'}>矩形</Radio>
+                <Radio value={'circle'}>圆形</Radio>
+              </Radio.Group>
+            </div>
+          }
           {/* <Button onClick={() => {
           console.log('heatmapData=', this.state.heatmapData)
 
@@ -245,6 +321,7 @@ class EmissionsHeatMap extends PureComponent {
               resizeEnable={true}
               plugins={this.state.plugins}
             >
+              <MouseTool events={this.toolEvents} />
               <Markers
                 markers={showMarkers && markersEntList.length ? markersEntList : []}
                 // className={this.state.special}
@@ -258,6 +335,7 @@ class EmissionsHeatMap extends PureComponent {
               events={this.amapEvents}
               zoom={5}
             >
+              <MouseTool events={this.toolEvents} />
               <Markers
                 markers={showMarkers && markersEntList.length ? markersEntList : []}
                 // className={this.state.special}

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Map, Marker, Markers, Circle } from 'react-amap';
+import { Map, Marker, Markers, Circle, MouseTool } from 'react-amap';
 import { connect } from 'dva'
 import styles from './heatMap.less'
 import { Drawer, Button, Form, DatePicker, Radio, Divider, Table, Tooltip, Input } from 'antd';
@@ -10,9 +10,13 @@ import $script from 'scriptjs';
 import { EntIcon } from '@/utils/icon';
 import PointDetailsModal from './component/PointDetailsModal'
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
+import mapStyle from './map.less'
+import CustomIcon from '@/components/CustomIcon';
 
 let thisMap;
 let mapMarkers;
+let ruler;
+
 const { amapKey } = config;
 const dividerStyle = { margin: '3px 0' }
 const initialValues = {
@@ -85,10 +89,18 @@ class CharacteristicPollutant extends PureComponent {
         fillOpacity: 0.35 //填充透明度
       },
     };
+    this.toolEvents = {
+      created: (tool) => {
+        this.tool = tool;
+      },
+    }
     // 地图
     this.amapEvents = {
       created: (mapInstance) => {
         thisMap = mapInstance;
+        window.AMap.plugin(["AMap.RangingTool"], function () {
+          ruler = new window.AMap.RangingTool(mapInstance);
+        });
       },
       click: e => {
         if (this.state.lngLatFromMap) {
@@ -264,7 +276,7 @@ class CharacteristicPollutant extends PureComponent {
 
   render() {
     const { entEmissionsData, loading, pointDetailsModalVisible } = this.props;
-    const { showType, radius, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
+    const { showType, radius, currentTool, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
     return (
       <>
         <div
@@ -272,11 +284,76 @@ class CharacteristicPollutant extends PureComponent {
           ref={(div) => { this.div = div }}
           id="characteristicPollutant"
         >
+          <div className={`${mapStyle.mapTools} ${mapStyle.blank}`}>
+            <ul>
+              <li className={currentTool === 'ruler' ? `${mapStyle.active}` : ''} onClick={() => {
+                if (currentTool === 'ruler') {
+                  this.setState({
+                    currentTool: ''
+                  })
+                  ruler.turnOff()
+                } else {
+                  this.tool.close();
+                  this.setState({
+                    currentTool: 'ruler'
+                  })
+                  ruler.turnOn()
+                }
+              }}>
+                <Tooltip color="blue" placement="left" title='测距'>
+                  <CustomIcon type="icon-biaohui1" />
+                </Tooltip>
+              </li>
+              <li className={currentTool === 'biaohui' ? mapStyle.active : ''} onClick={() => {
+                if (currentTool === 'biaohui') {
+                  this.tool.close();
+                  this.setState({
+                    currentTool: ''
+                  })
+                } else {
+                  ruler.turnOff()
+                  this.tool.polygon();
+                  this.setState({
+                    currentTool: 'biaohui'
+                  })
+                }
+              }}>
+                <Tooltip color="blue" placement="left" title='标绘'>
+                  <CustomIcon type="icon-biaohui" />
+                </Tooltip>
+              </li>
+              <li onClick={() => {
+                // ruler = undefined;
+                // ruler = new window.AMap.RangingTool(_thismap);
+                this.tool.close(true)
+                ruler.turnOff()
+                this.setState({
+                  currentTool: ''
+                })
+              }}>
+                <Tooltip color="blue" placement="left" title='清除'>
+                  <CustomIcon type="icon-qingchu" />
+                </Tooltip>
+              </li>
+            </ul>
+          </div>
+          {
+            currentTool === 'biaohui' && <div className={`${mapStyle.drawSelectContent} ${mapStyle.blank}`}>
+              <Radio.Group defaultValue='polygon' onChange={(e) => {
+                this.tool[e.target.value]();
+              }}>
+                <Radio value={'polygon'}>多边形</Radio>
+                <Radio value={'rectangle'}>矩形</Radio>
+                <Radio value={'circle'}>圆形</Radio>
+              </Radio.Group>
+            </div>
+          }
           <Map
             amapkey={amapKey}
             events={this.amapEvents}
             zoom={5}
           >
+            <MouseTool events={this.toolEvents} />
             <Markers
               markers={markersList}
               // className={this.state.special}

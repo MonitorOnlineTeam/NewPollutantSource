@@ -7,7 +7,7 @@ import {
   message,
 } from 'antd';
 import { connect } from 'dva';
-import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
+import { Map, Polygon, Markers, InfoWindow, MouseTool } from 'react-amap';
 import config from "@/config";
 import styles from './index.less';
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
@@ -62,6 +62,7 @@ class ThematicMap extends PureComponent {
     };
 
     this._SELF_ = {
+      overlays: [],
     }
 
     // 点弹窗事件
@@ -73,6 +74,14 @@ class ThematicMap extends PureComponent {
         });
       },
     };
+    this.toolEvents = {
+      created: (tool) => {
+        this.tool = tool;
+      },
+      draw: ({ obj }) => {
+        this._SELF_.overlays.push(obj);
+      }
+    }
 
     this.mapEvents = {
       created(m) {
@@ -263,7 +272,7 @@ class ThematicMap extends PureComponent {
     })
   }
 
-  // 
+  //
   getInfoWindowData = () => {
     let selectedPointInfo = this.state.selectedPointInfo;
     // 获取table数据
@@ -423,17 +432,6 @@ class ThematicMap extends PureComponent {
           </div>
           {
             (activePollutant != 5) && <div className={styles.legendContent}>
-              {/* <div className={styles.legendBox}>
-                <ul>
-                  {
-                    pollutantTypeCountList.map(item => {
-                      return <li>
-                        {this.getLegendIcon(item.PollutantTypeCode)}
-                      </li>
-                    })
-                  }
-                </ul>
-              </div> */}
               <div className={styles.stateBox}>
                 <span style={{ backgroundColor: '#33c166' }}>在线</span>
                 <span style={{ backgroundColor: '#a29d9d' }}>离线</span>
@@ -464,6 +462,7 @@ class ThematicMap extends PureComponent {
                   })
                   ruler.turnOff()
                 } else {
+                  this.tool.close();
                   this.setState({
                     currentTool: 'ruler'
                   })
@@ -474,13 +473,32 @@ class ThematicMap extends PureComponent {
                   <CustomIcon type="icon-biaohui1" />
                 </Tooltip>
               </li>
-              <li>
+              <li className={currentTool === 'biaohui' ? styles.active : ''} onClick={() => {
+                if (currentTool === 'biaohui') {
+                  this.tool.close();
+                  this.setState({
+                    currentTool: ''
+                  })
+                } else {
+                  ruler.turnOff()
+                  this.tool.polygon();
+                  this.setState({
+                    currentTool: 'biaohui'
+                  })
+                }
+              }}>
                 <Tooltip color="blue" placement="left" title='标绘'>
                   <CustomIcon type="icon-biaohui" />
                 </Tooltip>
               </li>
               <li onClick={() => {
-                _thismap.clearMap()
+                // ruler = undefined;
+                // ruler = new window.AMap.RangingTool(_thismap);
+                this.tool.close(true)
+                ruler.turnOff()
+                this.setState({
+                  currentTool: ''
+                })
               }}>
                 <Tooltip color="blue" placement="left" title='清除'>
                   <CustomIcon type="icon-qingchu" />
@@ -488,12 +506,24 @@ class ThematicMap extends PureComponent {
               </li>
             </ul>
           </div>
+          {
+            currentTool === 'biaohui' && <div className={styles.drawSelectContent}>
+              <Radio.Group defaultValue='polygon' onChange={(e) => {
+                this.tool[e.target.value]();
+              }}>
+                <Radio value={'polygon'}>多边形</Radio>
+                <Radio value={'rectangle'}>矩形</Radio>
+                <Radio value={'circle'}>圆形</Radio>
+              </Radio.Group>
+            </div>
+          }
           <Map
             resizeEnable={true}
             events={this.mapEvents}
             mapStyle="amap://styles/darkblue"
             amapkey={amapKey}
           >
+            <MouseTool events={this.toolEvents} />
             <Markers
               markers={markersList}
               events={this.markersEvents}
