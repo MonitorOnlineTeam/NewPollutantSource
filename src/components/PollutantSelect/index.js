@@ -46,11 +46,11 @@ class Index extends Component {
                 allowClear={allowClear}
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
-                defaultValue={defaultValue || (allpollutant ? -1 : null)}
+                defaultValue={defaultValue || (allpollutant ? -1 : [])}
                 maxTagCount={maxTagCount}
                 maxTagTextLength={maxTagTextLength}
                 maxTagPlaceholder={maxTagPlaceholder}
-            >
+            >    
                 {
                      this.getoption()
                 }

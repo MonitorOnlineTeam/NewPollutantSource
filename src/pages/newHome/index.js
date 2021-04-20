@@ -1377,7 +1377,7 @@ class NewHome extends PureComponent {
                     autoMove
                     showShadow
                     closeWhenClickMap
-                    isCustom
+                    isCusto
                   // content={this.infoWindowContent()}
                   >
                     {searchResult.title}

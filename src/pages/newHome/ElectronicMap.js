@@ -1399,8 +1399,9 @@ class NewHome extends PureComponent {
                     closeWhenClickMap
                     isCustom
                   // content={this.infoWindowContent()}
+                  className={styles.electmap}
                   >
-                    {searchResult.title}
+                    {/* {searchResult.title} */}
                   </InfoWindow>
                 )}
                 {/* {

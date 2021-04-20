@@ -36,6 +36,8 @@ export default Model.extend({
     dataFlagDataSource: [],
     tagTableTotal: 0,
     tabType:'shi',
+    dateTypes:'realtime',
+    dateValues:[moment(new Date()).add(-60, 'minutes'), moment(new Date())]
   },
   effects: {
     *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {
