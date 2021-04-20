@@ -9,7 +9,7 @@
     "fetch:blocks": "fetch-blocks",
     "format-imports": "import-sort --write '**/*.{js,jsx,ts,tsx}'",
     "prettier": "prettier -c --write **/*",
-    "start": "umi dev",
+    "start": "umi dev --port=8088",
     "start:no-mock": "cross-env MOCK=none umi dev"
   },
   "lint-staged": {

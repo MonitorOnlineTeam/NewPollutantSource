@@ -28,6 +28,8 @@ const { TabPane } = Tabs;
   tablewidth: dataquery.tablewidth,
   historyparams: dataquery.historyparams,
   tabType: dataquery.tabType,
+  dateTypes: dataquery.dateTypes,
+  dateValues: dataquery.dateValues
 }))
 class DataQuery extends Component {
   constructor(props) {
@@ -67,15 +69,17 @@ class DataQuery extends Component {
         notLoad: true,
       },
       callback: () => {
-        const { dataType } = this.state;
+        let { historyparams,dateTypes,dateValues } = this.props;
         if(this.props.tabType==='biao'&&dataType!=='realtime'&&dataType!=='minute'&&dataType!=='hour'&&dataType!=='day'){
           this.setState({dataType:'realtime'})
         }
         // this.children.onDataTypeChange(this.state.dataType)
         if(type){
-          this.reloaddatalist()
-        }else{
-          this.children.onDataTypeChange(this.state.dataType) 
+          this.reloaddatalist(historyparams)
+        }else{ //首次加载
+          this.setState({dataType:dateTypes,dateValue:dateValues},()=>{
+            this.children.onDataTypeChange(dateTypes) 
+          })
         }
       },
     });
@@ -188,7 +192,12 @@ class DataQuery extends Component {
         historyparams,
       },
     });
-
+    dispatch({
+      type: 'dataquery/updateState',
+      payload: {
+        dateTypes:dataType,
+      },
+    });
     this.children.onDataTypeChange(dataType);
   };
 
@@ -390,6 +399,13 @@ class DataQuery extends Component {
     this.setState({
       dateValue: dates,
     });
+
+        dispatch({
+      type: 'dataquery/updateState',
+      payload: {
+        dateValues: dates,
+      },
+    });
     historyparams = {
       ...historyparams,
       beginTime: dates[0] ? dates[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
@@ -406,8 +422,14 @@ class DataQuery extends Component {
   };
   dateCallbackDataQuery = (dates, dataType) => {
     let { historyparams, dispatch } = this.props;
-    this.setState({
-      dateValue: dates,
+    // this.setState({
+    //   dateValue: dates,
+    // });
+    dispatch({
+      type: 'dataquery/updateState',
+      payload: {
+        dateValues: dates,
+      },
     });
     historyparams = {
       ...historyparams,
@@ -459,7 +481,7 @@ class DataQuery extends Component {
 
   content=(tabType)=>{
     const { dataType, dateValue, displayType } = this.state;
-    const { pointName, entName, pollutantlist } = this.props;
+    const { pointName, entName, pollutantlist,dateValues } = this.props;
     let flag = '',
       mode = [];
     if (pollutantlist && pollutantlist[0]) {
