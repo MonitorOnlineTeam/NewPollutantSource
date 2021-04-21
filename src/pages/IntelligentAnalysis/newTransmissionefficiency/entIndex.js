@@ -387,6 +387,7 @@ export default class EntTransmissionEfficiency extends Component {
             <>
               <Form layout="inline">
                 <Form.Item>
+                <Form.Item>
                   查询时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
@@ -415,11 +416,10 @@ export default class EntTransmissionEfficiency extends Component {
                     value={this.props.assessment}
                     style={{ width: 200, marginLeft: 10 }}
                   >
-                    <Option value="1">全部考核</Option>
-                    <Option value="2">兵团考核</Option>
+                    <Option value="2">全部考核</Option>
+                    <Option value="1">国家考核</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item>
                   {/* <Select
                     allowClear
                     placeholder="请选择行政区"

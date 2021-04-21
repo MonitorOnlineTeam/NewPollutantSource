@@ -900,8 +900,8 @@ class NavigationTree extends Component {
               <Col span={5} style={this.state.exceState ? styleTrue : styleFalse} onClick={() => this.screenData(3)}><LegendIcon style={{ color: '#e94', fontSize: '20px', verticalAlign: 'middle', marginBottom: '2px' }} />异常</Col>
             </Row>
           </div>
-         {  this.props.type!='air' ?   <RegionList placeholder="请选择行政区" style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/> : null}
-        
+         {/* {  this.props.type!='air' ?   <RegionList placeholder="请选择行政区" style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/> : null} */}
+         <RegionList style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/>
          {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}

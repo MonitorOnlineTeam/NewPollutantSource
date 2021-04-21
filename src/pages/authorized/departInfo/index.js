@@ -329,7 +329,7 @@ class DepartIndex extends Component {
                   <Divider type="vertical" />
                 </>
               )}
-              <Tooltip title="数据过滤">
+              {/* <Tooltip title="数据过滤">
                 <a
                   onClick={() => {
                     this.setState(
@@ -344,8 +344,8 @@ class DepartIndex extends Component {
                 >
                   <DatabaseOutlined style={{ fontSize: 16 }} />
                 </a>
-              </Tooltip>
-              <Divider type="vertical" />
+              </Tooltip> */}
+              {/* <Divider type="vertical" /> */}
               <Tooltip title="报警关联">
                 <a
                   style={{ cursor: 'pointer' }}

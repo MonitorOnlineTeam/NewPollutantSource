@@ -51,6 +51,8 @@ import Operations from './component/Operations';
 import DiffHorizontal from './component/DiffHorizontal';
 import OfficeModal from './component/OfficeModal';
 import SiteDetailsModal from './component/SiteDetailsModal';
+import PageLoading from '@/components/PageLoading';
+
 // const plugins = [
 //   'MapType', // 地图模式（卫星）
 //   'Scale', //
@@ -104,6 +106,7 @@ let aMap = null;
   INIT_LEVEL: newHome.INIT_LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
   noticeList: global.notices,
+  infoWindowDataLoading:newHome.infoWindowDataLoading
 }))
 class NewHome extends PureComponent {
   constructor(props) {
@@ -300,13 +303,18 @@ class NewHome extends PureComponent {
   };
 
   // 获取企业和监测点
-  getAllEntAndPoint = () => {
+  getAllEntAndPoint = (type) => {
     this.props.dispatch({
       type: 'newHome/getAllEntAndPoint',
       payload: {
         PollutantTypes: this.state.allPollutantTypes.toString(),
         RegionCode: this.state.RegionCode,
       },
+      callback:res=>{
+         if(type){
+          this.onSearch(this.state.searchInputVal)
+         }
+      }
     });
   };
 
@@ -780,9 +788,12 @@ class NewHome extends PureComponent {
     }
     return (
       <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
+        {this.props.infoWindowDataLoading ? <PageLoading /> :  
+
+        <>
         <div className={styles.header}>
           <h2>
-            {infoWindowData.Abbreviation} - {currentClickObj.title}
+            {infoWindowData.entName} - {currentClickObj.title}
           </h2>
           <Button
             type="primary"
@@ -868,6 +879,7 @@ class NewHome extends PureComponent {
           </ul>
           <p>监控时间：{infoWindowData.MonitorTime}</p>
         </div>
+  </>}
       </div>
     );
   };
@@ -887,7 +899,7 @@ class NewHome extends PureComponent {
       if (filter.length > 0) {
         this.setState({
           searchResult: filter[0].position,
-          searchInputVal: undefined,
+          // searchInputVal: undefined,
         });
 
         aMap.setZoomAndCenter(aMap.getZoom() + 5, [
@@ -1169,9 +1181,9 @@ class NewHome extends PureComponent {
                     }}
                   >
                     {/* <Option value="">全部</Option> */}
-                    <Option value="服务站">服务站</Option>
+                    {/* <Option value="服务站">服务站</Option> */}
                     <Option value="1">企业</Option>
-                    <Option value="师">师</Option>
+                    {/* <Option value="师">师</Option> */}
                     <Option value="2">空气站</Option>
                   </Select>
                 )}
@@ -1259,9 +1271,13 @@ class NewHome extends PureComponent {
                  placeholder="请选择行政区"
                  selectType='2,是'
                  popupClassName='newHomeWrapCascaderPop'
-                //  onChange={val => {
-                //      this.getentbyrt(val);
-                //     }}
+                 onChange={val => {
+                   this.setState({RegionCode:val? val[val.length-1] : ''},()=>{
+                    this.getAllEntAndPoint('region');
+
+                   })
+                            
+                    }}
                  />
                  </div>
                 }
@@ -1278,21 +1294,21 @@ class NewHome extends PureComponent {
                 )
                 } */}
               </div>
-              {/* <div className={styles.legendContent}>
+               <div className={styles.legendContent}>
                 <div className={styles.legendBox}>
                   <ul>
-                    <li>
+                    {/* <li>
                       <CustomIcon type="icon-cangku" style={{ ...mapIconStyle, marginRight: 10 }} />
                       <span>服务站</span>
-                    </li>
+                    </li> */}
                     <li>
                       <EntIcon style={{ marginRight: 10 }} />
                       <span>企业</span>
                     </li>
-                    <li>
+                    {/* <li>
                       <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3, marginRight: 10 }} />{' '}
                       <span>师</span>
-                    </li>
+                    </li> */}
                     <li>
                       <WaterOffline style={{ marginRight: 10 }} /> <span>废水</span>
                     </li>
@@ -1337,7 +1353,7 @@ class NewHome extends PureComponent {
                     <span style={{ backgroundColor: '#ed9b43' }}>异常</span>
                   </div>
                 )}
-              </div> */}
+              </div> 
               <Map
                 amapkey="c5cb4ec7ca3ba4618348693dd449002d"
                 // plugins={plugins}

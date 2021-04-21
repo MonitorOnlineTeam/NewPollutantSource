@@ -90,6 +90,7 @@ export default Model.extend({
       ywc: [], wwc: [], x: [], name: ""
     },
     SparePartsStationInfo: null,
+    infoWindowDataLoading:true
   },
   effects: {
     // 获取显示级别
@@ -102,7 +103,7 @@ export default Model.extend({
       }
     },
     // 获取企业和监测点信息
-    *getAllEntAndPoint({ payload }, {
+    *getAllEntAndPoint({callback, payload }, {
       call, update, select, take, put
     }) {
       console.log("payload=", payload)
@@ -130,14 +131,15 @@ export default Model.extend({
             ...allEntAndPointList,
           ],
         })
+        callback(allEntAndPointList)
         // 获取师集合
-        yield put({
-          type: 'getConstructionCorpsList',
-        })
+        // yield put({
+        //   type: 'getConstructionCorpsList',
+        // })
         // 获取服务站集合
-        yield put({
-          type: "getOfficeList"
-        })
+        // yield put({
+        //   type: "getOfficeList"
+        // })
         // yield take('getConstructionCorpsList/@@end');
         // yield take('getOfficeList/@@end');
         // const state = yield select(state => state.newHome)
@@ -327,6 +329,7 @@ export default Model.extend({
       const startTime = payload.startTime;
       const endTime = payload.endTime;
       yield update({ startTime, endTime, START_TIME: startTime, END_TIME: endTime })
+      
       yield put({ type: "getMonitoringData" })
       yield put({ type: "getRunAndAnalysisData" })
       yield put({ type: "getAlarmResponseData" })
@@ -363,6 +366,7 @@ export default Model.extend({
     *getInfoWindowData({
       payload,
     }, { call, update, select, put }) {
+      yield update({ infoWindowDataLoading: true })
       const result = yield call(services.getPollutantList, { pollutantTypes: payload.pollutantTypes });
       if (result.IsSuccess) {
         yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
@@ -396,6 +400,7 @@ export default Model.extend({
         console.log("list=", list)
         let data = result.Datas[0] ? result.Datas[0] : [];
         yield update({
+          infoWindowDataLoading:false,
           infoWindowData: {
             list: list,
             ...data

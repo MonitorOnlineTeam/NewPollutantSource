@@ -33,7 +33,7 @@ export default Model.extend({
     EnterpriseName: '',
     pollutantType: '',
     operationpersonnel:'',
-    assessment:'1',
+    assessment:'2',
     qutletQueryPar: {
       beginTime: moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'),
       endTime: moment().subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),

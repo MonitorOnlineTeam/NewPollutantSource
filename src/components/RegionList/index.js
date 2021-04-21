@@ -61,7 +61,7 @@ export default class Index extends Component {
   
 
   componentDidMount() {
-    // this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', }, });  //获取行政区列表
+    this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', }, });  //获取行政区列表
   
    }
   render() {
@@ -75,6 +75,7 @@ export default class Index extends Component {
 //        onChange={changeRegion}
 // /> 
       <TreeSelect
+      virtual={false}
       showSearch
       allowClear
       searchPlaceholder='输入你查找的字段'
