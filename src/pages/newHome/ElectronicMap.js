@@ -50,6 +50,7 @@ import Operations from './component/Operations';
 import DiffHorizontal from './component/DiffHorizontal';
 import OfficeModal from './component/OfficeModal';
 import SiteDetailsModal from './component/SiteDetailsModal';
+import PageLoading from '@/components/PageLoading';
 // const plugins = [
 //   'MapType', // 地图模式（卫星）
 //   'Scale', //
@@ -103,6 +104,7 @@ let aMap = null;
   INIT_LEVEL: newHome.INIT_LEVEL,
   constructionCorpsList: newHome.constructionCorpsList,
   noticeList: global.notices,
+  infoWindowDataLoading:newHome.infoWindowDataLoading
 }))
 class NewHome extends PureComponent {
   constructor(props) {
@@ -467,7 +469,7 @@ class NewHome extends PureComponent {
             this.getEntIcon(extData)
           ) : (
               <div
-                onClick={() => {
+                onClick={() => {  
                   this.setState(
                     {
                       currentClickObj: extData.position,
@@ -778,10 +780,13 @@ class NewHome extends PureComponent {
       imgName = `/upload/${infoWindowData.photo[0]}`;
     }
     return (
-      <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
+    <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
+        {this.props.infoWindowDataLoading ? <PageLoading /> :  
+
+        <>
         <div className={styles.header}>
           <h2>
-            {infoWindowData.Abbreviation} - {currentClickObj.title}
+            {infoWindowData.entName} - {currentClickObj.title}
           </h2>
           <Button
             type="primary"
@@ -806,6 +811,7 @@ class NewHome extends PureComponent {
               )}
           </p>
         </div>
+       
         <div className={styles.desc}>
           <div className={styles['desc-l']}>
             <h3>站点信息</h3>
@@ -867,6 +873,9 @@ class NewHome extends PureComponent {
           </ul>
           <p>监控时间：{infoWindowData.MonitorTime}</p>
         </div>
+        </>
+        }
+      
       </div>
     );
   };

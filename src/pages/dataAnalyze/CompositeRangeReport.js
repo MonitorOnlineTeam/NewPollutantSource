@@ -38,7 +38,7 @@ class CompositeRangeReport extends Component {
           dataIndex: 'StationName',
           key: 'StationName',
           width: 90,
-          align:"center"
+          // align:"center"
         },
         {
           title: '监测点名称',

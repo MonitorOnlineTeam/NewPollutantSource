@@ -233,10 +233,10 @@ class SdlMap extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.path !== nextProps.path) {
-      nextProps.path && this.setState({
+      nextProps&&nextProps.path && this.setState({
         path: nextProps.path,
         polygon: this.props.path,
-        mapCenter: nextProps.path[0][0][0],
+        mapCenter: nextProps.path.length>0&&nextProps.path[0]&&nextProps.path[0][0]&&nextProps.path[0][0][0],
       }, () => {
         // thisMap.setFitView()
       })
