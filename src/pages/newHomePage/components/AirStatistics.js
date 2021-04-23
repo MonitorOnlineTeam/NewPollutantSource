@@ -192,9 +192,9 @@ export default class Index extends Component {
     );
   }
   flow=()=>{
-    this.setState({
-      flowVisible:true
-    })
+    // this.setState({
+    //   flowVisible:true
+    // })
   }
   tabCallback = (value) => {
   let time = value == 'HourData'? moment().add('hour',-1).format("YYYY-MM-DD HH:00:00") : moment().add('day',-1).format("YYYY-MM-DD 00:00:00")

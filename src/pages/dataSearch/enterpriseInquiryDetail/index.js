@@ -149,7 +149,15 @@ class index extends PureComponent {
             </Select>
             <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
             <Button  style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-            <Button onClick={() => { this.props.history.go(-1); }} ><RollbackOutlined />返回</Button>
+            <Button onClick={() => {
+                this.props.dispatch({
+                    type:'enterpriseMonitoringModel/updateState',
+                    payload: {
+                        cityRegionCode:this.props.match.params.RegionCode
+                    }
+                })
+                 this.props.history.go(-1);
+             }} ><RollbackOutlined />返回</Button>
         </>;
     }
     onChange =(PageIndex, PageSize)=>{

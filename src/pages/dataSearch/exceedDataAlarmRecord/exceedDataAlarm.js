@@ -4,7 +4,7 @@
  * 创建时间：2020.10.19
  */
 import React, { PureComponent, Fragment } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import {
     Button,
     Card,
@@ -177,7 +177,6 @@ class index extends PureComponent {
     // 导出
     exportReport = () => {
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,exportRegion,operationpersonnel} = this.state
-        console.log
         if(exportRegion != '1')
         {
             this.props.dispatch({
@@ -191,6 +190,7 @@ class index extends PureComponent {
                     EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                     PollutantCodeList: pollutantCodeList,
                     operationpersonnel:operationpersonnel,
+                    regionLevel:this.state.regionLevel
                 }
             })
         }
@@ -206,6 +206,7 @@ class index extends PureComponent {
                     EndTime: moment(time[1]).format("YYYY-MM-DD HH:mm:ss"),
                     PollutantCodeList: pollutantCodeList,
                     operationpersonnel:operationpersonnel,
+                    regionLevel:this.state.regionLevel
                 }
             })
         }
@@ -213,7 +214,7 @@ class index extends PureComponent {
     }
 
     //查询数据
-    getChartAndTableData =()=>{
+    getChartAndTableData =(regionLevel)=>{
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         
         this.props.dispatch({
@@ -229,10 +230,12 @@ class index extends PureComponent {
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
                 operationpersonnel:operationpersonnel,
+                regionLevel:regionLevel
             }
         })
         this.setState({
-            entType:outletValue
+            entType:outletValue,
+            regionLevel:regionLevel
         })
 
     }
@@ -275,7 +278,7 @@ class index extends PureComponent {
         this.childrenHand = ref;
       }
     cardTitle = () => {
-        const { time,regionValue} = this.state;
+        const { time,regionValue,regionLevel} = this.state;
         const {pollutantCodeList} = this.props
         return <>
             {/* <Select
@@ -301,7 +304,7 @@ class index extends PureComponent {
                 }}>
                 {this.children()}
             </Select> */}
-          <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+         {!regionLevel&& <><RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })
@@ -366,24 +369,9 @@ class index extends PureComponent {
                         time: dates
                     })
                 }
-            } />
+            } /></>}
             <div style={{ marginTop: 10 }}>
-            {/* <Select
-                allowClear
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                placeholder="运维状态"
-                maxTagCount={2}
-                maxTagTextLength={5}
-                maxTagPlaceholder="..."
-                onChange={(value) => {
-                    this.setState({
-                        operationpersonnel: value,
-                    })
-                }}>
-                <Option value="1">已设置运维人员</Option>
-                <Option value="2">未设置运维人员</Option>
-            </Select> */}
-                <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
+            {!regionLevel&&<>   <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                 {
                     pollutantCodeList.map(poll=>
                     <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
@@ -391,9 +379,20 @@ class index extends PureComponent {
                 }
                 </Checkbox.Group>
 
-                <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+               <Button type="primary" style={{ marginRight: 10 }} onClick={()=>{this.getChartAndTableData()}}>查询</Button></>}
             <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-                <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span>
+            {regionLevel&&<Button  onClick={() => {
+                this.setState({regionValue:''},()=>{
+                    this.props.dispatch({
+                        type:'exceedDataAlarmModel/updateState',
+                        payload: {
+                            cityRegionCode:''
+                        }
+                    })
+                    this.getChartAndTableData()
+                })
+            }}> <RollbackOutlined />返回 </Button>}
+            {!regionLevel&& <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span>}
             </div>
         </>;
     }
@@ -624,8 +623,12 @@ class index extends PureComponent {
 
     //添加标签
     paneAdd = (text,region)=>{
-       this.setState({cityRegion:region})
-        return;
+
+        if(!this.state.regionValue){
+            this.setState({regionValue:region},()=>{
+                this.getChartAndTableData(2)
+               })
+        }else{
         const {column,AlarmDetailList,loadingRateDetail} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
@@ -794,6 +797,7 @@ class index extends PureComponent {
                 }
             }
         })
+     }
     }
     //删除标签
     remove = targetKey => {

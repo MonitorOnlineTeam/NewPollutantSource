@@ -27,7 +27,8 @@ export default Model.extend({
     AlarmDetailList:[],
     ManagementDetail:[],
     pollutantCodeList:[],
-    AlarmDealTypeList:[]
+    AlarmDealTypeList:[],
+    cityRegionCode:''
   },
   subscriptions: {},
   effects: {
@@ -59,6 +60,7 @@ export default Model.extend({
           PageIndex: payload.PageIndex,
           PollutantCodeList: payload.PollutantCodeList,
           OperationPersonnel: payload.operationpersonnel,
+          regionLevel:payload.regionLevel&&payload.regionLevel
       }
     const result = yield call(GetAlarmVerifyRate,body,null)
     if(result.IsSuccess)
@@ -182,6 +184,7 @@ export default Model.extend({
           EndTime: payload.EndTime,
           PollutantCodeList: payload.PollutantCodeList,
           OperationPersonnel: payload.operationpersonnel,
+          regionLevel:payload.regionLevel
       }
     const result = yield call(ExportAlarmVerifyRate,body,null)
     if(result.IsSuccess)
@@ -200,6 +203,7 @@ export default Model.extend({
             EndTime: payload.EndTime,
             PollutantCodeList: payload.PollutantCodeList,
             OperationPersonnel: payload.operationpersonnel,
+            regionLevel:payload.regionLevel
         }
         const result = yield call(ExportAlarmVerifyRateDetail, body, null)
         if (result.IsSuccess) {
@@ -219,6 +223,7 @@ export default Model.extend({
           EntCode:payload.EntCode,
           VerifyStatus:payload.VerifyStatus,
           OperationPersonnel: payload.operationpersonnel,
+         
       }
       const result = yield call(ExportAlarmVerifyDetail, body, null)
       if (result.IsSuccess) {

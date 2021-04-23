@@ -22,7 +22,9 @@ export default Model.extend({
         PageIndex:1,
         total:0,
         EntOrPointDetail:[],
-        priseList:[]
+        priseList:[],
+        cityRegionCode:'',
+        cityRegionCodes:'',
     },
     subscriptions: {},
     effects: { 
@@ -43,6 +45,7 @@ export default Model.extend({
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
                 OperationPersonnel:payload.operationpersonnel,
+                ...payload
                 //PageSize: payload.PageSize,
                 //PageIndex: payload.PageIndex
             }
@@ -195,6 +198,7 @@ export default Model.extend({
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
                 OperationPersonnel:payload.operationpersonnel,
+                ...payload
             }
             const result = yield call(ExportEntSummary,body,null)
             if(result.IsSuccess)

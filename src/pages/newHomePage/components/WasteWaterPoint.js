@@ -213,17 +213,17 @@ export default class Index extends Component {
   }
   workOrder = () => {
 
-    // const { pollutantType } = this.state;
+    const { pollutantType } = this.state;
 
-    // if (pollutantType == '5') {
-    //   this.setState({
-    //     airWorkOrderVisible: true
-    //   })
-    // } else {
-    //   this.setState({
-    //     orderModalVisible: true
-    //   })
-    // }
+    if (pollutantType == '5') {
+      this.setState({
+        airWorkOrderVisible: true
+      })
+    } else {
+      this.setState({
+        orderModalVisible: true
+      })
+    }
 
   }
   // 监测点状态点击事件

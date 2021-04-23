@@ -61,7 +61,8 @@ export default class Index extends Component {
   
 
   componentDidMount() {
-    this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode:this.props.paraCode }, });  //获取行政区列表
+    
+    this.props.paraCode&&this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode:this.props.paraCode==='all'? '': this.props.paraCode}, });  //获取行政区列表
   
    }
   render() {

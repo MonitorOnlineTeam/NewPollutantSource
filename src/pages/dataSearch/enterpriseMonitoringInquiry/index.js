@@ -4,7 +4,7 @@
  * 创建时间：2020.10.12
  */
 import React, { PureComponent, Fragment } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import {
     Button,
     Card,
@@ -51,7 +51,10 @@ const pageUrl = {
     EntOrPointDetail: enterpriseMonitoringModel.EntOrPointDetail,
     total: enterpriseMonitoringModel.total,
     PageSize: enterpriseMonitoringModel.PageSize,
-    PageIndex: enterpriseMonitoringModel.PageIndex
+    PageIndex: enterpriseMonitoringModel.PageIndex,
+    cityRegionCode:enterpriseMonitoringModel.cityRegionCode,
+    cityRegionCodes:enterpriseMonitoringModel.cityRegionCodes,
+
 }))
 class index extends PureComponent {
     constructor(props) {
@@ -68,11 +71,21 @@ class index extends PureComponent {
             regionCode:'',
             hasCode:'',
             operationpersonnel:'',
+            regionLevel:''
         };
     }
 
     componentDidMount() {
-        this.initData();
+        if(this.props.cityRegionCode){//从三级页面跳转而来  需要跳转到第二个页面
+           this.setState({
+               regionValue:this.props.cityRegionCodes,
+               regionLevel:2
+           },()=>{
+            this.initData();
+           })
+        }else{
+            this.initData();
+        }
     }
 
     initData = () => {
@@ -81,7 +94,7 @@ class index extends PureComponent {
             type: pageUrl.getRegions,
             payload: {
                 PointMark: '2',
-                RegionCode: ''
+                RegionCode: this.state.regionValue
             },
         });
         //获取关注度列表
@@ -92,9 +105,10 @@ class index extends PureComponent {
         this.props.dispatch({
             type: pageUrl.GetEntSummary,
             payload: {
-                RegionCode: '',
+                RegionCode: this.state.regionValue,
                 AttentionCode: '',
                 PollutantType: '',
+                regionLevel:this.state.regionLevel
                 //PageSize: 25,
                 //PageIndex: 1
             }
@@ -111,6 +125,7 @@ class index extends PureComponent {
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
                 operationpersonnel:this.state.operationpersonnel,
+                regionLevel:this.state.regionLevel
             }
         })
     }
@@ -149,8 +164,8 @@ class index extends PureComponent {
 
 
     // 获取图表及表格数据
-    getChartAndTableData = () => {
-     debugger
+    getChartAndTableData = (regionLevel) => {
+    //  debugger
         this.props.dispatch({
             type: pageUrl.GetEntSummary,
             payload: {
@@ -158,10 +173,12 @@ class index extends PureComponent {
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
                 operationpersonnel: this.state.operationpersonnel,
+                regionLevel:regionLevel
                 //PageSize: 25,
                 //PageIndex: 1
             }
         })
+        this.setState({regionLevel:regionLevel})
     }
 
 
@@ -196,7 +213,7 @@ class index extends PureComponent {
     }
     cardTitle = () => {
         //const { pollutantValue,} = this.state;
-        const { regionValue } = this.state;
+        const { regionValue,regionLevel } = this.state;
         return <>
             {/* <Select
                 allowClear
@@ -221,7 +238,7 @@ class index extends PureComponent {
                 }}>
                 {this.children()}
             </Select> */}
-             <RegionList changeRegion={(value) => {
+            {!this.state.regionLevel&& <><RegionList changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })
@@ -271,8 +288,13 @@ class index extends PureComponent {
                  <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
             </Select> */}
-            <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+            <Button type="primary" style={{ marginRight: 10 }} onClick={()=>{this.getChartAndTableData()}}>查询</Button></>}
             <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+            {regionLevel&&<Button  onClick={() => {
+                this.setState({regionValue:''},()=>{
+                    this.getChartAndTableData()
+                })
+            }}> <RollbackOutlined />返回 </Button>}
         </>;
     }
 
@@ -352,7 +374,23 @@ class index extends PureComponent {
                 key: 'reginName',
                 render: (text, record) => {
                     return <a onClick={
-                        () => this.props.dispatch(routerRedux.push(`/dataSearch/enterpriseInquiryDetail/${record.regionCode}`))
+                        () => {
+                            if(this.state.regionLevel){
+                                this.props.dispatch(routerRedux.push(`/dataSearch/enterpriseInquiryDetail/${record.regionCode}`) )
+
+                            }else{
+                                this.props.dispatch({
+                                    type:'enterpriseMonitoringModel/updateState',
+                                    payload: {
+                                        cityRegionCodes:record.regionCode
+                                    }
+                                })
+                                this.setState({regionValue:record.regionCode},()=>{
+                                    this.getChartAndTableData(2)
+                                })
+
+                            }
+                        }
                     } > {text} </a>
                 }
             },

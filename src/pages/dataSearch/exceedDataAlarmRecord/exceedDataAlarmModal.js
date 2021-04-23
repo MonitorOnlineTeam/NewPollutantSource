@@ -4,7 +4,7 @@
  * 创建时间：2020.10.19
  */
 import React, { PureComponent, Fragment } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import {
     Button,
     Card,
@@ -194,6 +194,7 @@ class exceedDataAlarmModal extends PureComponent {
                     EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
                     PollutantCodeList: pollutantCodeList,
                     operationpersonnel: operationpersonnel,
+                    regionLevel:this.state.regionLevel
                 }
             })
         }
@@ -209,6 +210,7 @@ class exceedDataAlarmModal extends PureComponent {
                     EndTime: time[1].format('YYYY-MM-DD HH:mm:ss'),
                     PollutantCodeList: pollutantCodeList,
                     operationpersonnel: operationpersonnel,
+                    regionLevel:this.state.regionLevel
                 }
             })
         }
@@ -216,7 +218,7 @@ class exceedDataAlarmModal extends PureComponent {
     }
 
     //查询数据
-    getChartAndTableData =()=>{
+    getChartAndTableData =(regionLevel)=>{
         const {regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         
         this.props.dispatch({
@@ -232,10 +234,12 @@ class exceedDataAlarmModal extends PureComponent {
                 PageSize: 20,
                 PageIndex: 1,
                 PollutantCodeList: pollutantCodeList,
+                regionLevel:regionLevel
             }
         })
         this.setState({
-            entType:outletValue
+            entType:outletValue,
+            regionLevel:regionLevel
         })
 
     }
@@ -278,7 +282,7 @@ class exceedDataAlarmModal extends PureComponent {
         this.childrenHand = ref;
       }
     cardTitle = () => {
-        const { time,regionValue} = this.state;
+        const { time,regionValue,regionLevel} = this.state;
         const {pollutantCodeList,dateTime,alarmType} = this.props
         return <>
             {/* <Select
@@ -304,7 +308,7 @@ class exceedDataAlarmModal extends PureComponent {
                 }}>
                 {this.children()}
             </Select> */}
-            <RegionList   style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+          {!regionLevel&&<>  <RegionList   style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })
@@ -369,8 +373,14 @@ class exceedDataAlarmModal extends PureComponent {
                     })
                 }
             } />
-            <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+            <Button type="primary" style={{ marginRight: 10 }} onClick={()=>{this.getChartAndTableData()}}>查询</Button></>}
+
             <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+            {regionLevel&&<Button  onClick={() => {
+                this.setState({regionValue:''},()=>{
+                    this.getChartAndTableData()
+                })
+            }}> <RollbackOutlined />返回 </Button>}
             <div style={{ marginTop: 10 }}>
             {/* <Select
                 allowClear
@@ -387,14 +397,14 @@ class exceedDataAlarmModal extends PureComponent {
                  <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
             </Select> */}
-                <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
+               {!regionLevel&&<>  <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                 {
                     pollutantCodeList.map(poll=>
                     <Checkbox value={poll.PollutantCode}>{poll.PollutantName}</Checkbox>
                     )
                 }
                 </Checkbox.Group>
-                <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span>
+                <span style={{ fontSize: 14, color: 'red' }}>已核实指运维人员已核实的超标报警</span></>}
             </div>
         </>;
     }
@@ -628,6 +638,11 @@ class exceedDataAlarmModal extends PureComponent {
 
     //添加标签
     paneAdd = (text,region)=>{
+        if(!this.state.regionValue){
+            this.setState({regionValue:region},()=>{
+                this.getChartAndTableData(2)
+               })
+        }else{
         const {column,AlarmDetailList,loadingRateDetail} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;
@@ -797,6 +812,7 @@ class exceedDataAlarmModal extends PureComponent {
                 }
             }
         })
+     }
     }
     //删除标签
     remove = targetKey => {

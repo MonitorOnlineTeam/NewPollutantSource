@@ -4,7 +4,7 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -81,6 +81,7 @@ export default class PointVerifyLst extends Component {
         title: <span>行政区</span>,
         dataIndex: 'regionName',
         key: 'regionName',
+        width: 200,
         align: 'center',
       },
       {
@@ -176,7 +177,7 @@ export default class PointVerifyLst extends Component {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode },
+      payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode,regionLevel:'' },
     });
   };
 
@@ -259,6 +260,7 @@ export default class PointVerifyLst extends Component {
                     this.props.onBack() 
                   }}
                 >
+                  <RollbackOutlined />
                   返回
                 </Button>
               </Form.Item>

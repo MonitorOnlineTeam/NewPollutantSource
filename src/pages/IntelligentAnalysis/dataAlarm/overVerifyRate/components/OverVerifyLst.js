@@ -4,7 +4,7 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -107,14 +107,21 @@ export default class OverVerifyLst extends Component {
             dataIndex: 'regionName',
             key: 'regionName',
             align: 'center',
-
+            width: 200,
             render: (text, record) => {
+              const { level } = this.props;
+            
               return (
                 <Link
-                  to={{
+                  to={ level==2?
+                    {
                     pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                  }:
+                  {
+                    pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
                     query: { regionCode: record.regionCode },
-                  }}
+                  }
+                }
                 >
                   {text}
                 </Link>
@@ -125,14 +132,12 @@ export default class OverVerifyLst extends Component {
             title: <span>{'数据超标报警企业数'}</span>,
             dataIndex: 'entCount',
             key: 'entCount',
-
             align: 'center',
           },
           {
             title: <span>数据超标报警监测点数</span>,
             dataIndex: 'pointCount',
             key: 'pointCount',
-            width: 210,
             align: 'center',
           },
         ];
@@ -200,13 +205,15 @@ export default class OverVerifyLst extends Component {
     });
   };
   initData = () => {
-    const { dispatch, location, Atmosphere, type } = this.props;
+    const { dispatch, location, Atmosphere, type,level,query } = this.props;
+   
+    
+    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: level==2?query&&query.regionCode : '', PointMark: '2' } }); //获取行政区列表
 
-    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
-
-    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
+    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: level==2?query&&query.regionCode : '' } }); //获取关注列表
     this.updateQueryState({
-      RegionCode:  '',
+      RegionCode: level==2?query&&query.regionCode : '',
+      regionLevel: level,
     });
     setTimeout(() => {
       this.getTableData();
@@ -447,6 +454,7 @@ export default class OverVerifyLst extends Component {
         PollutantType,
         OperationPersonnel
       },
+      level,
       type,
     } = this.props;
     const { checkedValues } = this.state;
@@ -457,6 +465,7 @@ export default class OverVerifyLst extends Component {
         title={
           <Form layout="inline">
             <Row>
+            {!level?<>
               <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                 <Form.Item>
                   日期查询：
@@ -552,6 +561,21 @@ export default class OverVerifyLst extends Component {
                   </Button>
                 </Form.Item>
               </Col>
+              </>:
+                <Form.Item>
+                <Button
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  onClick={this.template}
+                  loading={exloading}
+                >
+                  导出
+                </Button>
+                <Button onClick={() => {
+                 history.go(-1);
+             }} ><RollbackOutlined />返回</Button>
+              </Form.Item>
+                  }
             </Row>
           </Form>
         }

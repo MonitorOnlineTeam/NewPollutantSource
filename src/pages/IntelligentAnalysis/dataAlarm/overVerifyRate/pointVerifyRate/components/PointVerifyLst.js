@@ -80,6 +80,7 @@ export default class PointVerifyLst extends Component {
         title: <span>行政区</span>,
         dataIndex: 'regionName',
         key: 'regionName',
+        width: 200,
         align: 'center',
       },
       {

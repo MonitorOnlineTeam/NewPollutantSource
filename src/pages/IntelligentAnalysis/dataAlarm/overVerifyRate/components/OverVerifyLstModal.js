@@ -4,7 +4,7 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -110,14 +110,28 @@ export default class OverVerifyLstModal extends Component {
             dataIndex: 'regionName',
             key: 'regionName',
             align: 'center',
-
+            width: 200,
             render: (text, record) => {
               let RegionCode = text =='全部合计'? '': record.regionCode;
               return <a onClick={()=>{
-                this.setState({
-                  showDetails: true,
+
+                if(!this.state.regionLevel){ //省进入市
+                  this.setState({
+                  regionLevel: 2,
                   RegionCode: RegionCode
+                },()=>{
+                  this.initData();
                 })
+              }else{
+                this.setState({
+                  regionLevel: '',
+                  RegionCode: RegionCode
+                },()=>{
+                  this.setState({
+                     showDetails:true
+                  })
+                })
+              }
               }}>
                 {text}
               </a>
@@ -203,14 +217,16 @@ export default class OverVerifyLstModal extends Component {
   };
   initData = () => {
     const { dispatch, location, Atmosphere, type } = this.props;
+   
+    const {RegionCode,regionLevel } = this.state;
+    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: RegionCode, PointMark: '2' } }); //获取行政区列表
 
-    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
-
-    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
+    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: RegionCode} }); //获取关注列表
     this.updateQueryState({
       PollutantType: '1',
       OperationPersonnel:'',
-      RegionCode:''
+      RegionCode:RegionCode,
+      regionLevel:regionLevel
     });
     setTimeout(() => {
       this.getTableData();
@@ -458,14 +474,14 @@ export default class OverVerifyLstModal extends Component {
       },
       type,
     } = this.props;
-    const { checkedValues } = this.state;
+    const { checkedValues,regionLevel } = this.state;
     return (
       <Card
         bordered={false}
         title={
           <Form layout="inline">
             <Row>
-              <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+           {!regionLevel?<><Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
                 <Form.Item>
                   日期查询：
                   <RangePicker_
@@ -499,7 +515,7 @@ export default class OverVerifyLstModal extends Component {
                     <Option value="">全部</Option>
                     {this.regchildren()}
                   </Select> */}
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+               <RegionList  changeRegion={this.changeRegion} RegionCode={RegionCode}/>
 
                 </Form.Item>
                 <Form.Item label="企业类型">
@@ -560,6 +576,27 @@ export default class OverVerifyLstModal extends Component {
                   </Button>
                 </Form.Item>
               </Col>
+              </>
+              :
+              <Form.Item>
+              <Button
+                style={{ margin: '0 5px' }}
+                icon={<ExportOutlined />}
+                onClick={this.template}
+                loading={exloading}
+              >
+                导出
+              </Button>
+              <Button onClick={() => {
+                 this.setState({
+                  RegionCode:'',
+                   regionLevel:''
+                 },()=>{
+                   this.initData();
+                 })
+             }} ><RollbackOutlined />返回</Button>
+            </Form.Item>
+                  }
             </Row>
           </Form>
         }
@@ -598,10 +635,11 @@ export default class OverVerifyLstModal extends Component {
               !this.state.showDetails && this.showModal()
             }
             {
-              this.state.showDetails && <PointVerifyLst  RegionCode= {this.state.RegionCode }  onBack={() => {
+              this.state.showDetails && <PointVerifyLst   RegionCode= {this.state.RegionCode }  onBack={() => {
                 this.setState({
                   showDetails: false,
-                  RegionCode: undefined
+                  RegionCode: this.state.RegionCodeined,
+                  regionLevel:2,
                 })
               }} />
             }

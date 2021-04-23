@@ -232,19 +232,19 @@ export default class Index extends PureComponent {
                 className="echarts-for-echarts"
                 theme="my_theme"
                 style={{ width: '100%', height: 120 }}
-                // onEvents={{
-                //   click: (event) => {
-                //     let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
-                //     // 响应率
+                onEvents={{
+                  click: (event) => {
+                    let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+                    // 响应率
 
-                //     this.setState({
-                //       TBeginTime: time[0],
-                //       TEndTime: time[1],
-                //       OverVisible: true,
-                //     })
+                    this.setState({
+                      TBeginTime: time[0],
+                      TEndTime: time[1],
+                      OverVisible: true,
+                    })
 
-                //   }
-                // }}
+                  }
+                }}
               />
               <div>
                 <div className={styles.title1}>核实率</div>
@@ -256,16 +256,16 @@ export default class Index extends PureComponent {
                 option={this.getChartData(2)}
                 className="echarts-for-echarts"
                 theme="my_theme"
-                // onEvents={{
-                //   click: (event) => {
-                //     let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
-                //     // 响应率
-                //     this.setState({
-                //       ECXYLTime: time,
-                //       visible_WJQ: true
-                //     })
-                //   }
-                // }}
+                onEvents={{
+                  click: (event) => {
+                    let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+                    // 响应率
+                    this.setState({
+                      ECXYLTime: time,
+                      visible_WJQ: true
+                    })
+                  }
+                }}
                 style={{ width: '100%', height: 120 }}
               />
               <div>
@@ -279,19 +279,19 @@ export default class Index extends PureComponent {
                   option={this.getChartData(3)}
                   className="echarts-for-echarts"
                   theme="my_theme"
-                  // onEvents={{
-                  //   click: (event) => {
-                  //     let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+                  onEvents={{
+                    click: (event) => {
+                      let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
 
-                  //     // 响应率
-                  //     this.setState({
-                  //       missDataTime: time,
+                      // 响应率
+                      this.setState({
+                        missDataTime: time,
 
-                  //     }, () => {
-                  //       this.setState({ popoverVisible: true, })
-                  //     })
-                  //   }
-                  // }}
+                      }, () => {
+                        this.setState({ popoverVisible: true, })
+                      })
+                    }
+                  }}
                   style={{ width: '100%', height: 122 }}
                 />
                 <div>

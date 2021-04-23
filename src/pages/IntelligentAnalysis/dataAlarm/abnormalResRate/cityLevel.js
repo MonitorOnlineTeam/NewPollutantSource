@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -84,9 +84,8 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.RegionCode;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
-            // this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-            router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode}`)
-              // router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
+            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+              router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
         }
       },
@@ -194,19 +193,22 @@ class index extends PureComponent {
   }
 
   componentDidMount() {
+
     // 获取行政区列表
+   let { location:{query}} = this.props
+     console.log(this.props)
     this.props.dispatch({
       type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2', }
+      payload: { RegionCode: query&&query.regionCode, PointMark: '2', }
     });
 
     // 获取关注列表
     this.props.dispatch({
       type: 'abnormalResRate/getAttentionDegreeList',
-      payload: { RegionCode: '' }
+      payload: { RegionCode: query&&query.regionCode }
     });
 
-    this.getTableDataSource();
+    this.getTableDataSource(query&&query.regionCode);
   }
 
 
@@ -220,8 +222,10 @@ class index extends PureComponent {
   }
 
   // 获取异常数据
-  getTableDataSource = () => {
-    let values = this.props.form.getFieldsValue();
+  getTableDataSource = (regionCode) => {
+    // let values = this.props.form.getFieldsValue();
+
+    let values = this.props.searchForm;
     console.log("values=", values)
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
@@ -236,42 +240,32 @@ class index extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode ? values.RegionCode:'',
+        RegionCode: regionCode ? regionCode:'',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel:this.state.operationpersonnel,
+        regionLevel:2
       }
     })
     this.setState({
       queryCondition: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode ? values.RegionCode:'',
+        RegionCode: regionCode ? regionCode:'',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel:this.state.operationpersonnel
       }
-    })
-    this.props.dispatch({
-      type: "abnormalResRate/updateState",
-      payload: {
-        searchForm:{ AttentionCode: values.AttentionCode,
-        PollutantType: values.PollutantType,
-        // RegionCode: values.RegionCode ? values.RegionCode:'',
-        dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
-      }
-    }
     })
   }
 
   // 导出异常数据
   onExport = () => {
-    let values = this.props.form.getFieldsValue();
+    // let values = this.props.form.getFieldsValue();
+    let { location:{query}} = this.props
+    let values = this.props.searchForm;
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
@@ -285,11 +279,12 @@ class index extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode? values.RegionCode:'',
+        RegionCode: query.regionCode? query.regionCode:'',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel:this.state.operationpersonnel,
+        regionLevel:2
       }
     })
   }
@@ -330,7 +325,7 @@ class index extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
-              <FormItem label="数据类型">
+              {/* <FormItem label="数据类型">
                 {getFieldDecorator('dataType', {
                   initialValue: 'HourData',
                 })(
@@ -344,7 +339,7 @@ class index extends PureComponent {
                     <Option key='1' value='DayData'> 日数据</Option>
                   </Select>
                 )}
-              </FormItem>
+              </FormItem> */}
               {/* <Form.Item label="运维状态">
               {
                   <Select
@@ -365,63 +360,9 @@ class index extends PureComponent {
                   </Select>
                 }
               </Form.Item> */}
-              <FormItem label="日期查询">
-                <RangePicker_ allowClear={false} onRef={(ref) => {
-                  this.rangePicker = ref;
-                }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={exceptionTime}
-                  callback={(dates, dataType) => this.dateChange(dates, dataType)} />
-              </FormItem>
-              <FormItem label="行政区">
-                {getFieldDecorator('RegionCode', {
-                })(
-                  // <Select style={{ width: 180 }} allowClear placeholder="请选择行政区">
-                  //   {
-                  //     _regionList.map(item => {
-                  //       return <Option key={item.key} value={item.value}>
-                  //         {item.title}
-                  //       </Option>
-                  //     })
-                  //   }
-                  // </Select>,
-                  <RegionList changeRegion={''} RegionCode={''}/>
-                )}
-              </FormItem>
-            </Row>
-            <Row>
-              <FormItem label="关注程度">
-                {getFieldDecorator('AttentionCode', {
-                  initialValue: undefined,
-                })(
-                  <Select allowClear style={{ width: 180 }} placeholder="请选择关注程度">
-                    {
-                      attentionList.map(item => {
-                        return <Option key={item.AttentionCode} value={item.AttentionCode}>
-                          {item.AttentionName}
-                        </Option>
-                      })
-                    }
-                  </Select>,
-                )}
-              </FormItem>
-            
-              <FormItem label="企业类型">
-                {getFieldDecorator('PollutantType', {
-                  initialValue: '1',
-                })(
-                  <Select style={{ width: 180 }} placeholder="请选择企业类型" onChange={(value) => {
-                    this.setState({ pollutantType: value }, () => {
-                    })
-                  }}>
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                )}
-              </FormItem>
+
 
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getTableDataSource}>
-                  查询
-                      </Button>
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -429,8 +370,10 @@ class index extends PureComponent {
                   onClick={this.onExport}
                 >
                   导出
-                      </Button>
-                <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span>
+                </Button>
+              <Button onClick={() => {
+                 this.props.history.go(-1);
+             }} ><RollbackOutlined />返回</Button>
               </div>
             </Row>
           </Form>

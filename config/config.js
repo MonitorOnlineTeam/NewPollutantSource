@@ -1467,9 +1467,19 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/overVerifyRate',
                     },
                     {
+                      //超标数据核实率  城市级别
+                      path: '/Intelligentanalysis/dataAlarm/overVerifyRate/cityLevel',
+                      component: './Intelligentanalysis/dataAlarm/overVerifyRate',
+                    },
+                    {
                       // 数据异常报警响应率
                       path: '/Intelligentanalysis/dataAlarm/abnormal',
                       component: './IntelligentAnalysis/dataAlarm/abnormalResRate',
+                    },
+                    {
+                      // 数据异常报警响应率 城市级别
+                      path: '/Intelligentanalysis/dataAlarm/abnormal/cityLevel',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/cityLevel',
                     },
                     {
                       // 数据异常报警响应率
