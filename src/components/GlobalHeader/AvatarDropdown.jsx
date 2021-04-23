@@ -3,7 +3,6 @@ import { Avatar, Menu, Spin, Modal } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import Cookie from 'js-cookie';

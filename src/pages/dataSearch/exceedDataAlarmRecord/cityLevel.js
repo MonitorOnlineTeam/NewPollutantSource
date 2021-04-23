@@ -624,8 +624,7 @@ class index extends PureComponent {
 
     //添加标签
     paneAdd = (text,region)=>{
-       this.setState({cityRegion:region})
-        return;
+
         const {column,AlarmDetailList,loadingRateDetail} = this.props
         const {panes,regionValue,attentionValue,outletValue,dataType,time,pollutantCodeList,operationpersonnel} = this.state
         const activeKey = `${region}newTab${this.newTabIndex++}`;

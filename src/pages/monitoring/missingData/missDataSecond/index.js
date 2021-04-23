@@ -169,8 +169,8 @@ debugger;
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,type } = this.props;
-
+    const { dispatch, location,Atmosphere,type,location:{query:{regionCode}} } = this.props;
+   
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
    
 
@@ -185,15 +185,15 @@ debugger;
       // PollutantType:'',
       // DataType:'HourData',
       // EntType:'',
-      RegionCode:location.query.regionCode,
+      RegionCode:regionCode,
       Status:'',
      });
      
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+    //  dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: regionCode },  });//获取企业列表
  
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    //  dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: regionCode },  });//获取关注列表
   
 
     setTimeout(() => {

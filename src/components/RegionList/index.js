@@ -6,7 +6,7 @@ import { Select,TreeSelect} from 'antd';
 
 const { TreeNode } = TreeSelect;
 
-import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
+// import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 
 //行政区列表组件
 @connect(({  autoForm }) => ({
@@ -61,7 +61,7 @@ export default class Index extends Component {
   
 
   componentDidMount() {
-    this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', }, });  //获取行政区列表
+    this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode:this.props.paraCode }, });  //获取行政区列表
   
    }
   render() {

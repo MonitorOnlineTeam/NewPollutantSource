@@ -36,3 +36,15 @@ export async function exportExceptionAlarmListForEnt(params) {
   return result;
 }
 
+
+// 获取table数据 - 城市一级
+export async function getExceptionAlarmListForCity(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionAlarmListForCity`, params);
+  return result;
+}
+
+// 导出table数据 - 城市一级 
+export async function exportExceptionAlarmListForCity(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmListForCity`, params);
+  return result;
+}

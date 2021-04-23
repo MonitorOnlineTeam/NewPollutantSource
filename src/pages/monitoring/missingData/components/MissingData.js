@@ -4,7 +4,7 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -75,10 +75,16 @@ export default class EntTransmissionEfficiency extends Component {
           //          {text}
           //      </Link>
            return <a href='javascript:;' onClick={
-             ()=>{ 
-               sessionStorage.setItem("missDataDetailPageIndex",1)
-               sessionStorage.setItem("missDataDetailPageSize",20)
-               this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}));
+             ()=>{ //市级跳转
+               if(this.props.level){
+                sessionStorage.setItem("missDataDetailPageIndex",1)
+                sessionStorage.setItem("missDataDetailPageSize",20)
+                this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/missDataSecond',query: {regionCode:record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}})); 
+               }else{ //省级跳转
+                 this.props.dispatch(routerRedux.push({
+                    pathname: this.props.types==='ent'? '/monitoring/missingData/cityLevel/ent' :'/monitoring/missingData/cityLevel/air',query: {regionCode:record.regionCode}
+                  }));
+               }
               }}>{text}</a>      
        },
       },
@@ -113,7 +119,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere,types } = this.props;
+    const { dispatch, query,Atmosphere,types } = this.props;
 
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
 
@@ -128,16 +134,16 @@ export default class EntTransmissionEfficiency extends Component {
       // EntCode: '',
       // RegionCode: '',
       // Atmosphere:Atmosphere
-      RegionCode: '',
+      RegionCode: query&&query.regionCode,
       EntType: types==='ent'? "1":"2",
       OperationPersonnel:'',
+      regionLevel:this.props.level? '2': undefined
     });
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      //获取企业列表 or 大气站列表
-     types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
- 
-     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
+     dispatch({ type: 'missingData/getAttentionDegreeList', payload: { RegionCode: query&&query.regionCode },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -285,15 +291,15 @@ export default class EntTransmissionEfficiency extends Component {
       types,
       tableDatas
     } = this.props;
-
     return (
       <Card
         bordered={false}
         title={
           <>
             <Form layout="inline">
-          
             <Row>
+            {!this.props.level&&
+            <>
             <Form.Item label='数据类型'>
             <Select
                   placeholder="数据类型"
@@ -321,8 +327,9 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList paraCode={this.props.query&&this.props.query.regionCode}  changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
+              </>}
               {/* <Form.Item label='运维状态'>
               <Select
                 allowClear
@@ -337,10 +344,11 @@ export default class EntTransmissionEfficiency extends Component {
                 <Option value="2">未设置运维人员</Option>
               </Select>
               </Form.Item>  */}
-              {types!=='ent'? <Form.Item>
-              <Button type="primary" onClick={this.queryClick}>
+              {types ==='air'? <Form.Item>
+              {!this.props.level&&<Button type="primary" onClick={this.queryClick}>
                   查询
                 </Button>
+              }
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -349,9 +357,17 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   导出
                 </Button>
+                {  this.props.level&&<Button  onClick={() => {
+                  // this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/air'}))
+                   history.go(-1)
+                   }}>
+                   <RollbackOutlined />返回 </Button>
+                }
               </Form.Item> :null}
               </Row>
+
               {types==='ent'?  <Row>
+              {!this.props.level&&<>
               <Form.Item label='关注程度'>
                 <Select
                   allowClear
@@ -376,11 +392,12 @@ export default class EntTransmissionEfficiency extends Component {
                   <Option value="2">废气</Option>
                 </Select>
               </Form.Item> 
-
+              </>}
               <Form.Item>
-                <Button type="primary" onClick={this.queryClick}>
+              {!this.props.level&&<Button type="primary" onClick={this.queryClick}>
                   查询
-                </Button>
+                </Button>}
+               
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -389,8 +406,15 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   导出
                 </Button>
+                {  this.props.level&&<Button  onClick={() => {
+                  //  this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/ent'}))
+                  history.go(-1)
+                   }}>
+                   <RollbackOutlined />返回 </Button>
+                }
               </Form.Item>
               </Row>: null }
+
             </Form>
           </>
         }

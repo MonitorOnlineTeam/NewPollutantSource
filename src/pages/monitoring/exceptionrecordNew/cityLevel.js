@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -34,16 +34,17 @@ const { RangePicker } = DatePicker;
   exceptionAlarmListForEntDataSource: exceptionrecordNew.exceptionAlarmListForEntDataSource,
   exceptionrecordForm: exceptionrecordNew.exceptionrecordForm,
   exceptionTime: exceptionrecordNew.exceptionTime,
-  loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForRegion"],
-  exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarm"],
+  loading: loading.effects["exceptionrecordNew/getExceptionAlarmListForCity"],
+  exportLoading: loading.effects["exceptionrecordNew/exportExceptionAlarmListForCity"],
   detailsLoading: loading.effects["exceptionrecordNew/getExceptionAlarmListForEnt"],
 }))
 @Form.create({
   mapPropsToFields(props) {
     return {
       dataType: Form.createFormField(props.exceptionrecordForm.dataType),
-      // time: Form.createFormField(props.exceptionrecordForm.time),
+    //   time: Form.createFormField(props.exceptionrecordForm.time),
       RegionCode: Form.createFormField(props.exceptionrecordForm.RegionCode),
+    //   RegionCode: Form.createFormField(props.location.query.regionCode),
       AttentionCode: Form.createFormField(props.exceptionrecordForm.AttentionCode),
       PollutantType: Form.createFormField(props.exceptionrecordForm.PollutantType),
     };
@@ -81,23 +82,23 @@ class index extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        width: 120,
+        width: 150,
         render: (text, record) => {
           return <a onClick={() => {
             let queryCondition = this.state.queryCondition;
-            queryCondition.RegionCode = record.RegionCode || this.props.form.getFieldValue("RegionCode");
+            queryCondition.RegionCode = record.CityCode || this.props.location.query.regionCode;
             queryCondition = JSON.stringify(queryCondition)
-            // this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-              // router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
-              router.push(`/monitoring/missingData/exceptionrecord/cityLevel?regionCode=${record.RegionCode?record.RegionCode : ''}`);
-          }}>{text}</a>
+            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+              router.push(`/monitoring/missingData/exceptionrecord/details?queryCondition=${queryCondition}`);
+            
+          }}>{record.CityName? `${text}/${record.CityName}` : text}</a>
         }
       },
       {
         title: '数据异常报警企业数',
         dataIndex: 'CountEnt',
         key: 'CountEnt',
-        width: 200,
+        width: 170,
       },
       {
         title: '数据异常报警监测点数',
@@ -272,16 +273,16 @@ class index extends PureComponent {
 
   componentDidMount() {
     // 获取行政区列表
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2', }
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2', }
+    // });
 
     // 获取关注列表
-    this.props.dispatch({
-      type: 'exceptionrecordNew/getAttentionDegreeList',
-      payload: { RegionCode: '' }
-    });
+    // this.props.dispatch({
+    //   type: 'exceptionrecordNew/getAttentionDegreeList',
+    //   payload: { RegionCode: '' }
+    // });
 
     this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
@@ -322,8 +323,10 @@ class index extends PureComponent {
 
   // 获取异常数据
   getExceptionList = () => {
-    let values = this.props.form.getFieldsValue();
-    console.log("values=", values)
+ 
+    // let values = this.props.form.getFieldsValue();
+    let values = this.props.exceptionrecordForm;
+    console.log("values=", this.props.form)
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
@@ -333,11 +336,12 @@ class index extends PureComponent {
       endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
     }
     this.props.dispatch({
-      type: "exceptionrecordNew/getExceptionAlarmListForRegion",
+      type: "exceptionrecordNew/getExceptionAlarmListForCity",
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode?values.RegionCode:'',
+        // RegionCode: values.RegionCode?values.RegionCode:'',
+        RegionCode:this.props.location.query.regionCode? this.props.location.query.regionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -348,32 +352,20 @@ class index extends PureComponent {
       queryCondition: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode?values.RegionCode:'',
+        // RegionCode: values.RegionCode?values.RegionCode:'',
+        RegionCode:this.props.location.query.regionCode? this.props.location.query.regionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel:this.state.operationpersonnel
       }
     })
-    this.props.dispatch({
-      type: 'exceptionrecordNew/updateState',
-      payload: {
-        exceptionrecordForm: {
-          AttentionCode: values.AttentionCode,
-          PollutantType: values.PollutantType,
-          RegionCode: values.RegionCode?values.RegionCode:'',
-          dataType: values.dataType,
-          beginTime: beginTime,
-          endTime: endTime,
-          OperationPersonnel:this.state.operationpersonnel
-        },
-      },
-    })
   }
 
   // 导出异常数据
-  exportExceptionAlarm = () => {
-    let values = this.props.form.getFieldsValue();
+  exportExceptionAlarmListForCity = () => {
+    // let values = this.props.form.getFieldsValue();
+    let values = this.props.exceptionrecordForm;
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
@@ -383,11 +375,12 @@ class index extends PureComponent {
       endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
     }
     this.props.dispatch({
-      type: "exceptionrecordNew/exportExceptionAlarm",
+      type: "exceptionrecordNew/exportExceptionAlarmListForCity",
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode?values.RegionCode:'',
+        // RegionCode: values.RegionCode?values.RegionCode:'',
+        RegionCode:this.props.location.query.regionCode? this.props.location.query.regionCode : '',
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -463,7 +456,7 @@ class index extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
-              <FormItem label="数据类型">
+              {/* <FormItem label="数据类型">
                 {getFieldDecorator('dataType', {
                   initialValue: 'HourData',
                 })(
@@ -477,19 +470,14 @@ class index extends PureComponent {
                     <Option key='1' value='DayData'> 日数据</Option>
                   </Select>
                 )}
-              </FormItem>
-              <FormItem label="日期查询">
-                {/* {getFieldDecorator('time', {
-                  initialValue: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")]
-                })( */}
-                {/* <RangePicker style={{ width: 200 }} allowClear={false} showTime={showTime} format={format} style={{ width: '100%' }} /> */}
+              </FormItem> */}
+              {/* <FormItem label="日期查询">
                 <RangePicker_ allowClear={false} onRef={(ref) => {
                   this.rangePicker = ref;
                 }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={exceptionTime}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)} />
-                {/* )} */}
-              </FormItem>
-              <FormItem label="行政区">
+              </FormItem> */}
+              {/* <FormItem label="行政区">
                 {getFieldDecorator('RegionCode', {
                   // initialValue: 'siteDaily',
                 })(
@@ -504,10 +492,10 @@ class index extends PureComponent {
                   // </Select>
                   <RegionList  changeRegion={''} RegionCode={''}/>
                 )}
-              </FormItem>
+              </FormItem> */}
             </Row>
             <Row>
-              <FormItem label="关注程度">
+              {/* <FormItem label="关注程度">
                 {getFieldDecorator('AttentionCode', {
                   initialValue: undefined,
                 })(
@@ -521,8 +509,8 @@ class index extends PureComponent {
                     }
                   </Select>,
                 )}
-              </FormItem>
-              <FormItem label="企业类型">
+              </FormItem> */}
+              {/* <FormItem label="企业类型">
                 {getFieldDecorator('PollutantType', {
                   initialValue: '1',
                 })(
@@ -534,7 +522,7 @@ class index extends PureComponent {
                     <Option value="2">废气</Option>
                   </Select>
                 )}
-              </FormItem>
+              </FormItem> */}
               {/* <Form.Item label="运维状态">
                 {
                   <Select
@@ -556,18 +544,23 @@ class index extends PureComponent {
                 }
               </Form.Item> */}
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
+                {/* <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
                   查询
-                      </Button>
+                      </Button> */}
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
                   loading={exportLoading}
-                  onClick={this.exportExceptionAlarm}
+                  onClick={this.exportExceptionAlarmListForCity}
                 >
                   导出
                       </Button>
-                <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span>
+                 <Button  onClick={() => {
+                     history.go(-1);
+                //   this.props.dispatch(routerRedux.push({pathname:'/monitoring/missingData/air'}))
+                   }}>
+                   <RollbackOutlined />返回 </Button>
+                {/* <span style={{ color: "red", marginLeft: 20 }}>已响应指：运维人员响应报警，并完成响应报警生成的运维工单。</span> */}
               </div>
             </Row>
           </Form>

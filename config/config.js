@@ -923,6 +923,12 @@ export default {
                   component: './monitoring/exceptionrecordNew',
                 },
                 {
+                  name: 'exceptionrecordCityLevel', //异常数据报警 城市级页面
+                  path: '/monitoring/missingData/exceptionrecord/cityLevel',
+                  component: './monitoring/exceptionrecordNew/cityLevel',
+                },
+                
+                {
                   name: 'exceptionrecordDetails',
                   path: '/monitoring/missingData/exceptionrecord/details',
                   component: './monitoring/exceptionrecordNew/RegionDetails',
@@ -1017,6 +1023,16 @@ export default {
                   //缺失数据报警 空气站
                   path: '/monitoring/missingData/air',
                   component: './monitoring/missingData/air',
+                },
+                {
+                  //缺失数据报警  城市级别 企业
+                  path: '/monitoring/missingData/cityLevel/ent',
+                  component: './monitoring/missingData/cityLevel/index',
+                },
+                {
+                  //缺失数据报警 城市级别 空气站
+                  path: '/monitoring/missingData/cityLevel/air',
+                  component: './monitoring/missingData/cityLevel/index',
                 },
                 {
                   //缺失数据报警 二级页面

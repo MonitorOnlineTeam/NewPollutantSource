@@ -58,6 +58,26 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+      // 异常数据查询-城市一级
+      *getExceptionAlarmListForCity({ payload }, { call, put, update, select }) {
+        const result = yield call(services.getExceptionAlarmListForCity, { ...payload });
+        if (result.IsSuccess) {
+          yield update({
+            exceptionAlarmDataSource: result.Datas
+          })
+        } else {
+          message.error(result.Message)
+        }
+      },
+      // 异常数据导出-城市一级
+      *exportExceptionAlarmListForCity({ payload }, { call, put, update, select }) {
+        const result = yield call(services.exportExceptionAlarmListForCity, { ...payload });
+        if (result.IsSuccess) {
+          window.open(result.Datas)
+        } else {
+          message.error(result.Message)
+        }
+      },  
     // 异常数据报警-二级页面
     *getExceptionAlarmListForEnt({ payload }, { call, put, update, select }) {
       const result = yield call(services.getExceptionAlarmListForEnt, { ...payload });
