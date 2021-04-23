@@ -69,8 +69,8 @@ class EmissionsHeatMap extends PureComponent {
         options: {
           visible: true,
           position: {
-            top: '50px',
-            right: '10px'
+            top: '12px',
+            left: '-80px'
           }
         }
       }],

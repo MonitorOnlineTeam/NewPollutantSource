@@ -49,8 +49,8 @@ class Index extends Component {
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
                 defaultValue={defaultValue || (allpollutant ? -1 : [])}
-                // maxTagCount={maxTagCount}
-                // maxTagTextLength={maxTagTextLength}
+                maxTagCount={maxTagCount}
+                maxTagTextLength={maxTagTextLength}
                 maxTagPlaceholder={maxTagPlaceholder}
             >
                 {

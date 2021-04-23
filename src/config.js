@@ -59,7 +59,7 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
-  cookieName: 'ssToken2',
+  cookieName: 'ssToken5003',
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,

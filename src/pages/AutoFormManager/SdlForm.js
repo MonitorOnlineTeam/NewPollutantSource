@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-04-19 10:57:48
+ * @Last Modified time: 2021-04-22 10:58:40
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -15,6 +15,7 @@ import '@ant-design/compatible/assets/index.css';
 
 import {
   Input,
+  InputNumber,
   Button,
   Card,
   Spin,
@@ -218,7 +219,7 @@ class SdlForm extends PureComponent {
       let { placeholder, validator } = item;
       const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
-      let initialValue = (formData[fieldName] != undefined) && `${formData[fieldName]}`;
+      let initialValue = (formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
       if (item.configId && item.fullFieldName) {
         // 有表连接时，取带表名的字段
         if (formData[item.fullFieldName] != undefined) {
@@ -227,20 +228,26 @@ class SdlForm extends PureComponent {
         }
       };
       // 判断类型
-      switch (item.type) {      
+      switch (item.type) {
         case '文本框':
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
-
-          element = <Input placeholder={placeholder} allowClear />;
+          element = <Input placeholder={'请输入' + item.labelText} allowClear />;
+          break;
+        case '数字':
+          validator = `${inputPlaceholder}`;
+          element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
           break;
         case '下拉列表框':
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;
-          // initialValue = formData[fieldName] && (formData[fieldName] + "").split(",");
-          initialValue = formData[configDataItemValue || fieldName] && (`${formData[configDataItemValue || fieldName]}`).split(',');
+          initialValue = formData[configDataItemValue || fieldName] !== undefined ? (`${formData[configDataItemValue || fieldName]}`) : undefined;
           placeholder = placeholder || selectPlaceholder;
-          const mode = item.type === '多选下拉列表' ? 'multiple' : '';
+          let mode = '';
+          if (item.type === '多选下拉列表') {
+            mode = 'multiple';
+            initialValue = formData[configDataItemValue || fieldName] !== undefined ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
+          }
           element = (
             <SearchSelect
               configId={item.configId}
@@ -521,7 +528,7 @@ class SdlForm extends PureComponent {
           <Col span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
             <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
-                initialValue: initialValue || undefined,
+                initialValue: initialValue !== undefined ? initialValue : undefined,
                 rules: [
                   {
                     required,

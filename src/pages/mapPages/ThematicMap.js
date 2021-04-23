@@ -62,7 +62,7 @@ class ThematicMap extends PureComponent {
     };
 
     this._SELF_ = {
-      overlays: [],
+      // overlays: [],
     }
 
     // 点弹窗事件
@@ -78,9 +78,9 @@ class ThematicMap extends PureComponent {
       created: (tool) => {
         this.tool = tool;
       },
-      draw: ({ obj }) => {
-        this._SELF_.overlays.push(obj);
-      }
+      // draw: ({ obj }) => {
+      //   this._SELF_.overlays.push(obj);
+      // }
     }
 
     this.mapEvents = {
@@ -100,8 +100,15 @@ class ThematicMap extends PureComponent {
   }
 
   componentDidMount() {
+    this.getPointList();
+  }
+
+  getPointList = () => {
     this.props.dispatch({
       type: "map/getAllPoint",
+      payload: {
+        pollutantCode: this.props.match.params.pollutantCode
+      },
       callback: (result) => {
         this.setState({
           pointsList: result.filter(item => item.PointLatitude && item.PointLongitude)
@@ -115,6 +122,23 @@ class ThematicMap extends PureComponent {
       this.setState({
         markersList: this.randomMarker()
       })
+    }
+    if (prevProps.match.params.pollutantCode !== this.props.match.params.pollutantCode) {
+      if (_thismap) { _thismap.clearMap() }
+      this.setState({
+        pointsList: [],
+        activePollutant: '0',
+        searchInputVal: undefined,
+        infoWindowVisible: false,
+        infoWindowPos: undefined,
+        selectedPointInfo: {
+          position: {}
+        },
+        markersList: [],
+        currentTool: undefined,
+      }, () => {
+        this.getPointList();
+      });
     }
   }
 
@@ -311,7 +335,8 @@ class ThematicMap extends PureComponent {
 
   onSearch = value => {
     if (value) {
-      const filter = this.state.pointsList.filter(item => {
+      let pointData = this.state.activePollutant === '0' ? this.props.allPoints : this.state.pointsList;
+      const filter = pointData.filter(item => {
         if (item.PointName.indexOf(value) > -1 || item.EntName.indexOf(value) > -1) {
           return item;
         }
@@ -393,6 +418,8 @@ class ThematicMap extends PureComponent {
     const { pollutantTypeCountList, curPointData, tableList, chartData, pointDetailsModalVisible } = this.props;
     const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
     console.log('activePollutant=', activePollutant)
+
+    let flag = this.props.match.params.pollutantCode;
     return (
       <div className={styles.pageWrapper}>
         <div className={styles.mapContent}>
@@ -402,32 +429,34 @@ class ThematicMap extends PureComponent {
                 {item.PollutantTypeName}
               </div>
             })} */}
-            <Radio.Group style={{}} defaultValue={this.state.activePollutant} buttonStyle="solid" size="default" onChange={this.onPollutantTypeClick}>
-              <RadioButton key="0" value="0">
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <AppstoreOutlined style={{ fontSize: 17, marginRight: 8 }} />
+            {
+              !flag && <Radio.Group style={{}} defaultValue={this.state.activePollutant} buttonStyle="solid" size="default" onChange={this.onPollutantTypeClick}>
+                <RadioButton key="0" value="0">
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <AppstoreOutlined style={{ fontSize: 17, marginRight: 8 }} />
                   全部
                 </div>
-              </RadioButton>
-              {
-                pollutantTypeCountList.map(item => {
-                  return <RadioButton key={item.PollutantTypeCode} value={item.PollutantTypeCode}>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                      {this.getLegendIcon(item.PollutantTypeCode)}
-                      {item.PollutantTypeName}
-                    </div>
-                  </RadioButton>
-                })
-              }
-            </Radio.Group>
+                </RadioButton>
+                {
+                  pollutantTypeCountList.map(item => {
+                    return <RadioButton key={item.PollutantTypeCode} value={item.PollutantTypeCode}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                        {this.getLegendIcon(item.PollutantTypeCode)}
+                        {item.PollutantTypeName}
+                      </div>
+                    </RadioButton>
+                  })
+                }
+              </Radio.Group>
+            }
             <Search
               value={searchInputVal}
               allowClear

@@ -28,9 +28,13 @@ export default Model.extend({
     *getAllPoint({ payload, callback }, { call, update, put, take, select }) {
       const result = yield call(services.getAllPoint, payload);
       if (result.IsSuccess) {
-        callback && callback(result.Datas.PointList);
+        let pointList = result.Datas.PointList;
+        if (payload.pollutantCode) {
+          pointList = result.Datas.PointList.filter(item => item.PollutantType == payload.pollutantCode)
+        }
+        callback && callback(pointList);
         yield update({
-          allPoints: result.Datas.PointList,
+          allPoints: pointList,
           pollutantTypeCountList: result.Datas.countList,
         })
       } else {

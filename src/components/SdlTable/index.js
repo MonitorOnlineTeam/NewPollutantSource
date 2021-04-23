@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-02 15:53:37
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-08 10:11:25
+ * @Last Modified time: 2021-04-22 09:24:20
  * @desc: table组件
  */
 import React, { PureComponent } from 'react';
@@ -102,7 +102,7 @@ class SdlTable extends PureComponent {
         return col.width || 160;
       } if (title.indexOf('状态') != -1) {
         return col.width || 150;
-      } if (title.indexOf('类型') != -1 || title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
+      } if (title.indexOf('风向') != -1 || title.indexOf('温度') != -1 || title.indexOf('风速') != -1 || title.indexOf('湿度') != -1 || title.indexOf('次数') != -1) {
         return 80;
       } if (title == '行政区') {
         return col.width || 200;

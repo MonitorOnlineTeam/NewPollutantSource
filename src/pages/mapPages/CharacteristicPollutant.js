@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Map, Marker, Markers, Circle, MouseTool } from 'react-amap';
 import { connect } from 'dva'
 import styles from './heatMap.less'
-import { Drawer, Button, Form, DatePicker, Radio, Divider, Table, Tooltip, Input } from 'antd';
+import { Drawer, Button, Form, DatePicker, Radio, Divider, Table, Tooltip, Input, InputNumber } from 'antd';
 import moment from 'moment'
 import TableText from '@/components/TableText'
 import config from "@/config";
@@ -284,7 +284,7 @@ class CharacteristicPollutant extends PureComponent {
           ref={(div) => { this.div = div }}
           id="characteristicPollutant"
         >
-          <div className={`${mapStyle.mapTools} ${mapStyle.blank}`}>
+          <div className={`${mapStyle.mapTools} ${mapStyle.blank}`} style={{ top: 10 }}>
             <ul>
               <li className={currentTool === 'ruler' ? `${mapStyle.active}` : ''} onClick={() => {
                 if (currentTool === 'ruler') {
@@ -332,13 +332,13 @@ class CharacteristicPollutant extends PureComponent {
                 })
               }}>
                 <Tooltip color="blue" placement="left" title='清除'>
-                  <CustomIcon type="icon-qingchu" />
+                  <CustomIcon type="icon-qingchu" style={{ fontSize: '16px !important' }} />
                 </Tooltip>
               </li>
             </ul>
           </div>
           {
-            currentTool === 'biaohui' && <div className={`${mapStyle.drawSelectContent} ${mapStyle.blank}`}>
+            currentTool === 'biaohui' && <div className={`${mapStyle.drawSelectContent} ${mapStyle.blank}`} style={{ top: 47 }}>
               <Radio.Group defaultValue='polygon' onChange={(e) => {
                 this.tool[e.target.value]();
               }}>
@@ -374,7 +374,7 @@ class CharacteristicPollutant extends PureComponent {
           {pointDetailsModalVisible && <PointDetailsModal pointInfo={selectedPointInfo} />}
         </div>
         <Drawer
-          title="排放量分析"
+          title="特征污染物分析"
           width={432}
           closable={false}
           // onClose={this.onClose}
@@ -490,11 +490,22 @@ class CharacteristicPollutant extends PureComponent {
             <Divider dashed style={dividerStyle} />
             <Form.Item
               label="勘测范围"
-              name="radius"
-              rules={[{ required: true }]}
+              // name="radius"
+            // rules={[{ type: 'number', message: "只能输入数字" }]}
             // style={{ display: 'inline-block', width: 100 }}
             >
-              <Input addonBefore="半径" addonAfter="千米" placeholder="请输入勘测范围（半径）" />
+              <Form.Item name="radius" noStyle>
+                {/* <Input addonBefore="半径" addonAfter="千米" placeholder="请输入勘测范围（半径）" /> */}
+                <InputNumber
+                  style={{ width: '207px' }}
+                  min={0.01}
+                  max={100}
+                  placeholder="请输入勘测范围（半径）"
+                // formatter={value => `半径（千米）：${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                // parser={value => value.replace(/\半径（千米）：\s?|(,*)/g, '')}
+                />
+              </Form.Item>
+              <span className="ant-form-text"> 千米</span>
             </Form.Item>
             <Divider dashed style={dividerStyle} />
             <Form.Item label={<span>&nbsp;&nbsp;&nbsp;&nbsp;经纬度</span>}>

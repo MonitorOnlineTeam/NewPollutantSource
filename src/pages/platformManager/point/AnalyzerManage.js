@@ -86,7 +86,7 @@ class AnalyzerManage extends Component {
 
   /** 添加主表Cem */
   handleAdd = () => {
-    const { dataSource } = this.state;
+    let dataSource = [...this.state.dataSource];
     if (dataSource.length === 3) {
       return;
     }
@@ -103,7 +103,7 @@ class AnalyzerManage extends Component {
 
   /** 添加子表 */
   handleAddChild = index => {
-    const { dataSource } = this.state;
+    let dataSource = [...this.state.dataSource];
     const key = dataSource[index].Component.length + 1;
     dataSource[index].Component.push({
       key: Math.floor(Math.random() * 65535),
@@ -112,7 +112,7 @@ class AnalyzerManage extends Component {
       DeviceModel: undefined,
       Manufacturer: undefined,
       ManufacturerAbbreviation: undefined,
-      TestComponent: undefined,
+      TestComponent: 123,
       AnalyzerPrinciple: undefined,
       AnalyzerRangeMin: undefined,
       AnalyzerRangeMax: undefined,
@@ -135,7 +135,7 @@ class AnalyzerManage extends Component {
 
   /** 子表值改变 */
   changeChildTable = (parentIndex, key, value, index) => {
-    const tempDataSource = this.state.dataSource;
+    const tempDataSource = [...this.state.dataSource];
     tempDataSource[parentIndex].Component[index][key] = value;
     this.setState({
       dataSource: tempDataSource,
@@ -187,7 +187,6 @@ class AnalyzerManage extends Component {
   expandedRowRender = (record, index, indent, expanded) => {
     const { dataSource } = this.state;
     const columns = [
-
       {
         title: '分析仪名称',
         dataIndex: 'TestComponent',
@@ -397,20 +396,20 @@ class AnalyzerManage extends Component {
               expandedRowRender={this.expandedRowRender}
               defaultExpandAllRows
               onExpand={(expanded, record) => {
-                if (expanded) {
-                  this.setState({
-                    expandedRowKeys: [
-                      ...expandedRowKeys,
-                      record.key,
-                    ],
-                  })
-                } else {
-                  const rowKeys = _.remove(expandedRowKeys, n => n !== record.key);
-                  this.setState({
-                    expandedRowKeys: [
-                      ...rowKeys,
-                    ],
-                  })
+                  if (expanded) {
+                    this.setState({
+                      expandedRowKeys: [
+                        ...expandedRowKeys,
+                        record.key,
+                      ],
+                    })
+                  } else {
+                    const rowKeys = _.remove(expandedRowKeys, n => n !== record.key);
+                    this.setState({
+                      expandedRowKeys: [
+                        ...rowKeys,
+                      ],
+                    })
                 }
               }}
               expandedRows={expandedRows => {
