@@ -1479,7 +1479,7 @@ export default {
                     {
                       // 数据异常报警响应率 城市级别
                       path: '/Intelligentanalysis/dataAlarm/abnormal/cityLevel',
-                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/cityLevel',
+                      component: './IntelligentAnalysis/dataAlarm/abnormalResRate/CityLevel',
                     },
                     {
                       // 数据异常报警响应率
@@ -1515,6 +1515,11 @@ export default {
                     {
                       // 运维工单统计（企业）
                       path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                    },
+                    {
+                      // 运维工单统计（企业） 城市级别
+                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/cityLevel',
                       component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
                     },
                     {
@@ -1554,6 +1559,12 @@ export default {
                     {
                       name: 'noAccountStatisticsEnt', //无台账上传统计 企业
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                      component:
+                        './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    },
+                    {
+                      name: 'noAccountStatisticsEnt', //无台账上传统计 企业  城市级别
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent/cityLevel',
                       component:
                         './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
                     },

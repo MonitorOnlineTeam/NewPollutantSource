@@ -198,7 +198,8 @@ class RegionDetails extends PureComponent {
             </Button>
             <Button onClick={() => {
               this.props.onBack ? this.props.onBack() :
-                router.push("/Intelligentanalysis/dataAlarm/abnormal")
+                // router.push("/Intelligentanalysis/dataAlarm/abnormal")
+                history.go(-1)
             }}
             >
               <RollbackOutlined />

@@ -22,6 +22,9 @@ class DetailsPage extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
+        render: (text, record) => {
+          return <span>{text}{ record.CityName? '/'+record.CityName : ''} </span>
+        }
       },
       {
         title: '企业名称',

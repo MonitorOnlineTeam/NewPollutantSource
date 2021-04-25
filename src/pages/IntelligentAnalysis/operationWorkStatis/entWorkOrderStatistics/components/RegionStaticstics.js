@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined,RollbackOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Card, Col, Row, Select, Input, Checkbox, Button, message, Modal } from 'antd';
@@ -114,7 +114,7 @@ class RegionStaticstics extends PureComponent {
 
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button 
-                  icon={<LeftOutlined />} 
+                  icon={<RollbackOutlined />} 
                   style={{ marginLeft: 10 }} 
                   onClick={()=>{
                     if(this.props.goBack)

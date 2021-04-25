@@ -65,6 +65,9 @@ class index extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
+        render: (text, record) => {
+          return <span>{text}{ record.CityName? '/'+record.CityName : ''} </span>
+        }
       },
       {
         title: '数据异常企业数',
@@ -182,6 +185,14 @@ class index extends PureComponent {
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel:this.state.operationpersonnel
+      }
+    })
+    this.props.dispatch({
+      type: 'abnormalData/updateState',
+      payload: {
+        abnormalDataForm: {
+          ...this.props.abnormalDataForm
+        }
       }
     })
   }

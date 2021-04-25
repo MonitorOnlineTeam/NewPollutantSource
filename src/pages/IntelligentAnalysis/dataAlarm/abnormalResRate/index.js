@@ -84,7 +84,7 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.RegionCode;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
-            // this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
             router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode}`)
               // router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
@@ -257,7 +257,8 @@ class index extends PureComponent {
     this.props.dispatch({
       type: "abnormalResRate/updateState",
       payload: {
-        searchForm:{ AttentionCode: values.AttentionCode,
+        searchForm:{
+        AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
         // RegionCode: values.RegionCode ? values.RegionCode:'',
         dataType: values.dataType,
@@ -267,10 +268,12 @@ class index extends PureComponent {
       }
     }
     })
+    console.log(this.props.searchForm)
   }
 
   // 导出异常数据
   onExport = () => {
+    // let values = this.props.form.getFieldsValue();
     let values = this.props.form.getFieldsValue();
     let beginTime, endTime;
     values.time = this.state.exceptionTime;

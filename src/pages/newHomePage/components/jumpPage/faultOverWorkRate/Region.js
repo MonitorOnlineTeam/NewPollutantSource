@@ -5,7 +5,7 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -206,11 +206,11 @@ export default class EntTransmissionEfficiency extends Component {
   
   };
 
-  getTableData = () => { 
+  getTableData = (regionLevel,RegionCode) => { 
     const { dispatch, queryPar,isWorkRate,isFaultRate,isOverRate } = this.props;
     dispatch({
       type: isWorkRate? pageUrl.getDeviceDataRate : isOverRate ? pageUrl.getOverDataRate : pageUrl.getExceptionDataRate,
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:regionLevel?regionLevel:'',RegionCode:RegionCode? RegionCode : '' },
     });
   };
 
@@ -310,26 +310,39 @@ export default class EntTransmissionEfficiency extends Component {
     const { isWorkRate,dispatch } = this.props;
     const { queryPar: { RegionCode} } = this.props;
    
+    if(!this.state.regionLevel){
+
+      this.setState({
+        regionLevel:2
+      },()=>{
+        this.getTableData(this.state.regionLevel,row.RegionCode);
+      })
+    }else{
      dispatch({
        type: pageUrl.updateState,
        payload: { ModelType: 'Region', regionName:row.RegionName,regionCode:row.RegionCode },
     });
-    
-    setTimeout(()=>{
-      this.setState({entVisible:true})
+    this.setState({regionLevel:''},()=>{
+      setTimeout(()=>{
+        this.setState({entVisible:true})
+      })
     })
+    
+
+  }
   }
 
   entCancel=()=>{
-    this.setState({entVisible:false})
+    this.setState({entVisible:false,regionLevel:2})
   }
   //创建并获取模板   导出
   template = () => {
     const { dispatch, queryPar,isWorkRate,isOverRate } = this.props;
+    const { regionLevel } = this.state;
     dispatch({
       type:  isWorkRate? 'home/exportDeviceDataRate':isOverRate?'home/exportOverDataRate'
                        :'home/exportExceptionDataRate',
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:regionLevel? regionLevel : '' },
       callback: data => {
           downloadFile(`/upload${data}`);
         },
@@ -345,7 +358,7 @@ export default class EntTransmissionEfficiency extends Component {
     } = this.props;
     const { TabPane } = Tabs;
    
-    const { entVisible } = this.state;
+    const { entVisible,regionLevel } = this.state;
     return (
       <div>
        <Modal
@@ -362,6 +375,7 @@ export default class EntTransmissionEfficiency extends Component {
            <>
              <Form layout="inline" style={{paddingBottom:10}}>
              <Row>
+             {!regionLevel&&<>
              <Form.Item label='查询日期'>
              <RangePicker_  format = 'YYYY-MM-DD' allowClear={false} onRef={this.onRef1}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(BeginTime),moment(EndTime)]} 
                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
@@ -369,6 +383,7 @@ export default class EntTransmissionEfficiency extends Component {
              <Form.Item label='行政区'>
               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
              </Form.Item>
+             </>}
              {/* <Form.Item label='运维状态'>
                <Select
                  allowClear
@@ -384,7 +399,7 @@ export default class EntTransmissionEfficiency extends Component {
                  <Option value="2">未设置运维人员</Option>
                </Select>
                </Form.Item>  */}
-             {!Atmosphere?
+             {!Atmosphere&&!regionLevel?
                <Form.Item label={'企业类型'}>
                 <EntType allowClear={true} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
                </Form.Item>
@@ -392,9 +407,9 @@ export default class EntTransmissionEfficiency extends Component {
                null
              }
                <Form.Item>
-                 <Button type="primary" onClick={this.queryClick}>
+                {!regionLevel&&<Button type="primary" onClick={this.queryClick}>
                    查询
-                 </Button>
+                 </Button>}
                    <Button
                    style={{ margin: '0 5px' }}
                    icon={<ExportOutlined />}
@@ -404,11 +419,26 @@ export default class EntTransmissionEfficiency extends Component {
                    导出
                  </Button>  
                </Form.Item>
+             {regionLevel&&<Form.Item>
+               <Button
+                style={{ marginBottom: 10}}
+                  onClick={() => {
+                     this.setState({
+                      regionLevel:''
+                     },()=>{
+                      this.queryClick();
+                     })
+                   } }
+                >
+                  <RollbackOutlined />
+                  返回
+                </Button>
+                </Form.Item>}
                </Row>
              </Form>
            </>
          <div id=''>
-         {isWorkRate?
+         {isWorkRate&&!regionLevel?
           <div style={{ paddingBottom: 10 }}>
                <div style={{ width: 20, height: 9, backgroundColor: '#52c41a', display: 'inline-block', borderRadius: '20%',cursor: 'pointer', marginRight: 3,  }}/>
                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>

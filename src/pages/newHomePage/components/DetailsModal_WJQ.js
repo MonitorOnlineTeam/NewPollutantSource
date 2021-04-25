@@ -13,6 +13,7 @@ import Ent from "@/pages/monitoring/overView/realtime/Ent"
 // import RegionDetails from "@/pages/monitoring/exceptionrecordNew/RegionDetails"
 import AbnormalResRate from "@/pages/IntelligentAnalysis/dataAlarm/abnormalResRate/index"
 import RegionDetails from "@/pages/IntelligentAnalysis/dataAlarm/abnormalResRate/RegionDetails"
+import CityLevel from "@/pages/IntelligentAnalysis/dataAlarm/abnormalResRate/CityLevel"
 
 @connect(({ loading, home, autoForm }) => ({
   detailsModalVisible_WJQ: home.detailsModalVisible_WJQ,
@@ -27,7 +28,9 @@ class DetailsModal_WJQ extends PureComponent {
 
   componentWillUnmount() {
     this.setState({
-      queryCondition: undefined
+      queryCondition: undefined,
+      queryConditions:undefined,
+      cityLevel:true
     })
   }
 
@@ -38,7 +41,7 @@ class DetailsModal_WJQ extends PureComponent {
 
   render() {
     const { status, stopStatus, defaultPollutantCode, time } = this.props
-    const { queryCondition, show } = this.state;
+    const { queryCondition,queryConditions, show,cityLevel } = this.state;
     return (
       <Modal
         title="详情"
@@ -60,15 +63,37 @@ class DetailsModal_WJQ extends PureComponent {
           time && show && <AbnormalResRate time={time} hideBreadcrumb onRegionClick={(queryCondition) => {
             this.setState({
               queryCondition: queryCondition,
+              cityLevel:true,
               show: false
             })
           }} />
         }
         {
-          queryCondition && <RegionDetails hideBreadcrumb location={{ query: { queryCondition: queryCondition } }} onBack={() => {
+          cityLevel && <CityLevel hideBreadcrumb 
+          location={{ query: { queryCondition: queryCondition } }}
+          onRegionClick={(queryCondition) => {
+            this.setState({
+              queryConditions: queryCondition,
+              cityLevel:false,
+              show: false
+            })
+          }}
+          onBack={() => {
             this.setState({
               queryCondition: undefined,
+              cityLevel:false,
               show: true
+            })
+          }} />
+        }
+                {
+          queryConditions &&  !cityLevel&&<RegionDetails hideBreadcrumb 
+          location={{ query: { queryCondition: queryConditions } }}
+          onBack={() => {
+            this.setState({
+              queryConditions: undefined,
+              cityLevel: true,
+              show: false
             })
           }} />
         }

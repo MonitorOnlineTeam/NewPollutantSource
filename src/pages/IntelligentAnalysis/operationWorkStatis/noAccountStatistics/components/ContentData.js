@@ -205,15 +205,15 @@ export default class EntTransmissionEfficiency extends Component {
 
  
      dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
-     this.updateQueryState({
-      beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
-      endTime: moment().format('YYYY-MM-DD 23:59:59'),
-      AttentionCode: '',
-      EntCode: '',
-      RegionCode: '',
-      PollutantTypeCode:"1",
-      ModelType: "All"
-    });
+    //  this.updateQueryState({
+    //   beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
+    //   endTime: moment().format('YYYY-MM-DD 23:59:59'),
+    //   AttentionCode: '',
+    //   EntCode: '',
+    //   RegionCode: '',
+    //   PollutantTypeCode:"1",
+    //   ModelType: "All"
+    // });
     setTimeout(() => {
       this.getTableData();
     });
@@ -231,11 +231,11 @@ export default class EntTransmissionEfficiency extends Component {
 
   getTableData = () => { 
 
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,level } = this.props;
 
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar,...{regionLevel:level} },
       callback:res=>{
 
       }
@@ -357,7 +357,9 @@ export default class EntTransmissionEfficiency extends Component {
    console.log(e)
   }
   regionDetail=(row)=>{
-    const { dispatch,queryPar } = this.props;
+    const { dispatch,queryPar,level } = this.props;
+
+    if(level){
     dispatch({
       type: pageUrl.updateState,
       payload: { regQueryPar: { ...queryPar,ModelType:"Region", RegionCode:row.RegionCode },
@@ -367,6 +369,9 @@ export default class EntTransmissionEfficiency extends Component {
     setTimeout(()=>{
       this.setState({regionVisible:true})
     })
+  }else{
+     router.push({pathname:'/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent/cityLevel'})
+  }
   }
 
   entNumDetail=(row)=>{

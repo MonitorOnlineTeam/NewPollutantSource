@@ -24,6 +24,17 @@ export async function exportExceptionList(params) {
   return result;
 }
 
+// 异常数据查询-城市级别
+export async function getExceptionCityList  (params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionCityList`, params);
+  return result;
+}
+
+// 异常数据导出-城市级别
+export async function exportExceptionCityList(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionCityList`, params);
+  return result;
+}
 // 异常数据查询 - 二级页面
 export async function getExceptionPointList(params) {
   const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionPointList`, params);

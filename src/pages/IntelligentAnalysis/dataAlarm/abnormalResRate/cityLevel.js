@@ -34,8 +34,8 @@ const { RangePicker } = DatePicker;
   exceptionAlarmListForEntDataSource: abnormalResRate.exceptionAlarmListForEntDataSource,
   searchForm: abnormalResRate.searchForm,
   exceptionTime: abnormalResRate.exceptionTime,
-  loading: loading.effects["abnormalResRate/getTableDataSource"],
-  exportLoading: loading.effects["abnormalResRate/exportReport"],
+  loading: loading.effects["abnormalResRate/getExceptionAlarmRateListForCity"],
+  exportLoading: loading.effects["abnormalResRate/exportExceptionAlarmRateListForCity"],
 }))
 @Form.create({
   mapPropsToFields(props) {
@@ -47,17 +47,17 @@ const { RangePicker } = DatePicker;
       PollutantType: Form.createFormField(props.searchForm.PollutantType),
     };
   },
-  onFieldsChange(props, fields) {
-    props.dispatch({
-      type: 'abnormalResRate/updateState',
-      payload: {
-        searchForm: {
-          ...props.searchForm,
-          ...fields,
-        },
-      },
-    })
-  },
+  // onFieldsChange(props, fields) {
+  //   props.dispatch({
+  //     type: 'abnormalResRate/updateState',
+  //     payload: {
+  //       searchForm: {
+  //         ...props.searchForm,
+  //         ...fields,
+  //       },
+  //     },
+  //   })
+  // },
 })
 class index extends PureComponent {
   state = {
@@ -77,16 +77,16 @@ class index extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        width: 120,
+        width: 200,
         render: (text, record) => {
           return <a onClick={() => {
             let queryCondition = this.state.queryCondition;
-            queryCondition.RegionCode = record.RegionCode;
+            queryCondition.RegionCode = record.CityCode;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
             this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-              router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
-          }}>{text}</a>
+              router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryConditions}`);
+          }}>{text==='全部合计'? text :`${text}/${record.CityName}` }</a>
         }
       },
       {
@@ -195,8 +195,7 @@ class index extends PureComponent {
   componentDidMount() {
 
     // 获取行政区列表
-   let { location:{query}} = this.props
-     console.log(this.props)
+   let { location:{ query } } = this.props
     this.props.dispatch({
       type: 'autoForm/getRegions',
       payload: { RegionCode: query&&query.regionCode, PointMark: '2', }
@@ -207,26 +206,27 @@ class index extends PureComponent {
       type: 'abnormalResRate/getAttentionDegreeList',
       payload: { RegionCode: query&&query.regionCode }
     });
-
-    this.getTableDataSource(query&&query.regionCode);
+  
+    console.log('传过来的参数：' , query)
+   this.getExceptionAlarmRateListForCity(query&&query.regionCode);
   }
 
 
-  onExport = () => {
-    this.props.dispatch({
-      type: "abnormalResRate/exportExceptionAlarmListForEnt",
-      payload: {
-        ...this.state.secondQueryCondition,
-      }
-    })
-  }
+  // onExport = () => {
+  //   this.props.dispatch({
+  //     type: "abnormalResRate/exportExceptionAlarmRateListForCity",
+  //     payload: {
+  //       ...this.state.secondQueryCondition,
+  //     }
+  //   })
+  // }
 
   // 获取异常数据
-  getTableDataSource = (regionCode) => {
+  getExceptionAlarmRateListForCity = (regionCode) => {
     // let values = this.props.form.getFieldsValue();
 
     let values = this.props.searchForm;
-    console.log("values=", values)
+    console.log(this.props.searchForm)
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
@@ -236,7 +236,7 @@ class index extends PureComponent {
       endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
     }
     this.props.dispatch({
-      type: "abnormalResRate/getTableDataSource",
+      type: "abnormalResRate/getExceptionAlarmRateListForCity",
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
@@ -245,7 +245,6 @@ class index extends PureComponent {
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel:this.state.operationpersonnel,
-        regionLevel:2
       }
     })
     this.setState({
@@ -261,9 +260,10 @@ class index extends PureComponent {
     })
   }
 
-  // 导出异常数据
+   // 导出异常数据
   onExport = () => {
-    // let values = this.props.form.getFieldsValue();
+
+    // let values = this.props.searchForm;
     let { location:{query}} = this.props
     let values = this.props.searchForm;
     let beginTime, endTime;
@@ -284,7 +284,6 @@ class index extends PureComponent {
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel:this.state.operationpersonnel,
-        regionLevel:2
       }
     })
   }
@@ -372,7 +371,8 @@ class index extends PureComponent {
                   导出
                 </Button>
               <Button onClick={() => {
-                 this.props.history.go(-1);
+                 this.props.onBack ? this.props.onBack() :
+                 history.go(-1);
              }} ><RollbackOutlined />返回</Button>
               </div>
             </Row>

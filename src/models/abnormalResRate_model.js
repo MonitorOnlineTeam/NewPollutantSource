@@ -47,6 +47,26 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+        // table数据-城市一级
+   *getExceptionAlarmRateListForCity ({ payload }, { call, put, update, select }) {
+          const result = yield call(services.getExceptionAlarmRateListForCity , { ...payload });
+          if (result.IsSuccess) {
+            yield update({
+              tableDataSource: result.Datas
+            })
+          } else {
+            message.error(result.Message)
+          }
+        },
+        // 导出-城市一级
+    *exportExceptionAlarmRateListForCity({ payload }, { call, put, update, select }) {
+          const result = yield call(services.exportExceptionAlarmRateListForCity, { ...payload });
+          if (result.IsSuccess) {
+            window.open(result.Datas)
+          } else {
+            message.error(result.Message)
+          }
+        },
     // table数据-二级页面
     *getSecondTableDataSource({ payload }, { call, put, update, select }) {
       const result = yield call(services.getSecondTableDataSource, { ...payload });

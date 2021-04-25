@@ -23,9 +23,11 @@ export default class Index extends Component {
   
    }
   render() {
+    
+    let level = this.props.location.pathname==='/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent'? '' : '2';
     return (
         <BreadcrumbWrapper >
-          <ContentData />
+           <ContentData level={level}/>
         </BreadcrumbWrapper>
     );
   }

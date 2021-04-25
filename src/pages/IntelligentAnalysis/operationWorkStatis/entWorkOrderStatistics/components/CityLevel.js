@@ -9,6 +9,7 @@ import { Link, router } from 'umi'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList'
+import { LeftOutlined,RollbackOutlined} from '@ant-design/icons';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -39,25 +40,24 @@ class EntWorkOrderStatistics extends PureComponent {
         dataIndex: '00_RegionName',
         key: '00_RegionName',
         render: (text, record) => { 
-          const values = this.props.form.getFieldsValue();
+        //   const values = this.props.form.getFieldsValue();
+          const values = this.props.location.query;
           const {initialForm:{RegionCode},changePage} = this.props;
           const query={
             RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
             PollutantTypeCode: values.PollutantTypeCode,
             AttentionCode: values.AttentionCode?values.AttentionCode:"",
-            BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
-            EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+            BeginTime: values.BeginTime,
+            EndTime: values.EndTime,
           }
           if(query.RegionCode == 'all') query.RegionCode = '';
           if(changePage){
             return <a onClick={()=>{changePage({page:'RegionStaticstics',query})}}>{text}</a>
           }else{
-            // return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
-            //   {text}
-            // </Link>
-            return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/cityLevel',query}} >
-            {text}
-          </Link>
+            return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
+              {text}
+            </Link>
+
           }
         },
         width: 120,
@@ -76,15 +76,16 @@ class EntWorkOrderStatistics extends PureComponent {
               dataIndex: '00_Opsenters',
               key: '00_Opsenters',
               render: (text, record) => { 
-                const values = this.props.form.getFieldsValue();
+                // const values = this.props.form.getFieldsValue();
+                const values = this.props.location.query;
                 const {initialForm:{RegionCode},changePage} = this.props;
 
                 const query={
                   RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
                   PollutantTypeCode: values.PollutantTypeCode,
                   AttentionCode: values.AttentionCode?values.AttentionCode:"",
-                  BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
-                  EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+                  BeginTime: values.BeginTime,
+                  EndTime: values.EndTime,
                 }
                 if(changePage){
                   return <a onClick={()=>{changePage({page:'EntStaticstics',query})}}>{text}</a>
@@ -122,16 +123,16 @@ class EntWorkOrderStatistics extends PureComponent {
 
   componentDidMount() {
     // 获取行政区列表
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2' },
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2' },
+    // });
 
-    // 获取关注列表
-    this.props.dispatch({
-      type: 'entWorkOrderStatistics/getAttentionDegreeList',
-      payload: { RegionCode: '' },
-    });
+    // // 获取关注列表
+    // this.props.dispatch({
+    //   type: 'entWorkOrderStatistics/getAttentionDegreeList',
+    //   payload: { RegionCode: '' },
+    // });
 
     this.getTableDataSource();
   }
@@ -153,7 +154,10 @@ class EntWorkOrderStatistics extends PureComponent {
 
   // 获取标题标题头及数据
   getTableDataSource = () => {
-    let values = this.props.form.getFieldsValue();
+    // let values = this.props.form.getFieldsValue();
+
+    const values = this.props.location.query;
+
     console.log("values=", values)
 
     // 获取一级数据标题头
@@ -170,8 +174,9 @@ class EntWorkOrderStatistics extends PureComponent {
         AttentionCode: values.AttentionCode?values.AttentionCode:"",
         RegionCode: values.RegionCode?values.RegionCode:"",
         EntCode: "",
-        BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
-        EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+        BeginTime: values.BeginTime,
+        EndTime: values.EndTime,
+        regionLevel:2
       },
     });
   }
@@ -211,30 +216,23 @@ class EntWorkOrderStatistics extends PureComponent {
         <Card>
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row>
-                <FormItem label="日期查询">
+                {/* <FormItem label="日期查询">
                     {getFieldDecorator('Time', {
                       initialValue: initialForm.Time,
                     })(
                         <RangePicker_ allowClear={false} style={{ width: "100%", marginRight: '10px' }}  dataType='day'/>
                     )}
-                </FormItem>
+                </FormItem> */}
 
-                <FormItem  label="行政区">
+                {/* <FormItem  label="行政区">
                     {getFieldDecorator('RegionCode', {
                       initialValue:initialForm.RegionCode,
                     })(
-                    // <Select style={{ width: 200 }} allowClear placeholder="请选择行政区">
-                    //     {
-                    //     _regionList.map(item => <Option key={item.key} value={item.value}>
-                    //         {item.title}
-                    //         </Option>)
-                    //     }
-                    // </Select>,
                     <RegionList  changeRegion={''} RegionCode={''}/>
                     )}
-                </FormItem>
+                </FormItem> */}
 
-                <FormItem label="关注程度">
+                {/* <FormItem label="关注程度">
                     {getFieldDecorator('AttentionCode', {
                       initialValue:initialForm.AttentionCode,
                     })(
@@ -246,9 +244,9 @@ class EntWorkOrderStatistics extends PureComponent {
                         }
                         </Select>,
                     )}
-                </FormItem>
+                </FormItem> */}
 
-                <FormItem label="企业类型">
+                {/* <FormItem label="企业类型">
                     {getFieldDecorator('PollutantTypeCode', {
                       initialValue: pollutantTypeCode?pollutantTypeCode:initialForm.PollutantTypeCode,
                     })(
@@ -260,22 +258,31 @@ class EntWorkOrderStatistics extends PureComponent {
                         <Option value="2">废气</Option>
                     </Select>,
                     )}
-                </FormItem>
+                </FormItem> */}
 
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
-                    <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.search}>查询</Button>
-                    {
-                      /*     
-                    <Button
+                    {/* <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.search}>查询</Button> */}
+    
+                    {/* <Button
                         style={{ margin: '0 5px' }}
                         icon="export"
                         loading={exportLoading}
                         onClick={this.onExport}
                     >
                         导出
-                    </Button>
-                    */
-                   }
+                    </Button> */}
+                                    <Button 
+                  icon={<RollbackOutlined />} 
+                  style={{ marginLeft: 10 }} 
+                  onClick={()=>{
+                    if(this.props.goBack)
+                      this.props.goBack();
+                    else
+                      history.go(-1)
+                  }}
+                >
+                  返回
+                </Button>
                 </div>
             </Row>
 

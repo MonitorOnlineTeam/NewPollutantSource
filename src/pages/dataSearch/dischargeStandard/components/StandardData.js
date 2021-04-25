@@ -371,6 +371,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={columns}
             bordered={true}
             dataSource={this.props.disTableDatas}
+            scroll={{  y: 'calc(100vh - 360px)' }}
             // pagination={{
             //   showSizeChanger: true,
             //   showQuickJumper: true,

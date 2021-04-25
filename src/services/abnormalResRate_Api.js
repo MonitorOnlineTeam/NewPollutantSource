@@ -18,6 +18,18 @@ export async function exportReport(params) {
   return result;
 }
 
+// 获取table数据 - 城市一级
+export async function getExceptionAlarmRateListForCity(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionAlarmRateListForCity`, params);
+  return result;
+}
+
+// 导出数据 - 城市一级
+export async function exportExceptionAlarmRateListForCity(params) {
+  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForCity`, params);
+  return result;
+}
+
 // 获取table数据 - 二级页面
 export async function getSecondTableDataSource(params) {
   const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionAlarmRateListForPoint`, params);
