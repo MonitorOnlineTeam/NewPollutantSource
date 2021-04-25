@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-04-23 11:43:35
+ * @Last Modified time: 2021-04-23 17:29:17
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -410,7 +410,7 @@ export default Model.extend({
       //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
       //   sysConfig
       // };
-      let postData = payload;
+      let postData = { ...payload, FormData: JSON.stringify(payload.FormData) };
       const result = yield call(services.postAutoFromDataAdd, postData);
       if (result.IsSuccess) {
         message.success('添加成功！');
@@ -433,7 +433,7 @@ export default Model.extend({
       //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
       //   sysConfig
       // };
-      let postData = payload;
+      let postData = { ...payload, FormData: JSON.stringify(payload.FormData) };
       const result = yield call(services.postAutoFromDataUpdate, postData);
       if (result.IsSuccess) {
         message.success('修改成功！');
