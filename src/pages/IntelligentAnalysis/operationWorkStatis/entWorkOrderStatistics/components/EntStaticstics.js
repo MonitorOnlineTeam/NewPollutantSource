@@ -184,7 +184,7 @@ class EntStaticstics extends PureComponent {
                     style={{ marginLeft: 10 }} 
                     onClick={()=>{
                       if(this.props.goBack)
-                      type==='city'? this.props.goBack('CityStaticstics') : this.props.goBack()
+                      type==='city'? this.props.goBack('CityStaticstics',this.location.query) : this.props.goBack()
                       else
                         history.go(-1)
                     }}

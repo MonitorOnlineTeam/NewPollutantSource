@@ -13,9 +13,9 @@ class EntWorkOrderModal extends PureComponent {
     this.state = {page:'EntWorkOrderStatistics',query:null};
   }
 
-  goBack = (page)=>{
+  goBack = (page,query)=>{
     page? this.changePage({page:page,query:null}):
-     this.changePage({page:'EntWorkOrderStatistics',query:null});
+     this.changePage({page:'EntWorkOrderStatistics',query:query});
   }
 
   changePage=({page,query})=>{
