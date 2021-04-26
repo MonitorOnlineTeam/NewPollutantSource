@@ -4,7 +4,7 @@
  * 创建时间：2020
  */
 import React, { Component } from 'react';
-import { ExportOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleTwoTone,RollbackOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -77,17 +77,18 @@ export default class EntTransmissionEfficiency extends Component {
   }
 
   componentWillMount() {
-    this.updateState({
-      RegionCode: '',
-    });
-    this.getTableData();
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: {
-        RegionCode: '',
-        PointMark: '2',
-      },
-    });
+    let query =  this.props.location.query
+    setTimeout(() => {
+        this.getTableData(query&&query.RegionCode,2);
+    })
+
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: {
+    //     RegionCode: '',
+    //     PointMark: '2',
+    //   },
+    // });
   }
 
   updateState = payload => {
@@ -97,9 +98,10 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (RegionCode,regionLevel) => {
     this.props.dispatch({
       type: pageUrl.getData,
+      payload:{RegionCode:RegionCode,regionLevel:regionLevel}
     });
   };
 
@@ -239,11 +241,13 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'RegionName',
         align: 'center',
         render: (text, record) => { 
-             return  <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/cityLevel',query:{
-                        RegionCode: record.RegionCode
-                      }}}>
-                          {text}
-                    </Link>         
+           return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                       query: { RegionCode: record.RegionCode,Operationersonnel:this.props.operationpersonnel},
+                       }}
+                       >
+                    {text}
+                </Link>
+                  
         },
       },
       {
@@ -384,18 +388,18 @@ export default class EntTransmissionEfficiency extends Component {
           title={
             <>
               <Form layout="inline">
-                <Form.Item>
-                <Form.Item>
-                  查询时间：
+                {/* <Form.Item> */}
+                {/* <Form.Item>
+                  查询时间： */}
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
-                  <RangePicker_
+                  {/* <RangePicker_
                     dateValue={[moment(this.props.beginTime), moment(this.props.endTime)]}
                     format="YYYY-MM-DD"
                     callback={(dates, dataType) => this.dateCallback(dates, dataType)}
                     allowClear={false}
                   />
-                </Form.Item>
-                <Form.Item>
+                </Form.Item> */}
+                {/* <Form.Item>
                   <Select
                     placeholder="请选择排口类型"
                     onChange={this.typeChange}
@@ -417,7 +421,7 @@ export default class EntTransmissionEfficiency extends Component {
                     <Option value="2">全部考核</Option>
                     <Option value="1">国家考核</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                   {/* <Select
                     allowClear
                     placeholder="请选择行政区"
@@ -427,8 +431,8 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     {this.children()}
                   </Select> */}
-                   <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
-                </Form.Item>
+                   {/* <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/> */}
+                {/* </Form.Item> */}
                {/*  <Form.Item>
                 <Select
                   allowClear
@@ -445,9 +449,9 @@ export default class EntTransmissionEfficiency extends Component {
                 </Select>
                 </Form.Item> */}
                 <Form.Item>
-                  <Button type="primary" onClick={this.queryClick}>
+                  {/* <Button type="primary" onClick={this.queryClick}>
                     查询
-                  </Button>
+                  </Button> */}
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
@@ -456,6 +460,15 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     {/* <Icon type="export" /> */}
                     导出
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      this.props.onBack ? this.props.onBack() :
+                        history.go(-1);
+                    }}
+                  >
+                    <RollbackOutlined />
+                    返回
                   </Button>
                   {/* <Button type="primary" onClick={this.manualData}>
                     手工生成有效传输效率数据

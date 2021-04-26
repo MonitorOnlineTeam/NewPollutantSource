@@ -4,7 +4,7 @@
  * 创建时间：2020.10
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined  } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -70,10 +70,25 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-          query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
-                   {text}
-               </Link>
+          if(this.props.level){
+            return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+             query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
+                     {text}
+                 </Link>    
+          }else{
+            return this.props.types==='ent'?
+             <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
+             query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
+                     {text}
+                 </Link>  :
+
+                <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
+                  query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
+                    {text}
+                </Link>
+
+          }
+
                  
        },
       },
@@ -154,10 +169,10 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,level } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:level },
     });
   };
 
@@ -219,10 +234,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,level } = this.props;
     dispatch({
       type: 'MissingRateData/exportDefectDataSummary',
-      payload: { ...queryPar },
+      payload: { ...queryPar,regionLevel:level },
       callback: data => {
          downloadFile(`/upload${data}`);
         },
@@ -282,7 +297,8 @@ export default class EntTransmissionEfficiency extends Component {
     const {
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,OperationPersonnel },
-      type
+      type,
+      level
     } = this.props;
 
     return (
@@ -304,7 +320,8 @@ export default class EntTransmissionEfficiency extends Component {
 
                 </Select>
             </Form.Item> */}
-              <Form.Item>
+            {!level&&
+             <> <Form.Item>
                 日期查询：
                 <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                 callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
@@ -335,15 +352,6 @@ export default class EntTransmissionEfficiency extends Component {
               </Select>
               </Form.Item>  */}
               <Form.Item label='行政区'>
-                {/* <Select
-                  allowClear
-                  placeholder="行政区"
-                  onChange={this.changeRegion}
-                  value={RegionCode ? RegionCode : undefined}
-                  style={{ width: 100 }}
-                >
-                  {this.regchildren()}
-                </Select> */}
               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
              {type==='ent'? <Form.Item label='企业类型'>
@@ -358,10 +366,13 @@ export default class EntTransmissionEfficiency extends Component {
                   <Option value="2">废气</Option>
                 </Select>
               </Form.Item> : null }
+              </>
+                }
               <Form.Item>
-                <Button type="primary" onClick={this.queryClick}>
+              {!level&& <Button type="primary" onClick={this.queryClick}>
                   查询
-                </Button>
+                </Button>}
+
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -370,6 +381,10 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   导出
                 </Button>
+                {level&& <Button  onClick={() => { history.go(-1);  }} >
+                <RollbackOutlined />
+                   返回
+                </Button>}
               </Form.Item>
               </Row>
             </Form>

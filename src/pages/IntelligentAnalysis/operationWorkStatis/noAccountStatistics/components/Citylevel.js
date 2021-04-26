@@ -4,7 +4,7 @@
  * 创建时间：2019.10.26
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -58,7 +58,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'noAccountStatistics/updateState',
-  getData: 'noAccountStatistics/getTaskFormBookSta',
+  getData: 'noAccountStatistics/getTaskFormBookStaCityList',
 };
 @connect(({ loading, noAccountStatistics,autoForm }) => ({
   priseList: noAccountStatistics.priseList,
@@ -95,7 +95,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Region',
         align: 'center',
         render: (text, record) => {
-          return <a onClick={()=>{this.regionDetail(record)}}>{text}</a>;
+          return <a onClick={()=>{this.regionDetail(record)}}>{text + `${record.CityName? `/${record.CityName}` : ''}`}</a>;
         },
       },
       {
@@ -201,10 +201,10 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, location } = this.props;
 
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-     dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    //  dispatch({ type: 'noAccountStatistics/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
     //  this.updateQueryState({
     //   beginTime: moment().subtract(1, 'month').format('YYYY-MM-DD 00:00:00'),
     //   endTime: moment().format('YYYY-MM-DD 23:59:59'),
@@ -231,11 +231,11 @@ export default class EntTransmissionEfficiency extends Component {
 
   getTableData = () => { 
 
-    const { dispatch, queryPar,level } = this.props;
-
+    const { dispatch, queryPar,level,location:{query} } = this.props;
+     
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar,...{regionLevel:level} },
+      payload: { ...queryPar,RegionCode:query&&query.RegionCode },
       callback:res=>{
 
       }
@@ -292,10 +292,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,location:{query}  } = this.props;
     dispatch({
-      type: 'noAccountStatistics/exportTaskFormBookSta',
-      payload: { ...queryPar },
+      type: 'noAccountStatistics/exportTaskFormBookStaForCity',
+      payload: { ...queryPar,RegionCode:query&&query.RegionCode },
       callback: data => {
           downloadFile(`/upload${data}`);
         },
@@ -359,8 +359,15 @@ export default class EntTransmissionEfficiency extends Component {
   regionDetail=(row)=>{
     const { dispatch,queryPar } = this.props;
 
-     router.push({pathname:'/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent/cityLevel',query:{RegionCode:row.RegionCode}})
-
+    dispatch({
+      type: pageUrl.updateState,
+      payload: { regQueryPar: { ...queryPar,ModelType:"Region", RegionCode:row.CityCode },
+         RegionName:row.Region,
+        },
+    });
+    setTimeout(()=>{
+      this.setState({regionVisible:true})
+    })
   }
 
   entNumDetail=(row)=>{
@@ -405,11 +412,11 @@ export default class EntTransmissionEfficiency extends Component {
         title={
           <>
             <Form layout="inline">
-            {regionVisible?  <Region   regionVisible={regionVisible}  regionCancel={()=>{this.setState({regionVisible:false})}}/> : null}
+          {regionVisible?  <Region   regionVisible={regionVisible}  regionCancel={()=>{this.setState({regionVisible:false})}}/> : null}
             {entNumVisible?  <EntNum   entNumVisible={entNumVisible}   entNumCancel={()=>{this.setState({entNumVisible:false})}}/> : null}         
             {workNumVisible? <WorkNum   workNumVisible={workNumVisible}  workNumCancel={()=>{this.setState({workNumVisible:false})}}/> : null}
 
-            <Form.Item label=''>
+          {/* <Form.Item label=''>
              <RangePicker_ allowClear={false}   style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
             callback={(dates, dataType)=>this.dateChange(dates, dataType)}
             onRef={(ref) => {
@@ -426,16 +433,12 @@ export default class EntTransmissionEfficiency extends Component {
             </Form.Item>
             <Form.Item label=''>
              <EntType allowClear={false} typeChange={this.typeChange}  PollutantType={PollutantTypeCode} />
-            </Form.Item>
-
-              {/* <Form.Item label='企业列表'>
-               <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode}/>
-              </Form.Item> */}
+            </Form.Item> */}
 
               <Form.Item>
-                <Button type="primary" onClick={this.queryClick}>
+                {/* <Button type="primary" onClick={this.queryClick}>
                   查询
-                </Button>
+                </Button> */}
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -444,6 +447,7 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   导出
                 </Button>
+                <Button  onClick={() => {history.go(-1) }}><RollbackOutlined />返回</Button>
               </Form.Item>
             </Form>
           </>

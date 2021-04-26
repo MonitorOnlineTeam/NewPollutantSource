@@ -16,6 +16,7 @@ import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
+import { RollbackOutlined } from '@ant-design/icons';
 
 import { checkParent } from '../utils';
 
@@ -122,6 +123,7 @@ export default class RegionAirQualityMonitoringStationContent extends PureCompon
                                     }
                                 }}
                             >
+                                <RollbackOutlined/>
                                 返回
                             </Button>
                             {/* <Button

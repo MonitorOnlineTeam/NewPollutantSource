@@ -152,7 +152,7 @@ class EntStaticstics extends PureComponent {
 
     const columns = this.getColumns();
 
-    const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
+    const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime,type}}} = this.props;
     return (
       <Card>
         <Form layout="inline" style={{ marginBottom: 20 }}>
@@ -184,7 +184,7 @@ class EntStaticstics extends PureComponent {
                     style={{ marginLeft: 10 }} 
                     onClick={()=>{
                       if(this.props.goBack)
-                        this.props.goBack();
+                      type==='city'? this.props.goBack('CityStaticstics') : this.props.goBack()
                       else
                         history.go(-1)
                     }}

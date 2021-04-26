@@ -13,6 +13,8 @@ import {
   ExportDefectPointDetail,
   GetDefectPointDetail,
   GetPollutantByType,
+  GetDefectModelCity,
+  ExportDefectDataSummaryCity
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -46,6 +48,16 @@ export default Model.extend({
     *getDefectModel({ payload }, { call, put, update, select }) {
       //列表
       const response = yield call(GetDefectModel, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          tableDatas: response.Datas,
+          total: response.Total,
+        });
+      }
+    },
+    *getDefectModelCity({ payload }, { call, put, update, select }) {
+      //列表
+      const response = yield call(GetDefectModelCity, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas,
@@ -95,7 +107,19 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-    
+    *exportDefectDataSummaryCity({ callback, payload }, { call, put, update, select }) {
+      yield update({ exloading: true });
+      //导出   城市级别
+      const response = yield call(ExportDefectDataSummaryCity, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        callback(response.Datas);
+        yield update({ exloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exloading: false });
+      }
+    },
     // 根据企业类型查询监测因子
     *getPollutantByType({ payload, callback }, { call, put, update, select }) {
       const response = yield call(GetPollutantByType, { ...payload });

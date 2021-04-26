@@ -14,6 +14,7 @@ import {
   ExportOutlined,
   PlusOutlined,
   ProfileOutlined,
+  DatabaseOutlined
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -39,6 +40,8 @@ import {
   InputNumber,
   Tooltip,
   TreeSelect,
+  Tree,
+  Empty
 } from 'antd';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { routerRedux } from 'dva/router';
@@ -48,10 +51,12 @@ import SearchWrapper from '../../AutoFormManager/SearchWrapper';
 import { sdlMessage,downloadFile } from '@/utils/utils';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 import SdlTable from '@/components/SdlTable';
+import SelectPollutantType from '@/components/SelectPollutantType';
 
 import styles from './style.less';
 const { confirm } = Modal;
-
+const { TreeNode } = Tree;
+const { SHOW_PARENT } = TreeSelect;
 @connect(({ loading, autoForm,newuserinfo,usertree }) => ({
   loading: newuserinfo.loading,
   autoForm,
@@ -63,7 +68,15 @@ const { confirm } = Modal;
   tableDatas:newuserinfo.tableDatas,
   depInfoList:usertree.DepartTree,
   rolesList:usertree.RolesTree,
-  userPar:newuserinfo.userPar
+  userPar:newuserinfo.userPar,
+  RegionInfoTree: newuserinfo.RegionInfoTree,
+  GetRegionInfoByTree: loading.effects['newuserinfo/getregioninfobytree'],
+  CheckPointLoading: loading.effects['newuserinfo/getpointbydepid'],
+  getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],
+  EntAndPoint: newuserinfo.EntAndPoint,
+  RegionByDepID: newuserinfo.RegionByDepID,
+
+
 }))
 export default class UserInfoIndex extends Component {
   constructor(props) {
@@ -71,6 +84,11 @@ export default class UserInfoIndex extends Component {
     this.state = {
       selectedRowKeys:[],
       selectedRows:[],
+      visibleData:false,
+      selectedRow:[],
+      DataTreeValue:[],
+      leafTreeDatas: [],
+      newEntAndPoint:[]
     };
 
     this.columns = [
@@ -143,6 +161,23 @@ export default class UserInfoIndex extends Component {
         render:(text,row)=>{
           return (
             <Fragment>
+               <Tooltip title="数据过滤">
+                <a
+                  onClick={() => {
+                    this.setState(
+                      {
+                        selectedRow:row,
+                      },
+                      () => {
+                        this.showDataModal();
+                      },
+                    );
+                  }}
+                >
+                  <DatabaseOutlined style={{ fontSize: 16 }} />
+                </a>
+              </Tooltip> 
+              <Divider type="vertical" />
             <Tooltip title="编辑">
               <a
                 onClick={() => {
@@ -156,6 +191,7 @@ export default class UserInfoIndex extends Component {
                 <EditOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
+
             <Divider type="vertical" />
             <Tooltip title="详情">
               <a
@@ -204,8 +240,78 @@ export default class UserInfoIndex extends Component {
     if (nextProps.location.pathname != this.props.location.pathname) {
       if (nextProps.match.params.configId !== this.props.routerConfig) {this.reloadPage(nextProps.match.params.configId);}
     }
-  }
+    if (this.props.RegionByDepID !== nextProps.RegionByDepID) {
+      this.setState({
+        visibleRegion: true,
+        checkedKey: nextProps.RegionByDepID,
+      });
+    }
+    if (this.props.CheckPoint !== nextProps.CheckPoint) {
+      this.setState({
+        visibleData: true,
+        checkedKeys: nextProps.CheckPoint,
+      });
+    }
 
+    if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
+      this.setState({
+        newEntAndPoint: [
+          {
+            title: '全部',
+            children: nextProps.EntAndPoint,
+          },
+        ],
+      });
+    }
+  }
+  showDataModal = () => {
+
+    if (this.state.selectedRow.length == 0) {
+      message.error('请选中一行');
+      return;
+    }
+    const keys = this.state.selectedRow.ID;
+    this.props.dispatch({
+      type: 'newuserinfo/getregioninfobytree',
+      payload: {},
+    });
+    this.setState({
+      visibleData: true,
+      DataTreeValue: [],
+      checkedKey: this.props.RegionByDepID,
+    });
+    this.props.dispatch({
+      type: 'newuserinfo/getentandpoint',
+      payload: {
+        PollutantType: this.state.pollutantType,
+        RegionCode: '',
+      },
+    });
+    this.props.dispatch({
+      type: 'newuserinfo/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys.toString(),
+        PollutantType: this.state.pollutantType,
+        RegionCode: [],
+      },
+    });
+  };
+  renderDataTreeNodes = data =>
+  data.map(item => {
+    if (item.children) {
+      if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+        this.state.leafTreeDatas.push(item.key);
+      }
+    }
+    if (item.children) {
+      return (
+        <TreeNode title={item.title} key={item.key} dataRef={item}>
+          {this.renderDataTreeNodes(item.children)}
+        </TreeNode>
+      );
+    }
+    return <TreeNode {...item} />;
+  });
   reloadPage = configId => {
     const { dispatch } = this.props;
     dispatch({
@@ -347,6 +453,111 @@ export default class UserInfoIndex extends Component {
       payload: {...userPar},
     })
    }
+   handleCancel=()=>{
+     this.setState({
+       visibleData:false
+     })
+   }
+   onChecks = checkedKeys => {
+    this.setState({ checkedKeys });
+    const leafTree = [];
+    checkedKeys.map(item => {
+      if (this.state.leafTreeDatas.indexOf(item) != -1) {
+        leafTree.push(item);
+      }
+    });
+    this.setState({ checkedKeySel: checkedKeys });
+  };
+  onSelectData = (selectedKey, info) => {
+    this.setState({ selectedKey });
+  };
+     /** 数据过滤切换污染物 */
+  handleSizeChange = e => {
+    const keys = this.state.selectedRow.ID;
+    this.setState({ pollutantType: e.target.value });
+    this.props.dispatch({
+      type: 'newuserinfo/getpointbydepid',
+      payload: {
+        UserGroup_ID: keys.toString(),
+        PollutantType: e.target.value,
+        RegionCode: this.state.DataTreeValue.toString(),
+      },
+    });
+    this.props.dispatch({
+      type: 'newuserinfo/getentandpoint',
+      payload: {
+        RegionCode: this.state.DataTreeValue.toString(),
+        PollutantType: e.target.value,
+      },
+    });
+  };
+  /** 数据过滤切换行政区 */
+  onChangeTree = value => {
+    console.log('onChange================= ', value);
+    const keys = this.state.selectedRow.ID;
+    if (value == undefined) {
+      this.setState({
+        DataTreeValue: '',
+      });
+      this.props.dispatch({
+        type: 'newuserinfo/getentandpoint',
+        payload: {
+          RegionCode: '',
+          PollutantType: this.state.pollutantType,
+        },
+      });
+      this.props.dispatch({
+        type: 'newuserinfo/getpointbydepid',
+        payload: {
+          UserGroup_ID: keys.toString(),
+          PollutantType: this.state.pollutantType,
+          RegionCode: [],
+        },
+      });
+    } else {
+      this.setState({
+        DataTreeValue: value,
+      });
+      this.props.dispatch({
+        type: 'newuserinfo/getentandpoint',
+        payload: {
+          RegionCode: value.toString(),
+          PollutantType: this.state.pollutantType,
+        },
+      });
+      this.props.dispatch({
+        type: 'newuserinfo/getpointbydepid',
+        payload: {
+          UserGroup_ID: keys.toString(),
+          PollutantType: this.state.pollutantType,
+          RegionCode: this.state.DataTreeValue.toString(),
+        },
+      });
+    }
+  };
+  handleDataOK = e => {
+    console.log('regioncode=', this.state.DataTreeValue.toString());
+    console.log('DGIMN=', this.state.checkedKeys);
+    console.log('selectedRowKeys=', this.state.selectedRow.ID);
+    // return;
+    this.props.dispatch({
+      type: 'newuserinfo/insertPointFilterByUser',
+      payload: {
+        DGIMN: this.state.checkedKeys,
+        User_ID: this.state.selectedRow.ID,
+        Type: this.state.pollutantType,
+        RegionCode: this.state.DataTreeValue.toString(),
+        callback: res => {
+          if (res.IsSuccess) {
+            message.success('操作成功');
+            this.handleCancel();
+          } else {
+            message.error(res.Message);
+          }
+        },
+      },
+    });
+  };
   render() {
     const {
       searchConfigItems,
@@ -368,7 +579,23 @@ export default class UserInfoIndex extends Component {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
-
+    const tProps = {
+      treeData: this.props.RegionInfoTree,
+      value: this.state.DataTreeValue,
+      onChange: this.onChangeTree,
+      treeCheckable: true,
+      showCheckedStrategy: SHOW_PARENT,
+      searchPlaceholder: '行政区',
+      treeDefaultExpandedKeys: ['0'],
+      style: {
+        width: 400,
+        marginLeft: 16,
+      },
+      dropdownStyle: {
+        maxHeight: '700px',
+        overflowY: 'auto',
+      },
+    };
     return (
       <BreadcrumbWrapper title="用户管理">
           <Card>
@@ -523,6 +750,66 @@ export default class UserInfoIndex extends Component {
               //   //defaultPageSize:20
               // }}
             />
+
+            <Modal
+                title={`数据过滤-${this.state.selectedRow.userName}`}
+                visible={this.state.visibleData}
+                onOk={this.handleDataOK}
+                // destroyOnClose="true"
+                onCancel={()=>{this.setState({visibleData:false})}}
+                width={900}
+              >
+                {
+
+                  <div style={{ height: '600px', overflow: 'hidden' }}>
+                    <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
+
+                      <SelectPollutantType
+                        showType="radio"
+                        defaultPollutantCode={this.state.pollutantType}
+                        mode="multiple"
+                        onChange={this.handleSizeChange}
+                      />
+                      <TreeSelect
+                        className={styles.placeHolderClass}
+                        {...tProps}
+                        treeCheckable={false}
+                        allowClear
+                        placeholder='请选择行政区'
+                      />
+                    </Row>
+                    {this.props.CheckPointLoading || this.props.getentandpointLoading ? (
+                      <Spin
+                        style={{
+                          width: '100%',
+                          height: 'calc(100vh/2)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        size="large"
+                      />
+                    ) : this.props.EntAndPoint.length > 0 ? (
+                      <Tree
+                        key="key"
+                        style={{ height: '560px', overflow: 'auto' }}
+                        checkable
+                        onExpand={this.onExpands}
+                        treeData={this.state.newEntAndPoint}
+                        onCheck={this.onChecks}
+                        checkedKeys={this.state.checkedKeys}
+                        onSelect={this.onSelectData}
+                        selectedKeys={this.state.selectedKeys}
+                        defaultExpandAll
+                      >
+                        {this.renderDataTreeNodes(this.state.newEntAndPoint)}
+                      </Tree>
+                    ) : (
+                      <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    )}
+                  </div>
+                }
+              </Modal>
           </Card>
       </BreadcrumbWrapper>
     );

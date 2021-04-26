@@ -257,3 +257,21 @@ export async function getip() {
         data: null
     } : result;
 }
+export async function insertPointFilterByUser(params) {
+    const body = {
+      UserID: params.User_ID,
+      DGIMN: params.DGIMN,
+      Type: params.Type,
+      RegionCode: params.RegionCode,
+    };
+    const result = post(
+      '/api/rest/PollutantSourceApi/AuthorApi/InsertPointFilterByUser',
+      body,
+      null,
+    );
+    return result === null
+      ? {
+          data: null,
+        }
+      : result;
+  }

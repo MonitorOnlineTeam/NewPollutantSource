@@ -29,7 +29,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from './style.less';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile,interceptTwo,RollbackOutlined } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 // import IndexModal from './IndexModal';
@@ -78,6 +78,7 @@ export default class EntIndexModal extends Component {
       PollutantType: props.pollutantType,
       beginTime:props.beginTime,
       endTime:props.endTime,
+      level:''
     };
   }
 
@@ -103,13 +104,15 @@ export default class EntIndexModal extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (regionCode) => {
     this.props.dispatch({
       type: pageUrl.getData,
       payload: {
         PollutantType: this.state.PollutantType?this.state.PollutantType:'',
         beginTime:this.state.beginTime,
         endTime:this.state.endTime,
+        RegionCode:this.state.level? regionCode: this.props.RegionCode,
+        regionLevel:this.state.level? this.state.level: ''
       }
     });
   };
@@ -257,7 +260,7 @@ export default class EntIndexModal extends Component {
   }
   showModal=()=>{
     
-    const { eName } = this.state;
+    const { eName,level } = this.state;
     const { regionList, exRegionloading, RegionCode,operationpersonnel } = this.props;
     const columns = [
       {
@@ -268,11 +271,20 @@ export default class EntIndexModal extends Component {
         render: (text, record) => { 
           let RegionCode = record.RegionCode;
           return <a onClick={()=>{
-            this.setState({
-              showDetails: true,
-              RegionCode: RegionCode,
-              OperationPersonnel:operationpersonnel
-            })
+            if(this.state.level){
+              this.setState({
+                showDetails: true,
+                RegionCode: RegionCode,
+                OperationPersonnel:operationpersonnel
+              })
+            }else{
+              this.setState({
+                level: '2',
+              },()=>{
+                this.getTableData(RegionCode);
+              })
+            }
+
           }}>
             {text}
           </a>
@@ -421,7 +433,8 @@ export default class EntIndexModal extends Component {
           title={
             <>
               <Form layout="inline">
-                <Form.Item>
+
+                {!level&&<><Form.Item>
                   查询时间：
                   {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
@@ -481,10 +494,11 @@ export default class EntIndexModal extends Component {
                   </Select> */}
                    <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                 </Form.Item>
+                </>}
                 <Form.Item>
-                  <Button type="primary" onClick={this.getTableData}>
+                {!level&& <Button type="primary" onClick={this.getTableData}>
                     查询
-                  </Button>
+                  </Button>}
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
@@ -499,7 +513,7 @@ export default class EntIndexModal extends Component {
                   </Button> */}
                 </Form.Item>
               </Form>
-              <div style={{ paddingTop: 10 }}>
+              {!level&& <div style={{ paddingTop: 10 }}>
                 <div
                   style={{
                     width: 20,
@@ -530,7 +544,19 @@ export default class EntIndexModal extends Component {
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                    {`<90%未达标`}
                 </span>
-              </div>
+              </div>}
+              <Button
+                    onClick={() => {
+                      this.setState({
+                        level:'',
+                      },()=>{
+                        this.getTableData();
+                      })
+                    }}
+                  >
+                    <RollbackOutlined />
+                    返回
+                  </Button>
             </>
           }
         >

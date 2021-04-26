@@ -20,6 +20,19 @@ export async function GetDefectModel(params) {
   return result;
 }
 /**
+ * 查询缺失台账统计 城市级别
+ *
+ */
+export async function GetDefectModelCity(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookStaAirCity',
+    params,
+    null,
+  );
+
+  return result;
+}
+/**
  * 超标核实率详情
  *
  */
@@ -54,7 +67,17 @@ export async function ExportDefectDataSummary(params) {
 
   return result;
 }
+//导出 缺失台账导出  城市级别
 
+export async function ExportDefectDataSummaryCity(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookStaAirCity',
+    params,
+    null,
+  );
+
+  return result;
+}
 
 
 //根据行政区获取 企业列表

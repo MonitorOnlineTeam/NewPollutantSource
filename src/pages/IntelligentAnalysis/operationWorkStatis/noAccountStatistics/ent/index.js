@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import ContentData from '../components/ContentData'
+import Citylevel from '../components/Citylevel'
 
 
 
@@ -24,10 +25,10 @@ export default class Index extends Component {
    }
   render() {
     
-    let level = this.props.location.pathname==='/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent'? '' : '2';
+    let flag = this.props.location.pathname==='/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent'? true : false;
     return (
         <BreadcrumbWrapper >
-           <ContentData level={level}/>
+          {!flag?  <Citylevel location={this.props.location}/> : <ContentData/> }
         </BreadcrumbWrapper>
     );
   }

@@ -10,6 +10,8 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportTaskFormBookSta,
+  GetTaskFormBookStaCityList,
+  ExportTaskFormBookStaForCity,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -71,6 +73,28 @@ export default Model.extend({
         yield update({ loading:false }); 
       }
     },
+    *getTaskFormBookStaCityList({callback, payload }, { call, put, update, select }) {
+      //无台账工单统计（企业） 列表  城市级别
+
+
+      payload.ModelType==='All'? yield update({ loading:true })   : payload.ModelType==='Region'? yield update({ Regionloading:true }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:true }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:true }) :  yield update({ TaskNumsloading:true })
+
+       const response = yield call(GetTaskFormBookStaCityList, { ...payload });
+      if (response.IsSuccess) {
+        if(payload.ModelType==='All'){
+          yield update({
+            tableDatas:response.Datas,
+            loading:false  
+          });
+        }else{
+          payload.ModelType==='Region'? yield update({ Regionloading:false }) :  payload.ModelType==='EntNum'?  yield update({ EntNumloading:false }) : payload.ModelType==='EntName'?  yield update({ EntNameloading:false }) :  yield update({ TaskNumsloading:false })
+        }
+        callback(response.Datas)
+      }else{
+      
+        yield update({ loading:false }); 
+      }
+    },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
       //关注列表
       const response = yield call(GetAttentionDegreeList, { ...payload });
@@ -104,7 +128,20 @@ export default Model.extend({
         yield update({ exloading: false });
       }
     },
-
+    *exportTaskFormBookStaForCity({callback, payload }, { call, put, update, select }) {
+      yield update({ exloading: true });
+      //导出
+      const response = yield call(ExportTaskFormBookStaForCity, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        callback(response.Datas);
+        yield update({ exloading: false });
+      } else {
+        message.warning(response.Message);
+        yield update({ exloading: false });
+      }
+    },
+    
 
   },
 });

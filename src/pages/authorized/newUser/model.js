@@ -6,8 +6,10 @@ import {
     GetDepInfoByTree,
     GetRolesTree,
     GetUserList,
-    ExportUserList
+    ExportUserList,
+    insertPointFilterByUser
 } from './service';
+import { getregioninfobytree,getentandpoint,getpointbydepid,} from '../departInfo/service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
 import { sdlMessage } from '@/utils/utils';
@@ -49,7 +51,11 @@ export default Model.extend({
             groupListID:'',
             userName:'',	
             userAccount:'',
-        }
+        },
+        RegionByDepID: [],
+        RegionInfoTree:[],
+        EntAndPoint: [],
+        CheckPoint:[]
     },
     subscriptions: {
         setup({
@@ -413,8 +419,130 @@ export default Model.extend({
                 reason: result.reason
             });
             payload.callback();
+        },
+     /*获取行政区详细信息及层级关系**/
+     * getregioninfobytree({
+              payload
+                }, {
+                    call,
+                    update,
+                }) {
+                    const result = yield call(getregioninfobytree, { ...payload });
+                    if (result.IsSuccess) {
+                        yield update({
+                            RegionInfoTree: result.Datas
+                        });
+                    }
+      },
+      /*获取企业+排口**/
+      * getentandpoint({
+        payload
+    }, {
+        call,
+        update,
+        select,
+        take
+    }) {
+        // if(!payload.PollutantType)
+        // {
+        //     yield take('common/getPollutantTypeList/@@end');
+        //     const dd = yield select(state => state.common);
+        //     payload={
+        //         ...payload,
+        //         PollutantTypes:dd.defaultPollutantCode
+        //     }
+        // }
+        if (!payload.PollutantType) {
+            let global = yield select(state => state.common);
+            if (!global.defaultPollutantCode) {
+                yield take('common/getPollutantTypeList/@@end');
+                global = yield select(state => state.common);
+                payload = {
+                    ...payload,
+                    PollutantType: global.defaultPollutantCode
+                }
+            } else {
+                payload = {
+                    ...payload,
+                    PollutantType: global.defaultPollutantCode
+                }
+            }
+
         }
+        const result = yield call(getentandpoint, {
+            ...payload
+        });
+        if (result.IsSuccess) {
+            // 过滤掉没有子节点的数据
+            let EntAndPoint = result.Datas.filter(item => item.children.length);
+            yield update({
+                EntAndPoint: EntAndPoint
+            });
+        }
+
     },
+   /*获取当前部门的排口**/
+  * getpointbydepid({
+                payload
+            }, {
+                call,
+                update,
+                select,
+                take
+            }) {
+                if (!payload.PollutantType) {
+                    let global = yield select(state => state.common);
+                    if (!global.defaultPollutantCode) {
+                        yield take('common/getPollutantTypeList/@@end');
+                        global = yield select(state => state.common);
+                        payload = {
+                            ...payload,
+                            PollutantType: global.defaultPollutantCode
+                        }
+                    } else {
+                        payload = {
+                            ...payload,
+                            PollutantType: global.defaultPollutantCode
+                        }
+                    }
+    
+                }
+                const result = yield call(getpointbydepid, {
+                    ...payload
+                });
+                if (result.IsSuccess) {
+                    yield update({
+                        CheckPoint: result.Datas
+                    });
+                }
+            },
+    /*给当前用户添加排口权限(可批量)**/
+      * insertPointFilterByUser({
+            payload
+        }, {
+            call,
+            update,
+            select,
+            take
+        }) {
+            if (!payload.Type) {
+                let global = yield select(state => state.common);
+                if (!global.defaultPollutantCode) {
+                    yield take('common/getPollutantTypeList/@@end');
+                    global = yield select(state => state.common);
+                    payload.Type = global.defaultPollutantCode
+                } else {
+                    payload.Type = global.defaultPollutantCode
+                }
+
+            }
+            const result = yield call(insertPointFilterByUser, {
+                ...payload
+            });
+            payload.callback(result)
+        },
+    },
+
     reducers: {
         save(state, action) {
             return {

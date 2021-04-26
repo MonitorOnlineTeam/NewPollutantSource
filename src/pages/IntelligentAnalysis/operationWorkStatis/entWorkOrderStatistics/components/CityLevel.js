@@ -60,7 +60,7 @@ class EntWorkOrderStatistics extends PureComponent {
 
           }
         },
-        width: 120,
+        width: 180,
       },{
           title: '企业',
           children: [
@@ -88,7 +88,7 @@ class EntWorkOrderStatistics extends PureComponent {
                   EndTime: values.EndTime,
                 }
                 if(changePage){
-                  return <a onClick={()=>{changePage({page:'EntStaticstics',query})}}>{text}</a>
+                  return <a onClick={()=>{changePage({page:'EntStaticstics',query,type:'city'})}}>{text}</a>
                 }else{
                   return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
                           {text}

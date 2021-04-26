@@ -9,6 +9,8 @@
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'; // 外层cpmponent 包含面包屑
 import { Form } from '@ant-design/compatible';
+import { RollbackOutlined } from '@ant-design/icons';
+
 import '@ant-design/compatible/assets/index.css';
 import {
     Card,
@@ -246,6 +248,7 @@ export default class StationAirQualityMonitoringStation extends PureComponent {
                                     }
                                 }}
                             >
+                                <RollbackOutlined />
                                 返回
                 </Button>
                             {/* <Button

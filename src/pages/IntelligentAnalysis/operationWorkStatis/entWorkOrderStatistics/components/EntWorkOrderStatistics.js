@@ -50,7 +50,7 @@ class EntWorkOrderStatistics extends PureComponent {
           }
           if(query.RegionCode == 'all') query.RegionCode = '';
           if(changePage){
-            return <a onClick={()=>{changePage({page:'RegionStaticstics',query})}}>{text}</a>
+            return <a onClick={()=>{changePage({page:'CityStaticstics',query})}}>{text}</a>
           }else{
             // return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
             //   {text}
@@ -60,7 +60,7 @@ class EntWorkOrderStatistics extends PureComponent {
           </Link>
           }
         },
-        width: 120,
+        width: 180,
       },{
           title: '企业',
           children: [

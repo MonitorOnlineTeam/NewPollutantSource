@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import AirMissing from './components/airMissing';
+import CityLevel from './components/CityLevel';
 
 
 export default class Index extends Component {
@@ -17,9 +18,10 @@ export default class Index extends Component {
 
   }
   render() {
+    const flag = this.props.location.pathname==='/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics'? true: false
     return (
       <BreadcrumbWrapper >
-      <AirMissing></AirMissing>
+     {flag? <AirMissing /> : <CityLevel location={this.props.location}/> }
       </BreadcrumbWrapper>
     );
   }

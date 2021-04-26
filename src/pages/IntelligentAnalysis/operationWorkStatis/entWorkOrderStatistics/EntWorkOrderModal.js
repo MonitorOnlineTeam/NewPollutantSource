@@ -4,6 +4,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import EntWorkOrderStatistics from './components/EntWorkOrderStatistics';
 import EntStaticstics from './components/EntStaticstics';
 import RegionStaticstics from './components/RegionStaticstics';
+import CityStaticstics from './components/CityLevel'
 class EntWorkOrderModal extends PureComponent {
  
 
@@ -12,8 +13,9 @@ class EntWorkOrderModal extends PureComponent {
     this.state = {page:'EntWorkOrderStatistics',query:null};
   }
 
-  goBack = ()=>{
-    this.changePage({page:'EntWorkOrderStatistics',query:null});
+  goBack = (page)=>{
+    page? this.changePage({page:page,query:null}):
+     this.changePage({page:'EntWorkOrderStatistics',query:null});
   }
 
   changePage=({page,query})=>{
@@ -38,6 +40,8 @@ class EntWorkOrderModal extends PureComponent {
               (<EntStaticstics goBack={this.goBack} location={{query:this.state.query}}></EntStaticstics>)
             :this.state.page=='RegionStaticstics'?
               (<RegionStaticstics goBack={this.goBack} location={{query:this.state.query}}></RegionStaticstics>)
+              :this.state.page=='CityStaticstics'?
+              (<CityStaticstics goBack={this.goBack.bind(this)} location={{query:this.state.query}}></CityStaticstics>)
             :null
           }
         </Modal>

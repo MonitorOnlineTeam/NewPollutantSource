@@ -13,7 +13,19 @@ export async function GetTaskFormBookSta(params) {
 
   return result;
 }
+/**
+ * 无台账工单统计（企业） 列表  城市级别
+ *
+ */
+export async function GetTaskFormBookStaCityList(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/GetTaskFormBookStaCity',
+    params,
+    null,
+  );
 
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(
@@ -30,6 +42,17 @@ export async function GetAttentionDegreeList(params) {
 export async function ExportTaskFormBookSta(params) {
   const result = post(
     '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookSta',
+    params,
+    null,
+  );
+
+  return result;
+}
+//导出 城市级别
+
+export async function ExportTaskFormBookStaForCity(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskFormBookStaCity',
     params,
     null,
   );

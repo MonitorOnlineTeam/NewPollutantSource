@@ -15,6 +15,7 @@ import SdlTable from '@/components/SdlTable';
 import { downloadFile } from '@/utils/utils';
 import moment from 'moment';
 import { router } from 'umi';
+import { RollbackOutlined } from '@ant-design/icons';
 
 import { checkParent } from './utils';
 import RegionList from '@/components/RegionList'
@@ -49,11 +50,12 @@ export default class index extends PureComponent {
 
   componentDidMount() {
     const { dispatch, divisorList, beginTime, endTime, RegionCode } = this.props;
+    const params = JSON.parse(this.props.location.query.params);
     // 获取行政区列表
-    dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2' },
-    });
+    // dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2' },
+    // });
     dispatch({
       type: 'airWorkOrderStatistics/getTaskStaticTitle',
       payload: { PollutantTypeCode: 5 },
@@ -62,37 +64,38 @@ export default class index extends PureComponent {
       type: 'airWorkOrderStatistics/getTaskStatic',
       payload: {
         PollutantTypeCode: '5',
-        AttentionCode: '',
-        RegionCode: typeof RegionCode == 'undefined' ? '' : RegionCode,
-        EntCode: '',
-        BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
-        EndTime: endTime.format('YYYY-MM-DD 23:59:59'),
+        // AttentionCode: '',
+        RegionCode: params.regionCode,
+        // EntCode: params.EntCode,
+        BeginTime: moment(params.beginTime).format('YYYY-MM-DD 00:00:00'),
+        EndTime:  moment(params.beginTime).format('YYYY-MM-DD 00:00:00'),
+        regionLevel:2
         // BeginTime: '2020-01-01 00:00:00',
         // EndTime: '2020-09-30 23:59:59',
       },
     });
   }
 
-  getTaskStatic = () => {
-    const { dispatch, divisorList, beginTime, endTime } = this.props;
-    let { RegionCode } = this.props;
-    if (typeof RegionCode === 'undefined') {
-      RegionCode = '';
-    }
-    dispatch({
-      type: 'airWorkOrderStatistics/getTaskStatic',
-      payload: {
-        PollutantTypeCode: '5',
-        AttentionCode: '',
-        RegionCode,
-        EntCode: '',
-        BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
-        EndTime: endTime.format('YYYY-MM-DD 23:59:59'),
-        // BeginTime: '2020-01-01 00:00:00',
-        // EndTime: '2020-09-30 23:59:59',
-      },
-    });
-  };
+//   getTaskStatic = () => {
+//     const { dispatch, divisorList, beginTime, endTime } = this.props;
+//     let { RegionCode } = this.props;
+//     if (typeof RegionCode === 'undefined') {
+//       RegionCode = '';
+//     }
+//     dispatch({
+//       type: 'airWorkOrderStatistics/getTaskStatic',
+//       payload: {
+//         PollutantTypeCode: '5',
+//         AttentionCode: '',
+//         RegionCode,
+//         EntCode: '',
+//         BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
+//         EndTime: endTime.format('YYYY-MM-DD 23:59:59'),
+//         // BeginTime: '2020-01-01 00:00:00',
+//         // EndTime: '2020-09-30 23:59:59',
+//       },
+//     });
+//   };
 
   createColum = item => {
     // if (item.TypeName == '行政区') {
@@ -114,7 +117,7 @@ export default class index extends PureComponent {
                 params.beginTime = beginTime.format('YYYY-MM-DD');
                 params.endTime = endTime.format('YYYY-MM-DD');
                 router.push(
-                  `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/cityLevel?params=${JSON.stringify(
+                  `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation?params=${JSON.stringify(
                     params,
                   )}`,
                 );
@@ -205,8 +208,8 @@ export default class index extends PureComponent {
       <BreadcrumbWrapper>
         <Card>
           <Form layout="" style={{ marginBottom: 20 }}>
-            <Row gutter={24}>
-              <Col md={7}>
+            <Row gutter={24} style={{ marginLeft: 0 }}>
+              {/* <Col md={7}>
                 <FormItem
                   {...formLayout}
                   labelCol={{ span: 4 }}
@@ -235,9 +238,9 @@ export default class index extends PureComponent {
                     />,
                   )}
                 </FormItem>
-              </Col>
-              <Col md={4}>
-                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+              </Col> */}
+              {/* <Col md={4}>
+                <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}> */}
                   {/* {getFieldDecorator('RegionCode', {
                     initialValue: RegionCode,
                   })(
@@ -262,7 +265,7 @@ export default class index extends PureComponent {
                         );
                       })}
                     </Select>)} */}
-                        <RegionList  changeRegion={value => {
+                        {/* <RegionList  changeRegion={value => {
                                         this.setState({ RegionCode: value }, () => { });
                                             dispatch({
                                                 type: 'airWorkOrderStatistics/updateState',
@@ -272,9 +275,9 @@ export default class index extends PureComponent {
                                                       });
                        }} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>                   
                   
-                </FormItem>
-              </Col>
-              <Col md={9} style={{ marginTop: 3 }}>
+                </FormItem> */}
+              {/* </Col> */}
+              {/* <Col md={9} style={{ marginTop: 3 }}>
                 <Button
                   loading={loading}
                   type="primary"
@@ -282,7 +285,7 @@ export default class index extends PureComponent {
                   onClick={this.getTaskStatic}
                 >
                   查询
-                </Button>
+                </Button> */}
                 {/* <Button
                   style={{ marginLeft: 10 }}
                   icon="export"
@@ -291,7 +294,10 @@ export default class index extends PureComponent {
                 >
                   导出
                 </Button> */}
-              </Col>
+              {/* </Col> */}
+              <Button style={{marginLeft:0}}  onClick={() => {
+                 this.props.history.go(-1);
+             }} ><RollbackOutlined />返回</Button>
             </Row>
           </Form>
           <SdlTable

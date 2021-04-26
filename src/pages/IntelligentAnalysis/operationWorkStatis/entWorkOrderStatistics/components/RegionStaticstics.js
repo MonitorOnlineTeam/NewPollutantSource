@@ -118,7 +118,7 @@ class RegionStaticstics extends PureComponent {
                   style={{ marginLeft: 10 }} 
                   onClick={()=>{
                     if(this.props.goBack)
-                      this.props.goBack();
+                     this.props.goBack('CityStaticstics')
                     else
                       history.go(-1)
                   }}

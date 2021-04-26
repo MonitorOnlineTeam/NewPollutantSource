@@ -1315,6 +1315,12 @@ export default {
                   path: '/Intelligentanalysis/chaoStatistics',
                   component: './IntelligentAnalysis/chaoStatistics',
                 },
+                //传输有效率 城市级别
+                {
+                  name: 'Intelligentanalysis',
+                  path: '/Intelligentanalysis/transmissionefficiency/cityLevel',
+                  component: './Intelligentanalysis/newTransmissionefficiency/CityLevel',
+                },
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
@@ -1451,9 +1457,19 @@ export default {
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
                     },
                     {
+                      //缺失数据报警响应率 企业  城市级别
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/ent/Citylevel',
+                    },
+                    {
                       //缺失数据报警响应率 空气站
                       path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
                       component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    },
+                    {
+                      //缺失数据报警响应率 空气站  城市级别
+                      path: '/Intelligentanalysis/dataAlarm/missingDataRate/air/citylevel',
+                      component: './Intelligentanalysis/dataAlarm/missingDataRate/air/Citylevel',
                     },
                     {
                       //缺失数据报警响应率 二级页面
@@ -1536,12 +1552,16 @@ export default {
                       component:
                         './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
                     },
-                    /* 缺失台账工单统计 */
+                    /* 缺失台账工单统计 空气站*/
                     {
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                       component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
                     },
-
+                    /* 缺失台账工单统计 空气站 城市级别*/
+                    {
+                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/citylevel',
+                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    },
                     /* 缺失台账工单详情 */
                     {
                       path:
@@ -1570,6 +1590,13 @@ export default {
                     },
                     {
                       /** 运维工单统计-空气站 */
+                      name: 'AirWorkOrderStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/cityLevel',
+                      component:
+                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/CityLevel',
+                    },
+                    {
+                      /** 运维工单统计-空气站  城市级别*/ 
                       name: 'AirWorkOrderStatistics',
                       path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
                       component:

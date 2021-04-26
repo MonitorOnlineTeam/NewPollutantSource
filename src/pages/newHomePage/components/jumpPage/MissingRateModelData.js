@@ -4,7 +4,7 @@
  * 创建时间：2020.11
  */
 import React, { Component,PureComponent } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined  } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -66,7 +66,8 @@ export default class Index extends PureComponent {
       entVisible:false,
       location:{
         query:{}
-      }
+      },
+      level:''
      
     };
     
@@ -123,11 +124,33 @@ export default class Index extends PureComponent {
     this.initData();
   }
   detail=(text,record)=>{
+
+     if(this.state.level){
       this.setState({
         location:{ query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)}}
        },()=>{
         this.setState({entVisible:true})
        })
+      }else{
+
+        const { dispatch,types,time } = this.props;
+        this.setState({level:2},()=>{
+
+          this.setState({regionCode:record.regionCode,level:2},()=>{
+            this.updateQueryState({
+              RegionCode: '',
+              EntType: types==='ent'? "1":"2",
+              beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
+              endTime: time[1].format('YYYY-MM-DD 23:59:59'),
+            }); 
+            setTimeout(() => {
+              this.getTableData(record.regionCode);
+            });   
+          })
+
+        })
+
+      }
   }
   initData = () => {
     const { dispatch, location,Atmosphere,types,time } = this.props;
@@ -168,7 +191,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: this.state.level? { ...queryPar,RegionCode:this.state.regionCode,regionLevel:this.state.level } :{ ...queryPar },
     });
   };
 
@@ -233,7 +256,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectDataSummary',
-      payload: { ...queryPar },
+      payload: this.state.level? { ...queryPar,RegionCode:this.state.regionCode,regionLevel:this.state.level } :{ ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
         },
@@ -296,7 +319,7 @@ export default class Index extends PureComponent {
        time,
       types
     } = this.props;
-    const { entVisible,location } = this.state;
+    const { entVisible,location,level } = this.state;
     return <>
     {entVisible? 
       <MissingDataRateModelDetail location={location} detailBack={()=>{this.setState({
@@ -306,7 +329,7 @@ export default class Index extends PureComponent {
     <div>
             <Form layout="inline"> 
             <Row style={{paddingBottom:15}}>
-              <Form.Item>
+              {!level&&<><Form.Item>
                 日期查询：
                 <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(time[0]),moment(time[1])]} 
                 callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
@@ -363,11 +386,11 @@ export default class Index extends PureComponent {
                   <Option value="2">废气</Option>
                 </Select>
               </Form.Item> : null }
-
+              </>}
               <Form.Item>
-                <Button type="primary" onClick={this.queryClick}>
+              {!level&& <Button type="primary" onClick={this.queryClick}>
                   查询
-                </Button>
+                </Button>}
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -376,6 +399,11 @@ export default class Index extends PureComponent {
                 >
                   导出
                 </Button>
+                {level&& <Button onClick={() => {
+                  this.setState({level:'',regionCode:''},()=>{
+                    this.getTableData();
+                  })
+             }} ><RollbackOutlined />返回</Button>}
               </Form.Item>
               </Row>
             </Form>

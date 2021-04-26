@@ -4,7 +4,7 @@
  * 创建时间：2020.10.17
  */
 import React, { Component } from 'react';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -42,7 +42,7 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'noAccountAirStatistics/updateState',
-  getData: 'noAccountAirStatistics/getDefectModel',
+  getData: 'noAccountAirStatistics/getDefectModelCity',
 };
 @connect(({ loading, noAccountAirStatistics, autoForm, common }) => ({
   priseList: noAccountAirStatistics.priseList,
@@ -67,15 +67,8 @@ export default class airMissing extends Component {
           key: 'Region',
           align: 'center',
           render: (text, record) => {
-            return (
-              <a
-                onClick={() => {
-                  this.regionDetail(record);
-                }}
-              >
-                {text}
-              </a>
-            );
+            return <a onClick={()=>{this.regionDetail(record)}}>{text + `${record.CityName? `/${record.CityName}` : ''}`}</a>;
+
           },
           // render: (text, record) => {
           //   return (
@@ -249,22 +242,19 @@ export default class airMissing extends Component {
   regionDetail = record => {
    
 
-    // setTimeout(() => {
-    //   this.setState({
-    //     regionVisible: true,
-    //     requestData: JSON.stringify({
-    //       RegionCode: record.RegionCode,
-    //       BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
-    //       EndTime: this.props.noAccountAirStatisticsForm.EndTime,
-    //     }),
-    //   });
-    // });
-    router.push({pathname:'/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/citylevel',query:{RegionCode:record.RegionCode}})
-
+    setTimeout(() => {
+      this.setState({
+        regionVisible: true,
+        requestData: JSON.stringify({
+          RegionCode: record.RegionCode,
+          BeginTime: this.props.noAccountAirStatisticsForm.BeginTime,
+          EndTime: this.props.noAccountAirStatisticsForm.EndTime,
+        }),
+      });
+    });
   };
   componentDidMount() {
-    this.updateQueryState({ ModelType: 'All', RegionCode: undefined });
-
+    // this.updateQueryState({ ModelType: 'All', RegionCode: undefined });
     setTimeout(() => {
       this.getTableData();
     });
@@ -280,19 +270,19 @@ export default class airMissing extends Component {
   };
 
   getTableData = () => {
-    const { dispatch, noAccountAirStatisticsForm } = this.props;
+    const { dispatch, noAccountAirStatisticsForm,location:{query} } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...noAccountAirStatisticsForm },
+      payload: { ...noAccountAirStatisticsForm,RegionCode:query&&query.RegionCode  },
     });
   };
 
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, noAccountAirStatisticsForm } = this.props;
+    const { dispatch, noAccountAirStatisticsForm,location:{query}  } = this.props;
     dispatch({
-      type: 'noAccountAirStatistics/exportDefectDataSummary',
-      payload: { ...noAccountAirStatisticsForm },
+      type: 'noAccountAirStatistics/exportDefectDataSummaryCity',
+      payload: { ...noAccountAirStatisticsForm,RegionCode:query&&query.RegionCode },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
@@ -331,7 +321,7 @@ export default class airMissing extends Component {
         bordered={false}
         title={
           <Form layout="inline">
-            {regionVisible ? (
+           {regionVisible ? (
               <Region
                 requestData={requestData}
                 regionVisible={regionVisible}
@@ -349,7 +339,7 @@ export default class airMissing extends Component {
                 }}
               />
             ) : null}
-            <Row>
+            {/*  <Row>
               <Form.Item>
                 日期查询：
                 <RangePicker_
@@ -359,12 +349,12 @@ export default class airMissing extends Component {
                   dateValue={[moment(BeginTime), moment(EndTime)]}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)}
                 />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item>
-                <Button type="primary" onClick={this.queryClick}>
+                {/* <Button type="primary" onClick={this.queryClick}>
                   查询
-                </Button>
+                </Button> */}
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
@@ -373,8 +363,10 @@ export default class airMissing extends Component {
                 >
                   导出
                 </Button>
+                <Button  onClick={() => {history.go(-1) }}><RollbackOutlined />返回</Button>
+
               </Form.Item>
-            </Row>
+            {/* </Row> */}
           </Form>
         }
       >

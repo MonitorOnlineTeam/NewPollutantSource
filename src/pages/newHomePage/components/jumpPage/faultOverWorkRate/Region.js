@@ -406,7 +406,7 @@ export default class EntTransmissionEfficiency extends Component {
                :
                null
              }
-               <Form.Item>
+               <Form.Item  style={{ marginRight:5}}>
                 {!regionLevel&&<Button type="primary" onClick={this.queryClick}>
                    查询
                  </Button>}
