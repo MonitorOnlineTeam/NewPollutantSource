@@ -21,6 +21,7 @@ const { Option } = Select;
   tableTitleData:entWorkOrderStatistics.tableTitleData,
   tableDataSource:entWorkOrderStatistics.tableDataSource,
   loading: loading.effects["entWorkOrderStatistics/getTableDataSource"],
+  param:entWorkOrderStatistics.param
 }))
 @Form.create()
 class EntWorkOrderStatistics extends PureComponent {
@@ -42,17 +43,22 @@ class EntWorkOrderStatistics extends PureComponent {
         render: (text, record) => { 
         //   const values = this.props.form.getFieldsValue();
           const values = this.props.location.query;
-          const {initialForm:{RegionCode},changePage} = this.props;
+          const {initialForm:{RegionCode},changePage,dispatch, param} = this.props;
           const query={
             RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
-            PollutantTypeCode: values.PollutantTypeCode,
-            AttentionCode: values.AttentionCode?values.AttentionCode:"",
-            BeginTime: values.BeginTime,
-            EndTime: values.EndTime,
+            PollutantTypeCode: values&&values.PollutantTypeCode,
+            AttentionCode: values&&values.AttentionCode?values.AttentionCode:"",
+            BeginTime: values&&values.BeginTime,
+            EndTime: values&&values.EndTime,
           }
           if(query.RegionCode == 'all') query.RegionCode = '';
+           dispatch({
+             type:'enterpriseMonitoringModel/updateState',
+             payload:{param:query}
+           })
           if(changePage){
-            return <a onClick={()=>{changePage({page:'RegionStaticstics',query})}}>{text}</a>
+            const { param } = this.props;
+            return <a onClick={()=>{changePage({page:'RegionStaticstics',query:query.PollutantTypeCode?query: param})}}>{text}</a>
           }else{
             return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
               {text}
@@ -78,17 +84,20 @@ class EntWorkOrderStatistics extends PureComponent {
               render: (text, record) => { 
                 // const values = this.props.form.getFieldsValue();
                 const values = this.props.location.query;
-                const {initialForm:{RegionCode},changePage} = this.props;
+                const {initialForm:{RegionCode},changePage,dispatch, param} = this.props;
 
                 const query={
                   RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
-                  PollutantTypeCode: values.PollutantTypeCode,
-                  AttentionCode: values.AttentionCode?values.AttentionCode:"",
-                  BeginTime: values.BeginTime,
-                  EndTime: values.EndTime,
+                  PollutantTypeCode: values&&values.PollutantTypeCode,
+                  AttentionCode: values&&values.AttentionCode?values.AttentionCode:"",
+                  BeginTime: values&&values.BeginTime,
+                  EndTime: values&&values.EndTime,
                 }
+                dispatch({
+                  type:'enterpriseMonitoringModel/updateState',
+                  payload:{  param:query  }  })
                 if(changePage){
-                  return <a onClick={()=>{changePage({page:'EntStaticstics',query,type:'city'})}}>{text}</a>
+                  return <a onClick={()=>{changePage({page:'EntStaticstics',query:query.PollutantTypeCode?query: param,type:'city'})}}>{text}</a>
                 }else{
                   return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
                           {text}
@@ -159,24 +168,26 @@ class EntWorkOrderStatistics extends PureComponent {
     const values = this.props.location.query;
 
     console.log("values=", values)
+   const { param } = this.props;
 
+   console.log(param)
     // 获取一级数据标题头
     this.props.dispatch({
       type: 'entWorkOrderStatistics/getTableTitleData',
-      payload: { PollutantTypeCode: values.PollutantTypeCode },
+      payload: { PollutantTypeCode: values&&values.PollutantTypeCode?values.PollutantTypeCode:param.PollutantTypeCode },
     });
 
     // 获取一级数据
     this.props.dispatch({
       type: 'entWorkOrderStatistics/getTableDataSource',
       payload: { 
-        PollutantTypeCode: values.PollutantTypeCode,
-        AttentionCode: values.AttentionCode?values.AttentionCode:"",
-        RegionCode: values.RegionCode?values.RegionCode:"",
+        PollutantTypeCode: values&&values.PollutantTypeCode?values.PollutantTypeCode:param.PollutantTypeCode,
+        AttentionCode: values&&values.AttentionCode?values.AttentionCode:param.AttentionCode?param.AttentionCode:'',
+        RegionCode: values&&values.RegionCode?values.RegionCode:param.RegionCode?param.RegionCode:'',
         EntCode: "",
-        BeginTime: values.BeginTime,
-        EndTime: values.EndTime,
-        regionLevel:2
+        BeginTime: values&&values.BeginTime?values.BeginTime:param.BeginTime,
+        EndTime: values&&values.EndTime?values.EndTime:param.EndTime,
+        regionLevel:'2'
       },
     });
   }

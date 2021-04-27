@@ -41,7 +41,7 @@ class EntWorkOrderModal extends PureComponent {
             :this.state.page=='RegionStaticstics'?
               (<RegionStaticstics goBack={this.goBack} location={{query:this.state.query}}></RegionStaticstics>)
               :this.state.page=='CityStaticstics'?
-              (<CityStaticstics goBack={this.goBack.bind(this)} location={{query:this.state.query}}></CityStaticstics>)
+              (<CityStaticstics goBack={this.goBack.bind(this)}   changePage ={this.changePage}  location={{query:this.state.query}}></CityStaticstics>)
             :null
           }
         </Modal>
