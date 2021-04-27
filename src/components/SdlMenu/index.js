@@ -75,7 +75,7 @@ class SdlMenu extends Component {
     const { menuList, match } = this.props;
     return (
       <div className={`${styles.menuWrapper} ant-pro-top-nav-header-menu`}>
-        <Menu selectedKeys={[current]} mode="horizontal" onClick={this.onMenuItemClick}>
+        <Menu theme={'dark'} selectedKeys={[current]} mode="horizontal" onClick={this.onMenuItemClick}>
           {
             menuList.map((item, index) => {
               if (item.children.length) {

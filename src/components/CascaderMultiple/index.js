@@ -285,7 +285,7 @@ class CascaderMultiple extends PureComponent {
                 }
                 <li className="ant-select-search ant-select-search--inline">
                   <div className="ant-select-search__field__wrap">
-                    <Input autocomplete="off" id="input" value={inputValue} style={{ width: inputValue.length * 20, minWidth: 60, display: "none" }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
+                    <Input autocomplete="off" id="input" value={inputValue} style={{ border: 0, width: inputValue.length * 20, minWidth: 60, display: "none" }} className="ant-select-search__field cascader_multiple" onPressEnter={e => {
                       let inputValue = e.target.value;
                       let newOptions = [...this.oldOptions];
                       if (e.target.value) {

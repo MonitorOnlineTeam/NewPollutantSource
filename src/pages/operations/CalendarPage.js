@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-15 14:35:27
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-26 10:28:28
+ * @Last Modified time: 2021-04-25 10:56:29
  * @desc: 运维日历页面
  */
 import React, { PureComponent } from 'react';
@@ -131,7 +131,7 @@ class CalendarPage extends PureComponent {
       Type: type,
       beginTime: beginTime,
       endTime: endTime,
-      DGIMN:item.DGIMN,
+      DGIMN: item.DGIMN,
     }
 
     this.setState({
@@ -433,9 +433,9 @@ class CalendarPage extends PureComponent {
       exceptionType: undefined,
       FutureType: type
     } : {
-        exceptionType: type,
-        FutureType: undefined
-      }
+      exceptionType: type,
+      FutureType: undefined
+    }
 
 
     this.props.dispatch({
@@ -471,7 +471,7 @@ class CalendarPage extends PureComponent {
 
   // 分页
   onTableChange = (current, pageSize) => {
-    this.updateState({ current })
+    this.updateState({ current, pageSize })
     setTimeout(() => {
       // 获取表格数据
       this.abnormalItemClick(this.state.currentCellInfo, true)
@@ -530,19 +530,21 @@ class CalendarPage extends PureComponent {
               </Card>
             </div>
             <div style={{ flex: 3 }}>
-              <Card className="contentContainer" title={cardTitle} bordered={false}>
+              <Card className="contentContainer" title={cardTitle} bordered={false}
+                bodyStyle={{ height: 'calc(100vh - 220px)', overflowY: 'auto' }}
+              >
                 <List
                   itemLayout="vertical"
                   size="large"
                   loading={loading}
-                  pagination={{
+                  pagination={listData.length ? {
                     size: "small",
                     showQuickJumper: true,
                     pageSize: abnormalForm.pageSize,
                     current: abnormalForm.current,
                     onChange: this.onTableChange,
                     total: abnormalForm.total
-                  }}
+                  } : false}
                   dataSource={listData}
                   renderItem={item => (
                     <List.Item

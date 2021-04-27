@@ -538,7 +538,7 @@ getTaskTypeInfo=() => {
                   <Col md={8} sm={24}>
                       <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
                           {getFieldDecorator('DGIMN', {
-                            initialValue: gettasklistqueryparams.DGIMN ? gettasklistqueryparams.DGIMN.split(',') : undefined,
+                            initialValue: gettasklistqueryparams.DGIMN ? gettasklistqueryparams.DGIMN.split(',') : [],
                           })(
                             <CascaderMultiple {...this.props} style={{ width: '100%' }}/>,
                           )}

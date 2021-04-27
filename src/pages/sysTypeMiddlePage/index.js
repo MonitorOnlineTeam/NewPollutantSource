@@ -56,12 +56,13 @@ class index extends PureComponent {
         </header>
         <div className={styles.pageContainer}>
           <div className={styles.cardListContainer}>
+            {/* <Row gutter={[32, 32]} style={{ width: '100%' }}> */}
             <Row gutter={[16, 16]} style={{ width: '100%' }}>
               {
                 sysPollutantTypeList.map((item, index) => {
                   return (
                     <Col className="gutter-row" span={6} onClick={() => this.onSysItemClick(item)}>
-                      <div className={styles.itemContent}>
+                      <div className={styles.itemContent} >
                         <img src={`/middlePage/${item.Name}.png`} alt="" />
                         <span className={styles.sysName}>
                           {item.Name}
@@ -81,8 +82,8 @@ class index extends PureComponent {
               }
             </Row>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     );
   }
 }
