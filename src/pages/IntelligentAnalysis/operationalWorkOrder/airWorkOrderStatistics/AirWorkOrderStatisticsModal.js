@@ -9,6 +9,7 @@ import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'; // 外层cpmponent 包含面包屑
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
+import { LeftOutlined,RollbackOutlined} from '@ant-design/icons';
 import {
     Card,
     Col,
@@ -56,7 +57,8 @@ export default class index extends PureComponent {
         checkedValues: [],
         currentView: WORK_ORDER,
         regionParams: {},
-        stationParams: {}
+        stationParams: {},
+        level:''
     };
 
     _SELF_ = {
@@ -86,13 +88,14 @@ export default class index extends PureComponent {
                 EntCode: '',
                 BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
                 EndTime: endTime.format('YYYY-MM-DD 23:59:59'),
+                regionLevel:this.state.level
                 // BeginTime: '2020-01-01 00:00:00',
                 // EndTime: '2020-09-30 23:59:59',
             },
         });
     }
 
-    getTaskStatic = () => {
+    getTaskStatic = (regionCode) => {
         const { dispatch, divisorList, beginTime, endTime } = this.props;
         let { RegionCode } = this.props;
         if (typeof RegionCode === 'undefined') {
@@ -103,10 +106,11 @@ export default class index extends PureComponent {
             payload: {
                 PollutantTypeCode: '5',
                 AttentionCode: '',
-                RegionCode,
+                RegionCode:regionCode?regionCode:RegionCode,
                 EntCode: '',
                 BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
                 EndTime: endTime.format('YYYY-MM-DD 23:59:59'),
+                regionLevel:this.state.level
                 // BeginTime: '2020-01-01 00:00:00',
                 // EndTime: '2020-09-30 23:59:59',
             },
@@ -124,25 +128,42 @@ export default class index extends PureComponent {
                 width: 150,
                 align: 'center',
                 render: (text, record) => {
-                    return (
-                        <a
-                            onClick={() => {
-                                let params = {};
-                                params.regionName = record['00_RegionName'];
-                                params.regionCode = record['00_RegionCode'];
-                                params.beginTime = beginTime.format('YYYY-MM-DD');
-                                params.endTime = endTime.format('YYYY-MM-DD');
-                                // router.push(
-                                //     `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation?params=${JSON.stringify(
-                                //         params,
-                                //     )}`,
-                                // );
-                                this.setState({ regionParams: params, currentView: REGION });
-                            }}
-                        >
-                            {text}
-                        </a>
-                    );
+                    if(this.state.level){
+                        return (
+                            <a
+                                onClick={() => {
+                                    let params = {};
+                                    params.regionName = record['00_RegionName'];
+                                    params.regionCode = record['00_RegionCode'];
+                                    params.beginTime = beginTime.format('YYYY-MM-DD');
+                                    params.endTime = endTime.format('YYYY-MM-DD');
+                                    // router.push(
+                                    //     `/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation?params=${JSON.stringify(
+                                    //         params,
+                                    //     )}`,
+                                    // );
+                                    this.setState({ regionParams: params, currentView: REGION });
+                                }}
+                            >
+                                {text}
+                            </a>
+                        );
+                    }else{
+                        return (
+                            <a
+                                onClick={() => {
+                                    this.setState({
+                                        level:'2'
+                                    },()=>{
+                                        this.getTaskStatic(record['00_RegionCode'])
+                                    })
+                                }}
+                            >
+                                {text}
+                            </a>
+                        );
+                    }
+
                 },
             };
             // } else if (item.TypeName == '运维空气监测点数') {
@@ -219,7 +240,7 @@ export default class index extends PureComponent {
             airWorkOrderCancelFun = () => { },
         } = this.props;
         const { formLayout } = this._SELF_;
-        const { format, showTime } = this.state;
+        const { format, showTime,level } = this.state;
         let _regionList = regionList.length ? regionList[0].children : [];
         let columns = [];
         let titlePollutant = [];
@@ -255,7 +276,7 @@ export default class index extends PureComponent {
                     : this.state.currentView == STATION ? <StationAirQualityMonitoringStationContent  {...this.state.stationParams} backFun={this.backFun} />
                         : <Card>
                             <Form layout="inline" style={{ marginBottom: 20 }}>
-                                <Row gutter={24}>
+                            {!level?<Row gutter={24}>
                                     <Col md={7}>
                                         <FormItem
                                             {...formLayout}
@@ -346,6 +367,15 @@ export default class index extends PureComponent {
                 </Button> */}
                                     </Col>
                                 </Row>
+                                :
+                                <>
+                                <Button  onClick={() => {
+                                  this.setState({level:''},()=>{
+                                  this.getTaskStatic()
+                                })
+                               }}> <RollbackOutlined />返回 </Button>
+                                </>
+                                }
                             </Form>
                             <SdlTable
                                 scroll={{ xScroll: 'scroll' }}

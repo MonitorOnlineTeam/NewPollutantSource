@@ -10,7 +10,10 @@ class EntWorkOrderModal extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {page:'EntWorkOrderStatistics',query:null};
+    this.state = {
+      page:'EntWorkOrderStatistics',
+      query:null,
+    };
   }
 
   goBack = (page,query)=>{

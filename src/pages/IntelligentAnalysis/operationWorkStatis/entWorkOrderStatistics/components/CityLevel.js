@@ -52,13 +52,15 @@ class EntWorkOrderStatistics extends PureComponent {
             EndTime: values&&values.EndTime,
           }
           if(query.RegionCode == 'all') query.RegionCode = '';
-           dispatch({
-             type:'enterpriseMonitoringModel/updateState',
-             payload:{param:query}
-           })
+
           if(changePage){
-            const { param } = this.props;
-            return <a onClick={()=>{changePage({page:'RegionStaticstics',query:query.PollutantTypeCode?query: param})}}>{text}</a>
+            return <a onClick={()=>{
+              dispatch({
+              type:'entWorkOrderStatistics/updateState',
+              payload:{param:query}
+           })
+              changePage({page:'RegionStaticstics',query:query&&query.PollutantTypeCode?query: param})
+            }}>{text}</a>
           }else{
             return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',query}} >
               {text}
@@ -92,12 +94,17 @@ class EntWorkOrderStatistics extends PureComponent {
                   AttentionCode: values&&values.AttentionCode?values.AttentionCode:"",
                   BeginTime: values&&values.BeginTime,
                   EndTime: values&&values.EndTime,
+                  type:'city'
                 }
-                dispatch({
-                  type:'enterpriseMonitoringModel/updateState',
-                  payload:{  param:query  }  })
+
                 if(changePage){
-                  return <a onClick={()=>{changePage({page:'EntStaticstics',query:query.PollutantTypeCode?query: param,type:'city'})}}>{text}</a>
+                  return <a onClick={()=>{
+                    dispatch({
+                      type:'entWorkOrderStatistics/updateState',
+                      payload:{  param:query  }  })
+                    changePage({page:'EntStaticstics',query:query.PollutantTypeCode?query: param})
+                  
+                  }}>{text}</a>
                 }else{
                   return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
                           {text}
