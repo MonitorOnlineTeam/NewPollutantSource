@@ -6,7 +6,7 @@
  * @Description: 用户管理
  */
 import React, { Component, Fragment } from 'react';
-import { DeleteOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ProfileOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -62,7 +62,7 @@ export default class UserInfoIndex extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname != this.props.location.pathname) {
-      if (nextProps.match.params.configId !== this.props.routerConfig) {this.reloadPage(nextProps.match.params.configId);}
+      if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
     }
   }
 
@@ -97,8 +97,12 @@ export default class UserInfoIndex extends Component {
       return;
     }
     const { dispatch } = this.props;
+
     confirm({
-      title: '是否确认重置密码?',
+      title: <div>
+        确认是否重置密码?
+        <span className={styles.resetPwd}><ExclamationCircleOutlined style={{ marginRight: 4 }} />初始密码为：123456</span>
+      </div>,
       content: '',
       okText: '确认',
       cancelText: '取消',
@@ -152,102 +156,102 @@ export default class UserInfoIndex extends Component {
     return (
       <BreadcrumbWrapper>
         {/* <div className={styles.cardTitle}> */}
-          <Card>
-            <SearchWrapper
-              // formItemList={searchConditions}
-              // formChangeActionType=""
-              // searchFormState={{
-              // }}
-              onSubmitForm={form => this.loadReportList(form)}
-              configId={configId}
-            // loadDataSourceParams={[
-            //   {
-            //     Key: "test",
-            //     Value: false,
-            //     Where: "$like"
-            //   }
-            // ]}
-            ></SearchWrapper>
-            <AutoFormTable
-              style={{ marginTop: 10 }}
-              configId={configId}
-              onAdd={() => {
-                dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
-              }}
-              rowChange={(key, row) => {
-                this.setState({
-                  key,
-                  row,
-                });
-              }}
-              appendHandleButtons={(selectedRowKeys, selectedRows) => (
-                  <Fragment>
-                    <Button
-                      type="danger"
-                      onClick={() => {
-                        this.showConfirm(selectedRowKeys, selectedRows);
-                      }}
-                      style={{marginRight:8}}
-                    >
-                      重置密码
+        <Card>
+          <SearchWrapper
+            // formItemList={searchConditions}
+            // formChangeActionType=""
+            // searchFormState={{
+            // }}
+            onSubmitForm={form => this.loadReportList(form)}
+            configId={configId}
+          // loadDataSourceParams={[
+          //   {
+          //     Key: "test",
+          //     Value: false,
+          //     Where: "$like"
+          //   }
+          // ]}
+          ></SearchWrapper>
+          <AutoFormTable
+            style={{ marginTop: 10 }}
+            configId={configId}
+            onAdd={() => {
+              dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
+            }}
+            rowChange={(key, row) => {
+              this.setState({
+                key,
+                row,
+              });
+            }}
+            appendHandleButtons={(selectedRowKeys, selectedRows) => (
+              <Fragment>
+                <Button
+                  type="danger"
+                  onClick={() => {
+                    this.showConfirm(selectedRowKeys, selectedRows);
+                  }}
+                  style={{ marginRight: 8 }}
+                >
+                  重置密码
                     </Button>
-                  </Fragment>
-                )}
-              appendHandleRows={row => (
-                  <Fragment>
-                    <Tooltip title="编辑">
-                      <a
-                        onClick={() => {
-                          dispatch(
-                            routerRedux.push(
-                              '/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 编辑",
-                            ),
-                          );
-                        }}
-                      >
-                        <EditOutlined style={{ fontSize: 16 }} />
-                      </a>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    <Tooltip title="详情">
-                      <a
-                        onClick={() => {
-                          dispatch(
-                            routerRedux.push(
-                              '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 详情",
-                            ),
-                          );
-                        }}
-                      >
-                        <ProfileOutlined style={{ fontSize: 16 }} />
-                      </a>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    <Tooltip title="删除">
-                      <Popconfirm
-                        title="确认要删除吗?"
-                        onConfirm={() => {
-                          this.confirm(row['dbo.Base_UserInfo.User_ID']);
-                        }}
-                        onCancel={this.cancel}
-                        okText="是"
-                        cancelText="否"
-                      >
-                        <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
-                      </Popconfirm>
-                    </Tooltip>
-                  </Fragment>
-                )}
-            // loadDataSourceParams={[
-            //   {
-            //     Key: "test",
-            //     Value: false,
-            //     Where: "$like"
-            //   }
-            // ]}
-            // dataSource={dataSource}
-            />
-          </Card>
+              </Fragment>
+            )}
+            appendHandleRows={row => (
+              <Fragment>
+                <Tooltip title="编辑">
+                  <a
+                    onClick={() => {
+                      dispatch(
+                        routerRedux.push(
+                          '/rolesmanager/user/userinfoedit/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 编辑",
+                        ),
+                      );
+                    }}
+                  >
+                    <EditOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip>
+                <Divider type="vertical" />
+                <Tooltip title="详情">
+                  <a
+                    onClick={() => {
+                      dispatch(
+                        routerRedux.push(
+                          '/rolesmanager/user/userinfoview/' + row['dbo.Base_UserInfo.User_ID'] + "?tabName=用户管理 - 详情",
+                        ),
+                      );
+                    }}
+                  >
+                    <ProfileOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip>
+                <Divider type="vertical" />
+                <Tooltip title="删除">
+                  <Popconfirm
+                    title="确认要删除吗?"
+                    onConfirm={() => {
+                      this.confirm(row['dbo.Base_UserInfo.User_ID']);
+                    }}
+                    onCancel={this.cancel}
+                    okText="是"
+                    cancelText="否"
+                  >
+                    <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
+                  </Popconfirm>
+                </Tooltip>
+              </Fragment>
+            )}
+          // loadDataSourceParams={[
+          //   {
+          //     Key: "test",
+          //     Value: false,
+          //     Where: "$like"
+          //   }
+          // ]}
+          // dataSource={dataSource}
+          />
+        </Card>
         {/* </div> */}
       </BreadcrumbWrapper>
     );

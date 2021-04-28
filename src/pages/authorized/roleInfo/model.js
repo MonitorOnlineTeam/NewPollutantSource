@@ -107,15 +107,12 @@ export default Model.extend({
             const result = yield call(updroleinfo, {
                 ...payload
             });
-            // if (result.IsSuccess) {
-            //     message.success("修改成功");
-            //     yield put({
-            //         type: "roleinfo/getroleinfobytree",
-            //         payload: {
-            //         }
-            //     })
-            // }
-            payload.callback(result);
+            if (result.IsSuccess) {
+                message.success("修改成功");
+                payload.callback(result);
+            }else{
+                message.error(result.Message);
+            }
         },
         /*获取角色树(带根结点)**/
         * getrolestreeandobj({

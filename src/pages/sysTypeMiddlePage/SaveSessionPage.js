@@ -29,6 +29,7 @@ class SaveSessionPage extends PureComponent {
       callback: (response) => {
         let defaultNavigateUrl = response.Datas[0].children && response.Datas[0].children.length ? response.Datas[0].children[0].NavigateUrl : response.Datas[0].NavigateUrl;
         let sysName = sessionStorage.getItem("sysName")
+        // if (sysName === "一厂一档管理系统") {
         if (sysName === "一企一档管理系统") {
           if (sysInfo.EntCode && sysInfo.EntName) {
             sessionStorage.setItem("oneEntCode", sysInfo.EntCode)

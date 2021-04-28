@@ -243,6 +243,11 @@ export default {
               routes: [
                 {
                   name: 'thematicMap',
+                  path: '/map/thematicMap/:pollutantCode',
+                  component: './mapPages/ThematicMap',
+                },
+                {
+                  name: 'thematicMap',
                   path: '/map/thematicMap',
                   component: './mapPages/ThematicMap',
                 },

@@ -108,7 +108,7 @@ class InfoWindowContent extends PureComponent {
         })}
       </ul>
     } else {
-      return <div style={{margin: '54px 0'}}>
+      return <div style={{ margin: '54px 0' }}>
         <Empty description="暂无数据" imageStyle={{ maring: '50px 0' }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
     }
@@ -336,7 +336,7 @@ class InfoWindowContent extends PureComponent {
           )}
           {this.getPollutantGroupContent()}
           {
-            (chartData.xAxisData && chartData.xAxisData.length) ?
+            (tableList && tableList.length && chartData.xAxisData && chartData.xAxisData.length) ?
               <ReactEcharts
                 className={styles.echartdiv}
                 style={{ width: '100%', height: '200px', textAlign: 'center', marginTop: -10 }}

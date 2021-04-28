@@ -24,7 +24,8 @@ const configinfopage = '/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemC
 export async function getPageConfigInfo(payload) {
   const param = {
     configId: 'TestCommonPoint',
-    ...payload.params,
+    // ...payload.params,
+    ...payload,
   };
   const defaults = {
     PageIndex: 1,
@@ -50,7 +51,9 @@ export async function getPageConfigInfo(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getListPager(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   // //判断配置是否开启明文传输0开启 1关闭
   // if (payload.sysConfig.ClearTransmission == 0) {
   //   params.configId = Base64.stringify(Utf8.parse(params.configId));
@@ -74,7 +77,9 @@ export async function getListPager(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getFormData(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   const defaults = {
     configId: 'TestCommonPoint',
   };
@@ -104,7 +109,9 @@ export async function getFormData(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function postAutoFromDataDelete(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   const postData = {
     configId: 'TestCommonPoint',
     ...params,
@@ -130,7 +137,9 @@ export async function postAutoFromDataDelete(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataAdd(payload) {
-  let params = payload.params;
+  console.log('payload=', payload)
+  // let params = payload.params;
+  let params = payload;
   // //判断配置是否开启明文传输0开启 1关闭
   // if (payload.sysConfig.ClearTransmission == 0) {
   //   var encrypt = new window.JSEncrypt();
@@ -151,7 +160,9 @@ export async function postAutoFromDataAdd(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataUpdate(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   // //判断配置是否开启明文传输0开启 1关闭
   // if (payload.sysConfig.ClearTransmission == 0) {
   //   var encrypt = new window.JSEncrypt();
@@ -194,7 +205,9 @@ export async function getAttachmentList(params) {
  * @params {"configId": "String"}
  */
 export async function exportDataExcel(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   // //判断配置是否开启明文传输0开启 1关闭
   // if (payload.sysConfig.ClearTransmission == 0) {
   //   var encrypt = new window.JSEncrypt();
@@ -214,7 +227,9 @@ export async function exportDataExcel(payload) {
  * @params {"configId": "String"}
  */
 export async function exportTemplet(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   const results = await get(configinfopage);
   // //判断配置是否开启明文传输0开启 1关闭
   // if (payload.sysConfig.ClearTransmission == 0) {
@@ -247,7 +262,9 @@ export async function deleteAttach(params) {
 // rest/PollutantSourceApi/AutoFormDataApi/VerificationData
 // 校验重复
 export async function checkRepeat(payload) {
-  let params = payload.params;
+  // let params = payload.params;
+  let params = payload;
+
   // //判断配置是否开启明文传输0开启 1关闭
   // if (payload.sysConfig.ClearTransmission == 0) {
   //   var encrypt = new window.JSEncrypt();
