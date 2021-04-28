@@ -84,8 +84,35 @@ class index extends PureComponent {
             queryCondition.RegionCode = record.RegionCode;
             queryCondition.RegionName = record.RegionName;
             queryCondition = JSON.stringify(queryCondition)
-            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
-            router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode}`)
+            let values = this.props.form.getFieldsValue();
+            let beginTime, endTime;
+            values.time = this.state.exceptionTime;
+            if (values.time && values.time[0]) {
+              beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
+            }
+            if (values.time && values.time[1]) {
+              endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
+            }
+            this.props.dispatch({
+              type: "abnormalResRate/updateState",
+              payload: {
+                searchForm:{
+                AttentionCode: values.AttentionCode,
+                PollutantType: values.PollutantType,
+                // RegionCode: values.RegionCode ? values.RegionCode:'',
+                dataType: values.dataType,
+                beginTime: beginTime,
+                endTime: endTime,
+                OperationPersonnel:this.state.operationpersonnel
+              }
+            }
+            })
+            if(this.props.onRegionClick){
+              this.props.onRegionClick(queryCondition) 
+            }else{
+
+              router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode}`)
+            }
               // router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
         }
@@ -233,7 +260,7 @@ class index extends PureComponent {
     }
     this.props.dispatch({
       type: "abnormalResRate/getTableDataSource",
-      payload: {
+      payload: !this.props.searchForm.PollutantType? {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
         RegionCode: values.RegionCode ? values.RegionCode:'',
@@ -241,7 +268,7 @@ class index extends PureComponent {
         beginTime: beginTime,
         endTime: endTime,
         OperationPersonnel:this.state.operationpersonnel
-      }
+      }:this.props.searchForm
     })
     this.setState({
       queryCondition: {
@@ -254,21 +281,7 @@ class index extends PureComponent {
         OperationPersonnel:this.state.operationpersonnel
       }
     })
-    this.props.dispatch({
-      type: "abnormalResRate/updateState",
-      payload: {
-        searchForm:{
-        AttentionCode: values.AttentionCode,
-        PollutantType: values.PollutantType,
-        // RegionCode: values.RegionCode ? values.RegionCode:'',
-        dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
-      }
-    }
-    })
-    console.log(this.props.searchForm)
+
   }
 
   // 导出异常数据
@@ -371,7 +384,8 @@ class index extends PureComponent {
               <FormItem label="日期查询">
                 <RangePicker_ allowClear={false} onRef={(ref) => {
                   this.rangePicker = ref;
-                }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }} dateValue={exceptionTime}
+                }} dataType={this.props.form.getFieldValue("dataType")} style={{ width: "100%", marginRight: '10px' }}
+                   dateValue={!this.props.searchForm.PollutantType? exceptionTime : [moment(this.props.searchForm.beginTime),moment(this.props.searchForm.endTime)]}
                   callback={(dates, dataType) => this.dateChange(dates, dataType)} />
               </FormItem>
               <FormItem label="行政区">

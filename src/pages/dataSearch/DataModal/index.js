@@ -26,7 +26,7 @@ import style from '@/pages/dataSearch/tableClass.less'
 import ExceedDataAlarm from '@/pages/dataSearch/exceedDataAlarmRecord/exceedDataAlarmModal'
 import ExceedData from '@/pages/dataSearch/exceedData/exceedDataModal'
 import FlowModal from '@/pages/IntelligentAnalysis/sewageDisposal/flow/flowModal'
-import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
 import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
 const { Option } = Select;
 const { TabPane } = Tabs;

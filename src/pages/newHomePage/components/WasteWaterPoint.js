@@ -211,6 +211,49 @@ export default class Index extends Component {
       </Row>
     );
   }
+  cancel=()=>{
+
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/updateState',
+      payload: {
+        initialForm: {
+          Time:[moment().subtract(30, "days").startOf("day"), moment().endOf("day")],
+          RegionCode:undefined,
+          AttentionCode:undefined,
+          PollutantTypeCode:'1',
+          },
+      },
+  });
+
+}
+cancelAir=()=>{
+  this.props.dispatch({
+    type: 'airWorkOrderStatistics/updateState',
+    payload: {
+
+      pointTitle: [], // 排口（企业） 运维工单统计 表头
+      pointTaskStatic: [], // 排口（企业） 运维工单统计 数据
+      enterpriseTitle: [], // 企业 运维工单统计 表头
+      enterpriseTaskStatic: [], // 企业 运维工单统计 数据
+      regionTitle: [], // 区域 运维工单统计 表头
+      regionTaskStatic: [], // 区域 运维工单统计 数据
+      taskStaticTitle: [], // 运维工单统计 表头
+      taskStatic: [], // 运维工单统计 数据
+      beginTime: moment()
+          .subtract(30, 'days')
+          .hour(0)
+          .minute(0)
+          .second(0),
+      endTime: moment()
+          .hour(23)
+          .minute(59)
+          .second(59),
+      RegionCode: undefined,
+
+    },
+});
+}
+
   workOrder = () => {
 
     const { pollutantType } = this.state;
@@ -396,10 +439,20 @@ export default class Index extends Component {
         {orderModalVisible ?
           <EntWorkOrderModal
             showModal={orderModalVisible}
-            onCloseListener={() => { this.setState({ orderModalVisible: false }) }}
+            onCloseListener={
+              () => { 
+                this.setState({ orderModalVisible: false })
+                this.cancel();
+              }}
             pollutantTypeCode={pollutantType}
           /> : null}
-        {airWorkOrderVisible ? <AirWorkOrderStatisticsModal airWorkOrderVisible={airWorkOrderVisible} airWorkOrderCancelFun={() => { this.setState({ airWorkOrderVisible: false }) }} /> : null}
+        {airWorkOrderVisible ? <AirWorkOrderStatisticsModal
+            airWorkOrderVisible={airWorkOrderVisible}
+             airWorkOrderCancelFun={() => { 
+               
+               this.setState({ airWorkOrderVisible: false })
+               this.cancelAir()
+               }} /> : null}
         {/**近七日废水超标监测点*/}
         {exceedVisible ? <ExceedData exceedDataType={overListPar.DataType == 'HourData' ? 'Hour' : 'Day'} exceedPollutant={overListPar.pollutantCode} exceedTime={[moment().add('day', -7).startOf(), moment()]} exceedVisible={exceedVisible} exceedType={overListPar.PollutantType} exceedCancle={() => {
           this.setState({ exceedVisible: false });

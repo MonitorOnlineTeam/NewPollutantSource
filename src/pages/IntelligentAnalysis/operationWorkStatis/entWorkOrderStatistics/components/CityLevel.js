@@ -174,7 +174,7 @@ class EntWorkOrderStatistics extends PureComponent {
 
     const values = this.props.location.query;
 
-    console.log("values=", values)
+    // console.log("values=", values)
    const { param } = this.props;
 
    console.log(param)

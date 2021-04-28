@@ -67,7 +67,8 @@ export default class Index extends PureComponent {
       location:{
         query:{}
       },
-      level:''
+      level:'',
+      goback:false
      
     };
     
@@ -136,13 +137,7 @@ export default class Index extends PureComponent {
         const { dispatch,types,time } = this.props;
         this.setState({level:2},()=>{
 
-          this.setState({regionCode:record.regionCode,level:2},()=>{
-            this.updateQueryState({
-              RegionCode: '',
-              EntType: types==='ent'? "1":"2",
-              beginTime: time[0].format('YYYY-MM-DD 00:00:00'),
-              endTime: time[1].format('YYYY-MM-DD 23:59:59'),
-            }); 
+          this.setState({regionCode:record.regionCode,level:2},()=>{ 
             setTimeout(() => {
               this.getTableData(record.regionCode);
             });   
@@ -162,7 +157,7 @@ export default class Index extends PureComponent {
       endTime: time[1].format('YYYY-MM-DD 23:59:59'),
       // OperationPersonnel:'',
     });
-
+    console.log('首次加载')
     let  entObj =  {title: <span>缺失数据报警企业数</span>,dataIndex: 'entCount', key: 'entCount',align: 'center', }
 
     types ==='ent'? this.columns.splice(1,0,entObj) : null;
@@ -331,7 +326,7 @@ export default class Index extends PureComponent {
             <Row style={{paddingBottom:15}}>
               {!level&&<><Form.Item>
                 日期查询：
-                <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(time[0]),moment(time[1])]} 
+                <RangePicker_ allowClear={false}  onRef={this.onRef1} dataType={''}  style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                 callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
               </Form.Item>
               <Form.Item label='关注程度'>
@@ -400,7 +395,7 @@ export default class Index extends PureComponent {
                   导出
                 </Button>
                 {level&& <Button onClick={() => {
-                  this.setState({level:'',regionCode:''},()=>{
+                  this.setState({level:'',regionCode:'',goback:true},()=>{
                     this.getTableData();
                   })
              }} ><RollbackOutlined />返回</Button>}

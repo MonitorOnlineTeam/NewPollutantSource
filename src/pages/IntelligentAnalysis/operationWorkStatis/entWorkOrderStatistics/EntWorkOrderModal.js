@@ -5,6 +5,9 @@ import EntWorkOrderStatistics from './components/EntWorkOrderStatistics';
 import EntStaticstics from './components/EntStaticstics';
 import RegionStaticstics from './components/RegionStaticstics';
 import CityStaticstics from './components/CityLevel'
+import moment from 'moment'
+import { connect } from 'dva'
+
 class EntWorkOrderModal extends PureComponent {
  
 
@@ -25,7 +28,21 @@ class EntWorkOrderModal extends PureComponent {
     console.log('page->',page)
     this.setState({page,query})
   }
+//   cancel=()=>{
 
+//     this.props.dispatch({
+//       type: 'entWorkOrderStatistics/updateState',
+//       payload: {
+//         initialForm: {
+//           Time:[moment().subtract(30, "days").startOf("day"), moment().endOf("day")],
+//           RegionCode:undefined,
+//           AttentionCode:undefined,
+//           PollutantTypeCode:'1',
+//           },
+//       },
+//   });
+
+// }
   render() {
     const {showModal,onCloseListener,pollutantTypeCode='1'} = this.props; 
     return (

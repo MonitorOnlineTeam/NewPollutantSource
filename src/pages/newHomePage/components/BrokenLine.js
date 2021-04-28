@@ -35,7 +35,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import styles from '../style.less'
 import ReactEcharts from 'echarts-for-react';
-import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/entIndexModal'
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
 
 
 import Region from '../components/jumpPage/faultOverWorkRate/Region'

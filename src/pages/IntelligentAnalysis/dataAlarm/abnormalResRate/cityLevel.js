@@ -207,7 +207,7 @@ class index extends PureComponent {
       payload: { RegionCode: query&&query.regionCode }
     });
   
-    console.log('传过来的参数：' , query)
+    // console.log('传过来的参数：' , query)
    this.getExceptionAlarmRateListForCity(query&&query.regionCode);
   }
 
@@ -242,8 +242,8 @@ class index extends PureComponent {
         PollutantType: values.PollutantType,
         RegionCode: regionCode ? regionCode:'',
         dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
+        beginTime: values.beginTime,
+        endTime: values.endTime,
         OperationPersonnel:this.state.operationpersonnel,
       }
     })
@@ -253,8 +253,8 @@ class index extends PureComponent {
         PollutantType: values.PollutantType,
         RegionCode: regionCode ? regionCode:'',
         dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
+        beginTime: values.beginTime,
+        endTime: values.endTime,
         OperationPersonnel:this.state.operationpersonnel
       }
     })
@@ -268,12 +268,12 @@ class index extends PureComponent {
     let values = this.props.searchForm;
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
-    if (values.time && values.time[0]) {
-      beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
-    }
-    if (values.time && values.time[1]) {
-      endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
-    }
+    // if (values.time && values.time[0]) {
+    //   beginTime = values.dataType === "HourData" ? moment(values.time[0]).format("YYYY-MM-DD HH:00:00") : moment(values.time[0]).format("YYYY-MM-DD")
+    // }
+    // if (values.time && values.time[1]) {
+    //   endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
+    // }
     this.props.dispatch({
       type: "abnormalResRate/exportReport",
       payload: {
@@ -281,8 +281,8 @@ class index extends PureComponent {
         PollutantType: values.PollutantType,
         RegionCode: query.regionCode? query.regionCode:'',
         dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
+        beginTime: values.beginTime,
+        endTime: values.endTime,
         OperationPersonnel:this.state.operationpersonnel,
       }
     })

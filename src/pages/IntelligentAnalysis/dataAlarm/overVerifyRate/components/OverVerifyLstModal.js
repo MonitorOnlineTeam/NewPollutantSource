@@ -219,14 +219,18 @@ export default class OverVerifyLstModal extends Component {
     const { dispatch, location, Atmosphere, type } = this.props;
    
     const {RegionCode,regionLevel } = this.state;
-    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: RegionCode, PointMark: '2' } }); //获取行政区列表
+    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
-    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: RegionCode} }); //获取关注列表
+    dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: ''} }); //获取关注列表
     this.updateQueryState({
       PollutantType: '1',
       OperationPersonnel:'',
-      RegionCode:RegionCode,
-      regionLevel:regionLevel
+      RegionCode:'',
+      regionLevel:'',
+      // beginTime: moment()
+      // .subtract(7, 'days')
+      // .format('YYYY-MM-DD 00:00:00'),
+      // endTime: moment().format('YYYY-MM-DD 23:59:59'),
     });
     setTimeout(() => {
       this.getTableData();
@@ -243,9 +247,16 @@ export default class OverVerifyLstModal extends Component {
 
   getTableData = () => {
     const { dispatch, overVerifyRateForm } = this.props;
+    const {regionLevel} = this.state;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...overVerifyRateForm },
+      payload: regionLevel?{ 
+        ...overVerifyRateForm,
+        RegionCode:this.state.RegionCode,
+        regionLevel:this.state.regionLevel,
+       }:{ 
+        ...overVerifyRateForm,
+       },
     });
   };
 
@@ -592,7 +603,7 @@ export default class OverVerifyLstModal extends Component {
                   RegionCode:'',
                    regionLevel:''
                  },()=>{
-                   this.initData();
+                  this.getTableData(2);
                  })
              }} ><RollbackOutlined />返回</Button>
             </Form.Item>

@@ -43,7 +43,7 @@ const pageUrl = {
   entName: newtransmissionefficiency.entName,
   queryPar: newtransmissionefficiency.priseQueryPar,
 }))
-export default class enterpriseEfficiency extends Component {
+export default class EnterpriseEfficiency extends Component {
   constructor(props) {
     super(props);
 

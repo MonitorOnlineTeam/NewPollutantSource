@@ -214,6 +214,7 @@ export default class Index extends PureComponent {
   // }
   // return true
   // }
+ 
   render() {
     const {
       alarmResponseLoading
@@ -307,6 +308,14 @@ export default class Index extends PureComponent {
             time={missDataTime}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               this.setState({ missingRateVisible: false })
+              const {dispatch } = this.props;
+              dispatch({
+                type: 'MissingRateDataModal/updateState',
+                payload: { queryPar: { 
+                  beginTime: missDataTime[0].format('YYYY-MM-DD 00:00:00'),
+                  endTime: missDataTime[1].format('YYYY-MM-DD 23:59:59'),
+                } },
+              });
             }} />
           : null}
         {/**超标报警核实率 */}
@@ -318,12 +327,36 @@ export default class Index extends PureComponent {
               TVisible={OverVisible}
               TCancle={() => {
                 this.setState({ OverVisible: false });
+
+                const { overVerifyRateForm, dispatch } = this.props;
+
+                dispatch({
+                  type: 'overVerifyRate/updateState',
+                  payload: { overVerifyRateForm: {
+                    PollutantType: '1',
+                    OperationPersonnel:'',
+                    RegionCode:'',
+                    regionLevel:'',
+                    beginTime: moment()
+                    .subtract(7, 'days')
+                    .format('YYYY-MM-DD 00:00:00'),
+                    endTime: moment().format('YYYY-MM-DD 23:59:59'),
+                  }},
+                });
               }}
             /> : null}
         {
           visible_WJQ && <DetailsModal_WJQ time={ECXYLTime} onCancel={() => {
             this.setState({
               visible_WJQ: false
+            })
+            this.props.dispatch({
+              type: "abnormalResRate/updateState",
+              payload: {
+                searchForm:{
+                PollutantType: '',
+              }
+            }
             })
           }} />
         }

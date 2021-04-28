@@ -57,9 +57,10 @@ export default Model.extend({
         // 获取运维工单统计 数据
         *getTaskStatic({ payload }, { call, put, update, select }) {
             const response = yield call(services.GetTaskStatic, { ...payload });
-            if (payload.RegionCode != '' && response.Datas.length > 0) {
+            if (payload.RegionCode != '' &&response.Datas&&response.Datas.length > 0) {
                 response.Datas[response.Datas.length - 1]['00_RegionCode'] = payload.RegionCode;
             }
+          
             if (response.IsSuccess) {
                 yield update({
                     taskStatic: response.Datas,

@@ -84,7 +84,7 @@ export default class index extends PureComponent {
             payload: {
                 PollutantTypeCode: '5',
                 AttentionCode: '',
-                RegionCode: '',
+                RegionCode: this.props.RegionCode,
                 EntCode: '',
                 BeginTime: beginTime.format('YYYY-MM-DD 00:00:00'),
                 EndTime: endTime.format('YYYY-MM-DD 23:59:59'),
@@ -267,7 +267,7 @@ export default class index extends PureComponent {
         return (
             <Modal
                 width={'90%'}
-                title={'运维工单统计（空气站）'}
+                title={'近30日运维工单统计（空气站）'}
                 visible={airWorkOrderVisible}
                 onCancel={airWorkOrderCancelFun}
                 footer={null}

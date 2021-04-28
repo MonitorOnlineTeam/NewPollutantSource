@@ -1,10 +1,10 @@
 /**
  * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 创建人：贾安波
+ * 创建时间：2020
  */
 import React, { Component } from 'react';
-import { ExportOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleTwoTone, RollbackOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -29,7 +29,7 @@ import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import styles from './style.less';
-import { downloadFile,interceptTwo,RollbackOutlined } from '@/utils/utils';
+import { downloadFile,interceptTwo } from '@/utils/utils';
 import SdlCascader from '../../AutoFormManager/SdlCascader';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 // import IndexModal from './IndexModal';
@@ -427,16 +427,15 @@ export default class EntIndexModal extends Component {
         },
       },
     ];
-    return <>{
-        <Card
+    return(
+     <Card
           bordered={false}
           title={
             <>
-              <Form layout="inline">
+              {!level&& <Form layout="inline">
 
-                {!level&&<><Form.Item>
+               <Form.Item>
                   查询时间：
-                  {/* <DatePickerTool defaultValue={this.state.beginTime} picker="month" allowClear={false} callback={this.onDateChange} /> */}
                   <RangePicker_
                     dateValue={[moment(this.state.beginTime), moment(this.state.endTime)]}
                     format="YYYY-MM-DD"
@@ -467,53 +466,24 @@ export default class EntIndexModal extends Component {
                     <Option value="2">兵团考核</Option>
                   </Select>
                 </Form.Item>
-                {/* <Form.Item>
-                <Select
-                    allowClear
-                    style={{ width: 200, marginLeft: 10}}
-                    placeholder="运维状态"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    value={this.props.operationpersonnel ? this.props.operationpersonnel : undefined}
-                    onChange={this.changeOperation}
-                    >
-                     <Option value="1">已设置运维人员</Option>
-                    <Option value="2">未设置运维人员</Option>
-                </Select>
-                </Form.Item> */}
                 <Form.Item>
-                  {/* <Select
-                    allowClear
-                    placeholder="请选择行政区"
-                    onChange={this.changeRegion}
-                    value={this.props.RegionCode ? this.props.RegionCode : undefined}
-                    style={{ width: 200, marginLeft: 10 }}
-                  >
-                    {this.children()}
-                  </Select> */}
                    <RegionList style={{ width: 200, marginLeft: 10 }} changeRegion={this.changeRegion} RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}/>
                 </Form.Item>
-                </>}
                 <Form.Item>
-                {!level&& <Button type="primary" onClick={this.getTableData}>
+                <Button type="primary" onClick={this.getTableData}>
                     查询
-                  </Button>}
+                  </Button>
                   <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
                     onClick={this.template}
                     loading={exRegionloading}
                   >
-                    {/* <Icon type="export" /> */}
                     导出
                   </Button>
-                  {/* <Button type="primary" onClick={this.manualData}>
-                    手工生成有效传输效率数据
-                  </Button> */}
                 </Form.Item>
-              </Form>
-              {!level&& <div style={{ paddingTop: 10 }}>
+              </Form>}
+              {!level&&  <div style={{ paddingTop: 10 }}>
                 <div
                   style={{
                     width: 20,
@@ -545,7 +515,14 @@ export default class EntIndexModal extends Component {
                    {`<90%未达标`}
                 </span>
               </div>}
-              <Button
+              {level&&<><Button
+                    style={{ margin: '0 5px' }}
+                    icon={<ExportOutlined />}
+                    onClick={this.template}
+                    loading={exRegionloading}
+                  >
+                    导出
+                  </Button><Button
                     onClick={() => {
                       this.setState({
                         level:'',
@@ -556,34 +533,29 @@ export default class EntIndexModal extends Component {
                   >
                     <RollbackOutlined />
                     返回
-                  </Button>
+                  </Button></>}
             </>
           }
         >
           <SdlTable
-            rowKey={(record, index) => `complete${index}`}
-            loading={this.props.loading}
+             rowKey={(record, index) => `complete${index}`}
+             loading={this.props.loading}
             columns={columns}
-            bordered={false}
-            // onChange={this.handleTableChange}
-            dataSource={this.props.tableDatas}
-            scroll={{ y: 'calc(100vh - 450px)'}}
-            // scroll={{ y: 550 }}
-            pagination={false}
-          />
+             bordered={false}
+             dataSource={this.props.tableDatas}
+             scroll={{ y: 'calc(100vh - 450px)'}}
+             pagination={false}
+           /> 
         </Card>
-        
-    }
-    </>;
+    )
   }
   render() {
     console.log("props.pollutantType=",this.props.pollutantType)
     console.log("state.pollutantType=",this.state.PollutantType)
   const {TVisible,TCancle,TTVisible} = this.props
   return (
-    <>
       <div>
-          <Modal
+           <Modal
           centered
           title='有效传输率'
           visible={TVisible}
@@ -591,7 +563,7 @@ export default class EntIndexModal extends Component {
           width={'95%'}
           destroyOnClose
           onCancel={TCancle}>
-            {
+           {
               !this.state.showDetails && this.showModal()
             }
             {
@@ -602,9 +574,8 @@ export default class EntIndexModal extends Component {
                 })
               }} />
             }
-          </Modal>
+          </Modal> 
       </div>
-    </>
   );
 }
 }
