@@ -70,7 +70,7 @@ class DataQuery extends Component {
       },
       callback: () => {
         let { historyparams,dateTypes,dateValues } = this.props;
-        if(this.props.tabType==='biao'&&dataType!=='realtime'&&dataType!=='minute'&&dataType!=='hour'&&dataType!=='day'){
+        if(this.props.tabType==='biao'&&type!=='realtime'&&type!=='minute'&&type!=='hour'&&type!=='day'){
           this.setState({dataType:'realtime'})
         }
         // this.children.onDataTypeChange(this.state.dataType)
