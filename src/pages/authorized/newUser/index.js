@@ -75,7 +75,7 @@ const { SHOW_PARENT } = TreeSelect;
   getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],
   EntAndPoint: newuserinfo.EntAndPoint,
   RegionByDepID: newuserinfo.RegionByDepID,
-
+  CheckPoint:newuserinfo.CheckPoint
 
 }))
 export default class UserInfoIndex extends Component {
@@ -251,6 +251,7 @@ export default class UserInfoIndex extends Component {
         visibleData: true,
         checkedKeys: nextProps.CheckPoint,
       });
+      console.log('DGIMN=', nextProps.CheckPoint);
     }
 
     if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
@@ -799,7 +800,7 @@ export default class UserInfoIndex extends Component {
                         onCheck={this.onChecks}
                         checkedKeys={this.state.checkedKeys}
                         onSelect={this.onSelectData}
-                        selectedKeys={this.state.selectedKeys}
+                        // selectedKeys={this.state.selectedKeys}
                         defaultExpandAll
                       >
                         {this.renderDataTreeNodes(this.state.newEntAndPoint)}

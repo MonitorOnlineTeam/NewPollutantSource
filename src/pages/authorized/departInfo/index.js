@@ -1109,9 +1109,10 @@ class DepartIndex extends Component {
                 title={`数据过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
                 visible={this.state.visibleData}
                 onOk={this.handleDataOK}
-                // destroyOnClose="true"
+                destroyOnClose={true}
                 onCancel={this.handleCancel}
                 width={900}
+                // destroyOnClose
               >
                 {
                   // (this.props.GetRegionInfoByTree && this.props.CheckPointLoading) ? <Spin
