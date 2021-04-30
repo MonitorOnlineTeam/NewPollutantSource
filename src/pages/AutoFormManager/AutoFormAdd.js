@@ -43,9 +43,16 @@ class AutoFormAdd extends Component {
   }
 
   onSubmitForm(formData) {
-    console.log("formData=", formData)
     const { dispatch, successCallback, form } = this.props;
     const { uid, configId } = this._SELF_;
+    if(formData.HazardousWasteYear){
+      formData.HazardousWasteYear=moment(formData.HazardousWasteMonth).format("YYYY")
+    }
+    if(formData.HazardousWasteMonth){
+      formData.HazardousWasteMonth=moment(formData.HazardousWasteMonth).format("MM")
+    }
+
+    
     // form.validateFields((err, values) => {
     //   if (!err) {
     //     let FormData = {};

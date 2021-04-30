@@ -16,6 +16,7 @@ class Index extends Component {
             dgimn: '',
             pointName: '',
             entName: '',
+            title:''
         };
     }
 
@@ -24,14 +25,15 @@ class Index extends Component {
             dgimn: value[0].key,
             pointName: value[0].pointName,
             entName: value[0].entName,
+            title:`${value[0].entName} - ${value[0].pointName}`,
         })
     }
 
     render() {
-        const { pointName, entName } = this.state;
+        const {dgimn, pointName, entName,title } = this.state;
         return (
             <div id="dataquery">
-                <BreadcrumbWrapper>
+               {dgimn&&<BreadcrumbWrapper  titles={`【${title}】` }>
                     {
                         this.state.dgimn ?
                             (
@@ -40,7 +42,7 @@ class Index extends Component {
                             )
                             : <PageLoading />
                     }
-                </BreadcrumbWrapper>
+                </BreadcrumbWrapper>}
                 <NavigationTree runState='1' domId="#dataquery" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         this.changeDgimn(value)

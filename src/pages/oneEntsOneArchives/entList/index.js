@@ -31,7 +31,7 @@ class Index extends React.Component {
         this.state = {
         searchValue:'',
         rightList:'',
-        page:1,
+        pageNum:1,
         pageSize:10
         };
     }
@@ -49,14 +49,15 @@ class Index extends React.Component {
 
   getData = (value)=>{
     let {dispatch,queryParams} = this.props;
-    const {page,pageSize} = this.state;
+    const {pageNum,pageSize} = this.state;
      dispatch({
         type: 'entList/getEntsList',
         payload: { indexStr:value? value : ''  },
         callback:(res)=>{
+
           this.setState({searchValue:value})
 
-             let rightSliceData = res.slice((page-1)*pageSize,page*pageSize);
+             let rightSliceData = res.slice((pageNum-1)*pageSize,pageNum*pageSize);
 
           this.setState({
             rightList: rightSliceData
@@ -109,12 +110,14 @@ class Index extends React.Component {
        router.push(`/oneEntsOneArchives/essentialInfo/entInfoDetail`);   
 
   } 
-  paginationChange = (page,pageSize) =>{
+  paginationChange = (pageNum,pageSize) =>{
 
    const {dataSource} = this.props;
-   let rightSliceData = dataSource.slice((page-1)*pageSize,page*pageSize);
+   let rightSliceData = dataSource.slice((pageNum-1)*pageSize,pageNum*pageSize);
    this.setState({
-     rightList: rightSliceData
+     rightList: rightSliceData,
+     pageNum:pageNum,
+     pageSize:pageSize
    })
 
   }
@@ -167,15 +170,15 @@ class Index extends React.Component {
           split={false}
           dataSource={this.loop(dataSource)}
           pagination={total<10? false:{
-            onChange: (page, pageSize) => {
-              this.paginationChange(page, pageSize)
+            onChange: (pageNum, pageSize) => {
+              this.paginationChange(pageNum, pageSize)
             },
             // pageSize: 6,
             // defaultPageSize:20,
             total: dataSource.length,
             showQuickJumper:true
           }}
-          style={{padding:'0 124px'}}
+          style={{padding:'0 124px 10px 124px'}}
           renderItem={item => (
            <List.Item>
                <Skeleton loading={loading} active paragraph={{ rows: 2 }}>
