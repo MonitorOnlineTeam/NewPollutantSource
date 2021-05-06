@@ -23,7 +23,7 @@ export async function getMenuData() {
   const body = {
     menu_id: '99dbc722-033f-481a-932a-3c6436e17245',
   };
-  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID', body);
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/GetSysMenuByUserID?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', body);
   // ;
   return result;
 }

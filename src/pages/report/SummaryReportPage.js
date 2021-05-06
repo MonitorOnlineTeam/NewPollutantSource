@@ -165,7 +165,7 @@ class SummaryReportPage extends PureComponent {
 
       const _columns = [
         {
-          title: '排口名称',
+          title: '监测点名称',
           dataIndex: 'PointName',
           width: 160,
         },
@@ -186,7 +186,8 @@ class SummaryReportPage extends PureComponent {
             const status = _text[1];
             // return status > 0 ? <span style={{ color: "#ee9844" }}>{val}</span> : (status > -1 ? <span style={{ color: "#ef4d4d" }}>{val}</span> : val)
             if (item.dataIndex === '风向') {
-              val = getDirLevel(text);
+              // val = getDirLevel(text);
+              val = getDirLevel(_text[0]);
             }
             if (val) {
               return status > -1 ? <span style={{ color: '#ef4d4d' }}>{val}</span> : val;
@@ -196,8 +197,9 @@ class SummaryReportPage extends PureComponent {
           return '-';
         },
       }));
+     const type =  this.props.form.getFieldValue('PollutantSourceType');
       columns.unshift({
-        title: '企业名称',
+        title: type==5?'城市名称' :'企业名称',
         dataIndex: 'EntName',
       });
       this.setState({

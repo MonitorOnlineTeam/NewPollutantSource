@@ -75,7 +75,8 @@ class AutoFormTable extends PureComponent {
   };
 
   componentDidMount() {
-    this.loadDataSource();
+    // this.loadDataSource();
+    this.props.sort? this.loadDataSource({SortFileds:"RegionCode",IsAsc: true}) : this.loadDataSource()
     if (this.props.getPageConfig) {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',

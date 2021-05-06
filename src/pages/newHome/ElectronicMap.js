@@ -497,6 +497,39 @@ class NewHome extends PureComponent {
     // console.log('currentDivisionPosition=', currentDivisionPosition)
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle };
     switch (extData.position.MonitorObjectType) {
+      case '师':
+        return (
+          <div
+            className={
+              this.state.clickedDivision
+                ? 'animate__animated animate__bounce animate__infinite animate__slow'
+                : ''
+            }
+            style={{ color: '#525151',position:'relative',zIndex:996}}
+          >
+            <div 
+            className={styles.pop}
+            // style={{ position:'absolute',zIndex:997 }}
+            >{extData.position.title}
+            
+            </div>
+            <CustomIcon
+              key="amache"
+              className={
+                this.props.currentDivisionPosition.includes(
+                  `${extData.position.Longitude},${extData.position.Latitude}`,
+                )
+                  ? 'animate__animated animate__bounce animate__infinite'
+                  : ''
+              }
+              type="icon-ditu"
+              style={{ fontSize: 32 }}
+              onClick={() => {
+                this.divisionClick(extData.position);
+              }}
+            />
+          </div>
+        );
       case '1':
         // 企业
         let isShow = 'none';
@@ -508,7 +541,7 @@ class NewHome extends PureComponent {
           });
         return (
           <div
-            style={{ color: '#525151', position: 'relative' }}
+            style={{ color: '#525151',zIndex:888}}
             onClick={() => {
               // 企业点击显示监测点
               if (extData.children) {
@@ -543,7 +576,7 @@ class NewHome extends PureComponent {
             ? extData.position.Color
             : '#999';
         return (
-          <div style={{ color: '#525151' }}>
+          <div style={{ color: '#525151',zIndex:777 }}>
             {aMap.getZoom() >= 9 && <div className={styles.pop}>{extData.position.title}</div>}
             <CustomIcon
               type="icon-fangwu"
@@ -563,37 +596,10 @@ class NewHome extends PureComponent {
             />
           </div>
         );
-      case '师':
-        return (
-          <div
-            className={
-              this.state.clickedDivision
-                ? 'animate__animated animate__bounce animate__infinite animate__slow'
-                : ''
-            }
-            style={{ color: '#525151' }}
-          >
-            <div className={styles.pop}>{extData.position.title}</div>
-            <CustomIcon
-              key="amache"
-              className={
-                this.props.currentDivisionPosition.includes(
-                  `${extData.position.Longitude},${extData.position.Latitude}`,
-                )
-                  ? 'animate__animated animate__bounce animate__infinite'
-                  : ''
-              }
-              type="icon-ditu"
-              style={{ fontSize: 32 }}
-              onClick={() => {
-                this.divisionClick(extData.position);
-              }}
-            />
-          </div>
-        );
+
       case '服务站':
         return (
-          <>
+          <div style={{ color: '#525151',zIndex:666}}>
             {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>}
             <CustomIcon
               type="icon-cangku"
@@ -606,7 +612,7 @@ class NewHome extends PureComponent {
                 this.getOfficeModalData(extData);
               }}
             />
-          </>
+          </div>
         );
       default:
         return null;

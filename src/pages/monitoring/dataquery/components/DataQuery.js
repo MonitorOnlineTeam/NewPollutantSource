@@ -50,6 +50,7 @@ class DataQuery extends Component {
   }
 
   componentDidMount() {
+    this.children.onDataTypeChange(this.state.dataType)
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
@@ -377,7 +378,7 @@ class DataQuery extends Component {
         resizable
         defaultWidth={80}
         scroll={{ y: this.props.tableHeight || undefined }}
-        pagination={{ pageSize: 20 }}
+        // pagination={{ pageSize: 20 }}
       />
       // </Card.Grid>
     );
@@ -422,9 +423,9 @@ class DataQuery extends Component {
   };
   dateCallbackDataQuery = (dates, dataType) => {
     let { historyparams, dispatch } = this.props;
-    // this.setState({
-    //   dateValue: dates,
-    // });
+    this.setState({
+      dateValue: dates,
+    });
     dispatch({
       type: 'dataquery/updateState',
       payload: {
