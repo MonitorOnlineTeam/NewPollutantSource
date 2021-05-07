@@ -141,7 +141,15 @@ class RegionStaticstics extends PureComponent {
               </div>
           </Row>
         </Form>
-        <SdlTable align="center" dataSource={secondTableDataSource} columns={columns} loading={loading} />
+        <SdlTable
+         align="center"
+          dataSource={secondTableDataSource}
+           columns={columns} 
+           loading={loading}
+           pagination={{
+             defaultPageSize:20
+           }}
+           />
       </Card>
     );
   }

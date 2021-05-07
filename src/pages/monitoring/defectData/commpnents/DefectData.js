@@ -136,7 +136,7 @@ export default class EntTransmissionEfficiency extends Component {
       PageSize:20,
       PageIndex:1
     });
-    // this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
+    this.child.onDataValueChange([moment().subtract(1, 'day').startOf('day'),moment().endOf('day')])
 
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 

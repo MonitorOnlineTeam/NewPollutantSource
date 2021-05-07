@@ -83,8 +83,8 @@ class UserInfoView extends Component {
                         <Button
                             style={{ float: "right", marginRight: 10 }}
                             onClick={() => {
-                                history.go(-1);
-                                // router.push('/oneEntsOneArchives/entList')
+                                // history.go(-1);
+                                router.push('/oneEntsOneArchives/entList')
 
                             }}
                         ><LeftOutlined />返回
@@ -108,6 +108,7 @@ class UserInfoView extends Component {
                                    fileList={fileList}
                                    showUploadList={{showRemoveIcon:false}}
                                    onPreview={this.handlePreview}
+                                   className='ontEntDetailPhoto'
                                       />
                            </Form.Item> 
                            <Modal
