@@ -52,7 +52,7 @@ const checkStatus = response => {
     // console.log(`
     //     接口返回${response.status}：
     //     url: ${response.url}
-    //     ssToken: ${getCookie(configToken.cookieName)} 
+    //     ssToken: ${getCookie(configToken.cookieName)}
     //     `)
     return response;
   }
@@ -75,10 +75,9 @@ async function requestMy(url, options) {
   const ssoToken = `${getCookie(configToken.cookieName)}`;
   // console.log(`
   // ${url} - ssToken:
-  // ${getCookie(configToken.cookieName)} 
+  // ${getCookie(configToken.cookieName)}
   // `)
   const authHeader = getAuthHeader(ssoToken);
-
   const resp = await fetch(url, { ...options, ...authHeader })
     .then(checkStatus)
     .then(parseJSON)
@@ -90,14 +89,14 @@ async function requestMy(url, options) {
         // console.log(`
         // 接口401报错1：
         // url: ${url}
-        // ssToken: ${getCookie(configToken.cookieName)} 
+        // ssToken: ${getCookie(configToken.cookieName)}
         // `)
         Cookie.set(configToken.cookieName, null);
         Cookie.set('currentUser', null);
         // console.log(`
         // 接口401报错2：
         // url: ${url}
-        // ssToken: ${getCookie(configToken.cookieName)} 
+        // ssToken: ${getCookie(configToken.cookieName)}
         // `)
         router.push('/user/login');
         return;
@@ -113,13 +112,12 @@ async function requestMy(url, options) {
       if (status >= 404 && status < 422) {
         // router.push('/exception/404');
         notification.error({
-          message: `请求错误 404`, 
+          message: `请求错误`,
           // description: errortext,
         });
       }
     });
-
-  return (resp && resp.data) || { IsSuccess: false, Datas: null, Message: '服务器内部错误' };
+  return (resp && resp.data) || { IsSuccess: false, Datas: null, Message: '' };
 }
 
 export async function get(url, params, flag) {
@@ -135,10 +133,10 @@ export async function get(url, params, flag) {
       }
     } else {
       url += `&${paramsArray.join('&')}`;
-    }   
+    }
     //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
-    // if (process.env.NODE_ENV === 'production' && true) {
-    // if (true) {
+    if (process.env.NODE_ENV === 'production' && true) {
+      // if (true) {
       const urlbehinds = url.split('?').map(item => ({ item }));
       if (urlbehinds.length > 1) {
         if (Object.keys(urlbehinds[1]).length !== 0) {
@@ -150,7 +148,7 @@ export async function get(url, params, flag) {
           url = urlbehinds[0].item + "?" + AESurlbehind;
         }
       }
-    // }
+    }
   }
   return requestMy(url, { method: 'GET' });
 }
@@ -159,7 +157,7 @@ export async function post(url, params) {
   let body = JSON.stringify(params);
   //参数加密开关 2021.1.29 cg 增加所有接口调用参数加密功能
   if (process.env.NODE_ENV === 'production' && true) {
-  // if (true) {
+    // if (true) {
     body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
       iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
       mode: CryptoJS.mode.CBC,
