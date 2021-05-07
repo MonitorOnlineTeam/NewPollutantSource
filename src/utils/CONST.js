@@ -8,3 +8,9 @@ export const gasPollutantList = [
   { value: "a19001", label: "O2", },
   { value: "n00000", label: "N2", },
 ]
+
+export const DatabaseVersion = [
+  { "value": "SQLSERVER", "key": "0" },
+  { "value": "ORACLE", "key": "1" },
+  { "value": "MYSQL", "key": "2" },
+]
