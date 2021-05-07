@@ -85,6 +85,7 @@ class AutoFormViewItems extends Component {
     const { formItemLayout, configId, keysParams } = this._SELF_;
     const formConfig = detailConfigInfo[configId] || [];
     const formData = editFormData[configId] || []
+
     return formConfig.map(item => {
       let showText = '';
       // if (item.type === "下拉列表框") {
@@ -123,13 +124,13 @@ class AutoFormViewItems extends Component {
 
       if (item.type === '上传') {
         const dataSource = getAttachmentDataSource(formData[item.FullFieldName]);
-        el = <div className={styles.detail}>
+          el = <div className={styles.detail}>
           <AttachmentView dataSource={dataSource} />
         </div>;
       }
       return (
-        <Col span={6} style={{ marginBottom: 10, display: item.isHide ? "none" : "block" }} key={item.fieldName}>
-          <div className={styles.term}>{item.labelText}</div>
+        <Col span={6} style={{ marginBottom: 10, display: item.isHide||item.labelText==='企业照片'&&this.props.uploadType==='big'? "none" : "block" }} key={item.fieldName}>
+          <div className={styles.term}>{item.labelText }</div>
           {el}
         </Col>
       )

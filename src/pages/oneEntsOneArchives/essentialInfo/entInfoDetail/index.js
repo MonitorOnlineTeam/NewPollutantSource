@@ -15,6 +15,8 @@ import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import router from 'umi/router';
 import styles from '../../entList/style.less'
+import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
+
 @connect(({loading }) => ({
 
 }))
@@ -55,14 +57,14 @@ class UserInfoView extends Component {
     };
     editFormDatas=(data)=>{
 
-      let datas = data.AEnterpriseTest.Photo;
-
+      let datas = data.AEnterpriseTest['dbo.T_Bas_Enterprise.Photo'];
+      console.log(getAttachmentDataSource(datas))
       if(datas){
 
-       const entPhoto =  datas.split(";").map((item,index)=>{
+       const entPhoto =  getAttachmentDataSource(datas).map((item,index)=>{
          return { 
                uid:index,
-               url:item
+               url:item.attach
            }
        })
       this.setState({
@@ -107,7 +109,7 @@ class UserInfoView extends Component {
                                    showUploadList={{showRemoveIcon:false}}
                                    onPreview={this.handlePreview}
                                       />
-                           </Form.Item>
+                           </Form.Item> 
                            <Modal
                              visible={previewVisible}
                              title={'图片预览'}
@@ -117,6 +119,7 @@ class UserInfoView extends Component {
                             <img alt="example" style={{ width: '100%' }} src={previewImage} />
                            </Modal>
                          <AutoFormViewItems
+                            uploadType='big'
                             seeType='customSty'
                             configId="AEnterpriseTest"
                             keysParams={{ "dbo.T_Bas_Enterprise.EntCode": entCode }}
