@@ -57,9 +57,9 @@ class PointDetailsModal extends PureComponent {
     const { currentPointInfo } = this.state;
     let currentKey = pointInfo.DGIMN;
     let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
-    if (infoWindowData.photo && infoWindowData.photo.length === 1) {
-      imgName = "/upload/" + infoWindowData.photo[0];
-    }
+    // if (infoWindowData.photo && infoWindowData.photo.length === 1) {
+    //   imgName = "/upload/" + infoWindowData.photo[0];
+    // }
     const modalHeight = 'calc(100vh - 24vh - 55px - 48px - 90px - 48px)';
     console.log('props=', this.props)
     return (
@@ -80,7 +80,7 @@ class PointDetailsModal extends PureComponent {
       >
         {
           loading ?
-            <div style={{height: '200px', textAlign: 'center'}}>
+            <div style={{ height: '200px', textAlign: 'center' }}>
               <Spin />
             </div> : <Tabs>
               {
