@@ -344,7 +344,7 @@ class Index extends Component {
                     dataSource={alarmPushDepOrRoleList}
                     showSearch
                     filterOption={this.filterOption}
-                    searchPlaceholder={"请输入企业名称"}
+                    locale={{searchPlaceholder:"请输入企业名称"}}
                     targetKeys={targetKeys}
                     onChange={this.handleChange}
                     leftColumns={this.leftTableColumns}

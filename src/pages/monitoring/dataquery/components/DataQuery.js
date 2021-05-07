@@ -318,11 +318,29 @@ class DataQuery extends Component {
     //     },
     // })
   };
+  updateQueryState = payload => {
+    const { historyparams, dispatch } = this.props;
 
+    dispatch({
+      type: 'dataquery/updateState',
+      payload: { historyparams: { ...historyparams, ...payload } },
+    });
+  };
+  tableOnChange = (PageIndex, PageSize) => {
+    const { historyparams} = this.props;
+    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize})
+
+   }
+   onShowSizeChange= (PageIndex, PageSize) => {
+    const { historyparams} = this.props;
+
+    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize, })
+    
+   }
   /** 渲染数据展示 */
 
   loaddata = () => {
-    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant } = this.props;
+    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant,historyparams:{pageSize,pageIndex},total } = this.props;
     const { displayType } = this.state;
     if (dataloading || loadingPollutant) {
       return (
@@ -379,6 +397,15 @@ class DataQuery extends Component {
         defaultWidth={80}
         scroll={{ y: this.props.tableHeight || undefined }}
         // pagination={{ pageSize: 20 }}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          total: total,
+          pageSize: pageSize,
+          current: pageIndex,
+          onChange: this.tableOnChange,
+          onShowSizeChange:this.onShowSizeChange,
+        }}
       />
       // </Card.Grid>
     );
