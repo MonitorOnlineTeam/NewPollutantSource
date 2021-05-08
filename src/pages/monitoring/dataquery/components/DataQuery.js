@@ -57,6 +57,17 @@ class DataQuery extends Component {
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
     if (nextProps.DGIMN !== this.props.DGIMN) {
+      this.props.dispatch({
+        type: 'dataquery/updateState',
+        payload: {
+          historyparams:
+          {
+          ...this.props.historyparams,
+          pageIndex:1,
+          pageSize:20
+        }
+        },
+      });
       this.changeDgimn(nextProps.DGIMN,'switch');
     }
   };
@@ -193,6 +204,7 @@ class DataQuery extends Component {
         historyparams,
       },
     });
+
     dispatch({
       type: 'dataquery/updateState',
       payload: {
@@ -386,7 +398,7 @@ class DataQuery extends Component {
         return item.dataIndex!=='AQI' && item.dataIndex!='AirQuality'
      })
     }
-   console.log(this.props.tabType)
+  //  console.log(this.props.tabType)
     return (
       // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
       <SdlTable
@@ -416,6 +428,8 @@ class DataQuery extends Component {
       type: 'dataquery/exportHistoryReport',
       payload: {
         DGIMNs: this.state.dgimn,
+        pageIndex:null,
+        pageSize:null,
       },
     });
   };
@@ -439,6 +453,8 @@ class DataQuery extends Component {
       beginTime: dates[0] ? dates[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
       endTime: dates[1] ? dates[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
       datatype: dataType,
+      pageIndex:1,
+      pageSize:20
     };
     dispatch({
       type: 'dataquery/updateState',
