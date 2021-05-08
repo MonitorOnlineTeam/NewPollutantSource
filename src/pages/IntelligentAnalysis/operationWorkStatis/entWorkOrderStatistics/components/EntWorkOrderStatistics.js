@@ -85,6 +85,7 @@ class EntWorkOrderStatistics extends PureComponent {
                   BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
                   EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
                 }
+                if(query.RegionCode == 'all') query.RegionCode = '';
                 if(changePage){
                   return <a onClick={()=>{changePage({page:'EntStaticstics',query})}}>{text}</a>
                 }else{
