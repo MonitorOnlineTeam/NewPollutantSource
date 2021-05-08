@@ -21,7 +21,7 @@ export default Model.extend({
     AllMonthEmissionsByPollutant: {
       beginTime: moment().format('YYYY-01-01 HH:mm:ss'),
       endTime: moment().add(1, 'years').format('YYYY-MM-01 HH:mm:ss'),
-      pollutantCode: ['01', '02', '03'],
+      pollutantCode: ['01', '02', '03', '30'],
       ycdate: [],
       ycdata: [],
       ycAnalData: [],

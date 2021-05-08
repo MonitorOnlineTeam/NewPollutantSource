@@ -58,7 +58,7 @@ const iconStyle = {
 }
 
 @Form.create()
-@connect(({ loading, mapView, global, user }) => ({
+@connect(({ loading, mapView, global, user, common }) => ({
   allEntAndPointList: mapView.allEntAndPointList,
   defaultMapInfo: mapView.defaultMapInfo,
   tableList: mapView.tableList,
@@ -73,6 +73,7 @@ const iconStyle = {
   curPointData: mapView.curPointData,
   noticeList: global.notices,
   menuDescList: user.menuDescList,
+  menuNameList: common.menuNameList,
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -154,6 +155,7 @@ class MapView extends Component {
   }
 
   componentDidMount() {
+    this.getMenuNameList();
     // 获取所有企业及排口信息
     this.props.dispatch({
       type: 'mapView/getAllEntAndPoint',
@@ -173,6 +175,12 @@ class MapView extends Component {
     //     pollutantTypes: 2,
     //   },
     // })
+  }
+
+  getMenuNameList = () => {
+    this.props.dispatch({
+      type: 'common/getMenuNameList',
+    })
   }
 
   // 渲染坐标点
@@ -616,7 +624,7 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator }, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
+    const { form: { getFieldDecorator },menuNameList, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
@@ -1135,6 +1143,7 @@ class MapView extends Component {
             footer={null}
             style={{ maxHeight: '80vh' }}
             visible={this.state.pointVisible}
+            destroyOnClose
             onOk={() => {
               this.setState({
                 pointVisible: false,
@@ -1162,7 +1171,7 @@ class MapView extends Component {
               // })
             }}>
               {
-                menuDescList.includes('历史数据') && <TabPane tab="历史数据" key="1">
+                menuNameList.includes('历史数据') && <TabPane tab="历史数据" key="1">
                   <DataQuery DGIMN={currentKey} initLoadData chartHeight="calc(100vh - 427px)" style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight="calc(100vh - 34vh - 55px - 48px - 90px - 64px)" pointName={this.state.pointName} pollutantTypes={this.state.pollutantTypes} entName={this.state.entName} />
                 </TabPane>
               }
@@ -1170,7 +1179,7 @@ class MapView extends Component {
                 <OperDetails DGIMN={currentKey} />
               </TabPane>
               {
-                menuDescList.includes('视频预览') && <TabPane tab="视频预览" key="2">
+                menuNameList.includes('视频预览') && <TabPane tab="视频预览" key="2">
                   <YsyShowVideo DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
                 </TabPane>
               }
@@ -1178,18 +1187,18 @@ class MapView extends Component {
                 <AlarmRecord DGIMN={currentKey} initLoadData />
               </TabPane> */}
               {
-                menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
+                menuNameList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标处置" key="3">
                   <AlarmRecord DGIMN={currentKey} EntCode={this.state.currentPointInfo.EntCode} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               {
-                menuDescList.includes('异常数据') && <TabPane tab="异常数据" key="4">
+                menuNameList.includes('异常数据') && <TabPane tab="异常数据" key="4">
                   <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} />
                 </TabPane>
               }
               {
-                menuDescList.includes('超标数据') && this.state.currentPointInfo.PollutantType != '5' &&
+                menuNameList.includes('超标数据') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标数据" key="5">
                   <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} noticeState={1} />
                 </TabPane>

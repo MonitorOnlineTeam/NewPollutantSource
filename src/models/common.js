@@ -127,9 +127,9 @@ export default Model.extend({
           }
         })
         callback && callback(filterData)
-        // yield update({
-        //   entAndPointList: filterData,
-        // });
+        yield update({
+          entAndPointList: result.Datas,
+        });
       } else {
         message.error(result.Message);
       }
