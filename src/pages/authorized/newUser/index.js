@@ -460,14 +460,20 @@ export default class UserInfoIndex extends Component {
      })
    }
    onChecks = checkedKeys => {
-    this.setState({ checkedKeys });
-    const leafTree = [];
-    checkedKeys.map(item => {
+    checkedKeys.map((item,index) => {
       if (this.state.leafTreeDatas.indexOf(item) != -1) {
-        leafTree.push(item);
+        checkedKeys.splice(index,1)
+        
       }
     });
-    this.setState({ checkedKeySel: checkedKeys });
+    this.setState({ checkedKeys });
+    // const leafTree = [];
+    // checkedKeys.map(item => {
+    //   if (this.state.leafTreeDatas.indexOf(item) != -1) {
+    //     leafTree.push(item);
+    //   }
+    // });
+    // this.setState({ checkedKeySel: checkedKeys });
   };
   onSelectData = (selectedKey, info) => {
     this.setState({ selectedKey });
