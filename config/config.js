@@ -508,6 +508,24 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
+                //企业运维管理
+                {
+                  name: 'operationEntManage',
+                  path: '/platformconfig/operationEntManage',
+                  redirect: '/platformconfig/operationEntManage/operationUnit',
+                  routes: [
+                    {
+                      name:'operationUnit', //运维单位管理
+                      path: '/platformconfig/operationEntManage/operationUnit',
+                      component: './platformManager/operationEntManage/operationUnit',
+                    },
+                    {
+                      name:'operationPerson', //运维人员管理
+                      path: '/platformconfig/operationEntManage/operationPerson',
+                      component: './platformManager/operationEntManage/operationPerson',
+                    },
+                ]
+                }, 
               ],
             },
             {

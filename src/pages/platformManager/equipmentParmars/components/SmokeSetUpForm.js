@@ -101,17 +101,17 @@ const SmokeSetUpForm = (props) => {
         </>
         <Row gutter={[40,24]}>
         <Col  span={8}>
-      <Form.Item label="皮托管系数" name="PitotCoefficient" rules={[{ required: true,message: '请输入皮托管系数!', } ]}>
+      <Form.Item label="皮托管系数" name="PitotCoefficient" rules={[{ required: false,message: '请输入皮托管系数!', } ]}>
         <InputNumber placeholder='请输入皮托管系数' />
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="速度场系数" name="VelocityCoefficient" rules={[{ required: true,message: '请输入速度场系数!', } ]}>
+      <Form.Item label="速度场系数" name="VelocityCoefficient" rules={[{ required: false,message: '请输入速度场系数!', } ]}>
         <InputNumber placeholder='请输入速度场系数'/>
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="烟道截面积(㎡)" name="FlueCoefficient" rules={[{ required: true,message: '请输入烟道截面积!', } ]}>
+      <Form.Item label="烟道截面积(㎡)" name="FlueCoefficient" rules={[{ required: false,message: '请输入烟道截面积!', } ]}>
         <InputNumber placeholder='请输入烟道截面积'/>
       </Form.Item>
       </Col>
@@ -123,12 +123,12 @@ const SmokeSetUpForm = (props) => {
         </>
         <Row gutter={[40,24]}>
         <Col  span={8}>
-      <Form.Item label="斜率" name="Slope" rules={[{ required: true,message: '请输入斜率!', } ]}>
+      <Form.Item label="斜率" name="Slope" rules={[{ required: false,message: '请输入斜率!', } ]}>
         <InputNumber placeholder='请输入斜率'/>
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="截距" name="Intercept" rules={[{ required: true,message: '请输入截距!', } ]}>
+      <Form.Item label="截距" name="Intercept" rules={[{ required: false,message: '请输入截距!', } ]}>
         <InputNumber  placeholder='请输入截距'/>
       </Form.Item>
       </Col>
@@ -139,12 +139,12 @@ const SmokeSetUpForm = (props) => {
         </>
       <Row gutter={[40,24]}>
         <Col  span={8}>
-      <Form.Item label="当地大气压(Pa)" name="Atmos" rules={[{ required: true,message: '请输入当地大气压!', } ]}>
+      <Form.Item label="当地大气压(Pa)" name="Atmos" rules={[{ required: false,message: '请输入当地大气压!', } ]}>
         <InputNumber placeholder='请输入当地大气压'/>
       </Form.Item>
       </Col>
       <Col  span={8}>
-      <Form.Item label="标准过量空气系数" name="AirCoefficient" rules={[{ required: true,message: '请输入标准过量空气系数!', } ]}>
+      <Form.Item label="标准过量空气系数" name="AirCoefficient" rules={[{ required: false,message: '请输入标准过量空气系数!', } ]}>
         <InputNumber placeholder='请输入标准过量空气系数'/>
       </Form.Item>
       </Col>
