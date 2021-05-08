@@ -40,19 +40,18 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'defectData/updateState',
-  getData: 'defectData/getDefectModel',
+  updateState: 'operationUnit/updateState',
+  getData: 'operationUnit/getDefectModel',
 };
-const content = <div>当有效传输率未到达90%时判定为未达标</div>;
-@connect(({ loading, defectData,autoForm,common}) => ({
-  priseList: defectData.priseList,
-  exloading:defectData.exloading,
+@connect(({ loading, operationUnit,autoForm,common}) => ({
+  priseList: operationUnit.priseList,
+  exloading:operationUnit.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: defectData.total,
-  tableDatas: defectData.tableDatas,
-  queryPar: defectData.queryPar,
+  total: operationUnit.total,
+  tableDatas: operationUnit.tableDatas,
+  queryPar: operationUnit.queryPar,
   regionList: autoForm.regionList,
-  attentionList:defectData.attentionList,
+  attentionList:operationUnit.attentionList,
   atmoStationList:common.atmoStationList
 }))
 @Form.create()
@@ -142,9 +141,9 @@ export default class EntTransmissionEfficiency extends Component {
 
       //获取企业列表 or  大气站列表
 
-      Atmosphere? dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'defectData/getEntByRegion', payload: { RegionCode: '' },  });  
+      Atmosphere? dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'operationUnit/getEntByRegion', payload: { RegionCode: '' },  });  
  
-     dispatch({ type: 'defectData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'operationUnit/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -233,7 +232,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'defectData/exportGetAlarmDataList',
+      type: 'operationUnit/exportGetAlarmDataList',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);

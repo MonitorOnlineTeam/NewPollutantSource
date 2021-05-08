@@ -511,9 +511,12 @@ export default {
                 //企业运维管理
                 {
                   name: 'operationEntManage',
-                  path: '/platformconfig/operationEntManage',
-                  redirect: '/platformconfig/operationEntManage/operationUnit',
+                  path:'/platformconfig/operationEntManage',
                   routes: [
+                    {
+                      path: '/platformconfig/operationEntManage',
+                      redirect: '/platformconfig/operationEntManage/operationUnit',
+                    },
                     {
                       name:'operationUnit', //运维单位管理
                       path: '/platformconfig/operationEntManage/operationUnit',

@@ -5,9 +5,9 @@
  */
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import DefectData from '../commpnents/PersonData'
+import PersonData from '../commpnents/PersonData'
 
-export default class Ent extends Component {
+export default class OperationPerson extends Component {
   constructor(props) {
     super(props);
 
@@ -25,7 +25,7 @@ export default class Ent extends Component {
 
     return (
       <BreadcrumbWrapper >
-        <DefectData />
+        <PersonData />
       </BreadcrumbWrapper>
     );
   }

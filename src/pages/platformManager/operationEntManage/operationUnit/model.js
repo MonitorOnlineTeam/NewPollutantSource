@@ -14,7 +14,7 @@ import {
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'defectData',
+  namespace: 'operationUnit',
   state: {
     exloading: false,
     loading: false,

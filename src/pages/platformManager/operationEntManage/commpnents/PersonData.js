@@ -40,19 +40,18 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'defectData/updateState',
-  getData: 'defectData/getDefectModel',
+  updateState: 'operationPerson/updateState',
+  getData: 'operationPerson/getDefectModel',
 };
-const content = <div>当有效传输率未到达90%时判定为未达标</div>;
-@connect(({ loading, defectData,autoForm,common}) => ({
-  priseList: defectData.priseList,
-  exloading:defectData.exloading,
+@connect(({ loading, operationPerson,autoForm,common}) => ({
+  priseList: operationPerson.priseList,
+  exloading:operationPerson.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: defectData.total,
-  tableDatas: defectData.tableDatas,
-  queryPar: defectData.queryPar,
+  total: operationPerson.total,
+  tableDatas: operationPerson.tableDatas,
+  queryPar: operationPerson.queryPar,
   regionList: autoForm.regionList,
-  attentionList:defectData.attentionList,
+  attentionList:operationPerson.attentionList,
   atmoStationList:common.atmoStationList
 }))
 @Form.create()
@@ -142,9 +141,9 @@ export default class EntTransmissionEfficiency extends Component {
 
       //获取企业列表 or  大气站列表
 
-      Atmosphere? dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'defectData/getEntByRegion', payload: { RegionCode: '' },  });  
+      Atmosphere? dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'operationPerson/getEntByRegion', payload: { RegionCode: '' },  });  
  
-     dispatch({ type: 'defectData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'operationPerson/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
   
 
     setTimeout(() => {
@@ -233,7 +232,7 @@ export default class EntTransmissionEfficiency extends Component {
   template = () => {
     const { dispatch, queryPar } = this.props;
     dispatch({
-      type: 'defectData/exportGetAlarmDataList',
+      type: 'operationPerson/exportGetAlarmDataList',
       payload: { ...queryPar },
       callback: data => {
          downloadFile(`/upload${data}`);
@@ -317,11 +316,9 @@ export default class EntTransmissionEfficiency extends Component {
        </Button>
        <Button
          style={{ margin: '0 5px' }}
-         icon={<ExportOutlined />}
          onClick={this.template}
-         loading={exloading}
        >
-         导出
+         添加
        </Button>
      </Form.Item>
      );
@@ -362,119 +359,65 @@ export default class EntTransmissionEfficiency extends Component {
               <Form layout="inline">
             
               <Row>
-              <Form.Item label='数据类型'>
+              <Form.Item label=''>
+              <Input
+                    placeholder="运维单位"
+                    onChange={this._handleDateTypeChange}
+                    style={{ width: 100}}
+                 /> 
+              </Form.Item>
+              <Form.Item label=''>
+              <Input
+                    placeholder="姓名"
+                    onChange={this._handleDateTypeChange}
+                    style={{ width: 100}}
+                 /> 
+              </Form.Item>
+              <Form.Item label=''>
               <Select
-                    placeholder="数据类型"
+                    placeholder="是否有运维工证书(气)"
                     onChange={this._handleDateTypeChange}
                     value={dataType}
-                    style={{ width: Atmosphere? 100 : 200}}
                   >  
-                 <Option key='0' value='HourData'>小时</Option>
-                 <Option key='1' value='DayData'> 日均</Option>
+                 <Option key='0' value='HourData'>有运维工证书(气)</Option>
+                 <Option key='1' value='DayData'> 无运维工证书(气)</Option>
 
                   </Select>
               </Form.Item>
-                <Form.Item>
-                  日期查询：
-                      {/* <RangePicker
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        value={[moment(beginTime),moment(endTime)]}
-                        onChange={this.dateChange}
-                        onOk={this.dateOk}
-                        allowClear={false}
-                   /> */}
-                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
-                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
-                </Form.Item>
-                <Form.Item label='行政区'>
-                  <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width:  Atmosphere? 100 : 150}}
-                  >
-                    {this.regchildren()}
-                  </Select>
-                </Form.Item>
-                {Atmosphere?
-                  <Form.Item label='大气站列表'>
+              <Form.Item label=''>
               <Select
-              showSearch
-              optionFilterProp="children"
-              allowClear
-              placeholder="大气站列表"
-              onChange={this.changeEnt}
-              value={EntCode ? EntCode : undefined}
-              style={{ width: 200  }}
-            >
-              {this.children()}
-            </Select>
-            </Form.Item>
-                 :
-                <Form.Item label='关注程度'>
-                  <Select
-                    allowClear
-                    placeholder="关注程度"
-                    onChange={this.changeAttent}
-                    value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 150 }}
-                  >
-                    {this.attentchildren()}
+                    placeholder="运维工证书是否过期(气)"
+                    onChange={this._handleDateTypeChange}
+                    value={dataType}
+                  >  
+                 <Option key='0' value='HourData'>运维工证书是已过期(气)</Option>
+                 <Option key='1' value='DayData'> 运维工证书是未过期(气)</Option>
                   </Select>
-                </Form.Item>
-                  } 
-                 { Atmosphere?  <BtnComponents /> : null}
+              </Form.Item>
+              <Form.Item label=''>
+              <Select
+                    placeholder="是否有运维工证书(水)"
+                    onChange={this._handleDateTypeChange}
+                    value={dataType}
+                  >  
+                 <Option key='0' value='HourData'>有运维工证书(水)</Option>
+                 <Option key='1' value='DayData'> 无运维工证书(水)</Option>
+
+                  </Select>
+              </Form.Item>
+              <Form.Item label=''>
+              <Select
+                    placeholder="运维工证书是否过期(水)"
+                    onChange={this._handleDateTypeChange}
+                    value={dataType}
+                  >  
+                 <Option key='0' value='HourData'>运维工证书是已过期(水)</Option>
+                 <Option key='1' value='DayData'> 运维工证书是未过期(水)</Option>
+                  </Select>
+              </Form.Item>
+                <BtnComponents />
                 </Row>
                 
-                {!Atmosphere?  <Row>
-
-                <Form.Item label='企业类型'>
-                  <Select
-                   allowClear
-                    placeholder="企业类型"
-                    onChange={this.typeChange}
-                    value={PollutantType?PollutantType:undefined}
-                    style={{ width: 200 }}
-                  >
-                    <Option value="1">废水</Option>
-                    <Option value="2">废气</Option>
-                  </Select>
-                </Form.Item>   
-              <Form.Item label='企业列表'>
-              <Select
-                showSearch
-                optionFilterProp="children"
-                allowClear
-                placeholder="企业列表"
-                onChange={this.changeEnt}
-                value={EntCode ? EntCode : undefined}
-                style={{ width: 394  }}
-              >
-                {this.children()}
-              </Select>
-            </Form.Item>
-            <Form.Item label='运维状态'>
-                <Select
-                    allowClear
-                    style={{ width: 200}}
-                    placeholder="运维状态"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    onChange={this.changeOperation}
-                    >
-                     <Option value="1">已设置运维人员</Option>
-                    <Option value="2">未设置运维人员</Option>
-                </Select>
-                </Form.Item>
-                 <BtnComponents />
-                </Row>
-                :
-                null
-           }
               </Form>
             </>
           }
