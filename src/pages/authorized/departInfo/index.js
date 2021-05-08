@@ -413,14 +413,23 @@ class DepartIndex extends Component {
   onChecks = checkedKeys => {
     console.log('select=', checkedKeys);
     console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas);
-    this.setState({ checkedKeys });
-    const leafTree = [];
-    checkedKeys.map(item => {
+    // this.setState({ checkedKeys });
+    // const leafTree = [];
+    // checkedKeys.map(item => {
+    //   if (this.state.leafTreeDatas.indexOf(item) != -1) {
+    //     leafTree.push(item);
+    //   }
+    // });
+    // this.setState({ checkedKeySel: checkedKeys });
+
+    checkedKeys.map((item,index) => {
       if (this.state.leafTreeDatas.indexOf(item) != -1) {
-        leafTree.push(item);
+        // leafTree.push(item);
+        checkedKeys.splice(index,1)
+        
       }
     });
-    this.setState({ checkedKeySel: checkedKeys });
+    this.setState({ checkedKeys });
   };
 
   onSelect = (record, selected, selectedRows) => {
