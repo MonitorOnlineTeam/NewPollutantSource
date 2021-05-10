@@ -19,8 +19,10 @@ export default Model.extend({
     currentMarkersList: [],
     pollutantTypeList: [],
     AllMonthEmissionsByPollutant: {
-      beginTime: moment().format('YYYY-01-01 HH:mm:ss'),
+      beginTime: moment().format('YYYY-01-01 00:00:00'),
       endTime: moment().add(1, 'years').format('YYYY-MM-01 HH:mm:ss'),
+      // beginTime: moment().add(2, 'years').format('YYYY-MM-01 HH:mm:ss'),
+      // endTime: moment().add(3, 'years').format('YYYY-MM-01 HH:mm:ss'),
       pollutantCode: ['01', '02', '03', '30'],
       ycdate: [],
       ycdata: [],
@@ -31,6 +33,9 @@ export default Model.extend({
       dyhwdate: [],
       dyhwdata: [],
       dyhwAnalData: [],
+      eyhtdate: [],
+      eyhtdata: [],
+      eyhtAnalData: [],
     },
     // 智能质控
     rateStatisticsByEnt: {
@@ -79,14 +84,13 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
-    homePage:"1"
+    homePage: "1"
   },
   effects: {
-    *getHomePage({payload},{call,update}){
+    *getHomePage({ payload }, { call, update }) {
       const result = yield call(services.getHomePage, payload);
-      if(result.IsSuccess)
-      {
-        yield update({homePage:result.Datas});
+      if (result.IsSuccess) {
+        yield update({ homePage: result.Datas });
       }
     },
     // 获取企业及排口信息
@@ -229,35 +233,56 @@ export default Model.extend({
 
         let ycdate = [];
         let ycdata = [];
-        response.Datas[0].monthList.map((ele) => {
-          ycdate.push(`${ele.DataDate.split('-')[1]}月`);
-          ycdata.push(ele.Emissions.toFixed(2));
-        });
+        // 烟尘
+        if (response.Datas['01']) {
+          response.Datas['01'].monthList.map((ele) => {
+            ycdate.push(`${ele.DataDate.split('-')[1]}月`);
+            ycdata.push(ele.Emissions.toFixed(2));
+          });
+        }
         let eyhldate = [];
         let eyhldata = [];
-        response.Datas[1].monthList.map((ele) => {
-          eyhldate.push(`${ele.DataDate.split('-')[1]}月`);
-          eyhldata.push(ele.Emissions.toFixed(2));
-        });
+        // 二氧化硫
+        if (response.Datas['02']) {
+          response.Datas['02'].monthList.map((ele) => {
+            eyhldate.push(`${ele.DataDate.split('-')[1]}月`);
+            eyhldata.push(ele.Emissions.toFixed(2));
+          });
+        }
         let dyhwdate = [];
         let dyhwdata = [];
-        response.Datas[2].monthList.map((ele) => {
-          dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
-          dyhwdata.push(ele.Emissions.toFixed(2));
-        });
+        // 氮氧化物
+        if (response.Datas['03']) {
+          response.Datas['03'].monthList.map((ele) => {
+            dyhwdate.push(`${ele.DataDate.split('-')[1]}月`);
+            dyhwdata.push(ele.Emissions.toFixed(2));
+          });
+        }
+        let eyhtdate = [];
+        let eyhtdata = [];
+        // 二氧化碳
+        if (response.Datas['30']) {
+          response.Datas['30'].monthList.map((ele) => {
+            eyhtdate.push(`${ele.DataDate.split('-')[1]}月`);
+            eyhtdata.push(ele.Emissions);
+          });
+        }
         yield update({
           AllMonthEmissionsByPollutant: {
             ...AllMonthEmissionsByPollutant,
             ...{
               ycdate: ycdate,
               ycdata: ycdata,
-              ycAnalData: response.Datas[0],
+              ycAnalData: response.Datas['01'] || {},
               eyhldate: eyhldate,
               eyhldata: eyhldata,
-              eyhlAnalData: response.Datas[1],
+              eyhlAnalData: response.Datas['02'] || {},
               dyhwdate: dyhwdate,
               dyhwdata: dyhwdata,
-              dyhwAnalData: response.Datas[2],
+              dyhwAnalData: response.Datas['03'] || {},
+              eyhtdate: eyhtdate,
+              eyhtdata: eyhtdata,
+              eyhtAnalData: response.Datas['30'] || {},
             }
           }
         });
