@@ -831,7 +831,7 @@ debugger;
         chartdata: option,
         columns,
         datatable: result,
-        total: resultlist.Total,
+        total: result.Total,
       });
     },
 

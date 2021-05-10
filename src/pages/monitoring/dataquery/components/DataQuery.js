@@ -415,7 +415,7 @@ class DataQuery extends Component {
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // total: total,
+          total: total,
           pageSize: pageSize,
           current: pageIndex,
           onChange: this.tableOnChange,
