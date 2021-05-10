@@ -20,6 +20,8 @@ import {
   Input,
   Button,
   Select,
+  Tooltip,
+  Popconfirm
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -32,6 +34,7 @@ import styles from '../operationPerson/style.less';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
+import { getThirdTableDataSource } from '@/services/entWorkOrderStatistics';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -60,11 +63,12 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
+      visible:false
     };
     
     this.columns = [
       {
-        title: <span>行政区</span>,
+        title: <span>运维单位</span>,
         dataIndex: 'regionName',
         key: 'regionName',
         align: 'center',
@@ -73,7 +77,7 @@ export default class EntTransmissionEfficiency extends Component {
       //  },
       },
       {
-        title: <span>{this.props.Atmosphere? '大气站名称': '企业名称'}</span>,
+        title: <span>姓名</span>,
         dataIndex: 'entName',
         key: 'entName',
         align: 'center',
@@ -82,7 +86,7 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
-        title: <span>监测点名称</span>,
+        title: <span>性别</span>,
         dataIndex: 'pointName',
         key: 'pointName',
         // width: '10%',
@@ -91,14 +95,8 @@ export default class EntTransmissionEfficiency extends Component {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
-      // {
-      //   title: <span>缺失监测因子</span>,
-      //   dataIndex: 'TransmissionRate',
-      //   key: 'TransmissionRate',
-      //   align: 'center',
-      // },
       {
-        title: <span>缺失时间段</span>,
+        title: <span>手机号</span>,
         dataIndex: 'firstAlarmTime',
         key: 'firstAlarmTime',
         align: 'center',
@@ -107,11 +105,44 @@ export default class EntTransmissionEfficiency extends Component {
         }
       },
       {
-        title: <span>缺失小时数</span>,
+        title: <span>身份证号</span>,
         dataIndex: 'defectCount',
         key: 'defectCount',
         align: 'center',
       },
+      {
+        title: <span>运维工证书编号(气)</span>,
+        dataIndex: 'defectCount',
+        key: 'defectCount',
+        align: 'center',
+      },
+      {
+        title: <span>运维工证书编号(水)</span>,
+        dataIndex: 'defectCount',
+        key: 'defectCount',
+        align: 'center',
+      },
+      {
+        title: "操作",
+        align: "center",
+        render: (text, record) => {
+          return (
+            <div>
+               <a href="#" onClick={this.see}>查看</a>
+                <a style={{padding:'0 5px'}} onClick={this.edit}>编辑</a>
+                <Popconfirm
+                  title="确认是否删除?"
+                  onConfirm={() => {
+                    this.del(record);
+                  }}
+                  okText="是"
+                  cancelText="否">
+                  <a href="#">删除</a>
+                </Popconfirm>
+            </div>
+          )
+        }
+      }
     ];
   }
 
@@ -342,6 +373,35 @@ export default class EntTransmissionEfficiency extends Component {
       this.queryClick();
     })
    }
+   see=()=>{
+
+   }
+
+   edit=()=>{  //编辑
+    this.setState({
+      visible:true
+    })
+   }
+   del=()=>{ //删除
+
+   }
+
+   operationUnit=()=>{ //运维单位
+
+   } 
+   operationName=()=>{ //姓名
+
+   }
+   operationBook=()=>{
+
+   }
+
+   operationBookOverdue=()=>{
+
+   }
+   onFinish=()=>{
+
+   }
   render() {
     const {
       Atmosphere,
@@ -361,58 +421,40 @@ export default class EntTransmissionEfficiency extends Component {
               <Row>
               <Form.Item label=''>
               <Input
-                    placeholder="运维单位"
-                    onChange={this._handleDateTypeChange}
-                    style={{ width: 100}}
+                    placeholder="请输入运维单位"
+                    onChange={this.operationUnit}
+                    style={{ width: 200}}
                  /> 
               </Form.Item>
               <Form.Item label=''>
               <Input
-                    placeholder="姓名"
-                    onChange={this._handleDateTypeChange}
+                    placeholder="请输入姓名"
+                    onChange={this.operationName}
                     style={{ width: 100}}
                  /> 
               </Form.Item>
               <Form.Item label=''>
               <Select
-                    placeholder="是否有运维工证书(气)"
-                    onChange={this._handleDateTypeChange}
+                    placeholder="是否有运维工证书"
+                    onChange={this.operationBook}
                     value={dataType}
+                    allowClear
                   >  
                  <Option key='0' value='HourData'>有运维工证书(气)</Option>
                  <Option key='1' value='DayData'> 无运维工证书(气)</Option>
-
-                  </Select>
-              </Form.Item>
-              <Form.Item label=''>
-              <Select
-                    placeholder="运维工证书是否过期(气)"
-                    onChange={this._handleDateTypeChange}
-                    value={dataType}
-                  >  
-                 <Option key='0' value='HourData'>运维工证书是已过期(气)</Option>
-                 <Option key='1' value='DayData'> 运维工证书是未过期(气)</Option>
-                  </Select>
-              </Form.Item>
-              <Form.Item label=''>
-              <Select
-                    placeholder="是否有运维工证书(水)"
-                    onChange={this._handleDateTypeChange}
-                    value={dataType}
-                  >  
                  <Option key='0' value='HourData'>有运维工证书(水)</Option>
                  <Option key='1' value='DayData'> 无运维工证书(水)</Option>
-
                   </Select>
               </Form.Item>
               <Form.Item label=''>
               <Select
-                    placeholder="运维工证书是否过期(水)"
-                    onChange={this._handleDateTypeChange}
+                    placeholder="证书是否过期"
+                    onChange={this.operationBookOverdue}
                     value={dataType}
+                    allowClear
                   >  
-                 <Option key='0' value='HourData'>运维工证书是已过期(水)</Option>
-                 <Option key='1' value='DayData'> 运维工证书是未过期(水)</Option>
+                 <Option key='0' value='HourData'>证书已过期</Option>
+                 <Option key='1' value='DayData'> 证书未过期</Option>
                   </Select>
               </Form.Item>
                 <BtnComponents />
@@ -442,6 +484,75 @@ export default class EntTransmissionEfficiency extends Component {
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
+
+       <Modal
+        title="Title"
+        visible={this.state.visible}
+        onOk={this.handleOk}
+        footer={null}
+        // confirmLoading={confirmLoading}
+        onCancel={()=>{this.setState({visible:false})}}
+        className={styles.operationModal}
+      >
+        <Form
+      name="basic"
+      onFinish={this.onFinish}
+    >
+      <Row>
+        <Col span={12}>
+    <Form.Item
+        label="运维单位"
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: '请输入运维单位!',
+          },
+        ]}
+      >
+      <Select placeholder="请输入运维单位">
+          <Option value="china">China</Option>
+          <Option value="usa">U.S.A</Option>
+        </Select>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item
+        label="姓名"
+        name="password"
+        rules={[
+          {
+            required: true,
+            message: '请输入姓名!',
+          },
+        ]}
+      >
+        <Input/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row> 
+    <Form.Item
+        label="运维证书相关信息(气)"
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your username!',
+          },
+        ]}
+      >
+        <Input/>
+      </Form.Item>
+      </Row>
+      <Form.Item style={{textAlign:'right'}}>
+        <Button type="primary" htmlType="submit">
+          提交
+        </Button>
+      </Form.Item>
+    </Form>
+      </Modal>
           </>
         </Card>
     );

@@ -197,12 +197,9 @@ class DataQuery extends Component {
     //         })
 
     // }
-
     dispatch({
       type: 'dataquery/updateState',
-      payload: {
-        historyparams,
-      },
+      payload: { historyparams },
     });
 
     dispatch({
@@ -291,13 +288,19 @@ class DataQuery extends Component {
     historyparams &&
       dispatch({
         type: 'dataquery/updateState',
-        payload: {
+        payload:this.props.historyparams.datatype==='hour'|| this.props.historyparams.datatype==='day'?
+        {
+          historyparams,
+          IsSupplyData:true
+        }
+        :
+        {
           historyparams,
         },
       });
     dispatch({
       type: 'dataquery/queryhistorydatalist',
-      payload: {},
+      payload:historyparams.datatype==='hour'|| historyparams.datatype==='day'? { IsSupplyData:true} : {},
     });
   };
 
@@ -412,7 +415,7 @@ class DataQuery extends Component {
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          total: total,
+          // total: total,
           pageSize: pageSize,
           current: pageIndex,
           onChange: this.tableOnChange,
@@ -454,7 +457,7 @@ class DataQuery extends Component {
       endTime: dates[1] ? dates[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
       datatype: dataType,
       pageIndex:1,
-      pageSize:20
+      pageSize:20,
     };
     dispatch({
       type: 'dataquery/updateState',

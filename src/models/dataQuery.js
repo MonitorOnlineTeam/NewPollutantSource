@@ -52,7 +52,7 @@ export default Model.extend({
       let { historyparams } = yield select(_ => _.dataquery);
       const { pollutantlist } = yield select(_ => _.dataquery);
       if (result && result[0]) {
-        yield update({ pollutantlist: result });
+        yield update({ pollutantlist: result});
         if (!payload.overdata) {
           historyparams = {
             ...historyparams,
@@ -831,7 +831,7 @@ debugger;
         chartdata: option,
         columns,
         datatable: result,
-        total: resultlist.total,
+        total: resultlist.Total,
       });
     },
 
