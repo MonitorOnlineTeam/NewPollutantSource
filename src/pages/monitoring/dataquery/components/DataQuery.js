@@ -401,7 +401,6 @@ class DataQuery extends Component {
         return item.dataIndex!=='AQI' && item.dataIndex!='AirQuality'
      })
     }
-  //  console.log(this.props.tabType)
     return (
       // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
       <SdlTable
@@ -589,7 +588,7 @@ class DataQuery extends Component {
           type="primary"
           loading={false}
           onClick={() => {
-            this.reloaddatalist();
+            this.reloaddatalist(this.props.historyparams);
           }}
           style={{ marginRight: 10 }}
         >

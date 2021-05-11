@@ -825,13 +825,14 @@ debugger;
           align: 'center',
         });
       }
+      console.log()
       yield update({
         tablewidth,
         datalist: result,
         chartdata: option,
         columns,
         datatable: result,
-        total: result.Total,
+        total: resultlist.Total,//总数据
       });
     },
 
