@@ -462,8 +462,10 @@ export default class EntIndexModal extends Component {
                     value={this.props.assessment}
                     style={{ width: 200, marginLeft: 10 }}
                   >
+                    {/* <Option value="1">国家考核</Option>
+                    <Option value="2">兵团考核</Option> */}
+                    <Option value="2">全部考核</Option>
                     <Option value="1">国家考核</Option>
-                    <Option value="2">兵团考核</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item>
