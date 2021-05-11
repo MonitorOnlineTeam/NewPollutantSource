@@ -196,7 +196,7 @@ class NewHome extends PureComponent {
     this.state = {
       leftVisible: true,
       rightVisible: true,
-      RegionCode: '660000000',
+      RegionCode: '',
       displayType: 0, // 显示类型： 0企业，1监测点
       allPollutantTypes: [], // 所有污染物类型
       markersList: [], // 点集合
@@ -270,8 +270,8 @@ class NewHome extends PureComponent {
         endTime: moment().format('YYYY-MM-DD 23:59:59'),
         END_TIME: moment().format('YYYY-MM-DD 23:59:59'),
         entName: '',
-        regionCode: '660000000',
-        REGION_CODE: '660000000',
+        regionCode: '',
+        REGION_CODE: '',
       },
     });
   }
@@ -1211,7 +1211,7 @@ class NewHome extends PureComponent {
                                 payload: {
                                   level: INIT_LEVEL,
                                   LEVEL: INIT_LEVEL,
-                                  regionCode: '660000000',
+                                  regionCode: '',
                                   currentDivisionName: '',
                                 },
                               });

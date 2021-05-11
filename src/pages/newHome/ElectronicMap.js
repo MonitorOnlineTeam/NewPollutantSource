@@ -199,7 +199,7 @@ class NewHome extends PureComponent {
     this.state = {
       leftVisible: true,
       rightVisible: true,
-      RegionCode: '660000000',
+      RegionCode: '',
       displayType: 0, // 显示类型： 0企业，1监测点
       allPollutantTypes: [], // 所有污染物类型
       markersList: [], // 点集合
@@ -207,7 +207,7 @@ class NewHome extends PureComponent {
       infoWindowPos: null, // 点弹窗位置
       currentClickObj: {}, // 当前点击对象 - 弹窗
       filterEntAndPointList: [], // 用于筛选的
-      selectValue: '1', // 筛选
+      selectValue: '1,2', // 筛选
       month: moment().get('month'),
       toggleSelect: false, //
       hideEntName: true,
@@ -274,8 +274,8 @@ class NewHome extends PureComponent {
         endTime: moment().format('YYYY-MM-DD 23:59:59'),
         END_TIME: moment().format('YYYY-MM-DD 23:59:59'),
         entName: '',
-        regionCode: '660000000',
-        REGION_CODE: '660000000',
+        regionCode: '',
+        REGION_CODE: '',
       },
     });
   }
@@ -307,7 +307,7 @@ class NewHome extends PureComponent {
     this.props.dispatch({
       type: 'newHome/getAllEntAndPoint',
       payload: {
-        PollutantTypes: this.state.allPollutantTypes.toString(),
+        PollutantTypes: this.state.selectValue.toString(),
         RegionCode: this.state.RegionCode,
       },
       callback:res=>{
@@ -1182,9 +1182,9 @@ class NewHome extends PureComponent {
                   >
                     {/* <Option value="">全部</Option> */}
                     {/* <Option value="服务站">服务站</Option> */}
-                    <Option value="1">企业</Option>
+                    <Option value="1,2">企业</Option>
                     {/* <Option value="师">师</Option> */}
-                    <Option value="2">空气站</Option>
+                    <Option value="5">空气站</Option>
                   </Select>
                 )}
                 {displayType === 0 && (
