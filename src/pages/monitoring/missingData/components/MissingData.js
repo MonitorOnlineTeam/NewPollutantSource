@@ -139,7 +139,7 @@ export default class EntTransmissionEfficiency extends Component {
       OperationPersonnel:'',
       regionLevel:this.props.level? '2': undefined
     });
-    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      //获取企业列表 or 大气站列表
     //  types==='ent'? dispatch({ type: 'missingData/getEntByRegion', payload: { RegionCode: '' },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: '' },  }) 
@@ -327,7 +327,7 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList paraCode={this.props.query&&this.props.query.regionCode}  changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList  changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
               </>}
               {/* <Form.Item label='运维状态'>
