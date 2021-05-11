@@ -206,7 +206,7 @@ export default class UserAuthority extends Component {
                 <ProfileOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip> */}
-            <Divider type="vertical" />
+            {/* <Divider type="vertical" />
             <Tooltip title="删除">
               <Popconfirm
                 title="确认要删除吗?"
@@ -219,7 +219,7 @@ export default class UserAuthority extends Component {
               >
                 <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
-            </Tooltip>
+            </Tooltip> */}
           </Fragment>
           );
         }

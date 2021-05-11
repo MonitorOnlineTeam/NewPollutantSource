@@ -1148,11 +1148,13 @@ class NewHome extends PureComponent {
                     value={selectValue}
                     onChange={val => {
                       this.setState({ selectValue: val });
-
+                      
                       if (val) {
+                        console.log( val.split(",")[0])
                         let filterList = filterEntAndPointList.filter(
-                          item => item.MonitorObjectType == val,
+                          item => item.MonitorObjectType == val.split(",")[0] || item.MonitorObjectType == val.split(",")[1],
                         );
+                        console.log(filterEntAndPointList)
                         if (clickedDivision) {
                           filterList = filterList.filter(itm => {
                             if (itm.RegionCode) {
