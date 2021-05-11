@@ -40,7 +40,7 @@ import CertificateManage from './components/index'
                 <BreadcrumbWrapper>
                  {this.state.UserId&&<CertificateManage UserID={this.state.UserId} configId={configId} {...this.props} />}
                 </BreadcrumbWrapper>
-                <UserTree RoleID="eec719c2-7c94-4132-be32-39fe57e738c9" domId="#CertificateManage" onItemClick={value => {
+                <UserTree RoleID="2b345cf3-1440-4898-84c8-93f9a64f8daf" domId="#CertificateManage" onItemClick={value => {
                             if (value.length > 0) {
                             this.changeDgimn(value[0].UserID)
                             }

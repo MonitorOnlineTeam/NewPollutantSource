@@ -209,6 +209,7 @@ class DepartIndex extends Component {
       DataTreeValue: [],
       rolesID:'',
       alarmPushData:'',
+      postCheckedKeys:'',
       columns: [
         {
           title: '部门名称',
@@ -406,8 +407,13 @@ class DepartIndex extends Component {
     });
   };
 
-  onCheck = checkedKey => {
-    this.setState({ checkedKey });
+  onCheck = (checkedKey,info) => {
+    // console.log(checkedKey)
+    // console.log(info)
+    this.setState({ checkedKey});
+    let checkedKeys = [...checkedKey,...info.halfCheckedKeys]
+    this.setState({ postCheckedKeys:checkedKeys});
+
   };
 
   onChecks = checkedKeys => {
@@ -667,6 +673,7 @@ class DepartIndex extends Component {
       type: 'departinfo/insertregionbyuser',
       payload: {
         RegionCode: this.state.checkedKey,
+        // RegionCode:this.state.postCheckedKeys,
         UserGroup_ID: this.state.selectedRowKeys.key,
         callback: res => {
           if (res.IsSuccess) {

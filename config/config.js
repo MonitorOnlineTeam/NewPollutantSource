@@ -808,6 +808,11 @@ export default {
                     },
                     {
                       name: 'newUserInfo',
+                      path: '/rolesmanager/user/userAuthority',
+                      component: './authorized/userAuthority',
+                    },
+                    {
+                      name: 'newUserInfo',
                       path: '/rolesmanager/user/newUserInfo',
                       component: './authorized/newUser',
                     },
