@@ -1150,7 +1150,6 @@ class NewHome extends PureComponent {
                       this.setState({ selectValue: val });
                       
                       if (val) {
-                        console.log( val.split(",")[0])
                         let filterList = filterEntAndPointList.filter(
                           item => item.MonitorObjectType == val.split(",")[0] || item.MonitorObjectType == val.split(",")[1],
                         );
