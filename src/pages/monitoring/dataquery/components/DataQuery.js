@@ -309,18 +309,18 @@ class DataQuery extends Component {
     loaddata = () => {
         const { dataloading, option, datatable, columns, chartHeight } = this.props;
         const { displayType } = this.state;
-        if (dataloading) {
-            return (<Spin
-                style={{
-                    width: '100%',
-                    height: chartHeight ? chartHeight : 'calc(100vh - 400px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                size="large"
-            />);
-        }
+        // if (dataloading) {
+        //     return (<Spin
+        //         style={{
+        //             width: '100%',
+        //             height: chartHeight ? chartHeight : 'calc(100vh - 400px)',
+        //             display: 'flex',
+        //             alignItems: 'center',
+        //             justifyContent: 'center',
+        //         }}
+        //         size="large"
+        //     />);
+        // }
 
         if (displayType === 'chart') {
             if (option) {
@@ -346,6 +346,7 @@ class DataQuery extends Component {
                 rowKey={(record, index) => `complete${index}`}
                 dataSource={datatable}
                 columns={columns}
+                loading={dataloading}
                 resizable
                 defaultWidth={80}
                 scroll={{ y: "calc(100vh - 380px)" || undefined }}

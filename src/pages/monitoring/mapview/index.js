@@ -23,7 +23,6 @@ import {
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 // import { Map, Markers, InfoWindow, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
-import moment from 'moment';
 import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import { isEqual } from 'lodash';
@@ -624,7 +623,7 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator },menuNameList, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
+    const { form: { getFieldDecorator }, menuNameList, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
@@ -948,69 +947,69 @@ class MapView extends Component {
                       }}
                       size="large"
                     /> : <>
-                        {
-                          ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                            // !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                            <Empty style={{ marginTop: 130 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
-                            <>
-                              <Descriptions
-                                title={
-                                  // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                                  <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                                }
-                                size="small"
-                                bordered>
-                                {
-                                  // 只显示前六个
-                                  this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
-                                    this.setState({
-                                      chartTitle: item.title,
-                                    })
-                                    this.props.dispatch({
-                                      type: 'mapView/updateChartData',
-                                      payload: {
-                                        key: item.key,
-                                        label: item.label,
-                                      },
-                                    })
-                                  }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ? 'rgb(243, 172, 0)' : '') }}>{item.value}</div></Descriptions.Item>)
-                                }
-                              </Descriptions>
-                              {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
-                              {
-                                // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
-                                !this.props.chartData.seriesData.length ?
-                                  <Empty style={{ marginTop: 108 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
-                                  // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
-                                  :
-                                  <ReactEcharts
-                                    className={styles.echartdiv}
-                                    style={{ width: '100%', height: '200px', textAlign: 'center' }}
-                                    option={option}
-                                    notMerge
-                                    lazyUpdate />
+                      {
+                        ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                          // !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                          <Empty style={{ marginTop: 130 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
+                          <>
+                            <Descriptions
+                              title={
+                                // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                                <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
                               }
-                              {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
-                              <a className={styles.pointDetails} size="small" onClick={() => {
-                                // 获取infoWindow数据
-                                this.props.dispatch({
-                                  type: "mapView/getInfoWindowData",
-                                  payload: {
-                                    DGIMNs: currentKey,
-                                    dataType: "HourData",
-                                    isLastest: true,
-                                    // type: PollutantType,
-                                    isAirOrSite: true,
-                                    pollutantTypes: this.state.currentPointInfo.PollutantType
-                                  }
-                                })
-                                this.setState({
-                                  pointVisible: true,
-                                })
-                              }}>监测点详情</a>
-                            </>)
-                        }
-                      </>
+                              size="small"
+                              bordered>
+                              {
+                                // 只显示前六个
+                                this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                                  this.setState({
+                                    chartTitle: item.title,
+                                  })
+                                  this.props.dispatch({
+                                    type: 'mapView/updateChartData',
+                                    payload: {
+                                      key: item.key,
+                                      label: item.label,
+                                    },
+                                  })
+                                }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ? 'rgb(243, 172, 0)' : '') }}>{item.value}</div></Descriptions.Item>)
+                              }
+                            </Descriptions>
+                            {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
+                            {
+                              // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
+                              !this.props.chartData.seriesData.length ?
+                                <Empty style={{ marginTop: 108 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
+                                :
+                                <ReactEcharts
+                                  className={styles.echartdiv}
+                                  style={{ width: '100%', height: '200px', textAlign: 'center' }}
+                                  option={option}
+                                  notMerge
+                                  lazyUpdate />
+                            }
+                            {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
+                            <a className={styles.pointDetails} size="small" onClick={() => {
+                              // 获取infoWindow数据
+                              this.props.dispatch({
+                                type: "mapView/getInfoWindowData",
+                                payload: {
+                                  DGIMNs: currentKey,
+                                  dataType: "HourData",
+                                  isLastest: true,
+                                  // type: PollutantType,
+                                  isAirOrSite: true,
+                                  pollutantTypes: this.state.currentPointInfo.PollutantType
+                                }
+                              })
+                              this.setState({
+                                pointVisible: true,
+                              })
+                            }}>监测点详情</a>
+                          </>)
+                      }
+                    </>
                   }
 
                 </div>
@@ -1142,6 +1141,7 @@ class MapView extends Component {
             width="80%"
             footer={null}
             style={{ maxHeight: '80vh' }}
+            bodyStyle={{ minHeight: modalHeight }}
             visible={this.state.pointVisible}
             destroyOnClose
             onOk={() => {
