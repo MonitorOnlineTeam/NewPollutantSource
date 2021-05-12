@@ -1,0 +1,75 @@
+// #root {
+@fontColor: rgba(255, 255, 255, .85);
+@bgColor: #141414 !important;
+
+body {
+
+  .ant-legacy-form-item-label>label,
+  .ant-legacy-form-item,
+  .ant-legacy-form-item label {
+    color: rgba(255, 255, 255, .85);
+  }
+
+  tr.light,
+  .antd-pro-pages-report-index-light {
+    background-color: #141414 !important;
+  }
+
+  .ant-table-thead>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
+  .ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
+  .ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td,
+  .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+    background: #262626 !important;
+  }
+
+  #basicLayout,
+  #notBreadcrumbLayout {
+    .ant-pro-page-header-wrap-children-content {
+      background: #141414 !important;
+    }
+  }
+
+  .ant-tree {
+    background: transparent;
+    color: @fontColor;
+  }
+
+  .ant-layout-sider-dark,
+  .ant-layout-has-sider {
+    background: #1f1f1f !important;
+  }
+}
+/*滚动条轨道颜色*/
+@scrollbar-track-color: #141414;
+/*滚动条颜色*/
+@scrollbar-thumb-color: black;
+
+::-webkit-scrollbar-track-piece {
+  -webkit-border-radius: 0;
+}
+
+::-webkit-scrollbar {
+  width: @scrollbar-width;
+  height: @scrollbar-width;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: @scrollbar-track-color;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 50px;
+  background-color: @scrollbar-thumb-color;
+  -webkit-border-radius: 4px;
+  outline-offset: -2px;
+  border: 2px solid @scrollbar-thumb-color;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  height: 50px;
+  background-color: @scrollbar-thumb-color;
+  -webkit-border-radius: 4px;
+}
+
+// }
