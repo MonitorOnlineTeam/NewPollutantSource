@@ -521,6 +521,9 @@ class DepartIndex extends Component {
       message.error('请选中一行');
       return;
     }
+    this.setState({
+      visibleRegion: true,
+    });
     const keys = this.state.selectedRowKeys.key;
     this.props.dispatch({
       type: 'departinfo/getregioninfobytree',
@@ -531,53 +534,49 @@ class DepartIndex extends Component {
       payload: {
         UserGroup_ID: keys.toString(),
       },
+      callback:res=>{
+        this.setState({checkedKey:res.userFlagList,postCheckedKeys:res.userList})
+      }
     });
-    console.log('regioncode=', this.props.RegionByDepID);
-    this.setState({
-      visibleRegion: true,
-      checkedKey: this.props.RegionByDepID,
-    });
+    // this.setState({
+    //   visibleRegion: true,
+    //   checkedKey: this.props.RegionByDepID,
+    // });
   };
 
   showDataModal = () => {
-    // console.log('///=', this.props.ConfigInfo)
-    // var list = this.props.ConfigInfo.SystemPollutantType ? this.props.ConfigInfo.SystemPollutantType.split(',') : []
-    // var type = list.length > 0 ? list[0] : "";
+    // console.log('this.state.pollutantType=', this.state.pollutantType);
+    // if (this.state.selectedRowKeys.length == 0) {
+    //   message.error('请选中一行');
+    //   return;
+    // }
+    // const keys = this.state.selectedRowKeys.key;
+    // this.props.dispatch({
+    //   type: 'departinfo/getregioninfobytree',
+    //   payload: {},
+    // });
     // this.setState({
-    //     pollutantType: type,
-    // })
-    console.log('this.state.pollutantType=', this.state.pollutantType);
-    if (this.state.selectedRowKeys.length == 0) {
-      message.error('请选中一行');
-      return;
-    }
-    const keys = this.state.selectedRowKeys.key;
-    this.props.dispatch({
-      type: 'departinfo/getregioninfobytree',
-      payload: {},
-    });
-    this.setState({
-      visibleData: true,
-      DataTreeValue: [],
-      checkedKey: this.props.RegionByDepID,
-    });
-    this.props.dispatch({
-      type: 'departinfo/getentandpoint',
-      payload: {
-        PollutantType: this.state.pollutantType,
-        RegionCode: '',
-      },
-    });
-    this.props.dispatch({
-      type: 'departinfo/getpointbydepid',
-      payload: {
-        UserGroup_ID: keys.toString(),
-        PollutantType: this.state.pollutantType,
-        RegionCode: [],
-      },
-    });
+    //   visibleData: true,
+    //   DataTreeValue: [],
+    //   checkedKey: this.props.RegionByDepID,
+    // });
+    // this.props.dispatch({
+    //   type: 'departinfo/getentandpoint',
+    //   payload: {
+    //     PollutantType: this.state.pollutantType,
+    //     RegionCode: '',
+    //   },
+    // });
+    // this.props.dispatch({
+    //   type: 'departinfo/getpointbydepid',
+    //   payload: {
+    //     UserGroup_ID: keys.toString(),
+    //     PollutantType: this.state.pollutantType,
+    //     RegionCode: [],
+    //   },
+    // });
 
-    console.log('pollutantType=', this.state.pollutantType);
+    // console.log('pollutantType=', this.state.pollutantType);
   };
 
   componentWillReceiveProps(nextProps) {
@@ -592,13 +591,12 @@ class DepartIndex extends Component {
         // allKeys: filterArr
       });
     }
-    if (this.props.RegionByDepID !== nextProps.RegionByDepID) {
-      this.setState({
-        visibleRegion: true,
-        checkedKey: nextProps.RegionByDepID,
-        // allKeys: filterArr
-      });
-    }
+    // if (this.props.RegionByDepID !== nextProps.RegionByDepID) { //用回调  这个用不上了
+    //   this.setState({
+    //     visibleRegion: true,
+    //     checkedKey: nextProps.RegionByDepID,
+    //   });
+    // }
     if (this.props.CheckPoint !== nextProps.CheckPoint) {
       this.setState({
         visibleData: true,
@@ -672,8 +670,8 @@ class DepartIndex extends Component {
     this.props.dispatch({
       type: 'departinfo/insertregionbyuser',
       payload: {
-        RegionCode: this.state.checkedKey,
-        // RegionCode:this.state.postCheckedKeys,
+        RegionFlagCode: this.state.checkedKey,//用来回显的参数
+        RegionCode:this.state.postCheckedKeys,//真正的参数  带父节点
         UserGroup_ID: this.state.selectedRowKeys.key,
         callback: res => {
           if (res.IsSuccess) {
@@ -688,27 +686,27 @@ class DepartIndex extends Component {
   };
 
   handleDataOK = e => {
-    console.log('regioncode=', this.state.DataTreeValue.toString());
-    console.log('DGIMN=', this.state.checkedKeys);
-    console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
-    // return;
-    this.props.dispatch({
-      type: 'departinfo/insertpointfilterbydepid',
-      payload: {
-        DGIMN: this.state.checkedKeys,
-        UserGroup_ID: this.state.selectedRowKeys.key,
-        Type: this.state.pollutantType,
-        RegionCode: this.state.DataTreeValue.toString(),
-        callback: res => {
-          if (res.IsSuccess) {
-            message.success('成功');
-            this.handleCancel();
-          } else {
-            message.error(res.Message);
-          }
-        },
-      },
-    });
+    // console.log('regioncode=', this.state.DataTreeValue.toString());
+    // console.log('DGIMN=', this.state.checkedKeys);
+    // console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
+    // this.props.dispatch({
+    //   type: 'departinfo/insertpointfilterbydepid',
+    //   payload: {
+    //     DGIMN: this.state.postCheckedKeys,
+    //     RegionFlagCode:this.state.checkedKeys,
+    //     UserGroup_ID: this.state.selectedRowKeys.key,
+    //     Type: this.state.pollutantType,
+    //     RegionCode: this.state.DataTreeValue.toString(),
+    //     callback: res => {
+    //       if (res.IsSuccess) {
+    //         message.success('成功');
+    //         this.handleCancel();
+    //       } else {
+    //         message.error(res.Message);
+    //       }
+    //     },
+    //   },
+    // });
   };
 
   /** 数据过滤切换污染物 */
@@ -866,6 +864,7 @@ class DepartIndex extends Component {
     const { getFieldDecorator } = this.props.form;
     const { btnloading, btnloading1 } = this.props;
     const { targetKeys, disabled, showSearch } = this.state;
+    console.log(this.state.checkedKey)
     const formItemLayout = {
       labelCol: {
         span: 6,

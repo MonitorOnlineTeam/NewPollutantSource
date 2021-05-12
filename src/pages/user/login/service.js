@@ -22,6 +22,7 @@ export async function systemLogin(params) {
   if (result.IsSuccess && result.Datas) {
     Cookie.set(configToken.cookieName, result.Datas.Ticket);
   } else {
+    
     Cookie.set(configToken.cookieName, "");
   }
   return result;

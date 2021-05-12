@@ -259,7 +259,8 @@ export default Model.extend({
         },
         /*获取当前部门的行政区**/
         * getregionbydepid({
-            payload
+            payload,
+            callback
         }, {
             call,
             update,
@@ -268,6 +269,7 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
+                callback(result.Datas)
                 yield update({
                     RegionByDepID: result.Datas
                 });

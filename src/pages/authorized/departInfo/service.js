@@ -132,6 +132,7 @@ export async function insertregionbyuser(params) {
   const body = {
     UserGroup_ID: params.UserGroup_ID,
     RegionCode: params.RegionCode,
+    ...params
   };
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertRegionByUser', body, null);
   return result === null
