@@ -126,7 +126,7 @@ export async function getSummaryYearReport(params) {
 export async function getEntAndPoint(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
     ...params,
-    PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+    PollutantTypes: params.PollutantTypes || sessionStorage.getItem('sysPollutantCodes'),
   }, null);
   return result;
 }
