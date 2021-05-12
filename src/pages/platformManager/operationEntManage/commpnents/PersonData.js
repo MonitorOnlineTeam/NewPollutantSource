@@ -3,7 +3,7 @@
  * 创建人：jab
  * 创建时间：2021.05.08
  */
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -21,7 +21,7 @@ import {
   Button,
   Select,
   Tooltip,
-  Popconfirm
+  Popconfirm,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -35,7 +35,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { getThirdTableDataSource } from '@/services/entWorkOrderStatistics';
-
+import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
+import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -407,6 +408,7 @@ export default class EntTransmissionEfficiency extends Component {
       Atmosphere,
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex,OperationPersonnel },
+      // match: { params: { configId } },
     } = this.props;
 
 
@@ -465,26 +467,39 @@ export default class EntTransmissionEfficiency extends Component {
           }
         >
           <>
-            <SdlTable
+            {/* <SdlTable
               rowKey={(record, index) => `complete${index}`}
               loading={this.props.loading}
               columns={this.columns}
-              // bordered={false}
               dataSource={this.props.tableDatas}
               pagination={{
                 showSizeChanger: true,
                 showQuickJumper: true,
-                // sorter: true,
                 total: this.props.total,
-                // //defaultPageSize:20,
                 pageSize: PageSize,
                 current: PageIndex,
                 onChange: this.onChange,
                 onShowSizeChange:this.onShowSizeChange,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
-            />
+            /> */}
+                    <SearchWrapper
+                        // onSubmitForm={form => this.loadReportList(form)}
+                        // configId={configId}
+                    ></SearchWrapper>
+                    <AutoFormTable
+                        sort={true}
+                        onRef={this.onRef1}
+                        style={{ marginTop: 10 }}
+                        // configId={configId}
+                        appendHandleRows={row => <Fragment>
 
+                            <a onClick={() => { this.edit(row);  }}>编辑 </a>
+
+                        </Fragment>}
+                        parentcode="platformconfig/monitortarget"
+                        {...this.props}
+                    >
+                    </AutoFormTable>
        <Modal
         title="Title"
         visible={this.state.visible}
