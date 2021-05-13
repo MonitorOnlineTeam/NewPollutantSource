@@ -25,7 +25,7 @@ export default class OperationPerson extends Component {
 
     return (
       <BreadcrumbWrapper >
-        <PersonData />
+        <PersonData  {...this.props}/>
       </BreadcrumbWrapper>
     );
   }

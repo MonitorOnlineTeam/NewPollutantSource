@@ -10,6 +10,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportGetAlarmDataList,
+  DeleteOperationMaintenanceEnterpriseID
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -37,6 +38,7 @@ export default Model.extend({
     total: '',
     attentionList:[],
     priseList: [],
+    operationUnitWhere:undefined
   },
   subscriptions: {},
   effects: {
@@ -51,37 +53,16 @@ export default Model.extend({
         callback(payload.dataType);
       }
     },
-    *getAttentionDegreeList({ payload }, { call, put, update, select }) {
-      //关注列表
-      const response = yield call(GetAttentionDegreeList, { ...payload });
-      if (response.IsSuccess) {
-        yield update({
-          attentionList: response.Datas,
-        });
-      }
-    },
-    *getEntByRegion({ payload }, { call, put, update, select }) {
+
+    *deleteOperationMaintenanceEnterpriseID({ payload,callback}, { call, put, update, select }) {
       //获取所有企业列表
-      const response = yield call(GetEntByRegion, { ...payload });
+      const response = yield call(DeleteOperationMaintenanceEnterpriseID, { ...payload });
       if (response.IsSuccess) {
-        yield update({
-          priseList: response.Datas,
-        });
+        message.success(response.Message);
+        callback(response)
       }
     },
-    *exportGetAlarmDataList({callback, payload }, { call, put, update, select }) {
-      yield update({ exloading: true });
-      //导出
-      const response = yield call(ExportGetAlarmDataList, { ...payload });
-      if (response.IsSuccess) {
-        message.success('下载成功');
-        callback(response.Datas);
-        yield update({ exloading: false });
-      } else {
-        message.warning(response.Message);
-        yield update({ exloading: false });
-      }
-    },
+
 
 
   },

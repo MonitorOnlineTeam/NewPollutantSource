@@ -25,7 +25,7 @@ export default class OperationUnit extends Component {
 
     return (
       <BreadcrumbWrapper >
-        <UnitData />
+        <UnitData {...this.props}/>
       </BreadcrumbWrapper>
     );
   }

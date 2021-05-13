@@ -515,16 +515,16 @@ export default {
                   routes: [
                     {
                       path: '/platformconfig/operationEntManage',
-                      redirect: '/platformconfig/operationEntManage/operationUnit',
+                      redirect: '/platformconfig/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
                     },
                     {
                       name:'operationUnit', //运维单位管理
-                      path: '/platformconfig/operationEntManage/operationUnit',
+                      path: '/platformconfig/operationEntManage/operationUnit/:configId',
                       component: './platformManager/operationEntManage/operationUnit',
                     },
                     {
                       name:'operationPerson', //运维人员管理
-                      path: '/platformconfig/operationEntManage/operationPerson',
+                      path: '/platformconfig/operationEntManage/operationPerson/:configId',
                       component: './platformManager/operationEntManage/operationPerson',
                     },
                 ]
