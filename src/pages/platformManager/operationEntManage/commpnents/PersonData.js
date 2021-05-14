@@ -22,6 +22,8 @@ import {
   Select,
   Tooltip,
   Popconfirm,
+  Radio,
+  Upload
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -38,7 +40,11 @@ import { getThirdTableDataSource } from '@/services/entWorkOrderStatistics';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { EditIcon } from '@/utils/icon'
-
+import {
+  QuestionCircleOutlined,
+  PlusOutlined,
+  UploadOutlined
+} from '@ant-design/icons';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -47,8 +53,17 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'operationPerson/updateState',
-  getData: 'operationPerson/getDefectModel',
+  getData: 'operationPerson/selectOperationMaintenancePersonnel',
 };
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
 @connect(({ loading, operationPerson,autoForm,common}) => ({
   priseList: operationPerson.priseList,
   exloading:operationPerson.exloading,
@@ -62,14 +77,84 @@ const pageUrl = {
 }))
 @Form.create()
 export default class PersonData extends Component {
+  formRef = React.createRef();
   constructor(props) {
     super(props);
 
     this.state = {
-      visible:false
+      visible:false,
+      previewVisible: false,
+      previewImage: '',
+      fileList: [
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+      ],
     };
-    
-    this.columns = [
+    this.columns =  [
+      {
+        title: <span>运维单位</span>,
+        dataIndex: 'Personnellist',
+        key: 'Personnellist',
+        align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+       },
+      },
+      {
+        title: <span>姓名</span>,
+        dataIndex: 'PersonnelName',
+        key: 'PersonnelName',
+        align: 'center',
+      },
+      {
+        title: <span>性别</span>,
+        dataIndex: 'Gender',
+        key: 'Gender',
+        align: 'center',
+      },
+      {
+        title: <span>手机号</span>,
+        dataIndex: 'Phone',
+        key: 'Phone',
+        align: 'center'
+      },
+      {
+        title: <span>身份证号</span>,
+        dataIndex: 'Identity',
+        key: 'Identity',
+        align: 'center',
+      },
+      {
+        title: <span>运维证书编号(气)</span>,
+        dataIndex: 'GasCertificateNumber',
+        key: 'GasCertificateNumber',
+        align: 'center',
+      },
+      {
+        title: <span>运维证书编号(水)</span>,
+        dataIndex: 'WaterCertificateNumber',
+        key: 'WaterCertificateNumber',
+        align: 'center',
+      },
+      {
+        title: <span>操作</span>,
+        dataIndex: 'x',
+        key: 'x',
+        align: 'center',
+        render: (text, record) =>{
+          return  <span>
+                 <a href="#" onClick={()=>{this.see(record)}} >查看</a>
+                 <a href="#" style={{padding:'0 5px'}} onClick={()=>{this.edit(record)}} >编辑</a>
+                 <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(record)} okText="是" cancelText="否">
+                 <a href="#" >删除</a>
+                 </Popconfirm>
+               </span>
+        }
+      },
     ];
   }
 
@@ -102,7 +187,11 @@ export default class PersonData extends Component {
   };
 
   getTableData = () => {
-
+    const { dispatch, queryPar } = this.props;
+    dispatch({
+      type: pageUrl.getData,
+      payload: { ...queryPar },
+    });
   };
 
 
@@ -131,69 +220,128 @@ export default class PersonData extends Component {
    }
 
 
-   operationUnit=()=>{ //运维单位
-
+   operationUnit=(e)=>{ //运维单位
+    this.updateQueryState({Personnellist:e.target?e.target.value:''})
    } 
-   operationName=()=>{ //姓名
+   operationName=(e)=>{ //姓名
+    this.updateQueryState({PersonnelName:e.target?e.target.value:''})
+   }
+   operationBook=(value)=>{
+     this.updateQueryState({type:value?value:''})
+   }
+
+   operationBookOverdue=(value)=>{
+    this.updateQueryState({col1:value?value:''})
+   }
+   onFinish=(e)=>{
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+   }
+   add=()=>{
 
    }
-   operationBook=()=>{
+   see=()=>{
 
    }
-
-   operationBookOverdue=()=>{
-
+   del=(row)=>{ //删除
+    
+    this.props.dispatch({
+      type: 'operationPerson/deleteOperationMaintenancePersonnel',
+      payload: { PersonnelID:row.PersonnelID },
+      callback:res=>{
+        this.getTableData();
+      }
+    });
    }
-   onFinish=()=>{
+   handleChange = ({ fileList }) => this.setState({ fileList });  //头像
+   handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
 
-   }
-   handleOk=()=>{
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+    });
+  };
 
-   }
+  normFile = e => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
   render() {
     const {
       Atmosphere,
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex,OperationPersonnel },
+      queryPar: {  type,col1 },
       match: { params: { configId } },
+      form:{ getFieldDecorator }
     } = this.props;
-
+    const { previewVisible, previewImage, fileList } = this.state;
+    const uploadButton = (
+      <div>
+        <PlusOutlined />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
 
     return (
         <Card
           bordered={false}
           title={
-            <><SearchWrapper
-            // onSubmitForm={form => this.loadReportList(form)}
-            configId={configId}
-        ></SearchWrapper>
+            <>
               <Form layout="inline">
             
               <Row>
               <Form.Item label=''>
+              <Input placeholder='请输入运维公司' onChange={this.operationUnit}/>
+              </Form.Item>
+              <Form.Item label=''>
+                  <Input placeholder='请输入姓名' onChange={this.operationName}/>
+              </Form.Item>
+              <Form.Item label=''>
               <Select
                     placeholder="是否有运维工证书"
                     onChange={this.operationBook}
-                    value={dataType}
                     allowClear
+                    defaultValue={type}
+                    style={{width:'150px'}}
                   >  
-                 <Option key='0' value='HourData'>有运维工证书(气)</Option>
-                 <Option key='1' value='DayData'> 无运维工证书(气)</Option>
-                 <Option key='0' value='HourData'>有运维工证书(水)</Option>
-                 <Option key='1' value='DayData'> 无运维工证书(水)</Option>
+                 <Option key='1' value='1'>有运维工证书(气)</Option>
+                 <Option key='2' value='2'> 无运维工证书(气)</Option>
+                 <Option key='3' value='3'>有运维工证书(水)</Option>
+                 <Option key='4' value='4'> 无运维工证书(水)</Option>
                   </Select>
               </Form.Item>
               <Form.Item label=''>
               <Select
                     placeholder="证书是否过期"
                     onChange={this.operationBookOverdue}
-                    value={dataType}
+                    defaultValue={col1}
                     allowClear
+                    style={{width:'150px'}}
                   >  
-                 <Option key='0' value='HourData'>证书已过期</Option>
-                 <Option key='1' value='DayData'> 证书未过期</Option>
+                 <Option key='1' value='1'>证书已过期</Option>
+                 <Option key='2' value='2'> 证书未过期</Option>
                   </Select>
               </Form.Item>
+              <Form.Item>
+             <Button style={{ marginLeft: '6px' }} type="primary" onClick={this.queryClick}> 查询 </Button>
+       <Button
+         style={{ margin: '0 5px' }}
+         onClick={this.add}
+         loading={exloading}
+       >
+         添加
+       </Button>
+     </Form.Item>
                 </Row>
                 
               </Form>
@@ -202,24 +350,14 @@ export default class PersonData extends Component {
         >
           <>
 
-                    <AutoFormTable
-                        sort={true}
-                        onRef={this.onRef1}
-                        style={{ marginTop: 10 }}
-                        configId={configId}
-                        parentcode="platformconfig/operationEntManage"
-                        appendHandleRows={row => <Fragment>
-
-                            <Tooltip title="编辑">
-                                <a href="#" style={{paddingLeft:5}} onClick={this.edit(row)} > <EditIcon/> </a>
-                           </Tooltip>
-                        </Fragment>}
-                        parentcode="platformconfig/monitortarget"
-                        {...this.props}
-                    >
-                    </AutoFormTable>
+            <SdlTable
+              rowKey={(record, index) => `complete${index}`}
+              loading={this.props.loading}
+              columns={this.columns}
+              dataSource={this.props.tableDatas}
+            />
        <Modal
-        title="Title"
+        title={'运维人员'}
         visible={this.state.visible}
         // onOk={this.handleOk}
         footer={null}
@@ -229,63 +367,218 @@ export default class PersonData extends Component {
       >
         <Form
       name="basic"
-      onFinish={this.onFinish}
+      ref={this.formRef}
     >
       <Row>
         <Col span={12}>
-    <Form.Item
-        label="运维单位"
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: '请输入运维单位!',
-          },
-        ]}
-      >
-      <Select placeholder="请输入运维单位">
-          <Option value="china">China</Option>
-          <Option value="usa">U.S.A</Option>
-        </Select>
-      </Form.Item>
+        <Form.Item  label="运维人员">
+           {getFieldDecorator('Device_Port', {   rules: [{required: true,  message: '请输入运维人员！'}],   })(
+                  <Input placeholder="请输入运维人员" />,
+                   )}
+         </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item
         label="姓名"
         name="password"
+        required
         rules={[
           {
             required: true,
-            message: '请输入姓名!',
           },
         ]}
       >
+           {getFieldDecorator('Device_Port', {   rules: [{required: true,  message: '请输入姓名！'}],   })(
+                  <Input placeholder="请输入姓名" />,
+                   )}
+      </Form.Item>
+      </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+         <Form.Item label="性别" name="username"  >
+         {getFieldDecorator('Device_Port', {   rules: [{required: true,  message: '请输入性别！'}],   })(
+                          <Radio.Group>
+                          <Radio value="a">男</Radio>
+                          <Radio value="b">女</Radio>
+                        </Radio.Group>
+                   )}
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item  label="手机号"  name="password" >
         <Input/>
       </Form.Item>
       </Col>
       </Row>
 
-      <Row> 
+      <Row>
+        <Col span={12}>
+         <Form.Item label="专业" name="username"   >
+          <Input/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item  label='学历'  name="password" >
+      <Select placeholder="请选择专业">
+          <Option value="china">China</Option>
+          <Option value="usa">U.S.A</Option>
+        </Select>
+      </Form.Item>
+      </Col>
+      </Row>
+
+
+      <Row>
+        <Col span={12}>
+         <Form.Item label="参加工作时间" name="username"  >
+          <Input/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item  label='职位'  name="password" >
+        <Input/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row>
+        <Col span={12}>
+
+      <Form.Item label="照片" name="username" >
+         {getFieldDecorator('Device_Port',
+        //  {
+        //     valuePropName: 'fileList',
+        //     getValueFromEvent: this.handleChange,
+        //   },   
+          {   rules: [{required: true,  message: '请上传照片！'}],   })(
+          <>
+         <Upload
+         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+         listType="picture-card"
+         fileList={fileList}
+         onPreview={this.handlePreview}
+         onChange={this.handleChange}
+         style={{width:'180px'}}
+       >
+       {fileList.length >= 1 ? null : uploadButton}
+       </Upload>
+       <Tooltip title="1-2寸免冠正面照"><QuestionCircleOutlined  style={{paddingLeft:5}}/></Tooltip>
+                 </>  )}
+      </Form.Item>
+      </Col>
+      </Row>
+
+     <Row> 
+        <Col span={12}>
     <Form.Item
         label="运维证书相关信息(气)"
         name="username"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
       >
         <Input/>
       </Form.Item>
+       </Col>
+      </Row> 
+
+      <Row>
+        <Col span={12}>
+         <Form.Item label="证书编号" name="username"  >
+          <Input/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item  label='发证日期'  name="password" >
+        <Input/>
+      </Form.Item>
+      </Col>
       </Row>
+
+      <Row>
+        <Col span={12}>
+         <Form.Item label="到期时间" name="username"  >
+          <Input/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="证书照片" extra="">
+          {getFieldDecorator('upload', {
+            valuePropName: 'fileList',
+            getValueFromEvent: this.normFile,
+          })(
+            <Upload name="logo" action="/upload.do">
+              <Button style={{width:180}}>
+              <UploadOutlined /> Click to upload
+              </Button>
+              <Tooltip title="需包含照片、姓名、身份证号、证书编号、有效期"><QuestionCircleOutlined  style={{paddingLeft:5}}/></Tooltip>
+
+            </Upload>,
+          )}
+        </Form.Item>
+      </Col>
+      </Row>
+
+
+     <Row> 
+        <Col span={12}>
+    <Form.Item
+        label="运维证书相关信息(水)"
+        name="username"
+        rules={[ { required: true,  message: 'Please input your username!', }, ]}
+      >
+        <Input/>
+      </Form.Item>
+       </Col>
+      </Row> 
+      <Row>
+        <Col span={12}>
+         <Form.Item label="证书编号" name="username"  >
+          <Input/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item  label='发证日期'  name="password" >
+        <Input/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row>
+        <Col span={12}>
+         <Form.Item label="到期时间" name="username"  >
+          <Input/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="证书照片" extra="">
+          {getFieldDecorator('upload2', {
+            valuePropName: 'fileList',
+            getValueFromEvent: this.normFile,
+          })(
+            <Upload name="logo" action="/upload.do">
+              <Button style={{width:180}}>
+              <UploadOutlined /> Click to upload
+              </Button>
+              <Tooltip title="需包含照片、姓名、身份证号、证书编号、有效期"><QuestionCircleOutlined  style={{paddingLeft:5}}/></Tooltip>
+
+            </Upload>,
+          )}
+        </Form.Item>
+      </Col>
+      </Row>
+
+
       <Form.Item style={{textAlign:'right'}}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary"  onClick={this.onFinish}>
           提交
         </Button>
       </Form.Item>
     </Form>
       </Modal>
+
+
+      <Modal visible={this.state.previewVisible} footer={null} onCancel={()=>{this.setState({previewVisible:false})}}>
+          {/* <img alt="example" style={{ width: '100%' }} src={previewImage} /> */}
+        </Modal>
           </>
         </Card>
     );

@@ -37,6 +37,7 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { DelIcon } from '@/utils/icon'
+import {  ToolTwoTone  } from '@ant-design/icons';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -65,6 +66,9 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
+      visible:false,
+      operationPersonConfigId:'View_OperationUserPhone',
+      entName:''
     };
     
     this.columns = [];
@@ -83,7 +87,12 @@ export default class EntTransmissionEfficiency extends Component {
         configId,
       },
     });
-
+    dispatch({
+      type: 'autoForm/getPageConfig',
+      payload: {
+        configId:this.state.operationPersonConfigId,
+      },
+    });
 
   
 
@@ -154,6 +163,12 @@ export default class EntTransmissionEfficiency extends Component {
   //     },
   // });
    }
+   operationPerson=(row)=>{
+     this.setState({
+       visible:true,
+       entName:row['dbo.T_Bas_OperationMaintenanceEnterprise.Company']
+     })
+   }
   render() {
     const {
       Atmosphere,
@@ -185,9 +200,25 @@ export default class EntTransmissionEfficiency extends Component {
                                 <a href="#" style={{paddingLeft:5}} > <DelIcon/> </a>
                             </Popconfirm>
                         </Tooltip>
+
+                        <Tooltip title="运维人员">
+                                <a href="#" onClick={()=>{this.operationPerson(row)}} style={{paddingLeft:5}} > <ToolTwoTone /> </a>
+                        </Tooltip>
                         </Fragment>}
                     />
           </>
+          <Modal
+                    title={`运维人员 - ${this.state.entName}`}
+                    visible={this.state.visible}
+                    destroyOnClose={true}
+                    onCancel={()=>{this.setState({visible:false})}}
+                    footer={null}
+                    width={'50%'}
+                >
+                    <AutoFormTable
+                        configId={this.state.operationPersonConfigId}
+                    />
+            </Modal>
         </Card>
     );
   }

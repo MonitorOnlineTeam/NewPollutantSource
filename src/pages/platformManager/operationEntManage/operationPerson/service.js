@@ -1,12 +1,12 @@
 import { post } from '@/utils/request';
 
 /**
- * 缺失数据
+ * 运维人员列表
  *
  */
-export async function GetDefectModel(params) {
+export async function SelectOperationMaintenancePersonnel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectModel',
+    '/api/rest/PollutantSourceApi/BaseDataApi/SelectOperationMaintenancePersonnel',
     params,
     null,
   );
@@ -14,22 +14,10 @@ export async function GetDefectModel(params) {
   return result;
 }
 
-//关注列表
-export async function GetAttentionDegreeList(params) {
+//删除
+export async function DeleteOperationMaintenancePersonnel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
-  );
-
-  return result;
-}
-
-//导出
-
-export async function ExportGetAlarmDataList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
+    '/api/rest/PollutantSourceApi/BaseDataApi/DeleteOperationMaintenancePersonnel',
     params,
     null,
   );
@@ -38,15 +26,4 @@ export async function ExportGetAlarmDataList(params) {
 }
 
 
-//根据行政区获取 企业列表
 
-export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
-  return result;
-}
