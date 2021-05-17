@@ -23,7 +23,8 @@ import {
   Tooltip,
   Popconfirm,
   Radio,
-  Upload
+  Upload,
+  Switch
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -45,6 +46,8 @@ import {
   PlusOutlined,
   UploadOutlined
 } from '@ant-design/icons';
+import cuid from 'cuid';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -73,7 +76,8 @@ function getBase64(file) {
   queryPar: operationPerson.queryPar,
   regionList: autoForm.regionList,
   attentionList:operationPerson.attentionList,
-  atmoStationList:common.atmoStationList
+  atmoStationList:common.atmoStationList,
+  editFormData:autoForm.editFormData
 }))
 @Form.create()
 export default class PersonData extends Component {
@@ -162,7 +166,7 @@ export default class PersonData extends Component {
     this.initData();
   }
   initData = () => {
-    const {dispatch, match: { params: { configId } }} = this.props;
+    const {dispatch, match: { params: { configId } },form:{setFieldsValue}} = this.props;
 
 
     dispatch({
@@ -171,19 +175,20 @@ export default class PersonData extends Component {
         configId,
       },
     });
-  
-
+    setFieldsValue({switchGas:true})
+    setFieldsValue({switchWater:true})
     setTimeout(() => {
       this.getTableData();
     });
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { queryPar, dispatch} = this.props;
 
     dispatch({
       type: pageUrl.updateState,
       payload: { queryPar: { ...queryPar, ...payload } },
     });
+
   };
 
   getTableData = () => {
@@ -213,15 +218,29 @@ export default class PersonData extends Component {
   }
    
 
-   edit=()=>{  //编辑
+   edit=(row)=>{  //编辑
+
+    const {dispatch,form:{setFieldsValue}} = this.props;
     this.setState({
       visible:true
+    },()=>{
+      setFieldsValue({PersonnelID:row.PersonnelID})
+        dispatch({
+          type: 'autoForm/getFormData',
+          payload: {
+            configId:'OperationMaintenancePersonnel',
+            "dbo.T_Bas_OperationMaintenancePersonnel.PersonnelID":row.PersonnelID
+          },
+        })
     })
+    // setTimeout(()=>{
+    //   console.log(this.props.editFormData)
+    // })
    }
 
 
    operationUnit=(e)=>{ //运维单位
-    this.updateQueryState({Personnellist:e.target?e.target.value:''})
+    this.updateQueryState({Company:e.target?e.target.value:''})
    } 
    operationName=(e)=>{ //姓名
     this.updateQueryState({PersonnelName:e.target?e.target.value:''})
@@ -242,7 +261,9 @@ export default class PersonData extends Component {
     });
    }
    add=()=>{
-
+     this.setState({
+      visible:true
+    })
    }
    see=()=>{
 
@@ -257,7 +278,17 @@ export default class PersonData extends Component {
       }
     });
    }
-   handleChange = ({ fileList }) => this.setState({ fileList });  //头像
+   handleChange = (info) => {
+     if (info.file.status === 'done') {
+      // setFieldsValue({ cuid: uid })
+      // setFieldsValue({ [fieldName]: uid })
+    } else if (info.file.status === 'error') {
+      message.error('上传文件失败！')
+    }
+    this.setState({
+      fileList: info.fileList
+    })
+   }
    handlePreview = async file => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -282,16 +313,17 @@ export default class PersonData extends Component {
       exloading,
       queryPar: {  type,col1 },
       match: { params: { configId } },
-      form:{ getFieldDecorator }
+      form:{ getFieldDecorator,getFieldValue }
     } = this.props;
     const { previewVisible, previewImage, fileList } = this.state;
+  
     const uploadButton = (
       <div>
         <PlusOutlined />
-        <div className="ant-upload-text">Upload</div>
+        <div className="ant-upload-text">上传照片</div>
       </div>
     );
-
+    console.log(this.props.form.getFieldsValue())
     return (
         <Card
           bordered={false}
@@ -311,20 +343,20 @@ export default class PersonData extends Component {
                     placeholder="是否有运维工证书"
                     onChange={this.operationBook}
                     allowClear
-                    defaultValue={type}
-                    style={{width:'150px'}}
+                    defaultValue={type?type:undefined}
+                    style={{width:'170px'}}
                   >  
-                 <Option key='1' value='1'>有运维工证书(气)</Option>
-                 <Option key='2' value='2'> 无运维工证书(气)</Option>
-                 <Option key='3' value='3'>有运维工证书(水)</Option>
-                 <Option key='4' value='4'> 无运维工证书(水)</Option>
+                 <Option key='1' value='1,1'>有运维工证书(气)</Option>
+                 <Option key='2' value='1,2'> 无运维工证书(气)</Option>
+                 <Option key='3' value='2,1'>有运维工证书(水)</Option>
+                 <Option key='4' value='2,2'> 无运维工证书(水)</Option>
                   </Select>
               </Form.Item>
               <Form.Item label=''>
               <Select
                     placeholder="证书是否过期"
                     onChange={this.operationBookOverdue}
-                    defaultValue={col1}
+                    defaultValue={col1?col1:undefined}
                     allowClear
                     style={{width:'150px'}}
                   >  
@@ -371,24 +403,17 @@ export default class PersonData extends Component {
     >
       <Row>
         <Col span={12}>
-        <Form.Item  label="运维人员">
-           {getFieldDecorator('Device_Port', {   rules: [{required: true,  message: '请输入运维人员！'}],   })(
-                  <Input placeholder="请输入运维人员" />,
+        <Form.Item  label="运维单位">
+           {getFieldDecorator('EnterpriseID', {   rules: [{required: true,  message: '请输入运维单位！'}],   })(
+                  <Input placeholder="请输入运维单位" />,
                    )}
          </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item
         label="姓名"
-        name="password"
-        required
-        rules={[
-          {
-            required: true,
-          },
-        ]}
       >
-           {getFieldDecorator('Device_Port', {   rules: [{required: true,  message: '请输入姓名！'}],   })(
+           {getFieldDecorator('PersonnelName', {   rules: [{required: true,  message: '请输入姓名！'}],   })(
                   <Input placeholder="请输入姓名" />,
                    )}
       </Form.Item>
@@ -396,8 +421,8 @@ export default class PersonData extends Component {
       </Row>
       <Row>
         <Col span={12}>
-         <Form.Item label="性别" name="username"  >
-         {getFieldDecorator('Device_Port', {   rules: [{required: true,  message: '请输入性别！'}],   })(
+         <Form.Item label="性别" >
+         {getFieldDecorator('Gender', {   rules: [{required: true,  message: '请选择性别！'}],   })(
                           <Radio.Group>
                           <Radio value="a">男</Radio>
                           <Radio value="b">女</Radio>
@@ -406,24 +431,24 @@ export default class PersonData extends Component {
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item  label="手机号"  name="password" >
-        <Input/>
+      <Form.Item  label="手机号"  >
+      {getFieldDecorator('Phone')( <Input placeholder="请输入姓名" />)}
       </Form.Item>
       </Col>
       </Row>
 
       <Row>
         <Col span={12}>
-         <Form.Item label="专业" name="username"   >
-          <Input/>
+         <Form.Item label="专业">
+         {getFieldDecorator('Major')( <Input placeholder="请输入专业"/>)}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item  label='学历'  name="password" >
-      <Select placeholder="请选择专业">
+      <Form.Item  label='学历' >
+      {getFieldDecorator('Education')(<Select placeholder="请选择学历">
           <Option value="china">China</Option>
           <Option value="usa">U.S.A</Option>
-        </Select>
+        </Select>)}
       </Form.Item>
       </Col>
       </Row>
@@ -431,64 +456,67 @@ export default class PersonData extends Component {
 
       <Row>
         <Col span={12}>
-         <Form.Item label="参加工作时间" name="username"  >
-          <Input/>
+         <Form.Item label="参加工作时间">
+         {getFieldDecorator('StartWorkTime')(<DatePicker />)}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item  label='职位'  name="password" >
-        <Input/>
+      <Form.Item  label='职位' >
+      {getFieldDecorator('Position')(<Input placeholder="请输入职位"/>)}
       </Form.Item>
       </Col>
       </Row>
 
-      <Row>
-        <Col span={12}>
+      <Row align='middle'>
+        {/* <Col span={12}> */}
 
       <Form.Item label="照片" name="username" >
-         {getFieldDecorator('Device_Port',
+         {getFieldDecorator('photo',
         //  {
-        //     valuePropName: 'fileList',
+        //     valuePropName: 'fileListss',
         //     getValueFromEvent: this.handleChange,
         //   },   
           {   rules: [{required: true,  message: '请上传照片！'}],   })(
-          <>
          <Upload
-         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+         action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
          listType="picture-card"
          fileList={fileList}
          onPreview={this.handlePreview}
          onChange={this.handleChange}
          style={{width:'180px'}}
+         accept='image/*'
+         data={{
+          FileUuid: cuid(),
+          FileActualType: '0',
+        }}
        >
        {fileList.length >= 1 ? null : uploadButton}
-       </Upload>
-       <Tooltip title="1-2寸免冠正面照"><QuestionCircleOutlined  style={{paddingLeft:5}}/></Tooltip>
-                 </>  )}
+       </Upload> )}
       </Form.Item>
-      </Col>
+
+     <Tooltip title="1-2寸免冠正面照"><QuestionCircleOutlined /></Tooltip>
+      {/* </Col> */}
       </Row>
 
      <Row> 
         <Col span={12}>
     <Form.Item
         label="运维证书相关信息(气)"
-        name="username"
       >
-        <Input/>
+         {getFieldDecorator('switchGas')( <Switch  defaultChecked />)}
       </Form.Item>
        </Col>
       </Row> 
 
-      <Row>
+     {getFieldValue('switchGas')?<> <Row>
         <Col span={12}>
-         <Form.Item label="证书编号" name="username"  >
-          <Input/>
+         <Form.Item label="证书编号"  >
+         {getFieldDecorator('GasCertificateNumber')( <Input placeholder="请输入证书编号"/>)}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item  label='发证日期'  name="password" >
-        <Input/>
+      <Form.Item  label='发证日期'>
+      {getFieldDecorator('WaterStartCertificatesTime')( <DatePicker />)}
       </Form.Item>
       </Col>
       </Row>
@@ -496,18 +524,24 @@ export default class PersonData extends Component {
       <Row>
         <Col span={12}>
          <Form.Item label="到期时间" name="username"  >
-          <Input/>
+         {getFieldDecorator('GasEndCertificatesTime')( <DatePicker />)}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="证书照片" extra="">
-          {getFieldDecorator('upload', {
-            valuePropName: 'fileList',
+      <Form.Item label="证书照片"  className='certificatePhoto' extra="">
+          {getFieldDecorator('GasPhoto', {
             getValueFromEvent: this.normFile,
           })(
-            <Upload name="logo" action="/upload.do">
+            <Upload 
+             action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
+             accept='image/*'
+             data={{
+              FileUuid: cuid(),
+              FileActualType: '0',
+            }}
+             >
               <Button style={{width:180}}>
-              <UploadOutlined /> Click to upload
+              <UploadOutlined />  请选择证书照片
               </Button>
               <Tooltip title="需包含照片、姓名、身份证号、证书编号、有效期"><QuestionCircleOutlined  style={{paddingLeft:5}}/></Tooltip>
 
@@ -515,48 +549,52 @@ export default class PersonData extends Component {
           )}
         </Form.Item>
       </Col>
-      </Row>
+      </Row></>:null}
 
 
      <Row> 
         <Col span={12}>
     <Form.Item
         label="运维证书相关信息(水)"
-        name="username"
-        rules={[ { required: true,  message: 'Please input your username!', }, ]}
       >
-        <Input/>
+       {getFieldDecorator('switchWater')( <Switch defaultChecked  />)}
       </Form.Item>
        </Col>
       </Row> 
-      <Row>
+      {getFieldValue('switchWater')? <> <Row>
         <Col span={12}>
-         <Form.Item label="证书编号" name="username"  >
-          <Input/>
+         <Form.Item label="证书编号" >
+         {getFieldDecorator('WaterPhoto')( <Input  placeholder="请输入证书编号"/>)}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item  label='发证日期'  name="password" >
-        <Input/>
+      <Form.Item  label='发证日期' >
+      {getFieldDecorator('WaterStartCertificatesTime')( <DatePicker />)}
       </Form.Item>
       </Col>
       </Row>
 
       <Row>
         <Col span={12}>
-         <Form.Item label="到期时间" name="username"  >
-          <Input/>
+         <Form.Item label="到期时间"   >
+         {getFieldDecorator('WaterEndCertificatesTime')(<DatePicker />)}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="证书照片" extra="">
-          {getFieldDecorator('upload2', {
+          {getFieldDecorator('WaterPhoto', {
             valuePropName: 'fileList',
             getValueFromEvent: this.normFile,
           })(
-            <Upload name="logo" action="/upload.do">
+            <Upload name="logo" className='certificatePhoto' action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
+            accept='image/*'
+            data={{
+             FileUuid: cuid(),
+             FileActualType: '0',
+           }}
+            >
               <Button style={{width:180}}>
-              <UploadOutlined /> Click to upload
+              <UploadOutlined /> 请选择证书照片
               </Button>
               <Tooltip title="需包含照片、姓名、身份证号、证书编号、有效期"><QuestionCircleOutlined  style={{paddingLeft:5}}/></Tooltip>
 
@@ -564,9 +602,11 @@ export default class PersonData extends Component {
           )}
         </Form.Item>
       </Col>
-      </Row>
+      </Row> </> : null}
 
-
+      <Form.Item label="ID"   hidden>
+         {getFieldDecorator('PersonnelID')(<Input />)}
+      </Form.Item>
       <Form.Item style={{textAlign:'right'}}>
         <Button type="primary"  onClick={this.onFinish}>
           提交
@@ -577,7 +617,7 @@ export default class PersonData extends Component {
 
 
       <Modal visible={this.state.previewVisible} footer={null} onCancel={()=>{this.setState({previewVisible:false})}}>
-          {/* <img alt="example" style={{ width: '100%' }} src={previewImage} /> */}
+          <img alt="example" style={{ width: '100%' }} src={previewImage} />
         </Modal>
           </>
         </Card>

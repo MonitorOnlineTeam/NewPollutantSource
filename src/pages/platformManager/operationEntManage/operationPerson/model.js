@@ -17,9 +17,9 @@ export default Model.extend({
     exloading: false,
     loading: false,
     queryPar: {
-      Personnellist: '',
+      Company: '',
       PersonnelName:'',
-      type : '1',
+      type : '1,1',
       col1: '1',
     },
     tableDatas: [],
