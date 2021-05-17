@@ -47,7 +47,6 @@ import {
   UploadOutlined
 } from '@ant-design/icons';
 import cuid from 'cuid';
-
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -265,8 +264,8 @@ export default class PersonData extends Component {
       visible:true
     })
    }
-   see=()=>{
-
+   see=(record)=>{
+    router.push('/platformconfig/operationEntManage/operationPerson/detail/'+'OperationMaintenancePersonnel'+ '/' + record.PersonnelID)
    }
    del=(row)=>{ //删除
     

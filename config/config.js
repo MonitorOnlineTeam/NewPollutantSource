@@ -527,6 +527,11 @@ export default {
                       path: '/platformconfig/operationEntManage/operationPerson/:configId',
                       component: './platformManager/operationEntManage/operationPerson',
                     },
+                    {
+                      name:'operationPerson', //运维人员管理  详情
+                      path: '/platformconfig/operationEntManage/operationPerson/detail/:configId/:personId',
+                      component: './platformManager/operationEntManage/operationPerson/OperationPersonDetail',
+                    },
                 ]
                 }, 
               ],
