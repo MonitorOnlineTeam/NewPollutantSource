@@ -25,5 +25,14 @@ export async function DeleteOperationMaintenancePersonnel(params) {
   return result;
 }
 
+//运维单位列表
+export async function ListOperationMaintenanceEnterprise(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/BaseDataApi/ListOperationMaintenanceEnterprise',
+    params,
+    null,
+  );
 
+  return result;
+}
 

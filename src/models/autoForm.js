@@ -405,7 +405,7 @@ export default Model.extend({
       }
     },
 
-    *getFormData({ payload }, { call, select, update, put }) {
+    *getFormData({ payload,callback }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
       const result = yield call(services.getFormData, { ...payload });
       if (result.IsSuccess && result.Datas.length) {
@@ -419,7 +419,21 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
+    *getFormDatas({ payload,callback }, { call, select, update, put }) {
+      const state = yield select(state => state.autoForm);
+      const result = yield call(services.getFormData, { ...payload });
+      if (result.IsSuccess && result.Datas.length) {
+        yield update({
+          editFormData: {
+            ...state.editFormData,
+            [payload.configId]: result.Datas[0],
+          },
+        });
+        callback(result.Datas[0])
+      } else {
+        message.error(result.Message);
+      }
+    },
     // 获取详情页面配置
     *getDetailsConfigInfo({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
@@ -487,7 +501,29 @@ export default Model.extend({
         });
       }
     },
-
+    // 获取联动 带回调函数
+    *getAttachmentLists({ payload,callback }, { call, update }) {
+      if (payload.FileUuid && payload.FileUuid !== 'null') {
+        const result = yield call(services.getAttachmentList, { ...payload });
+        if (result.IsSuccess) {
+          let fileList = [];
+          fileList = result.Datas.map((item, index) => ({
+            uid: item.Guid,
+            name: item.FileName,
+            status: 'done',
+            url: `${item.Url}`,
+          }));
+          yield update({
+            fileList,
+          });
+          callback(result.Datas.length>0? fileList :[])
+        }
+      } else {
+        yield update({
+          fileList: [],
+        });
+      }
+    },
     // 文件上传
     *fileUpload({ payload }, { call, update }) {
       const result = yield call(services.exportTemplet, payload);

@@ -7,7 +7,8 @@
 import Model from '@/utils/model';
 import {
   SelectOperationMaintenancePersonnel,
-  DeleteOperationMaintenancePersonnel
+  DeleteOperationMaintenancePersonnel,
+  ListOperationMaintenanceEnterprise
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -19,13 +20,12 @@ export default Model.extend({
     queryPar: {
       Company: '',
       PersonnelName:'',
-      type : '1,1',
-      col1: '1',
+      type : '',
+      col1: '',
     },
     tableDatas: [],
     total: '',
-    attentionList:[],
-    priseList: [],
+    operationList: [],
   },
   subscriptions: {},
   effects: {
@@ -47,7 +47,17 @@ export default Model.extend({
         callback(response.IsSuccess)
       }
     },
-
+    *listOperationMaintenanceEnterprise({ payload,callback }, { call, put, update, select }) {
+      // 运维列表
+      const response = yield call(ListOperationMaintenanceEnterprise, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          operationList: response.Datas,
+        });
+        // callback(response.IsSuccess)
+      }
+    },
+    
 
   },
 });
