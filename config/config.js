@@ -1335,6 +1335,16 @@ export default {
                   path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
                   component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
                 },
+                { //有效传输率  空气站
+                  name: 'AirTransmissionefficiency',
+                  path: '/Intelligentanalysis/airTransmissionefficiency',
+                  component: './Intelligentanalysis/airTransmissionefficiency',
+                },
+                {//有效传输率 排口  空气站
+                  name: 'Outlet',
+                  path: '/Intelligentanalysis/transmissionefficiency/outlet',
+                  component: './Intelligentanalysis/airTransmissionefficiency/outlet',
+                },
                 {
                   name: 'emissions',
                   path: '/Intelligentanalysis/emissions',
