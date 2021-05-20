@@ -67,8 +67,9 @@ export default class EntTransmissionEfficiency extends Component {
 
     this.state = {
       visible:false,
-      operationPersonConfigId:'View_OperationUserPhone',
-      entName:''
+      operationPersonConfigId:'NewOperationMaintenancePersonnel',
+      entName:'',
+      entCode:''
     };
     
     this.columns = [];
@@ -166,7 +167,8 @@ export default class EntTransmissionEfficiency extends Component {
    operationPerson=(row)=>{
      this.setState({
        visible:true,
-       entName:row['dbo.T_Bas_OperationMaintenanceEnterprise.Company']
+       entName:row['dbo.T_Bas_OperationMaintenanceEnterprise.Company'],
+       entCode:row['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']
      })
    }
   render() {
@@ -217,6 +219,14 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                     <AutoFormTable
                         configId={this.state.operationPersonConfigId}
+                        searchParams={
+                          [
+                            {
+                                Key: 'dbo__T_Bas_OperationMaintenancePersonnel__EnterpriseID',
+                                Value: this.state.entCode,//match.params.Pointcode,
+                                Where: '$=',
+                            }
+                        ]}
                     />
             </Modal>
         </Card>
