@@ -1328,23 +1328,34 @@ export default {
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
-                  component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/transmissionefficiency',
+                      redirect: '/Intelligentanalysis/transmissionefficiency/ent',
+                    }, 
+                    {
+                      name: 'Intelligentanalysis',
+                      path: '/Intelligentanalysis/transmissionefficiency/ent',
+                      component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
+                    },
+                    {
+                      name: 'Intelligentanalysis',
+                      path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                      component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
+                    },
+                    { //有效传输率  空气站
+                      name: 'AirTransmissionefficiency',
+                      path: '/Intelligentanalysis/transmissionefficiency/air',
+                      component: './Intelligentanalysis/airTransmissionefficiency',
+                    },
+                    {//有效传输率 排口  空气站
+                      name: 'Outlet',
+                      path: '/Intelligentanalysis/transmissionefficiency/outlet',
+                      component: './Intelligentanalysis/airTransmissionefficiency/outlet',
+                    },
+                  ]
                 },
-                {
-                  name: 'Intelligentanalysis',
-                  path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                  component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
-                },
-                { //有效传输率  空气站
-                  name: 'AirTransmissionefficiency',
-                  path: '/Intelligentanalysis/airTransmissionefficiency',
-                  component: './Intelligentanalysis/airTransmissionefficiency',
-                },
-                {//有效传输率 排口  空气站
-                  name: 'Outlet',
-                  path: '/Intelligentanalysis/transmissionefficiency/outlet',
-                  component: './Intelligentanalysis/airTransmissionefficiency/outlet',
-                },
+
                 {
                   name: 'emissions',
                   path: '/Intelligentanalysis/emissions',

@@ -1,7 +1,7 @@
 /**
- * 功  能：有效传输率
- * 创建人：吴建伟
- * 创建时间：2019.08.12
+ * 功  能
+ * 创建人
+ * 创建时间：
  */
 import React, { Component } from 'react';
 import { ExportOutlined, QuestionCircleTwoTone } from '@ant-design/icons';
@@ -41,7 +41,7 @@ const pageUrl = {
   updateState: 'airTransmissionefficiency/updateState',
   getData: 'airTransmissionefficiency/getAirTransmissionEfficiencyForEnt',
 };
-const content = <div>当有效传输率未到达90%时判定为未达标</div>;
+const content = <div>当传输有效率未到达90%时判定为未达标</div>;
 @connect(({ loading, airTransmissionefficiency, autoForm }) => ({
   exRegionloading: airTransmissionefficiency.exRegionloading,
   loading: loading.effects[pageUrl.getData],
@@ -200,7 +200,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     ];
     return (
-      <BreadcrumbWrapper title="有效传输率">
+      <BreadcrumbWrapper title="传输有效率">
         {/* <div className="contentContainer"> */}
         <Card
           bordered={false}
@@ -263,8 +263,8 @@ export default class EntTransmissionEfficiency extends Component {
                   {' '}
                    {`<90%未达标`}
                 </span>
-                {/* <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的有效传输率，每月4号和10号重新计算上个月的有效传输率</span> */}
-                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算本月的有效传输率，每月1号至15号期间每日凌晨重新计算上个月的有效传输率</span>
+                {/* <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算昨日的传输有效率，每月4号和10号重新计算上个月的传输有效率</span> */}
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算本月的传输有效率，每月1号至15号期间每日凌晨重新计算上个月的传输有效率</span>
               </div>
             </>
           }
