@@ -126,6 +126,9 @@ export default class PersonData extends Component {
         dataIndex: 'Gender',
         key: 'Gender',
         align: 'center',
+        render: (text, record) => {     
+          return  <div style={{textAlign:'left',width:'100%'}}>{text==1?'男':'女'}</div>
+       },
       },
       {
         title: <span>手机号</span>,
@@ -238,6 +241,8 @@ export default class PersonData extends Component {
 
     this.setState({
       visible:true,
+      switchGas:true,
+      switchWater:true,
       type:'edit',
     },()=>{
       // 获取详情页面数据
@@ -257,6 +262,11 @@ export default class PersonData extends Component {
           callback:res=>{
             if (res) {
               let operationData = res;
+              this.setState({
+                uid:operationData.AttachmentID,
+                uidWater:operationData.WaterPhoto,
+                uidGas:operationData.GasPhoto,
+              })
               setFieldsValue({
                 PersonnelID:operationData['dbo.T_Bas_OperationMaintenancePersonnel.PersonnelID'],
                 EnterpriseID:operationData['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID'],
@@ -277,7 +287,6 @@ export default class PersonData extends Component {
                 GasEndCertificatesTime:operationData.GasEndCertificatesTime?moment(moment(operationData.GasEndCertificatesTime).format('YYYY-MM-DD')):'',//到期时间 气
                 GasStartCertificatesTime:operationData.GasStartCertificatesTime?moment(moment(operationData.GasStartCertificatesTime).format('YYYY-MM-DD')):'',//发证时间 气
                 GasPhoto:operationData.GasPhoto,
-
                 
               })
               dispatch({
