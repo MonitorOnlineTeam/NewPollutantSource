@@ -237,7 +237,7 @@ export default Model.extend({
         ...payload
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
-      if (response.IsSuccess) {
+      if (response.IsSuccess&&response.Datas[0]) {
 
         let ycdate = [];
         let ycdata = [];
