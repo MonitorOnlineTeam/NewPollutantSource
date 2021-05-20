@@ -371,8 +371,8 @@ class CascaderMultiple extends PureComponent {
                       </li>
                     )
                   }) : <li className="ant-cascader-menu-item ant-cascader-menu-item-disabled" title="" role="menuitem">
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    </li>
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  </li>
                 }
               </ul>
               <ul className="ant-cascader-menu" style={{ display: currentChildren.length ? "inline-block" : "none" }}>

@@ -23,7 +23,6 @@ import {
 import { Map, Markers, InfoWindow, Polygon } from 'react-amap';
 // import { Map, Markers, InfoWindow, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
-import moment from 'moment';
 import router from 'umi/router';
 import NavigationTree from '@/components/NavigationTree'
 import { isEqual } from 'lodash';
@@ -58,7 +57,7 @@ const iconStyle = {
 }
 
 @Form.create()
-@connect(({ loading, mapView, global, user }) => ({
+@connect(({ loading, mapView, global, user, common }) => ({
   allEntAndPointList: mapView.allEntAndPointList,
   defaultMapInfo: mapView.defaultMapInfo,
   tableList: mapView.tableList,
@@ -73,6 +72,7 @@ const iconStyle = {
   curPointData: mapView.curPointData,
   noticeList: global.notices,
   menuDescList: user.menuDescList,
+  menuNameList: common.menuNameList,
 }))
 class MapView extends Component {
   constructor(props, context) {
@@ -154,6 +154,7 @@ class MapView extends Component {
   }
 
   componentDidMount() {
+    this.getMenuNameList();
     // 获取所有企业及排口信息
     this.props.dispatch({
       type: 'mapView/getAllEntAndPoint',
@@ -173,6 +174,12 @@ class MapView extends Component {
     //     pollutantTypes: 2,
     //   },
     // })
+  }
+
+  getMenuNameList = () => {
+    this.props.dispatch({
+      type: 'common/getMenuNameList',
+    })
   }
 
   // 渲染坐标点
@@ -616,7 +623,7 @@ class MapView extends Component {
 
 
   render() {
-    const { form: { getFieldDecorator }, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
+    const { form: { getFieldDecorator }, menuNameList, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
     const { currentEntInfo, currentKey } = this.state;
     const option = {
       title: {
@@ -940,69 +947,69 @@ class MapView extends Component {
                       }}
                       size="large"
                     /> : <>
-                        {
-                          ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                            // !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
-                            <Empty style={{ marginTop: 130 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
-                            <>
-                              <Descriptions
-                                title={
-                                  // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                                  <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
-                                }
-                                size="small"
-                                bordered>
-                                {
-                                  // 只显示前六个
-                                  this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
-                                    this.setState({
-                                      chartTitle: item.title,
-                                    })
-                                    this.props.dispatch({
-                                      type: 'mapView/updateChartData',
-                                      payload: {
-                                        key: item.key,
-                                        label: item.label,
-                                      },
-                                    })
-                                  }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ? 'rgb(243, 172, 0)' : '') }}>{item.value}</div></Descriptions.Item>)
-                                }
-                              </Descriptions>
-                              {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
-                              {
-                                // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
-                                !this.props.chartData.seriesData.length ?
-                                  <Empty style={{ marginTop: 108 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
-                                  // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
-                                  :
-                                  <ReactEcharts
-                                    className={styles.echartdiv}
-                                    style={{ width: '100%', height: '200px', textAlign: 'center' }}
-                                    option={option}
-                                    notMerge
-                                    lazyUpdate />
+                      {
+                        ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                          // !this.props.pointLoading && ((!this.props.tableList.length && !this.props.chartData.seriesData.length) ?
+                          <Empty style={{ marginTop: 130 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" /> :
+                          <>
+                            <Descriptions
+                              title={
+                                // <div>{this.state.currentPointInfo.title} <Tag color="blue">{this.props.curPointData.RunState === 1 ? "自动监测" : "手动监测"}</Tag> <br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
+                                <div>{this.state.currentPointInfo.title}<br /> <span style={{ fontWeight: 'normal', fontSize: 13 }}>{this.props.monitorTime ? `监控时间：${this.props.monitorTime}` : ''}</span></div>
                               }
-                              {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
-                              <a className={styles.pointDetails} size="small" onClick={() => {
-                                // 获取infoWindow数据
-                                this.props.dispatch({
-                                  type: "mapView/getInfoWindowData",
-                                  payload: {
-                                    DGIMNs: currentKey,
-                                    dataType: "HourData",
-                                    isLastest: true,
-                                    // type: PollutantType,
-                                    isAirOrSite: true,
-                                    pollutantTypes: this.state.currentPointInfo.PollutantType
-                                  }
-                                })
-                                this.setState({
-                                  pointVisible: true,
-                                })
-                              }}>监测点详情</a>
-                            </>)
-                        }
-                      </>
+                              size="small"
+                              bordered>
+                              {
+                                // 只显示前六个
+                                this.props.tableList.filter((itm, index) => index < 6).map(item => <Descriptions.Item label={item.label}><div onClick={() => {
+                                  this.setState({
+                                    chartTitle: item.title,
+                                  })
+                                  this.props.dispatch({
+                                    type: 'mapView/updateChartData',
+                                    payload: {
+                                      key: item.key,
+                                      label: item.label,
+                                    },
+                                  })
+                                }} className={styles.content} style={{ color: item.status === '0' ? '#f04d4c' : (item.status === '1' ? 'rgb(243, 172, 0)' : '') }}>{item.value}</div></Descriptions.Item>)
+                              }
+                            </Descriptions>
+                            {/* <div style={{ fontSize: 16, textAlign: 'center', padding: '10px 15px 0 15px' }}>{chartData.legend}24小时趋势图</div> */}
+                            {
+                              // (!this.props.chartLoading && !this.props.chartData.seriesData.length) ?
+                              !this.props.chartData.seriesData.length ?
+                                <Empty style={{ marginTop: 108 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据" />
+                                // <img src="/nodata.png" style={{ width: '150px', margin: '35px 124px', dispatch: 'block' }} />
+                                :
+                                <ReactEcharts
+                                  className={styles.echartdiv}
+                                  style={{ width: '100%', height: '200px', textAlign: 'center' }}
+                                  option={option}
+                                  notMerge
+                                  lazyUpdate />
+                            }
+                            {/* <Button style={{ position: "absolute", right: 10, bottom: 10 }} onClick={() => { */}
+                            <a className={styles.pointDetails} size="small" onClick={() => {
+                              // 获取infoWindow数据
+                              this.props.dispatch({
+                                type: "mapView/getInfoWindowData",
+                                payload: {
+                                  DGIMNs: currentKey,
+                                  dataType: "HourData",
+                                  isLastest: true,
+                                  // type: PollutantType,
+                                  isAirOrSite: true,
+                                  pollutantTypes: this.state.currentPointInfo.PollutantType
+                                }
+                              })
+                              this.setState({
+                                pointVisible: true,
+                              })
+                            }}>监测点详情</a>
+                          </>)
+                      }
+                    </>
                   }
 
                 </div>
@@ -1134,7 +1141,9 @@ class MapView extends Component {
             width="80%"
             footer={null}
             style={{ maxHeight: '80vh' }}
+            bodyStyle={{ minHeight: modalHeight }}
             visible={this.state.pointVisible}
+            destroyOnClose
             onOk={() => {
               this.setState({
                 pointVisible: false,
@@ -1162,7 +1171,7 @@ class MapView extends Component {
               // })
             }}>
               {
-                menuDescList.includes('历史数据') && <TabPane tab="历史数据" key="1">
+                menuNameList.includes('历史数据') && <TabPane tab="历史数据" key="1">
                   <DataQuery DGIMN={currentKey} initLoadData chartHeight="calc(100vh - 427px)" style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }} tableHeight="calc(100vh - 34vh - 55px - 48px - 90px - 64px)" pointName={this.state.pointName} pollutantTypes={this.state.pollutantTypes} entName={this.state.entName} />
                 </TabPane>
               }
@@ -1170,7 +1179,7 @@ class MapView extends Component {
                 <OperDetails DGIMN={currentKey} />
               </TabPane>
               {
-                menuDescList.includes('视频预览') && <TabPane tab="视频预览" key="2">
+                menuNameList.includes('视频预览') && <TabPane tab="视频预览" key="2">
                   <YsyShowVideo DGIMN={currentKey} initLoadData style={{ maxHeight: modalHeight }} />
                 </TabPane>
               }
@@ -1178,18 +1187,18 @@ class MapView extends Component {
                 <AlarmRecord DGIMN={currentKey} initLoadData />
               </TabPane> */}
               {
-                menuDescList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
+                menuNameList.includes('超标处置') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标处置" key="3">
                   <AlarmRecord DGIMN={currentKey} EntCode={this.state.currentPointInfo.EntCode} initLoadData dataHeight="calc(100vh - 450px)" style={{ maxHeight: modalHeight + 52, height: 'calc(100vh - 366px)' }} />
                 </TabPane>
               }
               {
-                menuDescList.includes('异常数据') && <TabPane tab="异常数据" key="4">
+                menuNameList.includes('异常数据') && <TabPane tab="异常数据" key="4">
                   <RecordEchartTable DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} />
                 </TabPane>
               }
               {
-                menuDescList.includes('超标数据') && this.state.currentPointInfo.PollutantType != '5' &&
+                menuNameList.includes('超标数据') && this.state.currentPointInfo.PollutantType != '5' &&
                 <TabPane tab="超标数据" key="5">
                   <RecordEchartTableOver DGIMN={currentKey} initLoadData style={{ maxHeight: '70vh' }} maxHeight={150} noticeState={1} />
                 </TabPane>

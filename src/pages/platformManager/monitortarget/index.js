@@ -214,22 +214,21 @@ export default class MonitorTarget extends Component {
         //   console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
-        if (this.props.loading) {
-            return (<Spin
-                style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                size="large"
-            />);
-        }
+        // if (this.props.loading) {
+        //     return (<Spin
+        //         style={{
+        //             width: '100%',
+        //             height: 'calc(100vh/2)',
+        //             display: 'flex',
+        //             alignItems: 'center',
+        //             justifyContent: 'center',
+        //         }}
+        //         size="large"
+        //     />);
+        // }
         return (
             <BreadcrumbWrapper>
                 <Card className={styles.contentContainer}>
-
                     <SearchWrapper
                         onSubmitForm={form => this.loadReportList(form)}
                         configId={configId}

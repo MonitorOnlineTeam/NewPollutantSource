@@ -69,6 +69,7 @@ class PointDetailsModal extends PureComponent {
         footer={null}
         style={{ maxHeight: '80vh' }}
         visible={pointDetailsModalVisible}
+        bodyStyle={{minHeight: modalHeight}}
         onCancel={() => {
           this.props.dispatch({
             type: "map/updateState",

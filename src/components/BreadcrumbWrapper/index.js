@@ -28,7 +28,6 @@ class index extends Component {
 
   pageHeaderRender = (pageHeaderWrapperProps) => {
     const { selectTreeItem } = this.state;
-    console.log('selectTreeItem=', selectTreeItem)
     if (pageHeaderWrapperProps.unfoldMenuList.length) {
       let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path.split('?')[0] === location.pathname.split('?')[0])
       // url和菜单能匹配到

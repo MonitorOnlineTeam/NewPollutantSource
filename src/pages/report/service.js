@@ -20,9 +20,10 @@ export async function getSiteDailyDayReport(params) {
  * 获取系统污染物
  */
 export async function getPollutantTypeList(params) {
+  let _params = params || {};
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList', {
-    ...params,
-    pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
+    ..._params,
+    pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || _params.pollutantCodes
   }, null);
   return result === null ? { data: null } : result;
 }
@@ -63,7 +64,7 @@ export async function summaryReportExcel(params) {
  * 获取上报数据月报
  */
 export async function getStatisticsReportDataList(params) {
- 
+
   const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataList', params, null);
   return result === null ? { data: null } : result;
 }
@@ -72,7 +73,7 @@ export async function getStatisticsReportDataList(params) {
  * 获取上报数据月报
  */
 export async function getEntSewageList(params) {
- 
+
   const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetEntSewageList', params, null);
   return result === null ? { data: null } : result;
 }
@@ -81,12 +82,12 @@ export async function getEntSewageList(params) {
  * 导出上报数据月报
  */
 export async function getStatisticsReportDataExcel(params) {
- 
+
   const result = await post('/api/rest/PollutantSourceApi/DataReportApi/GetStatisticsReportDataExcel', params, null);
   return result === null ? { data: null } : result;
 }
 
- 
+
 /**
  * 获取站点月报数据
  */
@@ -125,7 +126,7 @@ export async function getSummaryYearReport(params) {
 export async function getEntAndPoint(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
     ...params,
-    PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
+    PollutantTypes: params.PollutantTypes || sessionStorage.getItem('sysPollutantCodes'),
   }, null);
   return result;
 }

@@ -397,7 +397,7 @@ class CalendarPage extends PureComponent {
       </div>
     }
     return (
-      <ul className="events" style={{ width: "104%", height: "96%", overflow: "auto" }}>
+      <ul className="events" style={{ width: "104%", height: "96%" }}>
         {listData.map(item => {
           // if (item.notAbnormal) {  // 无异常
           //   return <li style={{ marginTop: -20 }}><Badge status={"success"} /></li>
@@ -523,7 +523,7 @@ class CalendarPage extends PureComponent {
                       date, mode
                     }, () => {
                       this.getCalendarInfo();
-                      // this.abnormalItemClick({ date: date, type: "", text: "运维记录" });
+                      this.abnormalItemClick({ date: date, type: 0, text: "运维记录" });
                     })
                   }}
                 />

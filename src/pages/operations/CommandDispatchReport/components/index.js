@@ -21,7 +21,7 @@ import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { DetailIcon } from '@/utils/icon'
 import {
-  routerRedux,
+    routerRedux,
 } from 'dva/router';
 import AlermIndex from './AlermIndex'
 import ExceptionAlarm from '@/components/ExceptionAlarm/ExceptionAlarm';
@@ -44,12 +44,12 @@ class Dispatchreport extends Component {
         super(props);
         this.formLayout = {
             labelCol: {
-              span: 5,
+                span: 5,
             },
             wrapperCol: {
-              span: 16,
+                span: 16,
             },
-          };
+        };
         this.state = {
             rangeDate: [],
             format: 'YYYY-MM-DD HH:mm',
@@ -65,9 +65,9 @@ class Dispatchreport extends Component {
             EID: '',
             PID: '',
         };
-         this.handleExpand = this.handleExpand.bind(this);
-         this.resetForm = this.resetForm.bind(this);
-         this.Detail = this.Detail.bind(this);
+        this.handleExpand = this.handleExpand.bind(this);
+        this.resetForm = this.resetForm.bind(this);
+        this.Detail = this.Detail.bind(this);
     }
 
     componentDidMount() {
@@ -85,44 +85,51 @@ class Dispatchreport extends Component {
     StepsList = StepsList => {
         const returnStepList = [];
         StepsList.map(item => {
-                returnStepList.push(
-                    <>
-                        <Card.Grid style={{ width: '100%', marginTop: '10px', overflowX: 'scroll' }} >
-                            <div className={this.CommandDispatchType('style', item.CommandDispatchType)}></div>
-                            <div style={{ float: 'left', marginLeft: '5px', width: '95%' }}>
-                                <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden', lineHeight: '24px' }}>
-                <div style={{ width: '95%', float: 'left', fontWeight: 'bolder' }}><span>{this.CommandDispatchType('', item.CommandDispatchType)}</span><span style={{ fontSize: '10px', color: '#8c8c8c', marginLeft: '10px' }}>{item.CreateTime}</span></div>
-                                    <div style={{ float: 'right' }}><Button type="primary" icon={<ProfileOutlined />} size="small" onClick={this.Detail.bind(this, item.TaskId, item.Flag, item.FirstTime, item.EndTime, item.EID, item.PID)}>详情</Button></div>
+            returnStepList.push(
+                <>
+                    <Card.Grid style={{ width: '100%', marginTop: '10px', overflowX: 'scroll' }} >
+                        <div className={this.CommandDispatchType('style', item.CommandDispatchType)}></div>
+                        <div style={{ float: 'left', marginLeft: '5px', width: '95%' }}>
+                            <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden', lineHeight: '24px' }}>
+                                <div style={{ width: '95%', float: 'left', fontWeight: 'bolder' }}>
+                                    <span>{this.CommandDispatchType('', item.CommandDispatchType)}</span>
+                                    <span style={{ fontSize: '10px', color: '#8c8c8c', marginLeft: '10px' }}>{item.CreateTime}</span>
                                 </div>
-                                <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden' }}>
-                                    <div style={{ width: '100%', fontWeight: 'bold', fontSize: '12px' }}>{item.Remark}</div>
-                                </div>
-                                <Steps size="small" status="process">{this.TaskLogList(item.Steplist)}</Steps>
+                                {
+                                    item.CommandDispatchType !== '5' && <div style={{ float: 'right' }}>
+                                        <Button type="primary" icon={<ProfileOutlined />} size="small" onClick={this.Detail.bind(this, item.TaskId, item.Flag, item.FirstTime, item.EndTime, item.EID, item.PID)}>详情</Button>
+                                    </div>
+                                }
                             </div>
-                        </Card.Grid>
+                            <div style={{ width: '100%', marginBottom: '5px', overflow: 'hidden' }}>
+                                <div style={{ width: '100%', fontWeight: 'bold', fontSize: '12px' }}>{item.Remark}</div>
+                            </div>
+                            <Steps size="small" status="process">{this.TaskLogList(item.Steplist)}</Steps>
+                        </div>
+                    </Card.Grid>
 
-                    </>,
-                );
-            });
+                </>,
+            );
+        });
         return returnStepList;
     }
 
     // 步骤条
     TaskLogList = TaskLogList => {
         const returnStepList = [];
-            TaskLogList.map(item => {
-                returnStepList.push(
-                    <Step
-                        status={item.Status == 1 ? 'finish' : 'wait'}
-                        title={item.TaskStatusText}
-                        description={this.description(item)}
-                        icon={<LegacyIcon type={
-                            this.showIcon(item.TaskStatusText)
-                        }
-                        />}
-                    />,
-                );
-            });
+        TaskLogList.map(item => {
+            returnStepList.push(
+                <Step
+                    status={item.Status == 1 ? 'finish' : 'wait'}
+                    title={item.TaskStatusText}
+                    description={this.description(item)}
+                    icon={<LegacyIcon type={
+                        this.showIcon(item.TaskStatusText)
+                    }
+                    />}
+                />,
+            );
+        });
         return returnStepList;
     }
 
@@ -148,19 +155,19 @@ class Dispatchreport extends Component {
 
     // 步骤条描述
     description = item => (
-                <div style={{ fontSize: '10' }} className={Style.hidpage}>
-                    <div style={{ marginTop: 5 }}>
-                        {item.Remark}
-                    </div>
-                    <div style={{ marginTop: 5 }}>
-                        {item.CreateUserName}
-                    </div>
-                    <div style={{ marginTop: 5 }}>
-                        {item.CreateTime == '0001-01-01 00:00:00' ? '' : item.CreateTime}
-                    </div>
+        <div style={{ fontSize: '10' }} className={Style.hidpage}>
+            <div style={{ marginTop: 5 }}>
+                {item.Remark}
+            </div>
+            <div style={{ marginTop: 5 }}>
+                {item.CreateUserName}
+            </div>
+            <div style={{ marginTop: 5 }}>
+                {item.CreateTime == '0001-01-01 00:00:00' ? '' : item.CreateTime}
+            </div>
 
-                </div>
-            )
+        </div>
+    )
 
     // 派单类型图标
     CommandDispatchType = (type, item) => {
@@ -186,21 +193,21 @@ class Dispatchreport extends Component {
     }
 
     /** 切换任务类型 */
-    SelectOnChange=value => {
+    SelectOnChange = value => {
         debugger;
         if (value === undefined) {
             this.setState({
-            selectvalue: '',
+                selectvalue: '',
             })
         } else {
-        this.setState({
-            selectvalue: value,
-        })
+            this.setState({
+                selectvalue: value,
+            })
         }
     }
 
     /** 人员姓名变化事件 */
-    InoutOnChange=e => {
+    InoutOnChange = e => {
         this.setState({
             UserName: e.target.value,
         })
@@ -209,24 +216,24 @@ class Dispatchreport extends Component {
     /** 切换时间 */
     _handleDateChange = (date, dateString) => {
         debugger;
-       if (date && date.length > 0 && date[0]) {
-        this.setState({ rangeDate: date });
-       } else {
-           this.setState({ rangeDate: [undefined, undefined] });
-       }
+        if (date && date.length > 0 && date[0]) {
+            this.setState({ rangeDate: date });
+        } else {
+            this.setState({ rangeDate: [undefined, undefined] });
+        }
     };
 
     /** 展开折叠 */
-    handleExpand=() => {
-      this.setState({
-        expand: !this.state.expand,
-      });
+    handleExpand = () => {
+        this.setState({
+            expand: !this.state.expand,
+        });
     }
 
-     /** 重置form */
-     resetForm=() => {
+    /** 重置form */
+    resetForm = () => {
         this.props.form.resetFields();
-     }
+    }
 
     /** 后台请求数据 */
     reloaddatalist = queryparams => {
@@ -268,10 +275,10 @@ class Dispatchreport extends Component {
                 },
             },
         })
-         dispatch({
-           type: 'operations/getcommanddispatchreport',
-           payload: {},
-         });
+        dispatch({
+            type: 'operations/getcommanddispatchreport',
+            payload: {},
+        });
     }
 
     /** 分页 */
@@ -289,10 +296,10 @@ class Dispatchreport extends Component {
                 },
             },
         })
-         dispatch({
-           type: 'operations/getcommanddispatchreport',
-           payload: {},
-         });
+        dispatch({
+            type: 'operations/getcommanddispatchreport',
+            payload: {},
+        });
     }
 
     onChange = (pageIndex, pageSize) => {
@@ -309,41 +316,41 @@ class Dispatchreport extends Component {
                 },
             },
         })
-         dispatch({
-           type: 'operations/getcommanddispatchreport',
-           payload: {},
-         });
+        dispatch({
+            type: 'operations/getcommanddispatchreport',
+            payload: {},
+        });
     }
 
     /** 详情 */
-    Detail=(TaskId, Type, btime, etime, EID, PID) => {
+    Detail = (TaskId, Type, btime, etime, EID, PID) => {
         this.setState({
             ID: TaskId,
             EID,
             PID,
         })
         const DGIMN = this.state.dgimn;
-          if (Type == 1) {
-              this.props.dispatch(routerRedux.push(`/operations/CommandDispatchReport/details/${TaskId}/${DGIMN}`));
-          }
-          if (Type == 3) {
-              this.setState({
-                  Rvisible: true,
-                  btime,
-                  etime,
-              })
-          }
-          if (Type == 2) {
+        if (Type == 1) {
+            this.props.dispatch(routerRedux.push(`/operations/CommandDispatchReport/details/${TaskId}/${DGIMN}`));
+        }
+        if (Type == 3) {
             this.setState({
-              Evisible: true,
-               btime,
-               etime,
+                Rvisible: true,
+                btime,
+                etime,
             })
-          }
+        }
+        if (Type == 2) {
+            this.setState({
+                Evisible: true,
+                btime,
+                etime,
+            })
+        }
     }
 
     /** 查询按钮 */
-    Search=() => {
+    Search = () => {
         const {
             dispatch, queryparams,
         } = this.props;
@@ -363,25 +370,25 @@ class Dispatchreport extends Component {
                 },
             },
         })
-         dispatch({
-           type: 'operations/getcommanddispatchreport',
-           payload: {},
-         });
+        dispatch({
+            type: 'operations/getcommanddispatchreport',
+            payload: {},
+        });
     }
 
-      // 取消Model
-      onCancel = () => {
+    // 取消Model
+    onCancel = () => {
         this.setState({
-          Rvisible: false,
+            Rvisible: false,
         });
-      }
+    }
 
-      // 取消Model
-      onCancel1 = () => {
+    // 取消Model
+    onCancel1 = () => {
         this.setState({
-          Evisible: false,
+            Evisible: false,
         });
-      }
+    }
     /** 渲染数据展示 */
 
     loaddata = () => {
@@ -395,64 +402,64 @@ class Dispatchreport extends Component {
         console.log('datatable', datatable);
         const columns = [
             {
-            title: '调度类别',
-            dataIndex: 'CommandDispatchType',
-            key: 'CommandDispatchType',
-            width: '5%',
-            align: 'center',
-            render: (text, record) => {
-              if (text === '1') {
-                return <span>例行派单</span>;
-              }
-              if (text === '2') {
-                 return <span>异常报警</span>;
-              }
-              if (text === '3') {
-                  return <span>人工派单</span>;
-              }
-              if (text === '5') {
-                return <span>缺失数据报警</span>;
-            }
-              return <span> 超标报警</span>;
-            },
+                title: '调度类别',
+                dataIndex: 'CommandDispatchType',
+                key: 'CommandDispatchType',
+                width: '5%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === '1') {
+                        return <span>例行派单</span>;
+                    }
+                    if (text === '2') {
+                        return <span>异常报警</span>;
+                    }
+                    if (text === '3') {
+                        return <span>人工派单</span>;
+                    }
+                    if (text === '5') {
+                        return <span>缺失数据报警</span>;
+                    }
+                    return <span> 超标报警</span>;
+                },
             },
             {
-              title: 'ddddd',
-              dataIndex: 'Steplist',
-              key: 'Steplist',
-              align: 'left',
-              render: (text, record) => <Steps status="process">{this.TaskLogList(record.Steplist)}</Steps>,
+                title: 'ddddd',
+                dataIndex: 'Steplist',
+                key: 'Steplist',
+                align: 'left',
+                render: (text, record) => <Steps status="process">{this.TaskLogList(record.Steplist)}</Steps>,
             },
             {
                 title: '操作',
                 key: 'action',
-                 width: '5%',
-                 align: 'center',
+                width: '5%',
+                align: 'center',
                 render: (text, record, index) => (
                     <span>
-                     <Tooltip title="详情">
-                        <a onClick={() => {
-                           this.Detail(record.TaskId, record.Flag, record.FirstTime, record.EndTime)
-                        }}><DetailIcon/></a>
+                        <Tooltip title="详情">
+                            <a onClick={() => {
+                                this.Detail(record.TaskId, record.Flag, record.FirstTime, record.EndTime)
+                            }}><DetailIcon /></a>
                         </Tooltip>
                     </span>
                 ),
             },
         ];
-         const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator } = this.props.form;
         const {
-          Option,
+            Option,
         } = Select;
         const { queryparams } = this.props;
         console.log('queryparams', queryparams);
         return (
             <div style={{ background: '#ECECEC' }}>
                 <Card
-                bordered={false}
-                extra={
-                    <Row gutter={16} style={{ width: '800px' }}>
-                        <Col xl={{ span: 6 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
-                            <Select
+                    bordered={false}
+                    extra={
+                        <Row gutter={16} style={{ width: '800px' }}>
+                            <Col xl={{ span: 6 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                                <Select
                                     onChange={this.SelectOnChange}
                                     placeholder="调度类别"
                                     allowClear
@@ -463,19 +470,19 @@ class Dispatchreport extends Component {
                                     <Option value="3">人工派单</Option>
                                     <Option value="4">超标报警</Option>
                                     <Option value="5">缺失数据报警</Option>
-                            </Select>
-                        </Col>
-                        <Col xl={{ span: 11 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
-                            <RangePicker_
+                                </Select>
+                            </Col>
+                            <Col xl={{ span: 11 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                                <RangePicker_
                                     style={{ width: '100%' }}
                                     dateValue={this.state.rangeDate} format={this.state.format}
                                     callback={this._handleDateChange} allowClear showTime={this.state.format} />
-                        </Col>
-                        <Col xl={{ span: 4 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
-                            <Input placeholder="人员姓名" style={{ width: '100%' }} allowClear onChange={this.InoutOnChange}/>
-                        </Col>
-                        <Col xl={{ span: 2 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
-                            <Button
+                            </Col>
+                            <Col xl={{ span: 4 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                                <Input placeholder="人员姓名" style={{ width: '100%' }} allowClear onChange={this.InoutOnChange} />
+                            </Col>
+                            <Col xl={{ span: 2 }} lg={{ span: 12 }} md={{ span: 12 }} sm={{ md: 24 }} xs={{ md: 24 }}>
+                                <Button
                                     onClick={() => {
                                         this.Search();
                                     }}
@@ -484,69 +491,69 @@ class Dispatchreport extends Component {
                                 >
                                     查询
                             </Button>
-                        </Col>
-                    </Row>
-                }
+                            </Col>
+                        </Row>
+                    }
                 >
                     <div className={Style.Content}>
                         {
-                        dataloading && <Spin
-                            style={{
-                            width: '100%',
-                            height: 'calc(100vh/2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            }}
-                            size="large"
-                        />
+                            dataloading && <Spin
+                                style={{
+                                    width: '100%',
+                                    height: 'calc(100vh/2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                                size="large"
+                            />
                         }
                         {
                             !dataloading && (datatable.length ?
-                            <>
-                                <div className={Style.Item}>
-                                {this.StepsList(datatable)}
-                                </div>
-                                <div style={{ width: '100%', marginTop: 30 }}>
-                                <Pagination
-                                    style={{ float: 'right' }}
-                                    size="small"
-                                    showSizeChanger
-                                    showQuickJumper
-                                    total= {queryparams.total}
-                                    pageSize= {queryparams.pageSize}
-                                    current= {queryparams.pageIndex}
-                                    onChange={this.onChange}
-                                    onShowSizeChange={this.onShowSizeChange}
-                                />
-                                </div>
-                            </> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
+                                <>
+                                    <div className={Style.Item}>
+                                        {this.StepsList(datatable)}
+                                    </div>
+                                    <div style={{ width: '100%', marginTop: 30 }}>
+                                        <Pagination
+                                            style={{ float: 'right' }}
+                                            size="small"
+                                            showSizeChanger
+                                            showQuickJumper
+                                            total={queryparams.total}
+                                            pageSize={queryparams.pageSize}
+                                            current={queryparams.pageIndex}
+                                            onChange={this.onChange}
+                                            onShowSizeChange={this.onShowSizeChange}
+                                        />
+                                    </div>
+                                </> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />)
                         }
 
                     </div>
                     <Modal
-                    destroyOnClose="true"
-                    visible={this.state.Rvisible}
-                    title="报警记录"
-                    width="90%"
-                    footer={null}
-                    onCancel={this.onCancel}
+                        destroyOnClose="true"
+                        visible={this.state.Rvisible}
+                        title="报警记录"
+                        width="90%"
+                        footer={null}
+                        onCancel={this.onCancel}
                     >
-                     <AlermIndex ID={this.state.ID} EID={this.state.EID} PID={this.state.PID}/>
+                        <AlermIndex ID={this.state.ID} EID={this.state.EID} PID={this.state.PID} />
                     </Modal>
                     <Modal
-                    destroyOnClose="true"
-                    visible={this.state.Evisible}
-                    title="异常记录"
-                    width="70%"
-                    footer={null}
-                    onCancel={this.onCancel1}
+                        destroyOnClose="true"
+                        visible={this.state.Evisible}
+                        title="异常记录"
+                        width="70%"
+                        footer={null}
+                        onCancel={this.onCancel1}
                     >
-                     <ExceptionAlarm
-                      initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={this.state.btime}
-                        lasttime={this.state.etime}/>
+                        <ExceptionAlarm
+                            initLoadData DGIMN={this.state.dgimn} Types="1" firsttime={this.state.btime}
+                            lasttime={this.state.etime} />
                     </Modal>
-                    </Card>
+                </Card>
             </div >
         );
     }

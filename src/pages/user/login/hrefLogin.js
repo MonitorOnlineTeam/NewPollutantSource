@@ -23,7 +23,7 @@ export default class hrefLogin extends Component {
       type: "userLogin/login",
       payload: {
         userName: "system",
-        password: "111111",
+        password: "123456",
         redirctUrl:'/homepage'
       }
     }) : router.push("/user/login")

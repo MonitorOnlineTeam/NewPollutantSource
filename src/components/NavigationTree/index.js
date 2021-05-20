@@ -136,7 +136,15 @@ class NavigationTree extends Component {
 
 
   componentDidMount() {
-    
+    if (this.props.pointInfo) {
+      this.props.dispatch({
+        type: 'navigationtree/updateState',
+        payload: {
+          pointInfo: { ...this.props.pointInfo, show: true }
+        },
+      })// 根据传入的状态判断是否更新全局
+    }
+
     const dom = document.querySelector(this.props.domId);
     const tabsCardElement = document.querySelector('.ant-tabs-card-bar');
     if (dom) {
@@ -182,8 +190,20 @@ class NavigationTree extends Component {
     // })
   }
 
+  componentWillUnmount() {
+    if (this.props.pointInfo) {
+      this.props.dispatch({
+        type: 'navigationtree/updateState',
+        payload: {
+          pointInfo: { ...this.props.pointInfo, show: false }
+        },
+      })// 根据传入的状态判断是否更新全局
+    }
+  }
+
+
   loadCallback = data => {
-    
+
     this.setState({
       EntAndPoint: data,
     }, () => {
@@ -317,12 +337,14 @@ class NavigationTree extends Component {
       let where;
       where = this.defaultKey == 0 && node.IsEnt == 0;
       if (where) {
-        this.props.dispatch({
-          type: 'navigationtree/updateState',
-          payload: {
-            pointInfo:{entName:node.EntName,pointName:node.title}
-          },
-        })// 根据传入的状态判断是否更新全局
+        if (!this.props.pointInfo.entName) {
+          this.props.dispatch({
+            type: 'navigationtree/updateState',
+            payload: {
+              pointInfo: { entName: node.EntName, pointName: node.title }
+            },
+          })// 根据传入的状态判断是否更新全局
+        }
         this.defaultKey = 1;
         var nowKey = [key]
         let nowExpandKey = [node.EntCode]
@@ -330,12 +352,13 @@ class NavigationTree extends Component {
           nowKey = [selKeys];
           nowExpandKey = [this.getParentKey(nowKey[0], this.state.EntAndPoint)]
           if (overAll) {
-         
+
             this.props.dispatch({
               type: 'navigationtree/updateState',
               payload: {
                 overallselkeys: nowKey,
                 overallexpkeys: [nowExpandKey],
+                pointInfo: { entName: node.EntName, pointName: node.title }
               },
             })// 根据传入的状态判断是否更新全局
           }
@@ -731,7 +754,7 @@ class NavigationTree extends Component {
           selectTreeKeys: rtnList,
           overallselkeys: this.state.selectedKeys,
           overallexpkeys: this.state.expandedKeys,
-          pointInfo:{entName:rtnList[0].entName,pointName:rtnList[0].pointName}
+          pointInfo: { entName: rtnList[0].entName, pointName: rtnList[0].pointName }
 
         },
       })
@@ -834,8 +857,8 @@ class NavigationTree extends Component {
               {afterStr}
             </span>
           ) : (
-              <span style={{ marginLeft: 3 }}>{item.title}</span>
-            );
+            <span style={{ marginLeft: 3 }}>{item.title}</span>
+          );
         if (item.Type == '0') {
           return (
             <TreeNode style={{ width: '100%' }} data-index={idx} title={
@@ -957,27 +980,27 @@ class NavigationTree extends Component {
               >
                 {loop(this.state.EntAndPoint)}
               </Tree> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                </div>
+              </div>
             }
 
           </div> : <div >
-              {
-                this.props.EntAndPointLoading ? <Spin
-                  style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  size="large"
-                /> : <div id="treeTableWrapper" style={{}}> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
-                  onRow={this.onClickRow}
-                  rowClassName={this.setRowClassName}
+            {
+              this.props.EntAndPointLoading ? <Spin
+                style={{
+                  width: '100%',
+                  height: 'calc(100vh/2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                size="large"
+              /> : <div id="treeTableWrapper" style={{}}> {this.state.panelDataListAys.length ? <Table id="treeTable" rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+                style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
+                onRow={this.onClickRow}
+                rowClassName={this.setRowClassName}
 
-                ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                  </div>}</div>
+              ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+              </div>}</div>
           }
 
         </Drawer>
