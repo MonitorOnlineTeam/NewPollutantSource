@@ -351,11 +351,11 @@ export default class PersonData extends Component {
               payload: {
               configId:'OperationMaintenancePersonnel',
               FormData:{...values,
-                StartWorkTime:moment(values.StartWorkTime).format('YYYY-MM-DD'),
-                WaterEndCertificatesTime:moment(values.WaterEndCertificatesTime).format('YYYY-MM-DD'),
-                WaterStartCertificatesTime:moment(values.WaterStartCertificatesTime).format('YYYY-MM-DD'),
-                GasEndCertificatesTime:moment(values.GasEndCertificatesTime).format('YYYY-MM-DD'),
-                GasStartCertificatesTime:moment(values.GasStartCertificatesTime).format('YYYY-MM-DD'),
+                StartWorkTime:values.StartWorkTime&&moment(values.StartWorkTime).format('YYYY-MM-DD'),
+                WaterEndCertificatesTime:values.WaterEndCertificatesTime&&moment(values.WaterEndCertificatesTime).format('YYYY-MM-DD'),
+                WaterStartCertificatesTime:values.WaterStartCertificatesTime&&moment(values.WaterStartCertificatesTime).format('YYYY-MM-DD'),
+                GasEndCertificatesTime:values.GasEndCertificatesTime&&moment(values.GasEndCertificatesTime).format('YYYY-MM-DD'),
+                GasStartCertificatesTime:values.GasStartCertificatesTime&&moment(values.GasStartCertificatesTime).format('YYYY-MM-DD'),
 
               }
            },
