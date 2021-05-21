@@ -1353,6 +1353,11 @@ export default {
                       path: '/Intelligentanalysis/transmissionefficiency/outlet',
                       component: './Intelligentanalysis/airTransmissionefficiency/outlet',
                     },
+                    { //有效传输率  手工统计
+                      name: 'AirTransmissionefficiency',
+                      path: '/Intelligentanalysis/transmissionefficiency/manual',
+                      component: './Intelligentanalysis/manualStatistics',
+                    },
                   ]
                 },
 

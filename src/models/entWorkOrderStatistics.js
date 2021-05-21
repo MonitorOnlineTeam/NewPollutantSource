@@ -48,7 +48,7 @@ export default Model.extend({
       } else {
         message.error(response.Message)
       }
-    },
+    },    
     // table title数据-一级
     *getTableTitleData({ payload }, { call, put, update, select }) {
       const result = yield call(services.getTableTitleData, { ...payload });
