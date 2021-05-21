@@ -253,9 +253,9 @@ export default class PersonData extends Component {
             if (res) {
               let operationData = res;
               this.setState({
-                uid:operationData.AttachmentID,
-                uidWater:operationData.WaterPhoto,
-                uidGas:operationData.GasPhoto,
+                uid:operationData.AttachmentID?operationData.AttachmentID:cuid(),
+                uidWater:operationData.WaterPhoto?operationData.WaterPhoto:cuid(),
+                uidGas:operationData.GasPhoto?operationData.GasPhoto:cuid(),
               })
               setFieldsValue({
                 PersonnelID:operationData['dbo.T_Bas_OperationMaintenancePersonnel.PersonnelID'],
