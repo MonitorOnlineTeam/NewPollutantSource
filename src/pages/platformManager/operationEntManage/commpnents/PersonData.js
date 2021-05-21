@@ -89,14 +89,7 @@ export default class PersonData extends Component {
       visible:false,
       previewVisible: false,
       previewImage: '',
-      fileList: [
-        // {
-        //   uid: '-1',
-        //   name: 'image.png',
-        //   status: 'done',
-        //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        // },
-      ],
+      fileList: [],
       uid:cuid(),
       uidWater:cuid(),
       uidGas:cuid(),
@@ -194,9 +187,6 @@ export default class PersonData extends Component {
     setTimeout(() => {
       this.getTableData();
     });
-    // this.setState({
-    //   uid:cuid()
-    // })
   };
   updateQueryState = payload => {
     const { queryPar, dispatch} = this.props;
@@ -301,7 +291,7 @@ export default class PersonData extends Component {
                 }
                });
                dispatch({
-                type: 'autoForm/getAttachmentList',
+                type: 'autoForm/getAttachmentLists',
                 payload: {
                   FileUuid: operationData.WaterPhoto,
                 },
@@ -312,7 +302,7 @@ export default class PersonData extends Component {
                 }
                });
                dispatch({
-                type: 'autoForm/getAttachmentList',
+                type: 'autoForm/getAttachmentLists',
                 payload: {
                   FileUuid: operationData.GasPhoto,
                 },
@@ -388,7 +378,10 @@ export default class PersonData extends Component {
      this.setState({
       visible:true,
       fileList:'',
-      type:'add'
+      type:'add',
+      uid:cuid(),
+      uidWater:cuid(),
+      uidGas:cuid(),
     })
     setFieldsValue({
       Gender:'', 
@@ -485,9 +478,9 @@ export default class PersonData extends Component {
       queryPar: {  type,col1 },
       match: { params: { configId } },
       form:{ getFieldDecorator,getFieldValue },
-      
+    
     } = this.props;
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { previewVisible, previewImage, fileList,waterPhoto,gasPhoto} = this.state;
   
     const uploadButton = (
       <div>
@@ -517,10 +510,10 @@ export default class PersonData extends Component {
                     defaultValue={type?type:undefined}
                     style={{width:'170px'}}
                   >  
-                 <Option key='1' value='1,1'>有运维工证书(气)</Option>
-                 <Option key='2' value='1,2'> 无运维工证书(气)</Option>
-                 <Option key='3' value='2,1'>有运维工证书(水)</Option>
-                 <Option key='4' value='2,2'> 无运维工证书(水)</Option>
+                 <Option key='1' value='2,1'>有运维工证书(气)</Option>
+                 <Option key='2' value='2,2'> 无运维工证书(气)</Option>
+                 <Option key='3' value='1,1'>有运维工证书(水)</Option>
+                 <Option key='4' value='1,2'> 无运维工证书(水)</Option>
                   </Select>
               </Form.Item>
               <Form.Item label=''>
@@ -747,6 +740,7 @@ export default class PersonData extends Component {
             <Upload 
              action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
              accept='image/*'
+             fileList={gasPhoto}
              data={{
               FileUuid: this.state.uidGas,
               FileActualType: '0',
@@ -816,6 +810,7 @@ export default class PersonData extends Component {
           })( 
             <Upload name="logo" className='certificatePhoto' action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
             accept='image/*'
+            fileList={waterPhoto}
             data={{
              FileUuid: this.state.uidWater,
              FileActualType: '0',

@@ -82,18 +82,18 @@ export default class EntTransmissionEfficiency extends Component {
     const {dispatch, match: { params: { configId } }} = this.props;
 
 
-    dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId,
-      },
-    });
-    dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId:this.state.operationPersonConfigId,
-      },
-    });
+    // dispatch({
+    //   type: 'autoForm/getPageConfig',
+    //   payload: {
+    //     configId,
+    //   },
+    // });
+    // dispatch({
+    //   type: 'autoForm/getPageConfig',
+    //   payload: {
+    //     configId:this.state.operationPersonConfigId,
+    //   },
+    // });
 
   
 
@@ -165,6 +165,12 @@ export default class EntTransmissionEfficiency extends Component {
   // });
    }
    operationPerson=(row)=>{
+    this.props.dispatch({
+        type: 'autoForm/getPageConfig',
+        payload: {
+          configId:this.state.operationPersonConfigId,
+        },
+      });
      this.setState({
        visible:true,
        entName:row['dbo.T_Bas_OperationMaintenanceEnterprise.Company'],
@@ -192,6 +198,7 @@ export default class EntTransmissionEfficiency extends Component {
           <>
 
                     <AutoFormTable
+                        getPageConfig
                         onRef={this.onRef1}
                         style={{ marginTop: 10 }}
                         configId={configId}
