@@ -131,8 +131,8 @@ export default class PersonData extends Component {
       },
       {
         title: <span>身份证号</span>,
-        dataIndex: 'Identity',
-        key: 'Identity',
+        dataIndex: 'IdCertificates',
+        key: 'IdCertificates',
         align: 'center',
       },
       {
