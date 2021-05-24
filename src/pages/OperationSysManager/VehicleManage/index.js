@@ -6,7 +6,6 @@ import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import AutoFormTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
-import styles from './index.less';
 import {
   DelIcon,
 } from '@/utils/icon';
@@ -81,39 +80,37 @@ class Index extends Component {
     }
     return (
       <BreadcrumbWrapper>
-        <div className={styles.cardTitle}>
-          <Card>
-            <SearchWrapper
-              onSubmitForm={form => this.loadReportList(form)}
-              configId={configId}
-            ></SearchWrapper>
-            <AutoFormTable
-              style={{ marginTop: 10 }}
-              configId={configId}
-              parentcode='operations/carmanager/vehiclemanage'
-              appendHandleRows={row => <Fragment>
-                <Divider type="vertical" />
-                <Tooltip title="删除">
-                  <Popconfirm
-                    title="确认要删除吗?"
-                    onConfirm={() => {
-                      this.delete(
-                        row['dbo.T_Bas_VehicleInfo.ID'],
-                      );
-                    }}
-                    onCancel={this.cancel}
-                    okText="是"
-                    cancelText="否"
-                  >
-                    <a href="#"><DelIcon /></a>
-                  </Popconfirm>
-                </Tooltip>
-              </Fragment>}
-              {...this.props}
-            >
-            </AutoFormTable>
-          </Card>
-        </div>
+        <Card>
+          <SearchWrapper
+            onSubmitForm={form => this.loadReportList(form)}
+            configId={configId}
+          ></SearchWrapper>
+          <AutoFormTable
+            style={{ marginTop: 10 }}
+            configId={configId}
+            parentcode='operations/carmanager/vehiclemanage'
+            appendHandleRows={row => <Fragment>
+              <Divider type="vertical" />
+              <Tooltip title="删除">
+                <Popconfirm
+                  title="确认要删除吗?"
+                  onConfirm={() => {
+                    this.delete(
+                      row['dbo.T_Bas_VehicleInfo.ID'],
+                    );
+                  }}
+                  onCancel={this.cancel}
+                  okText="是"
+                  cancelText="否"
+                >
+                  <a href="#"><DelIcon /></a>
+                </Popconfirm>
+              </Tooltip>
+            </Fragment>}
+            {...this.props}
+          >
+          </AutoFormTable>
+        </Card>
       </BreadcrumbWrapper>
     );
   }

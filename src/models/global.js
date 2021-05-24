@@ -79,8 +79,12 @@ export default Model.extend({
     *getSysPollutantTypeList({ payload }, { call, update, select }) {
       const result = yield call(getSysPollutantTypeList);
       if (result.IsSuccess) {
+        let sysPollutantTypeList = result.Datas;
+        if (process.env.NODE_ENV === 'production') {
+          sysPollutantTypeList = sysPollutantTypeList.filter(item => item.Name.indexOf("Autoform") === -1)
+        }
         yield update({
-          sysPollutantTypeList: result.Datas,
+          sysPollutantTypeList: sysPollutantTypeList,
         })
       } else {
         message.error(result.Message)

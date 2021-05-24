@@ -78,18 +78,18 @@ export default class AutoFormIndex extends Component {
     const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
     const searchConditions = searchConfigItems[configId] || []
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
-    if (this.props.loading) {
-      return (<Spin
-        style={{
-          width: '100%',
-          height: 'calc(100vh/2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-        size="large"
-      />);
-    }
+    // if (this.props.loading) {
+    //   return (<Spin
+    //     style={{
+    //       width: '100%',
+    //       height: 'calc(100vh/2)',
+    //       display: 'flex',
+    //       alignItems: 'center',
+    //       justifyContent: 'center'
+    //     }}
+    //     size="large"
+    //   />);
+    // }
     return (
       // <MonitorContent breadCrumbList={
       //   [

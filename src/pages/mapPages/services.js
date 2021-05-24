@@ -41,3 +41,10 @@ export async function getFeaturesPolList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/getFeaturesPolList', params, null);
   return result;
 }
+
+// 多媒体会议树
+export async function getTreeListByConfig(params) {
+  const result = await get('/api/rest/PollutantSourceApi/BaseDataApi/GetTreeListByConfig', params, null);
+  return result;
+}
+

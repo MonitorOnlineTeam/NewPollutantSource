@@ -393,3 +393,26 @@
     font-weight: 500;
   }
 }
+
+.treeTitleBox {
+  display: flex;
+  width: 174px;
+  align-items: center;
+
+  .icon {
+    color: #1890FF;
+    margin-right: 6px;
+    font-size: 20px;
+  }
+
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 190px;
+    float: left;
+    &.regionText {
+      width: 110px;
+    }
+  }
+}

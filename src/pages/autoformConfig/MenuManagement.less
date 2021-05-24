@@ -1,0 +1,36 @@
+.MenuButton{
+    height: '50px';
+    line-height: '50px';
+    
+}
+.titleTop{
+    display: flex;
+    justify-content: space-between;
+    &>div:nth-of-type(1){
+        height: '32px';
+        line-height: '32px';
+        &>button{
+            margin-right: 10px;
+        }
+    }
+    
+}
+.centerRight{
+    :global {
+        .ant-card-extra{
+            width: 100%
+        }
+    }
+}
+.autoCompleteTop{
+    width: 200px;
+    margin-right: 10px;
+    :global {
+        .ant-input{
+            height: 27px!important;
+        }
+    }
+}
+.buttonTop{
+    margin-left: 10px;
+}
