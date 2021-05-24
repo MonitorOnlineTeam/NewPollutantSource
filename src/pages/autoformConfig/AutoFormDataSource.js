@@ -13,6 +13,7 @@ import DbSourceTree from './components/DbSourceTree'
 import OtherConfig from './components/otherConfig'  //其他配置
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
+import Preview from './components/Preview'
 
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -348,6 +349,9 @@ class AutoFormDataSource extends React.PureComponent {
                                 </TabPane>
                                 <TabPane tab="其他配置" key="3" disabled={tableList.length > 0 ? true : false}>
                                     <OtherConfig tableConfigList={tableConfigList} changeList={this.state.checkedList} pageConfig={this.props.formDatas} styleConfig={this.props.styleDatas} />
+                                </TabPane>
+                                <TabPane tab="预览" key="4" disabled={(tableConfigList.length && tableConfigList[0].DT_CONFIG_ID) ? false : true}>
+                                    <Preview tableConfigList={tableConfigList} />
                                 </TabPane>
                             </Tabs>
                         </Card>

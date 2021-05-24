@@ -639,7 +639,7 @@ class SdlForm extends PureComponent {
               <Button
                 style={{ marginLeft: 8 }}
                 onClick={() => {
-                  history.go(-1);
+                  this.props.onClickBack ? this.props.onClickBack() : history.go(-1);
                 }}
               >返回</Button>
             </Divider>
