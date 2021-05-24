@@ -7,7 +7,9 @@
 import Model from '@/utils/model';
 import {
   GetEmissionsEntPointPollutant,
-  GetRecalculateEffectiveTransmissionEnt
+  GetRecalculateEffectiveTransmissionEnt,
+  // GetAirPoint,
+  GetRecalculateEffectiveTransmissionAir
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -19,7 +21,11 @@ export default Model.extend({
     PointList:[],
     queryPar:{
     },
-    parmarType:'RegionCode'
+    parmarType:'RegionCode',
+    airPoint: [],
+    airEffectiveVal:'',
+    entEffectiveVal:'',
+    pointLoading:false
   },
   subscriptions: {},
   effects: {
@@ -29,7 +35,7 @@ export default Model.extend({
 
       const  parmarType = yield select(_ =>_.manualStatistics.parmarType)
       const  queryPar = yield select(_ =>_.manualStatistics.queryPar)
-      yield update({ pointLoading: true });
+      parmarType==='EntCode'? yield update({ pointLoading: true }):''
       
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
@@ -39,12 +45,21 @@ export default Model.extend({
           callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
         }
         if(parmarType==='EntCode'){
+          yield update({ pointLoading: false });
           yield update({ PointList: response.Datas.PointList});
           // callback(response.Datas.PointList.length>0? response.Datas.PointList[0][0].EntCode :'')
         }
       }
     },
-
+    // *getAirPoint({ payload,callback }, { call, put, update, select }) {
+    //   //列表  空气站监测点
+    //   const response = yield call(GetAirPoint, { ...payload });
+    //   if (response.IsSuccess) {
+    //     yield update({
+    //       airPoint: response.Datas,
+    //     });
+    //   }
+    // },
     *getRecalculateEffectiveTransmissionEnt({ callback,payload }, { call, put, update, select }) {
       //手工计算  企业
       yield update({ pointLoading: true });
@@ -56,6 +71,16 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
-
+    *getRecalculateEffectiveTransmissionAir({ callback,payload }, { call, put, update, select }) {
+      //手工计算 空气站
+      yield update({ pointLoading: true });
+      
+      const response = yield call(GetRecalculateEffectiveTransmissionAir, { ...payload });
+      if (response.IsSuccess) {
+         message.success(response.Message)
+      }else{
+        message.error(response.Message)
+      }
+    },
   },
 });

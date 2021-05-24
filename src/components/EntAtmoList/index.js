@@ -50,7 +50,7 @@ export default class Index extends Component {
   };
   componentDidMount() {
     const {type,dispatch,regionCode} = this.props;
-    type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
+    type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: regionCode },  });  
  
   
    }
@@ -58,7 +58,7 @@ export default class Index extends Component {
     const { type,dispatch,regionCode } = this.props;
 
     if (props.regionCode !== regionCode) {
-       type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
+       type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode },  }) : dispatch({ type: 'common/getStationByRegion', payload: { RegionCode: regionCode },  });  
 
     }
   }

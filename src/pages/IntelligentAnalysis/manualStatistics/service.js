@@ -12,6 +12,17 @@ export async function GetEmissionsEntPointPollutant(params) {
   return result;
 }
 
+
+//空气站监测点
+export async function GetAirPoint(params) {
+    const result = post(
+        '/api/rest/PollutantSourceApi/BaseDataApi/GetPointSummary',
+        params,
+        null
+    )
+    return result
+}
+
 //手工计算 企业
 export async function GetRecalculateEffectiveTransmissionEnt(params) {
   const result = post(
@@ -23,4 +34,13 @@ export async function GetRecalculateEffectiveTransmissionEnt(params) {
   return result;
 }
 
-  
+//  手工计算 空气站
+export async function GetRecalculateEffectiveTransmissionAir(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetRecalculateEffectiveTransmissionAir',
+    params,
+    null,
+  );
+
+  return result;
+}

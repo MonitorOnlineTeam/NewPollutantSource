@@ -211,6 +211,7 @@ export default Model.extend({
     },
     // 根据configId 获取数据
     *getConfigIdList({ payload }, { call, update, select }) {
+      
       const result = yield call(services.getListPager, { ...payload });
       if (result.IsSuccess) {
         const configIdList = yield select(state => state.autoForm.configIdList);
@@ -222,6 +223,14 @@ export default Model.extend({
         });
       }
     },
+        // 根据configId 获取数据  空气站监测点
+   *getConfigIdLists({ payload,callback }, { call, update, select }) {
+
+          const result = yield call(services.getListPager, { ...payload });
+          if (result.IsSuccess) {
+            callback(result.Datas.DataSource)
+          }
+        },
     // FOREIGN_DF_NAME /// FOREIGN_DF_ID
     // 获取页面配置项
     *getPageConfig({ payload }, { call, put, update, select }) {

@@ -20,6 +20,8 @@ import {
   Input,
   Button,
   Select,
+  message,
+  Spin
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -29,16 +31,23 @@ import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import RegionList from '@/components/RegionList'
+import EntAtmoList from '@/components/EntAtmoList'
+
 const { RangePicker } = DatePicker
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const monthFormat = 'YYYY-MM';
 import styles from './style.less'
-@connect(({ loading, manualStatistics,autoForm,entWorkOrderStatistics }) => ({
+@connect(({ loading, manualStatistics,common }) => ({
   EntList:manualStatistics.EntList,
   PointList:manualStatistics.PointList,
-  queryPar:manualStatistics.queryPar
+  queryPar:manualStatistics.queryPar,
+  airPoint:manualStatistics.airPoint,
+  airEffectiveVal:manualStatistics.airEffectiveVal,
+  entEffectiveVal:manualStatistics.entEffectiveVal,
+  airLoading: loading.effects['autoForm/getConfigIdLists'],
+  pointLoading:manualStatistics.pointLoading
 }))
 
 @Form.create()
@@ -52,12 +61,13 @@ export default class EntTransmissionEfficiency extends Component {
       regionCode:'',
       dates:'',
       hackValue:'',
-      datesValue:''
+      datesValue:'',
+      airPoint:[]
     };
   }
 
   componentDidMount() {
-    this.getData();
+    this.getEntData();
   }
 
   updateState = payload => {
@@ -74,7 +84,7 @@ export default class EntTransmissionEfficiency extends Component {
       payload: { queryPar: { ...queryPar, ...payload } },
     });
   };
-  getData = () => {
+  getEntData = () => {
      // 获取行政区列表
     const { dispatch } = this.props;
     //获取企业列表
@@ -85,9 +95,37 @@ export default class EntTransmissionEfficiency extends Component {
       }
     })
 
+
+   
   };
 
-
+  airPoint = (data) =>{
+    this.props.dispatch({
+      type: 'autoForm/getConfigIdLists',
+      payload: {
+        configId:'AtmosphereNew',
+        ConditionWhere: JSON.stringify({
+          rel: '$and',
+          group: [
+            {
+              rel: '$and',
+              group: [ 
+                {
+                Key:'dbo__T_Cod_MonitorPointBase__BaseCode',
+                Value:data&&data,
+                Where:'$='
+              }],
+            },
+          ],
+        })
+      },
+      callback:res=>{
+        this.setState({
+          airPoint:res
+        })
+      }
+    })
+  }
   pointChildren=()=>{ //监测点列表
     const { PointList } = this.props;
 
@@ -97,6 +135,21 @@ export default class EntTransmissionEfficiency extends Component {
         selectList.push(
           <Option key={item[0].DGIMN} value={item[0].DGIMN}  title={item[0].PointName}>
             {item[0].PointName}
+          </Option>,
+        );
+      });
+      return selectList;
+    }
+  }
+  airPointChildren=()=>{  // 空气站 监测点列表
+    const { airPoint } = this.state;
+
+    const selectList = [];
+    if (airPoint.length > 0) {
+      airPoint.map(item => {
+        selectList.push(
+          <Option key={item['dbo.T_Bas_CommonPoint.DGIMN']} value={item['dbo.T_Bas_CommonPoint.DGIMN']}  title={item['dbo.T_Bas_CommonPoint.PointName']}>
+            {item['dbo.T_Bas_CommonPoint.PointName']}
           </Option>,
         );
       });
@@ -119,44 +172,18 @@ export default class EntTransmissionEfficiency extends Component {
     }
   };
 
-  //查询事件
-  queryClick = (e) => {
- 
-      // this.props.form.setFieldsValue({ AttachmentID:this.state.fileList.length>0? this.state.uid : ''})
-      // this.props.form.setFieldsValue({ WaterPhoto:this.state.waterPhoto.length>0? this.state.uidWater : ''})
-      // this.props.form.setFieldsValue({ GasPhoto:this.state.gasPhoto.length>0? this.state.uidGas : ''})
-      const { dispatch } = this.props;
- 
 
-     e.preventDefault();
-     this.props.form.validateFieldsAndScroll((err, values) => {
-       console.log(values)
-       if (!err) {
-          dispatch({
-          type: 'manualStatistics/getRecalculateEffectiveTransmissionEnt',
-          payload: { 
-            DGIMN:values.DGIMN,
-            beginTime: moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-            entTime: moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
-          },
-         })
-       }
-     })
-
-  };
 
   changeRegion=(value)=>{
     this.updateState({parmarType:'RegionCode'})
     this.setState({regionCode:value},()=>{
-      this.getData()
+      this.getEntData()
     })
   }
-  changeEnt=(value)=>{
-    this.updateState({parmarType:'EntCode'})
-    this.props.form.setFieldsValue({ DGIMN: undefined})
-    this.props.dispatch({ type: 'manualStatistics/getEmissionsEntPointPollutant', //根据企业获取监测点
-     payload: {  EntCode: value },
-   })
+
+  changeAir=(value)=>{
+    console.log(value)
+    this.airPoint(value)
   }
   disabledDate = current => {
     const {dates} = this.state;
@@ -182,10 +209,133 @@ export default class EntTransmissionEfficiency extends Component {
       })
     }
   };
+  queryClick=(e)=>{
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+     if (!err) {
+      this.props.dispatch({
+      type: 'manualStatistics/getRecalculateEffectiveTransmissionEnt',
+      payload: { 
+        DGIMN:values.DGIMN,
+        beginTime: moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        entTime: moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+      },
+     })
+   }
+ })
+  }
+  changeEnt=(value)=>{
+      this.updateState({parmarType:'EntCode'})
+      this.props.form.setFieldsValue({ DGIMN: undefined})
+      this.props.dispatch({ type: 'manualStatistics/getEmissionsEntPointPollutant', //根据企业获取监测点
+       payload: {  EntCode: value },
+     })
+    }
+
+    airQueryClick=(e)=>{ 
+        const { form:{getFieldValue} } = this.props;
+         
+          if (getFieldValue('airTime')&&getFieldValue('airDGIMN')) {
+            dispatch({
+             type: 'manualStatistics/getRecalculateEffectiveTransmissionAir',
+             payload: { 
+              DGIMN:getFieldValue('airDGIMN'),
+              beginTime:moment(getFieldValue('airTime')[0]).format('YYYY-MM-DD HH:mm:ss'),
+              entTime: moment(getFieldValue("airTime")[1]).format('YYYY-MM-DD HH:mm:ss'),
+            },
+            })
+          }else{
+            message.warning('请选择监测点或者日期')
+          }
+
+      }
+//   entFormFun = () =>{
+//     const { hackValue,datesValue,regionCode } = this.state;
+//     const { dispatch,entEffectiveVal} = this.props;
+//     const CreateFormMan = Form.create()(props => {
+//          const { form} = props;
+//          const { getFieldDecorator } = form;
+//       //手工计算  企业
+//     const queryClick = (e) => {
+//       e.preventDefault();
+//       props.form.validateFieldsAndScroll((err, values) => {
+//        if (!err) {
+//         dispatch({
+//         type: 'manualStatistics/getRecalculateEffectiveTransmissionEnt',
+//         payload: { 
+//           DGIMN:values.DGIMN,
+//           beginTime: moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+//           entTime: moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+//         },
+//        })
+//      }
+//    })
+  
+// };
+
+//         return     <Form layout="inline">
+//         <Form.Item>
+//         <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={regionCode}/>
+//         </Form.Item>
+//         <Form.Item>
+//             <Select 
+//                 showSearch 
+//                 style={{ width: 250 }} 
+//                 onChange={v=>{this.changeEnt(v)}} 
+//                 allowClear placeholder="请选择企业">
+//                 {
+//                   this.children()
+//                 }
+//             </Select>
+//              </Form.Item>
+
+//              <Form.Item label=''>
+//              {getFieldDecorator('DGIMN', {
+//               rules: [{ required: true, message: '请选择监测点名称' }],
+//              })( <Select
+//             placeholder="监测点名称"
+//             // onChange={this.changePoint}
+//             // value={DGIMN? DGIMN : undefined }
+//             style={{ width: 150  }}
+//           >
+//           {this.pointChildren()}
+//           </Select>)}
+//         </Form.Item>
+//           <Form.Item>
+//           {getFieldDecorator('time', {
+//               rules: [{ required: true, message: '请选择日期' }],
+//              })( <RangePicker
+//               showTime
+//                format="YYYY-MM-DD HH:mm:ss"
+//                value={hackValue || datesValue}
+//                disabledDate={this.disabledDate}
+//                onCalendarChange={val => this.setState({dates:val})}
+//                onChange={val => this.setState({datesValue:val})}
+//                onOpenChange={this.onOpenChange}
+//             /> )}
+//           </Form.Item>
+//           <Row style={{padding:'15px 0'}}>
+//           <Form.Item>
+//             <Button type="primary" onClick={queryClick} style={{ width: 150  }}>
+//               计算
+//             </Button>
+//           </Form.Item>
+//           <Form.Item>
+//              {entEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{entEffectiveVal}%</span>}
+//           </Form.Item>
+//           </Row>
+//         </Form>
+//         }
+//     )
+
+//     return <CreateFormMan />
+//   }
+
+
+
   render() {
     const { hackValue,datesValue,regionCode } = this.state;
-    const { entList,queryPar:{DGIMN,EntCode,RegionCode} } = this.props;
-    const { getFieldDecorator } = this.props.form;
+    const { dispatch,entEffectiveVal,airEffectiveVal,form:{getFieldDecorator},airLoading,pointLoading} = this.props;
     return (
       <BreadcrumbWrapper title="传输有效率">
         <Card
@@ -196,57 +346,109 @@ export default class EntTransmissionEfficiency extends Component {
           style={{border:'1px solid #f0f0f0'}}
           className={styles.manualStatistics}
       >
-          <Form layout="inline" ref={this.formRef} >
-              <Form.Item>
-              <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={regionCode}/>
-              </Form.Item>
-              <Form.Item>
-                  <Select 
-                      showSearch 
-                      style={{ width: 250 }} 
-                      onChange={v=>{this.changeEnt(v)}} 
-                      allowClear placeholder="请选择企业">
-                      {
-                        this.children()
-                      }
-                  </Select>
-                   </Form.Item>
+       {/* {this.entFormFun()} */}
 
-                   <Form.Item label=''>
-                   {getFieldDecorator('DGIMN', {
-                    rules: [{ required: true, message: '请选择监测点名称' }],
-                   })( <Select
-                  placeholder="监测点名称"
-                  onChange={this.changePoint}
-                  value={DGIMN? DGIMN : undefined }
-                  style={{ width: 150  }}
-                >
-                {this.pointChildren()}
-                </Select>)}
-              </Form.Item>
-                <Form.Item>
-                {getFieldDecorator('time', {
-                    rules: [{ required: true, message: '请选择日期' }],
-                   })( <RangePicker
-                    showTime
-                     format="YYYY-MM-DD HH:mm:ss"
-                     value={hackValue || datesValue}
-                     disabledDate={this.disabledDate}
-                     onCalendarChange={val => this.setState({dates:val})}
-                     onChange={val => this.setState({datesValue:val})}
-                     onOpenChange={this.onOpenChange}
-                  /> )}
-                </Form.Item>
-                <Row style={{paddingTop:8}}>
-                <Form.Item>
-                  <Button type="primary" onClick={this.queryClick} style={{ width: 150  }}>
-                    计算
-                  </Button>
-                </Form.Item>
-                </Row>
-              </Form>
+       <Form layout="inline">
+        <Form.Item>
+        <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={regionCode}/>
+        </Form.Item>
+        <Form.Item>
+            <Select 
+                showSearch 
+                style={{ width: 250 }} 
+                onChange={v=>{this.changeEnt(v)}} 
+                allowClear placeholder="请选择企业">
+                {
+                  this.children()
+                }
+            </Select>
+             </Form.Item>
+
+             <Form.Item label=''>
+             {!pointLoading? getFieldDecorator('DGIMN', {
+              rules: [{ required: true, message: '请选择监测点名称' }],
+             })( <Select
+            placeholder="监测点名称"
+            style={{ width: 150  }}
+          >
+          {this.pointChildren()}
+          </Select>) : <Spin size='small'/>}
+        </Form.Item>
+          <Form.Item>
+          {getFieldDecorator('time', {
+              rules: [{ required: true, message: '请选择日期' }],
+             })( <RangePicker
+              showTime
+               format="YYYY-MM-DD HH:mm:ss"
+               value={hackValue || datesValue}
+               disabledDate={this.disabledDate}
+               onCalendarChange={val => this.setState({dates:val})}
+               onChange={val => this.setState({datesValue:val})}
+               onOpenChange={this.onOpenChange}
+            /> )}
+          </Form.Item>
+          <Row style={{padding:'15px 0'}}>
+          <Form.Item>
+            <Button type="primary" onClick={this.queryClick} style={{ width: 150  }}>
+              计算
+            </Button>
+          </Form.Item>
+          <Form.Item>
+             {entEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{entEffectiveVal}%</span>}
+          </Form.Item>
+          </Row>
+        </Form>
       </Card>
   
+
+
+      <Card
+          title='统计污空气站传输有效率'
+          style={{border:'1px solid #f0f0f0',marginTop:20}}
+          className={styles.manualStatistics}
+      >
+
+<Form layout="inline" >
+             <Form.Item>
+             <EntAtmoList type={2} changeEnt={this.changeAir} EntCode={''}  style={{ width: 150  }}/>
+             </Form.Item>
+
+           <Form.Item label=''>
+           {!airLoading? getFieldDecorator('airDGIMN', {
+            // rules: [{ required: true, message: '请选择空气监测点名称' }],
+           })( <Select
+          placeholder="空气监测点名称"
+          style={{ width: 250  }}
+        >
+        {this.airPointChildren()}
+        </Select>) :  <Spin size='small'/> } 
+      </Form.Item>
+        <Form.Item>
+        {getFieldDecorator('airTime', {
+            // rules: [{ required: true, message: '请选择日期' }],
+           })( <RangePicker
+            showTime
+             format="YYYY-MM-DD HH:mm:ss"
+             value={hackValue || datesValue}
+             disabledDate={this.disabledDate}
+             onCalendarChange={val => this.setState({dates:val})}
+             onChange={val => this.setState({datesValue:val})}
+            //  onOpenChange={this.onOpenChange}
+          /> )}
+        </Form.Item>
+        <Row style={{padding:'15px 0'}}>
+        <Form.Item>
+          <Button type="primary"   onClick={this.airQueryClick} style={{ width: 150  }}>
+            计算
+          </Button>
+        </Form.Item>
+        <Form.Item>
+          {airEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{airEffectiveVal}%</span>}
+        </Form.Item>
+        </Row>
+      </Form>
+    
+      </Card>
         </Card>
       </BreadcrumbWrapper>
     );
