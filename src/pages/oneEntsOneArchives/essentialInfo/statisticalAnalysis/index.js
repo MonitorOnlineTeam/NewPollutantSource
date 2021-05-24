@@ -638,7 +638,7 @@ class index extends Component {
                 zIndex: 100
               }}
             >
-              <Radio.Group className='statueType' style={{marginLeft:50}}  buttonStyle="solid" size="default" disabled> 
+              <Radio.Group className='statueType' style={{marginLeft:100}}  buttonStyle="solid" size="default" disabled> 
                 {this.renderStatueTypelist(pollutantType)}
               </Radio.Group>
             </div>

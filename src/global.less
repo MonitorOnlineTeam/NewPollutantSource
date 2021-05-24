@@ -574,13 +574,15 @@ a:hover {
   justify-content: center;
   align-items: center
 }
-
-.ontEntDetailPhoto {
-  :global {
-
-    .ant-upload-list-picture-card .ant-upload-list-item-thumbnail,
-    .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
-      object-fit: fill;
-    }
-  }
+// .ontEntDetailPhoto{
+//   :global {
+//     .ant-upload-list-picture-card .ant-upload-list-item-thumbnail, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img{
+//       object-fit: fill;
+//     }
+//   }
+// }
+:global {
+.ant-upload-list-picture-card .ant-upload-list-item-thumbnail, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img{
+  object-fit: fill;
+}
 }
