@@ -13,6 +13,14 @@ import { connect } from 'dva';
 const FormItem = Form.Item;
 
 const columns = [
+  
+  {
+    title: '城市',
+    dataIndex: 'StationName',
+    key: 'StationName',
+    width: 90,
+    // align:"center"
+  },
   {
     title: '监测点名称',
     dataIndex: 'PointName',

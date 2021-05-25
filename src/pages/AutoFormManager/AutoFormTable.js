@@ -34,7 +34,9 @@ import config from '@/config'
 import styles from './index.less';
 import SdlTable from '@/components/SdlTable'
 import defaultSettings from '../../../config/defaultSettings'
-
+import {
+  ToolTwoTone
+} from '@ant-design/icons';
 const { confirm } = Modal;
 
 // 默认长度
@@ -75,7 +77,8 @@ class AutoFormTable extends PureComponent {
   };
 
   componentDidMount() {
-    this.loadDataSource();
+    // this.loadDataSource();
+    this.props.sort? this.loadDataSource({SortFileds:"RegionCode",IsAsc: true}) : this.loadDataSource()
     if (this.props.getPageConfig) {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',

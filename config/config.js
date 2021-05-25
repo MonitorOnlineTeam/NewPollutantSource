@@ -508,6 +508,32 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
+                //企业运维管理
+                {
+                  name: 'operationEntManage',
+                  path:'/platformconfig/operationEntManage',
+                  routes: [
+                    {
+                      path: '/platformconfig/operationEntManage',
+                      redirect: '/platformconfig/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
+                    },
+                    {
+                      name:'operationUnit', //运维单位管理
+                      path: '/platformconfig/operationEntManage/operationUnit/:configId',
+                      component: './platformManager/operationEntManage/operationUnit',
+                    },
+                    {
+                      name:'operationPerson', //运维人员管理
+                      path: '/platformconfig/operationEntManage/operationPerson/:configId',
+                      component: './platformManager/operationEntManage/operationPerson',
+                    },
+                    {
+                      name:'operationPerson', //运维人员管理  详情
+                      path: '/platformconfig/operationEntManage/operationPerson/detail/:configId/:personId',
+                      component: './platformManager/operationEntManage/operationPerson/OperationPersonDetail',
+                    },
+                ]
+                }, 
               ],
             },
             {
@@ -1302,13 +1328,39 @@ export default {
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
-                  component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
+                  routes: [
+                    {
+                      path: '/Intelligentanalysis/transmissionefficiency',
+                      redirect: '/Intelligentanalysis/transmissionefficiency/ent',
+                    }, 
+                    {
+                      name: 'Intelligentanalysis',
+                      path: '/Intelligentanalysis/transmissionefficiency/ent',
+                      component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
+                    },
+                    {
+                      name: 'Intelligentanalysis',
+                      path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                      component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
+                    },
+                    { //有效传输率  空气站
+                      name: 'AirTransmissionefficiency',
+                      path: '/Intelligentanalysis/transmissionefficiency/air',
+                      component: './Intelligentanalysis/airTransmissionefficiency',
+                    },
+                    {//有效传输率 排口  空气站
+                      name: 'Outlet',
+                      path: '/Intelligentanalysis/transmissionefficiency/outlet',
+                      component: './Intelligentanalysis/airTransmissionefficiency/outlet',
+                    },
+                    { //有效传输率  手工统计
+                      name: 'AirTransmissionefficiency',
+                      path: '/Intelligentanalysis/transmissionefficiency/manual',
+                      component: './Intelligentanalysis/manualStatistics',
+                    },
+                  ]
                 },
-                {
-                  name: 'Intelligentanalysis',
-                  path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
-                  component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
-                },
+
                 {
                   name: 'emissions',
                   path: '/Intelligentanalysis/emissions',

@@ -505,6 +505,13 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
+                    <Divider type="vertical" />
+                    {/* <Tooltip title="删除">
+                      <a onClick={() => {
+                        this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
+                          row['dbo.T_Bas_CommonPoint.DGIMN']);
+                      }}><DelIcon />    </a>
+                    </Tooltip> */}
                     {
                       row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
                         <Tooltip title="设置Cems参数">

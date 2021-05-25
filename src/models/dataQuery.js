@@ -21,8 +21,8 @@ export default Model.extend({
     historyparams: {
       datatype: 'realtime',
       DGIMNs: null,
-      pageIndex: null,
-      pageSize: null,
+      pageIndex: 1,
+      pageSize: 20,
       beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       pollutantCodes: null,
@@ -36,6 +36,8 @@ export default Model.extend({
     dataFlagDataSource: [],
     tagTableTotal: 0,
     tabType:'shi',
+    dateTypes:'realtime',
+    dateValues:[moment(new Date()).add(-60, 'minutes'), moment(new Date())]
   },
   effects: {
     *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {
@@ -50,7 +52,7 @@ export default Model.extend({
       let { historyparams } = yield select(_ => _.dataquery);
       const { pollutantlist } = yield select(_ => _.dataquery);
       if (result && result[0]) {
-        yield update({ pollutantlist: result });
+        yield update({ pollutantlist: result});
         if (!payload.overdata) {
           historyparams = {
             ...historyparams,
@@ -823,13 +825,14 @@ debugger;
           align: 'center',
         });
       }
+      console.log()
       yield update({
         tablewidth,
         datalist: result,
         chartdata: option,
         columns,
         datatable: result,
-        total: resultlist.total,
+        total: resultlist.Total,//总数据
       });
     },
 

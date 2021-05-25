@@ -235,6 +235,7 @@ export default class MonitorTarget extends Component {
                         configId={configId}
                     ></SearchWrapper>
                     <AutoFormTable
+                        sort={true}
                         onRef={this.onRef1}
                         style={{ marginTop: 10 }}
                         // columns={columns}

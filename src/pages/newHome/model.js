@@ -90,6 +90,7 @@ export default Model.extend({
       ywc: [], wwc: [], x: [], name: ""
     },
     SparePartsStationInfo: null,
+    infoWindowDataLoading:true
   },
   effects: {
     // 获取显示级别
@@ -363,6 +364,8 @@ export default Model.extend({
     *getInfoWindowData({
       payload,
     }, { call, update, select, put }) {
+      yield update({ infoWindowDataLoading: true })
+
       const result = yield call(services.getPollutantList, { pollutantTypes: payload.pollutantTypes });
       if (result.IsSuccess) {
         yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
@@ -399,7 +402,8 @@ export default Model.extend({
           infoWindowData: {
             list: list,
             ...data
-          }
+          },
+          infoWindowDataLoading: false
         })
       } else {
         message.error(result.Message)

@@ -13,6 +13,14 @@
       padding: 10px 4px;
     }
   }
+  .electmap{
+    display: none;
+  }
+  :global{
+    .amap-marker{
+     z-index: -1 !important;
+    }
+  }
 }
 
 
@@ -665,12 +673,14 @@
   white-space: nowrap;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background: #ffff;
+  background: #fff;
   padding: 1px 0px;
   margin-bottom: 4px;
   margin-left: calc(-50% - 0px);
   margin-right: calc(50% - 32px);
   text-align: center;
+  position: relative;
+  z-index: 10000;
 }
 
 .noData {

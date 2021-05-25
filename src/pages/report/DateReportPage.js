@@ -484,7 +484,7 @@ class DateReportPage extends PureComponent {
                                 }
                               }
                               this.props.form.setFieldsValue({ DGIMN });
-                              this.changeReportType(this.props.form.getFieldValue('reportType'));
+                              // this.changeReportType(this.props.form.getFieldValue('reportType')); 
                             },
                           });
                         }}
