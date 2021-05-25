@@ -208,7 +208,7 @@ class SdlForm extends PureComponent {
 
   // 渲染FormItem
   renderFormItem() {
-    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode,flag } = this.props;
+    const { addFormItems, dispatch, form: { getFieldDecorator, setFieldsValue, getFieldValue }, editFormData, fileList, fileLoading, corporationCode, flag } = this.props;
     const { formLayout, inputPlaceholder, selectPlaceholder, uid, configId, isEdit } = this._SELF_;
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
@@ -403,7 +403,7 @@ class SdlForm extends PureComponent {
               },
             };
 
-            element = <SdlUpload  accept={flag=="img"?"image/*":''} fileList={this.props.fileList}  flags={flag} cuid={uid} uploadSuccess={(cuid) => {
+            element = <SdlUpload accept={flag == "img" ? "image/*" : ''} fileList={this.props.fileList} flags={flag} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />
@@ -512,9 +512,9 @@ class SdlForm extends PureComponent {
         }
         return (
           <Col className='searchForm' span={colSpan} style={{ display: item.isHide == 1 ? 'none' : '' }}>
-            <FormItem   key={fieldName} {...layout} label={labelText}>
+            <FormItem key={fieldName} {...layout} label={labelText}>
               {getFieldDecorator(`${fieldName}`, {
-                initialValue: initialValue !== undefined ? initialValue : undefined,
+                initialValue: (initialValue !== undefined && initialValue !== "") ? initialValue : undefined,
                 rules: [
                   {
                     required,
