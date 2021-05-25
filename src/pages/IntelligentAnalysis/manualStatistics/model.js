@@ -25,7 +25,8 @@ export default Model.extend({
     airPoint: [],
     airEffectiveVal:'',
     entEffectiveVal:'',
-    pointLoading:false
+    pointLoading:false,
+    entLoading:false,
   },
   subscriptions: {},
   effects: {
@@ -35,13 +36,14 @@ export default Model.extend({
 
       const  parmarType = yield select(_ =>_.manualStatistics.parmarType)
       const  queryPar = yield select(_ =>_.manualStatistics.queryPar)
-      parmarType==='EntCode'? yield update({ pointLoading: true }):''
+      parmarType==='EntCode'? yield update({ pointLoading: true }):yield update({ entLoading: true })
       
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
       
         if(parmarType==='RegionCode'){
-          yield update({ EntList: response.Datas.EntList });
+          yield update({ EntList: response.Datas.EntList,PointList:[] });
+          yield update({ entLoading: false });
           callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
         }
         if(parmarType==='EntCode'){
@@ -62,24 +64,29 @@ export default Model.extend({
     // },
     *getRecalculateEffectiveTransmissionEnt({ callback,payload }, { call, put, update, select }) {
       //手工计算  企业
-      yield update({ pointLoading: true });
       
       const response = yield call(GetRecalculateEffectiveTransmissionEnt, { ...payload });
       if (response.IsSuccess) {
          message.success(response.Message)
+         yield update({ entEffectiveVal:response.Datas});
+
       }else{
         message.error(response.Message)
+        yield update({ entEffectiveVal:''});
+
       }
     },
     *getRecalculateEffectiveTransmissionAir({ callback,payload }, { call, put, update, select }) {
       //手工计算 空气站
-      yield update({ pointLoading: true });
       
       const response = yield call(GetRecalculateEffectiveTransmissionAir, { ...payload });
       if (response.IsSuccess) {
          message.success(response.Message)
+        yield update({ airEffectiveVal:response.Datas});
       }else{
         message.error(response.Message)
+        yield update({ airEffectiveVal:''});
+
       }
     },
   },

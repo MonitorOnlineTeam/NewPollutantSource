@@ -47,7 +47,10 @@ import styles from './style.less'
   airEffectiveVal:manualStatistics.airEffectiveVal,
   entEffectiveVal:manualStatistics.entEffectiveVal,
   airLoading: loading.effects['autoForm/getConfigIdLists'],
-  pointLoading:manualStatistics.pointLoading
+  airEffectLoading: loading.effects['manualStatistics/getRecalculateEffectiveTransmissionAir'],
+  entEffectLoading: loading.effects['manualStatistics/getRecalculateEffectiveTransmissionEnt'],
+  pointLoading:manualStatistics.pointLoading,
+  entLoading:manualStatistics.entLoading
 }))
 
 @Form.create()
@@ -176,13 +179,13 @@ export default class EntTransmissionEfficiency extends Component {
 
   changeRegion=(value)=>{
     this.updateState({parmarType:'RegionCode'})
+    this.props.form.setFieldsValue({ DGIMN: undefined})
     this.setState({regionCode:value},()=>{
       this.getEntData()
     })
   }
 
   changeAir=(value)=>{
-    console.log(value)
     this.airPoint(value)
   }
   disabledDate = current => {
@@ -209,16 +212,26 @@ export default class EntTransmissionEfficiency extends Component {
       })
     }
   };
-  queryClick=(e)=>{
+  // onPanelChange
+  queryClick=(e)=>{ //企业 手工统计
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
+
+
      if (!err) {
+      const ranges = moment(values.time[0].format('YYYY-MM-DD HH:mm:ss')).add(30, 'day');
+      const ydays = moment(moment().format('YYYY-MM-DD 23:59:59')).add(-1, 'day');
+      if(ranges<values.time[1]||values.time[1]>ydays){
+          message.warning('日期范围不能超过30天且不能超过昨天')
+          this.props.form.setFieldsValue({ time:undefined})
+          return false;
+     }
       this.props.dispatch({
       type: 'manualStatistics/getRecalculateEffectiveTransmissionEnt',
       payload: { 
         DGIMN:values.DGIMN,
         beginTime: moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        entTime: moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       },
      })
    }
@@ -232,16 +245,24 @@ export default class EntTransmissionEfficiency extends Component {
      })
     }
 
-    airQueryClick=(e)=>{ 
+    airQueryClick=(e)=>{ //空气站 手工统计
         const { form:{getFieldValue} } = this.props;
          
           if (getFieldValue('airTime')&&getFieldValue('airDGIMN')) {
-            dispatch({
+
+            const ranges = moment(getFieldValue('airTime')[0].format('YYYY-MM-DD HH:mm:ss')).add(30, 'day');
+            const ydays = moment(moment().format('YYYY-MM-DD 23:59:59')).add(-1, 'day');
+            if(ranges<getFieldValue('airTime')[1]||getFieldValue('airTime')[1]>ydays){
+                message.warning('日期范围不能超过30天且不能超过昨天')
+                this.props.form.setFieldsValue({ airTime:undefined})
+                return false;
+           }
+            this.props.dispatch({
              type: 'manualStatistics/getRecalculateEffectiveTransmissionAir',
              payload: { 
               DGIMN:getFieldValue('airDGIMN'),
               beginTime:moment(getFieldValue('airTime')[0]).format('YYYY-MM-DD HH:mm:ss'),
-              entTime: moment(getFieldValue("airTime")[1]).format('YYYY-MM-DD HH:mm:ss'),
+              endTime: moment(getFieldValue("airTime")[1]).format('YYYY-MM-DD HH:mm:ss'),
             },
             })
           }else{
@@ -330,12 +351,23 @@ export default class EntTransmissionEfficiency extends Component {
 
 //     return <CreateFormMan />
 //   }
+//  dateChange=(date,type)=>{
+//   if(date&&date.length>0){
+//     const ranges = moment(date[0].format('YYYY-MM-DD HH:mm:ss')).add(30, 'day');
+//     const ydays = moment(date[1].format('YYYY-MM-DD 23:59:59')).add(-1, 'day');
+//      if(ranges<date[1]||date[1]>ydays){
+//         message.warning('日期范围不能超过30天且不能超过昨天')
+//         this.setState({dates:[]})
+//         type==='ent'? this.props.form.setFieldsValue({ time: []}) : this.props.form.setFieldsValue({ airTime: undefined})
+//      }
+//   }
 
+//  }
 
 
   render() {
     const { hackValue,datesValue,regionCode } = this.state;
-    const { dispatch,entEffectiveVal,airEffectiveVal,form:{getFieldDecorator},airLoading,pointLoading} = this.props;
+    const { dispatch,entEffectiveVal,airEffectiveVal,form:{getFieldDecorator},airLoading,pointLoading,entLoading} = this.props;
     return (
       <BreadcrumbWrapper title="传输有效率">
         <Card
@@ -353,7 +385,7 @@ export default class EntTransmissionEfficiency extends Component {
         <RegionList style={{ width: 150  }} changeRegion={this.changeRegion} RegionCode={regionCode}/>
         </Form.Item>
         <Form.Item>
-            <Select 
+        {!entLoading? <Select 
                 showSearch 
                 style={{ width: 250 }} 
                 onChange={v=>{this.changeEnt(v)}} 
@@ -361,7 +393,7 @@ export default class EntTransmissionEfficiency extends Component {
                 {
                   this.children()
                 }
-            </Select>
+            </Select>: <Spin size='small'/>}
              </Form.Item>
 
              <Form.Item label=''>
@@ -378,23 +410,26 @@ export default class EntTransmissionEfficiency extends Component {
           {getFieldDecorator('time', {
               rules: [{ required: true, message: '请选择日期' }],
              })( <RangePicker
-              showTime
+              showTime={{
+                hideDisabledOptions: true,
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+              }}
                format="YYYY-MM-DD HH:mm:ss"
-               value={hackValue || datesValue}
                disabledDate={this.disabledDate}
                onCalendarChange={val => this.setState({dates:val})}
-               onChange={val => this.setState({datesValue:val})}
+              //  onChange={val => this.setState({dates:val})}
+              //  onChange={val => this.dateChange(val,'ent')}
                onOpenChange={this.onOpenChange}
             /> )}
           </Form.Item>
           <Row style={{padding:'15px 0'}}>
           <Form.Item>
-            <Button type="primary" onClick={this.queryClick} style={{ width: 150  }}>
+            <Button type="primary" onClick={this.queryClick} style={{ width: 150  }} loading={this.props.entEffectLoading}>
               计算
             </Button>
           </Form.Item>
           <Form.Item>
-             {entEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{entEffectiveVal}%</span>}
+             {entEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{entEffectiveVal}</span>}
           </Form.Item>
           </Row>
         </Form>
@@ -427,23 +462,27 @@ export default class EntTransmissionEfficiency extends Component {
         {getFieldDecorator('airTime', {
             // rules: [{ required: true, message: '请选择日期' }],
            })( <RangePicker
-            showTime
+            showTime={{
+              hideDisabledOptions: true,
+              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+            }}
              format="YYYY-MM-DD HH:mm:ss"
-             value={hackValue || datesValue}
+            //  value={hackValue || datesValue}
              disabledDate={this.disabledDate}
              onCalendarChange={val => this.setState({dates:val})}
-             onChange={val => this.setState({datesValue:val})}
-            //  onOpenChange={this.onOpenChange}
+            //  onChange={val => this.setState({datesValue:val})}
+            //  onChange={val => this.dateChange(val,'air')}
+             onOpenChange={this.onOpenChange}
           /> )}
         </Form.Item>
         <Row style={{padding:'15px 0'}}>
         <Form.Item>
-          <Button type="primary"   onClick={this.airQueryClick} style={{ width: 150  }}>
+          <Button type="primary"   onClick={this.airQueryClick} style={{ width: 150  }} loading={this.props.airEffectLoading}>
             计算
           </Button>
         </Form.Item>
         <Form.Item>
-          {airEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{airEffectiveVal}%</span>}
+          {airEffectiveVal&&<span style={{color:'#ff4d4f'}}>最新计算结果：{airEffectiveVal}</span>}
         </Form.Item>
         </Row>
       </Form>

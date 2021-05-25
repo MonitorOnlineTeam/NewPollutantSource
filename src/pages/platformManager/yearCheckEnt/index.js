@@ -82,7 +82,8 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    style={{ pointerEvents: listDisabled ? 'none' : null }}
+                    style={{ pointerEvents: listDisabled ? 'none' : null,width:554 }}
+                    scroll={{ x: 800 }}
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
                             if (itemDisabled || listDisabled) return;
@@ -98,34 +99,41 @@ const leftTableColumns = [
     {
         dataIndex: 'RegionName',
         title: '行政区',
+        ellipsis: true,
+        width:150,
     },
     {
         dataIndex: 'EntName',
         title: '企业名称',
-        render: (text, record, index) => {
-            if(text.length>10)
-            {
-                return text.substr(0,10)+'...';
-            }else
-            {
-                return text;
-            }
-        }
+        ellipsis: true,
+        width:400,
+        // render: (text, record, index) => {
+        //     if(text.length>10)
+        //     {
+        //         return text.substr(0,10)+'...';
+        //     }else
+        //     {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PointName',
         title: '监测点名称',
-        render: (text, record, index) => {
-            if (text.length > 10) {
-                return text.substr(0, 10) + '...';
-            } else {
-                return text;
-            }
-        }
+        ellipsis: true,
+        width:150,
+        // render: (text, record, index) => {
+        //     if (text.length > 10) {
+        //         return text.substr(0, 10) + '...';
+        //     } else {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PollutantType',
         title: '监测点类型',
+        width:100,
         render: (text, record, index) => {
             var str = ''
             switch (text) {
@@ -144,34 +152,41 @@ const rightTableColumns = [
     {
         dataIndex: 'RegionName',
         title: '行政区',
+        width:150,
+        ellipsis: true,
     },
     {
         dataIndex: 'EntName',
         title: '企业名称',
-        render: (text, record, index) => {
-            if(text.length>10)
-            {
-                return text.substr(0,10)+'...';
-            }else
-            {
-                return text;
-            }
-        }
+        ellipsis: true,
+        width:400,
+        // render: (text, record, index) => {
+        //     if(text.length>10)
+        //     {
+        //         return text.substr(0,10)+'...';
+        //     }else
+        //     {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PointName',
         title: '监测点名称',
-        render: (text, record, index) => {
-            if (text.length > 10) {
-                return text.substr(0, 10) + '...';
-            } else {
-                return text;
-            }
-        }
+        ellipsis: true,
+        width:150,
+        // render: (text, record, index) => {
+        //     if (text.length > 10) {
+        //         return text.substr(0, 10) + '...';
+        //     } else {
+        //         return text;
+        //     }
+        // }
     },
     {
         dataIndex: 'PollutantType',
         title: '监测点类型',
+        width:100,
         render: (text, record, index) => {
             var str = ''
             switch (text) {

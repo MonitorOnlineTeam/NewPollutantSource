@@ -100,11 +100,13 @@ const leftTableColumns = [
         dataIndex: 'RegionName',
         title: '行政区',
         width:100,
+        ellipsis: true,
     },
     {
         dataIndex: 'EntName',
         title: '企业名称',
         width: 500,
+        ellipsis: true,
         // render: (text, record, index) => {
         //     if (text.length > 10) {
         //         return text.substr(0, 10) + '...';
@@ -117,6 +119,7 @@ const leftTableColumns = [
         dataIndex: 'PointName',
         title: '监测点名称',
         width:300,
+        ellipsis: true,
         // render: (text, record, index) => {
         //     if (text.length > 10) {
         //         return text.substr(0, 10) + '...';
@@ -129,6 +132,7 @@ const leftTableColumns = [
         dataIndex: 'PollutantType',
         title: '监测点类型',
         width:100,
+        ellipsis: true,
         render: (text, record, index) => {
             var str = ''
             switch (text) {
@@ -148,11 +152,13 @@ const rightTableColumns = [
         dataIndex: 'RegionName',
         title: '行政区',
         width:100,
+        ellipsis: true,
     },
     {
         dataIndex: 'EntName',
         title: '企业名称',
         width:500,
+        ellipsis: true,
         // render: (text, record, index) => {
         //     if (text.length > 10) {
         //         return text.substr(0, 10) + '...';
@@ -165,6 +171,7 @@ const rightTableColumns = [
         dataIndex: 'PointName',
         title: '监测点名称',
         width:300,
+        ellipsis: true,
         // render: (text, record, index) => {
         //     if (text.length > 10) {
         //         return text.substr(0, 10) + '...';
@@ -177,6 +184,7 @@ const rightTableColumns = [
         dataIndex: 'PollutantType',
         title: '监测点类型',
         width:100,
+        ellipsis: true,
         render: (text, record, index) => {
             var str = ''
             switch (text) {

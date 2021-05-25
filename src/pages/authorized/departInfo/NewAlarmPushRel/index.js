@@ -73,28 +73,34 @@ class Index extends Component {
             {
               dataIndex: 'RegionName',
               title: '行政区',
+              ellipsis: true,
             },
             {
               dataIndex: 'EntName',
               title: '企业名称',
+              ellipsis: true,
             },
             {
               dataIndex: 'PointName',
               title: '监测点名称',
+              ellipsis: true,
             },
           ];
           this.rightTableColumns = [
             {
                 dataIndex: 'RegionName',
                 title: '行政区',
+                ellipsis: true,
               },
               {
                 dataIndex: 'EntName',
                 title: '企业名称',
+                ellipsis: true,
               },
               {
                 dataIndex: 'PointName',
                 title: '监测点名称',
+                ellipsis: true,
               },
           ];
     }
