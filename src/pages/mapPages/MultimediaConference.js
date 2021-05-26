@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import styles from './index.less'
 import $script from 'scriptjs';
-import { message, Drawer, Tooltip, Tree, Button, Modal, Space, Radio, Badge, Divider, Spin, Tag, Input } from 'antd';
+import { message, Drawer, Tree, Tooltip, Button, Modal, Space, Radio, Badge, Divider, Spin, Tag, Input } from 'antd';
 import { Map, Marker, Markers, Circle, MouseTool } from 'react-amap';
 import { connect } from 'dva'
 import config from "@/config";
 import CustomIcon from '@/components/CustomIcon';
 import { EntIcon } from '@/utils/icon';
+import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 
 let thisMap;
 let talkManager;
@@ -24,6 +25,7 @@ class MultimediaConference extends PureComponent {
       treeData: [],
       markersList: [],
       isModalVisible: false,
+      fullScreenModalVisible: false,
       currentPoint: {}
     };
 
@@ -134,9 +136,9 @@ class MultimediaConference extends PureComponent {
 
 
   // 打开视频
-  start = (uid) => {
+  start = (uid, elId) => {
     //监控盒子ID，用来装置监控视频
-    var el = 'monitor';
+    var el = elId || 'monitor';
     //监控人员ID
     var uid = uid;//用户id,通过设备管理类获取部门和设备成员获取设备信息。(TY.DeviceManager.loadDepartentDevice)
     //通过监控管理类向指定人员发起监控
@@ -286,7 +288,7 @@ class MultimediaConference extends PureComponent {
   }
 
   render() {
-    const { treeData, markersList, isModalVisible, currentPoint } = this.state;
+    const { treeData, markersList, isModalVisible, currentPoint, fullScreenModalVisible } = this.state;
     const { treeLoading } = this.props;
     return (
       <div
@@ -340,7 +342,7 @@ class MultimediaConference extends PureComponent {
           title={`${currentPoint.name} - 远程监控`}
           visible={isModalVisible}
           footer={false}
-          width={'70vw'}
+          width={'50vw'}
           onCancel={() => {
             this.removeUser()
             this.setState({ isModalVisible: false })
@@ -348,7 +350,7 @@ class MultimediaConference extends PureComponent {
           bodyStyle={{
             display: 'flex',
             flexDirection: 'column',
-            width: '70vw',
+            width: '50vw',
             height: '60vh'
           }}
         >
@@ -385,7 +387,59 @@ class MultimediaConference extends PureComponent {
               </Radio.Group>
             </Space>
           </div>
-          <div id="monitor" style={{ background: '#000', marginTop: 10, flex: 1 }}></div>
+          <div style={{ position: 'relative', flex: 1, display: 'flex', }}>
+            <Tooltip
+              placement="bottom"
+              title={
+                <span style={{ color: "#000" }}>全屏</span>
+              } color={'#fff'}
+            >
+              <FullscreenOutlined
+                onClick={(e) => {
+                  this.setState({ fullScreenModalVisible: true }, () => {
+                    this.start(currentPoint.id, 'monitor2');
+                  })
+                }}
+                style={{
+                  position: 'absolute',
+                  color: '#fff',
+                  right: 10,
+                  top: 20,
+                  fontSize: 20
+                }} />
+            </Tooltip>
+            <div id="monitor" style={{ background: '#000', marginTop: 10, flex: 1 }}></div>
+          </div>
+        </Modal>
+        <Modal
+          // title={`${currentPoint.name} - 远程监控`}
+          visible={fullScreenModalVisible}
+          style={{ marginTop: 0 }}
+          footer={false}
+          width={'99vw'}
+          closeIcon={
+            <Tooltip
+              placement="bottom"
+              title={
+                <span style={{ color: "#000" }}>缩小</span>
+              } color={'#fff'}
+            >
+              <FullscreenExitOutlined style={{ fontSize: 22, color: '#fff' }} />
+            </Tooltip>
+          }
+          onCancel={() => {
+            this.removeUser()
+            this.setState({ fullScreenModalVisible: false })
+          }}
+          bodyStyle={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '99vw',
+            height: '88vh',
+            padding: 0
+          }}
+        >
+          <div id="monitor2" style={{ background: '#000', flex: 1 }}></div>
         </Modal>
       </div>
     );

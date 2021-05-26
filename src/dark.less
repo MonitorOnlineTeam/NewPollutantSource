@@ -1,13 +1,22 @@
 // #root {
 @fontColor: rgba(255, 255, 255, .85);
 @bgColor: #141414 !important;
+@bgColor2: #1f1f1f !important;
+@bdColor: #434343;
 
 body {
 
   .ant-legacy-form-item-label>label,
   .ant-legacy-form-item,
-  .ant-legacy-form-item label {
+  .ant-legacy-form-item label,
+  .ant-legacy-form label {
     color: rgba(255, 255, 255, .85);
+  }
+
+  .ant-legacy-form-inline {
+    .ant-row {
+      display: inline-flex;
+    }
   }
 
   tr.light,
@@ -38,7 +47,91 @@ body {
   .ant-layout-has-sider {
     background: #1f1f1f !important;
   }
+
+  // 登录页面
+  .antd-pro-layouts-user-layout-container {
+    background-color: @bgColor;
+  }
+
+  .antd-pro-layouts-user-layout-title {
+    color: @fontColor;
+  }
+
+  .antd-pro-pages-user-login-components-login-index-login .antd-pro-pages-user-login-components-login-index-prefixIcon {
+    color: @fontColor;
+  }
+
+  // 菜单
+  .ant-menu.ant-menu-dark,
+  .ant-menu-dark .ant-menu-sub,
+  .ant-menu.ant-menu-dark .ant-menu-sub {
+    background: #1f1f1f;
+  }
+
+  .ant-menu-horizontal {
+    line-height: 64px;
+  }
+
+
+  // 级联
+  .ant-cascader-menu-item-expand .ant-cascader-menu-item-expand-icon,
+  .ant-cascader-menu-item-loading-icon {
+    color: @fontColor;
+  }
+
+  // 上传
+  .ant-upload.ant-upload-select-picture-card {
+    border-color: @bdColor;
+    background-color: transparent;
+  }
+
+  // 日期控件
+  .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before {
+    background: #111b26;
+  }
+
+  .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single).ant-picker-cell-range-hover-start::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single).ant-picker-cell-range-hover-end::before,
+  .ant-picker-panel>:not(.ant-picker-date-panel) .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start::before,
+  .ant-picker-panel>:not(.ant-picker-date-panel) .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end::before {
+    background: #06213a
+  }
+
+  // 分割线
+  .ant-divider {
+    border-top: 0;
+  }
+
+  .ant-divider-horizontal.ant-divider-with-text::before,
+  .ant-divider-horizontal.ant-divider-with-text::after {
+    border-color: rgba(67, 67, 67, .6);
+  }
+
+  // 左侧监测点树
+  .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected,
+  .ant-tree .ant-tree-node-content-wrapper:hover,
+  .clickRowStyl {
+    background-color: #444444;
+  }
+
+  // 企业、监测点级联多选组件
+  .antd-pro-components-cascader-multiple-index-cascaderMultiple .ant-select-selection {
+    background: @bgColor;
+    border-color: @bdColor;
+  }
+
+  .antd-pro-components-cascader-multiple-index-cascaderMultiple .ant-select-selection--multiple .ant-select-selection__choice {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid #303030;
+    color: #fff;
+  }
 }
+
 /*滚动条轨道颜色*/
 @scrollbar-track-color: #141414;
 /*滚动条颜色*/

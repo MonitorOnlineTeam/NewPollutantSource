@@ -1,8 +1,19 @@
 @import '~antd/es/style/themes/default.less';
-// @import '~antd/dist/antd.dark.less';
-// @import './dark.less';
-
+// @import '~antd/lib/style/themes/default.less';
+// @import '~antd/dist/antd.less'; // 引入官方提供的 less 样式入口文件
+// @import './your-theme-file.less';
 @contentMargin: 20px; // 内容区域左右边距
+
+// .dark(@isdark) when (@isdark = true) {
+//   @import '~antd/dist/antd.dark.less';
+//   @import './dark.less';
+// }
+
+//html#darkHtml {
+//  @import '~antd/dist/antd.dark.less';
+//  @import './dark.less';
+//  // @import './your-theme-file.less';
+//}
 
 html,
 body,
@@ -10,6 +21,7 @@ body,
   height: 100%;
   overflow-y: hidden;
 
+  // @import '~antd/dist/antd.dark.less';
   input {
     line-height: 1 !important;
   }
@@ -574,6 +586,7 @@ a:hover {
   justify-content: center;
   align-items: center
 }
+
 // .ontEntDetailPhoto{
 //   :global {
 //     .ant-upload-list-picture-card .ant-upload-list-item-thumbnail, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img{
@@ -582,7 +595,18 @@ a:hover {
 //   }
 // }
 :global {
-.ant-upload-list-picture-card .ant-upload-list-item-thumbnail, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img{
-  object-fit: fill;
+
+  .ant-upload-list-picture-card .ant-upload-list-item-thumbnail,
+  .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
+    object-fit: fill;
+  }
 }
+
+.example {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  // background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }

@@ -109,6 +109,11 @@ export default {
           path: '/sessionMiddlePage',
           component: './sysTypeMiddlePage/SaveSessionPage',
         },
+        {
+          name: 'summaryProject',
+          path: '/summaryProject',
+          component: './projectSummary',
+        },
         // appoperation
         {
           path: '/appoperation',
@@ -242,6 +247,11 @@ export default {
               path: '/map',
               routes: [
                 {
+                  name: 'multimediaConference',
+                  path: '/map/multimediaConference',
+                  component: './mapPages/MultimediaConference',
+                },
+                {
                   name: 'thematicMap',
                   path: '/map/thematicMap/:pollutantCode',
                   component: './mapPages/ThematicMap',
@@ -351,6 +361,31 @@ export default {
                   component: './AutoFormManager/AutoFormView',
                 },
               ],
+            },
+            /* 配置中心-AutoForm配置 */
+            {
+              path: '/console',
+              routes: [
+                /* 配置中心-AutoForm配置-AutoForm数据库配置 */
+                {
+                  path: '/console',
+                  redirect: '/sessionMiddlePage?sysInfo={"ID":"559becbf-bf68-46c0-8eda-664457b355cf","Name":"Autoform配置","TipsName":"Autoform配置","CodeList":""}'
+                },
+                {
+                  path: '/console/database',
+                  component: './autoformConfig/DatabaseConfig'
+                },
+                /* 配置中心-系统配置-菜单管理 */
+                {
+                  path: '/console/menuManagement',
+                  component: './autoformConfig/MenuManagement'
+                },
+                /* 配置中心-AutoForm配置-AutoForm数据源配置 */
+                {
+                  path: '/console/datasource',
+                  component: './autoformConfig/AutoFormDataSource'
+                }
+              ]
             },
             //污水处理台
             // {
@@ -2411,8 +2446,8 @@ export default {
     getLocalIdent: (context, _, localName) => {
       if (
         context.resourcePath.includes('node_modules') ||
-        context.resourcePath.includes('ant.design.pro.less') ||
-        context.resourcePath.includes('global.less')
+        context.resourcePath.includes('global.less') ||
+        context.resourcePath.includes('ant.design.pro.less')
       ) {
         return localName;
       }
@@ -2435,7 +2470,6 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-
   proxy: {
     '/api': {
       target: config.apiHost,

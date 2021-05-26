@@ -210,7 +210,7 @@ class SmokeReportPage extends PureComponent {
           children: [
             {
               title: '浓度(mg/m³)',
-              dataIndex: '30',
+              dataIndex: '01',
               width: 140,
               align: 'center',
               render: (value, row, index) => {
@@ -223,7 +223,7 @@ class SmokeReportPage extends PureComponent {
             },
             {
               title: `排放量(Kg)`,
-              dataIndex: '30sum',
+              dataIndex: '01sum',
               width: 140,
               align: 'center',
             },

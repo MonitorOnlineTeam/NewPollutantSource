@@ -32,7 +32,7 @@
     "custom-error": "^0.2.1",
     "dva": "^2.4.1",
     "echarts": "^4.2.1",
-    "echarts-for-react": "^2.0.15-beta.0",
+    "echarts-for-react": "^2.0.16",
     "encryptlong": "^3.1.4",
     "gg-editor": "^2.0.4",
     "html2canvas": "^1.0.0-rc.5",

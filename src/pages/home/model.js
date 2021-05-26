@@ -229,8 +229,7 @@ export default Model.extend({
         ...payload
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
-      if (response.IsSuccess&&response.Datas[0]) {
-
+      if (response.IsSuccess && response.Datas) {
         let ycdate = [];
         let ycdata = [];
         // 烟尘
@@ -270,20 +269,18 @@ export default Model.extend({
         yield update({
           AllMonthEmissionsByPollutant: {
             ...AllMonthEmissionsByPollutant,
-            ...{
-              ycdate: ycdate,
-              ycdata: ycdata,
-              ycAnalData: response.Datas['01'] || {},
-              eyhldate: eyhldate,
-              eyhldata: eyhldata,
-              eyhlAnalData: response.Datas['02'] || {},
-              dyhwdate: dyhwdate,
-              dyhwdata: dyhwdata,
-              dyhwAnalData: response.Datas['03'] || {},
-              eyhtdate: eyhtdate,
-              eyhtdata: eyhtdata,
-              eyhtAnalData: response.Datas['30'] || {},
-            }
+            ycdate: ycdate,
+            ycdata: ycdata,
+            ycAnalData: response.Datas['01'] || {},
+            eyhldate: eyhldate,
+            eyhldata: eyhldata,
+            eyhlAnalData: response.Datas['02'] || {},
+            dyhwdate: dyhwdate,
+            dyhwdata: dyhwdata,
+            dyhwAnalData: response.Datas['03'] || {},
+            eyhtdate: eyhtdate,
+            eyhtdata: eyhtdata,
+            eyhtAnalData: response.Datas['30'] || {},
           }
         });
       }
