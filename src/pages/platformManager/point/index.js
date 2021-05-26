@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined,FundOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -504,6 +504,12 @@ export default class MonitorPoint extends Component {
                         this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    <Tooltip title="运维信息">
+                      <a onClick={() => {
+                  
+                      }}><FundOutlined style={{fontSize:16}}/>  </a>
                     </Tooltip>
                     <Divider type="vertical" />
                     {/* <Tooltip title="删除">

@@ -188,13 +188,13 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>失传条数</span>,
+        title: <span style={{ fontWeight: 'bold' }}>实传条数</span>,
         dataIndex: 'TransmissionNumber',
         key: 'TransmissionNumber',
         align: 'center',
       },
       {
-        title: <span style={{ fontWeight: 'bold' }}>有效传输率</span>,
+        title: <span style={{ fontWeight: 'bold' }}>传输有效率</span>,
         dataIndex: 'TransmissionEffectiveRate',
         key: 'TransmissionEffectiveRate',
         align: 'center',
@@ -234,21 +234,21 @@ export default class EntTransmissionEfficiency extends Component {
       },
     ];
     return (
-      <BreadcrumbWrapper title="有效传输率" hideBreadcrumb={this.props.hideBreadcrumb}>
+      <BreadcrumbWrapper title="传输有效率" hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card
           bordered={false}
           title={
             <>
               <Form layout="inline">
 
-
+              <Row> 
               <Form.Item>
                 {location.query.cityName}（{moment(beginTime).format("YYYY-MM-DD")} - {moment(endTime).format("YYYY-MM-DD")}）
                 </Form.Item>
-
+                </Row>
                 <Form.Item>
                   <Button
-                    style={{ margin: '0 5px' }}
+                    style={{ marginRight: '5px' }}
                     icon={<ExportOutlined />}
                     onClick={this.template}
                     loading={exEntloading}
@@ -260,12 +260,16 @@ export default class EntTransmissionEfficiency extends Component {
                       this.props.onBack ? this.props.onBack() :
                         this.props.history.go(-1);
                     }}
+                    style={{ marginRight: '10px' }}
                   >
                     <RollbackOutlined />
                     返回
                   </Button>
                 </Form.Item>
-              </Form>
+                <Form.Item>
+                <span style={{color:'#f5222d',fontSize:14}}>应传条数：每日应传24条小时数据和1条日数据，实传条数：每日实际传输过来的数据条数</span>
+                </Form.Item>
+             </Form>
             </>
           }
         >

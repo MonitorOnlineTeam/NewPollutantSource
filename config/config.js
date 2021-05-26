@@ -508,32 +508,7 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
-                //企业运维管理
-                {
-                  name: 'operationEntManage',
-                  path:'/platformconfig/operationEntManage',
-                  routes: [
-                    {
-                      path: '/platformconfig/operationEntManage',
-                      redirect: '/platformconfig/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
-                    },
-                    {
-                      name:'operationUnit', //运维单位管理
-                      path: '/platformconfig/operationEntManage/operationUnit/:configId',
-                      component: './platformManager/operationEntManage/operationUnit',
-                    },
-                    {
-                      name:'operationPerson', //运维人员管理
-                      path: '/platformconfig/operationEntManage/operationPerson/:configId',
-                      component: './platformManager/operationEntManage/operationPerson',
-                    },
-                    {
-                      name:'operationPerson', //运维人员管理  详情
-                      path: '/platformconfig/operationEntManage/operationPerson/detail/:configId/:personId',
-                      component: './platformManager/operationEntManage/operationPerson/OperationPersonDetail',
-                    },
-                ]
-                }, 
+
               ],
             },
             {
@@ -802,6 +777,32 @@ export default {
                   name: 'CommandDispatchReportDetails',
                   component: './EmergencyTodoList/EmergencyDetailInfoLayout',
                 },
+                //企业运维管理
+                {
+                  name: 'operationEntManage',
+                  path:'/operations/operationEntManage',
+                  routes: [
+                    {
+                      path: '/operations/operationEntManage',
+                      redirect: '/operations/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
+                    },
+                    {
+                      name:'operationUnit', //运维单位管理
+                      path: '/operations/operationEntManage/operationUnit/:configId',
+                      component: './platformManager/operationEntManage/operationUnit',
+                    },
+                    {
+                      name:'operationPerson', //运维人员管理
+                      path: '/operations/operationEntManage/operationPerson/:configId',
+                      component: './platformManager/operationEntManage/operationPerson',
+                    },
+                    {
+                      name:'operationPerson', //运维人员管理  详情
+                      path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                      component: './platformManager/operationEntManage/operationPerson/OperationPersonDetail',
+                    },
+                ]
+                },                 
               ],
             },
             {
@@ -1350,7 +1351,7 @@ export default {
                     },
                     {//有效传输率 排口  空气站
                       name: 'Outlet',
-                      path: '/Intelligentanalysis/transmissionefficiency/outlet',
+                      path: '/Intelligentanalysis/transmissionefficiency/air/outlet',
                       component: './Intelligentanalysis/airTransmissionefficiency/outlet',
                     },
                     { //有效传输率  手工统计

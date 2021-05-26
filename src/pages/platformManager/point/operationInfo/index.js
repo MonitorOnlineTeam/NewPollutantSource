@@ -1,7 +1,7 @@
 /**
- * 功  能：运维人员管理
+ * 功  能：监测点下的运维信息
  * 创建人：jab
- * 创建时间：2021.05.08
+ * 创建时间：2021.05.26
  */
 import React, { Component,Fragment } from 'react';
 import { ExportOutlined } from '@ant-design/icons';
@@ -24,8 +24,7 @@ import {
   Popconfirm,
   Radio,
   Upload,
-  Switch,
-  message
+  Switch
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -48,7 +47,6 @@ import {
   UploadOutlined
 } from '@ant-design/icons';
 import cuid from 'cuid';
-import flowanalysismodel from '@/models/flowanalysismodel';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -59,14 +57,7 @@ const pageUrl = {
   updateState: 'operationPerson/updateState',
   getData: 'operationPerson/selectOperationMaintenancePersonnel',
 };
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
+
 
 @connect(({ loading, operationPerson,autoForm,common}) => ({
   priseList: operationPerson.priseList,
@@ -79,11 +70,10 @@ function getBase64(file) {
   attentionList:operationPerson.attentionList,
   atmoStationList:common.atmoStationList,
   editFormData:autoForm.editFormData,
-  operationList:operationPerson.operationList,
-  duplicateList:operationPerson.duplicateList
+  operationList:operationPerson.operationList
 }))
 @Form.create()
-export default class PersonData extends Component {
+export default class OperationInfo extends Component {
   formRef = React.createRef();
   constructor(props) {
     super(props);
@@ -107,9 +97,6 @@ export default class PersonData extends Component {
         dataIndex: 'Personnellist',
         key: 'Personnellist',
         align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
       },
       {
         title: <span>姓名</span>,
@@ -123,7 +110,7 @@ export default class PersonData extends Component {
         key: 'Gender',
         align: 'center',
         render: (text, record) => {     
-          return  <div style={{width:'100%'}}>{text==1?'男':'女'}</div>
+          return  <div style={{textAlign:'left',width:'100%'}}>{text==1?'男':'女'}</div>
        },
       },
       {
@@ -323,39 +310,22 @@ export default class PersonData extends Component {
    }
 
 
-   operationUnit=(e)=>{ //运维单位
-    this.updateQueryState({Company:e.target?e.target.value:''})
-   } 
-   operationName=(e)=>{ //姓名
-    this.updateQueryState({PersonnelName:e.target?e.target.value:''})
-   }
-   operationBook=(value)=>{
-     this.updateQueryState({type:value?value:''})
-   }
 
-   operationBookOverdue=(value)=>{
-    this.updateQueryState({col1:value?value:''})
-   }
+
+
    onFinish=(e)=>{
      const {uid,uidGas,uidWater,type} = this.state;
-     const { duplicateList } = this.props;
+
      this.props.form.setFieldsValue({ AttachmentID:this.state.fileList.length>0? this.state.uid : ''})
      this.props.form.setFieldsValue({ WaterPhoto:this.state.waterPhoto.length>0? this.state.uidWater : ''})
      this.props.form.setFieldsValue({ GasPhoto:this.state.gasPhoto.length>0? this.state.uidGas : ''})
 
+
+
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-      
-       let flag=true;
-        duplicateList.map(item=>{
-          
-          if(item.EnterpriseID===values.EnterpriseID&&item.Phone===values.Phone&&item.PersonnelName===values.PersonnelName){
-            flag = false;
-            message.error('不能重复添加');
-          }
-       })
-        if(flag){
+
         this.props.dispatch({
               type: type==='add'? 'autoForm/add' : 'autoForm/saveEdit',
               payload: {
@@ -379,7 +349,6 @@ export default class PersonData extends Component {
         },()=>{
           this.getTableData();
         })
-      }
       }
     });
    }
@@ -500,47 +469,10 @@ export default class PersonData extends Component {
       </div>
     );
     return (
+        <BreadcrumbWrapper >
         <Card
           bordered={false}
           title={
-            <>
-              <Form layout="inline">
-            
-              <Row>
-              <Form.Item label=''>
-                  <Input placeholder='请输入运维单位' onChange={this.operationUnit}/>
-              </Form.Item>
-              <Form.Item label=''>
-                  <Input placeholder='请输入姓名' onChange={this.operationName}/>
-              </Form.Item>
-              <Form.Item label=''>
-              <Select
-                    placeholder="是否有运维工证书"
-                    onChange={this.operationBook}
-                    allowClear
-                    defaultValue={type?type:undefined}
-                    style={{width:'170px'}}
-                  >  
-                 <Option key='1' value='2,1'>有运维工证书(气)</Option>
-                 <Option key='2' value='2,2'> 无运维工证书(气)</Option>
-                 <Option key='3' value='1,1'>有运维工证书(水)</Option>
-                 <Option key='4' value='1,2'> 无运维工证书(水)</Option>
-                  </Select>
-              </Form.Item>
-              <Form.Item label=''>
-              <Select
-                    placeholder="运维证书是否过期"
-                    onChange={this.operationBookOverdue}
-                    defaultValue={col1?col1:undefined}
-                    allowClear
-                    style={{width:'170px'}}
-                  >  
-                 <Option key='1' value='1'>证书已过期</Option>
-                 <Option key='2' value='2'> 证书未过期</Option>
-                  </Select>
-              </Form.Item>
-              <Form.Item>
-             <Button style={{ marginLeft: '6px' }} type="primary" onClick={this.queryClick}> 查询 </Button>
        <Button
          style={{ margin: '0 5px' }}
          onClick={this.add}
@@ -548,11 +480,6 @@ export default class PersonData extends Component {
        >
          添加
        </Button>
-     </Form.Item>
-                </Row>
-                
-              </Form>
-            </>
           }
         >
           <>
@@ -616,7 +543,7 @@ export default class PersonData extends Component {
       </Col>
       <Col span={12}>
       <Form.Item  label="手机号"  >
-      {getFieldDecorator('Phone', {   rules: [{required: true,  message: '请输入手机号！'}],   })( <Input placeholder="请输入手机号" />)}
+      {getFieldDecorator('Phone')( <Input placeholder="请输入手机号" />)}
       </Form.Item>
       </Col>
       </Row>
@@ -867,6 +794,7 @@ export default class PersonData extends Component {
         </Modal>
           </>
         </Card>
+        </BreadcrumbWrapper >
     );
   }
 }

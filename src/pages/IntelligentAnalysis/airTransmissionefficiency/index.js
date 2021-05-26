@@ -142,7 +142,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'RegionName',
         align: 'center',
         render: (text, record) => { 
-           return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/outlet',
+           return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/air/outlet',
                        query: { EntCode: record.EntCode,cityName:record.EntName},
                        }}
                        >

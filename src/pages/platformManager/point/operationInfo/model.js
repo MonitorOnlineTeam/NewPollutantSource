@@ -26,7 +26,6 @@ export default Model.extend({
     tableDatas: [],
     total: '',
     operationList: [],
-    duplicateList:[]
   },
   subscriptions: {},
   effects: {
@@ -37,7 +36,6 @@ export default Model.extend({
         yield update({
           tableDatas: response.Datas,
           total: response.Total,
-          duplicateList:response.Datas
         });
       }
     },
