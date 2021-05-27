@@ -146,7 +146,7 @@ export default class EntTransmissionEfficiency extends Component {
                        query: { EntCode: record.EntCode,cityName:record.EntName},
                        }}
                        >
-                   {record.EntName}（{text}）
+                   {record.EntName}{text&& `（${text}）`}
                 </Link>
                   
         },

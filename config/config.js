@@ -387,6 +387,12 @@ export default {
                   component: './platformManager/point',
                 },
                 {
+                  name: 'pointOperationInfo', //监测点下的运维信息
+                  path: '/platformconfig/monitortarget/operationInfo',
+                  component: './platformManager/point/operationInfo',
+                },
+                
+                {
                   name: 'usestandardlibrary',
                   path:
                     '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',

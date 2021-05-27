@@ -260,7 +260,6 @@ export default class EntTransmissionEfficiency extends Component {
                       this.props.onBack ? this.props.onBack() :
                         this.props.history.go(-1);
                     }}
-                    style={{ marginRight: '10px' }}
                   >
                     <RollbackOutlined />
                     返回

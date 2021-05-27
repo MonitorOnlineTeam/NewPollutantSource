@@ -505,19 +505,16 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
-                    <Divider type="vertical" />
-                    <Tooltip title="运维信息">
+                     <Divider type="vertical" />
+                      <Tooltip title="运维信息">
                       <a onClick={() => {
-                  
+                        router.push({
+                          pathname:"/platformconfig/monitortarget/operationInfo",
+                          query:{p:row['dbo.T_Cod_MonitorPointBase.DGIMN']}
+                        })
                       }}><FundOutlined style={{fontSize:16}}/>  </a>
-                    </Tooltip>
-                    <Divider type="vertical" />
-                    {/* <Tooltip title="删除">
-                      <a onClick={() => {
-                        this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
-                          row['dbo.T_Bas_CommonPoint.DGIMN']);
-                      }}><DelIcon />    </a>
-                    </Tooltip> */}
+                    </Tooltip> 
+                  
                     {
                       row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
                         <Tooltip title="设置Cems参数">

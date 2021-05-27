@@ -70,6 +70,10 @@ export default class EntTransmissionEfficiency extends Component {
   }
 
   componentDidMount() {
+    this.updateState({
+      entEffectiveVal:'',
+      airEffectiveVal:''
+    })
     this.getEntData();
   }
 
@@ -219,7 +223,7 @@ export default class EntTransmissionEfficiency extends Component {
 
 
      if (!err) {
-      const ranges = moment(values.time[0].format('YYYY-MM-DD HH:mm:ss')).add(30, 'day');
+      const ranges = moment(values.time[0].format('YYYY-MM-DD 23:59:59')).add(30, 'day');
       const ydays = moment(moment().format('YYYY-MM-DD 23:59:59')).add(-1, 'day');
       if(ranges<values.time[1]||values.time[1]>ydays){
           message.warning('日期范围不能超过30天且不能超过昨天')
@@ -230,8 +234,8 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'manualStatistics/getRecalculateEffectiveTransmissionEnt',
       payload: { 
         DGIMN:values.DGIMN,
-        beginTime: moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: moment(values.time[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: moment(values.time[1]).format('YYYY-MM-DD 23:59:59'),
       },
      })
    }
@@ -410,11 +414,11 @@ export default class EntTransmissionEfficiency extends Component {
           {getFieldDecorator('time', {
               rules: [{ required: true, message: '请选择日期' }],
              })( <RangePicker
-              showTime={{
-                hideDisabledOptions: true,
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-              }}
-               format="YYYY-MM-DD HH:mm:ss"
+              // showTime={{
+              //   hideDisabledOptions: true,
+              //   defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+              // }}
+               format="YYYY-MM-DD"
                disabledDate={this.disabledDate}
                onCalendarChange={val => this.setState({dates:val})}
               //  onChange={val => this.setState({dates:val})}
@@ -462,11 +466,11 @@ export default class EntTransmissionEfficiency extends Component {
         {getFieldDecorator('airTime', {
             // rules: [{ required: true, message: '请选择日期' }],
            })( <RangePicker
-            showTime={{
-              hideDisabledOptions: true,
-              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-            }}
-             format="YYYY-MM-DD HH:mm:ss"
+            // showTime={{
+            //   hideDisabledOptions: true,
+            //   defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+            // }}
+             format="YYYY-MM-DD"
             //  value={hackValue || datesValue}
              disabledDate={this.disabledDate}
              onCalendarChange={val => this.setState({dates:val})}

@@ -348,7 +348,8 @@ export default class PersonData extends Component {
       if (!err) {
       
        let flag=true;
-        duplicateList.map(item=>{
+      
+       duplicateList.length>0&&type==='add'&&duplicateList.map(item=>{
           
           if(item.EnterpriseID===values.EnterpriseID&&item.Phone===values.Phone&&item.PersonnelName===values.PersonnelName){
             flag = false;
@@ -401,7 +402,7 @@ export default class PersonData extends Component {
     })
    }
    see=(record)=>{
-    router.push('/platformconfig/operationEntManage/operationPerson/detail/'+'OperationMaintenancePersonnel'+ '/' + record.PersonnelID)
+    router.push('/operations/operationEntManage/operationPerson/detail/'+'OperationMaintenancePersonnel'+ '/' + record.PersonnelID)
    }
    del=(row)=>{ //删除
     
@@ -566,8 +567,8 @@ export default class PersonData extends Component {
        <Modal
         title={this.state.type==='edit'? '编辑运维人员':'添加运维人员'}
         visible={this.state.visible}
-        // onOk={this.handleOk}
-        footer={null}
+        onOk={this.onFinish}
+        // footer={null}
         // confirmLoading={confirmLoading}
         onCancel={this.cancel}
         className={styles.operationModal}
@@ -853,11 +854,11 @@ export default class PersonData extends Component {
       <Form.Item label="ID"   hidden>
          {getFieldDecorator('PersonnelID')(<Input />)}
       </Form.Item> 
-      <Form.Item style={{textAlign:'right'}}>
+      {/* <Form.Item style={{textAlign:'right'}}>
         <Button type="primary"  onClick={this.onFinish}>
           提交
         </Button>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
       </Modal>
 

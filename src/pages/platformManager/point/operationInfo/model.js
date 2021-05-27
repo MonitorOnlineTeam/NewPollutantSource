@@ -1,22 +1,24 @@
 /**
- * 功  能：运维人员列表
+ * 功  能：监测点下的运维信息
  * 创建人：贾安波
- * 创建时间：2021.05.14
+ * 创建时间：2021.05.27
  */
 
 import Model from '@/utils/model';
 import {
-  SelectOperationMaintenancePersonnel,
-  DeleteOperationMaintenancePersonnel,
+  GetOperationPointList,
+  AddOrUpdateOperationPoint,
+  DeleteOperationPoint,
   ListOperationMaintenanceEnterprise
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
-  namespace: 'operationPerson',
+  namespace: 'operationInfo',
   state: {
     exloading: false,
     loading: false,
+    confirmLoading:false,
     queryPar: {
       Company: '',
       PersonnelName:'',
@@ -29,9 +31,9 @@ export default Model.extend({
   },
   subscriptions: {},
   effects: {
-    *selectOperationMaintenancePersonnel({ payload,callback }, { call, put, update, select }) {
+    *getOperationPointList({ payload,callback }, { call, put, update, select }) {
       //列表
-      const response = yield call(SelectOperationMaintenancePersonnel, { ...payload });
+      const response = yield call(GetOperationPointList, { ...payload });
       if (response.IsSuccess) {
         yield update({
           tableDatas: response.Datas,
@@ -39,13 +41,24 @@ export default Model.extend({
         });
       }
     },
-    *deleteOperationMaintenancePersonnel({ payload,callback }, { call, put, update, select }) {
-      //删除
-      const response = yield call(DeleteOperationMaintenancePersonnel, { ...payload });
+    *addOrUpdateOperationPoint({ payload,callback }, { call, put, update, select }) {
+      //编辑或添加
+      const response = yield call(AddOrUpdateOperationPoint, { ...payload });
       if (response.IsSuccess) {
         message.success(response.Message);
-        callback(response.IsSuccess)
+      }else{
+        message.error(response.Message);
       }
+    },
+    *deleteOperationPoint({ payload,callback }, { call, put, update, select }) {
+      //删除
+      const response = yield call(DeleteOperationPoint, { ...payload });
+      if (response.IsSuccess) {
+        message.success(response.Message); 
+      }else{
+        message.error(response.Message);
+      }
+      callback(response.IsSuccess)
     },
     *listOperationMaintenanceEnterprise({ payload,callback }, { call, put, update, select }) {
       // 运维列表

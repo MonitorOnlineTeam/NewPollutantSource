@@ -37,7 +37,7 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { DelIcon } from '@/utils/icon'
-import {  ToolTwoTone  } from '@ant-design/icons';
+import {  ToolTwoTone,UserOutlined  } from '@ant-design/icons';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -211,7 +211,7 @@ export default class EntTransmissionEfficiency extends Component {
                         </Tooltip>
 
                         <Tooltip title="运维人员">
-                                <a href="#" onClick={()=>{this.operationPerson(row)}} style={{paddingLeft:5}} > <ToolTwoTone /> </a>
+                                <a href="#" onClick={()=>{this.operationPerson(row)}} style={{paddingLeft:5}} > <UserOutlined style={{fontSize:18}}/> </a>
                         </Tooltip>
                         </Fragment>}
                     />
