@@ -235,7 +235,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'RegionName',
         align: 'center',
         render: (text, record) => { 
-           return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+           return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/ent/qutDetail',
                        query: { RegionCode: record.RegionCode,Operationersonnel:this.props.operationpersonnel},
                        }}
                        >

@@ -548,7 +548,7 @@ class emissionEnt extends Component {
                                     allowClear
                                     placeholder="请选择监测点类型"
                                     onChange={this.typeChange}
-                                    value={this.props.pollutantType}
+                                    value={this.props.pollutantType?this.props.pollutantType : undefined}
                                     style={{ width: 200, marginLeft: 10 }}
                                 >
                                     <Option value="1">废水</Option>
@@ -560,7 +560,7 @@ class emissionEnt extends Component {
                                     allowClear
                                     placeholder="请选择计算标识"
                                     onChange={this.flagChange}
-                                    value={this.props.entFlag}
+                                    value={this.props.entFlag?this.props.entFlag : undefined}
                                     style={{ width: 200, marginLeft: 10 }}
                                 >
                                     <Option value="1">参与</Option>

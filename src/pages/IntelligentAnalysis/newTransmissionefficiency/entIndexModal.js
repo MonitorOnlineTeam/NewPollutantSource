@@ -274,7 +274,7 @@ export default class EntIndexModal extends Component {
           }}>
             {text}
           </a>
-          //  return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+          //  return <Link to={{  pathname: '/Intelligentanalysis/transmissionefficiency/ent/qutDetail',
           //              query: { RegionCode:text=='全部合计'? '': record.RegionCode},
           //              }}
           //              >

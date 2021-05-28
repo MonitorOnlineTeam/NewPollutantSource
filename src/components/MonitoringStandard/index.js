@@ -222,9 +222,9 @@ class MonitoringStandard extends Component {
                 // width: '10%',
                 align: 'center',
                 render: (text, record) => {
-                    if (text === '0') {
-                        return '-';
-                    }
+                    // if (text === '0') {
+                    //     return '-';
+                    // }
 
                     return text;
                 },
@@ -236,9 +236,9 @@ class MonitoringStandard extends Component {
                 // width: '10%',
                 align: 'center',
                 render: (text, record) => {
-                    if (text === '0') {
-                        return '-';
-                    }
+                    // if (text === '0') {
+                    //     return '-';
+                    // }
 
                     return text;
                 },
@@ -250,9 +250,9 @@ class MonitoringStandard extends Component {
                 // width: '10%',
                 align: 'center',
                 render: (text, record) => {
-                    if (text === 0) {
-                        return '-';
-                    }
+                    // if (text === 0) {
+                    //     return '-';
+                    // }
 
                     return text;
                 },

@@ -75,7 +75,8 @@ export default class OperationInfo extends Component {
 
     this.state = {
       visible:false,
-      unitDisabled:false
+      unitDisabled:false,
+      DGIMN:''
     };
     this.columns =  [      {
       title: <span>运维类型</span>,
@@ -108,9 +109,9 @@ export default class OperationInfo extends Component {
         align: 'center',
         render: (text, record) =>{
           return  <span>
-                 <a href="#" style={{padding:'0 5px'}} onClick={()=>{this.edit(record)}} >编辑</a>
+                 <a  style={{padding:'0 5px'}} onClick={()=>{this.edit(record)}} >编辑</a>
                  <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(record)} okText="是" cancelText="否">
-                 <a href="#" >删除</a>
+                 <a >删除</a>
                  </Popconfirm>
                </span>
         }
@@ -128,7 +129,7 @@ export default class OperationInfo extends Component {
       payload: {
       },
     });
-    setFieldsValue({
+    this.setState({
       DGIMN:p
     })
     setTimeout(() => {
@@ -165,7 +166,7 @@ export default class OperationInfo extends Component {
 
    edit=(row)=>{  //编辑
 
-    const {dispatch,form:{setFieldsValue},editFormData} = this.props;
+    const {dispatch,form:{setFieldsValue},editFormData,operationList} = this.props;
 
     this.setState({
       visible:true,
@@ -175,12 +176,18 @@ export default class OperationInfo extends Component {
         this.setState({unitDisabled:true})
       }else{
         this.setState({unitDisabled:false})
+        // row.EnterpriseID   = operationList.filter(item=>{
+        //        if(item.Company === row.oprationEntName){
+        //            return item
+        //        }
+        // })
+        // row.entID= row.EnterpriseID[0].EnterpriseID
       }
       // 获取详情页面数据
       setFieldsValue({
         ID:row.ID,
         Type:row.operationType,
-        OperationCompany:row.Type==2?row.OperationCompany:undefined,//单位
+        OperationCompany:row.operationType==2?row.entID:undefined,//单位
         Time:[moment(row.beginTime),moment(row.endTime)]
       })
 
@@ -192,17 +199,16 @@ export default class OperationInfo extends Component {
 
 
    handleOk=(e)=>{
-     const {uid,uidGas,uidWater,type} = this.state;
-
-    //  this.props.form.setFieldsValue({ Time:this.state.fileList.length>0? this.state.uid : ''})
+     const {DGIMN} = this.state;
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
+       console.log(values)
         this.props.dispatch({
               type: 'operationInfo/addOrUpdateOperationPoint',
               payload: {
                   ...values,
+                  DGIMN:DGIMN,
                   BeginTime:moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss"),
                   EndTime:moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss")
                  },
@@ -352,9 +358,6 @@ export default class OperationInfo extends Component {
       </Form.Item>
       <Form.Item label="ID"   hidden>
          {getFieldDecorator('ID')(<Input />)}
-      </Form.Item> 
-      <Form.Item label="DGIMN"   hidden>
-         {getFieldDecorator('DGIMN')(<Input />)}
       </Form.Item> 
       </Row>
     </Form>

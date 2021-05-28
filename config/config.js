@@ -1347,7 +1347,7 @@ export default {
                     },
                     {
                       name: 'Intelligentanalysis',
-                      path: '/Intelligentanalysis/transmissionefficiency/qutDetail',
+                      path: '/Intelligentanalysis/transmissionefficiency/ent/qutDetail',
                       component: './Intelligentanalysis/newTransmissionefficiency/qutPage',
                     },
                     { //有效传输率  空气站

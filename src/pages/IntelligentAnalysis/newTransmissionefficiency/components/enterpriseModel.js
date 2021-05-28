@@ -19,6 +19,7 @@ import {
   Button,
   Modal,
   message,
+  Tooltip 
 } from 'antd';
 import moment from 'moment';
 import styles from '../style.less';
@@ -35,6 +36,9 @@ const pageUrl = {
   updateState: 'newtransmissionefficiency/updateState',
   getData: 'newtransmissionefficiency/getTransmissionEfficiencyForEnt',
 };
+import {
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 @Form.create()
 @connect(({ loading, newtransmissionefficiency }) => ({
   loading: loading.effects[pageUrl.getData],
@@ -92,6 +96,13 @@ export default class enterpriseEfficiency extends Component {
     const data = value.toString();
     const result = data.substring(0,data.indexOf(".")+3)
     return result;
+  }
+  calculationType=()=>{
+    return <ol type='1' style={{listStyleType:'decimal'}}>
+      <li>空白：监测点参与企业和行政区的有效传输率统计</li>
+      <li>不参与企业计算：监测点不参与企业有效传输率统计，原因见备注列</li>
+      <li>不参与行政区计算：监测点不参与行政区有效传输率统计,原因见备注列</li>
+    </ol>
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -287,6 +298,18 @@ export default class enterpriseEfficiency extends Component {
             </div>
           );
         },
+      },
+      {
+        title: <span style={{ fontWeight: 'bold' }}>计算类型  <Tooltip overlayClassName='calculationTypeSty' title={this.calculationType()}><QuestionCircleOutlined/></Tooltip></span>,
+        dataIndex: 'x',
+        key: 'x',
+        align: 'center',
+      },
+      {
+        title: <span style={{ fontWeight: 'bold' }}>备注</span>,
+        dataIndex: 'x',
+        key: 'x',
+        align: 'center',
       },
     ];
     return (
