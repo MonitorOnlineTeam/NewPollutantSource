@@ -542,7 +542,6 @@ class Index extends React.Component {
         callback:()=>{
 
           const { getParaCodeList } = this.props;
-           console.log(getParaCodeList)
           if(getParaCodeList.length==0){
             
             this.setState({ paraPlaceholder:'请选择其他仪器' })
