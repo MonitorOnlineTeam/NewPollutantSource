@@ -51,11 +51,11 @@ const errorHandler = error => {
       Cookie.set(configToken.cookieName, null);
       Cookie.set('currentUser', null);
       router.push('/user/login');
-      return;
+      return data;
     }
     if (status === 403) {
       router.push('/exception/403');
-      return;
+      return data;
     }
     if (status >= 404 && status < 422) {
       // router.push('/exception/404');
