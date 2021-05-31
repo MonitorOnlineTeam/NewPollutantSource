@@ -35,7 +35,7 @@ class working extends Component {
       <>
         <NavigationTree domId="working" onItemClick={(value, selectItem) => { this.changeDgimn(value, selectItem) }} />
         <div  id="working">
-        <BreadcrumbWrapper  extraName={entName}>
+        <BreadcrumbWrapper  titles={`【${entName}】`}>
           <Card>
             <Tabs type="card">
               <TabPane tab="数据可视化" key="1">
