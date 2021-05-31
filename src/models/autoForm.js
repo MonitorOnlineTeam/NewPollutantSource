@@ -331,7 +331,6 @@ export default Model.extend({
         //   names: result.Datas.Keys.map(item => item.DF_NAME),
         // }
         // console.log('keys=', keys);
-
         const state = yield select(state => state.autoForm);
         yield put({
           type: 'saveConfigIdList',
@@ -437,9 +436,15 @@ export default Model.extend({
       const result = yield call(services.postAutoFromDataUpdate, postData);
       if (result.IsSuccess) {
         message.success('修改成功！');
-        // yield put({
-        //   type: 'getAutoFormData'
-        // });
+        if (payload.reload) {
+          yield put({
+            type: 'getAutoFormData',
+            payload: {
+              configId: payload.configId,
+              searchParams: payload.searchParams,
+            },
+          });
+        }
         payload.callback && payload.callback(result);
       } else {
         message.error(result.Message);

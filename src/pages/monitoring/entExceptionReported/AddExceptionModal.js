@@ -82,8 +82,8 @@ class AddExceptionModal extends PureComponent {
             Attachments: this.state.cuid,
             ExceptionType: values.ExceptionType.toString(),
             PollutantCodes: values.PollutantCodes.toString(),
-            ExceptionBeginTime: values.ExceptionBeginTime ? moment(values.ExceptionBeginTime).format("YYYY-MM-DD HH:mm:ss") : undefined,
-            ExceptionEndTime: values.ExceptionEndTime ? moment(values.ExceptionEndTime).format("YYYY-MM-DD HH:mm:ss") : undefined,
+            ExceptionBeginTime: values.ExceptionBeginTime ? moment(values.ExceptionBeginTime).format("YYYY-MM-DD HH:00:00") : undefined,
+            ExceptionEndTime: values.ExceptionEndTime ? moment(values.ExceptionEndTime).format("YYYY-MM-DD HH:00:00") : undefined,
           },
           callback: () => {
             this.props.onSuccess && this.props.onSuccess()

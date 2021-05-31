@@ -6,7 +6,6 @@ import { connect } from 'dva';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '../../AutoFormManager/AutoFormTable';
 import SearchWrapper from '../../AutoFormManager/SearchWrapper';
-import styles from './index.less';
 
 @connect(({ loading, autoForm }) => ({
     loading: loading.effects['autoForm/getPageConfig'],
@@ -17,7 +16,7 @@ import styles from './index.less';
     routerConfig: autoForm.routerConfig,
 }))
 
- class Index extends Component {
+class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -66,20 +65,18 @@ import styles from './index.less';
         }
         return (
             <BreadcrumbWrapper>
-                <div className={styles.cardTitle}>
-                    <Card>
-                        <SearchWrapper
-                            onSubmitForm={form => this.loadReportList(form)}
-                            configId={configId}
-                        ></SearchWrapper>
-                        <SdlTable
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                            {...this.props}
-                        >
-                        </SdlTable>
-                    </Card>
-                </div>
+                <Card>
+                    <SearchWrapper
+                        onSubmitForm={form => this.loadReportList(form)}
+                        configId={configId}
+                    ></SearchWrapper>
+                    <SdlTable
+                        style={{ marginTop: 10 }}
+                        configId={configId}
+                        {...this.props}
+                    >
+                    </SdlTable>
+                </Card>
             </BreadcrumbWrapper>
         );
     }

@@ -22,6 +22,7 @@ export default Model.extend({
     pointCountList: {},
     entEmissionsData: [],
     markersEntList: [],
+    multimediaConferenceTreeData: [],
   },
 
   effects: {
@@ -291,6 +292,42 @@ export default Model.extend({
         yield update({
 
         })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取多媒体会议树
+    *getTreeListByConfig({ payload, callback }, { call, update, put, take, select }) {
+      const result = yield call(services.getTreeListByConfig, {});
+      if (result.IsSuccess) {
+        let data = [];
+        console.log('payload=', payload)
+        payload.dataList.map(item => {
+          result.Datas.map(itm => {
+            if (item.id == itm.id && item.longitude && item.latitude) {
+              data.push({
+                ...itm,
+                title: item.name,
+                key: item.id,
+                position: {
+                  longitude: item.longitude,
+                  latitude: item.latitude
+                }
+              })
+            }
+          })
+        })
+        let treeData = [
+          {
+            title: '石城环保局',
+            key: '0',
+            children: data,
+          }
+        ]
+        callback && callback(treeData, data)
+        // yield update({
+        //   multimediaConferenceTreeData: data
+        // })
       } else {
         message.error(result.Message)
       }

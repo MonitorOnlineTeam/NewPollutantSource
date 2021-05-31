@@ -464,7 +464,7 @@ class ThematicMap extends PureComponent {
               onChange={e => {
                 this.setState({ searchInputVal: e.target.value });
               }}
-              placeholder="请输入排口名称"
+              placeholder="请输入点位名称"
               className={styles.searchInput}
             />
           </div>

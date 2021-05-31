@@ -447,6 +447,8 @@ export default class EntTransmissionEfficiency extends Component {
       })
     }
     return {
+      // darkMode: true,
+      backgroundColor: 'transparent',
       color: [blue[5], red[5], green[5], gold[5], purple[5], grey[5], magenta[5]],
       title: {
         // text:entName,//图表标题文本内
@@ -645,7 +647,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <ReactEcharts
                   option={this.getChartData()}
                   className="echarts-for-echarts"
-                  theme="my_theme"
+                  // theme="dark"
                   style={{ height: "calc(100vh - 350px)", paddingTop: 10 }}
                 />
 

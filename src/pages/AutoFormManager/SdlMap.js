@@ -8,6 +8,7 @@ import { connect } from 'dva';
 import styles from './MapContent.less';
 import config from '@/config'
 import { isInsidePolygon } from '@/utils/utils'
+import webConfig from '../../../public/webConfig'
 
 const YOUR_AMAP_KEY = 'c5cb4ec7ca3ba4618348693dd449002d';
 // import MapUI from "@/pages/monitoring/mapview/MapUI"
@@ -389,9 +390,14 @@ class SdlMap extends PureComponent {
     //   mapStaticAttribute.zooms = [3, 14]
     // }
 
+    if (webConfig.theme === 'dark') {
+      mapStaticAttribute = { mapStyle: "amap://styles/darkblue" }
+    }
+
     return <Map
       amapkey={YOUR_AMAP_KEY}
       // zoom={this.props.zoom}
+      // mapStyle="amap://styles/darkblue"
       {...props}
       events={events}
       {...mapStaticAttribute}

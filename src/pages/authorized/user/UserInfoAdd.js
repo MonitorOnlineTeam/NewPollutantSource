@@ -269,7 +269,7 @@ export default class UserInfoAdd extends Component {
                                         </FormItem> */}
 
 
-                                        <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                        <Divider orientation="right">
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -323,7 +323,7 @@ export default class UserInfoAdd extends Component {
                                             </Tree>
                                     }
 
-                                    <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                    <Divider orientation="right">
                                         <Button
                                             type="primary"
                                             onClick={() => {
@@ -367,7 +367,7 @@ export default class UserInfoAdd extends Component {
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>
                                     }
-                                    <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
+                                    <Divider orientation="right">
                                         <Button
                                             type="primary"
                                             onClick={this.postFormDatas}

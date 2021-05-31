@@ -1,5 +1,19 @@
 @import '~antd/es/style/themes/default.less';
+// @import '~antd/lib/style/themes/default.less';
+// @import '~antd/dist/antd.less'; // 引入官方提供的 less 样式入口文件
+// @import './your-theme-file.less';
 @contentMargin: 20px; // 内容区域左右边距
+
+// .dark(@isdark) when (@isdark = true) {
+//   @import '~antd/dist/antd.dark.less';
+//   @import './dark.less';
+// }
+
+//html#darkHtml {
+//  @import '~antd/dist/antd.dark.less';
+//  @import './dark.less';
+//  // @import './your-theme-file.less';
+//}
 
 html,
 body,
@@ -7,6 +21,7 @@ body,
   height: 100%;
   overflow-y: hidden;
 
+  // @import '~antd/dist/antd.dark.less';
   input {
     line-height: 1 !important;
   }
@@ -155,7 +170,7 @@ p {
   .ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td,
   .ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td,
   .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
-    background: #e6f7ff !important;
+    background: #e6f7ff;
   }
 
   #zeroPointData,
@@ -265,7 +280,7 @@ a:hover {
 :global {
 
   // button - loading
-  .ant-btn > .ant-btn-loading-icon .anticon {
+  .ant-btn>.ant-btn-loading-icon .anticon {
     margin-right: 8px;
     padding-right: 0;
   }
@@ -463,9 +478,11 @@ a:hover {
     box-shadow: none;
   }
 }
+
 #root>div {
   height: 100%;
 }
+
 // .notAdaptive {
 //   .ant-card-body {
 //     padding-bottom: 0 !important;
@@ -513,7 +530,7 @@ a:hover {
 #notBreadcrumbLayout {
   .ant-pro-page-header-wrap-children-content {
     height: calc(100vh - 126px);
-    background: #fff;
+    background-color: #fff;
     overflow-y: auto;
 
     .ant-card-body,
@@ -554,19 +571,22 @@ a:hover {
     background-color: #f0f2f5
   }
 }
-.textOverflow{
+
+.textOverflow {
   display: inline-block;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.colCenter{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center
+
+.colCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
 }
+
 // .ontEntDetailPhoto{
 //   :global {
 //     .ant-upload-list-picture-card .ant-upload-list-item-thumbnail, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img{
@@ -575,7 +595,18 @@ a:hover {
 //   }
 // }
 :global {
-.ant-upload-list-picture-card .ant-upload-list-item-thumbnail, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img{
-  object-fit: fill;
+
+  .ant-upload-list-picture-card .ant-upload-list-item-thumbnail,
+  .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
+    object-fit: fill;
+  }
 }
+
+.example {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  // background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
