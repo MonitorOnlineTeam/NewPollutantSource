@@ -226,6 +226,92 @@ onChangeHandle=(PageIndex, PageSize)=>{
         dataIndex: 'pointName',
         key: 'pointName'
       },
+
+      {
+        title: "站点属性",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'attentionName',
+        key: 'attentionName'
+      },
+      {
+        title: "经度",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'longitude',
+        key: 'longitude'
+      },
+      {
+        title: "纬度",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'latitude',
+        key: 'latitude'
+      },
+      {
+        title: "负责人手机号",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'x',
+        key: 'x'
+      },
+      {
+        title: "运维状态",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'operationStatus',
+        key: 'operationStatus',
+        render:(text)=>{
+          return text == '0' ? '进行中':'已结束'
+        }
+      },
+      
+      {
+        title: "是否上传监控数据",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'judgeOverData',
+        key: 'judgeOverData',
+        render:(text)=>{
+           if(text==0){
+             return '不上传监控数据'
+           }
+           if(text==1){
+            return '上传监控数据'
+          }
+          if(text==2){
+            return '不监控数据'
+          }
+        }
+      },
+      {
+        title: "是否判断缺失报警",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'monitorData',
+        key: 'monitorData',
+        render:(text)=>{
+          return text == '0' ? '不判断报警': '判断报警'
+        }
+      },
+      {
+        title: "运维负责人",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'operationName',
+        key: 'operationName',
+        render:(text)=>{
+          return text == '' ? '-':text
+        }
+      },
       {
         title: "最新数据上传时间",
         width: 100,
@@ -241,17 +327,6 @@ onChangeHandle=(PageIndex, PageSize)=>{
         fixed: fixed,
         dataIndex: 'pollutantNames',
         key: 'pollutantNames'
-      },
-      {
-        title: "运维负责人",
-        width: 100,
-        align: 'center',
-        fixed: fixed,
-        dataIndex: 'operationName',
-        key: 'operationName',
-        render:(text)=>{
-          return text == '' ? '-':text
-        }
       },
     ]
 

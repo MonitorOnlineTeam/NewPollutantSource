@@ -442,7 +442,7 @@ export default class EntTransmissionEfficiency extends Component {
 
 
       <Card
-          title='统计污空气站传输有效率'
+          title='统计空气站传输有效率'
           style={{border:'1px solid #f0f0f0',marginTop:20}}
           className={styles.manualStatistics}
       >

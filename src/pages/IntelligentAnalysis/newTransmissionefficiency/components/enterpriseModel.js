@@ -301,14 +301,15 @@ export default class enterpriseEfficiency extends Component {
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>计算类型  <Tooltip overlayClassName='calculationTypeSty' title={this.calculationType()}><QuestionCircleOutlined/></Tooltip></span>,
-        dataIndex: 'x',
-        key: 'x',
+        dataIndex: 'CalculationType',
+        key: 'CalculationType',
+        width:100,
         align: 'center',
       },
       {
         title: <span style={{ fontWeight: 'bold' }}>备注</span>,
-        dataIndex: 'x',
-        key: 'x',
+        dataIndex: 'Remark',
+        key: 'Remark',
         align: 'center',
       },
     ];
