@@ -131,11 +131,12 @@ class Index extends Component {
             configId,
             FormData: {
               ...formData,
+              EPID: this.state.ID,
               ID: this.state.ID,
             },
             callback: result => {
               if (result.IsSuccess) {
-                this.setState({
+                this.setState({ 
                   Evisible: false,
                 }, () => {
                   dispatch({
