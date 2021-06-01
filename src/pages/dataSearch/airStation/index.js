@@ -226,7 +226,14 @@ onChangeHandle=(PageIndex, PageSize)=>{
         dataIndex: 'pointName',
         key: 'pointName'
       },
-
+      {
+        title: "设备编号(MN)",
+        width: 100,
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'x',
+        key: 'x'
+      },
       {
         title: "站点属性",
         width: 100,
@@ -273,7 +280,6 @@ onChangeHandle=(PageIndex, PageSize)=>{
       
       {
         title: "是否上传监控数据",
-        width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'judgeOverData',
@@ -292,7 +298,6 @@ onChangeHandle=(PageIndex, PageSize)=>{
       },
       {
         title: "是否判断缺失报警",
-        width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'monitorData',
@@ -314,7 +319,6 @@ onChangeHandle=(PageIndex, PageSize)=>{
       },
       {
         title: "最新数据上传时间",
-        width: 100,
         align: 'center',
         fixed: fixed,
         dataIndex: 'latestTime',
