@@ -38,6 +38,8 @@ const Model = {
 
 
         delete response.Datas.MenuDatas;
+        delete response.Datas.Ticket;
+        delete response.Datas.DepIds;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
         Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
