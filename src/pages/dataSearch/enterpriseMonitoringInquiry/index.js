@@ -583,6 +583,116 @@ class index extends PureComponent {
                 dataIndex: 'entName',
                 key: 'entName',
             },
+            // {
+            //     title: "企业简称",
+            //     align: 'left',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "关注程度",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "经度",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "纬度",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "法人编号",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "法人名称",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "所属行业",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "污染源规模",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "注册类型",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "环保负责人",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "办公电话",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "移动电话",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "隶属关系",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "重点类型",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "双运维",
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
         ]
 
         const columns3 = [
@@ -630,6 +740,7 @@ class index extends PureComponent {
                         title="企业列表"
                         visible={this.state.visible}
                         footer={null}
+                        // width={'80%'}
                         width={800}
                         onCancel={this.CancelHandel}
                     >
@@ -646,10 +757,14 @@ class index extends PureComponent {
                         width={800}
                         onCancel={this.CancelHandel}
                     >
-                        <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
-                        <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
-                            <Button style={{ float: 'right' }} onClick={this.PointexportReport}><ExportOutlined />导出</Button>
+                        <div>
+                            {/* <Select style={{width:100}} defaultValue="1">
+                              <Option value="1">废水</Option>
+                              <Option value="2">废气</Option>
+                             </Select> */}
+                            <Button  style={{marginBottom:'8px',marginLeft:'5px'}}  onClick={this.PointexportReport}><ExportOutlined />导出</Button>
                         </div>
+                        <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
                     </Modal>
                 </BreadcrumbWrapper>
             </div>
