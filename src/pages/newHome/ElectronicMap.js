@@ -135,19 +135,19 @@ class NewHome extends PureComponent {
         // this.setState({ initZoom: aMap.getZoom()})
       },
       zoomchange: value => {
-      //   const zoom = aMap.getZoom();
-      //   if (this.state.displayType === 0) {
-      //     if (zoom >= 9 && this.state.hideEntName) {
-      //       this.setState({ hideEntName: false });
-      //       this.showEntName();
-      //     }
-      //     if (zoom <= 9 && !this.state.hideEntName) {
-      //       this.setState({
-      //         hideEntName: true,
-      //       });
-      //       this.showEntName();
-      //     }
-      //   }
+        const zoom = aMap.getZoom();
+        if (this.state.displayType === 0) {
+          if (zoom >= 9 && this.state.hideEntName) {
+            this.setState({ hideEntName: false });
+            this.showEntName();
+          }
+          if (zoom <= 9 && !this.state.hideEntName) {
+            this.setState({
+              hideEntName: true,
+            });
+            this.showEntName();
+          }
+        }
       },
     };
     // markers事件
@@ -282,18 +282,21 @@ class NewHome extends PureComponent {
 
   showEntName = () => {
     let filterEntList = this.props.allEntAndPointList;
+     
+    const { selectValue } = this.state;
+
     // 过滤企业筛选
-    if (this.state.selectValue) {
+    if (selectValue) {
       filterEntList = this.props.allEntAndPointList.filter(
-        item => item.MonitorObjectType == this.state.selectValue,
+        item => item.MonitorObjectType == selectValue.split(",")[0] || item.MonitorObjectType == selectValue.split(",")[1]
       );
     }
     // 过滤师筛选
-    if (this.state.clickedDivision) {
+    if (this.state.RegionCode) {
       filterEntList = filterEntList.filter(itm => {
         if (itm.RegionCode) {
           const RegionCode = itm.RegionCode.split(',');
-          if (RegionCode.includes(this.state.clickedDivision.RegionCode)) {
+          if (RegionCode.includes(this.state.RegionCode)) {
             return itm;
           }
         }
@@ -538,11 +541,11 @@ class NewHome extends PureComponent {
               }
             }}
           >
-            {/* <div
+           <div
               className={mapStyles.pulse1}
               style={{ left: -11, top: aMap.getZoom() >= 10 ? 18 : -12, display: isShow }}
-            ></div> */}
-            {/* {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>} */}
+            ></div>
+             {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>} 
             <EntIcon style={{ fontSize: 28 }} />
           </div>
         );
