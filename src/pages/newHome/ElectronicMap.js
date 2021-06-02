@@ -135,19 +135,19 @@ class NewHome extends PureComponent {
         // this.setState({ initZoom: aMap.getZoom()})
       },
       zoomchange: value => {
-        const zoom = aMap.getZoom();
-        if (this.state.displayType === 0) {
-          if (zoom >= 9 && this.state.hideEntName) {
-            this.setState({ hideEntName: false });
-            this.showEntName();
-          }
-          if (zoom <= 9 && !this.state.hideEntName) {
-            this.setState({
-              hideEntName: true,
-            });
-            this.showEntName();
-          }
-        }
+      //   const zoom = aMap.getZoom();
+      //   if (this.state.displayType === 0) {
+      //     if (zoom >= 9 && this.state.hideEntName) {
+      //       this.setState({ hideEntName: false });
+      //       this.showEntName();
+      //     }
+      //     if (zoom <= 9 && !this.state.hideEntName) {
+      //       this.setState({
+      //         hideEntName: true,
+      //       });
+      //       this.showEntName();
+      //     }
+      //   }
       },
     };
     // markers事件
@@ -308,7 +308,7 @@ class NewHome extends PureComponent {
       type: 'newHome/getAllEntAndPoint',
       payload: {
         PollutantTypes: this.state.selectValue.toString(),
-        RegionCode: this.state.RegionCode,
+        RegionCode: this.state.RegionCode?this.state.RegionCode : '',
       },
       callback:res=>{
          if(type){
@@ -456,7 +456,8 @@ class NewHome extends PureComponent {
       return (
         <div
           onMouseEnter={() => {
-            if (this.state.infoWindowVisible === false && aMap.getZoom() < 10) {
+            // if (this.state.infoWindowVisible === false && aMap.getZoom() < 10) {
+              if (this.state.infoWindowVisible === false && displayType === 0) {
               this.setState({
                 hoverMapCenter: extData.position,
                 currentTitle: extData.position.title,
@@ -504,6 +505,7 @@ class NewHome extends PureComponent {
     // console.log('currentDivisionPosition=', currentDivisionPosition)
     const style = { fontSize: 24, color: this.getColor(extData.position.Status), ...mapIconStyle };
     switch (extData.position.MonitorObjectType) {
+
       case '1':
         // 企业
         let isShow = 'none';
@@ -517,6 +519,7 @@ class NewHome extends PureComponent {
           <div
             style={{ color: '#525151', position: 'relative' }}
             onClick={() => {
+              // console.log('点击图标')
               // 企业点击显示监测点
               if (extData.children) {
                 const pointMarkers = extData.children.map(item => ({
@@ -535,11 +538,11 @@ class NewHome extends PureComponent {
               }
             }}
           >
-            <div
+            {/* <div
               className={mapStyles.pulse1}
               style={{ left: -11, top: aMap.getZoom() >= 10 ? 18 : -12, display: isShow }}
-            ></div>
-            {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>}
+            ></div> */}
+            {/* {aMap.getZoom() > 9 && <div className={styles.pop}>{extData.position.title}</div>} */}
             <EntIcon style={{ fontSize: 28 }} />
           </div>
         );
@@ -551,7 +554,7 @@ class NewHome extends PureComponent {
             : '#999';
         return (
           <div style={{ color: '#525151' }}>
-            {aMap.getZoom() >= 9 && <div className={styles.pop}>{extData.position.title}</div>}
+            {/* {aMap.getZoom() >= 9 && <div className={styles.pop}>{extData.position.title}</div>} */}
             <CustomIcon
               type="icon-fangwu"
               style={{ ...iconStyle, color }}
@@ -1084,7 +1087,7 @@ class NewHome extends PureComponent {
                       let filterList = allEntAndPointList;
                       if (selectValue) {
                         filterList = filterEntAndPointList.filter(
-                          item => item.MonitorObjectType == selectValue,
+                          item => item.MonitorObjectType == selectValue.split(",")[0] || item.MonitorObjectType == selectValue.split(",")[1],
                         );
                       }
                       if (clickedDivision) {
@@ -1102,7 +1105,8 @@ class NewHome extends PureComponent {
                       });
                       this.renderEntMarkers(filterList);
                       // aMap.setFitView();
-                      aMap.setZoom(6);
+                      // aMap.setZoom(6);
+                      // aMap.setZoom(9);
                     }}
                   >
                     返回企业
@@ -1149,35 +1153,41 @@ class NewHome extends PureComponent {
                     onChange={val => {
                       this.setState({ selectValue: val });
                       
-                      if (val) {
-                        let filterList = filterEntAndPointList.filter(
-                          item => item.MonitorObjectType == val.split(",")[0] || item.MonitorObjectType == val.split(",")[1],
-                        );
-                        console.log(filterEntAndPointList)
-                        if (clickedDivision) {
-                          filterList = filterList.filter(itm => {
-                            if (itm.RegionCode) {
-                              const RegionCode = itm.RegionCode.split(',');
-                              if (RegionCode.includes(clickedDivision.RegionCode)) {
-                                return itm;
-                              }
-                            }
-                          });
-                        }
-                        this.renderEntMarkers(filterList);
+                      if (val&&val!=5) {
+                        // let filterList = filterEntAndPointList.filter(
+                        //   item => item.MonitorObjectType == val.split(",")[0] || item.MonitorObjectType == val.split(",")[1],
+                        // );
+                        // if (clickedDivision) {
+                        //   filterList = filterList.filter(itm => {
+                        //     if (itm.RegionCode) {
+                        //       const RegionCode = itm.RegionCode.split(',');
+                        //       if (RegionCode.includes(clickedDivision.RegionCode)) {
+                        //         return itm;
+                        //       }
+                        //     }
+                        //   });
+                        // }
+                        // this.renderEntMarkers(filterList);
+                        this.setState({ selectValue: val },()=>{
+                          this.getAllEntAndPoint();
+                        });
+                      }else if(val==5){
+                        this.setState({ selectValue: val },()=>{
+                          this.getAllEntAndPoint();
+                        });
                       } else {
-                        let filterList = allEntAndPointList;
-                        if (clickedDivision) {
-                          filterList = allEntAndPointList.filter(itm => {
-                            if (itm.RegionCode) {
-                              const RegionCode = itm.RegionCode.split(',');
-                              if (RegionCode.includes(clickedDivision.RegionCode)) {
-                                return itm;
-                              }
-                            }
-                          });
-                        }
-                        this.renderEntMarkers(filterList);
+                        // let filterList = allEntAndPointList;
+                        // if (clickedDivision) {
+                        //   filterList = allEntAndPointList.filter(itm => {
+                        //     if (itm.RegionCode) {
+                        //       const RegionCode = itm.RegionCode.split(',');
+                        //       if (RegionCode.includes(clickedDivision.RegionCode)) {
+                        //         return itm;
+                        //       }
+                        //     }
+                        //   });
+                        // }
+                        // this.renderEntMarkers(filterList);
                       }
                     }}
                   >
@@ -1196,7 +1206,7 @@ class NewHome extends PureComponent {
                     onChange={e => {
                       this.setState({ searchInputVal: e.target.value });
                     }}
-                    placeholder={selectValue==='1'?"请输入企业名称":'请输入空气站名称'}
+                    placeholder={selectValue==='1,2'?"请输入企业名称":'请输入空气站名称'}
                     className={styles.searchInput}
                   />
                 )}
@@ -1274,7 +1284,7 @@ class NewHome extends PureComponent {
                  popupClassName='newHomeWrapCascaderPop'
                  onChange={val => {
                    this.setState({RegionCode:val? val[val.length-1] : ''},()=>{
-                    this.getAllEntAndPoint('region');
+                    this.state.RegionCode? this.getAllEntAndPoint('region') : this.getAllEntAndPoint();
 
                    })
                             
@@ -1366,13 +1376,13 @@ class NewHome extends PureComponent {
                 useAMapUI={!config.offlineMapUrl.domain}
                 {...mapStaticAttribute}
               >
-                {!config.offlineMapUrl.domain && (
+                {/* {!config.offlineMapUrl.domain && (
                   <MapUI
                     renderEnt={() => {
                       this.renderEntMarkers(this.props);
                     }}
                   />
-                )}
+                )} */}
 
                 {this.drawPolygon()}
                 <Markers

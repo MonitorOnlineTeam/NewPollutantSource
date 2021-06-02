@@ -8,6 +8,7 @@ import styles from './index.less';
 import Cookie from 'js-cookie';
 import ChangePwdView from './ChangePwdView';
 import configToken from '@/config'
+import router from 'umi/router';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {

@@ -34,7 +34,6 @@ export default class Index extends Component {
 
   componentDidMount() {
 
-  
    }
    updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;

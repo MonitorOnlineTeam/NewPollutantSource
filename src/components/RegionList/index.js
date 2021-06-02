@@ -14,7 +14,7 @@ const { TreeNode } = TreeSelect;
 }))
 export default class Index extends Component {
   static defaultProps = { 
-    levelNum: 2,
+    levelNum: 3,
     selectType:'3,是'
   }
   constructor(props) {
