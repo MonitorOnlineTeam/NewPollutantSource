@@ -242,7 +242,7 @@ export default class EntTransmissionEfficiency extends Component {
  })
   }
   changeEnt=(value)=>{
-      this.updateState({parmarType:'EntCode'})
+      // this.updateState({parmarType:'EntCode'})
       this.props.form.setFieldsValue({ DGIMN: undefined})
       this.props.dispatch({ type: 'manualStatistics/getPointByEntCode', //根据企业获取监测点
        payload: {  EntCode: value },
