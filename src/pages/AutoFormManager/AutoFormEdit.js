@@ -10,11 +10,8 @@ import PropTypes from 'prop-types';
 import { Spin } from 'antd'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import moment from "moment";
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
 import { checkRules } from '@/utils/validator';
-import MonitorContent from '../../components/MonitorContent/index';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlForm from "./SdlForm"
 
@@ -22,11 +19,14 @@ const FormItem = Form.Item;
 
 @connect(({ loading, autoForm }) => ({
   loadingConfig: loading.effects['autoForm/getPageConfig'],
+  loadingConfigId: loading.effects['autoForm/getConfigIdList'],
+  loadingGetFormData: loading.effects['autoForm/getFormData'],
   loadingAdd: loading.effects['autoForm/add'],
   addFormItems: autoForm.addFormItems,
   editFormData: autoForm.editFormData,
   tableInfo: autoForm.tableInfo,
-  loading: loading
+  loading: loading,
+
 }))
 @Form.create()
 class AutoFormEdit extends Component {
@@ -131,7 +131,7 @@ class AutoFormEdit extends Component {
   }
 
   render() {
-    const { dispatch, breadcrumb } = this.props;
+    const { dispatch, breadcrumb, loadingConfig, loadingConfigId, loadingGetFormData } = this.props;
     const { configId } = this._SELF_;
 
     return (
@@ -148,13 +148,13 @@ class AutoFormEdit extends Component {
             // }
             // >
             <BreadcrumbWrapper title="编辑">
-              <Spin delay={1500} spinning={this.props.loading.models.autoForm}>
+              <Spin spinning={loadingConfig || loadingConfigId || loadingGetFormData}>
                 {this._renderForm()}
               </Spin>
               {/* </MonitorContent> : */}
             </BreadcrumbWrapper> :
             <Fragment>
-              <Spin delay={1500} spinning={this.props.loading.models.autoForm}>
+              <Spin spinning={loadingConfig || loadingConfigId || loadingGetFormData}>
                 {this._renderForm()}
               </Spin>
             </Fragment>
