@@ -37,7 +37,10 @@ export default Model.extend({
 
       const  parmarType = yield select(_ =>_.manualStatistics.parmarType)
       const  queryPar = yield select(_ =>_.manualStatistics.queryPar)
-      parmarType==='EntCode'? yield update({ pointLoading: true }):yield update({ entLoading: true })
+      // parmarType==='EntCode'?
+      //  yield update({ pointLoading: true })
+      //  :
+      yield update({ entLoading: true })
       
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
@@ -47,11 +50,10 @@ export default Model.extend({
           yield update({ entLoading: false });
           callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
         }
-        if(parmarType==='EntCode'){
-          yield update({ pointLoading: false });
-          yield update({ PointList: response.Datas.PointList});
-          // callback(response.Datas.PointList.length>0? response.Datas.PointList[0][0].EntCode :'')
-        }
+        // if(parmarType==='EntCode'){
+        //   yield update({ pointLoading: false });
+        //   yield update({ PointList: response.Datas.PointList});
+        // }
       }
     },
     *getPointByEntCode({ callback,payload }, { call, put, update, select }) {
