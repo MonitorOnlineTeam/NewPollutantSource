@@ -9,7 +9,8 @@ import {
   GetEmissionsEntPointPollutant,
   GetRecalculateEffectiveTransmissionEnt,
   // GetAirPoint,
-  GetRecalculateEffectiveTransmissionAir
+  GetRecalculateEffectiveTransmissionAir,
+  GetPointByEntCode
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -53,6 +54,18 @@ export default Model.extend({
         }
       }
     },
+    *getPointByEntCode({ callback,payload }, { call, put, update, select }) {
+      //获取监测点列表
+
+       yield update({ pointLoading: true })
+      
+      const response = yield call(GetPointByEntCode, { ...payload });
+      if (response.IsSuccess) {
+          yield update({ pointLoading: false });
+          yield update({ PointList: response.Datas});
+      }
+    },
+    
     // *getAirPoint({ payload,callback }, { call, put, update, select }) {
     //   //列表  空气站监测点
     //   const response = yield call(GetAirPoint, { ...payload });
