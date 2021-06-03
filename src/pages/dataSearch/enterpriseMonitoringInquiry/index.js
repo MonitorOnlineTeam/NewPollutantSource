@@ -563,6 +563,9 @@ class index extends PureComponent {
             visibleMoni: false
         })
     }
+    typeChange = (value) =>{
+
+    }
     render() {
         const { loading } = this.props
         const fixed = false
@@ -758,10 +761,10 @@ class index extends PureComponent {
                         onCancel={this.CancelHandel}
                     >
                         <div>
-                            {/* <Select style={{width:100}} defaultValue="1">
+                             {/* <Select onChange={this.typeChange} style={{width:100}} defaultValue="1">
                               <Option value="1">废水</Option>
                               <Option value="2">废气</Option>
-                             </Select> */}
+                             </Select>  */}
                             <Button  style={{marginBottom:'8px',marginLeft:'5px'}}  onClick={this.PointexportReport}><ExportOutlined />导出</Button>
                         </div>
                         <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>

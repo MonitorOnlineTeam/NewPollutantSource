@@ -140,8 +140,8 @@ export default class EntTransmissionEfficiency extends Component {
     if (PointList.length > 0) {
       PointList.map(item => {
         selectList.push(
-          <Option key={item[0].DGIMN} value={item[0].DGIMN}  title={item[0].PointName}>
-            {item[0].PointName}
+          <Option key={item.DGIMN} value={item.DGIMN}  title={item.PointName}>
+            {item.PointName}
           </Option>,
         );
       });
@@ -242,9 +242,9 @@ export default class EntTransmissionEfficiency extends Component {
  })
   }
   changeEnt=(value)=>{
-      this.updateState({parmarType:'EntCode'})
+      // this.updateState({parmarType:'EntCode'})
       this.props.form.setFieldsValue({ DGIMN: undefined})
-      this.props.dispatch({ type: 'manualStatistics/getEmissionsEntPointPollutant', //根据企业获取监测点
+      this.props.dispatch({ type: 'manualStatistics/getPointByEntCode', //根据企业获取监测点
        payload: {  EntCode: value },
      })
     }

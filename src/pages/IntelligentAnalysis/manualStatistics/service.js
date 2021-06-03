@@ -12,7 +12,15 @@ export async function GetEmissionsEntPointPollutant(params) {
   return result;
 }
 
-
+//企业监测点
+export async function GetPointByEntCode(params) {
+  const result = post(
+      '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode?EntCode='+params.EntCode,
+      null,
+      null
+  )
+  return result
+}
 //空气站监测点
 export async function GetAirPoint(params) {
     const result = post(

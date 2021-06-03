@@ -9,7 +9,8 @@ import {
   GetEmissionsEntPointPollutant,
   GetRecalculateEffectiveTransmissionEnt,
   // GetAirPoint,
-  GetRecalculateEffectiveTransmissionAir
+  GetRecalculateEffectiveTransmissionAir,
+  GetPointByEntCode
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -36,7 +37,10 @@ export default Model.extend({
 
       const  parmarType = yield select(_ =>_.manualStatistics.parmarType)
       const  queryPar = yield select(_ =>_.manualStatistics.queryPar)
-      parmarType==='EntCode'? yield update({ pointLoading: true }):yield update({ entLoading: true })
+      // parmarType==='EntCode'?
+      //  yield update({ pointLoading: true })
+      //  :
+      yield update({ entLoading: true })
       
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
@@ -46,13 +50,24 @@ export default Model.extend({
           yield update({ entLoading: false });
           callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
         }
-        if(parmarType==='EntCode'){
-          yield update({ pointLoading: false });
-          yield update({ PointList: response.Datas.PointList});
-          // callback(response.Datas.PointList.length>0? response.Datas.PointList[0][0].EntCode :'')
-        }
+        // if(parmarType==='EntCode'){
+        //   yield update({ pointLoading: false });
+        //   yield update({ PointList: response.Datas.PointList});
+        // }
       }
     },
+    *getPointByEntCode({ callback,payload }, { call, put, update, select }) {
+      //获取监测点列表
+
+       yield update({ pointLoading: true })
+      
+      const response = yield call(GetPointByEntCode, { ...payload });
+      if (response.IsSuccess) {
+          yield update({ pointLoading: false });
+          yield update({ PointList: response.Datas});
+      }
+    },
+    
     // *getAirPoint({ payload,callback }, { call, put, update, select }) {
     //   //列表  空气站监测点
     //   const response = yield call(GetAirPoint, { ...payload });
