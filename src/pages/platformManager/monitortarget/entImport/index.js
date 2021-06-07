@@ -20,7 +20,8 @@ import {
   Button,
   Select,
   Upload,
-  message 
+  message,
+  Tabs 
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -40,6 +41,8 @@ const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+
+const { TabPane } = Tabs;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
@@ -58,7 +61,8 @@ export default class EntImport extends Component {
     this.state = {
       importLoading:false,
       tableDatas1:[],
-      tableDatas2:[]
+      tableDatas2:[],
+      saveDisabled:true
     };
 //     Abbreviation: "哈尔滨石化分公司热电厂"
 // AttentionCode: "国控"
@@ -86,20 +90,38 @@ export default class EntImport extends Component {
 // warning: ""
     this.columns = [
       {
+        title: <span>序号</span>,
+        dataIndex: 'Sort',
+        key: 'Sort',
+        align: 'center',
+        fixed: 'left',
+        width:50,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
+      },
+      {
         title: <span>省</span>,
         dataIndex: 'Province',
         key: 'Province',
         align: 'center',
         fixed: 'left',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:90,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>地级市</span>,
@@ -107,15 +129,16 @@ export default class EntImport extends Component {
         key: 'City',
         align: 'center',
         fixed: 'left',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:90,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>县/市</span>,
@@ -123,15 +146,16 @@ export default class EntImport extends Component {
         key: 'County',
         align: 'center',
         fixed: 'left',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:90,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>企业名称</span>,
@@ -139,15 +163,15 @@ export default class EntImport extends Component {
         key: 'EntName',
         align: 'center',
         fixed: 'left',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>企业简称</span>,
@@ -155,240 +179,250 @@ export default class EntImport extends Component {
         key: 'Abbreviation',
         align: 'center',
         fixed: 'left',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>企业经度</span>,
         dataIndex: 'Longitude',
         key: 'Longitude',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>企业纬度</span>,
         dataIndex: 'EntLatitude',
         key: 'Latitude',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>企业地址</span>,
         dataIndex: 'EntAddress',
         key: 'EntAddress',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>关注程度</span>,
         dataIndex: 'AttentionCode',
         key: 'AttentionCode',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:80,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>污染源规模</span>,
         dataIndex: 'PSScaleCode',
         key: 'PSScaleCode',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>环保负责人</span>,
         dataIndex: 'EnvironmentPrincipal',
         key: 'EnvironmentPrincipal',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>移动电话</span>,
         dataIndex: 'MobilePhone',
         key: 'MobilePhone',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>监测点名称</span>,
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>监测点编号(MN)</span>,
         dataIndex: 'DGIMN',
         key: 'DGIMN',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>监测点类型</span>,
         dataIndex: 'OutputType',
         key: 'OutputType',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:90,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>监测点经度</span>,
         dataIndex: 'Longitude',
         key: 'Longitude',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>监测点维度</span>,
         dataIndex: 'Latitude',
         key: 'Latitude',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:100,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>点位负责人</span>,
         dataIndex: 'UserName',
         key: 'UserName',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>工号</span>,
         dataIndex: 'UserNum',
         key: 'UserNum',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:70,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>监测因子</span>,
         dataIndex: 'PollutantList',
         key: 'PollutantList',
         align: 'center',
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>数据警告提示</span>,
@@ -396,32 +430,26 @@ export default class EntImport extends Component {
         key: 'warning',
         align: 'center',
         fixed: 'right',
-        width:200,
-        render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+        width:400,
+        // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
       },
       {
         title: <span>数据错误提示</span>,
         dataIndex: 'Error',
         key: 'Error',
         align: 'center',
-        width:200,
+        width:400,
         fixed: 'right',
         render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
           return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
         }
       },
     ];
@@ -436,27 +464,27 @@ export default class EntImport extends Component {
     let  gasObj =  [
          {
           title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center',
-          render:(text,rocord)=>{
-            if(!rocord.warning&&!rocord.Error){
-              return text 
-            }else if(rocord.Error){
-            return <span style={{color:'#f5222d'}} >{text}</span>
-            }else{
-              return <span style={{color:'#faad14'}} >{text}</span>
-            }
-          }
+          // render:(text,rocord)=>{
+          //   if(!rocord.warning&&!rocord.Error){
+          //     return text 
+          //   }else if(rocord.Error){
+          //   return <span style={{color:'#f5222d'}} >{text}</span>
+          //   }else{
+          //     return <span style={{color:'#faad14'}} >{text}</span>
+          //   }
+          // }
         },
         {
          title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center',
-         render:(text,rocord)=>{
-          if(!rocord.warning&&!rocord.Error){
-            return text 
-          }else if(rocord.Error){
-          return <span style={{color:'#f5222d'}} >{text}</span>
-          }else{
-            return <span style={{color:'#faad14'}} >{text}</span>
-          }
-        }
+         // render:(text,rocord)=>{
+        //   if(!rocord.warning&&!rocord.Error){
+        //     return text 
+        //   }else if(rocord.Error){
+        //   return <span style={{color:'#f5222d'}} >{text}</span>
+        //   }else{
+        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }
+        // }
         },
     ]
 
@@ -491,9 +519,10 @@ export default class EntImport extends Component {
     });
   }
   importChange=(info)=>{
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-      this.setState({ importLoading:true })
+
+
+    if (info.file.status === 'uploading') {
+      this.setState({ importLoading:true,saveDisabled:true })
     }
     if (info.file.status === 'done') {
       message.success(`${info.file.name}上传成功`);
@@ -503,11 +532,25 @@ export default class EntImport extends Component {
          importLoading:false,
          tableDatas1:data.List1,
          tableDatas2:data.List2,
+         errorText:data.MessErr
         })
+       let list = [...data.List1,...data.List2];
 
+     let  flag = true;
+       if(list.length>0){
+          list.map(item=>{
+            if(item.Error){
+             this.setState({
+              saveDisabled:false
+             })
+             return 
+            }
+         })
+       }
+       console.log(flag                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                )
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name}上传失败`);
-      this.setState({ importLoading:false })
+      this.setState({ importLoading:false,saveDisabled:true })
     }
   }
   render() {
@@ -551,12 +594,13 @@ export default class EntImport extends Component {
                   onClick={this.saveClick}
                   loading={saveLoading}
                   type='primary'
+                  disabled={this.state.saveDisabled}
                 >
                   保存入库
                 </Button>
               </Form.Item>
               <Form.Item>
-            <div
+            {/* <div
                   style={{
                     width: 20,
                     height: 9,
@@ -585,14 +629,42 @@ export default class EntImport extends Component {
                 />
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                  错误
-                </span>
-                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>警告可以保存入库，错误不可以保存入库</span>
+                </span> */}
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:10}}>
+                 注：警告可以保存入库，错误不可以保存入库
+                   <span>{this.state.errorText? '，'+this.state.errorText : ''}</span>
+                  </span>
 
                 </Form.Item>
             </Form>
         }
       >
-        <>
+      
+        <Tabs defaultActiveKey="2">
+          <TabPane tab="废气" key="2">
+          <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={this.state.importLoading}
+            columns={this.columns}
+            dataSource={this.state.tableDatas2}
+            scroll={{y:'calc(100vh - 380px)'}}
+            // pagination={{
+            //     pageSize: 10, 
+            // }}
+          />
+            </TabPane>
+           <TabPane tab="废水" key="1">
+           <SdlTable
+            rowKey={(record, index) => `complete${index}`}
+            loading={this.state.importLoading}
+            columns={this.columns2}
+            dataSource={this.state.tableDatas1}
+            scroll={{y:'calc(100vh - 380px)'}}
+          />
+         </TabPane>
+  
+  </Tabs>
+       {/* <>
         <Row align='middle' style={{marginBottom:8,paddingTop:20}}>
           <div style={{width:3,height:16,background:'#1890FF'}}></div>
            <span style={{paddingLeft:5}}>废气</span>
@@ -616,7 +688,7 @@ export default class EntImport extends Component {
             dataSource={this.state.tableDatas1}
             pagination={false}
           />
-        </>
+        </> */}
       </Card>
       </BreadcrumbWrapper>
     );
