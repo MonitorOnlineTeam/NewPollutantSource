@@ -141,7 +141,7 @@ export default class EntImport extends Component {
         // }
       },
       {
-        title: <span>县/市</span>,
+        title: <span>县/区</span>,
         dataIndex: 'County',
         key: 'County',
         align: 'center',
@@ -514,7 +514,10 @@ export default class EntImport extends Component {
   saveClick=()=>{
     const { dispatch } = this.props;
     const { tableDatas1,tableDatas2 } = this.state;
-    console.log()
+    if(this.state.errorText){
+      message.error(this.state.errorText);
+      return false;
+    }
     dispatch({
       type: pageUrl.insertImportEnt,
       payload: {ImportEntList:[...tableDatas1,...tableDatas2]},
@@ -534,22 +537,14 @@ export default class EntImport extends Component {
          importLoading:false,
          tableDatas1:data.List1,
          tableDatas2:data.List2,
-         errorText:data.MessErr
+         errorText:data.MessErr,
         })
        let list = [...data.List1,...data.List2];
-
-     let  flag = true;
+        
        if(list.length>0){
-          list.map(item=>{
-            if(item.Error){
-             this.setState({
-              saveDisabled:false,
-             })
-             return 
-            }
-         })
+        this.setState({ saveDisabled:false })
        }
-       console.log(flag                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                )
+      // console.log(list)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  )
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name}上传失败`);
       this.setState({ importLoading:false,saveDisabled:true,errorText:'' })
@@ -647,7 +642,7 @@ export default class EntImport extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.state.importLoading}
-            columns={this.columns}
+            columns={this.columns2}
             dataSource={this.state.tableDatas2}
             scroll={{y:'calc(100vh - 380px)'}}
             // pagination={{
@@ -659,7 +654,7 @@ export default class EntImport extends Component {
            <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.state.importLoading}
-            columns={this.columns2}
+            columns={this.columns}
             dataSource={this.state.tableDatas1}
             scroll={{y:'calc(100vh - 380px)'}}
           />
