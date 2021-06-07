@@ -430,26 +430,28 @@ export default class EntImport extends Component {
         key: 'warning',
         align: 'center',
         fixed: 'right',
-        width:400,
-        // render:(text,rocord)=>{
+        width:450,
+        render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
         //   }else if(rocord.Error){
         //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
+        //   }else{ return <span style={{color:'#faad14'}} >{text
+        //    }</span>
         //   }
-        // }
+        return <span  style={{textAlign:'left',display:'inline-block'}}  >{text}</span>
+        }
+        
       },
       {
         title: <span>数据错误提示</span>,
         dataIndex: 'Error',
         key: 'Error',
         align: 'center',
-        width:400,
+        width:450,
         fixed: 'right',
         render:(text,rocord)=>{
-          return <span style={{color:'#f5222d'}} >{text}</span>
+          return <span  style={{color:'#f5222d',textAlign:'left',display:'inline-block'}} >{text}</span>
         }
       },
     ];
