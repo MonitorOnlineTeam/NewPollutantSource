@@ -524,7 +524,7 @@ export default class EntImport extends Component {
 
 
     if (info.file.status === 'uploading') {
-      this.setState({ importLoading:true,saveDisabled:true })
+      this.setState({ importLoading:true,saveDisabled:true, errorText:'' })
     }
     if (info.file.status === 'done') {
       message.success(`${info.file.name}上传成功`);
@@ -543,7 +543,7 @@ export default class EntImport extends Component {
           list.map(item=>{
             if(item.Error){
              this.setState({
-              saveDisabled:false
+              saveDisabled:false,
              })
              return 
             }
@@ -552,7 +552,7 @@ export default class EntImport extends Component {
        console.log(flag                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                )
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name}上传失败`);
-      this.setState({ importLoading:false,saveDisabled:true })
+      this.setState({ importLoading:false,saveDisabled:true,errorText:'' })
     }
   }
   render() {
