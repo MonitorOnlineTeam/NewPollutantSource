@@ -94,7 +94,7 @@ export default class EntImport extends Component {
         dataIndex: 'Sort',
         key: 'Sort',
         align: 'center',
-        fixed: 'left',
+        // fixed: 'left',
         width:50,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
@@ -111,7 +111,7 @@ export default class EntImport extends Component {
         dataIndex: 'Province',
         key: 'Province',
         align: 'center',
-        fixed: 'left',
+        // fixed: 'left',
         width:100,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
@@ -128,7 +128,7 @@ export default class EntImport extends Component {
         dataIndex: 'City',
         key: 'City',
         align: 'center',
-        fixed: 'left',
+        // fixed: 'left',
         width:100,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
@@ -145,7 +145,7 @@ export default class EntImport extends Component {
         dataIndex: 'County',
         key: 'County',
         align: 'center',
-        fixed: 'left',
+        // fixed: 'left',
         width:100,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
@@ -162,7 +162,7 @@ export default class EntImport extends Component {
         dataIndex: 'EntName',
         key: 'EntName',
         align: 'center',
-        fixed: 'left',
+        // fixed: 'left',
         render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -179,7 +179,7 @@ export default class EntImport extends Component {
         dataIndex: 'Abbreviation',
         key: 'Abbreviation',
         align: 'center',
-        fixed: 'left',
+        // fixed: 'left',
         render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -418,6 +418,7 @@ export default class EntImport extends Component {
         dataIndex: 'PollutantList',
         key: 'PollutantList',
         align: 'center',
+        width:150,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -434,7 +435,7 @@ export default class EntImport extends Component {
         key: 'warning',
         align: 'center',
         fixed: 'right',
-        width:450,
+        width:300,
         render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -452,7 +453,7 @@ export default class EntImport extends Component {
         dataIndex: 'Error',
         key: 'Error',
         align: 'center',
-        width:450,
+        width:380,
         fixed: 'right',
         render:(text,rocord)=>{
           return <span  style={{color:'#f5222d',textAlign:'left',display:'inline-block'}} >{text}</span>
@@ -469,7 +470,7 @@ export default class EntImport extends Component {
 
     let  gasObj =  [
          {
-          title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center',
+          title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center', width:110,
           // render:(text,rocord)=>{
           //   if(!rocord.warning&&!rocord.Error){
           //     return text 
@@ -481,7 +482,7 @@ export default class EntImport extends Component {
           // }
         },
         {
-         title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center',
+         title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center', width:80,
          // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -525,6 +526,9 @@ export default class EntImport extends Component {
     dispatch({
       type: pageUrl.insertImportEnt,
       payload: {ImportEntList:[...tableDatas1,...tableDatas2]},
+      callback:res=>{
+        history.go(-1)
+      }
     });
   }
   importChange=(info)=>{
@@ -631,12 +635,14 @@ export default class EntImport extends Component {
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                  错误
                 </span> */}
-                <span style={{color:'#f5222d',fontSize:14,paddingLeft:10}}>
-                 注：警告可以保存入库，错误不可以保存入库
-                   <span>{this.state.errorText? '，'+this.state.errorText : ''}</span>
-                  </span>
 
                 </Form.Item>
+                <Row style={{paddingTop:10}}>
+               <span style={{color:'#f5222d'}}>
+                 注:警告可以保存入库,错误不可以保存入库
+                   <span>{this.state.errorText? ','+this.state.errorText : ''}</span>
+                  </span>
+              </Row>
             </Form>
         }
       >
@@ -648,7 +654,7 @@ export default class EntImport extends Component {
             loading={this.state.importLoading}
             columns={this.columns2}
             dataSource={this.state.tableDatas2}
-            scroll={{y:'calc(100vh - 380px)'}}
+            scroll={{y:'calc(100vh - 410px)'}}
             // pagination={{
             //     pageSize: 10, 
             // }}
@@ -660,7 +666,7 @@ export default class EntImport extends Component {
             loading={this.state.importLoading}
             columns={this.columns}
             dataSource={this.state.tableDatas1}
-            scroll={{y:'calc(100vh - 380px)'}}
+            scroll={{y:'calc(100vh - 410px)'}}
           />
          </TabPane>
   
