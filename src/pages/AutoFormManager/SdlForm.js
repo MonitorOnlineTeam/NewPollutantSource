@@ -220,7 +220,7 @@ class SdlForm extends PureComponent {
       const { fieldName, labelText, required, fullFieldName, configDataItemValue } = item;
       // let initialValue = formData && Object.keys(formData).length && formData[fieldName];
       // let initialValue = (formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
-      let initialValue = (formData[fieldName]!=null&&formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
+      let initialValue = (formData[fieldName] != null && formData[fieldName] != undefined) ? `${formData[fieldName]}` : undefined;
 
       if (item.configId && item.fullFieldName) {
         // 有表连接时，取带表名的字段

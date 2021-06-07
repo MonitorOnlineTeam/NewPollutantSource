@@ -47,7 +47,8 @@ class MultimediaConference extends PureComponent {
       window.TY.login({
         account: 'SCHBJ',
         password: 'JXyz@2019',
-        serverUrl: 'https://200.telyes.net'
+        serverUrl: 'https://200.telyes.net',
+        init: true
       }, function (resp) {
         //成功回调
         if (resp.rights) {
@@ -77,6 +78,7 @@ class MultimediaConference extends PureComponent {
   }
 
   componentWillUnmount() {
+    window.TY.logout();
     thisMap = undefined;
     talkManager = undefined;
     MoniterManager = undefined;
@@ -130,7 +132,7 @@ class MultimediaConference extends PureComponent {
       isModalVisible: true,
       currentPoint: data
     }, () => {
-      this.start(data.id)
+      // this.start(data.id)
     })
   }
 
@@ -150,12 +152,12 @@ class MultimediaConference extends PureComponent {
       console.log("监控成功回调", resp);
       message.success("监控成功");
       //如果需要，还可以通过设备管理类获取媒体信息
-      window.TY.DeviceManager.getMediaInfo({
-        id: [uid]
-      }, function (resp) {
-        //设置当前媒体连接状态
-        MoniterManager.setMediaStatus(uid, resp.data);
-      });
+      // window.TY.DeviceManager.getMediaInfo({
+      //   id: [uid]
+      // }, function (resp) {
+      //   //设置当前媒体连接状态
+      //   MoniterManager.setMediaStatus(uid, resp.data);
+      // });
     }, function (resp) {
       console.warn("监控失败回调", resp);
       message.error(resp.msg);
@@ -165,12 +167,14 @@ class MultimediaConference extends PureComponent {
   };
 
   // 关闭视频
-  closeVideo(uid) {
-    var params = { id: uid };
-    MoniterManager.stopMoniter(params, function (resp) {
-      message.success("操作成功");
-    }, function (resp) {
-    });
+  closeVideo(uid, hideMessage) {
+    let params = { id: uid };
+    if (MoniterManager) {
+      MoniterManager.stopMoniter(params, function (resp) {
+        hideMessage ? "" : message.success("操作成功");
+      }, function (resp) {
+      });
+    }
   }
 
   // 发言 - 添加人员
@@ -195,6 +199,7 @@ class MultimediaConference extends PureComponent {
     };
     window.TY.GroupManager.addUser(params, function (resp) {
       console.log('resp=', resp)
+      this.testApplyForSpeak()
     }, function (resp) {
       console.log('resp2=', resp)
     });
@@ -208,7 +213,7 @@ class MultimediaConference extends PureComponent {
         type: window.TY.GroupManager.TYPE.DISPATCH,
         personnel: users
       };
-      window.TY.GroupManager.deleteUser(params, function (resp) {
+      window.TY.GroupManager.deleteUser(params, (resp) => {
         console.log('aaa=', resp)
         this.deleteGroup();
       }, function (resp) {
@@ -223,9 +228,9 @@ class MultimediaConference extends PureComponent {
       type: window.TY.GroupManager.TYPE.DISPATCH,
       personnel: [404]
     };
-    talkManager.inactiveDispatchGroup(params, function (resp) {
+    talkManager.inactiveDispatchGroup(params, (resp) => {
+      this.testApplyForEndSpeak();
       console.log('bbb=', resp)
-
     }, function (resp) {
       console.log('bbb2=', resp)
     });
@@ -233,23 +238,25 @@ class MultimediaConference extends PureComponent {
 
   // 开启发言
   testApplyForSpeak = () => {
-    var id = this.state.curGid;
+    let id = this.state.curGid;
     if (talkManager) {
       talkManager.startTalk({
         id: id
       }, function (resp) {
-        recordResp("result", resp);
+        console.log('resp=', resp)
+        message.success("成功！")
       })
     }
   }
   // 结束发言
   testApplyForEndSpeak = () => {
-    var id = this.state.curGid;
+    let id = this.state.curGid;
     if (talkManager) {
       talkManager.stopTalk({
         id: id
       }, function (resp) {
-        recordResp("result", resp);
+        console.log("已结束发言 - ", resp);
+        message.success("已结束发言")
       })
     }
   }
@@ -341,10 +348,13 @@ class MultimediaConference extends PureComponent {
         <Modal
           title={`${currentPoint.name} - 远程监控`}
           visible={isModalVisible}
+          destroyOnClose
+          maskClosable={false}
           footer={false}
           width={'50vw'}
           onCancel={() => {
             this.removeUser()
+            this.closeVideo(currentPoint.id, true)
             this.setState({ isModalVisible: false })
           }}
           bodyStyle={{
@@ -355,7 +365,7 @@ class MultimediaConference extends PureComponent {
           }}
         >
           <div style={{ flex: 'none', marginBottom: 10 }}>
-            <Space style={{ flex: 'none' }}>
+            {/* <Space style={{ flex: 'none' }}>
               <div>
                 视频状态：<Badge status="success" text="打开" />
               </div>
@@ -363,9 +373,9 @@ class MultimediaConference extends PureComponent {
               <div>
                 发言状态：<Badge status="success" text="正在发言" />
               </div>
-            </Space>
+            </Space> */}
             <Space style={{ flex: 'none', float: 'right' }}>
-              <Radio.Group defaultValue="open" onChange={(e) => {
+              <Radio.Group onChange={(e) => {
                 if (e.target.value === 'open') {
                   this.start(currentPoint.id);
                 } else {
