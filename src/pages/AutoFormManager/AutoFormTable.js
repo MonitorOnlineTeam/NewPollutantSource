@@ -367,7 +367,11 @@ class AutoFormTable extends PureComponent {
 
   // 更多按钮点击
   moreClick(e) {
-    const { dispatch, configId } = this.props;
+    const { dispatch, configId,type } = this.props;
+    if(e.key==='import'&&type==='company'){ //企业导入 
+      router.push(`/platformconfig/monitortarget/entImport`);
+      return;
+    }
     switch (e.key) {
       // 打印
       case 'printer':

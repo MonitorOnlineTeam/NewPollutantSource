@@ -82,6 +82,7 @@ export default class Index extends Component {
       type: 'home/getEntByRegion',
       payload: { RegionCode: '' },
       callback: (code) => {
+        console.log(code)
         this.setState({EntCode:code},()=>{
           this.getLineData(code);
         })

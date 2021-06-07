@@ -246,6 +246,7 @@ export default class MonitorTarget extends Component {
                                 key, row,
                             })
                         }}
+                        type='company'
                         // onAdd={()=>{
                         //     dispatch(routerRedux.push(`/platformconfig/monitortarget/${configId}/add`));
                         // }}

@@ -430,7 +430,7 @@ export default Model.extend({
                     const result = yield call(getregioninfobytree, { ...payload });
                     if (result.IsSuccess) {
                         yield update({
-                            RegionInfoTree: result.Datas
+                            RegionInfoTree: result.Datas.list
                         });
                     }
       },

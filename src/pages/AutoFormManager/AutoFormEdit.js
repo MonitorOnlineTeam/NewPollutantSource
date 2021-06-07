@@ -148,13 +148,13 @@ class AutoFormEdit extends Component {
             // }
             // >
             <BreadcrumbWrapper title="编辑">
-              <Spin spinning={this.props.loading.models.autoForm}>
+              <Spin  delay={1500} spinning={this.props.loading.models.autoForm}>
                 {this._renderForm()}
               </Spin>
               {/* </MonitorContent> : */}
             </BreadcrumbWrapper> :
             <Fragment>
-              <Spin spinning={this.props.loading.models.autoForm}>
+              <Spin delay={1500} spinning={this.props.loading.models.autoForm}>
                 {this._renderForm()}
               </Spin>
             </Fragment>

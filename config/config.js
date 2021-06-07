@@ -508,6 +508,11 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
+                {
+                  name: 'entImport', //企业导入
+                  path: '/platformconfig/monitortarget/entImport',
+                  component: './platformManager/monitortarget/entImport',
+                },
               ],
             },
             {
