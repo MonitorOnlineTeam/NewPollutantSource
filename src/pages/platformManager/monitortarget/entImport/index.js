@@ -112,7 +112,7 @@ export default class EntImport extends Component {
         key: 'Province',
         align: 'center',
         fixed: 'left',
-        width:90,
+        width:100,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -129,7 +129,7 @@ export default class EntImport extends Component {
         key: 'City',
         align: 'center',
         fixed: 'left',
-        width:90,
+        width:100,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -146,7 +146,7 @@ export default class EntImport extends Component {
         key: 'County',
         align: 'center',
         fixed: 'left',
-        width:90,
+        width:100,
         // render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
@@ -163,7 +163,7 @@ export default class EntImport extends Component {
         key: 'EntName',
         align: 'center',
         fixed: 'left',
-        // render:(text,rocord)=>{
+        render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
         //   }else if(rocord.Error){
@@ -171,7 +171,8 @@ export default class EntImport extends Component {
         //   }else{
         //     return <span style={{color:'#faad14'}} >{text}</span>
         //   }
-        // }
+        return <span  style={{textAlign:'left',display:'inline-block'}}  >{text}</span>
+        }
       },
       {
         title: <span>企业简称</span>,
@@ -179,7 +180,7 @@ export default class EntImport extends Component {
         key: 'Abbreviation',
         align: 'center',
         fixed: 'left',
-        // render:(text,rocord)=>{
+        render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
         //   }else if(rocord.Error){
@@ -187,7 +188,8 @@ export default class EntImport extends Component {
         //   }else{
         //     return <span style={{color:'#faad14'}} >{text}</span>
         //   }
-        // }
+             return <span  style={{textAlign:'left',display:'inline-block'}}>{text}</span>
+        }
       },
       {
         title: <span>企业经度</span>,
@@ -226,7 +228,8 @@ export default class EntImport extends Component {
         dataIndex: 'EntAddress',
         key: 'EntAddress',
         align: 'center',
-        // render:(text,rocord)=>{
+        width:200,
+        render:(text,rocord)=>{
         //   if(!rocord.warning&&!rocord.Error){
         //     return text 
         //   }else if(rocord.Error){
@@ -234,7 +237,8 @@ export default class EntImport extends Component {
         //   }else{
         //     return <span style={{color:'#faad14'}} >{text}</span>
         //   }
-        // }
+        return <span  style={{textAlign:'left',display:'inline-block'}}  >{text}</span>
+        }
       },
       {
         title: <span>关注程度</span>,
