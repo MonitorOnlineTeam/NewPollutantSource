@@ -460,6 +460,7 @@ export default class EntImport extends Component {
         }
       },
     ];
+    this.columns2=[]
   }
 
   componentDidMount() {
@@ -468,37 +469,6 @@ export default class EntImport extends Component {
   initData = () => {
     const { dispatch} = this.props;
 
-    let  gasObj =  [
-         {
-          title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center', width:110,
-          // render:(text,rocord)=>{
-          //   if(!rocord.warning&&!rocord.Error){
-          //     return text 
-          //   }else if(rocord.Error){
-          //   return <span style={{color:'#f5222d'}} >{text}</span>
-          //   }else{
-          //     return <span style={{color:'#faad14'}} >{text}</span>
-          //   }
-          // }
-        },
-        {
-         title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center', width:80,
-         // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
-        },
-    ]
-
-    var arr = new Array(...this.columns)
-    
-     this.columns2 = arr;
-     this.columns2.splice(17,0,...gasObj);
   };
   updateQueryState = payload => {
     const { queryPar, dispatch } = this.props;
@@ -567,6 +537,18 @@ export default class EntImport extends Component {
           // authorization: 'authorization-text',
         }
       };
+      
+    let  gasObj =  [{
+            title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center', width:110,
+           },
+           {
+             title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center', width:80,
+           }]
+
+      const  arr = new Array(...this.columns)
+ 
+      this.columns2 = arr;
+      this.columns2.splice(17,0,...gasObj);
     return (
         <BreadcrumbWrapper>
       <Card
