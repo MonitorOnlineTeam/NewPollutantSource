@@ -282,6 +282,7 @@ export default class UserInfoEdit extends Component {
 
                             </Sider>
                             <Content style={{ padding: '0 10px', position: 'relative' }}>
+                              <Spin  spinning={this.props.UserDepLoading}>
                                 <Button
                                     style={{ position: 'absolute', right: 20, zIndex: 1, top: 11 }}
                                     onClick={() => {
@@ -290,6 +291,7 @@ export default class UserInfoEdit extends Component {
                                 >返回
                                 </Button>
                                 <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
+                               
                                     <SdlForm
                                         configId="UserInfoAdd"
                                         onSubmitForm={this.onSubmitForm}
@@ -416,6 +418,7 @@ export default class UserInfoEdit extends Component {
                                         </Button>
                                     </Divider>
                                 </Card>
+                                </Spin>
                             </Content>
                         </Layout>
                     }
