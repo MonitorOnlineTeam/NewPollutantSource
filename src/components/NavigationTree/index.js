@@ -112,7 +112,14 @@ class NavigationTree extends Component {
           title: 'Age',
           dataIndex: 'pointName',
           width: '40%',
-          render: (text, record) => <div className={styles.tabletitleStyle}><b title={record.pointName} style={{ fontSize: 15 }}>{record.pointName}</b><br></br><span title={record.entName} style={{ fontSize: 7 }}>{record.entName}{record.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</span></div>,
+          render: (text, record) =>
+            <div className={styles.tabletitleStyle}>
+              <b title={record.pointName} style={{ fontSize: 15 }}>
+                {record.pointName}</b><br></br>
+              <span title={record.entName} style={{ fontSize: 7 }}>
+                {record.entName}{record.outPutFlag == 1 ? <Tag style={{ marginLeft: 2 }} line-height={18} color="#f50">停运</Tag> : ''}
+              </span>
+            </div>,
         },
         {
           title: 'Age',
@@ -120,14 +127,14 @@ class NavigationTree extends Component {
           width: '20%',
           align: 'left',
           render: (text, record) => (
-            <>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {
-                record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), fontSize: '20px', height: 10, margin: '0 4px' }} /> : ''
+                record.Status != -1 ? <LegendIcon style={{ color: this.getColor(record.Status), fontSize: '20px', margin: '0 4px' }} /> : ''
               }
               {
-                !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, color: 'red', marginTop: 8 }} /></div>
+                !!props.noticeList.find(m => m.DGIMN === record.key) && <div className={styles.bell}><BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, color: 'red' }} /></div>
               }
-            </>
+            </div>
           ),
         },
       ],
@@ -869,8 +876,10 @@ class NavigationTree extends Component {
           );
         } if (item.Type == '1') {
           return <TreeNode style={{ width: '100%' }} title={
-            <div style={{ width: '253px', position: 'relative' }}>
-              <div className={styles.titleStyle} title={item.title}>{this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}{this.props.noticeList.find(m => m.DGIMN === item.key) ?
+            <div style={{ width: '240px', position: 'relative' }}>
+              <div className={styles.titleStyle} title={item.title}>
+                {this.getPollutantIcon(item.PollutantType, 16)}{title}{item.outPutFlag == 1 ? <Tag line-height={18} color="#f50">停运</Tag> : ''}</div>{item.IsEnt == 0 && item.Status != -1 ? <LegendIcon style={{ color: this.getColor(item.Status), fontSize: '20px', height: 10, float: 'right', marginTop: 2, marginRight: 10, position: 'absolute', right: 10 }} /> : ''}
+              {this.props.noticeList.find(m => m.DGIMN === item.key) ?
                 <div className={styles.bell}>
                   <BellIcon className={styles['bell-shake-delay']} style={{ fontSize: 10, marginTop: 7, marginRight: 4, float: 'right', color: 'red' }} />
                 </div>
@@ -998,7 +1007,7 @@ class NavigationTree extends Component {
                 style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
                 onRow={this.onClickRow}
                 rowClassName={this.setRowClassName}
-
+                size="small"
               ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
               </div>}</div>
           }

@@ -46,7 +46,7 @@ class index extends PureComponent {
         <header className={styles.header}>
           <div className={styles.left}>
             <img src={`/upload/${configInfo.Logo}`} alt="" />
-            <span>污染源综合监控平台</span>
+            <span>{configInfo.SystemName}</span>
           </div>
           <div className={styles.right}>
             <span>{userName}</span>

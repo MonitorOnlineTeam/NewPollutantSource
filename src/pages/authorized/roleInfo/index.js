@@ -887,6 +887,7 @@ class RoleIndex extends Component {
                                                         },
                                                     })}
                                                 size="small"
+                                                pagination={false}
                                                  rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
                                     }
 

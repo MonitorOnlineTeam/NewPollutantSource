@@ -297,7 +297,7 @@ class MenuManagementModal extends Component {
                                                 <TreeSelect
                                                     showSearch
                                                     style={{ width: 174 }}
-                                                    dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                                    // dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                                                     placeholder="请选择上级菜单"
                                                     allowClear
                                                     treeNodeFilterProp="title"

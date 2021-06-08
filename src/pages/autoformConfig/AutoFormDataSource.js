@@ -334,7 +334,7 @@ class AutoFormDataSource extends React.PureComponent {
                 <DbSourceTree
                     onSelect={this.onSelect}
                 />
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, marginLeft: 370 }}>
                     <BreadcrumbWrapper>
                         <Card
                             bordered={false}

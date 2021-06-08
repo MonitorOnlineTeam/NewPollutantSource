@@ -198,7 +198,7 @@ class DatabaseConfig extends PureComponent {
                 <Select.Option value="all">全部</Select.Option>
                 <Select.Option value="SQLSERVER">SQLSERVER</Select.Option>
                 <Select.Option value="ORACLE">ORACLE</Select.Option>
-                <Select.Option value="MYSOL">MYSOL</Select.Option>
+                <Select.Option value="MYSQL">MYSQL</Select.Option>
               </Select>
             </Form.Item>
             <Space align="baseline">
