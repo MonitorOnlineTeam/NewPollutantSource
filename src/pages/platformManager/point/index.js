@@ -39,6 +39,8 @@ import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
+import OperationInfo from './operationInfo';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 let pointConfigId = '';
@@ -75,7 +77,10 @@ export default class MonitorPoint extends Component {
       PointCode: '',
       DGIMN: '',
       FormData: null,
-      tabKey: "1"
+      tabKey: "1",
+      operationInfoVisible:false,
+      operationInfoDGIMN:'',
+      operationPointName:'',
     };
   }
 
@@ -378,6 +383,7 @@ export default class MonitorPoint extends Component {
       return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]} 
       pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
+
   render() {
     const {
       searchConfigItems,
@@ -508,10 +514,11 @@ export default class MonitorPoint extends Component {
                      <Divider type="vertical" />
                       <Tooltip title="运维信息">
                       <a onClick={() => {
-                        router.push({
-                          pathname:"/platformconfig/monitortarget/operationInfo",
-                          query:{p:row['dbo.T_Cod_MonitorPointBase.DGIMN']}
-                        })
+                        // router.push({
+                        //   pathname:"/platformconfig/monitortarget/operationInfo",
+                        //   query:{p:row['dbo.T_Cod_MonitorPointBase.DGIMN']}
+                        // })
+                         this.setState({operationPointName:row['dbo.T_Bas_CommonPoint.PointName'],operationInfoDGIMN:row['dbo.T_Cod_MonitorPointBase.DGIMN'],operationInfoVisible:true})
                       }}><FundOutlined style={{fontSize:16}}/>  </a>
                     </Tooltip> 
                   
@@ -588,6 +595,18 @@ export default class MonitorPoint extends Component {
           >
             <AnalyzerManage DGIMN={this.state.DGIMN} />
           </Modal>
+          <Modal
+        title={this.state.operationPointName + '-运维信息'}
+        visible={this.state.operationInfoVisible}
+        width={'80%'}
+        footer={false}
+        onCancel={()=>{
+          this.setState({operationInfoVisible:false})
+        }}
+        destroyOnClose
+      >
+        <OperationInfo  location={{query:{p:this.state.operationInfoDGIMN}}}/>
+        </Modal>
         </div>
         {/* </MonitorContent> */}
       </BreadcrumbWrapper>

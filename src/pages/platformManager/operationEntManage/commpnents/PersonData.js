@@ -353,7 +353,7 @@ export default class PersonData extends Component {
           
           if(item.EnterpriseID===values.EnterpriseID&&item.Phone===values.Phone&&item.PersonnelName===values.PersonnelName){
             flag = false;
-            message.error('不能重复添加');
+            message.error('运维单位、姓名、手机号存在重复信息');
           }
        })
         if(flag){
@@ -463,7 +463,7 @@ export default class PersonData extends Component {
     let operationData=[];
     if(operationList&&operationList.length>0){
       operationData  = operationList.map(item=>{
-      return   <Option key={item.EnterpriseID} value={item.EnterpriseID}>{item.Company}</Option>
+      return   <Option title={item.Company} key={item.EnterpriseID} value={item.EnterpriseID}>{item.Company}</Option>
       })
   
     }
@@ -482,6 +482,23 @@ export default class PersonData extends Component {
     // this.props.form.setFieldsValue({
 
     // })
+  }
+  gasEndDisabledDate=(current)=>{
+    const time = this.props.form.getFieldValue('GasStartCertificatesTime')
+    return time&&current && current < moment(time).endOf('day');
+  }
+  gasStartDisabledDate=(current)=>{
+    const time = this.props.form.getFieldValue('GasEndCertificatesTime')
+    return time&&current && current > moment(time).startOf('day');
+  }
+
+  waterEndDisabledDate=(current)=>{
+    const time = this.props.form.getFieldValue('WaterStartCertificatesTime')
+    return time&&current && current < moment(time).endOf('day');
+  }
+  waterStartDisabledDate=(current)=>{
+    const time = this.props.form.getFieldValue('WaterEndCertificatesTime')
+    return time&&current && current > moment(time).startOf('day');
   }
   render() {
     const {
@@ -675,11 +692,9 @@ export default class PersonData extends Component {
         {/* <Col span={12}> */}
 
       <Form.Item label="照片" name="username" >
-         {getFieldDecorator('AttachmentID',
-        //  {
-            // getValueFromEvent: this.handleChange,
-          // },   
-          {   rules: [{required: true,  message: '请上传照片！'}],   })(
+         {getFieldDecorator('AttachmentID',  
+          // {   rules: [{required: true,  message: '请上传照片！'}],   }
+          )(
          <Upload
          action="/api/rest/PollutantSourceApi/UploadApi/PostFiles"
          listType="picture-card"
@@ -733,7 +748,7 @@ export default class PersonData extends Component {
       </Col>
       <Col span={12}>
       <Form.Item  label='发证日期'>
-      {getFieldDecorator('GasStartCertificatesTime')( <DatePicker />)}
+      {getFieldDecorator('GasStartCertificatesTime')( <DatePicker  disabledDate={this.gasStartDisabledDate}/>)}
       </Form.Item>
       </Col>
       </Row>
@@ -741,7 +756,7 @@ export default class PersonData extends Component {
       <Row>
         <Col span={12}>
          <Form.Item label="到期时间" name="username"  >
-         {getFieldDecorator('GasEndCertificatesTime')( <DatePicker />)}
+         {getFieldDecorator('GasEndCertificatesTime')( <DatePicker  disabledDate={this.gasEndDisabledDate} />)}
       </Form.Item>
       </Col>
       <Col span={12}>
@@ -803,7 +818,7 @@ export default class PersonData extends Component {
       </Col>
       <Col span={12}>
       <Form.Item  label='发证日期' >
-      {getFieldDecorator('WaterStartCertificatesTime')( <DatePicker />)}
+      {getFieldDecorator('WaterStartCertificatesTime')( <DatePicker disabledDate={this.waterStartDisabledDate} />)}
       </Form.Item>
       </Col>
       </Row>
@@ -811,7 +826,7 @@ export default class PersonData extends Component {
       <Row>
         <Col span={12}>
          <Form.Item label="到期时间"   >
-         {getFieldDecorator('WaterEndCertificatesTime')(<DatePicker />)}
+         {getFieldDecorator('WaterEndCertificatesTime')(<DatePicker disabledDate={this.waterEndDisabledDate} />)}
       </Form.Item>
       </Col>
       <Col span={12}>

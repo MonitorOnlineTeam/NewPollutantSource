@@ -10,7 +10,7 @@ import {
   AddOrUpdateOperationPoint,
   DeleteOperationPoint,
   ListOperationMaintenanceEnterprise
-} from './service';
+} from '@/pages/platformManager/point/operationInfo/service';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({
@@ -46,6 +46,7 @@ export default Model.extend({
       const response = yield call(AddOrUpdateOperationPoint, { ...payload });
       if (response.IsSuccess) {
         message.success(response.Message);
+        callback(response)
       }else{
         message.error(response.Message);
       }

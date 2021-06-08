@@ -209,15 +209,18 @@ export default class OperationInfo extends Component {
               payload: {
                   ...values,
                   DGIMN:DGIMN,
-                  BeginTime:moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss"),
-                  EndTime:moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss")
+                  BeginTime:moment(values.Time[0]).format("YYYY-MM-DD 00:00:00"),
+                  EndTime:moment(values.Time[0]).format("YYYY-MM-DD 23:59:59")
                  },
+                 callback:res=>{
+                  this.setState({
+                   visible:false,
+                  },()=>{
+                 this.getTableData();
+                 })
+              }
           })
-        this.setState({
-             visible:false,
-        },()=>{
-          this.getTableData();
-        })
+
       }
     });
    }
@@ -282,7 +285,7 @@ export default class OperationInfo extends Component {
       </div>
     );
     return (
-        <BreadcrumbWrapper >
+        // <BreadcrumbWrapper >
         <Card
           bordered={false}
           title={
@@ -354,7 +357,7 @@ export default class OperationInfo extends Component {
       </Row>
       <Row>
          <Form.Item label="起止时间">
-         {getFieldDecorator('Time', {   rules: [{required: true,  message: '请选择起止时间！'}],   })(<RangePicker showTime/>)}
+         {getFieldDecorator('Time', {   rules: [{required: true,  message: '请选择起止时间！'}],   })(<RangePicker/>)}
       </Form.Item>
       <Form.Item label="ID"   hidden>
          {getFieldDecorator('ID')(<Input />)}
@@ -364,7 +367,7 @@ export default class OperationInfo extends Component {
       </Modal>
           </>
         </Card>
-        </BreadcrumbWrapper >
+        // </BreadcrumbWrapper >
     );
   }
 }

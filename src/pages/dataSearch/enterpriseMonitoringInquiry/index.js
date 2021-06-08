@@ -67,6 +67,7 @@ class index extends PureComponent {
             regionCode:'',
             hasCode:'',
             operationpersonnel:'',
+            type:'1'
         };
     }
 
@@ -564,7 +565,9 @@ class index extends PureComponent {
         })
     }
     typeChange = (value) =>{
-
+       this.setState({
+           type:value
+       })
     }
     render() {
         const { loading } = this.props
@@ -723,7 +726,208 @@ class index extends PureComponent {
                 dataIndex: 'pointName',
                 key: 'pointName',
             },
+            // {
+            //     title: "设备编号(MN)",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "经度",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "纬度",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "监测点类型",
+            //     align: 'center',
+            //     width: 100,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // }, 
+            // {
+            //     title: "排放去向",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "运维负责人",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "污水口类型",
+            //     align: 'center',
+            //     width: 100,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "运维状态",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "是否上传监控数据",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },
+            // {
+            //     title: "是否判断缺失数据",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },  
+            // {
+            //     title: "监测点有效传输率计算类型",
+            //     align: 'center',
+            //     width: 200,
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },  
+            // {
+            //     title: "备注",
+            //     align: 'center',
+            //     dataIndex: 'x',
+            //     key: 'x',
+            // },     
         ]
+        const columns4=[
+            {
+                title: "行政区",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'regionName',
+                key: 'regionName',
+            },
+            {
+                title: "企业名称",
+                width: 100,
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'entName',
+                key: 'entName',
+            },
+            {
+                title: "监测点",
+                width: 100,
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'pointName',
+                key: 'pointName',
+            },
+            {
+                title: "设备编号(MN)",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "经度",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "纬度",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "监测点类型",
+                align: 'center',
+                width: 100,
+                dataIndex: 'x',
+                key: 'x',
+            }, 
+            {
+                title: "是否烧结",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "排口类型",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "排口直径",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "排口高度",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "数据上传类型",
+                align: 'center',
+                width: 100,
+                dataIndex: 'x',
+                key: 'x',
+                
+            },
+            {
+                title: "运维负责人",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "CEMS监测原理",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "运维状态",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },
+            {
+                title: "是否上传监控数据",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },  
+            {
+                title: "是否判断缺失数据",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            },  
+            {
+                title: "监测点有效传输率计算类型",
+                align: 'center',
+                width: 200,
+                dataIndex: 'x',
+                key: 'x',
+            },  
+            {
+                title: "备注",
+                align: 'center',
+                dataIndex: 'x',
+                key: 'x',
+            }
+        ];
         return <>
             <div id="siteParamsPage" className={style.cardTitle}>
                 <BreadcrumbWrapper title="企业监测点查询">
@@ -743,8 +947,8 @@ class index extends PureComponent {
                         title="企业列表"
                         visible={this.state.visible}
                         footer={null}
-                        // width={'80%'}
-                        width={800}
+                        // width={800}
+                        width={'80%'}
                         onCancel={this.CancelHandel}
                     >
                         <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
@@ -757,17 +961,18 @@ class index extends PureComponent {
                         title="企业监测列表"
                         visible={this.state.visibleMoni}
                         footer={null}
-                        width={800}
+                        // width={800}
+                        width={'80%'}
                         onCancel={this.CancelHandel}
                     >
                         <div>
-                             {/* <Select onChange={this.typeChange} style={{width:100}} defaultValue="1">
+                              {/* <Select onChange={this.typeChange} style={{width:100}} defaultValue="1">
                               <Option value="1">废水</Option>
                               <Option value="2">废气</Option>
-                             </Select>  */}
+                             </Select> */}
                             <Button  style={{marginBottom:'8px',marginLeft:'5px'}}  onClick={this.PointexportReport}><ExportOutlined />导出</Button>
                         </div>
-                        <SdlTable columns={columns3} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
+                        <SdlTable columns={this.state.type==1?columns3:columns4} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
                     </Modal>
                 </BreadcrumbWrapper>
             </div>
