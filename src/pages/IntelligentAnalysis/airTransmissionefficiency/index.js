@@ -165,7 +165,7 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.TransmissionEffectiveRate - b.TransmissionEffectiveRate,
         render: (text, record) => {
-          if (record.ShouldNumber==0) {
+          if (record.ShouldNumber==0&&record.IsFlag==0) {
             return <span>停运</span>;
           }
           // 红色：#f5222d 绿色：#52c41a
