@@ -273,7 +273,11 @@ class emissionEnt extends Component {
         this.setState({ showSearch });
     };
 
-    getEntData = () => {
+    getEntData = (types) => {
+       types&&this.props.dispatch({
+            type: pageUrl.updateState,
+            payload: { pageIndex: 1, pageSize:20 },
+        });
         this.props.dispatch({
             type: 'emissionEnt/GetEmissionEntList',
             payload: {
@@ -285,15 +289,15 @@ class emissionEnt extends Component {
     initData = (RegionCode) => {
         const { dispatch } = this.props;
 
-        // this.updateQueryState({
-        //     RegionCode: RegionCode,
-        //     beginTime: beginTime,
-        //     endTime: endTime,
-        //     PageIndex: 1,
-        //     PageSize: 20,
-        //     EntCode: '',
-        //     PollutantType: '',
-        // });
+        this.updateQueryState({
+            // RegionCode: RegionCode,
+            // beginTime: beginTime,
+            // endTime: endTime,
+            // PageIndex: 1,
+            // PageSize: 20,
+            // EntCode: '',
+            // PollutantType: '',
+        });
 
         dispatch({
             //获取企业列表
@@ -581,7 +585,7 @@ class emissionEnt extends Component {
                                 </Select>
                             </FormItem>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
-                                this.getEntData()
+                                this.getEntData(true)
                             }}>查询</Button>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
                                 this.props.dispatch({
