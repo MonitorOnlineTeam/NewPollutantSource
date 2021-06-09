@@ -250,11 +250,13 @@ class MonitoringStandard extends Component {
                 // width: '10%',
                 align: 'center',
                 render: (text, record) => {
-                    // if (text === 0) {
-                    //     return '-';
-                    // }
+                    if (record.UpperLimit&&record.LowerLimit&&record.UpperLimit!=='-'&&record.LowerLimit!=='-') {
+                        return record.LowerLimit +"-"+ record.UpperLimit;
+                    }else{
+                        return text;
+                    }
 
-                    return text;
+                    
                 },
             },
             {
