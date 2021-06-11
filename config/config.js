@@ -1703,7 +1703,7 @@ export default {
                 },
                 {
                   name: 'enterpriseMonitoringInquiry',
-                  //企业监测点查询
+                  //企业监测点查询 二级页面
                   path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
                   component: './dataSearch/enterpriseInquiryDetail',
                 },

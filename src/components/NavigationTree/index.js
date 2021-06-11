@@ -969,7 +969,7 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={{ marginTop: '5%', maxHeight: 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
+                style={{ marginTop: '5%', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)':'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
                 {..._props}
@@ -992,7 +992,7 @@ class NavigationTree extends Component {
                   }}
                   size="large"
                 /> : <div> {this.state.panelDataListAys.length ? <Table id="treeTable" className={styles.table} rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: 'calc(100vh - 290px)' }}
+                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)':'calc(100vh - 290px)' }}
                   onRow={this.onClickRow}
                   rowClassName={this.setRowClassName}
 

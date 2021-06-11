@@ -75,12 +75,12 @@ class TaskRecord extends Component {
 
   componentDidMount() {
     // 获取运维人员
-    this.props.dispatch({
-      type: 'operations/getOperationsUserList',
-      payload: {
-        RolesID: 'eec719c2-7c94-4132-be32-39fe57e738c9',
-      },
-    })
+    // this.props.dispatch({
+    //   type: 'operations/getOperationsUserList',
+    //   payload: {
+    //     RolesID: 'eec719c2-7c94-4132-be32-39fe57e738c9',
+    //   },
+    // })
     this.LoadData();
   }
 
