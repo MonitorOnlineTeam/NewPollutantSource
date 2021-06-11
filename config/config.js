@@ -510,7 +510,8 @@ export default {
                 },
                 {
                   name: 'entImport', //企业导入
-                  path: '/platformconfig/monitortarget/entImport',
+                  // path: '/platformconfig/monitortarget/entImport',
+                  path:'/platformconfig/monitortarget/AEnterpriseTest/1/1,2/entImport',
                   component: './platformManager/monitortarget/entImport',
                 },
               ],
@@ -1646,6 +1647,11 @@ export default {
                   path: '/Intelligentanalysis/airQualityStatistics',
                   component: './Intelligentanalysis/airQualityStatistics/air',
                 },
+                { //运维区域账户访问率统计
+                  name: 'AccessStatistics',
+                  path: '/Intelligentanalysis/accessStatistics',
+                  component: './Intelligentanalysis/accessStatistics',
+                }
               ],
 
               

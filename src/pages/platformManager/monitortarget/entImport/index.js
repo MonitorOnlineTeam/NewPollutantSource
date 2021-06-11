@@ -35,7 +35,7 @@ import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
 import RegionList from '@/components/RegionList'
-import { DownloadOutlined,CloudDownloadOutlined,ImportOutlined } from '@ant-design/icons';
+import { DownloadOutlined,CloudDownloadOutlined,ImportOutlined,RollbackOutlined } from '@ant-design/icons';
 import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -556,6 +556,12 @@ export default class EntImport extends Component {
         className={styles.entImport}
         title={
             <Form layout="inline">
+               <Form.Item>
+            <Button onClick={() => {
+
+                 this.props.history.go(-1);
+             }} ><RollbackOutlined />返回</Button>
+             </Form.Item>
               <Form.Item>
               <a style={{color:'rgba(0, 0, 0, 0.65)'}} href='/upload/公司运维基础数据模板.xlsm' download="模板文件"> 
                 <Button
