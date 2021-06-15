@@ -21,8 +21,8 @@ export default Model.extend({
     historyparams: {
       datatype: 'realtime',
       DGIMNs: null,
-      pageIndex: null,
-      pageSize: null,
+      pageIndex: 1,
+      pageSize: 20,
       beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       pollutantCodes: null,
@@ -831,7 +831,7 @@ debugger;
         chartdata: option,
         columns,
         datatable: result,
-        total: resultlist.total,
+        total: resultlist.Total,
       });
     },
 

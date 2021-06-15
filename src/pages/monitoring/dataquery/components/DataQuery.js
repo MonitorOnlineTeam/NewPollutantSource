@@ -55,8 +55,21 @@ class DataQuery extends Component {
 
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
+
     if (nextProps.DGIMN !== this.props.DGIMN) {
+      this.props.dispatch({
+        type: 'dataquery/updateState',
+        payload: {
+          historyparams:
+          {
+          ...this.props.historyparams,
+          pageIndex:1,
+          pageSize:20
+        }
+        },
+      });
       this.changeDgimn(nextProps.DGIMN,'switch');
+
     }
   };
 
@@ -287,7 +300,17 @@ class DataQuery extends Component {
       payload: {},
     });
   };
+  tableOnChange = (PageIndex, PageSize) => {
+    const { historyparams} = this.props;
+    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize})
 
+   }
+  onShowSizeChange= (PageIndex, PageSize) => {
+    const { historyparams} = this.props;
+
+    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize, })
+    
+   }
   /** 切换排口 */
   changeDgimn = (dgimn,type) => {
     this.setState({
@@ -321,7 +344,7 @@ class DataQuery extends Component {
   /** 渲染数据展示 */
 
   loaddata = () => {
-    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant } = this.props;
+    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant,historyparams:{pageSize,pageIndex},total  } = this.props;
     const { displayType } = this.state;
     if (dataloading || loadingPollutant) {
       return (
@@ -377,7 +400,13 @@ class DataQuery extends Component {
         resizable
         defaultWidth={80}
         scroll={{ y: this.props.tableHeight || undefined }}
-        pagination={{ pageSize: 20 }}
+        // pagination={{ pageSize: 20 }}
+        pagination={{
+          pageSize: pageSize,
+          current: pageIndex,
+          onChange: this.tableOnChange,
+          onShowSizeChange:this.onShowSizeChange,
+        }}
       />
       // </Card.Grid>
     );
@@ -388,6 +417,8 @@ class DataQuery extends Component {
       type: 'dataquery/exportHistoryReport',
       payload: {
         DGIMNs: this.state.dgimn,
+        pageIndex:null,
+        pageSize:null,
       },
     });
   };
@@ -411,6 +442,8 @@ class DataQuery extends Component {
       beginTime: dates[0] ? dates[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
       endTime: dates[1] ? dates[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
       datatype: dataType,
+      pageIndex:1,
+      pageSize:20,
     };
     dispatch({
       type: 'dataquery/updateState',
