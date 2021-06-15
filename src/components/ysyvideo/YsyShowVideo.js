@@ -75,6 +75,8 @@ class YsyShowVideo extends Component {
   componentDidMount() {
     const { ysyUrl } = this.state;
     // isInnerIPFn()?  config.ysyvideourl =  `http://172.16.12.152:60060/${ysyUrl}`:  `http://61.50.135.114:60060/${ysyUrl}`
+    isInnerIPFn()?  config.ysyvideourl =  `/api/${ysyUrl}`:  `http://61.50.135.114:60060/${ysyUrl}`
+ 
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
