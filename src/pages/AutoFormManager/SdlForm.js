@@ -116,6 +116,7 @@ class SdlForm extends PureComponent {
       type: 'autoForm/getPageConfig',
       payload: {
         configId,
+        isEdit: this.props.isEdit
       },
     });
     // }
