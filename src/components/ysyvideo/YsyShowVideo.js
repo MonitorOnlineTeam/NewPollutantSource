@@ -19,6 +19,7 @@ import HistoryVideo from './YsyHisVideoData';
 import YsyRealVideoData from './YsyRealVideoData';
 import config from '@/config';
 import VideoSelect from '../VideoSelect'
+import { isInnerIPFn } from '@/utils/utils'
 
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -56,6 +57,7 @@ class YsyShowVideo extends Component {
       // dgimn: '',
       tabsKey: 1,
       VedioID: '',
+      ysyUrl:'Web/YsyVideo/YsyVideo.html'
     };
   }
 
@@ -69,6 +71,8 @@ class YsyShowVideo extends Component {
   }
 
   componentDidMount() {
+    const { ysyUrl } = this.state;
+    isInnerIPFn()?  config.ysyvideourl =  `/api/${ysyUrl}`:  `http://61.50.135.114:60060/${ysyUrl}`
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
