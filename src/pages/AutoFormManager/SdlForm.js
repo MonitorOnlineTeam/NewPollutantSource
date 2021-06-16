@@ -119,6 +119,7 @@ class SdlForm extends PureComponent {
         isEdit: this.props.isEdit
       },
     });
+
     // }
 
     // 编辑时获取数据
@@ -410,7 +411,7 @@ class SdlForm extends PureComponent {
                 FileActualType: '0',
               },
             };
-            element = <SdlUpload fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
+            element = <SdlUpload {...this.props} fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />

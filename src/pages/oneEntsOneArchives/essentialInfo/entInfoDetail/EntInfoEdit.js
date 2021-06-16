@@ -46,6 +46,7 @@ class UserInfoView extends Component {
                          configId="AEnterpriseTest"
                          keysParams={{ "dbo.T_Bas_Enterprise.EntCode": this.props.location.query.p}}
                          breadcrumb={false}
+                         accept='image/*'
                         />
 
                     </Card>

@@ -66,7 +66,6 @@ class SdlUpload extends Component {
 
   };
 
-
   render() {
     const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
     const { cuid } = this._SELF_;
@@ -78,11 +77,21 @@ class SdlUpload extends Component {
     const props = {
       action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
       //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
+      beforeUpload:(file) =>{
+        if(accept==='image/*'){
+          const isImage = file.type.indexOf("image") !== -1;
+          if (!isImage) {
+            message.error('上传文件失败，请选择照片！');
+            return isImage; 
+          }
+        }
+      },
       onChange: (info) => {
         let fileList = info.fileList;
         console.log('info=', info)
         if (info.file.status === 'done') {
           // setFieldsValue({ cuid: cuid })
+          console.log(fileList)
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
           fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
           fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas

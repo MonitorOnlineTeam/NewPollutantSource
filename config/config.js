@@ -432,6 +432,12 @@ export default {
                   component: './platformManager/equipmentManage',
                 },
                 {
+                  // 设备参数管理
+                  name: 'equipmentManage',
+                  path: '/platformconfig/equipmentParmars',
+                  component: './platformManager/equipmentParmars',
+                },
+                {
                   // 设备管理 - 添加、编辑
                   name: 'addEditEquipment',
                   path: '/platformconfig/equipmentManage/:DGIMN/:id',
@@ -1758,6 +1764,12 @@ export default {
                     },
                   ],
                 },
+                {
+                  //空气质量状况统计
+                  name: 'airQualityStatistics',
+                  path: '/Intelligentanalysis/airQualityStatistics',
+                  component: './IntelligentAnalysis/airQualityStatistics/air',
+                },
               ],
             },
             {
@@ -1883,6 +1895,24 @@ export default {
                       component: './dataSearch/monitor/alarmInfo/exceptionRecord',
                     },
                   ]
+                },
+                {
+                  name: 'dischargeStandard',
+                  //设备参数查询
+                  path: '/dataSearch/deviceParam',
+                  component: './dataSearch/deviceParam',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry',
+                  //企业监测点查询
+                  path: '/dataSearch/enterpriseMonitoringInquiry',
+                  component: './dataSearch/enterpriseMonitoringInquiry',
+                },
+                {
+                  name: 'enterpriseMonitoringInquiry',
+                  //企业监测点查询 二级页面
+                  path: '/dataSearch/enterpriseInquiryDetail/:RegionCode',
+                  component: './dataSearch/enterpriseInquiryDetail',
                 },
               ]
             },
