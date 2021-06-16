@@ -384,3 +384,16 @@ export function isInnerIPFn(webSocketPushURL) {
   // return returnIP;
    return isInnerIp
 }
+function getIpNum(ipAddress) { /* 获取IP数 */
+  const ip = ipAddress.split('.');
+  const a = parseInt(ip[0]);
+  const b = parseInt(ip[1]);
+  const c = parseInt(ip[2]);
+  const d = parseInt(ip[3]);
+  const ipNum = a * 256 * 256 * 256 + b * 256 * 256 + c * 256 + d;
+  return ipNum;
+}
+
+function isInner(userIp, begin, end) {
+  return (userIp >= begin) && (userIp <= end);
+}
