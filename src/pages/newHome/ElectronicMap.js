@@ -308,7 +308,7 @@ class NewHome extends PureComponent {
   // 获取企业和监测点
   getAllEntAndPoint = (type) => {
     this.props.dispatch({
-      type: 'newHome/getAllEntAndPoint',
+      type: 'newHome/getAllEntAndPoints',
       payload: {
         PollutantTypes: this.state.selectValue.toString(),
         RegionCode: this.state.RegionCode?this.state.RegionCode : '',

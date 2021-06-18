@@ -1647,11 +1647,17 @@ export default {
                   path: '/Intelligentanalysis/airQualityStatistics',
                   component: './Intelligentanalysis/airQualityStatistics/air',
                 },
-                { //运维区域账户访问率统计
+                { //运维区域账户访问率统计 大区
                   name: 'AccessStatistics',
                   path: '/Intelligentanalysis/accessStatistics',
                   component: './Intelligentanalysis/accessStatistics',
+                },
+                { //运维区域账户访问率统计 服务区
+                  name: 'AccessStatistics',
+                  path: '/Intelligentanalysis/accessStatistics/missDataSecond',
+                  component: './Intelligentanalysis/accessStatistics/missDataSecond',
                 }
+
               ],
 
               

@@ -1,32 +1,21 @@
 import { post } from '@/utils/request';
 
-/**
- * 缺失数据 响应
- *
- */
-export async function GetDefectModel(params) {
+
+
+// 获取用户访问率--大区
+export async function GetDaQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectDataSummary',
+    '/api/rest/PollutantSourceApi/UserInfosApi/GetDaQuUserActivity',
     params,
     null,
   );
 
   return result;
 }
-//缺失数据查询响应 二级
-export async function GetDefectPointDetail(params) {
+//获取用户访问率--服务区
+export async function GetFuWuQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectPointDetail',
-    params,
-    null,
-  );
-
-  return result;
-}
-//关注列表
-export async function GetAttentionDegreeList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
+    '/api/rest/PollutantSourceApi/UserInfosApi/GetFuWuQuUserActivity',
     params,
     null,
   );
@@ -34,11 +23,20 @@ export async function GetAttentionDegreeList(params) {
   return result;
 }
 
-//导出 缺失数据报警响应
-
-export async function ExportDefectDataSummary(params) {
+//获取用户访问率--访问状态
+export async function GetUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectDataSummary',
+    '/api/rest/PollutantSourceApi/UserInfosApi/GetUserActivity',
+    params,
+    null,
+  );
+
+  return result;
+}
+// 获取用户访问率--导出大区
+export async function ExportDaQuUserActivity(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/UserInfosApi/ExportDaQuUserActivity',
     params,
     null,
   );
@@ -46,10 +44,12 @@ export async function ExportDefectDataSummary(params) {
   return result;
 }
 
-//导出 缺失数据报警响应  详情
-export async function ExportDefectPointDetail(params) {
+
+//获取用户访问率--导出服务区
+
+export async function ExportFuWuQuUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportDefectPointDetail',
+    '/api/rest/PollutantSourceApi/UserInfosApi/ExportFuWuQuUserActivity',
     params,
     null,
   );
@@ -57,15 +57,16 @@ export async function ExportDefectPointDetail(params) {
   return result;
 }
 
-//根据行政区获取 企业列表
-
-export async function GetEntByRegion(params) {
+// 获取用户访问率--导出大区
+export async function ExportUserActivity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
+    '/api/rest/PollutantSourceApi/UserInfosApi/ExportUserActivity',
+    params,
     null,
   );
 
   return result;
 }
+
+
+

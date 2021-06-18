@@ -103,6 +103,7 @@ export default Model.extend({
         })
       }
     },
+    
     // 获取污染物类型
     *getPollutantTypeList({ payload }, {
       update, call

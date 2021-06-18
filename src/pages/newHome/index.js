@@ -306,6 +306,7 @@ class NewHome extends PureComponent {
         PollutantTypes: this.state.allPollutantTypes.toString(),
         RegionCode: this.state.RegionCode,
       },
+      callback:(res)=>{}
     });
   };
 

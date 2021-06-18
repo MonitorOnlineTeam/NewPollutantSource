@@ -18,7 +18,7 @@ export default class RegionalAccountStatistics extends Component {
   render() {
     return (
         <BreadcrumbWrapper title="运维区域账户访问率">
-           <ContentPage/>
+           <ContentPage {...this.props}/>
         </BreadcrumbWrapper>
     );
   }
