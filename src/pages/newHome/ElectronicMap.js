@@ -257,10 +257,10 @@ class NewHome extends PureComponent {
         );
       },
     });
-    // 获取行政区与师的关系
-    this.props.dispatch({
-      type: 'newHome/getMonitorRegionDivision',
-    });
+    // // 获取行政区与师的关系
+    // this.props.dispatch({
+    //   type: 'newHome/getMonitorRegionDivision',
+    // });
     // this.getConstructionCorpsList();
   }
 
@@ -308,7 +308,7 @@ class NewHome extends PureComponent {
   // 获取企业和监测点
   getAllEntAndPoint = (type) => {
     this.props.dispatch({
-      type: 'newHome/getAllEntAndPoints',
+      type: 'newHome/getAllEntAndPoint',
       payload: {
         PollutantTypes: this.state.selectValue.toString(),
         RegionCode: this.state.RegionCode?this.state.RegionCode : '',

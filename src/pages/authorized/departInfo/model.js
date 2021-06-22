@@ -2,7 +2,7 @@ import Model from '@/utils/model';
 import {
     getdepartinfobytree, getdepartinfobyid, insertdepartinfo, deldepartinfo, upddepartinfo, getdeparttreeandobj, getalluser, getuserbydepid, insertdepartbyuser,
     insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid, getGroupRegionFilter,
-    GetAlarmPushDepOrRole,InsertAlarmDepOrRole
+    GetAlarmPushDepOrRole,InsertAlarmDepOrRole,UpdateOperationArea
 } from './service';
 import { message } from 'antd';
 /*
@@ -393,8 +393,20 @@ export default Model.extend({
             } else {
                 message.error(result.Message)
             }
-        }
+        },
+       // 更新运维区域
+       *updateOperationArea({ payload,callback }, { call, update }) {
+                const result = yield call(UpdateOperationArea, payload);
+                if (result.IsSuccess) {
+                    message.success(result.Message)
+                    callback()
+                } else {
+                    message.error(result.Message)
+                }
+            },
     },
+
+
     reducers: {
     },
 });

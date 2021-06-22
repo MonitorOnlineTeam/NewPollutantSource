@@ -1,10 +1,10 @@
 /**
- * 功  能：运维区域账户访问率
+ * 功  能：联网率
  * 创建人：贾安波
- * 创建时间：2021.06.18
+ * 创建时间：2021.06.22
  */
 import React, { Component } from 'react';
-import { ExportOutlined,RollbackOutlined,UserOutlined} from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined,GlobalOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import { green,grey,blue,red } from '@ant-design/colors';
 import '@ant-design/compatible/assets/index.css';
@@ -48,27 +48,27 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'regionalAccountStatistics/updateState',
-  getData: 'regionalAccountStatistics/getFuWuQuUserActivity',
-  exportData: 'regionalAccountStatistics/exportFuWuQuUserActivity',
-  getUserData: 'regionalAccountStatistics/getUserActivity',
-  exportUserData: 'regionalAccountStatistics/exportUserActivity',
+  updateState: 'networkRateStatistics/updateState',
+  getData: 'networkRateStatistics/getFuWuQuUserActivity',
+  exportData: 'networkRateStatistics/exportFuWuQuUserActivity',
+  getUserData: 'networkRateStatistics/getUserActivity',
+  exportUserData: 'networkRateStatistics/exportUserActivity',
 };
-@connect(({ loading, regionalAccountStatistics,autoForm,common,global }) => ({
-  exloading:regionalAccountStatistics.exloading,
+@connect(({ loading, networkRateStatistics,autoForm,common,global }) => ({
+  exloading:networkRateStatistics.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: regionalAccountStatistics.total,
-  tableDatil: regionalAccountStatistics.tableDatil,
-  queryPar: regionalAccountStatistics.queryPar,
+  total: networkRateStatistics.total,
+  tableDatil: networkRateStatistics.tableDatil,
+  queryPar: networkRateStatistics.queryPar,
   exloading:loading.effects[pageUrl.exportData],
   clientHeight: global.clientHeight,
-  userList:regionalAccountStatistics.userList,
+  userList:networkRateStatistics.userList,
   userLoading: loading.effects[pageUrl.getUserData],
   exUserLoading: loading.effects[pageUrl.exportUserData],
-  FuWuArr: regionalAccountStatistics.FuWuArr,
-  FuviArr: regionalAccountStatistics.FuviArr,
-  FuNoVisitArr: regionalAccountStatistics.FuNoVisitArr,
-  FuRate: regionalAccountStatistics.FuRate
+  FuWuArr: networkRateStatistics.FuWuArr,
+  FuviArr: networkRateStatistics.FuviArr,
+  FuNoVisitArr: networkRateStatistics.FuNoVisitArr,
+  FuRate: networkRateStatistics.FuRate
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -215,7 +215,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Status',
         align: 'center',
         render: (text, record) => {
-            return text ==1?     <UserOutlined style={{color:blue[5],fontSize:16}}/> :   <UserOutlined style={{fontSize:16}}/>
+            return text ==1?     <GlobalOutlined style={{color:blue[5],fontSize:16}}/> :   <GlobalOutlined style={{fontSize:16}}/>
           }
 
     }
@@ -241,7 +241,7 @@ export default class EntTransmissionEfficiency extends Component {
 
  getOption=()=>{
 
-  const { FuWuArr,FuviArr,FuNoVisitArr,FuRate,location:{query:{p,day}}} = this.props;
+  const { FuWuArr,FuviArr,FuNoVisitArr,FuRate,location:{query:{p}}} = this.props;
   var option;
   option = {
       // color: [green[5],"#d9d9d9",blue[5]],
@@ -251,10 +251,10 @@ export default class EntTransmissionEfficiency extends Component {
           axisPointer: {
               type: 'shadow',
           },
-        formatter: function (params, ticket, callback) {
+          formatter: function (params, ticket, callback) {
 
-            //x轴名称 params[0]
-            let name = `近${day}内`
+            //x轴名称 params[0].name
+            let name = params[0].name;
             //值
               let value = ''
   
@@ -344,18 +344,6 @@ export default class EntTransmissionEfficiency extends Component {
               data: FuRate
           }
       ],
-    //   noDataLoadingOption: {
-    //     text: '暂无数据',
-    //     textStyle: {
-    //         fontSize: '20',
-    //     },
-    //     effect: 'bubble',
-    //     effectOption: {
-    //         effect: {
-    //             n: 0
-    //         }
-    //     }
-    // }
   };
   return option;
  }
@@ -415,20 +403,20 @@ export default class EntTransmissionEfficiency extends Component {
     }
 
     totalAccount=(row)=>{
-      const {location:{query:{p,day}} }= this.props;
-      this.setState({visible:true,accountTitle:`总账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
+      const {location:{query:{p}} }= this.props;
+      this.setState({visible:true,accountTitle:`总账户-${row.DaQuName}`,DaQuId:row.DaQuId},()=>{
          this.getUserDataFun(row,1)
       })
     }
     visitAccount=(row)=>{
-      const {location:{query:{p,day}} }= this.props;
-      this.setState({visible:true,accountTitle:`访问账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
+      const {location:{query:{p}} }= this.props;
+      this.setState({visible:true,accountTitle:`访问账户-${row.DaQuName}`,DaQuId:row.DaQuId},()=>{
         this.getUserDataFun(row,2)
      })
     }
     novisitAccount=(row)=>{
-      const {location:{query:{p,day}} }= this.props;
-      this.setState({visible:true,accountTitle:`未访问账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
+      const {location:{query:{p}} }= this.props;
+      this.setState({visible:true,accountTitle:`未访问账户-${row.DaQuName}`,DaQuId:row.DaQuId},()=>{
         this.getUserDataFun(row,3)
      })
     }
@@ -441,13 +429,12 @@ export default class EntTransmissionEfficiency extends Component {
       userLoading,
       userList,
       location:{
-        query:{day,n}
+        query:{n}
       }
     } = this.props;
 
 
     return (
-      <BreadcrumbWrapper title="运维区域账户访问率">
       <Card
         bordered={false}
         style={{height:'100%'}}
@@ -467,10 +454,9 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
               <Form.Item>
               <Button style={{ marginLeft: 10 }} onClick={() => {
-                        router.push(`/Intelligentanalysis/accessStatistics`);
+                    this.props.networkDetailCancel()
                     }}><RollbackOutlined />返回</Button>
               </Form.Item>
-              <Form.Item><span style={{color:red[5]}}>{n}(近{day}日内) </span> </Form.Item>
               </Row>
 
             </Form>
@@ -485,7 +471,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={this.columns}
             dataSource={this.props.tableDatil}
             pagination={false}
-            scroll={{ y: clientHeight - 630}}
+            scroll={{ y: clientHeight - 750}}
           />
         </div>
 
@@ -513,8 +499,8 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
 
               <Form.Item  style={{marginBottom:0}}>
-               <div style={{display:'inline-block'}}> <UserOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
-               <div style={{display:'inline-block',paddingLeft:8}}> <UserOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block'}}> <GlobalOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block',paddingLeft:8}}> <GlobalOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
               </Form.Item>
               </Row>
          <SdlTable
@@ -528,7 +514,6 @@ export default class EntTransmissionEfficiency extends Component {
           </>
       </Modal>
       </Card>
-      </BreadcrumbWrapper>
     );
   }
 }

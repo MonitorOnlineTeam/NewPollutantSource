@@ -214,7 +214,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Status',
         align: 'center',
         render: (text, record) => {
-            return text ==1?     <UserOutlined style={{color:blue[5]}}/> :   <UserOutlined />
+            return text ==1?     <UserOutlined style={{color:blue[5],fontSize:16}}/> :   <UserOutlined style={{fontSize:16}}/>
           }
 
     }
@@ -287,8 +287,8 @@ export default class EntTransmissionEfficiency extends Component {
               type: 'value',
               name: '账户数',
               min: 0,
-              max: 200,
-              interval: 40,
+              // max: 200,
+              // interval: 40,
               axisLine: { show: false }, //y轴
               axisTick: { show: false },
               splitLine: {  //x轴分割线
@@ -304,18 +304,19 @@ export default class EntTransmissionEfficiency extends Component {
               name: '系统访问率',
               min: 0,
               max: 100,
-              interval: 20,
+              // interval: 20,
               axisLabel: {
                   formatter: '{value} %'
               },
               axisLine: { show: false }, //y轴
               axisTick: { show: false },
               splitLine: {  //x轴分割线
-                lineStyle: {
-                  type: 'dashed',
-                  color: '#e9e9e9',
-                  width: 1
-                }
+                show: false,
+                // lineStyle: {
+                //   type: 'dashed',
+                //   color: '#e9e9e9',
+                //   width: 1
+                // }
               }
           },
           
@@ -344,18 +345,18 @@ export default class EntTransmissionEfficiency extends Component {
               data: DaRate
           }
       ],
-      noDataLoadingOption: {
-        text: '暂无数据',
-        textStyle: {
-            fontSize: '20',
-        },
-        effect: 'bubble',
-        effectOption: {
-            effect: {
-                n: 0
-            }
-        }
-    }
+    //   noDataLoadingOption: {
+    //     text: '暂无数据',
+    //     textStyle: {
+    //         fontSize: '20',
+    //     },
+    //     effect: 'bubble',
+    //     effectOption: {
+    //         effect: {
+    //             n: 0
+    //         }
+    //     }
+    // }
   };
   return option;
  }
@@ -486,7 +487,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={this.columns}
             dataSource={this.props.tableDatas}
             pagination={false}
-            scroll={{ y: clientHeight - 620}}
+            scroll={{ y: clientHeight - 640}}
           />
         </div>
 
@@ -514,8 +515,8 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
 
               <Form.Item  style={{marginBottom:0}}>
-               <div style={{display:'inline-block'}}> <UserOutlined style={{color:blue[5],paddingRight:5}}/>已访问 </div>
-               <div style={{display:'inline-block',paddingLeft:8}}> <UserOutlined style={{paddingRight:5}}/>已访问 </div>
+               <div style={{display:'inline-block'}}> <UserOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block',paddingLeft:8}}> <UserOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
               </Form.Item>
               </Row>
          <SdlTable
@@ -524,7 +525,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={this.accountCol}
             dataSource={userList}
             pagination={false}
-            // scroll={{ y: clientHeight - 620}}
+            scroll={{ y: clientHeight - 400}}
           />
           </>
       </Modal>

@@ -214,3 +214,9 @@ export async function getGroupRegionFilter(params) {
   const result = get('/api/rest/PollutantSourceApi/BaseDataApi/GetGroupRegionFilter', params, null);
   return result;
 }
+
+// 更新运维区域
+export async function UpdateOperationArea(params) {
+  const result = post('/api/rest/PollutantSourceApi/UserInfosApi/UpdateOperationArea', params, null);
+  return result;
+}

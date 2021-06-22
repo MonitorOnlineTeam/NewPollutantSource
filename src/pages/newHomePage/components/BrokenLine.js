@@ -5,7 +5,7 @@
  * 创建时间：2020.11
  */
 import React, { Component } from 'react';
-import { CaretDownOutlined } from '@ant-design/icons';
+import { CaretDownOutlined,CaretRightOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -39,7 +39,9 @@ import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmis
 
 
 import Region from '../components/jumpPage/faultOverWorkRate/Region'
+import 'echarts-liquidfill'
 
+import NetworkRateStatisticsModal from './networkRateStatistics'
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const pageUrl = {
@@ -60,6 +62,7 @@ const pageUrl = {
   YZLoading: loading.effects["home/getYZRateList"],
   CBLoading: loading.effects["home/getCBRateList"],
   GZLoading: loading.effects["home/getGZRateList"],
+  // LwLoading: loading.effects["home/getGZRateList"],
   queryPar:home.queryPar
 }))
 @Form.create()
@@ -74,7 +77,8 @@ export default class Index extends Component {
       TVisible:false,
       TBpollutantType:"1",
       regionVisible:false,
-      title:''
+      title:'',
+      networkVisible:false
     }
   }
 
@@ -274,7 +278,24 @@ export default class Index extends Component {
       </Row>
     );
   }
-
+  cardLwTitle= (title, type) => {
+    return (
+      <Row type='flex' align="middle" justify='space-between'>
+          <span onClick={()=>{this.setState({networkVisible:true})}} style={{cursor:'pointer'}}>
+            {title} <CaretRightOutlined style={{ color: '#cbcbcb' }} />
+          </span>
+        <Tabs defaultActiveKey="1" onChange={(value) => this.tabLWCallback(value, type)}>
+          <TabPane tab="废水" key="1">
+          </TabPane>
+          <TabPane tab="废气" key="2">
+          </TabPane>
+        </Tabs>
+      </Row>
+    );
+  }
+  tabLWCallback=(value)=>{
+    this.setState({networkType:value})
+  }
   tabCallback = (value, type) => {
     // GZRateTime: [moment().subtract(7, "days"), moment()],
     //   CBRateTime: [moment().subtract(7, "days"), moment()],
@@ -414,13 +435,67 @@ export default class Index extends Component {
     };
     return option;
   }
+  getLwChartData=()=>{
+    var option = {
+      series: [{
+          type: 'liquidFill',
+          data: [0.36],
+          color:['#64b0fd'],
+          radius: "95%", //水球的半径
+          itemStyle : { 
+            shadowBlur : 0
+          }, 
+          // center: [50,50],
+          outline: {
+            borderDistance: 0,
+            color: 'none',
+            itemStyle: {
+                borderWidth: 2,
+                borderColor: 'rgb(131, 147, 255)'
+            }
+          },
+          backgroundStyle: {
+            borderWidth: 0,
+            borderColor: 'none',
+            color: 'none'
+        },
+        label: {
+          normal: {
+            formatter: function (name) {
+              return `{title|联网率}{n|\n}{val|${name.value*100}%}`
+            },
+              textStyle: {
+                  color:'rgba(0,0,0,.65)',
+                  padding:[0,0,40,0],
+              },
+              rich: {
+                  //富文本 对字体进一步设置样式。title对应的运转率,val对应的 value
+                  title: {
+                      fontSize: 14,
+                      fontWeight: "400",
+                      lineHeight:30,
+                  },
+                  val: {
+                      fontSize: 18,
+                      fontWeight: "bold"
+                  }
+              }
+          }
+       },
+      },
+      ]
+
+};
+
+  return option;
+  }
   render() {
     const {
       CSYXLoading,
       YZLoading, CBLoading, GZLoading,
-      
+      LwLoading
     } = this.props;
-    const {CSYXRateTime,TVisible,TBpollutantType,regionVisible} = this.state;
+    const {CSYXRateTime,TVisible,TBpollutantType,regionVisible,networkVisible,networkType} = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.brokenLine}  >
            {
@@ -437,7 +512,7 @@ export default class Index extends Component {
               {regionVisible?  <Region  regionVisible={regionVisible} regionCancel={this.regionCancel}/> : null}
         <Row type='flex' justify='space-between'>
           <Col span={6}>
-            <Card title={this.cardTitle("有效传输率", "CSYX")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+            <Card  title={this.cardTitle("有效传输率", "CSYX")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={CSYXLoading} active paragraph={{ rows: 5 }}>
                 <ReactEcharts
                   option={this.getChartData("CSYX")}
@@ -448,7 +523,7 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col>
-          <Col span={6} style={{ padding: '0 10px' }}>
+           <Col span={6} style={{ padding: '0 10px' }}>
             <Card title={this.cardTitle("运转率", "YZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={YZLoading} active paragraph={{ rows: 5 }}>
                 <ReactEcharts
@@ -459,8 +534,8 @@ export default class Index extends Component {
                 />
               </Skeleton>
             </Card>
-          </Col>
-          <Col style={{ paddingRight: '10px' }} span={6}>
+          </Col> 
+          <Col  style={{ padding: '0 10px' }}  span={6}>
             <Card title={this.cardTitle("超标率", "CB")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={CBLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
@@ -472,7 +547,8 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col>
-          <Col span={6}>
+          {/* <Col   style={{ paddingRight: '10px' }} span={6}> */}
+          <Col  span={6}>
             <Card title={this.cardTitle("故障率", "GZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={GZLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
@@ -484,7 +560,38 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col>
+           {/* <Col span={6}>
+            <Card title={this.cardLwTitle("实时联网率", "LW")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
+              <Skeleton loading={LwLoading} paragraph={{ rows: 5 }} active>
+                <Row style={{height:'100%'}} align='middle'>
+                <Col span={12}  style={{height:'100%'}}>
+                <ReactEcharts
+                  option={this.getLwChartData()}
+                  className="echarts-for-echarts"
+                  theme="my_theme"
+                  style={{ height: '100%',width:'100%' }}
+                />
+                 </Col>
+                 <Col span={12} style={{paddingLeft:20,fontSize:15}}>
+                   <div style={{fontWeight:'bold',paddingBottom:15}}>废水统计</div>
+                   <div style={{paddingBottom:10}}>监测点统计：个</div>
+                   <div style={{paddingBottom:10}}>联网监测点：个</div>
+                   <div style={{paddingBottom:10}}>未联网测点：个</div>
+                  </Col>
+                </Row>
+              </Skeleton>
+            </Card>
+          </Col>  */}
         </Row>
+        {  //联网率
+                networkVisible &&
+                <NetworkRateStatisticsModal 
+                networkRateVisible={networkVisible} 
+                networkType={networkType}
+                networkRateCancel={() => {
+                  this.setState({ networkVisible: false });
+                }} 
+                />}
       </div>
     );
   }

@@ -1,10 +1,10 @@
 /**
- * 功  能：运维区域账户访问率
+ * 功  能：联网率
  * 创建人：贾安波
- * 创建时间：2021.06.18
+ * 创建时间：2021.06.22
  */
 import React, { Component } from 'react';
-import { ExportOutlined,RollbackOutlined,UserOutlined} from '@ant-design/icons';
+import { ExportOutlined,RollbackOutlined,GlobalOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import { green,grey,blue,red } from '@ant-design/colors';
 import '@ant-design/compatible/assets/index.css';
@@ -40,6 +40,7 @@ import PageLoading from '@/components/PageLoading'
 
 // import { DualAxes } from '@ant-design/charts';
 import ReactEcharts from 'echarts-for-react';
+import DetailDataSecond from './detailDataSecond'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -48,27 +49,27 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'regionalAccountStatistics/updateState',
-  getData: 'regionalAccountStatistics/getFuWuQuUserActivity',
-  exportData: 'regionalAccountStatistics/exportFuWuQuUserActivity',
-  getUserData: 'regionalAccountStatistics/getUserActivity',
-  exportUserData: 'regionalAccountStatistics/exportUserActivity',
+  updateState: 'networkRateStatistics/updateState',
+  getData: 'networkRateStatistics/getDaQuUserActivity',
+  exportData: 'networkRateStatistics/exportDaQuUserActivity',
+  getUserData: 'networkRateStatistics/getUserActivity',
+  exportUserData: 'networkRateStatistics/exportUserActivity',
 };
-@connect(({ loading, regionalAccountStatistics,autoForm,common,global }) => ({
-  exloading:regionalAccountStatistics.exloading,
+@connect(({ loading, networkRateStatistics,autoForm,common,global }) => ({
+  exloading:networkRateStatistics.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: regionalAccountStatistics.total,
-  tableDatil: regionalAccountStatistics.tableDatil,
-  queryPar: regionalAccountStatistics.queryPar,
+  total: networkRateStatistics.total,
+  tableDatas: networkRateStatistics.tableDatas,
+  queryPar: networkRateStatistics.queryPar,
   exloading:loading.effects[pageUrl.exportData],
   clientHeight: global.clientHeight,
-  userList:regionalAccountStatistics.userList,
+  userList:networkRateStatistics.userList,
   userLoading: loading.effects[pageUrl.getUserData],
   exUserLoading: loading.effects[pageUrl.exportUserData],
-  FuWuArr: regionalAccountStatistics.FuWuArr,
-  FuviArr: regionalAccountStatistics.FuviArr,
-  FuNoVisitArr: regionalAccountStatistics.FuNoVisitArr,
-  FuRate: regionalAccountStatistics.FuRate
+  DaQuArr: networkRateStatistics.DaQuArr,
+  DaviArr: networkRateStatistics.DaviArr,
+  DaNoVisitArr: networkRateStatistics.DaNoVisitArr,
+  DaRate: networkRateStatistics.DaRate
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -76,7 +77,9 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
     
     this.state = {
-      accountTitle:''
+      day:7,
+      accountTitle:'',
+      passParame:''
     };
     
     this.columns = [
@@ -94,14 +97,18 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'DaQuName',
         key: 'DaQuName',
         align: 'center',
+        render: (text, record) => { 
+          return <a  onClick={()=>{
+                     this.setState({
+                       detailVisible:true,
+                       passParame:record
+                     })
+
+                    }}>
+                   {text}
+               </a>      
+       },
       },
-      {
-        title: <span>服务区名称</span>,
-        dataIndex: 'FuWuQuName',
-        key: 'FuWuQuName',
-        align: 'center',
-      },
-      
       {
         title: <span>总账户数</span>,
         dataIndex: 'CountVisit',
@@ -121,9 +128,9 @@ export default class EntTransmissionEfficiency extends Component {
       //     return result;
       // }
       render: (text, record) => { 
-        return <a href='#' onClick={()=>{this.totalAccount(record)}}>
+        return <Link onClick={()=>{this.totalAccount(record)}}>
                  {text}
-             </a>      
+             </Link>      
      },
       },
       {
@@ -133,9 +140,9 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.Visited- b.Visited,
         render: (text, record) => { 
-          return <a href='#'  onClick={()=>{this.visitAccount(record)}}>
+          return <Link onClick={()=>{this.visitAccount(record)}}>
                    {text}
-               </a>      
+               </Link>      
        },
       },
       {
@@ -145,9 +152,9 @@ export default class EntTransmissionEfficiency extends Component {
         align: 'center',
         sorter: (a, b) => a.NoVisit- b.NoVisit,
         render: (text, record) => { 
-          return <a href='#' onClick={()=>{this.novisitAccount(record)}}>
+          return <Link onClick={()=>{this.novisitAccount(record)}}>
                    {text}
-               </a>      
+               </Link>      
        },
       },
       {
@@ -215,7 +222,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'Status',
         align: 'center',
         render: (text, record) => {
-            return text ==1?     <UserOutlined style={{color:blue[5],fontSize:16}}/> :   <UserOutlined style={{fontSize:16}}/>
+            return text ==1?     <GlobalOutlined style={{color:blue[5],fontSize:16}}/> :   <GlobalOutlined style={{fontSize:16}}/>
           }
 
     }
@@ -241,7 +248,7 @@ export default class EntTransmissionEfficiency extends Component {
 
  getOption=()=>{
 
-  const { FuWuArr,FuviArr,FuNoVisitArr,FuRate,location:{query:{p,day}}} = this.props;
+  const { DaQuArr,DaviArr,DaNoVisitArr,DaRate} = this.props;
   var option;
   option = {
       // color: [green[5],"#d9d9d9",blue[5]],
@@ -251,10 +258,10 @@ export default class EntTransmissionEfficiency extends Component {
           axisPointer: {
               type: 'shadow',
           },
-        formatter: function (params, ticket, callback) {
+          formatter: function (params, ticket, callback) {
 
-            //x轴名称 params[0]
-            let name = `近${day}内`
+            //x轴名称 params[0].name
+            let name = params[0].name;
             //值
               let value = ''
   
@@ -277,8 +284,8 @@ export default class EntTransmissionEfficiency extends Component {
      },
       xAxis: [{
               type: 'category',
-              data: FuWuArr,
-              axisTick: { //x轴
+              data: DaQuArr,
+              axisTick: { //x轴 去掉刻度
                 show:false
               },
           }],
@@ -287,8 +294,8 @@ export default class EntTransmissionEfficiency extends Component {
               type: 'value',
               name: '账户数',
               min: 0,
-              // max: 100,
-              // interval: 20,
+              // max: 200,
+              // interval: 40,
               axisLine: { show: false }, //y轴
               axisTick: { show: false },
               splitLine: {  //x轴分割线
@@ -311,14 +318,15 @@ export default class EntTransmissionEfficiency extends Component {
               axisLine: { show: false }, //y轴
               axisTick: { show: false },
               splitLine: {  //x轴分割线
-                show: false 
+                show: false,
                 // lineStyle: {
                 //   type: 'dashed',
                 //   color: '#e9e9e9',
                 //   width: 1
                 // }
               }
-          }
+          },
+          
       ],
       series: [
         {
@@ -329,39 +337,28 @@ export default class EntTransmissionEfficiency extends Component {
             // show: true,
             // position: 'insideRight'
         // },
-          data: FuviArr
+          data: DaviArr
       },
       {
           name: '未访问账户数',
           type: 'bar',
           stack: 'overlap',//堆叠效果(字符需要统一)
-          data: FuNoVisitArr
+          data: DaNoVisitArr
       },
       {
              name: '系统访问率',
               type: 'line',
               yAxisIndex: 1,
-              data: FuRate
+              data: DaRate
           }
-      ],
-    //   noDataLoadingOption: {
-    //     text: '暂无数据',
-    //     textStyle: {
-    //         fontSize: '20',
-    //     },
-    //     effect: 'bubble',
-    //     effectOption: {
-    //         effect: {
-    //             n: 0
-    //         }
-    //     }
-    // }
+      ]
   };
   return option;
  }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar,query:{p,day}}  = this.props;
+    const { dispatch, queryPar } = this.props;
+    const { day } = this.state;
     dispatch({
       type: pageUrl.exportData,
       payload: { 
@@ -373,15 +370,14 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
   userTemplate = () => {  //弹框  用户列表导出
-    const { dispatch, queryPar,query:{p,day} } = this.props;
-    const { FuWuQuId } = this.state;
+    const { dispatch, queryPar } = this.props;
+    const { day,DaQuId } = this.state;
     dispatch({
       type: pageUrl.exportUserData,
       payload: { 
         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
         endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-        DaQuId:p,
-        FuWuQuId:FuWuQuId
+        DaQuId:DaQuId
       },
       callback: data => {
          downloadFile(data);
@@ -389,45 +385,43 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
     dayChange=(e)=>{
-      const { dispatch, queryPar,location:{query:{p,day}}} = this.props;
+      const { dispatch, queryPar } = this.props;
+      this.setState({day:e?e.target.value : 7})
       dispatch({
         type: pageUrl.getData,
         payload: { 
-          beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
+          beginTime: moment().subtract(e?e.target.value : 7, 'day').format('YYYY-MM-DD 00:00:00'),
           endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-          DaQuId:p
         }
       });
     }
     getUserDataFun = (row,type) =>{
-      const {location:{query:{p,day}} }= this.props;
-      this.setState({FuWuQuId:row.FuWuQuId})
+      const { day } = this.state;
       this.props.dispatch({
         type:pageUrl.getUserData,
         payload:{
          beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
          endTime: moment().format('YYYY-MM-DD 23:59:59'),
          DaQuId: row.DaQuId,
-         FuWuQuId:row.FuWuQuId,
          ActivetyType:type
        }
       })
     }
 
     totalAccount=(row)=>{
-      const {location:{query:{p,day}} }= this.props;
+      const { day } = this.state;
       this.setState({visible:true,accountTitle:`总账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
          this.getUserDataFun(row,1)
       })
     }
     visitAccount=(row)=>{
-      const {location:{query:{p,day}} }= this.props;
+      const { day } = this.state;
       this.setState({visible:true,accountTitle:`访问账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
         this.getUserDataFun(row,2)
      })
     }
     novisitAccount=(row)=>{
-      const {location:{query:{p,day}} }= this.props;
+      const { day } = this.state;
       this.setState({visible:true,accountTitle:`未访问账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
         this.getUserDataFun(row,3)
      })
@@ -435,29 +429,43 @@ export default class EntTransmissionEfficiency extends Component {
   render() {
     const {
       exloading,
-      tableDatil,
+      tableDatas,
       clientHeight,
       exUserLoading,
       userLoading,
       userList,
-      location:{
-        query:{day,n}
-      }
+      networkRateVisible,
+      networkRateCancel
     } = this.props;
-
-
+    const { detailVisible,passParame,day} = this.state;
     return (
-      <BreadcrumbWrapper title="运维区域账户访问率">
-      <Card
+      <Modal
+      title={'实时联网率'}
+      width={'90%'}
+      visible={networkRateVisible}
+      onCancel={networkRateCancel}
+      footer={null}
+  >
+
+  {detailVisible&&<DetailDataSecond  networkDetailCancel={()=>{this.setState({detailVisible:false})}} location ={ {query : {p:passParame.DaQuId,n:passParame.DaQuName, day:day}}}/>}
+     {!detailVisible&&networkRateVisible&&<Card
         bordered={false}
         style={{height:'100%'}}
         title={
           <>
             <Form layout="inline">
             <Row>
+            <Form.Item>
+            <Radio.Group onChange={this.dayChange} defaultValue={7}>
+               <Radio.Button value={7}>近7日内</Radio.Button>
+               <Radio.Button value={14}>近14日内</Radio.Button>
+               <Radio.Button value={30}>近30日内</Radio.Button>
+             </Radio.Group>
 
-             <Form.Item  style={{ marginRight: 0}}>
-                <Button         
+            </Form.Item>
+             <Form.Item>
+                <Button
+                  style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
                   onClick={this.template}
                   loading={exloading}
@@ -465,13 +473,13 @@ export default class EntTransmissionEfficiency extends Component {
                   导出
                 </Button>
               </Form.Item>
-              <Form.Item>
-              <Button style={{ marginLeft: 10 }} onClick={() => {
-                        router.push(`/Intelligentanalysis/accessStatistics`);
-                    }}><RollbackOutlined />返回</Button>
-              </Form.Item>
-              <Form.Item><span style={{color:red[5]}}>{n}(近{day}日内) </span> </Form.Item>
               </Row>
+              <Row style={{paddingTop:5}}>
+              <span style={{color:red[5]}}>
+              停运时段内的监测点不参与联网率的计算
+              </span>
+              </Row>
+            
 
             </Form>
           </>
@@ -483,9 +491,9 @@ export default class EntTransmissionEfficiency extends Component {
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
             columns={this.columns}
-            dataSource={this.props.tableDatil}
+            dataSource={this.props.tableDatas}
             pagination={false}
-            scroll={{ y: clientHeight - 630}}
+            scroll={{ y: clientHeight - 800}}
           />
         </div>
 
@@ -513,8 +521,8 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
 
               <Form.Item  style={{marginBottom:0}}>
-               <div style={{display:'inline-block'}}> <UserOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
-               <div style={{display:'inline-block',paddingLeft:8}}> <UserOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block'}}> <GlobalOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block',paddingLeft:8}}> <GlobalOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
               </Form.Item>
               </Row>
          <SdlTable
@@ -527,8 +535,8 @@ export default class EntTransmissionEfficiency extends Component {
           />
           </>
       </Modal>
-      </Card>
-      </BreadcrumbWrapper>
+      </Card>}
+      </Modal>
     );
   }
 }

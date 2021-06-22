@@ -15,6 +15,7 @@ import {
   EditOutlined,
   FilterOutlined,
   UsergroupAddOutlined,
+  UndoOutlined,
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -41,6 +42,8 @@ import {
   Tree,
   Radio,
   Tooltip,
+  Popover,
+  Select
 } from 'antd';
 import MonitorContent from '@/components/MonitorContent';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
@@ -160,6 +163,7 @@ const rightTableColumns = [
   DepartInfoOneLoading: loading.effects['departinfo/getdepartinfobyid'],
   CheckPointLoading: loading.effects['departinfo/getpointbydepid'],
   getentandpointLoading: loading.effects['departinfo/getentandpoint'],
+  updateOperationAreaLoading: loading.effects['departinfo/updateOperationArea'],
   DepartInfoTree: departinfo.DepartInfoTree,
   DepartInfoOne: departinfo.DepartInfoOne,
   DepartTree: departinfo.DepartTree,
@@ -210,6 +214,7 @@ class DepartIndex extends Component {
       rolesID:'',
       alarmPushData:'',
       postCheckedKeys:'',
+      updateOperationVal:'1',
       columns: [
         {
           title: '部门名称',
@@ -241,7 +246,7 @@ class DepartIndex extends Component {
           key: 'x',
           align: 'left',
           width: '280px',
-          render: (text, record) => (
+          render: (text, record,index) => (
             <span>
               <Tooltip title="编辑">
                 <a
@@ -365,13 +370,72 @@ class DepartIndex extends Component {
                   <BellOutlined style={{ fontSize: 16 }} />
                 </a>
               </Tooltip>
+              <Divider type="vertical" />
+              <Tooltip title="更新运维区域">
+              <Popover   trigger="click" visible={this.state.operatioVisible && record.UserGroup_ID === this.state.updateOperationGroupId}  content={this.updateOperation} title="更新运维区域">
+                <a
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                     this.setState({
+                       updateOperationGroupId:record.UserGroup_ID,
+                       operatioVisible:true,
+                       updateOperationVal:'1'
+                     })
+                  }}
+                >
+                  <UndoOutlined style={{ fontSize: 16 }} />
+                </a>
+                </Popover>
+              </Tooltip>
             </span>
           ),
         },
       ],
     };
   }
+  updateOperation=()=>{
+    return <Form>
+        <Row>
+        <Select
+       placeholder="更新类型"
+       onChange={this.updateChange}
+       value={this.state.updateOperationVal}
+       style={{ width: '100%'}}
+     >
+       <Option value="1">一级</Option>
+       <Option value="2">二级</Option>
+       <Option value="3">其他</Option>
+     </Select>
+        </Row>
+         <Row style={{paddingTop:10}} justify='end'>
+         <Button type="primary"  loading={this.props.updateOperationAreaLoading} onClick={this.updateOperationSubmit}>
+           确定
+         </Button>  
+         <Button style={{marginLeft:5}} onClick={() => {this.setState({operatioVisible:false,updateOperationGroupId:''})}}>
+         取消
+         </Button>  
+         </Row>
+      </Form>
+  }
 
+  updateChange=(value)=>{
+    this.setState({
+      updateOperationVal:value
+    })
+  }
+
+  updateOperationSubmit=()=>{
+    this.props.dispatch({
+      type: 'departinfo/updateOperationArea',
+      payload: {
+        LevelType: this.state.updateOperationVal,
+        GroupId: this.state.updateOperationGroupId,
+      },
+      callback:()=>{
+        this.setState({operatioVisible:false})
+      }
+    });
+  }
   onChanges = nextTargetKeys => {
     // if (nextTargetKeys.length == 0) {
     //     message.error("请至少保留一个角色")
@@ -818,7 +882,7 @@ class DepartIndex extends Component {
     data.map(item => {
       if (item.children) {
         return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
+          <TreeNode title={item.label} key={item.value} dataRef={item}>
             {this.renderTreeNodes(item.children)}
           </TreeNode>
         );
@@ -864,7 +928,7 @@ class DepartIndex extends Component {
     const { getFieldDecorator } = this.props.form;
     const { btnloading, btnloading1 } = this.props;
     const { targetKeys, disabled, showSearch } = this.state;
-    console.log(this.state.checkedKey)
+
     const formItemLayout = {
       labelCol: {
         span: 6,
