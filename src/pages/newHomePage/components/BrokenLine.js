@@ -535,7 +535,8 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col> 
-          <Col  style={{ padding: '0 10px' }}  span={6}>
+          <Col   style={{ paddingRight: '10px' }} span={6}>
+          {/* <Col  style={{ padding: '0 10px' }}  span={6}> */}
             <Card title={this.cardTitle("超标率", "CB")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={CBLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
