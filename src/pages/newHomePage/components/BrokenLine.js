@@ -472,7 +472,7 @@ export default class Index extends Component {
   }
   getLwChartData=(data)=>{
 
-    let rate = data? data.replace('%','')/100 : data;
+    let rate = data?  data.replace('%','')/100 : data;
     var option = {
       series: [{
           type: 'liquidFill',
@@ -499,7 +499,9 @@ export default class Index extends Component {
         label: {
           normal: {
             formatter: function (name) {
-              return `{title|联网率}{n|\n}{val|${name.value*100}%}`
+
+              let val = name.value? name.value*100 : '0.00';
+              return `{title|联网率}{n|\n}{val|${ val}%}`
             },
               textStyle: {
                   color:'rgba(0,0,0,.65)',

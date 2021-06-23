@@ -514,8 +514,8 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
 
               <Form.Item  style={{marginBottom:0}}>
-               <div style={{display:'inline-block'}}> <GlobalOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
-               <div style={{display:'inline-block',paddingLeft:8}}> <GlobalOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block'}}> <GlobalOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已联网 </div>
+               <div style={{display:'inline-block',paddingLeft:8}}> <GlobalOutlined style={{paddingRight:5,fontSize:16}}/>未联网 </div>
               </Form.Item>
               </Row>
          <SdlTable

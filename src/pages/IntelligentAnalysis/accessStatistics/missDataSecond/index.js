@@ -517,7 +517,7 @@ export default class EntTransmissionEfficiency extends Component {
 
               <Form.Item  style={{marginBottom:0}}>
                <div style={{display:'inline-block'}}> <UserOutlined style={{color:blue[5],paddingRight:5,fontSize:16}}/>已访问 </div>
-               <div style={{display:'inline-block',paddingLeft:8}}> <UserOutlined style={{paddingRight:5,fontSize:16}}/>已访问 </div>
+               <div style={{display:'inline-block',paddingLeft:8}}> <UserOutlined style={{paddingRight:5,fontSize:16}}/>未访问 </div>
               </Form.Item>
               </Row>
          <SdlTable
