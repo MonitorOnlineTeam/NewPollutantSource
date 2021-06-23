@@ -379,7 +379,7 @@ class DepartIndex extends Component {
                      this.setState({
                        updateOperationGroupId:record.UserGroup_ID,
                        operatioVisible:true,
-                       updateOperationVal:'1'
+                       updateOperationVal:record.leve,
                      })
                   }}
                 >
@@ -432,7 +432,12 @@ class DepartIndex extends Component {
         GroupId: this.state.updateOperationGroupId,
       },
       callback:()=>{
-        this.setState({operatioVisible:false})
+        this.setState({operatioVisible:false},()=>{
+          this.props.dispatch({
+            type: 'departinfo/getdepartinfobytree',
+            payload: {},
+          });
+        })
       }
     });
   }

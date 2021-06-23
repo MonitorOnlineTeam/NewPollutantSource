@@ -49,10 +49,10 @@ const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
   updateState: 'networkRateStatistics/updateState',
-  getData: 'networkRateStatistics/getFuWuQuUserActivity',
-  exportData: 'networkRateStatistics/exportFuWuQuUserActivity',
-  getUserData: 'networkRateStatistics/getUserActivity',
-  exportUserData: 'networkRateStatistics/exportUserActivity',
+  getData: 'networkRateStatistics/getNetworkingRateForCity',
+  exportData: 'networkRateStatistics/exportNetworkingRateForCity',
+  getPointData: 'networkRateStatistics/getNetworkingRateForPoint',
+  exportPointData: 'networkRateStatistics/exportNetworkingRateForPoint',
 };
 @connect(({ loading, networkRateStatistics,autoForm,common,global }) => ({
   exloading:networkRateStatistics.exloading,
@@ -62,13 +62,13 @@ const pageUrl = {
   queryPar: networkRateStatistics.queryPar,
   exloading:loading.effects[pageUrl.exportData],
   clientHeight: global.clientHeight,
-  userList:networkRateStatistics.userList,
-  userLoading: loading.effects[pageUrl.getUserData],
-  exUserLoading: loading.effects[pageUrl.exportUserData],
-  FuWuArr: networkRateStatistics.FuWuArr,
+  pointList:networkRateStatistics.pointList,
+  pointLoading: loading.effects[pageUrl.getPointData],
+  exPointLoading: loading.effects[pageUrl.exportPointData],
+  CityArr: networkRateStatistics.CityArr,
   FuviArr: networkRateStatistics.FuviArr,
-  FuNoVisitArr: networkRateStatistics.FuNoVisitArr,
-  FuRate: networkRateStatistics.FuRate
+  CityNoNetArr: networkRateStatistics.CityNoNetArr,
+  CityRate: networkRateStatistics.CityRate
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -76,7 +76,7 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
     
     this.state = {
-      accountTitle:''
+      pointTitle:''
     };
     
     this.columns = [
@@ -90,72 +90,77 @@ export default class EntTransmissionEfficiency extends Component {
         }
       },
       {
-        title: <span>大区名称</span>,
-        dataIndex: 'DaQuName',
-        key: 'DaQuName',
+        title: <span>省区</span>,
+        dataIndex: 'ProviceName',
+        key: 'ProviceName',
+        align: 'center'
+      },
+      {
+        title: <span>城市</span>,
+        dataIndex: 'CityName',
+        key: 'CityName',
         align: 'center',
       },
       {
-        title: <span>服务区名称</span>,
-        dataIndex: 'FuWuQuName',
-        key: 'FuWuQuName',
+        title: <span>监测点类型</span>,
+        dataIndex: 'PollutantType',
+        key: 'PollutantType',
         align: 'center',
       },
-      
       {
-        title: <span>总账户数</span>,
-        dataIndex: 'CountVisit',
-        key: 'CountVisit',
+        title: <span>监测点总计(个)</span>,
+        dataIndex: 'PointCount',
+        key: 'PointCount',
         align: 'center',
-        sorter: (a, b) => a.CountVisit- b.CountVisit,
+        sorter: (a, b) => a.PointCount- b.PointCount,
       //   sorter: (a, b) => {
       //     const result = a.CountVisit - b.CountVisit;
       //     setTimeout(() => {
-      //         if (a.DaQuName === '全部合计') {
+      //         if (a.ProviceName === '全部合计') {
       //             a.CountVisit = 0 - a.CountVisit;
       //         }
-      //         if (b.DaQuName === '全部合计') {
+      //         if (b.ProviceName === '全部合计') {
       //             b.CountVisit = 0 - b.CountVisit;
       //         }
       //     });
       //     return result;
       // }
       render: (text, record) => { 
-        return <a href='#' onClick={()=>{this.totalAccount(record)}}>
+        return <Link onClick={()=>{this.totalPoint(record)}}>
                  {text}
-             </a>      
+             </Link>      
      },
       },
       {
-        title: <span>访问账户数</span>,
-        dataIndex: 'Visited',
-        key: 'Visited',
+        title: <span>联网监测点</span>,
+        dataIndex: 'NetworkingCount',
+        key: 'NetworkingCount',
         align: 'center',
-        sorter: (a, b) => a.Visited- b.Visited,
+        sorter: (a, b) => a.NetworkingCount- b.NetworkingCount,
         render: (text, record) => { 
-          return <a href='#'  onClick={()=>{this.visitAccount(record)}}>
+          return <Link onClick={()=>{this.netWorkPoint(record)}}>
                    {text}
-               </a>      
+               </Link>      
        },
       },
       {
-        title: <span>未访问账户数</span>,
-        dataIndex: 'NoVisit',
-        key: 'NoVisit',
+        title: <span>未联网监测点</span>,
+        dataIndex: 'OffLineCount',
+        key: 'OffLineCount',
         align: 'center',
-        sorter: (a, b) => a.NoVisit- b.NoVisit,
+        sorter: (a, b) => a.OffLineCount- b.OffLineCount,
         render: (text, record) => { 
-          return <a href='#' onClick={()=>{this.novisitAccount(record)}}>
+          return <Link onClick={()=>{this.noNetWorkPoint(record)}}>
                    {text}
-               </a>      
+               </Link>      
        },
       },
       {
-        title: <span>系统访问率</span>,
-        dataIndex: 'VisitRate',
-        key: 'VisitRate',
+        title: <span>联网率</span>,
+        dataIndex: 'NetworkingRate',
+        key: 'NetworkingRate',
         align: 'center',
-        sorter: (a, b) => a.VisitRate.replace("%","")- b.VisitRate.replace("%",""),
+        sorter: (a, b) => a.NetworkingRate.replace("%","")- b.NetworkingRate.replace("%",""),
         render: (text, record) => {
             return (
               <div>
@@ -174,7 +179,7 @@ export default class EntTransmissionEfficiency extends Component {
     ];
 
 
-    this.accountCol = [
+    this.pointCol = [
       {
         title: <span>序号</span>,
         dataIndex: 'x',
@@ -185,32 +190,40 @@ export default class EntTransmissionEfficiency extends Component {
         }
       },
       {
-        title: <span>大区名称</span>,
-        dataIndex: 'DaQuName',
-        key: 'DaQuName',
-        align: 'center'     
+        title: <span>省区</span>,
+        dataIndex: 'ProviceName',
+        key: 'ProviceName',
+        align: 'center'
       },
       {
-        title: <span>服务区名称</span>,
-        dataIndex: 'FuWuQuName',
-        key: 'FuWuQuName',
-        align: 'center',
-    
-     },
-      {
-        title: <span>姓名</span>,
-        dataIndex: 'UserName',
-        key: 'UserName',
+        title: <span>城市</span>,
+        dataIndex: 'CityName',
+        key: 'CityName',
         align: 'center',
       },
       {
-        title: <span>登录名</span>,
-        dataIndex: 'UserAccount',
-        key: 'UserAccount',
+        title: <span>企业</span>,
+        dataIndex: 'EntName',
+        key: 'EntName',
+        align: 'center',
+        render: (text, record) => { 
+          return <span style={{textAlign:'left'}}> {text}</span>      
+       },   
+      },
+      {
+        title: <span>监测点</span>,
+        dataIndex: 'PointName',
+        key: 'PointName',
+        align: 'center'
+      },
+      {
+        title: <span>监测点类型</span>,
+        dataIndex: 'PollutantType',
+        key: 'PollutantType',
         align: 'center',
       },
       {
-        title: <span>访问状态</span>,
+        title: <span>联网状态</span>,
         dataIndex: 'Status',
         key: 'Status',
         align: 'center',
@@ -219,6 +232,8 @@ export default class EntTransmissionEfficiency extends Component {
           }
 
     }
+
+    
     ];
   }
 
@@ -227,7 +242,7 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch } = this.props;
-   this.dayChange();
+   this.typeChange();
   };
  loadChart=()=>{
 
@@ -241,7 +256,7 @@ export default class EntTransmissionEfficiency extends Component {
 
  getOption=()=>{
 
-  const { FuWuArr,FuviArr,FuNoVisitArr,FuRate,location:{query:{p}}} = this.props;
+  const { CityArr,FuviArr,CityNoNetArr,CityRate,location:{query:{p}}} = this.props;
   var option;
   option = {
       // color: [green[5],"#d9d9d9",blue[5]],
@@ -259,14 +274,14 @@ export default class EntTransmissionEfficiency extends Component {
               let value = ''
   
               params.map(item=>{
-              value += `${item.marker} ${item.seriesName}: ${item.value}${item.seriesName==='系统访问率'?'%':''}<br />`
+              value += `${item.marker} ${item.seriesName}: ${item.value}${item.seriesName==='联网率'?'%':''}<br />`
             })
             
             return  name + '<br />' + value
         }
       },
       legend: {
-          data: ['访问账户数', '未访问账户数','系统访问率']
+          data: ['联网监测点', '未联网监测点','联网率']
       },
       grid: {
         left: 40,
@@ -277,7 +292,7 @@ export default class EntTransmissionEfficiency extends Component {
      },
       xAxis: [{
               type: 'category',
-              data: FuWuArr,
+              data: CityArr,
               axisTick: { //x轴
                 show:false
               },
@@ -285,7 +300,7 @@ export default class EntTransmissionEfficiency extends Component {
       yAxis: [
           {
               type: 'value',
-              name: '账户数',
+              name: '监测点',
               min: 0,
               // max: 100,
               // interval: 20,
@@ -301,7 +316,7 @@ export default class EntTransmissionEfficiency extends Component {
           },
           {
               type: 'value',
-              name: '系统访问率',
+              name: '联网率',
               min: 0,
               max: 100,
               // interval: 20,
@@ -322,7 +337,7 @@ export default class EntTransmissionEfficiency extends Component {
       ],
       series: [
         {
-          name: '访问账户数',
+          name: '联网监测点',
           type: 'bar',
           stack: 'overlap',//堆叠效果(字符需要统一)
           // label: {
@@ -332,16 +347,16 @@ export default class EntTransmissionEfficiency extends Component {
           data: FuviArr
       },
       {
-          name: '未访问账户数',
+          name: '未联网监测点',
           type: 'bar',
           stack: 'overlap',//堆叠效果(字符需要统一)
-          data: FuNoVisitArr
+          data: CityNoNetArr
       },
       {
-             name: '系统访问率',
+             name: '联网率',
               type: 'line',
               yAxisIndex: 1,
-              data: FuRate
+              data: CityRate
           }
       ],
   };
@@ -349,75 +364,75 @@ export default class EntTransmissionEfficiency extends Component {
  }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar,query:{p,day}}  = this.props;
+    const { dispatch,location:{query:{p,networkType}}}  = this.props;
     dispatch({
       type: pageUrl.exportData,
       payload: { 
-        beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
-        endTime: moment().format('YYYY-MM-DD 23:59:59'), },
+        PollutantType: networkType,
+        ProviceCode:p,
+      },
         callback: data => {
          downloadFile(data);
         },
     });
   };
-  userTemplate = () => {  //弹框  用户列表导出
-    const { dispatch, queryPar,query:{p,day} } = this.props;
-    const { FuWuQuId } = this.state;
+  pointTemplate = () => {  //弹框  监测点列表导出
+    const { dispatch,location:{query:{p,networkType}} } = this.props;
+    const { CityCode } = this.state;
     dispatch({
-      type: pageUrl.exportUserData,
+      type: pageUrl.exportPointData,
       payload: { 
-        beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
-        endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-        DaQuId:p,
-        FuWuQuId:FuWuQuId
+        PollutantType: networkType,
+        ProviceCode:p,
+        CityCode:CityCode,
+        NetworkingRateType:this.state.networkingRateType
       },
       callback: data => {
          downloadFile(data);
         },
     });
   }
-    dayChange=(e)=>{
-      const { dispatch, queryPar,location:{query:{p,day}}} = this.props;
+    typeChange=(e)=>{
+      const { dispatch,location:{query:{p,networkType}}} = this.props;
       dispatch({
         type: pageUrl.getData,
         payload: { 
-          beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
-          endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-          DaQuId:p
+          PollutantType: networkType,
+          ProviceCode: p,
         }
       });
     }
-    getUserDataFun = (row,type) =>{
-      const {location:{query:{p,day}} }= this.props;
-      this.setState({FuWuQuId:row.FuWuQuId})
+    getPointDataFun = (row,type) =>{
+      const {location:{query:{p,networkType}} }= this.props;
+      this.setState({CityCode:row.CityCode, networkingRateType:type})
+
       this.props.dispatch({
-        type:pageUrl.getUserData,
+        type:pageUrl.getPointData,
         payload:{
-         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
-         endTime: moment().format('YYYY-MM-DD 23:59:59'),
-         DaQuId: row.DaQuId,
-         FuWuQuId:row.FuWuQuId,
-         ActivetyType:type
+          PollutantType: networkType,
+          ProviceCode: p,
+          CityCode: row.CityCode,
+          NetworkingRateType: type
        }
       })
     }
 
-    totalAccount=(row)=>{
+    totalPoint=(row)=>{
       const {location:{query:{p}} }= this.props;
-      this.setState({visible:true,accountTitle:`总账户-${row.DaQuName}`,DaQuId:row.DaQuId},()=>{
-         this.getUserDataFun(row,1)
+      this.setState({visible:true,pointTitle:`监测点总计-${row.CityName}`},()=>{
+         this.getPointDataFun(row,1)
       })
     }
-    visitAccount=(row)=>{
+    netWorkPoint=(row)=>{
       const {location:{query:{p}} }= this.props;
-      this.setState({visible:true,accountTitle:`访问账户-${row.DaQuName}`,DaQuId:row.DaQuId},()=>{
-        this.getUserDataFun(row,2)
+      this.setState({visible:true,pointTitle:`联网监测点-${row.CityName}`},()=>{
+        this.getPointDataFun(row,2)
      })
     }
-    novisitAccount=(row)=>{
+    noNetWorkPoint=(row)=>{
       const {location:{query:{p}} }= this.props;
-      this.setState({visible:true,accountTitle:`未访问账户-${row.DaQuName}`,DaQuId:row.DaQuId},()=>{
-        this.getUserDataFun(row,3)
+      this.setState({visible:true,pointTitle:`未联网监测点-${row.CityName}`},()=>{
+        this.getPointDataFun(row,3)
      })
     }
   render() {
@@ -425,9 +440,9 @@ export default class EntTransmissionEfficiency extends Component {
       exloading,
       tableDatil,
       clientHeight,
-      exUserLoading,
-      userLoading,
-      userList,
+      exPointLoading,
+      pointLoading,
+      pointList,
       location:{
         query:{n}
       }
@@ -458,7 +473,7 @@ export default class EntTransmissionEfficiency extends Component {
                     }}><RollbackOutlined />返回</Button>
               </Form.Item>
               </Row>
-
+           
             </Form>
           </>
         }
@@ -476,7 +491,7 @@ export default class EntTransmissionEfficiency extends Component {
         </div>
 
         <Modal
-        title={this.state.accountTitle}
+        title={this.state.pointTitle}
         visible={this.state.visible}
         width={'90%'}
         onCancel={() => {
@@ -491,8 +506,8 @@ export default class EntTransmissionEfficiency extends Component {
              <Form.Item style={{marginBottom:0}}>
                 <Button
                   icon={<ExportOutlined />}
-                  onClick={this.userTemplate}
-                  loading={exUserLoading}
+                  onClick={this.pointTemplate}
+                  loading={exPointLoading}
                 >
                   导出
                 </Button>
@@ -505,9 +520,9 @@ export default class EntTransmissionEfficiency extends Component {
               </Row>
          <SdlTable
             rowKey={(record, index) => `complete${index}`}
-            loading={userLoading}
-            columns={this.accountCol}
-            dataSource={userList}
+            loading={pointLoading}
+            columns={this.pointCol}
+            dataSource={pointList}
             pagination={false}
             scroll={{ y: clientHeight - 400}}
           />

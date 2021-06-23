@@ -62,7 +62,7 @@ const pageUrl = {
   YZLoading: loading.effects["home/getYZRateList"],
   CBLoading: loading.effects["home/getCBRateList"],
   GZLoading: loading.effects["home/getGZRateList"],
-  // LwLoading: loading.effects["home/getGZRateList"],
+  LwLoading: loading.effects["networkRateStatistics/getHomePageNetworkingRate"],
   queryPar:home.queryPar
 }))
 @Form.create()
@@ -78,7 +78,12 @@ export default class Index extends Component {
       TBpollutantType:"1",
       regionVisible:false,
       title:'',
-      networkVisible:false
+      networkVisible:false,
+      networkType:'1',
+      networkingRate:0,
+      networkingCount: '',
+      offLineCount:  '',
+      pointCount:  '',
     }
   }
 
@@ -92,9 +97,12 @@ export default class Index extends Component {
     // 获取超标率
     this.getCBRateList();
     // 获取运转率
-    this.getYZRateList();
+    // this.getYZRateList();
     // 获取传输有效率
     this.getCSYXRateList();
+    
+    //获取联网率
+    this.getNetworkingRate();
   }
 
   // 获取故障率
@@ -144,6 +152,31 @@ export default class Index extends Component {
       }
     })
   }
+  // 获取联网率
+  getNetworkingRate = () => {
+    
+
+    this.props.dispatch({
+      type: "networkRateStatistics/getHomePageNetworkingRate",
+      payload: {
+          PollutantType: this.state.networkType,
+      },
+      callback:res=>{
+        if(res.length>0){
+          let data = res[0];
+          this.setState({
+            networkingRate: data.NetworkingRate,
+            networkingCount: data.NetworkingCount,
+            offLineCount:  data.OffLineCount,
+            pointCount:  data.PointCount,
+          })
+        }
+
+      }
+    })
+  }
+
+  
   transmission=(type)=>{
     this.setState({
       TBpollutantType:type
@@ -294,7 +327,9 @@ export default class Index extends Component {
     );
   }
   tabLWCallback=(value)=>{
-    this.setState({networkType:value})
+    this.setState({networkType:value},()=>{
+      this.getNetworkingRate();
+    })
   }
   tabCallback = (value, type) => {
     // GZRateTime: [moment().subtract(7, "days"), moment()],
@@ -435,11 +470,13 @@ export default class Index extends Component {
     };
     return option;
   }
-  getLwChartData=()=>{
+  getLwChartData=(data)=>{
+
+    let rate = data? data.replace('%','')/100 : data;
     var option = {
       series: [{
           type: 'liquidFill',
-          data: [0.36],
+          data: [rate],
           color:['#64b0fd'],
           radius: "95%", //水球的半径
           itemStyle : { 
@@ -495,7 +532,7 @@ export default class Index extends Component {
       YZLoading, CBLoading, GZLoading,
       LwLoading
     } = this.props;
-    const {CSYXRateTime,TVisible,TBpollutantType,regionVisible,networkVisible,networkType} = this.state;
+    const {CSYXRateTime,TVisible,TBpollutantType,regionVisible,networkVisible,networkType, networkingRate, networkingCount, offLineCount,pointCount} = this.state;
     return (
       <div style={{ width: '100%' }} className={styles.brokenLine}  >
            {
@@ -523,7 +560,7 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col>
-           <Col span={6} style={{ padding: '0 10px' }}>
+           {/* <Col span={6} style={{ padding: '0 10px' }}>
             <Card title={this.cardTitle("运转率", "YZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={YZLoading} active paragraph={{ rows: 5 }}>
                 <ReactEcharts
@@ -534,9 +571,9 @@ export default class Index extends Component {
                 />
               </Skeleton>
             </Card>
-          </Col> 
-          <Col   style={{ paddingRight: '10px' }} span={6}>
-          {/* <Col  style={{ padding: '0 10px' }}  span={6}> */}
+          </Col>  */}
+          {/* <Col   style={{ paddingRight: '10px' }} span={6}> */}
+          <Col  style={{ padding: '0 10px' }}  span={6}>
             <Card title={this.cardTitle("超标率", "CB")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={CBLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
@@ -548,8 +585,8 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col>
-          {/* <Col   style={{ paddingRight: '10px' }} span={6}> */}
-          <Col  span={6}>
+          <Col   style={{ paddingRight: '10px' }} span={6}>
+          {/* <Col  span={6}> */}
             <Card title={this.cardTitle("故障率", "GZ")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={GZLoading} paragraph={{ rows: 5 }} active>
                 <ReactEcharts
@@ -561,28 +598,29 @@ export default class Index extends Component {
               </Skeleton>
             </Card>
           </Col>
-           {/* <Col span={6}>
+            <Col span={6}>
             <Card title={this.cardLwTitle("实时联网率", "LW")} className={styles.lineCard} bodyStyle={{ background: "#fff", height: 244 }} bordered={false} >
               <Skeleton loading={LwLoading} paragraph={{ rows: 5 }} active>
                 <Row style={{height:'100%'}} align='middle'>
                 <Col span={12}  style={{height:'100%'}}>
                 <ReactEcharts
-                  option={this.getLwChartData()}
+                  option={this.getLwChartData(networkingRate)}
                   className="echarts-for-echarts"
                   theme="my_theme"
                   style={{ height: '100%',width:'100%' }}
                 />
                  </Col>
+                 
                  <Col span={12} style={{paddingLeft:20,fontSize:15}}>
-                   <div style={{fontWeight:'bold',paddingBottom:15}}>废水统计</div>
-                   <div style={{paddingBottom:10}}>监测点统计：个</div>
-                   <div style={{paddingBottom:10}}>联网监测点：个</div>
-                   <div style={{paddingBottom:10}}>未联网测点：个</div>
+                   <div style={{fontWeight:'bold',paddingBottom:15}}>{networkType==="1"? '废水统计':'废气统计'}</div>
+                  <div style={{paddingBottom:10}}>监测点统计：{pointCount}个</div>
+                   <div style={{paddingBottom:10}}>联网监测点：{networkingCount}个</div>
+                   <div style={{paddingBottom:10}}>未联网测点：{offLineCount}个</div>
                   </Col>
                 </Row>
               </Skeleton>
             </Card>
-          </Col>  */}
+          </Col>  
         </Row>
         {  //联网率
                 networkVisible &&

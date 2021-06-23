@@ -37,7 +37,7 @@ export default Model.extend({
     *getDaQuUserActivity({ payload }, { call, put, update, select }) {
       //大区 列表
       const response = yield call(GetDaQuUserActivity, { ...payload });
-      if (response.IsSuccess) {
+      if (response.IsSuccess&&response.Datas.length>0) {
         let chartData = response.Datas.filter(item=>{
           return item.DaQuName !=='全部合计'
         })
@@ -65,7 +65,7 @@ export default Model.extend({
     *getFuWuQuUserActivity({ payload }, { call, put, update, select }) {
       //服务区 列表
       const response = yield call(GetFuWuQuUserActivity, { ...payload });
-      if (response.IsSuccess) {
+      if (response.IsSuccess&&response.Datas.length>0) {
         let chartData = response.Datas.filter(item=>{
           return item.DaQuName !=='全部合计'
         })

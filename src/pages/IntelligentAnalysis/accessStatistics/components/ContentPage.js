@@ -382,7 +382,8 @@ export default class EntTransmissionEfficiency extends Component {
       payload: { 
         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
         endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-        DaQuId:DaQuId
+        DaQuId:DaQuId,
+        ActivetyType:this.state.activetyType
       },
       callback: data => {
          downloadFile(data);
@@ -402,6 +403,7 @@ export default class EntTransmissionEfficiency extends Component {
     }
     getUserDataFun = (row,type) =>{
       const { day } = this.state;
+      this.setState({activetyType:type})
       this.props.dispatch({
         type:pageUrl.getUserData,
         payload:{

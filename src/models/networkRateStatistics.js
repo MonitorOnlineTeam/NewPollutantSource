@@ -3,15 +3,18 @@
  * 创建人：贾安波
  * 创建时间：2021.06.17
  */
+// POST rest/PollutantSourceApi/MonitorPointApi/GetHomePageNetworkingRate	
+// 首页联网率
 
 import Model from '@/utils/model';
 import {
-  GetDaQuUserActivity,
-  GetFuWuQuUserActivity,
-  GetUserActivity,
-  ExportDaQuUserActivity,
-  ExportFuWuQuUserActivity,
-  ExportUserActivity
+  GetNetworkingRateForProvice,
+  GetNetworkingRateForCity,
+  GetNetworkingRateForPoint,
+  ExportNetworkingRateForProvice,
+  ExportNetworkingRateForCity,
+  ExportNetworkingRateForPoint,
+  GetHomePageNetworkingRate
 } from '../services/networkRateStatistics';
 import moment from 'moment';
 import { message } from 'antd';
@@ -22,86 +25,95 @@ export default Model.extend({
     loading: false,
     tableDatas: [],
     tableDatil:[],
-    userList:[],
-    DaQuArr:[],
-    DaviArr:[],
-    DaNoVisitArr:[],
-    DaRate:[],
-    FuWuArr:[],
-    FuviArr:[],
-    FuNoVisitArr:[],
-    FuRate:[]
+    pointList:[],
+    ProviceArr:[],
+    ProviceNetArr:[],
+    ProviceNoNetArr:[],
+    ProviceRate:[],
+    CityArr:[],
+    CityNetArr:[],
+    CityNoNetArr:[],
+    CityRate:[]
   },
   subscriptions: {},
   effects: {
-    *getDaQuUserActivity({ payload }, { call, put, update, select }) {
-      //大区 列表
-      const response = yield call(GetDaQuUserActivity, { ...payload });
+    *getHomePageNetworkingRate({callback, payload }, { call, put, update, select }) {
+      //首页 联网率
+      const response = yield call(GetHomePageNetworkingRate, { ...payload });
       if (response.IsSuccess) {
+        callback(response.Datas);
+      } else {
+        message.warning(response.Message);
+      }
+    },
+    *getNetworkingRateForProvice({ payload }, { call, put, update, select }) {
+      //省级 联网率
+      const response = yield call(GetNetworkingRateForProvice, { ...payload });
+      if (response.IsSuccess&&response.Datas.length>0) {
         let chartData = response.Datas.filter(item=>{
-          return item.DaQuName !=='全部合计'
+          return item.ProviceName !=='全部合计'
         })
-        let dqArr = chartData.map(item=>{
-          return item.DaQuName
+        let proviceArr = chartData.map(item=>{
+          return item.ProviceName
         })
-        let viArr = chartData.map(item=>{
-          return item.Visited
+        let proviceNetArr = chartData.map(item=>{
+          return item.NetworkingCount
         })
-        let noViArr = chartData.map(item=>{
-          return item.NoVisit
+        let proviceNoNetArr = chartData.map(item=>{
+          return item.OffLineCount
         })
-        let daRate = chartData.map(item=>{
-          return item.VisitRate.replace('%','')
+        let proviceRate = chartData.map(item=>{
+          return item.NetworkingRate.replace('%','')
         })
         yield update({
           tableDatas:response.Datas,
-          DaQuArr:dqArr,
-          DaviArr:viArr,
-          DaNoVisitArr:noViArr,
-          DaRate:daRate
+          ProviceArr:proviceArr,
+          ProviceNetArr:proviceNetArr,
+          ProviceNoNetArr:proviceNoNetArr,
+          ProviceRate:proviceRate
         });
       } 
     },
-    *getFuWuQuUserActivity({ payload }, { call, put, update, select }) {
-      //服务区 列表
-      const response = yield call(GetFuWuQuUserActivity, { ...payload });
-      if (response.IsSuccess) {
+    *getNetworkingRateForCity({ payload }, { call, put, update, select }) {
+      //市级 联网率
+      const response = yield call(GetNetworkingRateForCity, { ...payload });
+      if (response.IsSuccess&&response.Datas.length>0) {
         let chartData = response.Datas.filter(item=>{
           return item.DaQuName !=='全部合计'
         })
-        let fuArr = chartData.map(item=>{
-          return item.FuWuQuName
+        let cityArr = chartData.map(item=>{
+          return item.NetworkingCount
         })
-        let viArr = chartData.map(item=>{
-          return item.Visited
+        let cityNetArr = chartData.map(item=>{
+          return item.CityName
         })
-        let noViArr = chartData.map(item=>{
-          return item.NoVisit
+        let cityNoNetArr = chartData.map(item=>{
+          return item.OffLineCount
         })
-        let daRate = chartData.map(item=>{
-          return item.VisitRate.replace('%','')
+        let cityRate = chartData.map(item=>{
+          return item.NetworkingRate.replace('%','')
         })
         yield update({
           tableDatil:response.Datas,
-          FuWuArr:fuArr,
-          FuviArr:viArr,
-          FuNoVisitArr:noViArr,
-          FuRate:daRate
+          CityArr:cityArr,
+          CityNetArr:cityNetArr,
+          CityNoNetArr:cityNoNetArr,
+          CityRate:cityRate
         });
       }
     },
-    *getUserActivity({ payload }, { call, put, update, select }) {
-      //账户 列表
-      const response = yield call(GetUserActivity, { ...payload });
+    *getNetworkingRateForPoint({ payload }, { call, put, update, select }) {
+      //监测点 列表
+      const response = yield call(GetNetworkingRateForPoint, { ...payload });
       if (response.IsSuccess) {
         yield update({
-        userList: response.Datas,
+        pointList: response.Datas,
         });
       }
     },
-    *exportDaQuUserActivity({callback, payload }, { call, put, update, select }) {
-      //导出  大区
-      const response = yield call(ExportDaQuUserActivity, { ...payload });
+    *exportNetworkingRateForProvice({callback, payload }, { call, put, update, select }) {
+      //导出  省
+      const response = yield call(ExportNetworkingRateForProvice, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);
@@ -109,9 +121,9 @@ export default Model.extend({
         message.warning(response.Message);
       }
     },
-    *exportFuWuQuUserActivity({callback, payload }, { call, put, update, select }) {
-      //导出 服务区
-      const response = yield call(ExportFuWuQuUserActivity, { ...payload });
+    *exportNetworkingRateForCity({callback, payload }, { call, put, update, select }) {
+      //导出 市
+      const response = yield call(ExportNetworkingRateForCity, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);
@@ -119,9 +131,9 @@ export default Model.extend({
         message.warning(response.Message);
       }
     },
-    *exportUserActivity({callback, payload }, { call, put, update, select }) {
-      //导出 用户
-      const response = yield call(ExportUserActivity, { ...payload });
+    *exportNetworkingRateForPoint({callback, payload }, { call, put, update, select }) {
+      //导出 监测点
+      const response = yield call(ExportNetworkingRateForPoint, { ...payload });
       if (response.IsSuccess) {
         message.success('下载成功');
         callback(response.Datas);

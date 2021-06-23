@@ -2,41 +2,24 @@ import { post } from '@/utils/request';
 
 
 
-// 获取用户访问率--大区
-export async function GetDaQuUserActivity(params) {
+
+
+
+
+ // 联网率---省一级
+export async function GetNetworkingRateForProvice(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/GetDaQuUserActivity',
+    '/api/rest/PollutantSourceApi/MonitorPointApi/GetNetworkingRateForProvice',
     params,
     null,
   );
 
   return result;
 }
-//获取用户访问率--服务区
-export async function GetFuWuQuUserActivity(params) {
+//联网率---市一级
+export async function GetNetworkingRateForCity(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/GetFuWuQuUserActivity',
-    params,
-    null,
-  );
-
-  return result;
-}
-
-//获取用户访问率--访问状态
-export async function GetUserActivity(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/GetUserActivity',
-    params,
-    null,
-  );
-
-  return result;
-}
-// 获取用户访问率--导出大区
-export async function ExportDaQuUserActivity(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/ExportDaQuUserActivity',
+    '/api/rest/PollutantSourceApi/MonitorPointApi/GetNetworkingRateForCity',
     params,
     null,
   );
@@ -44,23 +27,20 @@ export async function ExportDaQuUserActivity(params) {
   return result;
 }
 
-
-//获取用户访问率--导出服务区
-
-export async function ExportFuWuQuUserActivity(params) {
+//联网率---监测点一级
+export async function GetNetworkingRateForPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/ExportFuWuQuUserActivity',
+    '/api/rest/PollutantSourceApi/MonitorPointApi/GetNetworkingRateForPoint',
     params,
     null,
   );
 
   return result;
 }
-
-// 获取用户访问率--导出大区
-export async function ExportUserActivity(params) {
+// 联网率---导出省一级
+export async function ExportNetworkingRateForProvice(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/UserInfosApi/ExportUserActivity',
+    '/api/rest/PollutantSourceApi/MonitorPointApi/ExportNetworkingRateForProvice',
     params,
     null,
   );
@@ -69,4 +49,38 @@ export async function ExportUserActivity(params) {
 }
 
 
+//联网率---导出市一级
 
+export async function ExportNetworkingRateForCity(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/MonitorPointApi/ExportNetworkingRateForCity',
+    params,
+    null,
+  );
+
+  return result;
+}
+
+// 联网率---导出监测点一级
+export async function ExportNetworkingRateForPoint(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/MonitorPointApi/ExportNetworkingRateForPoint',
+    params,
+    null,
+  );
+
+  return result;
+}
+
+
+
+ // 首页联网率
+ export async function GetHomePageNetworkingRate(params) {
+  const result = post(
+    '/api/rest/PollutantSourceApi/MonitorPointApi/GetHomePageNetworkingRate',
+    params,
+    null,
+  );
+
+  return result;
+}

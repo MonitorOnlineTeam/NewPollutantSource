@@ -361,19 +361,21 @@ export default class EntTransmissionEfficiency extends Component {
  }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar,query:{p,day}}  = this.props;
+    const { dispatch, queryPar,location:{query:{p,day}}}  = this.props;
     dispatch({
       type: pageUrl.exportData,
       payload: { 
         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
-        endTime: moment().format('YYYY-MM-DD 23:59:59'), },
+        endTime: moment().format('YYYY-MM-DD 23:59:59'), 
+        DaQuId:p,
+      },
         callback: data => {
          downloadFile(data);
         },
     });
   };
   userTemplate = () => {  //弹框  用户列表导出
-    const { dispatch, queryPar,query:{p,day} } = this.props;
+    const { dispatch, queryPar,location:{query:{p,day}} } = this.props;
     const { FuWuQuId } = this.state;
     dispatch({
       type: pageUrl.exportUserData,
@@ -381,7 +383,8 @@ export default class EntTransmissionEfficiency extends Component {
         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
         endTime: moment().format('YYYY-MM-DD 23:59:59'), 
         DaQuId:p,
-        FuWuQuId:FuWuQuId
+        FuWuQuId:FuWuQuId,
+        ActivetyType:this.state.activetyType
       },
       callback: data => {
          downloadFile(data);
@@ -401,7 +404,7 @@ export default class EntTransmissionEfficiency extends Component {
     }
     getUserDataFun = (row,type) =>{
       const {location:{query:{p,day}} }= this.props;
-      this.setState({FuWuQuId:row.FuWuQuId})
+      this.setState({FuWuQuId:row.FuWuQuId,activetyType:type})
       this.props.dispatch({
         type:pageUrl.getUserData,
         payload:{
@@ -416,19 +419,19 @@ export default class EntTransmissionEfficiency extends Component {
 
     totalAccount=(row)=>{
       const {location:{query:{p,day}} }= this.props;
-      this.setState({visible:true,accountTitle:`总账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
+      this.setState({visible:true,accountTitle:`总账户-${row.DaQuName}(近${day}日内)`},()=>{
          this.getUserDataFun(row,1)
       })
     }
     visitAccount=(row)=>{
       const {location:{query:{p,day}} }= this.props;
-      this.setState({visible:true,accountTitle:`访问账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
+      this.setState({visible:true,accountTitle:`访问账户-${row.DaQuName}(近${day}日内)`},()=>{
         this.getUserDataFun(row,2)
      })
     }
     novisitAccount=(row)=>{
       const {location:{query:{p,day}} }= this.props;
-      this.setState({visible:true,accountTitle:`未访问账户-${row.DaQuName}(近${day}日内)`,DaQuId:row.DaQuId},()=>{
+      this.setState({visible:true,accountTitle:`未访问账户-${row.DaQuName}(近${day}日内)`},()=>{
         this.getUserDataFun(row,3)
      })
     }
