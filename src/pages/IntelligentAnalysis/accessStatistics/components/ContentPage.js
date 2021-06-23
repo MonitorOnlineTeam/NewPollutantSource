@@ -472,7 +472,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Row>
               <Row style={{paddingTop:5}}>
               <span style={{color:red[5]}}>
-                统计账户范围：运营大区内系统账户。系统访问率=访问账户数1总账户数* 100%，近7日内表示当前时间范围内访问过系统的账户。
+                统计账户范围：运营大区内系统账户。系统访问率=访问账户数/总账户数*100%，近7日内表示当前时间范围内访问过系统的账户。
               </span>
               </Row>
             
