@@ -574,6 +574,17 @@ class index extends PureComponent {
         const fixed = false
         const columns2 = [
             {
+                title: "序号",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'x',
+                key: 'x',
+                render:(text,record,index)=>{
+                 return <span>{index+1}</span>
+                }
+            },
+            {
                 title: "行政区",
                 width: 100,
                 align: 'center',
@@ -703,6 +714,17 @@ class index extends PureComponent {
 
         const columns3 = [
             {
+                title: "序号",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'x',
+                key: 'x',
+                render:(text,record,index)=>{
+                 return <span>{index+1}</span>
+                }
+            },
+            {
                 title: "行政区",
                 width: 100,
                 align: 'center',
@@ -803,6 +825,17 @@ class index extends PureComponent {
             // },     
         ]
         const columns4=[
+            {
+                title: "序号",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'x',
+                key: 'x',
+                render:(text,record,index)=>{
+                 return <span>{index+1}</span>
+                }
+            },
             {
                 title: "行政区",
                 width: 100,
