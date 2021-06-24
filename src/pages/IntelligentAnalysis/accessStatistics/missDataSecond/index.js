@@ -269,8 +269,9 @@ export default class EntTransmissionEfficiency extends Component {
           data: ['访问账户数', '未访问账户数','系统访问率']
       },
       grid: {
-        left: 40,
+        left: 60,
         right: 50,
+        bottom:FuWuArr.length<=8 ? 40 : 70
     },
     splitLine:{
       show:false //去掉网格线
@@ -281,6 +282,10 @@ export default class EntTransmissionEfficiency extends Component {
               axisTick: { //x轴
                 show:false
               },
+              axisLabel: {
+                interval:0,
+                rotate:FuWuArr.length<=8 ? 360 : 40
+             }
           }],
       yAxis: [
           {

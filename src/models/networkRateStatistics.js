@@ -79,13 +79,13 @@ export default Model.extend({
       const response = yield call(GetNetworkingRateForCity, { ...payload });
       if (response.IsSuccess&&response.Datas.length>0) {
         let chartData = response.Datas.filter(item=>{
-          return item.DaQuName !=='全部合计'
+          return item.ProviceName !=='全部合计'
         })
         let cityArr = chartData.map(item=>{
-          return item.NetworkingCount
+          return item.CityName
         })
         let cityNetArr = chartData.map(item=>{
-          return item.CityName
+          return item.NetworkingCount
         })
         let cityNoNetArr = chartData.map(item=>{
           return item.OffLineCount

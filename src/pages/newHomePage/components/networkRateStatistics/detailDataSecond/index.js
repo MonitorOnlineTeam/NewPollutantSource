@@ -66,7 +66,7 @@ const pageUrl = {
   pointLoading: loading.effects[pageUrl.getPointData],
   exPointLoading: loading.effects[pageUrl.exportPointData],
   CityArr: networkRateStatistics.CityArr,
-  FuviArr: networkRateStatistics.FuviArr,
+  CityNetArr: networkRateStatistics.CityNetArr,
   CityNoNetArr: networkRateStatistics.CityNoNetArr,
   CityRate: networkRateStatistics.CityRate
 }))
@@ -256,7 +256,7 @@ export default class EntTransmissionEfficiency extends Component {
 
  getOption=()=>{
 
-  const { CityArr,FuviArr,CityNoNetArr,CityRate,location:{query:{p}}} = this.props;
+  const { CityArr,CityNetArr,CityNoNetArr,CityRate,location:{query:{p}}} = this.props;
   var option;
   option = {
       // color: [green[5],"#d9d9d9",blue[5]],
@@ -267,7 +267,6 @@ export default class EntTransmissionEfficiency extends Component {
               type: 'shadow',
           },
           formatter: function (params, ticket, callback) {
-
             //x轴名称 params[0].name
             let name = params[0].name;
             //值
@@ -286,6 +285,7 @@ export default class EntTransmissionEfficiency extends Component {
       grid: {
         left: 40,
         right: 50,
+        bottom:40
     },
     splitLine:{
       show:false //去掉网格线
@@ -344,7 +344,7 @@ export default class EntTransmissionEfficiency extends Component {
             // show: true,
             // position: 'insideRight'
         // },
-          data: FuviArr
+          data: CityNetArr
       },
       {
           name: '未联网监测点',

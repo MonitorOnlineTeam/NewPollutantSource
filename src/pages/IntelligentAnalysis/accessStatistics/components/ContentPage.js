@@ -271,6 +271,7 @@ export default class EntTransmissionEfficiency extends Component {
       grid: {
         left: 40,
         right: 50,
+        bottom:40
     },
     splitLine:{
       show:false //去掉网格线
@@ -280,7 +281,7 @@ export default class EntTransmissionEfficiency extends Component {
               data: DaQuArr,
               axisTick: { //x轴 去掉刻度
                 show:false
-              },
+              }
           }],
       yAxis: [
           {

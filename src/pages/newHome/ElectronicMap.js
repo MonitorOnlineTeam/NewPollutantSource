@@ -215,6 +215,7 @@ class NewHome extends PureComponent {
       initZoom: 6,
       SparePartsStationCode: "",
       SparePartsStationInfo: {},
+      echoRegionCode:[]
     };
   }
 
@@ -1107,6 +1108,7 @@ class NewHome extends PureComponent {
                         infoWindowVisible: false, // 关闭排口弹窗
                       });
                       this.renderEntMarkers(filterList);
+
                       // aMap.setFitView();
                       // aMap.setZoom(6);
                       // aMap.setZoom(9);
@@ -1285,8 +1287,9 @@ class NewHome extends PureComponent {
                  placeholder="请选择行政区"
                  selectType='2,是'
                  popupClassName='newHomeWrapCascaderPop'
+                 value={this.state.echoRegionCode}//仅用于回显
                  onChange={val => {
-                   this.setState({RegionCode:val? val[val.length-1] : ''},()=>{
+                   this.setState({RegionCode:val? val[val.length-1] : '',echoRegionCode:val},()=>{
                     this.state.RegionCode? this.getAllEntAndPoint('region') : this.getAllEntAndPoint();
 
                    })

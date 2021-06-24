@@ -295,6 +295,7 @@ export default class EntTransmissionEfficiency extends Component {
       grid: {
         left: 40,
         right: 50,
+        bottom:40,
     },
     splitLine:{
       show:false //去掉网格线
@@ -305,6 +306,10 @@ export default class EntTransmissionEfficiency extends Component {
               axisTick: { //x轴 去掉刻度
                 show:false
               },
+              axisLabel: {
+                interval:0,
+                rotate:360
+             }
           }],
       yAxis: [
           {
@@ -495,7 +500,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Row>
               <Row style={{paddingTop:5}}>
               <span style={{color:red[5]}}>
-              停运时段内的监测点不参与联网率的计算
+              停运时段内的监测点不参与联网率的计算。联网率 = 联网监测点/总监测点数*100%
               </span>
               </Row>
             
