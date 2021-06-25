@@ -90,6 +90,18 @@ export default {
       component: '../layouts/BlankLayout',
       routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
     },
+
+    {
+      path: '/screen',
+      component: '../layouts/ScreenLayout',
+      routes: [
+        {
+          name: 'test',
+          path: '/screen/test',
+          component: './Test/Test',
+        },
+      ]
+    },
     {
       path: '/',
       component: '../layouts/BlankLayout',
@@ -112,7 +124,7 @@ export default {
         {
           name: 'summaryProject',
           path: '/summaryProject',
-          component: './projectSummary',
+          component: './projectSummary/index',
         },
         // appoperation
         {
@@ -236,11 +248,60 @@ export default {
               path: '/home',
               component: './newHome',
             },
-            // {
-            //   name: 'test',
-            //   path: '/test',
-            //   component: './Test/Test',
-            // },
+            // 应急
+            {
+              path: '/emergency',
+              name: 'emergency',
+              routes: [
+                {
+                  name: 'index',
+                  path: '/emergency/emergencyDuty',
+                  component: './emergency/emergencyDuty',
+                },
+                // 甄别基本信息
+                {
+                  name: 'index',
+                  path: '/emergency/emergencyDuty/details',
+                  component: './emergency/identify/Details',
+                },
+                // 应急甄别
+                {
+                  name: 'index',
+                  path: '/emergency/identify',
+                  component: './emergency/identify',
+                },
+                // 应急处置
+                {
+                  name: 'index',
+                  path: '/emergency/disposal',
+                  component: './emergency/disposal',
+                },
+                // 应急处置
+                {
+                  name: 'index',
+                  path: '/emergency/disposalReport',
+                  component: './emergency/disposal/DisposalReport',
+                },
+                // 应急调度
+                {
+                  name: 'index',
+                  path: '/emergency/dispatch',
+                  component: './emergency/dispatch/DispatchPage',
+                },
+                // 预案
+                {
+                  name: 'index',
+                  path: '/emergency/plan',
+                  component: './emergency/plan',
+                },
+                // 环境应急监测
+                {
+                  name: 'index',
+                  path: '/emergency/monitor',
+                  component: './emergency/monitor',
+                },
+              ]
+            },
             // 地理信息系统
             {
               name: 'map',
@@ -733,11 +794,6 @@ export default {
                   component: './report/StatisticsReportDataList',
                 },
               ],
-            },
-            {
-              path: '/operations/test',
-              name: 'index',
-              component: './Test/Test',
             },
             {
               path: '/operations',
@@ -1849,6 +1905,12 @@ export default {
                   ]
                 },
                 {
+                  // 碳排放查询
+                  name: 'CO2Emissions',
+                  path: '/dataSearch/CO2Emissions',
+                  component: './dataSearch/CO2Emissions',
+                },
+                {
                   // 站点数据查询
                   path: '/dataSearch/siteData',
                   name: 'siteData',
@@ -1859,7 +1921,6 @@ export default {
                       path: '/dataSearch/siteData/siteInfo',
                       component: './dataSearch/siteData/siteInfoPage',
                     },
-
                   ]
                 },
                 {
@@ -2450,6 +2511,7 @@ export default {
             },
           ],
         },
+
         {
           component: '404',
         },
@@ -2502,7 +2564,8 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/api': {
-      target: config.apiHost,
+      target: 'http://172.16.12.183:50059/',
+      // target: 'http://172.16.12.165:5001/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
