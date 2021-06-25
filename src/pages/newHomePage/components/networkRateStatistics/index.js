@@ -295,7 +295,7 @@ export default class EntTransmissionEfficiency extends Component {
       grid: {
         left: 40,
         right: 50,
-        bottom:40,
+        bottom:70,
     },
     splitLine:{
       show:false //去掉网格线
@@ -308,7 +308,7 @@ export default class EntTransmissionEfficiency extends Component {
               },
               axisLabel: {
                 interval:0,
-                rotate:360
+                rotate:30
              }
           }],
       yAxis: [
