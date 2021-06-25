@@ -99,7 +99,9 @@ export default class PersonData extends Component {
       waterPhoto:[],
       gasPhoto:[],
       switchGas:true,
-      switchWater:true
+      switchWater:true,
+      pageSize:20,
+      pageIndex:1
     };
     this.columns =  [
       {
@@ -157,8 +159,8 @@ export default class PersonData extends Component {
         align: 'center',
         render: (text, record) =>{
           return  <span>
-                 <a href="javasctipt:;" onClick={()=>{this.see(record)}} >查看</a>
-                 <a href="#" style={{padding:'0 5px'}} onClick={()=>{this.edit(record)}} >编辑</a>
+                 <a href="#" onClick={()=>{this.edit(record)}} >编辑</a>
+                 <a href="javasctipt:;"  style={{padding:'0 5px'}} onClick={()=>{this.see(record)}} >详情</a>
                  <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(record)} okText="是" cancelText="否">
                  <a href="#" >删除</a>
                  </Popconfirm>
@@ -175,12 +177,12 @@ export default class PersonData extends Component {
     const {dispatch, match: { params: { configId } },form:{setFieldsValue}} = this.props;
 
 
-    dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId,
-      },
-    });
+    // dispatch({
+    //   type: 'autoForm/getPageConfig',
+    //   payload: {
+    //     configId,
+    //   },
+    // });
     dispatch({
       type: 'operationPerson/listOperationMaintenanceEnterprise',
       payload: {},
@@ -207,6 +209,9 @@ export default class PersonData extends Component {
       type: pageUrl.getData,
       payload: { ...queryPar },
     });
+    this.setState({
+      pageIndex: 1,
+    })
   };
 
 
@@ -500,6 +505,9 @@ export default class PersonData extends Component {
     const time = this.props.form.getFieldValue('WaterEndCertificatesTime')
     return time&&current && current > moment(time).startOf('day');
   }
+
+
+
   render() {
     const {
       Atmosphere,
@@ -580,6 +588,19 @@ export default class PersonData extends Component {
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
+              pagination={{
+                pageSize: this.state.pageSize,
+                total: this.props.tableDatas.length,
+                showSizeChanger: true,
+                current:this.state.pageIndex,
+                onChange: (current, size) => {
+                  this.setState({
+                    pageSize: size,
+                    pageIndex: current,
+                  })
+                },
+                pageSizeOptions: ['10', '20', '30', '40', '100'],
+              }}
             />
        <Modal
         title={this.state.type==='edit'? '编辑运维人员':'添加运维人员'}

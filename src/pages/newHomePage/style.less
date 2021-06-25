@@ -9,6 +9,7 @@
   // width: 100%;
   transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
   min-width: 1366px;
+  // min-width: 1435px;
   background-color: #f2f2f2;
   margin: -24px;
   overflow: auto;
@@ -33,6 +34,17 @@
     .ant-skeleton{
       padding:  0 24px 24px;
     }
+    @media screen and (max-width: 1435px) {
+      .ant-card-body{
+        padding: 0 14px 14px;
+      }
+      .ant-skeleton{
+        padding:  0 14px 14px;
+      }
+      .ant-card-head{
+        padding: 0 14px;
+      }
+  }
   }
 
   :global {
