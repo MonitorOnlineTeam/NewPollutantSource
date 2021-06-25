@@ -127,6 +127,7 @@ class AutoFormEdit extends Component {
       form={this.props.form}
       isEdit={true}
       keysParams={keysParams}
+      onClickBack={this.props.onClickBack}
       {...this.props}
     ></SdlForm>
   }
@@ -148,14 +149,14 @@ class AutoFormEdit extends Component {
             // }
             // >
             <BreadcrumbWrapper title="编辑">
-              <Spin spinning={this.props.loading.models.autoForm}>
+              <Spin delay={1000} spinning={this.props.loading.models.autoForm}>
                 {this._renderForm()}
               </Spin>
               {/* </MonitorContent> : */}
             </BreadcrumbWrapper> :
             <Fragment>
-              <Spin spinning={this.props.loading.models.autoForm}>
-              {this._renderForm()}
+              <Spin delay={1000} spinning={this.props.loading.models.autoForm}>
+                {this._renderForm()}
               </Spin>
             </Fragment>
         }

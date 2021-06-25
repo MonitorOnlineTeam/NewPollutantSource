@@ -112,6 +112,7 @@ class AutoFormAdd extends Component {
       configId={configId}
       // hideBtns={true}
       onSubmitForm={this.onSubmitForm}
+      onClickBack={this.props.onClickBack}
       form={form}
     >
     </SdlForm>

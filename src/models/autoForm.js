@@ -287,7 +287,10 @@ export default Model.extend({
           };
         });
         // 添加
-        const addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISADD === 1);
+        let addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISADD === 1);
+        if(payload.isEdit) {
+          addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1);
+        }
         // const colSpanLen = ;
         let layout = 12;
         if (addCfgField.filter(item => item.DF_COLSPAN === null).length == addCfgField.length) {
