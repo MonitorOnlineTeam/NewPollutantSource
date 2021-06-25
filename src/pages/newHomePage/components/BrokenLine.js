@@ -613,7 +613,7 @@ export default class Index extends Component {
                 />
                  </Col>
                  
-                 <Col span={12} style={{paddingLeft:20,fontSize:15}}>
+                 <Col span={12} className={styles.networkSty} style={{fontSize:15}}>
                    <div style={{fontWeight:'bold',paddingBottom:15}}>{networkType==="1"? '废水统计':'废气统计'}</div>
                   <div style={{paddingBottom:10}}>监测点统计：<span style={{display:'inline-block',width:'35px'}}>{pointCount}</span>个</div>
                    <div style={{paddingBottom:10}}>联网监测点：<span style={{display:'inline-block',width:'35px'}}>{networkingCount}</span>个</div>
