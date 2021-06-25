@@ -340,7 +340,7 @@ export function isInsidePolygon(lng, lat, poly) {
 }
 
 // /* 判断是否是内网IP */
-export function isInnerIPFn(webSocketPushURL) {
+export function isInnerIPFn() {
   
   let isInnerIp = false;// 默认给定IP不是内网IP
   // var returnIP = '';
