@@ -85,6 +85,7 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'x',
         key: 'x',
         align: 'center',
+        width:50,
         render:(text, record, index) => {
           return index + 1
         }
@@ -132,7 +133,7 @@ export default class EntTransmissionEfficiency extends Component {
      },
       },
       {
-        title: <span>联网监测点</span>,
+        title: <span>联网监测点(个)</span>,
         dataIndex: 'NetworkingCount',
         key: 'NetworkingCount',
         align: 'center',
@@ -144,7 +145,7 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
-        title: <span>未联网监测点</span>,
+        title: <span>未联网监测点(个)</span>,
         dataIndex: 'OffLineCount',
         key: 'OffLineCount',
         align: 'center',
@@ -185,6 +186,7 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'x',
         key: 'x',
         align: 'center',
+        width:50,
         render:(text, record, index) => {
           return index + 1
         }
@@ -300,7 +302,7 @@ export default class EntTransmissionEfficiency extends Component {
       yAxis: [
           {
               type: 'value',
-              name: '监测点',
+              name: '监测点(个)',
               min: 0,
               // max: 100,
               // interval: 20,

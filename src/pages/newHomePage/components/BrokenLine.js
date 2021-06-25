@@ -510,12 +510,12 @@ export default class Index extends Component {
               rich: {
                   //富文本 对字体进一步设置样式。title对应的运转率,val对应的 value
                   title: {
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: "400",
                       lineHeight:30,
                   },
                   val: {
-                      fontSize: 18,
+                      fontSize: 24,
                       fontWeight: "bold"
                   }
               }
@@ -613,8 +613,8 @@ export default class Index extends Component {
                 />
                  </Col>
                  
-                 <Col span={12} className={styles.networkSty} style={{fontSize:15}}>
-                   <div style={{fontWeight:'bold',paddingBottom:15}}>{networkType==="1"? '废水统计':'废气统计'}</div>
+                 <Col span={12} className={styles.networkSty} style={{fontSize:14}}>
+                   <div style={{fontWeight:'bold',paddingBottom:15,fontSize:16}}>{networkType==="1"? '废水统计':'废气统计'}</div>
                   <div style={{paddingBottom:10}}>监测点统计：<span style={{display:'inline-block',width:'35px'}}>{pointCount}</span>个</div>
                    <div style={{paddingBottom:10}}>联网监测点：<span style={{display:'inline-block',width:'35px'}}>{networkingCount}</span>个</div>
                    <div style={{paddingBottom:10}}>未联网测点：<span style={{display:'inline-block',width:'35px'}}>{offLineCount}</span>个</div>

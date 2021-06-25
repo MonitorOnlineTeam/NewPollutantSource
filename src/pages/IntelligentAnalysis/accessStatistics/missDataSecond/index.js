@@ -85,6 +85,7 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'x',
         key: 'x',
         align: 'center',
+        width:50,
         render:(text, record, index) => {
           return index + 1
         }
@@ -103,7 +104,7 @@ export default class EntTransmissionEfficiency extends Component {
       },
       
       {
-        title: <span>总账户数</span>,
+        title: <span>总账户数(个)</span>,
         dataIndex: 'CountVisit',
         key: 'CountVisit',
         align: 'center',
@@ -127,7 +128,7 @@ export default class EntTransmissionEfficiency extends Component {
      },
       },
       {
-        title: <span>访问账户数</span>,
+        title: <span>访问账户数(个)</span>,
         dataIndex: 'Visited',
         key: 'Visited',
         align: 'center',
@@ -139,7 +140,7 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
-        title: <span>未访问账户数</span>,
+        title: <span>未访问账户数(个)</span>,
         dataIndex: 'NoVisit',
         key: 'NoVisit',
         align: 'center',
@@ -180,6 +181,7 @@ export default class EntTransmissionEfficiency extends Component {
         dataIndex: 'x',
         key: 'x',
         align: 'center',
+        width:50,
         render:(text, record, index) => {
           return index + 1
         }
@@ -290,7 +292,7 @@ export default class EntTransmissionEfficiency extends Component {
       yAxis: [
           {
               type: 'value',
-              name: '账户数',
+              name: '账户数(个)',
               min: 0,
               // max: 100,
               // interval: 20,
