@@ -2,8 +2,8 @@
 import router from 'umi/router';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
-import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo } from './service';
-import { getPageQuery, setAuthority } from './utils/utils';
+import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo, getFirstMenu } from './service';
+import { getPageQuery, setAuthority, getDefaultNavigateUrl } from './utils/utils';
 const Model = {
   namespace: 'userLogin',
   state: {
@@ -21,26 +21,11 @@ const Model = {
 
       if (response.IsSuccess) {
         response.Datas.User_ID = response.Datas.UserId;
-        let defaultNavigateUrl = '/user/login';
-        let systemNavigateUrl = '';
-        if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if(response.Datas.MenuDatas[0].name === "首页"){
-            systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-          }else{
-            if(response.Datas.MenuDatas[0].children.length){
-              systemNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl;
-            }else{
-              systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
-            }
-          }
-        }
-        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
-
-
         delete response.Datas.MenuDatas;
+        delete response.Datas.Ticket;
+        delete response.Datas.RoleIds;
         Cookie.set('currentUser', JSON.stringify(response.Datas));
-        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
-        Cookie.set('systemNavigateUrl', systemNavigateUrl);
+
         try {
           const { ws } = window;
           ws.send(response.Datas.UserAccount);
@@ -53,15 +38,29 @@ const Model = {
           return;
           //defaultNavigateUrl = payload.redirctUrl;
         }
+
+        yield put({
+          type: 'getFirstMenu',
+          payload: {},
+        });
         // router.push('/');
+        // router.push(defaultNavigateUrl);
+      }
+    },
+
+    *getFirstMenu({ payload }, { call, put }) {
+      const response = yield call(getFirstMenu);
+      if (response.IsSuccess) {
+        let defaultNavigateUrl = getDefaultNavigateUrl([response.Datas[0]])
+        console.log('defaultNavigateUrl=', defaultNavigateUrl)
+        Cookie.set('defaultNavigateUrl', defaultNavigateUrl);
+        Cookie.set('systemNavigateUrl', defaultNavigateUrl);
         router.push(defaultNavigateUrl);
       }
     },
 
     *getSystemLoginConfigInfo({ payload }, { call, put }) {
-
       const response = yield call(getSystemLoginConfigInfo);
-
       if (response.IsSuccess) {
         yield put({
           type: 'setConfigInfo',
