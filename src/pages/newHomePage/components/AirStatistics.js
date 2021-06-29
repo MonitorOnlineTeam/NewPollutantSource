@@ -349,7 +349,7 @@ export default class Index extends Component {
       },
       title: [{
         text: this.props.airDayReportData.allCount,
-        x: '26%',
+        x: this.props.airDayReportData&&this.props.airDayReportData.allCount.toString().length>=2? '23%' :'26%',
         y: '30%',
         textStyle: {
           fontWeight: 'normal',

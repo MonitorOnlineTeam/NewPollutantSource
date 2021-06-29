@@ -51,6 +51,7 @@ let pointConfigIdEdit = '';
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
   saveLoadingAdd: loading.effects['point/addPoint'],
   saveLoadingEdit: loading.effects['point/editPoint'],
+  dragLoading:loading.effects['point'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -81,6 +82,8 @@ export default class MonitorPoint extends Component {
       operationInfoVisible:false,
       operationInfoDGIMN:'',
       operationPointName:'',
+      dragDatas:[],
+      sortText:'开启排序'
     };
   }
 
@@ -383,7 +386,21 @@ export default class MonitorPoint extends Component {
       return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]} 
       pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
+  dragData=(data)=>{
+   this.setState({
+     dragDatas:data
+   })
+  }
 
+  updateSort=()=>{ //更新排序
+     const { dragDatas } = this.state;
+    this.props.dispatch({
+      // type: 'autoForm/getPageConfig',
+      payload: {
+        // configId: 'service_StandardLibrary',
+     },
+    });    
+  }
   render() {
     const {
       searchConfigItems,
@@ -457,6 +474,8 @@ export default class MonitorPoint extends Component {
 
 
               pointConfigId && (<AutoFormTable
+                // dragable
+                dragData={(data)=>{this.dragData(data)}}
                 style={{ marginTop: 10 }}
                 // columns={columns}
                 configId={pointConfigId}
@@ -474,6 +493,20 @@ export default class MonitorPoint extends Component {
                   // })
                 }}
                 searchParams={pointDataWhere}
+                // appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                //   <Fragment>
+                //     <Button
+                //       type="primary"
+                //       onClick={() => {
+                //         this.updateSort()
+                //       }}
+                //       style={{marginRight:8}}
+                //       loading={this.props.dragLoading}
+                //     >
+                //       {this.state.sortText}
+                //     </Button>
+                //   </Fragment>
+                // )}
                 appendHandleRows={row => (
                   <Fragment>
                     <Tooltip title="编辑">

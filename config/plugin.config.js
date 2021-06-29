@@ -57,7 +57,8 @@ export default config => {
   config.optimization // share the same chunks across different modules
     .runtimeChunk(false)
     .splitChunks({
-      chunks: 'async',
+      // chunks: 'async',
+      chunks: 'all',// initial、async和all
       name: 'vendors',
       maxInitialRequests: Infinity,
       minSize: 0,
@@ -65,7 +66,6 @@ export default config => {
         vendors: {
           test: module => {
             const packageName = getModulePackageName(module);
-
             if (packageName) {
               return ['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0;
             }
@@ -85,6 +85,24 @@ export default config => {
             return 'misc';
           },
         },
+        echartsVenodr: { // 异步加载echarts包  Venodr里面的东西  同步加载
+          test: /(echarts)/,
+          priority: 100, // 高于async-commons优先级
+          name: 'echartsVenodr',
+          chunks: 'async'
+         },
+        //  thirdBigUmi: { // 同步加载大的第三方  umi里面的东西  同步加载
+        //   test: /(jquery)/,
+        //   priority: 80,
+        //   name: 'thirdBigUmi',
+        //   chunks: 'all'
+        //  },         
+        //  commonUmi: { // 同步加载基础框架  umi里面的东西  同步加载
+        //   test: /(react|react-dom|react-dom-router|babel-polyfill|mobx|antd)/,
+        //   priority: 80,
+        //   name: 'commonUmi',
+        //   chunks: 'all'
+        //  },
       },
     });
 };
