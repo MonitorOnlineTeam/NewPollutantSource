@@ -222,10 +222,10 @@ class index extends PureComponent {
 
   componentDidMount() {
     // 获取行政区列表
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2', }
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2', }
+    // });
 
     // 获取关注列表
     this.props.dispatch({

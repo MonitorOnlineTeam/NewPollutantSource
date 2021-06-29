@@ -20,7 +20,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import RegionList from '@/components/RegionList'
+// import RegionList from '@/components/RegionList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -196,10 +196,10 @@ class index extends PureComponent {
 
     // 获取行政区列表
    let { location:{ query } } = this.props
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: query&&query.regionCode, PointMark: '2', }
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: query&&query.regionCode, PointMark: '2', }
+    // });
 
     // 获取关注列表
     this.props.dispatch({

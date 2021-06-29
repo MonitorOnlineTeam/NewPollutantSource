@@ -77,10 +77,10 @@ class index extends Component {
 
   // 获取行政区列表
   getRegionList = () => {
-    this.props.dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2', }
-    });
+    // this.props.dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2', }
+    // });
   }
 
   getEntByRegion = (RegionCode) => {

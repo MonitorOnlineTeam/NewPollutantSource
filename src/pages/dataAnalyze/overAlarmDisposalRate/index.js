@@ -59,10 +59,10 @@ class index extends PureComponent {
   componentDidMount() {
     const { dispatch, divisorList } = this.props;
     // 获取行政区列表
-    dispatch({
-      type: 'autoForm/getRegions',
-      payload: { RegionCode: '', PointMark: '2' },
-    });
+    // dispatch({
+    //   type: 'autoForm/getRegions',
+    //   payload: { RegionCode: '', PointMark: '2' },
+    // });
 
     // 获取关注列表
     dispatch({

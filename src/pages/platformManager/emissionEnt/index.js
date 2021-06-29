@@ -231,13 +231,13 @@ class emissionEnt extends Component {
     componentDidMount() {
 
         // this.getTableData();
-        this.props.dispatch({
-            type: 'autoForm/getRegions',
-            payload: {
-                RegionCode: '',
-                PointMark: '2',
-            },
-        });
+        // this.props.dispatch({
+        //     type: 'autoForm/getRegions',
+        //     payload: {
+        //         RegionCode: '',
+        //         PointMark: '2',
+        //     },
+        // });
         this.getEntData();
     }
 

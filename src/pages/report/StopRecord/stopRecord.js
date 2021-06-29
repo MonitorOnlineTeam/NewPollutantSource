@@ -81,13 +81,13 @@ class index extends PureComponent {
 
     initData = () => {
         //获取行政区列表
-        this.props.dispatch({
-            type: pageUrl.getRegions,
-            payload: {
-                PointMark: '2',
-                RegionCode: ''
-            },
-        });
+        // this.props.dispatch({
+        //     type: pageUrl.getRegions,
+        //     payload: {
+        //         PointMark: '2',
+        //         RegionCode: ''
+        //     },
+        // });
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegion,

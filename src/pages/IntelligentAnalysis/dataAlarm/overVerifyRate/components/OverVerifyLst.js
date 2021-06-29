@@ -208,7 +208,7 @@ export default class OverVerifyLst extends Component {
     const { dispatch, location, Atmosphere, type,level,query } = this.props;
    
     
-    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: level==2?query&&query.regionCode : '', PointMark: '2' } }); //获取行政区列表
+    // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: level==2?query&&query.regionCode : '', PointMark: '2' } }); //获取行政区列表
 
     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: level==2?query&&query.regionCode : '' } }); //获取关注列表
     this.updateQueryState({

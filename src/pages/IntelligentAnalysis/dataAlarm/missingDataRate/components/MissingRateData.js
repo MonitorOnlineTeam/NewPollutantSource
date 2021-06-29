@@ -148,7 +148,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     types ==='ent'? this.columns.splice(1,0,entObj) : null;
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
      dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
  

@@ -146,7 +146,7 @@ export default class EntTransmissionEfficiency extends Component {
       this.columns.splice(3,2)
     }
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
      dispatch({ type: 'videoMonitor/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表

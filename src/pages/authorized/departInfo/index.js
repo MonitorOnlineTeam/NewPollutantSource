@@ -154,8 +154,9 @@ const rightTableColumns = [
     ellipsis: true,
   },
 ];
-@connect(({ departinfo, loading, global, common }) => ({
-  GetRegionInfoByTree: loading.effects['departinfo/getregioninfobytree'],
+@connect(({ departinfo, autoForm,loading, global, common }) => ({
+  // GetRegionInfoByTree: loading.effects['departinfo/getregioninfobytree'],
+  GetRegionInfoByTree: loading.effects['autoForm/getregioninfobytree'],
   GetRegionByDepID: loading.effects['departinfo/getregionbydepid'],
   GetUserByDepID: loading.effects['departinfo/getuserbydepid'],
   GetAllUser: loading.effects['departinfo/getalluser'],
@@ -170,7 +171,8 @@ const rightTableColumns = [
   AllUser: departinfo.AllUser,
   UserByDepID: departinfo.UserByDepID,
   RegionByDepID: departinfo.RegionByDepID,
-  RegionInfoTree: departinfo.RegionInfoTree,
+  // RegionInfoTree: departinfo.RegionInfoTree,
+  RegionInfoTree: autoForm.regionList,
   EntAndPoint: departinfo.EntAndPoint,
   CheckPoint: departinfo.CheckPoint,
   ConfigInfo: global.configInfo,
@@ -594,10 +596,10 @@ class DepartIndex extends Component {
       visibleRegion: true,
     });
     const keys = this.state.selectedRowKeys.key;
-    this.props.dispatch({
-      type: 'departinfo/getregioninfobytree',
-      payload: {},
-    });
+    // this.props.dispatch({
+    //   type: 'departinfo/getregioninfobytree',
+    //   payload: {},
+    // });
     this.props.dispatch({
       type: 'departinfo/getregionbydepid',
       payload: {

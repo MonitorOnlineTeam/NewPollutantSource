@@ -35,7 +35,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
-import RegionList from '@/components/RegionList'
+// import RegionList from '@/components/RegionList'
 import PageLoading from '@/components/PageLoading'
 
 // import { DualAxes } from '@ant-design/charts';

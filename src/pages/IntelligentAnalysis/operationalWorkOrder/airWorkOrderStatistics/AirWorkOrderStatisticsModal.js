@@ -71,10 +71,10 @@ export default class index extends PureComponent {
     componentDidMount() {
         const { dispatch, divisorList, beginTime, endTime } = this.props;
         // 获取行政区列表
-        dispatch({
-            type: 'autoForm/getRegions',
-            payload: { RegionCode: '', PointMark: '2' },
-        });
+        // dispatch({
+        //     type: 'autoForm/getRegions',
+        //     payload: { RegionCode: '', PointMark: '2' },
+        // });
         dispatch({
             type: 'airWorkOrderStatistics/getTaskStaticTitle',
             payload: { PollutantTypeCode: 5 },

@@ -207,7 +207,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, location } = this.props;
 
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
      dispatch({ type: 'entAbnormalRecord/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表

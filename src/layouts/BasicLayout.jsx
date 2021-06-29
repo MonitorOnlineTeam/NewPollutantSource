@@ -66,6 +66,9 @@ class BasicLayout extends Component {
       type: 'global/getSystemConfigInfo',
       payload: {},
     });
+    // this.props.dispatch({ 
+    //   type: 'autoForm/getRegions', 
+    //   payload: {  PointMark: '2', RegionCode: ''} }); //获取行政区列表
     dispatch({
       type: 'user/fetchCurrent',
       payload: {},

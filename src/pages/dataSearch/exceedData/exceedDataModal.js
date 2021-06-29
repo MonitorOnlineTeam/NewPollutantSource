@@ -132,13 +132,13 @@ class index extends PureComponent {
     initData = () => {
         const {exceedDataType,exceedPollutant,exceedTime,exceedType,operationpersonnel } = this.props
         //获取行政区列表
-        this.props.dispatch({
-            type: pageUrl.getRegions,
-            payload: {
-                PointMark: '2',
-                RegionCode: ''
-            },
-        });
+        // this.props.dispatch({
+        //     type: pageUrl.getRegions,
+        //     payload: {
+        //         PointMark: '2',
+        //         RegionCode: ''
+        //     },
+        // });
         //获取关注度列表
         this.props.dispatch({
             type: pageUrl.GetAttentionDegreeList,

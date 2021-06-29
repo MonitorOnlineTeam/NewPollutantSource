@@ -163,7 +163,7 @@ export default class EntTransmissionEfficiency extends Component {
     sessionStorage.setItem("pointName", 'COD')
     sessionStorage.setItem("entName", '')
 
-    dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2', }, });  //获取行政区列表
+    // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2', }, });  //获取行政区列表
 
 
     dispatch({ type: 'removalFlowRate/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表

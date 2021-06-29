@@ -139,7 +139,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     // this.child.onDataValueChange([moment().subtract(1, 'month').startOf('day'),moment()])
 
-     dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
+    //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
       //获取企业列表 or  大气站列表
 
