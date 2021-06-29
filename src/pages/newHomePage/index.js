@@ -117,7 +117,7 @@ export default class Index extends Component {
     return (
       <div  id='newHomePage' className={styles.pageContainer}>
          <div>
-         {/* <RealTimeAlarm /> */}
+         <RealTimeAlarm />
          </div>
          <div style={{marginTop:10}}>
          <BrokenLine />
