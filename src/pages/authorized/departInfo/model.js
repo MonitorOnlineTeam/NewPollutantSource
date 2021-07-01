@@ -87,7 +87,8 @@ export default Model.extend({
           },
         /*获取部门详细信息及层级关系**/
         * getdepartinfobytree({
-            payload
+            payload,
+            callback
         }, {
             call,
             update,
@@ -97,6 +98,7 @@ export default Model.extend({
                 yield update({
                     DepartInfoTree: result.Datas
                 });
+                callback(result.Datas)
             }
         },
         /*获取单个部门信息**/

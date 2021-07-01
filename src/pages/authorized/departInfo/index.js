@@ -16,6 +16,7 @@ import {
   FilterOutlined,
   UsergroupAddOutlined,
   UndoOutlined,
+  ConsoleSqlOutlined,
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -53,9 +54,79 @@ import SelectPollutantType from '@/components/SelectPollutantType';
 import AlarmPushRel from '@/components/AlarmPushRel';
 import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 import styles from './index.less';
-
+import { DndProvider, DragSource, DropTarget } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import update from 'immutability-helper';
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
+
+
+let dragingIndex = -1;
+
+class BodyRow extends React.Component {
+  render() {
+    const { isOver, connectDragSource, connectDropTarget, moveRow, ...restProps } = this.props;
+    const style = { ...restProps.style, cursor: 'move' };
+
+    let { className } = restProps;
+    if (isOver) {
+      if (restProps.index > dragingIndex) {
+        className += ' drop-over-downward';
+      }
+      if (restProps.index < dragingIndex) {
+        className += ' drop-over-upward';
+      }
+    }
+
+    return connectDragSource(
+      connectDropTarget(<tr {...restProps} className={className} style={style} />),
+    );
+  }
+}
+
+const rowSource = {
+  beginDrag(props) {
+    // dragingIndex = props.index;
+    dragingIndex = props['data-row-key']
+    return {
+      // index: props.index,
+      'data-row-key':props['data-row-key']
+    };
+  },
+};
+
+const rowTarget = {
+  drop(props, monitor) {
+    // const dragIndex = monitor.getItem().index;
+    // const hoverIndex = props.index;
+    const dragIndex = monitor.getItem()['data-row-key'];
+    const hoverIndex = props['data-row-key'];
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Time to actually perform the action
+    props.moveRow(dragIndex, hoverIndex);
+
+    // Note: we're mutating the monitor item here!
+    // Generally it's better to avoid mutations,
+    // but it's good here for the sake of performance
+    // to avoid expensive index searches.
+    // monitor.getItem().index = hoverIndex;
+    monitor.getItem()['data-row-key'] = hoverIndex;
+  },
+};
+
+const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+}))(
+  DragSource('row', rowSource, connect => ({
+    connectDragSource: connect.dragSource(),
+  }))(BodyRow),
+);
+
 // Customize Table Transfer
 const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
@@ -393,6 +464,8 @@ class DepartIndex extends Component {
           ),
         },
       ],
+      departInfoTree:[],
+      sortTitle:'开启排序'
     };
   }
   updateOperation=()=>{
@@ -520,10 +593,18 @@ class DepartIndex extends Component {
   //         console.log(selected, selectedRows, changeRows);
   //     },
   // };
+
+
   componentDidMount() {
     this.props.dispatch({
       type: 'departinfo/getdepartinfobytree',
       payload: {},
+      callback:(res)=>{
+        let data = this.handleData(res,0)
+        this.setState({
+          departInfoTree:data
+        })
+      }
     });
     this.props.dispatch({
       type: 'departinfo/getGroupRegionFilter',
@@ -541,7 +622,15 @@ class DepartIndex extends Component {
     //     }
     // })
   }
+  handleData=(data,i)=>{
+    if(data&&data.length>0){
+       i++;
+       return  data.map(item=>{
+         return {...item,flag:i,children:item.children.length>0 ? this.handleData(item.children,i) : []}
+      })
+    }
 
+  }
   showModal = () => {
     this.props.dispatch({
       type: 'departinfo/getdeparttreeandobj',
@@ -930,11 +1019,62 @@ class DepartIndex extends Component {
     })
 
   };
+  dragaComponents = {
+    body: {
+      row: DragableBodyRow,
+    },
+  };
 
+  moveRow = (dragIndex, hoverIndex) => { //拖拽事件
+    const { departInfoTree } = this.state;
+    
+       let data = [...departInfoTree]
+       let lastData = this.recursion(data,dragIndex, hoverIndex);
+       this.setState(
+        update(this.state, {
+          departInfoTree: {
+            $splice: [[departInfoTree, lastData]],
+          },
+        }),
+      );
+      // let lastDatas = update(this.state.departInfoTree, {$splice:[[departInfoTree , lastData]]});
+      //  this.setState({
+      //   departInfoTree:lastDatas
+      //  })
+  };
+ recursion= (data, current,find)=>{
+      let totalData =[], currentData = null,currentIndexs=-1, findData = null,findIndexs=-1;
+      if(data&&data.length>0){
+      //  return  data.map((item,index)=>{
+          for(var index in data){
+            let item = data[index]
+           if(item.key === current) {currentData = item ; currentIndexs = index };
+           if(item.key === find){ findData = item ; findIndexs = index };
+         
+           if(currentData&&findData&&currentData.flag === findData.flag ){ //在同一个树下拖拽
+              data[currentIndexs] = data.splice(findIndexs,1,data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置  
+              break; //拖拽完成后直接跳转循环 多次循环会导致错乱
+            }
+            totalData.push({
+              //  children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
+               ...item,
+               children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
+
+           })
+          }
+        // })
+      }
+
+      return totalData;
+    }
+    updateSort=()=>{
+      const { sortTitle } = this.state;
+      sortTitle==='开启排序'? this.setState({  sortTitle:'关闭排序'   }) : this.setState({  sortTitle:'开启排序'   })
+    }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { btnloading, btnloading1 } = this.props;
-    const { targetKeys, disabled, showSearch } = this.state;
+    const { targetKeys, disabled, showSearch,sortTitle } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -999,9 +1139,16 @@ class DepartIndex extends Component {
           // >
           <BreadcrumbWrapper>
             <Card bordered={false}>
-              <Button type="primary" onClick={this.showModal}>
+              <Button type="primary" style={{marginRight:8}} onClick={this.showModal}>
                 新增
               </Button>
+              {/* <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
+                {sortTitle}
+              </Button> */}
+              {sortTitle==='关闭排序'? <Button onClick={() => { this.saveSort()}} 
+                                        style={{marginRight:8}}   loading={this.props.dragLoading}  >
+                                       保存排序
+                                       </Button>:null}
               {/* <Button
                                 onClick={this.showUserModal}
                                 style={{ marginLeft: "10px" }}
@@ -1014,24 +1161,29 @@ class DepartIndex extends Component {
                                 onClick={this.showDataModal}
                                 style={{ marginLeft: "10px" }}
                             >数据过滤</Button> */}
-
+              <DndProvider backend={HTML5Backend}>
               <Table
                 // rowKey={}
-                onRow={record => ({
+                onRow={(record, index)  => ({
                   onClick: event => {
                     this.setState({
                       selectedRowKeys: record,
                       rowKeys: [record.key],
                     });
                   },
+                  index,
+                  moveRow: sortTitle==='关闭排序'? this.moveRow : null,
                 })}
+                components={sortTitle==='关闭排序'? this.dragaComponents : null}
                 style={{ marginTop: '20px' }}
                 //rowSelection={rowRadioSelection}
                 size="small"
                 columns={this.state.columns}
                 defaultExpandAllRows
-                dataSource={this.props.DepartInfoTree}
+                // dataSource={this.props.DepartInfoTree}
+                dataSource={this.state.departInfoTree}
               />
+              </DndProvider>
             </Card>
             <div>
               <Modal

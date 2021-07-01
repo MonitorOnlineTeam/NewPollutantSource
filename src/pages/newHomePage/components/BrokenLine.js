@@ -499,8 +499,7 @@ export default class Index extends Component {
         label: {
           normal: {
             formatter: function (name) {
-
-              let val = name.value? name.value*100 : '0.00';
+              let val = name.value? (name.value*100).toFixed(2) : '0.00';
               return `{title|联网率}{n|\n}{val|${ val}%}`
             },
               textStyle: {
