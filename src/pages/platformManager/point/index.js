@@ -83,7 +83,7 @@ export default class MonitorPoint extends Component {
       operationInfoDGIMN:'',
       operationPointName:'',
       dragDatas:[],
-      sortText:'开启排序'
+      sortTitle:'开启排序'
     };
   }
 
@@ -393,13 +393,19 @@ export default class MonitorPoint extends Component {
   }
 
   updateSort=()=>{ //更新排序
-     const { dragDatas } = this.state;
-    this.props.dispatch({
-      // type: 'autoForm/getPageConfig',
-      payload: {
-        // configId: 'service_StandardLibrary',
-     },
-    });    
+     const { dragDatas,sortTitle } = this.state;
+     if(sortTitle==='开启排序'){ 
+      this.setState({  sortTitle:'关闭排序'   })
+     }else{
+      this.setState({  sortTitle:'开启排序'   })
+     }
+
+  }
+  saveSort=()=>{
+    //  this.props.dispatch({
+      //    type: 'autoForm/getPageConfig',
+      //    payload: {  configId: 'service_StandardLibrary',   },
+      // });
   }
   render() {
     const {
@@ -417,6 +423,7 @@ export default class MonitorPoint extends Component {
     } = this.props;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
+    const { sortTitle } = this.state;
     if (this.props.loading || this.props.otherloading) {
       return (
         <Spin
@@ -474,7 +481,7 @@ export default class MonitorPoint extends Component {
 
 
               pointConfigId && (<AutoFormTable
-                // dragable
+                // dragable ={sortTitle==='关闭排序'? true :false }
                 dragData={(data)=>{this.dragData(data)}}
                 style={{ marginTop: 10 }}
                 // columns={columns}
@@ -493,20 +500,29 @@ export default class MonitorPoint extends Component {
                   // })
                 }}
                 searchParams={pointDataWhere}
-                // appendHandleButtons={(selectedRowKeys, selectedRows) => (
-                //   <Fragment>
-                //     <Button
-                //       type="primary"
-                //       onClick={() => {
-                //         this.updateSort()
-                //       }}
-                //       style={{marginRight:8}}
-                //       loading={this.props.dragLoading}
-                //     >
-                //       {this.state.sortText}
-                //     </Button>
-                //   </Fragment>
-                // )}
+                appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                  <Fragment>
+                    {/* <Button
+                      type="primary"
+                      onClick={() => {
+                        this.updateSort()
+                      }}
+                      style={{marginRight:8}}
+                    >
+                      {sortTitle}
+                    </Button> */}
+                    {sortTitle==='关闭排序'?
+                    <Button
+                      onClick={() => {
+                        this.saveSort()
+                      }}
+                      style={{marginRight:8}}
+                      loading={this.props.dragLoading}
+                    >
+                     保存排序
+                    </Button>:null}
+                  </Fragment>
+                )}
                 appendHandleRows={row => (
                   <Fragment>
                     <Tooltip title="编辑">

@@ -169,8 +169,6 @@ class SdlTable extends PureComponent {
         }
       }
     }, 50);
-    const {dragable, dataSource} = this.props;
-    dragable&&this.setState({dataSource:this.props.dataSource})
   }
 
   handleResize = index => (e, { size }) => {
@@ -271,6 +269,9 @@ class SdlTable extends PureComponent {
       this.setState({
         headAndFooterHeight: count > 110 ? count : 110,
       });
+    }
+    if (this.props.dragable !== prevProps.dragable) {
+      this.setState({dataSource:this.props.dataSource})
     }
   }
   moveRow = (dragIndex, hoverIndex) => { //拖拽事件
