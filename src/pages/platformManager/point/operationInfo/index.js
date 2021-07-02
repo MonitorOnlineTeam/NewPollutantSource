@@ -298,13 +298,13 @@ export default class OperationInfo extends Component {
          <PlusOutlined />
          添加
        </Button>
-          <Button
+          {/* <Button
             style={{marginLeft: 10 }}
                onClick={() => {
               history.go(-1);
           }}
             ><LeftOutlined />返回
-          </Button>
+          </Button> */}
           </>
           }
         >
