@@ -186,7 +186,7 @@ export default class MonitorTarget extends Component {
             payload: {
                 EntCode: row['dbo.T_Bas_Enterprise.EntCode'],
                 callback: (result) => {
-                    if (result.IsSuccess) {
+                    if (result.IsSuccess && result.Datas) {
                         this.downloadFile(result.Datas);
                     } else {
                         message.error('生成失败');

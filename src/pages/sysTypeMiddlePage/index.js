@@ -63,7 +63,7 @@ class index extends PureComponent {
                   return (
                     <Col className="gutter-row" span={6} onClick={() => this.onSysItemClick(item)}>
                       <div className={styles.itemContent} >
-                        <img src={`/middlePage/${item.Name}.png`} alt="" />
+                        <img src={`/middlePage/${item.MenuImg}.png`} alt="" />
                         <span className={styles.sysName}>
                           {item.Name}
                         </span>

@@ -4,7 +4,7 @@ import { Layout, Menu, Card } from 'antd'
 import { connect } from 'dva'
 import Factor from './components/Factor'
 import Point from './components/Point'
-// import Wuzi from './components/Wuzi'
+import Record from './components/Record'
 // import Equipped from './components/Equipped'
 // import Vehicle from './components/Vehicle'
 
@@ -62,7 +62,7 @@ class MonitorPage extends PureComponent {
           >
             {currentKey === '1' && <Factor AlarmInfoCode={AlarmInfoCode} />}
             {currentKey === '2' && <Point AlarmInfoCode={AlarmInfoCode} />}
-            {/* {currentKey === '3' && <Wuzi />} */}
+            {currentKey === '3' && <Record AlarmInfoCode={AlarmInfoCode} />}
             {/* {currentKey === '4' && <Equipped />} */}
             {/* {currentKey === '5' && <Vehicle />} */}
           </Content>

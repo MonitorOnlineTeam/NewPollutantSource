@@ -72,7 +72,7 @@ class index extends PureComponent {
     this._dispatch('emergency/endRecord', {
       AlarmInfoCode: this._SELF_.AlarmInfoCode,
       Status: this.state.overStatus ? 1 : 0
-    }).then(() => {
+    }, (res) => {
       this.getStepBar()
     })
   }

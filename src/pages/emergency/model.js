@@ -248,9 +248,10 @@ export default Model.extend({
       }
     },
     // 结束
-    *endRecord({ payload }, { call, update, put, take, select }) {
+    *endRecord({ payload, callback }, { call, update, put, take, select }) {
       const result = yield call(services.endRecord, payload);
       if (result.IsSuccess) {
+        callback && callback();
         message.success('操作成功');
       } else {
         message.error(result.Message)
