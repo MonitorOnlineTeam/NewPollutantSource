@@ -132,14 +132,14 @@ class FieldSurvey extends PureComponent {
                     name="WindDirection"
                   >
                     <Select placeholder="请选择风向">
-                      <Option value={1}>东</Option>
-                      <Option value={2}>南</Option>
-                      <Option value={3}>西</Option>
-                      <Option value={4}>北</Option>
-                      <Option value={4}>东南</Option>
-                      <Option value={4}>东北</Option>
-                      <Option value={4}>西南</Option>
-                      <Option value={4}>西北</Option>
+                      <Option value={'1'}>东</Option>
+                      <Option value={'2'}>南</Option>
+                      <Option value={'3'}>西</Option>
+                      <Option value={'4'}>北</Option>
+                      <Option value={'5'}>东南</Option>
+                      <Option value={'6'}>东北</Option>
+                      <Option value={'7'}>西南</Option>
+                      <Option value={'8'}>西北</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -157,9 +157,9 @@ class FieldSurvey extends PureComponent {
                     name="Stability"
                   >
                     <Select placeholder="请选择大气垂直定度">
-                      <Option value={1}>稳定状态</Option>
-                      <Option value={2}>不稳定状态</Option>
-                      <Option value={3}>中性平衡状态</Option>
+                      <Option value={'1'}>稳定状态</Option>
+                      <Option value={'2'}>不稳定状态</Option>
+                      <Option value={'3'}>中性平衡状态</Option>
                     </Select>
                   </Form.Item>
                 </Col>

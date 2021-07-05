@@ -34,7 +34,7 @@ class Record extends PureComponent {
       monitorList: [],
     };
     this._SELF_ = {
-      KEY: 'RelationCode',
+      KEY: 'Id',
       TYPE: 15,
       columns: [
         {
@@ -120,12 +120,13 @@ class Record extends PureComponent {
 
   // 获取table数据
   getTableList = () => {
-    const { ParamType, ParamName } = this.state;
+    const { ParamBegin, ParamEnd, ParamName } = this.state;
     this.props.dispatch({
       type: 'emergency/getTableList',
       payload: {
         ParamName,
-        ParamType,
+        ParamBegin: ParamBegin ? moment(ParamBegin).format('YYYY-MM-DD 00:00:00') : undefined,
+        ParamEnd: ParamEnd ? moment(ParamEnd).format('YYYY-MM-DD 23:59:59') : undefined,
         AlarmInfoCode: this.props.AlarmInfoCode,
         Type: this._SELF_.TYPE,
       },
@@ -205,7 +206,13 @@ class Record extends PureComponent {
             </div>
             <div>
               采样时间：
-              <RangePicker />
+              <RangePicker allowClear style={{ width: 300 }} onChange={(date, dataString) => {
+                if (date) {
+                  this.setState({ ParamBegin: date[0], ParamEnd: date[1] })
+                } else {
+                  this.setState({ ParamBegin: undefined, ParamEnd: undefined })
+                }
+              }} />
             </div>
           </Space>
           <Space align="baseline" style={{ marginLeft: 10 }}>
