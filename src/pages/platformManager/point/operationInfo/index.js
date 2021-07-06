@@ -208,9 +208,10 @@ export default class OperationInfo extends Component {
               type: 'operationInfo/addOrUpdateOperationPoint',
               payload: {
                   ...values,
+                  Time:undefined,
                   DGIMN:DGIMN,
                   BeginTime:moment(values.Time[0]).format("YYYY-MM-DD 00:00:00"),
-                  EndTime:moment(values.Time[0]).format("YYYY-MM-DD 23:59:59")
+                  EndTime:moment(values.Time[1]).format("YYYY-MM-DD 23:59:59")
                  },
                  callback:res=>{
                   this.setState({
