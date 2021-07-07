@@ -288,6 +288,12 @@ export default {
                   path: '/emergency/dispatch',
                   component: './emergency/dispatch/DispatchPage',
                 },
+                // 应急调度 - 地图
+                {
+                  name: 'index',
+                  path: '/emergency/dispatchMap',
+                  component: './emergency/dispatch/DispatchMap',
+                },
                 // 预案
                 {
                   name: 'index',
@@ -2564,8 +2570,8 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/api': {
-      target: 'http://172.16.12.183:50059/',
-      // target: 'http://172.16.12.165:5001/',
+      // target: 'http://172.16.12.183:50059/',
+      target: 'http://172.16.12.165:5001/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

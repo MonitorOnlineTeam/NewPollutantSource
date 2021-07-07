@@ -145,6 +145,7 @@ class index extends PureComponent {
                 if (record.Status === 2) {
                   return <Tooltip title="应急处置">
                     <a onClick={() => {
+                      this.onSetCurrent(record.AlarmInfoCode)
                       router.push(`/emergency/disposal?code=${record.AlarmInfoCode}`)
                     }}><FormOutlined style={{ fontSize: 16 }} /></a>
                   </Tooltip>

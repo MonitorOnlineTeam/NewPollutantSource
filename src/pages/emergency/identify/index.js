@@ -455,6 +455,19 @@ class Identify extends PureComponent {
     this._dispatch('emergency/getSaveEntAndMingan', {
       AlarmInfoCode: this._SELF_.AlarmInfoCode,
       Type: type,
+    }, (res) => {
+      let selectedRowKeys = [];
+      if (type === 1) {
+        selectedRowKeys = res.map(item => item.SensitiveCode);
+        this.setState({
+          minganSelectedRowKeys: selectedRowKeys,
+        })
+      } else {
+        selectedRowKeys = res.map(item => item.EntCode);
+        this.setState({
+          entSelectedRowKeys: selectedRowKeys,
+        })
+      }
     })
   }
 
@@ -465,25 +478,26 @@ class Identify extends PureComponent {
       AlarmInfoCode: this._SELF_.AlarmInfoCode,
       Type: type,
     }, (res) => {
-      let selectedRowKeys = [...this.state.entSelectedRowKeys];
-      if (type === 1) {
-        selectedRowKeys = [...this.state.minganSelectedRowKeys];
-      }
-      debugger
-      let index = selectedRowKeys.indexOf(EntCode);
-      if (index > -1) {//大于0 代表存在，
-        selectedRowKeys.splice(index, 1);//存在就删除
-      }
-      debugger
-      if (type === 1) {
-        this.setState({
-          minganSelectedRowKeys: selectedRowKeys
-        })
-      } else {
-        this.setState({
-          entSelectedRowKeys: selectedRowKeys
-        })
-      }
+      this.getSaveList(type);
+
+      // let selectedRowKeys = [...this.state.entSelectedRowKeys];
+      // if (type === 1) {
+      //   selectedRowKeys = [...this.state.minganSelectedRowKeys];
+      // }
+      // let index = selectedRowKeys.indexOf(EntCode);
+      // if (index > -1) {//大于0 代表存在，
+      //   selectedRowKeys.splice(index, 1);//存在就删除
+      //   _selectedRowKeys.splice(index, 1);//存在就删除
+      // }
+      // if (type === 1) {
+      //   this.setState({
+      //     minganSelectedRowKeys: selectedRowKeys
+      //   })
+      // } else {
+      //   this.setState({
+      //     entSelectedRowKeys: selectedRowKeys,
+      //   })
+      // }
     })
   }
 
@@ -514,7 +528,7 @@ class Identify extends PureComponent {
     const entRowSelection = {
       selectedRowKeys: entSelectedRowKeys,
       getCheckboxProps: (record) => ({
-        disabled: entSelectedRowKeys.includes(record.EntCode),
+        disabled: entSelectedRowKeys.includes(record.EntCode) && record.IsChecked,
         name: record.EntName,
       }),
       onChange: this.onEntSelectChange,

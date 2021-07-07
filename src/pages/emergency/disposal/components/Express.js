@@ -187,7 +187,7 @@ class Factor extends PureComponent {
     const { isModalVisible, dataSource, editData, hasEdit } = this.state;
     const { dictionaryList, loading } = this.props;
 
-    const title = hasEdit ? '编辑因子' : '新增因子';
+    const title = '快报信息';
 
     return (
       <Card bodyStyle={{ paddingBottom: 20, paddingTop: 10, overflow: 'auto', height: 'calc(100vh - 200px)' }} title="现场调查信息" extra={
@@ -245,7 +245,7 @@ class Factor extends PureComponent {
               NewsTime: moment().format("YYYY-MM-DD HH:mm:ss"),
             }}
           >
-            <Row>
+            <Row>发                              
               <Col span={12}>
                 <Form.Item
                   name="DeathNum"

@@ -142,7 +142,9 @@ class index extends PureComponent {
                   <p>处置调度</p>
                   <Row gutter={[3, 0]} className={styles.hoverContent}>
                     <Col span={12}>
-                      <div className={`${styles.blue} ${styles.block}`}>地图调度</div>
+                      <div className={`${styles.blue} ${styles.block}`}
+                        onClick={() => router.push('/emergency/dispatchMap?code=' + dutyOneData.AlarmInfoCode)}
+                      >地图调度</div>
                     </Col>
                     <Col span={12}>
                       <div className={`${styles.green} ${styles.block}`}

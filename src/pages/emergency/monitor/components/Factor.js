@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Card, Form, Input, Button, Space, Tooltip, Popconfirm, Modal, Row, Col, Select, InputNumber, Divider } from 'antd'
 import SdlTable from '@/components/SdlTable'
 import { DelIcon, EditIcon } from '@/utils/icon'
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, RollbackOutlined } from '@ant-design/icons'
 import { connect } from 'dva'
 
 const { Option } = Select;
@@ -164,7 +164,9 @@ class Factor extends PureComponent {
     const title = hasEdit ? '编辑因子' : '新增因子';
 
     return (
-      <Card bordered={false} title="采样因子" style={{ margin: 0 }}>
+      <Card bordered={false} title="采样因子" style={{ margin: 0 }} extra={
+        <Button icon={<RollbackOutlined />} onClick={() => history.go(-1)}>返回</Button>
+      }>
         <Row
           style={{ marginTop: 10, marginBottom: 20 }}
         >

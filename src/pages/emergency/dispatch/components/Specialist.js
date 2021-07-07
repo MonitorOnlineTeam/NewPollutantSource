@@ -3,6 +3,7 @@ import { Card, Row, Button, Space, Tooltip, Popconfirm, Input, Select, Divider }
 import { connect } from 'dva';
 import SdlTable from '@/components/SdlTable'
 import { DelIcon } from '@/utils/icon'
+import { RollbackOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -193,7 +194,9 @@ class Specialist extends PureComponent {
     let _props = showFlag ? {} : { rowSelection }
     let _columns = showFlag ? columns : columns.filter(item => item.key !== 'handle')
     return (
-      <Card bordered={false} title="专家调度" style={{ margin: 0 }}>
+      <Card bordered={false} title="专家调度" style={{ margin: 0 }} extra={
+        <Button icon={<RollbackOutlined />} onClick={() => history.go(-1)}>返回</Button>
+      }>
         <Row
           style={{ marginTop: 10, marginBottom: 20 }}
         >

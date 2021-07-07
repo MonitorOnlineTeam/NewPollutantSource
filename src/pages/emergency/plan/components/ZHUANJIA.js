@@ -93,6 +93,7 @@ class ZHUANJIA extends PureComponent {
     this.props.dispatch({
       type: "emergency/getListTable",
       payload: {
+        AlarmInfoCode: this.props.AlarmInfoCode,
         Type: 6
       },
       callback: (res) => {
@@ -106,6 +107,7 @@ class ZHUANJIA extends PureComponent {
     this.props.dispatch({
       type: "emergency/getRelationTable",
       payload: {
+        AlarmInfoCode: this.props.AlarmInfoCode,
         Type: 6
       },
       callback: (res) => {
@@ -137,6 +139,7 @@ class ZHUANJIA extends PureComponent {
     this.props.dispatch({
       type: "emergency/saveDispatch",
       payload: {
+        AlarmInfoCode: this.props.AlarmInfoCode,
         Type: this._SELF_.TYPE,
         ChildrenCode: this.state.selectedRowKeys
       },
