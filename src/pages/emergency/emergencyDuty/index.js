@@ -16,7 +16,9 @@ const { Meta } = Card;
 const options = [
   { label: '全部', value: undefined },
   { label: '甄别中', value: 1 },
-  { label: '甄别完成', value: 2 },
+  { label: '处置中', value: 2 },
+  { label: '甄别完成', value: 3 },
+  { label: '处置完成', value: 4 },
 ];
 
 

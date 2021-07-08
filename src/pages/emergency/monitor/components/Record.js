@@ -166,12 +166,12 @@ class Record extends PureComponent {
         type: 'emergency/saveSamplingData',
         payload: {
           EmergencyData: {
-            Id: this.state.hasEdit ? this.state.editData.Id : undefined,
             ...values,
             MonitorTime: moment(values.MonitorTime).format('YYYY-MM-DD HH:mm:ss'),
             RealDataList: this.state.RealDataList,
             AlarmInfoCode: this.props.AlarmInfoCode,
           },
+          Id: this.state.hasEdit ? this.state.editData.Id : undefined,
           AlarmInfoCode: this.props.AlarmInfoCode,
           RecordType: this.state.hasEdit ? 'upd' : 'add',
           Type: this._SELF_.TYPE,
