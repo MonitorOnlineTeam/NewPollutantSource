@@ -457,7 +457,8 @@ class index extends Component {
       taskCountLoading,
       exceptionProcessingLoading,
       mounthOverData,
-      homePage
+      homePage,
+      pollutantTypeList
     } = this.props;
 
     const { pollutantType } = this.state;
@@ -634,7 +635,7 @@ class index extends Component {
               style={{
                 position: 'absolute',
                 top: '2%',
-                left: 650,
+                left:pollutantTypeList.length==4? 650 : 720,
                 zIndex: 100
               }}
             >
