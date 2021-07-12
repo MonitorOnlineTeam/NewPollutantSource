@@ -440,7 +440,7 @@ class NavigationTree extends Component {
   handleChange = value => {
     value = value.toString()
     if (value == '') {
-      value = this.props.ConfigInfo.SystemPollutantType
+      // value = this.props.ConfigInfo.SystemPollutantType
     }
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,

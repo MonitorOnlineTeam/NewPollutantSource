@@ -54,7 +54,7 @@ class AutoFormView extends Component {
               <Button
                 style={{ float: "right", marginRight: 10 }}
                 onClick={() => {
-                  history.goBack(-1);
+                  history.go(-1);
                 }}
               ><LeftOutlined />返回
     </Button>

@@ -1,0 +1,182 @@
+.headerInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  &:last-child {
+    border: 0;
+  }
+
+  &>span {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  &>.content {
+    width: 50%;
+    margin: 0;
+    color: rgba(0, 0, 0, .85);
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+
+    .phone {
+      font-size: 18px;
+      color: rgba(0, 0, 0, .65);
+    }
+  }
+
+
+}
+
+.pageWrapper {
+  margin: -24px;
+  height: calc(100vh - 64px);
+  margin-right: 408px;
+  position: relative;
+}
+
+.tooltip {
+  :global {
+    .ant-tooltip-inner {
+      padding: 2px 4px;
+      min-height: 26px;
+    }
+  }
+}
+
+// .point {
+//   background: #fd1100;
+//   border-radius: 50%;
+//   opacity: .8;
+
+//   &.level4 {
+//     width: 16px;
+//     height: 16px;
+//   }
+
+//   &.level3 {
+//     width: 24px;
+//     height: 24px;
+//   }
+
+//   &.level2 {
+//     width: 30px;
+//     height: 30px;
+//   }
+
+//   &.level1 {
+//     width: 36px;
+//     height: 36px;
+//   }
+// }
+
+.toggleDrawer {
+  height: calc(100vh - 64px);
+
+  :global {
+    .ant-drawer-content {
+      overflow: visible;
+    }
+  }
+
+  .toggleIconContainer {
+    position: absolute;
+    top: 40%;
+    display: flex;
+    width: 14px;
+    height: 42px;
+    size: 16px;
+    text-align: center;
+    background: #1890ff;
+    cursor: pointer;
+
+    .toggleIcon {
+      margin-top: 90%;
+      color: rgb(255, 255, 255);
+      margin-left: 1px;
+    }
+  }
+}
+
+.title {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid #e8e8e8;
+  position: relative;
+
+  &:after {
+    position: absolute;
+    content: "";
+    width: 4px;
+    height: 14px;
+    background: #3788ff;
+    left: 0;
+    top: 14px;
+  }
+}
+
+// 处置
+
+.mySteps {
+  :global {
+    .ant-steps-item {
+      display: flex;
+      align-items: center;
+      // justify-content: center;
+    }
+  }
+}
+
+.stepDesc {
+  position: relative;
+  cursor: pointer;
+
+  .hoverContent {
+    width: 200px;
+    position: absolute;
+    left: -56px;
+    top: -15px;
+    color: #fff;
+    line-height: 64px;
+    z-index: 1;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0;
+  }
+
+  .block {
+    border: 1px solid #fff;
+    border-radius: 3px;
+    // background: #1d93f5;
+    // color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 2px 2px #e6e6e6e6;
+  }
+
+  .blue {
+    background: rgb(23, 144, 255);
+
+  }
+
+  .green {
+    background: rgb(51, 190, 138)
+  }
+
+  &:hover {
+    .hoverContent {
+      opacity: .9;
+      cursor: pointer;
+      transition: all .5s;
+    }
+  }
+}
+
+.descContent {
+  font-size: 12px;
+}

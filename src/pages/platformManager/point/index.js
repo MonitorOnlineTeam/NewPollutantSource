@@ -227,8 +227,17 @@ export default class MonitorPoint extends Component {
       isEdit: false,
       selectedPointCode: '',
       isView: false,
+      modalProps: {},
     });
   };
+
+  // modelClose = () => {
+  //   this.setState({
+  //     visible: false,
+  //     FormData: null,
+  //     tabKey: "1"
+  //   })
+  // }
 
   onSubmitForm() {
     const { dispatch, match, pointDataWhere, form } = this.props;
@@ -335,13 +344,7 @@ export default class MonitorPoint extends Component {
     console.log('res=', re)
   }
 
-  modelClose = () => {
-    this.setState({
-      visible: false,
-      FormData: null,
-      tabKey: "1"
-    })
-  }
+  
 
 
   /***
@@ -407,7 +410,7 @@ export default class MonitorPoint extends Component {
     const { modalProps } = this.state;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
-
+    console.log('this.state.isView=', this.state.isView)
     if (this.props.loading || this.props.otherloading) {
       return (
         <Spin
@@ -549,12 +552,12 @@ export default class MonitorPoint extends Component {
             footer={[
               !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
                 取消
-            </Button>,
+              </Button>,
                 <> <Button key="submit" type="primary" loading={!this.state.isEdit ? saveLoadingAdd : saveLoadingEdit} onClick={this.onSubmitForm.bind(this)}>
                   确定
-            </Button><Button key="submit" onClick={this.modelClose}>
+                </Button><Button key="submit" onClick={this.handleCancel}>
                     取消
-            </Button></>) : '',
+                  </Button></>) : '',
             ]}
             {...modalProps}
           >{
@@ -581,11 +584,11 @@ export default class MonitorPoint extends Component {
                   </TabPane>
                 </Tabs>
               ) : (
-                  <AutoFormViewItems
-                    configId={pointConfigIdEdit}
-                    keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-                  />
-                )
+                <AutoFormViewItems
+                  configId={pointConfigIdEdit}
+                  keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                />
+              )
             }
 
           </Modal>
