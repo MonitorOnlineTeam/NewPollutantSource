@@ -6,17 +6,17 @@ const routes = [
     component: '../layouts/BlankLayout',
     routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
   },
-  {
-    path: '/screen',
-    component: '../layouts/ScreenLayout',
-    routes: [
-      {
-        name: 'test',
-        path: '/screen/test',
-        component: './Test/Test',
-      },
-    ]
-  },
+  // {
+  //   path: '/screen',
+  //   component: '../layouts/ScreenLayout',
+  //   routes: [
+  //     {
+  //       name: 'test',
+  //       path: '/screen/test',
+  //       component: './Test/Test',
+  //     },
+  //   ]
+  // },
   {
     path: '/',
     component: '../layouts/BlankLayout',
@@ -1825,12 +1825,12 @@ const routes = [
                   },
                 ]
               },
-              {
-                // 碳排放查询
-                name: 'CO2Emissions',
-                path: '/dataSearch/CO2Emissions',
-                component: './dataSearch/CO2Emissions',
-              },
+              // {
+              //   // 碳排放查询
+              //   name: 'CO2Emissions',
+              //   path: '/dataSearch/CO2Emissions',
+              //   component: './dataSearch/CO2Emissions',
+              // },
               {
                 // 站点数据查询
                 path: '/dataSearch/siteData',
