@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined,HighlightOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -49,6 +49,7 @@ let pointConfigIdEdit = '';
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
   saveLoadingAdd: loading.effects['point/addPoint'],
   saveLoadingEdit: loading.effects['point/editPoint'],
+  saveLoadingMN:loading.effects['point/updatePointDGIMN'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -75,7 +76,8 @@ export default class MonitorPoint extends Component {
       PointCode: '',
       DGIMN: '',
       FormData: null,
-      tabKey: "1"
+      tabKey: "1",
+      MNVisible:false
     };
   }
 
@@ -378,6 +380,40 @@ export default class MonitorPoint extends Component {
       return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]} 
       pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
+
+  editMN=(MN)=>{
+    this.setState({ 
+      MNVisible:true,
+      MNEcho:MN
+    })
+  }
+  onSubmitMN= e =>{
+    const { dispatch,pointDataWhere } = this.props;
+
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'point/updatePointDGIMN',
+          payload: {
+            oldDGIMN:this.state.MNEcho,
+            newDGIMN:values.newMN
+          },
+          callback:()=>{
+            this.setState({ MNVisible:false })
+            dispatch({
+              type: 'autoForm/getAutoFormData',
+              payload: {
+                configId: pointConfigId,
+                searchParams: pointDataWhere,
+              },
+            });
+          }
+        })
+      }
+    });
+
+  }
   render() {
     const {
       searchConfigItems,
@@ -392,6 +428,7 @@ export default class MonitorPoint extends Component {
       saveLoadingAdd,
       saveLoadingEdit,
     } = this.props;
+    const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
     if (this.props.loading || this.props.otherloading) {
@@ -510,10 +547,15 @@ export default class MonitorPoint extends Component {
                         <Tooltip title="设置Cems参数">
                           <a onClick={() => {
                             this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
-                          }}><ToolOutlined /></a>
+                          }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     }
-
+                    <Divider type="vertical" />
+                    <Tooltip title="修改设备编号(MN)">
+                          <a onClick={() => {
+                            this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
+                          }}><HighlightOutlined  style={{fontSize:16}}/></a>
+                        </Tooltip>
                   </Fragment>
                 )}
               />
@@ -577,6 +619,28 @@ export default class MonitorPoint extends Component {
             footer={false}
           >
             <AnalyzerManage DGIMN={this.state.DGIMN} />
+          </Modal>
+          <Modal
+            title="修改设备编号(MN)"
+            visible={this.state.MNVisible}
+            onCancel={()=>{this.setState({MNVisible:false})}}
+            onOk={(e)=>{this.onSubmitMN(e)}}
+            destroyOnClose
+            confirmLoading={this.props.saveLoadingMN}
+            className={styles.MNmodal}
+          >
+           <Form>
+           <Form.Item label="旧设备编号(MN)">
+             <Input value={this.state.MNEcho} disabled/>
+           </Form.Item>
+           <Form.Item label="新设备编号(MN)">
+              {getFieldDecorator('newMN', {
+                                rules: [{ required: true, message: '请输入新的设备编号(MN)' }],
+                            })(
+                                <Input  placeholder="请输入新的设备编号(MN)" />
+                            )}
+           </Form.Item>
+      </Form>
           </Modal>
         </div>
         {/* </MonitorContent> */}

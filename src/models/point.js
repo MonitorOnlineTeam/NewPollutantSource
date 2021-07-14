@@ -9,7 +9,7 @@ import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
 import MonitoringStandard from '@/components/MonitoringStandard';
-import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode } from '@/services/pointApi';
+import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode,UpdatePointDGIMN } from '@/services/pointApi';
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -183,7 +183,17 @@ export default Model.extend({
                 sdlMessage(result.Message, 'error');
             }
         },
-
+        //更新dgimn号
+        *updatePointDGIMN({callback, payload }, { call, put, update, select }) {
+            const result = yield call(UpdatePointDGIMN, payload);
+            if (result.IsSuccess) {
+                sdlMessage('修改成功', 'success');
+                callback();
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        }
+        
     },
     reducers: {
         // 保存搜索框数据
