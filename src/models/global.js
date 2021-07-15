@@ -100,13 +100,13 @@ export default Model.extend({
       const response = yield call(services.getSystemConfigInfo);
       if (response.IsSuccess) {
         // console.log('ConfigInfo=', response.Datas);
-        try {
-          mywebsocket.InitWebsocket(response.Datas.WebSocketAddress);
+        // try {
+        //   mywebsocket.InitWebsocket(response.Datas.WebSocketAddress);
 
-          payload.listen();
-        } catch (e) {
-          console.log('WebSocketAddress获取失败');
-        }
+        //   payload.listen();
+        // } catch (e) {
+        //   console.log('WebSocketAddress获取失败');
+        // }
 
         yield put({
           type: 'setConfigInfo',

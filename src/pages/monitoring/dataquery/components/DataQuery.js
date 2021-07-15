@@ -284,7 +284,8 @@ class DataQuery extends Component {
 
   /** 后台请求数据 */
   reloaddatalist = historyparams => {
-    const { dispatch } = this.props;
+    const { dispatch,pollutantlist } = this.props;
+    if(pollutantlist && pollutantlist[0]){
     historyparams &&
       dispatch({
         type: 'dataquery/updateState',
@@ -302,6 +303,9 @@ class DataQuery extends Component {
       type: 'dataquery/queryhistorydatalist',
       payload:historyparams.datatype==='hour'|| historyparams.datatype==='day'? { IsSupplyData:true} : {},
     });
+  }else{
+    message.error('污染物列表为空，请添加污染物！')
+  }
   };
 
   /** 切换排口 */
