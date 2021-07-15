@@ -622,7 +622,7 @@ class index extends Component {
                 position: 'absolute',
                 top: '2%',
                 left: 430,
-                zIndex: 100
+                zIndex: 200
               }}
             >
               <Radio.Group style={{}} defaultValue={this.state.radioDefaultValue} buttonStyle="solid" size="default" onChange={this.onRadioChange}>

@@ -33,7 +33,7 @@ class Index extends Component {
         const { dgimn, pointName, entName, title } = this.state;
         return (
             <div id="dataquery">
-                <BreadcrumbWrapper>
+                <BreadcrumbWrapper titles={`【${title}】`}>
                     {
                         this.state.dgimn ?
                             (
