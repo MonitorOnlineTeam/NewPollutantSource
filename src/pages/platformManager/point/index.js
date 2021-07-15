@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined,HighlightOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined,HighlightOutlined,DownOutlined,EllipsisOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -22,7 +22,7 @@ import {
   Tooltip,
   Tabs,
 } from 'antd';
-import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
+import { EditIcon, DetailIcon, DelIcon  } from '@/utils/icon'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
@@ -414,6 +414,16 @@ export default class MonitorPoint extends Component {
     });
 
   }
+  onClick = ({ key }) => {
+    const { row } = this.state;
+
+    if(key==3){ //设置Cems参数
+      this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode'])
+    }
+    if(key==4){ //修改mn号
+      this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
+    }
+  };
   render() {
     const {
       searchConfigItems,
@@ -445,7 +455,18 @@ export default class MonitorPoint extends Component {
         />
       );
     }
-
+    const menu = (
+      <Menu onClick={this.onClick} >
+        <Menu.Item key="3">
+          <Tooltip title="设置Cems参数"> <a><ToolOutlined style={{fontSize:16}}/></a> </Tooltip></Menu.Item>
+          <Menu.Item key="4"> <Tooltip title="修改设备编号(MN)">  <a><HighlightOutlined  style={{fontSize:16}}/></a></Tooltip></Menu.Item>
+      </Menu>
+    );
+    // const menu2 = (
+    //   <Menu onClick={this.onClick}>
+    //       <Menu.Item key="4"> <Tooltip title="修改设备编号(MN)">  <a><HighlightOutlined  style={{fontSize:16}}/></a></Tooltip></Menu.Item>
+    //   </Menu>
+    // );
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
@@ -507,6 +528,8 @@ export default class MonitorPoint extends Component {
                 searchParams={pointDataWhere}
                 appendHandleRows={row => (
                   <Fragment>
+
+                    
                     <Tooltip title="编辑">
                       <a
                         onClick={() => {
@@ -517,11 +540,11 @@ export default class MonitorPoint extends Component {
                           })
                         }}
                       >
-                        <EditIcon />
+                        <EditIcon />      
                       </a>
                     </Tooltip>
                     <Divider type="vertical" />
-                    <Tooltip title="详情">
+                   <Tooltip title="详情">
                       <a
                         onClick={() => {
                           this.setState({
@@ -542,20 +565,27 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
-                    {
+                     {/* {
                       row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
                         <Tooltip title="设置Cems参数">
                           <a onClick={() => {
                             this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
                           }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
-                    }
-                    <Divider type="vertical" />
-                    <Tooltip title="修改设备编号(MN)">
+                    } */}
+                     {row['dbo.T_Bas_CommonPoint.PollutantType'] === '1'&&<> <Divider type="vertical" />
+                 <Tooltip title="修改设备编号(MN)">
                           <a onClick={() => {
                             this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
                           }}><HighlightOutlined  style={{fontSize:16}}/></a>
-                        </Tooltip>
+                        </Tooltip></> }
+                    
+
+                     {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} overlay={ menu }>
+                         <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
+                         <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
+                        </a>
+                        </Dropdown></>}
                   </Fragment>
                 )}
               />
