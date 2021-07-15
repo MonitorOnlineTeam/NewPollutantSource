@@ -37,28 +37,39 @@ const { RangePicker } = DatePicker;
   loading: loading.effects["abnormalResRate/getTableDataSource"],
   exportLoading: loading.effects["abnormalResRate/exportReport"],
 }))
-@Form.create({
-  mapPropsToFields(props) {
-    return {
-      dataType: Form.createFormField(props.searchForm.dataType),
-      // time: Form.createFormField(props.searchForm.time),
-      RegionCode: Form.createFormField(props.searchForm.RegionCode),
-      AttentionCode: Form.createFormField(props.searchForm.AttentionCode),
-      PollutantType: Form.createFormField(props.searchForm.PollutantType),
-    };
-  },
-  onFieldsChange(props, fields) {
+@Form.create( {
+  
+   onFieldsChange(props, fields) {
     props.dispatch({
       type: 'abnormalResRate/updateState',
       payload: {
-        searchForm: {
-          ...props.searchForm,
-          ...fields,
-        },
+        searchForm: {},
       },
     })
-  },
+  }
 })
+// @Form.create({
+//   mapPropsToFields(props) {
+//     return {
+//       dataType: Form.createFormField(props.searchForm.dataType),
+//       // time: Form.createFormField(props.searchForm.time),
+//       RegionCode: Form.createFormField(props.searchForm.RegionCode),
+//       AttentionCode: Form.createFormField(props.searchForm.AttentionCode),
+//       PollutantType: Form.createFormField(props.searchForm.PollutantType),
+//     };
+//   },
+//   onFieldsChange(props, fields) {
+//     props.dispatch({
+//       type: 'abnormalResRate/updateState',
+//       payload: {
+//         searchForm: {
+//           ...props.searchForm,
+//           ...fields,
+//         },
+//       },
+//     })
+//   },
+// })
 class index extends PureComponent {
   state = {
     showTime: true,
@@ -99,7 +110,7 @@ class index extends PureComponent {
                 searchForm:{
                 AttentionCode: values.AttentionCode,
                 PollutantType: values.PollutantType,
-                // RegionCode: values.RegionCode ? values.RegionCode:'',
+                RegionCode: values.RegionCode ? values.RegionCode:'',
                 dataType: values.dataType,
                 beginTime: beginTime,
                 endTime: endTime,
@@ -258,18 +269,34 @@ class index extends PureComponent {
     if (values.time && values.time[1]) {
       endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
     }
-    this.props.dispatch({
-      type: "abnormalResRate/getTableDataSource",
-      payload: !this.props.searchForm.PollutantType? {
-        AttentionCode: values.AttentionCode,
-        PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode ? values.RegionCode:'',
-        dataType: values.dataType,
-        beginTime: beginTime,
-        endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
-      }:this.props.searchForm
-    })
+    if(!this.props.searchForm.PollutantType){
+      this.props.dispatch({
+        type: "abnormalResRate/getTableDataSource",
+        payload:  {
+          AttentionCode: values.AttentionCode,
+          PollutantType: values.PollutantType,
+          RegionCode: values.RegionCode ? values.RegionCode:'',
+          dataType: values.dataType,
+          beginTime: beginTime,
+          endTime: endTime,
+          // OperationPersonnel:this.state.operationpersonnel
+        }
+      })
+    }else{  //从二级页面返回
+
+      this.props.form.setFieldsValue({
+        PollutantType:this.props.searchForm.PollutantType,
+        RegionCode: this.props.searchForm.RegionCode,
+        AttentionCode: this.props.searchForm.AttentionCode,
+        dataType: this.props.searchForm.dataType,
+      })
+
+      this.props.dispatch({
+        type: "abnormalResRate/getTableDataSource",
+        payload: this.props.searchForm
+      }) 
+    }
+
     this.setState({
       queryCondition: {
         AttentionCode: values.AttentionCode,

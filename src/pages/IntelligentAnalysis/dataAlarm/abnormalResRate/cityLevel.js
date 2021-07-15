@@ -226,7 +226,6 @@ class index extends PureComponent {
     // let values = this.props.form.getFieldsValue();
 
     let values = this.props.searchForm;
-    console.log(this.props.searchForm)
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
