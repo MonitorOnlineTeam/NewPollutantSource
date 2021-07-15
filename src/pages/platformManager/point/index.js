@@ -581,7 +581,7 @@ export default class MonitorPoint extends Component {
                         </Tooltip></> }
                     
 
-                     {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} overlay={ menu }>
+                     {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
                         </a>
