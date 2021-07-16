@@ -603,6 +603,7 @@ class SmokeReportPage extends PureComponent {
               </Select>
               <label>企业列表:</label><Select
                 allowClear
+                showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="企业列表"
                 maxTagCount={2}

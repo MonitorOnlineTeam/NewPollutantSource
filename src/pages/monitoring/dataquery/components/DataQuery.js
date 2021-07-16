@@ -304,7 +304,7 @@ class DataQuery extends Component {
       payload:historyparams.datatype==='hour'|| historyparams.datatype==='day'? { IsSupplyData:true} : {},
     });
   }else{
-    message.error('污染物列表为空，请添加污染物！')
+    message.error(' ')
   }
   };
 
