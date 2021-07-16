@@ -97,26 +97,26 @@ class index extends Component {
       },
       zoomchange: (value) => {
         if (_thismap.getZoom() <= this.state.zoom) {
-          props.dispatch({
-            type: "home/updateState",
-            payload: {
-              // currentEntInfo: {},
-              currentMarkersList: this.props.allEntAndPointList
-            }
-          })
-          if (this.state.showType === "point") {
-            props.dispatch({
-              type: "home/updateState",
-              payload: {
-                currentEntInfo: {},
-              }
-            })
+          // props.dispatch({
+          //   type: "home/updateState",
+          //   payload: {
+          //     // currentEntInfo: {},
+          //     currentMarkersList: this.props.allEntAndPointList
+          //   }
+          // })
+          // if (this.state.showType === "point") {
+          //   props.dispatch({
+          //     type: "home/updateState",
+          //     payload: {
+          //       currentEntInfo: {},
+          //     }
+          //   })
             this.setState({
               currentPoint: undefined,
               DGIMN: null
             })
-          }
-          this.setState({ showType: "ent" })
+          // }
+          // this.setState({ showType: "ent" })
         } else {
           this.setState({ showType: "point" })
         }
@@ -605,7 +605,7 @@ class index extends Component {
             {
               // currentEntInfo.title && <div>
               //   <span>企业</span> <br />
-              //   <span style={{color:'red'}}>{currentEntInfo.title}</span>
+              //          <span style={{color:'red'}}>{currentEntInfo.title}</span>
               // </div>
             }
             {
