@@ -8,11 +8,10 @@ import {
 } from 'antd'
 import { connect } from 'dva';
 const { Option } = Select;
-
-@connect(({ loading, common }) => ({
-  enterpriseAndPointList: common.enterpriseAndPointList,
+@connect(({ loading, common,autoForm }) => ({  enterpriseAndPointList: common.enterpriseAndPointList,
   industryTreeList: common.industryTreeList,
-  level: common.level
+  level: common.level,
+  regionList:autoForm.regionList
 }))
 class SdlCascader extends Component {
   constructor(props) {
@@ -47,18 +46,18 @@ class SdlCascader extends Component {
     //   }
     // })
     if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId){
-      console.log()
-      !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
-      // payload: {
-      //   ConfigId: configId,
-      //   ValueField: itemValue,
-      //   TextField: itemName
-      // },
-      payload: { PointMark: '2'},
-      callback: (res) => {
-        this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
-      }
-    })
+    //   !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
+    //   // payload: {
+    //   //   ConfigId: configId,
+    //   //   ValueField: itemValue,
+    //   //   TextField: itemName
+    //   // },
+    //   payload: { PointMark: '2'},
+    //   callback: (res) => {
+    //     this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
+    //   }
+    // })
+     this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) })
     }else{
       !data.length && this.props.dispatch({type: "common/getIndustryTree",
       payload: {
@@ -73,12 +72,18 @@ class SdlCascader extends Component {
     }
 
   }
+  componentDidUpdate(props){
+    const { regionList,configId, itemName } = this.props;
+    if (props.regionList !== regionList && (itemName === 'dbo.T_Cod_Region.RegionName' || !configId)) {
+      this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }) 
 
-
+   }
+    
+  }
   industryTreeListFormat = (data,i)=>{
     const { selectType } = this.props;
     let levelNum = selectType&&selectType.split(",")[0] || 999;
-  if(data.length>0 && i<= levelNum ){
+  if(data&&data.length>0 && i<= levelNum ){
     i++;
     return data.map(item=>{
       return {
@@ -114,7 +119,6 @@ class SdlCascader extends Component {
     //   )
     // }
     let onSelect = selectType&&selectType.split(",")[1] || '是';
-
     return (
       <Cascader
         {...this.props}
@@ -123,8 +127,7 @@ class SdlCascader extends Component {
         showSearch={(inputValue, path) => {
           return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
         }}
-        changeOnSelect={onSelect==='是'?true : false }
-        
+        hangeOnSelect={onSelect==='是'?true : false }
       />
     );
   }

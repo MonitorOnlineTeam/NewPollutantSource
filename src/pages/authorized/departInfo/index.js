@@ -251,6 +251,7 @@ const rightTableColumns = [
   showGroupRegionFilter: departinfo.showGroupRegionFilter,
   btnloading: loading.effects['departinfo/insertdepartinfo'],
   btnloading1: loading.effects['departinfo/upddepartinfo'],
+  insertregionbyuserLoading: loading.effects['departinfo/insertregionbyuser'],
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -1073,7 +1074,7 @@ class DepartIndex extends Component {
     }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { btnloading, btnloading1 } = this.props;
+    const { btnloading, btnloading1,insertregionbyuserLoading } = this.props;
     const { targetKeys, disabled, showSearch,sortTitle } = this.state;
 
     const formItemLayout = {
@@ -1298,6 +1299,8 @@ class DepartIndex extends Component {
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
                 width={900}
+                confirmLoading={insertregionbyuserLoading}
+                
               >
                 {this.props.GetRegionByDepID ? (
                   <Spin
@@ -1340,6 +1343,7 @@ class DepartIndex extends Component {
                 onOk={this.handleDataOK}
                 destroyOnClose={true}
                 onCancel={this.handleCancel}
+
                 width={900}
                 // destroyOnClose
               >

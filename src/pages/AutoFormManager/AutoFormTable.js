@@ -112,9 +112,9 @@ class AutoFormTable extends PureComponent {
         },
       },
     });
-    setTimeout(() => {
-      this.loadDataSource();
-    }, 0);
+    // setTimeout(() => {
+    //   this.loadDataSource();
+    // }, 0);
   }
 
   onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -326,7 +326,8 @@ class AutoFormTable extends PureComponent {
 
 
   componentWillReceiveProps(nextProps) {
-    if ((JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) || (this.props.configId !== nextProps.configId)) {
+    // if ((JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) || (this.props.configId !== nextProps.configId)) {
+    if (JSON.stringify(this.props.searchParams) !== JSON.stringify(nextProps.searchParams)) {
       this.props.dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
