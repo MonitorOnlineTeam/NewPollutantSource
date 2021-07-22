@@ -97,26 +97,26 @@ class index extends Component {
       },
       zoomchange: (value) => {
         if (_thismap.getZoom() <= this.state.zoom) {
-          props.dispatch({
-            type: "home/updateState",
-            payload: {
-              // currentEntInfo: {},
-              currentMarkersList: this.props.allEntAndPointList
-            }
-          })
-          if (this.state.showType === "point") {
-            props.dispatch({
-              type: "home/updateState",
-              payload: {
-                currentEntInfo: {},
-              }
-            })
+          // props.dispatch({
+          //   type: "home/updateState",
+          //   payload: {
+          //     // currentEntInfo: {},
+          //     currentMarkersList: this.props.allEntAndPointList
+          //   }
+          // })
+          // if (this.state.showType === "point") {
+          //   props.dispatch({
+          //     type: "home/updateState",
+          //     payload: {
+          //       currentEntInfo: {},
+          //     }
+          //   })
             this.setState({
               currentPoint: undefined,
               DGIMN: null
             })
-          }
-          this.setState({ showType: "ent" })
+          // }
+          // this.setState({ showType: "ent" })
         } else {
           this.setState({ showType: "point" })
         }
@@ -457,7 +457,8 @@ class index extends Component {
       taskCountLoading,
       exceptionProcessingLoading,
       mounthOverData,
-      homePage
+      homePage,
+      pollutantTypeList
     } = this.props;
 
     const { pollutantType } = this.state;
@@ -604,7 +605,7 @@ class index extends Component {
             {
               // currentEntInfo.title && <div>
               //   <span>企业</span> <br />
-              //   <span style={{color:'red'}}>{currentEntInfo.title}</span>
+              //          <span style={{color:'red'}}>{currentEntInfo.title}</span>
               // </div>
             }
             {
@@ -621,7 +622,7 @@ class index extends Component {
                 position: 'absolute',
                 top: '2%',
                 left: 430,
-                zIndex: 100
+                zIndex: 200
               }}
             >
               <Radio.Group style={{}} defaultValue={this.state.radioDefaultValue} buttonStyle="solid" size="default" onChange={this.onRadioChange}>
@@ -634,7 +635,7 @@ class index extends Component {
               style={{
                 position: 'absolute',
                 top: '2%',
-                left: 650,
+                left:pollutantTypeList.length==4? 650 : 720,
                 zIndex: 100
               }}
             >
