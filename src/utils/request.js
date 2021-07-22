@@ -4,8 +4,9 @@ import CryptoJS from 'crypto-js';
 
 export async function post(url, params) {
   let body = JSON.stringify(params);
-  // if (true) {
-  if (process.env.NODE_ENV === 'production') {
+  
+  let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
+  if (sysConfigInfo.ClearTransmission === '0') {
     body = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9PTfFDBY133QIDAQAB'), {
       iv: CryptoJS.enc.Utf8.parse('DLFRAME/GjdnSp9P'),
       mode: CryptoJS.mode.CBC,
@@ -30,8 +31,8 @@ export async function get(url, params, flag) {
       url += `&${paramsArray.join('&')}`;
     }
 
-    // if (true) {
-    if (process.env.NODE_ENV === 'production') {
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
+    if (sysConfigInfo.ClearTransmission === '0') {
       const urlbehinds = url.split('?').map(item => ({ item }));
       if (urlbehinds.length > 1) {
         if (Object.keys(urlbehinds[1]).length !== 0) {

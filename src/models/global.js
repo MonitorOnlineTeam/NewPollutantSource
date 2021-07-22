@@ -123,7 +123,7 @@ export default Model.extend({
         } catch (e) {
           console.log('WebSocketAddress获取失败');
         }
-
+        localStorage.setItem('sysConfigInfo', JSON.stringify(response.Datas))
         yield put({
           type: 'setConfigInfo',
           payload: {
