@@ -375,16 +375,16 @@ export default class PersonData extends Component {
 
               }
            },
+          }).then(()=>{
+            this.setState({
+              visible:false,
+             uid:cuid(),
+             uidWater:cuid(),
+             uidGas:cuid(),
+             },()=>{
+              this.getTableData();
+            })
           })
-
-        this.setState({
-             visible:false,
-            uid:cuid(),
-            uidWater:cuid(),
-            uidGas:cuid(),
-        },()=>{
-          this.getTableData();
-        })
       }
       }
     });

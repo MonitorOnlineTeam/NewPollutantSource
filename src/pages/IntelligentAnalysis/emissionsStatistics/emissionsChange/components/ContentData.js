@@ -129,6 +129,7 @@ export default class EntTransmissionEfficiency extends Component {
          PollutantType:'1',
          AttentionCode:'' },
       callback:(res)=>{  
+        if(res){
         dispatch({type: pageUrl.updateState, payload: { parmarType:'EntCode' }, });
         dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
           payload: {  EntCode: res },
@@ -147,6 +148,7 @@ export default class EntTransmissionEfficiency extends Component {
           
           }
       })
+    }
     }
   
   });

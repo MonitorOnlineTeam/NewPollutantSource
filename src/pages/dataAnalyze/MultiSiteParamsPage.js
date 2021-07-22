@@ -183,12 +183,13 @@ class MultiSiteParamsPage extends PureComponent {
         }
       },
       tooltip: {
-        trigger: 'item',
+        trigger: 'axis',
+        // trigger: 'item',
         // axisPointer: {
         //   type: 'cross',
         //   animation: false,
         // },
-        ...otherProps
+        ...otherProps,
         // formatter: function (params, ticket, callback) {
         //   console.log("params=",params)
         //   let format = `${params[0].axisValue}: `
