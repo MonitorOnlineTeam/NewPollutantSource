@@ -443,7 +443,6 @@ export default class Index extends Component {
 
     children = () => { //企业列表
       const { priseList } = this.props;
-  
       const selectList = [];
       if (priseList.length > 0) {
         priseList.map(item => {

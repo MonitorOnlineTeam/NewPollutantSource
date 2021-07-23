@@ -238,7 +238,7 @@ export default Model.extend({
             waterType:response.Datas.waterType
           });
         }else{
-
+          yield update({ getSewageFlowLoading: false});
 
       }
     },
@@ -327,7 +327,7 @@ export default Model.extend({
         yield update({
           priseList: response.Datas,
         });
-        response.Datas.length>0? callback(response.Datas[0].EntCode) : null
+        response.Datas.length>0? callback(response.Datas[0].EntCode) :callback()
       }
     },
     *exportOverDataRate({ callback, payload }, { call, put, update, select }) {
