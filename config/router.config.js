@@ -1866,6 +1866,12 @@ const routes = [
                     component: './dataSearch/monitor/alarmInfo',
 
                   },
+                  {
+                    name: 'historyparame',  //报警信息跳转详情页 历史管控参数  
+                    path: '/dataSearch/monitor/historyparameDetail',
+                    component: './dynamicControl/controlData/historyparame',
+
+                  },
                   { //超标数据
                     name: 'alarmOverrecord',
                     path: '/dataSearch/monitor/alarm/overrecord',

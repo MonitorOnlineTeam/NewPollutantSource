@@ -152,7 +152,7 @@ class TableData extends React.Component {
             record.AlarmType === "0" ? //数据异常
               <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> : 
               record.AlarmType === "12" ? //备案不符
-                <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
+                <Link to={`/dataSearch/monitor/historyparameDetail?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
                  <></>
 
           }
