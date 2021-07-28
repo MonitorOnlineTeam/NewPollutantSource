@@ -88,7 +88,13 @@ export default Model.extend({
       if (response.IsSuccess) {
         if(parmarType==='RegionCode'){
           yield update({ pointLoading: false,EntList: response.Datas.EntList, queryPar:{...queryPar,EntCode:response.Datas.EntList.length>0?response.Datas.EntList[0][0].EntCode:"",DGIMN:'',PollutantList:[]} });
-          callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
+          // callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
+          if(response.Datas.EntList.length>0){
+            callback( response.Datas.EntList[0][0].EntCode)
+         }else{
+            callback() 
+            yield update({ loading: false,PollutantList:[],PointList:[] });
+       }
         }
         if(parmarType==='EntCode'){
           yield update({pointLoading: false, PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN:"",PollutantList:[]}});

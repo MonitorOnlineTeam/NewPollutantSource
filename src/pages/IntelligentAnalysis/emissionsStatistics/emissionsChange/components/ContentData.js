@@ -131,6 +131,7 @@ export default class EntTransmissionEfficiency extends Component {
         AttentionCode: ''
       },
       callback: (res) => {
+        if(res){
         dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
         dispatch({
           type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
@@ -151,10 +152,8 @@ export default class EntTransmissionEfficiency extends Component {
           }
         })
       }
-
+    }
     });
-
-
 
   };
 
@@ -235,6 +234,7 @@ export default class EntTransmissionEfficiency extends Component {
         AttentionCode: AttentionCode ? AttentionCode : ''
       },
       callback: (res) => {
+        if(res){
         dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
         dispatch({
           type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
@@ -251,7 +251,7 @@ export default class EntTransmissionEfficiency extends Component {
           }
         })
       }
-
+    }
     });
   }
   changeRegion = (value) => { //行政区事件
