@@ -39,6 +39,7 @@ class Index extends Component {
           maxTagCount,
           maxTagTextLength,
           maxTagPlaceholder,
+          optionDatas,
         } = this.props;
         console.log('------------------默认选中的污染物---------------------------', defaultValue);
         return (
@@ -48,7 +49,7 @@ class Index extends Component {
                 allowClear={allowClear}
                 style={{ width: 200, ...style }}
                 placeholder={placeholder}
-                defaultValue={defaultValue || (allpollutant ? -1 : [])}
+                defaultValue={defaultValue || ((allpollutant && optionDatas.length) ? -1 : [])}
                 maxTagCount={maxTagCount}
                 maxTagTextLength={maxTagTextLength}
                 maxTagPlaceholder={maxTagPlaceholder}

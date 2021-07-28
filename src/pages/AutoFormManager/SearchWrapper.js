@@ -180,8 +180,8 @@ class SearchWrapper extends Component {
   }
 
   _rtnDateEl = (item) => {
-    const { dateFormat } = item;
-    const format = dateFormat.toUpperCase();
+    const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
+    const format = dateFormat || 'YYYY-MM-DD HH:mm:ss';
     if (format === "YYYY-MM" || format === "MM") {
       // 年月 、 月
       return <MonthPicker style={{ width: "100%" }} format={format} />
@@ -425,7 +425,7 @@ class SearchWrapper extends Component {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this._resetForm}>
                 重置
-                          </Button>
+              </Button>
               {
                 this.state.isShowExpand &&
                 <React.Fragment>
@@ -433,8 +433,8 @@ class SearchWrapper extends Component {
                     this.state.expand ? <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
                       展开 <DownOutlined />
                     </a> : <a style={{ marginLeft: 8 }} onClick={this._handleExpand}>
-                        收起 <UpOutlined />
-                      </a>
+                      收起 <UpOutlined />
+                    </a>
                   }
                 </React.Fragment>
               }

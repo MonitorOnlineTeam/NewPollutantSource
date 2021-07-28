@@ -25,7 +25,7 @@ const iconStyle = {
 }
 
 const beginDay = new Date().getTime() - 1000 * 60 * 60 * 24;
-const fakeY = [7, 15, 4, 12, 14, 7, 10, 8, 11, 9, 6, 13, 11, 15, 13, 6, 1, 5, 10, 9, 4, 8, 12, 4];
+const fakeY = [1, 2, 1, 3, 1, 1, 3, 2, 1, 3, 1, 2, 2, 4, 2, 3, 1, 3, 1, 1, 2, 3, 1, 1];
 const visitData = [];
 for (let i = 0; i < 24; i += 1) {
   visitData.push({
@@ -47,6 +47,8 @@ class index extends PureComponent {
     return (
       <>
         <NavigationTree
+          checkpPol="2"
+          polShow
           // polShow
           domId="#CO2Emissions"
           onItemClick={value => {
@@ -58,7 +60,7 @@ class index extends PureComponent {
           }}
         />
         <div id="CO2Emissions">
-          <BreadcrumbWrapper title="123213">
+          <BreadcrumbWrapper>
             <Card>
               <h3>{`${treeSelect.entName} - ${treeSelect.pointName}`}</h3>
               <Divider dashed style={{ marginBottom: 0 }} />
