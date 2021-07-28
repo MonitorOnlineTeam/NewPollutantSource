@@ -144,10 +144,12 @@ class index extends PureComponent {
               width: 100,
               key: 'chuzhi',
               render: (text, record) => {
-                if (record.Status === 2) {
+                if (record.Status === 2 || record.Status === 4) {
                   return <Tooltip title="应急处置">
                     <a onClick={() => {
-                      this.onSetCurrent(record.AlarmInfoCode)
+                      if(record.IsCurrent === 0 && record.Status !== 4) {
+                        this.onSetCurrent(record.AlarmInfoCode)
+                      }
                       router.push(`/emergency/disposal?code=${record.AlarmInfoCode}`)
                     }}><FormOutlined style={{ fontSize: 16 }} /></a>
                   </Tooltip>
@@ -235,7 +237,7 @@ class index extends PureComponent {
         name: record.name,
       }),
     };
-
+    console.log('selectedRowKeys=', selectedRowKeys)
     return (
       <div id="autoHeight">
         <BreadcrumbWrapper>

@@ -135,9 +135,7 @@ class ExceptionAlarm extends PureComponent {
                 itemLayout="vertical"
                 dataSource={listData}
                 size="large"
-                pagination={{
-                    pageSize: exceptionAlarm.pageSize,
-                }}
+                pagination={true}
                 renderItem={(item, key) => (
                     <List.Item
                         key={key}

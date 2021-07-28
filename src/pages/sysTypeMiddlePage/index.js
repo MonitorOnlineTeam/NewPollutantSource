@@ -27,8 +27,12 @@ class index extends PureComponent {
 
 
   onSysItemClick = (item) => {
-    console.log('item=', item)
-    window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+    let url = item.Url ? new URL(item.Url) : item.Url;
+    if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
+      window.open(url);
+    } else {
+      window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+    }
   }
 
   onLoglout = () => {
