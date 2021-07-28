@@ -21,9 +21,9 @@ class index extends PureComponent {
     const IconConfig = createFromIconfontCN({
       scriptUrl: this._SELF_.scriptUrl,
     })
-    const { style } = this.props;
+    const { style, fontSize } = this.props;
     return (
-      <IconConfig {...this.props} style={{ fontSize: 16, ...style }} />
+      <IconConfig {...this.props} style={{ fontSize: fontSize || 16, ...style }} />
     );
   }
 }

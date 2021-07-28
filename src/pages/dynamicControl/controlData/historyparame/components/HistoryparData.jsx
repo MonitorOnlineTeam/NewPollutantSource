@@ -357,6 +357,7 @@ dateCallback = (dates, dataType) => { //更新日期
               <Form.Item  className='queryConditionForm'> 
                 <Button type="primary" loading={false} htmlType="submit" style={{ marginRight: 5 }}>查询</Button>
                 <Button type="primary" loading={false} onClick={() => { this.exportData() }} style={{ marginRight: 5 }}>导出</Button>
+                {location.query&&location.query.type==='alarm' &&<Button  style={{ marginRight: 5 }} onClick={() => {   history.go(-1);  }}  >返回 </Button>}
               </Form.Item>
             </Col>
           </Row>
