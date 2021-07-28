@@ -94,7 +94,7 @@ export default Model.extend({
              callback( response.Datas.EntList[0][0].EntCode)
           }else{
              callback() 
-             yield update({ loading: false });
+             yield update({ loading: false,PollutantList:[],PointList:[]});
         }
       }
         if(parmarType==='EntCode'){

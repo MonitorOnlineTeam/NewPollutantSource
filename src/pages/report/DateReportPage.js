@@ -615,6 +615,7 @@ class DateReportPage extends PureComponent {
                 current: dateReportForm.current,
                 onChange: this.onTableChange,
                 total: dateReportForm.total,
+                pageSizeOptions:[pageSize.toString()]
               }}
             />
           </Card>
