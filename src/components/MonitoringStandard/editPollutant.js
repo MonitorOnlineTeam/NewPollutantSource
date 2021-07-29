@@ -88,6 +88,14 @@ class EditPollutant extends Component {
         } else {
           flag = true;
         }
+        if (values.UpperLimit < values.LowerLimit) {
+          message.error('错误：报警上限小于报警下限！', 3).then(() => {
+            flag = false;
+          });
+          flag = false;
+        } else {
+          flag = true;
+        }
         if (!err && flag === true) {
           that.props.dispatch({
             type: 'standardLibrary/editmonitorpointPollutant',

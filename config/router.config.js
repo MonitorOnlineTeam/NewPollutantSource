@@ -221,6 +221,12 @@ const routes = [
                 path: '/emergency/monitor',
                 component: './emergency/monitor',
               },
+              // 值班计划
+              {
+                name: 'dutyPlan',
+                path: '/emergency/dutyPlan',
+                component: './emergency/dutyPlan',
+              },
             ]
           },
           // 地理信息系统
@@ -1867,7 +1873,7 @@ const routes = [
 
                   },
                   {
-                    name: 'historyparame',  //报警信息跳转详情页 历史管控参数  
+                    name: 'historyparame',  //报警信息跳转详情页 历史管控参数
                     path: '/dataSearch/monitor/historyparameDetail',
                     component: './dynamicControl/controlData/historyparame',
 
