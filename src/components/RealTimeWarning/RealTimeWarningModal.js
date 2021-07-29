@@ -385,7 +385,7 @@ class RealTimeWarningModal extends Component {
             dataSource={chartDatas}
             rowKey="warntable"
             size="small"
-            pagination={{ pageSize: 15 }}
+            pagination={{ defaultPageSize: 15 }}
             loading={this.props.loadingRealTimeWarningDatas}
             scroll={{ y: 'calc(100vh - 490px)' }}
             rowClassName={

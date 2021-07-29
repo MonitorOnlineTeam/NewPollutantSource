@@ -23,6 +23,10 @@ export default Model.extend({
     saveEntList: [],
     saveMinganList: [],
     stepBarData: [],
+    dutyUserInfo: {
+      DutyLeader: [],
+      DutyPerson: [],
+    },
   },
   effects: {
     // 获取值班人员和值班领导信息
@@ -253,6 +257,28 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback();
         message.success('操作成功');
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取值班人员和值班领导的接口
+    *getDutyUser({ payload, callback }, { call, update, put, take, select }) {
+      const result = yield call(services.getDutyUser, payload);
+      if (result.IsSuccess) {
+        yield update({
+          dutyUserInfo: result.Datas
+        })
+        callback && callback();
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 换班
+    *shiftChangeDuty({ payload, callback }, { call, update, put, take, select }) {
+      const result = yield call(services.shiftChangeDuty, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功！')
+        callback && callback();
       } else {
         message.error(result.Message)
       }
