@@ -156,14 +156,14 @@ class ExceptionAlarm extends PureComponent {
         const { selectpoint } = this.state;
         return (
             <div style={{ maxHeight: '70vh' }}>
-                <Card
+                {/* <Card
                     bodyStyle={{ paddingTop: 0, paddingBottom: 0, marginBottom: 10 }}
                     bordered={false}
                 >
                     <PdButton DGIMN={this.props.DGIMN}
                         reloadData={() => this.reload()}
                     />
-                </Card>
+                </Card> */}
                 <Card
                     style={{ marginBottom: 10, maxHeight: '65vh', overflowY: 'auto' }}
                     bordered={false}
