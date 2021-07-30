@@ -208,7 +208,7 @@ class SdlTable extends PureComponent {
             }
           }
           bordered
-          pagination={{ pageSize: 20 }}
+          pagination={{ defaultPageSize: 20 }}
           {...this.props}
           defaultWidth={80}
           scroll={{ x: this.props.scroll && this.props.scroll.x && this.props.scroll.x || scrollXWidth, y: scrollY }}

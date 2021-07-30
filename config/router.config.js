@@ -221,6 +221,12 @@ const routes = [
                 path: '/emergency/monitor',
                 component: './emergency/monitor',
               },
+              // 值班计划
+              {
+                name: 'dutyPlan',
+                path: '/emergency/dutyPlan',
+                component: './emergency/dutyPlan',
+              },
             ]
           },
           // 地理信息系统
@@ -1841,12 +1847,12 @@ const routes = [
                   },
                 ]
               },
-              // {
-              //   // 碳排放查询
-              //   name: 'CO2Emissions',
-              //   path: '/dataSearch/CO2Emissions',
-              //   component: './dataSearch/CO2Emissions',
-              // },
+              {
+                // 碳排放查询
+                name: 'CO2Emissions',
+                path: '/dataSearch/CO2Emissions',
+                component: './dataSearch/CO2Emissions',
+              },
               {
                 // 站点数据查询
                 path: '/dataSearch/siteData',
@@ -1883,7 +1889,7 @@ const routes = [
 
                   },
                   {
-                    name: 'historyparame',  //报警信息跳转详情页 历史管控参数  
+                    name: 'historyparame',  //报警信息跳转详情页 历史管控参数
                     path: '/dataSearch/monitor/historyparameDetail',
                     component: './dynamicControl/controlData/historyparame',
 

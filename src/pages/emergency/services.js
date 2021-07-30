@@ -123,7 +123,16 @@ export async function endRecord(params) {
   return result;
 }
 
+// 获取值班人员和值班领导的接口
+export async function getDutyUser(params) {
+  const result = post('/api/rest/PollutantSourceApi/Emergency/GetDutyUser', params);
+  return result;
+}
 
-
+// 换班接口
+export async function shiftChangeDuty(params) {
+  const result = post('/api/rest/PollutantSourceApi/Emergency/ShiftChangeDuty', params);
+  return result;
+}
 
 

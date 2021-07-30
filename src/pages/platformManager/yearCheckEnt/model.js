@@ -44,7 +44,7 @@ export default Model.extend({
     entTotal: 0,
     RegionCode: '',
     EnterpriseName: '',
-    pollutantType: '1',
+    pollutantType: '',
 
     qutletQueryPar: {
       beginTime: moment()
