@@ -48,7 +48,7 @@ const pageUrl = {
   updateState: 'yearCheckEnt/updateState',
   getData: 'yearCheckEnt/getTransmissionEfficiencyForRegion',
 };
-const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns,loading, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -82,6 +82,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
           columns={columns}
           dataSource={filteredItems}
           size="small"
+          loading={loading}
           style={{ pointerEvents: listDisabled ? 'none' : null }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
@@ -146,6 +147,8 @@ const rightTableColumns = [
   {
     dataIndex: 'RegionName',
     title: '行政区',
+    ellipsis: true,
+    width:150
   },
   {
     dataIndex: 'EntName',
@@ -204,6 +207,7 @@ const rightTableColumns = [
   loading: loading.effects['yearCheckEnt/GetAnnualAssessmentEntList'],
   noSelectEnt: yearCheckEnt.noSelectEnt,
   selectEnt: yearCheckEnt.selectEnt,
+  pointloading: loading.effects['yearCheckEnt/GetAnnualAssessmentEntAndPoint'],  
 }))
 @Form.create()
 class yearCheckEnt extends Component {
@@ -647,6 +651,7 @@ class yearCheckEnt extends Component {
             leftColumns={leftTableColumns}
             rightColumns={rightTableColumns}
             style={{ width: '100%', height: '600px' }}
+            loading={this.props.pointloading}
           />
         </Modal>
       </BreadcrumbWrapper>

@@ -48,7 +48,7 @@ const pageUrl = {
   updateState: 'emissionEnt/updateState',
   getData: 'emissionEnt/getTransmissionEfficiencyForRegion',
 };
-const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns,loading, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -83,6 +83,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
           columns={columns}
           dataSource={filteredItems}
           size="small"
+          loading={loading}
           style={{ pointerEvents: listDisabled ? 'none' : null }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
@@ -99,28 +100,32 @@ const leftTableColumns = [
   {
     dataIndex: 'RegionName',
     title: '行政区',
+    ellipsis: true,
+    width:150
   },
   {
     dataIndex: 'EntName',
     title: '企业名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PointName',
     title: '监测点名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PollutantType',
@@ -143,28 +148,32 @@ const rightTableColumns = [
   {
     dataIndex: 'RegionName',
     title: '行政区',
+    ellipsis: true,
+    width:150
   },
   {
     dataIndex: 'EntName',
     title: '企业名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PointName',
     title: '监测点名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PollutantType',
@@ -200,6 +209,7 @@ const rightTableColumns = [
   loading: loading.effects['emissionEnt/GetEmissionEntList'],
   noSelectEnt: emissionEnt.noSelectEnt,
   selectEnt: emissionEnt.selectEnt,
+  pointLoading:loading.effects['emissionEnt/GetEmissionEntAndPoint']
 }))
 @Form.create()
 class emissionEnt extends Component {
@@ -655,6 +665,7 @@ class emissionEnt extends Component {
             leftColumns={leftTableColumns}
             rightColumns={rightTableColumns}
             style={{ width: '100%', height: '600px' }}
+            loading={this.props.pointLoading}
           />
         </Modal>
       </BreadcrumbWrapper>
