@@ -98,6 +98,8 @@ const leftTableColumns = [
   {
     dataIndex: 'RegionName',
     title: '行政区',
+    ellipsis: true,
+    width:150
   },
   {
     dataIndex: 'EntName',
