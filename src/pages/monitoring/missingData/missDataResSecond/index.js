@@ -156,13 +156,10 @@ export default class Index extends Component {
   }
 
   detail=(record)=>{
-debugger;
+    console.log(record)
      this.setState({DGIMN:record.DGIMN,TaskID:record.TaskID},()=>{
 
-      setTimeout(()=>{
         this.setState({visible:true})
-
-      })
      })
   }
   componentDidMount() {
@@ -544,7 +541,7 @@ handleTableChange = (pagination, filters, sorter) => {
         <Modal
           title="任务详情"
           visible={this.state.visible}
-          width='100%'
+          width='98%'
           style={{hegiht:'90%'}}
           footer={null}
           destroyOnClose={true}
