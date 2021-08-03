@@ -326,15 +326,9 @@ export default class EntTransmissionEfficiency extends Component {
       payload: { parmarType: 'DGIMN'},
     });
 
-      dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant',
+    dispatch({ type: 'emissionsChange/getEmissionsEntPointPollutant',//根据监测点获取监测因子
                payload: { DGIMN: value },
-               callback:(res)=>{
-                dispatch({ 
-                  type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
-                   payload: {  DGIMN: data },
-                   callback:(res)=>{               
-                   }
-                  })
+               callback:(data)=>{
               }
               });//获取参数列表 监测因子
 
@@ -610,14 +604,14 @@ export default class EntTransmissionEfficiency extends Component {
                 <Button type="primary" onClick={this.queryClick}>
                   查询
                 </Button>
-                <Button
+                {/* <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
                   onClick={this.template}
                   loading={exloading}
                 >
                   导出
-                </Button>
+                </Button> */}
               </Form.Item>
               </Row>
               <Row>

@@ -98,8 +98,11 @@ export default Model.extend({
         }
       }
         if(parmarType==='EntCode'){
-          yield update({pointLoading: false, PointList: response.Datas.PointList,PollutantList:[],queryPar:{...queryPar,DGIMN:response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN:"",PollutantList:[]}});
-           callback(response.Datas.PointList.length>0?response.Datas.PointList[0][0].DGIMN :'')
+          let pointList =  response.Datas.PointList[0]? response.Datas.PointList.filter(item=>{
+            return item[0].PollutantType == queryPar.PollutantType
+          }) :[]
+          yield update({pointLoading: false, PointList: pointList,queryPar:{...queryPar,DGIMN:pointList.length>0?pointList[0][0].DGIMN:"",PollutantList:[]}});
+          callback(pointList.length>0?pointList[0][0].DGIMN :'')
 
         }
         if( parmarType==='DGIMN'){
