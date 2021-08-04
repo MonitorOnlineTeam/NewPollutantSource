@@ -80,7 +80,7 @@ class FileUpload extends PureComponent {
             message.success('上传成功');
           }
         } else if (status === 'error') {
-          message.error('上传失败');
+          message.error(info.file.response.Message);
         }
       },
       onRemove(file) {

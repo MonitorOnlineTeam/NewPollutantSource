@@ -181,7 +181,7 @@ class NavigationTree extends Component {
         isFilter: this.props.isMap,
       },
       callback: data => {
-        this.loadCallback(data)
+        this.loadCallback(data, true)
       },
     })
     // this.onChangeSearch(null)
@@ -209,8 +209,19 @@ class NavigationTree extends Component {
   }
 
 
-  loadCallback = data => {
-
+  loadCallback = (data, isInit) => {
+    if (!isInit) {
+      this.props.dispatch({
+        type: 'navigationtree/updateState',
+        payload: {
+          selectTreeKeys: [],
+          overallselkeys: [],
+          overallexpkeys: [],
+          pointInfo: {},
+        }
+      })
+      this.defaultKey = 0;
+    }
     this.setState({
       EntAndPoint: data,
     }, () => {
@@ -441,6 +452,8 @@ class NavigationTree extends Component {
     value = value.toString()
     if (value == '') {
       // value = this.props.ConfigInfo.SystemPollutantType
+    } else {
+
     }
     this.setState({
       PollutantTypes: this.props.checkpPol ? this.props.checkpPol : value,

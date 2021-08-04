@@ -35,6 +35,7 @@
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.16",
     "encryptlong": "^3.1.4",
+    "ezuikit-js": "^0.2.6",
     "gg-editor": "^2.0.4",
     "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.5.0",

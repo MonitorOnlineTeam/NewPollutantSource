@@ -112,7 +112,7 @@ class AnalyzerManage extends Component {
       DeviceModel: undefined,
       Manufacturer: undefined,
       ManufacturerAbbreviation: undefined,
-      TestComponent: 123,
+      TestComponent: undefined,
       AnalyzerPrinciple: undefined,
       AnalyzerRangeMin: undefined,
       AnalyzerRangeMax: undefined,
@@ -120,7 +120,7 @@ class AnalyzerManage extends Component {
       Slope: undefined,
       Intercept: undefined,
     })
-    this.setState({ dataSource })
+    this.setState({ dataSource: [...dataSource] })
   }
 
   /** 主表值改变 */
@@ -185,40 +185,46 @@ class AnalyzerManage extends Component {
   }
 
   expandedRowRender = (record, index, indent, expanded) => {
-    const { dataSource } = this.state;
-    const columns = [
+    // const { dataSource } = this.state;
+    let dataSource = [...this.state.dataSource]
+    const columns2 = [
       {
         title: '分析仪名称',
         dataIndex: 'TestComponent',
         width: 150,
-        render: (text, record, idx) => <FormItem style={{ marginBottom: '0', width: '100%' }}>
-          {this.props.form.getFieldDecorator(`TestComponent${record.key}`, {
-            rules: [
-              { required: true, message: '请选择分析仪名称' },
-            ],
-            initialValue: text || undefined,
-          })(
-            <Select style={{ width: '100%' }} onChange={value => {
-              this.changeChildTable(index, 'TestComponent', value, idx);
-            }}>
-              {
-                this.props.TestComponent.map(item => <Option disabled={this.state.dataSource[index].Component.find(itm => itm.TestComponent === item.ChildID)} key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)
-              }
-            </Select>,
-          )}
-        </FormItem>,
+        render: (text, record, idx) => {
+          // console.log('form=', this.props.form)
+          return <FormItem style={{ marginBottom: '0', width: '100%' }}>
+            {this.props.form.getFieldDecorator(`TestComponent${record.key}`, {
+              rules: [
+                { required: true, message: '请选择分析仪名称' },
+              ],
+              initialValue: text || undefined,
+            })(
+              <Select style={{ width: '100%' }} onChange={value => {
+                this.changeChildTable(index, 'TestComponent', value, idx);
+              }}>
+                {
+                  this.props.TestComponent.map(item => <Option disabled={this.state.dataSource[index].Component.find(itm => itm.TestComponent === item.ChildID)} key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)
+                }
+              </Select>,
+            )}
+          </FormItem>
+        }
       },
       {
         title: '分析仪原理',
         dataIndex: 'AnalyzerPrinciple',
         width: 150,
-        render: (text, record, idx) => <FormItem style={{ marginBottom: '0' }}>
-          {this.props.form.getFieldDecorator(`AnalyzerPrinciple${record.key}`, {
-            initialValue: text || undefined,
-          })(
-            <Input onChange={e => { this.changeChildTable(index, 'AnalyzerPrinciple', e.target.value, idx) }} />,
-          )}
-        </FormItem>,
+        render: (text, record, idx) => {
+          return <FormItem style={{ marginBottom: '0' }}>
+            {this.props.form.getFieldDecorator(`AnalyzerPrinciple${record.key}`, {
+              initialValue: text || undefined,
+            })(
+              <Input onChange={e => { this.changeChildTable(index, 'AnalyzerPrinciple', e.target.value, idx) }} />,
+            )}
+          </FormItem>
+        }
       },
       {
         title: '最小量程',
@@ -275,23 +281,23 @@ class AnalyzerManage extends Component {
         locale: {
           emptyText: <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
             <PlusOutlined /> 添加
-        </div>,
+          </div>,
         },
       };
     } else {
       props = {
         footer: () => <div className={styles.addContent} onClick={() => { this.handleAddChild(index) }}>
           <PlusOutlined /> 添加
-      </div>,
+        </div>,
       };
     }
-    const scrollXWidth = columns.map(col => col.width || 150).reduce((prev, curr) => prev + curr, 0);
+    const scrollXWidth = columns2.map(col => col.width || 150).reduce((prev, curr) => prev + curr, 0);
     this._SELF_.scrollXWidth = scrollXWidth;
     return <Table
       {...props}
       rowKey={record => record.key}
-      columns={columns}
-      dataSource={dataSource[index].Component}
+      columns={columns2}
+      dataSource={[...dataSource[index].Component]}
       scroll={{ x: scrollXWidth }}
       pagination={false}
       bordered={false}
@@ -304,7 +310,6 @@ class AnalyzerManage extends Component {
     const { formItemLayout, id, title, scrollXWidth } = this._SELF_;
     const { form: { getFieldDecorator }, qualityControlFormData, loading } = this.props;
     const columns = [
-
       {
         title: 'CEMS名称',
         dataIndex: 'Type',
@@ -381,7 +386,7 @@ class AnalyzerManage extends Component {
           title=
           {<Button onClick={this.handleAdd} type="primary">
             添加
-              </Button>}
+          </Button>}
           type="inner"
           bordered={false}
         >
@@ -392,26 +397,27 @@ class AnalyzerManage extends Component {
               // defaultExpandAllRows={!!id}
               columns={columns}
               dataSource={dataSource}
+              expandable={{ expandedRowRender: this.expandedRowRender }}
               scroll={{ x: 300, y: '70vh' }}
-              expandedRowRender={this.expandedRowRender}
+              // expandedRowRender={this.expandedRowRender}
               defaultExpandAllRows
-              onExpand={(expanded, record) => {
-                  if (expanded) {
-                    this.setState({
-                      expandedRowKeys: [
-                        ...expandedRowKeys,
-                        record.key,
-                      ],
-                    })
-                  } else {
-                    const rowKeys = _.remove(expandedRowKeys, n => n !== record.key);
-                    this.setState({
-                      expandedRowKeys: [
-                        ...rowKeys,
-                      ],
-                    })
-                }
-              }}
+              // onExpand={(expanded, record) => {
+              //   if (expanded) {
+              //     this.setState({
+              //       expandedRowKeys: [
+              //         ...expandedRowKeys,
+              //         record.key,
+              //       ],
+              //     })
+              //   } else {
+              //     const rowKeys = _.remove(expandedRowKeys, n => n !== record.key);
+              //     this.setState({
+              //       expandedRowKeys: [
+              //         ...rowKeys,
+              //       ],
+              //     })
+              //   }
+              // }}
               expandedRows={expandedRows => {
                 console.log('expandedRows=', expandedRows)
               }}
