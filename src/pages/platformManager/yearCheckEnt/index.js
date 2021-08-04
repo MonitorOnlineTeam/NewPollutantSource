@@ -48,7 +48,7 @@ const pageUrl = {
   updateState: 'yearCheckEnt/updateState',
   getData: 'yearCheckEnt/getTransmissionEfficiencyForRegion',
 };
-const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns,loading, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -76,13 +76,13 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
         },
         selectedRowKeys: listSelectedKeys,
       };
-
       return (
         <Table
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredItems}
           size="small"
+          loading={loading}
           style={{ pointerEvents: listDisabled ? 'none' : null }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
@@ -99,28 +99,32 @@ const leftTableColumns = [
   {
     dataIndex: 'RegionName',
     title: '行政区',
+    ellipsis: true,
+    width:150
   },
   {
     dataIndex: 'EntName',
     title: '企业名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PointName',
     title: '监测点名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PollutantType',
@@ -143,28 +147,32 @@ const rightTableColumns = [
   {
     dataIndex: 'RegionName',
     title: '行政区',
+    ellipsis: true,
+    width:150
   },
   {
     dataIndex: 'EntName',
     title: '企业名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PointName',
     title: '监测点名称',
-    render: (text, record, index) => {
-      if (text.length > 10) {
-        return text.substr(0, 10) + '...';
-      } else {
-        return text;
-      }
-    },
+    ellipsis: true,
+    // render: (text, record, index) => {
+    //   if (text.length > 10) {
+    //     return text.substr(0, 10) + '...';
+    //   } else {
+    //     return text;
+    //   }
+    // },
   },
   {
     dataIndex: 'PollutantType',
@@ -199,6 +207,7 @@ const rightTableColumns = [
   loading: loading.effects['yearCheckEnt/GetAnnualAssessmentEntList'],
   noSelectEnt: yearCheckEnt.noSelectEnt,
   selectEnt: yearCheckEnt.selectEnt,
+  pointloading: loading.effects['yearCheckEnt/GetAnnualAssessmentEntAndPoint'],  
 }))
 @Form.create()
 class yearCheckEnt extends Component {
@@ -550,9 +559,10 @@ class yearCheckEnt extends Component {
                   {this.entChildren()}
                 </Select>
               </FormItem>
+              <FormItem>
               <Button
                 type="primary"
-                style={{ marginLeft: 46 }}
+                // style={{ marginLeft: 46 }}
                 onClick={() => {
                   this.getEntData();
                 }}
@@ -600,6 +610,7 @@ class yearCheckEnt extends Component {
               <span style={{ color: 'red', marginLeft: 20, fontSize: 12 }}>
                 设置年度参与国家有效传输率考核的企业监测点名单
               </span>
+              </FormItem>
             </Row>
           </Form>
           <SdlTable
@@ -640,6 +651,7 @@ class yearCheckEnt extends Component {
             leftColumns={leftTableColumns}
             rightColumns={rightTableColumns}
             style={{ width: '100%', height: '600px' }}
+            loading={this.props.pointloading}
           />
         </Modal>
       </BreadcrumbWrapper>

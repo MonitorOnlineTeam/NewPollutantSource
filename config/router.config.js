@@ -805,6 +805,7 @@ const routes = [
                     path: '/operations/usermanager/certificatemanage/:configId',
                     component: './OperationSysManager/CertificateManage/',
                   },
+
                 ],
               },
               {
@@ -871,9 +872,24 @@ const routes = [
                 component: './operations/CommandDispatchReport',
               },
               {
-                path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                path: '/operations/operationEntManage/details/:TaskID/:DGIMN',
                 name: 'CommandDispatchReportDetails',
                 component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+              },
+              {
+                name:'operationUnit', //运维单位管理
+                path: '/operations/operationEntManage/operationUnit/:configId',
+                component: './OperationSysManager/operationEntManage/operationUnit',
+              },
+              {
+                name:'operationPerson', //运维人员管理
+                path: '/operations/operationEntManage/operationPerson/:configId',
+                component: './OperationSysManager/operationEntManage/operationPerson',
+              },
+              {
+                name:'operationPerson', //运维人员管理  详情
+                path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                component: './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
               },
             ],
           },

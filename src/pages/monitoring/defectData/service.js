@@ -29,7 +29,8 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportGetAlarmDataList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
+    // '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
+    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetMissDataList',
     params,
     null,
   );

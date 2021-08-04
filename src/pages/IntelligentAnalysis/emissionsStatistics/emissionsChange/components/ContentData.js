@@ -131,6 +131,7 @@ export default class EntTransmissionEfficiency extends Component {
         AttentionCode: ''
       },
       callback: (res) => {
+        if(res){
         dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
         dispatch({
           type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
@@ -151,10 +152,8 @@ export default class EntTransmissionEfficiency extends Component {
           }
         })
       }
-
+    }
     });
-
-
 
   };
 
@@ -235,10 +234,11 @@ export default class EntTransmissionEfficiency extends Component {
         AttentionCode: AttentionCode ? AttentionCode : ''
       },
       callback: (res) => {
+        if(res){
         dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
         dispatch({
           type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
-          payload: { EntCode: res },
+          payload: { EntCode: res},
           callback: (data) => {
             dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
             dispatch({
@@ -251,7 +251,7 @@ export default class EntTransmissionEfficiency extends Component {
           }
         })
       }
-
+    }
     });
   }
   changeRegion = (value) => { //行政区事件
@@ -304,7 +304,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
-      payload: { EntCode: value },
+      payload: { EntCode: value,PollutantType:this.props.PollutantType },
       callback: (data) => {
         dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
         dispatch({
@@ -334,12 +334,6 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'emissionsChange/getEmissionsEntPointPollutant',
       payload: { DGIMN: value },
       callback: (res) => {
-        dispatch({
-          type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
-          payload: { DGIMN: data },
-          callback: (res) => {
-          }
-        })
       }
     });//获取参数列表 监测因子
 
@@ -617,14 +611,14 @@ export default class EntTransmissionEfficiency extends Component {
                   <Button type="primary" onClick={this.queryClick}>
                     查询
                   </Button>
-                  <Button
+                  {/* <Button
                     style={{ margin: '0 5px' }}
                     icon={<ExportOutlined />}
                     onClick={this.template}
                     loading={exloading}
                   >
                     导出
-                  </Button>
+                  </Button> */}
                 </Form.Item>
               </Row>
               <Row>

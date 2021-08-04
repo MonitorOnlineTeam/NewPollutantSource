@@ -86,6 +86,7 @@ class EditorAddMode extends React.Component {
       let { visible } = this.state;
       return  <FileViewer
       style={{width:"100%"}}
+      className='qualityProg'
       fileType={type}
       filePath={`/upload/${seeEchoData.ProgrammeFileName}`}
       onError={this.onError}/>

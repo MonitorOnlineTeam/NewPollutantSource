@@ -155,7 +155,7 @@ class DetailsPage extends PureComponent {
               导出
             </Button>
             <Divider type="vertical" />
-            <Button type="dashed" onClick={() => router.push("/dataSearch/abnormalData")}>
+            <Button type="dashed" onClick={() => router.push("/dataquerymanager/abnormalData")}>
               返回
             </Button>
           </Row>

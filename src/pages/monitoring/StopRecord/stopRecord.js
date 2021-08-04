@@ -346,26 +346,29 @@ debugger
     }
 
     onChange = (PageIndex, PageSize) => {
+        console.log(2222)
         this.loadData(PageIndex,PageSize);
     }
     ShowSizeChange= (PageIndex, PageSize) => {
-        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
+        console.log(111)
+        this.loadData(PageIndex,PageSize);
+        // const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
 
-        this.props.dispatch({
-            type:pageUrl.GetStopList,
-            payload:{
-                BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
-                EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
-                RegionCode: regionValue == undefined ?'':regionValue,
-                EntCode: entValue== undefined ?'':entValue,
-                DGIMN: pointValue== undefined ?'':pointValue,
-                Status: voucher== undefined ?'':voucher,
-                PageSize:PageSize,
-                PageIndex:PageIndex
-            }
-        })
+        // this.props.dispatch({
+        //     type:pageUrl.GetStopList,
+        //     payload:{
+        //         BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        //         BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        //         EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        //         EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        //         RegionCode: regionValue == undefined ?'':regionValue,
+        //         EntCode: entValue== undefined ?'':entValue,
+        //         DGIMN: pointValue== undefined ?'':pointValue,
+        //         Status: voucher== undefined ?'':voucher,
+        //         PageSize:PageSize,
+        //         PageIndex:PageIndex
+        //     }
+        // })
     }
 
     lookChange=(fileList)=>{
@@ -518,7 +521,7 @@ debugger
                     pageSize: this.props.PageSize,
                     current: this.props.PageIndex,
                     onChange: this.onChange,
-                    onShowSizeChange: this.ShowSizeChange,
+                    // onShowSizeChange: this.ShowSizeChange,
                     pageSizeOptions: ['20', '30', '40', '100'],
                     total: this.props.total,
                 }} 
