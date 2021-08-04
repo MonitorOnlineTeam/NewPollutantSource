@@ -1847,12 +1847,12 @@ const routes = [
                   },
                 ]
               },
-              {
-                // 碳排放查询
-                name: 'CO2Emissions',
-                path: '/dataSearch/CO2Emissions',
-                component: './dataSearch/CO2Emissions',
-              },
+              // {
+              //   // 碳排放查询
+              //   name: 'CO2Emissions',
+              //   path: '/dataSearch/CO2Emissions',
+              //   component: './dataSearch/CO2Emissions',
+              // },
               {
                 // 站点数据查询
                 path: '/dataSearch/siteData',
