@@ -227,7 +227,7 @@ class yearCheckEnt extends Component {
   }
 
   componentDidMount() {
-    this.getTableData();
+    // this.getTableData();
     this.props.dispatch({
       type: 'autoForm/getRegions',
       payload: {
