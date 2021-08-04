@@ -877,17 +877,17 @@ const routes = [
                 component: './EmergencyTodoList/EmergencyDetailInfoLayout',
               },
               {
-                name:'operationUnit', //运维单位管理
+                name: 'operationUnit', //运维单位管理
                 path: '/operations/operationEntManage/operationUnit/:configId',
                 component: './OperationSysManager/operationEntManage/operationUnit',
               },
               {
-                name:'operationPerson', //运维人员管理
+                name: 'operationPerson', //运维人员管理
                 path: '/operations/operationEntManage/operationPerson/:configId',
                 component: './OperationSysManager/operationEntManage/operationPerson',
               },
               {
-                name:'operationPerson', //运维人员管理  详情
+                name: 'operationPerson', //运维人员管理  详情
                 path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
                 component: './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
               },
@@ -1116,10 +1116,11 @@ const routes = [
               {
                 name: 'videopreview',
                 path: '/monitoring/videopreview',
-                component: `${config.VideoServer === 0
-                  ? './monitoring/videopreview/hkvideo/index'
-                  : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                // component: `${JSON.parse(window.localStorage.getItem('sysConfigInfo')).VideoServer === 0
+                //   ? './monitoring/videopreview/hkvideo/index'
+                //   : './monitoring/videopreview/ysyvideo/VideoReact'
+                //   }`,
+                component: './monitoring/videopreview',
               },
               {
                 name: 'realtimedata',
@@ -1847,12 +1848,12 @@ const routes = [
                   },
                 ]
               },
-              {
-                // 碳排放查询
-                name: 'CO2Emissions',
-                path: '/dataSearch/CO2Emissions',
-                component: './dataSearch/CO2Emissions',
-              },
+              // {
+              //   // 碳排放查询
+              //   name: 'CO2Emissions',
+              //   path: '/dataSearch/CO2Emissions',
+              //   component: './dataSearch/CO2Emissions',
+              // },
               {
                 // 站点数据查询
                 path: '/dataSearch/siteData',
