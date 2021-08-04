@@ -56,10 +56,10 @@
      }
      if (status >= 404 && status < 422 || status === 500) {
        // router.push('/exception/404');
-       notification.error({
-         message: `请求错误 ${status}: ${url}`,
-         description: errorText,
-       });
+      //  notification.error({
+      //    message: `请求错误 ${status}: ${url}`,
+      //    description: errorText,
+      //  });
      }
      // notification.error({
      //   message: `请求错误 ${status}: ${url}`,

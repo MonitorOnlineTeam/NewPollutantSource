@@ -42,7 +42,7 @@ export default Model.extend({
   },
   effects: {
     /** 萤石云视频链接 */
-    *ysyvideourl({ payload }, { call, update, select }) {
+    *ysyvideourl({ payload, callback }, { call, update, select }) {
       const { ysyvideoListParameters } = yield select(state => state.videodata);
       const body = {
         VedioCameraID: payload.VedioCameraID,
@@ -50,6 +50,7 @@ export default Model.extend({
       const result = yield call(getysyList, body);
       let temprealurl = 'nodata';
       if (result.IsSuccess) {
+        callback && callback(result.Datas);
         const obj = result.Datas[0];
         if (obj) {
           if (payload.type === 1) {
@@ -114,7 +115,7 @@ export default Model.extend({
       const body = {
         DGIMN: payload.dgimn,
       };
-      const res = yield call(getvideolist, body);
+      const res = yield call(getvideolist, payload);
       if (res.IsSuccess && res.Datas.length > 0) {
         yield update({
           videoList: res.Datas,

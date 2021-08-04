@@ -357,7 +357,7 @@ class YsyShowVideo extends Component {
         Empty.PRESENTED_IMAGE_SIMPLE
       } description="暂无视频数据"
       /></div ></Card>);
-    }
+    } 
     return (
       <div style={{ height: 'calc(100vh - 230px)', width: '100%', margin: '20px 0px 20px 0px', ...this.props.style }}>
         <Row gutter={48} style={{ height: '100%', margin: '0px' }}>
