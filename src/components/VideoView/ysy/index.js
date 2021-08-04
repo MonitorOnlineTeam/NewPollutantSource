@@ -67,7 +67,7 @@ class YSYManagerIndex extends Component {
             type: 'ysyvideo/DeleteCamera',
             payload: {
                 CameraMonitorID: id,
-                // PointCode: this.props.match.params.Pointcode,
+                PointCode: this.props.DGIMN,
             },
         });
     }
@@ -89,7 +89,7 @@ class YSYManagerIndex extends Component {
                     payload: {
                         SerialNumber: FormData.VedioCamera_No,
                         callback: result => {
-                            
+
                             if (result.Datas) {
                                 dispatch({
                                     type: 'ysyvideo/AddDevice',
@@ -161,7 +161,7 @@ class YSYManagerIndex extends Component {
                 //                 返回上级
                 // </Button></span>}
                 >
-                    <SearchWrapper configId="VideoCamera" />
+                    <SearchWrapper configId="VideoCamera" searchParams={pointDataWhere} />
                     <AutoFormTable
                         style={{ marginTop: 10 }}
                         configId="CameraMonitor"
@@ -198,8 +198,7 @@ class YSYManagerIndex extends Component {
                                         onClick={() => {
                                             dispatch(
                                                 routerRedux.push(
-                                                    `/platformconfig/ysyshowvideo/${
-                                                    row['dbo.T_Bas_VideoCamera.VedioCamera_ID']
+                                                    `/platformconfig/ysyshowvideo/${row['dbo.T_Bas_VideoCamera.VedioCamera_ID']
                                                     }/${DGIMN}`,
                                                 ),
                                             );
