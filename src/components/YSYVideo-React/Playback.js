@@ -8,7 +8,7 @@ const style = {
   fontSize: '16px',
   fontWeight: 500,
   textAlign: 'center',
-  paddingTop: '50%',
+  paddingTop: '20%',
 }
 
 @connect(({ loading, global }) => ({

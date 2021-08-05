@@ -448,7 +448,7 @@ class RealTimeWarningModal extends Component {
                                 <Col span={3}>{this.getPollutantSelect()}</Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col span={24}>
                                     {
                                         this.renderWarningDetailsCharts()
                                     }

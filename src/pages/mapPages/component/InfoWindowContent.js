@@ -272,18 +272,20 @@ class InfoWindowContent extends PureComponent {
               }}
             >
               进入站点
-          </Button>
-            <Button
-              type="primary"
-              size="small"
-              style={{ marginTop: 10 }}
-              onClick={() => {
-                let params = { ID: "4a805258-b105-49b2-90bb-1189604b589b", Name: "一企一档管理系统", TipsName: "ReactShow", CodeList: "", EntCode: selectedPointInfo.EntCode, EntName: selectedPointInfo.Abbreviation }
-                window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(params)}`)
-              }}
-            >
-              进入企业
-          </Button>
+            </Button>
+            {
+              selectedPointInfo.BaseType === 1 && <Button
+                type="primary"
+                size="small"
+                style={{ marginTop: 10 }}
+                onClick={() => {
+                  let params = { ID: "4a805258-b105-49b2-90bb-1189604b589b", Name: "一企一档管理系统", TipsName: "ReactShow", CodeList: "", EntCode: selectedPointInfo.EntCode, EntName: selectedPointInfo.Abbreviation }
+                  window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(params)}`)
+                }}
+              >
+                进入企业
+              </Button>
+            }
           </div>
           {
             selectedPointInfo.type === '5' && selectedPointInfo.AQI !== '-' ?
