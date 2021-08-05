@@ -77,7 +77,7 @@ export default class MonitorPoint extends Component {
       DGIMN: '',
       FormData: null,
       tabKey: "1",
-      MNVisible:false
+      MNVisible:false,
     };
   }
 
@@ -389,27 +389,31 @@ export default class MonitorPoint extends Component {
   }
   onSubmitMN= e =>{
     const { dispatch,pointDataWhere } = this.props;
-
+    
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        dispatch({
-          type: 'point/updatePointDGIMN',
-          payload: {
-            oldDGIMN:this.state.MNEcho,
-            newDGIMN:values.newMN
-          },
-          callback:()=>{
-            this.setState({ MNVisible:false })
-            dispatch({
-              type: 'autoForm/getAutoFormData',
-              payload: {
-                configId: pointConfigId,
-                searchParams: pointDataWhere,
-              },
-            });
-          }
-        })
+      if (values.newMN) {
+          dispatch({
+            type: 'point/updatePointDGIMN',
+            payload: {
+              oldDGIMN:this.state.MNEcho,
+              newDGIMN:values.newMN
+            },
+            callback:()=>{
+              this.setState({ MNVisible:false })
+              dispatch({
+                type: 'autoForm/getAutoFormData',
+                payload: {
+                  configId: pointConfigId,
+                  searchParams: pointDataWhere,
+                },
+              });
+            }
+          })
+
+      }else{
+
+        message.error('新设备编号(MN)不能为空！')
       }
     });
 
@@ -664,11 +668,11 @@ export default class MonitorPoint extends Component {
              <Input value={this.state.MNEcho} disabled/>
            </Form.Item>
            <Form.Item label="新设备编号(MN)">
-              {getFieldDecorator('newMN', {
-                                rules: [{ required: true, message: '请输入新的设备编号(MN)' }],
-                            })(
+               {getFieldDecorator('newMN', {
+                                rules: [{ required: this.state.MNVisible, message: '请输入新的设备编号(MN)' }], //设置成动态  以防影响autoform其他表单的提交
+                            })( 
                                 <Input  placeholder="请输入新的设备编号(MN)" />
-                            )}
+                            )} 
            </Form.Item>
       </Form>
           </Modal>
