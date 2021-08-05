@@ -24,6 +24,7 @@ import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import RegionList from '@/components/RegionList'
 
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
@@ -253,7 +254,8 @@ class index extends PureComponent {
         const { time } = this.state;
 
         return <>
-            <label style={{ fontSize: 14 }}>行政区:</label><Select
+            <label style={{ fontSize: 14 }}>行政区:</label>
+            {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -286,7 +288,26 @@ class index extends PureComponent {
                     })
                 }}>
                 {this.children()}
-            </Select>
+            </Select> */}
+            <RegionList
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                changeRegion={(value) => {
+                    //获取关注度列表
+                    this.props.dispatch({
+                        type: pageUrl.GetEntByRegionAndAtt,
+                        payload: {
+                            RegionCode: value,
+                            Attention: this.state.attentionValue,
+                            PollutantTypeCode: '1'
+                        },
+                    });
+                    this.setState({
+                        regionValue: value,
+                        entValue: undefined,
+                        pointValue: undefined
+                    })
+                }}
+            />
             <label style={{ fontSize: 14 }}>关注程度:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -306,8 +327,8 @@ class index extends PureComponent {
                     });
                     this.setState({
                         attentionValue: value,
-                        entValue:undefined,
-                        pointValue:undefined
+                        entValue: undefined,
+                        pointValue: undefined
                     })
                 }}>
                 {this.attention()}
