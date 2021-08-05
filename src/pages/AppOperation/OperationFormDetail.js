@@ -147,7 +147,8 @@ class OperationFormDetail extends PureComponent {
             />);
         }
         return (
-            <Card full style={{ height: '100vh', overflow: 'scroll' }}>
+            <div className='operationFormDetail'>
+            <Card full  style={{ height: '100vh', overflow: 'scroll' }}>
                 <Card.Header
                     title={
                         <span>
@@ -186,9 +187,9 @@ class OperationFormDetail extends PureComponent {
                         <Item ><span style={{ fontSize: 13 }}> 创建时间：{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].CreateTime : null}</span></Item>
                     </List>
                     <List renderHeader={() => '处理说明'} className="my-list">
-                        <Item wrap><span style={{ fontSize: 13 }}>{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskDescription : null}</span></Item>
+                        <Item><span style={{ fontSize: 13 }}>{OperationFormDetail && OperationFormDetail.length > 0 ? OperationFormDetail[0].TaskDescription : null}</span></Item>
                     </List>
-                    <List renderHeader={() => '处理记录'}>
+                    <List renderHeader={() => '处理记录'} className="my-list">
                         <Item>
                             <Upload
                                 {...upload}
@@ -209,6 +210,7 @@ class OperationFormDetail extends PureComponent {
                         </Item>
                     </List>
                 </Card.Body>
+                
                 {/* 处理记录 */}
                 {this.state.previewVisible && (
                     <Lightbox
@@ -248,6 +250,7 @@ class OperationFormDetail extends PureComponent {
                     />
                 )}
             </Card>
+            </div>
         );
     }
 }

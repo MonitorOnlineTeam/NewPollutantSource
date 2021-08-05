@@ -544,7 +544,7 @@ handleTableChange = (pagination, filters, sorter) => {
         <Modal
           title="任务详情"
           visible={this.state.visible}
-          width='100%'
+          width='98%'
           style={{hegiht:'90%'}}
           footer={null}
           destroyOnClose={true}

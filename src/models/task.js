@@ -97,7 +97,7 @@ export default Model.extend({
                     }
                 } else {
                     yield update({
-                        TaskRecord: [],
+                        TaskRecord: null,
                     });
                 }
             }

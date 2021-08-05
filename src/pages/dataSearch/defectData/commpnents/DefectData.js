@@ -497,7 +497,7 @@ export default class EntTransmissionEfficiency extends Component {
                 pageSize: PageSize,
                 current: PageIndex,
                 onChange: this.onChange,
-                onShowSizeChange:this.onShowSizeChange,
+                // onShowSizeChange:this.onShowSizeChange,
                 // pageSizeOptions: ['10', '20', '30', '40', '50'],
               }}
             />
