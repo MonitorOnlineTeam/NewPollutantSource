@@ -137,7 +137,7 @@ class VideoContent extends PureComponent {
           }
         </div>
         <div className={styles.rightContent}>
-          <Tabs defaultActiveKey="1" onChange={(key) => {
+          <Tabs defaultActiveKey="1" activeKey={currentKey} onChange={(key) => {
             this.setState({ currentKey: key })
           }}>
             <TabPane tab="实时" key="1">
