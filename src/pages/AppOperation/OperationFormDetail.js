@@ -146,7 +146,7 @@ class OperationFormDetail extends PureComponent {
                 size="large"
             />);
         }
-        return (
+        return (<div className='operationFormDetail'>
             <Card full style={{ height: '100vh', overflow: 'scroll' }}>
                 <Card.Header
                     title={
@@ -248,6 +248,7 @@ class OperationFormDetail extends PureComponent {
                     />
                 )}
             </Card>
+            </div>
         );
     }
 }

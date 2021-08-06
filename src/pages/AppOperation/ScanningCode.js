@@ -1,4 +1,4 @@
-import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Badge, Modal, List } from 'antd-mobile';
+import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Badge, Modal, List,Icon } from 'antd-mobile';
 import React, { PureComponent } from 'react';
 import zh_CN from 'antd-mobile/lib/date-picker/locale/zh_CN';
 import moment, { months } from 'moment';
@@ -155,12 +155,12 @@ class ScanningCode extends PureComponent {
                 item.Nodes.map((itemChild) => {
                     gridList.push(
                         <Step title={
-                            <div style={{ fontSize: 14, marginBottom: '8%', marginTop: '5%' }}>
+                            <div style={{ fontSize: 14,marginTop:-2}}>
                                 <span>{itemChild.RecordTypeName}</span>
                             </div>
                         }
                             icon={
-                                <div style={{ width: 20 }}>
+                                <div>
                                     <div style={{
                                         width: 12,
                                         height: 12,
@@ -177,7 +177,7 @@ class ScanningCode extends PureComponent {
                                             borderRadius: '50%',
                                             top: 4,
                                             left: 4,
-                                        }}></div>
+                                        }}></div> 
                                     </div>
                                 </div>
                             }
@@ -185,7 +185,9 @@ class ScanningCode extends PureComponent {
                                 <div style={{ fontSize: 13 }}>
                                     <div style={{ float: 'left', width: '35%', minWidth: 82, marginBottom: 15, marginTop: 10 }}>运维人:{itemChild.User_Name.length > 3 ? itemChild.User_Name.substring(0, 3) + ".." : itemChild.User_Name}</div>
                                     <div style={{ float: 'left', width: '40%', minWidth: 91, marginBottom: 15, marginTop: 10, textAlign: 'center' }}>执行时间:{itemChild.CreateTime}</div>
-                                    <div style={{ float: 'left', width: '20%', color: 'red', marginBottom: 15, textAlign: 'center', marginTop: 10 }}><span onClick={()=>{this.getDetails(itemChild.ID)}}>更多</span></div>
+                                    <div style={{ float: 'left', width: '20%', marginBottom: 15, textAlign: 'center', marginTop: 10 }}>
+                                        <span onClick={()=>{this.getDetails(itemChild.ID)}}><Icon type="right" /></span>
+                                     </div>
                                 </div>
                             } />
                     )
@@ -193,7 +195,7 @@ class ScanningCode extends PureComponent {
             })
         }
         return (
-            <div style={{ height: '100vh' }}>
+            <div style={{ height: '100vh' }} className={styles.scanningCode}>
                 <Card full style={{ height: 150 }}>
                     <Card.Header
                         title={
@@ -219,14 +221,14 @@ class ScanningCode extends PureComponent {
                                     <div style={{
                                         float: 'right',
                                         display: 'block',
-                                        width: 15,
-                                        height: 15,
+                                        width: 13,
+                                        height: 13,
                                         marginLeft: 8,
                                         backgroundImage: 'url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMjYnIHZpZXdCb3g9JzAgMCAxNiAyNicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cGF0aCBkPSdNMiAwTDAgMmwxMS41IDExTDAgMjRsMiAyIDE0LTEzeicgZmlsbD0nI0M3QzdDQycgZmlsbC1ydWxlPSdldmVub2RkJy8+PC9zdmc+)',
                                         backgroundSize: 'contain',
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPosition: '50% 50%;',
-                                        marginTop: 3
+                                        marginTop: 5
                                     }}></div>
                                     <div arrow="horizontal" style={{ fontSize: 15, float: 'right' }}>{moment(operationRzWhere.beginTime).format('YYYY-MM')}  </div>
                                 </div>
@@ -238,7 +240,7 @@ class ScanningCode extends PureComponent {
                     </Card.Body>
                 </Card>
                 <WhiteSpace />
-                <div full style={{ height: 'calc(100vh - 150px)', overflow: 'scroll', borderWidth: 0, paddingLeft: 25 }}>
+                <div full style={{ height: 'calc(100vh - 150px)', overflow: 'auto', borderWidth: 0, paddingLeft: 25,backgroundColor:'#fff' }}>
                     <WhiteSpace />
                     {
                         this.props.loading ?
@@ -263,13 +265,14 @@ class ScanningCode extends PureComponent {
                     }
                 </div>
                 <Modal
+                    className={styles.scanningCodeModal}
                     visible={this.state.visitible}
                     transparent
                     maskClosable={false}
                     onClose={this.onClose()}
                     footer={[{ text: <span style={{ fontSize: 13 }}>知道了</span>, onPress: () => { this.onClose()(); } }]}
                 >
-                    <List renderHeader={() => '工单状态说明'} className="my-list" >
+                    <List full renderHeader={() => '工单状态说明'} className="my-list" >
                         <Item wrap><span style={{ fontSize: 13 }}>1.工单：运维人员去现场执行运维任务，派发的工作单；</span> </Item>
                         <Item wrap><span style={{ fontSize: 13 }}>2.完成：运维人员完成了的工单；</span></Item>
                         <Item wrap><span style={{ fontSize: 13 }}>3.关闭：运维人员已经关闭的工单；</span> </Item>

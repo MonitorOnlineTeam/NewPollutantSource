@@ -385,6 +385,11 @@ getTaskTypeInfo=() => {
         key: 'PointName',
       },
       {
+        title: '运维单位',
+        dataIndex: 'x',
+        key: 'x',
+      },
+      {
         title: '任务单号',
         dataIndex: 'TaskCode',
         key: 'TaskCode',
@@ -561,6 +566,20 @@ getTaskTypeInfo=() => {
                       </FormItem>
                      
                   </Col>
+                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+                      <FormItem {...formLayout} label="运维单位" style={{ width: '100%' }}>
+                          {getFieldDecorator('ExceptionType', {
+                            initialValue: gettasklistqueryparams.ExceptionType ? gettasklistqueryparams.ExceptionType : undefined,
+                          })(
+                              <Select
+                              placeholder="请选择"
+                              allowClear
+                              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                              >
+                            </Select>,
+                          )}
+                      </FormItem>
+                  </Col> 
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="运维状态" style={{ width: '100%' }}>
                           {getFieldDecorator('ExceptionType', {
@@ -666,7 +685,8 @@ getTaskTypeInfo=() => {
                           )}
                       </FormItem>
                   </Col>
-                  <div style={{ marginTop: 4, ...style }}>
+                  <Col md={8} sm={24}>
+                  <FormItem {...formLayout} label="" style={{ width: '100%' }}>
                     <Button
                           style={{ marginLeft: 8 }}
                           onClick={() => {
@@ -688,7 +708,9 @@ getTaskTypeInfo=() => {
                                   展开 <DownOutlined />
                               </a>
                       }
-                  </div>
+                  </FormItem>
+                  </Col>
+                  
               </Row>
               <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                   <Col md={16} sm={24} style={{ margin: '10px 0' }}>
