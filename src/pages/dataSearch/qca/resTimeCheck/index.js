@@ -30,6 +30,7 @@ class index extends PureComponent {
           <NavigationTree domId="#resTimeCheck" onItemClick={item => {
             if (!item[0].IsEnt) {
               this.setState({
+                pointName: `${item[0].entName} - ${item[0].pointName}`,
                 // pointName: `${item.EntName} - ${item.title}`,
                 DGIMN: item[0].key,
                 pointType: item[0].Type
