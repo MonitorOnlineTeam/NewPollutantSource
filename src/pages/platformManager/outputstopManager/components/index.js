@@ -79,12 +79,12 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
         this.setState({
           DataWhere,
       }, () => {
-      //   dispatch({
-      //     type: 'autoForm/getPageConfig',
-      //     payload: {
-      //         configId,
-      //     },
-      // })
+        dispatch({
+          type: 'autoForm/getPageConfig',
+          payload: {
+              configId,
+          },
+      })
       })
     }
 
