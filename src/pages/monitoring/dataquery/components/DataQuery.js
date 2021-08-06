@@ -402,6 +402,9 @@ class DataQuery extends Component {
         scroll={{ y: this.props.tableHeight || undefined }}
         // pagination={{ pageSize: 20 }}
         pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          total:total,
           pageSize: pageSize,
           current: pageIndex,
           onChange: this.tableOnChange,
