@@ -53,34 +53,34 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'home/updateState',
-  getOverDataRate: 'home/getOverDataRate',
-  getDeviceDataRate: 'home/getDeviceDataRate',
-  getExceptionDataRate: 'home/getExceptionDataRate',
+  updateState: 'failureRate/updateState',
+  getOverDataRate: 'failureRate/getOverDataRate',
+  getDeviceDataRate: 'failureRate/getDeviceDataRate',
+  getExceptionDataRate: 'failureRate/getExceptionDataRate',
 };
-@connect(({ loading, home,autoForm }) => ({
-  priseList: home.priseList,
-  exloading:home.exloading,
-  loading: home.pointLoading,
-  total: home.total,
-  tableDatas: home.tableDatas,
-  queryPar: home.queryPar,
+@connect(({ loading, failureRate,autoForm }) => ({
+  priseList: failureRate.priseList,
+  exloading:failureRate.exloading,
+  loading: failureRate.pointLoading,
+  total: failureRate.total,
+  tableDatas: failureRate.tableDatas,
+  queryPar: failureRate.queryPar,
   regionList: autoForm.regionList,
-  attentionList:home.attentionList,
-  pointName:home.pointName,
-  chartExport:home.chartExport,
-  chartImport:home.chartImport,
-  chartTime:home.chartTime,
-  entName:home.entName,
-  pollutantList:home.pollutantList,
-  isWorkRate:home.isWorkRate,
-  isFaultRate:home.isFaultRate,
-  isOverRate:home.isOverRate,
-  Atmosphere:home.Atmosphere,
-  entQuery:home.entQuery,
-  pointQuery:home.pointQuery,
-  pointTableDatas:home.pointTableDatas,
-  entCode:home.entCode
+  attentionList:failureRate.attentionList,
+  pointName:failureRate.pointName,
+  chartExport:failureRate.chartExport,
+  chartImport:failureRate.chartImport,
+  chartTime:failureRate.chartTime,
+  entName:failureRate.entName,
+  pollutantList:failureRate.pollutantList,
+  isWorkRate:failureRate.isWorkRate,
+  isFaultRate:failureRate.isFaultRate,
+  isOverRate:failureRate.isOverRate,
+  Atmosphere:failureRate.Atmosphere,
+  entQuery:failureRate.entQuery,
+  pointQuery:failureRate.pointQuery,
+  pointTableDatas:failureRate.pointTableDatas,
+  entCode:failureRate.entCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {

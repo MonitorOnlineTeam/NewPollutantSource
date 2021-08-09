@@ -88,7 +88,7 @@
      'Content-Type': 'application/json',
    },
    // 默认错误处理
-  //  credentials: 'include', // 默认请求是否带上cookie
+   credentials: 'omit', // 默认请求是否带上cookie
  });
  
  request.interceptors.request.use(async (url, options) => {

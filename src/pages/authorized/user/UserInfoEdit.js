@@ -35,7 +35,7 @@ const { TreeNode } = Tree;
     UserDepLoading: loading.effects['userinfo/getdepbyuserid'],
     UserRoles: userinfo.UserRoles,
     UserDep: userinfo.UserDep,
-   btnisloading: loading.effects['userinfo/edit'],
+    btnisloading: loading.effects['userinfo/edit'],
 }))
 @Form.create()
 export default class UserInfoEdit extends Component {
@@ -125,7 +125,7 @@ export default class UserInfoEdit extends Component {
     };
 
     onChecks = checkedKeys => {
-        var that=this;
+        var that = this;
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
@@ -166,9 +166,9 @@ export default class UserInfoEdit extends Component {
     postFormDatas() {
         // this.onSubmitForm();
         const {
-          dispatch,
-          form,
-          RolesTreeData,
+            dispatch,
+            form,
+            RolesTreeData,
         } = this.props;
         const { leafTreeDatas, checkedKeySel, checkedKeysSel } = this.state;
         if (checkedKeySel.length == 0) {
@@ -323,17 +323,21 @@ export default class UserInfoEdit extends Component {
                                         <Divider orientation="right" style={{ border: '1px dashed #FFFFFF' }}>
                                             <Button
                                                 type="primary"
-
                                                 onClick={() => {
-                                                    this.setState({
-                                                        activeKey: 'roles',
-                                                        baseState: 'none',
-                                                        rolesState: 'block',
-                                                        departState: 'none',
+                                                    const { dispatch, form } = this.props;
+                                                    form.validateFields((err, values) => {
+                                                        if (!err) {
+                                                            this.setState({
+                                                                activeKey: 'roles',
+                                                                baseState: 'none',
+                                                                rolesState: 'block',
+                                                                departState: 'none',
+                                                            })
+                                                        }
                                                     })
                                                 }}
                                             >下一步
-                                        </Button>
+                                            </Button>
                                         </Divider>
                                     </SdlForm>
 

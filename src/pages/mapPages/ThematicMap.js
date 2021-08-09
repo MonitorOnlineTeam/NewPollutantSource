@@ -386,6 +386,18 @@ class ThematicMap extends PureComponent {
           }}
           />
         </>
+      case 6:
+        return <>
+          <CustomIcon
+            type="icon-richangshenghuo-shuizhan"
+            style={{
+              color: '#999',
+              marginRight: 8,
+              fontSize: 20,
+              ...mapIconStyle
+            }}
+          />
+        </>
       case 10:
         return <>
           <VocIcon style={{

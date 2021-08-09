@@ -54,33 +54,33 @@ const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
-  updateState: 'home/updateState',
-  getOverDataRate: 'home/getOverDataRate',
-  getDeviceDataRate: 'home/getDeviceDataRate',
-  getExceptionDataRate: 'home/getExceptionDataRate',
+  updateState: 'failureRate/updateState',
+  getOverDataRate: 'failureRate/getOverDataRate',
+  getDeviceDataRate: 'failureRate/getDeviceDataRate',
+  getExceptionDataRate: 'failureRate/getExceptionDataRate',
 };
-@connect(({ loading, home,autoForm }) => ({
-  priseList: home.priseList,
-  exloading:home.exloading,
-  loading: home.regionLoading,
-  total: home.total,
-  tableDatas: home.tableDatas,
-  queryPar: home.queryPar,
+@connect(({ loading, failureRate,autoForm }) => ({
+  priseList: failureRate.priseList,
+  exloading:failureRate.exloading,
+  loading: failureRate.regionLoading,
+  total: failureRate.total,
+  tableDatas: failureRate.tableDatas,
+  queryPar: failureRate.queryPar,
   regionList: autoForm.regionList,
-  attentionList:home.attentionList,
-  pointName:home.pointName,
-  chartExport:home.chartExport,
-  chartImport:home.chartImport,
-  chartTime:home.chartTime,
-  entName:home.entName,
-  isWorkRate:home.isWorkRate,
-  isFaultRate:home.isFaultRate,
-  isOverRate:home.isOverRate,
-  Atmosphere:home.Atmosphere,
-  entQuery:home.entQuery,
-  entTableDatas:home.entTableDatas,
-  regionName:home.regionName,
-  regionCode:home.regionCode
+  attentionList:failureRate.attentionList,
+  pointName:failureRate.pointName,
+  chartExport:failureRate.chartExport,
+  chartImport:failureRate.chartImport,
+  chartTime:failureRate.chartTime,
+  entName:failureRate.entName,
+  isWorkRate:failureRate.isWorkRate,
+  isFaultRate:failureRate.isFaultRate,
+  isOverRate:failureRate.isOverRate,
+  Atmosphere:failureRate.Atmosphere,
+  entQuery:failureRate.entQuery,
+  entTableDatas:failureRate.entTableDatas,
+  regionName:failureRate.regionName,
+  regionCode:failureRate.regionCode
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -160,7 +160,7 @@ export default class EntTransmissionEfficiency extends Component {
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
  
-    //  dispatch({ type: 'home/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    //  dispatch({ type: 'failureRate/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
     //  this.updateQueryState({
     //   BeginTime: moment().subtract(1, 'month') .format('YYYY-MM-DD 00:00:00'),
     //   EndTime: moment().format('YYYY-MM-DD HH:59:59'),
