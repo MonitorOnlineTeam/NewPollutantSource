@@ -196,11 +196,18 @@ class ScanningCode extends PureComponent {
         }
         return (
             <div style={{ height: '100vh' }} className={styles.scanningCode}>
-                <Card full style={{ height: 150 }}>
+                  {/* <div className={styles.scanningEntInfo}>
+                 <List renderHeader={() => '基本信息'} className="my-list">
+                        <Item ><span style={{ fontSize: 13 }}> 企业名称：{'雪迪龙科技有限公司'}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}> 监测点名称：{'废水监测点'}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}> 运维负责人：{'张三'}</span></Item>
+                    </List>
+                 </div> */}
+                 <Card full style={{ height: 150 }}>
                     <Card.Header
                         title={
                             <span>
-                                <span style={{ fontSize: 15 }}>
+                                <span style={{ fontSize: 14,color:'#888' }}>
                                     工单情况
                                 </span>
                                 <span style={{ marginLeft: 10 }}>
@@ -240,7 +247,7 @@ class ScanningCode extends PureComponent {
                     </Card.Body>
                 </Card>
                 <WhiteSpace />
-                <div full style={{ height: 'calc(100vh - 150px)', overflow: 'auto', borderWidth: 0, paddingLeft: 25,backgroundColor:'#fff' }}>
+                <div full style={{ height: 'calc(100vh - 340px)', overflow: 'auto', borderWidth: 0, paddingLeft: 25,backgroundColor:'#fff' }}>
                     <WhiteSpace />
                     {
                         this.props.loading ?

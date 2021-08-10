@@ -127,3 +127,13 @@ export async function getcommanddispatchreport(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetCommandDispatchReport', params, null);
   return result;
 }
+/**
+ * 获取公司运维单位列表
+ * @params {
+        
+    }
+ */
+export async function getOperationCompanyList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationCompanyList', params, null);
+  return result;
+}

@@ -390,7 +390,8 @@ export default class EntTransmissionEfficiency extends Component {
         </Form.Item>
         <Form.Item>
         {!entLoading? <Select 
-                showSearch 
+                showSearch
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 style={{ width: 250 }} 
                 onChange={v=>{this.changeEnt(v)}} 
                 allowClear placeholder="请选择企业">
