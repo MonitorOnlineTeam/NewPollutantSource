@@ -245,7 +245,7 @@ class SdlForm extends PureComponent {
           }
           placeholder = item.labelText==='大气站名称'? stationPlaceStr : placeholder || inputPlaceholder;
 
-          element = <Input placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
+          element = <Input disabled={item.labelText==='设备编号(MN)'? true : false} placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
           break;
         case '下拉列表框':
         case '多选下拉列表':

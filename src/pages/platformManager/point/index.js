@@ -577,19 +577,19 @@ export default class MonitorPoint extends Component {
                           }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     } */}
-                     {row['dbo.T_Bas_CommonPoint.PollutantType'] === '1'&&<> <Divider type="vertical" />
+                   <> <Divider type="vertical" />
                  <Tooltip title="修改设备编号(MN)">
                           <a onClick={() => {
                             this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
                           }}><HighlightOutlined  style={{fontSize:16}}/></a>
-                        </Tooltip></> }
+                        </Tooltip></>
                     
 
-                     {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
+                     {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
                         </a>
-                        </Dropdown></>}
+                        </Dropdown></>} */}
                   </Fragment>
                 )}
               />
@@ -629,6 +629,7 @@ export default class MonitorPoint extends Component {
                     uid={this.state.cuid}
                     isEdit={this.state.isEdit}
                     keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                    types='point'
                   />
               </TabPane>
               <TabPane tab="污染物信息" key="2">
