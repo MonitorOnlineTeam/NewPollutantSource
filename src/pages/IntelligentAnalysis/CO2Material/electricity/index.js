@@ -9,8 +9,8 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 
 const { Option } = Select;
-const CONFIG_ID = 'Desulphurization';
-const SELECT_LIST = [{ "key": 1, "value": "脱硫剂" }]
+const CONFIG_ID = 'CO2PowerDischarge';
+const SELECT_LIST = [{ "key": 1, "value": "外购电力" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -57,7 +57,7 @@ class index extends PureComponent {
           configId: CONFIG_ID,
           FormData: {
             ...values,
-            DesulphurizationCode: KEY
+            PowerDischargeCode: KEY
           },
           reload: KEY ? true : undefined,
         }
@@ -86,7 +86,7 @@ class index extends PureComponent {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_CO2Desulphurization.DesulphurizationCode': this.state.KEY,
+        'dbo.T_Bas_CO2PowerDischarge.PowerDischargeCode': this.state.KEY,
       },
       callback: (res) => {
         this.setState({
@@ -101,7 +101,7 @@ class index extends PureComponent {
     const { isModalVisible, editData, FileUuid } = this.state;
     const { tableInfo } = this.props;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2Desulphurization.tCO2');
+    let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2PowerDischarge.tCO2');
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -118,7 +118,7 @@ class index extends PureComponent {
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2Desulphurization.AttachmentID')
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2PowerDischarge.AttachmentID')
               this.setState({ KEY: key, FileUuid: FileUuid }, () => {
                 this.getFormData(FileUuid);
               })
@@ -137,11 +137,11 @@ class index extends PureComponent {
             <Row>
               <Col span={12}>
                 <Form.Item
-                  name="DesulfurizerType"
-                  label="脱硫剂类型"
-                  rules={[{ required: true, message: '请选择脱硫剂类型!' }]}
+                  name="PowerDischargeType"
+                  label="种类"
+                  rules={[{ required: true, message: '请选择种类!' }]}
                 >
-                  <Select placeholder="请选择脱硫剂类型">
+                  <Select placeholder="请选择种类">
                     {
                       SELECT_LIST.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>
@@ -152,12 +152,12 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="CarbonateConsumption"
-                  label="脱硫剂中碳酸盐消耗量（t）"
-                  rules={[{ required: true, message: '请填写脱硫剂中碳酸盐消耗量!' }]}
+                  name="ActivityData"
+                  label="活动数据（MWh）"
+                  rules={[{ required: true, message: '请填写活动数据!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写脱硫剂中碳酸盐消耗量" onChange={(value) => {
-                    let val2 = this.formRef.current.getFieldValue('CarbonateEmission') || 0;
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据" onChange={(value) => {
+                    let val2 = this.formRef.current.getFieldValue('Emission') || 0;
                     let count = value * val2;
                     this.formRef.current.setFieldsValue({ 'tCO2': count });
                   }} />
@@ -165,12 +165,12 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="CarbonateEmission"
-                  label="碳酸盐排放因子（tCO2/t）"
-                  rules={[{ required: true, message: '请填写碳酸盐排放因子!' }]}
+                  name="Emission"
+                  label="排放因子（tCO2/MWh）"
+                  rules={[{ required: true, message: '请填写排放因子!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写碳酸盐排放因子" onChange={(value) => {
-                    let val1 = this.formRef.current.getFieldValue('CarbonateConsumption') || 0;
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子" onChange={(value) => {
+                    let val1 = this.formRef.current.getFieldValue('ActivityData') || 0;
                     let count = value * val1;
                     this.formRef.current.setFieldsValue({ 'tCO2': count });
                   }} />
@@ -191,7 +191,7 @@ class index extends PureComponent {
                   wrapperCol={{ span: 7 }}
                   name="AttachmentID"
                   label="验证材料"
-                  // rules={[{ required: true, message: '请填写排放量!' }]}
+                // rules={[{ required: true, message: '请填写排放量!' }]}
                 >
                   <FileUpload fileUUID={FileUuid} uploadSuccess={(fileUUID) => {
                     this.formRef.current.setFieldsValue({ AttachmentID: fileUUID })
