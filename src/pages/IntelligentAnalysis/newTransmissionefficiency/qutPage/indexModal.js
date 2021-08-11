@@ -384,6 +384,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     return (
       <Card
+        centered
         bordered={false}
         title={
           <>

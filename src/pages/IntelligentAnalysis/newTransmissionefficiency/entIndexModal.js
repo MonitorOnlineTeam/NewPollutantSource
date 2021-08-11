@@ -527,6 +527,7 @@ export default class EntIndexModal extends Component {
                 <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                    {`<90%未达标`}
                 </span>
+                <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算本月的有效传输率，每月1号至15号期间每日凌晨重新计算上个月的有效传输率</span>
               </div>
             </>
           }
@@ -548,8 +549,6 @@ export default class EntIndexModal extends Component {
     </>;
   }
   render() {
-    console.log("props.pollutantType=",this.props.pollutantType)
-    console.log("state.pollutantType=",this.state.PollutantType)
   const {TVisible,TCancle,TTVisible} = this.props
   return (
     <>
