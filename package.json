@@ -27,8 +27,6 @@
     "animate.css": "^4.1.0",
     "antd": "4.6.1",
     "axios": "^0.19.0",
-    "bizcharts": "^3.5.4",
-    "bizcharts-plugin-slider": "^3.0.1",
     "classnames": "^2.2.6",
     "crypto-js": "^4.0.0",
     "cuid": "^2.1.6",
