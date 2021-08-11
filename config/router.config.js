@@ -1498,7 +1498,7 @@ const routes = [
               {
                 name: 'FailureRate',
                 path: '/Intelligentanalysis/failureRate',
-                component: './Intelligentanalysis/failureRate/Enterprise',
+                component: './IntelligentAnalysis/failureRate/Enterprise',
               },
               // 综合指数范围同比报表
               {
@@ -1769,6 +1769,22 @@ const routes = [
                 name: 'airQualityStatistics',
                 path: '/Intelligentanalysis/airQualityStatistics',
                 component: './IntelligentAnalysis/airQualityStatistics/air',
+              },
+              // 二氧化碳物料衡算法
+              {
+                name: 'CO2Material',
+                path: '/Intelligentanalysis/CO2Material',
+                routes: [
+                  {
+                    path: '/Intelligentanalysis/CO2Material/desensitization',
+                    component: './IntelligentAnalysis/CO2Material/desensitization',
+                  },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/electricity',
+                    component: './IntelligentAnalysis/CO2Material/electricity',
+                  },
+
+                ]
               },
             ],
           },
