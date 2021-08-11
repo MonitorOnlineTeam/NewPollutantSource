@@ -262,13 +262,21 @@ export default class Index extends Component {
     dateOk=()=>{ 
 
    }
-
+   onTableChange = (PageIndex,PageSize) =>{
+      this.updateQueryState({
+      PageIndex:PageIndex,
+      PageSize: PageSize,
+    });
+    setTimeout(()=>{
+      this.queryClick();
+    })
+   }
 
   render() {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType,PageSize,PageIndex },
       column,
       tableDatas
     } = this.props;
@@ -285,6 +293,7 @@ export default class Index extends Component {
           {
             // width: 100, 
            title: '零值异常',
+           align:'center',
            children: [{  title: '零值计数',   dataIndex: `${item.PollutantCode}_zero`,  key:`${item.PollutantCode}_zero`,  width: 100, align:'center' }]
           },
           {
@@ -394,12 +403,14 @@ export default class Index extends Component {
             columns={columns}
             bordered={true}
             dataSource={tableDatas}
-            // pagination={{
-            //   showSizeChanger: true,
-            //   showQuickJumper: true,
-            //   total: this.props.total,
-            //   defaultPageSize:20
-            // }}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              total: this.props.total,
+              pageSize: PageSize,
+              current: PageIndex,
+              onChange: this.onTableChange,
+            }}
           />
         </div>
       </Card>
