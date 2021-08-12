@@ -1791,6 +1791,14 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/supplementData/addOrEditPage',
                     component: './IntelligentAnalysis/CO2Material/supplementData/AddOrEditPage',
                   },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/fossilFuel',
+                    component: './Intelligentanalysis/CO2Material/fossilFuel',
+                  },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/cO2DischargeSum',
+                    component: './Intelligentanalysis/CO2Material/cO2DischargeSum',
+                  }
                 ]
               },
             ],

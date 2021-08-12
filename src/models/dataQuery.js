@@ -39,6 +39,7 @@ export default Model.extend({
     dataAuditDataSource: [],
     dataFlagDataSource: [],
     tagTableTotal: 0,
+    CO2SumData:[],
   },
   effects: {
     * querypollutantlist({ payload, callback,
@@ -490,6 +491,19 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('导出成功')
         window.open(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // 二氧化碳物料衡算法-获取数据
+    *getCO2SumData({ payload }, { call, put, update }) {
+      const result = yield call(services.getCO2SumData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          // dataAuditDataSource: result.Datas,
+          CO2SumData: result.Datas,
+        })
       } else {
         message.error(result.Message)
       }
