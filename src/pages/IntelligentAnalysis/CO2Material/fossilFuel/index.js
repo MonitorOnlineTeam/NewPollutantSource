@@ -48,7 +48,9 @@ class index extends PureComponent {
 
   handleCancel = () => {
     this.setState({
-      isModalVisible: false
+      isModalVisible: false,
+      UnitCarbonContentState: 2,
+      CO2OxidationRateState: 2,
     })
   };
 
@@ -197,7 +199,7 @@ class index extends PureComponent {
                   label="年消耗量(t/104Nm3)"
                   rules={[{ required: true, message: '请填写年消耗量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '80%' }} placeholder="请填写年消耗量" onChange={(value) => {
+                  <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写年消耗量" onChange={(value) => {
                     let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                     let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
                     let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
@@ -247,7 +249,7 @@ class index extends PureComponent {
                   label="低位发热量(GJ/t,GJ/104Nm3)"
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '80%' }} placeholder="请填写低位发热量" onChange={(value) => {
+                  <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量" onChange={(value) => {
                     let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                     let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
                     let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
@@ -330,7 +332,7 @@ class index extends PureComponent {
                   label="单位热值含碳量(tC/GJ)"
                   rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '80%' }} placeholder="请填写单位热值含碳量" onChange={(value) => {
+                  <InputNumber step="0.001" stringMode style={{ width: this.state.UnitCarbonContentState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写单位热值含碳量" onChange={(value) => {
                     let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                     let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
                     let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
@@ -350,7 +352,7 @@ class index extends PureComponent {
                     // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
                     if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !value) { }
                     else {
-                     
+
                       let upAll = AnnualConsumption * LowFever * 0.000001;
                       let downAll = (value * CO2OxidationRate * 44) / 12;
                       let countAll = upAll * downAll;
@@ -363,13 +365,13 @@ class index extends PureComponent {
                     content={
                       <>
                         <Row>
-                          <Col span={16}>
+                          <Col span={24}>
                             <Form.Item
                               name="ElementalCarbonContent"
                               label="元素含碳量(%)"
                             // rules={[{ required: true, message: '请填写全年炉渣产量!' }]}
                             >
-                              <InputNumber step="0.001" stringMode style={{ width: '60%' }} placeholder="请填写元素含碳量" onChange={(value) => {
+                              <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写元素含碳量" onChange={(value) => {
                                 // let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                                 let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
                                 if (!LowFever) { }
@@ -399,7 +401,7 @@ class index extends PureComponent {
                     }
                     trigger="click"
                     title="单位热值含碳量计算">
-                    <Button type='link' style={{ marginLeft: 5, display: 'inline' }}>计算</Button>
+                    <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
                   </Popover>}
               </Col>
               <Col span={12}>
@@ -457,7 +459,7 @@ class index extends PureComponent {
                   label="碳氧化率(%)"
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '80%' }} placeholder="请填写碳氧化率" onChange={(value) => {
+                  <InputNumber step="0.001" stringMode style={{ width: this.state.CO2OxidationRateState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写碳氧化率" onChange={(value) => {
                     // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
                     let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                     let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
@@ -468,7 +470,7 @@ class index extends PureComponent {
                       let upAll = AnnualConsumption * LowFever * 0.000001;
                       let downAll = (UnitCarbonContent * value * 44) / 12;
                       let countAll = upAll * downAll;
-                      console.log('countAll',countAll)
+                      console.log('countAll', countAll)
                       this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
                     }
                   }} />
@@ -478,7 +480,7 @@ class index extends PureComponent {
                     content={
                       <>
                         <Row>
-                          <Col span={16}>
+                          <Col span={24}>
                             <Form.Item
                               name="SlagYield"
                               label="全年炉渣产量(t)"
@@ -503,7 +505,7 @@ class index extends PureComponent {
                                   if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                                   else {
                                     let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) /12;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
                                     let countAll = upAll * downAll;
                                     this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
                                   }
@@ -511,7 +513,7 @@ class index extends PureComponent {
                               }} />
                             </Form.Item>
                           </Col>
-                          <Col span={16}>
+                          <Col span={24}>
                             <Form.Item
                               name="SlagAvgCO2"
                               label="炉渣平均含碳量(%)"
@@ -546,7 +548,7 @@ class index extends PureComponent {
                           </Col>
                         </Row>
                         <Row>
-                          <Col span={16}>
+                          <Col span={24}>
                             <Form.Item
                               name="FlyAshYield"
                               label="全年飞灰产量(t)"
@@ -571,7 +573,7 @@ class index extends PureComponent {
                                   if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                                   else {
                                     let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) /12;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
                                     let countAll = upAll * downAll;
                                     this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
                                   }
@@ -579,7 +581,7 @@ class index extends PureComponent {
                               }} />
                             </Form.Item>
                           </Col>
-                          <Col span={16}>
+                          <Col span={24}>
                             <Form.Item
                               name="FlyAshAvgCO2"
                               label="飞灰平均含碳量(%)"
@@ -614,7 +616,7 @@ class index extends PureComponent {
                           </Col>
                         </Row>
                         <Row>
-                          <Col span={16}>
+                          <Col span={24}>
                             <Form.Item
                               name="RemoveDustRate"
                               label="除尘系统平均除尘效率(%)"
@@ -657,7 +659,7 @@ class index extends PureComponent {
                     // visible={this.state.RateVisible}
                     // onVisibleChange={this.RatehandleVisibleChange}
                     title="碳氧化率计算">
-                    <Button type='link' style={{ marginLeft: 5, display: 'inline' }}>计算</Button>
+                    <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
                   </Popover>}
               </Col>
               <Col span={12}>
@@ -716,7 +718,7 @@ class index extends PureComponent {
                   label="排放量（tCO2）"
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '80%' }} placeholder="请填写排放量" />
+                  <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写排放量" />
                 </Form.Item>
               </Col>
               <Col span={24}>
