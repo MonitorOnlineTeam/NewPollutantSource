@@ -48,4 +48,10 @@ export async function exportDataFlagReport(params) {
   return result;
 }
 
+// 二氧化碳物料衡算法-获取数据
+export async function getCO2SumData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCO2SumData', params, null);
+  return result;
+}
+
 
