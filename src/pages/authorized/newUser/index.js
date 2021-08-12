@@ -148,6 +148,18 @@ export default class UserInfoIndex extends Component {
       //   align: 'center',
       // },
       {
+        title: <span>业务属性</span>,
+        dataIndex: 'businessAttribute',
+        key: 'businessAttribute',
+        align: 'center',
+      },
+      {
+        title: <span>行业属性</span>,
+        dataIndex: 'industryAttribute',
+        key: 'industryAttribute',
+        align: 'center',
+      },
+      {
         title: <span>拼音</span>,
         dataIndex: 'nameCode',
         key: 'nameCode',
