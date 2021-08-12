@@ -1783,7 +1783,14 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/electricity',
                     component: './IntelligentAnalysis/CO2Material/electricity',
                   },
-
+                  {
+                    path: '/Intelligentanalysis/CO2Material/supplementData',
+                    component: './IntelligentAnalysis/CO2Material/supplementData',
+                  },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/supplementData/addOrEditPage',
+                    component: './IntelligentAnalysis/CO2Material/supplementData/AddOrEditPage',
+                  },
                 ]
               },
             ],
