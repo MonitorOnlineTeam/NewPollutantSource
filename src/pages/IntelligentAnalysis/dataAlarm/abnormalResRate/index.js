@@ -20,6 +20,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import OperationUnitList from '@/components/OperationUnitList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -66,7 +67,7 @@ class index extends PureComponent {
     checkedValues: [],
     secondQueryCondition: {},
     queryCondition: {},
-    operationpersonnel:'',
+    operationEntCode:'',
     exceptionTime: this.props.time || this.props.exceptionTime,
     
   }
@@ -87,6 +88,13 @@ class index extends PureComponent {
               router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryCondition}`);
           }}>{text}</a>
         }
+      },
+      {
+        title: <span>运维单位</span>,
+        dataIndex: 'operationEntName',
+        key: 'operationEntName',
+        width: 200,
+        align: 'center',
       },
       {
         title: '数据异常报警企业数',
@@ -238,7 +246,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel:this.state.operationEntCode
       }
     })
     this.setState({
@@ -249,7 +257,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel:this.state.operationEntCode
       }
     })
   }
@@ -274,7 +282,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationPersonnel:this.state.operationEntCode
       }
     })
   }
@@ -307,7 +315,7 @@ class index extends PureComponent {
   render() {
     const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, tableDataSource, loading, exportLoading } = this.props;
     const { columns, detailsColumns } = this._SELF_;
-    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,operationpersonnel } = this.state;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,operationEntCode } = this.state;
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     return (
@@ -330,7 +338,7 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
-              <Form.Item label="运维状态">
+              {/* <Form.Item label="运维状态">
               {
                   <Select
                     allowClear
@@ -349,7 +357,14 @@ class index extends PureComponent {
                     <Option value="2">未设置运维人员</Option>
                   </Select>
                 }
-              </Form.Item>
+              </Form.Item> */}
+               <Form.Item label='运维单位'>
+                 <OperationUnitList  onChange={(value) => {
+                      this.setState({
+                        operationEntCode: value,
+                      })
+                  }}/>
+                </Form.Item>
               <FormItem label="日期查询">
                 <RangePicker_ allowClear={false} onRef={(ref) => {
                   this.rangePicker = ref;

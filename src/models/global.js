@@ -10,6 +10,7 @@ import moment from 'moment';
 import { array } from 'prop-types';
 import Cookie from 'js-cookie';
 import config from '@/config';
+import { sdlMessage } from '@/utils/utils';
 
 
 /**
@@ -36,7 +37,8 @@ export default Model.extend({
       EndTime: moment().format('YYYY-MM-DD 23:59:59'),
       DGIMN: '',
     },
-    clientHeight: null
+    clientHeight: null,
+    operationCompanyList:[]
   },
   effects: {
     // 首次加载获取当天报警消息
@@ -121,6 +123,18 @@ export default Model.extend({
         });
       }
     },
+    //查询公司运维单位列表信息
+   *getOperationCompanyList({ payload }, { call, put, update, select }) {
+        const result = yield call(services.getOperationCompanyList, payload);
+  
+        if (result.IsSuccess) {
+          yield update({
+            operationCompanyList: result.Datas,
+          });
+        } else {
+          sdlMessage(result.Message, "warning");
+        }
+      },  
   },
   reducers: {
     changeLayoutCollapsed(
