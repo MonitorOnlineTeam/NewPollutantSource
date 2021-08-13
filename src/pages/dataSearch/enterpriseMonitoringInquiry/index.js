@@ -135,7 +135,7 @@ class index extends PureComponent {
     // 导出
     PointexportReport = () => {
         debugger
-        const {outletValue,regionValue} = this.state
+        const {pointType,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
@@ -143,7 +143,7 @@ class index extends PureComponent {
                 HasData: this.state.hasCode,
                 EntCode: '1',
                 EntType: 1,
-                PollutantType:outletValue == undefined ?'':outletValue,
+                PollutantType:pointType == undefined ?'':pointType,
                 operationpersonnel:this.state.operationpersonnel,
             }
         })

@@ -9,7 +9,7 @@ import { Select,} from 'antd';
 }))
 export default class Index extends Component {
     static defaultProps = {
-        notOperation:false
+      notSelf:false
       };
   constructor(props) {
     super(props);
@@ -26,10 +26,10 @@ operationCompanyList=()=>{
     })
   }
   componentDidMount() {
-    const { dispatch,notOperation } = this.props;
+    const { dispatch,notSelf } = this.props;
     dispatch({
         type: 'global/getOperationCompanyList',
-        payload: notOperation ? { Flag:notOperation} : {} ,  //传了 就是不要自运维的
+        payload: notSelf ? { Flag:notSelf} : {} ,  //传了 就是不要自运维的
       }); //获取运维单位列表
   
    }
