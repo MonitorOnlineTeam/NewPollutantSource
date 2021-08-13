@@ -7,6 +7,7 @@ import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
+import QuestionTooltip from "@/components/QuestionTooltip"
 
 const { Option } = Select;
 const CONFIG_ID = 'CO2PowerDischarge';
@@ -180,6 +181,11 @@ class index extends PureComponent {
                 <Form.Item
                   name="tCO2"
                   label="排放量（tCO2）"
+                  label={
+                    <span>排放量（tCO2）
+                      <QuestionTooltip content="排放量 = 活动数据 × 排放因子" />
+                    </span>
+                  }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放量" />

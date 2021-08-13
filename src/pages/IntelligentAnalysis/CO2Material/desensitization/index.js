@@ -7,6 +7,7 @@ import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
+import QuestionTooltip from "@/components/QuestionTooltip"
 
 const { Option } = Select;
 const CONFIG_ID = 'Desulphurization';
@@ -179,7 +180,11 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="tCO2"
-                  label="排放量（tCO2）"
+                  label={
+                    <span>排放量（tCO2）
+                      <QuestionTooltip content="排放量 = 脱硫剂中碳酸盐消耗量 × 碳酸盐排放因子" />
+                    </span>
+                  }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放量" />
@@ -191,7 +196,7 @@ class index extends PureComponent {
                   wrapperCol={{ span: 7 }}
                   name="AttachmentID"
                   label="验证材料"
-                  // rules={[{ required: true, message: '请填写排放量!' }]}
+                // rules={[{ required: true, message: '请填写排放量!' }]}
                 >
                   <FileUpload fileUUID={FileUuid} uploadSuccess={(fileUUID) => {
                     this.formRef.current.setFieldsValue({ AttachmentID: fileUUID })

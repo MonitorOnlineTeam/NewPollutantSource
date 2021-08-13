@@ -3,6 +3,7 @@ import { Card, Form, Input, InputNumber, Select, Row, Col, Modal, Button, Popove
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import { router } from 'umi';
 import { connect } from 'dva'
+import QuestionTooltip from "@/components/QuestionTooltip"
 
 const { Option } = Select;
 const { Search } = Input;
@@ -57,19 +58,20 @@ class AddOrEditPage extends PureComponent {
   onModalOk = () => {
     let values = this.formRef.current.getFieldsValue();
     const { Consumption = 0, LowFever = 0, UnitCarbonContent = 0, CO2OxidationRate = 0 } = values;
-    let value1 = Consumption * LowFever * 0.000001;
-    let value2 = UnitCarbonContent * CO2OxidationRate * 12 / 44;
+    let value1 = Consumption * LowFever;
+    let value2 = UnitCarbonContent * CO2OxidationRate * 44 / 12;
     // let value3 = UnitCarbonContent * CO2OxidationRate * 44;
     // let value4 = UnitCarbonContent * CO2OxidationRate * 12;
     // if (value4) {
     //   let value2 = value3 / value4;
-    let count = (value1 * value2).toFixed(3);
+    let count = (value1 * value2).toFixed(5);
     //   this.formRef.current.setFieldsValue({ 'FossilFuel_tCO2': count });
     // } else {
     this.formRef.current.setFieldsValue({ 'FossilFuel_tCO2': count });
     // }
     this.setState({ isModalVisible: false })
     this.countCrew_tCO2();
+    // (消耗量 × 低位发热量 × 10⁻⁶ × (单位热值含碳量  × 碳氧化率  × 12 ÷ 44))
     // （消耗量*低位发热量*0.000001）*(（单位热值含碳量*碳氧化率*44）/（单位热值含碳量*碳氧化率*12）)
     // （消耗量*低位发热量*0.000001）*(单位热值含碳量*碳氧化率*12/44)
 
@@ -98,7 +100,7 @@ class AddOrEditPage extends PureComponent {
     console.log('value1=', value1, 'value2=', value2)
     let count = 0;
     if (value2) {
-      count = (1 - (value1 * 1000000 / value2)).toFixed(3);
+      count = (1 - (value1 * 1000000 / value2)).toFixed(5);
     }
     this.formRef.current.setFieldsValue({ 'CO2OxidationRate': count });
     // name = "Consumption"
@@ -119,7 +121,8 @@ class AddOrEditPage extends PureComponent {
     // name = "RemoveDustRate"
     // label = "系统平均除尘效率（%）"
     // 1 -（（全年炉渣产量*炉渣平均含碳量+全年飞灰产量*飞灰平均含碳量/除尘效率）*100w/(消耗量*低位发热量*单位热值含碳量)）
-    // let qnlzcl = 
+    // 1 - ((全年炉渣产量 × 炉渣平均含碳量 + 全年飞灰产量 × 飞灰平均含碳量 ÷ 除尘效率) × 10⁶) ÷ (消耗量 × 低位发热量 × 单位热值含碳量)
+    // let qnlzcl =
 
   }
 
@@ -127,7 +130,7 @@ class AddOrEditPage extends PureComponent {
   countCrew_tCO2 = () => {
     let values = this.formRef.current.getFieldsValue();
     const { FossilFuel_tCO2 = 0, PowerDischarge_tCO2 = 0 } = values;
-    let count = (FossilFuel_tCO2 * PowerDischarge_tCO2).toFixed(3);
+    let count = FossilFuel_tCO2 + PowerDischarge_tCO2;
     this.formRef.current.setFieldsValue({ 'Crew_tCO2': count });
   }
 
@@ -271,7 +274,12 @@ class AddOrEditPage extends PureComponent {
                   <Col span={12}>
                     <Form.Item
                       name="FossilFuel_tCO2"
-                      label="化石燃料燃烧排放量(tCO2)"
+                      label={
+                        <span>
+                          化石燃料燃烧排放量(tCO2)
+                          <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量 × (单位热值含碳量 × 碳氧化率 × 44 ÷ 12) " />
+                        </span>
+                      }
                       rules={[{ required: true, message: '请填写化石燃料燃烧排放量!' }]}
                     >
                       <Input style={{ width: 'calc(100% - 88px)' }} onChange={(val) => { this.countCrew_tCO2() }} placeholder="请填写化石燃料燃烧排放量" />
@@ -283,7 +291,13 @@ class AddOrEditPage extends PureComponent {
                   <Col span={12}>
                     <Form.Item
                       name="PowerDischarge_tCO2"
-                      label="购入电力产生的排放(tCO2)"
+                      // label="购入电力产生的排放(tCO2)"
+                      label={
+                        <span>
+                          购入电力产生的排放(tCO2)
+                          <QuestionTooltip content="购入电力产生的排放 = 购入电量 × 排放因子" />
+                        </span>
+                      }
                       rules={[{ required: true, message: '请填写购入电力产生的排放!' }]}
                     >
                       <Input style={{ width: 'calc(100% - 88px)' }} onChange={(val) => { this.countCrew_tCO2() }} placeholder="请填写购入电力产生的排放" />
@@ -300,7 +314,7 @@ class AddOrEditPage extends PureComponent {
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('Emission') || 0;
-                              let count = (value * val2).toFixed(3);
+                              let count = (value * val2).toFixed(5);
                               this.formRef.current.setFieldsValue({ 'PowerDischarge_tCO2': count });
                               this.countCrew_tCO2();
                             }} style={{ width: '100%' }} placeholder="请填写元素含碳量" />
@@ -312,7 +326,7 @@ class AddOrEditPage extends PureComponent {
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('BuyPower') || 0;
-                              let count = (value * val2).toFixed(3);
+                              let count = (value * val2).toFixed(5);
                               this.formRef.current.setFieldsValue({ 'PowerDischarge_tCO2': count });
                               this.countCrew_tCO2();
                             }} style={{ width: '100%' }} placeholder="请填写排放因子" />
@@ -326,7 +340,12 @@ class AddOrEditPage extends PureComponent {
                   <Col span={12}>
                     <Form.Item
                       name="Crew_tCO2"
-                      label="机组二氧化碳排放量(tCO2)"
+                      label={
+                        <span>
+                          机组二氧化碳排放量(tCO2)
+                          <QuestionTooltip content="机组二氧化碳排放量 = 化石燃料燃烧排放量 + 购入电力产生的排放" />
+                        </span>
+                      }
                       rules={[{ required: true, message: '请填写机组二氧化碳排放量!' }]}
                     >
                       <InputNumber style={{ width: '100%' }} placeholder="请填写机组二氧化碳排放量" />
@@ -436,7 +455,7 @@ class AddOrEditPage extends PureComponent {
                     >
                       <InputNumber onChange={(value) => {
                         let val2 = this.formRef.current.getFieldValue('ElementalCarbonContent') || 0;
-                        let count = (value * val2).toFixed(3);
+                        let count = (value * val2).toFixed(5);
                         this.formRef.current.setFieldsValue({ 'UnitCarbonContent': count });
                         this.countCO2Rate()
                       }} min={0} style={{ width: '100%' }} placeholder="请填写低位发热量" />
@@ -446,7 +465,12 @@ class AddOrEditPage extends PureComponent {
                     <Form.Item
                       {...layout2}
                       name="UnitCarbonContent"
-                      label="单位热值含碳量(tC/GJ)"
+                      label={
+                        <span>
+                          单位热值含碳量(tC/GJ)
+                          <QuestionTooltip content="单位热值含碳量 = 低位发热量 × 元素含碳量" />
+                        </span>
+                      }
                     // rules={[{ required: isModalVisible, message: '请填写单位热值含碳量!' }]}
                     >
                       {/* <Input.Group compact> */}
@@ -466,7 +490,7 @@ class AddOrEditPage extends PureComponent {
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('LowFever') || 0;
-                              let count = (value * val2).toFixed(3);
+                              let count = (value * val2).toFixed(5);
                               this.formRef.current.setFieldsValue({ 'UnitCarbonContent': count });
                               this.countCO2Rate()
                             }} style={{ width: '100%' }} placeholder="请填写元素含碳量" />
@@ -482,7 +506,13 @@ class AddOrEditPage extends PureComponent {
                     <Form.Item
                       {...layout2}
                       name="CO2OxidationRate"
-                      label="碳氧化率(%)"
+                      // label="碳氧化率(%)"
+                      label={
+                        <span>
+                          碳氧化率(%)
+                          <QuestionTooltip content="碳氧化率 = 1 - ((全年炉渣产量 × 炉渣平均含碳量 + 全年飞灰产量 × 飞灰平均含碳量 ÷ 除尘效率) × 10⁶) ÷ (消耗量 × 低位发热量 × 单位热值含碳量)" />
+                        </span>
+                      }
                     // rules={[{ required: isModalVisible, message: '请填写碳氧化率!' }]}
                     >
                       <InputNumber style={{ width: 'calc(100% - 64px)' }} placeholder="请填写碳氧化率" />
