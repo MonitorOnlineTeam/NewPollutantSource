@@ -8,6 +8,7 @@ import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import QuestionTooltip from "@/components/QuestionTooltip"
 
 const { Option } = Select;
 const CONFIG_ID = 'CO2FossilFuel';
@@ -100,6 +101,8 @@ class index extends PureComponent {
       },
       callback: (res) => {
         this.setState({
+          CO2OxidationRateState:res.CO2OxidationRateDataType,
+          UnitCarbonContentState:res.UnitCarbonContentDataType,
           editData: res,
           isModalVisible: true,
         })
@@ -199,7 +202,7 @@ class index extends PureComponent {
                   label="年消耗量(t/104Nm3)"
                   rules={[{ required: true, message: '请填写年消耗量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写年消耗量" onChange={(value) => {
+                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写年消耗量" onChange={(value) => {
                     let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                     let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
                     let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
@@ -213,70 +216,23 @@ class index extends PureComponent {
                       let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
                       let down = value * LowFever * UnitCarbonContent;
                       let count = 1 - up / down;
-                      this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
+                      this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
                     }
 
                     let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
                     // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                     if (!CO2OxidationRate || !value || !LowFever || !UnitCarbonContent) { }
                     else {
-                      let upAll = value * LowFever * 0.000001;
+                      let upAll = value * LowFever *1;
                       let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                       let countAll = upAll * downAll;
-                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                     }
                   }} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="GetType"
-                  label="获取方式"
-                  rules={[{ required: true, message: '请选择获取方式!' }]}
-                >
-                  <Select placeholder="请选择获取方式">
-                    {
-                      SELECT_LISTGet.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="LowFever"
-                  label="低位发热量(GJ/t,GJ/104Nm3)"
-                  rules={[{ required: true, message: '请填写低位发热量!' }]}
-                >
-                  <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量" onChange={(value) => {
-                    let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                    let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
-                    let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
-                    let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
-                    let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
-                    let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                    // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                    let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                    if (!RemoveDustRate || !AnnualConsumption || !value || !UnitCarbonContent) { }
-                    else {
-                      let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
-                      let down = AnnualConsumption * value * UnitCarbonContent;
-                      let count = 1 - up / down;
-                      this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
-                    }
-                    let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                    // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                    if (!CO2OxidationRate || !AnnualConsumption || !value || !UnitCarbonContent) { }
-                    else {
-                      let upAll = AnnualConsumption * value * 0.000001;
-                      let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
-                      let countAll = upAll * downAll;
-                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
-                    }
-                  }} />
-                </Form.Item>
-              </Col>
+             
+            
               <Col span={12}>
                 <Form.Item
                   name="LowFeverDataType"
@@ -292,27 +248,27 @@ class index extends PureComponent {
                       var type = this.formRef.current.getFieldValue('FossilType');
                       let count = 0;
                       switch (type) {
-                        case 2: count = 41816; break;
-                        case 3: count = 41816; break;
-                        case 4: count = 43070; break;
-                        case 5: count = 42652; break;
-                        case 6: count = 45998; break;
-                        case 8: count = 38931; break;
-                        case 9: count = 12726; break;
-                        case 10: count = 52270; break;
+                        case 2: count = 41.816; break;
+                        case 3: count = 41.816; break;
+                        case 4: count = 43.070; break;
+                        case 5: count = 42.652; break;
+                        case 6: count = 45.998; break;
+                        case 8: count = 38.931; break;
+                        case 9: count = 12.726; break;
+                        case 10: count = 52.270; break;
                       }
                       if (count != 0) {
-                        this.formRef.current.setFieldsValue({ 'LowFever': this.getFloat(count, 3) });
+                        this.formRef.current.setFieldsValue({ 'LowFever': this.getFloat(count, 5) });
                         let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
                         let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                         let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
                         let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
                         if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                         else {
-                          let upAll = AnnualConsumption * LowFever * 0.000001;
+                          let upAll = AnnualConsumption * LowFever *1;
                           let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                           let countAll = upAll * downAll;
-                          this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                          this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                         }
                       }
 
@@ -328,82 +284,39 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="UnitCarbonContent"
-                  label="单位热值含碳量(tC/GJ)"
-                  rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
+                  name="LowFever"
+                  label="低位发热量(GJ/t,GJ/104Nm3)"
+                  rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: this.state.UnitCarbonContentState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写单位热值含碳量" onChange={(value) => {
+                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量" onChange={(value) => {
                     let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                     let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
                     let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
                     let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
                     let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
                     let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                    let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                    // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                    if (!RemoveDustRate || !AnnualConsumption || !LowFever || !value) { }
+                    // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                    let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                    if (!RemoveDustRate || !AnnualConsumption || !value || !UnitCarbonContent) { }
                     else {
                       let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
-                      let down = AnnualConsumption * LowFever * value;
+                      let down = AnnualConsumption * value * UnitCarbonContent;
                       let count = 1 - up / down;
-                      this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
+                      this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
                     }
                     let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                    // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                    if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !value) { }
+                    // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                    if (!CO2OxidationRate || !AnnualConsumption || !value || !UnitCarbonContent) { }
                     else {
-
-                      let upAll = AnnualConsumption * LowFever * 0.000001;
-                      let downAll = (value * CO2OxidationRate * 44) / 12;
+                      let upAll = AnnualConsumption * value *1;
+                      let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                       let countAll = upAll * downAll;
-                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                     }
                   }} />
                 </Form.Item>
-                {this.state.UnitCarbonContentState == 2 ? '' :
-                  <Popover
-                    content={
-                      <>
-                        <Row>
-                          <Col span={24}>
-                            <Form.Item
-                              name="ElementalCarbonContent"
-                              label="元素含碳量(%)"
-                            // rules={[{ required: true, message: '请填写全年炉渣产量!' }]}
-                            >
-                              <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写元素含碳量" onChange={(value) => {
-                                // let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                                if (!LowFever) { }
-                                else {
-                                  let up = value * 1000000;
-                                  console.log('LowFever=', LowFever)
-                                  let down = LowFever;
-                                  let count = up / down;
-                                  this.formRef.current.setFieldsValue({ 'UnitCarbonContent': this.getFloat(count, 3) });
-                                  //计算排放量
-                                  let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                                  let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                                  let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                                  if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                  else {
-                                    let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
-                                    let countAll = upAll * downAll;
-                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
-                                  }
-                                }
-                              }} />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                      </>
-                    }
-                    trigger="click"
-                    title="单位热值含碳量计算">
-                    <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
-                  </Popover>}
               </Col>
+              
               <Col span={12}>
                 <Form.Item
                   name="UnitCarbonContentDataType"
@@ -419,27 +332,27 @@ class index extends PureComponent {
                       var type = this.formRef.current.getFieldValue('FossilType');
                       let count = 0;
                       switch (type) {
-                        case 2: count = 20.08; break;
-                        case 3: count = 21.1; break;
-                        case 4: count = 18.9; break;
-                        case 5: count = 20.2; break;
-                        case 6: count = 18.2; break;
-                        case 8: count = 15.32; break;
-                        case 9: count = 13.58; break;
-                        case 10: count = 12.2; break;
+                        case 2: count = 0.02008; break;
+                        case 3: count = 0.0211; break;
+                        case 4: count = 0.0189; break;
+                        case 5: count = 0.0202; break;
+                        case 6: count = 0.0182; break;
+                        case 8: count = 0.01532; break;
+                        case 9: count = 0.01358; break;
+                        case 10: count = 0.0122; break;
                       }
                       if (count != 0) {
-                        this.formRef.current.setFieldsValue({ 'UnitCarbonContent': this.getFloat(count, 3) });
+                        this.formRef.current.setFieldsValue({ 'UnitCarbonContent': this.getFloat(count, 5) });
                         let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
                         let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                         let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
                         let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
                         if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                         else {
-                          let upAll = AnnualConsumption * LowFever * 0.000001;
+                          let upAll = AnnualConsumption * LowFever *1;
                           let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                           let countAll = upAll * downAll;
-                          this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                          this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                         }
                       }
 
@@ -455,213 +368,88 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="CO2OxidationRate"
-                  label="碳氧化率(%)"
-                  rules={[{ required: true, message: '请填写碳氧化率!' }]}
+                  name="UnitCarbonContent"
+                  label={
+                    <span>
+                      单位热值含碳量(tC/GJ)
+                      <QuestionTooltip content="单位热值含碳量 = 低位发热量 × 元素含碳量" />
+                    </span>
+                  }
+                  rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: this.state.CO2OxidationRateState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写碳氧化率" onChange={(value) => {
-                    // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                  <InputNumber step="0.00001" stringMode style={{ width: this.state.UnitCarbonContentState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写单位热值含碳量" onChange={(value) => {
+                    let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
+                    let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
+                    let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
+                    let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
+                    let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
                     let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                     let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                    let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                    if (!value || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                    // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                    if (!RemoveDustRate || !AnnualConsumption || !LowFever || !value) { }
+                    else {
+                      let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
+                      let down = AnnualConsumption * LowFever * value;
+                      let count = 1 - up / down;
+                      this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
+                    }
+                    let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                    // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                    if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !value) { }
                     else {
 
-                      let upAll = AnnualConsumption * LowFever * 0.000001;
-                      let downAll = (UnitCarbonContent * value * 44) / 12;
+                      let upAll = AnnualConsumption * LowFever *1;
+                      let downAll = (value * CO2OxidationRate * 44) / 12;
                       let countAll = upAll * downAll;
-                      console.log('countAll', countAll)
-                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                     }
                   }} />
                 </Form.Item>
-                {this.state.CO2OxidationRateState == 2 ? '' :
+                {this.state.UnitCarbonContentState == 2 ? '' :
                   <Popover
                     content={
                       <>
                         <Row>
                           <Col span={24}>
                             <Form.Item
-                              name="SlagYield"
-                              label="全年炉渣产量(t)"
+                              name="ElementalCarbonContent"
+                              label="元素含碳量(%)"
                             // rules={[{ required: true, message: '请填写全年炉渣产量!' }]}
                             >
-                              <InputNumber step="0.001" stringMode style={{ width: '60%' }} placeholder="请填写全年炉渣产量" onChange={(value) => {
+                              <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写元素含碳量" onChange={(value) => {
                                 // let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
-                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
-                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
-                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
-                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                                 let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                if (!LowFever) { }
                                 else {
-                                  let up = ((value * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
-                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
-                                  let count = 1 - up / down;
-                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
-                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                  let up = value * 1000000;
+                                  console.log('LowFever=', LowFever)
+                                  let down = LowFever;
+                                  let count = up / down;
+                                  this.formRef.current.setFieldsValue({ 'UnitCarbonContent': this.getFloat(count, 5) });
+                                  //计算排放量
+                                  let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                                  let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                                  let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                                  if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                                   else {
-                                    let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) / 12;
+                                    let upAll = AnnualConsumption * LowFever *1;
+                                    let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                                     let countAll = upAll * downAll;
-                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                                   }
                                 }
                               }} />
                             </Form.Item>
                           </Col>
-                          <Col span={24}>
-                            <Form.Item
-                              name="SlagAvgCO2"
-                              label="炉渣平均含碳量(%)"
-                            // rules={[{ required: true, message: '请填写炉渣平均含碳量!' }]}
-                            >
-                              <InputNumber step="0.001" stringMode style={{ width: '60%' }} placeholder="请填写炉渣平均含碳量" onChange={(value) => {
-                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                                // let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
-                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
-                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
-                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
-                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                else {
-                                  let up = ((SlagYield * value) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
-                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
-                                  let count = 1 - up / down;
-                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
-                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                  else {
-                                    let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) / 12;
-                                    let countAll = upAll * downAll;
-                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
-                                  }
-                                }
-                              }} />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col span={24}>
-                            <Form.Item
-                              name="FlyAshYield"
-                              label="全年飞灰产量(t)"
-                            // rules={[{ required: true, message: '请填写全年飞灰产量!' }]}
-                            >
-                              <InputNumber step="0.001" stringMode style={{ width: '60%' }} placeholder="请填写全年飞灰产量" onChange={(value) => {
-                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
-                                // let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
-                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
-                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
-                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                else {
-                                  let up = ((SlagYield * SlagAvgCO2) + (value * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
-                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
-                                  let count = 1 - up / down;
-                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
-                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                  else {
-                                    let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) / 12;
-                                    let countAll = upAll * downAll;
-                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
-                                  }
-                                }
-                              }} />
-                            </Form.Item>
-                          </Col>
-                          <Col span={24}>
-                            <Form.Item
-                              name="FlyAshAvgCO2"
-                              label="飞灰平均含碳量(%)"
-                            // rules={[{ required: true, message: '请填写飞灰平均含碳量!' }]}
-                            >
-                              <InputNumber step="0.001" stringMode style={{ width: '60%' }} placeholder="请填写飞灰平均含碳量" onChange={(value) => {
-                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
-                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
-                                // let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
-                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
-                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                else {
-                                  let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * value / RemoveDustRate)) * 1000000;
-                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
-                                  let count = 1 - up / down;
-                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
-                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                  else {
-                                    let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) / 12;
-                                    let countAll = upAll * downAll;
-                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
-                                  }
-                                }
-                              }} />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col span={24}>
-                            <Form.Item
-                              name="RemoveDustRate"
-                              label="除尘系统平均除尘效率(%)"
-                            // rules={[{ required: true, message: '请填写除尘系统平均除尘效率!' }]}
-                            >
-                              <InputNumber step="0.001" stringMode style={{ width: '60%' }} placeholder="请填写除尘系统平均除尘效率" onChange={(value) => {
-                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
-                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
-                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
-                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
-                                // let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
-                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
-                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
-                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
-                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                else {
-                                  let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / value)) * 1000000;
-                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
-                                  let count = 1 - up / down;
-                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
-                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
-                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
-                                  else {
-                                    let upAll = AnnualConsumption * LowFever * 0.000001;
-                                    let downAll = (UnitCarbonContent * count * 44) / 12;
-                                    let countAll = upAll * downAll;
-                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
-                                  }
-                                }
-                              }} />
-                            </Form.Item>
-                          </Col>
-                          {/* <Col span={16}>
-                            <Button type="primary" shape="circle" icon={<CheckOutlined />} onClick={this.Ratehide} />
-                            </Col> */}
                         </Row>
                       </>
                     }
                     trigger="click"
-                    // visible={this.state.RateVisible}
-                    // onVisibleChange={this.RatehandleVisibleChange}
-                    title="碳氧化率计算">
+                    title="单位热值含碳量计算">
                     <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
                   </Popover>}
               </Col>
+              
               <Col span={12}>
                 <Form.Item
                   name="CO2OxidationRateDataType"
@@ -690,17 +478,17 @@ class index extends PureComponent {
                         case 10: count = 99; break;
                       }
                       if (count != 0)
-                        this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 3) });
+                        this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
                       let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
                       let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                       let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
                       let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
                       if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                       else {
-                        let upAll = AnnualConsumption * LowFever * 0.000001;
+                        let upAll = AnnualConsumption * LowFever *1;
                         let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                         let countAll = upAll * downAll;
-                        this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 3) });
+                        this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
                       }
                     }
                   }}>
@@ -714,11 +502,245 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
+                  name="CO2OxidationRate"
+                  label={
+                    <span>
+                      碳氧化率(%)
+                      <QuestionTooltip content="碳氧化率(%) = 1 - ((全年炉渣产量 × 炉渣平均含碳量 + 全年飞灰产量 × 飞灰平均含碳量 ÷ 除尘效率) × 10⁶) ÷ (消耗量 × 低位发热量 × 单位热值含碳量)" />
+                    </span>
+                  }
+                  rules={[{ required: true, message: '请填写碳氧化率!' }]}
+                >
+                  <InputNumber step="0.00001" stringMode style={{ width: this.state.CO2OxidationRateState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写碳氧化率" onChange={(value) => {
+                    // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                    let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                    let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                    let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                    if (!value || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                    else {
+
+                      let upAll = AnnualConsumption * LowFever *1;
+                      let downAll = (UnitCarbonContent * value * 44) / 12;
+                      let countAll = upAll * downAll;
+                      console.log('countAll', countAll)
+                      this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
+                    }
+                  }} />
+                </Form.Item>
+                {this.state.CO2OxidationRateState == 2 ? '' :
+                  <Popover
+                    content={
+                      <>
+                        <Row>
+                          <Col span={24}>
+                            <Form.Item
+                              name="SlagYield"
+                              label="全年炉渣产量(t)"
+                            // rules={[{ required: true, message: '请填写全年炉渣产量!' }]}
+                            >
+                              <InputNumber step="0.00001" stringMode style={{ width: '60%' }} placeholder="请填写全年炉渣产量" onChange={(value) => {
+                                // let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
+                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
+                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
+                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
+                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
+                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                else {
+                                  let up = ((value * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
+                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
+                                  let count = 1 - up / down;
+                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
+                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                  else {
+                                    let upAll = AnnualConsumption * LowFever *1;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
+                                    let countAll = upAll * downAll;
+                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
+                                  }
+                                }
+                              }} />
+                            </Form.Item>
+                          </Col>
+                          <Col span={24}>
+                            <Form.Item
+                              name="SlagAvgCO2"
+                              label="炉渣平均含碳量(%)"
+                            // rules={[{ required: true, message: '请填写炉渣平均含碳量!' }]}
+                            >
+                              <InputNumber step="0.00001" stringMode style={{ width: '60%' }} placeholder="请填写炉渣平均含碳量" onChange={(value) => {
+                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
+                                // let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
+                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
+                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
+                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
+                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                else {
+                                  let up = ((SlagYield * value) + (FlyAshYield * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
+                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
+                                  let count = 1 - up / down;
+                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
+                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                  else {
+                                    let upAll = AnnualConsumption * LowFever *1;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
+                                    let countAll = upAll * downAll;
+                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
+                                  }
+                                }
+                              }} />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col span={24}>
+                            <Form.Item
+                              name="FlyAshYield"
+                              label="全年飞灰产量(t)"
+                            // rules={[{ required: true, message: '请填写全年飞灰产量!' }]}
+                            >
+                              <InputNumber step="0.00001" stringMode style={{ width: '60%' }} placeholder="请填写全年飞灰产量" onChange={(value) => {
+                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
+                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
+                                // let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
+                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
+                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
+                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                else {
+                                  let up = ((SlagYield * SlagAvgCO2) + (value * FlyAshAvgCO2 / RemoveDustRate)) * 1000000;
+                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
+                                  let count = 1 - up / down;
+                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
+                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                  else {
+                                    let upAll = AnnualConsumption * LowFever *1;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
+                                    let countAll = upAll * downAll;
+                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
+                                  }
+                                }
+                              }} />
+                            </Form.Item>
+                          </Col>
+                          <Col span={24}>
+                            <Form.Item
+                              name="FlyAshAvgCO2"
+                              label="飞灰平均含碳量(%)"
+                            // rules={[{ required: true, message: '请填写飞灰平均含碳量!' }]}
+                            >
+                              <InputNumber step="0.00001" stringMode style={{ width: '60%' }} placeholder="请填写飞灰平均含碳量" onChange={(value) => {
+                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
+                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
+                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
+                                // let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
+                                let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
+                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                else {
+                                  let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * value / RemoveDustRate)) * 1000000;
+                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
+                                  let count = 1 - up / down;
+                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
+                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                  else {
+                                    let upAll = AnnualConsumption * LowFever *1;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
+                                    let countAll = upAll * downAll;
+                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
+                                  }
+                                }
+                              }} />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col span={24}>
+                            <Form.Item
+                              name="RemoveDustRate"
+                              label="除尘系统平均除尘效率(%)"
+                            // rules={[{ required: true, message: '请填写除尘系统平均除尘效率!' }]}
+                            >
+                              <InputNumber step="0.00001" stringMode style={{ width: '60%' }} placeholder="请填写除尘系统平均除尘效率" onChange={(value) => {
+                                let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
+                                let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
+                                let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
+                                let FlyAshAvgCO2 = this.formRef.current.getFieldValue('FlyAshAvgCO2') || 0;
+                                // let RemoveDustRate = this.formRef.current.getFieldValue('RemoveDustRate') || 0;
+                                let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
+                                let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
+                                let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
+                                if (!RemoveDustRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                else {
+                                  let up = ((SlagYield * SlagAvgCO2) + (FlyAshYield * FlyAshAvgCO2 / value)) * 1000000;
+                                  let down = AnnualConsumption * LowFever * UnitCarbonContent;
+                                  let count = 1 - up / down;
+                                  this.formRef.current.setFieldsValue({ 'CO2OxidationRate': this.getFloat(count, 5) });
+                                  // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0;
+                                  if (!count || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
+                                  else {
+                                    let upAll = AnnualConsumption * LowFever *1;
+                                    let downAll = (UnitCarbonContent * count * 44) / 12;
+                                    let countAll = upAll * downAll;
+                                    this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
+                                  }
+                                }
+                              }} />
+                            </Form.Item>
+                          </Col>
+                          {/* <Col span={16}>
+                            <Button type="primary" shape="circle" icon={<CheckOutlined />} onClick={this.Ratehide} />
+                            </Col> */}
+                        </Row>
+                      </>
+                    }
+                    trigger="click"
+                    // visible={this.state.RateVisible}
+                    // onVisibleChange={this.RatehandleVisibleChange}
+                    title="碳氧化率计算">
+                    <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
+                  </Popover>}
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="GetType"
+                  label="获取方式"
+                  rules={[{ required: true, message: '请选择获取方式!' }]}
+                >
+                  <Select placeholder="请选择获取方式">
+                    {
+                      SELECT_LISTGet.map(item => {
+                        return <Option value={item.key} key={item.key}>{item.value}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
                   name="tCO2"
-                  label="排放量（tCO2）"
+                  label={
+                    <span>
+                      排放量（tCO2）
+                      <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12) "/>
+                    </span>
+                  }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <InputNumber step="0.001" stringMode style={{ width: '100%' }} placeholder="请填写排放量" />
+                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写排放量" />
                 </Form.Item>
               </Col>
               <Col span={24}>
