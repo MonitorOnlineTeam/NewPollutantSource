@@ -783,6 +783,32 @@ export default {
                   name: 'CommandDispatchReportDetails',
                   component: './EmergencyTodoList/EmergencyDetailInfoLayout',
                 },
+               //企业运维管理
+               {
+                name: 'operationEntManage',
+                path:'/operations/operationEntManage',
+                routes: [
+                  {
+                    path: '/operations/operationEntManage',
+                    redirect: '/operations/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
+                  },
+                  {
+                    name:'operationUnit', //运维单位管理
+                    path: '/operations/operationEntManage/operationUnit/:configId',
+                    component: './operations/operationEntManage/operationUnit',
+                  },
+                  {
+                    name:'operationPerson', //运维人员管理
+                    path: '/operations/operationEntManage/operationPerson/:configId',
+                    component: './operations/operationEntManage/operationPerson',
+                  },
+                  {
+                    name:'operationPerson', //运维人员管理  详情
+                    path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                    component: './operations/operationEntManage/operationPerson/OperationPersonDetail',
+                  },
+              ]
+              },                  
               ],
             },
             {
