@@ -33,6 +33,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import EmergencyDetailInfo from '../../../../pages/EmergencyTodoList/TaskDetailModel';
+
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -62,7 +63,8 @@ export default class Index extends Component {
     this.state = {
       visible:false,
       DGIMN:'',
-      TaskID:''
+      TaskID:'',
+      responseStatus:''
     };
     this.columns = [
       {
@@ -93,6 +95,12 @@ export default class Index extends Component {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
+      {
+        title: '运维单位',
+        align: 'left',
+        dataIndex: 'operationEntName',
+        key: 'operationEntName'
+    },
       {
         title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,
         dataIndex: 'firstTime',
@@ -174,7 +182,7 @@ debugger;
     // type === 'ent'? this.columns[1].title = '企业名称' :  this.columns[1].title = '大气站名称'
    
 
-    this.updateQueryState({
+    // this.updateQueryState({
       // BeginTime: moment()
       // .subtract(1, 'day')
       // .format('YYYY-MM-DD 00:00:00'),
@@ -185,9 +193,9 @@ debugger;
       // PollutantType:'',
       // DataType:'HourData',
       // EntType:'',
-      RegionCode:location.query.regionCode,
-      Status:'',
-     });
+    //   RegionCode:location.query.regionCode,
+    //   Status:'',
+    //  });
      
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -201,19 +209,19 @@ debugger;
     });
   };
   updateQueryState = payload => {
-    const { queryPar, dispatch } = this.props;
+    const { dispatch,queryPar } = this.props;
 
     dispatch({
       type: pageUrl.updateState,
-      payload: { queryPar: { ...queryPar, ...payload } },
+      payload: { queryPar: {...queryPar, ...payload } },
     });
   };
 
   getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, location:{query:{regionCode,queryPar}} } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...queryPar },
+      payload: { ...JSON.parse(queryPar),RegionCode:regionCode,Status:this.state.responseStatus },
     });
   };
 
@@ -259,10 +267,10 @@ debugger;
   }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch,location:{query:{regionCode,queryPar}} } = this.props;
     dispatch({
       type: 'missingData/exportDefectPointDetail',
-      payload: { ...queryPar },
+      payload: { ...JSON.parse(queryPar),RegionCode:regionCode,Status:this.state.responseStatus },
       callback: data => {
          downloadFile(`/upload${data}`);
         },
@@ -383,9 +391,10 @@ debugger;
   //     </>
   // }
   reponseChange=(e)=>{
-      this.updateQueryState({
-        Status: e.target.value,
-      });
+      // this.updateQueryState({
+      //   Status: e.target.value,
+      // });
+      this.setState({responseStatus:e.target.value})
       setTimeout(()=>{
         this.getTableData();
       })
@@ -416,7 +425,7 @@ debugger;
 reponseComp = ()=>{
   const {queryPar:{Status} } = this.props;
   return <Form.Item label=''>
-        <Radio.Group value={Status} onChange={this.reponseChange}>
+        <Radio.Group onChange={this.reponseChange} defaultValue=''>
           <Radio.Button value="">全部</Radio.Button>
           <Radio.Button value="1">已响应</Radio.Button>
           <Radio.Button value="0">待响应</Radio.Button>

@@ -20,6 +20,7 @@ import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import OperationUnitList from '@/components/OperationUnitList'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -68,7 +69,7 @@ class index extends PureComponent {
     secondQueryCondition: {},
     queryCondition: {},
     exceptionTime: this.props.time || this.props.exceptionTime,
-    operationpersonnel:'',
+    OperationEntCode:'',
   }
   _SELF_ = {
     formLayout: {
@@ -284,14 +285,14 @@ class index extends PureComponent {
     this.getExceptionList([moment().subtract(7, "days").startOf("day"), moment().endOf("day")]);
   }
 
-  onTableClick = (RegionCode, ExceptionType, ResponseStatus,operationpersonnel) => {
+  onTableClick = (RegionCode, ExceptionType, ResponseStatus,OperationEntCode) => {
     this.setState({
       secondQueryCondition: {
         ...this.state.queryCondition,
         RegionCode: RegionCode,
         ExceptionType: ExceptionType,
         ResponseStatus: ResponseStatus,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationEntCode:this.state.OperationEntCode
       },
       visible: true
     }, () => {
@@ -339,7 +340,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationEntCode:this.state.OperationEntCode
       }
     })
     this.setState({
@@ -350,7 +351,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationEntCode:this.state.OperationEntCode
       }
     })
   }
@@ -375,7 +376,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationpersonnel
+        OperationEntCode:this.state.OperationEntCode
       }
     })
   }
@@ -518,7 +519,7 @@ class index extends PureComponent {
                   </Select>
                 )}
               </FormItem>
-              <Form.Item label="运维状态">
+              {/* <Form.Item label="运维状态">
                 {
                   <Select
                     allowClear
@@ -537,6 +538,9 @@ class index extends PureComponent {
                     <Option value="2">未设置运维人员</Option>
                   </Select>
                 }
+              </Form.Item> */}
+              <Form.Item label="运维单位">
+              <OperationUnitList style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={(value) => { this.setState({OperationEntCode: value,  })  }}/>
               </Form.Item>
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>

@@ -67,7 +67,7 @@ class index extends PureComponent {
     checkedValues: [],
     secondQueryCondition: {},
     queryCondition: {},
-    operationEntCode:'',
+    OperationEntCode:'',
     exceptionTime: this.props.time || this.props.exceptionTime,
     
   }
@@ -246,7 +246,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationEntCode
+        OperationPersonnel:this.state.OperationEntCode
       }
     })
     this.setState({
@@ -257,7 +257,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationEntCode
+        OperationPersonnel:this.state.OperationEntCode
       }
     })
   }
@@ -282,7 +282,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.operationEntCode
+        OperationPersonnel:this.state.OperationEntCode
       }
     })
   }
@@ -315,7 +315,7 @@ class index extends PureComponent {
   render() {
     const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, tableDataSource, loading, exportLoading } = this.props;
     const { columns, detailsColumns } = this._SELF_;
-    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,operationEntCode } = this.state;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,OperationEntCode } = this.state;
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     return (
@@ -361,7 +361,7 @@ class index extends PureComponent {
                <Form.Item label='运维单位'>
                  <OperationUnitList  onChange={(value) => {
                       this.setState({
-                        operationEntCode: value,
+                        OperationEntCode: value,
                       })
                   }}/>
                 </Form.Item>

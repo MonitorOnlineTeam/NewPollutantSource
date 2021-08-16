@@ -52,8 +52,8 @@ class index extends PureComponent {
     this.state = {
       defalutPollutantType: props.match.params.type,
       regionValue: '',
-      operationEntCode:'',
-      operationpersonnel:'',
+      OperationEntCode:'',
+      // operationpersonnel:'',
 
     };
   }
@@ -91,8 +91,8 @@ class index extends PureComponent {
       payload: {
         RegionCode: this.state.regionValue == undefined?'': this.state.regionValue,
         EntType: 2,
-        operationEntCode:this.state.operationEntCode,
-        operationpersonnel:this.state.operationpersonnel,
+        OperationEntCode:this.state.OperationEntCode,
+        // operationpersonnel:this.state.operationpersonnel,
 
       },
     });
@@ -109,8 +109,8 @@ class index extends PureComponent {
         PageSize: 20,
         PageIndex: 1,
         EntType: 2,
-        operationEntCode:this.state.operationEntCode,
-        operationpersonnel:this.state.operationpersonnel,
+        OperationEntCode:this.state.OperationEntCode,
+        // operationpersonnel:this.state.operationpersonnel,
 
       },
     });
@@ -125,8 +125,8 @@ class index extends PureComponent {
             PageSize:PageSize,
             PageIndex:PageIndex,
             EntType:2,
-            operationEntCode:this.state.operationEntCode,
-            operationpersonnel:this.state.operationpersonnel,
+            OperationEntCode:this.state.OperationEntCode,
+            // operationpersonnel:this.state.operationpersonnel,
 
         }
     })
@@ -141,8 +141,8 @@ onChangeHandle=(PageIndex, PageSize)=>{
           PageSize:PageSize,
           PageIndex:PageIndex,
           EntType:2,
-          operationEntCode:this.state.operationEntCode,
-          operationpersonnel:this.state.operationpersonnel,
+          OperationEntCode:this.state.OperationEntCode,
+          // operationpersonnel:this.state.operationpersonnel,
           
       }
   })
@@ -187,7 +187,7 @@ onChangeHandle=(PageIndex, PageSize)=>{
         }}>
         {this.children()}
       </Select>
-       <Select
+       {/* <Select
         allowClear
         style={{ width: 200, marginLeft: 10, marginRight: 10 }}
         placeholder="运维状态"
@@ -201,8 +201,8 @@ onChangeHandle=(PageIndex, PageSize)=>{
         }}>
         <Option value="1">已设置运维人员</Option>
         <Option value="2">未设置运维人员</Option>
-      </Select> 
-        <OperationUnitList  notSelf style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={(value) => { this.setState({operationEntCode: value,  })  }}/>
+      </Select>  */}
+        <OperationUnitList  notSelf style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={(value) => { this.setState({OperationEntCode: value,  })  }}/>
       <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
       <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
     </>;
@@ -233,19 +233,11 @@ onChangeHandle=(PageIndex, PageSize)=>{
       },
       {
         title: "空气监测点名称",
-        width: 100,
+        width: 120,
         align: 'left',
         fixed: fixed,
         dataIndex: 'pointName',
         key: 'pointName'
-      },
-      {
-        title: "运维单位",
-        width: 100,
-        align: 'left',
-        fixed: fixed,
-        dataIndex: 'operationEntName',
-        key: 'operationEntName'
       },
       {
         title: "设备编号(MN)",
@@ -279,6 +271,39 @@ onChangeHandle=(PageIndex, PageSize)=>{
         dataIndex: 'latitude',
         key: 'latitude'
       },
+      {
+        title: "运维单位",
+        align: 'left',
+        fixed: fixed,
+        dataIndex: 'operationEntName',
+        key: 'operationEntName'
+      },
+      {
+        title: "运维开始时间",
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'operationBeginTime',
+        key: 'operationBeginTime'
+    },
+    {
+        title: "运维截止时间",
+        align: 'center',
+        fixed: fixed,
+        dataIndex: 'operationEndTime',
+        key: 'operationEndTime',
+        
+    },
+    {
+      title: "运维负责人",
+      width: 100,
+      align: 'center',
+      fixed: fixed,
+      dataIndex: 'operationName',
+      key: 'operationName',
+      render:(text)=>{
+        return text == '' ? '-':text
+      }
+    },
       {
         title: "负责人手机号",
         width: 100,
@@ -342,17 +367,6 @@ onChangeHandle=(PageIndex, PageSize)=>{
         fixed: fixed,
         dataIndex: 'pollutantNames',
         key: 'pollutantNames'
-      },
-      {
-        title: "运维负责人",
-        width: 100,
-        align: 'center',
-        fixed: fixed,
-        dataIndex: 'operationName',
-        key: 'operationName',
-        render:(text)=>{
-          return text == '' ? '-':text
-        }
       },
     ]
 

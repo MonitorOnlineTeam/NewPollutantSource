@@ -28,7 +28,9 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
+import OperationUnitList from '@/components/OperationUnitList'
 import style from '@/pages/dataSearch/tableClass.less'
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -66,7 +68,7 @@ class index extends PureComponent {
             PointList: [],
             regionCode:'',
             hasCode:'',
-            operationpersonnel:'',
+            OperationEntCode:'',
             pointType:'1',
             pointLoading:true,
             entLoading:true,
@@ -112,7 +114,7 @@ class index extends PureComponent {
                 RegionCode: this.state.regionValue == undefined ? '' : this.state.regionValue,
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
-                operationpersonnel:this.state.operationpersonnel,
+                OperationEntCode:this.state.OperationEntCode,
             }
         })
     }
@@ -128,7 +130,7 @@ class index extends PureComponent {
                 EntCode: '',
                 EntType: 1,
                 PollutantType:outletValue == undefined ?'':outletValue,
-                operationpersonnel:this.state.operationpersonnel,
+                OperationEntCode:this.state.OperationEntCode,
             }
         })
     }
@@ -144,7 +146,7 @@ class index extends PureComponent {
                 EntCode: '1',
                 EntType: 1,
                 PollutantType:pointType == undefined ?'':pointType,
-                operationpersonnel:this.state.operationpersonnel,
+                OperationEntCode:this.state.OperationEntCode,
             }
         })
     }
@@ -159,7 +161,7 @@ class index extends PureComponent {
                 RegionCode: this.state.regionValue == undefined ? '' : this.state.regionValue,
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
                 //PageSize: 25,
                 //PageIndex: 1
             }
@@ -254,7 +256,7 @@ class index extends PureComponent {
                 <Option value="1">废水</Option>
                 <Option value="2">废气</Option>
             </Select>
-            <Select
+            {/* <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="运维状态"
@@ -268,7 +270,8 @@ class index extends PureComponent {
                 }}>
                  <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
-            </Select>
+            </Select> */}
+            <OperationUnitList style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={(value) => { this.setState({OperationEntCode: value,  })  }}/>
             <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
             <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
         </>;
@@ -286,7 +289,7 @@ class index extends PureComponent {
                 EntCode: '',
                 EntType: 1,
                 PollutantType:this.state.outletValue,
-                operationpersonnel: this.state.operationpersonnel,
+                operationpersonnel: this.state.OperationEntCode,
             }
         }).then(() => {
             this.setState({
@@ -294,7 +297,7 @@ class index extends PureComponent {
                 regionCode:regionCode,
                 hasCode:hasData,
                 entLoading:false,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
             })
         })
         })
@@ -312,14 +315,14 @@ class index extends PureComponent {
                 EntCode: '1',
                 EntType: 1,
                 PollutantType:this.state.pointType,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
             }
         }).then(() => {
             this.setState({
                 PointList: this.props.EntOrPointDetail,
                 regionCode:regionCode,
                 hasCode:hasData,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
                 pointLoading:false
             })
         })
@@ -335,7 +338,7 @@ class index extends PureComponent {
                 PollutantType: this.state.outletValue,
                 PageSize: PageSize,
                 PageIndex: PageIndex,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
             }
         })
     }

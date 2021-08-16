@@ -254,7 +254,7 @@ export default class OverVerifyLst extends Component {
   // }
   changeOperationUnit=(value)=>{
     this.updateQueryState({
-      operationEntCode: value?value:undefined,
+      OperationEntCode: value?value:undefined,
     });
   }
   changeRegion = value => {
@@ -453,7 +453,7 @@ export default class OverVerifyLst extends Component {
         AttentionCode,
         dataType,
         PollutantType,
-        operationEntCode
+        OperationEntCode
       },
       type,
     } = this.props;

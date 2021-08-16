@@ -27,6 +27,7 @@ class RegionDetails extends PureComponent {
         {
           title: '企业名称',
           dataIndex: 'EntName',
+          align: 'left',
           key: 'EntName',
         },
         {
@@ -34,6 +35,12 @@ class RegionDetails extends PureComponent {
           dataIndex: 'PointName',
           key: 'PointName',
         },
+        {
+          title: '运维单位',
+          align: 'left',
+          dataIndex: 'operationEntName',
+          key: 'operationEntName'
+      },
         {
           title: '数据类型',
           dataIndex: 'DataType',

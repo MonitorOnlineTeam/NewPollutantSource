@@ -196,13 +196,13 @@ class ScanningCode extends PureComponent {
         }
         return (
             <div style={{ height: '100vh' }} className={styles.scanningCode}>
-                  {/* <div className={styles.scanningEntInfo}>
+                  <div className={styles.scanningEntInfo}>
                  <List renderHeader={() => '基本信息'} className="my-list">
-                        <Item ><span style={{ fontSize: 13 }}> 企业名称：{'雪迪龙科技有限公司'}</span></Item>
-                        <Item ><span style={{ fontSize: 13 }}> 监测点名称：{'废水监测点'}</span></Item>
-                        <Item ><span style={{ fontSize: 13 }}> 运维负责人：{'张三'}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}><span>企业名称：</span>{operationLogList.pointData&&operationLogList.pointData.parentName}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}><span> 监测点名称：</span>{operationLogList.pointData&&operationLogList.pointData.pointName}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}> <span>运维负责人：</span>{operationLogList.pointData&&operationLogList.pointData.operationPersonName}</span></Item>
                     </List>
-                 </div> */}
+                 </div> 
                  <Card full style={{ height: 150 }}>
                     <Card.Header
                         title={
