@@ -52,6 +52,8 @@ const { Option } = Select;
   datatable: task.datatable,
   LoadingData: loading.effects['task/GetOperationTaskList'],
   clientHeight: global.clientHeight,
+  operationCompanyList:operations.operationCompanyList
+
 }))
 @Form.create()
 class TaskRecord extends Component {
@@ -361,7 +363,13 @@ getTaskTypeInfo=() => {
   }
   return res;
 }
-
+//运维单位列表
+operationCompanyList=()=>{
+  const { operationCompanyList } = this.props;
+   return operationCompanyList.map(item=>{
+   return  <Option key={item.id} value={item.id}>{item.name}</Option>
+  })
+}
 
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams } = this.props;
@@ -383,6 +391,11 @@ getTaskTypeInfo=() => {
         title: '监测点名称',
         dataIndex: 'PointName',
         key: 'PointName',
+      },
+      {
+        title: '运维单位',
+        dataIndex: 'operationCompanyName',
+        key: 'operationCompanyName',
       },
       {
         title: '任务单号',
@@ -561,6 +574,22 @@ getTaskTypeInfo=() => {
                       </FormItem>
                      
                   </Col>
+                  <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+                      <FormItem {...formLayout} label="运维单位" style={{ width: '100%' }}>
+                          {getFieldDecorator('OperationEntID', {
+                            initialValue: gettasklistqueryparams.OperationEntID ? gettasklistqueryparams.OperationEntID : undefined,
+                          })(
+                            <Select
+                            showSearch
+                            placeholder="请选择"
+                            allowClear
+                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                              {this.operationCompanyList()}
+                            </Select>,
+                          )}
+                      </FormItem>
+                  </Col> 
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="运维状态" style={{ width: '100%' }}>
                           {getFieldDecorator('ExceptionType', {
