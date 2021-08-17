@@ -73,7 +73,10 @@ export default Model.extend({
       BTime: '',
       ETime: '',
       CommandDispatchType: '',
+
     },
+    operationCompanyList:[]
+
   },
   effects: {
     // 获取日历信息
@@ -442,6 +445,18 @@ export default Model.extend({
         });
       }
     },
+    //查询公司运维单位列表信息
+    *getOperationCompanyList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getOperationCompanyList, payload);
+
+      if (result.IsSuccess) {
+        yield update({
+          operationCompanyList: result.Datas,
+        });
+      } else {
+        sdlMessage(result.Message, "warning");
+      }
+    },      
   },
   reducers: {
     // 更新车辆申请state
