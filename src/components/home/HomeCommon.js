@@ -5,6 +5,7 @@ import AlarmMessage from './AlarmMessage';
 import MonitoringStatus from './MonitoringStatus';
 import EmissionsAnalysis from './EmissionsAnalysis';
 import EmissionTax from './EmissionTax';
+import EmissionYears from './EmissionYears';
 import moment from 'moment';
 class HomeCommon extends Component {
     constructor(props) {
@@ -47,7 +48,8 @@ class HomeCommon extends Component {
                 break;
                 //排污税
             case "EmissionTax":
-                return<EmissionTax currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN}/>
+                // return<EmissionTax currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN}/>
+                return<EmissionYears currentMonth={currentMonth} entCode={entCode} DGIMN={DGIMN}/>
                 break;
                 default:
                     break;

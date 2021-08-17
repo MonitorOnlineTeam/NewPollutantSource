@@ -64,7 +64,7 @@ class AddOrEditPage extends PureComponent {
     // let value4 = UnitCarbonContent * CO2OxidationRate * 12;
     // if (value4) {
     //   let value2 = value3 / value4;
-    let count = (value1 * value2).toFixed(5);
+    let count = (value1 * value2).toFixed(2);
     //   this.formRef.current.setFieldsValue({ 'FossilFuel_tCO2': count });
     // } else {
     this.formRef.current.setFieldsValue({ 'FossilFuel_tCO2': count });
@@ -100,7 +100,7 @@ class AddOrEditPage extends PureComponent {
     console.log('value1=', value1, 'value2=', value2)
     let count = 0;
     if (value2) {
-      count = (1 - (value1 * 1000000 / value2)).toFixed(5);
+      count = (1 - (value1 * 1000000 / value2)).toFixed(2);
     }
     this.formRef.current.setFieldsValue({ 'CO2OxidationRate': count });
     // name = "Consumption"
@@ -314,7 +314,7 @@ class AddOrEditPage extends PureComponent {
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('Emission') || 0;
-                              let count = (value * val2).toFixed(5);
+                              let count = (value * val2).toFixed(2);
                               this.formRef.current.setFieldsValue({ 'PowerDischarge_tCO2': count });
                               this.countCrew_tCO2();
                             }} style={{ width: '100%' }} placeholder="请填写元素含碳量" />
@@ -326,7 +326,7 @@ class AddOrEditPage extends PureComponent {
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('BuyPower') || 0;
-                              let count = (value * val2).toFixed(5);
+                              let count = (value * val2).toFixed(2);
                               this.formRef.current.setFieldsValue({ 'PowerDischarge_tCO2': count });
                               this.countCrew_tCO2();
                             }} style={{ width: '100%' }} placeholder="请填写排放因子" />
@@ -455,7 +455,7 @@ class AddOrEditPage extends PureComponent {
                     >
                       <InputNumber onChange={(value) => {
                         let val2 = this.formRef.current.getFieldValue('ElementalCarbonContent') || 0;
-                        let count = (value * val2).toFixed(5);
+                        let count = (value * val2).toFixed(2);
                         this.formRef.current.setFieldsValue({ 'UnitCarbonContent': count });
                         this.countCO2Rate()
                       }} min={0} style={{ width: '100%' }} placeholder="请填写低位发热量" />
@@ -490,7 +490,7 @@ class AddOrEditPage extends PureComponent {
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('LowFever') || 0;
-                              let count = (value * val2).toFixed(5);
+                              let count = (value * val2).toFixed(2);
                               this.formRef.current.setFieldsValue({ 'UnitCarbonContent': count });
                               this.countCO2Rate()
                             }} style={{ width: '100%' }} placeholder="请填写元素含碳量" />

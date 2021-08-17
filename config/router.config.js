@@ -1,4 +1,3 @@
-import config from '../src/config'
 
 const routes = [
   {
@@ -1798,7 +1797,12 @@ const routes = [
                   {
                     path: '/Intelligentanalysis/CO2Material/cO2DischargeSum',
                     component: './IntelligentAnalysis/CO2Material/cO2DischargeSum',
-                  }
+                  },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/GHG',
+                    component: './IntelligentAnalysis/CO2Material/GHG',
+                  },
+
                 ]
               },
             ],
