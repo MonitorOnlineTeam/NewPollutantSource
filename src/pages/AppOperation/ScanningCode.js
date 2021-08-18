@@ -1,11 +1,11 @@
-import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Badge, Modal, List,Icon } from 'antd-mobile';
+import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Modal, List,Icon } from 'antd-mobile';
 import React, { PureComponent } from 'react';
 import zh_CN from 'antd-mobile/lib/date-picker/locale/zh_CN';
 import moment, { months } from 'moment';
 import styles from './ScanningCode.less';
 import { connect } from 'dva';
 import { ExclamationCircleTwoTone } from '@ant-design/icons';
-import { Spin } from 'antd';
+import { Spin, Tag,Badge } from 'antd';
 import { router } from 'umi'
 const Item = List.Item;
 const Step = Steps.Step;
@@ -124,6 +124,34 @@ class ScanningCode extends PureComponent {
         }
       
     }
+    taskStatus = (text)=>{
+    if (text === 1) {
+        return <span><Tag color="#d9d9d9" className={styles.tagSty}>待执行</Tag></span>;
+      }
+      if (text === 2) {
+        return <span><Tag color="#1890ff" className={styles.tagSty}>进行中</Tag></span>;
+      }  
+      if (text === 3) {
+        return <span><Tag color="#52c41a" className={styles.tagSty}>已完成</Tag></span>;
+      }
+      if (text === 10) { 
+      return <span><Tag color="#ff4d4f" className={styles.tagSty}>系统关闭</Tag></span>;
+      }
+    }
+    taskFrom = (text) => {
+        if (text === '手动创建') {
+          return <span><Tag className={styles.tagSty} color="purple">手动创建</Tag></span>;
+        }
+        if (text === '报警响应') {
+          return <span><Tag className={styles.tagSty}  color="red">报警响应</Tag></span>;
+        }
+        if (text === '监管派单') {
+          return <span><Tag className={styles.tagSty}  color="blue">监管派单</Tag></span>;
+        }
+        if (text === '自动派单') {
+        return <span><Tag className={styles.tagSty}  color="pink">自动派单</Tag></span>;
+        }
+      }
     render() {
         const { operationLogList, operationRzWhere } = this.props;
         const { dateValue } = this.state;
@@ -155,8 +183,10 @@ class ScanningCode extends PureComponent {
                 item.Nodes.map((itemChild) => {
                     gridList.push(
                         <Step title={
-                            <div style={{ fontSize: 14,marginTop:-2}}>
-                                <span>{itemChild.RecordTypeName}</span>
+                            <div style={{ fontSize: 14}}>
+                                <span style={{paddingRight:15}}>{itemChild.RecordTypeName}</span>
+                                {this.taskFrom(itemChild.TaskFromName)}
+                                {this.taskStatus(itemChild.TaskStatus)}
                             </div>
                         }
                             icon={
@@ -182,10 +212,10 @@ class ScanningCode extends PureComponent {
                                 </div>
                             }
                             description={
-                                <div style={{ fontSize: 13 }}>
-                                    <div style={{ float: 'left', width: '35%', minWidth: 82, marginBottom: 15, marginTop: 10 }}>运维人:{itemChild.User_Name.length > 3 ? itemChild.User_Name.substring(0, 3) + ".." : itemChild.User_Name}</div>
-                                    <div style={{ float: 'left', width: '40%', minWidth: 91, marginBottom: 15, marginTop: 10, textAlign: 'center' }}>执行时间:{itemChild.CreateTime}</div>
-                                    <div style={{ float: 'left', width: '20%', marginBottom: 15, textAlign: 'center', marginTop: 10 }}>
+                                <div style={{ fontSize: 13,display:'flex',flexDirection:'row',justifyContent: "space-between" }}>
+                                    <div style={{   marginBottom: 15, marginTop: 10 }}>运维人：{itemChild.User_Name.length > 3 ? itemChild.User_Name.substring(0, 3) + ".." : itemChild.User_Name}</div>
+                                    <div style={{ marginBottom: 15, marginTop: 10, textAlign: 'center' }}>完成时间：{itemChild.BeginTime}</div>
+                                    <div style={{ marginTop: 10,paddingRight:10 }}>
                                         <span onClick={()=>{this.getDetails(itemChild.ID)}}><Icon type="right" /></span>
                                      </div>
                                 </div>
