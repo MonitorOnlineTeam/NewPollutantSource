@@ -252,8 +252,8 @@ onChangeHandle=(PageIndex, PageSize)=>{
         width: 100,
         align: 'center',
         fixed: fixed,
-        dataIndex: 'attentionName',
-        key: 'attentionName'
+        dataIndex: 'stationType',
+        key: 'stationType'
       },
       {
         title: "经度",
@@ -309,8 +309,8 @@ onChangeHandle=(PageIndex, PageSize)=>{
         width: 100,
         align: 'center',
         fixed: fixed,
-        dataIndex: 'phone',
-        key: 'phone'
+        dataIndex: 'operationPhone',
+        key: 'operationPhone'
       },
       {
         title: "运维状态",
