@@ -1147,6 +1147,13 @@ class index extends PureComponent {
                 key: 'pointName',
             },
             {
+                title: "运维单位",
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'operationEntName',
+                key: 'operationEntName'
+              },
+            {
                 title: "数据类型",
                 width: 100,
                 align: 'center',
@@ -1156,7 +1163,7 @@ class index extends PureComponent {
             },
             {
                 title: "首次报警时间",
-                width: 100,
+                width: 120,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',
@@ -1289,7 +1296,7 @@ class index extends PureComponent {
             },
             {
                 title: "首次报警时间",
-                width: 100,
+                width: 120,
                 align: 'center',
                 fixed: fixed,
                 dataIndex: 'firstTime',

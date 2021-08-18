@@ -78,13 +78,6 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
-        title: '运维单位',
-        width: 100,
-        align: 'left',
-        dataIndex: 'operationEntName',
-        key: 'operationEntName'
-    },
-      {
         title: <span>{this.props.types==='ent'? '缺失数据报警检测点数': '缺失数据报警空气检测点数'}</span>,
         dataIndex: 'pointCount',
         key: 'pointCount',
