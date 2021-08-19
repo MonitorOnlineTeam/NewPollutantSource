@@ -95,6 +95,9 @@ class index extends PureComponent {
         key: 'operationEntName',
         width: 200,
         align: 'center',
+        render: (text, record) => {
+          return <div style={{textAlign:'left'}}>{text}</div>
+        }
       },
       {
         title: '数据异常报警企业数',

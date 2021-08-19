@@ -222,6 +222,15 @@ class index extends PureComponent {
         key: 'PointName',
       },
       {
+        title: '运维单位',
+        align: 'center',
+        dataIndex: 'operationEntName',
+        key: 'operationEntName',
+        render: (text, record) => {
+          return <div style={{textAlign:'left'}}>{text}</div>
+        }
+    },
+      {
         title: '数据类型',
         dataIndex: 'DataType',
         key: 'DataType',

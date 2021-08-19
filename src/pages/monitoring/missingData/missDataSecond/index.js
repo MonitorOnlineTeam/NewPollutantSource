@@ -97,9 +97,12 @@ export default class Index extends Component {
       },
       {
         title: '运维单位',
-        align: 'left',
+        align: 'center',
         dataIndex: 'operationEntName',
-        key: 'operationEntName'
+        key: 'operationEntName',
+        render: (text, record) => {
+          return <div style={{textAlign:'left'}}>{text}</div>
+        }
     },
       {
         title: <span>{JSON.parse(this.props.location.query.queryPar).EntType==='1'? '首次缺失时间' : '首次缺失时间' }</span>,

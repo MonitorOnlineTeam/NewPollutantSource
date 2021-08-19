@@ -126,6 +126,9 @@ export default class OverVerifyLst extends Component {
             key: 'operationEntName',
             width: 210,
             align: 'center',
+            render: (text, record) => {
+              return <div style={{textAlign:'left'}}>{text}</div>
+            }
           },
           {
             title: <span>{'数据超标报警企业数'}</span>,

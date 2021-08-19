@@ -37,9 +37,12 @@ class RegionDetails extends PureComponent {
         },
         {
           title: '运维单位',
-          align: 'left',
+          align: 'center',
           dataIndex: 'operationEntName',
-          key: 'operationEntName'
+          key: 'operationEntName',
+          render: (text, record) => {
+            return <div style={{textAlign:'left'}}>{text}</div>
+          }
       },
         {
           title: '数据类型',

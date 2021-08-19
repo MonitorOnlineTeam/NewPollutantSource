@@ -230,10 +230,13 @@ class index extends PureComponent {
             {
                 title: '运维单位',
                 width: 100,
-                align: 'left',
+                align: 'center',
                 fixed: fixed,
                 dataIndex: 'operationEntName',
-                key: 'operationEntName'
+                key: 'operationEntName',
+                render: (text, record) => {
+                    return <div style={{textAlign:'left'}}>{text}</div>
+                  }
             },
             {
                 title: "运维开始时间",
