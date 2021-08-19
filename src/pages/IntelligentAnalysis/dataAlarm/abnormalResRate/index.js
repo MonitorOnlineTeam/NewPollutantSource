@@ -90,16 +90,6 @@ class index extends PureComponent {
         }
       },
       {
-        title: <span>运维单位</span>,
-        dataIndex: 'operationEntName',
-        key: 'operationEntName',
-        width: 200,
-        align: 'center',
-        render: (text, record) => {
-          return <div style={{textAlign:'left'}}>{text}</div>
-        }
-      },
-      {
         title: '数据异常报警企业数',
         dataIndex: 'CountEnt',
         key: 'CountEnt',
@@ -249,7 +239,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.OperationEntCode
+        OperationEntCode:this.state.OperationEntCode
       }
     })
     this.setState({
@@ -260,7 +250,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.OperationEntCode
+        OperationEntCode:this.state.OperationEntCode
       }
     })
   }
@@ -285,7 +275,7 @@ class index extends PureComponent {
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
-        OperationPersonnel:this.state.OperationEntCode
+        OperationEntCode:this.state.OperationEntCode
       }
     })
   }
