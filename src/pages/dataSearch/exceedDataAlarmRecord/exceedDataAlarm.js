@@ -1287,6 +1287,13 @@ class index extends PureComponent {
                 key: 'pointName',
             },
             {
+                title: "运维单位",
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'operationEntName',
+                key: 'operationEntName'
+              },
+            {
                 title: "数据类型",
                 width: 100,
                 align: 'center',
@@ -1421,6 +1428,13 @@ class index extends PureComponent {
                 key: 'pointName',
             },
             {
+                title: "运维单位",
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'operationEntName',
+                key: 'operationEntName'
+              },
+            {
                 title: "数据类型",
                 width: 100,
                 align: 'center',
@@ -1548,6 +1562,14 @@ class index extends PureComponent {
                     return text == undefined?'-':text
                 }
             },
+            {
+                title: "运维单位",
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'operationEntName',
+                key: 'operationEntName'
+              },
+
             {
                 title: "数据类型",
                 width: 100,
