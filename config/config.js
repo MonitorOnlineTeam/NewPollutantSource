@@ -515,6 +515,22 @@ export default {
                   path:'/platformconfig/monitortarget/AEnterpriseTest/1/1,2/entImport',
                   component: './platformManager/monitortarget/entImport',
                 },
+                { //基础信息
+                  name: 'basicInfo',
+                  path: '/platformconfig/basicInfo',
+                  routes: [
+                    {
+                      path: '/platformconfig/basicInfo',
+                      redirect: '/platformconfig/basicInfo/projectManager',
+                    },
+                    {
+                      // 项目管理
+                      name: 'projectManager',
+                      path: '/platformconfig/basicInfo/projectManager',
+                      component: './platformManager/basicInfo/projectManager',
+                    },
+                  ]
+                },
               ],
             },
             {

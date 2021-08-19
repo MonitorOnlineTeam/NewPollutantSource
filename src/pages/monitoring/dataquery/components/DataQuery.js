@@ -50,12 +50,12 @@ class DataQuery extends Component {
   }
 
   componentDidMount() {
+    this.children.onDataTypeChange(this.state.dataType)
     this.props.initLoadData && this.changeDgimn(this.props.DGIMN);
   }
 
   /** dgimn改變時候切換數據源 */
   componentWillReceiveProps = nextProps => {
-
     if (nextProps.DGIMN !== this.props.DGIMN) {
       this.props.dispatch({
         type: 'dataquery/updateState',
@@ -69,7 +69,6 @@ class DataQuery extends Component {
         },
       });
       this.changeDgimn(nextProps.DGIMN,'switch');
-
     }
   };
 
@@ -83,7 +82,7 @@ class DataQuery extends Component {
       },
       callback: () => {
         let { historyparams,dateTypes,dateValues } = this.props;
-        if(this.props.tabType==='biao'&&dataType!=='realtime'&&dataType!=='minute'&&dataType!=='hour'&&dataType!=='day'){
+        if(this.props.tabType==='biao'&&type!=='realtime'&&type!=='minute'&&type!=='hour'&&type!=='day'){
           this.setState({dataType:'realtime'})
         }
         // this.children.onDataTypeChange(this.state.dataType)
@@ -198,13 +197,11 @@ class DataQuery extends Component {
     //         })
 
     // }
-
     dispatch({
       type: 'dataquery/updateState',
-      payload: {
-        historyparams,
-      },
+      payload: { historyparams },
     });
+
     dispatch({
       type: 'dataquery/updateState',
       payload: {
@@ -287,30 +284,28 @@ class DataQuery extends Component {
 
   /** 后台请求数据 */
   reloaddatalist = historyparams => {
-    const { dispatch } = this.props;
+    const { dispatch,pollutantlist } = this.props;
+    
     historyparams &&
       dispatch({
         type: 'dataquery/updateState',
-        payload: {
+        payload:this.props.historyparams.datatype==='hour'|| this.props.historyparams.datatype==='day'?
+        {
+          historyparams,
+          IsSupplyData:true
+        }
+        :
+        {
           historyparams,
         },
       });
     dispatch({
       type: 'dataquery/queryhistorydatalist',
-      payload: {},
+      payload:historyparams.datatype==='hour'|| historyparams.datatype==='day'? { IsSupplyData:true} : {},
     });
+
   };
-  tableOnChange = (PageIndex, PageSize) => {
-    const { historyparams} = this.props;
-    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize})
 
-   }
-  onShowSizeChange= (PageIndex, PageSize) => {
-    const { historyparams} = this.props;
-
-    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize, })
-    
-   }
   /** 切换排口 */
   changeDgimn = (dgimn,type) => {
     this.setState({
@@ -340,11 +335,29 @@ class DataQuery extends Component {
     //     },
     // })
   };
+  updateQueryState = payload => {
+    const { historyparams, dispatch } = this.props;
 
+    dispatch({
+      type: 'dataquery/updateState',
+      payload: { historyparams: { ...historyparams, ...payload } },
+    });
+  };
+  tableOnChange = (PageIndex, PageSize) => {
+    const { historyparams} = this.props;
+    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize})
+
+   }
+   onShowSizeChange= (PageIndex, PageSize) => {
+    const { historyparams} = this.props;
+
+    this.reloaddatalist({ ...historyparams, pageIndex:PageIndex, pageSize: PageSize, })
+    
+   }
   /** 渲染数据展示 */
 
   loaddata = () => {
-    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant,historyparams:{pageSize,pageIndex},total  } = this.props;
+    const { dataloading, option, datatable, columns, chartHeight, loadingPollutant,historyparams:{pageSize,pageIndex},total } = this.props;
     const { displayType } = this.state;
     if (dataloading || loadingPollutant) {
       return (
@@ -390,7 +403,6 @@ class DataQuery extends Component {
         return item.dataIndex!=='AQI' && item.dataIndex!='AirQuality'
      })
     }
-   console.log(this.props.tabType)
     return (
       // <Card.Grid style={{ width: '100%', height: 'calc(100vh - 350px)', overflow: 'auto', ...this.props.style }}>
       <SdlTable
@@ -404,7 +416,7 @@ class DataQuery extends Component {
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          total:total,
+          total: total,
           pageSize: pageSize,
           current: pageIndex,
           onChange: this.tableOnChange,
@@ -458,9 +470,9 @@ class DataQuery extends Component {
   };
   dateCallbackDataQuery = (dates, dataType) => {
     let { historyparams, dispatch } = this.props;
-    // this.setState({
-    //   dateValue: dates,
-    // });
+    this.setState({
+      dateValue: dates,
+    });
     dispatch({
       type: 'dataquery/updateState',
       payload: {
@@ -578,7 +590,11 @@ class DataQuery extends Component {
           type="primary"
           loading={false}
           onClick={() => {
-            this.reloaddatalist();
+            if(pollutantlist && pollutantlist[0]){
+              this.reloaddatalist(this.props.historyparams);
+             }else{
+               message.error('污染物列表为空，请添加污染物！')
+          }
           }}
           style={{ marginRight: 10 }}
         >
