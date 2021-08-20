@@ -197,6 +197,9 @@ class ThematicMap extends PureComponent {
         {extData.AQI}
       </div>
     }
+    if (pollutantType == 6) {
+      icon = <CustomIcon type="icon-richangshenghuo-shuizhan" style={{ ...style }} />
+    }
     return <Tooltip overlayClassName={styles.tooltip} color={"#fff"} title={<span style={{ color: "#000" }}>{extData.Abbreviation} - {extData.title}</span>}>
       <div onClick={() => this.onMapItemClick(extData)}>
         {icon}
@@ -246,6 +249,7 @@ class ThematicMap extends PureComponent {
         EntCode: item.EntCode,
         Color: item.Color,
         Level: item.Level,
+        BaseType: item.BaseType,
       }
     })
   };
@@ -382,6 +386,18 @@ class ThematicMap extends PureComponent {
           }}
           />
         </>
+      case 6:
+        return <>
+          <CustomIcon
+            type="icon-richangshenghuo-shuizhan"
+            style={{
+              color: '#999',
+              marginRight: 8,
+              fontSize: 20,
+              ...mapIconStyle
+            }}
+          />
+        </>
       case 10:
         return <>
           <VocIcon style={{
@@ -438,8 +454,8 @@ class ThematicMap extends PureComponent {
                     alignItems: 'center'
                   }}>
                     <AppstoreOutlined style={{ fontSize: 17, marginRight: 8 }} />
-                  全部
-                </div>
+                    全部
+                  </div>
                 </RadioButton>
                 {
                   pollutantTypeCountList.map(item => {

@@ -171,7 +171,7 @@ class SiteParamsPage extends PureComponent {
       <>
         <Select
           mode="multiple"
-          style={{ width: '25%',marginRight: '10px'}}
+          style={{ width: '25%', marginRight: '10px' }}
           value={pollutantValue}
           placeholder="请选择污染物"
           maxTagCount={2}
@@ -190,7 +190,7 @@ class SiteParamsPage extends PureComponent {
           }
         </Select>
 
-        <RangePicker_ style={{  width: '25%', minWidth: '200px', marginRight: '10px'}} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
+        <RangePicker_ style={{ width: '25%', minWidth: '200px', marginRight: '10px' }} dateValue={time} onRef={this.onRef1} dataType={dataType} callback={(dates, dataType) => {
           this.setState({
             time: dates,
             dataType: dataType
@@ -226,7 +226,7 @@ class SiteParamsPage extends PureComponent {
         name: item.PollutantName,
         type: 'line',
         animation: false,
-        barWidth : 30,
+        barWidth: 30,
         data: item.DataList,
         ...otherProps
       }
@@ -436,7 +436,7 @@ class SiteParamsPage extends PureComponent {
           // choice
           domId="#siteParamsPage"
           onItemClick={value => {
-            if (value.length) {
+            if (value.length && value[0].IsEnt === false) {
               let DGIMNs = value.find(item => {
                 if (item.IsEnt === false) {
                   return item.key

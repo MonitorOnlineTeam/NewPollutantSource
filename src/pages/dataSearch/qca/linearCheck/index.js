@@ -28,7 +28,7 @@ class index extends PureComponent {
           <NavigationTree domId="#zeroCheck" onItemClick={item => {
             if (!item[0].IsEnt) {
               this.setState({
-                // pointName: `${item.EntName} - ${item.title}`,
+                pointName: `${item[0].entName} - ${item[0].pointName}`,
                 DGIMN: item[0].key,
                 pointType: item[0].Type
               })

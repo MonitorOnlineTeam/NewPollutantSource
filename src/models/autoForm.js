@@ -288,7 +288,7 @@ export default Model.extend({
         });
         // 添加
         let addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISADD === 1);
-        if(payload.isEdit) {
+        if (payload.isEdit) {
           addCfgField = result.Datas.CfgField.filter(cfg => cfg.DF_ISEDIT === 1);
         }
         // const colSpanLen = ;
@@ -454,7 +454,7 @@ export default Model.extend({
       }
     },
 
-    * getFormData({ payload }, { call, select, update, put }) {
+    * getFormData({ payload, callback }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
@@ -464,6 +464,7 @@ export default Model.extend({
       let postData = payload;
       const result = yield call(services.getFormData, postData);
       if (result.IsSuccess && result.Datas.length) {
+        callback && callback(result.Datas[0])
         yield update({
           editFormData: {
             ...state.editFormData,
@@ -520,7 +521,7 @@ export default Model.extend({
     },
 
     // 获取联动
-    * getAttachmentList({ payload }, { call, update }) {
+    * getAttachmentList({ payload, callback }, { call, update }) {
       if (payload.FileUuid && payload.FileUuid !== 'null') {
         const result = yield call(services.getAttachmentList, { ...payload });
         if (result.IsSuccess) {
@@ -529,13 +530,15 @@ export default Model.extend({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
-            url: `${item.Url}`,
+            url: `/upload/${item.FileName}`,
           }))
+          callback && callback(fileList)
           yield update({
             fileList,
           })
         }
       } else {
+        callback && callback([])
         yield update({
           fileList: [],
         })

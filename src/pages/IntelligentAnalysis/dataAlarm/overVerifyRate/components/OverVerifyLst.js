@@ -470,7 +470,6 @@ export default class OverVerifyLst extends Component {
                     style={{ width: 110 }}
                     allowClear
                   >
-                    <Option value=""></Option>
                     {this.attentchildren()}
                   </Select>
                 </Form.Item>

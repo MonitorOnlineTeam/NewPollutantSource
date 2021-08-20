@@ -838,6 +838,10 @@ class NavigationTree extends Component {
         return <a><WaterIcon style={{ fontSize: size }} /></a>
       case '2':
         return <a><GasIcon style={{ fontSize: size }} /></a>
+      case '6':
+        return <a><CustomIcon type="icon-richangshenghuo-shuizhan" style={{ fontSize: size, color: '#3c99d8' }} /></a>
+      case '9':
+        return <a><CustomIcon type="icon-echoujiance" style={{ fontSize: size, color: '#3c99d8' }} /></a>
       case '10':
         return <a><VocIcon style={{ fontSize: size }} /></a>
       case '12':

@@ -24,6 +24,7 @@ import { connect } from "dva";
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import RegionList from '@/components/RegionList'
 
 import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
@@ -37,13 +38,13 @@ const { MonthPicker } = DatePicker;
 const pageUrl = {
     GetAttentionDegreeList: 'enterpriseMonitoringModel/GetAttentionDegreeList',
     getRegions: 'autoForm/getRegions',
-    GetEntByRegion:'exceedDataAlarmModel/GetEntByRegion',
-    GetEntByRegionAndAtt:'wasteWaterReportModel/GetEntByRegionAndAtt',
-    GetPointByEntCode:'wasteWaterReportModel/GetPointByEntCode',
-    GetAllTypeDataListWater:'wasteWaterReportModel/GetAllTypeDataListWater',
-    ExportAllTypeDataListWater:'wasteWaterReportModel/ExportAllTypeDataListWater',
+    GetEntByRegion: 'exceedDataAlarmModel/GetEntByRegion',
+    GetEntByRegionAndAtt: 'wasteWaterReportModel/GetEntByRegionAndAtt',
+    GetPointByEntCode: 'wasteWaterReportModel/GetPointByEntCode',
+    GetAllTypeDataListWater: 'wasteWaterReportModel/GetAllTypeDataListWater',
+    ExportAllTypeDataListWater: 'wasteWaterReportModel/ExportAllTypeDataListWater',
 }
-@connect(({ loading, autoForm, wasteWaterReportModel ,exceedDataAlarmModel,enterpriseMonitoringModel}) => ({
+@connect(({ loading, autoForm, wasteWaterReportModel, exceedDataAlarmModel, enterpriseMonitoringModel }) => ({
     loading: loading.effects['wasteWaterReportModel/GetAllTypeDataListWater'],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
@@ -51,21 +52,21 @@ const pageUrl = {
     PageSize: wasteWaterReportModel.PageSize,
     PageIndex: wasteWaterReportModel.PageIndex,
     priseList: exceedDataAlarmModel.priseList,
-    EntByRegionAndAttList:wasteWaterReportModel.EntByRegionAndAttList,
-    PointByEntCodeList:wasteWaterReportModel.PointByEntCodeList,
-    AllTypeDataListWaterList:wasteWaterReportModel.AllTypeDataListWaterList,
+    EntByRegionAndAttList: wasteWaterReportModel.EntByRegionAndAttList,
+    PointByEntCodeList: wasteWaterReportModel.PointByEntCodeList,
+    AllTypeDataListWaterList: wasteWaterReportModel.AllTypeDataListWaterList,
 }))
 class index extends PureComponent {
     constructor(props) {
         super(props);
         this.newTabIndex = 0
         this.state = {
-            time: moment(new Date(),'YYYY-MM-DD'),
+            time: moment(new Date(), 'YYYY-MM-DD'),
             regionValue: '',
             attentionValue: '',
             outletValue: '',
-            entValue:undefined,
-            pointValue:undefined
+            entValue: undefined,
+            pointValue: undefined
         };
     }
 
@@ -90,12 +91,12 @@ class index extends PureComponent {
         this.props.dispatch({
             //获取企业列表
             type: pageUrl.GetEntByRegionAndAtt,
-            payload: { RegionCode: '' ,Attention:'',PollutantTypeCode:'1'},
+            payload: { RegionCode: '', Attention: '', PollutantTypeCode: '1' },
         });
         this.props.dispatch({
-            type:'wasteWaterReportModel/updateState',
-            payload:{
-                AllTypeDataListWaterList:[]
+            type: 'wasteWaterReportModel/updateState',
+            payload: {
+                AllTypeDataListWaterList: []
             }
         })
     };
@@ -103,18 +104,17 @@ class index extends PureComponent {
 
     // 导出
     exportReport = () => {
-        const {time,pointValue} = this.state
+        const { time, pointValue } = this.state
 
-        if(pointValue == '' || pointValue == undefined)
-        {
+        if (pointValue == '' || pointValue == undefined) {
             return message.error('请选择监测点')
         }
-        let  begintime = moment(time).format("YYYY-MM-DD 00:00:00")
+        let begintime = moment(time).format("YYYY-MM-DD 00:00:00")
         let endTime = moment(time).format("YYYY-MM-DD 23:59:59")
         this.props.dispatch({
-            type:pageUrl.ExportAllTypeDataListWater,
-            payload:{
-                BeginTime:begintime,
+            type: pageUrl.ExportAllTypeDataListWater,
+            payload: {
+                BeginTime: begintime,
                 EndTime: endTime,
                 DGIMN: pointValue,
                 dataType: 'day',
@@ -124,19 +124,18 @@ class index extends PureComponent {
     }
 
     //查询数据
-    getChartAndTableData =()=>{
-        const {time,pointValue} = this.state
+    getChartAndTableData = () => {
+        const { time, pointValue } = this.state
 
-        if(pointValue == '' || pointValue == undefined)
-        {
+        if (pointValue == '' || pointValue == undefined) {
             return message.error('请选择监测点')
         }
-        let  begintime = moment(time).format("YYYY-MM-DD 00:00:00")
+        let begintime = moment(time).format("YYYY-MM-DD 00:00:00")
         let endTime = moment(time).format("YYYY-MM-DD 23:59:59")
         this.props.dispatch({
-            type:pageUrl.GetAllTypeDataListWater,
-            payload:{
-                BeginTime:begintime,
+            type: pageUrl.GetAllTypeDataListWater,
+            payload: {
+                BeginTime: begintime,
                 EndTime: endTime,
                 DGIMN: pointValue,
                 dataType: 'day',
@@ -190,7 +189,7 @@ class index extends PureComponent {
         }
     };
     //监测列表
-    pointList = ()=>{
+    pointList = () => {
         const { PointByEntCodeList } = this.props;
         const selectList = [];
         if (PointByEntCodeList.length > 0) {
@@ -204,16 +203,17 @@ class index extends PureComponent {
             return selectList;
         }
     }
-    DatePickerHandle=(date,dateString)=>{
+    DatePickerHandle = (date, dateString) => {
         this.setState({
-            time:dateString
+            time: dateString
         })
     }
     cardTitle = () => {
-        const { time} = this.state;
+        const { time } = this.state;
 
         return <>
-            <label style={{fontSize:14}}>行政区:</label><Select
+            <label style={{ fontSize: 14 }}>行政区:</label>
+            {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -234,20 +234,40 @@ class index extends PureComponent {
                     this.props.dispatch({
                         type: pageUrl.GetEntByRegionAndAtt,
                         payload: {
-                            RegionCode:value,
-                            Attention:this.state.attentionValue,
-                            PollutantTypeCode:'1'
+                            RegionCode: value,
+                            Attention: this.state.attentionValue,
+                            PollutantTypeCode: '1'
                         },
                     });
                     this.setState({
                         regionValue: value,
-                        entValue:undefined,
-                        pointValue:undefined
+                        entValue: undefined,
+                        pointValue: undefined
                     })
                 }}>
                 {this.children()}
-            </Select>
-            <label style={{fontSize:14}}>关注程度:</label><Select
+            </Select> */}
+            <RegionList
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                // RegionCode={this.props.form.getFieldValue('RegionCode')}
+                changeRegion={(value) => {
+                    //获取关注度列表
+                    this.props.dispatch({
+                        type: pageUrl.GetEntByRegionAndAtt,
+                        payload: {
+                            RegionCode: value,
+                            Attention: this.state.attentionValue,
+                            PollutantTypeCode: '1'
+                        },
+                    });
+                    this.setState({
+                        regionValue: value,
+                        entValue: undefined,
+                        pointValue: undefined
+                    })
+                }}
+            />
+            <label style={{ fontSize: 14 }}>关注程度:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="关注度"
@@ -259,20 +279,20 @@ class index extends PureComponent {
                     this.props.dispatch({
                         type: pageUrl.GetEntByRegionAndAtt,
                         payload: {
-                            RegionCode:this.state.regionValue,
-                            Attention:value,
-                            PollutantTypeCode:'1'
+                            RegionCode: this.state.regionValue,
+                            Attention: value,
+                            PollutantTypeCode: '1'
                         },
                     });
                     this.setState({
                         attentionValue: value,
-                        entValue:undefined,
-                        pointValue:undefined
+                        entValue: undefined,
+                        pointValue: undefined
                     })
                 }}>
                 {this.attention()}
             </Select>
-            <label style={{fontSize:14}}>企业列表:</label><Select
+            <label style={{ fontSize: 14 }}>企业列表:</label><Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -294,18 +314,18 @@ class index extends PureComponent {
                     this.props.dispatch({
                         type: pageUrl.GetPointByEntCode,
                         payload: {
-                            EntCode:value,
-                            PollutantTypeCode:'1'
+                            EntCode: value,
+                            PollutantTypeCode: '1'
                         },
-                    });    
+                    });
                     this.setState({
                         entValue: value,
-                        pointValue:undefined
+                        pointValue: undefined
                     })
                 }}>
                 {this.entList()}
             </Select>
-            <div style={{marginTop:10,fontSize:14}}>
+            <div style={{ marginTop: 10, fontSize: 14 }}>
                 <label>监测点:</label><Select
                     allowClear
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -317,15 +337,15 @@ class index extends PureComponent {
                     onChange={(value) => {
                         this.setState({
                             pointValue: value,
-                        })  
+                        })
                     }}>
                     {this.pointList()}
                 </Select>
-                <label>监测时间:</label><DatePicker size='default' onChange={this.DatePickerHandle} defaultValue={time}  style={{ marginLeft: 10, marginRight: 10 }}/>
+                <label>监测时间:</label><DatePicker size='default' onChange={this.DatePickerHandle} defaultValue={time} style={{ marginLeft: 10, marginRight: 10 }} />
 
                 <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-                <span style={{fontSize:14,color:'red'}}>排放量为小时均值*小时流量</span>
+                <span style={{ fontSize: 14, color: 'red' }}>排放量为小时均值*小时流量</span>
             </div>
         </>;
     }
@@ -335,7 +355,7 @@ class index extends PureComponent {
     }
 
     pageContent = () => {
-        const { AllTypeDataListWaterList ,loading} = this.props
+        const { AllTypeDataListWaterList, loading } = this.props
         const fixed = false
         const columns = [
             {
@@ -351,7 +371,7 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                children:[
+                children: [
                     {
                         title: "平均值(mg/L)",
                         width: 100,
@@ -375,7 +395,7 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                children:[
+                children: [
                     {
                         title: "平均值(mg/L)",
                         width: 100,
@@ -399,7 +419,7 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                children:[
+                children: [
                     {
                         title: "平均值(mg/L)",
                         width: 100,
@@ -423,7 +443,7 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                children:[
+                children: [
                     {
                         title: "平均值(mg/L)",
                         width: 100,
@@ -447,7 +467,7 @@ class index extends PureComponent {
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                children:[
+                children: [
                     {
                         title: "平均值(L/s)",
                         width: 100,
@@ -469,27 +489,27 @@ class index extends PureComponent {
         ]
 
         return <>{
-            loading?<PageLoading/>:
-            <SdlTable columns={columns} dataSource={AllTypeDataListWaterList}
-                // pagination={{
-                //     showSizeChanger: true,
-                //     showQuickJumper: true,
-                //     pageSize: this.props.pageSize,
-                //     current: this.props.PageIndex,
-                //     onChange: this.onChange,
-                //     pageSizeOptions: ['20', '30', '40', '100'],
-                //     total: this.props.total,
-                // }} 
-                pagination={
-                    false
-                }
-            />
+            loading ? <PageLoading /> :
+                <SdlTable columns={columns} dataSource={AllTypeDataListWaterList}
+                    // pagination={{
+                    //     showSizeChanger: true,
+                    //     showQuickJumper: true,
+                    //     pageSize: this.props.pageSize,
+                    //     current: this.props.PageIndex,
+                    //     onChange: this.onChange,
+                    //     pageSizeOptions: ['20', '30', '40', '100'],
+                    //     total: this.props.total,
+                    // }} 
+                    pagination={
+                        false
+                    }
+                />
         }
         </>
         //
     }
     render() {
-        const { loading,priseList } = this.props
+        const { loading, priseList } = this.props
         return (
             <>
                 <div id="siteParamsPage" className={style.cardTitle}>

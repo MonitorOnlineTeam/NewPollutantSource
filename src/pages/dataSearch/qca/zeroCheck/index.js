@@ -23,8 +23,11 @@ const ZeroCheck = (props) => {
     <>
       <NavigationTree domId="#zeroCheck" onItemClick={item => {
         if (!item[0].IsEnt) {
+          console.log('item=', item)
           setDGIMN(item[0].key)
           setPointType(item[0].Type)
+          // pointName: `${item.EntName} - ${item.title}`,
+          setPointName(`${item[0].entName} - ${item[0].pointName}`)
         }
         console.log('item=', item)
       }} />

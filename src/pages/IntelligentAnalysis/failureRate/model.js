@@ -34,7 +34,7 @@ import { result } from 'lodash';
 
 
 export default Model.extend({
-  namespace: 'home',
+  namespace: 'failureRate',
   state: {
     exloading: false,
     loading: true,

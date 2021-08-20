@@ -29,6 +29,7 @@ import style from './index.less';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
+import RegionList from '@/components/RegionList'
 
 
 const FormItem = Form.Item;
@@ -567,7 +568,8 @@ class SmokeReportPage extends PureComponent {
         <Card className="contentContainer">
           <Form layout="inline" style={{ marginBottom: 20 }}>
             <Row style={{ marginBottom: 10 }}>
-              <label style={{ lineHeight: '32px' }}>行政区:</label><Select
+              <label style={{ lineHeight: '32px' }}>行政区:</label>
+              {/* <Select
                 allowClear
                 showSearch
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -600,7 +602,27 @@ class SmokeReportPage extends PureComponent {
                   })
                 }}>
                 {this.children()}
-              </Select>
+              </Select> */}
+              <RegionList
+                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                // RegionCode={this.props.form.getFieldValue('RegionCode')}
+                changeRegion={(value) => {
+                  //获取关注度列表
+                  this.props.dispatch({
+                    type: pageUrl.GetEntByRegionAndAtt,
+                    payload: {
+                      RegionCode: value,
+                      Attention: this.state.attentionValue,
+                      PollutantTypeCode: '2'
+                    },
+                  });
+                  this.setState({
+                    regionValue: value,
+                    entValue: undefined,
+                    pointValue: undefined
+                  })
+                }}
+              />
               <label style={{ lineHeight: '32px' }}>关注程度:</label><Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}

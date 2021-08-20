@@ -40,16 +40,16 @@ export default Model.extend({
           global = yield select(state => state.global);
           payload = {
             ...payload,
-            PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || global.configInfo.SystemPollutantType
+            PollutantTypes: global.configInfo.IsShowSysPage === '1' ? sessionStorage.getItem('sysPollutantCodes') : global.configInfo.SystemPollutantType
           }
         } else {
           payload = {
             ...payload,
-            PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || global.configInfo.SystemPollutantType
+            PollutantTypes: global.configInfo.IsShowSysPage === '1' ? sessionStorage.getItem('sysPollutantCodes') : global.configInfo.SystemPollutantType
           }
         }
       }
-      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
+      const result = yield call(services.getAllEntAndPoint, { Status: [], RunState: "1", ...payload });
       if (result.IsSuccess) {
         let filterList = result.Datas.filter(item => item.MonitorObjectType === "2" || item.MonitorObjectType === "4");
         // let constructionSiteArr = result.Datas.filter(item => item.MonitorObjectType === "4");
@@ -77,7 +77,7 @@ export default Model.extend({
       const pollutantType = "pollutantType" + payload.type;
       debugger
       const result = yield call(services.getPollutantList, { pollutantTypes: payload.type });
-      console.log("pollutantType=",pollutantType)
+      console.log("pollutantType=", pollutantType)
       if (result.IsSuccess) {
         yield update({
           [pollutantType]: result.Datas

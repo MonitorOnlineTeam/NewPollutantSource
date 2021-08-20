@@ -6,16 +6,16 @@ import Gauge from './Gauge';
 import MiniArea from './MiniArea';
 import MiniBar from './MiniBar';
 import MiniProgress from './MiniProgress';
-import Pie from './Pie';
-import TagCloud from './TagCloud';
-import TimelineChart from './TimelineChart';
+// import Pie from './Pie';
+// import TagCloud from './TagCloud';
+// import TimelineChart from './TimelineChart';
 import WaterWave from './WaterWave';
 
 // const yuan = val => `¥ ${numeral(val).format('0,0')}`;
 
 const Charts = {
   Bar,
-  Pie,
+  // Pie,
   Gauge,
   MiniBar,
   MiniArea,
@@ -23,13 +23,13 @@ const Charts = {
   ChartCard,
   Field,
   WaterWave,
-  TagCloud,
-  TimelineChart,
+  // TagCloud,
+  // TimelineChart,
 };
 export {
   Charts as default,
   Bar,
-  Pie,
+  // Pie,
   Gauge,
   MiniBar,
   MiniArea,
@@ -37,6 +37,6 @@ export {
   ChartCard,
   Field,
   WaterWave,
-  TagCloud,
-  TimelineChart,
+  // TagCloud,
+  // TimelineChart,
 };

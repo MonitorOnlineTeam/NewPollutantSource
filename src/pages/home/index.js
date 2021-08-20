@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-02 13:53:19
+ * @Last Modified time: 2021-07-05 10:06:31
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -10,6 +10,7 @@ import {
   Spin,
   Radio,
   Button,
+  Modal
 } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { routerRedux } from 'dva/router';
@@ -17,6 +18,8 @@ import Cookie from 'js-cookie';
 import {
   connect
 } from 'dva';
+import CustomIcon from '@/components/CustomIcon';
+
 // import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
 // import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
@@ -27,7 +30,7 @@ import { onlyOneEnt } from '../../config';
 import styles from './index.less';
 import { router } from 'umi';
 import Link from 'umi/link';
-
+import EntWorkOrderStatistics from '@/pages/IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/components/EntWorkOrderStatistics'
 
 import config from "@/config";
 import HomeCommon from '@/components/home/HomeCommon';
@@ -38,7 +41,7 @@ let _thismap;
 let Map, Marker, Polygon, Markers, InfoWindow;
 
 
-@connect(({ loading, home }) => ({
+@connect(({ loading, home, global }) => ({
   allEntAndPointLoading: loading.effects['home/getAllEntAndPoint'],
   alarmAnalysisLoading: loading.effects['home/getAlarmAnalysis'],
   allMonthEmissionsByPollutantLoading: loading.effects['home/getAllMonthEmissionsByPollutant'],
@@ -53,7 +56,8 @@ let Map, Marker, Polygon, Markers, InfoWindow;
   currentMarkersList: home.currentMarkersList,
   allEntAndPointList: home.allEntAndPointList,
   mounthOverData: home.mounthOverData,
-  homePage: home.homePage
+  homePage: home.homePage,
+  configInfo: global.configInfo,
 }))
 class index extends Component {
   constructor(props) {
@@ -66,7 +70,7 @@ class index extends Component {
         0, 0
       ],
       // zoom: window.innerWidth > 1600 ? 13 : 12,
-      zoom: 5,
+      zoom: 6,
       mapCenter: [105.121964, 33.186871],
       visible: false,
       pointName: null,
@@ -339,7 +343,34 @@ class index extends Component {
     </div>
   }
 
+  // 获取筛选状态图标颜色
+  getColor = status => {
+    let color = ''
+    switch (status) {
+      case 0:// 离线
+        color = '#999999'
+        break;
+      case 1:// 正常
+        color = '#34c066'
+        break;
+      case 2:// 超标
+        color = '#f04d4d'
+        break;
+      case 3:// 异常
+        color = '#e94'
+        break;
+    }
+    return color
+  }
+
   getPollutantIcon = (pollutantType, status) => {
+    const mapStyle = {
+      fontSize: 24,
+      borderRadius: '50%',
+      background: '#fff',
+      boxShadow: '0px 0px 3px 2px #fff',
+    }
+    const style = { fontSize: 24, color: this.getColor(status), ...mapStyle }
     let icon = "";
     if (pollutantType == 1) {
       // 废水
@@ -374,6 +405,25 @@ class index extends Component {
           icon = <GasAbnormal />
           break;
       }
+    }
+    switch (pollutantType) {
+      // case '1':
+      //   // return <WaterIcon style={style} />
+      //   return this.getWaterIcon(extData.position.Status)
+      // case '2':
+      //   return this.getGasIcon(extData.position.Status)
+      case '10':
+        return <VocIcon style={style} />
+      case '6':
+        return <a><CustomIcon type="icon-richangshenghuo-shuizhan" style={{ ...style }} /></a>
+      case '9':
+        return <a><CustomIcon type="icon-echoujiance" style={{ ...style }} /></a>
+      case '12':
+        return <CustomIcon type="icon-yangchen1" style={{ ...style }} />
+      case '5':
+        return <a><CustomIcon type="icon-fangwu" style={style} /></a>
+      case '37':
+        return <CustomIcon type="icon-dian2" style={{ ...style }} />
     }
     return icon;
   }
@@ -415,7 +465,8 @@ class index extends Component {
       taskCountLoading,
       exceptionProcessingLoading,
       mounthOverData,
-      homePage
+      homePage,
+      configInfo,
     } = this.props;
     let pointposition = position;
     let pointvisible = visible;
@@ -497,7 +548,7 @@ class index extends Component {
           />
         }
         <header className={styles.homeHeader}>
-          <p><span>SDL</span> 污染源智能分析系统</p>
+          <p><span>SDL</span> {configInfo.SystemName}</p>
           <a className={styles.backMenu} onClick={() => {
             router.push(Cookie.get("systemNavigateUrl"))
           }}>系统功能</a>
@@ -617,6 +668,14 @@ class index extends Component {
             {pointName}
           </InfoWindow>
         </Map>
+        {/*<Button type="primary" onClick={() => {*/}
+        {/*this.setState({ modalVisible: true })*/}
+        {/*}}>*/}
+        {/*Open Modal*/}
+        {/*</Button>*/}
+        {/*<Modal footer={false} width="80vw" title="Basic Modal" visible={this.state.modalVisible} onCancel={() => this.setState({ modalVisible: false})}>*/}
+        {/*<EntWorkOrderStatistics />*/}
+        {/*</Modal>*/}
       </div >
     );
   }
