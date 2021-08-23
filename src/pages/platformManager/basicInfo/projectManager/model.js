@@ -11,17 +11,22 @@ export default Model.extend({
   state: {
     tableDatas:[],
     parametersList:[],
+    tableLoading:false
   },
   effects: {
     *getEquipmentParametersInfo({ payload,callback }, { call, put, update }) { //参数列表
       const result = yield call(services.GetEquipmentParametersInfo, payload);
+      yield update({ tableLoading:true})
       if (result.IsSuccess) {
         yield update({
-          tableDatas:result.Datas
+          tableDatas:result.Datas,
+          tableLoading:false
         })
         callback(result.Datas)
+      }else{
+        message.error(result.Message)
+        yield update({ tableLoading:false})
       }
-
     },
 
   },

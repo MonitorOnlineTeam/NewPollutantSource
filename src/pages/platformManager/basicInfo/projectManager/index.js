@@ -4,14 +4,15 @@
  * 创建时间：2021.08.18
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider  } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
-
+import router from 'umi/router';
+import Link from 'umi/link';
 import styles from "./style.less"
 const { Option } = Select;
 
@@ -22,7 +23,12 @@ const namespace = 'projectManager'
 
 const dvaPropsData =  ({ loading,projectManager }) => ({
   tableDatas:projectManager.tableDatas,
-  parametersList:projectManager.parametersList
+  parametersList:projectManager.parametersList,
+  loadingConfirm: loading.effects[`${namespace}/getParametersInfo`],
+  loadingPoint: loading.effects[`${namespace}/getParametersInfo`],
+  pointLoading: loading.effects[`${namespace}/getParametersInfo`],
+  exportLoading: loading.effects[`${namespace}/getParametersInfo`],
+  exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -39,7 +45,6 @@ const  dvaDispatch = (dispatch) => {
       dispatch({
         type: `${namespace}/getEquipmentParametersInfo`,
         payload:payload,
-        callback:callback
       })
     },
     getParametersInfo:(payload)=>{ //下拉列表测量参数
@@ -64,27 +69,31 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
   const [data, setData] = useState([]);
-  const [tableLoading, setTableLoading] = useState(true);
 
   const [editingKey, setEditingKey] = useState('');
   const [count, setCount] = useState(513);
   const [DGIMN,setDGIMN] =  useState('')
   const [expand,setExpand] = useState(false)
+  const [fromVisible,setFromVisible] = useState(false)
+  const [tableVisible,setTableVisible] = useState(false)
+
+  const [type,setType] = useState('add')
+
+  
   const isEditing = (record) => record.key === editingKey;
-
-  const  { type , tableDatas,parametersList } = props; 
+  
+  const  { tableDatas,parametersList,loadingConfirm,loadingPoint,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
   useEffect(() => {
-
-      setTableLoading(true)
-      props.getEquipmentParametersInfo({DGIMN:props.DGIMN},(res)=>{
-        setTableLoading(false)
-        setData(res)
-      })
+      getEquipmentParametersInfo({DGIMN:props.DGIMN})
       getParametersInfos();
 
     
   },[props.DGIMN]);
  
+  const getEquipmentParametersInfo=()=>{
+    props.getEquipmentParametersInfo({PolltantType:type==='smoke'?2:1})
+  }
+
   const getParametersInfos=()=>{
     props.getParametersInfo({PolltantType:type==='smoke'?2:1})
   }
@@ -116,13 +125,13 @@ const Index = (props) => {
       title: '运营起始日期',
       dataIndex: 'Unit',
       align:'center',
+      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
     {
       title: '运营结束日期',
-      dataIndex: 'operation',
+      dataIndex: 'operations',
       align:'center',
-      render: (text, record) => {
-      },
+      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
       
     },
     {
@@ -139,6 +148,8 @@ const Index = (props) => {
       title: '创建时间',
       dataIndex: 'operation',
       align:'center',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
     {
       title: <span>操作</span>,
@@ -149,7 +160,14 @@ const Index = (props) => {
         return  <span>
                <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                
-               <Fragment> <Tooltip title="详情">  <a href="javasctipt:;"  style={{padding:'0 5px'}} onClick={()=>{this.see(record)}} ><DetailIcon /></a></Tooltip><Divider type="vertical" /></Fragment>
+               <Fragment> <Tooltip title="详情">
+                 <Link  style={{padding:'0 5px'}} to={{  pathname: '/platformconfig/basicInfo/projectManager/detail',
+                       query: { RegionCode: record.RegionCode},
+                       }}
+                       >
+                    <DetailIcon />
+                </Link>
+                </Tooltip><Divider type="vertical" /></Fragment>
 
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={del(record)} okText="是" cancelText="否">
@@ -164,6 +182,29 @@ const Index = (props) => {
       }
     },
   ];
+
+  const pointColumns = [
+    {
+      title: '监控目标',
+      dataIndex: 'EquipmentParametersCode',
+      align:'center'
+    },
+    {
+      title: '监测点',
+      dataIndex: 'Range1',
+      align:'center',
+    },
+    {
+      title: '实际运营开始日期',
+      dataIndex: 'Range2',
+      align:'center',
+    },
+    {
+      title: '实际运营结束日期',
+      dataIndex: 'Range2',
+      align:'center',
+    },
+  ]
   const edit = async (record) => {
 
     try {
@@ -186,11 +227,9 @@ const Index = (props) => {
     // })
   };
 
-  const see = async (record) => {
 
-  };
   const operaInfo = async (record) => {
-
+   setTableVisible(true)
   };
   
   const save = async (record) => {
@@ -220,19 +259,33 @@ const Index = (props) => {
       type:'add'
      }
     setData([...data,newData])
-   
+    // setFromVisible(true)
 
   };
   const exports = () => {
 
-
-  
-
  };
+ 
+ const pointExports = () => {
 
-  const onFinish =()=>{
-
+};
+  const onFinish  = async () =>{  //查询
+    try {
+      const values = await form.validateFields();
+      console.log('Success:', values);
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
   }
+  const onModalOk  = async () =>{ //添加 or 编辑弹框
+    try {
+      const values = await form.validateFields();
+      console.log('Success:', values);
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  
   const searchComponents = () =>{
      return  <Form
     form={form}
@@ -289,7 +342,7 @@ const Index = (props) => {
      <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
           添加
      </Button>
-       <Button icon={<ExportOutlined />} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+       <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
             导出
           </Button> 
       </Row>   
@@ -307,6 +360,126 @@ const Index = (props) => {
       />
    </Card>
    </BreadcrumbWrapper>
+   
+   <Modal
+        title={type==='edit'? '编辑合同':'添加合同'}
+        visible={fromVisible}
+        onOk={onModalOk}
+        confirmLoading={loadingConfirm}
+        onCancel={()=>{setFromVisible(false)}}
+        className={styles.fromModal}
+        destroyOnClose
+        centered
+      >
+        <Form
+      name="basic"
+    >
+      <Row>
+        <Col span={12}>
+        <Form.Item label="合同名称" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input placeholder='请输入合同名称'/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item label="项目编号" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input  placeholder='请输入项目编号'/>
+      </Form.Item>
+      </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+        <Form.Item label="客户所在地" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Select placeholder="请选择客户所在地">
+          <Option value="1">小学</Option>
+
+
+        </Select>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="卖方公司" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input  placeholder='请输入卖方公司'/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row>
+        <Col span={12}>
+        <Form.Item label="行业" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input placeholder='请输入行业'/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="签订人" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input placeholder='请输入签订人'/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row>
+        <Col span={12}>
+        <Form.Item label="运营起始日期" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <DatePicker />
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="运营结束日期" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <DatePicker />
+      </Form.Item>
+      </Col>
+      </Row>
+
+
+      <Row>
+        <Col span={12}>
+        <Form.Item label="运营套数" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <InputNumber placeholder='请输入运营套数'/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="运营月数" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <InputNumber placeholder='请输入运营月数'/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row align='middle'>
+        <Col span={12}>
+
+      <Form.Item label="合同总金额(万)" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input placeholder='请输入合同总金额'/>
+      </Form.Item>
+      </Col>
+        <Col span={12}>
+        <Form.Item label="备注" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Input placeholder='请输入备注'/>
+      </Form.Item>
+       </Col>
+      </Row> 
+      <Form.Item label="ID"  name="username" hidden>
+          <Input />
+      </Form.Item> 
+    </Form>
+      </Modal>
+
+      <Modal
+        title='添加合同'
+        visible={tableVisible}
+        onCancel={()=>{setTableVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+      <Button style={{marginBottom:10}}  icon={<ExportOutlined />}  loading={exportPointLoading}  onClick={()=>{ pointExports()} }>
+            导出
+          </Button> 
+       <SdlTable
+        loading = {pointLoading}
+        bordered
+        // dataSource={data}
+        columns={pointColumns}
+      />
+      </Modal>
         </div>
   );
 };

@@ -529,6 +529,12 @@ export default {
                       path: '/platformconfig/basicInfo/projectManager',
                       component: './platformManager/basicInfo/projectManager',
                     },
+                    {
+                      // 项目管理
+                      name: 'projectManagerDetail',
+                      path: '/platformconfig/basicInfo/projectManager/detail',
+                      component: './platformManager/basicInfo/projectManager/detail',
+                    },
                   ]
                 },
               ],
