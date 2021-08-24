@@ -234,7 +234,7 @@ class SdlForm extends PureComponent {
           validator = `${inputPlaceholder}`;
           placeholder = placeholder || inputPlaceholder;
 
-          element = <Input disabled={item.labelText==='设备编号(MN)'? true : false} placeholder={placeholder} allowClear />;
+          element = <Input disabled={item.labelText==='设备编号(MN)'&&isEdit? true : false} placeholder={placeholder} allowClear />;
           break;
         case '下拉列表框':
         case '多选下拉列表':

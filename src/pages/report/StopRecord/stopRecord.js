@@ -244,6 +244,11 @@ class index extends PureComponent {
                         this.setState({
                             regionValue: value
                         })
+                        this.props.dispatch({
+                            //获取企业列表
+                            type: pageUrl.GetEntByRegion,
+                            payload: { RegionCode: value?value:'' },
+                        });
                     }}>
                     {this.children()}
                 </Select>
