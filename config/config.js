@@ -387,6 +387,11 @@ export default {
                   component: './platformManager/point',
                 },
                 {
+                  name: 'entOperationInfo', //企业下的运维信息
+                  path: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
+                  component: './platformManager/monitortarget/operationInfo',
+                },
+                {
                   name: 'usestandardlibrary',
                   path:
                     '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/usestandardlibrary/:DGIMN/:PointName/:targetId/:targetName/:pollutantType',
@@ -1705,8 +1710,12 @@ export default {
                   name: 'AccessStatistics',
                   path: '/Intelligentanalysis/accessStatistics/missDataSecond',
                   component: './Intelligentanalysis/accessStatistics/missDataSecond',
+                },
+                { //运维到期点位统计
+                  name: 'operationExpirePoint',
+                  path: '/Intelligentanalysis/operationExpirePoint',
+                  component: './Intelligentanalysis/operationExpirePoint',
                 }
-
               ],
 
               

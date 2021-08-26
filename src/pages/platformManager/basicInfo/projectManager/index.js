@@ -13,6 +13,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
+import moment from 'moment';
 import styles from "./style.less"
 const { Option } = Select;
 
@@ -67,6 +68,7 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
 
   const [data, setData] = useState([]);
 
@@ -259,7 +261,7 @@ const Index = (props) => {
       type:'add'
      }
     setData([...data,newData])
-    // setFromVisible(true)
+    setFromVisible(true)
 
   };
   const exports = () => {
@@ -279,7 +281,7 @@ const Index = (props) => {
   }
   const onModalOk  = async () =>{ //添加 or 编辑弹框
     try {
-      const values = await form.validateFields();
+      const values = await form2.validateFields();
       console.log('Success:', values);
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -373,6 +375,7 @@ const Index = (props) => {
       >
         <Form
       name="basic"
+      form={form2}
     >
       <Row>
         <Col span={12}>
@@ -381,14 +384,14 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="项目编号" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="项目编号" name="username2" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Input  placeholder='请输入项目编号'/>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={12}>
-        <Form.Item label="客户所在地" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="客户所在地" name="username3" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Select placeholder="请选择客户所在地">
           <Option value="1">小学</Option>
 
@@ -397,7 +400,7 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="卖方公司" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="卖方公司" name="username4" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Input  placeholder='请输入卖方公司'/>
       </Form.Item>
       </Col>
@@ -405,12 +408,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="行业" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="行业" name="username5" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Input placeholder='请输入行业'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="签订人" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="签订人" name="username6" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Input placeholder='请输入签订人'/>
       </Form.Item>
       </Col>
@@ -418,12 +421,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营起始日期" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运营起始日期" name="username7" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营结束日期" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="运营结束日期" name="username8" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
@@ -432,12 +435,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营套数" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运营套数" name="username9" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <InputNumber placeholder='请输入运营套数'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营月数" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="运营月数" name="username99" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <InputNumber placeholder='请输入运营月数'/>
       </Form.Item>
       </Col>
@@ -446,17 +449,17 @@ const Index = (props) => {
       <Row align='middle'>
         <Col span={12}>
 
-      <Form.Item label="合同总金额(万)" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="合同总金额(万)" name="username999" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Input placeholder='请输入合同总金额'/>
       </Form.Item>
       </Col>
         <Col span={12}>
-        <Form.Item label="备注" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="备注" name="username998" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <Input placeholder='请输入备注'/>
       </Form.Item>
        </Col>
       </Row> 
-      <Form.Item label="ID"  name="username" hidden>
+      <Form.Item label="ID"  name="username9898" hidden>
           <Input />
       </Form.Item> 
     </Form>

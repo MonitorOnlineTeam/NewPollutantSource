@@ -471,7 +471,7 @@ class AutoFormTable extends PureComponent {
       _columns.length && _columns.push({
         align: 'center',
         title: '操作',
-        width: 180,
+        width: 200,
         fixed: isFixed,
         render: (text, record) => {
           const returnKey = keys[configId] && record[keys[configId][0]];

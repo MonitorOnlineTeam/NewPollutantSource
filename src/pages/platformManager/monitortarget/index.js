@@ -5,7 +5,7 @@
  * @Date: 2019年7月29日15:11:59
  */
 import React, { Component, Fragment } from 'react';
-import { CalendarTwoTone, QrcodeOutlined } from '@ant-design/icons';
+import { CalendarTwoTone, QrcodeOutlined,FundOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -291,9 +291,17 @@ export default class MonitorTarget extends Component {
                             <Tooltip title="生成监测点二维码">
                                 <a onClick={() => {
                                     this.CreatQRCode(row);
-                                }}><QrcodeOutlined /></a>
+                                }}><QrcodeOutlined style={{fontSize:16}}/></a>
                             </Tooltip>
-
+                            <Divider type="vertical" />
+                           <Tooltip title="运维信息">
+                             <a onClick={() => {
+                                 router.push({
+                                   pathname:"/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo",
+                                   query:{p:row['dbo.T_Cod_MonitorPointBase.DGIMN'],entName:row['dbo.T_Bas_Enterprise.EntName']}
+                               })
+                             }}><FundOutlined style={{fontSize:16}}/>  </a>
+                    </Tooltip> 
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"
                         {...this.props}
