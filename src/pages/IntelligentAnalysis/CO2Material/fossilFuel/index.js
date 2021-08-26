@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, Button, Popover, message } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, Button, Popover, DatePicker } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import QuestionTooltip from "@/components/QuestionTooltip"
+import moment from 'moment'
 
 const { Option } = Select;
 const CONFIG_ID = 'CO2FossilFuel';
@@ -26,6 +27,7 @@ const layout = {
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
+  configIdList: autoForm.configIdList,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -68,6 +70,7 @@ class index extends PureComponent {
           configId: CONFIG_ID,
           FormData: {
             ...values,
+            MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
             FossilFuelCode: KEY
           },
           reload: KEY ? true : false,
@@ -101,8 +104,8 @@ class index extends PureComponent {
       },
       callback: (res) => {
         this.setState({
-          CO2OxidationRateState:res.CO2OxidationRateDataType,
-          UnitCarbonContentState:res.UnitCarbonContentDataType,
+          CO2OxidationRateState: res.CO2OxidationRateDataType,
+          UnitCarbonContentState: res.UnitCarbonContentDataType,
           editData: res,
           isModalVisible: true,
         })
@@ -146,6 +149,7 @@ class index extends PureComponent {
   render() {
     const { isModalVisible, editData, FileUuid } = this.state;
     const { tableInfo } = this.props;
+    const { Output_Enterprise = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2FossilFuel.tCO2');
     return (
@@ -172,15 +176,41 @@ class index extends PureComponent {
             footer={() => <div className="">排放量合计：{count}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
           <Form
             {...layout}
             ref={this.formRef}
             initialValues={{
-              ...editData
+              ...editData,
+              MonitorTime: moment(editData.MonitorTime),
+              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
             }}
           >
             <Row>
+              <Col span={12}>
+                <Form.Item
+                  name="EntCode"
+                  label="企业"
+                  rules={[{ required: true, message: '请选择企业!' }]}
+                >
+                  <Select placeholder="请选择企业">
+                    {
+                      Output_Enterprise.map(item => {
+                        return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="MonitorTime"
+                  label="时间"
+                  rules={[{ required: true, message: '请选择时间!' }]}
+                >
+                  <DatePicker picker="month" style={{ width: '100%' }} />
+                </Form.Item>
+              </Col>
               <Col span={12}>
                 <Form.Item
                   name="FossilType"
@@ -223,7 +253,7 @@ class index extends PureComponent {
                     // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0;
                     if (!CO2OxidationRate || !value || !LowFever || !UnitCarbonContent) { }
                     else {
-                      let upAll = value * LowFever *1;
+                      let upAll = value * LowFever * 1;
                       let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                       let countAll = upAll * downAll;
                       this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
@@ -231,8 +261,8 @@ class index extends PureComponent {
                   }} />
                 </Form.Item>
               </Col>
-             
-            
+
+
               <Col span={12}>
                 <Form.Item
                   name="LowFeverDataType"
@@ -265,7 +295,7 @@ class index extends PureComponent {
                         let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
                         if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                         else {
-                          let upAll = AnnualConsumption * LowFever *1;
+                          let upAll = AnnualConsumption * LowFever * 1;
                           let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                           let countAll = upAll * downAll;
                           this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
@@ -308,7 +338,7 @@ class index extends PureComponent {
                     // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0;
                     if (!CO2OxidationRate || !AnnualConsumption || !value || !UnitCarbonContent) { }
                     else {
-                      let upAll = AnnualConsumption * value *1;
+                      let upAll = AnnualConsumption * value * 1;
                       let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                       let countAll = upAll * downAll;
                       this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
@@ -316,7 +346,7 @@ class index extends PureComponent {
                   }} />
                 </Form.Item>
               </Col>
-              
+
               <Col span={12}>
                 <Form.Item
                   name="UnitCarbonContentDataType"
@@ -349,7 +379,7 @@ class index extends PureComponent {
                         let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0;
                         if (!CO2OxidationRate || !AnnualConsumption || !LowFever || !UnitCarbonContent) { }
                         else {
-                          let upAll = AnnualConsumption * LowFever *1;
+                          let upAll = AnnualConsumption * LowFever * 1;
                           let downAll = (UnitCarbonContent * CO2OxidationRate * 44) / 12;
                           let countAll = upAll * downAll;
                           this.formRef.current.setFieldsValue({ 'tCO2': this.getFloat(countAll, 5) });
@@ -449,7 +479,7 @@ class index extends PureComponent {
                     <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
                   </Popover>}
               </Col>
-              
+
               <Col span={12}>
                 <Form.Item
                   name="CO2OxidationRateDataType"
@@ -734,8 +764,8 @@ class index extends PureComponent {
                   name="tCO2"
                   label={
                     <span>
-                      排放量（tCO2）
-                      <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12) "/>
+                      排放量（tCO₂）
+                      <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12) " />
                     </span>
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}

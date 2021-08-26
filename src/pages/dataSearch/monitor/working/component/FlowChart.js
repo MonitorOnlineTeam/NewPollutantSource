@@ -320,19 +320,22 @@ class FlowChart extends PureComponent {
            </>
            <>
            <div className={`${styles.so2} ${styles.commonSty}`}>
-           <span>SO2：{so2b}</span>
+           {/* <span>SO2：{so2b}</span> */}
+           <span>SO2：{6.31}</span>
            <Tooltip placement="top" title={<So2Morepar/>} trigger='click'>    
            <span  className={`${styles.more}`}>更多参数</span>
            </Tooltip>
            </div>
            <div className={`${styles.no} ${styles.commonSty}`}>
-           <span>NOx：{noxb}</span>
+           {/* <span>NOx：{noxb}</span> */}
+           <span>CO2：{7.8}</span>
            <Tooltip placement="top" title={<NoxMorepar/>} trigger='click'>    
            <span  className={`${styles.more}`}>更多参数</span>
            </Tooltip>
            </div>
            <div className={`${styles.o2} ${styles.commonSty}`}>
-           <span>O2：{o2b}</span>
+           {/* <span>O2：{o2b}</span> */}
+           <span>O2：{5.4}</span>
            <Tooltip placement="top" title={<O2Morepar/>} trigger='click'>    
            <span  className={`${styles.more}`}>更多参数</span>
            </Tooltip>

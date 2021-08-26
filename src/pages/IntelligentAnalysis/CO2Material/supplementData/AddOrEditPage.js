@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Input, InputNumber, Select, Row, Col, Modal, Button, Popover, Divider, Spin } from 'antd'
+import { Card, Form, Input, InputNumber, Select, Row, Col, Modal, Button, Popover, Divider, Spin, DatePicker } from 'antd'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import { router } from 'umi';
 import { connect } from 'dva'
 import QuestionTooltip from "@/components/QuestionTooltip"
+import moment from 'moment'
 
 const { Option } = Select;
 const { Search } = Input;
@@ -26,6 +27,7 @@ const CONFIG_ID = 'CO2SupplementaryData';
 @connect(({ loading, autoForm, global }) => ({
   // loading: loading.effects['autoForm/getAutoFormData'],
   loading: loading.effects['autoForm/getFormData'],
+  configIdList: autoForm.configIdList,
 }))
 class AddOrEditPage extends PureComponent {
   constructor(props) {
@@ -150,6 +152,7 @@ class AddOrEditPage extends PureComponent {
           FormData: {
             ...editData,
             ...values,
+            MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
             SupplementaryDataCode: KEY
           },
           reload: KEY ? true : undefined,
@@ -192,6 +195,7 @@ class AddOrEditPage extends PureComponent {
   render() {
     const { isModalVisible, editData } = this.state;
     const { loading } = this.props;
+    const { Output_Enterprise = [] } = this.props.configIdList;
     let KEY = this.props.history.location.query.key;
     console.log('editData=', editData)
     return (
@@ -204,10 +208,36 @@ class AddOrEditPage extends PureComponent {
                 {...layout}
                 ref={this.formRef}
                 initialValues={{
-                  ...editData
+                  ...editData,
+                  MonitorTime: moment(editData.MonitorTime),
+                  EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
                 }}
               >
                 <Row>
+                  <Col span={12}>
+                    <Form.Item
+                      name="EntCode"
+                      label="企业"
+                      rules={[{ required: true, message: '请选择企业!' }]}
+                    >
+                      <Select placeholder="请选择企业">
+                        {
+                          Output_Enterprise.map(item => {
+                            return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="MonitorTime"
+                      label="时间"
+                      rules={[{ required: true, message: '请选择时间!' }]}
+                    >
+                      <DatePicker picker="month" style={{ width: '100%' }} />
+                    </Form.Item>
+                  </Col>
                   <Col span={12}>
                     <Form.Item
                       name="Status"
@@ -276,7 +306,7 @@ class AddOrEditPage extends PureComponent {
                       name="FossilFuel_tCO2"
                       label={
                         <span>
-                          化石燃料燃烧排放量(tCO2)
+                          化石燃料燃烧排放量(tCO₂)
                           <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量 × (单位热值含碳量 × 碳氧化率 × 44 ÷ 12) " />
                         </span>
                       }
@@ -294,7 +324,7 @@ class AddOrEditPage extends PureComponent {
                       // label="购入电力产生的排放(tCO2)"
                       label={
                         <span>
-                          购入电力产生的排放(tCO2)
+                          购入电力产生的排放(tCO₂)
                           <QuestionTooltip content="购入电力产生的排放 = 购入电量 × 排放因子" />
                         </span>
                       }
@@ -322,7 +352,7 @@ class AddOrEditPage extends PureComponent {
                           <Form.Item
                             {...layout2}
                             name="Emission"
-                            label={<span>排放因子<br />(tCO2/MWh)</span>}
+                            label={<span>排放因子<br />(tCO₂/MWh)</span>}
                           >
                             <InputNumber onChange={(value) => {
                               let val2 = this.formRef.current.getFieldValue('BuyPower') || 0;
@@ -342,7 +372,7 @@ class AddOrEditPage extends PureComponent {
                       name="Crew_tCO2"
                       label={
                         <span>
-                          机组二氧化碳排放量(tCO2)
+                          机组二氧化碳排放量(tCO₂)
                           <QuestionTooltip content="机组二氧化碳排放量 = 化石燃料燃烧排放量 + 购入电力产生的排放" />
                         </span>
                       }
@@ -390,7 +420,7 @@ class AddOrEditPage extends PureComponent {
                   <Col span={12}>
                     <Form.Item
                       name="WireCoalConsumption"
-                      label="供电煤耗/气耗（万Nm3,tce/MWH）"
+                      label="供电煤耗/气耗（万Nm³,tce/MWH）"
                       rules={[{ required: true, message: '请填写供电煤耗/气耗!' }]}
                     >
                       <InputNumber style={{ width: '100%' }} placeholder="请填写供电煤耗/气耗!" />
@@ -399,7 +429,7 @@ class AddOrEditPage extends PureComponent {
                   <Col span={12}>
                     <Form.Item
                       name="HeatCoalConsumption"
-                      label="供热煤耗/气耗(万Nm3,tce/TJ)"
+                      label="供热煤耗/气耗(万Nm³,tce/TJ)"
                       rules={[{ required: true, message: '请填写供热煤耗/气耗!' }]}
                     >
                       <InputNumber style={{ width: '100%' }} placeholder="请填写供热煤耗/气耗!" />
@@ -438,7 +468,7 @@ class AddOrEditPage extends PureComponent {
                     <Form.Item
                       {...layout2}
                       name="Consumption"
-                      label="消耗量(t或万Nm3)"
+                      label="消耗量(t或万Nm³)"
                     // rules={[{ required: isModalVisible, message: '请填写消耗量!' }]}
                     >
                       <InputNumber onChange={(value) => {
@@ -450,7 +480,7 @@ class AddOrEditPage extends PureComponent {
                     <Form.Item
                       {...layout2}
                       name="LowFever"
-                      label="低位发热量(GJ/t或GJ/万Nm3)"
+                      label="低位发热量(GJ/t或GJ/万Nm³)"
                     // rules={[{ required: isModalVisible, message: '请填写低位发热量!' }]}
                     >
                       <InputNumber onChange={(value) => {

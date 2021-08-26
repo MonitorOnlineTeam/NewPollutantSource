@@ -2,12 +2,13 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
+import moment from 'moment'
 
 const { Option } = Select;
 const CONFIG_ID = 'Desulphurization';
@@ -22,6 +23,7 @@ const layout = {
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
+  configIdList: autoForm.configIdList,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -58,6 +60,7 @@ class index extends PureComponent {
           configId: CONFIG_ID,
           FormData: {
             ...values,
+            MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
             DesulphurizationCode: KEY
           },
           reload: KEY ? true : undefined,
@@ -100,9 +103,14 @@ class index extends PureComponent {
 
   render() {
     const { isModalVisible, editData, FileUuid } = this.state;
-    const { tableInfo } = this.props;
+    const { tableInfo, autoForm } = this.props;
+    const { Output_Enterprise = [] } = this.props.configIdList;
+
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2Desulphurization.tCO2');
+
+    console.log("autoForm=", autoForm)
+
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -132,10 +140,36 @@ class index extends PureComponent {
             {...layout}
             ref={this.formRef}
             initialValues={{
-              ...editData
+              ...editData,
+              MonitorTime: moment(editData.MonitorTime),
+              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
             }}
           >
             <Row>
+              <Col span={12}>
+                <Form.Item
+                  name="EntCode"
+                  label="企业"
+                  rules={[{ required: true, message: '请选择企业!' }]}
+                >
+                  <Select placeholder="请选择企业">
+                    {
+                      Output_Enterprise.map(item => {
+                        return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="MonitorTime"
+                  label="时间"
+                  rules={[{ required: true, message: '请选择时间!' }]}
+                >
+                  <DatePicker picker="month" style={{ width: '100%' }} />
+                </Form.Item>
+              </Col>
               <Col span={12}>
                 <Form.Item
                   name="DesulfurizerType"
@@ -167,7 +201,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="CarbonateEmission"
-                  label="碳酸盐排放因子（tCO2/t）"
+                  label="碳酸盐排放因子（tCO₂/t）"
                   rules={[{ required: true, message: '请填写碳酸盐排放因子!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写碳酸盐排放因子" onChange={(value) => {
@@ -181,7 +215,7 @@ class index extends PureComponent {
                 <Form.Item
                   name="tCO2"
                   label={
-                    <span>排放量（tCO2）
+                    <span>排放量（tCO₂）
                       <QuestionTooltip content="排放量 = 脱硫剂中碳酸盐消耗量 × 碳酸盐排放因子" />
                     </span>
                   }

@@ -67,7 +67,7 @@ class index extends Component {
       ],
       // zoom: window.innerWidth > 1600 ? 13 : 12,
       zoom: 5,
-      mapCenter: [105.121964, 33.186871],
+      mapCenter: [116.3232, 26.873278],
       visible: false,
       pointName: null,
       radioDefaultValue: "",
@@ -553,6 +553,7 @@ class index extends Component {
           resizeEnable={true}
           events={this.mapEvents}
           mapStyle="amap://styles/macaron"
+          zoom={5}
           amapkey={amapKey}
           center={mapCenter}
         >
