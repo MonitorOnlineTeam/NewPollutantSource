@@ -466,10 +466,12 @@ timeClick=(value)=>{//质控时间
     
     let {addItem,blindAddItem,standDefaultVal,configInfo,current,pageSize} = this.state;
     
-    let {dispatch,tableDatas,count,cycleListParams:{QCAType},isSaveFlag,addParams,dgimn} = this.props;
+    let {dispatch,tableDatas,count,cycleListParams:{QCAType},isSaveFlag,addParams,dgimn,pollutantlist} = this.props;
      if(!isSaveFlag){
-     
-
+       if(pollutantlist.length<=0&&QCAType!=1026){
+         message.warning('污染物列表不能为空')
+         return;
+       }
       if(QCAType ==1030){ //盲样核查
         addItem = {...addItem,ID:count,...blindAddItem}
         this.getSampleRangeFlow(dgimn,addItem.PollutantName[0].PollutantCode)

@@ -199,10 +199,10 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="AnnualConsumption"
-                  label="年消耗量(t/104Nm3)"
-                  rules={[{ required: true, message: '请填写年消耗量!' }]}
+                  label="消耗量(t/10⁴Nm³)"
+                  rules={[{ required: true, message: '请填写消耗量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写年消耗量" onChange={(value) => {
+                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写消耗量" onChange={(value) => {
                     let SlagYield = this.formRef.current.getFieldValue('SlagYield') || 0;
                     let SlagAvgCO2 = this.formRef.current.getFieldValue('SlagAvgCO2') || 0;
                     let FlyAshYield = this.formRef.current.getFieldValue('FlyAshYield') || 0;
@@ -285,7 +285,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="LowFever"
-                  label="低位发热量(GJ/t,GJ/104Nm3)"
+                  label="低位发热量(GJ/t,GJ/10⁴Nm³)"
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
                   <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量" onChange={(value) => {
