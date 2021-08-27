@@ -9,12 +9,15 @@ import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
-import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
+import RegionList from '@/components/RegionList'
 import styles from "./style.less"
+import Cookie from 'js-cookie';
+
 const { Option } = Select;
 
 const namespace = 'projectManager'
@@ -24,8 +27,9 @@ const namespace = 'projectManager'
 
 const dvaPropsData =  ({ loading,projectManager }) => ({
   tableDatas:projectManager.tableDatas,
-  parametersList:projectManager.parametersList,
-  loadingConfirm: loading.effects[`${namespace}/getParametersInfo`],
+  tableLoading:projectManager.tableLoading,
+  tableTotal:projectManager.tableTotal,
+  loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   loadingPoint: loading.effects[`${namespace}/getParametersInfo`],
   pointLoading: loading.effects[`${namespace}/getParametersInfo`],
   exportLoading: loading.effects[`${namespace}/getParametersInfo`],
@@ -34,19 +38,25 @@ const dvaPropsData =  ({ loading,projectManager }) => ({
 
 const  dvaDispatch = (dispatch) => {
   return {
-    addOrUpdateEquipmentParametersInfo : (payload,callback) =>{ //修改 or 添加
+    updateState:(payload)=>{ 
       dispatch({
-        type: `${namespace}/addOrUpdateEquipmentParametersInfo`,
+        type: `${namespace}/updateState`,
+        payload:payload,
+      })
+    },
+    getProjectInfoList:(payload)=>{ //项目管理列表
+      dispatch({
+        type: `${namespace}/getProjectInfoList`,
+        payload:payload,
+      })
+    },
+    addOrUpdateProjectInfo : (payload,callback) =>{ //修改 or 添加
+      dispatch({
+        type: `${namespace}/addOrUpdateProjectInfo`,
         payload:payload,
         callback:callback
       })
       
-    },
-    getEquipmentParametersInfo:(payload,callback)=>{ //参数列表
-      dispatch({
-        type: `${namespace}/getEquipmentParametersInfo`,
-        payload:payload,
-      })
     },
     getParametersInfo:(payload)=>{ //下拉列表测量参数
       dispatch({
@@ -80,75 +90,74 @@ const Index = (props) => {
   const [tableVisible,setTableVisible] = useState(false)
 
   const [type,setType] = useState('add')
-
+  const [pageSize,setPageSize] = useState(20)
+  const [pageIndex,setPageIndex] = useState(1)
+  
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,parametersList,loadingConfirm,loadingPoint,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,loadingPoint,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
   useEffect(() => {
-      getEquipmentParametersInfo({DGIMN:props.DGIMN})
-      getParametersInfos();
+    onFinish();
+  
+  },[]);
 
-    
-  },[props.DGIMN]);
- 
-  const getEquipmentParametersInfo=()=>{
-    props.getEquipmentParametersInfo({PolltantType:type==='smoke'?2:1})
-  }
-
-  const getParametersInfos=()=>{
-    props.getParametersInfo({PolltantType:type==='smoke'?2:1})
-  }
   const columns = [
     {
       title: '合同名称',
-      dataIndex: 'EquipmentParametersCode',
+      dataIndex: 'ProjectName',
+      key:'ProjectName',
       align:'center'
     },
     {
       title: '项目编号',
-      dataIndex: 'Range1',
+      dataIndex: 'ProjectCode',
+      key:'ProjectCode',
       align:'center',
     },
     {
       title: '客户所在地',
-      dataIndex: 'Range2',
+      dataIndex: 'RegionName',
+      key:'RegionName',
       align:'center',
-      render:(text,record)=>{
-
-      }
     },
     {
       title: '卖方公司名称',
-      dataIndex: 'DetectionLimit',
+      dataIndex: 'SellCompanyName',
+      key:'SellCompanyName',
       align:'center',
     },
     {
       title: '运营起始日期',
-      dataIndex: 'Unit',
+      dataIndex: 'BeginTime',
+      key:'BeginTime',
       align:'center',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
     {
       title: '运营结束日期',
-      dataIndex: 'operations',
+      dataIndex: 'EndTime',
+      key:'EndTime',
       align:'center',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
       
     },
     {
       title: '运营套数',
-      dataIndex: 'operation',
+      dataIndex: 'OperationCount',
+      key:'OperationCount',
       align:'center',
     },
     {
       title: '创建人',
-      dataIndex: 'operation',
+      dataIndex: 'UserName',
+      key:'UserName',
       align:'center',
     },
     {
       title: '创建时间',
-      dataIndex: 'operation',
+      dataIndex: 'CreateTime',
+      key:'CreateTime',
       align:'center',
       defaultSortOrder: 'descend',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
@@ -164,7 +173,9 @@ const Index = (props) => {
                
                <Fragment> <Tooltip title="详情">
                  <Link  style={{padding:'0 5px'}} to={{  pathname: '/platformconfig/basicInfo/projectManager/detail',
-                       query: { RegionCode: record.RegionCode},
+                       query: { 
+                         data: JSON.stringify(record)
+                        },
                        }}
                        >
                     <DetailIcon />
@@ -207,15 +218,22 @@ const Index = (props) => {
       align:'center',
     },
   ]
-  const edit = async (record) => {
 
+  const edit = async (record) => {
+    setFromVisible(true)
+    setType('edit')
+    form2.resetFields();
     try {
-    //   const row = await form.validateFields();//触发校验
+      form2.setFieldsValue({
+        ...record,
+        BeginTime:moment(record.BeginTime),
+        EndTime:moment(record.BeginTime)
+      })
 
    
 
     } catch (errInfo) {
-    console.log('Validate Failed:', errInfo);
+      console.log('Validate Failed:', errInfo);
     }
   };
 
@@ -234,34 +252,13 @@ const Index = (props) => {
    setTableVisible(true)
   };
   
-  const save = async (record) => {
 
-    try {
-
-
-      
-    } catch (errInfo) {
-      message.warning("请输入测量参数和设置量程范围1")
-      console.log('错误信息:', errInfo);
-    }
-  };
 
   
   const add = () => {
-
-     setCount(count+1)
-     const newData = {
-      DetectionLimit: "",
-      EquipmentParametersCode: "",
-      ID: count,
-      Range1: '',
-      Range2: '',
-      Unit: "",
-      editable:true,
-      type:'add'
-     }
-    setData([...data,newData])
     setFromVisible(true)
+    setType('add')
+    form2.resetFields();
 
   };
   const exports = () => {
@@ -272,22 +269,49 @@ const Index = (props) => {
 
 };
   const onFinish  = async () =>{  //查询
+      
     try {
       const values = await form.validateFields();
-      console.log('Success:', values);
+
+      props.getProjectInfoList({
+        ...values,
+        BegBeginTime:values.BegTime&&moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        BegEndTime:values.BegTime&&moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BegTime:undefined,
+        EndTime:undefined,
+        
+      })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
   const onModalOk  = async () =>{ //添加 or 编辑弹框
+  
     try {
-      const values = await form2.validateFields();
-      console.log('Success:', values);
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
+      const values = await form2.validateFields();//触发校验
+      props.addOrUpdateProjectInfo({
+        ...values,
+        BeginTime:values.BeginTime&&moment(values.BegTime).format('YYYY-MM-DD 00:00:00'),
+        EndTime:values.EndTime&&moment(values.EndTime).format('YYYY-MM-DD 23:59:59'),
+        CreateUserID:type==='add'? JSON.parse(Cookie.get('currentUser')).UserId : values.CreateUserID,
+      },()=>{
+        setFromVisible(false)
+        onFinish()
+      })
+
+      
+    } catch (errInfo) {
+      console.log('错误信息:', errInfo);
     }
   }
-  
+  const handleTableChange =   async (PageIndex, )=>{ //分页
+    const values = await form.validateFields();
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    props.getProjectInfoList({...values,PageIndex,PageSize})
+  }
   const searchComponents = () =>{
      return  <Form
     form={form}
@@ -297,35 +321,33 @@ const Index = (props) => {
   >  
          <Row> 
          <Col span={8}>
-          <Form.Item   name='filed-1' label='合同名称'>
+          <Form.Item   name='ProjectName' label='合同名称'>
             <Input placeholder="请输入合同名称" />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='filed-2' label='项目编号' >
+          <Form.Item name='ProjectCode' label='项目编号' >
             <Input placeholder="请输入项目编号" />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='filed-3' label='运营起始日期' >
-          <RangePicker_  type='simple' style={{width:'100%'}}    showTime="HH:mm:ss" format="YYYY-MM-DD HH:mm:ss"/>
+          <Form.Item name='BegTime' label='运营起始日期' >
+          <RangePicker style={{width:'100%'}} showTime />
           </Form.Item>
         </Col>  
         {expand&&<><Col span={8}>
-          <Form.Item   name='filed-11' label='卖方公司名称'>
+          <Form.Item   name='EntName' label='卖方公司名称'>
             <Input placeholder="请输入卖方公司名称" />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='filed-12' label='客户所在地' >
-            <Select placeholder="请输入客户所在地" >
-              <Option> </Option>
-            </Select>
+          <Form.Item name='RegionCode' label='客户所在地' >
+           <RegionList style={{ width: '100%' }} />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='filed-13' label='运营结束日期' >
-          <RangePicker_  type='simple' style={{width:'100%'}}    showTime="HH:mm:ss" format="YYYY-MM-DD HH:mm:ss"/>
+          <Form.Item name='EndTime' label='运营结束日期' >
+          <RangePicker style={{width:'100%'}} showTime />
           </Form.Item>
         </Col></>}
         </Row>   
@@ -357,8 +379,14 @@ const Index = (props) => {
       <SdlTable
         loading = {tableLoading}
         bordered
-        dataSource={data}
+        dataSource={tableDatas}
         columns={columns}
+        pagination={{
+          total:tableTotal,
+          pageSize: pageSize,
+          current: pageIndex,
+          onChange: handleTableChange,
+        }}
       />
    </Card>
    </BreadcrumbWrapper>
@@ -376,31 +404,32 @@ const Index = (props) => {
         <Form
       name="basic"
       form={form2}
+      initialValues={{
+        //  CreateUserID:JSON.parse(Cookie.get('currentUser')).UserId
+      }}
     >
+
       <Row>
         <Col span={12}>
-        <Form.Item label="合同名称" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="合同名称" name="ProjectName" rules={[  { required: true, message: '请输入合同名称!',  },]} >
         <Input placeholder='请输入合同名称'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="项目编号" name="username2" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="项目编号" name="ProjectCode" rules={[  { required: true, message: '请输入项目编号!',  },]} >
         <Input  placeholder='请输入项目编号'/>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={12}>
-        <Form.Item label="客户所在地" name="username3" rules={[  { required: true, message: 'Please input your username!',  },]} >
-        <Select placeholder="请选择客户所在地">
-          <Option value="1">小学</Option>
+        <Form.Item label="客户所在地" name="RegionCode" rules={[  { required: true, message: '请输入客户所在地!',  },]} >
+        <RegionList style={{ width: '100%' }} />
 
-
-        </Select>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="卖方公司" name="username4" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="卖方公司" name="SellCompanyName" rules={[  { required: true, message: '请输入卖方公司!',  },]} >
         <Input  placeholder='请输入卖方公司'/>
       </Form.Item>
       </Col>
@@ -408,12 +437,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="行业" name="username5" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="行业" name="IndustryCode" >
         <Input placeholder='请输入行业'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="签订人" name="username6" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="签订人" name="SignName" rules={[  { required: true, message: '请输入签订人!',  },]} >
         <Input placeholder='请输入签订人'/>
       </Form.Item>
       </Col>
@@ -421,12 +450,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营起始日期" name="username7" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运营起始日期" name="BeginTime" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营结束日期" name="username8" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="运营结束日期" name="EndTime" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
@@ -435,12 +464,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营套数" name="username9" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运营套数" name="OperationCount" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <InputNumber placeholder='请输入运营套数'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营月数" name="username99" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="运营月数" name="OperationMonth" rules={[  { required: true, message: 'Please input your username!',  },]} >
         <InputNumber placeholder='请输入运营月数'/>
       </Form.Item>
       </Col>
@@ -449,19 +478,23 @@ const Index = (props) => {
       <Row align='middle'>
         <Col span={12}>
 
-      <Form.Item label="合同总金额(万)" name="username999" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="合同总金额(万)" name="Money"  >
         <Input placeholder='请输入合同总金额'/>
       </Form.Item>
       </Col>
         <Col span={12}>
-        <Form.Item label="备注" name="username998" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="备注" name="Remark"  >
         <Input placeholder='请输入备注'/>
       </Form.Item>
        </Col>
       </Row> 
-      <Form.Item label="ID"  name="username9898" hidden>
+      <Form.Item   name="ID" hidden>
           <Input />
       </Form.Item> 
+       <Form.Item name="CreateUserID" hidden>
+          <Input />
+      </Form.Item> 
+     
     </Form>
       </Modal>
 

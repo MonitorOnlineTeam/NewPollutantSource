@@ -11,23 +11,43 @@ export default Model.extend({
   state: {
     tableDatas:[],
     parametersList:[],
-    tableLoading:false
+    tableLoading:false,
+    tableTotal:0,
+    pointDatas:[]
   },
   effects: {
-    *getEquipmentParametersInfo({ payload,callback }, { call, put, update }) { //参数列表
-      const result = yield call(services.GetEquipmentParametersInfo, payload);
+    *getProjectInfoList({ payload,callback }, { call, put, update }) { //项目信息列表
       yield update({ tableLoading:true})
+      const result = yield call(services.GetProjectInfoList, payload);
       if (result.IsSuccess) {
         yield update({
+          tableTotal:result.Total,
           tableDatas:result.Datas,
           tableLoading:false
         })
-        callback(result.Datas)
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
-
+    *addOrUpdateProjectInfo({ payload,callback }, { call, put, update }) { //添加和修改
+      const result = yield call(services.AddOrUpdateProjectInfo, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    }, 
+    *GetProjectPointList({ payload,callback }, { call, put, update }) { //运维监测点信息
+      const result = yield call(services.GetProjectPointList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pointDatas:result.Datas,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

@@ -22,15 +22,14 @@ const namespace = 'projectManager'
 
 
 const dvaPropsData =  ({ loading,projectManager }) => ({
-  tableDatas:projectManager.tableDatas,
-  detailLoading: loading.effects[`${namespace}/getParametersInfo`],
+  detailLoading: loading.effects[`${namespace}/getProjectInfo`],
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-    getEquipmentParametersInfo : (payload,callback) =>{ //修改 or 添加
+    getProjectInfo : (payload,callback) =>{ 
       dispatch({
-        type: `${namespace}/addOrUpdateEquipmentParametersInfo`,
+        type: `${namespace}/getProjectInfo`,
         payload:payload,
       })
       
@@ -44,17 +43,15 @@ const Index = (props) => {
 
 
   const [data, setData] = useState([]);
-
+  
 
   
-  const isEditing = (record) => record.key === editingKey;
+
   
-  const  { tableDatas,detailLoading } = props; 
   useEffect(() => {
-      getEquipmentParametersInfo({DGIMN:props.DGIMN})
-
-    
-  },[props.DGIMN]);
+  
+    setData(JSON.parse(props.location.query.data))
+  },[props]);
  
   const getEquipmentParametersInfo=()=>{
     props.getEquipmentParametersInfo({PolltantType:1})
@@ -73,33 +70,30 @@ const Index = (props) => {
         <Button onClick={() => {props.history.go(-1);   }} ><RollbackOutlined />返回</Button>
      </Row>
     }>
-    {detailLoading?
-    <PageLoading />
-   :
     <Form
       name="detail"
     >
       <Row>
         <Col span={12}>
         <Form.Item label="合同名称" >
-        {}
+        {data.ProjectName}
       </Form.Item>
       </Col>
       <Col span={12}>
         <Form.Item label="项目编号">
-        {}
+        {data.ProjectCode}
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={12}>
         <Form.Item label="客户所在地" >
-         {}
+        {data.RegionName}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="卖方公司">
-       {}
+      {data.SellCompanyName}
       </Form.Item>
       </Col>
       </Row>
@@ -107,12 +101,12 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="行业">
-         {}
+        {data.IndustryCode}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="签订人"  >
-        {}
+        {data.SignName}
       </Form.Item>
       </Col>
       </Row>
@@ -120,12 +114,12 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="运营起始日期"  >
-        {}
+        {data.BeginTime}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="运营结束日期" >
-      {}
+      {data.EndTime}
       </Form.Item>
       </Col>
       </Row>
@@ -134,12 +128,12 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="运营套数" >
-         {}
+        {data.OperationCount}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="运营月数"  >
-      {}
+      {data.OperationMonth}
       </Form.Item>
       </Col>
       </Row>
@@ -148,17 +142,16 @@ const Index = (props) => {
         <Col span={12}>
 
       <Form.Item label="合同总金额(万)"  >
-        {}
+      {data.Money}
       </Form.Item>
       </Col>
         <Col span={12}>
         <Form.Item label="备注"  >
-        {}
+        {data.Remark}
       </Form.Item>
        </Col>
       </Row> 
     </Form>
-  }
    </Card>
    </BreadcrumbWrapper>
         </div>
