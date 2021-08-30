@@ -312,7 +312,7 @@ class AddOrEditPage extends PureComponent {
                       }
                       rules={[{ required: true, message: '请填写化石燃料燃烧排放量!' }]}
                     >
-                      <Input style={{ width: 'calc(100% - 88px)' }} onChange={(val) => { this.countCrew_tCO2() }} placeholder="请填写化石燃料燃烧排放量" />
+                      <InputNumber style={{ width: 'calc(100% - 88px)' }} onChange={(val) => { this.countCrew_tCO2() }} placeholder="请填写化石燃料燃烧排放量" />
                     </Form.Item>
                     <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary" onClick={() => {
                       this.setState({ isModalVisible: true })
@@ -330,7 +330,7 @@ class AddOrEditPage extends PureComponent {
                       }
                       rules={[{ required: true, message: '请填写购入电力产生的排放!' }]}
                     >
-                      <Input style={{ width: 'calc(100% - 88px)' }} onChange={(val) => { this.countCrew_tCO2() }} placeholder="请填写购入电力产生的排放" />
+                      <InputNumber style={{ width: 'calc(100% - 88px)' }} onChange={(val) => { this.countCrew_tCO2() }} placeholder="请填写购入电力产生的排放" />
                     </Form.Item>
                     <Popover
                       title="计算购入电力产生的排放"

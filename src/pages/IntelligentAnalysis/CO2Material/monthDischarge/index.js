@@ -74,6 +74,25 @@ class index extends PureComponent {
         axisPointer: {
           type: 'shadow'
         },
+        formatter: (params) => {
+          if (params) {
+            let params0 = "", params1 = "";
+            if (params[0]) {
+              params0 = `
+              ${params[0].name}
+              <br />
+              ${params[0].marker}
+              ${params[0].seriesName}：${params[0].value}（t）
+              <br />`
+            }
+            if (params[1]) {
+              params1 = `${params[1].marker}
+${params[1].seriesName} ：${params[1].value}（t）
+<br />`
+            }
+            return params0 + params1;
+          }
+        }
         // formatter: (params, ticket, callback) => {
         //   let param = params[0]
         //   let format = `${param.name}<br />${param.marker}${param.value}（t）`

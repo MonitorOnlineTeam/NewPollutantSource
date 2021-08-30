@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Divider, Space, Select, DatePicker, Button, Empty, Spin } from 'antd'
+import { Card, Divider, Space, Select, DatePicker, Button, Empty, Spin, message } from 'antd'
 import { connect } from 'dva'
 import ReactEcharts from 'echarts-for-react';
 import moment from 'moment'
@@ -18,7 +18,7 @@ class index extends PureComponent {
     this.formRef = React.createRef();
     this.state = {
       year: moment(),
-      time: [moment(), moment()],
+      time: [moment().subtract(1, 'month'), moment()],
     };
   }
 
@@ -48,6 +48,11 @@ class index extends PureComponent {
   // 获取图表数据
   getEchartsData = () => {
     const { entCode, time } = this.state;
+    console.log('time[0].month=', time[0].month)
+    if (time[1].get('month') - time[0].get('month') < 1) {
+      message.error('最小间隔时间为2个月，请重新选择！');
+      return;
+    }
     this._dispatch('CO2Material/getCO2LinearAnalysis', {
       EntCode: entCode,
       BeginTime: time[0].startOf('month').format('YYYY-MM-DD HH:mm:ss'),
@@ -91,22 +96,22 @@ class index extends PureComponent {
       grid: {
         left: '2%',
         right: '100px',
-        bottom: '4%',
+        bottom: '6%',
         // top: "2%",
         containLabel: true
       },
       tooltip: {
-        // formatter: function (params, ticket, callback) {
-        //   console.log('params=', params)
-        //   return `测量浓度:    ${params.value[0]}${currentRowData.Unit} <br />标准气浓度:    ${params.value[1]}${currentRowData.Unit}`
-        // }
+        formatter: function (params, ticket, callback) {
+          console.log('params=', params)
+          return `直测排放量:    ${params.value[0]} t <br />核算排放量:    ${params.value[1]} t`
+        }
       },
       toolbox: {
         show: true,
         feature: {
-          dataZoom: {
-            yAxisIndex: 'none'
-          },
+          // dataZoom: {
+          //   yAxisIndex: 'none'
+          // },
           dataView: { readOnly: false },
           // magicType: {type: ['line', 'bar']},
           // restore: {},
@@ -122,7 +127,7 @@ class index extends PureComponent {
       ],
       series: [
         {
-          name: '测量浓度 标准气浓度',
+          name: '直测排放量 核算排放量',
           type: 'scatter',
           xAxisIndex: 0,
           yAxisIndex: 0,

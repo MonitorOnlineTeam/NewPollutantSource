@@ -211,9 +211,9 @@ export default Model.extend({
               ...item,
               DGIMNArr: item.DGIMN.split('/'),
               key: index,
-              Component: [
-                ...Component,
-              ],
+              // Component: [
+              //   ...Component,
+              // ],
             }
           })
         }
