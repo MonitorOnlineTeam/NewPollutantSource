@@ -85,7 +85,6 @@ class AutoFormTable extends PureComponent {
       });
     }
   }
-
   loadDataSource(params) {
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',

@@ -27,11 +27,11 @@ const namespace = 'projectManager'
 
 const dvaPropsData =  ({ loading,projectManager }) => ({
   tableDatas:projectManager.tableDatas,
+  pointDatas:projectManager.pointDatas,
   tableLoading:projectManager.tableLoading,
   tableTotal:projectManager.tableTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
-  loadingPoint: loading.effects[`${namespace}/getParametersInfo`],
-  pointLoading: loading.effects[`${namespace}/getParametersInfo`],
+  pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/getParametersInfo`],
   exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
 })
@@ -64,13 +64,19 @@ const  dvaDispatch = (dispatch) => {
         payload:payload
       }) 
     },
-    deleteEquipmentParametersInfo:(payload,callback)=>{ //删除
+    deleteProjectInfo:(payload,callback)=>{ //删除
       dispatch({
-        type: `${namespace}/deleteEquipmentParametersInfo`, 
+        type: `${namespace}/deleteProjectInfo`, 
         payload:payload,
         callback:callback
       }) 
-    }
+    },
+    getProjectPointList:(payload)=>{ //运维监测点信息
+      dispatch({
+        type: `${namespace}/getProjectPointList`, 
+        payload:payload,
+      }) 
+    },
   }
 }
 const Index = (props) => {
@@ -96,7 +102,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,loadingConfirm,loadingPoint,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
   useEffect(() => {
     onFinish();
   
@@ -183,7 +189,7 @@ const Index = (props) => {
                 </Tooltip><Divider type="vertical" /></Fragment>
 
                <Fragment> <Tooltip title="删除">
-                  <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={del(record)} okText="是" cancelText="否">
+                  <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
                   <a href="#" ><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
@@ -199,22 +205,26 @@ const Index = (props) => {
   const pointColumns = [
     {
       title: '监控目标',
-      dataIndex: 'EquipmentParametersCode',
+      dataIndex: 'ProjectID',
+      key:'ProjectID',
       align:'center'
     },
     {
       title: '监测点',
-      dataIndex: 'Range1',
+      dataIndex: 'DGIMN',
+      key:'DGIMN',
       align:'center',
     },
     {
       title: '实际运营开始日期',
-      dataIndex: 'Range2',
+      dataIndex: 'BeginTime',
+      key:'BeginTime',
       align:'center',
     },
     {
       title: '实际运营结束日期',
-      dataIndex: 'Range2',
+      dataIndex: 'EndTime',
+      key:'EndTime',
       align:'center',
     },
   ]
@@ -237,19 +247,16 @@ const Index = (props) => {
     }
   };
 
-  const del = async (record) => {
-    // const dataSource = [...data];
-    // let newData = dataSource.filter((item) => item.ID !== ID)
-    // setTableLoading(true)
-    // props.deleteEquipmentParametersInfo({ID:ID},()=>{
-    //    setTableLoading(false)
-    //    setData(newData)
-    // })
+  const del =  (record) => {
+    props.deleteProjectInfo({ID:record.ID},()=>{
+        onFinish();
+    })
   };
 
 
-  const operaInfo = async (record) => {
+  const operaInfo = (record) => {
    setTableVisible(true)
+   props.getProjectPointList({ID:record.ID,ProjectCode:record.ProjectCode})
   };
   
 
@@ -512,7 +519,7 @@ const Index = (props) => {
        <SdlTable
         loading = {pointLoading}
         bordered
-        // dataSource={data}
+        dataSource={pointDatas}
         columns={pointColumns}
       />
       </Modal>

@@ -6,11 +6,11 @@
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover    } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined  } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import styles from "./style.less"

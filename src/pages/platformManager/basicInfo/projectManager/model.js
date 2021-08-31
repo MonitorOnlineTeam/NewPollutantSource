@@ -39,7 +39,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-    *GetProjectPointList({ payload,callback }, { call, put, update }) { //运维监测点信息
+    *deleteProjectInfo({ payload,callback }, { call, put, update }) { //删除
+      const result = yield call(services.DeleteProjectInfo, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *getProjectPointList({ payload,callback }, { call, put, update }) { //运维监测点信息
       const result = yield call(services.GetProjectPointList, payload);
       if (result.IsSuccess) {
         yield update({

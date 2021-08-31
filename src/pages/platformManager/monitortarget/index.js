@@ -208,7 +208,6 @@ export default class MonitorTarget extends Component {
     onRef1 = ref => {
         this.child = ref;
     };
-
     render() {
         const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
         //   console.log("this.props=", this.props);
@@ -225,7 +224,7 @@ export default class MonitorTarget extends Component {
                 }}
                 size="large"
             />);
-        }
+        }else{
         return (
             <BreadcrumbWrapper>
                 <Card className={styles.contentContainer}>
@@ -311,4 +310,5 @@ export default class MonitorTarget extends Component {
             </BreadcrumbWrapper>
         );
     }
+}
 }

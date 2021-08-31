@@ -6,6 +6,195 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "22697598",
+      "name": "恶臭监测",
+      "font_class": "echoujiance",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "2273093",
+      "name": "日常生活-水站",
+      "font_class": "richangshenghuo-shuizhan",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "19848113",
+      "name": "企业",
+      "font_class": "qiye",
+      "unicode": "e71e",
+      "unicode_decimal": 59166
+    },
+    {
+      "icon_id": "22269030",
+      "name": "全部",
+      "font_class": "quanbu",
+      "unicode": "e6db",
+      "unicode_decimal": 59099
+    },
+    {
+      "icon_id": "9603527",
+      "name": "工厂",
+      "font_class": "gongchang",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "10232116",
+      "name": "扬尘",
+      "font_class": "yangchen",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "12177213",
+      "name": "仓库",
+      "font_class": "cangku1",
+      "unicode": "e7bd",
+      "unicode_decimal": 59325
+    },
+    {
+      "icon_id": "13064462",
+      "name": "烟气",
+      "font_class": "yanqi1",
+      "unicode": "e930",
+      "unicode_decimal": 59696
+    },
+    {
+      "icon_id": "13527089",
+      "name": "废水排口",
+      "font_class": "hqsa0101",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "15190181",
+      "name": "设施",
+      "font_class": "sheshi",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "20618099",
+      "name": "视频",
+      "font_class": "shipin1",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
+      "icon_id": "7926826",
+      "name": "标绘",
+      "font_class": "biaohui",
+      "unicode": "e6a9",
+      "unicode_decimal": 59049
+    },
+    {
+      "icon_id": "11674031",
+      "name": "清除",
+      "font_class": "qingchu",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "14666484",
+      "name": "标绘",
+      "font_class": "biaohui1",
+      "unicode": "e726",
+      "unicode_decimal": 59174
+    },
+    {
+      "icon_id": "10194649",
+      "name": "恶臭",
+      "font_class": "echouqitijiancezhan",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "3401997",
+      "name": "亚军",
+      "font_class": "yajun",
+      "unicode": "e6b0",
+      "unicode_decimal": 59056
+    },
+    {
+      "icon_id": "3402022",
+      "name": "冠军",
+      "font_class": "guanjun",
+      "unicode": "e6b1",
+      "unicode_decimal": 59057
+    },
+    {
+      "icon_id": "3402049",
+      "name": "季军",
+      "font_class": "jijun",
+      "unicode": "e6b2",
+      "unicode_decimal": 59058
+    },
+    {
+      "icon_id": "552749",
+      "name": "钢铁行业",
+      "font_class": "gangtiexingye",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "552774",
+      "name": "水泥行业",
+      "font_class": "shuinixingye",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "688252",
+      "name": "基础化工",
+      "font_class": "jichuhuagong",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "9759534",
+      "name": "电力",
+      "font_class": "dianli",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "14095324",
+      "name": "电力行业",
+      "font_class": "dianlihangye",
+      "unicode": "e791",
+      "unicode_decimal": 59281
+    },
+    {
+      "icon_id": "14349679",
+      "name": "menu_行政区划管理",
+      "font_class": "region",
+      "unicode": "e74e",
+      "unicode_decimal": 59214
+    },
+    {
+      "icon_id": "8765261",
+      "name": "pdf",
+      "font_class": "pdf",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "14151852",
+      "name": "上传",
+      "font_class": "shangchuan",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "3051209",
+      "name": "身份证正面",
+      "font_class": "shenfenzhengzhengmian",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
       "icon_id": "15090547",
       "name": "地图",
       "font_class": "ditu",
