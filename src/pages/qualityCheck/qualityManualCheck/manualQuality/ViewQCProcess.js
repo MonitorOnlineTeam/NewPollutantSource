@@ -30,7 +30,8 @@ const QCStatusList = {
 const pollutantCodeList = {
   "a21026": { name: "SO2", unit: "mg/m3" },
   "a21002": { name: "NOx", unit: "mg/m3" },
-  "a19001": { name: "O2", unit: "%" }
+  "a19001": { name: "O2", unit: "%" },
+  "30": { name: "二氧化碳", unit: "mg/m³" },
 }
 
 @connect(({ loading, qcManual, qualityControlModel }) => ({
