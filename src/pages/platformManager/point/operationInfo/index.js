@@ -276,7 +276,8 @@ export default class OperationInfo extends Component {
   render() {
     const {
       form:{ getFieldDecorator,getFieldValue },
-      confirmLoading
+      confirmLoading,
+       location: { query: { type } }
     } = this.props;
     const { unitDisabled } = this.state;
     const uploadButton = (
@@ -335,7 +336,7 @@ export default class OperationInfo extends Component {
          <Form.Item label="运维类型" >
          {getFieldDecorator('Type', {   rules: [{required: true,  message: '请选择运维类型！'}],   })(
           <Select   placeholder="请选择运维类型"  allowClear onChange={this.typeChange} >  
-                               <Option value={1}>自运维</Option>  
+                              {type!==5&& <Option value={1}>自运维</Option> }
                                <Option value={2}>第三方运维</Option>                                  
                   </Select>
                    )}

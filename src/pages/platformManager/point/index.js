@@ -576,7 +576,7 @@ export default class MonitorPoint extends Component {
                         <Tooltip title="设置Cems参数">
                           <a onClick={() => {
                             this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
-                          }}><ToolOutlined /></a>
+                          }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     }
 
@@ -654,7 +654,7 @@ export default class MonitorPoint extends Component {
         }}
         destroyOnClose
       >
-        <OperationInfo  location={{query:{p:this.state.operationInfoDGIMN}}}/>
+        <OperationInfo  location={{query:{p:this.state.operationInfoDGIMN,type:this.state.pollutantType}}} />
         </Modal>
         </div>
         {/* </MonitorContent> */}

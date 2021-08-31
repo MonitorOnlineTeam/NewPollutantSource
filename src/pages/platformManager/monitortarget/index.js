@@ -290,7 +290,7 @@ export default class MonitorTarget extends Component {
                             <Tooltip title="生成监测点二维码">
                                 <a onClick={() => {
                                     this.CreatQRCode(row);
-                                }}><QrcodeOutlined /></a>
+                                }}><QrcodeOutlined style={{fontSize:16}} /></a>
                             </Tooltip>
 
                         </Fragment>}

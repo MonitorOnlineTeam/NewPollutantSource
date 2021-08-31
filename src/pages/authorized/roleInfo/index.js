@@ -192,7 +192,7 @@ class RoleIndex extends Component {
             buttonState: [],
             selectedRowKeysMenu: [],
             expandRows: false,
-            alarmPushData:'',
+            alarmPushData: '',
             menucolumns: [
                 {
                     title: '菜单名称',
@@ -225,13 +225,13 @@ class RoleIndex extends Component {
                                                 this.state.selectButton.push(item.ID)
                                                 this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
                                             } else if (this.state.selectButton.indexOf(item.ID) == -1) {
-                                                    this.state.selectButton.push(item.ID)
-                                                    this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
-                                                } else {
-                                                    const index = this.state.selectButton.indexOf(item.ID)
-                                                    this.state.selectButton.splice(index, 1)
-                                                    this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
-                                                }
+                                                this.state.selectButton.push(item.ID)
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '1'
+                                            } else {
+                                                const index = this.state.selectButton.indexOf(item.ID)
+                                                this.state.selectButton.splice(index, 1)
+                                                this.state.buttonState.find(cc => cc.ID == item.ID).State = '0'
+                                            }
                                             this.setState({
                                                 buttonState: this.state.buttonState,
                                             })
@@ -344,7 +344,7 @@ class RoleIndex extends Component {
                                     })
                                 }}><MenuUnfoldOutlined style={{ fontSize: 16 }} /></a>
                             </Tooltip>
-                            <Divider type="vertical" />
+                            {/* <Divider type="vertical" />
                             <Tooltip title="报警关联">
                                 <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
                                     console.log(record.Roles_ID)
@@ -354,7 +354,7 @@ class RoleIndex extends Component {
                                         this.showAlarmModal(record)
                                     })
                                 }}><BellOutlined style={{ fontSize: 16 }} /></a>
-                            </Tooltip>
+                            </Tooltip> */}
                         </span>,
                 },
             ],
@@ -624,12 +624,12 @@ class RoleIndex extends Component {
 
     showAlarmModal = record => {
         this.setState({
-            alarmPushData:record
-          },()=>{
+            alarmPushData: record
+        }, () => {
             this.setState({
-              visibleAlarm: true
+                visibleAlarm: true
             });
-          })
+        })
     }
 
     render() {
@@ -705,14 +705,14 @@ class RoleIndex extends Component {
                                 /> :
                                     <Table
                                         onRow={record => ({
-                                                onClick: event => {
-                                                    console.log('onClick=', record)
-                                                    this.setState({
-                                                        selectedRowKeys: record,
-                                                        rowKeys: [record.key],
-                                                    })
-                                                },
-                                            })}
+                                            onClick: event => {
+                                                console.log('onClick=', record)
+                                                this.setState({
+                                                    selectedRowKeys: record,
+                                                    rowKeys: [record.key],
+                                                })
+                                            },
+                                        })}
                                         size="small"
                                         style={{ marginTop: '20px' }}
                                         //rowSelection={rowRadioSelection}
@@ -725,7 +725,7 @@ class RoleIndex extends Component {
                                 visible={this.state.visible}
                                 onOk={this.handleSubmit}
                                 destroyOnClose="true"
-                                confirmLoading={ this.state.IsEdit === true ? btnloading1 : btnloading}
+                                confirmLoading={this.state.IsEdit === true ? btnloading1 : btnloading}
                                 onCancel={this.handleCancel}
                             >
                                 {
@@ -880,17 +880,17 @@ class RoleIndex extends Component {
                                         /> :
                                             <Table
                                                 onRow={record => ({
-                                                        onClick: event => {
-                                                            console.log('onClick=', this.props.CheckMenu)
-                                                        },
-                                                    })}
+                                                    onClick: event => {
+                                                        console.log('onClick=', this.props.CheckMenu)
+                                                    },
+                                                })}
                                                 size="small"
-                                                 rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
+                                                rowSelection={rowMenuSelection} columns={this.state.menucolumns} dataSource={this.props.MenuTree} />
                                     }
 
                                 </div>
                             </Modal>
-{/* 
+                            {/* 
                             <Modal
                                 title="报警关联"
                                 visible={this.state.visibleAlarm}
@@ -902,7 +902,7 @@ class RoleIndex extends Component {
 
                                 <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType="Role" cancelModal={this.cancelAlarmModal} />
                             </Modal> */}
-                         {this.state.visibleAlarm&&<NewAlarmPushRel type='Role'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
+                            {this.state.visibleAlarm && <NewAlarmPushRel type='Role' alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal} />}
 
                         </div>
                         {/* </MonitorContent> */}
