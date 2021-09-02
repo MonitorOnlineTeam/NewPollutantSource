@@ -42,6 +42,7 @@ class MaintenanceCycle extends Component {
             ID: '',
             DGIMN: this.props.DGIMN,
             loadings: false,
+            switchLoading:false
         };
     }
 
@@ -65,6 +66,7 @@ class MaintenanceCycle extends Component {
         if (this.props.DGIMN != nextProps.DGIMN) {
             this.setState({
                 DGIMN: nextProps.DGIMN,
+                switchLoading:true,
             }, () => {
                 this.getdata(this.state.type);
             });
@@ -75,15 +77,22 @@ class MaintenanceCycle extends Component {
     delete = () => {
         const { ID, type } = this.state;
         const { dispatch } = this.props;
+        this.setState({delLoading:true})
         dispatch({
             type: 'maintenances/DeleteMaintenanceReminder',
             payload: {
                 ID,
                 callback: model => {
                     if (model.Datas) {
-                        message.success('删除成功').then(() => {
-                            this.getdata(type);
-                        });
+                        message.success('删除成功')
+                        // .then(() => {
+                            // this.getdata(type);
+                            this.setState({ ID: '',delLoading:false });
+                            const { setFieldsValue } = this.props.form;
+                             setFieldsValue({RemindCycle:''})
+                             setFieldsValue({LastRemindDate:''})
+
+                        // });
                     }
                 },
             },
@@ -111,9 +120,11 @@ class MaintenanceCycle extends Component {
                             LastRemindDate: values.LastRemindDate.format('YYYY-MM-DD'),
                             callback: model => {
                                 if (model.Datas) {
-                                    message.success('添加成功').then(() => {
-                                        this.getdata(type);
-                                    });
+ 
+                                    // message.success('添加成功')
+                                    // .then(() => {
+                                        this.getdata(type,'add');
+                                    // });
                                 }
                             },
                         },
@@ -143,7 +154,7 @@ class MaintenanceCycle extends Component {
     }
 
     /** 加载数据 */
-    getdata = type => {
+    getdata = (type,operation) => {
         const { dispatch, PointCode } = this.props;
         const { DGIMN, loadings } = this.state;
         if (DGIMN) {
@@ -157,13 +168,16 @@ class MaintenanceCycle extends Component {
                             this.setState({
                                 ID: Maintenancereminderdata.ID,
                             });
+                            operation==='add'&&message.success('添加成功')
                         } else {
                             this.setState({
                                 ID: '',
                             });
                         }
                         this.setState({
-                            loadings: false
+                            delLoading:false,
+                            loadings: false,
+                            switchLoading:false
                         })
                     },
                 },
@@ -174,7 +188,7 @@ class MaintenanceCycle extends Component {
     /** 组装form */
     getfromData = () => {
         const { Maintenancereminderdata, DGIMN } = this.props;
-        const { loadings } = this.state;
+        const { loadings,delLoading,switchLoading } = this.state;
         const {
             ID,
             RemindCycle,
@@ -191,7 +205,8 @@ class MaintenanceCycle extends Component {
             },
         };
         const { getFieldDecorator } = this.props.form;
-        if (this.props.Isloading) {
+        // if (this.props.Isloading) {
+          if (switchLoading) {
             return (<Spin
                 style={{
                     width: '100%',
@@ -252,10 +267,11 @@ class MaintenanceCycle extends Component {
                             >
                                 保存
                                 </Button>
-                            <Divider type="vertical" style={{ display: ID ? 'inline' : 'none' }} />
+                            <Divider type="vertical" style={{ display: this.state.ID ? 'inline' : 'none' }} />
                             <Button
                                 type="dashed"
-                                style={{ display: ID ? 'inline' : 'none' }}
+                                loading={delLoading}
+                                style={{ display: this.state.ID ? 'inline' : 'none' }}
                                 onClick={() => {
                                     this.delete();
                                 }}

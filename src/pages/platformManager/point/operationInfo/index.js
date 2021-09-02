@@ -208,9 +208,10 @@ export default class OperationInfo extends Component {
               type: 'operationInfo/addOrUpdateOperationPoint',
               payload: {
                   ...values,
+                  Time:undefined,
                   DGIMN:DGIMN,
                   BeginTime:moment(values.Time[0]).format("YYYY-MM-DD 00:00:00"),
-                  EndTime:moment(values.Time[0]).format("YYYY-MM-DD 23:59:59")
+                  EndTime:moment(values.Time[1]).format("YYYY-MM-DD 23:59:59")
                  },
                  callback:res=>{
                   this.setState({
@@ -275,7 +276,8 @@ export default class OperationInfo extends Component {
   render() {
     const {
       form:{ getFieldDecorator,getFieldValue },
-      confirmLoading
+      confirmLoading,
+       location: { query: { type } }
     } = this.props;
     const { unitDisabled } = this.state;
     const uploadButton = (
@@ -298,13 +300,13 @@ export default class OperationInfo extends Component {
          <PlusOutlined />
          添加
        </Button>
-          <Button
+          {/* <Button
             style={{marginLeft: 10 }}
                onClick={() => {
               history.go(-1);
           }}
             ><LeftOutlined />返回
-          </Button>
+          </Button> */}
           </>
           }
         >
@@ -334,7 +336,7 @@ export default class OperationInfo extends Component {
          <Form.Item label="运维类型" >
          {getFieldDecorator('Type', {   rules: [{required: true,  message: '请选择运维类型！'}],   })(
           <Select   placeholder="请选择运维类型"  allowClear onChange={this.typeChange} >  
-                               <Option value={1}>自运维</Option>  
+                              {type!==5&& <Option value={1}>自运维</Option> }
                                <Option value={2}>第三方运维</Option>                                  
                   </Select>
                    )}

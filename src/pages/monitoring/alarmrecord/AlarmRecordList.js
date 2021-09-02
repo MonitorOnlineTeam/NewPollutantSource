@@ -310,25 +310,24 @@ class AlarmRecordList extends Component {
       getFieldDecorator,
     } = this.props.form;
     const formLayout = {
-      labelCol: {
-        span: 8,
-      },
-      wrapperCol: {
-        span: 14,
-      },
+      // labelCol: {
+      //   span: 8,
+      // },
+      // wrapperCol: {
+      //   span: 14,
+      // },
     };
     return (
       <BreadcrumbWrapper>
         <div>
           <Card>
           <Form layout="" style={{ marginBottom: 20 }}>
-              <Row gutter={16}>
-                <Col md={4}>
-                  <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
+              <Row>
+                  <FormItem {...formLayout} style={{marginRight: 10}} label="企业类型">
                     {getFieldDecorator('PollutantType', {
                       initialValue: '1',
                     })(
-                      <Select placeholder="请选择企业类型" onChange={(value) => {
+                      <Select placeholder="请选择企业类型"  onChange={(value) => {
                         this.setState({ pollutantType: value }, () => {
                           this.getPollutantByType(true)
                         })
@@ -338,19 +337,15 @@ class AlarmRecordList extends Component {
                       </Select>
                     )}
                   </FormItem>
-                </Col>
-                <Col md={7}>
-                  <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="日期查询" style={{ width: '100%' }}>
-                      <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10, marginTop: 5 }}
+                  <FormItem  label="日期查询">
+                      <RangePicker_ style={{ width: 350, textAlign: 'left', marginRight: 10}}
                           dataType="minute"
                           dateValue={this.state.rangeDate}
                           callback={dates => this._handleDateChange(dates)}
                           allowClear={false}
                       />
                   </FormItem>
-                </Col>
-                <Col md={4}>
-                  <FormItem {...formLayout} label="行政区" style={{ width: '100%' }}>
+                  <FormItem {...formLayout}  style={{ marginRight: 10}} label="行政区">
                     {getFieldDecorator('RegionCode', {
                     })(
                       <Select allowClear placeholder="请选择行政区">
@@ -364,13 +359,11 @@ class AlarmRecordList extends Component {
                       </Select>,
                     )}
                   </FormItem>
-                </Col>
-                <Col md={5}>
-                  <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="企业">
                     {getFieldDecorator('EntCode', {
                       initialValue: undefined,
                     })(
-                      <Select allowClear placeholder="请选择企业"  onChange={(value) => {
+                      <Select allowClear placeholder="请选择企业"   style={{ width: 310, marginRight: 10}} onChange={(value) => {
                           //获取监测点
                           this.props.dispatch({
                               type: pageUrl.GetPointByEntCode,
@@ -390,9 +383,7 @@ class AlarmRecordList extends Component {
                       </Select>,
                     )}
                   </FormItem>
-                </Col>
-                <Col md={4}>
-                  <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
+                  <FormItem {...formLayout} label="监测点">
                     {getFieldDecorator('DGIMN', {
                     })(
                       <Select allowClear placeholder="请选择监测点">
@@ -406,10 +397,9 @@ class AlarmRecordList extends Component {
                     </Select>,
                     )}
                   </FormItem>
-                </Col>
 
-                <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
-                  <div class="ant-form-item-label" style={{ width: '5.3%' }}>
+                <Col md={24} style={{ display: "flex", alignItems: "center" }}>
+                  <div class="ant-form-item-label">
                     <label for="RegionCode" class="" title="监测因子">监测因子</label>
                   </div>
                   {getFieldDecorator('PollutantList', {

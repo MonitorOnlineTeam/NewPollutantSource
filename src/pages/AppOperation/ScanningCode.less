@@ -1,5 +1,42 @@
 :global{
     .am-steps-vertical.am-steps-small .am-steps-item-tail {
-        padding: 10px 0 4px 0;
+        padding: 13px 0 0 0;
     }
+}
+.scanningCode  :global{
+    .am-steps-small .am-steps-item-custom .am-steps-item-icon > .am-steps-icon{
+      top: 0 !important;
+    }
+    .am-card-header{
+      background-color: #f5f5f9;
+    }
+    .am-grid .am-flexbox .am-flexbox-item .am-grid-item-content .am-grid-item-inner-content .am-grid-text:global{
+      font-size: 13px;
+    }
+    .am-steps-vertical.am-steps-small .am-steps-item-title{
+      line-height: 11px;
+    }
+   }
+   .scanningCodeModal :global{
+    .am-list-body::after { 
+      height: 0 !important;
+    }
+   }
+.scanningEntInfo  :global{
+  .am-list-body::after { 
+    height: 0 !important;
+  }
+}
+.tagSty{
+  font-weight:normal;
+  margin-right:10px;
+  padding:1px 4px;
+  line-height:12px;
+}
+.badgeSty  :global{
+  font-weight: normal;
+  .ant-badge-status-text{
+    margin-left: 3px;
+    font-size: 12px;
+  }
 }

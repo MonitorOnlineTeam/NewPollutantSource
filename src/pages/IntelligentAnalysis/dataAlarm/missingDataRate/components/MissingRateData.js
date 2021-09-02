@@ -31,6 +31,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile,interceptTwo } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
+import OperationUnitList from '@/components/OperationUnitList'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -123,7 +124,7 @@ export default class EntTransmissionEfficiency extends Component {
       this.updateQueryState({
         RegionCode: '',
         EntCode:'',
-        OperationPersonnel:'',
+        OperationEntCode:'',
         EntType: types==='ent'? "1":"2",
       });
 
@@ -206,9 +207,14 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: value,
     });
   }
-  changePperation=(value)=>{
+  // changePperation=(value)=>{
+  //   this.updateQueryState({
+  //     OperationPersonnel: value,
+  //   });
+  // }
+  changeOperationUnit=(value)=>{
     this.updateQueryState({
-      OperationPersonnel: value,
+      OperationEntCode: value,
     });
   }
   changeEnt=(value,data)=>{ //企业事件
@@ -280,7 +286,7 @@ export default class EntTransmissionEfficiency extends Component {
   render() {
     const {
       exloading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,OperationPersonnel },
+      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,OperationEntCode },
       type
     } = this.props;
 
@@ -319,7 +325,7 @@ export default class EntTransmissionEfficiency extends Component {
                   {this.attentchildren()}
                 </Select>
               </Form.Item>
-              <Form.Item label='运维状态'>
+              {/* <Form.Item label='运维状态'>
               <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -332,7 +338,10 @@ export default class EntTransmissionEfficiency extends Component {
                 <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
               </Select>
-              </Form.Item> 
+              </Form.Item>  */}
+              <Form.Item label='运维列表'>
+            <OperationUnitList notSelf={this.props.types==='air'&&true} style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={this.changeOperationUnit  }/>
+            </Form.Item> 
               <Form.Item label='行政区'>
                 <Select
                   allowClear

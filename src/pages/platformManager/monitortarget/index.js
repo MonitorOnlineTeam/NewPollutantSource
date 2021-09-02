@@ -5,7 +5,7 @@
  * @Date: 2019年7月29日15:11:59
  */
 import React, { Component, Fragment } from 'react';
-import { CalendarTwoTone, QrcodeOutlined } from '@ant-design/icons';
+import { CalendarTwoTone, QrcodeOutlined,FundOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -286,12 +286,11 @@ export default class MonitorTarget extends Component {
                                         this.adddischargepermit('', row);
                                     }}><CalendarTwoTone style={{ fontSize: 16 }} /> </a>
                                 </Tooltip></>} */}
-
                             <Divider type="vertical" />
                             <Tooltip title="生成监测点二维码">
                                 <a onClick={() => {
                                     this.CreatQRCode(row);
-                                }}><QrcodeOutlined /></a>
+                                }}><QrcodeOutlined style={{fontSize:16}} /></a>
                             </Tooltip>
 
                         </Fragment>}

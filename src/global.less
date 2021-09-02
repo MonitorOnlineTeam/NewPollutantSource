@@ -47,6 +47,9 @@ ol {
 }
 
 :global {
+  .ant-layout.ant-layout-has-sider > .ant-layout, .ant-layout.ant-layout-has-sider > .ant-layout-content {
+    overflow-x: auto;
+  }
   .ant-table-fixed {
     table-layout: fixed;  //防止单元格和表头对不齐的样式 3.24.0之前的版本都需要
   }
@@ -518,3 +521,24 @@ a:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+#components-table-demo-drag-sorting tr.drop-over-downward td {
+  border-bottom: 2px dashed #1890ff;
+}
+
+#components-table-demo-drag-sorting tr.drop-over-upward td {
+  border-top: 2px dashed #1890ff;
+}
+.operationFormDetail  :global{
+  .am-card.am-card-full::after { //监测点 二维码扫描详情最底下的横线
+    height: 0 !important;
+  }
+
+ }
+ :global {
+  .calculationTypeSty{
+   .ant-tooltip-inner{
+      padding-left: 25px;
+   }
+ }
+ }

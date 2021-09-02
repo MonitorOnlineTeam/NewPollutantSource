@@ -20,11 +20,11 @@
 const XinJiang = true;
 
 //  const apiHost = 'http://localhost:52198/';
-// const apiHost = 'http://220.171.32.30:8180/';
+const apiHost = 'http://220.171.32.30:8180/';
 // const apiHost = 'http://172.16.12.135:50206/';
 // const apiHost = 'http://localhost:52198/';
 
-const apiHost = 'http://172.16.12.135:50206/';
+// const apiHost = 'http://172.16.12.135:50207/';
 
 // const apiHost = 'http://220.171.32.30:8187/';
 
@@ -57,9 +57,9 @@ module.exports = {
     domain: 'http://10.230.28.70:8184',
     srcPath: '/amap-master/amap/js/maps.js',
   },
-  isShowTabs: true,
+  isShowTabs: true, 
   centerlongitude: '118.510962',
-  centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_9o5tqsc00hq.js)
+  centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_4u1vg828at7.js)
   zoom: 12,
   iconFontUrl: '/iconFont/iconfont.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',

@@ -24,6 +24,7 @@ import {
   Radio,
   Checkbox,
   message,
+  Tooltip
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -43,8 +44,9 @@ import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import AttentList from '@/components/AttentList'
 import { EnumPropellingAlarmSourceType } from '@/utils/enum';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
-
+import styles  from '../../../style.less'
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -118,6 +120,9 @@ export default class EntTransmissionEfficiency extends Component {
           // const percent = interceptTwo(Number(text) * 100);
           const percent = interceptTwo(text);
           if(this.props.isWorkRate){ // 运转率 
+            if (record.ShouldNumber==0) {
+              return <span className={styles.normaldata}>停运</span>;
+            }
             if (percent >= 90) {
               return <div>
                   <Progress successPercent={percent}  percent={percent}   size="small"  style={{width:'90%'}}
@@ -145,9 +150,23 @@ export default class EntTransmissionEfficiency extends Component {
     this.initData();
   }
   initData = () => {
-    let { dispatch, location,queryPar,pointQuery,entCode } = this.props;
+    let { dispatch, location,queryPar,pointQuery,entCode,isWorkRate } = this.props;
     
-
+    if(isWorkRate){
+      this.columns.push({
+        title: <span style={{ fontWeight: 'bold' }}>计算类型  <Tooltip overlayClassName='calculationTypeSty' title={this.calculationType()}><QuestionCircleOutlined/></Tooltip></span>,
+        dataIndex: 'CalculationType',
+        key: 'CalculationType',
+        width:100,
+        align: 'center',
+      },
+      {
+        title: <span style={{ fontWeight: 'bold' }}>备注</span>,
+        dataIndex: 'Remark',
+        key: 'Remark',
+        align: 'center',
+      },)
+    }
     pointQuery = {...queryPar,ModelType:'EntName',EntCode:entCode}
 
     dispatch({
@@ -160,6 +179,13 @@ export default class EntTransmissionEfficiency extends Component {
   
 
   };
+  calculationType=()=>{
+    return <ol type='1' style={{listStyleType:'decimal'}}>
+      <li>空白：监测点参与企业和行政区的运转率统计</li>
+      <li>不参与企业计算：监测点不参与企业有运转率统计，原因见备注列</li>
+      <li>不参与行政区计算：监测点不参与行政区有运转率统计,原因见备注列</li>
+    </ol>
+  }
   updateQueryState = payload => {
     const { pointQuery, dispatch } = this.props;
 
@@ -275,6 +301,7 @@ export default class EntTransmissionEfficiency extends Component {
 
     return (
         <Modal
+          centered
           title={
             <Row type="flex" justify="space-between">
          <div>{entName}</div>  

@@ -146,16 +146,18 @@ export default class EntTransmissionEfficiency extends Component {
           </div>
            }
          },
-      }
+      },
     ];
   }
 
   componentDidMount() {
     this.initData();
+
   }
+
+
   initData = () => {
-    let { dispatch, location,queryPar,entQuery,regionCode} = this.props;
-    
+    let { dispatch, location,queryPar,entQuery,regionCode,isWorkRate} = this.props;
 
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 

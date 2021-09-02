@@ -28,7 +28,9 @@ import SdlTable from '@/components/SdlTable';
 import PageLoading from '@/components/PageLoading'
 import { routerRedux } from 'dva/router';
 import { Right } from '@/utils/icon';
+import OperationUnitList from '@/components/OperationUnitList'
 import style from '@/pages/dataSearch/tableClass.less'
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -66,8 +68,10 @@ class index extends PureComponent {
             PointList: [],
             regionCode:'',
             hasCode:'',
-            operationpersonnel:'',
-            type:'1'
+            OperationEntCode:'',
+            pointType:'1',
+            pointLoading:true,
+            entLoading:true,
         };
     }
 
@@ -110,7 +114,7 @@ class index extends PureComponent {
                 RegionCode: this.state.regionValue == undefined ? '' : this.state.regionValue,
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
-                operationpersonnel:this.state.operationpersonnel,
+                OperationEntCode:this.state.OperationEntCode,
             }
         })
     }
@@ -126,14 +130,14 @@ class index extends PureComponent {
                 EntCode: '',
                 EntType: 1,
                 PollutantType:outletValue == undefined ?'':outletValue,
-                operationpersonnel:this.state.operationpersonnel,
+                OperationEntCode:this.state.OperationEntCode,
             }
         })
     }
     // 导出
     PointexportReport = () => {
         debugger
-        const {outletValue,regionValue} = this.state
+        const {pointType,regionValue} = this.state
         this.props.dispatch({
             type: pageUrl.ExportEntOrPointDetail,
             payload: {
@@ -141,8 +145,8 @@ class index extends PureComponent {
                 HasData: this.state.hasCode,
                 EntCode: '1',
                 EntType: 1,
-                PollutantType:outletValue == undefined ?'':outletValue,
-                operationpersonnel:this.state.operationpersonnel,
+                PollutantType:pointType == undefined ?'':pointType,
+                OperationEntCode:this.state.OperationEntCode,
             }
         })
     }
@@ -157,7 +161,7 @@ class index extends PureComponent {
                 RegionCode: this.state.regionValue == undefined ? '' : this.state.regionValue,
                 AttentionCode: this.state.attentionValue,
                 PollutantType: this.state.outletValue,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
                 //PageSize: 25,
                 //PageIndex: 1
             }
@@ -252,7 +256,7 @@ class index extends PureComponent {
                 <Option value="1">废水</Option>
                 <Option value="2">废气</Option>
             </Select>
-            <Select
+            {/* <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="运维状态"
@@ -266,7 +270,8 @@ class index extends PureComponent {
                 }}>
                  <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
-            </Select>
+            </Select> */}
+            <OperationUnitList style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={(value) => { this.setState({OperationEntCode: value,  })  }}/>
             <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
             <Button style={{ marginRight: 10 }} onClick={this.exportReport}><ExportOutlined />导出</Button>
         </>;
@@ -274,6 +279,7 @@ class index extends PureComponent {
 
     GetEntDetail = (regionCode, hasData) => {
         const {regionValue,attentionValue} = this.state
+        this.setState({visible: true,entLoading:true},()=>{
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
@@ -283,21 +289,23 @@ class index extends PureComponent {
                 EntCode: '',
                 EntType: 1,
                 PollutantType:this.state.outletValue,
-                operationpersonnel: this.state.operationpersonnel,
+                operationpersonnel: this.state.OperationEntCode,
             }
         }).then(() => {
             this.setState({
                 EntList: this.props.EntOrPointDetail,
-                visible: true,
                 regionCode:regionCode,
                 hasCode:hasData,
-                operationpersonnel: this.state.operationpersonnel,
+                entLoading:false,
+                OperationEntCode: this.state.OperationEntCode,
             })
+        })
         })
     }
 
     GetPointDetail = (regionCode, hasData) => {
         const {regionValue,attentionValue} = this.state
+        this.setState({pointLoading:true,visibleMoni: true},()=>{
         this.props.dispatch({
             type: pageUrl.GetEntOrPointDetail,
             payload: {
@@ -306,17 +314,18 @@ class index extends PureComponent {
                 HasData: hasData,
                 EntCode: '1',
                 EntType: 1,
-                PollutantType:this.state.outletValue,
-                operationpersonnel: this.state.operationpersonnel,
+                PollutantType:this.state.pointType,
+                OperationEntCode: this.state.OperationEntCode,
             }
         }).then(() => {
             this.setState({
                 PointList: this.props.EntOrPointDetail,
-                visibleMoni: true,
                 regionCode:regionCode,
                 hasCode:hasData,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
+                pointLoading:false
             })
+        })
         })
     }
     onChange = (PageIndex, PageSize) => {
@@ -329,7 +338,7 @@ class index extends PureComponent {
                 PollutantType: this.state.outletValue,
                 PageSize: PageSize,
                 PageIndex: PageIndex,
-                operationpersonnel: this.state.operationpersonnel,
+                OperationEntCode: this.state.OperationEntCode,
             }
         })
     }
@@ -566,7 +575,9 @@ class index extends PureComponent {
     }
     typeChange = (value) =>{
        this.setState({
-           type:value
+        pointType:value?value:undefined
+       },()=>{
+        this.GetPointDetail()
        })
     }
     render() {
@@ -574,6 +585,17 @@ class index extends PureComponent {
         const fixed = false
         const columns2 = [
             {
+                title: "序号",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'x',
+                key: 'x',
+                render:(text,record,index)=>{
+                 return <span>{index+1}</span>
+                }
+            },
+            {
                 title: "行政区",
                 width: 100,
                 align: 'center',
@@ -589,220 +611,132 @@ class index extends PureComponent {
                 dataIndex: 'entName',
                 key: 'entName',
             },
-            // {
-            //     title: "企业简称",
-            //     align: 'left',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "关注程度",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "经度",
-            //     width: 100,
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "纬度",
-            //     width: 100,
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "法人编号",
-            //     width: 100,
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "法人名称",
-            //     width: 100,
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "所属行业",
-            //     width: 100,
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "污染源规模",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "注册类型",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "环保负责人",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "办公电话",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "移动电话",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "隶属关系",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "重点类型",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "双运维",
-            //     align: 'center',
-            //     fixed: fixed,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
+            {
+                title: "企业简称",
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'Abbreviation',
+                key: 'Abbreviation',
+            },
+            {
+                title: "关注程度",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'attentionName',
+                key: 'attentionName',
+            },
+            {
+                title: "经度",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'longitude',
+                key: 'longitude',
+            },
+            {
+                title: "纬度",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'latitude',
+                key: 'latitude',
+            },
+            {
+                title: "法人编号",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'CorporationCode',
+                key: 'CorporationCode',
+            },
+            {
+                title: "法人名称",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'CorporationName',
+                key: 'CorporationName',
+            },
+            {
+                title: "所属行业",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'industryTypeName',
+                key: 'industryTypeName',
+            },
+            {
+                title: "污染源规模",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'pSScaleName',
+                key: 'pSScaleName',
+            },
+            {
+                title: "注册类型",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'RegistTypeName',
+                key: 'RegistTypeName',
+            },
+            {
+                title: "环保负责人",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'environmentPrincipal',
+                key: 'environmentPrincipal',
+            },
+            {
+                title: "办公电话",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'officePhone',
+                key: 'officePhone',
+            },
+            {
+                title: "移动电话",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'mobilePhone',
+                key: 'mobilePhone',
+            },
+            {
+                title: "隶属关系",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'subjectionRelationName',
+                key: 'subjectionRelationName',
+            },
+            {
+                title: "重点类型",
+                align: 'center',
+                fixed: fixed,
+                width:100,
+                dataIndex: 'entTypeName',
+                key: 'entTypeName',
+            },
+            {
+                title: "双运维",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'doubleOperation',
+                key: 'doubleOperation',
+            },
         ]
 
+        
         const columns3 = [
             {
-                title: "行政区",
+                title: "序号",
                 width: 100,
                 align: 'center',
                 fixed: fixed,
-                dataIndex: 'regionName',
-                key: 'regionName',
+                dataIndex: 'x',
+                key: 'x',
+                render:(text,record,index)=>{
+                 return <span>{index+1}</span>
+                }
             },
-            {
-                title: "企业名称",
-                width: 100,
-                align: 'left',
-                fixed: fixed,
-                dataIndex: 'entName',
-                key: 'entName',
-            },
-            {
-                title: "监测点",
-                width: 100,
-                align: 'left',
-                fixed: fixed,
-                dataIndex: 'pointName',
-                key: 'pointName',
-            },
-            // {
-            //     title: "设备编号(MN)",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "经度",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "纬度",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "监测点类型",
-            //     align: 'center',
-            //     width: 100,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // }, 
-            // {
-            //     title: "排放去向",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "运维负责人",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "污水口类型",
-            //     align: 'center',
-            //     width: 100,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "运维状态",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "是否上传监控数据",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },
-            // {
-            //     title: "是否判断缺失数据",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },  
-            // {
-            //     title: "监测点有效传输率计算类型",
-            //     align: 'center',
-            //     width: 200,
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },  
-            // {
-            //     title: "备注",
-            //     align: 'center',
-            //     dataIndex: 'x',
-            //     key: 'x',
-            // },     
-        ]
-        const columns4=[
             {
                 title: "行政区",
                 width: 100,
@@ -813,7 +747,7 @@ class index extends PureComponent {
             },
             {
                 title: "企业名称",
-                width: 100,
+                width: 150,
                 align: 'left',
                 fixed: fixed,
                 dataIndex: 'entName',
@@ -830,102 +764,214 @@ class index extends PureComponent {
             {
                 title: "设备编号(MN)",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'DGIMN',
+                key: 'DGIMN',
             },
             {
                 title: "经度",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'longitude',
+                key: 'longitude',
             },
             {
                 title: "纬度",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'latitude',
+                key: 'latitude',
             },
             {
                 title: "监测点类型",
                 align: 'center',
                 width: 100,
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'pollutantType',
+                key: 'pollutantType',
             }, 
             {
-                title: "是否烧结",
+                title: "排放去向",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
-            },
-            {
-                title: "排口类型",
-                align: 'center',
-                dataIndex: 'x',
-                key: 'x',
-            },
-            {
-                title: "排口直径",
-                align: 'center',
-                dataIndex: 'x',
-                key: 'x',
-            },
-            {
-                title: "排口高度",
-                align: 'center',
-                dataIndex: 'x',
-                key: 'x',
-            },
-            {
-                title: "数据上传类型",
-                align: 'center',
-                width: 100,
-                dataIndex: 'x',
-                key: 'x',
-                
+                dataIndex: 'outPutWhitherName',
+                key: 'outPutWhitherName',
             },
             {
                 title: "运维负责人",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'operationLinkMan',
+                key: 'operationLinkMan',
             },
             {
-                title: "CEMS监测原理",
+                title: "污水口类型",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                width: 100,
+                dataIndex: 'waterType',
+                key: 'waterType',
             },
             {
                 title: "运维状态",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'operationStatus',
+                key: 'operationStatus',
             },
             {
                 title: "是否上传监控数据",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
-            },  
+                dataIndex: 'isMonitor',
+                key: 'isMonitor',
+            },
             {
                 title: "是否判断缺失数据",
                 align: 'center',
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'judgeMiss',
+                key: 'judgeMiss',
             },  
             {
                 title: "监测点有效传输率计算类型",
                 align: 'center',
                 width: 200,
-                dataIndex: 'x',
-                key: 'x',
+                dataIndex: 'isTransmission',
+                key: 'isTransmission',
             },  
             {
                 title: "备注",
                 align: 'center',
+                dataIndex: 'remark',
+                key: 'remark',
+            },     
+        ]
+        const columns4=[
+            {
+                title: "序号",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
                 dataIndex: 'x',
                 key: 'x',
+                render:(text,record,index)=>{
+                 return <span>{index+1}</span>
+                }
+            },
+            {
+                title: "行政区",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'regionName',
+                key: 'regionName',
+            },
+            {
+                title: "企业名称",
+                width: 150,
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'entName',
+                key: 'entName',
+            },
+            {
+                title: "监测点",
+                width: 100,
+                align: 'left',
+                fixed: fixed,
+                dataIndex: 'pointName',
+                key: 'pointName',
+            },
+            {
+                title: "设备编号(MN)",
+                align: 'center',
+                dataIndex: 'DGIMN',
+                key: 'DGIMN',
+            },
+            {
+                title: "经度",
+                align: 'center',
+                dataIndex: 'longitude',
+                key: 'longitude',
+            },
+            {
+                title: "纬度",
+                align: 'center',
+                dataIndex: 'latitude',
+                key: 'latitude',
+            },
+            {
+                title: "监测点类型",
+                align: 'center',
+                width: 100,
+                dataIndex: 'pollutantType',
+                key: 'pollutantType',
+            }, 
+            {
+                title: "是否烧结",
+                align: 'center',
+                dataIndex: 'isSj',
+                key: 'isSj',
+            },
+            {
+                title: "排口类型",
+                align: 'center',
+                dataIndex: 'outputType',
+                key: 'outputType',
+            },
+            {
+                title: "排口直径",
+                align: 'center',
+                dataIndex: 'outputDiameter',
+                key: 'outputDiameter',
+            },
+            {
+                title: "排口高度",
+                align: 'center',
+                dataIndex: 'outputHigh',
+                key: 'outputHigh',
+            },
+            {
+                title: "数据上传类型",
+                align: 'center',
+                width: 100,
+                dataIndex: 'RunState',
+                key: 'RunState',
+                
+            },
+            {
+                title: "运维负责人",
+                align: 'center',
+                dataIndex: 'operationLinkMan',
+                key: 'operationLinkMan',
+            },
+            {
+                title: "CEMS监测原理",
+                align: 'center',
+                dataIndex: 'cemsJCYL',
+                key: 'cemsJCYL',
+            },
+            {
+                title: "运维状态",
+                align: 'center',
+                dataIndex: 'operationStatus',
+                key: 'operationStatus',
+            },
+            {
+                title: "是否上传监控数据",
+                align: 'center',
+                dataIndex: 'isMonitor',
+                key: 'isMonitor',
+            },  
+            {
+                title: "是否判断缺失数据",
+                align: 'center',
+                dataIndex: 'judgeMiss',
+                key: 'judgeMiss',
+            },  
+            {
+                title: "监测点有效传输率计算类型",
+                align: 'center',
+                width: 200,
+                dataIndex: 'isTransmission',
+                key: 'isTransmission',
+            },  
+            {
+                title: "备注",
+                align: 'center',
+                dataIndex: 'remark',
+                key: 'remark',
             }
         ];
         return <>
@@ -951,7 +997,7 @@ class index extends PureComponent {
                         width={'80%'}
                         onCancel={this.CancelHandel}
                     >
-                        <SdlTable columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
+                        <SdlTable loading={this.state.entLoading} columns={columns2} dataSource={this.state.EntList} pagination={false} scroll={{ y: 500 }}/>
                         <div style={{height:15,lineHeight:15,marginTop:'5px'}}>
                             <Button style={{ float: 'right' }} onClick={this.EntexportReport}><ExportOutlined /> 导出</Button>
                         </div>
@@ -966,13 +1012,13 @@ class index extends PureComponent {
                         onCancel={this.CancelHandel}
                     >
                         <div>
-                              {/* <Select onChange={this.typeChange} style={{width:100}} defaultValue="1">
+                              <Select style={{width:120}} onChange={this.typeChange} placeholder='请选择类型' value={this.state.pointType?this.state.pointType:undefined} style={{width:120}}>
                               <Option value="1">废水</Option>
                               <Option value="2">废气</Option>
-                             </Select> */}
+                             </Select> 
                             <Button  style={{marginBottom:'8px',marginLeft:'5px'}}  onClick={this.PointexportReport}><ExportOutlined />导出</Button>
                         </div>
-                        <SdlTable columns={this.state.type==1?columns3:columns4} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
+                        <SdlTable loading={this.state.pointLoading} columns={this.state.pointType==1?columns3:columns4} dataSource={this.state.PointList} pagination={false} scroll={{ y: 500 }}/>
                     </Modal>
                 </BreadcrumbWrapper>
             </div>

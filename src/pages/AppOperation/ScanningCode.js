@@ -1,11 +1,11 @@
-import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Badge, Modal, List } from 'antd-mobile';
+import { Card, WhiteSpace, DatePicker, Grid, Steps, WingBlank, Modal, List,Icon } from 'antd-mobile';
 import React, { PureComponent } from 'react';
 import zh_CN from 'antd-mobile/lib/date-picker/locale/zh_CN';
 import moment, { months } from 'moment';
 import styles from './ScanningCode.less';
 import { connect } from 'dva';
 import { ExclamationCircleTwoTone } from '@ant-design/icons';
-import { Spin } from 'antd';
+import { Spin, Tag,Badge } from 'antd';
 import { router } from 'umi'
 const Item = List.Item;
 const Step = Steps.Step;
@@ -124,6 +124,34 @@ class ScanningCode extends PureComponent {
         }
       
     }
+    taskStatus = (text)=>{
+    if (text === 1) {
+        return <span><Tag color="#d9d9d9" className={styles.tagSty}>待执行</Tag></span>;
+      }
+      if (text === 2) {
+        return <span><Tag color="#1890ff" className={styles.tagSty}>进行中</Tag></span>;
+      }  
+      if (text === 3) {
+        return <span><Tag color="#52c41a" className={styles.tagSty}>已完成</Tag></span>;
+      }
+      if (text === 10) { 
+      return <span><Tag color="#ff4d4f" className={styles.tagSty}>系统关闭</Tag></span>;
+      }
+    }
+    taskFrom = (text) => {
+        if (text === '手动创建') {
+          return <span><Tag className={styles.tagSty} color="purple">手动创建</Tag></span>;
+        }
+        if (text === '报警响应') {
+          return <span><Tag className={styles.tagSty}  color="red">报警响应</Tag></span>;
+        }
+        if (text === '监管派单') {
+          return <span><Tag className={styles.tagSty}  color="blue">监管派单</Tag></span>;
+        }
+        if (text === '自动派单') {
+        return <span><Tag className={styles.tagSty}  color="pink">自动派单</Tag></span>;
+        }
+      }
     render() {
         const { operationLogList, operationRzWhere } = this.props;
         const { dateValue } = this.state;
@@ -155,12 +183,14 @@ class ScanningCode extends PureComponent {
                 item.Nodes.map((itemChild) => {
                     gridList.push(
                         <Step title={
-                            <div style={{ fontSize: 14, marginBottom: '8%', marginTop: '5%' }}>
-                                <span>{itemChild.RecordTypeName}</span>
+                            <div style={{ fontSize: 14}}>
+                                <span style={{paddingRight:15}}>{itemChild.RecordTypeName}</span>
+                                {this.taskFrom(itemChild.TaskFromName)}
+                                {this.taskStatus(itemChild.TaskStatus)}
                             </div>
                         }
                             icon={
-                                <div style={{ width: 20 }}>
+                                <div>
                                     <div style={{
                                         width: 12,
                                         height: 12,
@@ -177,15 +207,17 @@ class ScanningCode extends PureComponent {
                                             borderRadius: '50%',
                                             top: 4,
                                             left: 4,
-                                        }}></div>
+                                        }}></div> 
                                     </div>
                                 </div>
                             }
                             description={
-                                <div style={{ fontSize: 13 }}>
-                                    <div style={{ float: 'left', width: '35%', minWidth: 82, marginBottom: 15, marginTop: 10 }}>运维人:{itemChild.User_Name.length > 3 ? itemChild.User_Name.substring(0, 3) + ".." : itemChild.User_Name}</div>
-                                    <div style={{ float: 'left', width: '40%', minWidth: 91, marginBottom: 15, marginTop: 10, textAlign: 'center' }}>执行时间:{itemChild.CreateTime}</div>
-                                    <div style={{ float: 'left', width: '20%', color: 'red', marginBottom: 15, textAlign: 'center', marginTop: 10 }}><span onClick={()=>{this.getDetails(itemChild.ID)}}>更多</span></div>
+                                <div style={{ fontSize: 13,display:'flex',flexDirection:'row',justifyContent: "space-between" }}>
+                                    <div style={{   marginBottom: 15, marginTop: 10 }}>运维人：{itemChild.User_Name.length > 3 ? itemChild.User_Name.substring(0, 3) + ".." : itemChild.User_Name}</div>
+                                    <div style={{ marginBottom: 15, marginTop: 10, textAlign: 'center' }}>完成时间：{itemChild.BeginTime}</div>
+                                    <div style={{ marginTop: 10,paddingRight:10 }}>
+                                        <span onClick={()=>{this.getDetails(itemChild.ID)}}><Icon type="right" /></span>
+                                     </div>
                                 </div>
                             } />
                     )
@@ -193,12 +225,19 @@ class ScanningCode extends PureComponent {
             })
         }
         return (
-            <div style={{ height: '100vh' }}>
-                <Card full style={{ height: 150 }}>
+            <div style={{ height: '100vh' }} className={styles.scanningCode}>
+                  <div className={styles.scanningEntInfo}>
+                 <List renderHeader={() => '基本信息'} className="my-list">
+                        <Item ><span style={{ fontSize: 13 }}><span>企业名称：</span>{operationLogList.pointData&&operationLogList.pointData.parentName}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}><span> 监测点名称：</span>{operationLogList.pointData&&operationLogList.pointData.pointName}</span></Item>
+                        <Item ><span style={{ fontSize: 13 }}> <span>运维负责人：</span>{operationLogList.pointData&&operationLogList.pointData.operationPersonName}</span></Item>
+                    </List>
+                 </div> 
+                 <Card full style={{ height: 150 }}>
                     <Card.Header
                         title={
                             <span>
-                                <span style={{ fontSize: 15 }}>
+                                <span style={{ fontSize: 14,color:'#888' }}>
                                     工单情况
                                 </span>
                                 <span style={{ marginLeft: 10 }}>
@@ -219,14 +258,14 @@ class ScanningCode extends PureComponent {
                                     <div style={{
                                         float: 'right',
                                         display: 'block',
-                                        width: 15,
-                                        height: 15,
+                                        width: 13,
+                                        height: 13,
                                         marginLeft: 8,
                                         backgroundImage: 'url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMjYnIHZpZXdCb3g9JzAgMCAxNiAyNicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48cGF0aCBkPSdNMiAwTDAgMmwxMS41IDExTDAgMjRsMiAyIDE0LTEzeicgZmlsbD0nI0M3QzdDQycgZmlsbC1ydWxlPSdldmVub2RkJy8+PC9zdmc+)',
                                         backgroundSize: 'contain',
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPosition: '50% 50%;',
-                                        marginTop: 3
+                                        marginTop: 5
                                     }}></div>
                                     <div arrow="horizontal" style={{ fontSize: 15, float: 'right' }}>{moment(operationRzWhere.beginTime).format('YYYY-MM')}  </div>
                                 </div>
@@ -238,7 +277,7 @@ class ScanningCode extends PureComponent {
                     </Card.Body>
                 </Card>
                 <WhiteSpace />
-                <div full style={{ height: 'calc(100vh - 150px)', overflow: 'scroll', borderWidth: 0, paddingLeft: 25 }}>
+                <div full style={{ height: 'calc(100vh - 340px)', overflow: 'auto', borderWidth: 0, paddingLeft: 25,backgroundColor:'#fff' }}>
                     <WhiteSpace />
                     {
                         this.props.loading ?
@@ -263,13 +302,14 @@ class ScanningCode extends PureComponent {
                     }
                 </div>
                 <Modal
+                    className={styles.scanningCodeModal}
                     visible={this.state.visitible}
                     transparent
                     maskClosable={false}
                     onClose={this.onClose()}
                     footer={[{ text: <span style={{ fontSize: 13 }}>知道了</span>, onPress: () => { this.onClose()(); } }]}
                 >
-                    <List renderHeader={() => '工单状态说明'} className="my-list" >
+                    <List full renderHeader={() => '工单状态说明'} className="my-list" >
                         <Item wrap><span style={{ fontSize: 13 }}>1.工单：运维人员去现场执行运维任务，派发的工作单；</span> </Item>
                         <Item wrap><span style={{ fontSize: 13 }}>2.完成：运维人员完成了的工单；</span></Item>
                         <Item wrap><span style={{ fontSize: 13 }}>3.关闭：运维人员已经关闭的工单；</span> </Item>

@@ -84,7 +84,7 @@ export default Model.extend({
         yield update({
           priseList: response.Datas,
         });
-        callback(response.Datas[0].EntCode)
+        callback(response.Datas.length>0?response.Datas[0].EntCode : null)
       }
     },
     *exportSewageHistoryList({callback, payload }, { call, put, update, select }) {

@@ -1,8 +1,14 @@
 @font-face {
   font-family: "iconfont"; /* Project id 1298443 */
+<<<<<<< HEAD
   src: url('iconfont.woff2?t=1624334157100') format('woff2'),
        url('iconfont.woff?t=1624334157100') format('woff'),
        url('iconfont.ttf?t=1624334157100') format('truetype');
+=======
+  src: url('iconfont.woff2?t=1630373657458') format('woff2'),
+       url('iconfont.woff?t=1630373657458') format('woff'),
+       url('iconfont.ttf?t=1630373657458') format('truetype');
+>>>>>>> d50c7512f95ad651813d253ccfab0937193c1937
 }
 
 .iconfont {
@@ -13,6 +19,53 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+<<<<<<< HEAD
+=======
+.icon-echoujiance:before {
+  content: "\e61a";
+}
+
+.icon-richangshenghuo-shuizhan:before {
+  content: "\e63e";
+}
+
+.icon-qiye:before {
+  content: "\e71e";
+}
+
+.icon-quanbu:before {
+  content: "\e6db";
+}
+
+.icon-gongchang:before {
+  content: "\e60e";
+}
+
+.icon-yangchen:before {
+  content: "\e65d";
+}
+
+.icon-cangku1:before {
+  content: "\e7bd";
+}
+
+.icon-yanqi1:before {
+  content: "\e930";
+}
+
+.icon-hqsa0101:before {
+  content: "\e613";
+}
+
+.icon-sheshi:before {
+  content: "\e614";
+}
+
+.icon-shipin1:before {
+  content: "\e678";
+}
+
+>>>>>>> d50c7512f95ad651813d253ccfab0937193c1937
 .icon-biaohui:before {
   content: "\e6a9";
 }

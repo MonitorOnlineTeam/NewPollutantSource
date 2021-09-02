@@ -87,6 +87,8 @@ class Index extends Component {
                 payload: {
                     beginTime: date[0] ? date[0].format('YYYY-MM-DD HH:mm:ss') : null,
                     endTime: date[1] ? date[1].format('YYYY-MM-DD HH:mm:ss') : null,
+                    pageIndex: 1,
+                    pageSize: 20,
                 },
             });
             this.setState({

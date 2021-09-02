@@ -53,19 +53,23 @@ export default config => {
       },
     ]);
   } // optimize chunks
-
+  // 　　maxAsyncRequests和maxInitialRequests有相似之处，它俩都是用来限制拆分数量的，
+  //    maxInitialRequests是用来限制入口的拆分数量而maxAsyncRequests是用来限制异步模块内部的并行最大请求数的
   config.optimization // share the same chunks across different modules
     .runtimeChunk(false)
     .splitChunks({
-      chunks: 'async',
+      // chunks: 'async',
+      chunks: 'all',// initial、async和all  'initial" | "all"(推荐) | "async" (默认就是async)
       name: 'vendors',
-      maxInitialRequests: Infinity,
-      minSize: 0,
+      // maxInitialRequests: Infinity,
+      maxInitialRequests: 6, //表示允许入口并行加载的最大请求数 默认是5
+      maxAsyncRequests: 11, // 按需引入的包中并行请求的最大数量 默认是3
+      // minSize: 0,
+      // minChunks: 2, // 引入两次及以上被打包
       cacheGroups: {
         vendors: {
           test: module => {
             const packageName = getModulePackageName(module);
-
             if (packageName) {
               return ['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0;
             }
@@ -84,7 +88,52 @@ export default config => {
 
             return 'misc';
           },
+          chunks: 'all'
+          // priority: -20, // 优先级
+        },        
+         basicsUmi: { // 同步加载基础框架  umi里面的东西  同步加载
+          test: /(react|react-dom|react-dom-router|babel-polyfill|mobx|lodash|draft-js|immutable)/,
+          priority: 200,
+          name: 'basicsUmi',
+          chunks: 'all'
+         },
+         antdUmi: {
+          // || /[\\/]node_modules[\\/]/.test(module.context)
+          test:/(antd)/,
+          name: 'antdUmi',
+          priority: 100,
+          chunks: 'all'
         },
+        antdDesignUmi: {
+          test:/(@ant-design)/,
+          name: 'antdDesignUmi',
+          priority: 50,
+          chunks: 'all'
+        },
+         echartsVenodr: { // 异步按需加载echarts包  Venodr里面的东西  减少首次加载压力
+          test: /(echarts)/,
+          priority: 100, // 优先级
+          name: 'echartsVenodr',
+          chunks: 'async'
+         },
+         jqueryVenodr: { 
+          test: /(jquery)/,
+          priority: 80,
+          name: 'jqueryVenodr',
+          chunks: 'async'
+         }, 
+         zrenderVenodr: { 
+          test: /(zrender)/,
+          priority: 80,
+          name: 'zrenderVenodr',
+          chunks: 'async'
+         }, 
+         rcPickerVenodr: { 
+          test: /(rc-picker)/,
+          priority: 80,
+          name: 'rcPickerVenodr',
+          chunks: 'async'
+         }, 
       },
     });
 };

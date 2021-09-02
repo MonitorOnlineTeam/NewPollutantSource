@@ -497,6 +497,7 @@ class index extends Component {
                 )}
                 {
                   wrwList.length ? <Popover
+                    placement="right" 
                     content={
                       <Row style={{ maxWidth: 700, minWidth: 300 }}>
                         {

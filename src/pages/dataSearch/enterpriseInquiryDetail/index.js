@@ -28,6 +28,7 @@ import PageLoading from '@/components/PageLoading'
 import { red } from '@ant-design/colors';
 import { routerRedux } from 'dva/router';
 import style from '@/pages/dataSearch/tableClass.less'
+
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -73,7 +74,7 @@ class index extends PureComponent {
                 PageSize:20,
                 PageIndex:1,
                 EntType:1,
-                operationpersonnel:"1"
+                // OperationEntCode:""
              },
         });
     };
@@ -210,14 +211,14 @@ class index extends PureComponent {
                 dataIndex: 'pointName',
                 key: 'pointName'
             },
-            {
-                title: "关注程度",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: 'attentionName',
-                key: 'attentionName'
-            },
+            // {
+            //     title: "关注程度",
+            //     width: 100,
+            //     align: 'center',
+            //     fixed: fixed,
+            //     dataIndex: 'attentionName',
+            //     key: 'attentionName'
+            // },
             {
                 title: "排口类型",
                 width: 100,
@@ -225,6 +226,44 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'pollutantTypeName',
                 key: 'pollutantTypeName'
+            },
+            {
+                title: '运维单位',
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'operationEntName',
+                key: 'operationEntName',
+                render: (text, record) => {
+                    return <div style={{textAlign:'left'}}>{text}</div>
+                  }
+            },
+            {
+                title: "运维开始时间",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'operationBeginTime',
+                key: 'operationBeginTime'
+            },
+            {
+                title: "运维截止时间",
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'operationEndTime',
+                key: 'operationEndTime',
+                
+            },
+            {
+                title: "运维负责人",
+                width: 100,
+                align: 'center',
+                fixed: fixed,
+                dataIndex: 'operationName',
+                key: 'operationName',
+                render:(text)=>{
+                    return text == '' ?'-':text
+                }
+                
             },
             {
                 title: "最新数据上传时间",
@@ -244,18 +283,6 @@ class index extends PureComponent {
                 fixed: fixed,
                 dataIndex: 'pollutantNames',
                 key: 'pollutantNames'
-            },
-            {
-                title: "运维负责人",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: 'operationName',
-                key: 'operationName',
-                render:(text)=>{
-                    return text == '' ?'-':text
-                }
-                
             },
         ]
         return <>{

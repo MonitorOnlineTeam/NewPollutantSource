@@ -32,6 +32,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
+import OperationUnitList from '@/components/OperationUnitList'
 
 
 const { Search } = Input;
@@ -129,7 +130,7 @@ export default class EntTransmissionEfficiency extends Component {
       // Atmosphere:Atmosphere
       RegionCode: '',
       EntType: types==='ent'? "1":"2",
-      OperationPersonnel:'',
+      OperationEntCode:'',
     });
      dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
@@ -208,9 +209,14 @@ export default class EntTransmissionEfficiency extends Component {
       AttentionCode: value,
     });
   }
-  changePperation=(value)=>{
+  // changePperation=(value)=>{
+  //   this.updateQueryState({
+  //     OperationPersonnel: value,
+  //   });
+  // }
+  changeOperationUnit=(value)=>{
     this.updateQueryState({
-      OperationPersonnel: value,
+      OperationEntCode: value,
     });
   }
   changeEnt=(value,data)=>{ //企业事件
@@ -280,7 +286,7 @@ export default class EntTransmissionEfficiency extends Component {
   render() {
     const {
       exloading,
-      queryPar: {  BeginTime, EndTime,EntCode, RegionCode,AttentionCode,DataType,PollutantType,OperationPersonnel },
+      queryPar: {  BeginTime, EndTime,EntCode, RegionCode,AttentionCode,DataType,PollutantType,OperationEntCode },
       types,
       tableDatas
     } = this.props;
@@ -321,7 +327,7 @@ export default class EntTransmissionEfficiency extends Component {
                   {this.regchildren()}
                 </Select>
               </Form.Item>
-              <Form.Item label='运维状态'>
+              {/* <Form.Item label='运维状态'>
               <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -334,7 +340,10 @@ export default class EntTransmissionEfficiency extends Component {
                 <Option value="1">已设置运维人员</Option>
                 <Option value="2">未设置运维人员</Option>
               </Select>
-              </Form.Item> 
+              </Form.Item>  */}
+              <Form.Item label='运维状态'>
+            <OperationUnitList notSelf={this.props.types==='air'&&true} style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={this.changeOperationUnit}/>
+            </Form.Item> 
               {types!=='ent'? <Form.Item>
               <Button type="primary" onClick={this.queryClick}>
                   查询

@@ -27,6 +27,7 @@ const plugins = [
         // default true, when it is true, will use `navigator.language` overwrite default
         baseNavigator: true,
       },
+      chunks: ['basicsUmi','umi','antdUmi','antdDesignUmi','vendors'],
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
         webpackChunkName: true,
@@ -619,7 +620,7 @@ export default {
                     },
                     {
                       name: 'smokeReport',
-                      path: '/report/smoke/:reportType',
+                      path: '/report/smoke/:reportType', 
                       component: './report/SmokeReportPage',
                     },
                   ],

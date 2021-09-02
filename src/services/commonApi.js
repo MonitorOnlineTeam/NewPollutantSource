@@ -103,4 +103,16 @@ export async function getPollutantListByDgimn(params) {
   return result;
 }
 
+/**
+ * 获取公司运维单位列表
+ * @params {
+       Flag  传了 就是不要自运维的
+
+
+    }
+ */
+export async function getOperationCompanyList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationCompanyList', params, null);
+  return result;
+}
 

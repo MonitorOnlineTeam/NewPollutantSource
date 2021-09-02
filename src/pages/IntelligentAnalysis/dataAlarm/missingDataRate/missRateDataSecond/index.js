@@ -92,6 +92,15 @@ export default class EntTransmissionEfficiency extends Component {
        },
       },
       {
+        title: '运维单位',
+        align: 'center',
+        dataIndex: 'operationEntName',
+        key: 'operationEntName',
+        render: (text, record) => {
+          return <div style={{textAlign:'left'}}>{text}</div>
+        }
+    },
+      {
         title: <span>缺失数据报警次数</span>,
         dataIndex: 'alarmCount',
         key: 'alarmCount',

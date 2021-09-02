@@ -41,7 +41,6 @@ export default Model.extend({
   },
   effects: {
     *querypollutantlist({ payload, callback }, { call, update, put, take, select }) {
-
       let  { tabType }  = yield select(_ => _.dataquery);
 
       const body = {
@@ -74,6 +73,7 @@ export default Model.extend({
           }
         }
       } else {
+        
         yield update({
           pollutantlist: [],
           datalist: null,
@@ -83,6 +83,7 @@ export default Model.extend({
           total: 0,
           DGIMN: payload.dgimn,
         });
+       message.error('污染物列表为空，请添加污染物！')
       }
     },
     *queryhistorydatalist({ payload, from }, { select, call, update }) {

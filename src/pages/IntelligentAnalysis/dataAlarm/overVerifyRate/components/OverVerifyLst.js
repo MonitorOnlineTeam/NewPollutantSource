@@ -33,7 +33,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup';
-
+import OperationUnitList from '@/components/OperationUnitList'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -121,10 +121,20 @@ export default class OverVerifyLst extends Component {
             },
           },
           {
+            title: <span>运维单位</span>,
+            dataIndex: 'operationEntName',
+            key: 'operationEntName',
+            width: 210,
+            align: 'center',
+            render: (text, record) => {
+              return <div style={{textAlign:'left'}}>{text}</div>
+            }
+          },
+          {
             title: <span>{'数据超标报警企业数'}</span>,
             dataIndex: 'entCount',
             key: 'entCount',
-
+            width: 210,
             align: 'center',
           },
           {
@@ -204,7 +214,6 @@ export default class OverVerifyLst extends Component {
     dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: '' } }); //获取关注列表
-
     setTimeout(() => {
       this.getTableData();
     });
@@ -241,9 +250,14 @@ export default class OverVerifyLst extends Component {
       this.getTableData();
     });
   };
-  changePperation=(value)=>{
+  // changePperation=(value)=>{
+  //   this.updateQueryState({
+  //     OperationPersonnel: value,
+  //   });
+  // }
+  changeOperationUnit=(value)=>{
     this.updateQueryState({
-      OperationPersonnel: value,
+      OperationEntCode: value?value:undefined,
     });
   }
   changeRegion = value => {
@@ -442,7 +456,7 @@ export default class OverVerifyLst extends Component {
         AttentionCode,
         dataType,
         PollutantType,
-        OperationPersonnel
+        OperationEntCode
       },
       type,
     } = this.props;
@@ -503,7 +517,7 @@ export default class OverVerifyLst extends Component {
                 </Form.Item>
               </Col>
               <Col md={24} style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-              <Form.Item label='运维状态'>
+              {/* <Form.Item label='运维状态'>
                 <Select
                   allowClear
                   style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -517,7 +531,10 @@ export default class OverVerifyLst extends Component {
                   <Option value="1">已设置运维人员</Option>
                   <Option value="2">未设置运维人员</Option>
                 </Select>
-                </Form.Item> 
+                </Form.Item>  */}
+                <Form.Item label='运维单位'>
+                 <OperationUnitList  onChange={this.changeOperationUnit}/>
+                </Form.Item>
                 {getFieldDecorator('PollutantList', {
                   initialValue: checkedValues,
                 })(

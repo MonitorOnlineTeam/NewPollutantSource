@@ -55,13 +55,13 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
                  this.setState({
                      DataWhere,
                  }, () => {
-                     dispatch({
-                       type: 'autoForm/getAutoFormData',
-                       payload: {
-                        configId,
-                        searchParams: this.state.DataWhere,
-                       },
-                     })
+                    //  dispatch({
+                    //    type: 'autoForm/getAutoFormData',
+                    //    payload: {
+                    //     configId,
+                    //     searchParams: this.state.DataWhere,
+                    //    },
+                    //  })
                  })
             }
         }
@@ -200,6 +200,7 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
                 size="large"
             />);
         }
+        console.log(DataWhere)
         return (
             <div>
                 <Card>
@@ -208,7 +209,7 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
                         configId={configId}
                         searchParams={this.state.DataWhere}
                     ></SearchWrapper>
-                    <SdlTable
+                    {DataWhere[0]&&<SdlTable
                         style={{ marginTop: 10 }}
                         configId={configId}
                         parentcode="ddd"
@@ -251,7 +252,7 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
                             </Fragment>}
                         {...this.props}
                     >
-                    </SdlTable>
+                    </SdlTable>}
                     <Modal
                           title="添加"
                           visible={this.state.visible}

@@ -24,7 +24,7 @@ import {
   Tabs,
   Radio,
   Checkbox,
-  message,
+  message
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -354,6 +354,7 @@ export default class EntTransmissionEfficiency extends Component {
          width='95%'
          visible={regionVisible}  
          onCancel={regionCancel}
+         centered
        >
         { entVisible?
          <EntData entVisible={entVisible} onBack={this.entCancel}/>
@@ -418,6 +419,7 @@ export default class EntTransmissionEfficiency extends Component {
                <span style={{ cursor: 'pointer', fontSize: 14, color: 'rgba(0, 0, 0, 0.65)' }}>
                  {`<90%未达标`}
                </span>
+               {this.props.isWorkRate&& <span style={{color:'#f5222d',fontSize:14,paddingLeft:15}}>每日凌晨计算本月运转率，每月1号至15号期间每日凌晨重新计算上个月的运转率</span>}
              </div>
            :null
          }

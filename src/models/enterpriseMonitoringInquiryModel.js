@@ -42,7 +42,7 @@ export default Model.extend({
                 AttentionCode: payload.AttentionCode,
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
                 //PageSize: payload.PageSize,
                 //PageIndex: payload.PageIndex
             }
@@ -139,7 +139,7 @@ export default Model.extend({
                 PageSize: payload.PageSize,
                 PageIndex: payload.PageIndex,
                 EntType:payload.EntType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
             }
             const result = yield call(GetPointSummary,body,null)
             if(result.IsSuccess)
@@ -170,7 +170,7 @@ export default Model.extend({
                 EntCode:payload.EntCode,
                 EntType:payload.EntType,
                 PollutantType:payload.PollutantType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
             }
             const result = yield call(GetEntOrPointDetail,body,null)
             if(result.IsSuccess)
@@ -194,7 +194,7 @@ export default Model.extend({
                 AttentionCode: payload.AttentionCode,
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
             }
             const result = yield call(ExportEntSummary,body,null)
             if(result.IsSuccess)
@@ -224,7 +224,7 @@ export default Model.extend({
                 EntCode:payload.EntCode,
                 EntType:payload.EntType,
                 PollutantType:payload.PollutantType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
             }
             const result = yield call(ExportEntOrPointDetail,body,null)
             if(result.IsSuccess)

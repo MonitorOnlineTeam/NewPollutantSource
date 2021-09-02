@@ -6,6 +6,86 @@
   "description": "",
   "glyphs": [
     {
+<<<<<<< HEAD
+=======
+      "icon_id": "22697598",
+      "name": "恶臭监测",
+      "font_class": "echoujiance",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "2273093",
+      "name": "日常生活-水站",
+      "font_class": "richangshenghuo-shuizhan",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "19848113",
+      "name": "企业",
+      "font_class": "qiye",
+      "unicode": "e71e",
+      "unicode_decimal": 59166
+    },
+    {
+      "icon_id": "22269030",
+      "name": "全部",
+      "font_class": "quanbu",
+      "unicode": "e6db",
+      "unicode_decimal": 59099
+    },
+    {
+      "icon_id": "9603527",
+      "name": "工厂",
+      "font_class": "gongchang",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "10232116",
+      "name": "扬尘",
+      "font_class": "yangchen",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "12177213",
+      "name": "仓库",
+      "font_class": "cangku1",
+      "unicode": "e7bd",
+      "unicode_decimal": 59325
+    },
+    {
+      "icon_id": "13064462",
+      "name": "烟气",
+      "font_class": "yanqi1",
+      "unicode": "e930",
+      "unicode_decimal": 59696
+    },
+    {
+      "icon_id": "13527089",
+      "name": "废水排口",
+      "font_class": "hqsa0101",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "15190181",
+      "name": "设施",
+      "font_class": "sheshi",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "20618099",
+      "name": "视频",
+      "font_class": "shipin1",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
+>>>>>>> d50c7512f95ad651813d253ccfab0937193c1937
       "icon_id": "7926826",
       "name": "标绘",
       "font_class": "biaohui",

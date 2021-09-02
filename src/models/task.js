@@ -44,8 +44,8 @@ export default Model.extend({
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             DGIMN: '',
-            pageIndex: 1,
-            pageSize: 10,
+            // pageIndex: 1,
+            // pageSize: 10,
         },
         // 手机任务详情
         OperationFormDetail: [],

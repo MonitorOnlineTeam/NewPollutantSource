@@ -31,7 +31,7 @@ export default Model.extend({
       PollutantType:'',
       DataType:'HourData',
       EntType:'',
-      OperationPersonnel:''
+      OperationEntCode:''
     },
     tableDatas: [],
     total: '',

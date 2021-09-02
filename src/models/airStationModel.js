@@ -26,7 +26,7 @@ export default Model.extend({
                 PageSize: payload.PageSize,
                 PageIndex: payload.PageIndex,
                 EntType:payload.EntType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
             }
 
             const result = yield call(GetPointSummary,body,null)
@@ -56,7 +56,7 @@ export default Model.extend({
                 EntCode: payload.EntCode,
                 RegionCode:payload.RegionCode,
                 EntType:payload.EntType,
-                OperationPersonnel:payload.operationpersonnel,
+                OperationEntCode:payload.OperationEntCode,
             }
             console.log(body)
             const result = yield call(ExportPointSummary,body,null)

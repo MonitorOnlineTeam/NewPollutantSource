@@ -83,15 +83,16 @@ class CascaderMultiple extends PureComponent {
           }
         });
 
-        this.oldOptions = [
+        this.oldOptions =entAndPointList.length>0? [
           {
             title: "全部",
             key: "0",
           },
           ...entAndPointList,
-        ];
+        ] : [];
 
         let checkedLabels = [];
+        
         entAndPointList.map((item, index) => {
           if (item.children) {
             item.children.map(itm => {
@@ -106,19 +107,18 @@ class CascaderMultiple extends PureComponent {
             })
           }
         })
-
         this.setState({
-          options: [
+          options: entAndPointList.length>0?[
             {
               title: "全部",
               key: "0",
             },
             ...entAndPointList,
-          ],
+          ] : [],
           allLength: checkedValues.length,
           checkedValues: this.props.value || [],
           checkedLabels: checkedLabels,
-          all: this.props.value ? checkedValues.length === this.props.value.length : false,
+          all: this.props.value && this.props.value.length? checkedValues.length === this.props.value.length : false,
           currentChildren: currentChildren,
           currentIndex: currentIndex,
           currentEntLable: currentEntLable
@@ -161,7 +161,7 @@ class CascaderMultiple extends PureComponent {
       this.setState({
         checkedValues: nextProps.value,
         checkedLabels: checkedLabels,
-        all: nextProps.value ? this.state.allLength === nextProps.value.length : false,
+        all: nextProps.value&&nextProps.value.length? this.state.allLength === nextProps.value.length : false,
         // currentChildren: currentChildren,
         // currentIndex: currentIndex
       })

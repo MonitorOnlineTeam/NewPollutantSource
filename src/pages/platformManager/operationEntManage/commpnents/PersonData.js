@@ -25,7 +25,8 @@ import {
   Radio,
   Upload,
   Switch,
-  message
+  message,
+  Divider
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -41,7 +42,7 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import { getThirdTableDataSource } from '@/services/entWorkOrderStatistics';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
-import { EditIcon } from '@/utils/icon'
+import { EditIcon,DetailIcon,DelIcon } from '@/utils/icon'
 import {
   QuestionCircleOutlined,
   PlusOutlined,
@@ -99,7 +100,9 @@ export default class PersonData extends Component {
       waterPhoto:[],
       gasPhoto:[],
       switchGas:true,
-      switchWater:true
+      switchWater:true,
+      pageSize:20,
+      pageIndex:1
     };
     this.columns =  [
       {
@@ -157,11 +160,15 @@ export default class PersonData extends Component {
         align: 'center',
         render: (text, record) =>{
           return  <span>
-                 <a href="javasctipt:;" onClick={()=>{this.see(record)}} >查看</a>
-                 <a href="#" style={{padding:'0 5px'}} onClick={()=>{this.edit(record)}} >编辑</a>
-                 <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(record)} okText="是" cancelText="否">
-                 <a href="#" >删除</a>
+                 <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{this.edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+                 
+                 <Fragment> <Tooltip title="详情">  <a href="javasctipt:;"  style={{padding:'0 5px'}} onClick={()=>{this.see(record)}} ><DetailIcon /></a></Tooltip><Divider type="vertical" /></Fragment>
+
+                 <Fragment> <Tooltip title="删除">
+                    <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(record)} okText="是" cancelText="否">
+                    <a href="#" ><DelIcon/></a>
                  </Popconfirm>
+                 </Tooltip></Fragment> 
                </span>
         }
       },
@@ -175,12 +182,12 @@ export default class PersonData extends Component {
     const {dispatch, match: { params: { configId } },form:{setFieldsValue}} = this.props;
 
 
-    dispatch({
-      type: 'autoForm/getPageConfig',
-      payload: {
-        configId,
-      },
-    });
+    // dispatch({
+    //   type: 'autoForm/getPageConfig',
+    //   payload: {
+    //     configId,
+    //   },
+    // });
     dispatch({
       type: 'operationPerson/listOperationMaintenanceEnterprise',
       payload: {},
@@ -207,6 +214,9 @@ export default class PersonData extends Component {
       type: pageUrl.getData,
       payload: { ...queryPar },
     });
+    this.setState({
+      pageIndex: 1,
+    })
   };
 
 
@@ -270,15 +280,15 @@ export default class PersonData extends Component {
                 Education:operationData.Education,
                 Major:operationData.Major,
                 School:operationData.School,
-                StartWorkTime:operationData.StartWorkTime? moment(moment(operationData.StartWorkTime).format('YYYY-MM-DD')):'',//参加工作时间
+                StartWorkTime:operationData.StartWorkTime? moment(moment(operationData.StartWorkTime).format('YYYY-MM-DD')):null,//参加工作时间
                 Position:operationData.Position,
                 WaterCertificateNumber:operationData.WaterCertificateNumber,
-                WaterEndCertificatesTime:operationData.WaterEndCertificatesTime?moment(moment(operationData.WaterEndCertificatesTime).format('YYYY-MM-DD')):'',//到期时间 水
-                WaterStartCertificatesTime:operationData.WaterStartCertificatesTime?moment(moment(operationData.WaterStartCertificatesTime).format('YYYY-MM-DD')):'',//发证时间 水
+                WaterEndCertificatesTime:operationData.WaterEndCertificatesTime?moment(moment(operationData.WaterEndCertificatesTime).format('YYYY-MM-DD')):null,//到期时间 水
+                WaterStartCertificatesTime:operationData.WaterStartCertificatesTime?moment(moment(operationData.WaterStartCertificatesTime).format('YYYY-MM-DD')):null,//发证时间 水
                 WaterPhoto:operationData.WaterPhoto,
                 GasCertificateNumber:operationData.GasCertificateNumber,
-                GasEndCertificatesTime:operationData.GasEndCertificatesTime?moment(moment(operationData.GasEndCertificatesTime).format('YYYY-MM-DD')):'',//到期时间 气
-                GasStartCertificatesTime:operationData.GasStartCertificatesTime?moment(moment(operationData.GasStartCertificatesTime).format('YYYY-MM-DD')):'',//发证时间 气
+                GasEndCertificatesTime:operationData.GasEndCertificatesTime?moment(moment(operationData.GasEndCertificatesTime).format('YYYY-MM-DD')):null,//到期时间 气
+                GasStartCertificatesTime:operationData.GasStartCertificatesTime?moment(moment(operationData.GasStartCertificatesTime).format('YYYY-MM-DD')):null,//发证时间 气
                 GasPhoto:operationData.GasPhoto,
                 
               })
@@ -370,16 +380,16 @@ export default class PersonData extends Component {
 
               }
            },
+          }).then(()=>{
+            this.setState({
+              visible:false,
+             uid:cuid(),
+             uidWater:cuid(),
+             uidGas:cuid(),
+             },()=>{
+              this.getTableData();
+            })
           })
-
-        this.setState({
-             visible:false,
-            uid:cuid(),
-            uidWater:cuid(),
-            uidGas:cuid(),
-        },()=>{
-          this.getTableData();
-        })
       }
       }
     });
@@ -500,6 +510,9 @@ export default class PersonData extends Component {
     const time = this.props.form.getFieldValue('WaterEndCertificatesTime')
     return time&&current && current > moment(time).startOf('day');
   }
+
+
+
   render() {
     const {
       Atmosphere,
@@ -580,6 +593,19 @@ export default class PersonData extends Component {
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
+              pagination={{
+                pageSize: this.state.pageSize,
+                total: this.props.tableDatas.length,
+                showSizeChanger: true,
+                current:this.state.pageIndex,
+                onChange: (current, size) => {
+                  this.setState({
+                    pageSize: size,
+                    pageIndex: current,
+                  })
+                },
+                pageSizeOptions: ['10', '20', '30', '40', '100'],
+              }}
             />
        <Modal
         title={this.state.type==='edit'? '编辑运维人员':'添加运维人员'}

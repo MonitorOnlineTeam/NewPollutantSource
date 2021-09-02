@@ -21,7 +21,8 @@ import {
   Button,
   Select,
   Tooltip,
-  Popconfirm
+  Popconfirm,
+  Divider
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -150,7 +151,6 @@ export default class EntTransmissionEfficiency extends Component {
     });
    }
    onSubmitForms=(form)=>{
-     console.log(form)
   //   dispatch({
   //     type: 'operationUnit/updateState',
   //     payload: {
@@ -203,23 +203,22 @@ export default class EntTransmissionEfficiency extends Component {
                         style={{ marginTop: 10 }}
                         configId={configId}
                         parentcode="platformconfig/operationEntManage"
-                        appendHandleRows={row => <Fragment>
+                        appendHandleRows={row =><> <Fragment>
                             {/* <Tooltip title="删除">
                             <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(row)} okText="是" cancelText="否">
                                 <a href="#" style={{paddingLeft:5}} > <DelIcon/> </a>
                             </Popconfirm>
                         </Tooltip> */}
-
+                        <Divider type="vertical" />
                         <Tooltip title="运维人员">
-                                <a href="#" onClick={()=>{this.operationPerson(row)}} style={{paddingLeft:5}} > <UserOutlined style={{fontSize:18}}/> </a>
+                                <a href="#" onClick={()=>{this.operationPerson(row)}}> <UserOutlined style={{fontSize:18}}/> </a>
                         </Tooltip>
-                        </Fragment>}
+                        </Fragment></>}
                     />
           </>
           <Modal
                     title={`运维人员 - ${this.state.entName}`}
-                    visible={this.state.visible}
-                    destroyOnClose={true}
+                    visible={this.state.visible} 
                     onCancel={()=>{this.setState({visible:false})}}
                     footer={null}
                     width={'50%'}

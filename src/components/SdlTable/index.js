@@ -9,10 +9,79 @@ import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import { Resizable } from 'react-resizable';
 import { connect } from 'dva';
-import $ from 'jquery';
+// import $ from 'jquery';
 import styles from './index.less';
-
+import { DndProvider, DragSource, DropTarget } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import update from 'immutability-helper';
 // const DEFAULT_WIDTH = 180;
+
+/****拖拽功能**** */
+let dragingIndex = -1;
+
+class BodyRow extends React.Component {
+  render() {
+    const { isOver, connectDragSource, connectDropTarget, moveRow, ...restProps } = this.props;
+    const style = { ...restProps.style, cursor: 'move' };
+
+    let { className } = restProps;
+    if (isOver) {
+      if (restProps.index > dragingIndex) {
+        className += ' drop-over-downward';
+      }
+      if (restProps.index < dragingIndex) {
+        className += ' drop-over-upward';
+      }
+    }
+
+    return connectDragSource(
+      connectDropTarget(<tr {...restProps} className={className} style={style} />),
+    );
+  }
+}
+
+const rowSource = {
+  beginDrag(props) {
+    dragingIndex = props.index;
+    return {
+      index: props.index,
+    };
+  },
+};
+
+const rowTarget = {
+  drop(props, monitor) {
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    // Time to actually perform the action
+    props.moveRow(dragIndex, hoverIndex);
+
+    // Note: we're mutating the monitor item here!
+    // Generally it's better to avoid mutations,
+    // but it's good here for the sake of performance
+    // to avoid expensive index searches.
+    monitor.getItem().index = hoverIndex;
+  },
+};
+
+const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+}))(
+  DragSource('row', rowSource, connect => ({
+    connectDragSource: connect.dragSource(),
+  }))(BodyRow),
+);
+
+
+
+/****拖拽功能**** */
 
 const ResizeableTitle = props => {
   const { onResize, width, ...restProps } = props;
@@ -46,6 +115,7 @@ class SdlTable extends PureComponent {
       computeHeight: null,
       headAndFooterHeight: 110,
       pageSize: 20,
+      dataSource:[]
     };
 
     this.components = {
@@ -53,8 +123,23 @@ class SdlTable extends PureComponent {
         cell: ResizeableTitle,
       },
     };
-  }
 
+    this.dragableComponents = {
+      body: {
+        row: DragableBodyRow, //拖拽功能
+      },
+    };
+    this.totalComponents = {
+      header: {
+        cell: ResizeableTitle,
+      },
+      body: {
+        row: DragableBodyRow, //拖拽功能
+      },
+    };
+  }
+  
+  totalComponents
   getOffsetTop = obj => {
     let offsetCountTop = obj.offsetTop;
     let parent = obj.offsetParent;
@@ -185,10 +270,26 @@ class SdlTable extends PureComponent {
         headAndFooterHeight: count > 110 ? count : 110,
       });
     }
+    if (this.props.dragable !== prevProps.dragable) {
+      this.setState({dataSource:this.props.dataSource})
+    }
   }
+  moveRow = (dragIndex, hoverIndex) => { //拖拽事件
+    const { dataSource } = this.state;
 
+    const dragRow = dataSource[dragIndex];
+  
+    this.setState(
+      update(this.state, {
+        dataSource: {
+          $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]],
+        },
+      }),
+    );
+    this.props.dragData(this.state.dataSource)
+  };
   render() {
-    const { defaultWidth, resizable, clientHeight, pagination, align } = this.props;
+    const { defaultWidth, resizable, clientHeight, pagination, align,dragable } = this.props;
     const { _props, columns, headAndFooterHeight } = this.state;
 
     const fixedHeight = this.state.computeHeight;
@@ -216,7 +317,9 @@ class SdlTable extends PureComponent {
 
     const scrollXWidth = _columns.map(col => col.width).reduce((prev, curr) => prev + curr, 0);
     return (
+      <DndProvider backend={HTML5Backend}>
       <div ref={el => (this.sdlTableFrame = el)}>
+     
         <Table
           ref={table => {
             this.sdlTable = table;
@@ -224,7 +327,7 @@ class SdlTable extends PureComponent {
           id="sdlTable"
           rowKey={(record, index) => record.id || record.ID || index}
           size="middle"
-          components={resizable ? this.components : undefined}
+          components={resizable&&dragable? this.totalComponents :resizable ? this.components : dragable?  this.dragableComponents: undefined}
           // className={styles.dataTable}
           rowClassName={(record, index, indent) => {
             if (index === 0) {
@@ -255,9 +358,17 @@ class SdlTable extends PureComponent {
             y: scrollY,
           }}
           columns={_columns}
+
+          onRow={(record, index) => ({  //拖拽功能
+            index,
+            moveRow: this.moveRow,
+          })}
+          dataSource={dragable?this.state.dataSource : this.props.dataSource}
           {..._props}
         />
+     
       </div>
+      </DndProvider>
     );
   }
 }
