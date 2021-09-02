@@ -1,8 +1,26 @@
 import { post, get, getNew } from '@/utils/request';
 
-// 获取测量参数列表
-export async function GetEquipmentParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetEquipmentParametersInfo?DGIMN='+params.DGIMN, {}, null);
+//监测设备运维信息列表
+export async function GetEntProjectRelationList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntProjectRelationList', params, null);
   return result;
 }
 
+//监测设备运维信息列表 添加和更新
+export async function UpdateOrAddProjectRelation(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdateOrAddProjectRelation', params, null);
+  return result;
+}
+
+//监测设备运维信息列表 删除
+export async function DeleteOperationPoint(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteOperationPoint', params, null);
+  return result;
+}
+
+
+//项目编号列表
+export async function ProjectNumList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ProjectNumList', params, null);
+  return result;
+}

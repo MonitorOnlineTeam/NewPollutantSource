@@ -12,22 +12,45 @@ export default Model.extend({
     tableDatas:[],
     projectTableDatas:[],
     parametersList:[],
-    tableLoading:false
+    tableLoading:false,
+    projectNumList:[]
   },
   effects: {
-    *getEquipmentParametersInfo({ payload,callback }, { call, put, update }) { //参数列表
-      const result = yield call(services.GetEquipmentParametersInfo, payload);
+    *getEntProjectRelationList({ payload,callback }, { call, put, update }) { //监测运维列表
+      const result = yield call(services.GetEntProjectRelationList, payload);
       yield update({ tableLoading:true})
       if (result.IsSuccess) {
-        yield update({
-          tableDatas:result.Datas,
-          tableLoading:false
-        })
+        yield update({ tableDatas:result.Datas,tableLoading:false  })
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
-
+    *updateOrAddProjectRelation({ payload,callback }, { call, put, update }) { //添加和更新
+      const result = yield call(services.UpdateOrAddProjectRelation, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *deleteOperationPoint({ payload,callback }, { call, put, update }) { //删除
+      const result = yield call(services.DeleteOperationPoint, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *projectNumList({ payload,callback }, { call, put, update }) { //项目编号列表
+      const result = yield call(services.ProjectNumList, payload);
+      if (result.IsSuccess) {
+        yield update({ projectNumList:result.Datas, })
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

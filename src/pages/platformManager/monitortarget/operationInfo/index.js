@@ -10,6 +10,7 @@ import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined  }
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
+import RegionList from '@/components/RegionList'
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -27,38 +28,38 @@ const dvaPropsData =  ({ loading,operationInfo }) => ({
   loadingConfirm: loading.effects[`${namespace}/getParametersInfo`],
   loadingPoint: loading.effects[`${namespace}/getParametersInfo`],
   exportLoading: loading.effects[`${namespace}/getParametersInfo`],
-  projectTableLoading: loading.effects[`${namespace}/getParametersInfo`],
+  projectNumListLoading:loading.effects[`${namespace}/projectNumList`]
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-    addOrUpdateEquipmentParametersInfo : (payload,callback) =>{ //修改 or 添加
+    getEntProjectRelationList:(payload,callback)=>{ //监测运维列表
       dispatch({
-        type: `${namespace}/addOrUpdateEquipmentParametersInfo`,
+        type: `${namespace}/getEntProjectRelationList`,
+        payload:payload,
+      })
+    },
+    updateOrAddProjectRelation : (payload,callback) =>{ //修改 or 添加
+      dispatch({
+        type: `${namespace}/updateOrAddProjectRelation`,
         payload:payload,
         callback:callback
       })
       
     },
-    getEquipmentParametersInfo:(payload,callback)=>{ //参数列表
+    deleteOperationPoint:(payload,callback)=>{ //删除
       dispatch({
-        type: `${namespace}/getEquipmentParametersInfo`,
-        payload:payload,
-      })
-    },
-    getParametersInfo:(payload)=>{ //下拉列表测量参数
-      dispatch({
-        type: `${namespace}/getParametersInfo`,
-        payload:payload
-      }) 
-    },
-    deleteEquipmentParametersInfo:(payload,callback)=>{ //删除
-      dispatch({
-        type: `${namespace}/deleteEquipmentParametersInfo`, 
+        type: `${namespace}/deleteOperationPoint`, 
         payload:payload,
         callback:callback
       }) 
-    }
+    },
+    projectNumList:(payload)=>{ //项目编号列表
+      dispatch({
+        type: `${namespace}/projectNumList`,
+        payload:payload
+      }) 
+    },
   }
 }
 const Index = (props) => {
@@ -67,13 +68,8 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN,setDGIMN] =  useState('')
-  const [expand,setExpand] = useState(false)
-  const [fromVisible,setFromVisible] = useState(true)
+  const [fromVisible,setFromVisible] = useState(false)
   const [tableVisible,setTableVisible] = useState(false)
   const [popVisible,setPopVisible] = useState(false)
 
@@ -82,22 +78,17 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,projectTableDatas,loadingConfirm,loadingPoint,tableLoading,exportLoading,projectTableLoading } = props; 
+  const  { tableDatas,projectTableDatas,loadingConfirm,loadingPoint,tableLoading,exportLoading,projectNumListLoading } = props; 
 
   
   useEffect(() => {
-      getEquipmentParametersInfo({DGIMN:props.DGIMN})
-      getParametersInfos();
-    console.log(props)
+    onFinish()
     
   },[props.DGIMN]);
  
-  const getEquipmentParametersInfo=()=>{
-    props.getEquipmentParametersInfo({PolltantType:type==='smoke'?2:1})
-  }
 
-  const getParametersInfos=()=>{
-    props.getParametersInfo({PolltantType:type==='smoke'?2:1})
+  const projectNumList=()=>{
+    props.projectNumList({PolltantType:1})
   }
   const columns = [
     {
@@ -195,34 +186,30 @@ const projectNumCol =[
     key: 'x',
     align: 'center',
     render: (text, record) =>{
-      return<Button size='small' type="primary" onClick={()=>{ choice()}} >选择</Button>
+      return<Button size='small' type="primary" onClick={()=>{ choice(record)}} >选择</Button>
     }
   },
   ]
 
-  const choice = () =>{
-
+  const choice = (record) =>{
+    form.setFieldsValue({ ...record});
   }
 
   const del = async (record) => {
-    // const dataSource = [...data];
-    // let newData = dataSource.filter((item) => item.ID !== ID)
-    // setTableLoading(true)
-    // props.deleteEquipmentParametersInfo({ID:ID},()=>{
-    //    setTableLoading(false)
-    //    setData(newData)
-    // })
+    props.deleteOperationPoint({ID:record.ID},()=>{
+       onFinish()
+    })
   };
 
 
   const save = async (record) => {
-
+    
+    const values = await form.validateFields();
     try {
-
-
-      
+      props.updateOrAddProjectRelation({...values},()=>{
+        onFinish()
+     })
     } catch (errInfo) {
-      message.warning("请输入测量参数和设置量程范围1")
       console.log('错误信息:', errInfo);
     }
   };
@@ -230,29 +217,12 @@ const projectNumCol =[
   
   const add = () => {
 
-     const newData = {
-      DetectionLimit: "",
-      EquipmentParametersCode: "",
-      ID: count,
-      Range1: '',
-      Range2: '',
-      Unit: "",
-      editable:true,
-      type:'add'
-     }
-    setData([...data,newData])
-    // setFromVisible(true)
+    setFromVisible(true)
 
   };
   const edit = async (record) => {
-    form.setFieldsValue({ username3: undefined,username4:'1' });
+    form.setFieldsValue({ ...record});
     setFromVisible(true)
-    try {
-    //   const row = await form.validateFields();//触发校验
-
-    } catch (errInfo) {
-    console.log('Validate Failed:', errInfo);
-    }
   };
 
   const exports = () => {
@@ -263,7 +233,7 @@ const projectNumCol =[
   const onFinish  = async () =>{  //查询
     try {
       const values = await form.validateFields();
-      console.log('Success:', values);
+       props.getEntProjectRelationList({...values})
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -292,9 +262,7 @@ const projectNumCol =[
    </Row>
          <Row> 
          <Form.Item name='customAdress' label='客户所在地' >
-            <Select placeholder="请输入客户所在地" >
-              <Option> </Option>
-            </Select>
+           <RegionList />
           </Form.Item>
           <Form.Item name='projectNum' style={{margin:'20px 12px'}}  label='项目编号' >
             <Input placeholder="请输入项目编号" />
@@ -326,8 +294,7 @@ const projectNumCol =[
       <SdlTable
         loading = {tableLoading}
         bordered
-        // dataSource={tableDatas}
-        dataSource={data}
+        dataSource={tableDatas}
         columns={columns}
       />
    </Card>
@@ -378,7 +345,7 @@ const projectNumCol =[
              </Button>
              </Form.Item>
              </Row>
-               <SdlTable style={{width:800}} loading = {projectTableLoading} bordered    dataSource={projectTableDatas}   columns={projectNumCol}  />
+               <SdlTable style={{width:800}} loading = {projectNumListLoading} bordered    dataSource={projectTableDatas}   columns={projectNumCol}  />
                </>}
             title=""
             trigger="click"
@@ -392,9 +359,7 @@ const projectNumCol =[
       </Col>
       <Col span={12}>
       <Form.Item label="省份名称" name="username4" rules={[  { required: true, message: 'Please input your username!',  },]} >
-        <Select placeholder="请选择省份名称">
-          <Option value="1">小学</Option>
-        </Select>
+       <RegionList style={{width:'100%'}}/>
       </Form.Item>
       </Col>
       </Row>
