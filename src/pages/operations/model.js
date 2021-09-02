@@ -156,7 +156,7 @@ export default Model.extend({
             uid: index,
             name: item,
             status: 'done',
-            url: `/uploadplantform/${item}`,
+            url: `http://220.171.32.30:8184/uploadplantform/${item}`,
           }));
           yield update({
             imageListVisible: true,

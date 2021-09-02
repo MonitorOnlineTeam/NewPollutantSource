@@ -339,7 +339,7 @@ export default class EntTransmissionEfficiency extends Component {
                 <Option value="2">未设置运维人员</Option>
               </Select>
               </Form.Item>  */}
-              <Form.Item label='运维列表'>
+              <Form.Item label='运维单位'>
             <OperationUnitList notSelf={this.props.types==='air'&&true} style={{ width: 200, marginLeft: 10, marginRight: 10 }} onChange={this.changeOperationUnit  }/>
             </Form.Item> 
               <Form.Item label='行政区'>
