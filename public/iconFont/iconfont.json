@@ -6,6 +6,8 @@
   "description": "",
   "glyphs": [
     {
+<<<<<<< HEAD
+=======
       "icon_id": "22697598",
       "name": "恶臭监测",
       "font_class": "echoujiance",
@@ -83,6 +85,7 @@
       "unicode_decimal": 59000
     },
     {
+>>>>>>> d50c7512f95ad651813d253ccfab0937193c1937
       "icon_id": "7926826",
       "name": "标绘",
       "font_class": "biaohui",
