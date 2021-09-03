@@ -195,5 +195,22 @@ export async function getQCAMNByDGIMN(params) {
   return result;
 }
 
+// 获取标气下拉框
+export async function getQCAComponent(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAComponent', params, null);
+  return result;
+}
+
+// 获取标气瓶子对应关系设置列表
+export async function getQCAComponentInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAComponentInfoList', params, null);
+  return result;
+}
+
+// 编辑标气瓶子对应标气
+export async function editQCAComponentInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/EditQCAComponentInfo', params, null);
+  return result;
+}
 
 

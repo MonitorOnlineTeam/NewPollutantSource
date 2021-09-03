@@ -21,7 +21,7 @@ export default Model.extend({
   state: {
     entAndPointList: [],
     standardGasList: [],
-    qcaReportList:[],
+    qcaReportList: [],
     qualityControlFormData: {},
     qualityControlTableData: [],
     QCAGasRelation: [],
@@ -124,6 +124,9 @@ export default Model.extend({
     // 工作模式
     workPatternList: [],
     workPatternEditData: [],
+    // 
+    gasJoinListData: [],
+    gasSelectList: [],
   },
   effects: {
     // 获取企业及排口
@@ -201,19 +204,10 @@ export default Model.extend({
         let QCAGasRelation = [];
         if (result.Datas.Relation) {
           qualityControlTableData = result.Datas.Relation.map((item, index) => {
-            let Component = [];
-            Component = item.Component.map((itm, idx) => ({
-              ...itm,
-              unit: (itm.StandardGasCode === "03" || itm.StandardGasCode === "02") ? "mg/m3" : "%",
-              key: `${index}${idx}`,
-            }))
             return {
               ...item,
               DGIMNArr: item.DGIMN.split('/'),
               key: index,
-              // Component: [
-              //   ...Component,
-              // ],
             }
           })
         }
@@ -700,6 +694,36 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取标气下拉框
+    *getQCAComponent({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getQCAComponent, payload);
+      if (result.IsSuccess) {
+        yield update({ gasSelectList: result.Datas })
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取标气瓶子对应关系设置列表
+    *getQCAComponentInfoList({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.getQCAComponentInfoList, payload);
+      if (result.IsSuccess) {
+        console.log('result=', result)
+        yield update({ gasJoinListData: result.Datas })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 编辑标气瓶子对应标气
+    *editQCAComponentInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.editQCAComponentInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+
   },
   reducers: {
     // 质控仪流程图 - 状态
@@ -736,7 +760,7 @@ export default Model.extend({
             // 吹扫阀门
             ValveStatus.purge = value
           }
-           if (code === "32018") {
+          if (code === "32018") {
             // 泵配气阀状态
             ValveStatus.Air = value
           }
@@ -877,8 +901,7 @@ export default Model.extend({
     changeQCStatus(state, { payload }) {
       if (state.currentQCAMN) {
         let filterQC = payload.filter(item => item.DataGatherCode === state.currentQCAMN) || [];
-        if(filterQC.length)
-        {
+        if (filterQC.length) {
           return {
             ...state,
             QCStatus: filterQC.length ? filterQC[0].Status : undefined
