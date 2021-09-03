@@ -42,10 +42,10 @@ export default Model.extend({
         operationLogList: [], // 运维记录列表
         // 运维记录参数
         operationRzWhere: {
-            beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            beginTime: moment().format('YYYY-MM-01 00:00:00'),
             DGIMN: '',
-            // pageIndex: 1,
-            // pageSize: 10,
+            pageIndex: 1,
+            pageSize: 10000,
         },
         // 手机任务详情
         OperationFormDetail: [],

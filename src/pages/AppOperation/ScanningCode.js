@@ -42,7 +42,7 @@ let gridData = [{
     </div>,
 }]
 
-@connect(({ task, loading }) => ({
+@connect(({ task, loading,global }) => ({
     loading: loading.effects['task/GetOperationLogList'],
     operationLogList: task.operationLogList,
     operationRzWhere: task.operationRzWhere,
@@ -57,6 +57,8 @@ class ScanningCode extends PureComponent {
         this.state = {
             visitible: false,
             dateValue: new Date(Date.now()),
+            pos:'relative',
+            displagFlag:'none'
         };
 
     }
@@ -74,6 +76,19 @@ class ScanningCode extends PureComponent {
             }
         });
         this.getData();
+        window.addEventListener('scroll', this.bindHandleScroll, true)
+    }
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.bindHandleScroll, true);
+    }
+
+    bindHandleScroll = (event) => {
+        const   offsetTop = document.querySelector('#workOrder').offsetTop;
+       if(this.refs.scanningCodeEle.scrollTop >= offsetTop){
+           this.setState({pos:'fixed',displagFlag:'block'})
+       }else{
+        this.setState({pos:'relative',displagFlag:'none'})
+       }
     }
     //获取数据
     getData = () => {
@@ -109,7 +124,9 @@ class ScanningCode extends PureComponent {
                 operationRzWhere: {
                     ...this.props.operationRzWhere,
                     ...{
-                        beginTime: moment(date).format("YYYY-MM-DD HH:mm:ss"),
+                        beginTime: moment(date).format("YYYY-MM-01 00:00:00"),
+                        pageIndex: 1,
+                        pageSize: 10000,
                     }
                 },
             }
@@ -154,8 +171,7 @@ class ScanningCode extends PureComponent {
       }
     render() {
         const { operationLogList, operationRzWhere } = this.props;
-        const { dateValue } = this.state;
-        console.log(this.props.loading);
+        const { dateValue,pos,displagFlag } = this.state;
         let gridList = [];
         if (operationLogList && operationLogList.operationStatesCount && operationLogList.operationStatesCount.length > 0) {
 
@@ -163,7 +179,7 @@ class ScanningCode extends PureComponent {
                 text:
                     <div>
                         <div>{item.Text}</div>
-                        <div style={{ margin: 10, marginBottom: 0 }}>{item.Total}</div>
+                        <div style={{ margin: 10,marginTop:9, marginBottom: 0 }}>{item.Total}</div>
                     </div>,
             }));
         }
@@ -184,7 +200,7 @@ class ScanningCode extends PureComponent {
                     gridList.push(
                         <Step title={
                             <div style={{ fontSize: 14}}>
-                                <span style={{paddingRight:15}}>{itemChild.RecordTypeName}</span>
+                                <span style={{paddingRight:15}}>{itemChild.RecordTypeName&&itemChild.RecordTypeName.split('-')[1]}</span>
                                 {this.taskFrom(itemChild.TaskFromName)}
                                 {this.taskStatus(itemChild.TaskStatus)}
                             </div>
@@ -225,7 +241,7 @@ class ScanningCode extends PureComponent {
             })
         }
         return (
-            <div style={{ height: '100vh' }} className={styles.scanningCode}>
+            <div style={{ height: '100vh',overflowY:'auto' }} ref='scanningCodeEle' className={styles.scanningCode}>
                   <div className={styles.scanningEntInfo}>
                  <List renderHeader={() => '基本信息'} className="my-list">
                         <Item ><span style={{ fontSize: 13 }}><span>企业名称：</span>{operationLogList.pointData&&operationLogList.pointData.parentName}</span></Item>
@@ -233,7 +249,9 @@ class ScanningCode extends PureComponent {
                         <Item ><span style={{ fontSize: 13 }}> <span>运维负责人：</span>{operationLogList.pointData&&operationLogList.pointData.operationPersonName}</span></Item>
                     </List>
                  </div> 
-                 <Card full style={{ height: 150 }}>
+                 <div id='workOrder'>
+                     <div  style={{height:150,width:'100%',display:displagFlag}}>  </div>
+                 <Card full  style={{ height: 150,width:'100%',position:pos,zIndex:998,top:0,transition:'all .3s' }}>
                     <Card.Header
                         title={
                             <span>
@@ -277,7 +295,9 @@ class ScanningCode extends PureComponent {
                     </Card.Body>
                 </Card>
                 <WhiteSpace />
-                <div full style={{ height: 'calc(100vh - 340px)', overflow: 'auto', borderWidth: 0, paddingLeft: 25,backgroundColor:'#fff' }}>
+                <WhiteSpace style={{display:displagFlag,width:'100%',position:pos,zIndex:998,top:150,backgroundColor:'#f5f5f9',transition:'all .3s' }} />
+                </div>
+                <div full  style={{ borderWidth: 0, paddingLeft: 25,backgroundColor:'#fff' }}>
                     <WhiteSpace />
                     {
                         this.props.loading ?
@@ -312,7 +332,7 @@ class ScanningCode extends PureComponent {
                     <List full renderHeader={() => '工单状态说明'} className="my-list" >
                         <Item wrap><span style={{ fontSize: 13 }}>1.工单：运维人员去现场执行运维任务，派发的工作单；</span> </Item>
                         <Item wrap><span style={{ fontSize: 13 }}>2.完成：运维人员完成了的工单；</span></Item>
-                        <Item wrap><span style={{ fontSize: 13 }}>3.关闭：运维人员已经关闭的工单；</span> </Item>
+                        <Item wrap><span style={{ fontSize: 13 }}>3.关闭：系统关闭的工单；</span> </Item>
                         <Item wrap><span style={{ fontSize: 13 }}>4.执行中：运维人员正在处理的工单；</span> </Item>
                         <Item wrap><span style={{ fontSize: 13 }}>5.待执行：运维人员还未处理的工单。</span> </Item>
                     </List>
