@@ -21,6 +21,6 @@ export async function DeleteOperationPoint(params) {
 
 //项目编号列表
 export async function ProjectNumList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ProjectNumList', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList', params, null);
   return result;
 }

@@ -99,7 +99,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'ProviceName',
         align: 'center',
         render: (text, record) => { 
-          return <a  onClick={()=>{
+          return text==='全部合计'? text : <a  onClick={()=>{
                      this.setState({
                        detailVisible:true,
                        passParame:record

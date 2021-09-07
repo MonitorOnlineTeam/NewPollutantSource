@@ -6,7 +6,7 @@
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover    } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined  } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined, CodeSandboxCircleFilled  } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -15,6 +15,7 @@ import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import styles from "./style.less"
+import { ItemPanel } from 'gg-editor';
 const { Option } = Select;
 
 const namespace = 'operationInfo'
@@ -22,13 +23,15 @@ const namespace = 'operationInfo'
 
 
 
-const dvaPropsData =  ({ loading,operationInfo }) => ({
+const dvaPropsData =  ({ loading,operationInfo,autoForm }) => ({
   tableDatas:operationInfo.tableDatas,
   projectTableDatas:operationInfo.projectTableDatas,
+  tableLoading:operationInfo.tableLoading,
   loadingConfirm: loading.effects[`${namespace}/getParametersInfo`],
   loadingPoint: loading.effects[`${namespace}/getParametersInfo`],
   exportLoading: loading.effects[`${namespace}/getParametersInfo`],
-  projectNumListLoading:loading.effects[`${namespace}/projectNumList`]
+  projectNumListLoading:loading.effects[`${namespace}/projectNumList`],
+  operationInfoList:autoForm.tableInfo
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -58,81 +61,123 @@ const  dvaDispatch = (dispatch) => {
       dispatch({
         type: `${namespace}/projectNumList`,
         payload:payload
-      }) 
+      })
     },
+    operationList:(payload)=>{ //运维单位列表
+      dispatch({
+        type: 'autoForm/getAutoFormData',
+        payload: {
+            configId: 'OperationMaintenanceEnterprise', 
+            otherParams:{
+                pageSize:10000,
+              },
+
+        },
+     });
+     dispatch({
+      type: 'autoForm/getPageConfig',
+      payload: {
+        configId: 'OperationMaintenanceEnterprise',
+      },
+    });
+    },
+    
   }
 }
+let choiceArr = [],choiceID = []
 const Index = (props) => {
 
 
 
   const [form] = Form.useForm();
-
+  const [form2] = Form.useForm();
 
   const [fromVisible,setFromVisible] = useState(false)
   const [tableVisible,setTableVisible] = useState(false)
   const [popVisible,setPopVisible] = useState(false)
 
   const [type,setType] = useState('add')
+  const [operationList,setOperationList] = useState([])
   
   
-  const isEditing = (record) => record.key === editingKey;
+  const [projectNum,setProjectNum] = useState('')
+  const [choiceData,setChoiceData] = useState([])
+
   
-  const  { tableDatas,projectTableDatas,loadingConfirm,loadingPoint,tableLoading,exportLoading,projectNumListLoading } = props; 
+
+  
+  
+  const  { tableDatas,projectTableDatas,loadingConfirm,loadingPoint,tableLoading,exportLoading,projectNumListLoading,operationInfoList } = props; 
 
   
   useEffect(() => {
-    onFinish()
     
+    initData();
+
   },[props.DGIMN]);
  
 
+  const initData=()=>{
+    onFinish();
+    projectNumQuery(); //项目编号列表
+    props.operationList();//运维列表
+    operationInfoList['OperationMaintenanceEnterprise']&&setOperationList(operationInfoList['OperationMaintenanceEnterprise'].dataSource)
+  }
+
   const projectNumList=()=>{
-    props.projectNumList({PolltantType:1})
+    props.projectNumList()
   }
   const columns = [
     {
       title: '监测点',
       dataIndex: 'EquipmentParametersCode',
+      key:'',
       align:'center'
     },
     {
       title: '运维单位',
       dataIndex: 'EquipmentParametersCode',
+      key:'',
       align:'center'
     },
     {
       title: '项目编号',
       dataIndex: 'Range1',
+      key:'',
       align:'center',
     },
     {
       title: '省区名称',
       dataIndex: 'DetectionLimit',
+      key:'',
       align:'center',
     },
     {
       title: '运营起始日期',
       dataIndex: 'Unit',
+      key:'',
       align:'center',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
     {
       title: '运营结束日期',
       dataIndex: 'operations',
+      key:'',
       align:'center',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
       
     },
     {
       title: '实际开始日期',
-      dataIndex: 'Unit',
+      dataIndex: 'BeginTime',
+      key:'BeginTime',
       align:'center',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
     {
       title: '实际结束日期',
-      dataIndex: 'operations',
+      dataIndex: 'EndTime',
+      key:'EndTime',
       align:'center',
       sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
       
@@ -158,25 +203,30 @@ const Index = (props) => {
     },
   ];
 
+  
 const projectNumCol =[
   {
     title: '项目编号',
-    dataIndex: 'Range1',
+    dataIndex: 'ProjectCode',
+    key:'ProjectCode',
     align:'center',
   },
   {
     title: '卖方公司名称',
-    dataIndex: 'DetectionLimit',
+    dataIndex: 'SellCompanyName',
+    key:'SellCompanyName',
     align:'center',
   },
   {
     title: '运营起始日期',
-    dataIndex: 'Unit',
+    dataIndex: 'BeginTime',
+    key:'BeginTime',
     align:'center',
   },
   {
     title: '运营结束日期',
-    dataIndex: 'operations',
+    dataIndex: 'EndTime',
+    key:'EndTime',
     align:'center',
     
   },
@@ -191,10 +241,28 @@ const projectNumCol =[
   },
   ]
 
-  const choice = (record) =>{
-    form.setFieldsValue({ ...record});
-  }
 
+  const choice = (record) =>{
+    choiceArr.push(record.ProjectCode)
+    const  value = Array.from(new Set(choiceArr))
+    choiceID.push(record.ID)
+    const  idArr = Array.from(new Set(choiceID))
+    form2.setFieldsValue({PorjectID:idArr[0]? idArr.toString() : ''});
+    setChoiceData(value)
+  }
+  const onClearChoice=(value,data)=>{
+    choiceArr=value;
+    setChoiceData(choiceArr)
+    choiceID=[];
+    projectTableDatas.map(item=>{
+      value.map(items=>{
+        if(item.ProjectCode === items){
+          choiceID.push(item.ID) 
+        }
+      })
+    })
+    form2.setFieldsValue({PorjectID:choiceID[0]? choiceID.toString() : ''});
+  }
   const del = async (record) => {
     props.deleteOperationPoint({ID:record.ID},()=>{
        onFinish()
@@ -216,7 +284,8 @@ const projectNumCol =[
 
   
   const add = () => {
-
+    setChoiceData([])
+    form2.resetFields();
     setFromVisible(true)
 
   };
@@ -240,23 +309,25 @@ const projectNumCol =[
   }
   const onModalOk  = async () =>{ //添加 or 编辑弹框
     try {
-      const values = await form.validateFields();
-      console.log('Success:', values);
+      const values = await form2.validateFields();
+      props.updateOrAddProjectRelation({...values})
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
 
   const  projectNumQuery = ()=>{
-    console.log(1111)
+    props.projectNumList({ProjectCode:projectNum})
  }
   
+
   const searchComponents = () =>{
      return  <Form
     name="advanced_search"
     className={styles['ant-advanced-search-form']}
+    form={form}
     onFinish={onFinish}
-  >  
+  > 
    <Row> 
   <span className='ant-modal-title'>{props.location.query.entName}</span>
    </Row>
@@ -312,32 +383,35 @@ const projectNumCol =[
       >
     <Form
       name="basic2"
-      form={form}
+      form={form2}
     >
       <Row>
         <Col span={12}>
-        <Form.Item label="监测点列表" name="username" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="监测点列表" name="OperationCompany" rules={[  { required: true, message: '请选择监测点列表!',  },]} >
         <Select placeholder="请选择监测点列表">
           <Option value="1">小学</Option>
         </Select>
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="运维单位" name="username2" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运维单位" name="ss" rules={[  { required: true, message: '请选择运维单位!',  },]} >
         <Select placeholder="请选择运维单位">
-          <Option value="1">小学</Option>
+           {operationList[0]&&operationList.map(item=>{
+             return <Option value={item['dbo.T_Bas_OperationMaintenanceEnterprise.EnterpriseID']}>{item['dbo.T_Bas_OperationMaintenanceEnterprise.Company']}</Option>
+           })
+          }
         </Select>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={12}>
-        <Form.Item label="项目编号" name="username3"  rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="项目编号" name="PorjectID"  rules={[  { required: true, message: '请输入项目编号!',  },]} >
           <Popover
             content={<>
               <Row>
               <Form.Item  style={{marginRight:8}}  label='项目编号' >
-                  <Input placeholder="请输入项目编号" />
+                  <Input allowClear placeholder="请输入项目编号"  onChange={(e)=>{ setProjectNum(e.target.value)}}/>
                 </Form.Item>
               <Form.Item>
                <Button type="primary" onClick={projectNumQuery}>
@@ -353,12 +427,12 @@ const projectNumCol =[
             onVisibleChange={(visible )=>{setPopVisible(visible)}}
             placement="bottom"
           >
-           <Select value={form.getFieldValue('username3')} dropdownClassName={styles.projectNumSty} placeholder="请选择省份名称"> </Select>
+           <Select onChange={onClearChoice} allowClear showSearch={false}  mode='multiple' value={choiceData} dropdownClassName={styles.projectNumSty} placeholder="请选择省份名称"> </Select>
       </Popover>
       </Form.Item> 
       </Col>
       <Col span={12}>
-      <Form.Item label="省份名称" name="username4" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="省份名称" name="RegionCode" rules={[  { required: true, message: '请选择省份名称!',  },]} >
        <RegionList style={{width:'100%'}}/>
       </Form.Item>
       </Col>
@@ -368,19 +442,29 @@ const projectNumCol =[
 
       <Row>
         <Col span={12}>
-        <Form.Item label="实际起始日期" name="username5" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="实际起始日期" name="BeginTime" rules={[  { required: true, message: '请选择实际起始日期!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="实际结束日期" name="username6" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="实际结束日期" name="EndTime" rules={[  { required: true, message: '请选择实际结束日期!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
       </Row>
-      <Form.Item label="ID"  name="username7" hidden>
+      <Row>
+        <Col span={12}>
+        <Form.Item label="备注" name='remark' hidden={type==='edit'}>
+        <Input placeholder='请输入备注信息'/>
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="ID"  name="ID" hidden>
           <Input />
       </Form.Item> 
+      </Col>
+      </Row>
+
     </Form>
       </Modal>
         </div>

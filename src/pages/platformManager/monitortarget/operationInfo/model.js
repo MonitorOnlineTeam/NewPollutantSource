@@ -12,13 +12,14 @@ export default Model.extend({
     tableDatas:[],
     projectTableDatas:[],
     parametersList:[],
-    tableLoading:false,
-    projectNumList:[]
+    tableLoading:true,
+    projectNumList:[],
+    
   },
   effects: {
     *getEntProjectRelationList({ payload,callback }, { call, put, update }) { //监测运维列表
-      const result = yield call(services.GetEntProjectRelationList, payload);
       yield update({ tableLoading:true})
+      const result = yield call(services.GetEntProjectRelationList, payload);
       if (result.IsSuccess) {
         yield update({ tableDatas:result.Datas,tableLoading:false  })
       }else{
@@ -47,7 +48,7 @@ export default Model.extend({
     *projectNumList({ payload,callback }, { call, put, update }) { //项目编号列表
       const result = yield call(services.ProjectNumList, payload);
       if (result.IsSuccess) {
-        yield update({ projectNumList:result.Datas, })
+        yield update({ projectTableDatas:result.Datas, })
       }else{
         message.error(result.Message)
       }
