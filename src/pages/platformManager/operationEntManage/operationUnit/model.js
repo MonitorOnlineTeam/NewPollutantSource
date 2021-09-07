@@ -55,7 +55,7 @@ export default Model.extend({
     },
 
     *deleteOperationMaintenanceEnterpriseID({ payload,callback}, { call, put, update, select }) {
-      //获取所有企业列表
+      //删除
       const response = yield call(DeleteOperationMaintenanceEnterpriseID, { ...payload });
       if (response.IsSuccess) {
         message.success(response.Message);
