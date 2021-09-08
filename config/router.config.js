@@ -1802,7 +1802,14 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/GHG',
                     component: './IntelligentAnalysis/CO2Material/GHG',
                   },
-
+                  {
+                    path: '/Intelligentanalysis/CO2Material/GHGLinearAnalysis',
+                    component: './IntelligentAnalysis/CO2Material/GHGLinearAnalysis',
+                  },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/monthDischarge',
+                    component: './IntelligentAnalysis/CO2Material/monthDischarge',
+                  },
                 ]
               },
             ],
@@ -2130,6 +2137,7 @@ const routes = [
                     path: '/qualityControl/qcaManager/instrumentManage',
                     component: './qualityControl/instrumentManage',
                   },
+
                   // 质控仪 - 添加
                   {
                     name: 'instrumentAdd',
