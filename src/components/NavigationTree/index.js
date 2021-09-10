@@ -38,7 +38,6 @@ import styles from './index.less'
 import SelectPollutantType from '@/components/SelectPollutantType'
 import CustomIcon from '@/components/CustomIcon'
 import RegionList from '@/components/RegionList'
-
 const RadioGroup = Radio.Group;
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -66,7 +65,7 @@ const dataLists = [];
   IsTree: navigationtree.IsTree,
   noticeList: global.notices,
   configInfo: global.configInfo,
-
+  clientHeight: global.clientHeight,
 }))
 @Form.create()
 class NavigationTree extends Component {
@@ -102,6 +101,7 @@ class NavigationTree extends Component {
       panelDataListAys: [],
       RunState: '',
       useChioce: true,
+      isLoading:false,
       // panelSelKey:"",
       panelColumn: [
         {
@@ -171,8 +171,7 @@ class NavigationTree extends Component {
         this.loadCallback(data)
       },
     })
-    window.addEventListener('scroll', this.handleScroll);
-
+    window.addEventListener('scroll', this.handleScroll,true);
     // this.onChangeSearch(null)
 
     // panelDataList.splice(0, panelDataList.length)
@@ -204,6 +203,11 @@ class NavigationTree extends Component {
     let clientHeight = document.documentElement.clientHeight; //可视区域高度
     let scrollTop  = document.documentElement.scrollTop;  //滚动条滚动高度
     let scrollHeight =document.documentElement.scrollHeight; //滚动内容高度
+ 
+    
+  //  if(document.querySelector('.antd-pro-components-navigation-tree-index-table')){
+  //   let tableScollTop = document.querySelector('.antd-pro-components-navigation-tree-index-table').scrollTop
+  //  }  
 }
   componentWillReceiveProps(nextProps) {
     if (this.props.PollutantType !== nextProps.PollutantType) {
@@ -291,6 +295,7 @@ class NavigationTree extends Component {
   // 面板数据
   tilingData = (data = this.state.EntAndPoint) => {
     for (let i = 0; i < data.length; i++) {
+
       const node = data[i];
       const { key } = node;
       this.state.dataList.push({ key, title: node.title, entName: node.IsEnt ? node.title : node.EntName, IsEnt: node.IsEnt, Type: node.PollutantType, EntCode: node.IsEnt ? node.key : node.EntCode, QCAType: node.Type, VideoNo: node.VideoNo, outPutFlag: node.outPutFlag });
@@ -766,15 +771,24 @@ class NavigationTree extends Component {
         },
       })
     } else {
-      this.setState({
-        treeVis: false,
-      })
+
       this.props.dispatch({
         type: 'navigationtree/updateState',
         payload: {
           IsTree: false,
         },
       })
+      this.setState({
+        treeVis: false,
+        isLoading:true,
+      })
+      setTimeout(()=>{
+      this.setState({
+        isLoading:false,
+      })
+      },500)
+
+
     }
   }
 
@@ -783,7 +797,9 @@ class NavigationTree extends Component {
     onClick: () => {
       this.setState({
         selectedKeys: [record.key],
-      }, () => { this.returnData([record.key]) });
+      }, () => {
+         this.returnData([record.key]) 
+        });
     },
   })
 
@@ -912,6 +928,17 @@ class NavigationTree extends Component {
     //     }
     //   });
     }
+
+    panelDatas = () => {
+       
+      return <Table   id="treeTable" className={styles.table} rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
+        style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)':'calc(100vh - 290px)' }}
+        onRow={this.onClickRow}
+          rowClassName={this.setRowClassName}/>
+    }
+
+
+  // ></Table>
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo,pageType } = this.props;
@@ -923,7 +950,7 @@ class NavigationTree extends Component {
     } else {
       _props = { expandedKeys }
     }
-
+ 
     return (
       <div >
 
@@ -1026,7 +1053,7 @@ class NavigationTree extends Component {
                 style={{ marginTop: '5%', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)': 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
-                // height={800}
+                height={this.props.clientHeight - 330} 
                 treeData={this.loop(this.state.EntAndPoint)}
                 {..._props}
               />
@@ -1048,12 +1075,19 @@ class NavigationTree extends Component {
                     justifyContent: 'center',
                   }}
                   size="large"
-                /> : <div> {this.state.panelDataListAys.length ? <Table id="treeTable" className={styles.table} rowKey="tabKey" columns={this.state.panelColumn} dataSource={this.state.panelDataList} showHeader={false} pagination={false}
-                  style={{ marginTop: '5%', maxHeight: 730, overflow: 'auto', cursor: 'pointer', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)':'calc(100vh - 290px)' }}
-                  onRow={this.onClickRow}
-                  rowClassName={this.setRowClassName}
-
-                ></Table> : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                /> : <div> {this.state.panelDataListAys.length ?
+                <div   ref='panes'  > { this.state.isLoading&&this.props.type!=='air'?<Spin
+                  style={{
+                    width: '100%',
+                    height: 'calc(100vh/2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  size="large"
+                /> : this.panelDatas()}</div>
+                
+                 : <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                   </div>}</div>
           }
 

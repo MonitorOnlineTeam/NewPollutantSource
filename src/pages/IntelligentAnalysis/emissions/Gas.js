@@ -267,7 +267,7 @@ class Gas extends PureComponent {
             return "-"
           }
         },
-        width: 180,
+        width: 150,
       },
       {
         title: '行业',
@@ -349,7 +349,7 @@ class Gas extends PureComponent {
         title: '重点类别',
         dataIndex: 'ImportantType',
         key: 'ImportantType',
-        width: 180,
+        width: 150,
         render: (text, record) => {
           if (text && text !== "0") {
             // return ImportantTypeList.find(item => item.value == text)["text"]
