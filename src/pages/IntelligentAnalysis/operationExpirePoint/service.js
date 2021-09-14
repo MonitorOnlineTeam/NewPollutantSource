@@ -1,8 +1,14 @@
 import { post, get, getNew } from '@/utils/request';
 
-// 获取测量参数列表
-export async function GetEquipmentParametersInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationBasicApi/GetEquipmentParametersInfo?DGIMN='+params.DGIMN, {}, null);
+// 运维到期点位统计
+export async function GetOperationExpirePointList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOperationExpirePointList', params, null);
+  return result;
+}
+
+//导出
+export async function ExportOperationExpirePointList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportOperationExpirePointList', params, null);
   return result;
 }
 

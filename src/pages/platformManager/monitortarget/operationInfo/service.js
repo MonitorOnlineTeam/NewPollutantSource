@@ -24,3 +24,15 @@ export async function ProjectNumList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList', params, null);
   return result;
 }
+
+//项目编号列表
+export async function GetEntPointList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntPointList', params, null);
+  return result;
+}
+ 
+//导出
+export async function ExportEntProjectRelationList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEntProjectRelationList', params, null);
+  return result;
+}

@@ -5,6 +5,7 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config'
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'operationInfo',
@@ -14,7 +15,7 @@ export default Model.extend({
     parametersList:[],
     tableLoading:true,
     projectNumList:[],
-    
+    entPointList:[]
   },
   effects: {
     *getEntProjectRelationList({ payload,callback }, { call, put, update }) { //监测运维列表
@@ -51,6 +52,23 @@ export default Model.extend({
         yield update({ projectTableDatas:result.Datas, })
       }else{
         message.error(result.Message)
+      }
+    },
+    *getEntPointList({ payload,callback }, { call, put, update }) { //企业运维信息列表
+      const result = yield call(services.GetEntPointList, payload);
+      if (result.IsSuccess) {
+        yield update({ entPointList:result.Datas, })
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *exportEntProjectRelationList({ callback,payload }, { call, put, update, select }) {//导出
+      const response = yield call(services.ExportEntProjectRelationList, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${response.Datas}`);
+      } else {
+        message.warning(response.Message);
       }
     },
   },

@@ -5,21 +5,22 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 import { router } from 'umi';
 import config from '@/config'
+import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
   namespace: 'operationExpirePoint',
   state: {
-    tableDatas:[],
+    totalDatas:{},
     tableLoading:false,
-    checkName:'Thu'
+    checkName:'0~7日'
   },
   effects: {
-    *getEquipmentParametersInfo({ payload,callback }, { call, put, update }) { //参数列表
-      const result = yield call(services.GetEquipmentParametersInfo, payload);
+    *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计
       yield update({ tableLoading:true})
+      const result = yield call(services.GetOperationExpirePointList, payload);
       if (result.IsSuccess) {
         yield update({
-          tableDatas:result.Datas,
+          totalDatas:result.Datas,
           tableLoading:false
         })
       }else{
@@ -27,6 +28,14 @@ export default Model.extend({
         yield update({ tableLoading:false})
       }
     },
-
+    *exportOperationExpirePointList({ callback,payload }, { call, put, update, select }) { //运维到期点位统计 导出
+      const response = yield call(services.ExportOperationExpirePointList, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${response.Datas}`);
+      } else {
+        message.warning(response.Message);
+      }
+    },
   },
 })
