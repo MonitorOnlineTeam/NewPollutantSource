@@ -650,6 +650,10 @@ class SmokeReportPage extends PureComponent {
               </Select>
               <label style={{ lineHeight: '32px' }}>企业列表:</label><Select
                 allowClear
+                showSearch
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}
                 placeholder="企业列表"
                 maxTagCount={2}

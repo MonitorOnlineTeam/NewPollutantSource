@@ -440,7 +440,7 @@ export default class EntIndexModal extends Component {
                     style={{ width: 200, marginLeft: 10 }}
                   >
                     <Option value="1">国家考核</Option>
-                    <Option value="2">兵团考核</Option>
+                    <Option value="2">辖区考核</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item>

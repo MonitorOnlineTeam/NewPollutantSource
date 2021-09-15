@@ -224,6 +224,10 @@ class EmissionsHeatMap extends PureComponent {
   render() {
     const { entEmissionsData, markersEntList, loading } = this.props;
     const { showType, showMarkers, mode, visible, currentTool } = this.state;
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
+    // if (_thismap) {
+    //   console.log('thisMap=', _thismap.getZoom())
+    // }
     return (
       <>
         <div
@@ -314,7 +318,9 @@ class EmissionsHeatMap extends PureComponent {
               amapkey={amapKey}
               events={this.amapEvents}
               viewMode='3D'
-              zoom={5}
+              // zoom={5}
+              zoom={sysConfigInfo.ZoomLevel}
+              center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
               pitchEnable={true}
               pitch={60}
               expandZoomRange={true}
@@ -334,7 +340,9 @@ class EmissionsHeatMap extends PureComponent {
             mode === '2D' && <Map
               amapkey={amapKey}
               events={this.amapEvents}
-              zoom={5}
+              // zoom={13}
+              zoom={sysConfigInfo.ZoomLevel}
+              center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
             >
               <MouseTool events={this.toolEvents} />
               <Markers

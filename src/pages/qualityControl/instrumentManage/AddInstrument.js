@@ -66,10 +66,10 @@ class AddInstrument extends Component {
             })(
               <Cascader
                 style={{ width: '70%' }}
-                fieldNames={{ label: 'title', value: 'key', children: 'children' }}
                 showSearch
                 // disabled={this.state.dataSource[index].find(item => item.DGIMN == )}
                 options={this.state.entAndPointList}
+                fieldNames={this.state.entAndPointList.length ? { label: 'title', value: 'key', children: 'children' } : { label: 'label', value: 'value', children: 'children' }}
                 onChange={(value, selectedOptions) => {
                   const dataSource = [...this.state.dataSource];
                   dataSource[index]['DGIMN'] = value[1];
