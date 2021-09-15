@@ -147,7 +147,9 @@ class MonitoringStandard extends Component {
                 key: 'PollutantCode',
                 // width: '10%',
                 align: 'left',
+                fixed:'left',
                 render: (text, record) => text,
+                
             },
             {
                 title: '污染物名称',
@@ -155,6 +157,7 @@ class MonitoringStandard extends Component {
                 key: 'PollutantName',
                 // width: '10%',
                 align: 'left',
+                fixed:'left',
                 render: (text, record) => text,
             },
 
@@ -163,6 +166,7 @@ class MonitoringStandard extends Component {
                 dataIndex: 'AlarmType',
                 key: 'AlarmType',
                 // width: 200,
+                fixed:'left',
                 render: (text, record) => {
                     if (text === 0) {
                         return (
@@ -372,6 +376,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
+                    className={styles.tableSty}
                 //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
