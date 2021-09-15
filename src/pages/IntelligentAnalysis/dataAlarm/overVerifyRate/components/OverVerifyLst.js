@@ -121,16 +121,6 @@ export default class OverVerifyLst extends Component {
             },
           },
           {
-            title: <span>运维单位</span>,
-            dataIndex: 'operationEntName',
-            key: 'operationEntName',
-            width: 210,
-            align: 'center',
-            render: (text, record) => {
-              return <div style={{textAlign:'left'}}>{text}</div>
-            }
-          },
-          {
             title: <span>{'数据超标报警企业数'}</span>,
             dataIndex: 'entCount',
             key: 'entCount',
