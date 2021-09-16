@@ -3,7 +3,7 @@
  * 创建人：贾安波
  * 创建时间：2021.08.26
  */
-import React, { useState,useEffect,Fragment, useRef  } from 'react';
+import React, { useState,useEffect,Fragment, useRef,useMemo  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined } from '@ant-design/icons';
@@ -15,7 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
-
+import moment from 'moment'
 import styles from "./style.less"
 const { Option } = Select;
 
@@ -25,24 +25,25 @@ const namespace = 'operationExpirePoint'
 
 
 const dvaPropsData =  ({ loading,operationExpirePoint }) => ({
-  tableDatas:operationExpirePoint.tableDatas,
-  exportLoading: loading.effects[`${namespace}/getParametersInfo`],
+  tableLoading:operationExpirePoint.tableLoading,
+  totalDatas:operationExpirePoint.totalDatas,
+  exportLoading: loading.effects[`${namespace}/exportOperationExpirePointList`],
   checkName:operationExpirePoint.checkName,
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-    addOrUpdateEquipmentParametersInfo : (payload,callback) =>{ //修改 or 添加
+    getOperationExpirePointList : (payload,callback) =>{ //运维到期点位
       dispatch({
-        type: `${namespace}/addOrUpdateEquipmentParametersInfo`,
+        type: `${namespace}/getOperationExpirePointList`,
         payload:payload,
         callback:callback
       })
       
     },
-    getEquipmentParametersInfo:(payload,callback)=>{ //参数列表
+    exportOperationExpirePointList:(payload,callback)=>{ //导出
       dispatch({
-        type: `${namespace}/getEquipmentParametersInfo`,
+        type: `${namespace}/exportOperationExpirePointList`,
         payload:payload,
       })
     },
@@ -62,63 +63,71 @@ const Index = (props) => {
 
   const echartsRef = useRef(null);
 
+  
+ const [tableDatas,setTableDatas] = useState([])
+ const [pollutantType,setPollutantType] = useState('')
 
-  
-  
-  const isEditing = (record) => record.key === editingKey;
-  
-  const  { tableDatas,tableLoading,exportLoading,checkName } = props; 
+
+  const  { tableLoading,exportLoading,checkName,totalDatas } = props; 
 
   
   useEffect(() => {
-      getEquipmentParametersInfo({DGIMN:props.DGIMN})
-      getParametersInfos();
+      getOperationExpirePointList()
   },[props.DGIMN]);
- 
-  const getEquipmentParametersInfo=()=>{
-    props.getEquipmentParametersInfo({PolltantType:1})
+//   useEffect(() => {
+//     console.log(tableDatas)
+// },[tableDatas])
+
+  const getOperationExpirePointList = (value) =>{
+    props.getOperationExpirePointList({PollutantType:value},()=>{
+      setTableDatas(totalDatas.notExpired7List)
+    })
   }
 
-  const getParametersInfos=()=>{
-    props.getEquipmentParametersInfo({PolltantType:1})
-  }
   const columns = [
     {
       title: '项目号',
-      dataIndex: 'EquipmentParametersCode',
+      dataIndex: 'projectCode',
+      key:'projectCode',
       align:'center'
     },
     {
       title: '省份',
-      dataIndex: 'EquipmentParametersCode',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center'
     },
     {
       title: '监控目标',
-      dataIndex: 'Range1',
+      dataIndex: 'parentName',
+      key:'parentName',
       align:'center',
     },
     {
       title: '监测点',
-      dataIndex: 'DetectionLimit',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
     },
     {
       title: '监测点类型',
-      dataIndex: 'Unit',
+      dataIndex: 'pollutantTypeName',
+      key:'pollutantTypeName',
       align:'center',
     },
     {
       title: '运营实际开始日期',
-      dataIndex: 'Unit',
+      dataIndex: 'beginTime',
+      key:'beginTime',
       align:'center',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.beginTime).valueOf() - moment(b.beginTime).valueOf()
     },
     {
       title: '运营实际结束日期',
-      dataIndex: 'operations',
+      dataIndex: 'endTime',
+      key:'endTime',
       align:'center',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.endTime).valueOf() - moment(b.endTime).valueOf()
       
     },
   ]
@@ -138,10 +147,11 @@ const Index = (props) => {
         bottom: 50,
         // containLabel: true
     },
+
     xAxis: [
         {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: ['过期15~30日', '过期8~14日', '过期7日内','0~7日', '8~14日', '15~30日', '31~60日'],
             axisTick: {
                 alignWithLabel: true
             },
@@ -162,6 +172,7 @@ const Index = (props) => {
         {
             name: '监测点数（个）',
             type: 'value',
+            minInterval: 1,
             splitLine:{
               show:false
             },
@@ -178,10 +189,10 @@ const Index = (props) => {
     ],
     series: [
         {
-            name: '过期时间',
+            name: '监测点个数',
             type: 'bar',
             barWidth: '60%',
-            data: [10, 52, 200, 334, 390, 330, 220],
+            data: [totalDatas.overdue7, totalDatas.overdue14, totalDatas.overdue30, totalDatas.notExpired7, totalDatas.notExpired14, totalDatas.notExpired30, totalDatas.notExpired60],
             label: {
               show: true,
               position: 'top',
@@ -201,19 +212,50 @@ const Index = (props) => {
 };
   }
  
+ const exports = () =>{
+   const  codeList = {
+    '过期15~30日':"overdue7List",
+    '过期8~14日':"overdue14List",
+    '过期7日内':"overdue30List",
+    '0~7日':"notExpired7List",
+    '8~14日':"notExpired14List",
+    '15~30日':"notExpired30List", 
+    '31~60日':"notExpired60List"
+   }
+   const  titleList = {
+    '过期15~30日':"运维过期15~30日",
+    '过期8~14日':"运维过期8~14日",
+    '过期7日内':"运维过期7日内",
+    '0~7日':"0~7日内运维到期",
+    '8~14日':"8~14日内运维到期",
+    '15~30日':"15~30日内运维到期", 
+    '31~60日':"31~60日内运维到期"
+   }
+   props.exportOperationExpirePointList({Title:`${titleList[checkName]}${pollutantType==1?'废水':pollutantType==2? '废气':'全部'}监测点列表`,Code:codeList[checkName]})
+ }
 
 
-
-  const onChange =(value) => {
-
+  const onChange =(e) => {
+    setPollutantType(e.target.value)
+    getOperationExpirePointList(e.target.value);
   };
 
   const  onChartClick = (e)=>{
     // props.updateState({checkName:e.name})
+   const dataObj = {
+    '过期15~30日':totalDatas.overdue7List,
+    '过期8~14日':totalDatas.overdue14List,
+    '过期7日内':totalDatas.overdue30List,
+    '0~7日':totalDatas.notExpired7List,
+    '8~14日':totalDatas.notExpired14List,
+    '15~30日':totalDatas.notExpired30List, 
+    '31~60日':totalDatas.notExpired60List
+   }
+   setTableDatas(dataObj[e.name])
    echartsRef.current.props.option.series[0].itemStyle.normal.color = (params)=>{
-       return  params.name == e.name ? '#ffa940' : '#64b0fd'
-    }
-   echartsRef.current.getEchartsInstance().setOption(echartsRef.current.props.option)
+    return  params.name == e.name ? '#ffa940' : '#64b0fd'
+  }
+  echartsRef.current.getEchartsInstance().setOption(echartsRef.current.props.option)
   }
   const searchComponents = () =>{
      return  <Form
@@ -238,25 +280,29 @@ const Index = (props) => {
 
      </Form>
   }
+
+  const echartsComponents = useMemo(()=>{ //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
+    return <ReactEcharts
+    option={getOption()}
+    style={{  width: '100%' }}
+    theme="my_theme "
+    onEvents={{
+      'click': onChartClick,
+    }}   
+    ref={echartsRef}  
+  />
+  },[tableLoading])
   return (
     <div  className={styles.operationExpirePoint}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
-     { tableLoading? <PageLoading /> : <ReactEcharts
-                option={getOption()}
-                style={{  width: '100%' }}
-                theme="my_theme"
-                onEvents={{
-                  'click': onChartClick,
-                }}     
-                ref={echartsRef}    
-              />}
-     <SdlTable
+     { tableLoading? <div style={{paddingBottom:100}}><PageLoading /></div>: echartsComponents}
+        <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={columns}
-      /> 
+      />  
    </Card>
    </BreadcrumbWrapper>
         </div>

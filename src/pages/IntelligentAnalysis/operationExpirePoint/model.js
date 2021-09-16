@@ -23,6 +23,7 @@ export default Model.extend({
           totalDatas:result.Datas,
           tableLoading:false
         })
+        callback()
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})

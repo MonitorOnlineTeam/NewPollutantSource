@@ -32,7 +32,7 @@ const dvaPropsData =  ({ loading,projectManager }) => ({
   tableTotal:projectManager.tableTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
-  exportLoading: loading.effects[`${namespace}/getParametersInfo`],
+  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
   exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
 })
 
@@ -74,6 +74,12 @@ const  dvaDispatch = (dispatch) => {
     getProjectPointList:(payload)=>{ //运维监测点信息
       dispatch({
         type: `${namespace}/getProjectPointList`, 
+        payload:payload,
+      }) 
+    },
+    exportProjectInfoList:(payload)=>{ //导出
+      dispatch({
+        type: `${namespace}/exportProjectInfoList`, 
         payload:payload,
       }) 
     },
@@ -173,6 +179,7 @@ const Index = (props) => {
       dataIndex: 'x',
       key: 'x',
       align: 'center',
+      width:180,
       render: (text, record) =>{
         return  <span>
                <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
@@ -268,8 +275,18 @@ const Index = (props) => {
     form2.resetFields();
 
   };
-  const exports = () => {
-
+  const exports =  async () => {
+    const values =   await form.validateFields();
+    props.exportProjectInfoList({
+      ...values,
+      BegBeginTime:values.BegTime&&moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+      BegEndTime:values.BegTime&&moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+      EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+      EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+      BegTime:undefined,
+      EndTime:undefined,
+      
+    })
  };
  
  const pointExports = () => {
@@ -339,7 +356,9 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item name='BegTime' label='运营起始日期' >
-          <RangePicker style={{width:'100%'}} showTime />
+          <RangePicker style={{width:'100%'}}
+            showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+            />
           </Form.Item>
         </Col>  
         {expand&&<><Col span={8}>
@@ -353,8 +372,10 @@ const Index = (props) => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name='EndTime' label='运营结束日期' >
-          <RangePicker style={{width:'100%'}} showTime />
+          <Form.Item name='EndTime' label='运营结束日期' format='YYYY-MM-DD 23:59:59'>
+          <RangePicker style={{width:'100%'}} 
+           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+          />
           </Form.Item>
         </Col></>}
         </Row>   
@@ -449,7 +470,7 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="签订人" name="SignName" rules={[  { required: true, message: '请输入签订人!',  },]} >
+      <Form.Item label="签订人" name="SingName" rules={[  { required: true, message: '请输入签订人!',  },]} >
         <Input placeholder='请输入签订人'/>
       </Form.Item>
       </Col>

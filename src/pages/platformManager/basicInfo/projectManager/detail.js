@@ -106,7 +106,7 @@ const Index = (props) => {
       </Col>
       <Col span={12}>
       <Form.Item label="签订人"  >
-        {data.SignName}
+        {data.SingName}
       </Form.Item>
       </Col>
       </Row>

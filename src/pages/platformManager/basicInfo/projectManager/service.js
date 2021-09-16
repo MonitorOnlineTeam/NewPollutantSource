@@ -27,4 +27,9 @@ export async function GetProjectPointList(params) {
   return result;
 }
 
+// 导出
+export async function ExportProjectInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportProjectInfoList',params, null);
+  return result;
+}
 

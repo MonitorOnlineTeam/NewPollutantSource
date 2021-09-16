@@ -341,6 +341,50 @@ export default {
                   path: '/platformconfig',
                   redirect: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2',
                 },
+                { //基础信息
+                  name: 'basicInfo',
+                  path: '/platformconfig/basicInfo',
+                  routes: [
+                    {
+                      path: '/platformconfig/basicInfo',
+                      redirect: '/platformconfig/basicInfo/projectManager',
+                    },
+                    {
+                      // 项目管理
+                      name: 'projectManager',
+                      path: '/platformconfig/basicInfo/projectManager',
+                      component: './platformManager/basicInfo/projectManager',
+                    },
+                    {
+                      // 项目管理详情
+                      name: 'projectManagerDetail',
+                      path: '/platformconfig/basicInfo/projectManager/detail',
+                      component: './platformManager/basicInfo/projectManager/detail',
+                    },                
+                    {  //污染源管理
+                      name: 'monitortarget',
+                      path: '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes',
+                      component: './platformManager/monitortarget',
+                    },
+                    {
+                      name: 'entOperationInfo', //企业下的运维信息
+                      path: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
+                      component: './platformManager/monitortarget/operationInfo',
+                    },
+                    {
+                      name: 'dischargepermit',//排污许可证
+                      path:
+                        '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
+                      component: './platformManager/dischargepermit',
+                    },
+                    { //维护点信息
+                      name: 'monitorpoint',
+                      path:
+                        '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
+                      component: './platformManager/point',
+                    },
+                  ]
+                },
                 {
                   // 设备管理
                   name: 'equipmentManage',
@@ -365,31 +409,9 @@ export default {
                   component: './platformManager/monitortarget',
                 },
                 {
-                  name: 'dischargepermit',
-                  path:
-                    '/platformconfig/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
-                  component: './platformManager/dischargepermit',
-                },
-                {
                   name: 'maintainbase',
                   path: '/platformconfig/maintain/:configId/',
                   component: './platformManager/maintain',
-                },
-                {
-                  name: 'monitortarget',
-                  path: '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes',
-                  component: './platformManager/monitortarget',
-                },
-                {
-                  name: 'monitorpoint',
-                  path:
-                    '/platformconfig/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
-                  component: './platformManager/point',
-                },
-                {
-                  name: 'entOperationInfo', //企业下的运维信息
-                  path: '/platformconfig/monitortarget/AEnterpriseTest/1/1,2/operationInfo',
-                  component: './platformManager/monitortarget/operationInfo',
                 },
                 {
                   name: 'usestandardlibrary',
@@ -519,28 +541,6 @@ export default {
                   // path: '/platformconfig/monitortarget/entImport',
                   path:'/platformconfig/monitortarget/AEnterpriseTest/1/1,2/entImport',
                   component: './platformManager/monitortarget/entImport',
-                },
-                { //基础信息
-                  name: 'basicInfo',
-                  path: '/platformconfig/basicInfo',
-                  routes: [
-                    {
-                      path: '/platformconfig/basicInfo',
-                      redirect: '/platformconfig/basicInfo/projectManager',
-                    },
-                    {
-                      // 项目管理
-                      name: 'projectManager',
-                      path: '/platformconfig/basicInfo/projectManager',
-                      component: './platformManager/basicInfo/projectManager',
-                    },
-                    {
-                      // 项目管理
-                      name: 'projectManagerDetail',
-                      path: '/platformconfig/basicInfo/projectManager/detail',
-                      component: './platformManager/basicInfo/projectManager/detail',
-                    },
-                  ]
                 },
               ],
             },

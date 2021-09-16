@@ -300,8 +300,8 @@ const projectNumCol =[
     setFromVisible(true)
   };
 
-  const exports = () => {
-    const values =  form.validateFields();
+  const exports = async () => {
+    const values = await form.validateFields();
     props.exportEntProjectRelationList({...values})
  };
  
