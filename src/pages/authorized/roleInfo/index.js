@@ -87,7 +87,8 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    style={{ pointerEvents: listDisabled ? 'none' : null }}
+                    style={{ pointerEvents: listDisabled ? 'none' : null,paddingBottom:10 }}
+                    scroll={{y:'calc(100vh - 550px)'}} 
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
                             if (itemDisabled || listDisabled) return;
@@ -802,7 +803,8 @@ class RoleIndex extends Component {
                                 onOk={this.handleCancel}
                                 destroyOnClose="true"
                                 onCancel={this.handleCancel}
-                                width={900}
+                                // width={1000}
+                                width="70%"
                             >
                                 {
                                     this.props.UserByRoleIDLoading ? <Spin
@@ -828,7 +830,7 @@ class RoleIndex extends Component {
                                             }
                                             leftColumns={leftTableColumns}
                                             rightColumns={rightTableColumns}
-                                            style={{ width: '100%', height: '600px' }}
+                                            style={{ width: '100%'}}
                                         />
                                 }
                             </Modal>

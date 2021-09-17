@@ -82,8 +82,8 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    style={{ pointerEvents: listDisabled ? 'none' : null,width:554}}
-                    scroll={{ x:1000}}
+                    style={{ pointerEvents: listDisabled ? 'none' : null,width:554,paddingBottom:10}}
+                    scroll={{y:'calc(100vh - 550px)'}} 
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
                             if (itemDisabled || listDisabled) return;
@@ -653,7 +653,7 @@ class emissionEnt extends Component {
                         }
                         leftColumns={leftTableColumns}
                         rightColumns={rightTableColumns}
-                        style={{ width: '100%', height: '600px' }}
+                        style={{ width: '100%' }}
                     />
                 </Modal>
             </BreadcrumbWrapper>

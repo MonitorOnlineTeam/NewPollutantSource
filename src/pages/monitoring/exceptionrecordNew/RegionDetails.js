@@ -38,8 +38,8 @@ class RegionDetails extends PureComponent {
         {
           title: '运维单位',
           align: 'center',
-          dataIndex: 'operationEntName',
-          key: 'operationEntName',
+          dataIndex: 'OperationEntName',
+          key: 'OperationEntName',
           render: (text, record) => {
             return <div style={{textAlign:'left'}}>{text}</div>
           }
@@ -166,7 +166,7 @@ class RegionDetails extends PureComponent {
             visible={this.state.visible}
             footer={false}
             width="100vw"
-            height="100vh"
+            // height="100vh"
             destroyOnClose
             bodyStyle={{ padding: 0 }}
             onCancel={() => this.setState({ visible: false })}

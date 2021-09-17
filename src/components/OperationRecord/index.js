@@ -118,6 +118,7 @@ class OperationRecord extends Component {
           RecordType: value,
         },
       });
+
       this.props.dispatch({
         type: 'operationform/updateState',
         payload: {
@@ -351,6 +352,7 @@ class OperationRecord extends Component {
         type: 'operationform/updateState',
         payload: {
           breadTitle: '运维记录',
+          currentRecordType: 1,
         },
       });
     }
