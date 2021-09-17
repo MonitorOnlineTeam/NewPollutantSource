@@ -163,7 +163,8 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
           columns={columns}
           dataSource={filteredItems}
           size="small"
-          style={{ pointerEvents: listDisabled ? 'none' : null }}
+          style={{ pointerEvents: listDisabled ? 'none' : null,paddingBottom:10 }}
+          scroll={{y:'calc(100vh - 550px)'}}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) return;
@@ -1263,7 +1264,7 @@ class DepartIndex extends Component {
                 onOk={this.handleCancel}
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
-                width={900}
+                width={'70%'}
               >
                 {this.props.GetUserByDepID ? (
                   <Spin

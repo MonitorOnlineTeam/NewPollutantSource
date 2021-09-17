@@ -52,7 +52,7 @@ import NewAlarmPushRel from '@/pages/authorized/departInfo/NewAlarmPushRel'
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
 // Customize Table Transfer
-const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns,tableChange,pageNumber,pageSize, ...restProps }) => (
     <Transfer {...restProps} showSelectAll={false}>
         {({
             direction,
@@ -87,13 +87,19 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
                     columns={columns}
                     dataSource={filteredItems}
                     size="small"
-                    style={{ pointerEvents: listDisabled ? 'none' : null }}
+                    scroll={{y:'calc(100vh - 550px)'}} 
+                    style={{ pointerEvents: listDisabled ? 'none' : null,paddingBottom:10 }}
                     onRow={({ key, disabled: itemDisabled }) => ({
                         onClick: () => {
                             if (itemDisabled || listDisabled) return;
                             onItemSelect(key, !listSelectedKeys.includes(key));
                         },
                     })}
+                    pagination={{
+                        onChange:tableChange,
+                        pageNumber:pageNumber,
+                        pageSize:pageSize
+                    }}
                 />
             );
         }}
@@ -193,6 +199,8 @@ class RoleIndex extends Component {
             selectedRowKeysMenu: [],
             expandRows: false,
             alarmPushData:'',
+            pageNumber:1,
+            pageSize:10,
             menucolumns: [
                 {
                     title: '菜单名称',
@@ -631,7 +639,9 @@ class RoleIndex extends Component {
             });
           })
     }
-
+    tableChange=(pageNumber,pageSize)=>{
+      this.setState({pageNumber,pageSize})
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const { targetKeys, disabled, showSearch } = this.state;
@@ -802,7 +812,7 @@ class RoleIndex extends Component {
                                 onOk={this.handleCancel}
                                 destroyOnClose="true"
                                 onCancel={this.handleCancel}
-                                width={900}
+                                width={'70%'}
                             >
                                 {
                                     this.props.UserByRoleIDLoading ? <Spin
@@ -828,7 +838,10 @@ class RoleIndex extends Component {
                                             }
                                             leftColumns={leftTableColumns}
                                             rightColumns={rightTableColumns}
-                                            style={{ width: '100%', height: '600px' }}
+                                            style={{ width: '100%' }}
+                                            tableChange={this.tableChange}
+                                            pageNumber={this.state.pageNumber}
+                                            pageSize={this.state.pageSize}
                                         />
                                 }
                             </Modal>
