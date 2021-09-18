@@ -279,7 +279,9 @@ class CharacteristicPollutant extends PureComponent {
     const { entEmissionsData, loading, pointDetailsModalVisible } = this.props;
     const { showType, radius, currentTool, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
     let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
-
+    if(thisMap) {
+      console.log('zoom=', thisMap.getZoom())
+    }
     return (
       <>
         <div
@@ -354,7 +356,7 @@ class CharacteristicPollutant extends PureComponent {
           <Map
             amapkey={amapKey}
             events={this.amapEvents}
-            zoom={5}
+            // zoom={5}
             zoom={sysConfigInfo.ZoomLevel}
             center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
           >
