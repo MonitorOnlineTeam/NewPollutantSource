@@ -128,7 +128,7 @@ export default Model.extend({
           ZoomLevel: response.Datas.ZoomLevel || 10,
           //  北京市中心坐标：116.397693,39.908195
           CenterLongitude: response.Datas.CenterLongitude || 116.397693,
-          CenterLatitude: response.Datas.CenterLongitude || 39.908195,
+          CenterLatitude: response.Datas.CenterLatitude || 39.908195,
         }))
         yield put({
           type: 'setConfigInfo',
