@@ -649,12 +649,13 @@ class AutoFormTable extends PureComponent {
         </Row>
         <SdlTable
           rowKey={(record, index) => {
-            // if (keys[configId] && keys[configId].length) {
-            //   return record[keys[configId][0]];
-            //   // return `${current}-${index}`
-            // }
-            // return `${current}-${index}`
-            return record.rn
+            if (keys[configId] && keys[configId].length) {
+              let key = [...keys[configId]].pop();
+              return record[key];
+              // return `${current}-${index}`
+            }
+            return `${current}-${index}`
+            // return record.rn
           }}
           // size="small"
           loading={this.props.loading}
@@ -677,7 +678,8 @@ class AutoFormTable extends PureComponent {
               const { selectedRowKeys } = this.state;
               let rowkey;
               if (this.props.keys[configId] && this.props.keys[configId].length) {
-                rowkey = record[this.props.keys[configId][0]];
+                let key = [...this.props.keys[configId]].pop();
+                rowkey = record[key];
               } else {
                 rowkey = `${current}-${index}`;
               }
