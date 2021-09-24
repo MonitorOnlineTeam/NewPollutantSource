@@ -129,6 +129,7 @@ class CharacteristicPollutant extends PureComponent {
   }
 
   componentDidMount() {
+    this.onSubmit();
   }
 
   onSubmit = () => {
@@ -277,6 +278,8 @@ class CharacteristicPollutant extends PureComponent {
   render() {
     const { entEmissionsData, loading, pointDetailsModalVisible } = this.props;
     const { showType, radius, currentTool, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
+
     return (
       <>
         <div
@@ -352,6 +355,8 @@ class CharacteristicPollutant extends PureComponent {
             amapkey={amapKey}
             events={this.amapEvents}
             zoom={5}
+            zoom={sysConfigInfo.ZoomLevel}
+            center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
           >
             <MouseTool events={this.toolEvents} />
             <Markers
@@ -407,7 +412,10 @@ class CharacteristicPollutant extends PureComponent {
               endTime: this.getTime()[1],
               dataType: 'HourData',
               PollutantType: 2,
-              pollutantCodes: '03'
+              pollutantCodes: '03',
+              radius: 30,
+              longitude: sysConfigInfo.CenterLongitude,
+              latitude: sysConfigInfo.CenterLatitude,
             }}
           >
             <Form.Item
@@ -490,7 +498,7 @@ class CharacteristicPollutant extends PureComponent {
             <Divider dashed style={dividerStyle} />
             <Form.Item
               label="勘测范围"
-              // name="radius"
+            // name="radius"
             // rules={[{ type: 'number', message: "只能输入数字" }]}
             // style={{ display: 'inline-block', width: 100 }}
             >
@@ -499,7 +507,7 @@ class CharacteristicPollutant extends PureComponent {
                 <InputNumber
                   style={{ width: '207px' }}
                   min={0.01}
-                  max={100}
+                  max={500}
                   placeholder="请输入勘测范围（半径）"
                 // formatter={value => `半径（千米）：${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 // parser={value => value.replace(/\半径（千米）：\s?|(,*)/g, '')}

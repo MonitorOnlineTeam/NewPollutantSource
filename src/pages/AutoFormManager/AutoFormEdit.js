@@ -23,7 +23,8 @@ const FormItem = Form.Item;
 
 @connect(({ loading, autoForm }) => ({
   loadingConfig: loading.effects['autoForm/getPageConfig'],
-  loadingAdd: loading.effects['autoForm/add'],
+  loadingConfigId: loading.effects['autoForm/getConfigIdList'],
+  loadingGetFormData: loading.effects['autoForm/getFormData'],
   addFormItems: autoForm.addFormItems,
   editFormData: autoForm.editFormData,
   tableInfo: autoForm.tableInfo,
@@ -133,7 +134,7 @@ class AutoFormEdit extends Component {
   }
 
   render() {
-    const { dispatch, breadcrumb } = this.props;
+    const { dispatch, breadcrumb, loadingConfig, loadingConfigId, loadingGetFormData } = this.props;
     const { configId } = this._SELF_;
     return (
       <Fragment>
@@ -149,13 +150,13 @@ class AutoFormEdit extends Component {
             // }
             // >
             <BreadcrumbWrapper title="编辑">
-              <Spin delay={1000} spinning={this.props.loading.models.autoForm}>
+              <Spin spinning={loadingConfig || loadingConfigId || loadingGetFormData}>
                 {this._renderForm()}
               </Spin>
               {/* </MonitorContent> : */}
             </BreadcrumbWrapper> :
             <Fragment>
-              <Spin delay={1000} spinning={this.props.loading.models.autoForm}>
+              <Spin spinning={loadingConfig || loadingConfigId || loadingGetFormData}>
                 {this._renderForm()}
               </Spin>
             </Fragment>

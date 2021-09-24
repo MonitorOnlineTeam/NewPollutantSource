@@ -46,7 +46,10 @@ class ZeroCheckChart extends PureComponent {
     console.log('zeroChartData111=', zeroChartData)
     const valueMax = _.max(zeroChartData.dataList) ? _.max(zeroChartData.dataList) : 0;
     const standardMax = _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
-    let max = _.max([valueMin, valueMax]) + 5
+    let max = _.max([valueMin, valueMax]) + 5;
+    // let max = _.max([valueMax, standardMax]) + 5
+
+
     // max = max > 100 ? 100 : max;
 
     const valueMin = _.min(zeroChartData.dataList) ? _.min(zeroChartData.dataList) : 0;

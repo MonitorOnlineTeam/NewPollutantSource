@@ -34,6 +34,12 @@ class SdlMenu extends Component {
     this.getMenuCurrentKey();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.pathname != this.props.location.pathname) {
+      this.getMenuCurrentKey();
+    }
+  }
+
   getMenuCurrentKey = () => {
     let current = this.props.location.pathname;
     this.setState({ current: current });

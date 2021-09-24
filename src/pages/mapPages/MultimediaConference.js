@@ -297,6 +297,7 @@ class MultimediaConference extends PureComponent {
   render() {
     const { treeData, markersList, isModalVisible, currentPoint, fullScreenModalVisible } = this.state;
     const { treeLoading } = this.props;
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     return (
       <div
         className={styles.pageWrapper}
@@ -337,7 +338,8 @@ class MultimediaConference extends PureComponent {
         <Map
           amapkey={amapKey}
           events={this.amapEvents}
-          zoom={5}
+          zoom={sysConfigInfo.ZoomLevel}
+          center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
         >
           <Markers
             markers={markersList}

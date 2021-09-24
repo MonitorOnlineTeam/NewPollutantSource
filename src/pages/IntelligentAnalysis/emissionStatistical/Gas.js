@@ -234,17 +234,48 @@ class Gas extends PureComponent {
         key: 'AttentionName',
         width: 150,
       },
+      // {
+      //   title: '重点类别',
+      //   dataIndex: 'ImportantType',
+      //   key: 'ImportantType',
+      //   render: (text, record) => {
+      //     if (text && text != "0") {
+      //       return ImportantTypeList.find(item => item.value == text)["text"]
+      //     }
+      //     return "-"
+      //   },
+      //   width: 180,
+      // },
       {
         title: '重点类别',
         dataIndex: 'ImportantType',
         key: 'ImportantType',
         render: (text, record) => {
-          if (text && text != "0") {
-            return ImportantTypeList.find(item => item.value == text)["text"]
+          if (text && text !== "0") {
+            // return ImportantTypeList.find(item => item.value == text)["text"]
+            const ImportantTypeLists = 
+              { "1": "污染处理厂",
+                '2': "水重点",
+                '3': "气重点",
+                '4': "垃圾焚烧"
+              }
+            let importVal = ''
+            let dataArr = text.split(',')
+            dataArr.map(item=>{
+              ImportantTypeList.map(items=>{
+                 if(item == items.value){
+                  importVal += `${ImportantTypeLists[item]}，`
+                 }
+              })
+            })
+            let _text = importVal.substring(0,importVal.length-1);
+            return _text || '-'
+            
+          }else{
+            return "-"
           }
-          return "-"
         },
-        width: 180,
+        width: 150,
       },
       {
         title: '行业',
@@ -322,17 +353,47 @@ class Gas extends PureComponent {
         key: 'AttentionName',
         width: 150,
       },
+      // {
+      //   title: '重点类别',
+      //   dataIndex: 'ImportantType',
+      //   key: 'ImportantType',
+      //   width: 180,
+      //   render: (text, record) => {
+      //     if (text && text != "0") {
+      //       return ImportantTypeList.find(item => item.value == text)["text"]
+      //     }
+      //     return "-"
+      //   }
+      // },
       {
         title: '重点类别',
         dataIndex: 'ImportantType',
         key: 'ImportantType',
-        width: 180,
         render: (text, record) => {
-          if (text && text != "0") {
-            return ImportantTypeList.find(item => item.value == text)["text"]
+          if (text && text !== "0") {
+            // return ImportantTypeList.find(item => item.value == text)["text"]
+            const ImportantTypeLists = 
+              { "1": "污染处理厂",
+                '2': "水重点",
+                '3': "气重点",
+                '4': "垃圾焚烧"
+              }
+            let importVal = ''
+            let dataArr = text.split(',')
+            dataArr.map(item=>{
+              ImportantTypeList.map(items=>{
+                 if(item == items.value){
+                  importVal += `${ImportantTypeLists[item]}，`
+                 }
+              })
+            })
+            let _text = importVal.substring(0,importVal.length-1);
+            return _text || '-'
+          }else{
+            return "-"
           }
-          return "-"
-        }
+        },
+        width: 150,
       },
       {
         title: '行业',
@@ -537,7 +598,7 @@ class Gas extends PureComponent {
           </Form>
           {/* <Divider /> */}
           <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
-            <TabPane tab="师市排放量" key="region">
+            <TabPane tab="辖区排放量" key="region">
               <SdlTable loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">

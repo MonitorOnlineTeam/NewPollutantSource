@@ -531,6 +531,46 @@ export default Model.extend({
                     payload: obj.Message[0],
                   })
                   break;
+                // 质控日志 - 开始质控命令
+                case 'QCACheckStart':
+                  // console.log("QCACheckStart=", obj.Message)
+                  if (obj.Message.MsgType === "check") {
+                    dispatch({
+                      type: 'qcManual/updateQCLogStart',
+                      payload: obj.Message,
+                    })
+                  }
+                  if (obj.Message.MsgType === "get") {
+                    dispatch({
+                      type: 'dataExtract/updateQCLogStart',
+                      payload: obj.Message,
+                    })
+                  }
+                  break;
+                // 质控日志 - 质控应答
+                case 'QCACheckAnswer':
+                  // console.log("QCACheckAnswer=", obj.Message)
+                  if (obj.Message.MsgType === "check") {
+                    dispatch({
+                      type: 'qcManual/updateQCLogAnswer',
+                      payload: obj.Message
+                    })
+                  }
+                  if (obj.Message.MsgType === "get") {
+                    dispatch({
+                      type: 'dataExtract/updateQCLogAnswer',
+                      payload: obj.Message
+                    })
+                  }
+                  break;
+                // 质控日志 - 质控结果
+                case 'QCACheckResult':
+                  // console.log("QCACheckResult=", obj.Message)
+                  dispatch({
+                    type: 'qcManual/updateQCLogResult',
+                    payload: obj.Message
+                  })
+                  break;
                 case 'ControlState':
                   dispatch({
                     type: 'qualityControl/changeQCState',

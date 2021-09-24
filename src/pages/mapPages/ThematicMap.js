@@ -18,7 +18,7 @@ import { airLevel } from '@/pages/monitoring/overView/tools'
 import InfoWindowContent from './component/InfoWindowContent'
 import PointDetailsModal from './component/PointDetailsModal'
 import { AppstoreOutlined } from '@ant-design/icons'
-import webConfig from '../../../public/webConfig'
+// import webConfig from '../../../public/webConfig'
 
 const statusList = [
   { text: "正常", checked: false, color: "#52c41a", value: 1, count: 33, className: "green" },
@@ -444,7 +444,7 @@ class ThematicMap extends PureComponent {
     const { pollutantTypeCountList, curPointData, tableList, chartData, pointDetailsModalVisible } = this.props;
     const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
     console.log('activePollutant=', activePollutant)
-
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     let flag = this.props.match.params.pollutantCode;
     return (
       <div className={styles.pageWrapper}>
@@ -584,8 +584,9 @@ class ThematicMap extends PureComponent {
           <Map
             resizeEnable={true}
             events={this.mapEvents}
-            // zoom={5}
-            center={webConfig.mapCenter}
+            zoom={sysConfigInfo.ZoomLevel}
+            center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
+            // center={webConfig.mapCenter}
             mapStyle="amap://styles/darkblue"
             amapkey={amapKey}
           >

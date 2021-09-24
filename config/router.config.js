@@ -2148,7 +2148,6 @@ const routes = [
                     path: '/qualityControl/qcaManager/instrumentManage',
                     component: './qualityControl/instrumentManage',
                   },
-
                   // 质控仪 - 添加
                   {
                     name: 'instrumentAdd',

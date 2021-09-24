@@ -250,11 +250,36 @@ class Water extends PureComponent {
         dataIndex: 'ImportantType',
         key: 'ImportantType',
         render: (text, record) => {
-          if (text && text != "0") {
-            return ImportantTypeList.find(item => item.value == text)["text"]
+          if (text && text !== "0") {
+            // return ImportantTypeList.find(item => item.value == text)["text"]
+            const ImportantTypeLists = 
+              { "1": "污染处理厂",
+                '2': "水重点",
+                '3': "气重点",
+                '4': "垃圾焚烧"
+              }
+            let importVal = ''
+            let dataArr = text.split(',')
+            dataArr.map(item=>{
+              ImportantTypeList.map(items=>{
+                 if(item == items.value){
+                  importVal += `${ImportantTypeLists[item]}，`
+                 }
+              })
+            })
+            let _text = importVal.substring(0,importVal.length-1);
+            return _text || '-'
+            
+          }else{
+            return "-"
           }
-          return "-"
-        }
+        },
+        // render: (text, record) => {
+        //   if (text && text != "0") {
+        //     return ImportantTypeList.find(item => item.value == text)["text"]
+        //   }
+        //   return "-"
+        // }
         // width: 200,
       },
       {
@@ -345,11 +370,37 @@ class Water extends PureComponent {
         dataIndex: 'ImportantType',
         key: 'ImportantType',
         render: (text, record) => {
-          if (text && text != "0") {
-            return ImportantTypeList.find(item => item.value == text)["text"]
+          if (text && text !== "0") {
+            // return ImportantTypeList.find(item => item.value == text)["text"]
+            const ImportantTypeLists = 
+              { "1": "污染处理厂",
+                '2': "水重点",
+                '3': "气重点",
+                '4': "垃圾焚烧"
+              }
+            let importVal = ''
+            let dataArr = text.split(',')
+            dataArr.map(item=>{
+              ImportantTypeList.map(items=>{
+                 if(item == items.value){
+                  importVal += `${ImportantTypeLists[item]}，`
+                 }
+              })
+            })
+            let _text = importVal.substring(0,importVal.length-1);
+            return _text || '-'
+            
+          }else{
+            return "-"
           }
-          return "-"
-        }
+        },
+        // render: (text, record) => {
+        //   if (text && text != "0") {
+        //     return ImportantTypeList.find(item => item.value == text)["text"]
+        //   }
+        //   return "-"
+        // }
+
       },
       {
         title: '行业',
@@ -572,7 +623,7 @@ class Water extends PureComponent {
           </Form>
           {/* <Divider /> */}
           <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
-            <TabPane tab="师市排放量" key="region">
+            <TabPane tab="辖区排放量" key="region">
               <SdlTable loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">
