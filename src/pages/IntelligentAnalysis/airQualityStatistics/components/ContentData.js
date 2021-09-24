@@ -90,7 +90,7 @@ export default class Index extends Component {
         align: 'center',
         width:165,
         render: (text, record) => {
-          return !record.countDay ? '-' :  <div>{text.replace(/日/g,'').replace(/年|月/g,'/') }</div> 
+          return  <div>{text.replace(/日/g,'').replace(/年|月/g,'/') }</div> 
         },
       },
       {
@@ -98,9 +98,6 @@ export default class Index extends Component {
         dataIndex: 'CityName',
         key: 'CityName',
         align: 'center',
-        render: (text, record) => {
-          return !record.countDay ? '-' : text 
-        }, 
       },
       {
         title: '优',
