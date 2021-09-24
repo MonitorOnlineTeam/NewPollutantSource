@@ -1537,7 +1537,7 @@ const routes = [
                     //缺失数据报警响应率 企业
                     name: 'missingDataRate',
                     path: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
-                    component: './Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                    component: './IntelligentAnalysis/dataAlarm/missingDataRate/ent',
                   },
                   {
                     //缺失数据报警响应率 空气站
@@ -1563,7 +1563,7 @@ const routes = [
                   {
                     //超标数据核实率
                     path: '/Intelligentanalysis/dataAlarm/overVerifyRate',
-                    component: './Intelligentanalysis/dataAlarm/overVerifyRate',
+                    component: './IntelligentAnalysis/dataAlarm/overVerifyRate',
                   },
                   {
                     //超标数据核实率二级页面
@@ -1574,7 +1574,7 @@ const routes = [
                     //超标报警处置率
                     name: 'overAlarmDisposalRate',
                     path: '/Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
-                    component: './Intelligentanalysis/dataAlarm/overAlarmDisposalRate',
+                    component: './IntelligentAnalysis/dataAlarm/overAlarmDisposalRate',
                   },
                   {
                     //超标报警处置率-二级
@@ -1594,7 +1594,7 @@ const routes = [
                     // 运维工单统计（企业）
                     name: 'entWorkOrderStatistics',
                     path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                    component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                    component: './IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics',
                   },
                   {
                     //行政区运维工单统计（企业）
@@ -1617,7 +1617,7 @@ const routes = [
                   {
                     name: 'noAccountStatisticsEnt', //无台账上传统计 企业
                     path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
-                    component: './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
+                    component: './IntelligentAnalysis/operationWorkStatis/noAccountStatistics/ent',
                   },
                   /* 缺失台账照片统计 */
                   {
@@ -1809,6 +1809,17 @@ const routes = [
                   {
                     path: '/Intelligentanalysis/CO2Material/monthDischarge',
                     component: './IntelligentAnalysis/CO2Material/monthDischarge',
+                  },
+                ]
+              },
+              // 水泥行业
+              {
+                name: 'cement',
+                path: '/Intelligentanalysis/cement',
+                routes: [
+                  {
+                    path: '/Intelligentanalysis/cement/fossilFuel',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/fossilFuel',
                   },
                 ]
               },
@@ -2137,7 +2148,6 @@ const routes = [
                     path: '/qualityControl/qcaManager/instrumentManage',
                     component: './qualityControl/instrumentManage',
                   },
-
                   // 质控仪 - 添加
                   {
                     name: 'instrumentAdd',
