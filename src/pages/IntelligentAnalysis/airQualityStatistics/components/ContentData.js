@@ -90,7 +90,7 @@ export default class Index extends Component {
         align: 'center',
         width:165,
         render: (text, record) => {
-          return <div>{text.replace(/日/g,'').replace(/年|月/g,'/') }</div>;
+          return !record.countDay ? '-' :  <div>{text.replace(/日/g,'').replace(/年|月/g,'/') }</div> 
         },
       },
       {
@@ -98,6 +98,9 @@ export default class Index extends Component {
         dataIndex: 'CityName',
         key: 'CityName',
         align: 'center',
+        render: (text, record) => {
+          return !record.countDay ? '-' : text 
+        }, 
       },
       {
         title: '优',
@@ -108,7 +111,10 @@ export default class Index extends Component {
             dataIndex: 'youDay',
             key: 'youDay',
             align: 'center',
-            width:100,    
+            width:100,   
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            }, 
           },
           {
             title:'比率',
@@ -116,6 +122,9 @@ export default class Index extends Component {
             key: 'youRate',
             align: 'center',
             width:100,
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            },  
           },        
       ]
       },
@@ -128,7 +137,10 @@ export default class Index extends Component {
             dataIndex: 'liangDay',
             key: 'liangDay',
             align: 'center',
-            width:100,    
+            width:100,  
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            },   
           },
           {
             title:'比率',
@@ -136,6 +148,9 @@ export default class Index extends Component {
             key: 'liangRate',
             align: 'center',
             width:100,
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            }, 
           },        
       ]
       },  
@@ -148,7 +163,10 @@ export default class Index extends Component {
             dataIndex: 'qingDay',
             key: 'qingDay',
             align: 'center',
-            width:100,    
+            width:100, 
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            },    
           },
           {
             title:'比率',
@@ -156,6 +174,9 @@ export default class Index extends Component {
             key: 'qingRate',
             align: 'center',
             width:100,
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            }, 
           },        
       ]
       },  
@@ -168,7 +189,10 @@ export default class Index extends Component {
             dataIndex: 'zhongDay',
             key: 'zhongDay',
             align: 'center',
-            width:100,    
+            width:100,  
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            },   
           },
           {
             title:'比率',
@@ -176,6 +200,9 @@ export default class Index extends Component {
             key: 'zhongRate',
             align: 'center',
             width:100,
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            }, 
           },        
       ]
       },
@@ -188,7 +215,10 @@ export default class Index extends Component {
             dataIndex: 'zhongduDay',
             key: 'zhongduDay',
             align: 'center',
-            width:100,    
+            width:100, 
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            },    
           },
           {
             title:'比率',
@@ -196,6 +226,9 @@ export default class Index extends Component {
             key: 'zhongduRate',
             align: 'center',
             width:100,
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            }, 
           },        
       ]
       }, 
@@ -208,7 +241,10 @@ export default class Index extends Component {
             dataIndex: 'yanzhongDay',
             key: 'yanzhongDay',
             align: 'center',
-            width:100,    
+            width:100,   
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            },  
           },
           {
             title:'比率',
@@ -216,6 +252,9 @@ export default class Index extends Component {
             key: 'yanzhongRate',
             align: 'center',
             width:100,
+            render: (text, record) => {
+              return !record.countDay ? '-' : text 
+            }, 
           },        
       ]
       },
@@ -224,18 +263,27 @@ export default class Index extends Component {
         dataIndex: 'countDay',
         key: 'countDay',
         align: 'center',
+        render: (text, record) => {
+          return !record.countDay ? '-' : text 
+        }, 
       },
       {
         title: '优良天数',
         dataIndex: 'youliangDay',
         key: 'youliangDay',
         align: 'center',
+        render: (text, record) => {
+          return !text? '-' : text 
+        }, 
       },
       {
         title: '优良率',
         dataIndex: 'youliangRate',
         key: 'youliangRate',
         align: 'center',
+        render: (text, record) => {
+          return !record.countDay ? '-' : text 
+        }, 
       },           
     ]
   }
