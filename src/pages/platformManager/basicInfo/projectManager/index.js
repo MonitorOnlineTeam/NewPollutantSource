@@ -212,26 +212,26 @@ const Index = (props) => {
   const pointColumns = [
     {
       title: '监控目标',
-      dataIndex: 'ProjectID',
-      key:'ProjectID',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center'
     },
     {
       title: '监测点',
-      dataIndex: 'DGIMN',
-      key:'DGIMN',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
     },
     {
       title: '实际运营开始日期',
-      dataIndex: 'BeginTime',
-      key:'BeginTime',
+      dataIndex: 'beginTime',
+      key:'beginTime',
       align:'center',
     },
     {
       title: '实际运营结束日期',
-      dataIndex: 'EndTime',
-      key:'EndTime',
+      dataIndex: 'endTime',
+      key:'endTime',
       align:'center',
     },
   ]
@@ -330,12 +330,12 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
-  const handleTableChange =   async (PageIndex, )=>{ //分页
-    const values = await form.validateFields();
-    setPageSize(PageSize)
-    setPageIndex(PageIndex)
-    props.getProjectInfoList({...values,PageIndex,PageSize})
-  }
+  // const handleTableChange =   async (PageIndex,PageIndex )=>{ //分页
+  //   const values = await form.validateFields();
+  //   setPageSize(PageSize)
+  //   setPageIndex(PageIndex)
+  //   props.getProjectInfoList({...values,PageIndex,PageSize})
+  // }
   const searchComponents = () =>{
      return  <Form
     form={form}
@@ -409,12 +409,12 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        pagination={{
-          total:tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          onChange: handleTableChange,
-        }}
+        // pagination={{
+        //   total:tableTotal,
+        //   pageSize: pageSize,
+        //   current: pageIndex,
+        //   onChange: handleTableChange,
+        // }}
       />
    </Card>
    </BreadcrumbWrapper>
@@ -527,7 +527,7 @@ const Index = (props) => {
       </Modal>
 
       <Modal
-        title='添加合同'
+        title='运维监测点信息'
         visible={tableVisible}
         onCancel={()=>{setTableVisible(false)}}
         footer={null}

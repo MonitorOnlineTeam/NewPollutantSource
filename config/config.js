@@ -385,6 +385,21 @@ export default {
                     },
                   ]
                 },
+                { //配置信息
+                  name: 'basicInfo',
+                  path: '/platformconfig/configurationInfo',
+                  routes: [
+                    {
+                      path: '/platformconfig/configurationInfo',
+                      // redirect: '/platformconfig/configurationInfo/timerManage',
+                    },
+                    {
+                      name: 'timerManage',//定时器管理
+                      path: '/platformconfig/configurationInfo/timerManage',
+                      component: './platformManager/configurationInfo/timerManage',
+                    },
+                  ]
+                },
                 {
                   // 设备管理
                   name: 'equipmentManage',
