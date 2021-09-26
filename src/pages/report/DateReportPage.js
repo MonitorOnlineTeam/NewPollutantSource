@@ -46,10 +46,8 @@ class DateReportPage extends PureComponent {
       columns: [],
       currentDate: moment().add(-1, 'day'),
       defaultRegionCode: [],
-      beginTime: moment()
-        .add(-1, 'day')
-        .format('YYYY-MM-DD 01:00:00'),
-      endTime: moment().format('YYYY-MM-DD 00:00:00'),
+      beginTime: moment().add(-1, 'day').format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().add(-1, 'day').format('YYYY-MM-DD 23:59:59'),
       regions:''
     };
     this.SELF = {
@@ -231,14 +229,11 @@ class DateReportPage extends PureComponent {
     const reportTime = this.props.form.getFieldValue('ReportTime');
     let beginTime;
     let endTime;
-
     const time = pollutantType != 5 ? reportTime : moment();
     switch (reportType) {
       case 'siteDaily':
-        beginTime = moment(time).format('YYYY-MM-DD 01:00:00');
-        endTime = moment(time)
-          .add(1, 'day')
-          .format('YYYY-MM-DD 00:00:00');
+        beginTime = moment(time).format('YYYY-MM-DD 00:00:00');
+        endTime = moment(time).format('YYYY-MM-DD 23:59:59');
         break;
       case 'monthly':
         beginTime = moment(time).format('YYYY-MM-01 00:00:00');
@@ -326,8 +321,8 @@ class DateReportPage extends PureComponent {
   rangeOnchange = dates => {
     this.props.form.setFieldsValue({ airReportTime: dates });
     this.setState({
-      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: dates[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: dates[1].format('YYYY-MM-DD 23:59:59'),
     });
   };
   changeRegion=(value)=>{
