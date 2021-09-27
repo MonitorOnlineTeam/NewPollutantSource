@@ -185,7 +185,7 @@ class SdlForm extends PureComponent {
     const { configId, isEdit } = this._SELF_;
     const formItems = addFormItems[configId] || [];
     const formData = isEdit ? (editFormData[configId] || {}) : {};
-    if (value !== formData[rule.field]) {
+    if (value && value !== formData[rule.field]) {
       this.props.dispatch({
         type: "autoForm/checkRepeat",
         payload: {

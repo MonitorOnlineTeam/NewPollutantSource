@@ -6,7 +6,7 @@
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
-import { Card, Row, Col, Badge, Divider, Tag, Modal, Input, InputNumber, message, Spin } from "antd";
+import { Card, Row, Col, Badge, Divider, Tag, Modal, Input, InputNumber, message, Spin, Popconfirm, Radio } from "antd";
 import styles from "../index.less"
 import { connect } from "dva"
 import CheckModal from "@/pages/dataSearch/qca/components/CheckModal"
@@ -15,10 +15,14 @@ import { LoadingOutlined, CheckCircleFilled, CloseCircleFilled, ExclamationCircl
 import PageLoading from "@/components/PageLoading"
 import { gasPollutantList } from "@/utils/CONST"
 const pollutantCodeList = {
-  "a21026": { name: "SO2", unit: "mg/m3" },
-  "a21002": { name: "NOx", unit: "mg/m3" },
-  "a19001": { name: "O2", unit: "%" },
-  "30": { name: "二氧化碳", unit: "mg/m³" },
+  "a21026": { name: "SO₂", unit: "mg/m³" },
+  "a21002": { name: "NOx", unit: "mg/m³" },
+  "a19001": { name: "O₂", unit: "%" },
+  "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
+  "a05002": { name: "CH₄", unit: "mg/m³" },  // 甲烷
+  "a24002": { name: "C₃H₈", unit: "mg/m³" },  // 丙烷
+  "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
+  "065": { name: "N₂", unit: "mg/m³" },
 }
 
 const { confirm } = Modal;
@@ -37,8 +41,8 @@ const QCStatusList = {
 const CheckTypeList = [
   { id: 3101, name: "零点核查" },
   { id: 3102, name: "量程核查" },
-  { id: 3104, name: "线性核查" },
-  { id: 3105, name: "盲样核查" },
+  // { id: 3104, name: "线性核查" },
+  // { id: 3105, name: "盲样核查" },
   { id: 3103, name: "响应时间核查" },
 ]
 @connect(({ qcManual, qcaCheck, loading }) => ({
@@ -57,7 +61,8 @@ const CheckTypeList = [
 }))
 class ManualQualityPage extends Component {
   state = {
-    currentRowData: {}
+    currentRowData: {},
+    GasPathMode: 0,
   }
 
   componentDidMount() {
@@ -180,7 +185,8 @@ class ManualQualityPage extends Component {
         PollutantCode: PollutantCode,
         QCAType: QCAType,
         Method: 1,
-        StandardValue: StandardValue
+        StandardValue: StandardValue,
+        GasPathMode: this.state.GasPathMode,
       },
       callback: () => {
         this.setState({ MYVisible: false })
@@ -373,7 +379,7 @@ class ManualQualityPage extends Component {
     if (loading) {
       return <PageLoading />
     }
-    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType } = this.state;
+    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType, GasPathMode } = this.state;
     return (
       <Card>
         <Row>
@@ -398,8 +404,25 @@ class ManualQualityPage extends Component {
                         if (check.id === 3105) {
                           return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.id) }}> 盲样核查 </div>
                         }
-                        return <div key={idx} onClick={() =>
-                          this.sendQCACheckCMD(item.GasCode, check.id)} className={styles.button}> {check.name} </div>
+                        return <Popconfirm
+                          key={idx}
+                          title={
+                            <div>
+                              <p>
+                                气路模式：
+                                <Radio.Group value={GasPathMode} onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
+                                  <Radio value={0}>全程校验</Radio>
+                                  <Radio value={1}>系统校验</Radio>
+                                </Radio.Group>
+                              </p>
+                            </div>
+                          }
+                          onConfirm={() =>
+                            this.sendQCACheckCMD(item.GasCode, check.id)
+                          }
+                        >
+                          <div key={idx} className={styles.button}> {check.name} </div>
+                        </Popconfirm>
                       })
                     }
                     {/* <div className={styles.button}> 响应时间核查 </div> */}
@@ -494,18 +517,32 @@ class ManualQualityPage extends Component {
         <Modal
           title="盲样核查"
           visible={this.state.MYVisible}
+          // visible={true}
           onOk={this.onMYClick}
           onCancel={() => this.setState({ MYVisible: false })}
         >
           <div>
-            <InputNumber style={{ width: '100%', marginBottom: 4 }} placeholder="请输入盲样核查浓度" onChange={(value) => {
-              this.setState({
-                value: value
-              })
-            }} />
-            <span style={{ color: "#656565", fontSize: 13 }}>
-              <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${MYMin}-${MYMax} 】之间`}
-            </span>
+            <p style={{ marginBottom: 18 }}>
+              气路模式：
+              <Radio.Group value={GasPathMode} onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
+                <Radio value={0}>全程校验</Radio>
+                <Radio value={1}>系统校验</Radio>
+              </Radio.Group>
+            </p>
+          </div>
+          <div>
+            <span style={{ float: 'left', marginTop: 6 }}>核查浓度：</span>
+            <div style={{ display: 'inline-block', width: '80%' }}>
+              <InputNumber style={{ width: '100%', marginBottom: 4 }} placeholder="请输入盲样核查浓度" onChange={(value) => {
+                this.setState({
+                  value: value
+                })
+              }} />
+              <br />
+              <span style={{ color: "#656565", fontSize: 13 }}>
+                <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${MYMin}-${MYMax} 】之间`}
+              </span>
+            </div>
           </div>
         </Modal>
       </Card>

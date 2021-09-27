@@ -57,31 +57,37 @@ class AddInstrument extends Component {
         {
           title: '排口',
           dataIndex: 'DGIMN',
-          render: (text, record, index) => <FormItem style={{ marginBottom: '0' }}>
-            {this.props.form.getFieldDecorator(`DGIMN${record.key}`, {
-              rules: [
-                { required: true, message: '请输入排口' },
-              ],
-              initialValue: record.DGIMNArr || text,
-            })(
-              <Cascader
-                style={{ width: '70%' }}
-                showSearch
-                // disabled={this.state.dataSource[index].find(item => item.DGIMN == )}
-                options={this.state.entAndPointList}
-                fieldNames={this.state.entAndPointList.length ? { label: 'title', value: 'key', children: 'children' } : { label: 'label', value: 'value', children: 'children' }}
-                onChange={(value, selectedOptions) => {
-                  const dataSource = [...this.state.dataSource];
-                  dataSource[index]['DGIMN'] = value[1];
-                  dataSource[index]['DGIMNArr'] = value;
-                  this.setState({ dataSource }, () => {
-                    this.handleCascaderDisable(this.state.entAndPointList)
-                  });
-                }}
-                placeholder="请选择排口"
-              />,
-            )}
-          </FormItem>,
+          render: (text, record, index) => {
+            // console.log('record.DGIMNArr=',record.DGIMNArr)
+            return <FormItem style={{ marginBottom: '0' }}>
+              {this.props.form.getFieldDecorator(`DGIMN${record.key}`, {
+                rules: [
+                  { required: true, message: '请输入排口' },
+                ],
+                initialValue: record.DGIMNArr || text,
+              })(
+                <Cascader
+                  style={{ width: '70%' }}
+                  showSearch
+                  // disabled={!this.state.entAndPointList.length}
+                  options={this.state.entAndPointList}
+                  fieldNames={this.state.entAndPointList.length ? { label: 'title', value: 'key', children: 'children' } : { label: 'label', value: 'value', children: 'children' }}
+                  onChange={(value, selectedOptions) => {
+                    if (this.state.entAndPointList && this.state.entAndPointList.length) {
+                      console.log('value=', value)
+                      const dataSource = [...this.state.dataSource];
+                      dataSource[index]['DGIMN'] = value[1];
+                      dataSource[index]['DGIMNArr'] = value;
+                      this.setState({ dataSource }, () => {
+                        this.handleCascaderDisable(this.state.entAndPointList)
+                      });
+                    }
+                  }}
+                  placeholder="请选择排口"
+                />,
+              )}
+            </FormItem>
+          }
         },
         {
           title: '操作',

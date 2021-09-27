@@ -2148,6 +2148,12 @@ const routes = [
                     path: '/qualityControl/qcaManager/instrumentManage',
                     component: './qualityControl/instrumentManage',
                   },
+                   // 质控标准要求管理
+                   {
+                    name: 'qcaStandardRequest',
+                    path: '/qualityControl/qcaManager/qcaStandardRequest',
+                    component: './qualityControl/qcaStandardRequest',
+                  },
                   // 质控仪 - 添加
                   {
                     name: 'instrumentAdd',
@@ -2165,6 +2171,12 @@ const routes = [
                     name: 'instrumentView',
                     path: '/qualityControl/qcaManager/instrumentManage/view/:id',
                     component: './qualityControl/instrumentManage/ViewInstrument',
+                  },
+                  // 气瓶关联
+                  {
+                    name: 'instrumentView',
+                    path: '/qualityControl/qcaManager/gasJoin',
+                    component: './qualityControl/gasJoin',
                   },
                   // 工作模式 - 列表
                   {

@@ -3,13 +3,15 @@ import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Card, Spin, message, Empty, Radio, Row, Col, Button } from 'antd';
+import { Card, Spin, message, Empty, Radio, Row, Col, Button, Select } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
 import PollutantSelect from '@/components/PollutantSelect'
 import SdlTable from '@/components/SdlTable'
 
+
+const { Option } = Select;
 @Form.create()
 /**
  * 数据查询组件
@@ -33,6 +35,7 @@ class DataQuery extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            searchDataType: 1,
             displayType: 'data',
             displayName: '查看数据',
             rangeDate: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
@@ -267,7 +270,9 @@ class DataQuery extends Component {
         })
         dispatch({
             type: 'dataquery/queryhistorydatalist',
-            payload: {},
+            payload: {
+                searchDataType: this.state.searchDataType
+            },
         });
     }
 
@@ -281,7 +286,11 @@ class DataQuery extends Component {
         const {
             dispatch,
         } = this.props;
-        this.getpointpollutants(dgimn);
+        this.setState({
+            searchDataType: 1
+        }, () => {
+            this.getpointpollutants(dgimn);
+        })
 
         // let { historyparams } = this.props;
         // this.children.onDataTypeChange(this.state.dataType);
@@ -439,8 +448,8 @@ class DataQuery extends Component {
     }
 
     render() {
-        const { dataType, dateValue, displayType } = this.state;
-        const { pointName, entName, pollutantlist } = this.props;
+        const { dataType, dateValue, displayType, searchDataType } = this.state;
+        const { pointName, entName, pollutantlist, Type } = this.props;
         let flag = "", mode = [];
         if (pollutantlist && pollutantlist[0]) {
             flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
@@ -498,6 +507,14 @@ class DataQuery extends Component {
                                             //     allowClear={false} showTime={this.state.format} />
                                         }
                                     </Form.Item>
+                                    {
+                                        Type === '5' && <Form.Item style={{ marginRight: 5 }}>
+                                            <Select style={{ width: 100 }} value={searchDataType} onChange={(value) => { this.setState({ searchDataType: value }) }}>
+                                                <Option value={1}>原始</Option>
+                                                <Option value={2}>审核</Option>
+                                            </Select>
+                                        </Form.Item>
+                                    }
                                     <Form.Item style={{ marginRight: 5 }}>
                                         <Button type="primary" loading={false} onClick={() => { this.reloaddatalist() }} style={{ marginRight: 10 }}>查询</Button>
                                         <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>

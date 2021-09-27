@@ -28,12 +28,15 @@ const QCStatusList = {
 }
 
 const pollutantCodeList = {
-  "a21026": { name: "SO2", unit: "mg/m3" },
-  "a21002": { name: "NOx", unit: "mg/m3" },
-  "a19001": { name: "O2", unit: "%" },
-  "30": { name: "二氧化碳", unit: "mg/m³" },
+  "a21026": { name: "SO₂", unit: "mg/m³" },
+  "a21002": { name: "NOx", unit: "mg/m³" },
+  "a19001": { name: "O₂", unit: "%" },
+  "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
+  "a05002": { name: "CH₄", unit: "mg/m³" },  // 甲烷
+  "a24002": { name: "C₃H₈", unit: "mg/m³" },  // 丙烷
+  "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
+  "065": { name: "N₂", unit: "mg/m³" },
 }
-
 @connect(({ loading, qcManual, qualityControlModel }) => ({
   gasData: qcManual.gasData,
   valveStatus: qcManual.valveStatus,
