@@ -126,7 +126,7 @@ export default class EntTransmissionEfficiency extends Component {
           // const percent = interceptTwo(Number(text) * 100);
           const percent = interceptTwo(text);
           if(this.props.isWorkRate){ // 运转率 
-            if (record.ShouldNumber==0) {
+            if (record.ShouldRunTime==0) {
               return <span>停运</span>;
             }
            if (percent >= 90) {
@@ -159,6 +159,9 @@ export default class EntTransmissionEfficiency extends Component {
         width: 145,
         align: 'center',
         render: (text, record) => {
+          if(this.props.isWorkRate&&record.ShouldRunTime==0){ // 运转率 
+              return <span>停运</span>;
+          }
           if (record.ShouldNumber==0) {
             return <span>停运</span>;
           }else{
