@@ -39,7 +39,7 @@ export default Model.extend({
     dataAuditDataSource: [],
     dataFlagDataSource: [],
     tagTableTotal: 0,
-    CO2SumData:[{},{},{},{},{},{}],
+    CO2SumData: [{}, {}, {}, {}, {}, {}],
   },
   effects: {
     * querypollutantlist({ payload, callback,
@@ -100,7 +100,11 @@ export default Model.extend({
       //     historyparams.payloadpollutantCode = pollutantlist[0].PollutantCode;
       //     historyparams.payloadpollutantName = pollutantlist[0].PollutantName;
       // }
-      const resultlist = yield call(queryhistorydatalist, _historyparams);
+      const resultlist = yield call(queryhistorydatalist, {
+        ..._historyparams,
+        DGIMNs: payload.searchDataType === 1 ? _historyparams.DGIMNs : _historyparams.DGIMNs + '_check',
+        DGIMN: payload.searchDataType === 1 ? _historyparams.DGIMNs : _historyparams.DGIMNs + '_check'
+      });
       const result = resultlist.Datas;
       if (result && result.length === 0) {
         yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
@@ -217,7 +221,7 @@ export default Model.extend({
             }
           },
         }];
-        if (result && result[0] && result[0].PollutantType === '5AQI') {
+        if (result && result[0] && result[0].PollutantType === '5AQI' || payload.searchDataType === 2) {
           columns = columns.concat({
             title: 'AQI',
             dataIndex: 'AQI',
