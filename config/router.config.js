@@ -1899,6 +1899,12 @@ const routes = [
                     path: '/dataSearch/qca/resTimeCheck',
                     component: './dataSearch/qca/resTimeCheck',
                   },
+                  {
+                    // 示值误差核查
+                    name: 'errorValueCheck',
+                    path: '/dataSearch/qca/errorValueCheck',
+                    component: './dataSearch/qca/errorValueCheck',
+                  },
                 ]
               },
               // {

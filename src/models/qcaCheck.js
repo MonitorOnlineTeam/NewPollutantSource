@@ -148,6 +148,25 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取示值误差核查数据
+    *getErrorValueDataList({ payload, }, { call, update, put, take, select }) {
+      const result = yield call(services.getErrorValueDataList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          errorValueCheckTableData: result.Datas.rtnData,
+          // errorValueCheckAllData
+          // blindCheckChartAllData: result.Datas.codeList,
+          errorValueChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
+            PollutantCode: "",
+            dataList: [],
+            standard: { top: 0, lower: 0 },
+            timeList: [],
+          }
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
     // 获取线性核查数据
     *getLinearDataList({ payload, }, { call, update, put, take, select }) {
       const result = yield call(services.getLinearDataList, payload);

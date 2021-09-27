@@ -4,7 +4,7 @@ import SdlTable from '@/components/SdlTable'
 import { connect } from "dva"
 import moment from "moment"
 import QuestionTooltip from "@/components/QuestionTooltip"
-import BlindCheckChart from "./BlindCheckChart"
+import ErrorValueChart from "./ErrorValueChart"
 import CheckModal from "../components/CheckModal"
 import _ from "lodash"
 
@@ -16,7 +16,7 @@ const workMode = {
 }
 
 @connect(({ qcaCheck, loading }) => ({
-  blindCheckTableData: qcaCheck.blindCheckTableData,
+  errorValueCheckTableData: qcaCheck.errorValueCheckTableData,
   pollutantList: qcaCheck.pollutantList,
   checkModalVisible: qcaCheck.checkModalVisible,
   tableLoading: loading.effects['qcaCheck/getBlindDataList'],
@@ -158,7 +158,7 @@ class BlindCheckPage extends PureComponent {
     const { DGIMN } = this.props;
     const fieldsValue = this.formRef.current.getFieldsValue();
     this.props.dispatch({
-      type: "qcaCheck/getBlindDataList",
+      type: "qcaCheck/getErrorValueDataList",
       payload: {
         beginTime: fieldsValue["time"] ? fieldsValue["time"][0].format('YYYY-MM-DD HH:mm:ss') : undefined,
         endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
@@ -179,7 +179,7 @@ class BlindCheckPage extends PureComponent {
         endTime: fieldsValue["time"] ? fieldsValue["time"][1].format('YYYY-MM-DD HH:mm:ss') : undefined,
         DGIMN: DGIMN,
         PollutantCode: fieldsValue["PollutantCode"],
-        exportType: "exportSampleDataList"
+        exportType: "exportErrorValueCheck"
       }
     })
   }
@@ -188,7 +188,7 @@ class BlindCheckPage extends PureComponent {
   render() {
     const { columns } = this._SELF_;
     const { currentRowData } = this.state;
-    const { checkModalVisible, exportLoading, DGIMN, blindCheckTableData, pollutantList, tableLoading, pointName } = this.props;
+    const { checkModalVisible, exportLoading, DGIMN, errorValueCheckTableData, pollutantList, tableLoading, pointName } = this.props;
     let pollutantCodeList = "";
     if (this.formRef.current) {
       pollutantCodeList = this.formRef.current.getFieldValue("PollutantCode")
@@ -237,8 +237,8 @@ class BlindCheckPage extends PureComponent {
         </Form>
         {/* <Spin spinning={tableLoading}> */}
           <Tabs type="card">
-            <TabPane tab="盲样核查" key="1">
-              <SdlTable loading={tableLoading} dataSource={blindCheckTableData} columns={columns}
+            <TabPane tab="示值误差核查" key="1">
+              <SdlTable loading={tableLoading} dataSource={errorValueCheckTableData} columns={columns}
                 onRow={record => {
                   return {
                     onClick: event => {
@@ -259,8 +259,8 @@ class BlindCheckPage extends PureComponent {
                 }}
               />
             </TabPane>
-            <TabPane tab="盲样核查数据图表" key="2">
-              <BlindCheckChart pollutantCodeList={pollutantCodeList} />
+            <TabPane tab="示值误差核查数据图表" key="2">
+              <ErrorValueChart pollutantCodeList={pollutantCodeList} />
             </TabPane>
           </Tabs>
         {/* </Spin> */}

@@ -72,6 +72,17 @@ export async function exportLinearDataList(params) {
   return result;
 }
 
+// 获取示值误差核查数据
+export async function getErrorValueDataList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/getErrorValueDataList', params, null);
+  return result;
+}
+
+// 导出 - 示值误差核查数据
+export async function exportErrorValueCheck(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/exportErrorValueCheck', params, null);
+  return result;
+}
 
 
 

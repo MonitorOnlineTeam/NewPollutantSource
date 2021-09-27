@@ -112,7 +112,7 @@ class ManualQualityPage extends Component {
           realtimeStabilizationTime: {},
         }
       })
-      this.getMargin();
+      // this.getMargin();
     }
   }
 
@@ -397,7 +397,7 @@ class ManualQualityPage extends Component {
                   return <div key={item.pollutantName} className={styles.pollutantContent}>
                     <div className={styles.pollutantInfo}>
                       <p className={styles.pollutantName}>{item.PollutantName}</p>
-                      <p style={{ color: "rgb(24, 144, 255)", lineHeight: "44px" }}>标气余量：{marginData[item.GasCode]} L</p>
+                      <p style={{ color: "rgb(24, 144, 255)", lineHeight: "44px" }}>标气余量：{item.Allowance} L</p>
                     </div>
                     {
                       CheckTypeList.map((check, idx) => {
