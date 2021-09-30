@@ -77,7 +77,9 @@ export default class EntTransmissionEfficiency extends Component {
     
     this.state = {
       day:7,
-      accountTitle:''
+      accountTitle:'',
+      pollutantVal:'',
+      afterSaleVal:''
     };
     
     this.columns = [
@@ -160,7 +162,7 @@ export default class EntTransmissionEfficiency extends Component {
             return (
               <div>
                 <Progress
-                  percent={text.replace("%","")}
+                  percent={text&&text.replace("%","")}
                   size="small"
                   style={{width:'90%'}}
                   status='normal'
@@ -404,6 +406,13 @@ export default class EntTransmissionEfficiency extends Component {
         }
       });
     }
+    pollChange=(val)=>{
+     this.setState({pollutantVal:val?val:undefined})
+    }
+    afterSaleChange=(val)=>{
+      this.setState({afterSaleVal:val?val:undefined})
+
+    }
     getUserDataFun = (row,type) =>{
       const { day } = this.state;
       this.setState({activetyType:type})
@@ -460,6 +469,26 @@ export default class EntTransmissionEfficiency extends Component {
                <Radio.Button value={14}>近14日内</Radio.Button>
                <Radio.Button value={30}>近30日内</Radio.Button>
              </Radio.Group>
+
+            </Form.Item>
+            <Form.Item>
+            <Select placeholder='请选择污染源' onChange={this.pollChange}>
+              {/* {
+                ss.map(item=>{
+                return <Option value={item.ss}>{item.ss}</Option>
+                })
+              } */}
+            </Select>
+
+            </Form.Item>
+            <Form.Item>
+            <Select placeholder='请选择售服务' onChange={this.afterSaleChange}>
+              {/* {
+                ss.map(item=>{
+                return <Option value={item.ss}>{item.ss}</Option>
+                })
+              } */}
+            </Select>
 
             </Form.Item>
              <Form.Item>

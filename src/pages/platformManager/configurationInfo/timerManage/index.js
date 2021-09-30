@@ -249,7 +249,7 @@ const Index = (props) => {
      </Form>
   }
   return (
-    <div  className={styles.projectManagerSty}>
+    <div  className={styles.timerManageSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable

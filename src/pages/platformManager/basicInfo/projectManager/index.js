@@ -375,7 +375,6 @@ const Index = (props) => {
           <Form.Item name='EndTime' label='运营结束日期' format='YYYY-MM-DD 23:59:59'>
           <RangePicker style={{width:'100%'}} 
            showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
-          />
           </Form.Item>
         </Col></>}
         </Row>   

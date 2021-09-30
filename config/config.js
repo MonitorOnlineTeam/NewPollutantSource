@@ -1730,6 +1730,16 @@ export default {
                   name: 'operationExpirePoint',
                   path: '/Intelligentanalysis/operationExpirePoint',
                   component: './Intelligentanalysis/operationExpirePoint',
+                },
+                { //异常工单统计
+                  name: 'abnormalWorkStatistics',
+                  path: '/Intelligentanalysis/abnormalWorkStatistics',
+                  component: './Intelligentanalysis/abnormalWorkStatistics',
+                },
+                { //异常工单统计 市一级
+                  name: 'abnormalWorkStatistics',
+                  path: '/Intelligentanalysis/abnormalWorkStatistics/regionDetail',
+                  component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
                 }
               ],
 

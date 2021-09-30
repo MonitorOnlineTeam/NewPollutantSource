@@ -161,7 +161,7 @@ export default class EntTransmissionEfficiency extends Component {
             return (
               <div>
                 <Progress
-                  percent={text.replace("%","")}
+                  percent={text&&text.replace("%","")}
                   size="small"
                   style={{width:'90%'}}
                   status='normal'
