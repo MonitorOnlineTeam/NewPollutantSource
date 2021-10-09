@@ -34,6 +34,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
   exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
+  abnormalTypes:abnormalWorkStatistics.abnormalTypes
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -76,7 +77,7 @@ const Index = (props) => {
   const [data, setData] = useState([]);
 
 
-  const [tableVisible,setTableVisible] = useState(false)
+  const [abnormalNumVisible,setAbnormalNumVisible] = useState(false)
 
 
   const [pageSize,setPageSize] = useState(20)
@@ -85,9 +86,9 @@ const Index = (props) => {
   const [aa,setAa] = useState(['周一','周二','周三','周四','周五','周六','周日'])
 
   
-  const isEditing = (record) => record.key === editingKey;
+
   
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,abnormalTypes } = props; 
   useEffect(() => {
 
   
@@ -228,7 +229,10 @@ const Index = (props) => {
       }
     },
   ];
-  const cityColumns = [
+  
+  
+  
+  const reponseNumColumns = [
     {
       title: '省/市',
       dataIndex: 'ProjectName',
@@ -253,20 +257,12 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '打卡异常数',
+      title: '响应超时数',
       dataIndex: 'RegionName',
       key:'RegionName',
       align:'center',
-    },
+    }
   ];
- 
-
-
-
-
-  
-  
-
 
  
  const abnormalExports = () => {
@@ -274,7 +270,7 @@ const Index = (props) => {
 };
 const abnormalNum = () =>{
 
-   setTableVisible(true)
+  setAbnormalNumVisible(true)
     
 
 }
@@ -327,8 +323,8 @@ const abnormalNum = () =>{
      </Form>
   }
 
-  cityColumns.push({
-    title: '计划异常工单分布',
+  reponseNumColumns.push({
+    title: '报警响应超时工单分布',
     width:200, 
     align:'center',
     children:aa.map((item,index)=>{
@@ -345,7 +341,9 @@ const abnormalNum = () =>{
         }]
       }
     })
-})
+  })
+
+  const type = 1;
   return (
       <div>
       <SdlTable
@@ -356,30 +354,29 @@ const abnormalNum = () =>{
         pagination={false}
       />
    
-      <Modal
+  {/**打卡异常 响应超时 弹框 */}
+  <Modal
         title={'河南省新乡市'}
-        visible={tableVisible}
-        onCancel={()=>{setTableVisible(false)}}
+        visible={abnormalNumVisible}
+        onCancel={()=>{setAbnormalNumVisible(false)}}
         footer={null}
         destroyOnClose
         centered
         width='90%'
       >
-     <Card title={searchComponents()}>
-     <SdlTable
-        loading = {tableLoading}
-        bordered
-        dataSource={tableDatas}
-        columns={cityColumns}
-        pagination={{
-          showSizeChanger: true,
-          showQuickJumper: true,
-          // onChange: handleTableChange,
-      }}
-      />
+     <Card title={abnormalTypes==1? '' : searchComponents()}>
+     {abnormalTypes ==1?  '地图':
+      <SdlTable
+      loading = {tableLoading}
+      bordered
+      dataSource={tableDatas}
+      columns={reponseNumColumns}
+      pagination={false}
+    />
+  }
+     
    </Card>
- 
-      </Modal>
+   </Modal>
         </div>
   );
 };

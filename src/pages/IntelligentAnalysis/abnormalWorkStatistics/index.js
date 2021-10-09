@@ -3,7 +3,7 @@
  * 创建人：贾安波
  * 创建时间：2021.09.27
  */
-import React, { useState,useEffect,Fragment  } from 'react';
+import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined } from '@ant-design/icons';
@@ -50,8 +50,8 @@ const  dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
+  const pchildref = useRef();
   const [form] = Form.useForm();
-  const [form2] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
@@ -76,7 +76,7 @@ const Index = (props) => {
  };
 
  const entExports =  async () => {
-  const values =   await form2.validateFields();
+  const values =   await form.validateFields();
   props.exportProjectInfoList({
     ...values,
   })
@@ -87,22 +87,13 @@ const Index = (props) => {
       
     try {
       const values = await form.validateFields();
-      if(values.time[1].diff(values.time[0], 'days') <= 7){
-        props.getProjectInfoList({
-          ...values,
-        })
-      }else{
-        message.warning('日期单位不能超过90天，请重新选择')
-      }
-
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
-  const onFinish2  = async () =>{  //查询
-    try {
-      const values = await form.validateFields();
+      console.log (values)
       if(values.time[1].diff(values.time[0], 'days') <= 90){
+
+        // showType==1
+       props.updateState({
+         abnormalTypes:values.abnormalType
+       }) 
         props.getProjectInfoList({
           ...values,
         })
@@ -116,41 +107,44 @@ const Index = (props) => {
   }
 
 
-  const onOpenChange = open => {
-    if (open) {
-      setHackValue([]);
-      setDates([]);
-    } else {
-      setHackValue(undefined);
-    }
-  };
+
+
+  const abnormalTypeChange = (values) =>{
+    // pchildref.current._childFn(values);
+  }
   const searchComponents = () =>{
-    if(showType==1){
      return <Form
     form={form}
     name="advanced_search"
     onFinish={onFinish}
+    initialValues={{
+      pointType:1,
+      abnormalType:1,
+      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
+    }}
   >  
-      <Row  align='middle'>
-      <Form.Item name='time'>
-          <RangePicker  style={{width:'100%'}} 
+    {showType==1? <Row  align='middle'>
+      <Form.Item name='time' label='日期'>
+          <RangePicker   style={{width:'100%'}} 
                         allowClear={false}
                         showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
      </Form.Item>
-      <Form.Item name='EndTime' style={{padding:'0 8px'}}>
+      <Form.Item label = '监测点类型' name='pointType' style={{padding:'0 8px'}}>
          <Select placeholder='监测点类型'>
             <Option value={1}>废水</Option>
             <Option value={2}>废气</Option>
             </Select>
         </Form.Item>
-        <Form.Item name='EndTime'  style={{paddingRight:'8px'}}>
-            <Select placeholder='异常类型'>
+        <Form.Item label='异常类型' name='abnormalType'  style={{paddingRight:'8px'}}>
+            <Select style={{width:150}} placeholder='异常类型'  onChange={abnormalTypeChange}>
               {/* {
                 ss.map(item=>{
                 return <Option value={item.ss}>{item.ss}</Option>
                 })
               } */}
+                <Option value={1}>打卡异常</Option>
+                <Option value={2}>报警响应超时率</Option>
             </Select>
         </Form.Item>
         <Form.Item>
@@ -168,68 +162,62 @@ const Index = (props) => {
       <Radio.Button value="2">企业</Radio.Button>
     </Radio.Group>
     </Form.Item>
-      </Row>   
-     </Form>
-    }else{
-      return <Form
-      form={form2}
-      name="advanced_search"
-      onFinish={onFinish2}
-    >  
-        <Row  align='middle'>
-        <Form.Item label='日期' name='EndTime' format='YYYY-MM-DD 23:59:59' style={{paddingRight:'16px'}}>
-            <RangePicker style={{width:'100%'}} 
-             showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+      </Row> 
+      :
+      <>
+      <Row  align='middle'>
+      <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
+         <RangePicker style={{width:'100%'}} 
+          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+    </Form.Item> 
+     <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px'}}>
+         <Input placeholder='请输入企业名称'  allowClear/>
        </Form.Item>
-        <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px'}}>
-            <Input placeholder='请输入企业名称'  allowClear/>
-          </Form.Item>
-          <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:'16px'}}>
-             <RegionList />
-          </Form.Item>
-          </Row>
-          <Row style={{paddingTop:12}}>
-          <Form.Item name='abnormal'  label='异常类型' style={{paddingRight:'16px'}}>
-              <Select placeholder='异常类型' style={{width:150}}>
-                {/* {
-                  ss.map(item=>{
-                  return <Option value={item.ss}>{item.ss}</Option>
-                  })
-                } */}
-              </Select>
-          </Form.Item>
-          <Form.Item label='监测点类型' name='EndTime'  style={{paddingRight:'16px'}}>
-           <Select placeholder='监测点类型' style={{width:150}}>
-              <Option value={1}>废水</Option>
-              <Option value={2}>废气</Option>
-              </Select>
-          </Form.Item>
+       <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:'16px'}}>
+          <RegionList />
+       </Form.Item>
+       </Row>
+       <Row style={{paddingTop:12}}>
+       <Form.Item name='abnormalType'  label='异常类型' style={{paddingRight:'16px'}}>
+           <Select placeholder='异常类型' style={{width:150}} onChange={abnormalTypeChange}>
+             <Option value={1}>打卡异常</Option>
+             <Option value={2}>报警响应超时率</Option>
+           </Select>
+       </Form.Item>
+       <Form.Item label='监测点类型' name='pointType'  style={{paddingRight:'16px'}}>
+        <Select placeholder='监测点类型' style={{width:150}}>
+           <Option value={1}>废水</Option>
+           <Option value={2}>废气</Option>
+           </Select>
+       </Form.Item>
 
-          <Form.Item>
-       <Button  type="primary" htmlType='submit' >
-            查询
-       </Button>
-       <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ entExports()} }>
-              导出
-       </Button> 
-       
-       </Form.Item>
-       
        <Form.Item>
-       <Radio.Group  value={showType} onChange={showTypeChange} buttonStyle="solid">
-        <Radio.Button value="1">行政区</Radio.Button>
-        <Radio.Button value="2">企业</Radio.Button>
-      </Radio.Group>
-      </Form.Item>
-        </Row>   
-       </Form> 
-    }
+    <Button  type="primary" htmlType='submit' >
+         查询
+    </Button>
+    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ entExports()} }>
+           导出
+    </Button> 
+    
+    </Form.Item>
+    
+    <Form.Item>
+    <Radio.Group  value={showType} onChange={showTypeChange} buttonStyle="solid">
+     <Radio.Button value="1">行政区</Radio.Button>
+     <Radio.Button value="2">企业</Radio.Button>
+   </Radio.Group>
+   </Form.Item>
+            </Row>   
+            </>
+            }  
+     </Form>
+    
   }
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
-      {showType==1? <Region /> : <Ent />}
+      {showType==1? <Region {...props} ref={pchildref}/> : <Ent />}
    </Card>
    </BreadcrumbWrapper>
    

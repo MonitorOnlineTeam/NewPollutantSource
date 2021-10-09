@@ -3,7 +3,7 @@
  * 创建人：贾安波
  * 创建时间：2021.09.27
  */
-import React, { useState,useEffect,Fragment  } from 'react';
+import React, { useState,useEffect,Fragment,useRef,useImperativeHandle,forwardRef} from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined } from '@ant-design/icons';
@@ -30,6 +30,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   pointDatas:abnormalWorkStatistics.pointDatas,
   tableLoading:abnormalWorkStatistics.tableLoading,
   tableTotal:abnormalWorkStatistics.tableTotal,
+  abnormalTypes:abnormalWorkStatistics.abnormalTypes,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
@@ -67,7 +68,7 @@ const  dvaDispatch = (dispatch) => {
     },
   }
 }
-const Index = (props) => {
+const Index = (props,ref) => {
 
 
   const [regionForm] = Form.useForm();
@@ -77,17 +78,18 @@ const Index = (props) => {
 
 
   const [tableVisible,setTableVisible] = useState(false)
+  const [abnormalType,setAbnormalType] = useState(1)
 
+  
 
   const [pageSize,setPageSize] = useState(20)
   const [pageIndex,setPageIndex] = useState(1)
 
   const [aa,setAa] = useState(['周一','周二','周三','周四','周五','周六','周日'])
 
+
   
-  const isEditing = (record) => record.key === editingKey;
-  
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,abnormalTypes,refInstance } = props; 
   useEffect(() => {
 
   
@@ -98,7 +100,12 @@ const Index = (props) => {
   </ol>
   }
   
-
+  const alarmResponse = () =>{
+    return <ol type='1' style={{listStyleType:'decimal'}}>
+              <li>报警响应工单:数据出现异常、缺失后:系统会发出报警，运维人员响应报警后会生成工单。</li>
+              <li>响应超时:报警首欠出现后:超过5个小时响应，则生成的工单判定为响应超时异常工单。</li>
+           </ol>
+  }
   const columns = [
     {
       title: '序号',
@@ -118,7 +125,7 @@ const Index = (props) => {
       render:(text,record,index)=>{
         return  <Button type="link"
          onClick={()=>{
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:JSON.stringify(record)});
+          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(record) }});
          }}
         >河南省</Button>
       }
@@ -255,18 +262,184 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '打卡异常数',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
+      title: '计划内工单',
+      width:200,
+      children: [
+        {
+          title: '总数',
+          dataIndex: 'building',
+          key: 'building',
+          width: 50,
+          align:'center',
+        },
+        {
+          title:  <span>打卡异常数<Tooltip overlayClassName='customTooltipSty' title={abnormalNumber()}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render:(record,text,index)=>{
+            return  <Button type="link" onClick={abnormalNum}>3</Button>
+          }
+        },
+        {
+          title: '异常率',
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text&&text.replace("%","")}
+                  size="small"
+                  style={{width:'90%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
     },
+    {
+      title: '计划外工单',
+      width:200,
+      children: [
+        {
+          title: '总数',
+          dataIndex: 'building',
+          key: 'building',
+          width: 50,
+          align:'center',
+        },
+        {
+          title: '打卡异常数',
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render:(record,text,index)=>{
+            return   <Button type="link" onClick={abnormalNum}>3</Button>
+          }
+        },
+        {
+          title: '异常率',
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text&&text.replace("%","")}
+                  size="small"
+                  style={{width:'90%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    },
+      {
+    title: '异常率',
+    dataIndex: 'number',
+    key: 'number',
+    width: 100,
+    align:'center',
+    render: (text, record) => {
+      return (
+        <div>
+          <Progress
+            percent={text&&text.replace("%","")}
+            size="small"
+            style={{width:'90%'}}
+            status='normal'
+            format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+          />
+        </div>
+      );
+    }
+  },
   ];
  
 
 
+  const alarmColumns = [
+    {
+      title: '序号',
+      dataIndex: 'ProjectName',
+      key:'ProjectName',
+      align:'center',
+      width: 50,
+      render:(text,record,index)=>{
+        return index;
+      }
+    },
+    {
+      title: '省',
+      dataIndex: 'RegionName',
+      key:'RegionName',
+      align:'center',
+      render:(text,record,index)=>{
+        return  <Button type="link"
+         onClick={()=>{
+          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:JSON.stringify(record)});
+         }}
+        >河南省</Button>
+      }
+    },
+    {
+      title: <span>报警响应工单<Tooltip overlayClassName='customTooltipSty' title={alarmResponse()}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+      width:200,
+      children: [
+        {
+          title: '总数',
+          dataIndex: 'building',
+          key: 'building',
+          width: 50,
+          align:'center',
+        },
+        {
+          title: "响应超时数",
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render:(record,text,index)=>{
+            return  <Button type="link" onClick={abnormalNum}>3</Button>
+          }
+        },
+        {
+          title: '超时率',
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text&&text.replace("%","")}
+                  size="small"
+                  style={{width:'90%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    }
+  ]; 
 
-
-  
   
 
 
@@ -274,6 +447,8 @@ const Index = (props) => {
  const abnormalExports = () => {
 
 };
+
+
 const abnormalNum = () =>{
 
    setTableVisible(true)
@@ -284,8 +459,10 @@ const abnormalNum = () =>{
   const handleTableChange =   async (PageIndex, )=>{ //分页
   }
   const onFinish  = async () =>{  //查询
-      
+
+
     try {
+
       const values = await form.validateFields();
 
       props.getProjectInfoList({
@@ -323,7 +500,9 @@ const abnormalNum = () =>{
 
 
      <Col>
-     <Row align='middle'><div style={{background:'rgb(247,152,34)',width:20,height:10,marginRight:5}}></div><span>打卡异常数</span></Row>
+     <Row align='middle'><div style={{background:'rgb(247,152,34)',width:20,height:10,marginRight:5}}></div>
+     <span>{abnormalTypes ==1? '打卡异常数' : '报警响应超时工单数'}</span>
+     </Row>
      </Col>
     </Row>
      </Form>
@@ -348,15 +527,32 @@ const abnormalNum = () =>{
       }
     })
 })
+// 暴露的子组件方法，给父组件调用
+const childRef = useRef();
+useImperativeHandle(refInstance,() => {
+     return {
+        _childFn(values) {
+            // setAbnormalType(values)
+        }
+    }
+})
   return (
       <div>
-      <SdlTable
+     {abnormalTypes ==1? <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={columns}
         pagination={false}
+      />:
+      <SdlTable
+        loading = {tableLoading}
+        bordered
+        dataSource={tableDatas}
+        columns={alarmColumns}
+        pagination={false}
       />
+      }
    
       <Modal
         title={'河南省新乡市'}
@@ -385,4 +581,6 @@ const abnormalNum = () =>{
         </div>
   );
 };
-export default connect(dvaPropsData,dvaDispatch)(Index);
+const TFunction = connect(dvaPropsData,dvaDispatch)(Index);
+
+export default forwardRef((props,ref)=><TFunction {...props} refInstance={ref}/>);

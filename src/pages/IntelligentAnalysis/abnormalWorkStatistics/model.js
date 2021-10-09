@@ -14,7 +14,8 @@ export default Model.extend({
     parametersList:[],
     tableLoading:false,
     tableTotal:0,
-    pointDatas:[]
+    pointDatas:[],
+    abnormalTypes:1,
   },
   effects: {
     *getProjectInfoList({ payload,callback }, { call, put, update }) { //项目信息列表
