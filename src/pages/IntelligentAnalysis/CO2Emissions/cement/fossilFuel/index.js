@@ -151,7 +151,7 @@ class index extends PureComponent {
   render() {
     const { isModalVisible, editData, FileUuid, } = this.state;
     const { tableInfo, cementDictionaries } = this.props;
-    const { EntBase = [] } = this.props.configIdList;
+    const { Output_Enterprise = [] } = this.props.configIdList;
     console.log('props=', this.props)
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementFossilFuel.tCO2');
@@ -194,7 +194,7 @@ class index extends PureComponent {
               GetType: 1,
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
-              FossilType: editData['FossilType'] + '',
+              FossilType: editData['FossilType'] ? editData['FossilType'] + '' : undefined,
             }}
           >
             <Row>
@@ -206,7 +206,7 @@ class index extends PureComponent {
                 >
                   <Select placeholder="请选择企业">
                     {
-                      EntBase.map(item => {
+                      Output_Enterprise.map(item => {
                         return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
                       })
                     }

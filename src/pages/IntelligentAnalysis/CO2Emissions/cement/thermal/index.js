@@ -1,15 +1,16 @@
 /*
  * @Author: Jiaqi 
- * @Date: 2021-10-12 13:58:42 
+ * @Date: 2021-10-12 14:03:36 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-10-12 14:02:17
- * @Description: 净购入电力
+ * @Last Modified time: 2021-10-12 14:15:02
+ * @Description: 净购入热力
  */
+
 import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Input, Select, DatePicker } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
@@ -18,8 +19,8 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 
 const { Option } = Select;
-const CONFIG_ID = 'CementDischarge';
-const SELECT_LIST = [{ "key": 1, "value": "外购电力" }]
+const CONFIG_ID = 'CementHeatDischarge';
+const SELECT_LIST = [{ "key": 1, "value": "外购热力" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -68,7 +69,7 @@ class index extends PureComponent {
           FormData: {
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
-            PowerDischargeCode: KEY
+            HeatDischargeCode: KEY
           },
           reload: KEY ? true : undefined,
         }
@@ -97,7 +98,7 @@ class index extends PureComponent {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_CementDischarge.PowerDischargeCode': this.state.KEY,
+        'dbo.T_Bas_CementHeatDischarge.HeatDischargeCode': this.state.KEY,
       },
       callback: (res) => {
         this.setState({
@@ -113,7 +114,7 @@ class index extends PureComponent {
     const { tableInfo } = this.props;
     const { Output_Enterprise = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    let count = _.sumBy(dataSource, 'dbo.T_Bas_CementDischarge.tCO2');
+    let count = _.sumBy(dataSource, 'dbo.T_Bas_CementHeatDischarge.tCO2');
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -130,7 +131,7 @@ class index extends PureComponent {
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementDischarge.AttachmentID')
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementHeatDischarge.AttachmentID')
               this.setState({ KEY: key, FileUuid: FileUuid }, () => {
                 this.getFormData(FileUuid);
               })
@@ -175,7 +176,7 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="PowerDischargeType"
+                  name="HeatDischargeType"
                   label="种类"
                   rules={[{ required: true, message: '请选择种类!' }]}
                 >
@@ -212,6 +213,15 @@ class index extends PureComponent {
                     let count = value * val1;
                     this.formRef.current.setFieldsValue({ 'tCO2': count });
                   }} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="Coefficient"
+                  label="转换系数"
+                  rules={[{ required: true, message: '请填写转换系数!' }]}
+                >
+                  <Input style={{ width: '100%' }} placeholder="请填写转换系数" />
                 </Form.Item>
               </Col>
               <Col span={12}>

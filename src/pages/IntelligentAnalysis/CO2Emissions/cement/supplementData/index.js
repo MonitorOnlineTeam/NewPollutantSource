@@ -62,10 +62,10 @@ class index extends PureComponent {
             getPageConfig
             configId={CONFIG_ID}
             onAdd={() => {
-              router.push('/Intelligentanalysis/cement/supplementData/addOrEditPage')
+              router.push('/Intelligentanalysis/cement/supplementData/addOrEditPage?industry=2')
             }}
             onEdit={(record, key) => {
-              router.push('/Intelligentanalysis/cement/supplementData/addOrEditPage?key=' + key)
+              router.push('/Intelligentanalysis/cement/supplementData/addOrEditPage?industry=2&key=' + key)
             }}
           />
         </Card>
