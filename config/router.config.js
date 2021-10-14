@@ -1821,6 +1821,24 @@ const routes = [
                     path: '/Intelligentanalysis/cement/fossilFuel',
                     component: './IntelligentAnalysis/CO2Emissions/cement/fossilFuel',
                   },
+                  {
+                    path: '/Intelligentanalysis/cement/supplementData',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/supplementData',
+                  },
+                  {
+                    path: '/Intelligentanalysis/cement/supplementData/addOrEditPage',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/supplementData/AddOrEditPage',
+                  },
+                  // 净购入电力
+                  {
+                    path: '/Intelligentanalysis/cement/electricity',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/electricity',
+                  },
+                  // 净购入热力
+                  {
+                    path: '/Intelligentanalysis/cement/thermal',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/thermal',
+                  },
                 ]
               },
             ],
@@ -2154,8 +2172,8 @@ const routes = [
                     path: '/qualityControl/qcaManager/instrumentManage',
                     component: './qualityControl/instrumentManage',
                   },
-                   // 质控标准要求管理
-                   {
+                  // 质控标准要求管理
+                  {
                     name: 'qcaStandardRequest',
                     path: '/qualityControl/qcaManager/qcaStandardRequest',
                     component: './qualityControl/qcaStandardRequest',

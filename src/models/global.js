@@ -555,7 +555,7 @@ export default Model.extend({
                   break;
                 // 质控日志 - 质控应答
                 case 'QCACheckAnswer':
-                  // console.log("QCACheckAnswer=", obj.Message)
+                  console.log("QCACheckAnswer-global=", obj.Message)
                   if (obj.Message.MsgType === "check") {
                     dispatch({
                       type: 'qcManual/updateQCLogAnswer',

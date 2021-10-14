@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-08-24 11:02:20
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-10-12 16:18:29
+ * @Last Modified time: 2020-08-29 10:38:51
  * @Description: 手动质控 - 页面
  */
 import React, { Component } from 'react';
@@ -19,7 +19,6 @@ const pollutantCodeList = {
   "a21002": { name: "NOx", unit: "mg/m³" },
   "a19001": { name: "O₂", unit: "%" },
   "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
-  "a05001": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
   "a05002": { name: "CH₄", unit: "mg/m³" },  // 甲烷
   "a24002": { name: "C₃H₈", unit: "mg/m³" },  // 丙烷
   "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
@@ -39,6 +38,13 @@ const QCStatusList = {
 }
 // 量程核查为1  盲样核查为2 零点核查：3  响应时间核查为4   线性5
 
+const CheckTypeList = [
+  { id: 3101, name: "零点核查" },
+  { id: 3102, name: "量程核查" },
+  // { id: 3104, name: "线性核查" },
+  // { id: 3105, name: "盲样核查" },
+  { id: 3103, name: "响应时间核查" },
+]
 @connect(({ qcManual, qcaCheck, loading }) => ({
   bottleDataList: qcManual.bottleDataList,
   qcImageVisible: qcManual.qcImageVisible,
@@ -262,17 +268,14 @@ class ManualQualityPage extends Component {
   }
 
   getPollutantName = (code) => {
-    console.log('code=', code)
     if (code) {
       return pollutantCodeList[code].name
     }
     return "";
   }
 
-  // getAnswer = (QCLogsAnswer) => {
-  getAnswer = () => {
-    const { QCLogsResult, QCLogsAnswer } = this.props;
-    { console.log("QCLogsAnswer=", QCLogsAnswer) }
+  getAnswer = (QCLogsAnswer) => {
+    const { QCLogsResult } = this.props;
     let str = QCLogsAnswer.Str;
     if (str) {
       if (str === "通讯超时") {
@@ -287,7 +290,7 @@ class ManualQualityPage extends Component {
           收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，{QCLogsAnswer.Str}。
           {
             !QCLogsResult.str && <Tag color="#87d068" onClick={() => {
-              this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment, GasPathMode: QCLogsAnswer.GasPathMode })
+              this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment })
               this.updateModalState({ qcImageVisible: true })
             }}>查看质控过程</Tag>
           }
@@ -368,6 +371,9 @@ class ManualQualityPage extends Component {
       QCLogsStart,
       QCLogsAnswer,
       QCLogsResult,
+      sendLoading,
+      currentDGIMN,
+      marginData,
       loading,
     } = this.props;
     if (loading) {
@@ -394,9 +400,9 @@ class ManualQualityPage extends Component {
                       <p style={{ color: "rgb(24, 144, 255)", lineHeight: "44px" }}>标气余量：{item.Allowance} L</p>
                     </div>
                     {
-                      item.CNList.map((check, idx) => {
-                        if (check.CN === '3105') {
-                          return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.CN) }}> 盲样核查 </div>
+                      CheckTypeList.map((check, idx) => {
+                        if (check.id === 3105) {
+                          return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.id) }}> 盲样核查 </div>
                         }
                         return <Popconfirm
                           key={idx}
@@ -412,10 +418,10 @@ class ManualQualityPage extends Component {
                             </div>
                           }
                           onConfirm={() =>
-                            this.sendQCACheckCMD(item.GasCode, check.CN)
+                            this.sendQCACheckCMD(item.GasCode, check.id)
                           }
                         >
-                          <div key={idx} className={styles.button}> {check.Name} </div>
+                          <div key={idx} className={styles.button}> {check.name} </div>
                         </Popconfirm>
                       })
                     }
@@ -429,6 +435,7 @@ class ManualQualityPage extends Component {
         <Divider dashed />
         {console.log("QCAResultLoading=", QCAResultLoading)}
         {console.log("QCLogsStart=", QCLogsStart)}
+        {console.log("QCLogsAnswer=", QCLogsAnswer)}
         {console.log("QCLogsResult=", QCLogsResult)}
         <div className={styles.qcLogContainer}>
           {QCAResultLoading ? <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> : ""}
@@ -468,14 +475,44 @@ class ManualQualityPage extends Component {
               }
             </p>
             <span className={styles.text}>
-              {QCLogsResult.Str ? this.getLogResult(QCLogsResult) : ""}
+              {QCLogsResult.Str ?
+                this.getLogResult(QCLogsResult)
+                // <>
+                //   {`【${pointName}】${QCLogsResult.str}`}
+                //   {
+                //     QCLogsResult.Data.Result == 0 ?
+                //       <Tag color="#87d068" onClick={() => {
+                //         this.setState({
+                //           currentRowData: QCLogsResult.Data,
+                //           QCAType: QCLogsResult.Data.QCAType
+                //         }, () => {
+                //           this.props.dispatch({
+                //             type: "qcaCheck/updateState",
+                //             payload: { checkModalVisible: true }
+                //           })
+                //         })
+                //       }}>合格</Tag>
+                //       :
+                //       <Tag color="#f81d22" onClick={() => {
+                //         this.setState({
+                //           currentRowData: QCLogsResult.Data
+                //         }, () => {
+                //           this.props.dispatch({
+                //             type: "qcaCheck/updateState",
+                //             payload: { checkModalVisible: true }
+                //           })
+                //         })
+                //       }}>不合格</Tag>
+                //   }
+                // </>
+                : ""}
             </span>
           </div>
         </div>
         {/* 核查结果弹窗 */}
         {checkModalVisible && <CheckModal QCAType={QCAType} DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
         {/* 质控过程弹窗 */}
-        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} QCATypeName={modalQCAType} GasPathMode={GasPathMode} />}
+        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} QCATypeName={modalQCAType} />}
         {/*{true && <ViewQCProcess />}*/}
         <Modal
           title="盲样核查"

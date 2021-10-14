@@ -10,7 +10,7 @@ import locale from 'antd/es/locale/zh_CN';
 import { gasPollutantList } from "@/utils/CONST"
 import { router } from "umi"
 
-const { confirm } = Modal; 
+const { confirm } = Modal;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -32,15 +32,30 @@ class DataExtractPage extends PureComponent {
   constructor(props) {
     super(props);
     // 分钟：mins 小时 hour  日 day  系统参数：system 质控标气信息：qcainfo
+    this.defalutPollutantCode = gasPollutantList[0].value;
     this.state = {
-      currentPollutantCode: "a21026",
+      currentPollutantCode: this.defalutPollutantCode,
       mins: [moment().subtract(1, "hour"), moment()],
       hour: [moment().subtract(1, "hour"), moment()],
       day: [moment().subtract(1, "days"), moment()],
       qcainfo: {
-        pollutantCode: "a21026"
+        pollutantCode: this.defalutPollutantCode
       }
     };
+
+
+
+    let PQLLTEXT = [], BQXXTEXT = [];
+    gasPollutantList.map(item => {
+      if (item.label !== 'N₂') {
+        PQLLTEXT.push(item.label)
+      }
+      BQXXTEXT.push(item.label)
+    });
+    this._SELF_ = {
+      PQLLTEXT: PQLLTEXT.join('、'),
+      BQXXTEXT: BQXXTEXT.join('、'),
+    }
   }
 
   componentDidMount() {
@@ -115,7 +130,7 @@ class DataExtractPage extends PureComponent {
       },
       callback: () => {
         this.setState({
-          currentPollutantCode: "a21026",
+          currentPollutantCode: this.defalutPollutantCode,
         })
       }
     })
@@ -186,6 +201,8 @@ class DataExtractPage extends PureComponent {
   render() {
     const { mins, hour, day, loading, currentPollutantCode } = this.state;
     const { QCLogsStart, QCLogsAnswer, QCLogsResult, pointName } = this.props;
+    const { PQLLTEXT, BQXXTEXT } = this._SELF_;
+
     return (
       <Spin spinning={!!loading}>
         <Card title="监测数据提取">
@@ -263,7 +280,7 @@ class DataExtractPage extends PureComponent {
             </Col>
             <Col className={styles.label} flex="200px">
               提取配气流量信息
-              <QuestionTooltip content="提取质控仪SO2、NOx、O2的配气信息，用于计算质控仪配气范围" />
+              <QuestionTooltip content={`提取质控仪${PQLLTEXT}的配气信息，用于计算质控仪配气范围`} />
             </Col>
             <Col flex="auto">
               <Button type="primary" onClick={() => {
@@ -291,7 +308,7 @@ class DataExtractPage extends PureComponent {
                   },
                   onCancel() {
                     that.setState({
-                      currentPollutantCode: "a21026",
+                      currentPollutantCode: that.defalutPollutantCode,
                     })
                   },
                 });
@@ -301,7 +318,7 @@ class DataExtractPage extends PureComponent {
           <Row className={styles.row}>
             <Col className={styles.label} flex="200px">
               提取质控仪标气信息
-              <QuestionTooltip content="远程调取质控仪标气变更信息，包括SO2、NOx、O2、N2的标气压力、标气浓度、标气失效日期、标气证书编号、标气生产日期、气瓶体积、制造商、扩展不确定度" />
+              <QuestionTooltip content={`远程调取质控仪标气变更信息，包括${BQXXTEXT}的标气压力、标气浓度、标气失效日期、标气证书编号、标气生产日期、气瓶体积、制造商、扩展不确定度`} />
             </Col>
             <Col flex="auto">
               <Button type="primary" onClick={() => {
@@ -327,7 +344,7 @@ class DataExtractPage extends PureComponent {
                   },
                   onCancel() {
                     that.setState({
-                      currentPollutantCode: "a21026",
+                      currentPollutantCode: that.defalutPollutantCode,
                     })
                   },
                 });

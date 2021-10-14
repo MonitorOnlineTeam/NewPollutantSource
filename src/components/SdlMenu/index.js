@@ -63,12 +63,16 @@ class SdlMenu extends Component {
       return <Menu.ItemGroup key={menuItem.path} title={menuItem.name}>
         {
           menuItem.children.map(itm => {
+            if (itm.children && itm.children.length) {
+              return <SubMenu popupClassName={styles.wrySubMenu} key={itm.NavigateUrl} icon={this.getIcon(itm.icon)} title={itm.name}>
+                {this.menuItemContent(itm.children, itm.name)}
+              </SubMenu>
+            }
             return <Menu.Item key={itm.path} icon={this.getIcon(itm.icon)}>{itm.name}</Menu.Item>
           })
         }
       </Menu.ItemGroup>
     })
-
   }
 
   onMenuItemClick = (e) => {

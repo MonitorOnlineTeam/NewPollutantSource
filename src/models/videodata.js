@@ -133,6 +133,7 @@ export default Model.extend({
         DGIMNs: payload.dgimn,
       };
       const res = yield call(querypollutantlist, body);
+      console.log('res=',res)
       let pollutants = [];
       // pollutants.push({ title: "监测时间", dataIndex: "MonitorTime", key: "MonitorTime", align: 'center', width: '200px' });
       if (res.length > 0) {
@@ -141,6 +142,7 @@ export default Model.extend({
             title: `${item.PollutantName}(${item.Unit})`,
             dataIndex: item.PollutantCode,
             key: item.PollutantCode,
+            StandardValue: item.StandardValue,
             align: 'center',
             render: (value, record, index) =>
               formatPollutantPopover(value, record[`${item.PollutantCode}_params`]),

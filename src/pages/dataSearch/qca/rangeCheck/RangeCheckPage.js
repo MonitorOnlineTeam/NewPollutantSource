@@ -88,7 +88,7 @@ class RangeCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入量程校准 气体，仪器的读数与量程校准气体初始测量值之间的偏差相对于满量程的百分比。（测量浓度-标准浓度）/量程范围*100%（参考75标准中示值误差计算公式）" />
+          <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入量程校准 气体，仪器的读数与量程校准气体初始测量值之间的偏差相对于满量程的百分比。（测量浓度-标准浓度）/量程范围*100%（参考75标准中示值误差计算公式）" />
         </span>,
         dataIndex: 'Offset',
         width: 180,
@@ -150,7 +150,7 @@ class RangeCheckPage extends PureComponent {
       {
         title: <span>
           相对误差（%）
-      <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入量程校准 气体，仪器的读数与量程校准气体初始测量值之间的偏差相对于24小时前的量程核查读数的百分比。测量浓度-24小时前量程核查浓度/量程范围*100%（参考75标准中示值误差计算公式）" />
+          <QuestionTooltip content="在仪器未进行维修、保养或调节的前提下，CEMS 按规定的时间运行后通入量程校准 气体，仪器的读数与量程校准气体初始测量值之间的偏差相对于24小时前的量程核查读数的百分比。测量浓度-24小时前量程核查浓度/量程范围*100%（参考75标准中示值误差计算公式）" />
         </span>,
         dataIndex: 'Offset',
         width: 180,
@@ -182,7 +182,7 @@ class RangeCheckPage extends PureComponent {
           // 废水
           this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
-          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026"])
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026", 'a05001'])
           // 废气
           this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }
