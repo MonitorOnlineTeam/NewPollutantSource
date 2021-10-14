@@ -1,7 +1,7 @@
 /**
- * 功  能：异常工单统计
+ * 功  能：计划工单统计
  * 创建人：贾安波
- * 创建时间：2021.09.27
+ * 创建时间：2021.10.13
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -22,14 +22,14 @@ const { Option } = Select;
 import Region from './components/Region'
 import Ent from './components/Ent'
 
-const namespace = 'abnormalWorkStatistics'
+const namespace = 'planWorkOrderStatistics'
 
 
 
 
-const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
-  tableDatas:abnormalWorkStatistics.tableDatas,
-  tableLoading:abnormalWorkStatistics.tableLoading,
+const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
+  tableDatas:planWorkOrderStatistics.tableDatas,
+  tableLoading:planWorkOrderStatistics.tableLoading,
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
 })
 
@@ -136,17 +136,6 @@ const Index = (props) => {
             <Option value={2}>废气</Option>
             </Select>
         </Form.Item>
-        <Form.Item label='异常类型' name='abnormalType'  style={{paddingRight:'8px'}}>
-            <Select style={{width:150}} placeholder='异常类型'  onChange={abnormalTypeChange}>
-              {/* {
-                ss.map(item=>{
-                return <Option value={item.ss}>{item.ss}</Option>
-                })
-              } */}
-                <Option value={1}>打卡异常</Option>
-                <Option value={2}>报警响应超时率</Option>
-            </Select>
-        </Form.Item>
         <Form.Item>
      <Button  type="primary" htmlType='submit' >
           查询
@@ -214,7 +203,7 @@ const Index = (props) => {
     
   }
   return (
-    <div  className={styles.abnormalWorkStatisticsSty}>
+    <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       {showType==1? <Region {...props} ref={pchildref}/> : <Ent />}

@@ -21,16 +21,16 @@ import { setAuthority } from '@/utils/authority';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'abnormalWorkStatistics'
+const namespace = 'planWorkOrderStatistics'
 
 
 
 
-const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
-  tableDatas:abnormalWorkStatistics.tableDatas,
-  pointDatas:abnormalWorkStatistics.pointDatas,
-  tableLoading:abnormalWorkStatistics.tableLoading,
-  tableTotal:abnormalWorkStatistics.tableTotal,
+const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
+  tableDatas:planWorkOrderStatistics.tableDatas,
+  pointDatas:planWorkOrderStatistics.pointDatas,
+  tableLoading:planWorkOrderStatistics.tableLoading,
+  tableTotal:planWorkOrderStatistics.tableTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
@@ -121,57 +121,59 @@ const Index = (props) => {
     },
     {
       title: '省/市',
+      dataIndex: 'RegionName',
+      key:'RegionName',
+      align:'center',
+      render:(text,record,index)=>{
+        return  <Button type="link"
+         onClick={()=>{
+          router.push({pathname:`/Intelligentanalysis/planWorkOrderStatistics/regionDetail`,query:{data:JSON.stringify(record) }});
+         }}
+        >河南省</Button>
+      }
+    },
+    {
+      title: '运营企业数',
+      dataIndex: 'ProjectName',
+      key:'ProjectName',
+      align:'center',
+      width: 50,
+    },
+    {
+      title: <span>运营监测点数<Tooltip title={'点击运营监测点数，可以查看运营监测点在条件日期内派发计划工单情况。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
       dataIndex: 'ProjectName',
       key:'ProjectName',
       align:'center',
       width: 100,
-      render:(text,record)=>{ 
-          return  <Button type="link" onClick={()=>{setTableVisible(true)}}>Link Button</Button>
-      }
     },
     {
-      title: '企业名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-      width: 150,
-      render:(record,text,index)=>{
-        return  <div style={{textAlign:"left"}}>Link Button</div>
-      }
-    },
-    {
-      title: '监测点名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-    {
-      title: '计划内工单',
+      title: '计划巡检工单',
       width:200,
       children: [
         {
-          title: '总数',
+          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'building',
           key: 'building',
           width: 50,
           align:'center',
-        },
-        {
-          title:  <span>打卡异常数<Tooltip overlayClassName='customTooltipSty' title={abnormalNumber()}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
           render:(record,text,index)=>{
-            return  <Button type="link" onClick={abnormalNum}>3</Button>
+            return  <Button type="link" onClick={totalNum}>3</Button>
           }
         },
         {
-          title: '异常率',
+          title:  <span>完成数</span>,
+          dataIndex: 'number',
+          key: 'number',
+          width: 50,
+          align:'center',
+        },
+        {
+          title: '完成率',
           dataIndex: 'number',
           key: 'number',
           width: 100,
           align:'center',
+          sorter: (a, b) => a.number - b.number,
           render: (text, record) => {
             return (
               <div>
@@ -189,32 +191,33 @@ const Index = (props) => {
       ],
     },
     {
-      title: '计划外工单',
+      title: '计划校准工单',
       width:200,
       children: [
         {
-          title: '总数',
+          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'building',
           key: 'building',
           width: 50,
           align:'center',
-        },
-        {
-          title: '打卡异常数',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
           render:(record,text,index)=>{
-            return   <Button type="link" onClick={abnormalNum}>3</Button>
+            return  <Button type="link" onClick={totalNum}>3</Button>
           }
         },
         {
-          title: '异常率',
+          title:  <span>完成数</span>,
+          dataIndex: 'number',
+          key: 'number',
+          width: 50,
+          align:'center',
+        },
+        {
+          title: '完成率',
           dataIndex: 'number',
           key: 'number',
           width: 100,
           align:'center',
+          sorter: (a, b) => a.number - b.number,
           render: (text, record) => {
             return (
               <div>
@@ -231,26 +234,7 @@ const Index = (props) => {
         },
       ],
     },
-    {
-      title: '异常率',
-      dataIndex: 'number',
-      key: 'number',
-      width: 100,
-      align:'center',
-      render: (text, record) => {
-        return (
-          <div>
-            <Progress
-              percent={text&&text.replace("%","")}
-              size="small"
-              style={{width:'90%'}}
-              status='normal'
-              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
-            />
-          </div>
-        );
-      }
-    },
+   
   ];
  
 
@@ -551,7 +535,7 @@ const reponseNumColumns = [
  const abnormalExports = () => {
 
 };
-const abnormalNum = () =>{
+const totalNum = () =>{
   setAbnormalNumVisible(true)
     
 
@@ -603,7 +587,7 @@ const responseNum = () =>{
 
 
      <Col>
-     <Row align='middle'><div style={{background:'#faad14',width:24,height:12,marginRight:5}}></div>
+     <Row align='middle'><div style={{background:'rgb(247,152,34)',width:20,height:10,marginRight:5}}></div>
        <span> {type ==1? '打卡异常数' : '报警响应超时工单数'}</span>
       </Row>
      </Col>

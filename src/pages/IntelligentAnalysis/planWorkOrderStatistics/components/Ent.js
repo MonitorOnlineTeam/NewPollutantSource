@@ -33,21 +33,21 @@ const { Option } = Select;
 import config from '@/config';
 import { Map, MouseTool, Marker,Markers, Polygon,Circle } from '@/components/ReactAmap';
 
-const namespace = 'abnormalWorkStatistics'
+const namespace = 'planWorkOrderStatistics'
 
 
 
 
-const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
-  tableDatas:abnormalWorkStatistics.tableDatas,
-  pointDatas:abnormalWorkStatistics.pointDatas,
-  tableLoading:abnormalWorkStatistics.tableLoading,
-  tableTotal:abnormalWorkStatistics.tableTotal,
+const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
+  tableDatas:planWorkOrderStatistics.tableDatas,
+  pointDatas:planWorkOrderStatistics.pointDatas,
+  tableLoading:planWorkOrderStatistics.tableLoading,
+  tableTotal:planWorkOrderStatistics.tableTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
   exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
-  abnormalTypes:abnormalWorkStatistics.abnormalTypes
+  abnormalTypes:planWorkOrderStatistics.abnormalTypes
 })
 
 const  dvaDispatch = (dispatch) => {

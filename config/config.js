@@ -6,7 +6,8 @@ import webpackPlugin from './plugin.config';
 import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-
+const apiHost = 'http://172.16.12.234:61002/';
+// const apiHost = 'http://172.16.12.57:61000/';
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
@@ -391,7 +392,12 @@ export default {
                   routes: [
                     {
                       path: '/platformconfig/configurationInfo',
-                      // redirect: '/platformconfig/configurationInfo/timerManage',
+                      redirect: '/platformconfig/configurationInfo/operationCycle',
+                    },
+                    {
+                      name: 'timerManage',//运维频次管理
+                      path: '/platformconfig/configurationInfo/:configId',
+                      component: './AutoFormManager',
                     },
                     {
                       name: 'timerManage',//定时器管理
@@ -1737,10 +1743,20 @@ export default {
                   component: './Intelligentanalysis/abnormalWorkStatistics',
                 },
                 { //异常工单统计 市一级
-                  name: 'abnormalWorkStatistics',
+                  name: 'abnormalWorkStatisticsDetail',
                   path: '/Intelligentanalysis/abnormalWorkStatistics/regionDetail',
                   component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
-                }
+                },
+                { //计划工单统计
+                  name: 'planWorkOrderStatistics',
+                  path: '/Intelligentanalysis/planWorkOrderStatistics',
+                  component: './Intelligentanalysis/planWorkOrderStatistics',
+                },
+                { //计划工单统计 市一级
+                  name: 'planWorkOrderStatisticsDetail',
+                  path: '/Intelligentanalysis/planWorkOrderStatistics/regionDetail',
+                  component: './Intelligentanalysis/planWorkOrderStatistics/regionDetail',
+                },
               ],
 
               
@@ -2076,7 +2092,7 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/api': {
-      target: config.apiHost,
+      target: apiHost,
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',

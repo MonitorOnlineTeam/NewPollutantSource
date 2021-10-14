@@ -121,7 +121,7 @@ const Index = (props) => {
     {
       title: '状态',
       dataIndex: 'SellCompanyName',
-      key:'SellCompanyName',
+      key:'SellCompanyName', 
       align:'center',
       render: (text, record) => {
         if (text === 1) {
