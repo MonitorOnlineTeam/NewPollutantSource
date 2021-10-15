@@ -117,9 +117,9 @@ class ViewQCProcess extends PureComponent {
         {/* 气瓶2 */}
         <div className={styles.gasInfoBox} style={{ top: 226 }}>
           <ul>
-            <li>
+            {/* <li>
               气瓶浓度：{gasData[1].Value}{gasData[1].Unit}
-            </li>
+            </li> */}
             <li>
               <span>过期时间：</span>
               <span className={styles.time} title={gasData[1].LoseDate}>{gasData[1].LoseDate ? moment(gasData[1].LoseDate).format("YYYY-MM-DD") : ''}</span>

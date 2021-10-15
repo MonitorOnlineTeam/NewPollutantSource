@@ -17,7 +17,7 @@ const DataExtract = () => {
         if (!item[0].IsEnt) {
           setDGIMN(item[0].key)
           setPointType(item[0].Type)
-          setPointName(`${item.entName} - ${item.pointName}`)
+          setPointName(`${item[0].entName} - ${item[0].pointName}`)
         }
         // setPointName(`${item.EntName} - ${item.title}`)
         // setDGIMN(value)

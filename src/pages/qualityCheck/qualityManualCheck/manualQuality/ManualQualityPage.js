@@ -57,6 +57,7 @@ class ManualQualityPage extends Component {
   state = {
     currentRowData: {},
     GasPathMode: 0,
+    QCLogsAnswer: {},
   }
 
   componentDidMount() {
@@ -82,6 +83,12 @@ class ManualQualityPage extends Component {
       })
       this.getStateAndRecord();
       this.getBottleDataList();
+    }
+
+    if (this.props.QCLogsAnswer !== prevProps.QCLogsAnswer) {
+      this.setState({
+        QCLogsAnswer: this.props.QCLogsAnswer,
+      })
     }
 
     // 状态改变后，清空数据
@@ -151,27 +158,13 @@ class ManualQualityPage extends Component {
     })
   }
 
-  // 重置质控日志
-  resetQCLog = () => {
-    this.props.dispatch({
-      type: "qcManual/updateState",
-      payload: {
-        QCLogsStart: {},
-        QCLogsAnswer: {},
-        QCLogsResult: {
-          Data: {},
-        },
-      }
-    })
-  }
-
   // 发送核查命令
   sendQCACheckCMD = (PollutantCode, QCAType, StandardValue) => {
     // if(this.props.QCStatus == "1") {
     //   message.warning("")
     // }
     this.updateModalState({ currentPollutantCode: PollutantCode })
-    this.setState({ QCAType: QCAType })
+    this.setState({ QCAType: QCAType, QCLogsAnswer: {} })
     this.props.dispatch({
       type: "qcManual/sendQCACheckCMD",
       payload: {
@@ -184,6 +177,7 @@ class ManualQualityPage extends Component {
       },
       callback: () => {
         this.setState({ MYVisible: false })
+        // this.updateModalState({ QCAResultLoading: true })
         // // 重置数据
         // this.props.dispatch({
         //   type: "qcManual/resetModalState",
@@ -271,42 +265,37 @@ class ManualQualityPage extends Component {
 
   // getAnswer = (QCLogsAnswer) => {
   getAnswer = () => {
-    const { QCLogsResult, QCLogsAnswer } = this.props;
+    const { QCLogsResult, pointName } = this.props;
+    const { QCLogsAnswer } = this.state;
     { console.log("QCLogsAnswer=", QCLogsAnswer) }
     let str = QCLogsAnswer.Str;
     if (str) {
+      let ele = '';
       if (str === "通讯超时") {
-        return <span style={{ color: "#f81d22" }}>通讯超时。</span>
+        ele = <span style={{ color: "#f81d22" }}>通讯超时。</span>
       }
       if (QCLogsAnswer.Result === false) {
-        return <span>收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，<span style={{ color: "#f81d22" }}>{str}。</span></span>
+        ele = <span>收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，<span style={{ color: "#f81d22" }}>{str}。</span></span>
       }
       if (QCLogsAnswer.Result) {
-        return <span>
+        ele = <span>
           {/* 收到{QCLogsAnswer.Comment}，准备执行请求。 */}
           收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，{QCLogsAnswer.Str}。
           {
-            !QCLogsResult.str && <Tag color="#87d068" onClick={() => {
+            // !QCLogsResult.Str && <Tag color="#87d068" onClick={() => {
+            <Tag color="#87d068" onClick={() => {
               this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment, GasPathMode: QCLogsAnswer.GasPathMode })
               this.updateModalState({ qcImageVisible: true })
             }}>查看质控过程</Tag>
           }
         </span>
       }
+      return <>
+        {`【${pointName}】`}{ele}
+      </>
+    } else {
+      return ''
     }
-    // {
-    //   QCLogsAnswer.Str ?
-    //     (QCLogsAnswer.Result === false ? <span style={{ color: QCLogsAnswer.Str === "" }}></span> : "")
-    //     : null
-    // }
-    // {QCLogsAnswer.str ?
-    //   <>
-    //     {`【${pointName}】${QCLogsAnswer.str}。`}
-    //     <Tag color="#87d068" onClick={() => {
-    //       this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode })
-    //       this.updateModalState({ qcImageVisible: true })
-    //     }}>查看质控过程</Tag>
-    //   </> : ""}
   }
 
 
@@ -366,14 +355,13 @@ class ManualQualityPage extends Component {
       QCStatus,
       QCAResultLoading,
       QCLogsStart,
-      QCLogsAnswer,
       QCLogsResult,
       loading,
     } = this.props;
     if (loading) {
       return <PageLoading />
     }
-    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType, GasPathMode } = this.state;
+    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType, GasPathMode, QCLogsAnswer, } = this.state;
     return (
       <Card>
         <Row>
@@ -430,6 +418,7 @@ class ManualQualityPage extends Component {
         {console.log("QCAResultLoading=", QCAResultLoading)}
         {console.log("QCLogsStart=", QCLogsStart)}
         {console.log("QCLogsResult=", QCLogsResult)}
+        {console.log("QCLogsAnswer-render=", QCLogsAnswer)}
         <div className={styles.qcLogContainer}>
           {QCAResultLoading ? <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> : ""}
           {/* 1 */}
@@ -446,10 +435,7 @@ class ManualQualityPage extends Component {
           <div className={styles.logItem}>
             <p className={styles.date}>{QCLogsAnswer.Time}</p>
             <span className={styles.text}>
-              {QCLogsAnswer.Str ?
-                <>
-                  {`【${pointName}】`}{this.getAnswer(QCLogsAnswer)}
-                </> : ""}
+              {this.getAnswer()}
             </span>
           </div>
           {/* 3 */}

@@ -47,16 +47,15 @@ export default Model.extend({
     *getBottleDataList({ payload, }, { call, update, put, take, select }) {
       const result = yield call(services.getBottleDataList, { ...payload, State: 1 });
       if (result.IsSuccess) {
-
         let gasData = _.sortBy(result.Datas, item => item.Number);
-        // if (gasData.length) {
-        //   gasData[0] = {
-        //     ...gasData[0],
-        //     PollutantName: gasData[0].PollutantName + '<br />' + gasData[1].PollutantName
-        //   }
-        //   // gasData.splice(1, 1);
-        //   console.log('gasData=', gasData)
-        // }
+        if (gasData.length) {
+          gasData[0] = {
+            ...gasData[0],
+            PollutantName: gasData[0].PollutantName + '<br />' + gasData[1].PollutantName
+          }
+          gasData.splice(1, 1);
+          console.log('gasData=', gasData)
+        }
         yield update({
           bottleDataList: result.Datas,
           gasData: gasData,
@@ -86,7 +85,7 @@ export default Model.extend({
           totalFlow: undefined,
           pollutantValueListInfo: [],
           realtimeStabilizationTime: {},
-          QCAResultLoading: false, // 质控结果loading
+          QCAResultLoading: true, // 质控结果loading
           // QCLogsStart: {},
           // QCLogsAnswer: {},
           QCLogsResult: {
@@ -98,7 +97,7 @@ export default Model.extend({
         })
         callback && callback()
         message.success("命令发送成功");
-        yield update({ QCAResultLoading: true })
+        // yield update({ QCAResultLoading: true })
       } else {
         yield update({ QCAResultLoading: false })
         message.error(result.Message)
@@ -125,8 +124,7 @@ export default Model.extend({
           updateObj.currentDGIMN = result.Datas[1].DGIMN;
         }
         if (result.Datas[2]) {
-          updateObj.QCLogsAnswer = result.Datas[2];
-          updateObj.QCLogsAnswer.GasPathMode = result.Datas[0].GasPathMode;
+          updateObj.QCLogsAnswer = { ...result.Datas[2], GasPathMode: result.Datas[0].GasPathMode };
           updateObj.currentPollutantCode = result.Datas[2].PollutantCode;
           updateObj.currentDGIMN = result.Datas[2].DGIMN;
         }
@@ -417,18 +415,16 @@ export default Model.extend({
       console.log("updateQCLogAnswer=", payload)
       console.log("updateQCLogAnswer-state=", state)
       let QCAResultLoading = state.QCAResultLoading;
-
+      let QCLogsAnswer = { ...state.QCLogsAnswer };
       if (payload.DGIMN === state.currentDGIMN) {
         debugger
         if (payload.Result === false) {
           QCAResultLoading = false;
         }
-        let QCLogsAnswer = payload;
-        // QCLogsAnswer = payload
-        console.log('QCLogsAnswer-modal=', QCLogsAnswer)
-        return { ...state, QCLogsAnswer: { ...QCLogsAnswer }, QCAResultLoading: QCAResultLoading }
+        QCLogsAnswer = payload;
       }
-      return { ...state }
+      console.log('QCLogsAnswer-modal=', QCLogsAnswer)
+      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading }
     },
     // log - Result
     updateQCLogResult(state, { payload }) {
