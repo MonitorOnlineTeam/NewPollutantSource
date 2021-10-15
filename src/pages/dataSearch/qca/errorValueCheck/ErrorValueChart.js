@@ -180,7 +180,7 @@ class BlindCheckChart extends PureComponent {
                 this.props.dispatch({
                   type: "qcaCheck/updateCheckChartData",
                   payload: {
-                    type: "blind",
+                    type: "errorValue",
                     code: item.PollutantCode,
                   }
                 })

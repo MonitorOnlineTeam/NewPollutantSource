@@ -76,6 +76,7 @@ class ManualQualityPage extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.DGIMN !== prevProps.DGIMN) {
+      this.updateModalState({ currentDGIMN: this.props.DGIMN })
       // 重置数据
       this.props.dispatch({
         type: "qcManual/resetModalState",

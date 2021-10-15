@@ -154,8 +154,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           errorValueCheckTableData: result.Datas.rtnData,
-          // errorValueCheckAllData
-          // blindCheckChartAllData: result.Datas.codeList,
+          errorValueCheckChartAllData:result.Datas.codeList,
           errorValueChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
             PollutantCode: "",
             dataList: [],

@@ -122,7 +122,7 @@ export default Model.extend({
           updateObj.QCLogsStart = result.Datas[1];
           updateObj.currentPollutantCode = result.Datas[1].PollutantCode;
           updateObj.currentDGIMN = result.Datas[1].DGIMN;
-        }
+        } 
         if (result.Datas[2]) {
           updateObj.QCLogsAnswer = { ...result.Datas[2], GasPathMode: result.Datas[0].GasPathMode };
           updateObj.currentPollutantCode = result.Datas[2].PollutantCode;
@@ -350,6 +350,7 @@ export default Model.extend({
           door = payload.Value
         }
         if (payload.Code === "i32002") {
+          console.log('i32002=', payload)
           QCStatus = payload.Value;
           // if (payload.Value == 1) {
           //   QCAResultLoading = true
@@ -537,5 +538,41 @@ export default Model.extend({
     //     }
     //   }
     // },
+    // 重置质控仪流程图state
+    resetModalState(state, { payload }) {
+      return {
+        ...state,
+        // 质控仪流程图
+        qualityControlName: null, // 质控仪名称
+        // gasData: {  // 气瓶信息
+        //   N2Info: {},
+        //   NOxInfo: {},
+        //   SO2Info: {},
+        //   O2Info: {},
+        // },
+        CEMSOpen: undefined,// CEMS阀门状态
+        CEMSStatus: undefined,
+        valveStatus: {}, // 阀门状态
+        p2Pressure: {},
+        p1Pressure: {},
+        p3Pressure: {},
+        p4Pressure: {},
+        QCStatus: undefined, // 质控仪状态
+        standardValue: undefined,
+        standardValueUtin: null, // 单位
+        totalFlow: undefined,
+        pollutantValueListInfo: [],
+        realtimeStabilizationTime: {},
+        QCAResultLoading: false, // 质控结果loading
+        QCLogsStart: {},
+        QCLogsAnswer: {},
+        QCLogsResult: {
+          Data: {},
+        },
+        timeList: [],
+        valueList: [],
+        standardValueList: [],
+      }
+    }
   }
 });
