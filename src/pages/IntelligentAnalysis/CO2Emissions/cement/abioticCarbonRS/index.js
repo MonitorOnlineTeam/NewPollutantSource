@@ -11,13 +11,11 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 
-const industry = INDUSTRYS.cement;
 const { Option } = Select;
-const CONFIG_ID = 'CementFossilFuel';
-const SELECT_LIST = [{ "key": 1, "value": "燃煤" }, { "key": 2, "value": "原油 " }, { "key": 3, "value": "燃料油" }, { "key": 4, "value": "汽油" }, { "key": 5, "value": "柴油" }, { "key": 6, "value": "炼厂干气" }, { "key": 7, "value": "其它石油制品" }, { "key": 8, "value": "天然气" }, { "key": 9, "value": "焦炉煤气" }, { "key": 10, "value": "其它煤气" }]
+const CONFIG_ID = 'CementAlternativeFuels';
 const SELECT_LISTGet = [{ "key": 1, "value": "购(产)销存" }];
 const SELECT_LISTWhere = [{ "key": 2, "value": "缺省值" }];
-const SELECT_LISTOnly = [{ "key": 2, "value": "缺省值" }];
+const industry = INDUSTRYS.cement;
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -52,7 +50,8 @@ class index extends PureComponent {
     this.props.dispatch({
       type: 'CO2Emissions/getCO2EnergyType',
       payload: {
-        IndustryCode: industry
+        IndustryCode: industry,
+        SelectType: 'T'
       },
     })
   }
@@ -60,27 +59,25 @@ class index extends PureComponent {
 
   // 种类change，填写缺省值
   onTypesChange = (value) => {
+    //     化石碳的质量分数: 100
+    // 排放因子: 0.07
+    // 生物碳的质量分数: 0
     const { cementDictionaries } = this.props;
     this.formRef.current.setFieldsValue({
       'LowFever': cementDictionaries.one[value]["低位发热量"],
-      'UnitCarbonContent': cementDictionaries.one[value]["含碳量"],
-      'CO2OxidationRate': cementDictionaries.one[value]["碳氧化率"],
+      'CarbonContent': cementDictionaries.one[value]["化石碳的质量分数"],
+      'Emission': cementDictionaries.one[value]["排放因子"],
     });
+    this.countEmissions();
   }
 
   // 计算排放量
   countEmissions = () => {
-    // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12)
+    // 排放量 = 用量*平均低位发热量*排放因子*非生物质碳的含量
     let values = this.formRef.current.getFieldsValue();
-    let { AnnualConsumption = 0, LowFever = 0, UnitCarbonContent = 0, CO2OxidationRate = 0 } = values;
-    // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0; // 年消耗量
-    // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0; //低位发热量
-    // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0; //单位热值含碳量
-    // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0; //碳氧化率
-    let value1 = AnnualConsumption * LowFever;
-    let value2 = UnitCarbonContent * CO2OxidationRate * 44 / 12;
-    let count = value1 * value2;
-    this.formRef.current.setFieldsValue({ 'tCO2': count });
+    let { AnnualConsumption = 0, LowFever = 0, Emission = 0, CarbonContent = 0 } = values;
+    let count = AnnualConsumption * LowFever * Emission * CarbonContent;
+    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
   }
 
   handleCancel = () => {
@@ -105,7 +102,7 @@ class index extends PureComponent {
           FormData: {
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
-            FossilFuelCode: KEY
+            AlternativeFuelsCode: KEY
           },
           reload: KEY ? true : false,
         }
@@ -134,7 +131,7 @@ class index extends PureComponent {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_CementFossilFuel.FossilFuelCode': this.state.KEY,
+        'dbo.T_Bas_CementAlternativeFuels.AlternativeFuelsCode': this.state.KEY,
       },
       callback: (res) => {
         this.setState({
@@ -153,7 +150,7 @@ class index extends PureComponent {
     const { Output_Enterprise = [] } = this.props.configIdList;
     console.log('props=', this.props)
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    let count = _.sumBy(dataSource, 'dbo.T_Bas_CementFossilFuel.tCO2');
+    let count = _.sumBy(dataSource, 'dbo.T_Bas_CementAlternativeFuels.tCO2');
 
     const TYPES = cementDictionaries.two || [];
 
@@ -173,7 +170,7 @@ class index extends PureComponent {
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.AttachmentID')
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementAlternativeFuels.AttachmentID')
               this.setState({ KEY: key, FileUuid: FileUuid }, () => {
                 this.getFormData(FileUuid);
               })
@@ -188,8 +185,8 @@ class index extends PureComponent {
             initialValues={{
               ...editData,
               LowFeverDataType: 2,
-              UnitCarbonContentDataType: 2,
-              CO2OxidationRateDataType: 2,
+              EmissionDataType: 2,
+              CarbonContentDataType: 2,
               GetType: 1,
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
@@ -224,10 +221,10 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="FossilType"
-                  label="燃料种类"
-                  rules={[{ required: true, message: '请选择燃料种类!' }]}
+                  label="替代燃料或废弃物种类"
+                  rules={[{ required: true, message: '请选择替代燃料或废弃物种类!' }]}
                 >
-                  <Select placeholder="请选择燃料种类" onChange={this.onTypesChange}>
+                  <Select placeholder="请选择替代燃料或废弃物种类" onChange={this.onTypesChange}>
                     {
                       TYPES.map(item => {
                         return <Option value={item.code} key={item.code}>{item.name}</Option>
@@ -239,19 +236,19 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="AnnualConsumption"
-                  label="年消耗量(t/10⁴Nm³)"
-                  rules={[{ required: true, message: '请填写年消耗量!' }]}
+                  label="用量(t)"
+                  rules={[{ required: true, message: '请填写用量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写用量" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   name="LowFeverDataType"
-                  label="低位发热量数据来源"
-                  rules={[{ required: true, message: '请选择低位发热量数据来源!' }]}
+                  label="平均低位发热量数据来源"
+                  rules={[{ required: true, message: '请选择平均低位发热量数据来源!' }]}
                 >
-                  <Select placeholder="请选择低位发热量数据来源">
+                  <Select placeholder="请选择平均低位发热量数据来源">
                     {
                       SELECT_LISTWhere.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>
@@ -263,10 +260,10 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="LowFever"
-                  label="低位发热量(GJ/t,GJ/10⁴Nm³)"
+                  label="平均低位发热量(GJ/t)"
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量"
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写低位发热量"
                     onChange={this.countEmissions}
                   />
                 </Form.Item>
@@ -274,11 +271,11 @@ class index extends PureComponent {
 
               <Col span={12}>
                 <Form.Item
-                  name="UnitCarbonContentDataType"
-                  label="单位热值含碳量数据来源"
-                  rules={[{ required: true, message: '请选择单位热值含碳量数据来源!' }]}
+                  name="EmissionDataType"
+                  label="排放因子数据来源"
+                  rules={[{ required: true, message: '请选择排放因子数据来源!' }]}
                 >
-                  <Select placeholder="请选择单位热值含碳量数据来源">
+                  <Select placeholder="请选择排放因子数据来源">
                     {
                       SELECT_LISTWhere.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>
@@ -289,25 +286,20 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="UnitCarbonContent"
-                  label={
-                    <span>
-                      单位热值含碳量(tC/GJ)
-                      {/* <QuestionTooltip content="单位热值含碳量 = 低位发热量 × 元素含碳量" /> */}
-                    </span>
-                  }
-                  rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
+                  name="Emission"
+                  label='排放因子'
+                  rules={[{ required: true, message: '请填写排放因子!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写单位热值含碳量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写排放因子" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="CO2OxidationRateDataType"
-                  label="碳氧化率数据来源"
-                  rules={[{ required: true, message: '请选择碳氧化率数据来源!' }]}
+                  name="CarbonContentDataType"
+                  label="非生物质碳的含量数据来源"
+                  rules={[{ required: true, message: '请选择非生物质碳的含量数据来源!' }]}
                 >
-                  <Select placeholder="请选择碳氧化率数据来源">
+                  <Select placeholder="请选择非生物质碳的含量数据来源">
                     {
                       SELECT_LISTWhere.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>
@@ -318,16 +310,11 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="CO2OxidationRate"
-                  label={
-                    <span>
-                      碳氧化率(%)
-                      {/* <QuestionTooltip content="碳氧化率(%) = 1 - ((全年炉渣产量 × 炉渣平均含碳量 + 全年飞灰产量 × 飞灰平均含碳量 ÷ 除尘效率) × 10⁶) ÷ (消耗量 × 低位发热量 × 单位热值含碳量)" /> */}
-                    </span>
-                  }
+                  name="CarbonContent"
+                  label='非生物质碳的含量(%)'
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -351,12 +338,12 @@ class index extends PureComponent {
                   label={
                     <span>
                       排放量（tCO₂）
-                      <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12) " />
+                      <QuestionTooltip content="排放量 = 用量 × 平均低位发热量 × 排放因子 × 非生物质碳的含量 " />
                     </span>
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写排放量" />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写排放量" />
                 </Form.Item>
               </Col>
               <Col span={24}>

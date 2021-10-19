@@ -1839,6 +1839,26 @@ const routes = [
                     path: '/Intelligentanalysis/cement/thermal',
                     component: './IntelligentAnalysis/CO2Emissions/cement/thermal',
                   },
+                  // 替代燃料非生物质碳的燃烧
+                  {
+                    path: '/Intelligentanalysis/cement/abioticCarbonRS',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/abioticCarbonRS',
+                  },
+                  // 生料中非燃料碳煅烧
+                  {
+                    path: '/Intelligentanalysis/cement/SLAbioticCarbonDS',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/SLAbioticCarbonDS',
+                  },
+                  // 生料中非燃料碳煅烧
+                  {
+                    path: '/Intelligentanalysis/cement/YLTSY',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/YLTSY',
+                  },
+                  // 排放量汇总
+                  {
+                    path: '/Intelligentanalysis/cement/CO2DischargeSum',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/CO2DischargeSum',
+                  },
                 ]
               },
             ],

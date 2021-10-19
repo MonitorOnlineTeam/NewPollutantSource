@@ -198,7 +198,7 @@ class index extends PureComponent {
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据" onChange={(value) => {
                     let val2 = this.formRef.current.getFieldValue('Emission') || 0;
                     let count = value * val2;
-                    this.formRef.current.setFieldsValue({ 'tCO2': count });
+                    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
                   }} />
                 </Form.Item>
               </Col>
@@ -211,7 +211,7 @@ class index extends PureComponent {
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子" onChange={(value) => {
                     let val1 = this.formRef.current.getFieldValue('ActivityData') || 0;
                     let count = value * val1;
-                    this.formRef.current.setFieldsValue({ 'tCO2': count });
+                    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
                   }} />
                 </Form.Item>
               </Col>

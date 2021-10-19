@@ -5,9 +5,10 @@ import { router } from 'umi';
 import { connect } from 'dva'
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
+import { INDUSTRYS } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 
+const industry = INDUSTRYS.cement;
 const { Option } = Select;
-const { Search } = Input;
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -49,14 +50,12 @@ class AddOrEditPage extends PureComponent {
   }
 
   componentDidMount() {
-    if (!this.props.cementDictionaries.one) {
-      this.props.dispatch({
-        type: 'CO2Emissions/getCO2EnergyType',
-        payload: {
-          IndustryCode: this.props.location.query.industry
-        },
-      })
-    }
+    this.props.dispatch({
+      type: 'CO2Emissions/getCO2EnergyType',
+      payload: {
+        IndustryCode: industry
+      },
+    })
 
     let KEY = this.props.history.location.query.key;
     if (KEY) {
@@ -127,9 +126,9 @@ class AddOrEditPage extends PureComponent {
             SupplementaryDataCode: KEY
           },
           reload: KEY ? true : undefined,
-        }
+        },
       }).then(() => {
-        router.push('/Intelligentanalysis/cement/supplementData/addOrEditPage?industry=2')
+        router.push('/Intelligentanalysis/cement/supplementData')
       })
     })
   }
@@ -411,7 +410,7 @@ class AddOrEditPage extends PureComponent {
                   <Button
                     style={{ marginLeft: 8 }}
                     onClick={() => {
-                      router.push('/Intelligentanalysis/cement/supplementData?industry=2')
+                      router.push('/Intelligentanalysis/cement/supplementData')
                     }}
                   >返回</Button>
                 </Divider>
