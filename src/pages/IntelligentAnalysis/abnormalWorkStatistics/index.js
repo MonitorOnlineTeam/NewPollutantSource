@@ -38,15 +38,15 @@ const  dvaDispatch = (dispatch) => {
     updateState:(payload)=>{ 
       dispatch({
         type: `${namespace}/updateState`,
-        payload:payload,
+        payload:{...payload},
       })
     },
-    getProjectInfoList:(payload)=>{ //项目管理列表
+    regEntExceptionTaskList:(payload)=>{ //省级 异常工单
       dispatch({
-        type: `${namespace}/getProjectInfoList`,
+        type: `${namespace}/regEntExceptionTaskList`,
         payload:payload,
       })
-    },
+    }, 
   }
 }
 const Index = (props) => {
@@ -63,9 +63,17 @@ const Index = (props) => {
   },[]);
 
 
-  const showTypeChange = (e) =>{
+  const showTypeChange =  (e) =>{
+
      setShowType(e.target.value)
+     
+    
+     
   }
+
+  useEffect(() => {
+      onFinish();
+  },[showType]);
 
 
   const exports =  async () => {
@@ -84,45 +92,54 @@ const Index = (props) => {
  
 
   const onFinish  = async () =>{  //查询
-      
+     
+     
     try {
       const values = await form.validateFields();
-      console.log (values)
       if(values.time[1].diff(values.time[0], 'days') <= 90){
 
-        // showType==1
-       props.updateState({
-         abnormalTypes:values.abnormalType
-       }) 
-        props.getProjectInfoList({
+       pchildref.current._childFn(values.exceptionType);
+       props.regEntExceptionTaskList({
           ...values,
+          time:undefined,
+          staticType:showType,
+          beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+          endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          regionLevel: 1,
         })
+
+
       }else{
         message.warning('日期单位不能超过90天，请重新选择')
       }
 
     } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
+      console.log('Failed:', errorInfo);                                                               }
   }
 
 
 
 
-  const abnormalTypeChange = (values) =>{
-    // pchildref.current._childFn(values);
-  }
+  // const abnormalTypeChange =  (data) =>{
+    // pchildref.current._childFn(data);
+    // props.updateState({
+    //   abnormalTypes : data
+    // })
+    // onFinish()
+
+  // }
   const searchComponents = () =>{
      return <Form
     form={form}
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
-      pointType:1,
-      abnormalType:1,
-      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      exceptionType:1,
+      pollutantType:undefined,
+      time:[moment(new Date()).add(-88, 'day').startOf('day'), moment(new Date()).endOf('day')]
     }}
   >  
+
     {showType==1? <Row  align='middle'>
       <Form.Item name='time' label='日期'>
           <RangePicker   style={{width:'100%'}} 
@@ -130,19 +147,14 @@ const Index = (props) => {
                         showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
      </Form.Item>
-      <Form.Item label = '监测点类型' name='pointType' style={{padding:'0 8px'}}>
-         <Select placeholder='监测点类型'>
+      <Form.Item label = '监测点类型'  name='pollutantType' style={{padding:'0 8px'}} >
+         <Select placeholder='监测点类型' style={{width:120}} allowClear>
             <Option value={1}>废水</Option>
             <Option value={2}>废气</Option>
             </Select>
         </Form.Item>
-        <Form.Item label='异常类型' name='abnormalType'  style={{paddingRight:'8px'}}>
-            <Select style={{width:150}} placeholder='异常类型'  onChange={abnormalTypeChange}>
-              {/* {
-                ss.map(item=>{
-                return <Option value={item.ss}>{item.ss}</Option>
-                })
-              } */}
+        <Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
+            <Select style={{width:150}} placeholder='异常类型'>
                 <Option value={1}>打卡异常</Option>
                 <Option value={2}>报警响应超时率</Option>
             </Select>
@@ -178,14 +190,14 @@ const Index = (props) => {
        </Form.Item>
        </Row>
        <Row style={{paddingTop:8}}>
-       <Form.Item name='abnormalType'  label='异常类型' style={{paddingRight:'16px'}}>
-           <Select placeholder='异常类型' style={{width:150}} onChange={abnormalTypeChange}>
+       <Form.Item name='exceptionType'  label='异常类型' style={{paddingRight:'16px'}}>
+           <Select placeholder='异常类型' style={{width:150}}>
              <Option value={1}>打卡异常</Option>
              <Option value={2}>报警响应超时率</Option>
            </Select>
        </Form.Item>
-       <Form.Item label='监测点类型' name='pointType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='监测点类型' style={{width:150}}>
+       <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
+        <Select placeholder='监测点类型' style={{width:150}} allowClear>
            <Option value={1}>废水</Option>
            <Option value={2}>废气</Option>
            </Select>
@@ -202,7 +214,7 @@ const Index = (props) => {
     </Form.Item>
     
     <Form.Item>
-    <Radio.Group  value={showType} onChange={showTypeChange} buttonStyle="solid">
+    <Radio.Group  name='showType' value={showType} onChange={showTypeChange} buttonStyle="solid">
      <Radio.Button value="1">行政区</Radio.Button>
      <Radio.Button value="2">企业</Radio.Button>
    </Radio.Group>
@@ -217,7 +229,7 @@ const Index = (props) => {
     <div  className={styles.abnormalWorkStatisticsSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
-      {showType==1? <Region {...props} ref={pchildref}/> : <Ent />}
+      {showType==1? <Region    ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
    </Card>
    </BreadcrumbWrapper>
    

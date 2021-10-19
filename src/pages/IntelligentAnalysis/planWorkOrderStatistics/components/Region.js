@@ -86,6 +86,7 @@ const Index = (props,ref) => {
 
   const [workOrderVisible,setWorkOrderVisible] = useState(false)
 
+  const [workOrderVisible2,setWorkOrderVisible2] = useState(false)
   
 
   const [pageSize,setPageSize] = useState(20)
@@ -182,7 +183,7 @@ const Index = (props,ref) => {
           width: 50,
           align:'center',
           render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum()}}>3</Button>
+            return  <Button type="link" onClick={()=>{totalNum(1)}}>3</Button>
           }
         },
         {
@@ -226,7 +227,7 @@ const Index = (props,ref) => {
           width: 50,
           align:'center',
           render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum()}}>3</Button>
+            return  <Button type="link" onClick={()=>{totalNum(2)}}>3</Button>
           }
         },
         {
@@ -304,7 +305,7 @@ const Index = (props,ref) => {
           width: 50,
           align:'center',
           render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum()}}>3</Button>
+            return  <Button type="link" onClick={()=>{totalNum(1)}}>3</Button>
           }
         },
         {
@@ -348,7 +349,7 @@ const Index = (props,ref) => {
           width: 50,
           align:'center',
           render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum()}}>3</Button>
+            return  <Button type="link" onClick={()=>{totalNum(2)}}>3</Button>
           }
         },
         {
@@ -503,7 +504,79 @@ const Index = (props,ref) => {
    
   ];
  
-
+  const workOrderColumns2 = [
+    {
+      title: '省/市',
+      dataIndex: 'ProjectName',
+      key:'ProjectName',
+      align:'center',
+      width: 100,
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'RegionName',
+      key:'RegionName',
+      align:'center',
+      width: 150,
+      render:(record,text,index)=>{
+        return  <div style={{textAlign:"left"}}>Link Button</div>
+      }
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'RegionName',
+      key:'RegionName',
+      align:'center',
+    },
+    {
+      title: '巡检周期',
+      dataIndex: 'RegionName',
+      key:'RegionName',
+      align:'center',
+    },
+    {
+      title: '计划校准工单',
+      width:200,
+      children: [
+        {
+          title: '总数',
+          dataIndex: 'building',
+          key: 'building',
+          width: 50,
+          align:'center',
+        },
+        {
+          title:  "完成数",
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '完成率',
+          dataIndex: 'number',
+          key: 'number',
+          width: 100,
+          align:'center',
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text&&text.replace("%","")}
+                  size="small"
+                  style={{width:'90%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    },
+   
+  ];
+ 
  
 
  
@@ -514,9 +587,10 @@ const cityRegColumnsExports = () =>{
 
 }
 
-const totalNum = () =>{
+const totalNum = (type) =>{
+  
 
-   setWorkOrderVisible(true)
+  type==1? setWorkOrderVisible(true) : setWorkOrderVisible2(true)
     
 
 }
@@ -546,11 +620,26 @@ const totalNum = () =>{
     </Button> 
   }
 
+  const onFinishWorkOrder = async () =>{  //查询 工单
 
+
+    try {
+
+      const values = await form.validateFields();
+
+      workOrderVisible?  props.getProjectInfoList({
+        ...values,
+      }) : props.getProjectInfoList({
+        ...values,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
   const [ workOrderForm ]= Form.useForm()
   const searchWorkOrderComponents = () =>{
     return <> <Form
-    onFinish={onFinish}
+    onFinish={onFinishWorkOrder}
     form={workOrderForm}
     layout={'inline'}
   >   
@@ -600,7 +689,9 @@ const totalNum = () =>{
     </Row>
       </Form>
       <Row style={{paddingTop:8}}>
-     <span style={{color:'#f5222d',fontSize:14}}>计划巡检工单由系统自动派发，在巡检周期内没有被完成，将被系统自动关闭。 </span>
+     <span style={{color:'#f5222d',fontSize:14}}>
+     {workOrderVisible? "计划巡检工单由系统自动派发，在巡检周期内没有被完成，将被系统自动关闭。" : "计划校准工单由系统自动派发，在校准周期内没有被完成，将被系统自动关闭。"}
+        </span>
      </Row>
       </>
    }
@@ -687,6 +778,54 @@ const totalNum = () =>{
       }
     })
 })
+workOrderColumns2.push({
+  title: '工单分布(按工单完成日期分布)',
+  width:200, 
+  align:'center',
+  children:aa.map((item,index)=>{
+    return { 
+      title: index,
+      width: 50,
+      align:'center',
+      children: [{
+          title: item,
+          dataIndex: 'building',
+          key: 'building',
+          width: 50,
+          align:'center',
+          render:(text,record)=>{
+            switch(text){
+              case 1 :
+                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                <span style={{color:'#fff'}}>1</span>
+              </Row>
+              break;
+              case 2 :
+                return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                <span style={{color:'#fff'}}>1</span>
+              </Row>
+              break;
+              case 3 :
+                return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                <span style={{color:'#fff'}}>1</span>
+              </Row>
+              break;
+              case 4 :
+                return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                <span style={{color:'#fff'}}>1</span>
+              </Row>
+              break;
+              default:
+                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                <span style={{color:'#fff'}}>1</span>
+              </Row>
+            }
+
+          }
+      }]
+    }
+  })
+})
 // 暴露的子组件方法，给父组件调用
 const childRef = useRef();
 useImperativeHandle(refInstance,() => {
@@ -770,7 +909,7 @@ useImperativeHandle(refInstance,() => {
  
       </Modal> 
 
-        {/**省级&&市级工单数弹框 */}
+        {/**省级&&市级工单数弹框  计划巡检*/}
       
         <Modal
         title={'内派发的计划巡检啊工单完成情况'}
@@ -794,8 +933,34 @@ useImperativeHandle(refInstance,() => {
       }}
       />
    </Card>
- 
       </Modal> 
+              {/**省级&&市级工单数弹框  计划校准*/}
+      
+              <Modal
+        title={'内派发的计划校准工单完成情况'}
+        visible={workOrderVisible2}
+        onCancel={()=>{setWorkOrderVisible2(false)}}
+        footer={null}
+        destroyOnClose
+        centered
+        width='90%'
+      >
+     <Card title={  searchWorkOrderComponents()}>
+     <SdlTable
+        loading = {tableLoading}
+        bordered
+        dataSource={tableDatas}
+        columns={workOrderColumns2}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          // onChange: handleTableChange,
+      }}
+      />
+   </Card>
+      </Modal> 
+   
+
         </div>
   );
 };

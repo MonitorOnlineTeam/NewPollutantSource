@@ -14,44 +14,103 @@ export default Model.extend({
     parametersList:[],
     tableLoading:false,
     tableTotal:0,
-    pointDatas:[],
     abnormalTypes:1,
+    pointDatas:[],
+    entTableDatas:[],
+    abnormalList:[],
+    queryPar:null,
+    dateCol:[],
+    cityTableTotal:0,
+    cityTableDatas:[],
+    cityTableLoading:false,
+    cityDateCol:[],
+    cityAbnormalList:[],
+    cityDetailTableTotal:[],
+    cityDetailTableDatas:[],
+    entAbnormalList:[]
   },
   effects: {
-    *getProjectInfoList({ payload,callback }, { call, put, update }) { //项目信息列表
+    *regEntExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
       yield update({ tableLoading:true})
-      const result = yield call(services.GetProjectInfoList, payload);
+      const result = yield call(services.exceptionTaskList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
           tableDatas:result.Datas,
-          tableLoading:false
+          tableLoading:false,
+          queryPar:{...payload},
         })
+
+        
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
-    *addOrUpdateProjectInfo({ payload,callback }, { call, put, update }) { //添加和修改
-      const result = yield call(services.AddOrUpdateProjectInfo, payload);
+    *abnormalExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区省级 企业 打卡异常 响应超时
+      const result = yield call(services.abnormalExceptionTaskList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
-      }else{
-        message.error(result.Message)
-      }
-    }, 
-    *deleteProjectInfo({ payload,callback }, { call, put, update }) { //删除
-      const result = yield call(services.DeleteProjectInfo, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
+        yield update({
+          abnormalList:result.Datas,
+          dateCol:result.Datas[0]&&result.Datas[0].datePick
+        })
+
       }else{
         message.error(result.Message)
       }
     },
+    *cityExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区市 级别 第一级
+      yield update({ cityTableLoading:true})
+      const result = yield call(services.cityExceptionTaskList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          cityTableTotal:result.Total,
+          cityTableDatas:result.Datas,
+          cityTableLoading:false
+        })
 
+        
+      }else{
+        message.error(result.Message)
+        yield update({ cityTableLoading:false})
+      }
+    },
+    *cityDetailExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区市 级别 第二级 弹框
+      const result = yield call(services.cityDetailExceptionTaskList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          cityDetailTableTotal:result.Total,
+          cityDetailTableDatas:result.Datas,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
 
+    *cityAbnormalExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区市级 打卡异常
+      const result = yield call(services.cityAbnormalExceptionTaskList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          cityAbnormalList:result.Datas,
+          cityDateCol:result.Datas[0]&&result.Datas[0].datePick
+        })
 
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *getPointExceptionSignList({ payload,callback }, { call, put, update }) { //企业 打卡异常
+      const result = yield call(services.getPointExceptionSignList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entAbnormalList:result.Datas,
+        })
+
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
   },
 })
