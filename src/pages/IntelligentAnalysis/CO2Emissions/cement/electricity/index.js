@@ -111,7 +111,7 @@ class index extends PureComponent {
   render() {
     const { isModalVisible, editData, FileUuid } = this.state;
     const { tableInfo } = this.props;
-    const { Output_Enterprise = [] } = this.props.configIdList;
+    const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementDischarge.tCO2');
     return (
@@ -157,8 +157,8 @@ class index extends PureComponent {
                 >
                   <Select placeholder="请选择企业">
                     {
-                      Output_Enterprise.map(item => {
-                        return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
+                      EntView.map(item => {
+                        return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
                       })
                     }
                   </Select>
