@@ -186,7 +186,7 @@ class index extends PureComponent {
               ...editData,
               GetType: 1,
               MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
+              EntCode: editData['dbo.EntView.EntCode'],
             }}
           >
             <Row>

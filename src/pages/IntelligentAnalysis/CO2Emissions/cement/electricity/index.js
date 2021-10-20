@@ -145,7 +145,7 @@ class index extends PureComponent {
             initialValues={{
               ...editData,
               MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
+              EntCode: editData['dbo.EntView.EntCode'],
             }}
           >
             <Row>

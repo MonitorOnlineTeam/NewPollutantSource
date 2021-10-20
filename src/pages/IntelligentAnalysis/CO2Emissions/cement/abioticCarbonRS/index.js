@@ -189,8 +189,8 @@ class index extends PureComponent {
               CarbonContentDataType: 2,
               GetType: 1,
               MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
-              FossilType: editData['FossilType'] ? editData['FossilType'] + '' : undefined,
+              EntCode: editData['dbo.EntView.EntCode'],
+              FossilType: editData['dbo.T_Bas_CementAlternativeFuels.FossilType'] ? editData['dbo.T_Bas_CementAlternativeFuels.FossilType'] + '' : undefined,
             }}
           >
             <Row>

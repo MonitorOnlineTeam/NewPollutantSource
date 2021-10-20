@@ -41,40 +41,44 @@ class index extends PureComponent {
 
   getoption = () => {
     const { cementCO2Sum } = this.props;
-    let legendData = cementCO2Sum.map(item => item.name)
-    let option = {
-      title: {
-        text: '排放量汇总',
-        subtext: '',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: legendData
-      },
-      series: [
-        {
-          name: '排放量来源',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: cementCO2Sum,
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
+    if (cementCO2Sum.length) {
+      let _cementCO2Sum = cementCO2Sum.filter(item => item.name.indexOf('温室气体排放总量') === -1);
+      let legendData = _cementCO2Sum.map(item => item.name);
+      let option = {
+        title: {
+          text: '排放量汇总',
+          subtext: '',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: legendData
+        },
+        series: [
+          {
+            name: '排放量来源',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: _cementCO2Sum,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
             }
           }
-        }
-      ]
-    };
-    return option;
+        ]
+      };
+      return option;
+    }
+    return {}
   }
 
   render() {

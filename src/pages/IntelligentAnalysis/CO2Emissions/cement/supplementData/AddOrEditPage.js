@@ -185,7 +185,8 @@ class AddOrEditPage extends PureComponent {
                   CO2OxidationRateDataType: 2,
                   // PowerDataType: 1,
                   MonitorTime: moment(editData.MonitorTime),
-                  EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
+                  FossilType: editData['dbo.T_Bas_CementSupplementaryData.FossilType'] ? editData['dbo.T_Bas_CementSupplementaryData.FossilType'] + '' : undefined,
+                  EntCode: editData['dbo.EntView.EntCode'],
                 }}
               >
                 <Row>

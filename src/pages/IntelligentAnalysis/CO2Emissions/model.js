@@ -6,7 +6,7 @@ export default Model.extend({
   namespace: 'CO2Emissions',
   state: {
     cementDictionaries: {},
-    cementCO2Sum: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    cementCO2Sum: [],
   },
   effects: {
     // 获取关注列表
