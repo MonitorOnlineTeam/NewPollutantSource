@@ -80,7 +80,7 @@ class index extends PureComponent {
     let value1 = AnnualConsumption * LowFever;
     let value2 = UnitCarbonContent * CO2OxidationRate * 44 / 12;
     let count = value1 * value2;
-    this.formRef.current.setFieldsValue({ 'tCO2': count });
+    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
   }
 
   handleCancel = () => {
@@ -242,7 +242,7 @@ class index extends PureComponent {
                   label="年消耗量(t/10⁴Nm³)"
                   rules={[{ required: true, message: '请填写年消耗量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -266,7 +266,7 @@ class index extends PureComponent {
                   label="低位发热量(GJ/t,GJ/10⁴Nm³)"
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量"
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写低位发热量"
                     onChange={this.countEmissions}
                   />
                 </Form.Item>
@@ -298,7 +298,7 @@ class index extends PureComponent {
                   }
                   rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写单位热值含碳量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写单位热值含碳量" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -327,7 +327,7 @@ class index extends PureComponent {
                   }
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -356,7 +356,7 @@ class index extends PureComponent {
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <InputNumber step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写排放量" />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写排放量" />
                 </Form.Item>
               </Col>
               <Col span={24}>
