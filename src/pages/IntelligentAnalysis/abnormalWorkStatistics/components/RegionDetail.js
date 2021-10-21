@@ -174,7 +174,7 @@ const Index = (props) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'80%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -216,11 +216,11 @@ const Index = (props) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text.replace("%","")}
+                  percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'80%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + "%"}</span>}
                 />
               </div>
             );
@@ -241,7 +241,7 @@ const Index = (props) => {
             <Progress
               percent={text&&text}
               size="small"
-              style={{width:'90%'}}
+              style={{width:'80%'}}
               status='normal'
               format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
             />
@@ -310,7 +310,7 @@ const Index = (props) => {
               <Progress
                 percent={text&&text}
                 size="small"
-                style={{width:'90%'}}
+                style={{width:'80%'}}
                 status='normal'
                 format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
               />
@@ -376,7 +376,7 @@ const Index = (props) => {
               <Progress
                 percent={text&&text}
                 size="small"
-                style={{width:'90%'}}
+                style={{width:'80%'}}
                 status='normal'
                 format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
               />
@@ -415,11 +415,11 @@ const Index = (props) => {
           return (
             <div>
               <Progress
-                percent={text&&text.replace("%","")}
+                percent={text&&text}
                 size="small"
-                style={{width:'90%'}}
+                style={{width:'80%'}}
                 status='normal'
-                format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + "%"}</span>}
               />
             </div>
           );
@@ -440,7 +440,7 @@ const Index = (props) => {
           <Progress
             percent={text&&text}
             size="small"
-            style={{width:'90%'}}
+            style={{width:'80%'}}
             status='normal'
             format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
           />
@@ -502,7 +502,7 @@ const cityAlarmColumns = [
             <Progress
               percent={text&&text}
               size="small"
-              style={{width:'90%'}}
+              style={{width:'80%'}}
               status='normal'
               format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
             />
@@ -602,7 +602,7 @@ const reponseNumColumns = [
             <Progress
               percent={text&&text}
               size="small"
-              style={{width:'90%'}}
+              style={{width:'80%'}}
               status='normal'
               format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
             />
@@ -677,7 +677,6 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
       :
       props.cityDetailExceptionTaskList({
         ...queryPar,
-        staticType:3,
         regionCode:regionCode,
         staticType:staticType,
         ...values,

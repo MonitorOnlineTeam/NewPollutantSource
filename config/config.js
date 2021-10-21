@@ -8,6 +8,8 @@ const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.57:61000/';
+// const apiHost = 'http://172.16.12.57:61002/';
+
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';

@@ -4,7 +4,7 @@
  * 创建时间：2021.09.27
  */
 import React, { useState,useEffect,Fragment ,useRef,useImperativeHandle,forwardRef } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined,EnvironmentFilled } from '@ant-design/icons';
 import { connect } from "dva";
@@ -50,8 +50,10 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   dateCol:abnormalWorkStatistics.dateCol,
   abnormalList:abnormalWorkStatistics.abnormalList,
   queryPar:abnormalWorkStatistics.queryPar,
-  getPointExceptionLoading:loading.effects[`${namespace}/getPointExceptionSignList`],
-  entAbnormalList:abnormalWorkStatistics.entAbnormalList
+  // getPointExceptionLoading:loading.effects[`${namespace}/getPointExceptionSignList`],
+  getPointExceptionLoading:abnormalWorkStatistics.getPointExceptionLoading,
+  entAbnormalList:abnormalWorkStatistics.entAbnormalList,
+  taskList:abnormalWorkStatistics.taskList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -93,7 +95,6 @@ const Index = (props) => {
   const [pageSize,setPageSize] = useState(20)
   const [pageIndex,setPageIndex] = useState(1)
 
-  const [aa,setAa] = useState(['周一','周二','周三','周四','周五','周六','周日'])
 
 
   
@@ -170,7 +171,7 @@ const Index = (props) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -214,7 +215,7 @@ const Index = (props) => {
               <Progress
                 percent={text&&text}
                 size="small"
-                style={{width:'90%'}}
+                style={{width:'80%'}}
                 status='normal'
                 format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
               />
@@ -237,7 +238,7 @@ const Index = (props) => {
             <Progress
               percent={text&&text}
               size="small"
-              style={{width:'90%'}}
+              style={{width:'80%'}}
               status='normal'
               format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
             />
@@ -297,7 +298,7 @@ const Index = (props) => {
               <Progress
                 percent={text&&text}
                 size="small"
-                style={{width:'90%'}}
+                style={{width:'85%'}}
                 status='normal'
                 format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
               />
@@ -352,20 +353,11 @@ const handleTableChange =   async (PageIndex, )=>{ //分页
 
 
 
-// const [outOrInside,setOutOrInside] = useState()
-const abnormalNum = (row) =>{  //企业监测点异常打卡
-// getPointExceptionSignList
-  setEntAbnormalNumVisible(true)
-  // regionForm.resetFields()
-  // setEntCode(row.entCode)
-  // setRegName(row.regionName)
-    
 
-}
 
 const [regName,setRegName] = useState()
 const [entCode,setEntCode] = useState()
-const responselNum = (row) =>{
+const responselNum = (row) =>{  //响应超时
   setAbnormalNumVisible(true)
   regionForm.resetFields()
   setEntCode(row.entCode)
@@ -380,7 +372,7 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
   })
 
  }
-
+ 
   const onFinish  = async () =>{  //查询 响应超时
       
     try {
@@ -469,7 +461,35 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
     return icon;
   };
   
-  const  { entAbnormalList,getPointExceptionLoading }  = props; 
+  // const [outOrInside,setOutOrInside] = useState()
+const [clockNumber,setClockNumber] = useState()
+const [pointName,setPointName] = useState()
+
+const abnormalNum = (row,outOrInside) =>{  //企业监测点异常打卡
+
+  setEntAbnormalNumVisible(true)
+  // setRegName(row.regionName)
+  setPointName(`${row.entName} - ${row.pointName}`)
+  setClockNumber(Number(row.insidePlanExceptionCount) + Number(row.outPlanExceptionCount))
+  props.getPointExceptionSignList({
+    beginTime:queryPar.beginTime,
+    endTime:queryPar.endTime,
+    // outOrInside:outOrInside,
+    DGIMN:row.DGIMN,
+   })  
+
+}
+  const  { entAbnormalList,getPointExceptionLoading,taskList }  = props; 
+
+  const renderMarker = (extData) =>{
+    return <div>
+            
+  <Row style={{whiteSpace:"nowrap",padding:5,background:'#fff',marginBottom:5,marginLeft:-58}}>{extData.position.checkInTime}</Row>
+           {/* <EnvironmentFilled style={{color:'#1890ff',fontSize:24}}/> */}
+           <img src='/location.png' style={{width:24}}/>
+           </div>
+  }
+
  const entMap = () =>{
   const styleA= {
     position: 'absolute',
@@ -486,40 +506,56 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
     backgroundColor: "rgba(0,0,0,.4)"
 }
 
-const randomPosition = () => ({
-  longitude: 100 + Math.random() * 20,
-  latitude: 30 + Math.random() * 20
-})
-const randomMarker = (len) => (
-  Array(len).fill(true).map((e, idx) => ({
-    position: randomPosition()
-  }))
-);
-const renderMarker = (extData) =>{
-  return <div>
-          
-         <Row style={{whiteSpace:"nowrap",padding:5,background:'#fff',marginBottom:5,marginLeft:-58}}>2021/09/16 14:08:08</Row>
-         {/* <EnvironmentFilled style={{color:'#1890ff',fontSize:24}}/> */}
-         <img src='/location.png' style={{width:24}}/>
-         </div>
-}
 
-const [markers,setMarkers] = useState(randomMarker(10))
-const [center,setCenter] = useState(randomPosition())
-//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png
-   return <div style={{width: '100%', height: '800px'}}>
-     <Map
+if (getPointExceptionLoading) {
+  return (<Spin
+    style={{
+      width: '100%',
+      height: 'calc(100vh/2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+    size="large"
+  />);
+}
+  //  <Spin spinning={getPointExceptionLoading}  style={{  display: 'flex',alignItems:'center' , justifyContent: 'center', }}>
+  return <div style={{width: '100%', height: 'calc(100vh - 200px)'}}>
+    <Map
    amapkey={config.amapKey}
   //  events={this.amapEvents}
   //  mapStyle="amap://styles/normal"
    mapStyle="amap://styles/macaron"
    useAMapUI={!config.offlineMapUrl.domain}
-   center={{longitude: 110, latitude: 40} } //center 地图中心点坐标值
-   zoom={10}
+   center={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude} } //center 地图中心点坐标值
+   zoom={11}
  >
-           <Markers markers={markers} render={renderMarker}  />
-        <div style={styleA}>
-        <span>某某化工厂- 脱硫排口，2021-06-01 ~ 2021-08-01期间打卡异常数: 200</span>
+
+           <Markers markers={taskList? taskList : []} render={taskList? renderMarker : ''}  />
+
+
+        {/*企业监测点 */}
+        <Marker position={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude}} >
+        <div>
+          
+          <Row style={{whiteSpace:"nowrap",padding:'0 5px',background:'#fff',
+             marginBottom:5,marginLeft: `calc(-4 * ${entAbnormalList.pointName&&entAbnormalList.pointName.length}px)` }}>
+            {entAbnormalList.pointName}
+          </Row>
+                 {entAbnormalList.pollutantType ==1 ?getWaterIcon(1) : getGasIcon(1)}
+          </div> 
+        </Marker>
+
+        {/*半径 */}
+        <Circle 
+            center={ { longitude:  entAbnormalList.longitude, latitude:entAbnormalList.latitude} } 
+            radius={ Number(entAbnormalList.operationRadius) }
+            style={  {fillColor:"rgba(228,228,228,.7)", strokeColor: 'rgba(228,228,228,.8)'}}
+          />
+
+      <div style={styleA}>
+        <span>{`${pointName} ,${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
+             期间打卡异常数：${ entAbnormalList.exceptionCount}`}</span>
         </div>
            <div  style={styleB}>
           <Row align='middle'>
@@ -527,20 +563,10 @@ const [center,setCenter] = useState(randomPosition())
               <img src='/location.png' style={{width:18}}/>
                <span style={{paddingLeft:5}}>打卡位置及时间</span></Row>
         </div>
-        <Marker position={ {longitude: 110.222222, latitude: 40.222222}} >
-        <div>
-          
-          <Row style={{whiteSpace:"nowrap",padding:'0 5px',background:'#fff',marginBottom:5,marginLeft:-22}}>脱硫排口</Row>
-                 {getGasIcon(1)}
-          </div> 
-        </Marker>
-        <Circle 
-            center={ {longitude: 110.222222, latitude: 40.222222} } 
-            radius={ 15000 }
-            style={  {fillColor:"rgba(228,228,228,.7)", strokeColor: 'rgba(228,228,228,.8)'}}
-          />
    </Map>
+
    </div>  
+  //  </Spin>
  }
  
   const { dateCol } = props;
@@ -600,7 +626,7 @@ useImperativeHandle(refInstance,() => {
    
   {/** 打卡异常  监测点 弹框 */}
   <Modal
-        title={`企业` }
+        title={ '' } 
         visible={entAbnormalNumVisible}
         onCancel={()=>{setEntAbnormalNumVisible(false)}}
         footer={null}

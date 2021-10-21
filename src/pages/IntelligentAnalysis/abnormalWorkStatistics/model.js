@@ -27,7 +27,9 @@ export default Model.extend({
     cityAbnormalList:[],
     cityDetailTableTotal:[],
     cityDetailTableDatas:[],
-    entAbnormalList:[]
+    entAbnormalList:{},
+    taskList:[],
+    getPointExceptionLoading:true
   },
   effects: {
     *regEntExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
@@ -101,14 +103,28 @@ export default Model.extend({
       }
     },
     *getPointExceptionSignList({ payload,callback }, { call, put, update }) { //企业 打卡异常
+      
+      yield update({  getPointExceptionLoading:true })
       const result = yield call(services.getPointExceptionSignList, payload);
       if (result.IsSuccess) {
+        if(result.Datas.taskList[0]){
+          const taskLists = result.Datas.taskList.map((item)=>({
+             position:{
+               ...item
+            }
+          }))
+          yield update({
+            taskList:taskLists,
+          })
+        }
         yield update({
           entAbnormalList:result.Datas,
+          getPointExceptionLoading:false
         })
-
       }else{
         message.error(result.Message)
+        yield update({getPointExceptionLoading:false
+        })
       }
     },
     

@@ -136,7 +136,7 @@ const Index = (props) => {
     initialValues={{
       exceptionType:1,
       pollutantType:undefined,
-      time:[moment(new Date()).add(-88, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
     }}
   >  
 
