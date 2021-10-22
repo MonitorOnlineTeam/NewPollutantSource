@@ -41,9 +41,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getProjectInfoList:(payload)=>{ //项目管理列表
+    regEntGetTaskWorkOrderList:(payload)=>{ // 计划工单统计
       dispatch({
-        type: `${namespace}/getProjectInfoList`,
+        type: `${namespace}/regEntGetTaskWorkOrderList`,
         payload:payload,
       })
     },
@@ -62,11 +62,14 @@ const Index = (props) => {
   
   },[]);
 
-
+   console.log(props)
   const showTypeChange = (e) =>{
      setShowType(e.target.value)
   }
-
+  
+  useEffect(()=>{
+    onFinish();
+  },[showType])
 
   const exports =  async () => {
     const values =   await form.validateFields();
@@ -82,20 +85,20 @@ const Index = (props) => {
   })
 };
  
-
+  const [outOrInside,setOutOrInside] = useState(1)
   const onFinish  = async () =>{  //查询
-      
     try {
       const values = await form.validateFields();
-      console.log (values)
       if(values.time[1].diff(values.time[0], 'days') <= 90){
 
-        // showType==1
-       props.updateState({
-         abnormalTypes:values.abnormalType
-       }) 
-        props.getProjectInfoList({
+        props.regEntGetTaskWorkOrderList({
           ...values,
+          time:undefined,
+          staticType:showType,
+          beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+          endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          regionLevel: 1,
+          outOrInside:outOrInside// 子组件调用的父组件方法
         })
       }else{
         message.warning('日期单位不能超过90天，请重新选择')
@@ -109,8 +112,9 @@ const Index = (props) => {
 
 
 
-  const abnormalTypeChange = (values) =>{
+  const parentCallback = (val) =>{
     // pchildref.current._childFn(values);
+    setOutOrInside(val)
   }
   const searchComponents = () =>{
      return <Form
@@ -167,12 +171,6 @@ const Index = (props) => {
        </Form.Item>
        </Row>
        <Row style={{paddingTop:8}}>
-       <Form.Item name='abnormalType'  label='异常类型' style={{paddingRight:'16px'}}>
-           <Select placeholder='异常类型' style={{width:150}} onChange={abnormalTypeChange}>
-             <Option value={1}>打卡异常</Option>
-             <Option value={2}>报警响应超时率</Option>
-           </Select>
-       </Form.Item>
        <Form.Item label='监测点类型' name='pointType'  style={{paddingRight:'16px'}}>
         <Select placeholder='监测点类型' style={{width:150}}>
            <Option value={1}>废水</Option>
@@ -206,7 +204,7 @@ const Index = (props) => {
     <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
-      {showType==1? <Region {...props} ref={pchildref}/> : <Ent />}
+      {showType==1? <Region parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
    </Card>
    </BreadcrumbWrapper>
    

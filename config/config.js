@@ -1754,11 +1754,6 @@ export default {
                   path: '/Intelligentanalysis/planWorkOrderStatistics',
                   component: './Intelligentanalysis/planWorkOrderStatistics',
                 },
-                { //计划工单统计 市一级
-                  name: 'planWorkOrderStatisticsDetail',
-                  path: '/Intelligentanalysis/planWorkOrderStatistics/regionDetail',
-                  component: './Intelligentanalysis/planWorkOrderStatistics/regionDetail',
-                },
               ],
 
               

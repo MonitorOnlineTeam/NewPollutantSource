@@ -1,21 +1,36 @@
 import { post, get, getNew } from '@/utils/request';
 
-// 获取项目管理列表
-export async function GetProjectInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList',params, null);
-  return result;
-}
-// 获取项目管理列表  添加和修改
-export async function AddOrUpdateProjectInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdateProjectInfo',params, null);
-  return result;
-}
- 
-// 获取项目管理列表  删除
-export async function DeleteProjectInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteProjectInfo',params, null);
+// 计划工单统计
+export async function getTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
   return result;
 }
 
+// 计划工单统计 市级别
+export async function cityGetTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
 
+// 计划工单统计 市级别 弹框
+export async function cityDetailGetTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
+//计划工单统计 省级
+export async function abnormalGetTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
 
+//计划工单统计 市级
+export async function cityAbnormalGetTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
+
+//计划工单统计  企业
+export async function getPointGetTaskWorkOrderListt(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
