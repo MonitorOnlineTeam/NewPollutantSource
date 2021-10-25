@@ -76,7 +76,8 @@ const Index = (props,ref) => {
   const [pageSize,setPageSize] = useState(20)
   const [pageIndex,setPageIndex] = useState(1)
 
-
+  const [regionCode,setRegionCode]  = useState();
+  const  [regName ,setRegName] = useState()
 
   
   const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,abnormalTypes,refInstance } = props; 
@@ -86,12 +87,6 @@ const Index = (props,ref) => {
     },[]);
 
   
-  const alarmResponse = () =>{
-    return <ol type='1' style={{listStyleType:'decimal'}}>
-              <li>报警响应工单:数据出现异常、缺失后:系统会发出报警，运维人员响应报警后会生成工单。</li>
-              <li>响应超时:报警首欠出现后:超过5个小时响应，则生成的工单判定为响应超时异常工单。</li>
-           </ol>
-  }
 
   const plannedInspectTip =()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
@@ -104,7 +99,7 @@ const Index = (props,ref) => {
     <li>运营周期内:在监测点的实际运营周期内。</li>
     <li>完成工单:当日存在完成的计划工单。</li>
     <li>系统关闭工单:在运维周期内未完成计划工单，系统会关闭掉。</li>
-    <li>4、同时存在关闭和完成的工单:当日存在系统关闭的计划工单，也存在完成的工单。</li>
+    <li>同时存在关闭和完成的工单:当日存在系统关闭的计划工单，也存在完成的工单。</li>
 
   </ol>
   }
@@ -112,61 +107,63 @@ const Index = (props,ref) => {
   const columns = [
     {
       title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
     },
     {
       title: '企业名称',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
-      width: 50,
+      width: 150,
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
+      }
     },
     {
-      title: <span>监测点名称</span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      title: '监测点名称',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
-      width: 100,
     },
     {
       title: '计划巡检工单',
       width:200,
       children: [
         {
-          title: <span>总数</span>,
-          dataIndex: 'building',
-          key: 'building',
+          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
           width: 50,
           align:'center',
-          render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum(1)}}>3</Button>
+          render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{totalNum(1,record)}}>{text}</Button>
           }
         },
         {
           title:  <span>完成数</span>,
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionCompleteCount',
+          key: 'inspectionCompleteCount',
           width: 50,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionRate',
+          key: 'inspectionRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.number - b.number,
+          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text.replace("%","")}
+                  percent={text?text:0}
                   size="small"
                   style={{width:'90%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
               </div>
             );
@@ -179,38 +176,38 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: <span>总数</span>,
-          dataIndex: 'building',
-          key: 'building',
+          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'calibrationCount',
+          key: 'calibrationCount',
           width: 50,
           align:'center',
           render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum(2)}}>3</Button>
+            return  <Button type="link" onClick={()=>{totalNum(2,record)}}></Button>
           }
         },
         {
           title:  <span>完成数</span>,
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'calibrationCompleteCount',
+          key: 'calibrationCompleteCount',
           width: 50,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionRate',
+          key: 'inspectionRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.number - b.number,
+          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text.replace("%","")}
+                  percent={text&&text}
                   size="small"
                   style={{width:'90%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
               </div>
             );
@@ -218,114 +215,9 @@ const Index = (props,ref) => {
         },
       ],
     },
-   
   ];
 
-   const cityInsideRegColumns =[ //计划内  市级别 二级弹框
 
-    {
-      title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-    {
-      title: '运营企业数',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 50,
-    },
-    {
-      title: <span>运营监测点数</span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 100,
-    },
-    {
-      title: '计划巡检工单',
-      width:200,
-      children: [
-        {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'building',
-          key: 'building',
-          width: 50,
-          align:'center',
-        },
-        {
-          title:  <span>完成数</span>,
-          dataIndex: 'number',
-          key: 'number',
-          width: 50,
-          align:'center',
-        },
-        {
-          title: '完成率',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-          sorter: (a, b) => a.number - b.number,
-          render: (text, record) => {
-            return (
-              <div>
-                <Progress
-                  percent={text&&text.replace("%","")}
-                  size="small"
-                  style={{width:'90%'}}
-                  status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
-                />
-              </div>
-            );
-          }
-        },
-      ],
-    },
-    {
-      title: '计划校准工单',
-      width:200,
-      children: [
-        {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'building',
-          key: 'building',
-          width: 50,
-          align:'center',
-        },
-        {
-          title:  <span>完成数</span>,
-          dataIndex: 'number',
-          key: 'number',
-          width: 50,
-          align:'center',
-        },
-        {
-          title: '完成率',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-          sorter: (a, b) => a.number - b.number,
-          render: (text, record) => {
-            return (
-              <div>
-                <Progress
-                  percent={text&&text.replace("%","")}
-                  size="small"
-                  style={{width:'90%'}}
-                  status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
-                />
-              </div>
-            );
-          }
-        },
-      ],
-    },
-   ]
    const insideWorkOrderColumns = [
     {
       title: '省/市',
@@ -376,19 +268,20 @@ const Index = (props,ref) => {
         },
         {
           title: '完成率',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionRate',
+          key: 'inspectionRate',
           width: 100,
           align:'center',
+          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text.replace("%","")}
+                  percent={text&&text}
                   size="small"
                   style={{width:'90%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
               </div>
             );
@@ -449,19 +342,20 @@ const Index = (props,ref) => {
         },
         {
           title: '完成率',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionRate',
+          key: 'inspectionRate',
           width: 100,
           align:'center',
+          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text.replace("%","")}
+                  percent={text&&text}
                   size="small"
                   style={{width:'90%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
               </div>
             );
@@ -474,21 +368,24 @@ const Index = (props,ref) => {
    const outsideColumns =  [ //计划外 首页面
     {
       title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
     },
     {
       title: '企业名称',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
-      width: 50,
+      width: 150,
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
+      }
     },
     {
       title: <span>监测点名称</span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
       width: 100,
       render:(text,record,index)=>{
@@ -496,7 +393,7 @@ const Index = (props,ref) => {
          onClick={()=>{
            outPointClick(record)
          }}
-        >3</Button>
+        >{text}</Button>
       }
     },
     {
@@ -504,51 +401,51 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: <span>总数</span>,
-          dataIndex: 'building',
-          key: 'building',
+          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'allTaskCount',
+          key: 'allTaskCount',
           width: 50,
           align:'center',
         },
         {
           title:  <span>巡检工单数</span>,
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
           width: 100,
           align:'center',
         },
         {
           title: '校准工单数',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'calibrationCount',
+          key: 'calibrationCount',
           width: 100,
           align:'center',
         },
         {
           title: '维护维修工单数',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'repairCount',
+          key: 'repairCount',
           width: 100,
           align:'center',
         },
         {
           title: '配合对比工单数',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'matchingComparisonCount',
+          key: 'matchingComparisonCount',
           width: 100,
           align:'center',
         },
         {
           title: '配合检查工单数',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'cooperationInspectionCount',
+          key: 'cooperationInspectionCount',
           width: 100,
           align:'center',
         },
         {
           title: '校验监测工单数',
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'calibrationTestCount',
+          key: 'calibrationTestCount',
           width: 100,
           align:'center',
         },
@@ -677,15 +574,19 @@ const Index = (props,ref) => {
     },
     {
       title: '运维周期',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'operationTime',
+      key:'operationTime',
       align:'center',
+
     },
     {
       title: '运维状态',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'operationStatus',
+      key:'operationStatus',
       align:'center',
+      render:(text,record)=>{
+      return <span style={{color: text=='进行中'?'#1890ff' :'#f5222d'}}>{text}</span> 
+      }
     },
     {
       title: <span>计划巡检工单数<Tooltip title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
@@ -715,11 +616,17 @@ const cityRegColumnsExports = () =>{
 }
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState()
-const totalNum = (type) =>{ //计划内 总数工单
+
+const totalNum = (type,record) =>{ //计划内 总数工单
   
-   setInsideWorkType(type)
-   setInsideWorkOrderVisible(true)
-    
+  setInsideWorkType(type)
+  setInsideWorkOrderVisible(true)
+  setRegName(record.regionName)
+  setRegionCode(record.regionCode)
+  insideOrOutsideWorkGetTaskWorkOrderList({
+   regionCode: record.regionCode,
+  })
+ 
 
 }
 
@@ -1003,10 +910,12 @@ const monthCellRender = (value) =>{//月份
 
   setTabType(key)
   props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
-  queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
-    ...queryPar,
-    outOrInside:key// 子组件调用的父组件方法
-  })
+  setTimeout(()=>{
+    queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
+      ...queryPar,
+      outOrInside:key// 子组件调用的父组件方法
+    })
+  },500)
 
  }
   return (
@@ -1059,7 +968,8 @@ const monthCellRender = (value) =>{//月份
         {/**计划内 省级&&市级工单数弹框  计划巡检 计划校准*/}
       
         <Modal
-        title={ insideWorkType==1? '内派发的计划巡检啊工单完成情况' :'内派发的计划校准工单完成情况'}
+        title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
+        ${insideWorkType==1?  '内派发的计划巡检工单完成情况' :'内派发的计划校准工单完成情况' }`}
         visible={insideWorkOrderVisible}
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}

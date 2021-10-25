@@ -6,7 +6,8 @@ import webpackPlugin from './plugin.config';
 import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const apiHost = 'http://172.16.12.234:61002/';
+// const apiHost = 'http://172.16.12.234:61002/';
+const apiHost = 'http://172.16.9.53:8036';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
 

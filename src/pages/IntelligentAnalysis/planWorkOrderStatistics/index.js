@@ -62,9 +62,9 @@ const Index = (props) => {
   
   },[]);
 
-   console.log(props)
   const showTypeChange = (e) =>{
      setShowType(e.target.value)
+     setOutOrInside(1)
   }
   
   useEffect(()=>{
@@ -97,8 +97,8 @@ const Index = (props) => {
           staticType:showType,
           beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-          regionLevel: 1,
-          outOrInside:outOrInside// 子组件调用的父组件方法
+          regionLevel:showType ==1? 1 : undefined,
+          outOrInside:outOrInside
         })
       }else{
         message.warning('日期单位不能超过90天，请重新选择')
