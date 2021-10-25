@@ -1,7 +1,3 @@
-import Cookie from 'js-cookie';
-import config from '../config';
-import ReconnectingWebSocket from './reconnecting-websocket'
-
 // cg add 2018.4.1
 let websocket = null;
 
@@ -23,15 +19,15 @@ export function InitWebsocket(webSocketPushURL) {
 export function listen(callback) {
   try {
     websocket.onopen = event => {
-      console.log('open=', true)
+      console.log('ws连接成功')
     };
 
     websocket.onclose = event => {
-      // console.log('disconnected');
+      console.log('ws连接关闭')
     };
 
     websocket.onerror = event => {
-      //  console.log(`error:${  event.data}`);
+      console.log(`error:${event.data}`);
     };
 
     websocket.onmessage = event => {
