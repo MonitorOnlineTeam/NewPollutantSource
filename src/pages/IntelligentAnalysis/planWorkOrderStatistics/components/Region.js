@@ -43,6 +43,10 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   insideOrOutsideWorkLoading:loading.effects[`${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`],
   insideOrOutsiderWorkTableDatas:planWorkOrderStatistics.insideOrOutsiderWorkTableDatas,
   clientHeight: global.clientHeight,
+  cityDetailTableDatas:planWorkOrderStatistics.cityDetailTableDatas,
+  cityDetailTableLoading:loading.effects[`${namespace}/cityDetailGetTaskWorkOrderList`],
+  cityDetailTableTotal:planWorkOrderStatistics.cityDetailTableTotal,
+  dateCol:planWorkOrderStatistics.dateCol,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -74,6 +78,12 @@ const  dvaDispatch = (dispatch) => {
     insideOrOutsideWorkGetTaskWorkOrderList:(payload)=>{ // 计划内 工单数 弹框
       dispatch({
         type: `${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
+    cityDetailGetTaskWorkOrderList:(payload)=>{ // 计划外 市详情
+      dispatch({
+        type: `${namespace}/cityDetailGetTaskWorkOrderList`,
         payload:payload,
       })
     },
@@ -165,7 +175,7 @@ const Index = (props,ref ) => {
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
-      width: 50,
+      width: 100,
     },
     {
       title: <span>运营监测点数<Tooltip title={'点击运营监测点数，可以查看运营监测点在条件日期内派发计划工单情况。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
@@ -192,7 +202,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{totalNum(1,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
           }
         },
         {
@@ -215,7 +225,7 @@ const Index = (props,ref ) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -235,8 +245,8 @@ const Index = (props,ref ) => {
           key: 'calibrationCount',
           width: 50,
           align:'center',
-          render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum(2,record)}}></Button>
+          render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
           }
         },
         {
@@ -259,7 +269,7 @@ const Index = (props,ref ) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -290,7 +300,7 @@ const Index = (props,ref ) => {
       align:'center',
       width: 150,
       render:(text,record,index)=>{
-        return <div style={{textAlign:'center'}}> <a href="javascript:;" onClick={()=>{cityDatail(record)}}>{text}</a></div>
+        return <div style={{textAlign:'center'}}>{text}</div>
       }
     },
     {
@@ -298,7 +308,7 @@ const Index = (props,ref ) => {
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
-      width: 50,
+      width: 100,
     },
     {
       title: <span>运营监测点数</span>,
@@ -318,7 +328,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{totalNum(1,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
           }
         },
         {
@@ -341,7 +351,7 @@ const Index = (props,ref ) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -362,7 +372,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum(2,record)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
             }
         },
         {
@@ -385,7 +395,7 @@ const Index = (props,ref ) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -421,8 +431,8 @@ const Index = (props,ref ) => {
     },
     {
       title: '巡检周期',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'calibrationCycle',
+      key:'calibrationCycle',
       align:'center',
     },
     {
@@ -431,15 +441,15 @@ const Index = (props,ref ) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'building',
-          key: 'building',
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionCompleteCount',
+          key: 'inspectionCompleteCount',
           width: 100,
           align:'center',
         },
@@ -456,7 +466,7 @@ const Index = (props,ref ) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -472,31 +482,31 @@ const Index = (props,ref ) => {
   const insideWorkOrderColumns2 = [
     {
       title: '省/市',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
       width: 100,
     },
     {
       title: '企业名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
       width: 150,
-      render:(record,text,index)=>{
-        return  <div style={{textAlign:"left"}}>Link Button</div>
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
       }
     },
     {
       title: '监测点名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
     },
     {
-      title: '巡检周期',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      title: '校准周期',
+      dataIndex: 'calibrationCycle',
+      key:'calibrationCycle',
       align:'center',
     },
     {
@@ -505,32 +515,32 @@ const Index = (props,ref ) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'building',
-          key: 'building',
+          dataIndex: 'calibrationCount',
+          key: 'calibrationCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'calibrationCompleteCount',
+          key: 'calibrationCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'inspectionRate',
-          key: 'inspectionRate',
+          dataIndex: 'calibrationRate',
+          key: 'calibrationRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) => a.calibrationRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -571,7 +581,7 @@ const Index = (props,ref ) => {
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
-      width: 50,
+      width: 100,
     },
     {
       title: <span>运营监测点数</span>,
@@ -598,7 +608,7 @@ const Index = (props,ref ) => {
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{outWorkNum(2)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'inspectionCount')}}>{text}</Button>
           }
         },
         {
@@ -608,7 +618,7 @@ const Index = (props,ref ) => {
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{outWorkNum(3)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'calibrationCount')}}>{text}</Button>
           }
         },
         {
@@ -618,7 +628,7 @@ const Index = (props,ref ) => {
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{outWorkNum(4)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'repairCount')}}>{text}</Button>
           }
         },
         {
@@ -628,7 +638,7 @@ const Index = (props,ref ) => {
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{outWorkNum(5)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'matchingComparisonCount')}}>{text}</Button>
           }
         },
         {
@@ -638,7 +648,7 @@ const Index = (props,ref ) => {
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{outWorkNum(6)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'cooperationInspectionCount')}}>{text}</Button>
           }
         },
         {
@@ -648,7 +658,7 @@ const Index = (props,ref ) => {
           width: 100,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{outWorkNum(7)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'calibrationTestCount')}}>{text}</Button>
           }
         },
       ],
@@ -673,7 +683,7 @@ const Index = (props,ref ) => {
       align:'center',
       width:150,
       render:(text,record,index)=>{
-        return <div style={{textAlign:'center'}}> <a href="javascript:;" onClick={()=>{cityDatail(record)}}>{text}</a></div>
+        return <div style={{textAlign:'center'}}> <a href="javascript:;" onClick={()=>{cityDetail(record)}}>{text}</a></div>
       }
     },
     {
@@ -681,7 +691,7 @@ const Index = (props,ref ) => {
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
-      width: 50,
+      width: 100,
     },
     {
       title: <span>运营监测点数</span>,
@@ -696,6 +706,87 @@ const Index = (props,ref ) => {
       children: [
         {
           title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'allTaskCount',
+          key: 'allTaskCount',
+          width: 50,
+          align:'center',
+        },
+        {
+          title:  <span>巡检工单数</span>,
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '校准工单数',
+          dataIndex: 'calibrationCount',
+          key: 'calibrationCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '维护维修工单数',
+          dataIndex: 'repairCount',
+          key: 'repairCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '配合对比工单数',
+          dataIndex: 'matchingComparisonCount',
+          key: 'matchingComparisonCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '配合检查工单数',
+          dataIndex: 'cooperationInspectionCount',
+          key: 'cooperationInspectionCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '校验监测工单数',
+          dataIndex: 'calibrationTestCount',
+          key: 'calibrationTestCount',
+          width: 100,
+          align:'center',
+        },
+      ],
+    },
+   
+  ];
+  const cityDetailOutRegColumns = [ //计划外  市级别详情  三级弹框
+    {
+      title: '省/市',
+      dataIndex: 'regionName',
+      key:'regionName',
+      align:'center',
+      width:150,
+    },
+    {
+      title: '企业名称',
+      dataIndex: 'entName',
+      key:'entName',
+      align:'center',
+      width: 150,
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
+      }
+    },
+    {
+      title: '监测点名称',
+      dataIndex: 'pointName',
+      key:'pointName',
+      align:'center',
+    },
+    {
+      title: '计划外完成工单',
+      width:200,
+      children: [
+        {
+          title: <span>总数</span>,
           dataIndex: 'allTaskCount',
           key: 'allTaskCount',
           width: 50,
@@ -750,23 +841,25 @@ const Index = (props,ref ) => {
   const  outWorkOrderColumn = [ //计划外 工单
     {
       title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
     },
     {
-      title: '运营企业数',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      title: '企业名称',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
-      width: 50,
+      width: 150,
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
+      }
     },
     {
-      title: <span>运营监测点数</span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      title: '监测点名称',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
-      width: 100,
     },
   ]
   const operaPointColumns = [
@@ -781,6 +874,10 @@ const Index = (props,ref ) => {
       dataIndex: 'entName',
       key:'entName',
       align:'center',
+      width: 150,
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
+      }
     },
     {
       title: '监测点名称',
@@ -841,66 +938,123 @@ const regionClick = (record) =>{
   })
 }
 
-const cityDatail = (record) =>{
-  setCityVisible(true)
-  setRegName(record.regionName)
-  //  props.cityGetTaskWorkOrderList({
-  //   ...queryPar,
-  //   regionCode: record.regionCode,
-  //   regionLevel: 2,
-  // })
-}
 
+
+const cityDetailGetTaskWorkOrderList=(par)=>{
+   props.cityDetailGetTaskWorkOrderList({
+     ...queryPar,
+     staticType:2,
+     outOrInside:2,
+     regionLevel:undefined,
+     ...par
+   })
+}
+const {cityDetailTableDatas,cityDetailTableLoading,cityDetailTableTotal} = props;
+const [cityDetailVisible,setCityDetailVisible] = useState(false)
+
+const cityDetail = (record) =>{
+  setCityDetailVisible(true)
+  setRegName(record.regionName)
+  setRegionCode(record.regionCode)
+  cityDetailGetTaskWorkOrderList({
+    regionCode: record.regionCode,
+  })
+}
+const onFinishCityDetail = async () =>{  // 计划外 市详情
+
+
+  try {
+
+    const values = await cityDetailForm.validateFields();
+
+     cityDetailGetTaskWorkOrderList({
+      ...values,
+      regionCode: regionCode,
+    })
+  } catch (errorInfo) {
+    console.log('Failed:', errorInfo);
+  }
+}
 
 const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
   props.insideOrOutsideWorkGetTaskWorkOrderList({
     ...queryPar,
     ...par,
+    regionLevel:undefined,
     staticType:3
   })
 }
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState(false)
-const totalNum = (type,record) =>{ //计划内 总数工单
+
+const [outType,setOutType] = useState()
+const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工单
   
-   setInsideWorkType(type)
-   setInsideWorkOrderVisible(true)
+   if(type == 1 || type ==2){
+    setInsideWorkType(type) 
+    setInsideWorkOrderVisible(true)
+   }
+   if(type == 3){
+    setOutWorkOrderVisible(true)
+    setOutType(outType)
+   }
+   workRegForm.resetFields()
    setRegName(record.regionName)
    setRegionCode(record.regionCode)
+
    insideOrOutsideWorkGetTaskWorkOrderList({
     regionCode: record.regionCode,
    })
   
 
 }
-const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
-const outWorkNum = (type) =>{ //计划外  各种工单
-  setOutWorkOrderVisible(true)
+const onFinishWorkOrder = async () =>{  //计划内 计划外 查询 工单
+
+
+  try {
+
+    const values = await workRegForm.validateFields();
+
+    insideOrOutsideWorkGetTaskWorkOrderList({
+      ...values,
+      regionCode:regionCode,
+    }) 
+  } catch (errorInfo) {
+    console.log('Failed:', errorInfo);
+  }
 }
+const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
+
 
   const handleTableChange =   async (PageIndex, )=>{ //分页
   }
 
   
+   const [cityDetailForm] = Form.useForm()
 
+  const searchCityDetailRegComponents = ()=>{
+   return <Form
+    onFinish={onFinishCityDetail}
+    form={cityDetailForm}
+    layout={'inline'}
+  >   
+      <Form.Item name='entName' >
+       <Input placeholder='请输入企业名称' allowClear />
+     </Form.Item>
 
-
-  const onFinishWorkOrder = async () =>{  //计划内 计划外 查询 工单
-
-
-    try {
-
-      const values = await form.validateFields();
-
-      insideWorkOrderVisible?  props.getProjectInfoList({
-        ...values,
-      }) : props.getProjectInfoList({
-        ...values,
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
+        <Form.Item>
+     <Button  type="primary" htmlType='submit'>
+          查询
+     </Button>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+            导出
+     </Button> 
+     
+     </Form.Item>
+     </Form>
   }
+
+
   const [ workRegForm ]= Form.useForm()
   const searchWorkComponents = () =>{ //计划内 查询 工单
     return <> <Form
@@ -913,7 +1067,7 @@ const outWorkNum = (type) =>{ //计划外  各种工单
         <Col >
         <Row align='middle'>
       <Form.Item name='entName' >
-       <Input placeholder='请输入企业名称' />
+       <Input placeholder='请输入企业名称' allowClear/>
      </Form.Item>
 
         <Form.Item>
@@ -961,11 +1115,10 @@ const outWorkNum = (type) =>{ //计划外  各种工单
       </>
    }
 
-   const [outWorkRegForm] = Form.useForm()
    const searchOutWorkComponents =()=>{ //计划外 工单弹框
     return <Form
     onFinish={onFinishWorkOrder}
-    form={outWorkRegForm}
+    form={workRegForm}
     layout={'inline'}
   >   
       <Row justify='space-between'  align='middle' style={{flex:1}} >
@@ -973,7 +1126,7 @@ const outWorkNum = (type) =>{ //计划外  各种工单
         <Col >
         <Row align='middle'>
       <Form.Item name='entName' >
-       <Input placeholder='请输入企业名称' />
+       <Input placeholder='请输入企业名称' allowClear/>
      </Form.Item>
 
         <Form.Item>
@@ -1071,8 +1224,8 @@ const outWorkNum = (type) =>{ //计划外  各种工单
 
 
   const { dateCol } = props;
-  const insideWorkOrderColumnsPush = (col)=>{
-    if(dateCol&&dateCol[0]){
+  const insideWorkOrderColumnsPush = (col)=>{ //计划内 巡检周期
+    if(dateCol&&dateCol[0]){ 
 
       col.push({
         title: '工单分布(按工单完成日期分布)',
@@ -1089,33 +1242,35 @@ const outWorkNum = (type) =>{ //计划外  各种工单
                 key: `${item.date.split('_')[1]}`,
                 width: 70,
                 align:'center',
-                render:(text,record)=>{
-                  switch(text){
-                    case 1 :
-                      return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                      <span style={{color:'#fff'}}>1</span>
-                    </Row>
-                    break;
-                    case 2 :
-                      return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                      <span style={{color:'#fff'}}>1</span>
-                    </Row>
-                    break;
-                    case 3 :
-                      return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                      <span style={{color:'#fff'}}>1</span>
-                    </Row>
-                    break;
-                    case 4 :
-                      return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                      <span style={{color:'#fff'}}>1</span>
-                    </Row>
-                    break;
-                    default:
-                      return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                      <span style={{color:'#fff'}}>1</span>
-                    </Row>
-                  }
+                render:(text,row,index)=>{
+                    return row.datePick.map(dateItem=>{
+                            if(dateItem.inspectionCompleteCount && dateItem.inspectionCloseCount){ //同时存在
+                              return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                              <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount + dateItem.inspectionCloseCount}</span>
+                             </Row>
+                            }
+                            if(dateItem.inspectionCloseCount){ //关闭
+                              return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                              <span style={{color:'#fff'}}>{dateItem.inspectionCloseCount}</span>
+                            </Row>
+                              }
+
+                            if(dateItem.inspectionCompleteCount){//完成
+                            return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                            <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount}</span>
+                          </Row>
+                            }
+                            if(dateItem.operationStatus){ //运营周期内
+                              return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                      
+                                     </Row>
+                              }else{
+                               return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+               
+                                      </Row>
+                            }
+                     })
+
     
                 }
             }]
@@ -1125,8 +1280,65 @@ const outWorkNum = (type) =>{ //计划外  各种工单
      return col;
    }
   }
+  const insideWorkOrderColumnsPush2 = (col)=>{ //计划内 校准周期
+    if(dateCol&&dateCol[0]){ 
+
+      col.push({
+        title: '工单分布(按工单完成日期分布)',
+        width:200, 
+        align:'center',
+        children:dateCol.map((item,index)=>{
+          return { 
+            title: `${item.date.split('_')[0]}`,
+            width: 70,
+            align:'center',
+            children: [{
+                title: `${item.date.split('_')[1]}`,
+                dataIndex: `${item.date.split('_')[1]}`,
+                key: `${item.date.split('_')[1]}`,
+                width: 70,
+                align:'center',
+                render:(text,row,index)=>{
+                    return row.datePick.map(dateItem=>{
+                            if(dateItem.calibrationCompleteCount && dateItem.calibrationCloseCount){ //同时存在
+                              return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                              <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount + dateItem.calibrationCloseCount}</span>
+                             </Row>
+                            }
+                            if(dateItem.calibrationCloseCount){ //关闭
+                              return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                              <span style={{color:'#fff'}}>{dateItem.calibrationCloseCount}</span>
+                            </Row>
+                              }
+
+                            if(dateItem.calibrationCompleteCount){//完成
+                            return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                            <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount}</span>
+                          </Row>
+                            }
+                            if(dateItem.operationStatus){ //运营周期内
+                              return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                      
+                                     </Row>
+                              }else{
+                              return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+               
+                              </Row>
+                            }
+                     })
+
+    
+                }
+            }]
+          }
+        })
+    })
+     return col;
+   }
+  }
+
   insideWorkOrderColumnsPush(insideWorkOrderColumns)
-  insideWorkOrderColumnsPush(insideWorkOrderColumns2)
+  insideWorkOrderColumnsPush2(insideWorkOrderColumns2)
 
  const  outWorkOrderColumnPush = (col)=>{  //计划外 巡检工单
   if(dateCol&&dateCol[0]){
@@ -1145,25 +1357,38 @@ const outWorkNum = (type) =>{ //计划外  各种工单
               key: `${item.date.split('_')[1]}`,
               width: 70,
               align:'center',
-              render:(text,record)=>{
-                switch(text){
-                  case 1 :
-                    return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>{text}</span>
-                  </Row>
-                  break;
-                  case 2 :
-                    return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>{text}</span>
-                  </Row>
-                  break;
-                  default:
-                    return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>{text}</span>
-                  </Row>
-                }
-  
-              }
+              render:(text,row,index)=>{
+                 
+                const outTypeObj = {
+                  "inspectionCount"  : "inspectionCompleteCount",
+                  "calibrationCount" :'calibrationCompleteCount',
+                  "repairCount" :'repairCompleteCount',
+                  "matchingComparisonCount" :'matchingComparisonCompleteCount',
+                  "cooperationInspectionCount" :'cooperationInspectionCompleteCount',
+                  "calibrationTestCount":'calibrationTestCompleteCount',
+                 }
+                return row.datePick.map(dateItem=>{
+                           for(let key in outTypeObj){ //完成
+                              if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
+                                return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span>
+                               </Row>
+                              }
+
+                          }
+                        if(dateItem.operationStatus){ //运营周期内
+                          return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                  
+                                 </Row>
+                          }else{
+                          return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+           
+                          </Row>
+                        }
+                 })
+
+
+            }
           }]
         }
       })
@@ -1262,11 +1487,13 @@ useImperativeHandle(refInstance,() => {
         bordered
         dataSource={regPointTableDatas}
         columns={operaPointColumns}
+        scroll={{ y: clientHeight - 500}}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
           // onChange: handleTableChange,
       }}
+      
       />
    </Card>
  
@@ -1288,6 +1515,7 @@ useImperativeHandle(refInstance,() => {
         bordered
         dataSource={insideOrOutsiderWorkTableDatas}
         columns={insideWorkType==1? insideWorkOrderColumns : insideWorkOrderColumns2}
+        scroll={{ y: clientHeight - 580}}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
@@ -1316,6 +1544,7 @@ useImperativeHandle(refInstance,() => {
         bordered
         dataSource={insideOrOutsiderWorkTableDatas}
         columns={outWorkOrderColumn}
+        scroll={{ y: clientHeight - 500}}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
@@ -1325,6 +1554,29 @@ useImperativeHandle(refInstance,() => {
    </Card>
       </Modal> 
 
+      {/**计划外 市级详情 */}
+      <Modal
+        title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
+                   内完成的计划外工单情况`}
+        visible={cityDetailVisible}
+        onCancel={()=>{setCityDetailVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+     <Card title={  searchCityDetailRegComponents()}>
+     <SdlTable
+        loading = {cityDetailTableLoading}
+        bordered
+        dataSource={cityDetailTableDatas}
+        total={cityDetailTableTotal}
+        columns={ cityDetailOutRegColumns}
+        scroll={{ y: clientHeight - 500}}
+        pagination={false}
+      />
+   </Card>
+ 
+      </Modal> 
         </div>
   );
 };

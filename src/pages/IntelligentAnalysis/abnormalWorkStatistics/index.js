@@ -142,7 +142,7 @@ const Index = (props) => {
 
     {showType==1? <Row  align='middle'>
       <Form.Item name='time' label='日期'>
-          <RangePicker   style={{width:'100%'}} 
+          <RangePicker allowClear={false}   style={{width:'100%'}} 
                         allowClear={false}
                         showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />

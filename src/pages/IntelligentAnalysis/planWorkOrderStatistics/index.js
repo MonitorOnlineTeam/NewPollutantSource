@@ -124,7 +124,7 @@ const Index = (props) => {
     initialValues={{
       pointType:1,
       abnormalType:1,
-      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      time:[moment(new Date()).add(-90, 'day').startOf('day'), moment(new Date()).endOf('day')]
     }}
   >  
     {showType==1? <Row  align='middle'>
@@ -160,7 +160,7 @@ const Index = (props) => {
       <>
       <Row  align='middle'>
       <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
-         <RangePicker style={{width:'100%'}} 
+         <RangePicker allowClear={false} style={{width:'100%'}} 
           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
     </Form.Item> 
      <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px'}}>

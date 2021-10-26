@@ -31,7 +31,9 @@ export default Model.extend({
     taskList:[],
     getPointExceptionLoading:true,
     regPointTableDatas:[],
-    insideOrOutsiderWorkTableDatas:[]
+    insideOrOutsiderWorkTableDatas:[],
+    cityDetailTableTotal:[],
+    cityDetailTableDatas:[],
   },
   effects: {
     *regEntGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
@@ -73,17 +75,28 @@ export default Model.extend({
       }
     },
     
-    *insideOrOutsideWorkGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区  计划内 工单数弹框
-      const result = yield call(services.insideOrOutsideWorkGetTaskWorkOrderList, payload);
+    *insideOrOutsideWorkGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区  计划内 计划外 工单数弹框
+      const result = yield  call(services.insideOrOutsideWorkGetTaskWorkOrderList, payload);
       if (result.IsSuccess) {
         yield update({
           insideOrOutsiderWorkTableDatas:result.Datas,
+          dateCol:result.Datas[0]&&result.Datas[0].datePick
         })  
       }else{
         message.error(result.Message)
       }
     },
-
+    *cityDetailGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区市  计划外 市详情
+      const result = yield call(services.cityDetailGetTaskWorkOrderList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          cityDetailTableTotal:result.Total,
+          cityDetailTableDatas:result.Datas,
+        })  
+      }else{
+        message.error(result.Message)
+      }
+    },
 
   },
 })

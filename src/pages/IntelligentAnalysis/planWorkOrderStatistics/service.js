@@ -21,11 +21,11 @@ export async function  insideOrOutsideWorkGetTaskWorkOrderList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
   return result;
 }
-// //计划工单统计 省级
-// export async function abnormalGetTaskWorkOrderList(params) {
-//   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
-//   return result;
-// }
+// 计划工单统计 行政区市  计划外 市详情
+export async function cityDetailGetTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
 
 // //计划工单统计 市级
 // export async function cityAbnormalGetTaskWorkOrderList(params) {

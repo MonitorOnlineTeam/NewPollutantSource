@@ -159,9 +159,9 @@ const Index = (props,ref) => {
             return (
               <div>
                 <Progress
-                  percent={text?text:0}
+                  percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -181,8 +181,8 @@ const Index = (props,ref) => {
           key: 'calibrationCount',
           width: 50,
           align:'center',
-          render:(record,text,index)=>{
-            return  <Button type="link" onClick={()=>{totalNum(2,record)}}></Button>
+          render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{totalNum(2,record)}}>{text}</Button>
           }
         },
         {
@@ -205,7 +205,7 @@ const Index = (props,ref) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -279,7 +279,7 @@ const Index = (props,ref) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -328,15 +328,15 @@ const Index = (props,ref) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'building',
-          key: 'building',
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
           width: 100,
           align:'center',
         },
@@ -353,7 +353,7 @@ const Index = (props,ref) => {
                 <Progress
                   percent={text&&text}
                   size="small"
-                  style={{width:'90%'}}
+                  style={{width:'85%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
                 />
@@ -614,6 +614,15 @@ const Index = (props,ref) => {
 const cityRegColumnsExports = () =>{
 
 }
+
+const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
+  props.insideOrOutsideWorkGetTaskWorkOrderList({
+    ...queryPar,
+    ...par,
+    regionLevel:undefined,
+    staticType:3
+  })
+}
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState()
 
@@ -683,7 +692,7 @@ const outPointClick = (record) =>{ //计划外 监测点名称
         <Col >
         <Row align='middle'>
       <Form.Item name='entName' >
-       <Input placeholder='请输入企业名称' />
+       <Input placeholder='请输入企业名称' allowClear/>
      </Form.Item>
 
         <Form.Item>
@@ -743,7 +752,7 @@ const outPointClick = (record) =>{ //计划外 监测点名称
         <Col >
         <Row align='middle'>
       <Form.Item name='entName' >
-       <Input placeholder='请输入企业名称' />
+       <Input placeholder='请输入企业名称' allowClear/>
      </Form.Item>
 
         <Form.Item>
