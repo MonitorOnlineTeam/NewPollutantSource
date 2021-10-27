@@ -4,7 +4,7 @@
  * 创建时间：2021.09.27
  */
 import React, { useState,useEffect,Fragment,useRef,useImperativeHandle,forwardRef} from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs,Calendar,Tag    } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs,Calendar,Tag,Spin    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -25,7 +25,7 @@ const namespace = 'planWorkOrderStatistics'
 
 
 
-const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
+const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   tableDatas:planWorkOrderStatistics.tableDatas,
   pointDatas:planWorkOrderStatistics.pointDatas,
   tableLoading:planWorkOrderStatistics.tableLoading,
@@ -36,9 +36,13 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
   abnormalList:planWorkOrderStatistics.abnormalList,
   queryPar:planWorkOrderStatistics.queryPar,
   // getPointExceptionLoading:loading.effects[`${namespace}/getPointExceptionSignList`],
-  getPointExceptionLoading:planWorkOrderStatistics.getPointExceptionLoading,
-  entAbnormalList:planWorkOrderStatistics.entAbnormalList,
-  taskList:planWorkOrderStatistics.taskList,
+  insideOrOutsideWorkLoading:loading.effects[`${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`],
+  insideOrOutsiderWorkTableDatas:planWorkOrderStatistics.insideOrOutsiderWorkTableDatas,
+  clientHeight: global.clientHeight,
+  entOutsidePointListTotal:planWorkOrderStatistics.entOutsidePointListTotal,
+  entOutsidePointListDatas:planWorkOrderStatistics.entOutsidePointListDatas,
+  entOutsidePointLoading:loading.effects[`${namespace}/entOutsidePointGetTaskWorkOrderList`],
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -52,6 +56,18 @@ const  dvaDispatch = (dispatch) => {
     regEntGetTaskWorkOrderList:(payload)=>{ // 计划工单统计
       dispatch({
         type: `${namespace}/regEntGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
+    insideOrOutsideWorkGetTaskWorkOrderList:(payload)=>{ // 计划内 工单数 弹框
+      dispatch({
+        type: `${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
+    entOutsidePointGetTaskWorkOrderList:(payload)=>{ // 计划内 工单数 弹框
+      dispatch({
+        type: `${namespace}/entOutsidePointGetTaskWorkOrderList`,
         payload:payload,
       })
     },
@@ -81,6 +97,10 @@ const Index = (props,ref) => {
 
   
   const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,abnormalTypes,refInstance } = props; 
+  
+  const { insideOrOutsideWorkLoading ,insideOrOutsiderWorkTableDatas,clientHeight} = props;
+
+  
   useEffect(() => {
 
   
@@ -138,7 +158,7 @@ const Index = (props,ref) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{totalNum(1,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
           }
         },
         {
@@ -182,7 +202,7 @@ const Index = (props,ref) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{totalNum(2,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
           }
         },
         {
@@ -218,34 +238,33 @@ const Index = (props,ref) => {
   ];
 
 
-   const insideWorkOrderColumns = [
+  const insideWorkOrderColumns = [
     {
       title: '省/市',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
-      width: 100,
     },
     {
       title: '企业名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
       width: 150,
-      render:(record,text,index)=>{
-        return  <div style={{textAlign:"left"}}>Link Button</div>
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
       }
     },
     {
       title: '监测点名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
     },
     {
       title: '巡检周期',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'calibrationCycle',
+      key:'calibrationCycle',
       align:'center',
     },
     {
@@ -254,15 +273,15 @@ const Index = (props,ref) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'building',
-          key: 'building',
+          dataIndex: 'inspectionCount',
+          key: 'inspectionCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'number',
-          key: 'number',
+          dataIndex: 'inspectionCompleteCount',
+          key: 'inspectionCompleteCount',
           width: 100,
           align:'center',
         },
@@ -295,31 +314,31 @@ const Index = (props,ref) => {
   const insideWorkOrderColumns2 = [
     {
       title: '省/市',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
       width: 100,
     },
     {
       title: '企业名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
       width: 150,
-      render:(record,text,index)=>{
-        return  <div style={{textAlign:"left"}}>Link Button</div>
+      render:(text,record,index)=>{
+       return  <div style={{textAlign:"left"}}>{text}</div>
       }
     },
     {
       title: '监测点名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
     },
     {
-      title: '巡检周期',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      title: '校准周期',
+      dataIndex: 'calibrationCycle',
+      key:'calibrationCycle',
       align:'center',
     },
     {
@@ -328,25 +347,25 @@ const Index = (props,ref) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'inspectionCount',
-          key: 'inspectionCount',
+          dataIndex: 'calibrationCount',
+          key: 'calibrationCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'inspectionCount',
-          key: 'inspectionCount',
+          dataIndex: 'calibrationCompleteCount',
+          key: 'calibrationCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'inspectionRate',
-          key: 'inspectionRate',
+          dataIndex: 'calibrationRate',
+          key: 'calibrationRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) => a.calibrationRate - b.inspectionRate,
           render: (text, record) => {
             return (
               <div>
@@ -453,156 +472,9 @@ const Index = (props,ref) => {
     },
    
   ]; 
-  const cityOutRegColumns = [ //计划外  市级别 二级弹框
-    {
-      title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-    {
-      title: '运营企业数',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 50,
-    },
-    {
-      title: <span>运营监测点数</span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 100,
-    },
-    {
-      title: '计划外完成工单',
-      width:200,
-      children: [
-        {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'building',
-          key: 'building',
-          width: 50,
-          align:'center',
-        },
-        {
-          title:  <span>巡检工单数</span>,
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '校准工单数',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '维护维修工单数',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '配合对比工单数',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '配合检查工单数',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '校验监测工单数',
-          dataIndex: 'number',
-          key: 'number',
-          width: 100,
-          align:'center',
-        },
-      ],
-    },
-   
-  ];
-  const  outWorkOrderColumn = [ //计划外 工单
-    {
-      title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-    {
-      title: '运营企业数',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 50,
-    },
-    {
-      title: <span>运营监测点数</span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 100,
-    },
-  ]
-  const operaPointColumns = [
-    {
-      title: '省/市',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-    },
-    {
-      title: '监测点名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-    {
-      title: '运维周期',
-      dataIndex: 'operationTime',
-      key:'operationTime',
-      align:'center',
+  
 
-    },
-    {
-      title: '运维状态',
-      dataIndex: 'operationStatus',
-      key:'operationStatus',
-      align:'center',
-      render:(text,record)=>{
-      return <span style={{color: text=='进行中'?'#1890ff' :'#f5222d'}}>{text}</span> 
-      }
-    },
-    {
-      title: <span>计划巡检工单数<Tooltip title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 100,
-    },
-    {
-      title: <span>计划校准工单数<Tooltip title={'日期条件内，派发的计划校工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
-      align:'center',
-      width: 100,
-    },
-  ]
+
 
  
  
@@ -626,23 +498,21 @@ const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外�
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState()
 
-const totalNum = (type,record) =>{ //计划内 总数工单
+const workOrderNum = (type,record) =>{ //计划内 总数工单
   
-  setInsideWorkType(type)
+  setInsideWorkType(type) 
   setInsideWorkOrderVisible(true)
+  workRegForm.resetFields()
   setRegName(record.regionName)
   setRegionCode(record.regionCode)
+
   insideOrOutsideWorkGetTaskWorkOrderList({
    regionCode: record.regionCode,
   })
- 
 
 }
 
-const [operaPointVisible, setOperaPointVisible] = useState(false)
-const outPointClick = (record) =>{ //计划外 监测点名称
-  setOperaPointVisible(true)
-}
+
 
   const handleTableChange =   async (PageIndex, )=>{ //分页
   }
@@ -664,18 +534,17 @@ const outPointClick = (record) =>{ //计划外 监测点名称
 
 
 
-  const onFinishWorkOrder = async () =>{  //计划内 查询 工单
+  const onFinishWorkOrder = async () =>{  //计划内  查询 工单
 
 
     try {
-
-      const values = await form.validateFields();
-
-      insideWorkOrderVisible?  props.getProjectInfoList({
+  
+      const values = await workRegForm.validateFields();
+  
+      insideOrOutsideWorkGetTaskWorkOrderList({
         ...values,
-      }) : props.getProjectInfoList({
-        ...values,
-      })
+        regionCode:regionCode,
+      }) 
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -740,154 +609,125 @@ const outPointClick = (record) =>{ //计划外 监测点名称
       </>
    }
 
-   const [outWorkRegForm] = Form.useForm()
-   const searchOutWorkComponents =()=>{ //计划外 工单弹框
-    return <Form
-    onFinish={onFinishWorkOrder}
-    form={outWorkRegForm}
-    layout={'inline'}
-  >   
-      <Row justify='space-between'  align='middle' style={{flex:1}} >
-
-        <Col >
-        <Row align='middle'>
-      <Form.Item name='entName' >
-       <Input placeholder='请输入企业名称' allowClear/>
-     </Form.Item>
-
-        <Form.Item>
-     <Button  type="primary" htmlType='submit'>
-          查询
-     </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
-            导出
-     </Button> 
-     
-     </Form.Item>
-     </Row>
-     </Col>
-
-
-     <Col>
-     <Row align='middle'>
-       <div style={{marginRight:8}}>
-     <div style={{display:'inline-block', background:'#bae7ff',width:24,height:12,marginRight:5}}></div>
-       <span>运营周期内</span>
-       </div>
-       <div  style={{ marginRight:8}}>
-     <div style={{ display:'inline-block',background:'#1890ff',width:24,height:12,marginRight:5}}></div>
-       <span>完成工单</span>
-       </div>
-
-     </Row>
-     </Col>
-    </Row>
-      </Form>
-   }
+   
    const { dateCol } = props;
-  const insideWorkOrderColumnsPush = (col)=>{
-    if(dateCol&&dateCol[0]){
-
-    col.push({
-      title: '工单分布(按工单完成日期分布)',
-      width:200, 
-      align:'center',
-      children:dateCol.map((item,index)=>{
-        return { 
-          title: `${item.date.split('_')[0]}`,
-          width: 70,
-          align:'center',
-          children: [{
-              title: `${item.date.split('_')[1]}`,
-              dataIndex: `${item.date.split('_')[1]}`,
-              key: `${item.date.split('_')[1]}`,
-              width: 70,
-              align:'center',
-              render:(text,record)=>{
-                switch(text){
-                  case 1 :
-                    return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>1</span>
-                  </Row>
-                  break;
-                  case 2 :
-                    return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>1</span>
-                  </Row>
-                  break;
-                  case 3 :
-                    return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>1</span>
-                  </Row>
-                  break;
-                  case 4 :
-                    return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>1</span>
-                  </Row>
-                  break;
-                  default:
-                    return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                    <span style={{color:'#fff'}}>1</span>
-                  </Row>
-                }
-  
-              }
-          }]
-        }
-      })
-  })
-   return col;
- }
-  }
+   const insideWorkOrderColumnsPush = (col)=>{ //计划内 巡检周期
+     if(dateCol&&dateCol[0]){ 
+ 
+       col.push({
+         title: '工单分布(按工单完成日期分布)',
+         width:200, 
+         align:'center',
+         children:dateCol.map((item,index)=>{
+           return { 
+             title: `${item.date.split('_')[0]}`,
+             width: 70,
+             align:'center',
+             children: [{
+                 title: `${item.date.split('_')[1]}`,
+                 dataIndex: `${item.date.split('_')[1]}`,
+                 key: `${item.date.split('_')[1]}`,
+                 width: 70,
+                 align:'center',
+                 render:(text,row,index)=>{
+                     return row.datePick.map(dateItem=>{
+                             if(dateItem.inspectionCompleteCount && dateItem.inspectionCloseCount){ //同时存在
+                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                               <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount + dateItem.inspectionCloseCount}</span>
+                              </Row>
+                             }
+                             if(dateItem.inspectionCloseCount){ //关闭
+                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                               <span style={{color:'#fff'}}>{dateItem.inspectionCloseCount}</span>
+                             </Row>
+                               }
+ 
+                             if(dateItem.inspectionCompleteCount){//完成
+                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                             <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount}</span>
+                           </Row>
+                             }
+                             if(dateItem.operationStatus){ //运营周期内
+                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                       
+                                      </Row>
+                               }else{
+                                return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                
+                                       </Row>
+                             }
+                      })
+ 
+     
+                 }
+             }]
+           }
+         })
+     })
+      return col;
+    }
+   }
+   const insideWorkOrderColumnsPush2 = (col)=>{ //计划内 校准周期
+     if(dateCol&&dateCol[0]){ 
+ 
+       col.push({
+         title: '工单分布(按工单完成日期分布)',
+         width:200, 
+         align:'center',
+         children:dateCol.map((item,index)=>{
+           return { 
+             title: `${item.date.split('_')[0]}`,
+             width: 70,
+             align:'center',
+             children: [{
+                 title: `${item.date.split('_')[1]}`,
+                 dataIndex: `${item.date.split('_')[1]}`,
+                 key: `${item.date.split('_')[1]}`,
+                 width: 70,
+                 align:'center',
+                 render:(text,row,index)=>{
+                     return row.datePick.map(dateItem=>{
+                             if(dateItem.calibrationCompleteCount && dateItem.calibrationCloseCount){ //同时存在
+                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                               <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount + dateItem.calibrationCloseCount}</span>
+                              </Row>
+                             }
+                             if(dateItem.calibrationCloseCount){ //关闭
+                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                               <span style={{color:'#fff'}}>{dateItem.calibrationCloseCount}</span>
+                             </Row>
+                               }
+ 
+                             if(dateItem.calibrationCompleteCount){//完成
+                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                             <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount}</span>
+                           </Row>
+                             }
+                             if(dateItem.operationStatus){ //运营周期内
+                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                       
+                                      </Row>
+                               }else{
+                               return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                
+                               </Row>
+                             }
+                      })
+ 
+     
+                 }
+             }]
+           }
+         })
+     })
+      return col;
+    }
+   }
   insideWorkOrderColumnsPush(insideWorkOrderColumns)
   insideWorkOrderColumnsPush(insideWorkOrderColumns2)
 
 
- const  outWorkOrderColumnPush = (col)=>{  //计划外 巡检工单
 
-  if(dateCol&&dateCol[0]){
-  col.push({
-    title: '巡检工单分布',
-    width:200, 
-    align:'center',
-    children:dateCol.map((item,index)=>{
-      return { 
-        title:`${item.date.split('_')[0]}`,
-        width: 70,
-        align:'center',
-        children: [{
-            title: `${item.date.split('_')[1]}`,
-            dataIndex: `${item.date.split('_')[1]}`,
-            key: `${item.date.split('_')[1]}`,
-            width: 70,
-            align:'center',
-            render:(text,record)=>{
-              switch(text){
-                case 1 :
-                  return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                  <span style={{color:'#fff'}}>1</span>
-                </Row>
-                break;
-                case 2 :
-                  return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                  <span style={{color:'#fff'}}>1</span>
-                </Row>
-                break;
-                default:
-                  return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                  <span style={{color:'#fff'}}>1</span>
-                </Row>
-              }
-
-            }
-        }]
-      }
-    })
-})
-return col;
-}
- }
- outWorkOrderColumnPush(outWorkOrderColumn)
 // 暴露的子组件方法，给父组件调用
 const childRef = useRef();
 useImperativeHandle(refInstance,() => {
@@ -898,28 +738,83 @@ useImperativeHandle(refInstance,() => {
     }
 })
 
-const  onPanelChange = (value, mode)=> { //日历
-  console.log(value.format('YYYY-MM-DD'), mode);
-}
+const {entOutsidePointListTotal,entOutsidePointListDatas,entOutsidePointLoading} = props;
+const [operaPointVisible, setOperaPointVisible] = useState(false)
+const [DGIMN, setDGIMN] = useState()
+const [dete, setDete] = useState({})
+// const [entName, setEntName] = useState({})
+
 const dateCellRender = (value)=>{//日期
-  if (value.month() === 8) {
-    return  <Tag color="#108ee9">巡检工单1个</Tag>;
+
+  const outTypeObj = {
+    "inspectionCount"  : "巡检工单",
+    "calibrationCount" :'校准工单',
+    "repairCount" :'维护维修工单',
+    "matchingComparisonCount" :'配合对比工单',
+    "cooperationInspectionCount" :'配合检查工单',
+    "calibrationTestCount":'校验监测工单',
+   }
+  if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
+    entOutsidePointListDatas.map((item,index)=>{
+      if(value.date()==item.dateTime){
+         for(let key in item){ //完成
+          // if(item[`${outTypeObj[key]}`]){ 
+           return  <Tag color="#108ee9">{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
+        // }
+      }
+      }
+  })
   }
+
 } 
-const monthCellRender = (value) =>{//月份 
+const monthCellRender = (value) =>{//月份
+  // entOutsidePointListDatas 
   if (value === 8) {
     return  <Tag color="#108ee9">巡检工单23个</Tag>;
   }
 
 }
+const  onPanelChange = (value, mode)=> { //日期面板变化回调
+  entOutsidePointGetTaskWorkOrderList({
+    DGIMN:DGIMN,
+    beginTime:mode==='month'? moment(value).startOf('month').format('YYYY-MM-DD 00:00:00') :moment(value).startOf('year').format('YYYY-MM-DD 00:00:00'),
+    endTime:mode==='month'?moment(value).endOf('month').format('YYYY-MM-DD 23:59:59'):moment(value).endOf('year').format('YYYY-MM-DD 23:59:59'),
+  })
+}
+
+
+ 
+const outPointClick = (record) =>{ //计划外 监测点名称
+  setOperaPointVisible(true)
+  setDGIMN(record.DGIMN)
+  setRegName(`${record.entName} - ${record.pointName}`)
+  // setEntName(record.entName)
+   entOutsidePointGetTaskWorkOrderList({
+    DGIMN:record.DGIMN,
+    beginTime:moment().startOf('month').format('YYYY-MM-DD 00:00:00'),
+    endTime:moment().endOf('month').format('YYYY-MM-DD 23:59:59'),
+  })
+  
+}
+
+const entOutsidePointGetTaskWorkOrderList = (par) =>{
+  props.entOutsidePointGetTaskWorkOrderList({
+    ...par,
+    staticType:3
+  })
+  setDete({
+    beginTime:moment(par.beginTime).format('YYYY-MM-DD'),
+    endTime:moment(par.endTime).format('YYYY-MM-DD'),
+  })
+}
   const [tabType,setTabType] = useState("1")
 
-  const { queryPar } = props;
+ const { queryPar } = props;
  const tabsChange = (key)=>{
 
   setTabType(key)
-  props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
   setTimeout(()=>{
+    props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
       outOrInside:key// 子组件调用的父组件方法
@@ -961,21 +856,37 @@ const monthCellRender = (value) =>{//月份
   {/**计划外 监测点数弹框 */}
       
       <Modal
-        title={'河南省新乡市运营监测点数'}
+        title={regName}
         visible={operaPointVisible}
         onCancel={()=>{setOperaPointVisible(false)}}
         footer={null}
         destroyOnClose
         width='80%'
+        wrapClassName={styles.pointModalSty}
       >
-     <Card title={'计划外工单情况'}>
-     <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender}  onPanelChange={onPanelChange} />
+     <Card title={`统计${ dete.beginTime&&dete.beginTime} ~ ${dete.endTime&&dete.endTime}
+        内计划外工单情况`}
+        style={{
+          height:clientHeight - 250,
+          overflowY:'auto'
+        }}
+        >
+          
+      <Spin spinning={entOutsidePointLoading}>
+     <Calendar
+        
+        dateCellRender={dateCellRender}
+        monthCellRender={monthCellRender} 
+        // onChange={onDateChange}
+        onPanelChange={onPanelChange}
+
+        />
+      </Spin>
    </Card>
  
       </Modal> 
 
-        {/**计划内 省级&&市级工单数弹框  计划巡检 计划校准*/}
-      
+        {/**计划内 企业 计划巡检 计划校准*/}
         <Modal
         title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
         ${insideWorkType==1?  '内派发的计划巡检工单完成情况' :'内派发的计划校准工单完成情况' }`}
@@ -983,15 +894,15 @@ const monthCellRender = (value) =>{//月份
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}
         destroyOnClose
-        centered
         width='90%'
       >
      <Card title={  searchWorkComponents()}>
      <SdlTable
-        loading = {tableLoading}
+        loading = {insideOrOutsideWorkLoading}
         bordered
-        dataSource={tableDatas}
+        dataSource={insideOrOutsiderWorkTableDatas}
         columns={insideWorkType==1? insideWorkOrderColumns : insideWorkOrderColumns2}
+        scroll={{ y: clientHeight - 580}}
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,

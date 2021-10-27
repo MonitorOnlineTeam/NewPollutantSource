@@ -75,7 +75,7 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    insideOrOutsideWorkGetTaskWorkOrderList:(payload)=>{ // 计划内 工单数 弹框
+    insideOrOutsideWorkGetTaskWorkOrderList:(payload)=>{ // 计划内or计划外 工单数 弹框
       dispatch({
         type: `${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`,
         payload:payload,
@@ -1411,14 +1411,13 @@ useImperativeHandle(refInstance,() => {
   const { queryPar } = props;
  const tabsChange = (key)=>{
   setTabType(key)
-  props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
-
   setTimeout(()=>{
+    props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
       outOrInside:key// 子组件调用的父组件方法
     })
-  },500)
+  },300)
 
  }
   return (

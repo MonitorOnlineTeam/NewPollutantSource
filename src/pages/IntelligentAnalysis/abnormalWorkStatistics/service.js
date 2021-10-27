@@ -34,3 +34,9 @@ export async function getPointExceptionSignList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetPointExceptionSignList',params, null);
   return result;
 }
+
+//异常打卡 导出
+export async function exportExceptionTaskList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
+  return result;
+}

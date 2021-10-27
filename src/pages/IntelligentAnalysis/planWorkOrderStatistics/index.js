@@ -124,7 +124,7 @@ const Index = (props) => {
     initialValues={{
       pointType:1,
       abnormalType:1,
-      time:[moment(new Date()).add(-90, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
     }}
   >  
     {showType==1? <Row  align='middle'>

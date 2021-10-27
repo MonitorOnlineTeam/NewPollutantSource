@@ -34,6 +34,8 @@ export default Model.extend({
     insideOrOutsiderWorkTableDatas:[],
     cityDetailTableTotal:[],
     cityDetailTableDatas:[],
+    entOutsidePointListTotal:[],
+    entOutsidePointListDatas:[],
   },
   effects: {
     *regEntGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
@@ -97,6 +99,17 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *entOutsidePointGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //企业  计划外 监测点
+      const result = yield call(services.entOutsidePointGetTaskWorkOrderList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entOutsidePointListTotal:result.Total,
+          entOutsidePointListDatas:result.Datas[0]&&result.Datas[0].datePick ,
+        })  
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
   },
 })

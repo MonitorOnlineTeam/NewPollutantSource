@@ -27,10 +27,10 @@ export async function cityDetailGetTaskWorkOrderList(params) {
   return result;
 }
 
-// //计划工单统计 市级
-// export async function cityAbnormalGetTaskWorkOrderList(params) {
-//   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
-//   return result;
-// }
+//计划工单统计 企业 计划外监测点 
+export async function entOutsidePointGetTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
+  return result;
+}
 
 
