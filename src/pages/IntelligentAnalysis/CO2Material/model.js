@@ -18,7 +18,8 @@ export default Model.extend({
       coordMin: [],
       data: [],
       formula: ""
-    }
+    },
+    CO2ReportList: [],
   },
   effects: {
     // 获取关注列表
@@ -78,5 +79,30 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
+    // 温室气体排放报告
+    *getCO2ReportList({ payload }, { call, put, update, select }) {
+      const response = yield call(services.getCO2ReportList, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          CO2ReportList: response.Datas,
+        });
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 温室气体排放报告
+    *createReportCO2({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.createReportCO2, { ...payload });
+      if (response.IsSuccess) {
+        yield put({
+          type: 'getCO2ReportList'
+        })
+        callback && callback();
+        message.success('生成报表成功！')
+      } else {
+        message.error(response.Message)
+      }
+    },
+    
   },
 });

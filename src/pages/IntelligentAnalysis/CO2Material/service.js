@@ -32,3 +32,15 @@ export async function getCO2LinearAnalysis(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/getCO2LinearAnalysis', params, null);
   return result;
 }
+
+// 获取温室气体排放报告
+export async function getCO2ReportList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/getCO2ReportList', params, null);
+  return result;
+}
+
+// 生成温室气体排放报告
+export async function createReportCO2(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DoReportCO2', params, null);
+  return result;
+}

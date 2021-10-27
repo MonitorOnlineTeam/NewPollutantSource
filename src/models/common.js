@@ -22,6 +22,7 @@ export default Model.extend({
     pointListByEntCode: [],
     pollutantListByDgimn: [],
     menuNameList: [],
+    entList: [],
   },
 
   effects: {
@@ -200,6 +201,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           pollutantListByDgimn: result.Datas,
+        });
+      }
+    },
+    // 获取所有企业
+    *getEntList({ payload }, { call, update }) {
+      const result = yield call(services.getEntList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entList: result.Datas,
         });
       }
     },

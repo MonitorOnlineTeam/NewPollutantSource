@@ -116,4 +116,11 @@ export async function getMenuNameList(params) {
   } : result;
 }
 
+// 获取所有企业
+export async function getEntList(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntList', params, null);
+  return result;
+}
+
+
 

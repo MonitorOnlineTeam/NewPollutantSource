@@ -1810,6 +1810,11 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/monthDischarge',
                     component: './IntelligentAnalysis/CO2Material/monthDischarge',
                   },
+                  // 核算报告
+                  {
+                    path: '/Intelligentanalysis/CO2Material/accountingReport',
+                    component: './IntelligentAnalysis/CO2Material/accountingReport',
+                  },
                 ]
               },
               // 水泥行业
@@ -1858,6 +1863,16 @@ const routes = [
                   {
                     path: '/Intelligentanalysis/cement/CO2DischargeSum',
                     component: './IntelligentAnalysis/CO2Emissions/cement/CO2DischargeSum',
+                  },
+                  // 工业生产过程排放
+                  {
+                    path: '/Intelligentanalysis/cement/industrialProcess',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/industrialProcess',
+                  },
+                  // 协同处置废弃物排放
+                  {
+                    path: '/Intelligentanalysis/cement/XTCZFQW',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/XTCZFQW',
                   },
                 ]
               },

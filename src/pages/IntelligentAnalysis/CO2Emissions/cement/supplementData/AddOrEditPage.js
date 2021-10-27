@@ -69,7 +69,7 @@ class AddOrEditPage extends PureComponent {
 
   // 计算化石燃料燃烧排放量
   onModalOk = () => {
-    // 化石燃料燃烧排放量 = 年消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12)
+    // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12)
     let values = this.formRef.current.getFieldsValue();
     let { Consumption = 0, LowFever = 0, UnitCarbonContent = 0, CO2OxidationRate = 0 } = values;
 
@@ -244,7 +244,7 @@ class AddOrEditPage extends PureComponent {
                       label={
                         <span>
                           化石燃料燃烧排放量(tCO₂)
-                          <QuestionTooltip content="化石燃料燃烧排放量 = 年消耗量 × 低位发热量 × (单位热值含碳量 × 碳氧化率 × 44 ÷ 12) " />
+                          <QuestionTooltip content="化石燃料燃烧排放量 = 消耗量 × 低位发热量 × (单位热值含碳量 × 碳氧化率 × 44 ÷ 12) " />
                         </span>
                       }
                       rules={[{ required: true, message: '请填写化石燃料燃烧排放量!' }]}
@@ -442,8 +442,8 @@ class AddOrEditPage extends PureComponent {
                     <Col span={12}>
                       <Form.Item
                         name="Consumption"
-                        label="年消耗量(t/10⁴Nm³)"
-                        rules={[{ required: true, message: '请填写年消耗量!' }]}
+                        label="消耗量(t/10⁴Nm³)"
+                        rules={[{ required: true, message: '请填写消耗量!' }]}
                       >
                         <InputNumber stringMode style={{ width: '100%' }} placeholder="请填写消耗量" />
                       </Form.Item>
@@ -540,7 +540,6 @@ class AddOrEditPage extends PureComponent {
                   onCancel={this.handleCancel}
                   width={1000}
                 >
-                  {/* // 化石燃料燃烧排放量 = 年消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12) */}
                   {/* 熟料对应的碳酸盐分解排放量 = ((熟料中CaO的含量 - 熟料中不是来源于碳酸盐分解的CaO的含量) × 44 / 56) + ((熟料中MgO的含量 - 熟料中不是来源于碳酸盐分解的MgO的含量) * 44 / 40) */}
                   <Row>
                     <Col span={12}>
