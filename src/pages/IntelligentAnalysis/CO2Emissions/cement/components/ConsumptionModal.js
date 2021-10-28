@@ -1,12 +1,25 @@
 import React, { PureComponent } from 'react'
 import { Modal, Button, Collapse, Form, InputNumber, Row, Col } from 'antd';
 const { Panel } = Collapse;
-
+import { InfoCircleOutlined } from '@ant-design/icons';
+import _ from 'lodash'
 class ConsumptionModal extends PureComponent {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
-    this.state = {};
+    this.state = {
+      deviation: 0,
+      xhl: 0,
+    };
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
+      this.setState({
+        deviation: this.props.data.deviation,
+        xhl: this.props.data.xhl,
+      })
+    }
   }
 
   // 计算发票或结算确认单消耗量
@@ -16,39 +29,87 @@ class ConsumptionModal extends PureComponent {
     let count = BuyVolume - TransferVolume;
     this.setState({ Consumption: count })
     this.formRef.current.setFieldsValue({ 'Consumption': count });
+    this.countDeviation()
   }
 
   // 计算消耗量
   countConsumption = () => {
+    const { deviation } = this.state;
     let values = this.formRef.current.getFieldsValue();
-    let { MonVolume = 0, ReportVolume = 0, Consumption } = values;
+    let { MonVolume = 0, ReportVolume = 0, Consumption = 0 } = values;
+    let xhl = 0;
+    if (deviation > 5) {
+      // 偏差大于5取消耗量最大值
+      xhl = _.max([MonVolume, ReportVolume, Consumption])
+    } else {
+      // 偏差小于5按优先级：1. 远程监控 2. 生产报表 3. 发票或计算确认单
+      xhl = MonVolume;
+    }
+    this.setState({ xhl })
   }
 
   // 计算偏差
-  deviation = () => {
+  countDeviation = () => {
+    let values = this.formRef.current.getFieldsValue();
+    let { MonVolume = 0, ReportVolume = 0, Consumption = 0 } = values;
+    if (ReportVolume && Consumption) {
+      let value1 = MonVolume / ReportVolume;
+      let value2 = ReportVolume / Consumption;
+      let deviation = value1 > value2 ? value1 : value2;
+      this.setState({
+        deviation: parseInt(deviation)
+      }, () => {
+        this.countConsumption()
+      })
+    }
+  }
 
+  // 显示偏差值
+  showDeviation = () => {
+    const { deviation } = this.state;
+    if (deviation > 5) {
+      return <span style={{ color: 'red', fontWeight: 'bold' }}>{deviation}%，大于5%，确定后需要填写偏差原因并上传偏差证明材料！</span>
+    } else {
+      return <span style={{ fontWeight: 'bold' }}>{deviation}%</span>
+    }
+  }
+
+  onHandleSubmit = () => {
+    this.formRef.current.validateFields().then((values) => {
+      const { xhl, deviation } = this.state;
+      let data = { ...values, xhl, deviation }
+      this.props.onOk(data);
+    })
   }
 
   render() {
-    const { onCancel, visible } = this.props;
-    // const { Consumption, AnnualConsumption, Deviation } = this.state;
+    const { onCancel, visible, data } = this.props;
+    const { xhl } = this.state;
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       var { Consumption, AnnualConsumption, Deviation } = values;
     }
+    console.log('props=', this.props)
+
     return (
       <Modal
-        destroyOnClose
+        // destroyOnClose
         width={1000}
-        title="添加"
+        title="计算消耗量"
         visible={visible}
-        // onOk={this.onHandleSubmit}
+        onOk={this.onHandleSubmit}
         onCancel={onCancel}
       >
+        <p style={{ position: 'absolute', top: 68 }}>
+          <InfoCircleOutlined style={{ marginRight: 10 }} />
+          消耗量：<span style={{ fontSize: 15 }}>{xhl}（t/10⁴Nm³）</span>，偏差：{this.showDeviation()}
+        </p>
         <Form
           // {...layout}
+          style={{ marginTop: 24 }}
           ref={this.formRef}
           initialValues={{
+            ...data
           }}
         >
           <Collapse activeKey={['1', '2', '3']}>
@@ -59,7 +120,7 @@ class ConsumptionModal extends PureComponent {
                 style={{ marginBottom: 0 }}
                 rules={[{ required: true, message: '请输入消耗量!' }]}
               >
-                <InputNumber style={{ width: '100%' }} placeholder="请输入消耗量" />
+                <InputNumber onChange={this.countDeviation} style={{ width: '100%' }} placeholder="请输入消耗量" />
               </Form.Item>
             </Panel>
             <Panel showArrow={false} header="生产报表" key="2">
@@ -69,7 +130,7 @@ class ConsumptionModal extends PureComponent {
                 style={{ marginBottom: 0 }}
                 rules={[{ required: true, message: '请输入生产报表消耗量!' }]}
               >
-                <InputNumber style={{ width: '100%' }} placeholder="请输入生产报表消耗量" />
+                <InputNumber onChange={this.countDeviation} style={{ width: '100%' }} placeholder="请输入生产报表消耗量" />
               </Form.Item>
             </Panel>
             <Panel showArrow={false} header="发票或结算确认单" key="3">
@@ -103,29 +164,7 @@ class ConsumptionModal extends PureComponent {
               </Form.Item>
             </Panel>
           </Collapse>
-          <Row>
-            <Col span={12}>
-              <Form.Item
-                name="Deviation"
-                label="偏差"
-                style={{ marginBottom: 0 }}
-              >
-                <p>{Deviation}</p>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="AnnualConsumption"
-                label="消耗量"
-                style={{ marginBottom: 0 }}
-              >
-                <p>{AnnualConsumption}</p>
-              </Form.Item>
-            </Col>
-          </Row>
         </Form>
-
-
       </Modal>
     );
   }

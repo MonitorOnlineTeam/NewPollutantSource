@@ -71,8 +71,8 @@ class index extends PureComponent {
     const { CO2ReportList, entList, loading } = this.props;
     return (
       <BreadcrumbWrapper>
-        <Row style={{ padding: '10px 20px' }}>
-          <Button type='primary' onClick={() => this.setState({ isModalVisible: true })}>核算</Button>
+        <Row style={{ background: '#f0f2f5' }}>
+          <Button type='primary' onClick={() => this.setState({ isModalVisible: true })}>生成排放报告</Button>
         </Row>
         <div style={{ background: '#f0f2f5', height: 'calc(100vh - 204px)', paddingTop: 20 }}>
           <Spin spinning={loading}>

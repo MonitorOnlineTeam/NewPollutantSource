@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, Button, Popover, DatePicker } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, Button, Input, DatePicker } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
@@ -10,9 +10,12 @@ import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import ConsumptionModal from '../components/ConsumptionModal';
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 const industry = INDUSTRYS.cement;
 const { Option } = Select;
+const { TextArea } = Input;
 const CONFIG_ID = 'CementFossilFuel';
 const SELECT_LIST = [{ "key": 1, "value": "燃煤" }, { "key": 2, "value": "原油 " }, { "key": 3, "value": "燃料油" }, { "key": 4, "value": "汽油" }, { "key": 5, "value": "柴油" }, { "key": 6, "value": "炼厂干气" }, { "key": 7, "value": "其它石油制品" }, { "key": 8, "value": "天然气" }, { "key": 9, "value": "焦炉煤气" }, { "key": 10, "value": "其它煤气" }]
 const SELECT_LISTGet = [{ "key": 1, "value": "购(产)销存" }];
@@ -41,8 +44,10 @@ class index extends PureComponent {
       editData: {},
       KEY: undefined,
       FileUuid: undefined,
+      FileUuid2: undefined,
       UnitCarbonContentState: 2,
-      CO2OxidationRateState: 2,
+      xhlData: {},
+      editXHLData: {},
       RateVisible: false,
       UnitVisible: false,
     };
@@ -73,7 +78,7 @@ class index extends PureComponent {
     // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12)
     let values = this.formRef.current.getFieldsValue();
     let { AnnualConsumption = 0, LowFever = 0, UnitCarbonContent = 0, CO2OxidationRate = 0 } = values;
-    // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0; // 年消耗量
+    // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0; // 消耗量
     // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0; //低位发热量
     // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0; //单位热值含碳量
     // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0; //碳氧化率
@@ -94,7 +99,7 @@ class index extends PureComponent {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { editData, KEY } = this.state;
+      const { xhlData, KEY } = this.state;
       console.log('KEY=', KEY)
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
@@ -103,6 +108,7 @@ class index extends PureComponent {
         payload: {
           configId: CONFIG_ID,
           FormData: {
+            ...xhlData,
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
             FossilFuelCode: KEY
@@ -142,13 +148,37 @@ class index extends PureComponent {
           // UnitCarbonContentState: res.UnitCarbonContentDataType,
           editData: res,
           isModalVisible: true,
+          editXHLData: {
+            MonVolume: res.MonVolume,
+            ReportVolume: res.ReportVolume,
+            BuyVolume: res.BuyVolume,
+            TransferVolume: res.TransferVolume,
+            Consumption: res.Consumption,
+            deviation: res.Deviation,
+            xhl: res.AnnualConsumption,
+          }
         })
       }
     })
   }
 
+  // 显示偏差值
+  showDeviation = () => {
+    if (this.formRef.current) {
+      let Deviation = this.formRef.current.getFieldValue('Deviation');
+      if (Deviation > 5) {
+        return <p style={{ position: 'absolute', top: 68 }}>
+          <InfoCircleOutlined style={{ marginRight: 10 }} />
+          <span style={{ color: 'red' }}>偏差值大于5%，请添加偏差原因并上传偏差证明材料！</span>
+        </p>
+      } else {
+        return ''
+      }
+    }
+  }
+
   render() {
-    const { isModalVisible, editData, FileUuid, } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, XHLVisible, editXHLData, KEY } = this.state;
     const { tableInfo, cementDictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     console.log('props=', this.props)
@@ -156,6 +186,12 @@ class index extends PureComponent {
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementFossilFuel.tCO2');
 
     const TYPES = cementDictionaries.two || [];
+    if (this.formRef.current) {
+      let values = this.formRef.current.getFieldsValue();
+      var { Deviation, MonVolume } = values;
+    }
+
+
 
     return (
       <BreadcrumbWrapper>
@@ -170,20 +206,24 @@ class index extends PureComponent {
                 editData: {},
                 KEY: undefined,
                 FileUuid: undefined,
+                FileUuid2: undefined,
               })
             }}
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.AttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid }, () => {
-                this.getFormData(FileUuid);
+              const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.DevAttachmentID')
+              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2 }, () => {
+                this.getFormData();
               })
             }}
             footer={() => <div className="">排放量合计：{count.toFixed(2)}</div>}
           />
         </Card>
         <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+          {this.showDeviation()}
           <Form
             {...layout}
+            style={{ marginTop: 24 }}
             ref={this.formRef}
             initialValues={{
               ...editData,
@@ -194,6 +234,7 @@ class index extends PureComponent {
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
               FossilType: editData['dbo.T_Bas_CementFossilFuel.FossilType'] ? editData['dbo.T_Bas_CementFossilFuel.FossilType'] + '' : undefined,
+              // Deviation: '-'
             }}
           >
             <Row>
@@ -238,11 +279,59 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="AnnualConsumption"
-                  label="年消耗量(t/10⁴Nm³)"
-                  rules={[{ required: true, message: '请填写年消耗量!' }]}
+                  name="GetType"
+                  label="获取方式"
+                  rules={[{ required: true, message: '请选择获取方式!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
+                  <Select placeholder="请选择获取方式">
+                    {
+                      SELECT_LISTGet.map(item => {
+                        return <Option value={item.key} key={item.key}>{item.value}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="AnnualConsumption"
+                  label="消耗量(t/10⁴Nm³)"
+                  rules={[{ required: true, message: '请填写消耗量!' }]}
+                >
+                  <InputNumber style={{ width: 'calc(100% - 64px)' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
+                </Form.Item>
+                <Button onClick={() => this.setState({ XHLVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="Deviation"
+                  label="消耗量偏差（%）"
+                >
+                  <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 19 }}
+                  name="DeviationReson"
+                  label="偏差原因"
+                  rules={[{ required: Deviation > 5, message: '请填写消耗量!' }]}
+                >
+                  <TextArea autoSize={{ minRows: 4 }} placeholder="请填写偏差原因" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 7 }}
+                  name="DevAttachmentID"
+                  label="偏差证明材料"
+                  rules={[{ required: Deviation > 5, message: '请上传偏差证明材料!' }]}
+                >
+                  <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
+                    this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
+                  }} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -330,21 +419,7 @@ class index extends PureComponent {
                   <InputNumber style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="GetType"
-                  label="获取方式"
-                  rules={[{ required: true, message: '请选择获取方式!' }]}
-                >
-                  <Select placeholder="请选择获取方式">
-                    {
-                      SELECT_LISTGet.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
+
               <Col span={12}>
                 <Form.Item
                   name="tCO2"
@@ -375,7 +450,14 @@ class index extends PureComponent {
             </Row>
           </Form>
         </Modal>
-      </BreadcrumbWrapper>
+        <ConsumptionModal
+          data={KEY ? editXHLData : {}}
+          visible={XHLVisible} onCancel={() => this.setState({ XHLVisible: false })} onOk={(data) => {
+            this.formRef.current.setFieldsValue({ 'AnnualConsumption': data.xhl, 'Deviation': data.deviation })
+            this.setState({ XHLVisible: false, xhlData: data })
+            this.countEmissions();
+          }} />
+      </BreadcrumbWrapper >
     );
   }
 }
