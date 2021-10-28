@@ -36,6 +36,9 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   dateCol:abnormalWorkStatistics.cityDateCol,
   cityDetailTableTotal:abnormalWorkStatistics.cityDetailTableTotal,
   cityDetailTableDatas:abnormalWorkStatistics.cityDetailTableDatas,
+  exportLoading:loading.effects[`${namespace}/regDetaiExportExceptionTaskList`],
+  abnormalExceptionExportLoading:loading.effects[`${namespace}/abnormalExceptionTaskListExport`],
+  cityDetailExceptionExportLoading:loading.effects[`${namespace}/cityDetailExceptionTaskListExport`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -64,6 +67,24 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    regDetaiExportExceptionTaskList:(payload)=>{ //导出
+      dispatch({
+        type: `${namespace}/regDetaiExportExceptionTaskList`,
+        payload:payload,
+      })
+    },
+    abnormalExceptionTaskListExport:(payload)=>{ //打卡异常 导出
+      dispatch({
+        type: `${namespace}/abnormalExceptionTaskListExport`,
+        payload:payload,
+      })
+    },
+    cityDetailExceptionTaskListExport:(payload)=>{ //市级弹框 导出
+      dispatch({
+        type: `${namespace}/cityDetailExceptionTaskListExport`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -88,7 +109,10 @@ const Index = (props) => {
     const abnormalTypes = props.location.query.abnormalTypes
      
   
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,exportLoading,abnormalList,abnormalLoading,cityDetailTableTotal,cityDetailTableDatas,cityDetailTableLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,exportLoading,abnormalList,abnormalLoading,cityDetailTableTotal,cityDetailTableDatas,cityDetailTableLoading } = props; 
+
+  const {abnormalExceptionExportLoading,cityDetailExceptionExportLoading } = props;
+
   useEffect(() => {
     queryFinish()
   
@@ -103,6 +127,13 @@ const Index = (props) => {
             regionCode: regionCodes,
             regionLevel: 2,
           })                                               
+    }
+    const exports=()=>{
+      props.regDetaiExportExceptionTaskList({
+        ...queryPar,
+        regionCode: regionCodes,
+        regionLevel: 2,
+      })
     }
   const abnormalNumber = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
@@ -613,9 +644,7 @@ const reponseNumColumns = [
     ],
   }
 ];
- const abnormalExports = () => {
 
-};
 const [regName,setRegName] = useState()
 const [regionCode,setRegionCode] = useState()
 const [staticType,setStaticType] = useState()
@@ -641,7 +670,15 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
 
  }
  const [workTableVisible,setWorkTableVisible] = useState(false)
- 
+ const cityDetailExceptionTaskList = (regionCode) =>{
+  props.cityDetailExceptionTaskList({
+    ...queryPar,
+    regionCode:regionCode,
+    staticType:2,
+    regionLevel: 2,
+  })
+
+ }
  const cityClick = (row) =>{ //点击市级别的弹框
   setWorkTableVisible(true)
   regionForm.resetFields()
@@ -650,24 +687,47 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   setStaticType(2)
   cityDetailExceptionTaskList(row.regionCode? row.regionCode : regionCodes)
  }
- const cityDetailExceptionTaskList = (regionCode) =>{
-  props.cityDetailExceptionTaskList({
-    ...queryPar,
-    regionCode:regionCode,
-    staticType:2,
-    regionLevel: 1,
-  })
-
- }
+ 
   const handleTableChange =   async (PageIndex, )=>{ //分页
   }
+
   const onFinish  = async () =>{  //查询
 
 
     try {
 
       const values = await regionForm.validateFields();
-      tableVisible? props.abnormalExceptionTaskList({
+      tableVisible?
+      abnormalExceptionTaskList(regionCode,outOrInside)
+      // props.abnormalExceptionTaskList({
+      //   ...queryPar,
+      //   staticType:staticType,
+      //   regionCode:regionCode,
+      //   outOrInside:outOrInside,
+      //   ...values,
+      //   regionLevel:2,
+      // })
+      :
+      cityDetailExceptionTaskList(regionCode)
+      // props.cityDetailExceptionTaskList({
+      //   ...queryPar,
+      //   regionCode:regionCode,
+      //   staticType:staticType,
+      //   ...values,
+      //   regionLevel:2,
+        
+      // })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+
+  const modalExports = () =>{  //导出
+
+
+
+      const values =  regionForm.validateFields();
+      tableVisible? props.abnormalExceptionTaskListExport({ 
         ...queryPar,
         staticType:staticType,
         regionCode:regionCode,
@@ -675,15 +735,13 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
         ...values,
       })
       :
-      props.cityDetailExceptionTaskList({
+      props.cityDetailExceptionTaskListExport({//市级弹框 导出
         ...queryPar,
         regionCode:regionCode,
         staticType:staticType,
         ...values,
+        regionLevel:2,
       })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
   }
   const searchComponents = () =>{
     return <Form
@@ -703,7 +761,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}} loading={ tableVisible?abnormalExceptionExportLoading : cityDetailExceptionExportLoading}  onClick={modalExports} >
             导出
      </Button> 
      
@@ -721,42 +779,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
      </Form>
   }
 
-  // const [ workForm ] =  Form.useForm();
-  // const workSearchComponents = () =>{
-  //   return <Form
-  //   onFinish={onFinish}
-  //   form={workForm}
-  //   layout={'inline'}
-  // >   
-  //     <Row justify='space-between'  align='middle' style={{flex:1}} >
-
-  //       <Col >
-  //       <Row align='middle'>
-  //     <Form.Item name='entName' >
-  //      <Input placeholder='请输入企业名称' allowClear/>
-  //    </Form.Item>
-
-  //       <Form.Item>
-  //    <Button  type="primary" htmlType='submit'>
-  //         查询
-  //    </Button>
-  //    <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
-  //           导出
-  //    </Button> 
-     
-  //    </Form.Item>
-  //    </Row>
-  //    </Col>
-
-
-  //    <Col>
-  //    <Row align='middle'><div style={{background:'#faad14',width:24,height:12,marginRight:5}}></div>
-  //      <span> {abnormalTypes ==1? '打卡异常数' : '报警响应超时工单数'}</span>
-  //     </Row>
-  //    </Col>
-  //   </Row>
-  //    </Form>
-  // }
+  
   const { dateCol } = props
 const  cityColumnsPush = (col) =>{
   if(dateCol&&dateCol[0]){
@@ -796,7 +819,7 @@ const  cityColumnsPush = (col) =>{
   return ( <div>
          <Form layout={'inline'} style={{paddingBottom:12}} >   
        <Form.Item>
-     <Button icon={<ExportOutlined />}  style={{  marginRight: '8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  marginRight: '8px'}}  loading={exportLoading}  onClick={()=>{ exports()} }>
             导出
      </Button> 
      <Button onClick={() => {history.go(-1); }} icon={<RollbackOutlined />} >返回</Button>
@@ -809,7 +832,7 @@ const  cityColumnsPush = (col) =>{
         columns={ abnormalTypes ==1? columns : alarmColumns}
         pagination={false}
       />
-           {/*工单异常 响应超时 详情 弹框*/}
+           {/*工单异常  城市 详情 弹框*/}
      <Modal
         title={`${regName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
         内${abnormalTypes==1? '打卡异常工单情况' : '报警响应超时工单情况'}`}

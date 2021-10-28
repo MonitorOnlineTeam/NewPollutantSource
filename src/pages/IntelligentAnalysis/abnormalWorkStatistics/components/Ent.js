@@ -50,7 +50,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   dateCol:abnormalWorkStatistics.dateCol,
   abnormalList:abnormalWorkStatistics.abnormalList,
   queryPar:abnormalWorkStatistics.queryPar,
-  // getPointExceptionLoading:loading.effects[`${namespace}/getPointExceptionSignList`],
+  exportLoading:loading.effects[`${namespace}/exportEntResExceptionTaskList`],
   getPointExceptionLoading:abnormalWorkStatistics.getPointExceptionLoading,
   entAbnormalList:abnormalWorkStatistics.entAbnormalList,
   taskList:abnormalWorkStatistics.taskList,
@@ -75,7 +75,13 @@ const  dvaDispatch = (dispatch) => {
         type: `${namespace}/getPointExceptionSignList`,
         payload:payload,
       })
-    }
+    },
+    exportEntResExceptionTaskList:(payload)=>{  //企业 响应超时
+      dispatch({
+        type: `${namespace}/exportEntResExceptionTaskList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -345,9 +351,7 @@ const Index = (props) => {
   ];
 
  
- const abnormalExports = () => {
 
-};
 const handleTableChange =   async (PageIndex, )=>{ //分页
 }
 
@@ -372,8 +376,16 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
   })
 
  }
- 
-  const onFinish  = async () =>{  //查询 响应超时
+ const exports = () => {
+  const values =  regionForm.validateFields();
+  props.exportEntResExceptionTaskList({
+    ...queryPar,
+    staticType:3,
+    entCode:entCode,
+    ...values,
+  })
+};
+  const onFinish  = async () =>{  //查询 响应超时 弹框
       
     try {
 
@@ -406,7 +418,7 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ exports()} }>
             导出
      </Button> 
      

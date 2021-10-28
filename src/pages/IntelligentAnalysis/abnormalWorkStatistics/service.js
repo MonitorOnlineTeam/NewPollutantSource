@@ -35,8 +35,34 @@ export async function getPointExceptionSignList(params) {
   return result;
 }
 
-//异常打卡 导出
+//行政区 导出
 export async function exportExceptionTaskList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
+  return result;
+}
+//行政区 打卡异常 导出
+export async function exportCardResExceptionTaskList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
+  return result;
+}
+//行政区 市级 详情 导出
+export async function regDetaiExportExceptionTaskList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
+  return result;
+}
+//行政区 市级 打卡异常 导出
+export async function abnormalExceptionTaskListExport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
+  return result;
+}
+//行政区 市级弹框 详情 导出
+export async function cityDetailExceptionTaskListExport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
+  return result;
+}
+
+//企业 响应超时 导出
+export async function exportEntResExceptionTaskList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportExceptionTaskList',params, null);
   return result;
 }

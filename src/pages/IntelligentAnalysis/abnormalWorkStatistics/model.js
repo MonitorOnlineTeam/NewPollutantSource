@@ -29,7 +29,9 @@ export default Model.extend({
     cityDetailTableDatas:[],
     entAbnormalList:{},
     taskList:[],
-    getPointExceptionLoading:true
+    getPointExceptionLoading:true,
+    exportCardExceptionLoading:false,
+    exportResExceptionLoading:false,
   },
   effects: {
     *regEntExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
@@ -123,10 +125,69 @@ export default Model.extend({
         })
       }else{
         message.error(result.Message)
-        yield update({getPointExceptionLoading:false
-        })
+        yield update({getPointExceptionLoading:false })
       }
     },
     
+     *exportExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区 导出
+      const result = yield call(services.exportExceptionTaskList, payload);
+       if (result.IsSuccess) {
+         message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+          } else {
+         message.warning(result.Message);
+       }
+    },
+    *exportCardResExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区 打卡异常  导出
+      
+      payload.exceptionType == 1 ? yield update({exportCardExceptionLoading:true }) : yield update({exportCardResExceptionLoading:true })
+      
+      const result = yield call(services.exportCardResExceptionTaskList, payload);
+
+       if (result.IsSuccess) {
+         message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+           payload.exceptionType == 1 ? yield update({exportCardExceptionLoading:false }) : yield update({exportCardResExceptionLoading:false })
+          } else {
+          message.warning(result.Message);
+          payload.exceptionType == 1 ? yield update({exportCardExceptionLoading:false }) : yield update({exportCardResExceptionLoading:false })
+       }
+    },
+    *regDetaiExportExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区详情 市级 导出
+      const result = yield call(services.regDetaiExportExceptionTaskList, payload);
+       if (result.IsSuccess) {
+         message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+          } else {
+         message.warning(result.Message);
+       }
+    },
+    *abnormalExceptionTaskListExport({ payload,callback }, { call, put, update }) { //行政区详情 打卡异常 导出
+      const result = yield call(services.abnormalExceptionTaskListExport, payload);
+       if (result.IsSuccess) {
+           message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+          } else {
+         message.warning(result.Message);
+       }
+    },
+    *cityDetailExceptionTaskListExport({ payload,callback }, { call, put, update }) { //行政区详情 市级弹框  导出
+      const result = yield call(services.cityDetailExceptionTaskListExport, payload);
+       if (result.IsSuccess) {
+         message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+          } else {
+         message.warning(result.Message);
+       }
+    },
+    *exportEntResExceptionTaskList({ payload,callback }, { call, put, update }) { //响应超时 导出
+      const result = yield call(services.exportEntResExceptionTaskList, payload);
+       if (result.IsSuccess) {
+         message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+          } else {
+         message.warning(result.Message);
+       }
+    },
   },
 })

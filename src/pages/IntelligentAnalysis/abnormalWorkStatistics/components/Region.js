@@ -31,7 +31,8 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   tableLoading:abnormalWorkStatistics.tableLoading,
   tableTotal:abnormalWorkStatistics.tableTotal,
   abnormalTypes:abnormalWorkStatistics.abnormalTypes,
-  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  exportCardExceptionLoading:abnormalWorkStatistics.exportCardExceptionLoading,
+  exportResExceptionLoading:abnormalWorkStatistics.exportCardResExceptionLoading,
   abnormalLoading:loading.effects[`${namespace}/abnormalExceptionTaskList`],
   abnormalList:abnormalWorkStatistics.abnormalList,
   queryPar:abnormalWorkStatistics.queryPar,
@@ -58,6 +59,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    exportCardResExceptionTaskList:(payload)=>{ //导出 省级 异常打卡 响应超时 统计 
+      dispatch({
+        type: `${namespace}/exportCardResExceptionTaskList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props,ref) => {
@@ -81,7 +88,11 @@ const Index = (props,ref) => {
 
 
   
-  const  { tableDatas,tableLoading,tableTotal,exportLoading,abnormalTypes,refInstance,abnormalList,abnormalLoading,queryPar,dateCol} = props; 
+  const  { tableDatas,tableLoading,tableTotal,abnormalTypes,refInstance,abnormalList,abnormalLoading,queryPar,dateCol} = props; 
+  
+
+  const { exportCardExceptionLoading, exportResExceptionLoading} = props;
+
   useEffect(() => {
 
   
@@ -370,9 +381,6 @@ const Index = (props,ref) => {
 
 
  
- const abnormalExports = () => {
-
-};
 
 
  const [regName,setRegName] = useState()
@@ -401,6 +409,17 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
 
   const handleTableChange =   async (PageIndex, )=>{ //分页
   }
+  const exports = () => { //导出 打卡异常 弹框 
+    const values =  regionForm.validateFields();
+    props.exportCardResExceptionTaskList({
+      ...queryPar,
+      staticType:3,
+      regionCode:regionCode,
+      outOrInside:outOrInside,
+      ...values,
+    })
+  };
+  
   const onFinish  = async () =>{  //查询
 
 
@@ -436,7 +455,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={abnormalTypes==1? exportCardExceptionLoading: exportResExceptionLoading}  onClick={()=>{ exports()} }>
             导出
      </Button> 
      
@@ -512,7 +531,7 @@ useImperativeHandle(refInstance,() => {
       {/*打卡异常 响应超时 弹框*/}
       <Modal
         title={`${regName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-        内${abnormalTypes==1?'报警响应超时工单情况':'打卡异常工单情况'}`}
+        内${abnormalTypes==1?'打卡异常工单情况' :'报警响应超时工单情况'}`}
         visible={tableVisible}
         onCancel={()=>{setTableVisible(false)}}
         footer={null}
@@ -524,8 +543,8 @@ useImperativeHandle(refInstance,() => {
      <SdlTable
         loading = {abnormalLoading}
         bordered
-        dataSource={abnormalList}
         columns={abnormalTypes ==1? cityColumns : cityReponseNumColumns}
+        dataSource={abnormalList}
         scroll={{ y: 'calc(100vh - 560px)' }}
         pagination={{
           showSizeChanger: true,

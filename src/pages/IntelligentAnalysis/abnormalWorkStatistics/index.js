@@ -30,7 +30,7 @@ const namespace = 'abnormalWorkStatistics'
 const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   tableDatas:abnormalWorkStatistics.tableDatas,
   tableLoading:abnormalWorkStatistics.tableLoading,
-  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  exportLoading: loading.effects[`${namespace}/exportExceptionTaskList`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -47,6 +47,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     }, 
+    exportExceptionTaskList:(payload)=>{ //导出
+      dispatch({
+        type: `${namespace}/exportExceptionTaskList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -54,7 +60,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading } = props; 
   
   
   useEffect(() => {
@@ -78,17 +84,16 @@ const Index = (props) => {
 
   const exports =  async () => {
     const values =   await form.validateFields();
-    props.exportProjectInfoList({
+    props.exportExceptionTaskList({
       ...values,
+      time:undefined,
+      staticType:showType,
+      beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+      endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+      regionLevel: showType==1? 1 :undefined,
     })
  };
 
- const entExports =  async () => {
-  const values =   await form.validateFields();
-  props.exportProjectInfoList({
-    ...values,
-  })
-};
  
 
   const onFinish  = async () =>{  //查询
@@ -105,7 +110,7 @@ const Index = (props) => {
           staticType:showType,
           beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-          regionLevel: 1,
+          regionLevel: showType==1? 1 :undefined,
         })
 
 
@@ -182,7 +187,7 @@ const Index = (props) => {
          <RangePicker style={{width:'100%'}} 
           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
     </Form.Item> 
-     <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px'}}>
+     <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px',width:350}}>
          <Input placeholder='请输入企业名称'  allowClear/>
        </Form.Item>
        <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:'16px'}}>
@@ -207,7 +212,7 @@ const Index = (props) => {
     <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ entExports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     

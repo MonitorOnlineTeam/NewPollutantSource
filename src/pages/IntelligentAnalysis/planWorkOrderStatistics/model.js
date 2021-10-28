@@ -104,7 +104,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           entOutsidePointListTotal:result.Total,
-          entOutsidePointListDatas:result.Datas[0]&&result.Datas[0].datePick ,
+          entOutsidePointListDatas:payload.staticType==3? result.Datas[0]&&result.Datas[0].datePick : result.Datas,
         })  
       }else{
         message.error(result.Message)

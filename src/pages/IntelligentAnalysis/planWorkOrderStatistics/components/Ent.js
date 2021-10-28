@@ -6,7 +6,7 @@
 import React, { useState,useEffect,Fragment,useRef,useImperativeHandle,forwardRef} from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs,Calendar,Tag,Spin    } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -421,50 +421,50 @@ const Index = (props,ref) => {
       children: [
         {
           title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'allTaskCount',
-          key: 'allTaskCount',
+          dataIndex: 'allCompleteTaskCount',
+          key: 'allCompleteTaskCount',
           width: 50,
           align:'center',
         },
         {
           title:  <span>巡检工单数</span>,
-          dataIndex: 'inspectionCount',
-          key: 'inspectionCount',
+          dataIndex: 'inspectionCompleteCount',
+          key: 'inspectionCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '校准工单数',
-          dataIndex: 'calibrationCount',
-          key: 'calibrationCount',
+          dataIndex: 'calibrationCompleteCount',
+          key: 'calibrationCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '维护维修工单数',
-          dataIndex: 'repairCount',
-          key: 'repairCount',
+          dataIndex: 'repairCompleteCount',
+          key: 'repairCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '配合对比工单数',
-          dataIndex: 'matchingComparisonCount',
-          key: 'matchingComparisonCount',
+          dataIndex: 'matchingComparisonCompleteCount',
+          key: 'matchingComparisonCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '配合检查工单数',
-          dataIndex: 'cooperationInspectionCount',
-          key: 'cooperationInspectionCount',
+          dataIndex: 'cooperationInspectionCompleteCount',
+          key: 'cooperationInspectionCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '校验监测工单数',
-          dataIndex: 'calibrationTestCount',
-          key: 'calibrationTestCount',
+          dataIndex: 'calibrationTestCompleteCount',
+          key: 'calibrationTestCompleteCount',
           width: 100,
           align:'center',
         },
@@ -743,34 +743,54 @@ const [operaPointVisible, setOperaPointVisible] = useState(false)
 const [DGIMN, setDGIMN] = useState()
 const [dete, setDete] = useState({})
 // const [entName, setEntName] = useState({})
-
+const outTypeObj = {
+  "inspectionCount"  : "巡检工单",
+  "calibrationCount" :'校准工单',
+  "repairCount" :'维护维修工单',
+  "matchingComparisonCount" :'配合对比工单',
+  "cooperationInspectionCount" :'配合检查工单',
+  "calibrationTestCount":'校验监测工单',
+ }
+ const outTypeColor = {
+  "inspectionCount"  : '#1890ff',
+  "calibrationCount" :'#52c41a',
+  "repairCount" :'#f5222d',
+  "matchingComparisonCount" :'#13c2c2',
+  "cooperationInspectionCount" :'#fa8c16',
+  "calibrationTestCount":'#08979c',
+ }
 const dateCellRender = (value)=>{//日期
 
-  const outTypeObj = {
-    "inspectionCount"  : "巡检工单",
-    "calibrationCount" :'校准工单',
-    "repairCount" :'维护维修工单',
-    "matchingComparisonCount" :'配合对比工单',
-    "cooperationInspectionCount" :'配合检查工单',
-    "calibrationTestCount":'校验监测工单',
-   }
+
+
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
-    entOutsidePointListDatas.map((item,index)=>{
-      if(value.date()==item.dateTime){
+    return  entOutsidePointListDatas.map((item,index)=>{
+      if(item.date){//年 月 返回的数据格式不一致 需判断
+      if(moment(value).format("MM/DD") == item.date.split('_')[0] ){
          for(let key in item){ //完成
-          // if(item[`${outTypeObj[key]}`]){ 
-           return  <Tag color="#108ee9">{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
-        // }
+          if(item[key] && outTypeObj[key]){ 
+           return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
+        }
       }
       }
+    }
   })
   }
 
 } 
 const monthCellRender = (value) =>{//月份
-  // entOutsidePointListDatas 
-  if (value === 8) {
-    return  <Tag color="#108ee9">巡检工单23个</Tag>;
+
+  if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
+    entOutsidePointListDatas.map((item,index)=>{
+      if(Number(value.month()) + 1 == item.month ){
+        console.log(Number(value.month()) + 1 , item.month,222222)
+         for(let key in item){ //完成
+          if(item[key] && outTypeObj[key]){ 
+           return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
+        }
+      }
+      }
+  })
   }
 
 }
@@ -779,6 +799,7 @@ const  onPanelChange = (value, mode)=> { //日期面板变化回调
     DGIMN:DGIMN,
     beginTime:mode==='month'? moment(value).startOf('month').format('YYYY-MM-DD 00:00:00') :moment(value).startOf('year').format('YYYY-MM-DD 00:00:00'),
     endTime:mode==='month'?moment(value).endOf('month').format('YYYY-MM-DD 23:59:59'):moment(value).endOf('year').format('YYYY-MM-DD 23:59:59'),
+    staticType: mode==='month'? 3:4
   })
 }
 
@@ -799,8 +820,8 @@ const outPointClick = (record) =>{ //计划外 监测点名称
 
 const entOutsidePointGetTaskWorkOrderList = (par) =>{
   props.entOutsidePointGetTaskWorkOrderList({
+    staticType: 3,
     ...par,
-    staticType:3
   })
   setDete({
     beginTime:moment(par.beginTime).format('YYYY-MM-DD'),
@@ -819,7 +840,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
       ...queryPar,
       outOrInside:key// 子组件调用的父组件方法
     })
-  },500)
+  },300)
 
  }
   return (
