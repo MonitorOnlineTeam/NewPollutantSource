@@ -352,8 +352,6 @@ const Index = (props) => {
 
  
 
-const handleTableChange =   async (PageIndex, )=>{ //分页
-}
 
 
 

@@ -37,6 +37,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   abnormalList:abnormalWorkStatistics.abnormalList,
   queryPar:abnormalWorkStatistics.queryPar,
   dateCol:abnormalWorkStatistics.dateCol,
+  abnormalListTotal:abnormalWorkStatistics.abnormalListTotal
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -81,14 +82,13 @@ const Index = (props,ref) => {
 
   
 
-  const [pageSize,setPageSize] = useState(20)
-  const [pageIndex,setPageIndex] = useState(1)
+
 
 
 
 
   
-  const  { tableDatas,tableLoading,tableTotal,abnormalTypes,refInstance,abnormalList,abnormalLoading,queryPar,dateCol} = props; 
+  const  { tableDatas,tableLoading,tableTotal,abnormalTypes,refInstance,abnormalList,abnormalListTotal,abnormalLoading,queryPar,dateCol} = props; 
   
 
   const { exportCardExceptionLoading, exportResExceptionLoading} = props;
@@ -130,7 +130,7 @@ const Index = (props,ref) => {
       render:(text,record,index)=>{
         return  <Button type="link"
          onClick={()=>{
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionCode:record.regionCode,abnormalTypes:abnormalTypes }});
+          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }});
          }}
         >{text}</Button>
       }
@@ -299,7 +299,7 @@ const Index = (props,ref) => {
       render:(text,record,index)=>{
         return  <Button type="link"
          onClick={()=>{
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionCode:record.regionCode,abnormalTypes:abnormalTypes}});
+          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}});
          }}
         >{text}</Button>
       }
@@ -397,28 +397,29 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
    abnormalExceptionTaskList(row.regionCode,outOrInside)
 
 }
- const abnormalExceptionTaskList = (regionCode,outOrInside) =>{
+ const abnormalExceptionTaskList = (regionCode,outOrInside,pageIndexs,pageSizes,par) =>{
   props.abnormalExceptionTaskList({
     ...queryPar,
     regionCode:regionCode,
     outOrInside:outOrInside,
-    staticType:3
+    staticType:3,
+    regionLevel: 2,
+    pageIndex:pageIndexs?pageIndexs:pageIndex,
+    pageSize:pageSizes?pageSizes:pageSize,
+    ...par
   })
 
  }
+   
 
-  const handleTableChange =   async (PageIndex, )=>{ //分页
+ const [pageIndex,setPageIndex] = useState(1)
+ const [pageSize,setPageSize] = useState(10)
+  const handleTableChange =   (PageIndex, PageSize )=>{ //分页 打卡异常 响应超时 弹框
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    abnormalExceptionTaskList(regionCode,outOrInside,PageIndex,PageSize)
   }
-  const exports = () => { //导出 打卡异常 弹框 
-    const values =  regionForm.validateFields();
-    props.exportCardResExceptionTaskList({
-      ...queryPar,
-      staticType:3,
-      regionCode:regionCode,
-      outOrInside:outOrInside,
-      ...values,
-    })
-  };
+
   
   const onFinish  = async () =>{  //查询
 
@@ -426,13 +427,9 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
     try {
 
       const values = await regionForm.validateFields();
-      props.abnormalExceptionTaskList({
-        ...queryPar,
-        staticType:3,
-        regionCode:regionCode,
-        outOrInside:outOrInside,
-        ...values,
-      })
+      setPageIndex(1)
+      setPageSize(10)
+      abnormalExceptionTaskList(regionCode,outOrInside,1,10,values)
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -472,7 +469,16 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
     </Row>
      </Form>
   }
- 
+  const exports = () => { //导出 打卡异常 弹框 
+    const values =  regionForm.validateFields();
+    props.exportCardResExceptionTaskList({
+      ...queryPar,
+      staticType:3,
+      regionCode:regionCode,
+      outOrInside:outOrInside,
+      ...values,
+    })
+  };
   const  cityColumnsPush = (col) =>{
     if(dateCol&&dateCol[0]){
       col.push({
@@ -546,10 +552,14 @@ useImperativeHandle(refInstance,() => {
         columns={abnormalTypes ==1? cityColumns : cityReponseNumColumns}
         dataSource={abnormalList}
         scroll={{ y: 'calc(100vh - 560px)' }}
+      
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          total:abnormalListTotal,
+          pageSize:pageSize,
+          current:pageIndex,
+          onChange: handleTableChange,
       }}
       />
    </Card>

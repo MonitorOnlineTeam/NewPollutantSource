@@ -18,6 +18,7 @@ export default Model.extend({
     pointDatas:[],
     entTableDatas:[],
     abnormalList:[],
+    abnormalListTotal:0,
     queryPar:null,
     dateCol:[],
     cityTableTotal:0,
@@ -56,6 +57,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           abnormalList:result.Datas,
+          abnormalListTotal:result.Total,
           dateCol:result.Datas[0]&&result.Datas[0].datePick
         })
 

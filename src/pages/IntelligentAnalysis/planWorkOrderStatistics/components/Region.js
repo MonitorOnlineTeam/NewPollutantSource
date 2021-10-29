@@ -42,11 +42,13 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   regPointTableLoading:loading.effects[`${namespace}/regPointGetTaskWorkOrderList`],
   insideOrOutsideWorkLoading:loading.effects[`${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`],
   insideOrOutsiderWorkTableDatas:planWorkOrderStatistics.insideOrOutsiderWorkTableDatas,
+  insideOrOutsiderWorkTableTotal:planWorkOrderStatistics.insideOrOutsiderWorkTableTotal,
   clientHeight: global.clientHeight,
   cityDetailTableDatas:planWorkOrderStatistics.cityDetailTableDatas,
   cityDetailTableLoading:loading.effects[`${namespace}/cityDetailGetTaskWorkOrderList`],
   cityDetailTableTotal:planWorkOrderStatistics.cityDetailTableTotal,
   dateCol:planWorkOrderStatistics.dateCol,
+  regPointTableDatasTotal:planWorkOrderStatistics.regPointTableDatasTotal
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -118,9 +120,9 @@ const Index = (props,ref ) => {
 
   const {cityTableDatas,cityTableLoading,cityTableTotal} = props; //市级别
 
-  const { regPointTableDatas,regPointTableLoading } = props; //监测点
+  const { regPointTableDatas,regPointTableLoading ,regPointTableDatasTotal} = props; //监测点
 
-  const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading } = props; //计划内or计划外工单数
+  const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading,insideOrOutsiderWorkTableTotal } = props; //计划内or计划外工单数
 
 
   useEffect(() => {
@@ -202,7 +204,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(1,record,'inspectionCount')}}>{text}</Button>
           }
         },
         {
@@ -246,7 +248,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(2,record,'calibrationCount')}}>{text}</Button>
           }
         },
         {
@@ -328,7 +330,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(1,record)}}>{text}</Button>
+          return  <Button type="link" onClick={()=>{workOrderNum(1,record,'inspectionCount')}}>{text}</Button>
           }
         },
         {
@@ -372,7 +374,7 @@ const Index = (props,ref ) => {
           width: 50,
           align:'center',
           render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{workOrderNum(2,record)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{workOrderNum(2,record,'calibrationCount')}}>{text}</Button>
             }
         },
         {
@@ -441,25 +443,25 @@ const Index = (props,ref ) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'inspectionCount',
-          key: 'inspectionCount',
+          dataIndex: 'taskCount',
+          key: 'taskCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'inspectionCompleteCount',
-          key: 'inspectionCompleteCount',
+          dataIndex: 'taskCompleteCount',
+          key: 'taskCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'inspectionRate',
-          key: 'inspectionRate',
+          dataIndex: 'taskRate',
+          key: 'taskRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) => a.taskRate - b.taskRate,
           render: (text, record) => {
             return (
               <div>
@@ -515,25 +517,25 @@ const Index = (props,ref ) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'calibrationCount',
-          key: 'calibrationCount',
+          dataIndex: 'taskCount',
+          key: 'taskCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'calibrationCompleteCount',
-          key: 'calibrationCompleteCount',
+          dataIndex: 'taskCompleteCount',
+          key: 'taskCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'calibrationRate',
-          key: 'calibrationRate',
+          dataIndex: 'taskRate',
+          key: 'taskRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.calibrationRate - b.inspectionRate,
+          sorter: (a, b) => a.taskRate - b.taskRate,
           render: (text, record) => {
             return (
               <div>
@@ -954,6 +956,7 @@ const [cityDetailVisible,setCityDetailVisible] = useState(false)
 
 const cityDetail = (record) =>{
   setCityDetailVisible(true)
+  cityDetailForm.resetFields()
   setRegName(record.regionName)
   setRegionCode(record.regionCode)
   cityDetailGetTaskWorkOrderList({
@@ -978,16 +981,27 @@ const onFinishCityDetail = async () =>{  // 计划外 市详情
 
 const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
   props.insideOrOutsideWorkGetTaskWorkOrderList({
+    pageIndex:1,
+    pageSize:10,
+    taskType:outTypePar[outType],
     ...queryPar,
     ...par,
     regionLevel:undefined,
-    staticType:3
+    staticType:3,
   })
 }
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState(false)
 
 const [outType,setOutType] = useState()
+const outTypePar = {
+  "inspectionCount"  : "1",
+  "calibrationCount" :'2',
+  "repairCount" :'3',
+  "matchingComparisonCount" :'4',
+  "cooperationInspectionCount" :'5',
+  "calibrationTestCount":'6',
+ }
 const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工单
   
    if(type == 1 || type ==2){
@@ -996,14 +1010,18 @@ const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工
    }
    if(type == 3){
     setOutWorkOrderVisible(true)
-    setOutType(outType)
    }
+   setOutType(outType)
    workRegForm.resetFields()
    setRegName(record.regionName)
    setRegionCode(record.regionCode)
 
+
+   setWorkPageIndex(1)
+   setWorkPageSize(10)
    insideOrOutsideWorkGetTaskWorkOrderList({
     regionCode: record.regionCode,
+    taskType:outTypePar[outType]
    })
   
 
@@ -1014,7 +1032,8 @@ const onFinishWorkOrder = async () =>{  //计划内 计划外 查询 工单
   try {
 
     const values = await workRegForm.validateFields();
-
+    setWorkPageIndex(1)
+    setWorkPageSize(10)
     insideOrOutsideWorkGetTaskWorkOrderList({
       ...values,
       regionCode:regionCode,
@@ -1023,11 +1042,27 @@ const onFinishWorkOrder = async () =>{  //计划内 计划外 查询 工单
     console.log('Failed:', errorInfo);
   }
 }
-const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
 
 
-  const handleTableChange =   async (PageIndex, )=>{ //分页
-  }
+const [workPageIndex,setWorkPageIndex] = useState(1)
+const [workPageSize,setWorkPageSize] = useState(10)
+
+const handleWorkTableChange =  (PageIndex, PageSize)=>{ //计划内 计划外 工单 分页
+
+  setWorkPageIndex(PageIndex)
+  setWorkPageSize(PageSize)
+  insideOrOutsideWorkGetTaskWorkOrderList({
+    regionCode:regionCode,
+    pageIndex:PageIndex,
+    pageSize:PageSize
+  }) 
+}
+
+
+
+const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
+
+
 
   
    const [cityDetailForm] = Form.useForm()
@@ -1165,22 +1200,40 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
    }
    const regPointGetTaskWorkOrderList = (par) =>{
     props.regPointGetTaskWorkOrderList({
+      pageIndex:1,
+      pageSize:10,
       ...queryPar,
       regionLevel: 2,
       staticType:2,
       ...par
     })
    }
+   const [regPointPageIndex,setRegPointPageIndex] = useState(1)
+   const [regPointPageSize,setRegPointPageSize] = useState(10)
+
+    const handleRegPointTableChange =(PageIndex,PageSize)=>{ //监测点   分页
+      setRegPointPageIndex(PageIndex)
+      setRegPointPageSize(PageSize)
+      regPointGetTaskWorkOrderList({
+        regionCode:regionCode,
+        pageIndex:PageIndex,
+        pageSize:PageSize
+      })
+    }
    const insideOperaPointClick=(record)=>{ //行政区 计划内 运营监测点弹框 
     setInsideOperaPointVisible(true)
     setRegName(record.regionName)
     setRegionCode(record.regionCode)
+    setRegPointPageIndex(1)
+    setRegPointPageSize(10)
     regPointGetTaskWorkOrderList({
       regionCode:record.regionCode
     })
   }
    const [operaPointForm] = Form.useForm()
    const operaPointClick  = (e) =>{  //查询  运营监测点
+    setRegPointPageIndex(1)
+    setRegPointPageSize(10)
     regPointGetTaskWorkOrderList({
       regionCode:regionCode,
       operationStatus:e.target.value
@@ -1244,20 +1297,20 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
                 align:'center',
                 render:(text,row,index)=>{
                     return row.datePick.map(dateItem=>{
-                            if(dateItem.inspectionCompleteCount && dateItem.inspectionCloseCount){ //同时存在
+                            if(dateItem.taskCloseCount && dateItem.taskCompleteCount){ //同时存在
                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                              <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount + dateItem.inspectionCloseCount}</span>
+                              <span style={{color:'#fff'}}>{dateItem.taskCloseCount + dateItem.taskCompleteCount}</span>
                              </Row>
                             }
-                            if(dateItem.inspectionCloseCount){ //关闭
+                            if(dateItem.taskCloseCount){ //关闭
                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                              <span style={{color:'#fff'}}>{dateItem.inspectionCloseCount}</span>
+                              <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
                             </Row>
                               }
 
-                            if(dateItem.inspectionCompleteCount){//完成
+                            if(dateItem.taskCompleteCount){//完成
                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                            <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount}</span>
+                            <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                           </Row>
                             }
                             if(dateItem.operationStatus){ //运营周期内
@@ -1300,20 +1353,20 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
                 align:'center',
                 render:(text,row,index)=>{
                     return row.datePick.map(dateItem=>{
-                            if(dateItem.calibrationCompleteCount && dateItem.calibrationCloseCount){ //同时存在
+                            if(dateItem.taskCloseCount && dateItem.taskCompleteCount){ //同时存在
                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                              <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount + dateItem.calibrationCloseCount}</span>
+                              <span style={{color:'#fff'}}>{dateItem.taskCompleteCount + dateItem.taskCloseCount}</span>
                              </Row>
                             }
-                            if(dateItem.calibrationCloseCount){ //关闭
+                            if(dateItem.taskCloseCount){ //关闭
                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                              <span style={{color:'#fff'}}>{dateItem.calibrationCloseCount}</span>
+                              <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
                             </Row>
                               }
 
-                            if(dateItem.calibrationCompleteCount){//完成
+                            if(dateItem.taskCompleteCount){//完成
                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                            <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount}</span>
+                            <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                           </Row>
                             }
                             if(dateItem.operationStatus){ //运营周期内
@@ -1359,23 +1412,26 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState()
               align:'center',
               render:(text,row,index)=>{
                  
-                const outTypeObj = {
-                  "inspectionCount"  : "inspectionCompleteCount",
-                  "calibrationCount" :'calibrationCompleteCount',
-                  "repairCount" :'repairCompleteCount',
-                  "matchingComparisonCount" :'matchingComparisonCompleteCount',
-                  "cooperationInspectionCount" :'cooperationInspectionCompleteCount',
-                  "calibrationTestCount":'calibrationTestCompleteCount',
-                 }
+                // const outTypeObj = {
+                //   "inspectionCount"  : "inspectionCompleteCount",
+                //   "calibrationCount" :'calibrationCompleteCount',
+                //   "repairCount" :'repairCompleteCount',
+                //   "matchingComparisonCount" :'matchingComparisonCompleteCount',
+                //   "cooperationInspectionCount" :'cooperationInspectionCompleteCount',
+                //   "calibrationTestCount":'calibrationTestCompleteCount',
+                //  }
                 return row.datePick.map(dateItem=>{
-                           for(let key in outTypeObj){ //完成
-                              if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
+                          //  for(let key in outTypeObj){ //完成
+                          //     if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
+                                 if(item.taskCompleteCount){
                                 return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                                <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span>
+                                {/* <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span> */}
+                                  <span style={{color:'#fff'}}>{item.taskCompleteCount}</span>
                                </Row>
-                              }
+                                 }
+                          //     }
 
-                          }
+                          // }
                         if(dateItem.operationStatus){ //运营周期内
                           return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                   
@@ -1490,7 +1546,10 @@ useImperativeHandle(refInstance,() => {
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          total:regPointTableDatasTotal,
+          pageSize:regPointPageSize,
+          current:regPointPageIndex,
+          onChange: handleRegPointTableChange,
       }}
       
       />
@@ -1518,7 +1577,10 @@ useImperativeHandle(refInstance,() => {
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          total:insideOrOutsiderWorkTableTotal,
+          pageSize:workPageSize,
+          current:workPageIndex,
+          onChange: handleWorkTableChange,
       }}
       />
    </Card>
@@ -1547,7 +1609,10 @@ useImperativeHandle(refInstance,() => {
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          total:insideOrOutsiderWorkTableTotal,
+          pageSize:workPageSize,
+          current:workPageIndex,
+          onChange: handleWorkTableChange, 
       }}
       />
    </Card>

@@ -62,9 +62,7 @@ const Index = (props) => {
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
     <BreadcrumbWrapper>
-    <Card title={'河南省-统计2021-06-01 ~ 2021-08-01内打卡异常工单情况'}>
       <RegionDetail {...props}/>
-   </Card>
    </BreadcrumbWrapper>
    
         </div>

@@ -39,6 +39,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   exportLoading:loading.effects[`${namespace}/regDetaiExportExceptionTaskList`],
   abnormalExceptionExportLoading:loading.effects[`${namespace}/abnormalExceptionTaskListExport`],
   cityDetailExceptionExportLoading:loading.effects[`${namespace}/cityDetailExceptionTaskListExport`],
+  abnormalListTotal:abnormalWorkStatistics.abnormalListTotal,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -99,17 +100,17 @@ const Index = (props) => {
   const [tableVisible,setTableVisible] = useState(false)
   const [abnormalNumVisible,setAbnormalNumVisible] = useState(false)
 
-  
-  const [pageSize,setPageSize] = useState(20)
-  const [pageIndex,setPageIndex] = useState(1)
+
+
 
  
 
   
     const abnormalTypes = props.location.query.abnormalTypes
+    const regionName = props.location.query.regionName
      
   
-  const  { tableDatas,tableTotal,tableLoading,exportLoading,abnormalList,abnormalLoading,cityDetailTableTotal,cityDetailTableDatas,cityDetailTableLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,exportLoading,abnormalList,abnormalListTotal,abnormalLoading,cityDetailTableTotal,cityDetailTableDatas,cityDetailTableLoading } = props; 
 
   const {abnormalExceptionExportLoading,cityDetailExceptionExportLoading } = props;
 
@@ -588,17 +589,17 @@ const reponseNumColumns = [
     }
   },
   {
-    title: '省',
+    title: '省/市',
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
-    render:(text,record,index)=>{
-      return  <Button type="link"
-       onClick={()=>{
-        router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:JSON.stringify(record)});
-       }}
-      >{text}</Button>
-    }
+    // render:(text,record,index)=>{
+    //   return  <Button type="link"
+    //    onClick={()=>{
+    //     router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:JSON.stringify(record)});
+    //    }}
+    //   >{text}</Button>
+    // }
   },
   {
     title: <span>报警响应工单<Tooltip overlayClassName='customTooltipSty' title={alarmResponse()}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
@@ -645,7 +646,53 @@ const reponseNumColumns = [
   }
 ];
 
-const [regName,setRegName] = useState()
+
+
+ const [workTableVisible,setWorkTableVisible] = useState(false)
+ const cityDetailExceptionTaskList = (regionCode,pageIndexs,pageSizes,par) =>{
+  props.cityDetailExceptionTaskList({
+    ...queryPar,
+    regionCode:regionCode,
+    staticType:2,
+    regionLevel: 2,
+    pageIndex:pageIndexs?pageIndexs:pageIndex,
+    pageSize:pageSizes?pageSizes:pageSize,
+    ...par
+  })
+
+ }
+ const cityClick = (row) =>{ //点击市级别的弹框
+  setWorkTableVisible(true)
+  regionForm.resetFields()
+  setRegionCode(row.regionCode ? row.regionCode : regionCodes)
+  setRegName(row.regionName)
+  setStaticType(2)
+  cityDetailExceptionTaskList(row.regionCode? row.regionCode : regionCodes)
+ }
+
+ const [cityDetailPageIndex,setCityDetailPageIndex] = useState(1)
+ const [cityDetailPageSize,setCityDetailPageSize] = useState(10)
+ const  cityDetailhandleTableChange =(PageIndex, PageSize)=>{
+  setCityDetailPageIndex(PageIndex)
+  setCityDetailPageSize(PageSize)
+  cityDetailExceptionTaskList(regionCode,PageIndex,PageSize)
+ }
+
+
+  const abnormalExceptionTaskList = (regionCode,outOrInside,pageIndexs,pageSizes,par) =>{
+  props.abnormalExceptionTaskList({
+    ...queryPar,
+    regionCode:regionCode,
+    outOrInside:outOrInside,
+    staticType:3,
+    regionLevel: 2,
+    pageIndex:pageIndexs?pageIndexs:pageIndex,
+    pageSize:pageSizes?pageSizes:pageSize,
+    ...par
+  })
+
+ }
+ const [regName,setRegName] = useState()
 const [regionCode,setRegionCode] = useState()
 const [staticType,setStaticType] = useState()
 const [outOrInside,setOutOrInside] = useState()
@@ -659,36 +706,12 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
    abnormalExceptionTaskList(row.regionCode? row.regionCode : regionCodes,outOrInside)
  
 }
- const abnormalExceptionTaskList = (regionCode,outOrInside) =>{
-  props.abnormalExceptionTaskList({
-    ...queryPar,
-    regionCode:regionCode,
-    outOrInside:outOrInside,
-    staticType:3,
-    regionLevel: 2,
-  })
-
- }
- const [workTableVisible,setWorkTableVisible] = useState(false)
- const cityDetailExceptionTaskList = (regionCode) =>{
-  props.cityDetailExceptionTaskList({
-    ...queryPar,
-    regionCode:regionCode,
-    staticType:2,
-    regionLevel: 2,
-  })
-
- }
- const cityClick = (row) =>{ //点击市级别的弹框
-  setWorkTableVisible(true)
-  regionForm.resetFields()
-  setRegionCode(row.regionCode ? row.regionCode : regionCodes)
-  setRegName(row.regionName)
-  setStaticType(2)
-  cityDetailExceptionTaskList(row.regionCode? row.regionCode : regionCodes)
- }
- 
-  const handleTableChange =   async (PageIndex, )=>{ //分页
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(10)
+  const handleTableChange =    (PageIndex, PageSize )=>{ //分页 打卡异常 响应超时 弹框
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    abnormalExceptionTaskList(regionCode,outOrInside,PageIndex,PageSize)
   }
 
   const onFinish  = async () =>{  //查询
@@ -697,9 +720,8 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
     try {
 
       const values = await regionForm.validateFields();
-      tableVisible?
-      abnormalExceptionTaskList(regionCode,outOrInside)
-      // props.abnormalExceptionTaskList({
+      if(tableVisible){
+         // props.abnormalExceptionTaskList({
       //   ...queryPar,
       //   staticType:staticType,
       //   regionCode:regionCode,
@@ -707,16 +729,20 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
       //   ...values,
       //   regionLevel:2,
       // })
-      :
-      cityDetailExceptionTaskList(regionCode)
-      // props.cityDetailExceptionTaskList({
+        setPageIndex(1)
+        setPageSize(10)
+        abnormalExceptionTaskList(regionCode,outOrInside,1,10,values)
+      }else{
+        // props.cityDetailExceptionTaskList({
       //   ...queryPar,
       //   regionCode:regionCode,
       //   staticType:staticType,
       //   ...values,
       //   regionLevel:2,
-        
-      // })
+        setCityDetailPageIndex(1)
+        setCityDetailPageSize(10)
+        cityDetailExceptionTaskList(regionCode,1,10,values)
+      }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -815,8 +841,11 @@ const  cityColumnsPush = (col) =>{
  cityColumnsPush(abnormalNumColumns)
  cityColumnsPush(reponseNumColumns)
   
- 
   return ( <div>
+        <Card title={`
+        ${regionName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
+        内${abnormalTypes==1? '打卡异常工单情况' : '报警响应超时工单情况'}
+        `}>
          <Form layout={'inline'} style={{paddingBottom:12}} >   
        <Form.Item>
      <Button icon={<ExportOutlined />}  style={{  marginRight: '8px'}}  loading={exportLoading}  onClick={()=>{ exports()} }>
@@ -832,6 +861,7 @@ const  cityColumnsPush = (col) =>{
         columns={ abnormalTypes ==1? columns : alarmColumns}
         pagination={false}
       />
+      </Card>
            {/*工单异常  城市 详情 弹框*/}
      <Modal
         title={`${regName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
@@ -852,7 +882,10 @@ const  cityColumnsPush = (col) =>{
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          total:cityDetailTableTotal,
+          pageSize:cityDetailPageSize,
+          current:cityDetailPageIndex,
+          onChange: cityDetailhandleTableChange,
       }}
       />
    </Card>
@@ -878,7 +911,10 @@ const  cityColumnsPush = (col) =>{
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          total:abnormalListTotal,
+          pageSize:pageSize,
+          current:pageIndex,
+          onChange: handleTableChange,
       }}
       />
      

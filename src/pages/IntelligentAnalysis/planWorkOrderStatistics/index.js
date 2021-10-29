@@ -97,8 +97,10 @@ const Index = (props) => {
           staticType:showType,
           beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+          outOrInside:outOrInside,
           regionLevel:showType ==1? 1 : undefined,
-          outOrInside:outOrInside
+          pageIndex:showType ==2? 1 : undefined,
+          pageSize:showType ==2? 10 : undefined,
         })
       }else{
         message.warning('日期单位不能超过90天，请重新选择')

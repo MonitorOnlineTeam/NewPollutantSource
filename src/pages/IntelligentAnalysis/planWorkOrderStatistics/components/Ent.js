@@ -38,6 +38,7 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   // getPointExceptionLoading:loading.effects[`${namespace}/getPointExceptionSignList`],
   insideOrOutsideWorkLoading:loading.effects[`${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`],
   insideOrOutsiderWorkTableDatas:planWorkOrderStatistics.insideOrOutsiderWorkTableDatas,
+  insideOrOutsiderWorkTableTotal:planWorkOrderStatistics.insideOrOutsiderWorkTableTotal,
   clientHeight: global.clientHeight,
   entOutsidePointListTotal:planWorkOrderStatistics.entOutsidePointListTotal,
   entOutsidePointListDatas:planWorkOrderStatistics.entOutsidePointListDatas,
@@ -89,8 +90,6 @@ const Index = (props,ref) => {
 
   
 
-  const [pageSize,setPageSize] = useState(20)
-  const [pageIndex,setPageIndex] = useState(1)
 
   const [regionCode,setRegionCode]  = useState();
   const  [regName ,setRegName] = useState()
@@ -98,7 +97,7 @@ const Index = (props,ref) => {
   
   const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,abnormalTypes,refInstance } = props; 
   
-  const { insideOrOutsideWorkLoading ,insideOrOutsiderWorkTableDatas,clientHeight} = props;
+  const { insideOrOutsideWorkLoading ,insideOrOutsiderWorkTableDatas,insideOrOutsiderWorkTableTotal,clientHeight} = props;
 
   
   useEffect(() => {
@@ -273,25 +272,25 @@ const Index = (props,ref) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'inspectionCount',
-          key: 'inspectionCount',
+          dataIndex: 'taskCount',
+          key: 'taskCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'inspectionCompleteCount',
-          key: 'inspectionCompleteCount',
+          dataIndex: 'taskCompleteCount',
+          key: 'taskCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'inspectionRate',
-          key: 'inspectionRate',
+          dataIndex: 'taskRate',
+          key: 'taskRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) => a.taskRate - b.taskRate,
           render: (text, record) => {
             return (
               <div>
@@ -347,25 +346,25 @@ const Index = (props,ref) => {
       children: [
         {
           title: '总数',
-          dataIndex: 'calibrationCount',
-          key: 'calibrationCount',
+          dataIndex: 'taskCount',
+          key: 'taskCount',
           width: 50,
           align:'center',
         },
         {
           title:  "完成数",
-          dataIndex: 'calibrationCompleteCount',
-          key: 'calibrationCompleteCount',
+          dataIndex: 'taskCompleteCount',
+          key: 'taskCompleteCount',
           width: 100,
           align:'center',
         },
         {
           title: '完成率',
-          dataIndex: 'calibrationRate',
-          key: 'calibrationRate',
+          dataIndex: 'taskRate',
+          key: 'taskRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.calibrationRate - b.inspectionRate,
+          sorter: (a, b) => a.taskRate - b.taskRate,
           render: (text, record) => {
             return (
               <div>
@@ -486,15 +485,31 @@ const Index = (props,ref) => {
 const cityRegColumnsExports = () =>{
 
 }
-
+ const [entCode,setEntCode] = useState()
 const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
   props.insideOrOutsideWorkGetTaskWorkOrderList({
     ...queryPar,
-    ...par,
+    pageIndex:1,
+    pageSize:10,
+    taskType:insideWorkType,
     regionLevel:undefined,
-    staticType:3
+    staticType:3,
+    entCode: entCode,
+    ...par,
   })
 }
+ const [insideWorkPageIndex,setInsideWorkPageIndex] = useState(1)
+ const [insideWorkPageSize,setInsideWorkPageSize] =useState(10)
+   
+
+  const handleInsideWorkTableChange =   (PageIndex, PageSize )=>{ //分页 打卡异常 响应超时 弹框
+    setInsideWorkPageIndex(PageIndex)
+    setInsideWorkPageSize(PageSize)
+    insideOrOutsideWorkGetTaskWorkOrderList({
+      pageIndex:PageIndex,
+      pageSize:PageSize
+     })
+  }
 const [insideWorkType, setInsideWorkType] = useState()
 const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState()
 
@@ -503,56 +518,37 @@ const workOrderNum = (type,record) =>{ //计划内 总数工单
   setInsideWorkType(type) 
   setInsideWorkOrderVisible(true)
   workRegForm.resetFields()
-  setRegName(record.regionName)
-  setRegionCode(record.regionCode)
-
+  setRegName(`${record.entName} - ${record.pointName}`)
+  setEntCode(record.entCode)
+  setInsideWorkPageIndex(1)
+  setInsideWorkPageSize(10)
   insideOrOutsideWorkGetTaskWorkOrderList({
-   regionCode: record.regionCode,
+   entCode:record.entCode,
+   taskType:type
   })
 
 }
 
+  // const onFinishWorkOrder = async () =>{  //计划内  查询 工单
 
 
-  const handleTableChange =   async (PageIndex, )=>{ //分页
-  }
-  const onFinish  = async () =>{  //查询
-
-
-    try {
-
-      const values = await form.validateFields();
-
-      props.getProjectInfoList({
-        ...values,
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
+  //   try {
   
-
-
-
-  const onFinishWorkOrder = async () =>{  //计划内  查询 工单
-
-
-    try {
-  
-      const values = await workRegForm.validateFields();
-  
-      insideOrOutsideWorkGetTaskWorkOrderList({
-        ...values,
-        regionCode:regionCode,
-      }) 
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
+  //     const values = await workRegForm.validateFields();
+  //     setInsideWorkPageIndex(1)
+  //     setInsideWorkPageSize(10)
+  //     insideOrOutsideWorkGetTaskWorkOrderList({
+  //       ...values,
+  //     }) 
+  //   } catch (errorInfo) {
+  //     console.log('Failed:', errorInfo);
+  //   }
+  // }
   const [ workRegForm ]= Form.useForm()
   const searchWorkComponents = () =>{ //计划内 查询 工单
-    return <> <Form
-    onFinish={onFinishWorkOrder}
+    return <> 
+    <Form
+    // onFinish={onFinishWorkOrder}
     form={workRegForm}
     layout={'inline'}
   >   
@@ -560,18 +556,10 @@ const workOrderNum = (type,record) =>{ //计划内 总数工单
 
         <Col >
         <Row align='middle'>
-      <Form.Item name='entName' >
-       <Input placeholder='请输入企业名称' allowClear/>
-     </Form.Item>
-
-        <Form.Item>
-     <Button  type="primary" htmlType='submit'>
-          查询
-     </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+        <Form.Item >
+      <Button icon={<ExportOutlined />}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
             导出
      </Button> 
-     
      </Form.Item>
      </Row>
      </Col>
@@ -809,7 +797,6 @@ const outPointClick = (record) =>{ //计划外 监测点名称
   setOperaPointVisible(true)
   setDGIMN(record.DGIMN)
   setRegName(`${record.entName} - ${record.pointName}`)
-  // setEntName(record.entName)
    entOutsidePointGetTaskWorkOrderList({
     DGIMN:record.DGIMN,
     beginTime:moment().startOf('month').format('YYYY-MM-DD 00:00:00'),
@@ -834,14 +821,33 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
  const tabsChange = (key)=>{
 
   setTabType(key)
+  setPageIndex(1)
+  setPageSize(10)
   setTimeout(()=>{
     props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
+      pageIndex:1,
+      pageSize:10,
       outOrInside:key// 子组件调用的父组件方法
     })
   },300)
 
+ }
+
+ const [pageIndex,setPageIndex] = useState(1)
+ const [pageSize,setPageSize] = useState(10)
+
+
+ const handleTableChange = (PageIndex, PageSize )=>{ //计划内 计划外
+  setPageIndex(PageIndex)
+  setPageSize(PageSize)
+  props.regEntGetTaskWorkOrderList({
+    ...queryPar,
+    pageIndex:PageIndex,
+    pageSize:PageSize,
+    outOrInside:tabType
+  })
  }
   return (
       <div>
@@ -856,7 +862,10 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          current:pageIndex,
+          pageSize:pageSize,
+          total:tableTotal,
+          onChange: handleTableChange,
       }}
       />
     </Tabs.TabPane>
@@ -866,7 +875,14 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         bordered
         dataSource={tableDatas}
         columns={outsideColumns}
-        pagination={false}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          current:pageIndex,
+          pageSize:pageSize,
+          total:tableTotal,
+          onChange: handleTableChange,
+      }}
       />
     </Tabs.TabPane>
   </Tabs>
@@ -927,7 +943,10 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          pageSize:insideWorkPageSize,
+          current:insideWorkPageIndex,
+          total:insideOrOutsiderWorkTableTotal,
+          onChange: handleInsideWorkTableChange,
       }}
       />
    </Card>

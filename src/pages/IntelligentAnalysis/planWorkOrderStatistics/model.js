@@ -36,6 +36,7 @@ export default Model.extend({
     cityDetailTableDatas:[],
     entOutsidePointListTotal:[],
     entOutsidePointListDatas:[],
+    regPointTableDatasTotal:[]
   },
   effects: {
     *regEntGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
@@ -70,6 +71,7 @@ export default Model.extend({
       const result = yield call(services.regPointGetTaskWorkOrderList, payload);
       if (result.IsSuccess) {
         yield update({
+          regPointTableDatasTotal:result.Total,
           regPointTableDatas:result.Datas,
         })  
       }else{
@@ -82,6 +84,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           insideOrOutsiderWorkTableDatas:result.Datas,
+          insideOrOutsiderWorkTableTotal:result.Total,
           dateCol:result.Datas[0]&&result.Datas[0].datePick
         })  
       }else{
