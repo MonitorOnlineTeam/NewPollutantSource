@@ -43,6 +43,7 @@ class index extends PureComponent {
       CO2OxidationRateState: 2,
       RateVisible: false,
       UnitVisible: false,
+      currentTypeData: {}
     };
   }
 
@@ -63,6 +64,9 @@ class index extends PureComponent {
     // 排放因子: 0.07
     // 生物碳的质量分数: 0
     const { cementDictionaries } = this.props;
+    this.setState({
+      currentTypeData: cementDictionaries.one[value]
+    })
     this.formRef.current.setFieldsValue({
       'LowFever': cementDictionaries.one[value]["低位发热量"],
       'CarbonContent': cementDictionaries.one[value]["化石碳的质量分数"],
@@ -145,7 +149,7 @@ class index extends PureComponent {
   }
 
   render() {
-    const { isModalVisible, editData, FileUuid, } = this.state;
+    const { isModalVisible, editData, FileUuid, currentTypeData } = this.state;
     const { tableInfo, cementDictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     console.log('props=', this.props)
@@ -260,7 +264,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="LowFever"
-                  label="平均低位发热量(GJ/t)"
+                  label={<p>平均低位发热量{currentTypeData['低位发热量Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} placeholder="请填写低位发热量"
@@ -287,7 +291,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="Emission"
-                  label='排放因子'
+                  label={<p>排放因子{currentTypeData['排放因子Unit'] ? <span>({currentTypeData['排放因子Unit']})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写排放因子!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} placeholder="请填写排放因子" onChange={this.countEmissions} />
@@ -311,10 +315,10 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="CarbonContent"
-                  label='非生物质碳的含量(%)'
-                  rules={[{ required: true, message: '请填写碳氧化率!' }]}
+                  label={<p>非生物质碳的含量{currentTypeData['化石碳的质量分数Unit'] ? <span>({currentTypeData['化石碳的质量分数Unit']})</span> : ''}</p>}
+                  rules={[{ required: true, message: '请填写非生物质碳的含量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写非生物质碳的含量" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>

@@ -12,7 +12,7 @@ class ConsumptionModal extends PureComponent {
       xhl: 0,
     };
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
       this.setState({
@@ -37,15 +37,25 @@ class ConsumptionModal extends PureComponent {
     const { deviation } = this.state;
     let values = this.formRef.current.getFieldsValue();
     let { MonVolume = 0, ReportVolume = 0, Consumption = 0 } = values;
+    let list = [
+      { name: '远程监控', value: MonVolume },
+      { name: '生产报表', value: ReportVolume },
+      { name: '发票或结算确认单', value: Consumption },
+    ]
     let xhl = 0;
+    let GetType = '';
     if (deviation > 5) {
       // 偏差大于5取消耗量最大值
-      xhl = _.max([MonVolume, ReportVolume, Consumption])
+      let maxObj = _.maxBy(list, 'value');
+      console.log('maxObj=', maxObj)
+      xhl = maxObj.value
+      GetType = maxObj.name;
     } else {
       // 偏差小于5按优先级：1. 远程监控 2. 生产报表 3. 发票或计算确认单
       xhl = MonVolume;
+      GetType = '远程监控';
     }
-    this.setState({ xhl })
+    this.setState({ xhl, GetType })
   }
 
   // 计算偏差
@@ -76,8 +86,8 @@ class ConsumptionModal extends PureComponent {
 
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { xhl, deviation } = this.state;
-      let data = { ...values, xhl, deviation }
+      const { xhl, deviation, GetType } = this.state;
+      let data = { ...values, xhl, deviation, GetType }
       this.props.onOk(data);
     })
   }
@@ -89,8 +99,6 @@ class ConsumptionModal extends PureComponent {
       let values = this.formRef.current.getFieldsValue();
       var { Consumption, AnnualConsumption, Deviation } = values;
     }
-    console.log('props=', this.props)
-
     return (
       <Modal
         // destroyOnClose

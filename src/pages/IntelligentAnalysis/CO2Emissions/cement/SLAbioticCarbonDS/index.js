@@ -64,7 +64,7 @@ class index extends PureComponent {
     // 生物碳的质量分数: 0
     const { cementDictionaries } = this.props;
     this.formRef.current.setFieldsValue({
-      'LowFever': cementDictionaries.one[value]["低位发热量"],
+      'NonFuelCarbonContent': cementDictionaries.one[value]["低位发热量"],
       'CarbonContent': cementDictionaries.one[value]["化石碳的质量分数"],
       'Emission': cementDictionaries.one[value]["排放因子"],
     });
@@ -248,6 +248,7 @@ class index extends PureComponent {
                   <Select allowClear placeholder="请选择生料中非燃料碳含量数据来源" onChange={(value) => {
                     let val = cementDictionaries.one['S1']["生料中非燃料碳含量"];
                     this.formRef.current.setFieldsValue({ 'NonFuelCarbonContent': val });
+                    this.countEmissions();
                   }}>
                     {
                       SELECT_LISTWhere.map(item => {

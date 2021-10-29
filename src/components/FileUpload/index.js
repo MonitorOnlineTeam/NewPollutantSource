@@ -50,8 +50,8 @@ class FileUpload extends Component {
   render() {
     const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
     const { fileUUID } = this._SELF_;
-    console.log('fileList=', fileList)
-    console.log('fileList2=', this.state.fileList)
+    // console.log('fileList=', fileList)
+    // console.log('fileList2=', this.state.fileList)
     let imageProps = {};
     if (accept) {
       imageProps.accept = accept;

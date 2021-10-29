@@ -47,7 +47,7 @@ class index extends PureComponent {
       type: 'CO2Emissions/getCO2EnergyType',
       payload: {
         IndustryCode: industry,
-        SelectType: 'FQW'
+        SelectType: 'T'
       },
     })
   }
@@ -66,9 +66,9 @@ class index extends PureComponent {
       currentTypeData: value
     })
     this.formRef.current.setFieldsValue({
-      'CProp': cementDictionaries.one[value]["废弃物碳含量的比例"],
+      'CProp': cementDictionaries.one[value]["化石碳的质量分数"] + cementDictionaries.one[value]["生物碳的质量分数"],
       'Rate': cementDictionaries.one[value]["废弃物焚烧炉的燃烧效率"],
-      'Prop': cementDictionaries.one[value]["废弃物中矿物碳在碳总量中的比例"],
+      'Prop': cementDictionaries.one[value]["化石碳的质量分数"],
     });
     this.countEmissions();
   }
@@ -261,7 +261,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="CProp"
-                  label={`废弃物碳含量的比例(${currentTypeData['废弃物碳含量的比例Unit'] || '%'})`}
+                  label={`废弃物碳含量的比例(${currentTypeData['化石碳的质量分数Unit'] || '%'})`}
                   rules={[{ required: true, message: '请填写废弃物碳含量的比例!' }]}
                 >
                   <InputNumber min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物碳含量的比例" onChange={this.countEmissions} />
@@ -284,7 +284,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="Prop"
-                  label={`废弃物中矿物碳在碳总量中的比例(${currentTypeData['废弃物中矿物碳在碳总量中的比例Unit'] || '%'})`}
+                  label={`废弃物中矿物碳在碳总量中的比例(${currentTypeData['化石碳的质量分数Unit'] || '%'})`}
                   rules={[{ required: true, message: '请填写废弃物中矿物碳在碳总量中的比例!' }]}
                 >
                   <InputNumber min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物中矿物碳在碳总量中的比例" onChange={this.countEmissions} />
