@@ -53,7 +53,8 @@ class index extends Component {
       disabled1: true,
       disabled2: true,
       disabled3: true,
-      currentTypeData: {}
+      currentTypeData: {},
+      typeUnit: '',
     };
   }
 
@@ -68,10 +69,12 @@ class index extends Component {
 
 
   // 种类change，填写缺省值
-  onTypesChange = (value) => {
+  onTypesChange = (value, option) => {
+    console.log('option=', option)
     const { cementDictionaries } = this.props;
     this.setState({
-      currentTypeData: cementDictionaries.one[value]
+      currentTypeData: cementDictionaries.one[value],
+      typeUnit: option['data-unit']
     })
     let values = this.formRef.current.getFieldsValue();
     const { LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
@@ -95,18 +98,57 @@ class index extends Component {
 
   // 计算排放量
   countEmissions = () => {
-    // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率  × 44 ÷ 12)
+    // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率 / 100 × 44 ÷ 12)
     let values = this.formRef.current.getFieldsValue();
-    let { AnnualConsumption = 0, LowFever = 0, UnitCarbonContent = 0, CO2OxidationRate = 0 } = values;
+    let { AnnualConsumption = 0, CO2OxidationRate = 0 } = values;
+    let { LowFever, UnitCarbonContent } = this.unitConversion();
+    debugger
     // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0; // 消耗量
     // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0; //低位发热量
     // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0; //单位热值含碳量
     // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0; //碳氧化率
     let value1 = AnnualConsumption * LowFever;
-    let value2 = UnitCarbonContent * CO2OxidationRate * 44 / 12;
+    let value2 = UnitCarbonContent * CO2OxidationRate / 100 * 44 / 12;
     let count = value1 * value2;
     this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
   }
+
+  // 单位换算 - 全换成GJ
+  unitConversion = () => {
+    // 判断单位是tC/TJ 计算的时候 * 1000
+    // 判断单位是MJ/t 计算的时候除以1000
+    // 判断单位是MJ/m³ 计算的时候除以1000
+    // 判断单位是 % 计算的时候除以100
+    const { currentTypeData } = this.state;
+    const { 低位发热量Unit, 含碳量Unit } = currentTypeData;
+    let values = this.formRef.current.getFieldsValue();
+    let { LowFever = 0, UnitCarbonContent = 0 } = values;
+    switch (低位发热量Unit) {
+      case 'tC/TJ':
+        LowFever = LowFever * 1000;
+        break;
+      case 'MJ/t':
+        LowFever = LowFever / 1000;
+        break;
+      case 'MJ/m³':
+        LowFever = LowFever / 1000;
+        break;
+    }
+    switch (含碳量Unit) {
+      case 'tC/TJ':
+        UnitCarbonContent = UnitCarbonContent * 1000;
+        break;
+      case 'MJ/t':
+        UnitCarbonContent = UnitCarbonContent / 1000;
+        break;
+      case 'MJ/m³':
+        UnitCarbonContent = UnitCarbonContent / 1000;
+        break;
+    }
+
+    return { LowFever, UnitCarbonContent }
+  }
+
 
   handleCancel = () => {
     this.setState({
@@ -227,7 +269,7 @@ class index extends Component {
   }
 
   render() {
-    const { isModalVisible, editData, FileUuid, FileUuid2, XHLVisible, editXHLData, KEY, disabled1, disabled2, disabled3, currentTypeData } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, XHLVisible, editXHLData, KEY, disabled1, disabled2, disabled3, currentTypeData } = this.state;
     const { tableInfo, cementDictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
@@ -319,7 +361,7 @@ class index extends Component {
                   <Select placeholder="请选择燃料种类" onChange={this.onTypesChange}>
                     {
                       TYPES.map(item => {
-                        return <Option value={item.code} key={item.code}>{item.name}</Option>
+                        return <Option value={item.code} key={item.code} data-unit={item.typeUnit}>{item.name}</Option>
                       })
                     }
                   </Select>
@@ -344,7 +386,7 @@ class index extends Component {
               <Col span={12}>
                 <Form.Item
                   name="AnnualConsumption"
-                  label="消耗量(t/10⁴Nm³)"
+                  label={<p>消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写消耗量!' }]}
                 >
                   <InputNumber style={{ width: 'calc(100% - 64px)' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
@@ -453,7 +495,7 @@ class index extends Component {
               <Col span={12}>
                 <Form.Item
                   name="CO2OxidationRate"
-                  label={<p>碳氧化率{currentTypeData['氧化率Unit'] ? <span>({currentTypeData['氧化率Unit']})</span> : ''}</p>}
+                  label="碳氧化率(%)"
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
                   <InputNumber disabled={disabled3} style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
@@ -492,7 +534,10 @@ class index extends Component {
         </Modal>
         <ConsumptionModal
           data={KEY ? editXHLData : {}}
-          visible={XHLVisible} onCancel={() => this.setState({ XHLVisible: false })} onOk={(data) => {
+          unit={typeUnit}
+          visible={XHLVisible}
+          onCancel={() => this.setState({ XHLVisible: false })}
+          onOk={(data) => {
             console.log('data=', data)
             this.formRef.current.setFieldsValue({ 'AnnualConsumption': data.xhl, 'Deviation': data.deviation, GetType: data.GetType })
             this.setState({ XHLVisible: false, xhlData: data })

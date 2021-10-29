@@ -93,7 +93,7 @@ class ConsumptionModal extends PureComponent {
   }
 
   render() {
-    const { onCancel, visible, data } = this.props;
+    const { onCancel, visible, data, unit } = this.props;
     const { xhl } = this.state;
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
@@ -110,7 +110,7 @@ class ConsumptionModal extends PureComponent {
       >
         <p style={{ position: 'absolute', top: 68 }}>
           <InfoCircleOutlined style={{ marginRight: 10 }} />
-          消耗量：<span style={{ fontSize: 15 }}>{xhl}（t/10⁴Nm³）</span>，偏差：{this.showDeviation()}
+          消耗量：<span style={{ fontSize: 15 }}>{xhl}{unit ? `（${unit}）` : ''}</span>，偏差：{this.showDeviation()}
         </p>
         <Form
           // {...layout}
