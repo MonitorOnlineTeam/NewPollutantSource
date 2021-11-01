@@ -30,7 +30,8 @@ const namespace = 'planWorkOrderStatistics'
 const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
   tableDatas:planWorkOrderStatistics.tableDatas,
   tableLoading:planWorkOrderStatistics.tableLoading,
-  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  queryPar:planWorkOrderStatistics.queryPar
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -47,6 +48,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    exportTaskWorkOrderList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -54,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar } = props; 
   
   
   useEffect(() => {
@@ -71,19 +78,17 @@ const Index = (props) => {
     onFinish();
   },[showType])
 
-  const exports =  async () => {
-    const values =   await form.validateFields();
-    props.exportProjectInfoList({
-      ...values,
+  const exports = async  () => {
+    const values = await form.validateFields();
+      props.exportTaskWorkOrderList({
+        ...queryPar,
+        pageIndex:undefined,
+        pageSize:undefined,
     })
+
  };
 
- const entExports =  async () => {
-  const values =   await form.validateFields();
-  props.exportProjectInfoList({
-    ...values,
-  })
-};
+
  
   const [outOrInside,setOutOrInside] = useState(1)
   const onFinish  = async () =>{  //查询
@@ -184,7 +189,7 @@ const Index = (props) => {
     <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ entExports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     

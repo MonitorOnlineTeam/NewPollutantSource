@@ -32,5 +32,34 @@ export async function entOutsidePointGetTaskWorkOrderList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTaskWorkOrderList',params, null);
   return result;
 }
+//导出  行政区和企业第一个页面
+export async function exportTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}
+//导出  行政区 市级别详情
+export async function exportCityDetailTaskWorkList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}
 
-
+//导出  行政区
+export async function workRegExportTaskWorkList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}
+//导出  行政区 市级别
+export async function cityRegExportTaskWorkList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}
+//导出  行政区 监测点
+export async function operaPointExportTaskWorkList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}
+//导出  企业  工单弹框
+export async function  workEntExportTaskWorkList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}

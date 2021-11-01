@@ -374,13 +374,13 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
   })
 
  }
- const exports = () => {
-  const values =  regionForm.validateFields();
+ const exports = async () => {
   props.exportEntResExceptionTaskList({
     ...queryPar,
     staticType:3,
     entCode:entCode,
-    ...values,
+    pageIndex:undefined,
+    pageSize:undefined,
   })
 };
   const onFinish  = async () =>{  //查询 响应超时 弹框

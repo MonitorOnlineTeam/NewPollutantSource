@@ -31,6 +31,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   tableDatas:abnormalWorkStatistics.tableDatas,
   tableLoading:abnormalWorkStatistics.tableLoading,
   exportLoading: loading.effects[`${namespace}/exportExceptionTaskList`],
+  queryPar:abnormalWorkStatistics.queryPar,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -60,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,queryPar } = props; 
   
   
   useEffect(() => {
@@ -83,15 +84,13 @@ const Index = (props) => {
 
 
   const exports =  async () => {
-    const values =   await form.validateFields();
+
     props.exportExceptionTaskList({
-      ...values,
-      time:undefined,
-      staticType:showType,
-      beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-      endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-      regionLevel: showType==1? 1 :undefined,
+       ...queryPar,
+       pageIndex:undefined,
+       pageSize:undefined,
     })
+     
  };
 
  

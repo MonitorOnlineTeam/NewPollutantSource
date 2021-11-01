@@ -469,14 +469,14 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
     </Row>
      </Form>
   }
-  const exports = () => { //导出 打卡异常 弹框 
-    const values =  regionForm.validateFields();
+  const exports = async() => { //导出 打卡异常 弹框 
     props.exportCardResExceptionTaskList({
       ...queryPar,
       staticType:3,
       regionCode:regionCode,
       outOrInside:outOrInside,
-      ...values,
+      pageIndex:undefined,
+      pageSize:undefined,
     })
   };
   const  cityColumnsPush = (col) =>{

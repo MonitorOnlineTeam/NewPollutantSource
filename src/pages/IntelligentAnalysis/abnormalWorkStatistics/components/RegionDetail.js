@@ -134,6 +134,8 @@ const Index = (props) => {
         ...queryPar,
         regionCode: regionCodes,
         regionLevel: 2,
+        pageIndex:undefined,
+        pageSize:undefined,
       })
     }
   const abnormalNumber = ()=>{
@@ -748,25 +750,25 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
     }
   }
 
-  const modalExports = () =>{  //导出
+  const modalExports =  () =>{  //导出
 
 
-
-      const values =  regionForm.validateFields();
       tableVisible? props.abnormalExceptionTaskListExport({ 
         ...queryPar,
         staticType:staticType,
         regionCode:regionCode,
         outOrInside:outOrInside,
-        ...values,
+        pageIndex:undefined,
+        pageSize:undefined,
       })
       :
       props.cityDetailExceptionTaskListExport({//市级弹框 导出
         ...queryPar,
         regionCode:regionCode,
         staticType:staticType,
-        ...values,
         regionLevel:2,
+        pageIndex:undefined,
+        pageSize:undefined,
       })
   }
   const searchComponents = () =>{

@@ -43,7 +43,7 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   entOutsidePointListTotal:planWorkOrderStatistics.entOutsidePointListTotal,
   entOutsidePointListDatas:planWorkOrderStatistics.entOutsidePointListDatas,
   entOutsidePointLoading:loading.effects[`${namespace}/entOutsidePointGetTaskWorkOrderList`],
-
+  exportLoading:loading.effects[`${namespace}/workEntExportTaskWorkList`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -69,6 +69,12 @@ const  dvaDispatch = (dispatch) => {
     entOutsidePointGetTaskWorkOrderList:(payload)=>{ // 计划内 工单数 弹框
       dispatch({
         type: `${namespace}/entOutsidePointGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
+    workEntExportTaskWorkList:(payload)=>{ // 导出 计划内 工单数 弹框
+      dispatch({
+        type: `${namespace}/workEntExportTaskWorkList`,
         payload:payload,
       })
     },
@@ -479,12 +485,8 @@ const Index = (props,ref) => {
  
 
  
- const operaPointExports = () => {
 
-};
-const cityRegColumnsExports = () =>{
 
-}
  const [entCode,setEntCode] = useState()
 const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
   props.insideOrOutsideWorkGetTaskWorkOrderList({
@@ -528,7 +530,18 @@ const workOrderNum = (type,record) =>{ //计划内 总数工单
   })
 
 }
-
+const exports = () => { //导出
+  props.workEntExportTaskWorkList({
+    ...queryPar,
+    taskType:insideWorkType,
+    regionLevel:undefined,
+    staticType:3,
+    entCode: entCode,
+    pageIndex:undefined,
+    pageSize:undefined,
+   })
+ 
+};
   // const onFinishWorkOrder = async () =>{  //计划内  查询 工单
 
 
@@ -557,7 +570,7 @@ const workOrderNum = (type,record) =>{ //计划内 总数工单
         <Col >
         <Row align='middle'>
         <Form.Item >
-      <Button icon={<ExportOutlined />}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+      <Button icon={<ExportOutlined />}  loading={exportLoading}  onClick={()=>{ exports()} }>
             导出
      </Button> 
      </Form.Item>

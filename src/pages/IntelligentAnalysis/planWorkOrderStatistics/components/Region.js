@@ -48,7 +48,11 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   cityDetailTableLoading:loading.effects[`${namespace}/cityDetailGetTaskWorkOrderList`],
   cityDetailTableTotal:planWorkOrderStatistics.cityDetailTableTotal,
   dateCol:planWorkOrderStatistics.dateCol,
-  regPointTableDatasTotal:planWorkOrderStatistics.regPointTableDatasTotal
+  regPointTableDatasTotal:planWorkOrderStatistics.regPointTableDatasTotal,
+  cityDetaiExportLoading:loading.effects[`${namespace}/exportCityDetailTaskWorkList`],
+  workRegExportLoading:loading.effects[`${namespace}/workRegExportTaskWorkList`],
+  cityRegExportLoading:loading.effects[`${namespace}/cityRegExportTaskWorkList`],
+  operaPointExportLoading:loading.effects[`${namespace}/operaPointExportTaskWorkList`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -89,6 +93,30 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    exportCityDetailTaskWorkList:(payload)=>{ // 计划外 市详情 导出
+      dispatch({
+        type: `${namespace}/exportCityDetailTaskWorkList`,
+        payload:payload,
+      })
+    },
+    workRegExportTaskWorkList:(payload)=>{ // 导出 计划内or计划外 工单数 弹框
+      dispatch({
+        type: `${namespace}/workRegExportTaskWorkList`,
+        payload:payload,
+      })
+    },
+    cityRegExportTaskWorkList:(payload)=>{ // 导出 市级别
+      dispatch({
+        type: `${namespace}/cityRegExportTaskWorkList`,
+        payload:payload,
+      })
+    },
+    operaPointExportTaskWorkList:(payload)=>{ // 导出 监测点
+      dispatch({
+        type: `${namespace}/operaPointExportTaskWorkList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props,ref ) => {
@@ -124,7 +152,7 @@ const Index = (props,ref ) => {
 
   const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading,insideOrOutsiderWorkTableTotal } = props; //计划内or计划外工单数
 
-
+   const { cityDetaiExportLoading,workRegExportLoading,cityRegExportLoading,operaPointExportLoading }  = props; //导出
   useEffect(() => {
 
   
@@ -923,16 +951,12 @@ const Index = (props,ref ) => {
  
 
  
- const operaPointExports = () => {
 
-};
-const cityRegColumnsExports = () =>{
-
-}
 
 const regionClick = (record) =>{
   setCityVisible(true)
   setRegName(record.regionName)
+  setRegionCode(record.regionCode)
    props.cityGetTaskWorkOrderList({
     ...queryPar,
     regionCode: record.regionCode,
@@ -942,27 +966,36 @@ const regionClick = (record) =>{
 
 
 
+
+
+
+
+
+const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
+
 const cityDetailGetTaskWorkOrderList=(par)=>{
-   props.cityDetailGetTaskWorkOrderList({
-     ...queryPar,
-     staticType:2,
-     outOrInside:2,
-     regionLevel:undefined,
-     ...par
-   })
+  props.cityDetailGetTaskWorkOrderList({
+    ...queryPar,
+    staticType:2,
+    outOrInside:2,
+    regionCode: regionCode,
+    regionLevel:undefined,
+    ...par
+  })
 }
 const {cityDetailTableDatas,cityDetailTableLoading,cityDetailTableTotal} = props;
 const [cityDetailVisible,setCityDetailVisible] = useState(false)
 
 const cityDetail = (record) =>{
-  setCityDetailVisible(true)
-  cityDetailForm.resetFields()
-  setRegName(record.regionName)
-  setRegionCode(record.regionCode)
-  cityDetailGetTaskWorkOrderList({
-    regionCode: record.regionCode,
-  })
+ setCityDetailVisible(true)
+ cityDetailForm.resetFields()
+ setRegName(record.regionName)
+ setRegionCode(record.regionCode)
+ cityDetailGetTaskWorkOrderList({
+   regionCode: record.regionCode,
+ })
 }
+
 const onFinishCityDetail = async () =>{  // 计划外 市详情
 
 
@@ -972,98 +1005,23 @@ const onFinishCityDetail = async () =>{  // 计划外 市详情
 
      cityDetailGetTaskWorkOrderList({
       ...values,
-      regionCode: regionCode,
     })
   } catch (errorInfo) {
     console.log('Failed:', errorInfo);
   }
 }
+const cityDetailExports =  ()=>{ // 导出 计划外 市详情
 
-const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
-  props.insideOrOutsideWorkGetTaskWorkOrderList({
-    pageIndex:1,
-    pageSize:10,
-    taskType:outTypePar[outType],
+  props.cityDetailGetTaskWorkOrderList({
     ...queryPar,
-    ...par,
+    staticType:2,
+    outOrInside:2,
+    regionCode: regionCode,
     regionLevel:undefined,
-    staticType:3,
-  })
+    pageIndex:undefined,
+    pageSize:undefined,
+ })
 }
-const [insideWorkType, setInsideWorkType] = useState()
-const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState(false)
-
-const [outType,setOutType] = useState()
-const outTypePar = {
-  "inspectionCount"  : "1",
-  "calibrationCount" :'2',
-  "repairCount" :'3',
-  "matchingComparisonCount" :'4',
-  "cooperationInspectionCount" :'5',
-  "calibrationTestCount":'6',
- }
-const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工单
-  
-   if(type == 1 || type ==2){
-    setInsideWorkType(type) 
-    setInsideWorkOrderVisible(true)
-   }
-   if(type == 3){
-    setOutWorkOrderVisible(true)
-   }
-   setOutType(outType)
-   workRegForm.resetFields()
-   setRegName(record.regionName)
-   setRegionCode(record.regionCode)
-
-
-   setWorkPageIndex(1)
-   setWorkPageSize(10)
-   insideOrOutsideWorkGetTaskWorkOrderList({
-    regionCode: record.regionCode,
-    taskType:outTypePar[outType]
-   })
-  
-
-}
-const onFinishWorkOrder = async () =>{  //计划内 计划外 查询 工单
-
-
-  try {
-
-    const values = await workRegForm.validateFields();
-    setWorkPageIndex(1)
-    setWorkPageSize(10)
-    insideOrOutsideWorkGetTaskWorkOrderList({
-      ...values,
-      regionCode:regionCode,
-    }) 
-  } catch (errorInfo) {
-    console.log('Failed:', errorInfo);
-  }
-}
-
-
-const [workPageIndex,setWorkPageIndex] = useState(1)
-const [workPageSize,setWorkPageSize] = useState(10)
-
-const handleWorkTableChange =  (PageIndex, PageSize)=>{ //计划内 计划外 工单 分页
-
-  setWorkPageIndex(PageIndex)
-  setWorkPageSize(PageSize)
-  insideOrOutsideWorkGetTaskWorkOrderList({
-    regionCode:regionCode,
-    pageIndex:PageIndex,
-    pageSize:PageSize
-  }) 
-}
-
-
-
-const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
-
-
-
   
    const [cityDetailForm] = Form.useForm()
 
@@ -1081,7 +1039,7 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={cityDetaiExportLoading}  onClick={()=>{ cityDetailExports()} }>
             导出
      </Button> 
      
@@ -1089,9 +1047,98 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
      </Form>
   }
 
-
+  
+  const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
+    props.insideOrOutsideWorkGetTaskWorkOrderList({
+      ...queryPar,
+      pageIndex:1,
+      pageSize:10,
+      taskType:outTypePar[outType],
+      ...par,
+      regionLevel:undefined,
+      staticType:3,
+    })
+  }
+  const [insideWorkType, setInsideWorkType] = useState()
+  const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState(false)
+  
+  const [outType,setOutType] = useState()
+  const outTypePar = {
+    "inspectionCount"  : "1",
+    "calibrationCount" :'2',
+    "repairCount" :'3',
+    "matchingComparisonCount" :'4',
+    "cooperationInspectionCount" :'5',
+    "calibrationTestCount":'6',
+   }
+  const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工单
+    
+     if(type == 1 || type ==2){
+      setInsideWorkType(type) 
+      setInsideWorkOrderVisible(true)
+     }
+     if(type == 3){
+      setOutWorkOrderVisible(true)
+     }
+     setOutType(outType)
+     workRegForm.resetFields()
+     setRegName(record.regionName)
+     setRegionCode(record.regionCode)
+  
+  
+     setWorkPageIndex(1)
+     setWorkPageSize(10)
+     insideOrOutsideWorkGetTaskWorkOrderList({
+      regionCode: record.regionCode,
+      taskType:outTypePar[outType]
+     })
+    
+  
+  }
+  const onFinishWorkOrder = async () =>{  //计划内 计划外 查询 工单
+  
+  
+    try {
+  
+      const values = await workRegForm.validateFields();
+      setWorkPageIndex(1)
+      setWorkPageSize(10)
+      insideOrOutsideWorkGetTaskWorkOrderList({
+        ...values,
+        regionCode:regionCode,
+      }) 
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+  
+  
+  const [workPageIndex,setWorkPageIndex] = useState(1)
+  const [workPageSize,setWorkPageSize] = useState(10)
+  
+  const handleWorkTableChange =  (PageIndex, PageSize)=>{ //计划内 计划外 工单 分页
+  
+    setWorkPageIndex(PageIndex)
+    setWorkPageSize(PageSize)
+    insideOrOutsideWorkGetTaskWorkOrderList({
+      regionCode:regionCode,
+      pageIndex:PageIndex,
+      pageSize:PageSize
+    }) 
+  }
+  const workRegExports =   () =>{ //导出 工单
+    props.workRegExportTaskWorkList({
+      ...queryPar,
+      taskType:outTypePar[outType],
+      regionLevel:undefined,
+      staticType:3,
+      regionCode:regionCode,
+      pageIndex:undefined,
+      pageSize:undefined,
+    })
+  }
   const [ workRegForm ]= Form.useForm()
-  const searchWorkComponents = () =>{ //计划内 查询 工单
+  const searchWorkComponents = () =>{ //计划内  查询 工单
     return <> <Form
     onFinish={onFinishWorkOrder}
     form={workRegForm}
@@ -1109,7 +1156,7 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={workRegExportLoading}  onClick={()=>{ workRegExports()} }>
             导出
      </Button> 
      
@@ -1168,7 +1215,7 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={workRegExportLoading}  onClick={()=>{ workRegExports()} }>
             导出
      </Button> 
      
@@ -1193,16 +1240,26 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
     </Row>
       </Form>
    }
-   const searchCityRegComponents = ()=>{
-    return <Button icon={<ExportOutlined />}   loading={exportLoading}  onClick={()=>{ abnormalExports()} }>
+
+   const cityRegExports = () =>{
+    props.cityRegExportTaskWorkList({
+      ...queryPar,
+      regionCode: regionCode,
+      regionLevel: 2,
+      pageIndex:undefined,
+      pageSize:undefined,
+    })
+   }
+   const searchCityRegComponents = ()=>{ //市级别弹框 
+    return <Button icon={<ExportOutlined />}   loading={cityRegExportLoading}  onClick={()=>{ cityRegExports()} }>
             导出
          </Button> 
    }
    const regPointGetTaskWorkOrderList = (par) =>{
     props.regPointGetTaskWorkOrderList({
+      ...queryPar,
       pageIndex:1,
       pageSize:10,
-      ...queryPar,
       regionLevel: 2,
       staticType:2,
       ...par
@@ -1230,7 +1287,11 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
       regionCode:record.regionCode
     })
   }
+
+  
    const [operaPointForm] = Form.useForm()
+
+   
    const operaPointClick  = (e) =>{  //查询  运营监测点
     setRegPointPageIndex(1)
     setRegPointPageSize(10)
@@ -1239,7 +1300,19 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
       operationStatus:e.target.value
     })
   }
+  const operaPointExports = async () => { //导出  运营监测点
 
+    const values = await operaPointForm.validateFields()
+    props.operaPointExportTaskWorkList({
+      ...queryPar,
+      regionLevel: 2,
+      staticType:2,
+      regionCode:regionCode,
+      pageIndex:undefined,
+      pageSize:undefined,
+    })
+  };
+  
   const searchOperaPointComponents = () =>{ 
      return  <Form
      form={operaPointForm}
@@ -1257,15 +1330,15 @@ const [outWorkOrderVisible, setOutWorkOrderVisible] = useState(false)
       <Radio.Button value="4">缺失计划校准工单</Radio.Button>
     </Radio.Group>
     </Form.Item> */}
-    <Form.Item>
-     <Radio.Group  name='operationStatus' onChange={operaPointClick}  buttonStyle="solid"   style={{  margin: '0 8px'}}>
+    <Form.Item   name='operationStatus'>
+     <Radio.Group onChange={operaPointClick}  buttonStyle="solid"   style={{  margin: '0 8px'}}>
       <Radio.Button value={undefined}>全部</Radio.Button>
       <Radio.Button value="1">进行中</Radio.Button>
       <Radio.Button value="2">已结束</Radio.Button>
     </Radio.Group>
     </Form.Item>
     <Form.Item>
-     <Button icon={<ExportOutlined />}  loading={exportLoading}  onClick={()=>{operaPointExports()} }>
+     <Button icon={<ExportOutlined />}  loading={operaPointExportLoading}  onClick={()=>{operaPointExports()} }>
             导出
      </Button> 
 

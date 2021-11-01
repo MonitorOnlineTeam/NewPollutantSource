@@ -58,7 +58,8 @@ export default Model.extend({
         yield update({
           abnormalList:result.Datas,
           abnormalListTotal:result.Total,
-          dateCol:result.Datas[0]&&result.Datas[0].datePick
+          dateCol:result.Datas[0]&&result.Datas[0].datePick,
+          queryPar:{...payload},
         })
 
       }else{
@@ -87,6 +88,7 @@ export default Model.extend({
         yield update({
           cityDetailTableTotal:result.Total,
           cityDetailTableDatas:result.Datas,
+          queryPar:{...payload},
         })
       }else{
         message.error(result.Message)
