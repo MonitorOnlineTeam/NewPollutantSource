@@ -395,7 +395,7 @@ export default {
                   routes: [
                     {
                       path: '/platformconfig/configurationInfo',
-                      redirect: '/platformconfig/configurationInfo/operationCycle',
+                      redirect: '/platformconfig/configurationInfo/OperationCycle',
                     },
                     {
                       name: 'timerManage',//运维频次管理
