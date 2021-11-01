@@ -96,7 +96,7 @@ class index extends PureComponent {
     }
     if (CO2OxidationRateDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'CO2OxidationRate': cementDictionaries.one[value]["碳氧化率"],
+        'CO2OxidationRate': cementDictionaries.one[value]["氧化率"],
       });
     }
     // this.countEmissions();
@@ -142,7 +142,7 @@ class index extends PureComponent {
     }
     let value2 = AnnualConsumption * LowFever * UnitCarbonContent;
     if (value2) {
-      count = 1 - value1 / value2;
+      count = 100 - value1 / value2;
     }
 
     this.formRef.current.setFieldsValue({ 'CO2OxidationRate': count.toFixed(2) });
@@ -307,7 +307,7 @@ class index extends PureComponent {
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       console.log('values=', values)
-      var { Deviation, GetType } = values;
+      var { Deviation, LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
     }
     console.log('editTotalData=', editTotalData)
     return (
@@ -467,7 +467,7 @@ class index extends PureComponent {
                   label={<p>低位发热量{currentTypeData['低位发热量Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber disabled={disabled1} step="0.00001" stringMode style={{ width: '100%' }} placeholder="请填写低位发热量"
+                  <InputNumber disabled={LowFeverDataType == 2} style={{ width: '100%' }} placeholder="请填写低位发热量"
                     onChange={this.countEmissions}
                   />
                 </Form.Item>
@@ -501,8 +501,7 @@ class index extends PureComponent {
                   rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
                 >
                   <InputNumber
-                    disabled={disabled2}
-                    step="0.00001"
+                    disabled={UnitCarbonContentDataType == 2}
                     stringMode
                     style={{ width: this.state.UnitCarbonContentState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写单位热值含碳量"
                     onChange={this.countEmissions}
@@ -538,7 +537,7 @@ class index extends PureComponent {
                   label="碳氧化率数据来源"
                 >
                   <Select placeholder="请选择碳氧化率数据来源"
-                    onChange={(value) => this.onSourceChange(value, 3, 'CO2OxidationRate', '碳氧化率', 'CO2OxidationRateState')}
+                    onChange={(value) => this.onSourceChange(value, 3, 'CO2OxidationRate', '氧化率', 'CO2OxidationRateState')}
                   >
                     {
                       SELECT_LISTWhere.map(item => {
@@ -560,7 +559,7 @@ class index extends PureComponent {
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
                   <InputNumber
-                    disabled={disabled3}
+                    disabled={CO2OxidationRateDataType == 2}
                     step="0.00001"
                     style={{ width: this.state.CO2OxidationRateState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写碳氧化率"
                     onChange={this.countEmissions}
@@ -577,7 +576,7 @@ class index extends PureComponent {
                               label="全年炉渣产量(t)"
                             // rules={[{ required: true, message: '请填写全年炉渣产量!' }]}
                             >
-                              <InputNumber step="0.00001" style={{ width: '60%' }} placeholder="请填写全年炉渣产量"
+                              <InputNumber style={{ width: '60%' }} placeholder="请填写全年炉渣产量"
                                 onChange={this.countTYHL}
                               />
                             </Form.Item>
@@ -669,7 +668,7 @@ class index extends PureComponent {
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <InputNumber step="0.00001" style={{ width: '100%' }} placeholder="请填写排放量" />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写排放量" />
                 </Form.Item>
               </Col>
               <Col span={24}>

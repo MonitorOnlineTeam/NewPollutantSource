@@ -80,7 +80,7 @@ class index extends Component {
     const { LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
     if (LowFeverDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'LowFever': cementDictionaries.one[value]["低位发热量"],
+        'LowFever': cementDictionaries.one[value]["低位发热值"],
       });
     }
     if (UnitCarbonContentDataType == 2) {
@@ -90,7 +90,7 @@ class index extends Component {
     }
     if (CO2OxidationRateDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'CO2OxidationRate': cementDictionaries.one[value]["碳氧化率"],
+        'CO2OxidationRate': cementDictionaries.one[value]["氧化率"],
       });
     }
     this.countEmissions();
@@ -280,7 +280,7 @@ class index extends Component {
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       console.log('values=', values)
-      var { Deviation, GetType } = values;
+      var { Deviation, LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
     }
     console.log('currentTypeData=', currentTypeData)
 
@@ -321,11 +321,11 @@ class index extends Component {
               LowFeverDataType: editData.LowFeverDataType || 2,
               UnitCarbonContentDataType: editData.UnitCarbonContentDataType || 2,
               CO2OxidationRateDataType: editData.CO2OxidationRateDataType || 2,
-              // GetType: 1,
+              Deviation: editData.Deviation || '-',
+              GetType: editData.GetType || '-',
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
               FossilType: editData['dbo.T_Bas_CementFossilFuel.FossilType'] ? editData['dbo.T_Bas_CementFossilFuel.FossilType'] + '' : undefined,
-              // Deviation: '-'
             }}
           >
             <Row>
@@ -393,13 +393,10 @@ class index extends Component {
                   label="消耗量偏差（%）"
                 >
                   <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
-                  {/* <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p> */}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  // labelCol={{ span: 5 }}
-                  // wrapperCol={{ span: 19 }}
                   name="DeviationReson"
                   label="偏差原因"
                   rules={[{ required: Deviation > 5, message: '请填写消耗量!' }]}
@@ -409,8 +406,6 @@ class index extends Component {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  // labelCol={{ span: 5 }}
-                  // wrapperCol={{ span: 7 }}
                   name="DevAttachmentID"
                   label="偏差证明材料"
                   rules={[{ required: Deviation > 5, message: '请上传偏差证明材料!' }]}
@@ -425,7 +420,7 @@ class index extends Component {
                   name="LowFeverDataType"
                   label="低位发热量数据来源"
                 >
-                  <Select placeholder="请选择低位发热量数据来源" onChange={(value) => this.onSourceChange(value, 1, 'LowFever', '低位发热量')}>
+                  <Select placeholder="请选择低位发热量数据来源" onChange={(value) => this.onSourceChange(value, 1, 'LowFever', '低位发热值')}>
                     {
                       SELECT_LISTWhere.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>
@@ -440,7 +435,7 @@ class index extends Component {
                   label={<p>低位发热量{currentTypeData['低位发热量Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber disabled={disabled1} style={{ width: '100%' }} placeholder="请填写低位发热量"
+                  <InputNumber disabled={LowFeverDataType == 2} style={{ width: '100%' }} placeholder="请填写低位发热量"
                     onChange={this.countEmissions}
                   />
                 </Form.Item>
@@ -468,7 +463,7 @@ class index extends Component {
                   label={<p>单位热值含碳量{currentTypeData['含碳量Unit'] ? <span>({currentTypeData['含碳量Unit']})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
                 >
-                  <InputNumber disabled={disabled2} style={{ width: '100%' }} placeholder="请填写单位热值含碳量" onChange={this.countEmissions} />
+                  <InputNumber disabled={UnitCarbonContentDataType == 2} style={{ width: '100%' }} placeholder="请填写单位热值含碳量" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -477,7 +472,7 @@ class index extends Component {
                   label="碳氧化率数据来源"
                 >
                   <Select placeholder="请选择碳氧化率数据来源"
-                    onChange={(value) => this.onSourceChange(value, 3, 'CO2OxidationRate', '碳氧化率')}
+                    onChange={(value) => this.onSourceChange(value, 3, 'CO2OxidationRate', '氧化率')}
                   >
                     {
                       SELECT_LISTWhere.map(item => {
@@ -493,7 +488,7 @@ class index extends Component {
                   label="碳氧化率(%)"
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
-                  <InputNumber disabled={disabled3} style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
+                  <InputNumber disabled={CO2OxidationRateDataType == 2} style={{ width: '100%' }} placeholder="请填写碳氧化率" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
 
