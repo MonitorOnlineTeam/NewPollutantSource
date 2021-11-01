@@ -16,15 +16,6 @@ export default Model.extend({
         yield update({
           cementDictionaries: response.Datas
         })
-        // let CO2TypesAndDefaultValues = localStorage.getItem('CO2TypesAndDefaultValues');
-        // let _CO2TypesAndDefaultValues;
-        // if (CO2TypesAndDefaultValues) {
-        //   _CO2TypesAndDefaultValues = JSON.parse(CO2TypesAndDefaultValues)
-        // }
-        // _CO2TypesAndDefaultValues[payload.IndustryCode] = response.Datas;
-        // console.log('_CO2TypesAndDefaultValues=', _CO2TypesAndDefaultValues)
-        // localStorage.setItem('CO2TypesAndDefaultValues', _CO2TypesAndDefaultValues)
-        // callback && callback(_CO2TypesAndDefaultValues)
       } else {
         message.error(response.Message)
       }

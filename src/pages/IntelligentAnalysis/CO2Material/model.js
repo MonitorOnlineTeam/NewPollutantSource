@@ -20,6 +20,8 @@ export default Model.extend({
       formula: ""
     },
     CO2ReportList: [],
+    cementDictionaries: {},
+
   },
   effects: {
     // 获取关注列表
@@ -103,6 +105,16 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
-    
+    // 获取缺省值码表
+    *getCO2EnergyType({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getCO2EnergyType, payload);
+      if (response.IsSuccess) {
+        yield update({
+          cementDictionaries: response.Datas
+        })
+      } else {
+        message.error(response.Message)
+      }
+    },
   },
 });

@@ -1,3 +1,4 @@
 export const INDUSTRYS = {
-  'cement': 2
+  'cement': 2,
+  'electricity': 1
 }

@@ -10,10 +10,10 @@ import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
-import ConsumptionModal from '../components/ConsumptionModal';
+import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
 import { InfoCircleOutlined } from '@ant-design/icons'
 
-const industry = INDUSTRYS.cement;
+const industry = INDUSTRYS.electricity;
 const { Option } = Select;
 const { TextArea } = Input;
 const CONFIG_ID = 'CementFossilFuel';
@@ -46,8 +46,8 @@ class index extends Component {
       FileUuid: undefined,
       FileUuid2: undefined,
       UnitCarbonContentState: 2,
-      xhlData: {},
-      editXHLData: {},
+      totalData: {},
+      editTotalData: {},
       RateVisible: false,
       UnitVisible: false,
       disabled1: true,
@@ -102,13 +102,12 @@ class index extends Component {
     let values = this.formRef.current.getFieldsValue();
     let { AnnualConsumption = 0, CO2OxidationRate = 0 } = values;
     let { LowFever, UnitCarbonContent } = this.unitConversion();
-    debugger
     // let AnnualConsumption = this.formRef.current.getFieldValue('AnnualConsumption') || 0; // 消耗量
     // let LowFever = this.formRef.current.getFieldValue('LowFever') || 0; //低位发热量
     // let UnitCarbonContent = this.formRef.current.getFieldValue('UnitCarbonContent') || 0; //单位热值含碳量
     // let CO2OxidationRate = this.formRef.current.getFieldValue('CO2OxidationRate') || 0; //碳氧化率
     let value1 = AnnualConsumption * LowFever;
-    let value2 = UnitCarbonContent * CO2OxidationRate / 100 * 44 / 12;
+    let value2 = UnitCarbonContent * (CO2OxidationRate / 100) * 44 / 12;
     let count = value1 * value2;
     this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
   }
@@ -161,7 +160,7 @@ class index extends Component {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { xhlData, KEY } = this.state;
+      const { totalData, KEY } = this.state;
       console.log('KEY=', KEY)
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
@@ -170,7 +169,7 @@ class index extends Component {
         payload: {
           configId: CONFIG_ID,
           FormData: {
-            ...xhlData,
+            ...totalData,
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
             FossilFuelCode: KEY
@@ -205,19 +204,21 @@ class index extends Component {
         'dbo.T_Bas_CementFossilFuel.FossilFuelCode': this.state.KEY,
       },
       callback: (res) => {
+        // Deviation, GetType
+
         this.setState({
           // CO2OxidationRateState: res.CO2OxidationRateDataType,
           // UnitCarbonContentState: res.UnitCarbonContentDataType,
           editData: res,
           isModalVisible: true,
-          editXHLData: {
+          editTotalData: {
             MonVolume: res.MonVolume,
             ReportVolume: res.ReportVolume,
             BuyVolume: res.BuyVolume,
             TransferVolume: res.TransferVolume,
             Consumption: res.Consumption,
             deviation: res.Deviation,
-            xhl: res.AnnualConsumption,
+            total: res.AnnualConsumption,
           }
         })
       }
@@ -269,7 +270,7 @@ class index extends Component {
   }
 
   render() {
-    const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, XHLVisible, editXHLData, KEY, disabled1, disabled2, disabled3, currentTypeData } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, totalVisible, editTotalData, KEY, disabled1, disabled2, disabled3, currentTypeData } = this.state;
     const { tableInfo, cementDictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
@@ -367,38 +368,32 @@ class index extends Component {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="GetType"
-                  label="获取方式"
-                  rules={[{ required: true, message: '请选择获取方式!' }]}
-                >
-                  {/* <Select placeholder="请选择获取方式">
-                    {
-                      SELECT_LISTGet.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
-                  </Select> */}
-                  <p>{GetType || '-'}</p>
-                </Form.Item>
-              </Col>
+
               <Col span={12}>
                 <Form.Item
                   name="AnnualConsumption"
                   label={<p>消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写消耗量!' }]}
                 >
-                  <InputNumber style={{ width: 'calc(100% - 64px)' }} placeholder="请填写消耗量" onChange={this.countEmissions} />
+                  <InputNumber disabled style={{ width: 'calc(100% - 64px)' }} placeholder="消耗量" onChange={this.countEmissions} />
                 </Form.Item>
-                <Button onClick={() => this.setState({ XHLVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
+                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="GetType"
+                  label="获取方式"
+                >
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   name="Deviation"
                   label="消耗量偏差（%）"
                 >
-                  <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p>
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                  {/* <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p> */}
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -533,14 +528,14 @@ class index extends Component {
           </Form>
         </Modal>
         <ConsumptionModal
-          data={KEY ? editXHLData : {}}
+          data={KEY ? editTotalData : {}}
           unit={typeUnit}
-          visible={XHLVisible}
-          onCancel={() => this.setState({ XHLVisible: false })}
+          visible={totalVisible}
+          onCancel={() => this.setState({ totalVisible: false })}
           onOk={(data) => {
             console.log('data=', data)
-            this.formRef.current.setFieldsValue({ 'AnnualConsumption': data.xhl, 'Deviation': data.deviation, GetType: data.GetType })
-            this.setState({ XHLVisible: false, xhlData: data })
+            this.formRef.current.setFieldsValue({ 'AnnualConsumption': data.total, 'Deviation': data.deviation, GetType: data.GetType })
+            this.setState({ totalVisible: false, totalData: data })
             this.countEmissions();
           }} />
       </BreadcrumbWrapper >

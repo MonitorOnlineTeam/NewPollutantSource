@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Modal, Button, Collapse, Form, InputNumber, Row, Col } from 'antd';
+import { Modal, Input, Collapse, Form, InputNumber, Row, Col } from 'antd';
 const { Panel } = Collapse;
 import { InfoCircleOutlined } from '@ant-design/icons';
 import _ from 'lodash'
@@ -9,7 +9,7 @@ class ConsumptionModal extends PureComponent {
     this.formRef = React.createRef();
     this.state = {
       deviation: 0,
-      xhl: 0,
+      total: 0,
     };
   }
 
@@ -17,7 +17,7 @@ class ConsumptionModal extends PureComponent {
     if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
       this.setState({
         deviation: this.props.data.deviation,
-        xhl: this.props.data.xhl,
+        total: this.props.data.total,
       })
     }
   }
@@ -42,20 +42,20 @@ class ConsumptionModal extends PureComponent {
       { name: '生产报表', value: ReportVolume },
       { name: '发票或结算确认单', value: Consumption },
     ]
-    let xhl = 0;
+    let total = 0;
     let GetType = '';
     if (deviation > 5) {
       // 偏差大于5取消耗量最大值
       let maxObj = _.maxBy(list, 'value');
       console.log('maxObj=', maxObj)
-      xhl = maxObj.value
+      total = maxObj.value
       GetType = maxObj.name;
     } else {
       // 偏差小于5按优先级：1. 远程监控 2. 生产报表 3. 发票或计算确认单
-      xhl = MonVolume;
+      total = MonVolume;
       GetType = '远程监控';
     }
-    this.setState({ xhl, GetType })
+    this.setState({ total, GetType })
   }
 
   // 计算偏差
@@ -86,15 +86,15 @@ class ConsumptionModal extends PureComponent {
 
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { xhl, deviation, GetType } = this.state;
-      let data = { ...values, xhl, deviation, GetType }
+      const { total, deviation, GetType } = this.state;
+      let data = { ...values, total, deviation, GetType }
       this.props.onOk(data);
     })
   }
 
   render() {
     const { onCancel, visible, data, unit } = this.props;
-    const { xhl } = this.state;
+    const { total } = this.state;
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       var { Consumption, AnnualConsumption, Deviation } = values;
@@ -110,7 +110,7 @@ class ConsumptionModal extends PureComponent {
       >
         <p style={{ position: 'absolute', top: 68 }}>
           <InfoCircleOutlined style={{ marginRight: 10 }} />
-          消耗量：<span style={{ fontSize: 15 }}>{xhl}{unit ? `（${unit}）` : ''}</span>，偏差：{this.showDeviation()}
+          消耗量：<span style={{ fontSize: 15 }}>{total}{unit ? `（${unit}）` : ''}</span>，偏差：{this.showDeviation()}
         </p>
         <Form
           // {...layout}
@@ -168,7 +168,8 @@ class ConsumptionModal extends PureComponent {
                 style={{ marginBottom: 0 }}
                 rules={[{ required: true, message: '请输入消耗量!' }]}
               >
-                <p>{Consumption}</p>
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                {/* <p>{Consumption}</p> */}
               </Form.Item>
             </Panel>
           </Collapse>
