@@ -49,7 +49,7 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   cityDetailTableTotal:planWorkOrderStatistics.cityDetailTableTotal,
   dateCol:planWorkOrderStatistics.dateCol,
   regPointTableDatasTotal:planWorkOrderStatistics.regPointTableDatasTotal,
-  cityDetaiExportLoading:loading.effects[`${namespace}/exportCityDetailTaskWorkList`],
+  cityDetailExportLoading:loading.effects[`${namespace}/exportCityDetailTaskWorkList`],
   workRegExportLoading:loading.effects[`${namespace}/workRegExportTaskWorkList`],
   cityRegExportLoading:loading.effects[`${namespace}/cityRegExportTaskWorkList`],
   operaPointExportLoading:loading.effects[`${namespace}/operaPointExportTaskWorkList`],
@@ -152,7 +152,7 @@ const Index = (props,ref ) => {
 
   const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading,insideOrOutsiderWorkTableTotal } = props; //计划内or计划外工单数
 
-   const { cityDetaiExportLoading,workRegExportLoading,cityRegExportLoading,operaPointExportLoading }  = props; //导出
+   const { cityDetailExportLoading,workRegExportLoading,cityRegExportLoading,operaPointExportLoading }  = props; //导出
   useEffect(() => {
 
   
@@ -952,14 +952,16 @@ const Index = (props,ref ) => {
 
  
 
-
+const [cityDetailRegionCode, setCityDetailRegionCode] = useState()
 const regionClick = (record) =>{
   setCityVisible(true)
   setRegName(record.regionName)
   setRegionCode(record.regionCode)
+  setCityDetailRegionCode(record.regionCode)//计划外 市级详情 全部合计Code
    props.cityGetTaskWorkOrderList({
     ...queryPar,
     regionCode: record.regionCode,
+    staticType: 1,
     regionLevel: 2,
   })
 }
@@ -990,9 +992,9 @@ const cityDetail = (record) =>{
  setCityDetailVisible(true)
  cityDetailForm.resetFields()
  setRegName(record.regionName)
- setRegionCode(record.regionCode)
+ setRegionCode(record.regionCode?record.regionCode:cityDetailRegionCode)
  cityDetailGetTaskWorkOrderList({
-   regionCode: record.regionCode,
+   regionCode: record.regionCode?record.regionCode:cityDetailRegionCode,
  })
 }
 
@@ -1012,7 +1014,7 @@ const onFinishCityDetail = async () =>{  // 计划外 市详情
 }
 const cityDetailExports =  ()=>{ // 导出 计划外 市详情
 
-  props.cityDetailGetTaskWorkOrderList({
+  props.exportCityDetailTaskWorkList({
     ...queryPar,
     staticType:2,
     outOrInside:2,
@@ -1039,7 +1041,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={cityDetaiExportLoading}  onClick={()=>{ cityDetailExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={cityDetailExportLoading}  onClick={()=>{ cityDetailExports()} }>
             导出
      </Button> 
      
@@ -1244,7 +1246,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
    const cityRegExports = () =>{
     props.cityRegExportTaskWorkList({
       ...queryPar,
-      regionCode: regionCode,
+      regionCode: cityDetailRegionCode,
       regionLevel: 2,
       pageIndex:undefined,
       pageSize:undefined,
@@ -1544,6 +1546,8 @@ useImperativeHandle(refInstance,() => {
     props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
+      regionCode:'',
+      regionLevel: 1,
       outOrInside:key// 子组件调用的父组件方法
     })
   },300)

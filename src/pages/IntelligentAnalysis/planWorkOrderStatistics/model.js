@@ -99,6 +99,7 @@ export default Model.extend({
         yield update({
           cityDetailTableTotal:result.Total,
           cityDetailTableDatas:result.Datas,
+          queryPar:{...payload},
         })  
       }else{
         message.error(result.Message)

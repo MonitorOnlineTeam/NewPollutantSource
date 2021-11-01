@@ -118,7 +118,6 @@ const Index = (props) => {
 
 
 
-
   const parentCallback = (val) =>{
     // pchildref.current._childFn(values);
     setOutOrInside(val)
@@ -129,9 +128,9 @@ const Index = (props) => {
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
-      pointType:1,
+      pollutantType:undefined,
       abnormalType:1,
-      time:[moment(new Date()).add(-90, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
     }}
   >  
     {showType==1? <Row  align='middle'>
@@ -141,7 +140,7 @@ const Index = (props) => {
                         showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
      </Form.Item>
-      <Form.Item label = '监测点类型' name='pointType' style={{padding:'0 8px'}}>
+      <Form.Item label = '监测点类型' name='pollutantType' style={{padding:'0 8px'}}>
          <Select placeholder='监测点类型'>
             <Option value={1}>废水</Option>
             <Option value={2}>废气</Option>
@@ -178,7 +177,7 @@ const Index = (props) => {
        </Form.Item>
        </Row>
        <Row style={{paddingTop:8}}>
-       <Form.Item label='监测点类型' name='pointType'  style={{paddingRight:'16px'}}>
+       <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
         <Select placeholder='监测点类型' style={{width:150}}>
            <Option value={1}>废水</Option>
            <Option value={2}>废气</Option>
