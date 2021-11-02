@@ -7,7 +7,7 @@
 import Model from '@/utils/model';
 import {
   GetEmissionsTrendList,
-  GetEntByRegion,
+  // GetEntByRegion,
   GetAttentionDegreeList,
   ExportSewageHistoryList,
   GetEmissionsEntPointPollutant

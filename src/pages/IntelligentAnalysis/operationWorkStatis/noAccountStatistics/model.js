@@ -7,7 +7,7 @@
 import Model from '@/utils/model';
 import {
   GetTaskFormBookSta,
-  GetEntByRegion,
+  // GetEntByRegion,
   GetAttentionDegreeList,
   ExportTaskFormBookSta,
 } from './service';
@@ -80,17 +80,17 @@ export default Model.extend({
         });
       }
     },
-    *getEntByRegion({ callback,payload }, { call, put, update, select }) {
-      const { queryPar }  = yield select(state => state.removalFlowRate);
-      //获取所有污水处理厂
-      const response = yield call(GetEntByRegion, { ...payload });
-      if (response.IsSuccess) {
-        yield update({
-          priseList: response.Datas,
-        });
-        callback(response.Datas[0].EntCode)
-      }
-    },
+    // *getEntByRegion({ callback,payload }, { call, put, update, select }) {
+    //   const { queryPar }  = yield select(state => state.removalFlowRate);
+    //   //获取所有污水处理厂
+    //   const response = yield call(GetEntByRegion, { ...payload });
+    //   if (response.IsSuccess) {
+    //     yield update({
+    //       priseList: response.Datas,
+    //     });
+    //     callback(response.Datas[0].EntCode)
+    //   }
+    // },
     *exportTaskFormBookSta({callback, payload }, { call, put, update, select }) {
       yield update({ exloading: true });
       //导出

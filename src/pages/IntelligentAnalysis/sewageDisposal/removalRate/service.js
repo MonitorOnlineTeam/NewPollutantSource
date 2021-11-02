@@ -1,7 +1,7 @@
 import { post } from '@/utils/request';
 
 /**
- * 缺失数据
+ * 
  *
  */
 export async function GetSewageHistoryList(params) {

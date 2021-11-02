@@ -40,13 +40,13 @@ export async function ExportTaskFormBookSta(params) {
 
 //根据行政区获取 污水处理厂
 
-export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
+// export async function GetEntByRegion(params) {
+//   const result = post(
+//     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
+//       params.RegionCode,
+//     null,
+//     null,
+//   );
 
-  return result;
-}
+//   return result;
+// }
