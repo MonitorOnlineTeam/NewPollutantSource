@@ -1401,7 +1401,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                       
                                      </Row>
-                              }else{
+                              }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
                                return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                
                                       </Row>
@@ -1457,7 +1457,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                       
                                      </Row>
-                              }else{
+                              }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
                               return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                
                               </Row>
@@ -1520,9 +1520,8 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                           return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                   
                                  </Row>
-                          }else{
+                          }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
                           return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-           
                           </Row>
                         }
                  })
@@ -1558,7 +1557,6 @@ useImperativeHandle(refInstance,() => {
       regionCode:'',
       regionLevel: 1,
       staticType:1,
-      entCode: undefined,
       outOrInside:key,// 子组件调用的父组件方法
     })
   },300)

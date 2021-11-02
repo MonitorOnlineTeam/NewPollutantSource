@@ -658,7 +658,7 @@ const exports = () => { //导出
                                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                        
                                       </Row>
-                               }else{
+                               }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
                                 return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                 
                                        </Row>
@@ -714,7 +714,7 @@ const exports = () => { //导出
                                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                        
                                       </Row>
-                               }else{
+                               }else if(!dateItem.operationStatus&&!dateItem.taskCount&&dateItem.date == item.date){
                                return <Row align='middle' justify='center' style={{ background:'#fff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                 
                                </Row>
@@ -850,7 +850,6 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
       pageSize:10,
       regionLevel: 1,
       staticType:2,
-      entCode: undefined,
       outOrInside:key// 子组件调用的父组件方法
     })
   },300)

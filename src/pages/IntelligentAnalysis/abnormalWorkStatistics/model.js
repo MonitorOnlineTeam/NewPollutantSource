@@ -43,7 +43,7 @@ export default Model.extend({
           tableTotal:result.Total,
           tableDatas:result.Datas,
           tableLoading:false,
-          queryPar:{...payload},
+          queryPar:{...payload,entCode:undefined,entName:undefined},
         })
 
         
@@ -59,7 +59,7 @@ export default Model.extend({
           abnormalList:result.Datas,
           abnormalListTotal:result.Total,
           dateCol:result.Datas[0]&&result.Datas[0].datePick,
-          queryPar:{...payload},
+          queryPar:{...payload,entCode:undefined,entName:undefined},
         })
 
       }else{
@@ -88,7 +88,7 @@ export default Model.extend({
         yield update({
           cityDetailTableTotal:result.Total,
           cityDetailTableDatas:result.Datas,
-          queryPar:{...payload},
+          queryPar:{...payload,entCode:undefined,entName:undefined},
         })
       }else{
         message.error(result.Message)
