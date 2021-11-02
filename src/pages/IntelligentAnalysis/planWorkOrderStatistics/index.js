@@ -130,7 +130,7 @@ const Index = (props) => {
     initialValues={{
       pollutantType:undefined,
       abnormalType:1,
-      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).endOf('day')]
+      time:[moment(new Date()).add(-80, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
   >  
     {showType==1? <Row  align='middle'>

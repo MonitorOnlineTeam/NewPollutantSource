@@ -249,6 +249,7 @@ const Index = (props,ref) => {
       dataIndex: 'regionName',
       key:'regionName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '企业名称',
@@ -256,6 +257,7 @@ const Index = (props,ref) => {
       key:'entName',
       align:'center',
       width: 150,
+      fixed: 'left',
       render:(text,record,index)=>{
        return  <div style={{textAlign:"left"}}>{text}</div>
       }
@@ -265,6 +267,7 @@ const Index = (props,ref) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '巡检周期',
@@ -323,6 +326,7 @@ const Index = (props,ref) => {
       key:'regionName',
       align:'center',
       width: 100,
+      fixed: 'left',
     },
     {
       title: '企业名称',
@@ -330,6 +334,7 @@ const Index = (props,ref) => {
       key:'entName',
       align:'center',
       width: 150,
+      fixed: 'left',
       render:(text,record,index)=>{
        return  <div style={{textAlign:"left"}}>{text}</div>
       }
@@ -339,6 +344,7 @@ const Index = (props,ref) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '校准周期',
@@ -632,23 +638,23 @@ const exports = () => { //导出
                  align:'center',
                  render:(text,row,index)=>{
                      return row.datePick.map(dateItem=>{
-                             if(dateItem.inspectionCompleteCount && dateItem.inspectionCloseCount){ //同时存在
+                             if(dateItem.inspectionCompleteCount && dateItem.inspectionCloseCount&&dateItem.date == item.date){ //同时存在
                                return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount + dateItem.inspectionCloseCount}</span>
                               </Row>
                              }
-                             if(dateItem.inspectionCloseCount){ //关闭
+                             if(dateItem.inspectionCloseCount&&dateItem.date == item.date){ //关闭
                                return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                <span style={{color:'#fff'}}>{dateItem.inspectionCloseCount}</span>
                              </Row>
                                }
  
-                             if(dateItem.inspectionCompleteCount){//完成
+                             if(dateItem.inspectionCompleteCount&&dateItem.date == item.date){//完成
                              return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                              <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount}</span>
                            </Row>
                              }
-                             if(dateItem.operationStatus){ //运营周期内
+                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
                                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                        
                                       </Row>
@@ -688,23 +694,23 @@ const exports = () => { //导出
                  align:'center',
                  render:(text,row,index)=>{
                      return row.datePick.map(dateItem=>{
-                             if(dateItem.calibrationCompleteCount && dateItem.calibrationCloseCount){ //同时存在
+                             if(dateItem.calibrationCompleteCount && dateItem.calibrationCloseCount&&dateItem.date == item.date){ //同时存在
                                return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount + dateItem.calibrationCloseCount}</span>
                               </Row>
                              }
-                             if(dateItem.calibrationCloseCount){ //关闭
+                             if(dateItem.calibrationCloseCount&&dateItem.date == item.date){ //关闭
                                return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                <span style={{color:'#fff'}}>{dateItem.calibrationCloseCount}</span>
                              </Row>
                                }
  
-                             if(dateItem.calibrationCompleteCount){//完成
+                             if(dateItem.calibrationCompleteCount&&dateItem.date == item.date){//完成
                              return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                              <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount}</span>
                            </Row>
                              }
-                             if(dateItem.operationStatus){ //运营周期内
+                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
                                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                        
                                       </Row>
@@ -842,6 +848,9 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
       ...queryPar,
       pageIndex:1,
       pageSize:10,
+      regionLevel: 1,
+      staticType:2,
+      entCode: undefined,
       outOrInside:key// 子组件调用的父组件方法
     })
   },300)

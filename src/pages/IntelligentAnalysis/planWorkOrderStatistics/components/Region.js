@@ -442,6 +442,7 @@ const Index = (props,ref ) => {
       dataIndex: 'regionName',
       key:'regionName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '企业名称',
@@ -449,6 +450,7 @@ const Index = (props,ref ) => {
       key:'entName',
       align:'center',
       width: 150,
+      fixed: 'left',
       render:(text,record,index)=>{
        return  <div style={{textAlign:"left"}}>{text}</div>
       }
@@ -458,6 +460,7 @@ const Index = (props,ref ) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '巡检周期',
@@ -516,6 +519,7 @@ const Index = (props,ref ) => {
       key:'regionName',
       align:'center',
       width: 100,
+      fixed: 'left',
     },
     {
       title: '企业名称',
@@ -523,6 +527,7 @@ const Index = (props,ref ) => {
       key:'entName',
       align:'center',
       width: 150,
+      fixed: 'left',
       render:(text,record,index)=>{
        return  <div style={{textAlign:"left"}}>{text}</div>
       }
@@ -532,6 +537,7 @@ const Index = (props,ref ) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '校准周期',
@@ -874,6 +880,7 @@ const Index = (props,ref ) => {
       dataIndex: 'regionName',
       key:'regionName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '企业名称',
@@ -881,6 +888,7 @@ const Index = (props,ref ) => {
       key:'entName',
       align:'center',
       width: 150,
+      fixed: 'left',
       render:(text,record,index)=>{
        return  <div style={{textAlign:"left"}}>{text}</div>
       }
@@ -890,6 +898,7 @@ const Index = (props,ref ) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
   ]
   const operaPointColumns = [
@@ -1372,23 +1381,23 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                 align:'center',
                 render:(text,row,index)=>{
                     return row.datePick.map(dateItem=>{
-                            if(dateItem.taskCloseCount && dateItem.taskCompleteCount){ //同时存在
+                            if(dateItem.taskCloseCount && dateItem.taskCompleteCount&&dateItem.date == item.date){ //同时存在
                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount + dateItem.taskCompleteCount}</span>
                              </Row>
                             }
-                            if(dateItem.taskCloseCount){ //关闭
+                            if(dateItem.taskCloseCount&&dateItem.date == item.date){ //关闭
                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
                             </Row>
                               }
 
-                            if(dateItem.taskCompleteCount){//完成
+                            if(dateItem.taskCompleteCount&&dateItem.date == item.date){//完成
                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                           </Row>
                             }
-                            if(dateItem.operationStatus){ //运营周期内
+                            if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                       
                                      </Row>
@@ -1428,23 +1437,23 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                 align:'center',
                 render:(text,row,index)=>{
                     return row.datePick.map(dateItem=>{
-                            if(dateItem.taskCloseCount && dateItem.taskCompleteCount){ //同时存在
+                            if(dateItem.taskCloseCount && dateItem.taskCompleteCount&&dateItem.date == item.date){ //同时存在
                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                               <span style={{color:'#fff'}}>{dateItem.taskCompleteCount + dateItem.taskCloseCount}</span>
                              </Row>
                             }
-                            if(dateItem.taskCloseCount){ //关闭
+                            if(dateItem.taskCloseCount&&dateItem.date == item.date){ //关闭
                               return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
                             </Row>
                               }
 
-                            if(dateItem.taskCompleteCount){//完成
+                            if(dateItem.taskCompleteCount&&dateItem.date == item.date){//完成
                             return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                           </Row>
                             }
-                            if(dateItem.operationStatus){ //运营周期内
+                            if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                       
                                      </Row>
@@ -1486,7 +1495,6 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
               width: 70,
               align:'center',
               render:(text,row,index)=>{
-                 
                 // const outTypeObj = {
                 //   "inspectionCount"  : "inspectionCompleteCount",
                 //   "calibrationCount" :'calibrationCompleteCount',
@@ -1495,19 +1503,20 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                 //   "cooperationInspectionCount" :'cooperationInspectionCompleteCount',
                 //   "calibrationTestCount":'calibrationTestCompleteCount',
                 //  }
-                return row.datePick.map(dateItem=>{
+                return row.datePick.map(dateItem=>{             
                           //  for(let key in outTypeObj){ //完成
                           //     if(outType=== key && dateItem[`${outTypeObj[key]}`]){ 
-                                 if(item.taskCompleteCount){
+                                 if(dateItem.taskCompleteCount&&dateItem.date == item.date){
+                                  console.log(dateItem.taskCompleteCount)
                                 return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                 {/* <span style={{color:'#fff'}}>{dateItem[`${outTypeObj[key]}`]}</span> */}
-                                  <span style={{color:'#fff'}}>{item.taskCompleteCount}</span>
+                                  <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                                </Row>
                                  }
                           //     }
 
                           // }
-                        if(dateItem.operationStatus){ //运营周期内
+                        if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
                           return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                   
                                  </Row>
@@ -1548,7 +1557,9 @@ useImperativeHandle(refInstance,() => {
       ...queryPar,
       regionCode:'',
       regionLevel: 1,
-      outOrInside:key// 子组件调用的父组件方法
+      staticType:1,
+      entCode: undefined,
+      outOrInside:key,// 子组件调用的父组件方法
     })
   },300)
 

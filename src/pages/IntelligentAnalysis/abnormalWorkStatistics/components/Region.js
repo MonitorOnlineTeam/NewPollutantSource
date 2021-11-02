@@ -252,12 +252,14 @@ const Index = (props,ref) => {
       key:'regionName',
       align:'center',
       width: 150,
+      fixed: 'left',
     },
     {
       title: '企业名称',
       dataIndex: 'entName',
       key:'entName',
       width: 200,
+      fixed: 'left',
       render:(text)=>{
        return <div style={{textAlign:'left'}}>{text}</div>
       }
@@ -268,6 +270,7 @@ const Index = (props,ref) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title:  <span>打卡异常数</span>,
@@ -355,12 +358,14 @@ const Index = (props,ref) => {
       key:'regionName',
       align:'center',
       width: 150,
+      fixed: 'left',
     },
     {
       title: '企业名称',
       dataIndex: 'entName',
       key:'entName',
       width: 150,
+      fixed: 'left',
       render:(text)=>{
         return <div style={{textAlign:'left'}}>{text}</div>
        }
@@ -370,6 +375,7 @@ const Index = (props,ref) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '响应超时数',
@@ -499,7 +505,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
                 render:(text,row,index)=>{
                    return row.datePick.map(dateItem=>{
                       if(dateItem.date == item.date){
-                         return dateItem.count;
+                      return dateItem.count? <span style={{color:'rgb(247,152,34)'}}>{dateItem.count}</span>: dateItem.count;
                       }
                     })
                 } 

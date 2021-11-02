@@ -325,6 +325,7 @@ const Index = (props) => {
       key:'regionName',
       align:'center',
       width: 150,
+      fixed: 'left',
     },
     {
       title: '企业名称',
@@ -332,6 +333,7 @@ const Index = (props) => {
       key:'entName',
       align:'center',
       width: 150,
+      fixed: 'left',
       render:(text)=>{
         return <div style={{textAlign:'left'}}>{text}</div>
        }
@@ -341,6 +343,7 @@ const Index = (props) => {
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      fixed: 'left',
     },
     {
       title: '响应超时数',
@@ -600,7 +603,7 @@ if (getPointExceptionLoading) {
                 render:(text,row,index)=>{
                    return row.datePick.map(dateItem=>{
                       if(dateItem.date == item.date){
-                         return dateItem.count;
+                        return dateItem.count? <span style={{color:'rgb(247,152,34)'}}>{dateItem.count}</span>: dateItem.count;
                       }
                     })
                 } 
