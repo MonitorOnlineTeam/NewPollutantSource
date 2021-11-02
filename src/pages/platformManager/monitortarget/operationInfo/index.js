@@ -94,6 +94,25 @@ const  dvaDispatch = (dispatch) => {
         payload:payload
       })
     },
+    cycleList:(payload)=>{ //频次
+      dispatch({
+        type: 'autoForm/getAutoFormData',
+        payload: {
+            configId: 'OperationCycle', 
+            otherParams:{
+                pageSize:10000,
+              },
+
+        },
+     });
+     dispatch({
+      type: 'autoForm/getPageConfig',
+      payload: {
+        configId: 'OperationCycle',
+      },
+    });
+    }
+
   }
 }
 let choiceArr = [],choiceID = []
@@ -133,7 +152,7 @@ const Index = (props) => {
     projectNumQuery(); //项目编号列表
     props.operationList();//运维列表
     props.getEntPointList({EntID:props.location.query.p});//企业运维列表
-    
+    props.cycleList();//运维频次
 
   }
 
@@ -163,6 +182,18 @@ const Index = (props) => {
       title: '省区名称',
       dataIndex: 'regionName',
       key:'regionName',
+      align:'center',
+    },
+    {
+      title: '校准频次',
+      dataIndex: 'CalibrationCycle',
+      key:'CalibrationCycle',
+      align:'center',
+    },
+    {
+      title: '巡检频次',
+      dataIndex: 'InspectionCycel',
+      key:'InspectionCycel',
       align:'center',
     },
     {
@@ -389,6 +420,7 @@ const projectNumCol =[
      </Form>
   }
   const operationDataSource = operationInfoList['OperationMaintenanceEnterprise']&&operationInfoList['OperationMaintenanceEnterprise'].dataSource ? operationInfoList['OperationMaintenanceEnterprise'].dataSource : [];
+  const operationCycleDataSource = operationInfoList['OperationCycle']&&operationInfoList['OperationCycle'].dataSource ? operationInfoList['OperationCycle'].dataSource : [];
 
   return (
     <div  className={styles.entOperationInfo}>
@@ -474,8 +506,28 @@ const projectNumCol =[
       </Col>
       </Row>
 
-
-
+      <Row>
+        <Col span={12}>
+        <Form.Item label="巡检频次" name="CalibrationCycle" rules={[{ required: true, message: '请输入巡检频次!',  },]} >
+        <Select placeholder="请选择巡检频次">
+           {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+             return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
+           })
+          }
+        </Select> 
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+      <Form.Item label="校准频次"  name="InspectionCycel" rules={[{ required: true, message: '请输入校准频次!',  },]} >
+      <Select placeholder="请选择校准频次">
+           {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+             return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
+           })
+          }
+        </Select> 
+      </Form.Item>
+      </Col>
+      </Row>
       <Row>
         <Col span={12}>
         <Form.Item label="实际起始日期" name="BeginTime" rules={[{ required: true, message: '请选择实际起始日期!',  },]} >

@@ -73,14 +73,14 @@ const Index = (props) => {
   
   useEffect(() => {
       getOperationExpirePointList()
-  },[props.DGIMN]);
+  },[]);
 //   useEffect(() => {
 //     console.log(tableDatas)
 // },[tableDatas])
 
   const getOperationExpirePointList = (value) =>{
-    props.getOperationExpirePointList({PollutantType:value},()=>{
-      setTableDatas(totalDatas.notExpired7List)
+    props.getOperationExpirePointList({PollutantType:value},(res)=>{
+      setTableDatas(res.notExpired7List)
     })
   }
 
@@ -192,7 +192,7 @@ const Index = (props) => {
             name: '监测点个数',
             type: 'bar',
             barWidth: '60%',
-            data: [totalDatas.overdue7, totalDatas.overdue14, totalDatas.overdue30, totalDatas.notExpired7, totalDatas.notExpired14, totalDatas.notExpired30, totalDatas.notExpired60],
+            data: [totalDatas.overdue30, totalDatas.overdue14, totalDatas.overdue7, totalDatas.notExpired7, totalDatas.notExpired14, totalDatas.notExpired30, totalDatas.notExpired60],
             label: {
               show: true,
               position: 'top',
@@ -214,9 +214,9 @@ const Index = (props) => {
  
  const exports = () =>{
    const  codeList = {
-    '过期15~30日':"overdue7List",
+    '过期15~30日':"overdue30List",
     '过期8~14日':"overdue14List",
-    '过期7日内':"overdue30List",
+    '过期7日内':"overdue7List",
     '0~7日':"notExpired7List",
     '8~14日':"notExpired14List",
     '15~30日':"notExpired30List", 
@@ -243,9 +243,9 @@ const Index = (props) => {
   const  onChartClick = (e)=>{
     // props.updateState({checkName:e.name})
    const dataObj = {
-    '过期15~30日':totalDatas.overdue7List,
+    '过期15~30日':totalDatas.overdue30List,
     '过期8~14日':totalDatas.overdue14List,
-    '过期7日内':totalDatas.overdue30List,
+    '过期7日内':totalDatas.overdue7List,
     '0~7日':totalDatas.notExpired7List,
     '8~14日':totalDatas.notExpired14List,
     '15~30日':totalDatas.notExpired30List, 
