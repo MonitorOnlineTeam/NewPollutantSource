@@ -186,14 +186,14 @@ const Index = (props) => {
     },
     {
       title: '校准频次',
-      dataIndex: 'CalibrationCycle',
-      key:'CalibrationCycle',
+      dataIndex: 'calibrationCycleName',
+      key:'calibrationCycleName',
       align:'center',
     },
     {
       title: '巡检频次',
-      dataIndex: 'InspectionCycel',
-      key:'InspectionCycel',
+      dataIndex: 'inspectionCycelName',
+      key:'inspectionCycelName',
       align:'center',
     },
     {
@@ -326,7 +326,10 @@ const projectNumCol =[
 
   };
   const edit = async (record) => {
-    form2.setFieldsValue({ ...record,PorjectID:record.projectID,OperationCompany:record.companyID,RegionCode:record.regionCode,BeginTime:moment(record.actualBeginTime),EndTime:moment(record.actualEndTime)});
+    form2.setFieldsValue({ ...record,
+      PorjectID:record.projectID,OperationCompany:record.companyID,
+      InspectionCycel:record.inspectionCycel,CalibrationCycle:record.calibrationCycle,
+      RegionCode:record.regionCode,BeginTime:moment(record.actualBeginTime),EndTime:moment(record.actualEndTime)});
     setChoiceData(record.projectCode)
     setFromVisible(true)
   };
