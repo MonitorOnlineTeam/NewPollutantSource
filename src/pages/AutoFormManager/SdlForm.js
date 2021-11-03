@@ -27,6 +27,7 @@ import {
   Modal,
   Carousel,
   Tabs,
+  InputNumber
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
@@ -247,6 +248,10 @@ class SdlForm extends PureComponent {
 
           element = <Input disabled={item.labelText==='设备编号(MN)'&&isEdit? true : false} placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
           break;
+          case '数字':
+            validator = `${inputPlaceholder}`;
+            element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
+            break;
         case '下拉列表框':
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;

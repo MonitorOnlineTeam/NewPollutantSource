@@ -1,21 +1,28 @@
 import { post, get, getNew } from '@/utils/request';
 
-// 获取项目管理列表
-export async function GetProjectInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetProjectInfoList',params, null);
+//定时器 列表
+export async function GetOnlineTimerManageList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetOnlineTimerManageList',params, null);
   return result;
 }
-// 获取项目管理列表  添加和修改
-export async function AddOrUpdateProjectInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdateProjectInfo',params, null);
+//定时器 添加
+export async function AddOnlineTimerManage(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOnlineTimerManage',params, null);
+  return result;
+}
+
+// 定时器 修改
+export async function EditOnlineTimerManage(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditOnlineTimerManage',params, null);
   return result;
 }
  
-// 获取项目管理列表  删除
-export async function DeleteProjectInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteProjectInfo',params, null);
+// 定时器  删除
+export async function DelOnlineTimerManage(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelOnlineTimerManage',params, null);
   return result;
 }
 
 
 
+// AddOnlineTimerManage，EditOnlineTimerManage，DelOnlineTimerManage

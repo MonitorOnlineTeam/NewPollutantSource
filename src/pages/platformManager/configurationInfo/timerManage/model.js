@@ -17,9 +17,9 @@ export default Model.extend({
     pointDatas:[]
   },
   effects: {
-    *getProjectInfoList({ payload,callback }, { call, put, update }) { //项目信息列表
+    *getOnlineTimerManageList({ payload,callback }, { call, put, update }) { //列表
       yield update({ tableLoading:true})
-      const result = yield call(services.GetProjectInfoList, payload);
+      const result = yield call(services.GetOnlineTimerManageList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
@@ -31,8 +31,8 @@ export default Model.extend({
         yield update({ tableLoading:false})
       }
     },
-    *addOrUpdateProjectInfo({ payload,callback }, { call, put, update }) { //添加和修改
-      const result = yield call(services.AddOrUpdateProjectInfo, payload);
+    *addOnlineTimerManage({ payload,callback }, { call, put, update }) { //添加
+      const result = yield call(services.AddOnlineTimerManage, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -40,8 +40,17 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-    *deleteProjectInfo({ payload,callback }, { call, put, update }) { //删除
-      const result = yield call(services.DeleteProjectInfo, payload);
+    *editOnlineTimerManage({ payload,callback }, { call, put, update }) { //修改
+      const result = yield call(services.EditOnlineTimerManage, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    }, 
+    *delOnlineTimerManage({ payload,callback }, { call, put, update }) { //删除
+      const result = yield call(services.DelOnlineTimerManage, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()

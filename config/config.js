@@ -241,6 +241,21 @@ export default {
               component: './newHomePage',
             },
             {
+              name: 'newestHome',
+              path: '/newestHome',
+              routes: [
+                {
+                  path: '/newHomePage',
+                  recordForm: '/newHomePage/wasteGas',  
+                },
+                  {
+                    name: 'wasteGas',
+                    path: '/newHomePage/wasteGas',
+                    component: './newestHome',  
+                  },
+              ]
+            },
+            {
               name: 'test',
               path: '/test',
               component: './Test',
@@ -398,13 +413,13 @@ export default {
                       redirect: '/platformconfig/configurationInfo/OperationCycle',
                     },
                     {
-                      name: 'timerManage',//运维频次管理
+                      name: 'operationCycle',//运维频次管理
                       path: '/platformconfig/configurationInfo/:configId',
                       component: './AutoFormManager',
                     },
                     {
                       name: 'timerManage',//定时器管理
-                      path: '/platformconfig/configurationInfo/timerManage',
+                      path: '/platformconfig/configurationInfo/timer/timerManage',
                       component: './platformManager/configurationInfo/timerManage',
                     },
                   ]

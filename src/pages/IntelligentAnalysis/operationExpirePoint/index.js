@@ -47,14 +47,14 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    updateState:(payload)=>{ //下拉列表测量参数
+    updateState:(payload)=>{ //更新数据
       dispatch({
         type: `${namespace}/updateState`, 
         payload:{...payload},
       }) 
     },
   }
-}
+} 
 const Index = (props) => {
 
 

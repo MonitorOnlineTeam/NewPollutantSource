@@ -4,7 +4,7 @@
  * 创建时间：2021.09.24
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -30,10 +30,9 @@ const dvaPropsData =  ({ loading,timerManage }) => ({
   pointDatas:timerManage.pointDatas,
   tableLoading:timerManage.tableLoading,
   tableTotal:timerManage.tableTotal,
-  loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
-  pointLoading: loading.effects[`${namespace}/getProjectPointList`],
-  exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
-  exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
+  loadingAddConfirm: loading.effects[`${namespace}/addOnlineTimerManage`],
+  loadingEditConfirm: loading.effects[`${namespace}/editOnlineTimerManage`],
+  // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -44,23 +43,31 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getProjectInfoList:(payload)=>{ //项目管理列表
+    getOnlineTimerManageList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getProjectInfoList`,
+        type: `${namespace}/getOnlineTimerManageList`,
         payload:payload,
       })
     },
-    addOrUpdateProjectInfo : (payload,callback) =>{ //修改 or 添加
+    addOnlineTimerManage : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addOrUpdateProjectInfo`,
+        type: `${namespace}/addOnlineTimerManage`,
         payload:payload,
         callback:callback
       })
       
     },
-    deleteProjectInfo:(payload,callback)=>{ //删除
+    editOnlineTimerManage : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/deleteProjectInfo`, 
+        type: `${namespace}/editOnlineTimerManage`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delOnlineTimerManage:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delOnlineTimerManage`, 
         payload:payload,
         callback:callback
       }) 
@@ -84,13 +91,13 @@ const Index = (props) => {
   const [tableVisible,setTableVisible] = useState(false)
 
   const [type,setType] = useState('add')
-  const [pageSize,setPageSize] = useState(20)
-  const [pageIndex,setPageIndex] = useState(1)
+  // const [pageSize,setPageSize] = useState(20)
+  // const [pageIndex,setPageIndex] = useState(1)
   
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingAddConfirm,loadingEditConfirm,tableLoading,exportLoading } = props; 
   useEffect(() => {
     onFinish();
   
@@ -99,29 +106,26 @@ const Index = (props) => {
   const columns = [
     {
       title: '编号',
-      dataIndex: 'ProjectName',
-      key:'ProjectName',
+      dataIndex: 'Sort',
+      key:'Sort',
       align:'center',
-      render:(record,text,index)=>{
-        return index;
-      }
     },
     {
       title: '定时器名称',
-      dataIndex: 'ProjectCode',
-      key:'ProjectCode',
+      dataIndex: 'TimerFileName',
+      key:'TimerFileName',
       align:'center',
     },
     {
       title: '定时器文件名称',
-      dataIndex: 'RegionName',
-      key:'RegionName',
+      dataIndex: 'TimerFileName',
+      key:'TimerFileName',
       align:'center',
     },
     {
       title: '状态',
-      dataIndex: 'SellCompanyName',
-      key:'SellCompanyName', 
+      dataIndex: 'TimerStatus',
+      key:'TimerStatus', 
       align:'center',
       render: (text, record) => {
         if (text === 1) {
@@ -134,8 +138,8 @@ const Index = (props) => {
     },
     {
       title: '功能描述',
-      dataIndex: 'BeginTime',
-      key:'BeginTime',
+      dataIndex: 'TimerRemark',
+      key:'TimerRemark',
       align:'center',
     },
     
@@ -175,7 +179,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.deleteProjectInfo({ID:record.ID},()=>{
+    props.delOnlineTimerManage({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -190,22 +194,13 @@ const Index = (props) => {
     form2.resetFields();
 
   };
-  const exports =  async () => {
-    const values =   await form.validateFields();
-    props.exportProjectInfoList({
-      ...values,
-    })
- };
- 
- const pointExports = () => {
 
-};
   const onFinish  = async () =>{  //查询
       
     try {
       const values = await form.validateFields();
 
-      props.getProjectInfoList({
+      props.getOnlineTimerManageList({
         ...values,
       })
     } catch (errorInfo) {
@@ -216,25 +211,30 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      props.addOrUpdateProjectInfo({
+      type==='add'? props.addOnlineTimerManage({
         ...values,
-        // CreateUserID:type==='add'? JSON.parse(Cookie.get('currentUser')).UserId : values.CreateUserID,
       },()=>{
         setFromVisible(false)
         onFinish()
       })
-
+      :
+     props.editOnlineTimerManage({
+        ...values,
+      },()=>{
+        setFromVisible(false)
+        onFinish()
+      })
       
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
     }
   }
-  const handleTableChange =   async (PageIndex, )=>{ //分页
-    const values = await form.validateFields();
-    setPageSize(PageSize)
-    setPageIndex(PageIndex)
-    props.getProjectInfoList({...values,PageIndex,PageSize})
-  }
+  // const handleTableChange =   async (PageIndex, )=>{ //分页
+  //   const values = await form.validateFields();
+  //   setPageSize(PageSize)
+  //   setPageIndex(PageIndex)
+  //   props.getProjectInfoList({...values,PageIndex,PageSize})
+  // }
   const searchComponents = () =>{
      return  <Form
     form={form}
@@ -268,10 +268,10 @@ const Index = (props) => {
    </BreadcrumbWrapper>
    
    <Modal
-        title={type==='edit'? '编辑合同':'添加合同'}
+        title={type==='add'? '添加定时器':'编辑定时器'}
         visible={fromVisible}
         onOk={onModalOk}
-        confirmLoading={loadingConfirm}
+        confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
         onCancel={()=>{setFromVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
@@ -281,7 +281,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        Status:1
+        Sort:1
       }}
     >
       <Row>
@@ -291,16 +291,16 @@ const Index = (props) => {
       </Form.Item> 
       </Col>
       </Row>
-      <Row>
+      <Row>  
         <Col span={24}>
-        <Form.Item label="编号" name="ProjectName" rules={[  { required: false, message: '请输入编号',  },]} >
-        <InputNumber placeholder='请输入编号'/>
+        <Form.Item hidden={type==='add'} label="编号" name="Sort" >
+        <InputNumber placeholder='请输入编号' />
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="定时器名称" name="RegionCode"  >
+        <Form.Item label="定时器名称" name="TimerName" rules={[  { required: true, message: '请输入定时器名称'  }]} >
         <Input placeholder='请输入定时器名称'/>
 
       </Form.Item>
@@ -308,7 +308,7 @@ const Index = (props) => {
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="定时器文件名称" name="RegionCode"  >
+        <Form.Item label="定时器文件名称" name="TimerFileName"  rules={[  { required: true, message: '请输入定时器文件名称'  }]}>
         <Input placeholder='请输入定时器文件名称'/>
 
       </Form.Item>
@@ -317,7 +317,7 @@ const Index = (props) => {
 
       <Row>
         <Col span={24}>
-        <Form.Item label="状态" name="Status" >
+        <Form.Item label="状态" name="TimerStatus" >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
              <Radio value={2}>停用</Radio>
@@ -328,7 +328,7 @@ const Index = (props) => {
 
       <Row>
         <Col span={24}>
-        <Form.Item label="功能描述" name="IndustryCode" >
+        <Form.Item label="功能描述" name="TimerRemark" >
         <TextArea rows={4} />
       </Form.Item>
       </Col>
