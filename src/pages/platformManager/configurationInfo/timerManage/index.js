@@ -281,7 +281,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        Sort:1
+        TimerStatus:1
       }}
     >
       <Row>

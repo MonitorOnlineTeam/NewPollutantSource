@@ -18,36 +18,31 @@ import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import styles from "./style.less"
 const { Option } = Select;
+import WasteWater from './wasteWater'
+import WasteGas from './wasteGas'
+import WaterQuality from './waterQuality'
+import Air from './air'
 
 const namespace = 'newestHome'
 
 
 
 
-const dvaPropsData =  ({ loading,operationExpirePoint }) => ({
-  tableLoading:operationExpirePoint.tableLoading,
-  totalDatas:operationExpirePoint.totalDatas,
-  exportLoading: loading.effects[`${namespace}/exportOperationExpirePointList`],
-  checkName:operationExpirePoint.checkName,
+const dvaPropsData =  ({ loading,newestHome }) => ({
+
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-    getOperationExpirePointList : (payload,callback) =>{ //运维到期点位
+    getnewestHomeList : (payload,callback) =>{ 
       dispatch({
-        type: `${namespace}/getOperationExpirePointList`,
+        type: `${namespace}/getnewestHomeList`,
         payload:payload,
         callback:callback
       })
       
     },
-    exportOperationExpirePointList:(payload,callback)=>{ //导出
-      dispatch({
-        type: `${namespace}/exportOperationExpirePointList`,
-        payload:payload,
-      })
-    },
-    updateState:(payload)=>{ //下拉列表测量参数
+    updateState:(payload)=>{ //更新代码
       dispatch({
         type: `${namespace}/updateState`, 
         payload:{...payload},
@@ -67,11 +62,17 @@ const Index = (props) => {
   
   },[]);
 
+ const typeObj={
+  wasteWater:<WasteWater/>,
+  wasteGas:<WasteGas />,
+  waterQuality:<WaterQuality />,
+  air:<Air />
+ }
 
-
-
+  const  type = props.route.name;
   return (
     <div>
+     { typeObj[type]}
     </div>
   );
 };

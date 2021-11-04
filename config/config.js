@@ -10,6 +10,7 @@ const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.9.53:8036';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
@@ -245,14 +246,28 @@ export default {
               path: '/newestHome',
               routes: [
                 {
-                  path: '/newHomePage',
-                  recordForm: '/newHomePage/wasteGas',  
+                  path: '/newestHome',
+                  redirect: '/newestHome/wasteWater',
                 },
-                  {
-                    name: 'wasteGas',
-                    path: '/newHomePage/wasteGas',
+                {
+                    name: 'wasteWater',//废水
+                    path: '/newestHome/wasteWater',
                     component: './newestHome',  
-                  },
+                },
+                {
+                  name: 'wasteGas', //废气
+                  path: '/newestHome/wasteGas',
+                  component: './newestHome',  
+               },
+              {
+                name:'waterQuality', //水质
+                path: '/newestHome/waterQuality',
+                component: './newestHome', 
+              },{
+                name: 'air', //空气站
+                path: '/newestHome/air',
+                component: './newestHome',  
+              }
               ]
             },
             {
@@ -402,6 +417,12 @@ export default {
                         '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes/monitorpoint/:targetId/:targetName',
                       component: './platformManager/point',
                     },
+                    {  //仓库管理
+                      name: 'monitortarget',
+                      path: '/platformconfig/basicInfo/monitortarget/warehouse/:configId',
+                      component: './AutoFormManager',
+                    },
+                    
                   ]
                 },
                 { //配置信息
