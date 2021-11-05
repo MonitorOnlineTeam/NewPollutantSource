@@ -80,11 +80,21 @@ const Index = (props) => {
 
 
   return (
-    <div>
-    <BreadcrumbWrapper style={{color:'red'}}>
-
+  <BreadcrumbWrapper type='homePage'>
+      <div className={styles.homePage}>
+        <Row style={{padding:'10px 0'}}>   {/**地图部分 和 地图两侧*/}
+          <Col span={5} className={styles.leftContent}>
+            111
+           </Col>
+           <Col span={14} className={styles.mapContent}>
+           111
+           </Col>
+           <Col span={5} className={styles.rightContent}>
+           111
+           </Col>
+        </Row>  
+      </div>  
    </BreadcrumbWrapper>
-        </div>
   );
 };
 export default connect(dvaPropsData,dvaDispatch)(Index);
