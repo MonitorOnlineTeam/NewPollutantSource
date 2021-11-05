@@ -377,7 +377,7 @@ class index extends Component {
                 >
                   <InputNumber disabled style={{ width: 'calc(100% - 64px)' }} placeholder="消耗量" onChange={this.countEmissions} />
                 </Form.Item>
-                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
+                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">来源</Button>
               </Col>
               <Col span={12}>
                 <Form.Item

@@ -262,7 +262,7 @@ class index extends PureComponent {
             TransferVolume: res.TransferVolume,
             Consumption: res.Consumption,
             deviation: res.Deviation,
-            SUM: res.AnnualConsumption,
+            total: res.AnnualConsumption,
           }
         })
       }
@@ -323,6 +323,7 @@ class index extends PureComponent {
                 editData: {},
                 KEY: undefined,
                 FileUuid: undefined,
+                FileUuid2: undefined,
               })
             }}
             onEdit={(record, key) => {
@@ -401,7 +402,7 @@ class index extends PureComponent {
                 >
                   <InputNumber bordered={false} disabled style={{ width: 'calc(100% - 64px)' }} placeholder="消耗量" onChange={this.countEmissions} />
                 </Form.Item>
-                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
+                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">来源</Button>
               </Col>
               <Col span={12}>
                 <Form.Item
@@ -467,7 +468,7 @@ class index extends PureComponent {
                   label={<p>低位发热量{currentTypeData['低位发热量Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写低位发热量!' }]}
                 >
-                  <InputNumber disabled={LowFeverDataType == 2} style={{ width: '100%' }} placeholder="请填写低位发热量"
+                  <InputNumber disabled={LowFeverDataType ? LowFeverDataType == 2 : true} style={{ width: '100%' }} placeholder="请填写低位发热量"
                     onChange={this.countEmissions}
                   />
                 </Form.Item>
@@ -501,7 +502,7 @@ class index extends PureComponent {
                   rules={[{ required: true, message: '请填写单位热值含碳量!' }]}
                 >
                   <InputNumber
-                    disabled={UnitCarbonContentDataType == 2}
+                    disabled={UnitCarbonContentDataType ? UnitCarbonContentDataType == 2 : true}
                     stringMode
                     style={{ width: this.state.UnitCarbonContentState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写单位热值含碳量"
                     onChange={this.countEmissions}
@@ -559,7 +560,7 @@ class index extends PureComponent {
                   rules={[{ required: true, message: '请填写碳氧化率!' }]}
                 >
                   <InputNumber
-                    disabled={CO2OxidationRateDataType == 2}
+                    disabled={CO2OxidationRateDataType ? CO2OxidationRateDataType == 2 : true}
                     step="0.00001"
                     style={{ width: this.state.CO2OxidationRateState == 2 ? '100%' : 'calc(100% - 64px)' }} placeholder="请填写碳氧化率"
                     onChange={this.countEmissions}
@@ -641,21 +642,6 @@ class index extends PureComponent {
                     title="碳氧化率计算">
                     <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
                   </Popover>}
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="GetType"
-                  label="获取方式"
-                  rules={[{ required: true, message: '请选择获取方式!' }]}
-                >
-                  <Select placeholder="请选择获取方式">
-                    {
-                      SELECT_LISTGet.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item

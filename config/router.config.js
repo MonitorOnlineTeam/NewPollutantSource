@@ -158,6 +158,11 @@ const routes = [
         routes: [
           { path: '/', redirect: '' },
           {
+            name: 'realtimeLive',
+            path: '/realtimeLive',
+            component: './SC/realtimeLive/M3U8Video',
+          },
+          {
             name: 'home',
             path: '/home',
             component: './newHome',
@@ -238,6 +243,16 @@ const routes = [
                 path: '/map/multimediaConference',
                 component: './mapPages/MultimediaConference',
               },
+              // {
+              //   name: 'thematicMap',
+              //   path: '/map/thematicMap/:pollutantCode',
+              //   component: './mapPages/ThematicMap_SC',
+              // },
+              // {
+              //   name: 'thematicMap',
+              //   path: '/map/thematicMap',
+              //   component: './mapPages/ThematicMap_SC',
+              // },
               {
                 name: 'thematicMap',
                 path: '/map/thematicMap/:pollutantCode',

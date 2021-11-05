@@ -45,14 +45,14 @@ class ConsumptionModal extends PureComponent {
     let total = 0;
     let GetType = '';
     if (deviation > 5) {
-      // 偏差大于5取消耗量最大值
+      // 偏差大于5取：消耗量最大值
       let maxObj = _.maxBy(list, 'value');
       console.log('maxObj=', maxObj)
       total = maxObj.value
       GetType = maxObj.name;
     } else {
       // 偏差小于5按优先级：1. 远程监控 2. 生产报表 3. 发票或计算确认单
-      total = MonVolume;
+      total = MonVolume ? MonVolume : (ReportVolume ? ReportVolume : Consumption);
       GetType = '远程监控';
     }
     this.setState({ total, GetType })
@@ -61,17 +61,53 @@ class ConsumptionModal extends PureComponent {
   // 计算偏差
   countDeviation = () => {
     let values = this.formRef.current.getFieldsValue();
-    let { MonVolume = 0, ReportVolume = 0, Consumption = 0 } = values;
-    if (ReportVolume && Consumption) {
-      let value1 = MonVolume / ReportVolume;
-      let value2 = ReportVolume / Consumption;
-      let deviation = value1 > value2 ? value1 : value2;
-      this.setState({
-        deviation: parseInt(deviation)
-      }, () => {
-        this.countConsumption()
-      })
+    // 1,2,3
+    let { MonVolume, Consumption, ReportVolume } = values;
+    let value1 = 0;
+    let value2 = 0;
+    let value3 = 0;
+    // 2-3/3
+    // Math.abs(Consumption - ReportVolume) / ReportVolume
+    // 1-3/3
+    // Math.abs(MonVolume - ReportVolume) / ReportVolume
+    // 1-2/2
+    // Math.abs(MonVolume - Consumption) / Consumption
+    if (Consumption !== null && ReportVolume !== null) {
+      // 2-3/3  (发票或结算确认单 - 生产报表) / 生产报表
+      value1 = Math.abs(Consumption - ReportVolume) / ReportVolume
     }
+
+    if (MonVolume !== null && ReportVolume !== null) {
+      // 1-3/3  (远程监控 - 生产报表) / 生产报表
+      value2 = Math.abs(MonVolume - ReportVolume) / ReportVolume
+    }
+    if (MonVolume !== null && Consumption !== null) {
+      // 1-2/2  (远程监控 - 发票或结算确认单) / 发票或结算确认单
+      value3 = Math.abs(MonVolume - Consumption) / Consumption
+    }
+    let deviation = _.max([value1, value2, value3]);
+    console.log('deviation=', deviation)
+    this.setState({
+      deviation: parseInt(deviation * 100)
+    }, () => {
+      this.countConsumption()
+    })
+    // console.log('maxObj=', maxObj)
+    // if (ReportVolume && Consumption) {
+    //   // let value1 = MonVolume / ReportVolume;
+    //   // let value2 = ReportVolume / Consumption;
+    //   // let value3 = MonVolume / Consumption;
+    //   // let deviation = value1 > value2 ? value1 : value2;
+    //   let value1 = MonVolume / ReportVolume;
+    //   let value2 = ReportVolume / Consumption;
+    //   let value3 = MonVolume / Consumption;
+    //   let deviation = value1 > value2 ? value1 : value2;
+    //   this.setState({
+    //     deviation: parseInt(deviation)
+    //   }, () => {
+    //     this.countConsumption()
+    //   })
+    // }
   }
 
   // 显示偏差值
@@ -126,7 +162,7 @@ class ConsumptionModal extends PureComponent {
                 name="MonVolume"
                 label="远程监控消耗量"
                 style={{ marginBottom: 0 }}
-                rules={[{ required: true, message: '请输入消耗量!' }]}
+              // rules={[{ required: true, message: '请输入消耗量!' }]}
               >
                 <InputNumber onChange={this.countDeviation} style={{ width: '100%' }} placeholder="请输入消耗量" />
               </Form.Item>
@@ -136,7 +172,7 @@ class ConsumptionModal extends PureComponent {
                 name="ReportVolume"
                 label="生产报表消耗量"
                 style={{ marginBottom: 0 }}
-                rules={[{ required: true, message: '请输入生产报表消耗量!' }]}
+              // rules={[{ required: true, message: '请输入生产报表消耗量!' }]}
               >
                 <InputNumber onChange={this.countDeviation} style={{ width: '100%' }} placeholder="请输入生产报表消耗量" />
               </Form.Item>
@@ -147,7 +183,7 @@ class ConsumptionModal extends PureComponent {
                   <Form.Item
                     name="BuyVolume"
                     label="购入量"
-                    rules={[{ required: true, message: '请输入购入量!' }]}
+                  // rules={[{ required: true, message: '请输入购入量!' }]}
                   >
                     <InputNumber style={{ width: '100%' }} placeholder="请输入购入量" onChange={this.countSheetConsumption} />
                   </Form.Item>
@@ -156,7 +192,7 @@ class ConsumptionModal extends PureComponent {
                   <Form.Item
                     name="TransferVolume"
                     label="转供量"
-                    rules={[{ required: true, message: '请输入转供量!' }]}
+                  // rules={[{ required: true, message: '请输入转供量!' }]}
                   >
                     <InputNumber style={{ width: '100%' }} placeholder="请输入转供量" onChange={this.countSheetConsumption} />
                   </Form.Item>
@@ -166,9 +202,9 @@ class ConsumptionModal extends PureComponent {
                 name="Consumption"
                 label="发票或结算确认单消耗量"
                 style={{ marginBottom: 0 }}
-                rules={[{ required: true, message: '请输入消耗量!' }]}
+              // rules={[{ required: true, message: '请输入消耗量!' }]}
               >
-                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
                 {/* <p>{Consumption}</p> */}
               </Form.Item>
             </Panel>

@@ -2,14 +2,17 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, Input, Button } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
+import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
+import { InfoCircleOutlined } from '@ant-design/icons'
 
+const { TextArea } = Input;
 const { Option } = Select;
 const CONFIG_ID = 'Desulphurization';
 const SELECT_LIST = [{ "key": 1, "value": "脱硫剂" }]
@@ -34,6 +37,8 @@ class index extends PureComponent {
       editData: {},
       KEY: undefined,
       FileUuid: undefined,
+      currentTypeData: {},
+      editTotalData: {},
     };
   }
 
@@ -50,7 +55,7 @@ class index extends PureComponent {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { editData, KEY } = this.state;
+      const { totalData, KEY } = this.state;
       console.log('KEY=', KEY)
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
@@ -59,6 +64,7 @@ class index extends PureComponent {
         payload: {
           configId: CONFIG_ID,
           FormData: {
+            ...totalData,
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
             DesulphurizationCode: KEY
@@ -96,20 +102,48 @@ class index extends PureComponent {
         this.setState({
           editData: res,
           isModalVisible: true,
+          editTotalData: {
+            MonVolume: res.MonVolume,
+            ReportVolume: res.ReportVolume,
+            BuyVolume: res.BuyVolume,
+            TransferVolume: res.TransferVolume,
+            Consumption: res.Consumption,
+            deviation: res.Deviation,
+            total: res.CarbonateConsumption,
+          }
         })
       }
     })
   }
 
+  // 显示偏差值
+  showDeviation = () => {
+    if (this.formRef.current) {
+      let Deviation = this.formRef.current.getFieldValue('Deviation');
+      if (Deviation > 5) {
+        return <p style={{ position: 'absolute', top: 68 }}>
+          <InfoCircleOutlined style={{ marginRight: 10 }} />
+          <span style={{ color: 'red' }}>偏差值大于5%，请添加偏差原因并上传偏差证明材料！</span>
+        </p>
+      } else {
+        return ''
+      }
+    }
+  }
+
   render() {
-    const { isModalVisible, editData, FileUuid } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, totalVisible, KEY, editTotalData } = this.state;
     const { tableInfo, autoForm } = this.props;
-    const { Output_Enterprise = [] } = this.props.configIdList;
+    const { EntView = [] } = this.props.configIdList;
 
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2Desulphurization.tCO2');
 
-    console.log("autoForm=", autoForm)
+    if (this.formRef.current) {
+      let values = this.formRef.current.getFieldsValue();
+      console.log('values=', values)
+      var { Deviation, LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
+    }
 
     return (
       <BreadcrumbWrapper>
@@ -124,25 +158,31 @@ class index extends PureComponent {
                 editData: {},
                 KEY: undefined,
                 FileUuid: undefined,
+                FileUuid2: undefined,
               })
             }}
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2Desulphurization.AttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid }, () => {
-                this.getFormData(FileUuid);
+              const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CO2Desulphurization.DevAttachmentID')
+              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2 }, () => {
+                this.getFormData();
               })
             }}
             footer={() => <div className="">排放量合计：{count}</div>}
           />
         </Card>
         <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+          {this.showDeviation()}
           <Form
+            style={{ marginTop: 24 }}
             {...layout}
             ref={this.formRef}
             initialValues={{
               ...editData,
               MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
+              EntCode: editData['dbo.EntView.EntCode'],
+              Deviation: editData.Deviation || '-',
+              GetType: editData.GetType || '-',
             }}
           >
             <Row>
@@ -154,8 +194,8 @@ class index extends PureComponent {
                 >
                   <Select placeholder="请选择企业">
                     {
-                      Output_Enterprise.map(item => {
-                        return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
+                      EntView.map(item => {
+                        return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
                       })
                     }
                   </Select>
@@ -191,10 +231,53 @@ class index extends PureComponent {
                   label="脱硫剂中碳酸盐消耗量（t）"
                   rules={[{ required: true, message: '请填写脱硫剂中碳酸盐消耗量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写脱硫剂中碳酸盐消耗量" onChange={(value) => {
+                  <InputNumber bordered={false} disabled style={{ width: 'calc(100% - 64px)' }} placeholder="消耗量" onChange={this.countEmissions} />
+                  {/* <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写脱硫剂中碳酸盐消耗量" onChange={(value) => {
                     let val2 = this.formRef.current.getFieldValue('CarbonateEmission') || 0;
                     let count = value * val2;
                     this.formRef.current.setFieldsValue({ 'tCO2': count });
+                  }} /> */}
+                </Form.Item>
+                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">来源</Button>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="GetType"
+                  label="获取方式"
+                >
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="Deviation"
+                  label="消耗量偏差（%）"
+                >
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                  {/* <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p> */}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 19 }}
+                  name="DeviationReson"
+                  label="偏差原因"
+                  rules={[{ required: Deviation > 5, message: '请填写消耗量!' }]}
+                >
+                  <TextArea autoSize={{ minRows: 4 }} placeholder="请填写偏差原因" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 7 }}
+                  name="DevAttachmentID"
+                  label="偏差证明材料"
+                  rules={[{ required: Deviation > 5, message: '请上传偏差证明材料!' }]}
+                >
+                  <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
+                    this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
                   }} />
                 </Form.Item>
               </Col>
@@ -240,6 +323,19 @@ class index extends PureComponent {
             </Row>
           </Form>
         </Modal>
+        <ConsumptionModal
+          data={KEY ? editTotalData : {}}
+          unit={'t'}
+          visible={totalVisible}
+          onCancel={() => this.setState({ totalVisible: false })}
+          onOk={(data) => {
+            console.log('data=', data)
+            this.formRef.current.setFieldsValue({ 'CarbonateConsumption': data.total, 'Deviation': data.deviation, GetType: data.GetType })
+            this.setState({ totalVisible: false, totalData: data })
+            let val2 = this.formRef.current.getFieldValue('CarbonateEmission') || 0;
+            let count = data.total * val2;
+            this.formRef.current.setFieldsValue({ 'tCO2': count });
+          }} />
       </BreadcrumbWrapper>
     );
   }
