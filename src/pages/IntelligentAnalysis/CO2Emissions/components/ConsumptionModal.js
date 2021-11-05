@@ -74,16 +74,16 @@ class ConsumptionModal extends PureComponent {
     // Math.abs(MonVolume - Consumption) / Consumption
     if (Consumption !== null && ReportVolume !== null) {
       // 2-3/3  (发票或结算确认单 - 生产报表) / 生产报表
-      value1 = Math.abs(Consumption - ReportVolume) / ReportVolume
+      value1 = ReportVolume ? Math.abs(Consumption - ReportVolume) / ReportVolume : 0;
     }
 
     if (MonVolume !== null && ReportVolume !== null) {
       // 1-3/3  (远程监控 - 生产报表) / 生产报表
-      value2 = Math.abs(MonVolume - ReportVolume) / ReportVolume
+      value2 = ReportVolume ? Math.abs(MonVolume - ReportVolume) / ReportVolume : 0;
     }
     if (MonVolume !== null && Consumption !== null) {
       // 1-2/2  (远程监控 - 发票或结算确认单) / 发票或结算确认单
-      value3 = Math.abs(MonVolume - Consumption) / Consumption
+      value3 = Consumption ? Math.abs(MonVolume - Consumption) / Consumption : 0
     }
     let deviation = _.max([value1, value2, value3]);
     console.log('deviation=', deviation)

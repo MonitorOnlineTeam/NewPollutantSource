@@ -49,7 +49,7 @@ class index extends PureComponent {
       type: 'CO2Emissions/getCO2EnergyType',
       payload: {
         IndustryCode: industry,
-        SelectType: 'GC'
+        SelectType: 'T'
       },
     })
   }
@@ -169,24 +169,20 @@ class index extends PureComponent {
     let WhetherT = this.state.WhetherT;
     if (WhetherT === 1) {
       // 包含
-      return <Row>
-        <Col span={12}>
+      return <>
           <Form.Item
             name="CaO"
             label="氧化钙(CaO)的质量分数(%)"
           >
             <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写氧化钙(CaO)的质量分数(%)" />
           </Form.Item>
-        </Col>
-        <Col span={12}>
           <Form.Item
             name="MgO"
             label="氧化镁(MgO)的质量分数(%)"
           >
             <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写氧化镁(MgO)的质量分数(%)" />
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Form.Item
             name="LimestoneSource"
             label="石灰石的含量来源"
@@ -204,16 +200,14 @@ class index extends PureComponent {
               }
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </Col> */}
           <Form.Item
             name="Limestone"
             label={`石灰石的含量(%)`}
           >
             <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写石灰石的含量(%)" />
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        {/* <Col span={12}>
           <Form.Item
             name="LossSource"
             label="生料烧失量来源"
@@ -231,16 +225,14 @@ class index extends PureComponent {
               }
             </Select>
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </Col> */}
           <Form.Item
             name="Loss"
             label={`生料烧失量(%)`}
           >
             <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写生料烧失量" />
           </Form.Item>
-        </Col>
-      </Row>
+</>
     } else {
       // 不包含
       return <>
