@@ -18,7 +18,7 @@ class index extends PureComponent {
     this.formRef = React.createRef();
     this.state = {
       year: moment(),
-      time: [moment().subtract(1, 'month'), moment()],
+      time: [moment().startOf('year'), moment()],
     };
   }
 
