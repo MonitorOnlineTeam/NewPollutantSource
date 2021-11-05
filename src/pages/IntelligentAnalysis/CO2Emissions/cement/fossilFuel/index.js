@@ -80,7 +80,7 @@ class index extends Component {
     const { LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
     if (LowFeverDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'LowFever': cementDictionaries.one[value]["低位发热值"],
+        'LowFever': cementDictionaries.one[value]["低位发热量"],
       });
     }
     if (UnitCarbonContentDataType == 2) {
@@ -132,6 +132,9 @@ class index extends Component {
       case 'MJ/m³':
         LowFever = LowFever / 1000;
         break;
+      case 'KJ/Kg':
+        LowFever = LowFever / 1000000000;
+        break;
     }
     switch (含碳量Unit) {
       case 'tC/TJ':
@@ -142,6 +145,9 @@ class index extends Component {
         break;
       case 'MJ/m³':
         UnitCarbonContent = UnitCarbonContent / 1000;
+        break;
+      case 'KJ/Kg':
+        UnitCarbonContent = UnitCarbonContent / 1000000000;
         break;
     }
 
@@ -420,7 +426,7 @@ class index extends Component {
                   name="LowFeverDataType"
                   label="低位发热量数据来源"
                 >
-                  <Select placeholder="请选择低位发热量数据来源" onChange={(value) => this.onSourceChange(value, 1, 'LowFever', '低位发热值')}>
+                  <Select placeholder="请选择低位发热量数据来源" onChange={(value) => this.onSourceChange(value, 1, 'LowFever', '低位发热量')}>
                     {
                       SELECT_LISTWhere.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>

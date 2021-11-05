@@ -99,7 +99,7 @@ class index extends PureComponent {
         'CO2OxidationRate': cementDictionaries.one[value]["氧化率"],
       });
     }
-    // this.countEmissions();
+    this.countEmissions();
   }
 
   // 计算排放量
@@ -155,10 +155,12 @@ class index extends PureComponent {
     // 判断单位是MJ/t 计算的时候除以1000
     // 判断单位是MJ/m³ 计算的时候除以1000
     // 判断单位是 % 计算的时候除以100
+    // 判断单位是 KJ/Kg 计算的时候除以10的六次方
     const { currentTypeData } = this.state;
     const { 低位发热量Unit, 含碳量Unit } = currentTypeData;
     let values = this.formRef.current.getFieldsValue();
     let { LowFever = 0, UnitCarbonContent = 0 } = values;
+    // if (低位发热量Unit && 含碳量Unit) {
     switch (低位发热量Unit) {
       case 'tC/TJ':
         LowFever = LowFever * 1000;
@@ -168,6 +170,9 @@ class index extends PureComponent {
         break;
       case 'MJ/m³':
         LowFever = LowFever / 1000;
+        break;
+      case 'KJ/Kg':
+        LowFever = LowFever / 1000000000;
         break;
     }
     switch (含碳量Unit) {
@@ -180,7 +185,11 @@ class index extends PureComponent {
       case 'MJ/m³':
         UnitCarbonContent = UnitCarbonContent / 1000;
         break;
+      case 'KJ/Kg':
+        UnitCarbonContent = UnitCarbonContent / 1000000000;
+        break;
     }
+    // }
 
     return { LowFever, UnitCarbonContent }
   }
