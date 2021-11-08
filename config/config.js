@@ -443,6 +443,17 @@ export default {
                       path: '/platformconfig/configurationInfo/timer/timerManage',
                       component: './platformManager/configurationInfo/timerManage',
                     },
+                    {
+                      name: 'equipmentFacturer',//设备厂家
+                      path: '/platformconfig/configurationInfo/deveice/equipmentFacturer',
+                      component: './platformManager/configurationInfo/equipmentFacturer',
+                    },
+                    {
+                      name: 'systemMarker',//系统型号
+                      path: '/platformconfig/configurationInfo/deveice/systemMarker',
+                      component: './platformManager/configurationInfo/systemMarker',
+                    },
+                    
                   ]
                 },
                 {

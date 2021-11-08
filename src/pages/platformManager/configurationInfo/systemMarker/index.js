@@ -20,18 +20,20 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'timerManage'
+const namespace = 'systemMarker'
 
 
 
 
-const dvaPropsData =  ({ loading,timerManage }) => ({
-  tableDatas:timerManage.tableDatas,
-  pointDatas:timerManage.pointDatas,
-  tableLoading:timerManage.tableLoading,
-  tableTotal:timerManage.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addOnlineTimerManage`],
-  loadingEditConfirm: loading.effects[`${namespace}/editOnlineTimerManage`],
+const dvaPropsData =  ({ loading,systemMarker }) => ({
+  tableDatas:systemMarker.tableDatas,
+  pointDatas:systemMarker.pointDatas,
+  tableLoading:systemMarker.tableLoading,
+  tableTotal:systemMarker.tableTotal,
+  loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
+  loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
+  monitoringTypeList:systemMarker.monitoringTypeList,
+  manufacturerList:systemMarker.manufacturerList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
 })
 
@@ -43,31 +45,31 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getOnlineTimerManageList:(payload)=>{ //列表
+    getManufacturerList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getOnlineTimerManageList`,
+        type: `${namespace}/getManufacturerList`,
         payload:payload,
       })
     },
-    addOnlineTimerManage : (payload,callback) =>{ // 添加
+    addManufacturer : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addOnlineTimerManage`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editOnlineTimerManage : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editOnlineTimerManage`,
+        type: `${namespace}/addManufacturer`,
         payload:payload,
         callback:callback
       })
       
     },
-    delOnlineTimerManage:(payload,callback)=>{ //删除
+    editManufacturer : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/delOnlineTimerManage`, 
+        type: `${namespace}/editManufacturer`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delManufacturer:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delManufacturer`, 
         payload:payload,
         callback:callback
       }) 
@@ -97,7 +99,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,loadingAddConfirm,loadingEditConfirm,tableLoading,exportLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
   useEffect(() => {
     onFinish();
   
@@ -179,7 +181,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.delOnlineTimerManage({ID:record.ID},()=>{
+    props.delManufacturer({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -200,7 +202,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getOnlineTimerManageList({
+      props.getManufacturerList({
         ...values,
       })
     } catch (errorInfo) {
@@ -211,14 +213,14 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addOnlineTimerManage({
+      type==='add'? props.addManufacturer({
         ...values,
       },()=>{
         setFromVisible(false)
         onFinish()
       })
       :
-     props.editOnlineTimerManage({
+     props.editManufacturer({
         ...values,
       },()=>{
         setFromVisible(false)
@@ -249,7 +251,7 @@ const Index = (props) => {
      </Form>
   }
   return (
-    <div  className={styles.timerManageSty}>
+    <div  className={styles.systemMarkerSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
@@ -268,7 +270,7 @@ const Index = (props) => {
    </BreadcrumbWrapper>
    
    <Modal
-        title={type==='add'? '添加':'编辑'}
+        title={type==='add'? '添加定时器':'编辑定时器'}
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
@@ -293,23 +295,26 @@ const Index = (props) => {
       </Row>
       <Row>  
         <Col span={24}>
-        <Form.Item hidden={type==='add'} label="编号" name="Sort" >
+        <Form.Item hidden={type==='add'}  label="编号" name="Sort" >
         <InputNumber placeholder='请输入编号' />
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="定时器名称" name="TimerName" rules={[  { required: true, message: '请输入定时器名称'  }]} >
-        <Input placeholder='请输入定时器名称'/>
-
+        <Form.Item label="设备厂家" name="TimerName" rules={[  { required: true, message: '请输入设备厂家'  }]} >
+              {
+               manufacturerList.map(item => {
+                    return <Option key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>
+                  })
+                }
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="定时器文件名称" name="TimerFileName"  rules={[  { required: true, message: '请输入定时器文件名称'  }]}>
-        <Input placeholder='请输入定时器文件名称'/>
+        <Form.Item label="简称" name="TimerFileName"  rules={[  { required: true, message: '请输入简称'  }]}>
+        <Input placeholder='请输入简称'/>
 
       </Form.Item>
       </Col>
@@ -326,13 +331,6 @@ const Index = (props) => {
       </Col>
       </Row>
 
-      <Row>
-        <Col span={24}>
-        <Form.Item label="功能描述" name="TimerRemark" >
-        <TextArea rows={4} />
-      </Form.Item>
-      </Col>
-      </Row>
 
      
     </Form>

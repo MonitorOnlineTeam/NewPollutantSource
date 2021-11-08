@@ -16,7 +16,9 @@ import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
+import LeftContent from './LeftContent'
 import styles from "../style.less"
+
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -84,7 +86,7 @@ const Index = (props) => {
       <div className={styles.homePage}>
         <Row style={{padding:'10px 0'}}>   {/**地图部分 和 地图两侧*/}
           <Col span={5} className={styles.leftContent}>
-            111
+             <LeftContent />
            </Col>
            <Col span={14} className={styles.mapContent}>
            111

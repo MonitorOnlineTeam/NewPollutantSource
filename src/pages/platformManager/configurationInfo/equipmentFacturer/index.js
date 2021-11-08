@@ -20,18 +20,18 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'timerManage'
+const namespace = 'equipmentFacturer'
 
 
 
 
-const dvaPropsData =  ({ loading,timerManage }) => ({
-  tableDatas:timerManage.tableDatas,
-  pointDatas:timerManage.pointDatas,
-  tableLoading:timerManage.tableLoading,
-  tableTotal:timerManage.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addOnlineTimerManage`],
-  loadingEditConfirm: loading.effects[`${namespace}/editOnlineTimerManage`],
+const dvaPropsData =  ({ loading,equipmentFacturer }) => ({
+  tableDatas:equipmentFacturer.tableDatas,
+  pointDatas:equipmentFacturer.pointDatas,
+  tableLoading:equipmentFacturer.tableLoading,
+  tableTotal:equipmentFacturer.tableTotal,
+  loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
+  loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
 })
 
@@ -43,31 +43,31 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getOnlineTimerManageList:(payload)=>{ //列表
+    getManufacturerList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getOnlineTimerManageList`,
+        type: `${namespace}/getManufacturerList`,
         payload:payload,
       })
     },
-    addOnlineTimerManage : (payload,callback) =>{ // 添加
+    addManufacturer : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addOnlineTimerManage`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editOnlineTimerManage : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editOnlineTimerManage`,
+        type: `${namespace}/addManufacturer`,
         payload:payload,
         callback:callback
       })
       
     },
-    delOnlineTimerManage:(payload,callback)=>{ //删除
+    editManufacturer : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/delOnlineTimerManage`, 
+        type: `${namespace}/editManufacturer`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delManufacturer:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delManufacturer`, 
         payload:payload,
         callback:callback
       }) 
@@ -97,7 +97,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,loadingAddConfirm,loadingEditConfirm,tableLoading,exportLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
   useEffect(() => {
     onFinish();
   
@@ -106,26 +106,26 @@ const Index = (props) => {
   const columns = [
     {
       title: '编号',
-      dataIndex: 'Sort',
-      key:'Sort',
+      dataIndex: 'ManufacturerCode',
+      key:'ManufacturerCode',
       align:'center',
     },
     {
-      title: '定时器名称',
-      dataIndex: 'TimerFileName',
-      key:'TimerFileName',
+      title: '设备厂家',
+      dataIndex: 'ManufacturerName',
+      key:'ManufacturerName',
       align:'center',
     },
     {
-      title: '定时器文件名称',
-      dataIndex: 'TimerFileName',
-      key:'TimerFileName',
+      title: '简称',
+      dataIndex: 'Abbreviation',
+      key:'Abbreviation',
       align:'center',
     },
     {
-      title: '状态',
-      dataIndex: 'TimerStatus',
-      key:'TimerStatus', 
+      title: '使用状态',
+      dataIndex: 'Status',
+      key:'Status', 
       align:'center',
       render: (text, record) => {
         if (text === 1) {
@@ -135,14 +135,7 @@ const Index = (props) => {
           return <span><Tag color="red">停用</Tag></span>;
         }
       },
-    },
-    {
-      title: '功能描述',
-      dataIndex: 'TimerRemark',
-      key:'TimerRemark',
-      align:'center',
-    },
-    
+    },   
     {
       title: <span>操作</span>,
       dataIndex: 'x',
@@ -179,7 +172,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.delOnlineTimerManage({ID:record.ID},()=>{
+    props.delManufacturer({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -200,7 +193,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getOnlineTimerManageList({
+      props.getManufacturerList({
         ...values,
       })
     } catch (errorInfo) {
@@ -211,14 +204,14 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addOnlineTimerManage({
+      type==='add'? props.addManufacturer({
         ...values,
       },()=>{
         setFromVisible(false)
         onFinish()
       })
       :
-     props.editOnlineTimerManage({
+     props.editManufacturer({
         ...values,
       },()=>{
         setFromVisible(false)
@@ -240,16 +233,33 @@ const Index = (props) => {
     form={form}
     name="advanced_search"
     className={styles['ant-advanced-search-form']}
+    layout='inline'
+    initialValues={{
+      Status:1
+    }}
+    onFinish={onFinish}
   >  
-      <Row  align='middle'>
-     <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
+      <Form.Item label="设备厂家" name="ManufacturerName"  >
+        <Input placeholder='请输入设备厂家' allowClear/>
+      </Form.Item>
+      <Form.Item label="状态" name="Status" >
+           <Radio.Group>
+             <Radio value={1}>启用</Radio>
+             <Radio value={2}>停用</Radio>
+         </Radio.Group>
+      </Form.Item>
+      <Form.Item>
+      <Button   type="primary" htmlType='submit'  style={{marginRight:8}}>
+          查询
+     </Button>
+     <Button   onClick={()=>{ add()}} >
           添加
      </Button>
-      </Row>   
+     </Form.Item>
      </Form>
   }
   return (
-    <div  className={styles.timerManageSty}>
+    <div  className={styles.equipmentFacturerSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
@@ -281,7 +291,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        TimerStatus:1
+        Status:1
       }}
     >
       <Row>
@@ -293,23 +303,22 @@ const Index = (props) => {
       </Row>
       <Row>  
         <Col span={24}>
-        <Form.Item hidden={type==='add'} label="编号" name="Sort" >
-        <InputNumber placeholder='请输入编号' />
+        <Form.Item hidden  label="编号" name="Sort" >
+        <InputNumber />
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="定时器名称" name="TimerName" rules={[  { required: true, message: '请输入定时器名称'  }]} >
-        <Input placeholder='请输入定时器名称'/>
-
+        <Form.Item label="设备厂家" name="ManufacturerName" rules={[  { required: true, message: '请输入设备厂家'  }]} >
+        <Input placeholder='请输入设备厂家'/>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="定时器文件名称" name="TimerFileName"  rules={[  { required: true, message: '请输入定时器文件名称'  }]}>
-        <Input placeholder='请输入定时器文件名称'/>
+        <Form.Item label="简称" name="Abbreviation"  rules={[  { required: true, message: '请输入简称'  }]}>
+        <Input placeholder='请输入简称'/>
 
       </Form.Item>
       </Col>
@@ -317,7 +326,7 @@ const Index = (props) => {
 
       <Row>
         <Col span={24}>
-        <Form.Item label="状态" name="TimerStatus" >
+        <Form.Item label="状态" name="Status" >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
              <Radio value={2}>停用</Radio>
@@ -326,13 +335,6 @@ const Index = (props) => {
       </Col>
       </Row>
 
-      <Row>
-        <Col span={24}>
-        <Form.Item label="功能描述" name="TimerRemark" >
-        <TextArea rows={4} />
-      </Form.Item>
-      </Col>
-      </Row>
 
      
     </Form>
