@@ -418,7 +418,7 @@ export default {
                       component: './platformManager/point',
                     },
                     {  //仓库管理
-                      name: 'monitortarget',
+                      name: 'warehouse',
                       path: '/platformconfig/basicInfo/monitortarget/warehouse/:configId',
                       component: './AutoFormManager',
                     },
@@ -453,7 +453,11 @@ export default {
                       path: '/platformconfig/configurationInfo/deveice/systemMarker',
                       component: './platformManager/configurationInfo/systemMarker',
                     },
-                    
+                    {  //故障单元管理
+                      name: 'faultUnitManager',
+                      path: '/platformconfig/configurationInfo/faultUnit/faultUnitManager',
+                      component: './platformManager/configurationInfo/faultUnitManager',
+                    },
                   ]
                 },
                 {
@@ -1667,51 +1671,53 @@ export default {
                     {
                       // 运维工单统计（企业）
                       path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      // component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                      component: './Intelligentanalysis/planWorkOrderStatistics',
                     },
-                    {
-                      // 运维工单统计（企业） 城市级别
-                      path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/cityLevel',
-                      component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
-                    },
-                    {
-                      //行政区运维工单统计（企业）
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
-                    },
-                    {
-                      //企业运维工单统计（企业）
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
-                    },
+                    // {
+                    //   // 运维工单统计（企业） 城市级别
+                    //   path: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/cityLevel',
+                    //   component: './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics',
+                    // },
+
+                    // {
+                    //   //行政区运维工单统计（企业）
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                    //   component:
+                    //     './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/RegionStaticstics',
+                    // },
+                    // {
+                    //   //企业运维工单统计（企业）
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                    //   component:
+                    //     './Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',
+                    // },
                     /* 缺失台账工单统计 空气站*/
-                    {
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                    },
+                    // {
+                    //   path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    //   component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    // },
                     /* 缺失台账工单统计 空气站 城市级别*/
-                    {
-                      path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/citylevel',
-                      component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
-                    },
-                    /* 缺失台账工单详情 */
-                    {
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
-                    },
+                    // {
+                    //   path: '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/citylevel',
+                    //   component: './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics',
+                    // },
+                    /* 缺失台账工单详情 空气站 */
+                    // {
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    //   component:
+                    //     './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsDetails',
+                    // },
                     /* 缺失台账照片统计 */
-                    {
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                      component:
-                        './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
-                    },
+                    // {
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    //   component:
+                    //     './Intelligentanalysis/operationWorkStatis/noAccountAirStatistics/noAccountAirStatisticsPhoto',
+                    // },
                     {
                       name: 'noAccountStatisticsEnt', //无台账上传统计 企业
                       path: '/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
@@ -1724,43 +1730,53 @@ export default {
                       component:
                         './Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent',
                     },
-                    {
-                      /** 运维工单统计-空气站 */
-                      name: 'AirWorkOrderStatistics',
-                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/cityLevel',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/CityLevel',
+                    // {
+                    //   /** 运维工单统计-空气站 */
+                    //   name: 'AirWorkOrderStatistics',
+                    //   path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/cityLevel',
+                    //   component:
+                    //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/CityLevel',
+                    // },
+                    // {
+                    //   /** 运维工单统计-空气站  城市级别*/ 
+                    //   name: 'AirWorkOrderStatistics',
+                    //   path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
+                    //   component:
+                    //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
+                    // },
+                    // {
+                    //   /** 单区域 运维工单统计-空气站 排口 */
+                    //   name: 'RegionAirQualityMonitoringStation',
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
+                    //   component:
+                    //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
+                    // },
+                    // {
+                    //   /** 单站点 运维工单统计-空气站 排口 */
+                    //   name: 'SingleStationAirQualityMonitoringStation',
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
+                    //   component:
+                    //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
+                    // },
+                    // {
+                    //   /** 单区域 运维工单统计-空气站 */
+                    //   name: 'AirWorkOrderStatistics',
+                    //   path:
+                    //     '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
+                    //   component:
+                    //     './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                    // },
+                    { //异常工单统计
+                      name: 'abnormalWorkStatistics',
+                      path: '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics',
+                      component: './Intelligentanalysis/abnormalWorkStatistics',
                     },
-                    {
-                      /** 运维工单统计-空气站  城市级别*/ 
-                      name: 'AirWorkOrderStatistics',
-                      path: '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics',
-                    },
-                    {
-                      /** 单区域 运维工单统计-空气站 排口 */
-                      name: 'RegionAirQualityMonitoringStation',
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/RegionAirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/RegionAirQualityMonitoringStation',
-                    },
-                    {
-                      /** 单站点 运维工单统计-空气站 排口 */
-                      name: 'SingleStationAirQualityMonitoringStation',
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/SingleStationAirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/SingleStationAirQualityMonitoringStation',
-                    },
-                    {
-                      /** 单区域 运维工单统计-空气站 */
-                      name: 'AirWorkOrderStatistics',
-                      path:
-                        '/Intelligentanalysis/operationWorkStatis/AirQualityMonitoringStation/StationAirQualityMonitoringStation',
-                      component:
-                        './IntelligentAnalysis/operationalWorkOrder/airWorkOrderStatistics/StationAirQualityMonitoringStation',
+                    { //异常工单统计 市一级
+                      name: 'abnormalWorkStatisticsDetail',
+                      path: '/Intelligentanalysis/abnormalWorkStatistics/regionDetail',
+                      component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
                     },
                   ],
                 },
@@ -1787,21 +1803,8 @@ export default {
                   path: '/Intelligentanalysis/operationExpirePoint',
                   component: './Intelligentanalysis/operationExpirePoint',
                 },
-                { //异常工单统计
-                  name: 'abnormalWorkStatistics',
-                  path: '/Intelligentanalysis/abnormalWorkStatistics',
-                  component: './Intelligentanalysis/abnormalWorkStatistics',
-                },
-                { //异常工单统计 市一级
-                  name: 'abnormalWorkStatisticsDetail',
-                  path: '/Intelligentanalysis/abnormalWorkStatistics/regionDetail',
-                  component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
-                },
-                { //计划工单统计
-                  name: 'planWorkOrderStatistics',
-                  path: '/Intelligentanalysis/planWorkOrderStatistics',
-                  component: './Intelligentanalysis/planWorkOrderStatistics',
-                },
+
+
               ],
 
               

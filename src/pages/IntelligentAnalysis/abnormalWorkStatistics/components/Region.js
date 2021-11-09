@@ -130,7 +130,7 @@ const Index = (props,ref) => {
       render:(text,record,index)=>{
         return  <Button type="link"
          onClick={()=>{
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }});
+          router.push({pathname:`/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }});
          }}
         >{text}</Button>
       }
@@ -302,7 +302,7 @@ const Index = (props,ref) => {
       render:(text,record,index)=>{
         return  <Button type="link"
          onClick={()=>{
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}});
+          router.push({pathname:`/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}});
          }}
         >{text}</Button>
       }

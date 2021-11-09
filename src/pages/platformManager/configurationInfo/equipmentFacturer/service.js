@@ -23,10 +23,4 @@ export async function DelManufacturer(params) {
   return result;
 }
 
-// 设备厂商 获取监测类别
-export async function GetMonitoringTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList',params, null);
-  return result;
-}
-
 

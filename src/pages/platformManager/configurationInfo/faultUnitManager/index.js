@@ -1,7 +1,7 @@
 /**
- * 功  能：设备厂家
+ * 功  能：故障单元管理
  * 创建人：贾安波
- * 创建时间：2021.11
+ * 创建时间：2021.09.24
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -20,18 +20,19 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'equipmentFacturer'
+const namespace = 'faultUnitManager'
 
 
 
 
-const dvaPropsData =  ({ loading,equipmentFacturer }) => ({
-  tableDatas:equipmentFacturer.tableDatas,
-  pointDatas:equipmentFacturer.pointDatas,
-  tableLoading:equipmentFacturer.tableLoading,
-  tableTotal:equipmentFacturer.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
-  loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
+const dvaPropsData =  ({ loading,faultUnitManager }) => ({
+  tableDatas:faultUnitManager.tableDatas,
+  pointDatas:faultUnitManager.pointDatas,
+  tableLoading:faultUnitManager.tableLoading,
+  tableTotal:faultUnitManager.tableTotal,
+  loadingAddConfirm: loading.effects[`${namespace}/addFaultUnit`],
+  loadingEditConfirm: loading.effects[`${namespace}/editFaultUnit`],
+  equipmentTypeList:faultUnitManager.equipmentTypeList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
 })
 
@@ -43,31 +44,38 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getManufacturerList:(payload)=>{ //列表
+    getFaultUnitList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getManufacturerList`,
+        type: `${namespace}/getFaultUnitList`,
         payload:payload,
       })
     },
-    addManufacturer : (payload,callback) =>{ // 添加
+    addFaultUnit : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addManufacturer`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editManufacturer : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editManufacturer`,
+        type: `${namespace}/addFaultUnit`,
         payload:payload,
         callback:callback
       })
       
     },
-    delManufacturer:(payload,callback)=>{ //删除
+    editFaultUnit : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/delManufacturer`, 
+        type: `${namespace}/editFaultUnit`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delFaultUnit:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delFaultUnit`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    getTestingEquipmentList:(payload,callback)=>{ //监测设备类别
+      dispatch({
+        type: `${namespace}/getTestingEquipmentList`, 
         payload:payload,
         callback:callback
       }) 
@@ -97,31 +105,45 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,equipmentTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
   useEffect(() => {
     onFinish();
-  
+    props.getTestingEquipmentList({});
   },[]);
 
   const columns = [
     {
       title: '编号',
-      dataIndex: 'ManufacturerCode',
-      key:'ManufacturerCode',
+      dataIndex: 'FaultUnitCode',
+      key:'FaultUnitCode',
       align:'center',
     },
     {
-      title: '设备厂家',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      title: '故障单元名称',
+      dataIndex: 'FaultUnitName',
+      key:'FaultUnitName',
       align:'center',
     },
     {
-      title: '简称',
-      dataIndex: 'Abbreviation',
-      key:'Abbreviation',
-      align:'center',
+      title: '监测设备类别',
+      dataIndex: 'PollutantTypeName',
+      key:'PollutantTypeName',
+      align:'center'
     },
+    {
+      title: '是否主机',
+      dataIndex: 'IsMaster',
+      key:'IsMaster', 
+      align:'center',
+      render: (text, record) => {
+        if (text === 1) {
+          return <span>是</span>;
+        }
+        if (text === 2) {
+          return <span>否</span>;
+        }
+      },
+    },  
     {
       title: '使用状态',
       dataIndex: 'Status',
@@ -172,7 +194,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.delManufacturer({ID:record.ID},()=>{
+    props.delFaultUnit({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -193,7 +215,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getManufacturerList({
+      props.getFaultUnitList({
         ...values,
       })
     } catch (errorInfo) {
@@ -204,14 +226,14 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addManufacturer({
+      type==='add'? props.addFaultUnit({
         ...values,
       },()=>{
         setFromVisible(false)
         onFinish()
       })
       :
-     props.editManufacturer({
+     props.editFaultUnit({
         ...values,
       },()=>{
         setFromVisible(false)
@@ -235,15 +257,22 @@ const Index = (props) => {
     className={styles['ant-advanced-search-form']}
     layout='inline'
     initialValues={{
+      IsMaster:1,
       // Status:1
     }}
     onFinish={onFinish}
   >  
-      <Form.Item label="设备厂家" name="ManufacturerName"  >
-        <Input placeholder='请输入设备厂家' allowClear style={{width:200}}/>
+      <Form.Item label="监测设备类别" name="PollutantType"   >
+       <Select placeholder='请选择监测设备类别' allowClear style={{width:200}}>
+              {
+               equipmentTypeList[0]&&equipmentTypeList.map(item => {
+                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                  })
+                } 
+        </Select>
       </Form.Item>
       <Form.Item label="状态" name="Status" >
-       <Select placeholder='请选择状态' allowClear style={{width:200}}>
+        <Select placeholder='请选择状态' allowClear style={{width:200}}>
            <Option key={1} value={1}>启用</Option>
            <Option key={2} value={2}>停用</Option>
         </Select>
@@ -259,7 +288,7 @@ const Index = (props) => {
      </Form>
   }
   return (
-    <div  className={styles.equipmentFacturerSty}>
+    <div  className={styles.faultUnitManagerSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
@@ -291,6 +320,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
+        IsMaster:1,
         Status:1
       }}
     >
@@ -301,29 +331,36 @@ const Index = (props) => {
       </Form.Item> 
       </Col>
       </Row>
-      <Row>  
+      <Row>
         <Col span={24}>
-        <Form.Item hidden  label="编号" name="Sort" >
-        <InputNumber />
+        <Form.Item label="故障单元名称" name="FaultUnitName" rules={[  { required: true, message: '请输入故障单元名称'  }]} >
+        <Input placeholder='请输入故障单元名称'/>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="设备厂家" name="ManufacturerName" rules={[  { required: true, message: '请输入设备厂家'  }]} >
-        <Input placeholder='请输入设备厂家'/>
+        <Form.Item label="监测设备类别" name="PollutantType"  rules={[  { required: true, message: '请选择监测设备类别'  }]}>
+              <Select placeholder='请选择监测设备类别' allowClear>
+               {
+                equipmentTypeList[0]&&equipmentTypeList.map(item => {
+                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                  })
+                } 
+            </Select>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="简称" name="Abbreviation"  rules={[  { required: true, message: '请输入简称'  }]}>
-        <Input placeholder='请输入简称'/>
-
+        <Form.Item label="是否主机" name="IsMaster" >
+           <Radio.Group>
+             <Radio value={1}>是</Radio>
+             <Radio value={2}>否</Radio>
+         </Radio.Group>
       </Form.Item>
       </Col>
       </Row>
-
       <Row>
         <Col span={24}>
         <Form.Item label="状态" name="Status" >

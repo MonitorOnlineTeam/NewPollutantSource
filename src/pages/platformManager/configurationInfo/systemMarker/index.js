@@ -193,7 +193,7 @@ const Index = (props) => {
     try {
       form2.setFieldsValue({
         ...record,
-        MonitoringType:record.MonitoringTypeID
+        MonitoringType:record.MonitoringTypeID.toString()
       })
 
     } catch (errInfo) {
@@ -263,7 +263,7 @@ const Index = (props) => {
     form={form}
     name="advanced_search"
     initialValues={{
-      Status:1
+      // Status:1
     }}
     className={styles["ant-advanced-search-form"]}
     onFinish={onFinish}
@@ -297,10 +297,10 @@ const Index = (props) => {
               </Select>
       </Form.Item>
       <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}} >
-           <Radio.Group>
-             <Radio value={1}>启用</Radio>
-             <Radio value={2}>停用</Radio>
-         </Radio.Group>
+       <Select placeholder='请选择状态' allowClear style={{width:200}}>
+           <Option key={1} value={1}>启用</Option>
+           <Option key={2} value={2}>停用</Option>
+        </Select>
       </Form.Item>
       <Form.Item>
       <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
