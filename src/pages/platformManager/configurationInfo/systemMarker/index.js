@@ -30,8 +30,8 @@ const dvaPropsData =  ({ loading,systemMarker }) => ({
   pointDatas:systemMarker.pointDatas,
   tableLoading:systemMarker.tableLoading,
   tableTotal:systemMarker.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
-  loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
+  loadingAddConfirm: loading.effects[`${namespace}/addSystemModel`],
+  loadingEditConfirm: loading.effects[`${namespace}/editSystemModel`],
   monitoringTypeList:systemMarker.monitoringTypeList,
   manufacturerList:systemMarker.manufacturerList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
@@ -45,31 +45,45 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getManufacturerList:(payload)=>{ //列表
+    getSystemModelList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getManufacturerList`,
+        type: `${namespace}/getSystemModelList`,
         payload:payload,
       })
     },
-    addManufacturer : (payload,callback) =>{ // 添加
+    addSystemModel : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addManufacturer`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editManufacturer : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editManufacturer`,
+        type: `${namespace}/addSystemModel`,
         payload:payload,
         callback:callback
       })
       
     },
-    delManufacturer:(payload,callback)=>{ //删除
+    editSystemModel : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/delManufacturer`, 
+        type: `${namespace}/editSystemModel`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delSystemModel:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delSystemModel`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    getManufacturerList:(payload,callback)=>{ //厂商列表
+      dispatch({
+        type: `${namespace}/getManufacturerList`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    getMonitoringTypeList:(payload,callback)=>{ //监测类型
+      dispatch({
+        type: `${namespace}/getMonitoringTypeList`, 
         payload:payload,
         callback:callback
       }) 
@@ -102,32 +116,45 @@ const Index = (props) => {
   const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
   useEffect(() => {
     onFinish();
-  
+    props.getManufacturerList({})
+    props.getMonitoringTypeList({})
   },[]);
 
   const columns = [
     {
       title: '编号',
-      dataIndex: 'Sort',
-      key:'Sort',
+      dataIndex: 'SystemCode',
+      key:'SystemCode',
       align:'center',
     },
     {
-      title: '定时器名称',
-      dataIndex: 'TimerFileName',
-      key:'TimerFileName',
+      title: '设备厂家',
+      dataIndex: 'ManufacturerName',
+      key:'ManufacturerName',
       align:'center',
     },
     {
-      title: '定时器文件名称',
-      dataIndex: 'TimerFileName',
-      key:'TimerFileName',
+      title: '系统名称',
+      dataIndex: 'SystemName',
+      key:'SystemName',
+      align:'center',
+    },
+    {
+      title: '系统型号',
+      dataIndex: 'SystemModel',
+      key:'SystemModel',
+      align:'center',
+    },
+    {
+      title: '监测类别',
+      dataIndex: 'MonitoringType',
+      key:'MonitoringType',
       align:'center',
     },
     {
       title: '状态',
-      dataIndex: 'TimerStatus',
-      key:'TimerStatus', 
+      dataIndex: 'Status',
+      key:'Status', 
       align:'center',
       render: (text, record) => {
         if (text === 1) {
@@ -138,13 +165,6 @@ const Index = (props) => {
         }
       },
     },
-    {
-      title: '功能描述',
-      dataIndex: 'TimerRemark',
-      key:'TimerRemark',
-      align:'center',
-    },
-    
     {
       title: <span>操作</span>,
       dataIndex: 'x',
@@ -173,6 +193,7 @@ const Index = (props) => {
     try {
       form2.setFieldsValue({
         ...record,
+        MonitoringType:record.MonitoringTypeID
       })
 
     } catch (errInfo) {
@@ -181,7 +202,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.delManufacturer({ID:record.ID},()=>{
+    props.delSystemModel({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -202,7 +223,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getManufacturerList({
+      props.getSystemModelList({
         ...values,
       })
     } catch (errorInfo) {
@@ -213,14 +234,14 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addManufacturer({
+      type==='add'? props.addSystemModel({
         ...values,
       },()=>{
         setFromVisible(false)
         onFinish()
       })
       :
-     props.editManufacturer({
+     props.editSystemModel({
         ...values,
       },()=>{
         setFromVisible(false)
@@ -238,16 +259,58 @@ const Index = (props) => {
   //   props.getProjectInfoList({...values,PageIndex,PageSize})
   // }
   const searchComponents = () =>{
-     return  <Form
+    return  <Form
     form={form}
     name="advanced_search"
-    className={styles['ant-advanced-search-form']}
-  >  
-      <Row  align='middle'>
-     <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
+    initialValues={{
+      Status:1
+    }}
+    className={styles["ant-advanced-search-form"]}
+    onFinish={onFinish}
+  >   
+      <Row>
+        <Form.Item label="设备厂家" name="ManufacturerID" >
+             <Select placeholder='请选择设备厂家' allowClear style={{width:200}}>
+                {
+               manufacturerList[0]&&manufacturerList.map(item => {
+                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+                  })
+                } 
+              </Select>
+      </Form.Item>
+      <Form.Item label="系统名称" name="SystemName" style={{margin:'0 16px'}}  >
+            <Input placeholder="请输入系统名称" style={{width:200}} allowClear/>
+      </Form.Item>
+      <Form.Item label="系统型号" name="SystemModel" >
+        <Input placeholder='请输入系统型号' style={{width:200}} allowClear/>
+
+      </Form.Item>
+      </Row>
+      <Row>
+      <Form.Item label="监测类型" name="MonitoringType"  >
+             <Select placeholder='请选择监测类型' allowClear style={{width:200}}>
+                 {
+                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                  })
+                }   
+              </Select>
+      </Form.Item>
+      <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}} >
+           <Radio.Group>
+             <Radio value={1}>启用</Radio>
+             <Radio value={2}>停用</Radio>
+         </Radio.Group>
+      </Form.Item>
+      <Form.Item>
+      <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
+          查询
+     </Button>
+     <Button   onClick={()=>{ add()}} >
           添加
      </Button>
-      </Row>   
+     </Form.Item>
+     </Row>
      </Form>
   }
   return (
@@ -270,7 +333,7 @@ const Index = (props) => {
    </BreadcrumbWrapper>
    
    <Modal
-        title={type==='add'? '添加定时器':'编辑定时器'}
+        title={type==='add'? '添加':'编辑'}
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
@@ -283,7 +346,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        TimerStatus:1
+        Status:1
       }}
     >
       <Row>
@@ -295,34 +358,54 @@ const Index = (props) => {
       </Row>
       <Row>  
         <Col span={24}>
-        <Form.Item hidden={type==='add'}  label="编号" name="Sort" >
+        <Form.Item hidden  label="编号" name="SystemCode" >
         <InputNumber placeholder='请输入编号' />
       </Form.Item>
       </Col>
       </Row>
       <Row>
-        <Col span={24}>
-        <Form.Item label="设备厂家" name="TimerName" rules={[  { required: true, message: '请输入设备厂家'  }]} >
-              {
-               manufacturerList.map(item => {
-                    return <Option key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>
+        <Col span={12}>
+        <Form.Item label="设备厂家" name="ManufacturerID" rules={[  { required: true, message: '请输入设备厂家'  }]} >
+             <Select placeholder='请选择设备厂家' allowClear>
+                {
+               manufacturerList[0]&&manufacturerList.map(item => {
+                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
                   })
-                }
+                } 
+              </Select>
       </Form.Item>
       </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-        <Form.Item label="简称" name="TimerFileName"  rules={[  { required: true, message: '请输入简称'  }]}>
-        <Input placeholder='请输入简称'/>
-
+      <Col span={12}>
+        <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请输入系统名称'  }]} >
+            <Input placeholder="请输入系统名称" allowClear/>
       </Form.Item>
       </Col>
       </Row>
 
+
       <Row>
-        <Col span={24}>
-        <Form.Item label="状态" name="TimerStatus" >
+      <Col span={12}>
+        <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true, message: '请输入系统型号'  }]}>
+        <Input placeholder='请输入系统型号' allowClear/>
+
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item label="监测类型" name="MonitoringType" rules={[  { required: true, message: '请选择监测类型'  }]} >
+             <Select placeholder='请选择监测类型' allowClear>
+                 {
+                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                  })
+                }   
+              </Select>
+      </Form.Item>
+      
+      </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+        <Form.Item label="状态" name="Status" >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
              <Radio value={2}>停用</Radio>

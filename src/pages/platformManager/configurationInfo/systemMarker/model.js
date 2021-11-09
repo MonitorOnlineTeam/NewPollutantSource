@@ -18,9 +18,9 @@ export default Model.extend({
     manufacturerList:[]
   },
   effects: {
-    *getManufacturerList({ payload,callback }, { call, put, update }) { //列表
+    *getSystemModelList({ payload,callback }, { call, put, update }) { //列表
       yield update({ tableLoading:true})
-      const result = yield call(services.GetManufacturerList, payload);
+      const result = yield call(services.GetSystemModelList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
@@ -32,8 +32,8 @@ export default Model.extend({
         yield update({ tableLoading:false})
       }
     },
-    *addManufacturer({ payload,callback }, { call, put, update }) { //添加
-      const result = yield call(services.AddManufacturer, payload);
+    *addSystemModel({ payload,callback }, { call, put, update }) { //添加
+      const result = yield call(services.AddSystemModel, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -41,8 +41,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-    *editManufacturer({ payload,callback }, { call, put, update }) { //修改
-      const result = yield call(services.EditManufacturer, payload);
+    *editSystemModel({ payload,callback }, { call, put, update }) { //修改
+      const result = yield call(services.EditSystemModel, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -50,8 +50,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-    *delManufacturer({ payload,callback }, { call, put, update }) { //删除
-      const result = yield call(services.DelManufacturer, payload);
+    *delSystemModel({ payload,callback }, { call, put, update }) { //删除
+      const result = yield call(services.DelSystemModel, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -59,20 +59,18 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    getMonitoringTypeList({ payload,callback }, { call, put, update }) { //获取监测类别
+    *getMonitoringTypeList({ payload,callback }, { call, put, update }) { //获取监测类别
       const result = yield call(services.GetMonitoringTypeList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        yield update({ monitoringTypeList:result.Data})
+        yield update({ monitoringTypeList:result.Datas})
       }else{
         message.error(result.Message)
       }
     },
-     getManufacturerList({ payload,callback }, { call, put, update }) { //获取厂商列表
+    *getManufacturerList({ payload,callback }, { call, put, update }) { //获取厂商列表
       const result = yield call(services.GetManufacturerList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        yield update({ manufacturerList:result.Data})
+        yield update({ manufacturerList:result.Datas})
       }else{
         message.error(result.Message)
       }

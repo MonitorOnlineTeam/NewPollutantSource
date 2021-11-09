@@ -1,42 +1,35 @@
 import { post, get, getNew } from '@/utils/request';
 
-// //设备厂商 列表
-// export async function GetManufacturerList(params) {
-//   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);
-//   return result;
-// }
-//设备厂商 添加
-export async function AddManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddManufacturer',params, null);
+// //系统型号 列表
+export async function GetSystemModelList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList',params, null);
+  return result;
+}
+//系统型号 添加
+export async function AddSystemModel(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddSystemModel',params, null);
   return result;
 }
 
-// 设备厂商 修改
-export async function EditManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditManufacturer',params, null);
+// 系统型号 修改
+export async function EditSystemModel(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditSystemModel',params, null);
   return result;
 }
  
-// 设备厂商  删除
-export async function DelManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelManufacturer',params, null);
+// 系统型号  删除
+export async function DelSystemModel(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelSystemModel',params, null);
   return result;
 }
-// 设备厂商  删除
-export async function DelManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelManufacturer',params, null);
-  return result;
-}
-// 设备厂商 获取监测类别
+// 系统型号 获取监测类别
 export async function GetMonitoringTypeList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList',params, null);
   return result;
 }
-// 设备厂商 获取设备厂商列表
+// 系统型号 获取设备厂商列表
 export async function GetManufacturerList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);
   return result;
 }
-
-
 

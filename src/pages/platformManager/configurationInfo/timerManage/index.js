@@ -112,8 +112,8 @@ const Index = (props) => {
     },
     {
       title: '定时器名称',
-      dataIndex: 'TimerFileName',
-      key:'TimerFileName',
+      dataIndex: 'TimerName',
+      key:'TimerName',
       align:'center',
     },
     {
