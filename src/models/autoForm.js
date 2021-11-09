@@ -19,7 +19,7 @@ function getQueryParams(state, payload) {
     for (const key in searchForm) {
       let groupItem = {};
       // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
-      if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
+      if (searchForm[key] && searchForm[key].value && searchForm[key].value.length + '') {
         // 是否是moment对象
         const isMoment = moment.isMoment(searchForm[key].value);
         const isArrMoment =
