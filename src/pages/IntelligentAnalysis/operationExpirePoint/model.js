@@ -12,7 +12,7 @@ export default Model.extend({
   state: {
     totalDatas:{},
     tableLoading:false,
-    checkName:'0~7日'
+    checkName:''
   },
   effects: {
     *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计

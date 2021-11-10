@@ -68,5 +68,15 @@ export default Model.extend({
         message.warning(response.Message);
       }
     },
+    *exportProjectPointList({ callback,payload }, { call, put, update, select }) { //导出 运维信息监测点
+      const response = yield call(services.ExportProjectPointList, { ...payload });
+      if (response.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${response.Datas}`);
+      } else {
+        message.warning(response.Message);
+      }
+    },
+    
   },
 })

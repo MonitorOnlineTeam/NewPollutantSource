@@ -80,7 +80,12 @@ const Index = (props) => {
 
   const getOperationExpirePointList = (value) =>{
     props.getOperationExpirePointList({PollutantType:value},(res)=>{
-      setTableDatas(res.notExpired7List)
+      setTableDatas(
+        [...res.overdue14List,...res.overdue7List,...res.notExpired7List,...res.notExpired14List,...res.notExpired30List,
+          ...res.notExpired30List,...res.notExpired60List
+        ]
+        )
+      
     })
   }
 
@@ -202,18 +207,17 @@ const Index = (props) => {
           },
           itemStyle:{
             normal:{
-              color:(params)=>{
-               return  params.name == checkName ? '#ffa940' : '#64b0fd'
-              }
+              // color:(params)=>{
+              //  return  params.name == checkName ? '#ffa940' : '#64b0fd'
+              // }
+              color:'#64b0fd'
             }
           }
         }
     ]
 };
   }
- 
- const exports = () =>{
-   const  codeList = {
+  const  codeList = {
     '过期15~30日':"overdue30List",
     '过期8~14日':"overdue14List",
     '过期7日内':"overdue7List",
@@ -231,6 +235,8 @@ const Index = (props) => {
     '15~30日':"15~30日内运维到期", 
     '31~60日':"31~60日内运维到期"
    }
+ const exports = () =>{
+
    props.exportOperationExpirePointList({Title:`${titleList[checkName]}${pollutantType==1?'废水':pollutantType==2? '废气':'全部'}监测点列表`,Code:codeList[checkName]})
  }
 
@@ -241,7 +247,7 @@ const Index = (props) => {
   };
 
   const  onChartClick = (e)=>{
-    // props.updateState({checkName:e.name})
+    props.updateState({checkName:e.name})
    const dataObj = {
     '过期15~30日':totalDatas.overdue30List,
     '过期8~14日':totalDatas.overdue14List,
@@ -276,8 +282,11 @@ const Index = (props) => {
            </Button>  
           </Form.Item>
       </Row>  
-
-
+      <Row>
+        <span style={{color:'#f5222d'}}>
+        运维监测点到期后，系统将停止自动派发工单，关闭手工申请工单功能。对于续签项目请及时续签,然后将运营信息维护至平台。
+        </span>
+         </Row>  
      </Form>
   }
 
@@ -297,11 +306,15 @@ const Index = (props) => {
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
      { tableLoading? <div style={{paddingBottom:100}}><PageLoading /></div>: echartsComponents}
+        <div style={{color:'#f5222d',paddingBottom:8}}>
+        {titleList[checkName]}运维到期监测点列表
+        </div>
         <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={columns}
+        scroll={{ y: 'calc(100vh - 670px)' }}
       />  
    </Card>
    </BreadcrumbWrapper>

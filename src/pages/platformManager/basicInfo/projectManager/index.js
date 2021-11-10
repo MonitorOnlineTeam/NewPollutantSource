@@ -33,7 +33,8 @@ const dvaPropsData =  ({ loading,projectManager }) => ({
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
-  exportPointLoading: loading.effects[`${namespace}/getParametersInfo`],
+  exportPointLoading: loading.effects[`${namespace}/exportProjectPointList`],
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -80,6 +81,12 @@ const  dvaDispatch = (dispatch) => {
     exportProjectInfoList:(payload)=>{ //导出
       dispatch({
         type: `${namespace}/exportProjectInfoList`, 
+        payload:payload,
+      }) 
+    },
+    exportProjectPointList:(payload)=>{ //导出 运维信息监测点
+      dispatch({
+        type: `${namespace}/exportProjectPointList`, 
         payload:payload,
       }) 
     },
@@ -261,8 +268,15 @@ const Index = (props) => {
   };
 
 
+  const [ID,setID] = useState();
+  const [ProjectCode,setProjectCode] = useState();
+  const [ProjectName,setProjectName] = useState();
+
   const operaInfo = (record) => {
    setTableVisible(true)
+   setID(record.ID)
+   setProjectCode(record.ProjectCode)
+   setProjectName(record.ProjectName)
    props.getProjectPointList({ID:record.ID,ProjectCode:record.ProjectCode})
   };
   
@@ -289,8 +303,10 @@ const Index = (props) => {
     })
  };
  
- const pointExports = () => {
-
+ const pointExports = () => { //监测点信息  导出
+  props.exportProjectPointList({
+    ID:ID,ProjectCode:ProjectCode
+  })
 };
   const onFinish  = async () =>{  //查询
       
@@ -317,7 +333,7 @@ const Index = (props) => {
       const values = await form2.validateFields();//触发校验
       props.addOrUpdateProjectInfo({
         ...values,
-        BeginTime:values.BeginTime&&moment(values.BegTime).format('YYYY-MM-DD 00:00:00'),
+        BeginTime:values.BeginTime&&moment(values.BeginTime).format('YYYY-MM-DD 00:00:00'),
         EndTime:values.EndTime&&moment(values.EndTime).format('YYYY-MM-DD 23:59:59'),
         CreateUserID:type==='add'? JSON.parse(Cookie.get('currentUser')).UserId : values.CreateUserID,
       },()=>{
@@ -526,7 +542,7 @@ const Index = (props) => {
       </Modal>
 
       <Modal
-        title='运维监测点信息'
+        title={ `${ProjectName} - ${ProjectCode}`}
         visible={tableVisible}
         onCancel={()=>{setTableVisible(false)}}
         footer={null}
