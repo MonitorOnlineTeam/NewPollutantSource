@@ -460,6 +460,22 @@ export default {
                     },
                   ]
                 },
+                { //资产故管理
+                  name: 'assetManage',
+                  path: '/platformconfig/assetManage',
+                  routes: [
+                    {
+                      path: '/platformconfig/assetManage',
+                      redirect: '/platformconfig/assetManage/deviceInfo',
+                    },
+                    {
+                      name: 'deviceInfo',//设备管理
+                      path: '/platformconfig/assetManage/deviceInfo',
+                      component: './platformManager/assetManage/deviceInfo',
+                    },
+                  ]
+                },
+                
                 {
                   // 设备管理
                   name: 'equipmentManage',

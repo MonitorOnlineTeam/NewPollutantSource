@@ -127,7 +127,7 @@ class SdlCascader extends Component {
         showSearch={(inputValue, path) => {
           return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
         }}
-        hangeOnSelect={onSelect==='是'?true : false }
+        changeOnSelect={onSelect==='是'?true : false }
       />
     );
   }

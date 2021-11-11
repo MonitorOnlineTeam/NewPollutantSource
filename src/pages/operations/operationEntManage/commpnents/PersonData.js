@@ -531,6 +531,7 @@ export default class PersonData extends Component {
       </div>
     );
     return (
+      <>
         <Card
           bordered={false}
           title={
@@ -586,7 +587,6 @@ export default class PersonData extends Component {
             </>
           }
         >
-          <>
 
             <SdlTable
               rowKey={(record, index) => `complete${index}`}
@@ -607,7 +607,11 @@ export default class PersonData extends Component {
                 pageSizeOptions: ['10', '20', '30', '40', '100'],
               }}
             />
-       <Modal
+            
+        </Card>
+
+
+        <Modal
         title={this.state.type==='edit'? '编辑运维人员':'添加运维人员'}
         visible={this.state.visible}
         onOk={this.onFinish}
@@ -660,7 +664,7 @@ export default class PersonData extends Component {
       </Col>
       <Col span={12}>
       <Form.Item  label="手机号"  >
-      {getFieldDecorator('Phone', {   rules: [{required: true,  message: '请输入手机号！'}],   })( <Input placeholder="请输入手机号" />)}
+      {getFieldDecorator('Phone', {   rules: [{ pattern:/^1[3|4|5|7|8][0-9]\d{8}$/ , message: '请输入正确的手机号！'},{required: true, message: '请输入手机号！'}],   })( <Input placeholder="请输入手机号" />)}
       </Form.Item>
       </Col>
       </Row>
@@ -902,13 +906,10 @@ export default class PersonData extends Component {
       </Form.Item> */}
     </Form>
       </Modal>
-
-
-      <Modal visible={this.state.previewVisible} footer={null} onCancel={()=>{this.setState({previewVisible:false})}}>
-          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        <Modal  zIndex={1100} visible={this.state.previewVisible} footer={null} onCancel={()=>{this.setState({previewVisible:false})}}>
+          <img alt="photo" style={{ width: '100%' }} src={previewImage} />
         </Modal>
-          </>
-        </Card>
+        </>
     );
   }
 }

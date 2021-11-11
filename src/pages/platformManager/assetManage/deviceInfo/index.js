@@ -1,10 +1,10 @@
 /**
- * 功  能：系统型号
+ * 功  能：设备信息
  * 创建人：贾安波
- * 创建时间：2021.11
+ * 创建时间：2021.11.11
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -20,20 +20,21 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'systemMarker'
+const namespace = 'deviceInfo'
 
 
 
 
-const dvaPropsData =  ({ loading,systemMarker }) => ({
-  tableDatas:systemMarker.tableDatas,
-  pointDatas:systemMarker.pointDatas,
-  tableLoading:systemMarker.tableLoading,
-  tableTotal:systemMarker.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addSystemModel`],
-  loadingEditConfirm: loading.effects[`${namespace}/editSystemModel`],
-  monitoringTypeList:systemMarker.monitoringTypeList,
-  manufacturerList:systemMarker.manufacturerList,
+const dvaPropsData =  ({ loading,deviceInfo }) => ({
+  tableDatas:deviceInfo.tableDatas,
+  pointDatas:deviceInfo.pointDatas,
+  tableLoading:deviceInfo.tableLoading,
+  tableTotal:deviceInfo.tableTotal,
+  loadingAddConfirm: loading.effects[`${namespace}/addEquipmentInfo`],
+  loadingEditConfirm: loading.effects[`${namespace}/editEquipmentInfo`],
+  monitoringTypeList:deviceInfo.monitoringTypeList,
+  manufacturerList:deviceInfo.manufacturerList,
+  pollutantTypeList:deviceInfo.pollutantTypeList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
 })
 
@@ -45,31 +46,31 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getSystemModelList:(payload)=>{ //列表
+    getEquipmentInfoList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getSystemModelList`,
+        type: `${namespace}/getEquipmentInfoList`,
         payload:payload,
       })
     },
-    addSystemModel : (payload,callback) =>{ // 添加
+    addEquipmentInfo : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addSystemModel`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editSystemModel : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editSystemModel`,
+        type: `${namespace}/addEquipmentInfo`,
         payload:payload,
         callback:callback
       })
       
     },
-    delSystemModel:(payload,callback)=>{ //删除
+    editEquipmentInfo : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/delSystemModel`, 
+        type: `${namespace}/editEquipmentInfo`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delEquipmentInfo:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delEquipmentInfo`, 
         payload:payload,
         callback:callback
       }) 
@@ -84,6 +85,13 @@ const  dvaDispatch = (dispatch) => {
     getMonitoringTypeList:(payload,callback)=>{ //监测类别
       dispatch({
         type: `${namespace}/getMonitoringTypeList`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    getPollutantById:(payload,callback)=>{ //监测类型
+      dispatch({
+        type: `${namespace}/getPollutantById`, 
         payload:payload,
         callback:callback
       }) 
@@ -113,7 +121,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
   useEffect(() => {
     onFinish();
     props.getManufacturerList({})
@@ -202,7 +210,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.delSystemModel({ID:record.ID},()=>{
+    props.delEquipmentInfo({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -223,7 +231,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getSystemModelList({
+      props.getEquipmentInfoList({
         ...values,
       })
     } catch (errorInfo) {
@@ -234,14 +242,14 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addSystemModel({
+      type==='add'? props.addEquipmentInfo({
         ...values,
       },()=>{
         setFromVisible(false)
         onFinish()
       })
       :
-     props.editSystemModel({
+     props.editEquipmentInfo({
         ...values,
       },()=>{
         setFromVisible(false)
@@ -287,8 +295,8 @@ const Index = (props) => {
       </Form.Item>
       </Row>
       <Row>
-      <Form.Item label="监测类别" name="MonitoringType"  >
-             <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
+      <Form.Item label="监测类型" name="MonitoringType"  >
+             <Select placeholder='请选择监测类型' allowClear style={{width:200}}>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
                     return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -313,9 +321,46 @@ const Index = (props) => {
      </Row>
      </Form>
   }
+  const dig = (path = '0', level = 3)=> {
+    const list = [];
+    for (let i = 0; i < 10; i += 1) {
+      const key = `${path}-${i}`;
+      const treeNode = {
+        title: key,
+        key,
+      };
+  
+      if (level > 0) {
+        treeNode.children = dig(key, level - 1);
+      }
+  
+      list.push(treeNode);
+    }
+    return list;
+  }
   return (
-    <div  className={styles.systemMarkerSty}>
-    <BreadcrumbWrapper>
+    <div  className={styles.deviceInfoSty}>
+
+    <Drawer
+          // title="导航菜单"
+          placement={'left'}
+          closable={false}
+          // onClose={this.onClose}
+          visible={true}
+          width={320}
+          mask={false}
+          keyboard={false}
+          zIndex={1}
+          // getContainer={(Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body'}
+          bodyStyle={{ padding: '18px 8px' }}
+          style={{
+            marginTop: 64,
+          }}
+        >
+
+    <Tree   treeData={dig()} height={233} defaultExpandAll />
+    </Drawer>
+    <BreadcrumbWrapper style={{marginLeft:320 }}>
     <Card title={searchComponents()}>
       <SdlTable
         loading = {tableLoading}
@@ -331,7 +376,6 @@ const Index = (props) => {
       />
    </Card>
    </BreadcrumbWrapper>
-   
    <Modal
         title={type==='add'? '添加':'编辑'}
         visible={fromVisible}
@@ -391,8 +435,8 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="监测类别" name="MonitoringType" rules={[  { required: true, message: '请选择监测类别'  }]} >
-             <Select placeholder='请选择监测类别' allowClear>
+        <Form.Item label="监测类型" name="MonitoringType" rules={[  { required: true, message: '请选择监测类型'  }]} >
+             <Select placeholder='请选择监测类型' allowClear>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
                     return <Option key={item.Code} value={item.Code}>{item.Name}</Option>

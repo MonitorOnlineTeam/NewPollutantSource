@@ -421,7 +421,15 @@ export default Model.extend({
         message.error(result.Message);
       }
     },
-
+    *getFormDatas({ payload,callback }, { call, select, update, put }) { //特殊需求 列表用的正常接口 回显用的autoForm接口
+      const state = yield select(state => state.autoForm);
+      const result = yield call(services.getFormData, { ...payload });
+      if (result.IsSuccess && result.Datas.length) {
+        callback(result.Datas[0])
+      } else {
+        message.error(result.Message);
+      }
+    },
     // 获取详情页面配置
     *getDetailsConfigInfo({ payload }, { call, select, update, put }) {
       const state = yield select(state => state.autoForm);
@@ -488,7 +496,25 @@ export default Model.extend({
         });
       }
     },
-
+    *getAttachmentLists({ payload,callback }, { call, update }) { //特殊需求 列表用的正常接口 回显用的autoForm接口
+      if (payload.FileUuid && payload.FileUuid !== 'null') {
+        const result = yield call(services.getAttachmentList, { ...payload });
+        if (result.IsSuccess) {
+          let fileList = [];
+          fileList = result.Datas.map((item, index) => ({
+            uid: item.Guid,
+            name: item.FileName,
+            status: 'done',
+            url: `${item.Url}`,
+          }));
+          callback(fileList)
+        }
+      } else {
+        yield update({
+          fileList: [],
+        });
+      }
+    },
     // 文件上传
     *fileUpload({ payload }, { call, update }) {
       const result = yield call(services.exportTemplet, payload);
