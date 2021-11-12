@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, Upload, Button, Input, DatePicker } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, Upload, Button, Input, DatePicker, Divider } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
@@ -11,7 +11,7 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
-import { UploadOutlined } from '@ant-design/icons'
+import ImportData from '@/pages/IntelligentAnalysis/CO2Emissions/components/ImportData'
 
 const industry = INDUSTRYS.cement;
 const { Option } = Select;
@@ -117,7 +117,7 @@ class index extends Component {
           IndustryCode: industry,
           Type: FossilType,
           CalType: 'w-1',
-          Data: { '消耗量': AnnualConsumption || 0, '低位发热量': LowFever || 0, '单位热值含碳量': UnitCarbonContent || 0, '碳氧化率': CO2OxidationRate || 0 }
+          Data: { '消耗量': AnnualConsumption || 0, '低位发热量': LowFever || 0, '含碳量': UnitCarbonContent || 0, '碳氧化率': CO2OxidationRate || 0 }
         },
         callback: (res) => {
           console.log('res=', res)
@@ -225,8 +225,6 @@ class index extends Component {
     }
     console.log('currentTypeData=', currentTypeData)
 
-
-
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -251,13 +249,7 @@ class index extends Component {
               })
             }}
             appendHandleButtons={(keys, rows) => {
-              return (
-                <Button type="primary" onClick={() => {
-                  this.setState({
-                    importVisible: true,
-                  })
-                }}>上传</Button>
-              );
+              return <ImportData />;
             }}
             footer={() => <div className="">排放量合计：{count.toFixed(2)}</div>}
           />
