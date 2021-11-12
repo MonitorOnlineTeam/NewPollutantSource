@@ -9,7 +9,8 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import Debounce from 'lodash.debounce';
 
 const industry = INDUSTRYS.cement;
 const { Option } = Select;
@@ -45,13 +46,22 @@ class index extends PureComponent {
   }
 
   componentDidMount() {
+  }
+
+  // 根据企业和时间获取种类
+  getCO2EnergyType = () => {
+    let values = this.formRef.current.getFieldsValue();
+    const { EntCode, MonitorTime } = values;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2EnergyType',
       payload: {
         IndustryCode: industry,
-        SelectType: 'T'
+        EntCode: EntCode,
+        SelectType: 'T',
+        Time: moment(MonitorTime).format("YYYY-MM-01 00:00:00"),
       },
     })
+    this.countEmissions();
   }
 
 
@@ -75,31 +85,87 @@ class index extends PureComponent {
   countEmissions = () => {
     // 二氧化碳排放总量 = 单位熟料二氧化碳排放量 × 熟料实际生产量
     let values = this.formRef.current.getFieldsValue();
-    let { FtCo2 = 0, PtCo2 = 0 } = values;
-    let count = FtCo2 * PtCo2;
-    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
+    let { EntCode, MonitorTime, FtCo2 = 0, PtCo2 = 0 } = values;
+
+    if (EntCode && MonitorTime) {
+      this.props.dispatch({
+        type: 'CO2Emissions/countEmissions',
+        payload: {
+          EntCode: EntCode,
+          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
+          IndustryCode: industry,
+          CalType: 'w-4',
+          Data: { '单位熟料二氧化碳排放量': FtCo2 || 0, '熟料实际生产量': PtCo2 || 0 }
+        },
+        callback: (res) => {
+          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
+        }
+      })
+    }
   }
 
-  // 计算单位熟料二氧化碳排放量
+  // // 计算单位熟料二氧化碳排放量
+  // countSLCO2Emissions = () => {
+  //   // 包含：单位熟料二氧化碳排放量 = (氧化钙的质量分数 × 0.785 + 氧化镁的质量分数 × 1.092) × 生料中石灰石的含量 * 1 ÷ (1 - 生料烧失量)
+  //   // 不包含：单位熟料二氧化碳排放量 = (氧化钙的质量分数 × 0.785 + 氧化镁的质量分数 × 1.092) × 1.01
+  //   let values = this.formRef.current.getFieldsValue();
+  //   let { CaO = 0, MgO = 0, Limestone = 0, Loss = 0 } = values;
+  //   let WhetherT = this.state.WhetherT;
+  //   if (WhetherT === 1) {
+  //     // 包含
+  //     let value1 = (CaO * 0.785 + MgO * 1.092) * Limestone * 1;
+  //     let value2 = 1 - Loss;
+  //     let count = value2 ? value1 / value2 : 0;
+  //     this.formRef.current.setFieldsValue({ 'FtCo2': count.toFixed(2) });
+  //   } else {
+  //     // 不包含
+  //     let count = (CaO * 0.785 + MgO * 1.092) * Limestone * 1.01;
+  //     this.formRef.current.setFieldsValue({ 'FtCo2': count.toFixed(2) });
+  //   }
+  //   this.countEmissions();
+  // }
+
   countSLCO2Emissions = () => {
-    // 单位熟料二氧化碳排放量 = (氧化钙的质量分数 × 0.785 + 氧化镁的质量分数 × 1.092) × 生料中石灰石的含量 * 1 ÷ (1 - 生料烧失量)
-    // 单位熟料二氧化碳排放量 = (氧化钙的质量分数 × 0.785 + 氧化镁的质量分数 × 1.092) × 1.01
+    // 包含：单位熟料二氧化碳排放量 = (氧化钙的质量分数 × 0.785 + 氧化镁的质量分数 × 1.092) × 生料中石灰石的含量 * 1 ÷ (1 - 生料烧失量)
+    // 不包含：单位熟料二氧化碳排放量 = (氧化钙的质量分数 × 0.785 + 氧化镁的质量分数 × 1.092) × 1.01
     let values = this.formRef.current.getFieldsValue();
-    let { CaO = 0, MgO = 0, Limestone = 0, Loss = 0 } = values;
+    let { EntCode, MonitorTime, CaO = 0, MgO = 0, Limestone = 0, Loss = 0 } = values;
+
+    let Data = {};
     let WhetherT = this.state.WhetherT;
     if (WhetherT === 1) {
       // 包含
-      let value1 = (CaO * 0.785 + MgO * 1.092) * Limestone * 1;
-      let value2 = 1 - Loss;
-      let count = value2 ? value1 / value2 : 0;
-      this.formRef.current.setFieldsValue({ 'FtCo2': count.toFixed(2) });
+      // let value1 = (CaO * 0.785 + MgO * 1.092) * Limestone * 1;
+      // let value2 = 1 - Loss;
+      // let count = value2 ? value1 / value2 : 0;
+      // this.formRef.current.setFieldsValue({ 'FtCo2': count.toFixed(2) });
+      Data = { '是否包含': 1, '氧化钙的质量分数': CaO, '氧化镁的质量分数': MgO, '生料中石灰石的含量': Limestone, '生料烧失量': Loss };
     } else {
       // 不包含
-      let count = (CaO * 0.785 + MgO * 1.092) * Limestone * 1.01;
-      this.formRef.current.setFieldsValue({ 'FtCo2': count.toFixed(2) });
+      // let count = (CaO * 0.785 + MgO * 1.092) * Limestone * 1.01;
+      // this.formRef.current.setFieldsValue({ 'FtCo2': count.toFixed(2) });
+      Data = { '是否包含': 0, '氧化钙的质量分数': CaO, '氧化镁的质量分数': MgO, };
     }
-    this.countEmissions();
+
+    if (EntCode && MonitorTime) {
+      this.props.dispatch({
+        type: 'CO2Emissions/countEmissions',
+        payload: {
+          EntCode: EntCode,
+          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
+          IndustryCode: industry,
+          CalType: 'w-3',
+          Data: Data
+        },
+        callback: (res) => {
+          this.formRef.current.setFieldsValue({ 'FtCo2': res.toFixed(2) });
+          this.countEmissions();
+        }
+      })
+    }
   }
+
+
 
   handleCancel = () => {
     this.setState({
@@ -170,18 +236,24 @@ class index extends PureComponent {
     if (WhetherT === 1) {
       // 包含
       return <>
-          <Form.Item
-            name="CaO"
-            label="氧化钙(CaO)的质量分数(%)"
-          >
-            <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写氧化钙(CaO)的质量分数(%)" />
-          </Form.Item>
-          <Form.Item
-            name="MgO"
-            label="氧化镁(MgO)的质量分数(%)"
-          >
-            <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写氧化镁(MgO)的质量分数(%)" />
-          </Form.Item>
+        <Form.Item
+          name="CaO"
+          label="氧化钙(CaO)的质量分数(%)"
+        >
+          <InputNumber style={{ width: '100%' }}
+            onChange={Debounce(() => this.countSLCO2Emissions(), maxWait)}
+            placeholder="请填写氧化钙(CaO)的质量分数(%)"
+          />
+        </Form.Item>
+        <Form.Item
+          name="MgO"
+          label="氧化镁(MgO)的质量分数(%)"
+        >
+          <InputNumber style={{ width: '100%' }}
+            onChange={Debounce(() => this.countSLCO2Emissions(), maxWait)}
+            placeholder="请填写氧化镁(MgO)的质量分数(%)"
+          />
+        </Form.Item>
         {/* <Col span={12}>
           <Form.Item
             name="LimestoneSource"
@@ -201,12 +273,15 @@ class index extends PureComponent {
             </Select>
           </Form.Item>
         </Col> */}
-          <Form.Item
-            name="Limestone"
-            label={`石灰石的含量(%)`}
-          >
-            <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写石灰石的含量(%)" />
-          </Form.Item>
+        <Form.Item
+          name="Limestone"
+          label={`石灰石的含量(%)`}
+        >
+          <InputNumber style={{ width: '100%' }}
+            onChange={Debounce(() => this.countSLCO2Emissions(), maxWait)}
+            placeholder="请填写石灰石的含量(%)"
+          />
+        </Form.Item>
         {/* <Col span={12}>
           <Form.Item
             name="LossSource"
@@ -226,13 +301,16 @@ class index extends PureComponent {
             </Select>
           </Form.Item>
         </Col> */}
-          <Form.Item
-            name="Loss"
-            label={`生料烧失量(%)`}
-          >
-            <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写生料烧失量" />
-          </Form.Item>
-</>
+        <Form.Item
+          name="Loss"
+          label={`生料烧失量(%)`}
+        >
+          <InputNumber style={{ width: '100%' }}
+            onChange={Debounce(() => this.countSLCO2Emissions(), maxWait)}
+            placeholder="请填写生料烧失量"
+          />
+        </Form.Item>
+      </>
     } else {
       // 不包含
       return <>
@@ -240,13 +318,19 @@ class index extends PureComponent {
           name="CaO"
           label="氧化钙(CaO)的质量分数(%)"
         >
-          <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写氧化钙(CaO)的质量分数(%)" />
+          <InputNumber style={{ width: '100%' }}
+            onChange={Debounce(() => this.countSLCO2Emissions(), maxWait)}
+            placeholder="请填写氧化钙(CaO)的质量分数(%)"
+          />
         </Form.Item>
         <Form.Item
           name="MgO"
           label="氧化镁(MgO)的质量分数(%)"
         >
-          <InputNumber style={{ width: '100%' }} onChange={this.countSLCO2Emissions} placeholder="请填写氧化镁(MgO)的质量分数(%)" />
+          <InputNumber style={{ width: '100%' }}
+            onChange={Debounce(() => this.countSLCO2Emissions(), maxWait)}
+            placeholder="请填写氧化镁(MgO)的质量分数(%)"
+          />
         </Form.Item>
       </>
     }
@@ -301,7 +385,7 @@ class index extends PureComponent {
                   label="企业"
                   rules={[{ required: true, message: '请选择企业!' }]}
                 >
-                  <Select placeholder="请选择企业">
+                  <Select placeholder="请选择企业" onChange={this.getCO2EnergyType}>
                     {
                       EntView.map(item => {
                         return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
@@ -347,7 +431,9 @@ class index extends PureComponent {
                   }
                   rules={[{ required: true, message: '请填写单位熟料二氧化碳排放量!' }]}
                 >
-                  <InputNumber style={{ width: 'calc(100% - 88px)' }} placeholder="请填写单位熟料二氧化碳排放量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: 'calc(100% - 88px)' }} placeholder="请填写单位熟料二氧化碳排放量"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
                 </Form.Item>
                 <Popover
                   title="计算单位熟料二氧化碳排放量"
@@ -363,7 +449,9 @@ class index extends PureComponent {
                   label="熟料实际生产量(t)"
                   rules={[{ required: true, message: '请填写熟料实际生产量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写熟料实际生产量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写熟料实际生产量"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>

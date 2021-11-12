@@ -9,7 +9,7 @@ export default Model.extend({
     cementCO2Sum: [],
   },
   effects: {
-    // 获取关注列表
+    // 获取缺省值码表
     *getCO2EnergyType({ payload, callback }, { call, put, update, select }) {
       const response = yield call(services.getCO2EnergyType, payload);
       if (response.IsSuccess) {
@@ -17,6 +17,9 @@ export default Model.extend({
           cementDictionaries: response.Datas
         })
       } else {
+        yield update({
+          cementDictionaries: {}
+        })
         message.error(response.Message)
       }
     },
@@ -27,6 +30,15 @@ export default Model.extend({
         yield update({
           cementCO2Sum: response.Datas
         })
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 计算排放量
+    *countEmissions({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.countEmissions, payload);
+      if (response.IsSuccess) {
+        callback && callback(response.Datas)
       } else {
         message.error(response.Message)
       }
