@@ -4,9 +4,9 @@
  * 创建时间：2021.11.11
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer    } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -17,6 +17,7 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+import PageLoading from '@/components/PageLoading'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -25,7 +26,7 @@ const namespace = 'deviceInfo'
 
 
 
-const dvaPropsData =  ({ loading,deviceInfo }) => ({
+const dvaPropsData =  ({ loading,deviceInfo,global }) => ({
   tableDatas:deviceInfo.tableDatas,
   pointDatas:deviceInfo.pointDatas,
   tableLoading:deviceInfo.tableLoading,
@@ -36,6 +37,11 @@ const dvaPropsData =  ({ loading,deviceInfo }) => ({
   manufacturerList:deviceInfo.manufacturerList,
   pollutantTypeList:deviceInfo.pollutantTypeList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  clientHeight: global.clientHeight,
+  loadingManufacturer: loading.effects[`${namespace}/getManufacturerList`],
+  loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
+  loadingAddEditPollutantById :loading.effects[`${namespace}/addEditPollutantById`] || false,
+  addEditPollutantTypeList:deviceInfo.addEditPollutantTypeList
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -89,11 +95,19 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       }) 
     },
-    getPollutantById:(payload,callback)=>{ //监测类型
+    getPollutantById:(payload)=>{ //监测类型
       dispatch({
         type: `${namespace}/getPollutantById`, 
         payload:payload,
-        callback:callback
+
+      }) 
+    },
+    
+    addEditPollutantById:(payload)=>{ //监测类型 添加 or 编辑
+      dispatch({
+        type: `${namespace}/addEditPollutantById`, 
+        payload:payload,
+
       }) 
     },
   }
@@ -119,20 +133,34 @@ const Index = (props) => {
   // const [pageIndex,setPageIndex] = useState(1)
   
   
-  const isEditing = (record) => record.key === editingKey;
+  const [deveiceName,setDeveiceName] = useState('')
   
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
+  const [ manufacturerId, setManufacturerId] = useState(undefined)
+
+  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList } = props; 
   useEffect(() => {
-    onFinish();
-    props.getManufacturerList({})
-    props.getMonitoringTypeList({})
+    props.getManufacturerList({},(data)=>{
+      if(data[0]){
+        setManufacturerId(data[0].ID)
+        setDeveiceName(data[0].ManufacturerName)
+      }
+    })
+    props.getMonitoringTypeList({})//监测类别
   },[]);
 
+  
+  useEffect(()=>{
+   
+    if(manufacturerId){
+      onFinish();
+    }
+
+  },[manufacturerId])
   const columns = [
     {
       title: '编号',
-      dataIndex: 'SystemCode',
-      key:'SystemCode',
+      dataIndex: 'EquipmentCode',
+      key:'EquipmentCode',
       align:'center',
     },
     {
@@ -142,21 +170,39 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '系统名称',
-      dataIndex: 'SystemName',
-      key:'SystemName',
+      title: '设备品牌',
+      dataIndex: 'EquipmentBrand',
+      key:'EquipmentBrand',
       align:'center',
     },
     {
-      title: '系统型号',
-      dataIndex: 'SystemModel',
-      key:'SystemModel',
+      title: '设备名称',
+      dataIndex: 'EquipmentName',
+      key:'EquipmentName',
+      align:'center',
+    },
+    {
+      title: '分析方法',
+      dataIndex: 'AnalyticalMethod',
+      key:'AnalyticalMethod',
+      align:'center',
+    },
+    {
+      title: '设备型号',
+      dataIndex: 'EquipmentType',
+      key:'EquipmentType',
+      align:'center',
+    },
+    {
+      title: '监测类型',
+      dataIndex: 'PollutantName',
+      key:'PollutantName',
       align:'center',
     },
     {
       title: '监测类别',
-      dataIndex: 'MonitoringType',
-      key:'MonitoringType',
+      dataIndex: 'PollutantTypeName',
+      key:'PollutantTypeName',
       align:'center',
     },
     {
@@ -193,15 +239,16 @@ const Index = (props) => {
     },
   ];
 
-
+ 
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
+
     form2.resetFields();
     try {
       form2.setFieldsValue({
         ...record,
-        MonitoringType:record.MonitoringTypeID.toString()
+        MonitoringType:record.MonitoringTypeID
       })
 
     } catch (errInfo) {
@@ -233,6 +280,7 @@ const Index = (props) => {
 
       props.getEquipmentInfoList({
         ...values,
+        ManufacturerId:manufacturerId
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -244,6 +292,7 @@ const Index = (props) => {
       const values = await form2.validateFields();//触发校验
       type==='add'? props.addEquipmentInfo({
         ...values,
+        ManufacturerId:manufacturerId
       },()=>{
         setFromVisible(false)
         onFinish()
@@ -251,6 +300,7 @@ const Index = (props) => {
       :
      props.editEquipmentInfo({
         ...values,
+        ManufacturerId:manufacturerId
       },()=>{
         setFromVisible(false)
         onFinish()
@@ -260,12 +310,24 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
+  const onSelect = async (selectedKeys,e) =>{
+    setManufacturerId(selectedKeys.toString())
+    setDeveiceName(e.node.titles)
+  }
+
   // const handleTableChange =   async (PageIndex, )=>{ //分页
   //   const values = await form.validateFields();
   //   setPageSize(PageSize)
   //   setPageIndex(PageIndex)
   //   props.getProjectInfoList({...values,PageIndex,PageSize})
   // }
+
+  const onValuesChange = (hangedValues, allValues)=>{
+    if(Object.keys(hangedValues).join() == 'PollutantType'){
+      props.getPollutantById({id:hangedValues.PollutantType})
+      form.setFieldsValue({PollutantCode:undefined})
+    }
+  }
   const searchComponents = () =>{
     return  <Form
     form={form}
@@ -275,34 +337,34 @@ const Index = (props) => {
     }}
     className={styles["ant-advanced-search-form"]}
     onFinish={onFinish}
-  >   
+    onValuesChange={onValuesChange}
+  >  
       <Row>
-        <Form.Item label="设备厂家" name="ManufacturerID" >
-             <Select placeholder='请选择设备厂家' allowClear style={{width:200}}>
-                {
-               manufacturerList[0]&&manufacturerList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
-                  })
-                } 
-              </Select>
+      <Form.Item label="设备名称" name="EquipmentName" style={{marginRight:16}}  >
+            <Input placeholder="请输入设备名称" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="系统名称" name="SystemName" style={{margin:'0 16px'}}  >
-            <Input placeholder="请输入系统名称" style={{width:200}} allowClear/>
-      </Form.Item>
-      <Form.Item label="系统型号" name="SystemModel" >
-        <Input placeholder='请输入系统型号' style={{width:200}} allowClear/>
-
-      </Form.Item>
-      </Row>
-      <Row>
-      <Form.Item label="监测类型" name="MonitoringType"  >
-             <Select placeholder='请选择监测类型' allowClear style={{width:200}}>
+      <Form.Item label="监测类别" name="PollutantType">
+      <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
                     return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
                   })
                 }   
               </Select>
+      </Form.Item>
+      </Row>
+      <Row>
+      <Form.Item label="监测类型" name="PollutantCode"  >
+              {loadingGetPollutantById? <Spin size='small' style={{width:200,textAlign:'left'}}/> 
+                :
+              <Select placeholder='请选择监测类型' allowClear style={{width:200}}>
+                 
+                 {
+                  pollutantTypeList[0]&&pollutantTypeList.map(item => {
+                    return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
+                  })
+                }  
+              </Select>}
       </Form.Item>
       <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}} >
        <Select placeholder='请选择状态' allowClear style={{width:200}}>
@@ -321,22 +383,32 @@ const Index = (props) => {
      </Row>
      </Form>
   }
-  const dig = (path = '0', level = 3)=> {
-    const list = [];
-    for (let i = 0; i < 10; i += 1) {
-      const key = `${path}-${i}`;
+  const treeDatas = ()=> {
+    const list = [{
+      title: '设备厂家',
+      key:'1',
+      icon:<CreditCardFilled style={{color:'#1890ff'}}/>,
+      children:[],
+      selectable:false
+    }];
+    for (let i = 0; i < manufacturerList.length; i += 1) {
+      const key = manufacturerList[i].ID;
       const treeNode = {
-        title: key,
+        title:<div style={{display:'inline-block'}}> {manufacturerList[i].ManufacturerName }</div>,
         key,
+        icon: <ProfileFilled  style={{color:'#1890ff'}}/>,
+        titles:manufacturerList[i].ManufacturerName
       };
   
-      if (level > 0) {
-        treeNode.children = dig(key, level - 1);
-      }
-  
-      list.push(treeNode);
+      list[0].children.push(treeNode);
     }
     return list;
+  }
+  const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时的监测类型请求
+    if(Object.keys(hangedValues).join() == 'PollutantType'){
+      props.addEditPollutantById({id:hangedValues.PollutantType})
+      form2.setFieldsValue({PollutantCode:undefined})
+    }
   }
   return (
     <div  className={styles.deviceInfoSty}>
@@ -357,10 +429,20 @@ const Index = (props) => {
             marginTop: 64,
           }}
         >
-
-    <Tree   treeData={dig()} height={233} defaultExpandAll />
+         
+         {loadingManufacturer?
+        <PageLoading />
+         :
+         <>
+        {manufacturerList.length? 
+          <Tree selectedKeys={[manufacturerId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
+          :
+        <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+        </>
+        }
+        
     </Drawer>
-    <BreadcrumbWrapper style={{marginLeft:320 }}>
+    <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
         loading = {tableLoading}
@@ -377,7 +459,7 @@ const Index = (props) => {
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={type==='add'? '添加':'编辑'}
+        title={`${type==='add'? '添加':'编辑'} - ${deveiceName}` }
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
@@ -392,7 +474,8 @@ const Index = (props) => {
       initialValues={{
         Status:1
       }}
-    >
+      onValuesChange={onAddEditValuesChange}
+    > 
       <Row>
         <Col span={24}>
       <Form.Item   name="ID" hidden>
@@ -400,43 +483,15 @@ const Index = (props) => {
       </Form.Item> 
       </Col>
       </Row>
-      <Row>  
-        <Col span={24}>
-        <Form.Item hidden  label="编号" name="SystemCode" >
-        <InputNumber placeholder='请输入编号' />
-      </Form.Item>
-      </Col>
-      </Row>
       <Row>
         <Col span={12}>
-        <Form.Item label="设备厂家" name="ManufacturerID" rules={[  { required: true, message: '请输入设备厂家'  }]} >
-             <Select placeholder='请选择设备厂家' allowClear>
-                {
-               manufacturerList[0]&&manufacturerList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
-                  })
-                } 
-              </Select>
+        <Form.Item label="设备名称" name="EquipmentName" rules={[  { required: true, message: '请输入设备名称'  }]} >
+          <Input placeholder="请输入设备名称"  allowClear/>
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请输入系统名称'  }]} >
-            <Input placeholder="请输入系统名称" allowClear/>
-      </Form.Item>
-      </Col>
-      </Row>
-
-
-      <Row>
-      <Col span={12}>
-        <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true, message: '请输入系统型号'  }]}>
-        <Input placeholder='请输入系统型号' allowClear/>
-
-      </Form.Item>
-      </Col>
-      <Col span={12}>
-        <Form.Item label="监测类型" name="MonitoringType" rules={[  { required: true, message: '请选择监测类型'  }]} >
-             <Select placeholder='请选择监测类型' allowClear>
+        <Form.Item label="监测类别" name="PollutantType" rules={[  { required: true, message: '请输入监测类别'  }]} >
+            <Select placeholder='请选择监测类别' allowClear >
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
                     return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -444,9 +499,45 @@ const Index = (props) => {
                 }   
               </Select>
       </Form.Item>
+      </Col>
+      </Row>
+
+
+      <Row>
+      <Col span={12}>
+        <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请输入监测类型'  }]}>
+              {loadingAddEditPollutantById? <Spin size='small' /> 
+                :
+              <Select placeholder='请选择监测类型' allowClear>
+                          {
+                   addEditPollutantTypeList[0]&&addEditPollutantTypeList.map(item => {
+                    return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
+                  })
+                }   
+              </Select>}
+      </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item label="设备品牌" name="EquipmentBrand" rules={[  { required: true, message: '请选择监测类型'  }]} >
+             <Input placeholder='请输入设备品牌' allowClear/>
+      </Form.Item>
       
       </Col>
       </Row>
+       <Row>
+       <Col span={12}>
+        <Form.Item label="设备型号" name="EquipmentType" rules={[  { required: true, message: '请输入设备型号'  }]} >
+             <Input placeholder='请输入设备型号' allowClear/>
+      </Form.Item>
+      
+      </Col>
+      <Col span={12}>
+        <Form.Item label="分析方法" name="AnalyticalMethod" rules={[  { required: true, message: '请输入分析方法'  }]} >
+             <Input placeholder='请输入分析方法' allowClear/>
+      </Form.Item>
+      
+      </Col>
+        </Row>
       <Row>
         <Col span={12}>
         <Form.Item label="状态" name="Status" >
@@ -457,8 +548,6 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       </Row>
-
-
      
     </Form>
       </Modal>
