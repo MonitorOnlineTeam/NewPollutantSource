@@ -1509,6 +1509,12 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
  const  outWorkOrderColumnPush = (col)=>{  //计划外 巡检工单
   if(dateCol&&dateCol[0]){
     col.push({
+      title: `${outTypeName}数`,
+      dataIndex: 'taskCount',
+      key:'taskCount',
+      align:'center',
+      fixed: 'left',
+    },{
       title: `${outTypeName}分布`,
       width:200, 
       align:'center',

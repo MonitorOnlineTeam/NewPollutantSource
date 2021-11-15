@@ -12,6 +12,29 @@ export default Model.extend({
   state: {
     totalDatas:{},
     tableLoading:false,
+    operationDataSource: [
+      {
+        key: '1',
+        name: '总数',
+        age: 32,
+        address: '12',
+        tags: 23,
+      },
+      {
+        key: '2',
+        name: '暂停运维',
+        age: 42,
+        address: '13',
+        tags: 23,
+      },
+      {
+        key: '3',
+        name: '结束运维',
+        age: 32,
+        address: 25,
+        tags: 56
+      },
+    ]
   },
   effects: {
     *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计

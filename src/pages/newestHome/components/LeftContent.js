@@ -16,7 +16,8 @@ import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
-import Content from '../components/Content'
+import styles from "../style.less"
+import CardHeader from '../components/CardHeader'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -25,6 +26,7 @@ const namespace = 'newestHome'
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
+  operationDataSource:newestHome.operationDataSource
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -47,26 +49,107 @@ const Index = (props) => {
 
 
 
-
   
   useEffect(() => {
 
   },[]);
 
+  const OperationColumns =  [
+    {
+      title: '统计类别',
+      dataIndex: 'name',
+      key: 'name',
+      align:'center',
+      width:61,
+    },
+    {
+      title: '运营企业',
+      dataIndex: 'age',
+      key: 'age',
+      align:'center',
+      width:61,
+    },
+    {
+      title: '排放口',
+      dataIndex: 'address',
+      key: 'address',
+      align:'center',
+      width:61,
+    },
+    {
+      title: '非排放口',
+      dataIndex: 'tags',
+      key: 'tags',
+      align:'center',
+      width:61,
+    },
+  ]
 
+  const operaOrderOption = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
+    grid: {
+      top:0,
+      left: 100,
+      right: 0,
+      bottom: 0,
+  },
+    xAxis: {
+        show:false,
+        type: 'value',
+        // boundaryGap: ,
+    },
+    
+    yAxis: {
+        type: 'category',
+        data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)'],
+        axisLine: { show: false},
+        axisTick: {show: false  },
+        axisLabel: {  textStyle: { color: '#fff'} },
+    },
+    series: [
+        {
+            name: '2011年',
+            type: 'bar',
+            data: [18203, 23489, 29034, 104970, 131744, 630230],
+            showBackground: true,
+            backgroundStyle: {
+              color: 'rgba(220, 220, 220, 0.8)'
+            },
+            itemStyle:{
+             normal:{
+               color:'#0000ff'
+             }
+            }
+        },
 
+                        
+    ]
+};
 
 
 
 
 
   return (
-    <div>
-         <div style={{padding:'20px 0 9px 20px'}}>
-          <span>运营信息统计</span>
-          <img style={{width:'100%'}} src='/title_bg2.png'/>
+    <div className={styles.leftContent}>
+         <div className={styles.pointSty}>
+           <CardHeader  title='运营信息统计'/>
+          <Table style={{padding:'16px 15px 0 0'}}  columns={OperationColumns} dataSource={props.operationDataSource} pagination={false}/>
          </div>
-         
+
+
+         <div className={styles.operaOrder}>
+           <CardHeader  title='近30日运维工单统计'/>
+           <ReactEcharts 
+              option={operaOrderOption}
+              style={{height:200,width:'100%'}}
+             />
+          </div>
         </div>
   );
 };

@@ -442,6 +442,9 @@ operationCompanyList=()=>{
         dataIndex: 'TaskStatus',
         key: 'TaskStatus',
         render: (text, record) => {
+          if (text === 11) {
+            return <span><Badge status="warning" text="待领取" /></span>;
+            }
           if (text === 1) {
             return <span><Badge status="default" text="待执行" /></span>;
           }
@@ -454,6 +457,7 @@ operationCompanyList=()=>{
           if (text === 10) {
           return <span><Badge status="error" text="系统关闭" /></span>;
           }
+   
         },
       },
       {
@@ -637,6 +641,7 @@ operationCompanyList=()=>{
                                   allowClear
                                   filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                               >
+                                  <Option key="11" value="11">待领取</Option>
                                   <Option key="1" value="1">待执行</Option>
                                   <Option key="2" value="2">进行中</Option>
                                   <Option key="3" value="3">已完成</Option>
