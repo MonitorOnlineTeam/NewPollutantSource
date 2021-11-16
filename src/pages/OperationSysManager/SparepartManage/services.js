@@ -47,5 +47,13 @@ export async function UpdateSpareParts(params) {
   return result;
 }
 
+/**
+ * 仓库管理
+ * 
+ */
+export async function GetStorehouse(params) {
+  const result =await get('/api/rest/PollutantSourceApi/SparepartManageApi/GetStorehouse', params, null);
+  return result;
+}
 
 

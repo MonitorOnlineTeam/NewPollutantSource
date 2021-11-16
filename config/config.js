@@ -473,6 +473,12 @@ export default {
                       path: '/platformconfig/assetManage/deviceInfo',
                       component: './platformManager/assetManage/deviceInfo',
                     },
+                    {
+                      name: 'spareParts',//备品备件 
+                      path: '/platformconfig/assetManage/spareParts/:configId',
+                      component: './OperationSysManager/SparepartManage',
+                    },
+                    
                   ]
                 },
                 

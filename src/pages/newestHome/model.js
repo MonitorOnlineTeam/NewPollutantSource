@@ -34,7 +34,8 @@ export default Model.extend({
         address: 25,
         tags: 56
       },
-    ]
+    ],
+    operaOrderData: [1823, 2348, 2903, 1049, 1317, 6302, 2302, 34234],
   },
   effects: {
     *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计

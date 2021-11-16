@@ -24,6 +24,8 @@ const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 @connect(({ SparepartManage, loading }) => ({
     sparePartsStationList: SparepartManage.sparePartsStationList,
+    storehouseList:SparepartManage.storehouseList
+
 }))
 
 @connect()
@@ -56,7 +58,7 @@ export default class UpdateSparepartManage extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { item, sparePartsStationList } = this.props;
+        const { item, sparePartsStationList,storehouseList } = this.props;
         let isExists = false;
         if (item.ID) {
             //有值是修改,状态改为true
@@ -81,7 +83,7 @@ export default class UpdateSparepartManage extends Component {
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
-                    <Row gutter={24}>
+                    <Row gutter={24} align='middle'>
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -95,13 +97,13 @@ export default class UpdateSparepartManage extends Component {
                                         },
                                     ],
                                 })(
-                                    <Input style={{ width: '90%' }} placeholder="请输入" />
+                                    <Input style={{ width: '100%' }} placeholder="请输入" />
 
                                 )}
                                 <Popover
                                     content={DepartInfo}
                                 >
-                                    <QuestionCircleTwoTone style={{ width: '10%' }} />
+                                    <QuestionCircleTwoTone style={{ width: '10%',position:'absolute',top:0 }} />
                                 </Popover>
                             </FormItem>
                         </Col>
@@ -155,7 +157,7 @@ export default class UpdateSparepartManage extends Component {
                                         },
                                     ],
                                 })(
-                                    <InputNumber min={0} />
+                                    <InputNumber style={{width:'100%'}} min={0}  placeholder='请输入'/>
                                 )}
                             </FormItem>
                         </Col>
@@ -218,7 +220,7 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                        {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
                                 label={'服务站'}>
@@ -235,9 +237,34 @@ export default class UpdateSparepartManage extends Component {
                                         placeholder="请选择"
                                     // onChange={this.pollutantChange}
                                     >
-                                        {
+                                         {
                                             sparePartsStationList.length !== 0 ? sparePartsStationList.map(item => <Option key={item.SparePartsStationCode}>{item.Name}</Option>) : null
-                                        }
+                                        } 
+                                        
+                                    </Select>
+                                )}
+                            </FormItem>
+                        </Col> */}
+                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                            <FormItem
+                                {...formItemLayout}
+                                label={'仓库名称'}>
+                                {getFieldDecorator('SparePartsStationCode', {
+                                    initialValue: isExists ? item.SparePartsStationCode : undefined,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择仓库名称!',
+                                        },
+                                    ],
+                                })(
+                                    <Select
+                                        placeholder="请选择"
+                                        allowClear
+                                    >
+                                         {
+                                            storehouseList[0]&&storehouseList.map(item => <Option key={item.SparePartsStationCode}>{item.Name}</Option>)
+                                        } 
                                     </Select>
                                 )}
                             </FormItem>
