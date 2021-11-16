@@ -90,9 +90,9 @@ class index extends PureComponent {
                             <DownloadOutlined style={{ fontSize: 20 }} />
                           </a>
                         </Tooltip>,
-                        <Tooltip title="预览">
-                          <FolderViewOutlined onClick={() => this.onFileView(item)} style={{ fontSize: 20 }} />
-                        </Tooltip>,
+                        // <Tooltip title="预览">
+                        //   <FolderViewOutlined onClick={() => this.onFileView(item)} style={{ fontSize: 20 }} />
+                        // </Tooltip>,
                       ]}
                     >
                       <Meta

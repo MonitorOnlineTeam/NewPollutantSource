@@ -3,6 +3,7 @@ import { Modal, Upload, Row, Col, message, Divider, Button, Select } from 'antd'
 import { UploadOutlined, DownloadOutlined } from '@ant-design/icons'
 import { connect } from 'dva';
 import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import styles from './ImportData.less'
 
 const industry = INDUSTRYS.cement;
 const { Option } = Select;
@@ -27,7 +28,7 @@ class ImportData extends PureComponent {
       return;
     }
     this.props.dispatch({
-      type: 'downloadTemp',
+      type: 'CO2Emissions/downloadTemp',
       payload: {
         EntCode: EntCode,
         IndustryCode: industry,
@@ -42,19 +43,22 @@ class ImportData extends PureComponent {
 
     const props = {
       name: 'file',
-      multiple: true,
+      accept: ".xls,.xlsx",
+      // fileList: [],
+      // multiple: true,
       // headers: {
       //   authorization: 'authorization-text',
       // },
-      action: '/api/rest/PollutantSourceApi/AutoFormDataApi/ImportDataExcel',
-      data: {
-        ConfigID: '',
-      },
+      action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportGHGExcel',
+      data: {},
       onChange: (info) => {
         if (info.file.status === 'done') {
+          console.log('success=', info)
+          this.props.onSuccess();
           message.success("导入成功");
         } else if (info.file.status === 'error') {
-          message.error('上传文件失败！')
+          console.log('error=', info)
+          message.error('上传文件失败！' + info.file.response.Message)
         }
       },
     };
@@ -62,7 +66,7 @@ class ImportData extends PureComponent {
     return (
       <>
         <Divider type="vertical" style={{ height: 32, marginRight: 18 }} />
-        <Upload {...props} style={{ marginLeft: 5 }} >
+        <Upload {...props} style={{ marginLeft: 5 }} className={styles.myUpload} >
           <Button type="primary">
             <UploadOutlined />
             导入
@@ -79,9 +83,7 @@ class ImportData extends PureComponent {
         <Modal
           title="下载导入模板"
           visible={downloadTempVisible}
-          onOk={() => {
-
-          }}
+          onOk={this.onDownloadTemp}
           onCancel={() => this.setState({ downloadTempVisible: false })}
         >
           <Select style={{ width: 300 }} placeholder="请选择企业" onChange={(value) => this.setState({ EntCode: value })}>

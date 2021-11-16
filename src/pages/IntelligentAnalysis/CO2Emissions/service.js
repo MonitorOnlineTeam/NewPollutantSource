@@ -18,3 +18,14 @@ export async function countEmissions(params) {
   return result;
 }
 
+// 下载导入模板
+export async function downloadTemp(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportGHGRepTemp', params, null);
+  return result;
+}
+
+// 获取排放量合计
+export async function getCO2TableSum(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCO2TableSum', params, null);
+  return result;
+}

@@ -9,14 +9,15 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
-import Debounce from 'lodash.debounce';
+import { INDUSTRYS } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
 
 const industry = INDUSTRYS.cement;
 const { Option } = Select;
 const { TextArea } = Input;
 const CONFIG_ID = 'CementCollaborativeDischarge';
-const SELECT_LISTWhere = [{ "key": '1', "value": "计算" }, { "key": '2', "value": "缺省值" }];
+const SELECT_LISTWhere = [{ "key": 1, "value": "计算" }, { "key": 2, "value": "缺省值" }];
 const layout = {
   labelCol: { span: 12 },
   wrapperCol: { span: 12 },
@@ -41,32 +42,42 @@ class index extends PureComponent {
       KEY: undefined,
       FileUuid: undefined,
       currentTypeData: {},
+      editTotalData: {},
     };
   }
 
   componentDidMount() {
-  }
-
-  // 根据企业和时间获取种类
-  getCO2EnergyType = (formEidt) => {
-    let values = this.formRef.current.getFieldsValue();
-    const { EntCode, MonitorTime } = values;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2EnergyType',
       payload: {
         IndustryCode: industry,
-        EntCode: EntCode,
-        SelectType: 'T',
-        Time: moment(MonitorTime).format("YYYY-MM-01 00:00:00"),
+        SelectType: 'T'
       },
     })
-    !formEidt && this.countEmissions();
   }
 
 
   // 种类change，填写缺省值
   onTypesChange = (value, option) => {
+    // 废弃物中矿物碳在碳总量中的比例: 2
+    // 废弃物中矿物碳在碳总量中的比例Unit: "%"
+    // 废弃物焚烧炉的燃烧效率: 3
+    // 废弃物焚烧炉的燃烧效率Unit: "%"
+    // 废弃物碳含量的比例: 1
+    // 废弃物碳含量的比例Unit: "%"
     const { cementDictionaries } = this.props;
+    // this.setState({
+    //   currentTypeData: value
+    // })
+    // this.formRef.current.setFieldsValue({
+    //   'CProp': cementDictionaries.one[value]["化石碳的质量分数"] + cementDictionaries.one[value]["生物碳的质量分数"],
+    //   'Rate': cementDictionaries.one[value]["废弃物焚烧炉的燃烧效率"],
+    //   'Prop': cementDictionaries.one[value]["化石碳的质量分数"],
+    // });
+
+    // CPropSource: editData.CPropSource || 2,
+    // PropSource: editData.PropSource || 2,
+    // RateSource: editData.RateSource || 2,
     this.setState({
       currentTypeData: cementDictionaries.one[value],
       typeUnit: option['data-unit']
@@ -96,35 +107,12 @@ class index extends PureComponent {
   countEmissions = () => {
     // 二氧化碳排放量 = 废弃物的处置量 × 废弃物碳含量的比例  × 废弃物中矿物碳在碳总量中的比例  × 废弃物焚烧炉的燃烧效率  × 44 ÷ 12
     let values = this.formRef.current.getFieldsValue();
-    let { EntCode, MonitorTime, FossilType, Disposal = 0, CProp = 0, Prop = 0, Rate = 0 } = values;
-    // let count = Disposal * (CProp / 100) * (Prop / 100) * (Rate / 100) * 44 / 12;
-
-    if (EntCode && MonitorTime) {
-      this.props.dispatch({
-        type: 'CO2Emissions/countEmissions',
-        payload: {
-          EntCode: EntCode,
-          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
-          IndustryCode: industry,
-          Type: FossilType,
-          CalType: 'w-5',
-          Data: { '废弃物的处置量': Disposal || 0, '废弃物碳含量的比例': CProp || 0, '废弃物中矿物碳在碳总量中的比例': Prop || 0, '废弃物焚烧炉的燃烧效率': Rate || 0 }
-        },
-        callback: (res) => {
-          console.log('res=', res)
-          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
-        }
-      })
-    }
+    let { Disposal = 0, CProp = 0, Prop = 0, Rate = 0 } = values;
+    let count = Disposal * (CProp / 100) * (Prop / 100) * (Rate / 100) * 44 / 12;
+    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
   }
 
   handleCancel = () => {
-    this.props.dispatch({
-      type: 'CO2Emissions/updateState',
-      payload: {
-        cementDictionaries: {}
-      }
-    })
     this.setState({
       isModalVisible: false,
       // UnitCarbonContentState: 2,
@@ -135,7 +123,7 @@ class index extends PureComponent {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { KEY } = this.state;
+      const { totalData, KEY } = this.state;
       console.log('KEY=', KEY)
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
@@ -144,6 +132,7 @@ class index extends PureComponent {
         payload: {
           configId: CONFIG_ID,
           FormData: {
+            ...totalData,
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
             CollaborativeCode: KEY
@@ -179,10 +168,19 @@ class index extends PureComponent {
       },
       callback: (res) => {
         this.setState({
+          // CO2OxidationRateState: res.CO2OxidationRateDataType,
+          // UnitCarbonContentState: res.UnitCarbonContentDataType,
           editData: res,
           isModalVisible: true,
-        }, () => {
-          this.getCO2EnergyType(true)
+          editTotalData: {
+            MonVolume: res.MonVolume,
+            ReportVolume: res.ReportVolume,
+            BuyVolume: res.BuyVolume,
+            TransferVolume: res.TransferVolume,
+            Consumption: res.Consumption,
+            deviation: res.Deviation,
+            total: res.AnnualConsumption,
+          }
         })
       }
     })
@@ -205,8 +203,23 @@ class index extends PureComponent {
     this.setState({ [key]: !this.state[key], })
   }
 
+  // 显示偏差值
+  showDeviation = () => {
+    if (this.formRef.current) {
+      let Deviation = this.formRef.current.getFieldValue('Deviation');
+      if (Deviation > 5) {
+        return <p style={{ position: 'absolute', top: 68 }}>
+          <InfoCircleOutlined style={{ marginRight: 10 }} />
+          <span style={{ color: 'red' }}>偏差值大于5%，请添加偏差原因并上传偏差证明材料！</span>
+        </p>
+      } else {
+        return ''
+      }
+    }
+  }
+
   render() {
-    const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, typeUnit, totalVisible, KEY, editTotalData } = this.state;
     const { tableInfo, cementDictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     console.log('props=', this.props)
@@ -217,8 +230,9 @@ class index extends PureComponent {
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       console.log('values=', values)
-      var { CPropSource, PropSource, RateSource } = values;
+      var { Deviation, CPropSource, PropSource, RateSource } = values;
     }
+    console.log('editTotalData=', editTotalData)
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -246,15 +260,18 @@ class index extends PureComponent {
           />
         </Card>
         <Modal destroyOnClose width={1100} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+          {this.showDeviation()}
           <Form
             style={{ marginTop: 24 }}
             {...layout}
             ref={this.formRef}
             initialValues={{
               ...editData,
-              CPropSource: editData.CPropSource || '2',
-              PropSource: editData.PropSource || '2',
-              RateSource: editData.RateSource || '2',
+              CPropSource: editData.CPropSource || 2,
+              PropSource: editData.PropSource || 2,
+              RateSource: editData.RateSource || 2,
+              Deviation: editData.Deviation || '-',
+              GetType: editData.GetType !== undefined ? editData.GetType : '-',
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
               CollaborativeType: editData['dbo.T_Bas_CementCollaborativeDischarge.CollaborativeType'] ? editData['dbo.T_Bas_CementCollaborativeDischarge.CollaborativeType'] + '' : undefined,
@@ -267,7 +284,7 @@ class index extends PureComponent {
                   label="企业"
                   rules={[{ required: true, message: '请选择企业!' }]}
                 >
-                  <Select placeholder="请选择企业" onChange={this.getCO2EnergyType}>
+                  <Select placeholder="请选择企业">
                     {
                       EntView.map(item => {
                         return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
@@ -306,17 +323,45 @@ class index extends PureComponent {
                   label="废弃物的处置量(t)"
                   rules={[{ required: true, message: '请填写废弃物的处置量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} style={{ width: '100%' }} placeholder="请填写废弃物的处置量"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
+                  <InputNumber bordered={false} disabled style={{ width: 'calc(100% - 64px)' }} style={{ width: '100%' }} placeholder="请填写废弃物的处置量" onChange={this.countEmissions} />
+                </Form.Item>
+                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">来源</Button>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="GetType"
+                  label="获取方式"
+                >
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
                 </Form.Item>
               </Col>
-              <Col span={24}>
+              <Col span={12}>
                 <Form.Item
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+                  name="Deviation"
+                  label="消耗量偏差（%）"
+                >
+                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                  {/* <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p> */}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 19 }}
+                  name="DeviationReson"
+                  label="偏差原因"
+                  rules={[{ required: Deviation > 5, message: '请填写消耗量!' }]}
+                >
+                  <TextArea autoSize={{ minRows: 4 }} placeholder="请填写偏差原因" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 7 }}
                   name="DevAttachmentID"
-                  label="证明材料"
+                  label="偏差证明材料"
+                  rules={[{ required: Deviation > 5, message: '请上传偏差证明材料!' }]}
                 >
                   <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
                     this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
@@ -347,9 +392,7 @@ class index extends PureComponent {
                 >
                   <InputNumber
                     disabled={CPropSource ? CPropSource == 2 : true}
-                    min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物碳含量的比例"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
+                    min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物碳含量的比例" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -376,9 +419,7 @@ class index extends PureComponent {
                 >
                   <InputNumber
                     disabled={PropSource ? PropSource == 2 : true}
-                    min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物中矿物碳在碳总量中的比例"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
+                    min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物中矿物碳在碳总量中的比例" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -405,9 +446,7 @@ class index extends PureComponent {
                 >
                   <InputNumber
                     disabled={RateSource ? RateSource == 2 : true}
-                    min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物焚烧炉的燃烧效率"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
+                    min={0} max={100} style={{ width: '100%' }} placeholder="请填写废弃物焚烧炉的燃烧效率" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -440,6 +479,17 @@ class index extends PureComponent {
             </Row>
           </Form>
         </Modal>
+        <ConsumptionModal
+          data={KEY ? editTotalData : {}}
+          unit={typeUnit}
+          visible={totalVisible}
+          onCancel={() => this.setState({ totalVisible: false })}
+          onOk={(data) => {
+            console.log('data=', data)
+            this.formRef.current.setFieldsValue({ 'Disposal': data.total, 'Deviation': data.deviation, GetType: data.GetType })
+            this.setState({ totalVisible: false, totalData: data })
+            this.countEmissions();
+          }} />
       </BreadcrumbWrapper>
     );
   }

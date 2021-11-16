@@ -7,6 +7,7 @@ export default Model.extend({
   state: {
     cementDictionaries: {},
     cementCO2Sum: [],
+    cementTableCO2Sum: 0,
   },
   effects: {
     // 获取缺省值码表
@@ -39,6 +40,26 @@ export default Model.extend({
       const response = yield call(services.countEmissions, payload);
       if (response.IsSuccess) {
         callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 下载导入模板
+    *downloadTemp({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.downloadTemp, payload);
+      if (response.IsSuccess) {
+        window.open('/upload' + response.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 获取排放量合计
+    *getCO2TableSum({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getCO2TableSum, payload);
+      if (response.IsSuccess) {
+        yield update({
+          cementTableCO2Sum: response.Datas
+        })
       } else {
         message.error(response.Message)
       }
