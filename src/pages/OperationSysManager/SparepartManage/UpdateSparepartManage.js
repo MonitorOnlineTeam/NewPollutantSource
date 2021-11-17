@@ -24,7 +24,8 @@ const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 @connect(({ SparepartManage, loading }) => ({
     sparePartsStationList: SparepartManage.sparePartsStationList,
-    storehouseList:SparepartManage.storehouseList
+    storehouseList:SparepartManage.storehouseList,
+    monitoringTypeList:SparepartManage.monitoringTypeList
 
 }))
 
@@ -53,12 +54,17 @@ export default class UpdateSparepartManage extends Component {
             payload: {
             }
         });
-
+        dispatch({
+            type: 'SparepartManage/GetMonitoringTypeList',
+            payload: {
+            }
+        });
+        
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { item, sparePartsStationList,storehouseList } = this.props;
+        const { item, sparePartsStationList,storehouseList,monitoringTypeList } = this.props;
         let isExists = false;
         if (item.ID) {
             //有值是修改,状态改为true
@@ -213,9 +219,14 @@ export default class UpdateSparepartManage extends Component {
                                     <Select
                                         placeholder="请选择"
                                     >
-                                        <Option key='1'>废水</Option>
+                                        {/* <Option key='1'>废水</Option>
                                         <Option key='2'>废气</Option>
-                                        <Option key='5'>环境质量</Option>
+                                        <Option key='5'>环境质量</Option> */}
+                                      {
+                                      monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                                       return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                                          })
+                                           }  
                                     </Select>
                                 )}
                             </FormItem>
@@ -263,7 +274,7 @@ export default class UpdateSparepartManage extends Component {
                                         allowClear
                                     >
                                          {
-                                            storehouseList[0]&&storehouseList.map(item => <Option key={item.SparePartsStationCode}>{item.Name}</Option>)
+                                            storehouseList[0]&&storehouseList.map(item => <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>)
                                         } 
                                     </Select>
                                 )}

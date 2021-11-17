@@ -56,4 +56,12 @@ export async function GetStorehouse(params) {
   return result;
 }
 
+/**
+ * 设备类型
+ * 
+ */
+export async function GetMonitoringTypeList(params) {
+  const result =await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList', params, null);
+  return result;
+}
 

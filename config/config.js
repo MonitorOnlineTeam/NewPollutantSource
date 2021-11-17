@@ -460,7 +460,7 @@ export default {
                     },
                   ]
                 },
-                { //资产故管理
+                { //资产管理
                   name: 'assetManage',
                   path: '/platformconfig/assetManage',
                   routes: [
@@ -477,6 +477,16 @@ export default {
                       name: 'spareParts',//备品备件 
                       path: '/platformconfig/assetManage/spareParts/:configId',
                       component: './OperationSysManager/SparepartManage',
+                    },
+                    {
+                      name: 'referenceMaterial',//标准物质
+                      path: '/platformconfig/assetManage/referenceMaterial/:configId',
+                      component: './OperationSysManager/StandardGasManage/',
+                    },
+                    {
+                      name: 'StandardLiquid',//试剂信息
+                      path: '/platformconfig/assetManage/referenceMaterial/:configId',
+                      component: './AutoFormManager',
                     },
                     
                   ]

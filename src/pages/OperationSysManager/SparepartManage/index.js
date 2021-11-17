@@ -41,7 +41,8 @@ const { Search } = Input;
     total: SparepartManage.total,
     sparepartManageParameters: SparepartManage.sparepartManageParameters,
     pageCount: SparepartManage.pageCount,
-    storehouseList:SparepartManage.storehouseList
+    storehouseList:SparepartManage.storehouseList,
+    monitoringTypeList:SparepartManage.monitoringTypeList
 }))
 @Form.create()
 
@@ -66,7 +67,8 @@ export default class Index extends Component {
 
     componentDidMount() {
         this.GetSparepartManageList();
-        this.GetStorehouse()
+        this.GetStorehouse();
+        this.GetMonitoringTypeList();
     }
     //创建并获取模板
     Template = () => {
@@ -133,7 +135,15 @@ export default class Index extends Component {
             }
         });
     }
-    
+    GetMonitoringTypeList = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'SparepartManage/GetMonitoringTypeList',
+            payload: {
+            }
+        });
+    }
+
     //上传文件
     upload = () => {
         var that = this;
@@ -341,7 +351,7 @@ export default class Index extends Component {
         });
     }
     //设备类型回调
-    EquipmentTypeChange = (e) => {
+    EquipmentTypeChange = (val) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'SparepartManage/updateState',
@@ -349,7 +359,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        EquipmentType: e
+                        EquipmentType: val?val:''
                     }
                 }
             }
@@ -364,7 +374,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        EquipmentType: value? value : ''
+                        SparePartsStationCode: value? value : ''
                     }
                 }
             }
@@ -430,7 +440,7 @@ export default class Index extends Component {
         }
     }
     render() {
-        const { sparepartManageDatalist, sparepartManageParameters, pageCount,storehouseList } = this.props;
+        const { sparepartManageDatalist, sparepartManageParameters, pageCount,storehouseList,monitoringTypeList } = this.props;
         const { visible } = this.state;
         const columns = [
             {
@@ -469,7 +479,9 @@ export default class Index extends Component {
                 align: 'center',
             },
 
-
+            // {Code: "266", Name: "污染源(气)"}
+            // 1: {Code: "267", Name: "大气环境"}
+            // 2: {Code: "268", Name: "水环境"}
             {
                 title: '设备类型',
                 dataIndex: 'EquipmentType',
@@ -477,24 +489,29 @@ export default class Index extends Component {
                 width: 100,
                 align: 'center',
                 render: (text, row, index) => {
-                    switch (text) {
-                        case '1':
-                            text = "废水";
-                            break;
-                        case '2':
-                            text = "废气";
-                            break;
-                        case '5':
-                            text = "环境质量";
-                            break;
-                        case '10':
-                            text = "VOC";
-                            break;
-                        case '12':
-                            text = "扬尘";
-                            break;
-                    }
-                    return text;
+                    // switch (text) {
+                    //     case '1':
+                    //         text = "废水";
+                    //         break;
+                    //     case '2':
+                    //         text = "废气";
+                    //         break;
+                    //     case '5':
+                    //         text = "环境质量";
+                    //         break;
+                    //     case '10':
+                    //         text = "VOC";
+                    //         break;
+                    //     case '12':
+                    //         text = "扬尘";
+                    //         break;
+                    // }
+                    // return text;
+                   return monitoringTypeList.map(item=>{
+                        if(item.Code === text){
+                           return item.Name
+                        }
+                    })
                 },
             },
             // {
@@ -591,7 +608,7 @@ export default class Index extends Component {
                             <Select placeholder="仓库名称" allowClear style={{ width: 120 }}  onChange={this.storehouseChange}>
                                      {
                                       storehouseList[0]&&storehouseList.map(item=>{
-                                      return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                                      return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
                                       })
                                      }
                                 </Select>
@@ -599,9 +616,14 @@ export default class Index extends Component {
                             <Form.Item>
                                 设备类型：
                             <Select placeholder="设备类型" allowClear style={{ width: 120 }} value={sparepartManageParameters.EquipmentType? sparepartManageParameters.EquipmentType : undefined} onChange={this.EquipmentTypeChange}>
-                                    <Option value="1">废水</Option>
+                                    {/* <Option value="1">废水</Option>
                                     <Option value="2">废气</Option>
-                                    <Option value="5">环境质量</Option>
+                                    <Option value="5">环境质量</Option> */}
+                                                                        {
+                                      monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                                       return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                                          })
+                                           }  
                                 </Select>
                             </Form.Item>
 

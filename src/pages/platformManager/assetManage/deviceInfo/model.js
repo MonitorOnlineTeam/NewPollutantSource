@@ -65,7 +65,6 @@ export default Model.extend({
       const result = yield call(services.GetMonitoringTypeList, payload);
       if (result.IsSuccess) {
         yield update({ monitoringTypeList: result.Datas })
-        // callback(result.Datas)
       } else {
         message.error(result.Message)
       }

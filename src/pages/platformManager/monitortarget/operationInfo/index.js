@@ -183,12 +183,7 @@ const Index = (props) => {
       dataIndex: 'regionName',
       key:'regionName',
       align:'center',
-    },
-    {
-      title: '校准频次',
-      dataIndex: 'calibrationCycleName',
-      key:'calibrationCycleName',
-      align:'center',
+      
     },
     {
       title: '巡检频次',
@@ -196,6 +191,13 @@ const Index = (props) => {
       key:'inspectionCycelName',
       align:'center',
     },
+    {
+      title: '校准频次',
+      dataIndex: 'calibrationCycleName',
+      key:'calibrationCycleName',
+      align:'center',
+    },
+
     {
       title: '运营起始日期',
       dataIndex: 'operationBeginTime',

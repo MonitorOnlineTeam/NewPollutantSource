@@ -28,6 +28,7 @@ const subjectFontSize = 14;
 const dvaPropsData =  ({ loading,newestHome }) => ({
   operationDataSource:newestHome.operationDataSource,
   operaOrderData:newestHome.operaOrderData,
+  planOperaList:newestHome.planOperaList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -97,30 +98,18 @@ const { operaOrderData } = props;
     return bgBarData;
   }
   const  bagBarData = changeBarData(operaOrderData);
-  const operaOrderOption = {
-    tooltip: {
-        show:false
-    },
-    grid: {
-      top:0,
-      left: 80,
-      right: 65,
-      bottom: 0,
-  },
-    xAxis: {
-        show:false,
-        type: 'value'
-    },
-    
+
+  const operaOrderOption = {  //运维工单图表
+    tooltip: { show:false },
+    grid: { top:0,left: 80, right: 65, bottom: 0,},
+    xAxis: { show:false,  type: 'value'},
     yAxis: {
         type: 'category',
         data: ['巡检', '校准', '校验测试', '维护', '维修', '配合检查','配合对比','参数核对'],
         axisLine: { show: false},
         axisTick: {show: false  },
-        axisLabel: {  margin:80, textStyle: { color: '#fff',fontSize:subjectFontSize,align:'left'},
-      
-      },
-        
+        axisLabel: {  margin:80, textStyle: { color: '#fff',fontSize:subjectFontSize,align:'left'},   
+      },       
     },
     series: [
       {
@@ -144,11 +133,7 @@ const { operaOrderData } = props;
           },
         },
         itemStyle:{
-         normal:{
-           color: '#2f3648',
-           barBorderRadius: [15, 15, 15 ,15]
-         },
-        },
+         normal:{color: '#2f3648', barBorderRadius: [15, 15, 15 ,15] },},
         barWidth: '50%',  // 柱形的宽度
         barGap: '-100%', // Make series be ove
         silent: true //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
@@ -156,25 +141,12 @@ const { operaOrderData } = props;
         {
             type: 'bar',
             data: operaOrderData,
-            label: {
-              normal: {
-              show: false,
-              // position:[100,0],
-              // formatter: function (params) {
-              //   return `${params.data}次`;
-              //  },
-              //  fontSize:subjectFontSize,
-              //  color: '#4BF3F9'
-              }
-            },
+            label: {  normal: { show: false, }},
             itemStyle:{
              normal:{
               color: {
                 type: 'linear', // 线性渐变
-                x: 0,
-                y: 0,
-                x2: 1,
-                y2: 0,
+                x: 0,  y: 0, x2: 1, y2: 0,
                colorStops: [{
                 offset: 0,
                 color: '#298CFB' // 0%处的颜色为红色
@@ -187,18 +159,93 @@ const { operaOrderData } = props;
              },
             },
             barWidth: '50%',   // 柱形的宽度
-            // barCategoryGap: '20%',  // 柱形的间距
         },
 
                         
     ]
 };
-const  planOperaOption =()=>{
 
+ const { planOperaList } = props;
+
+ const planOperaOption = (type) => {  //计划运维图表
+
+  let color1 = ["#F9BF31", "#323A70"], color2 = ["#3BE2BA", '#323A70'],color3 = ['#F66080', '#323A70']
+  let option = {
+    tooltip: {
+      show: false,
+      trigger: 'item',
+      formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    color: type == 1 ? color1 : type == 2 ? color2 : color3,
+    title: {
+      text: type == 1 ? '99.12%': type == 2 ? '99.12%' : '99.12%',
+      left: "center",
+      top: "42%",
+      textStyle: {
+        color: type == 1 ? color1[0] : type == 2 ? color2[0] : color3[0],
+        fontSize: 18,
+        align: "center",
+        fontWeight: 'bold',
+      }
+    },
+    series: [
+      {
+        name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
+        type: 'pie',
+        radius: ['70%', '83%'],
+        avoidLabelOverlap: false,
+        label: { normal: { show: false, position: 'center'  }, },
+        data: [
+          { value: type == 1 ? 99.12 : type == 2 ? 99.12 : 99.12, name: '已完成' },
+          { value: type == 1 ? (100 - 99.12) : type == 2 ? (100 - 99.12) : (100 - 99.12), name: '未完成' },
+        ]
+      }
+    ]
+  };
+  return option;
+}
+const planInspection = () =>{ 
+  // let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
+  console.log(1111)
+}
+
+const [planBtnCheck,setPlanBtnCheck] = useState(1)
+const btnChange = (key) =>{
+  setPlanBtnCheck(key)
 }
 
 
 
+
+const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
+  return <div style={{height:'100%', padding:'24px 11px 0 0'}}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
+  <Row type='flex' align='middle' justify='space-between'>
+   <Col span={8} align='middle'>
+
+     <ReactEcharts
+       option={planOperaOption(1)} 
+       style={{ width: '100%', height: 120 }}
+       onEvents={{click: planInspection }}
+     />
+     <div  className={styles.planOperaText} ><div style={{fontWeight:'bold'}}>计划巡检完成率</div><div>计划内次数： </div> <div>完成次数： </div></div>
+   </Col>
+   <Col span={8} align='middle'>
+     <ReactEcharts
+       option={planOperaOption(2)}
+       style={{ width: '100%', height: 120 }}
+     />
+     <div   className={styles.planOperaText}><div style={{fontWeight:'bold'}}>计划校准完成率</div><div>计划内次数： </div> <div>完成次数： </div></div>
+   </Col>
+   <Col span={8} align='middle'>
+       <ReactEcharts
+         option={planOperaOption(3)}
+         style={{ width: '100%', height: 120 }}
+       />
+      <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内次数： </div> <div>完成次数： </div></div>
+   </Col>
+ </Row>
+   </div>
+},[planOperaList])
 
   return (
     <div className={styles.leftContent}>
@@ -220,12 +267,12 @@ const  planOperaOption =()=>{
 
           <div className={styles.planOpera }>
            <CardHeader  title='近30日计划运维情况'/>
-           <div style={{height:'100%', padding:'24px 11px 0 0'}}>
-           {/* <ReactEcharts 
-              option={planOperaOption}
-              style={{height:'calc(100% - 28px )',width:'100%'}}
-             /> */}
-            </div>
+            {planOperaEcharts}
+          </div>
+
+          <div className={styles.planComplete}>
+           <CardHeader  btnChange={btnChange} showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
+
           </div>
 
         </div>
