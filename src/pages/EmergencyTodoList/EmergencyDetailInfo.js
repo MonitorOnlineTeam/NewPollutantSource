@@ -44,8 +44,8 @@ const { Description } = DescriptionList;
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const { Step } = Steps;
-let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
-
+// let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
+let SCREEN_HEIGHT = "calc(100vh - 250px)";
 @Form.create()
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetTaskRecord'],
