@@ -1809,6 +1809,10 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/fossilFuel',
                     component: './IntelligentAnalysis/CO2Emissions/electricity/fossilFuel',
                   },
+                  {
+                    path: '/Intelligentanalysis/CO2Material/fossilFuel/imp',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/fossilFuel/Imp',
+                  },
                   // {
                   //   path: '/Intelligentanalysis/CO2Material/fossilFuel/imp',
                   //   component: './IntelligentAnalysis/CO2Material/fossilFuel/Imp',
