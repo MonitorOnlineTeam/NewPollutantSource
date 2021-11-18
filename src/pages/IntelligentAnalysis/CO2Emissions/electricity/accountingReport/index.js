@@ -79,7 +79,7 @@ class index extends PureComponent {
             <Row gutter={16}>
               {
                 CO2ReportList.map(item => {
-                  return <Col span={8}>
+                  return <Col span={8}> 
                     <Card
                       style={{ border: '1px solid #f0f0f0' }}
                       actions={[

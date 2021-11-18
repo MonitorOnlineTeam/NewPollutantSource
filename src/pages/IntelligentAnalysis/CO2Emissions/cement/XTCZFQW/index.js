@@ -28,7 +28,7 @@ const layout = {
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
-  cementDictionaries: CO2Emissions.cementDictionaries,
+  Dictionaries: CO2Emissions.Dictionaries,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -66,26 +66,26 @@ class index extends PureComponent {
 
   // 种类change，填写缺省值
   onTypesChange = (value, option) => {
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     this.setState({
-      currentTypeData: cementDictionaries.one[value],
+      currentTypeData: Dictionaries.one[value],
       typeUnit: option['data-unit']
     })
     let values = this.formRef.current.getFieldsValue();
     const { CPropSource, PropSource, RateSource } = values;
     if (CPropSource == 2) {
       this.formRef.current.setFieldsValue({
-        'CProp': cementDictionaries.one[value]["化石碳的质量分数"] + cementDictionaries.one[value]["生物碳的质量分数"],
+        'CProp': Dictionaries.one[value]["化石碳的质量分数"] + Dictionaries.one[value]["生物碳的质量分数"],
       });
     }
     if (PropSource == 2) {
       this.formRef.current.setFieldsValue({
-        'Prop': cementDictionaries.one[value]["化石碳的质量分数"],
+        'Prop': Dictionaries.one[value]["化石碳的质量分数"],
       });
     }
     if (RateSource == 2) {
       this.formRef.current.setFieldsValue({
-        'Rate': cementDictionaries.one[value]["废弃物焚烧炉的燃烧效率"],
+        'Rate': Dictionaries.one[value]["废弃物焚烧炉的燃烧效率"],
       });
     }
 
@@ -122,7 +122,7 @@ class index extends PureComponent {
     this.props.dispatch({
       type: 'CO2Emissions/updateState',
       payload: {
-        cementDictionaries: {}
+        Dictionaries: {}
       }
     })
     this.setState({
@@ -189,14 +189,14 @@ class index extends PureComponent {
   }
 
   onSourceChange = (value, index, name, label) => {
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     let values = this.formRef.current.getFieldsValue();
     const { FossilType, } = values
     if (FossilType) {
       if (value == 2) {
         // 缺省
         this.formRef.current.setFieldsValue({
-          [name]: cementDictionaries.one[FossilType][label],
+          [name]: Dictionaries.one[FossilType][label],
         });
         this.countEmissions();
       }
@@ -207,13 +207,13 @@ class index extends PureComponent {
 
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, } = this.state;
-    const { tableInfo, cementDictionaries } = this.props;
+    const { tableInfo, Dictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     console.log('props=', this.props)
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementCollaborativeDischarge.tCO2');
 
-    const TYPES = cementDictionaries.two || [];
+    const TYPES = Dictionaries.two || [];
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       console.log('values=', values)

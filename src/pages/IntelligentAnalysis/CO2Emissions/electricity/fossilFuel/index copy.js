@@ -30,7 +30,7 @@ const layout = {
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
-  cementDictionaries: CO2Material.cementDictionaries,
+  Dictionaries: CO2Material.Dictionaries,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -77,26 +77,26 @@ class index extends PureComponent {
 
   // 种类change，填写缺省值
   onTypesChange = (value, option) => {
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     this.setState({
-      currentTypeData: cementDictionaries.one[value],
+      currentTypeData: Dictionaries.one[value],
       typeUnit: option['data-unit']
     })
     let values = this.formRef.current.getFieldsValue();
     const { LowFeverDataType, UnitCarbonContentDataType, CO2OxidationRateDataType } = values;
     if (LowFeverDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'LowFever': cementDictionaries.one[value]["低位发热量"],
+        'LowFever': Dictionaries.one[value]["低位发热量"],
       });
     }
     if (UnitCarbonContentDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'UnitCarbonContent': cementDictionaries.one[value]["含碳量"],
+        'UnitCarbonContent': Dictionaries.one[value]["含碳量"],
       });
     }
     if (CO2OxidationRateDataType == 2) {
       this.formRef.current.setFieldsValue({
-        'CO2OxidationRate': cementDictionaries.one[value]["氧化率"],
+        'CO2OxidationRate': Dictionaries.one[value]["氧化率"],
       });
     }
     this.countEmissions();
@@ -195,14 +195,14 @@ class index extends PureComponent {
   }
 
   onSourceChange = (value, index, name, label, stateKey) => {
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     let values = this.formRef.current.getFieldsValue();
     const { FossilType, } = values
     if (FossilType) {
       if (value == 2) {
         // 缺省
         this.formRef.current.setFieldsValue({
-          [name]: cementDictionaries.one[FossilType][label],
+          [name]: Dictionaries.one[FossilType][label],
         });
         this.countEmissions();
       }
@@ -306,13 +306,13 @@ class index extends PureComponent {
 
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, disabled1, disabled2, disabled3, currentTypeData, typeUnit, totalVisible, KEY, editTotalData } = this.state;
-    const { tableInfo, cementDictionaries } = this.props;
+    const { tableInfo, Dictionaries } = this.props;
 
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2FossilFuel.tCO2');
 
-    const TYPES = cementDictionaries.two || [];
+    const TYPES = Dictionaries.two || [];
     if (this.formRef.current) {
       let values = this.formRef.current.getFieldsValue();
       console.log('values=', values)

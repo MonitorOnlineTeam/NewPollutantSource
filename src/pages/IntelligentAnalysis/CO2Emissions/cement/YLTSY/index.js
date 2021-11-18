@@ -9,13 +9,12 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { InfoCircleOutlined } from '@ant-design/icons'
-import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
+import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import Debounce from 'lodash.debounce';
 
+const industry = INDUSTRYS.cement;
 const { Option } = Select;
-const { TextArea } = Input;
 const CONFIG_ID = 'CementCarbonate';
-const SELECT_LISTGet = [{ "key": 1, "value": "购(产)销存" }];
 const layout = {
   labelCol: { span: 14 },
   wrapperCol: { span: 10 },
@@ -37,16 +36,16 @@ class index extends PureComponent {
       editData: {},
       KEY: undefined,
       FileUuid: undefined,
-      editTotalData: {},
     };
   }
 
   componentDidMount() {
   }
 
+  // countEmissions = Debounce(() => this.countEmissions(), maxWait)
 
   // 计算排放量
-  countEmissions = () => {
+  countEmissions = Debounce(() => {
     //   (水泥熟料产量 + 窑炉排气筒(窑头)粉尘重量 + 窑炉旁路防风粉尘的重量) * 
     //  (
     //     (熟料中氧化钙的含量 - 生料中不是以碳酸盐形式存在的氧化钙的含量) × 44 ÷ 56
@@ -55,6 +54,7 @@ class index extends PureComponent {
     //  )
     let values = this.formRef.current.getFieldsValue();
     let {
+      EntCode, MonitorTime, FossilType,
       AnnualConsumption = 0,
       ExhaustWeight = 0,
       FreshWeight = 0,
@@ -63,12 +63,27 @@ class index extends PureComponent {
       NoCalciumContent = 0,
       NoMagnesiumContent = 0,
     } = values;
-    let value1 = AnnualConsumption + ExhaustWeight + FreshWeight;
-    let value2 = (CalciumContent - NoCalciumContent) * 44 / 56;
-    let value3 = (MagnesiumContent - NoMagnesiumContent) * 44 / 56;
-    let count = value1 * (value2 + value3);
-    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
-  }
+    if (EntCode && MonitorTime) {
+      this.props.dispatch({
+        type: 'CO2Emissions/countEmissions',
+        payload: {
+          EntCode: EntCode,
+          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
+          IndustryCode: industry,
+          Type: FossilType,
+          CalType: 'w-7',
+          Data: {
+            '水泥熟料产量': AnnualConsumption || 0, '窑炉排气筒(窑头)粉尘重量': ExhaustWeight || 0, '窑炉旁路防风粉尘的重量': FreshWeight || 0,
+            '熟料中氧化钙的含量': CalciumContent || 0, '生料中不是以碳酸盐形式存在的氧化钙的含量': NoCalciumContent || 0,
+            '熟料中氧化镁的含量': MagnesiumContent || 0, '生料中不是以碳酸盐形式存在的氧化镁的含量': NoMagnesiumContent || 0
+          }
+        },
+        callback: (res) => {
+          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
+        }
+      })
+    }
+  }, maxWait)
 
   handleCancel = () => {
     this.setState({
@@ -79,7 +94,7 @@ class index extends PureComponent {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { totalData, KEY } = this.state;
+      const { KEY } = this.state;
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
       this.props.dispatch({
@@ -87,7 +102,6 @@ class index extends PureComponent {
         payload: {
           configId: CONFIG_ID,
           FormData: {
-            ...totalData,
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
             CarbonateCode: KEY
@@ -127,48 +141,18 @@ class index extends PureComponent {
           // UnitCarbonContentState: res.UnitCarbonContentDataType,
           editData: res,
           isModalVisible: true,
-          editTotalData: {
-            MonVolume: res.MonVolume,
-            ReportVolume: res.ReportVolume,
-            BuyVolume: res.BuyVolume,
-            TransferVolume: res.TransferVolume,
-            Consumption: res.Consumption,
-            deviation: res.Deviation,
-            total: res.AnnualConsumption,
-          }
         })
       }
     })
   }
 
-  // 显示偏差值
-  showDeviation = () => {
-    if (this.formRef.current) {
-      let Deviation = this.formRef.current.getFieldValue('Deviation');
-      if (Deviation > 5) {
-        return <p style={{ position: 'absolute', top: 68 }}>
-          <InfoCircleOutlined style={{ marginRight: 10 }} />
-          <span style={{ color: 'red' }}>偏差值大于5%，请添加偏差原因并上传偏差证明材料！</span>
-        </p>
-      } else {
-        return ''
-      }
-    }
-  }
-
-
   render() {
-    const { isModalVisible, editData, FileUuid, FileUuid2, editTotalData, totalVisible, KEY } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, } = this.state;
     const { tableInfo } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementCarbonate.tCO2');
 
-    if (this.formRef.current) {
-      let values = this.formRef.current.getFieldsValue();
-      console.log('values=', values)
-      var { Deviation } = values;
-    }
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -183,7 +167,6 @@ class index extends PureComponent {
                 KEY: undefined,
                 FileUuid: undefined,
                 FileUuid2: undefined,
-
               })
             }}
             onEdit={(record, key) => {
@@ -197,16 +180,13 @@ class index extends PureComponent {
           />
         </Card>
         <Modal destroyOnClose width={1200} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
-          {this.showDeviation()}
           <Form
             style={{ marginTop: 24 }}
             {...layout}
             ref={this.formRef}
             initialValues={{
               ...editData,
-              NonFuelCarbonContentDataType: 2,
-              Deviation: editData.Deviation || '-',
-              GetType: editData.GetType || '-',
+              GetType: editData.GetType,
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
             }}
@@ -243,7 +223,7 @@ class index extends PureComponent {
                   rules={[{ required: true, message: '请填写生料烧失量!' }]}
                 >
                   <InputNumber stringMode style={{ width: '100%' }} placeholder="请填写生料烧失量!"
-                    onChange={this.countEmissions}
+                  // onChange={this.countEmissions}
                   />
                 </Form.Item>
               </Col>
@@ -253,46 +233,29 @@ class index extends PureComponent {
                   label="水泥熟料产量(t)"
                   rules={[{ required: true, message: '请填写水泥熟料产量!' }]}
                 >
-                  <InputNumber bordered={false} disabled style={{ width: 'calc(100% - 64px)' }} placeholder="请填写水泥熟料产量" onChange={this.countEmissions} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写水泥熟料产量" onChange={this.countEmissions} />
                 </Form.Item>
-                <Button onClick={() => this.setState({ totalVisible: true })} style={{ position: 'absolute', top: 0, right: 0 }} type="primary">来源</Button>
               </Col>
 
               <Col span={12}>
                 <Form.Item
                   name="GetType"
                   label="获取方式"
+                  rules={[{ required: true, message: '请选择获取方式!' }]}
                 >
-                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
+                  <Select placeholder="请选择获取方式">
+                    {
+                      GET_SELECT_LIST.map(item => {
+                        return <Option value={item.key} key={item.key}>{item.value}</Option>
+                      })
+                    }
+                  </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="Deviation"
-                  label="消耗量偏差（%）"
-                >
-                  <Input style={{ color: 'rgba(0, 0, 0, 0.85)' }} disabled bordered={false} />
-                  {/* <p>{Deviation !== undefined ? Deviation + '%' : '-'}</p> */}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  // labelCol={{ span: 5 }}
-                  // wrapperCol={{ span: 19 }}
-                  name="DeviationReson"
-                  label="偏差原因"
-                  rules={[{ required: Deviation > 5, message: '请填写消耗量!' }]}
-                >
-                  <TextArea autoSize={{ minRows: 4 }} placeholder="请填写偏差原因" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  // labelCol={{ span: 5 }}
-                  // wrapperCol={{ span: 7 }}
                   name="DevAttachmentID"
-                  label="偏差证明材料"
-                  rules={[{ required: Deviation > 5, message: '请上传偏差证明材料!' }]}
+                  label="证明材料"
                 >
                   <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
                     this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
@@ -362,7 +325,6 @@ class index extends PureComponent {
                   />
                 </Form.Item>
               </Col>
-
               <Col span={12}>
                 <Form.Item
                   name="tCO2"
@@ -375,7 +337,7 @@ class index extends PureComponent {
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}
                 >
-                  <InputNumber stringMode style={{ width: '100%' }} placeholder="请填写排放量" />
+                  <InputNumber  style={{ width: '100%' }} placeholder="请填写排放量" />
                 </Form.Item>
               </Col>
               <Col span={24}>
@@ -394,17 +356,6 @@ class index extends PureComponent {
             </Row>
           </Form>
         </Modal>
-        <ConsumptionModal
-          data={KEY ? editTotalData : {}}
-          unit={'t'}
-          visible={totalVisible}
-          onCancel={() => this.setState({ totalVisible: false })}
-          onOk={(data) => {
-            console.log('data=', data)
-            this.formRef.current.setFieldsValue({ 'AnnualConsumption': data.total, 'Deviation': data.deviation, GetType: data.GetType })
-            this.setState({ totalVisible: false, totalData: data })
-            this.countEmissions();
-          }} />
       </BreadcrumbWrapper>
     );
   }

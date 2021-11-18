@@ -1791,44 +1791,48 @@ const routes = [
                 routes: [
                   {
                     path: '/Intelligentanalysis/CO2Material/desensitization',
-                    component: './IntelligentAnalysis/CO2Material/desensitization',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/desensitization',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/electricity',
-                    component: './IntelligentAnalysis/CO2Material/electricity',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/electricity',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/supplementData',
-                    component: './IntelligentAnalysis/CO2Material/supplementData',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/supplementData',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/supplementData/addOrEditPage',
-                    component: './IntelligentAnalysis/CO2Material/supplementData/AddOrEditPage',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/supplementData/AddOrEditPage',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/fossilFuel',
-                    component: './IntelligentAnalysis/CO2Material/fossilFuel',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/fossilFuel',
                   },
+                  // {
+                  //   path: '/Intelligentanalysis/CO2Material/fossilFuel/imp',
+                  //   component: './IntelligentAnalysis/CO2Material/fossilFuel/Imp',
+                  // },
                   {
                     path: '/Intelligentanalysis/CO2Material/cO2DischargeSum',
-                    component: './IntelligentAnalysis/CO2Material/cO2DischargeSum',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/cO2DischargeSum',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/GHG',
-                    component: './IntelligentAnalysis/CO2Material/GHG',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/GHG',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/GHGLinearAnalysis',
-                    component: './IntelligentAnalysis/CO2Material/GHGLinearAnalysis',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/GHGLinearAnalysis',
                   },
                   {
                     path: '/Intelligentanalysis/CO2Material/monthDischarge',
-                    component: './IntelligentAnalysis/CO2Material/monthDischarge',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/monthDischarge',
                   },
                   // 核算报告
                   {
                     path: '/Intelligentanalysis/CO2Material/accountingReport',
-                    component: './IntelligentAnalysis/CO2Material/accountingReport',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/accountingReport',
                   },
                 ]
               },
@@ -1840,6 +1844,10 @@ const routes = [
                   {
                     path: '/Intelligentanalysis/cement/fossilFuel',
                     component: './IntelligentAnalysis/CO2Emissions/cement/fossilFuel',
+                  },
+                  {
+                    path: '/Intelligentanalysis/cement/fossilFuel/imp',
+                    component: './IntelligentAnalysis/CO2Emissions/cement/fossilFuel/Imp',
                   },
                   {
                     path: '/Intelligentanalysis/cement/supplementData',

@@ -20,7 +20,7 @@ export default Model.extend({
       formula: ""
     },
     CO2ReportList: [],
-    cementDictionaries: {},
+    Dictionaries: {},
 
   },
   effects: {
@@ -110,7 +110,7 @@ export default Model.extend({
       const response = yield call(services.getCO2EnergyType, payload);
       if (response.IsSuccess) {
         yield update({
-          cementDictionaries: response.Datas
+          Dictionaries: response.Datas
         })
       } else {
         message.error(response.Message)

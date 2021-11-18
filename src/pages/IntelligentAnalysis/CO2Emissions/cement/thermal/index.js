@@ -17,7 +17,10 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
+import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import Debounce from 'lodash.debounce';
 
+const industry = INDUSTRYS.cement;
 const { Option } = Select;
 const CONFIG_ID = 'CementHeatDischarge';
 const SELECT_LIST = [{ "key": 1, "value": "外购热力" }]
@@ -45,8 +48,27 @@ class index extends PureComponent {
     };
   }
 
-  onAddClick = () => {
-
+  // 计算排放量
+  countEmissions = () => {
+    // 化石燃料燃烧排放量 = 活动数据 × 排放因子
+    let values = this.formRef.current.getFieldsValue();
+    let { EntCode, MonitorTime, Emission = 0, ActivityData = 0 } = values;
+    if (EntCode && MonitorTime) {
+      this.props.dispatch({
+        type: 'CO2Emissions/countEmissions',
+        payload: {
+          EntCode: EntCode,
+          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
+          IndustryCode: industry,
+          CalType: 'w-2',
+          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0, }
+        },
+        callback: (res) => {
+          console.log('res=', res)
+          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
+        }
+      })
+    }
   }
 
   handleCancel = () => {
@@ -171,7 +193,7 @@ class index extends PureComponent {
                   label="时间"
                   rules={[{ required: true, message: '请选择时间!' }]}
                 >
-                  <DatePicker picker="month" style={{ width: '100%' }} />
+                  <DatePicker picker="month" style={{ width: '100%' }} onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -195,11 +217,9 @@ class index extends PureComponent {
                   label="活动数据（MWh）"
                   rules={[{ required: true, message: '请填写活动数据!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据" onChange={(value) => {
-                    let val2 = this.formRef.current.getFieldValue('Emission') || 0;
-                    let count = value * val2;
-                    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
-                  }} />
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -208,11 +228,9 @@ class index extends PureComponent {
                   label="排放因子（tCO₂/MWh）"
                   rules={[{ required: true, message: '请填写排放因子!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子" onChange={(value) => {
-                    let val1 = this.formRef.current.getFieldValue('ActivityData') || 0;
-                    let count = value * val1;
-                    this.formRef.current.setFieldsValue({ 'tCO2': count.toFixed(2) });
-                  }} />
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>

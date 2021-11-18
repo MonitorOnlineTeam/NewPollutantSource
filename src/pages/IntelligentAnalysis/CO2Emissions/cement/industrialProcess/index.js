@@ -27,7 +27,7 @@ const layout = {
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
-  cementDictionaries: CO2Emissions.cementDictionaries,
+  Dictionaries: CO2Emissions.Dictionaries,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -74,10 +74,10 @@ class index extends PureComponent {
     this.setState({
       currentTypeData: value
     })
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     this.formRef.current.setFieldsValue({
-      'Limestone': cementDictionaries.one[value]["石灰石的含量"],
-      'Loss': cementDictionaries.one[value]["生料烧失量"],
+      'Limestone': Dictionaries.one[value]["石灰石的含量"],
+      'Loss': Dictionaries.one[value]["生料烧失量"],
     });
   }
 
@@ -231,7 +231,7 @@ class index extends PureComponent {
     // if (!this.formRef.current) {
     //   return '';
     // }
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     let WhetherT = this.state.WhetherT;
     if (WhetherT === 1) {
       // 包含
@@ -261,7 +261,7 @@ class index extends PureComponent {
           >
             <Select placeholder="请选择石灰石的含量来源" onChange={value => {
               this.formRef.current.setFieldsValue({
-                'Limestone': cementDictionaries.one['GC']["石灰石的含量"],
+                'Limestone': Dictionaries.one['GC']["石灰石的含量"],
               });
               this.countSLCO2Emissions();
             }}>
@@ -289,7 +289,7 @@ class index extends PureComponent {
           >
             <Select placeholder="请选择生料烧失量来源" onChange={value => {
               this.formRef.current.setFieldsValue({
-                'Loss': cementDictionaries.one['GC']["生料烧失量"],
+                'Loss': Dictionaries.one['GC']["生料烧失量"],
               });
               this.countSLCO2Emissions();
             }}>
@@ -400,7 +400,7 @@ class index extends PureComponent {
                   label="时间"
                   rules={[{ required: true, message: '请选择时间!' }]}
                 >
-                  <DatePicker picker="month" style={{ width: '100%' }} />
+                  <DatePicker picker="month" style={{ width: '100%' }} onChange={this.getCO2EnergyType} />
                 </Form.Item>
               </Col>
 

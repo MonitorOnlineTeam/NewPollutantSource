@@ -5,7 +5,7 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'CO2Emissions',
   state: {
-    cementDictionaries: {},
+    Dictionaries: {},
     cementCO2Sum: [],
     cementTableCO2Sum: 0,
   },
@@ -15,11 +15,11 @@ export default Model.extend({
       const response = yield call(services.getCO2EnergyType, payload);
       if (response.IsSuccess) {
         yield update({
-          cementDictionaries: response.Datas
+          Dictionaries: response.Datas
         })
       } else {
         yield update({
-          cementDictionaries: {}
+          Dictionaries: {}
         })
         message.error(response.Message)
       }

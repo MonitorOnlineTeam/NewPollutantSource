@@ -23,6 +23,13 @@ const layout = {
   wrapperCol: { span: 14 },
 };
 
+const searchParams = [{
+  Key: 'dbo__T_Bas_CementFossilFuel__IsImp',
+  Value: 1,
+  Where: '$=',
+}]
+
+
 @connect(({ loading, autoForm, CO2Emissions }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
@@ -65,15 +72,6 @@ class index extends Component {
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
         SumType: 'w-foss',
-      }
-    });
-  }
-
-  getTableDataSource = () => {
-    this.props.dispatch({
-      type: 'autoForm/getAutoFormData',
-      payload: {
-        configId: CONFIG_ID,
       }
     });
   }
@@ -172,16 +170,18 @@ class index extends Component {
           configId: CONFIG_ID,
           FormData: {
             ...values,
+            IsImp: 1,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
             FossilFuelCode: KEY
           },
-          reload: KEY ? true : false,
+          searchParams: searchParams,
+          reload: true
         }
       }).then(() => {
         this.setState({
           isModalVisible: false,
         })
-        this.getTableList();
+        // this.getTableList();
       })
     })
   }
@@ -192,6 +192,7 @@ class index extends Component {
       type: 'autoform/getAutoFormData',
       payload: {
         configId: CONFIG_ID,
+        searchParams: searchParams,
       }
     })
   }
@@ -206,6 +207,7 @@ class index extends Component {
       },
       callback: (res) => {
         // Deviation, GetType
+
         this.setState({
           // CO2OxidationRateState: res.CO2OxidationRateDataType,
           // UnitCarbonContentState: res.UnitCarbonContentDataType,
@@ -253,8 +255,11 @@ class index extends Component {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <SearchWrapper configId={CONFIG_ID} />
+          <SearchWrapper configId={CONFIG_ID}
+            searchParams={searchParams}
+          />
           <AutoFormTable
+            noload
             getPageConfig
             configId={CONFIG_ID}
             onAdd={() => {
@@ -274,7 +279,7 @@ class index extends Component {
               })
             }}
             appendHandleButtons={(keys, rows) => {
-              return <ImportData onSuccess={() => { this.getTableDataSource() }} />;
+              return <ImportData onSuccess={() => { this.getTableList() }} />;
             }}
             footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
           />

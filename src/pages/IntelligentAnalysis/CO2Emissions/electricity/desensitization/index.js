@@ -1,40 +1,34 @@
-/*
- * @Author: Jiaqi 
- * @Date: 2021-10-12 13:58:42 
- * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-10-12 14:02:17
- * @Description: 净购入电力
- */
 import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, Input, Button } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+const industry = INDUSTRYS.electricity;
 import Debounce from 'lodash.debounce';
 
-
-const industry = INDUSTRYS.cement;
+const { TextArea } = Input;
 const { Option } = Select;
-const CONFIG_ID = 'CementDischarge';
-const SELECT_LIST = [{ "key": 1, "value": "外购电力" }]
+const CONFIG_ID = 'Desulphurization';
+const SELECT_LIST = [{ "key": 1, "value": "脱硫剂" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
 };
 
-@connect(({ loading, autoForm, global }) => ({
+@connect(({ loading, autoForm, CO2Emissions }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
+  Dictionaries: CO2Emissions.Dictionaries,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -45,14 +39,32 @@ class index extends PureComponent {
       editData: {},
       KEY: undefined,
       FileUuid: undefined,
+      currentTypeData: {},
+      editTotalData: {},
     };
+  }
+
+  // 根据企业和时间获取种类
+  getCO2EnergyType = (formEidt) => {
+    let values = this.formRef.current.getFieldsValue();
+    const { EntCode, MonitorTime } = values;
+    this.props.dispatch({
+      type: 'CO2Emissions/getCO2EnergyType',
+      payload: {
+        IndustryCode: industry,
+        EntCode: EntCode,
+        SelectType: 'D',
+        Time: moment(MonitorTime).format("YYYY-MM-01 00:00:00"),
+      },
+    })
+    // !formEidt && this.countEmissions();
   }
 
   // 计算排放量
   countEmissions = () => {
-    // 化石燃料燃烧排放量 = 活动数据 × 排放因子
+    // 排放量 = 脱硫剂中碳酸盐消耗量 × 碳酸盐排放因子
     let values = this.formRef.current.getFieldsValue();
-    let { EntCode, MonitorTime, Emission = 0, ActivityData = 0 } = values;
+    let { EntCode, MonitorTime, DesulfurizerType, CarbonateConsumption = 0, CarbonateEmission = 0 } = values;
     if (EntCode && MonitorTime) {
       this.props.dispatch({
         type: 'CO2Emissions/countEmissions',
@@ -60,17 +72,39 @@ class index extends PureComponent {
           EntCode: EntCode,
           Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
           IndustryCode: industry,
-          CalType: 'w-2',
-          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0, }
+          Type: DesulfurizerType,
+          CalType: 'p-4',
+          Data: { '脱硫剂中碳酸盐消耗量': CarbonateConsumption || 0, '碳酸盐排放因子': CarbonateEmission || 0 }
         },
         callback: (res) => {
+          console.log('res=', res)
           this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
         }
       })
     }
   }
 
+  // 种类change，填写缺省值
+  onTypesChange = (value, option) => {
+    console.log('option=', option)
+    const { Dictionaries } = this.props;
+    this.setState({
+      currentTypeData: Dictionaries.one[value],
+      typeUnit: option['data-unit']
+    })
+    this.formRef.current.setFieldsValue({
+      'CarbonateEmission': Dictionaries.one[value]["排放因子"],
+    });
+    // this.countEmissions();
+  }
+
   handleCancel = () => {
+    this.props.dispatch({
+      type: 'CO2Emissions/updateState',
+      payload: {
+        Dictionaries: {}
+      }
+    })
     this.setState({
       isModalVisible: false
     })
@@ -79,7 +113,7 @@ class index extends PureComponent {
   // 保存
   onHandleSubmit = () => {
     this.formRef.current.validateFields().then((values) => {
-      const { editData, KEY } = this.state;
+      const { totalData, KEY } = this.state;
       console.log('KEY=', KEY)
       let actionType = KEY ? 'autoForm/saveEdit' : 'autoForm/add';
 
@@ -88,9 +122,10 @@ class index extends PureComponent {
         payload: {
           configId: CONFIG_ID,
           FormData: {
+            ...totalData,
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
-            PowerDischargeCode: KEY
+            DesulphurizationCode: KEY
           },
           reload: KEY ? true : undefined,
         }
@@ -119,23 +154,28 @@ class index extends PureComponent {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_CementDischarge.PowerDischargeCode': this.state.KEY,
+        'dbo.T_Bas_CO2Desulphurization.DesulphurizationCode': this.state.KEY,
       },
       callback: (res) => {
         this.setState({
           editData: res,
           isModalVisible: true,
+        }, () => {
+          this.getCO2EnergyType(true)
         })
       }
     })
   }
 
   render() {
-    const { isModalVisible, editData, FileUuid } = this.state;
-    const { tableInfo } = this.props;
+    const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, totalVisible, typeUnit, editTotalData } = this.state;
+    const { tableInfo, Dictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
+
+    const TYPES = Dictionaries.two || [];
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    let count = _.sumBy(dataSource, 'dbo.T_Bas_CementDischarge.tCO2');
+    let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2Desulphurization.tCO2');
+
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -149,12 +189,14 @@ class index extends PureComponent {
                 editData: {},
                 KEY: undefined,
                 FileUuid: undefined,
+                FileUuid2: undefined,
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementDischarge.AttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid }, () => {
-                this.getFormData(FileUuid);
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2Desulphurization.AttachmentID')
+              const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CO2Desulphurization.DevAttachmentID')
+              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2 }, () => {
+                this.getFormData();
               })
             }}
             footer={() => <div className="">排放量合计：{count}</div>}
@@ -162,12 +204,14 @@ class index extends PureComponent {
         </Card>
         <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
           <Form
+            style={{ marginTop: 24 }}
             {...layout}
             ref={this.formRef}
             initialValues={{
               ...editData,
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
+              GetType: editData.GetType,
             }}
           >
             <Row>
@@ -177,7 +221,7 @@ class index extends PureComponent {
                   label="企业"
                   rules={[{ required: true, message: '请选择企业!' }]}
                 >
-                  <Select placeholder="请选择企业">
+                  <Select placeholder="请选择企业" onChange={this.getCO2EnergyType}>
                     {
                       EntView.map(item => {
                         return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
@@ -192,18 +236,44 @@ class index extends PureComponent {
                   label="时间"
                   rules={[{ required: true, message: '请选择时间!' }]}
                 >
-                  <DatePicker picker="month" style={{ width: '100%' }} />
+                  <DatePicker picker="month" style={{ width: '100%' }} onChange={this.getCO2EnergyType} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="PowerDischargeType"
-                  label="种类"
-                  rules={[{ required: true, message: '请选择种类!' }]}
+                  name="DesulfurizerType"
+                  label="脱硫剂类型"
+                  rules={[{ required: true, message: '请选择脱硫剂类型!' }]}
                 >
-                  <Select placeholder="请选择种类">
+                  <Select placeholder="请选择脱硫剂类型" onChange={this.onTypesChange}>
                     {
-                      SELECT_LIST.map(item => {
+                      TYPES.map(item => {
+                        return <Option value={item.code} key={item.code} data-unit={item.typeUnit}>{item.name}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="CarbonateConsumption"
+                  label={<p>脱硫剂中碳酸盐消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
+                  rules={[{ required: true, message: '请填写脱硫剂中碳酸盐消耗量!' }]}
+                >
+                  <InputNumber style={{ width: '100%' }} placeholder="消耗量"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="GetType"
+                  label="获取方式"
+                  rules={[{ required: true, message: '请选择获取方式!' }]}
+                >
+                  <Select placeholder="请选择获取方式">
+                    {
+                      GET_SELECT_LIST.map(item => {
                         return <Option value={item.key} key={item.key}>{item.value}</Option>
                       })
                     }
@@ -212,22 +282,24 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="ActivityData"
-                  label="活动数据（MWh）"
-                  rules={[{ required: true, message: '请填写活动数据!' }]}
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 7 }}
+                  name="DevAttachmentID"
+                  label="证明材料"
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
-                  />
+                  <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
+                    this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
+                  }} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="Emission"
-                  label="排放因子（tCO₂/MWh）"
-                  rules={[{ required: true, message: '请填写排放因子!' }]}
+                  name="CarbonateEmission"
+                  // label={<p>碳酸盐排放因子{currentTypeData['排放因子Unit'] ? <span>({currentTypeData['低位发热量Unit']})</span> : ''}</p>}
+                  label="碳酸盐排放因子（tCO₂/t）"
+                  rules={[{ required: true, message: '请填写碳酸盐排放因子!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子"
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写碳酸盐排放因子"
                     onChange={Debounce(() => this.countEmissions(), maxWait)}
                   />
                 </Form.Item>
@@ -235,10 +307,9 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="tCO2"
-                  label="排放量（tCO₂）"
                   label={
                     <span>排放量（tCO₂）
-                      <QuestionTooltip content="排放量 = 活动数据 × 排放因子" />
+                      <QuestionTooltip content="排放量 = 脱硫剂中碳酸盐消耗量 × 碳酸盐排放因子" />
                     </span>
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}

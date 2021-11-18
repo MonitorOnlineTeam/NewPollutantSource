@@ -30,7 +30,7 @@ const CONFIG_ID = 'CementSupplementaryData';
   // loading: loading.effects['autoForm/getAutoFormData'],
   loading: loading.effects['autoForm/getFormData'],
   configIdList: autoForm.configIdList,
-  cementDictionaries: CO2Emissions.cementDictionaries,
+  Dictionaries: CO2Emissions.Dictionaries,
 }))
 class AddOrEditPage extends PureComponent {
   constructor(props) {
@@ -153,20 +153,20 @@ class AddOrEditPage extends PureComponent {
 
   // 种类change，填写缺省值
   onTypesChange = (value) => {
-    const { cementDictionaries } = this.props;
+    const { Dictionaries } = this.props;
     this.formRef.current.setFieldsValue({
-      'LowFever': cementDictionaries.one[value]["低位发热量"],
-      'UnitCarbonContent': cementDictionaries.one[value]["含碳量"],
-      'CO2OxidationRate': cementDictionaries.one[value]["碳氧化率"],
+      'LowFever': Dictionaries.one[value]["低位发热量"],
+      'UnitCarbonContent': Dictionaries.one[value]["含碳量"],
+      'CO2OxidationRate': Dictionaries.one[value]["碳氧化率"],
     });
   }
 
   render() {
     const { isModalVisible, isSLVisible, editData } = this.state;
-    const { loading, cementDictionaries } = this.props;
+    const { loading, Dictionaries } = this.props;
     const { EntView = [] } = this.props.configIdList;
     let KEY = this.props.history.location.query.key;
-    const TYPES = cementDictionaries.two || [];
+    const TYPES = Dictionaries.two || [];
 
     console.log('editData=', editData)
     return (

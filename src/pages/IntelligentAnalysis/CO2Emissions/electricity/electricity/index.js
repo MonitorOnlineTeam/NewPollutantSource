@@ -9,6 +9,9 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
+import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+const industry = INDUSTRYS.electricity;
+import Debounce from 'lodash.debounce';
 
 const { Option } = Select;
 const CONFIG_ID = 'CO2PowerDischarge';
@@ -37,8 +40,30 @@ class index extends PureComponent {
     };
   }
 
-  onAddClick = () => {
 
+  // 计算排放量
+  countEmissions = () => {
+    // 排放量 = 活动数据 × 排放因子
+    let values = this.formRef.current.getFieldsValue();
+
+    let { EntCode, MonitorTime, ActivityData = 0, Emission = 0 } = values;
+    if (EntCode && MonitorTime) {
+      this.props.dispatch({
+        type: 'CO2Emissions/countEmissions',
+        payload: {
+          EntCode: EntCode,
+          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
+          IndustryCode: industry,
+          Type: 1,
+          CalType: 'w-2',
+          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0 }
+        },
+        callback: (res) => {
+          console.log('res=', res)
+          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
+        }
+      })
+    }
   }
 
   handleCancel = () => {
@@ -104,7 +129,7 @@ class index extends PureComponent {
   render() {
     const { isModalVisible, editData, FileUuid } = this.state;
     const { tableInfo } = this.props;
-    const { Output_Enterprise = [] } = this.props.configIdList;
+    const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2PowerDischarge.tCO2');
     return (
@@ -138,7 +163,7 @@ class index extends PureComponent {
             initialValues={{
               ...editData,
               MonitorTime: moment(editData.MonitorTime),
-              EntCode: editData['dbo.T_Bas_Enterprise.EntCode'],
+              EntCode: editData['dbo.EntView.EntCode'],
             }}
           >
             <Row>
@@ -150,8 +175,8 @@ class index extends PureComponent {
                 >
                   <Select placeholder="请选择企业">
                     {
-                      Output_Enterprise.map(item => {
-                        return <Option value={item["dbo.T_Bas_Enterprise.EntCode"]} key={item["dbo.T_Bas_Enterprise.EntCode"]}>{item["dbo.T_Bas_Enterprise.EntName"]}</Option>
+                      EntView.map(item => {
+                        return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
                       })
                     }
                   </Select>
@@ -187,11 +212,9 @@ class index extends PureComponent {
                   label="活动数据（MWh）"
                   rules={[{ required: true, message: '请填写活动数据!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据" onChange={(value) => {
-                    let val2 = this.formRef.current.getFieldValue('Emission') || 0;
-                    let count = value * val2;
-                    this.formRef.current.setFieldsValue({ 'tCO2': count });
-                  }} />
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -200,11 +223,9 @@ class index extends PureComponent {
                   label="排放因子（tCO₂/MWh）"
                   rules={[{ required: true, message: '请填写排放因子!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子" onChange={(value) => {
-                    let val1 = this.formRef.current.getFieldValue('ActivityData') || 0;
-                    let count = value * val1;
-                    this.formRef.current.setFieldsValue({ 'tCO2': count });
-                  }} />
+                  <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写排放因子"
+                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
