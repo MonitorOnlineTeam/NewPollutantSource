@@ -36,7 +36,23 @@ export default Model.extend({
       },
     ],
     operaOrderData: [1823, 2348, 2903, 1049, 1317, 6302, 2302, 34234],
-    planOperaList:[]
+    planOperaList:[],
+    planCompleteList:[
+      {sort:1,name:'北京',roat:'99.98%'},
+      {sort:2,name:'北京',roat:'99.98%'},
+      {sort:3,name:'北京',roat:'99.98%'},
+      {sort:4,name:'北京',roat:'99.98%'},
+      {sort:5,name:'北京',roat:'99.98%'},
+      {sort:6,name:'北京',roat:'99.98%'},
+      {sort:7,name:'北京',roat:'99.98%'},
+      {sort:8,name:'北京',roat:'99.98%'},
+      {sort:9,name:'北京',roat:'99.98%'},
+      {sort:10,name:'北京',roat:'99.98%'},
+      {sort:11,name:'北京',roat:'99.98%'},
+      {sort:12,name:'北京',roat:'99.98%'},
+      {sort:13,name:'北京',roat:'99.98%'},
+      {sort:14,name:'北京',roat:'99.98%'},
+    ]
   },
   effects: {
     *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计

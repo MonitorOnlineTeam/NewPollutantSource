@@ -17,7 +17,8 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import styles from "../style.less"
-import CardHeader from '../components/CardHeader'
+import CardHeader from './CardHeader'
+import ScrollTable from './ScrollTable'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -29,6 +30,7 @@ const dvaPropsData =  ({ loading,newestHome }) => ({
   operationDataSource:newestHome.operationDataSource,
   operaOrderData:newestHome.operaOrderData,
   planOperaList:newestHome.planOperaList,
+  planCompleteList:newestHome.planCompleteList
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -246,7 +248,8 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
  </Row>
    </div>
 },[planOperaList])
-
+  
+  const  { planCompleteList } = props;
   return (
     <div className={styles.leftContent}>
          <div className={styles.pointSty}>
@@ -272,7 +275,9 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
 
           <div className={styles.planComplete}>
            <CardHeader  btnChange={btnChange} showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
-
+           <div style={{height:'100%', padding:'26px 18px 0 0'}}>
+           <ScrollTable data={planCompleteList}  column={[]} />
+           </div>
           </div>
 
         </div>

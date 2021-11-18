@@ -44,11 +44,12 @@ const { Description } = DescriptionList;
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const { Step } = Steps;
-let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
-
+// let SCREEN_HEIGHT = document.querySelector('body').offsetHeight - 250;
+let SCREEN_HEIGHT = "calc(100vh - 250px)";
 @Form.create()
 @connect(({ task, loading }) => ({
-    isloading: loading.effects['task/GetTaskRecord'],
+    // isloading: loading.effects['task/GetTaskRecord'],
+    isloading: task.TaskRecordLoading,
     taskInfo: task.TaskRecord,
     alarmList: [],
 }))
@@ -195,24 +196,25 @@ class EmergencyDetailInfo extends Component {
             style={{ marginBottom: '5px' }}
             icon={<CheckCircleOutlined />}
             onClick={() => {
-                if (recordType == '-1') {
-                    // 获取详情图片
-                    this.props.dispatch({
-                        type: 'common/getOperationImageList',
-                        payload: {
-                            FormMainID,
-                            // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
-                        },
-                        callback: res => {
-                            this.setState({
-                                visibleImg: true,
-                            })
-                        },
-                    })
-                } else {
-                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
-                }
+                // if (recordType == '-1') {
+                //     // 获取详情图片
+                //     this.props.dispatch({
+                //         type: 'common/getOperationImageList',
+                //         payload: {
+                //             FormMainID,
+                //             // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
+                //         },
+                //         callback: res => {
+                //             this.setState({
+                //                 visibleImg: true,
+                //             })
+                //         },
+                //     })
+                // } else {
+                //     router.push(`/operations/recordForm/${recordType}/${taskID}`)
+                // }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
+                router.push(`/operations/recordForm/${recordType}/${taskID}`)
             }}
         >{cnName}
         </Button>
@@ -450,6 +452,19 @@ class EmergencyDetailInfo extends Component {
                 sm: { span: 16 },
             },
         };
+        const { isloading } = this.props;
+        if (isloading) {
+            return (<Spin
+                style={{
+                    width: '100%',
+                    height: 'calc(100vh/2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+                size="large"
+            />);
+        }
         if (this.props.taskInfo === null) {
             return (
                 <div />
@@ -709,19 +724,7 @@ class EmergencyDetailInfo extends Component {
             listType: 'picture-card',
             fileList: [...fileList],
         };
-        const { isloading } = this.props;
-        if (isloading) {
-            return (<Spin
-                style={{
-                    width: '100%',
-                    height: 'calc(100vh/2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                size="large"
-            />);
-        }
+
 
         return (
             <div>

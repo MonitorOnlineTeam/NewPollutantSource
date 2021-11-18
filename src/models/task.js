@@ -66,6 +66,7 @@ export default Model.extend({
             pageSize: 20,
             total: 0,
         },
+        TaskRecordLoading:true,
     },
 
     effects: {
@@ -354,11 +355,14 @@ export default Model.extend({
         }, { call, update }) {
             const DataInfo = yield call(GetAlarmResponseList, payload);
             if (DataInfo !== null && DataInfo.IsSuccess) {
+                yield update({ TaskRecordLoading:false });  
                 if (DataInfo.Datas !== null) {
                     yield update({ AlarmResponseList: DataInfo.Datas });
                 } else {
                     yield update({ AlarmResponseList: [] });
                 }
+            }else{
+                yield update({ TaskRecordLoading:false });  
             }
         },
         /** 获取任务列表 */
