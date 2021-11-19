@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
 import { Row, Col, Button, Card, Tooltip, Form, Select, Modal, DatePicker, Spin } from 'antd'
-import { DownloadOutlined, FileWordTwoTone, FolderViewOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FileZipTwoTone, FolderViewOutlined } from '@ant-design/icons';
 import { connect } from 'dva'
 import moment from 'moment'
 import FileViewer from 'react-file-viewer';
@@ -96,7 +96,7 @@ class index extends PureComponent {
                       ]}
                     >
                       <Meta
-                        avatar={<FileWordTwoTone style={{ fontSize: 36, marginBottom: 16 }} />}
+                        avatar={<FileZipTwoTone style={{ fontSize: 36, marginBottom: 16 }} />}
                         title={<div style={{ lineHeight: '40px' }}>
                           <Tooltip title={item.FileName}>
                             <p className="textOverflow">{item.FileName}</p>

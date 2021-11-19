@@ -56,7 +56,7 @@ const QCStatusList = {
 class ManualQualityPage extends Component {
   state = {
     currentRowData: {},
-    GasPathMode: 0,
+    GasPathMode: 1,
     QCLogsAnswer: {},
   }
 
@@ -188,13 +188,32 @@ class ManualQualityPage extends Component {
     })
   }
 
+
+  onChangeMode = () => {
+    this.props.dispatch({
+      type: "qcManual/getSampleRangeFlow",
+      payload: {
+        DGIMN: this.props.DGIMN,
+        PollutantCode: this.state.PollutantCode,
+        GasPathMode: this.state.GasPathMode
+      },
+      callback: (res) => {
+        this.setState({
+          MYMin: res.min,
+          MYMax: res.max,
+        })
+      }
+    })
+  }
+
   //
   blindCheckClick = (PollutantCode, QCAType) => {
     this.props.dispatch({
       type: "qcManual/getSampleRangeFlow",
       payload: {
         DGIMN: this.props.DGIMN,
-        PollutantCode: PollutantCode
+        PollutantCode: PollutantCode,
+        GasPathMode: this.state.GasPathMode
       },
       callback: (res) => {
         this.setState({
@@ -420,7 +439,7 @@ class ManualQualityPage extends Component {
         {console.log("QCLogsStart=", QCLogsStart)}
         {console.log("QCLogsResult=", QCLogsResult)}
         {console.log("QCLogsAnswer-render=", QCLogsAnswer)}
-        <div className={styles.qcLogContainer}>
+        <div className={styles.qcLogContainer} >
           {QCAResultLoading ? <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> : ""}
           {/* 1 */}
           <div className={styles.logItem}>
@@ -474,7 +493,7 @@ class ManualQualityPage extends Component {
           <div>
             <p style={{ marginBottom: 18 }}>
               气路模式：
-              <Radio.Group value={GasPathMode} onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
+              <Radio.Group value={GasPathMode} onChange={(e) => this.setState({ GasPathMode: e.target.value }, () => this.onChangeMode())}>
                 <Radio value={0}>全程校验</Radio>
                 <Radio value={1}>系统校验</Radio>
               </Radio.Group>
@@ -495,7 +514,7 @@ class ManualQualityPage extends Component {
             </div>
           </div>
         </Modal>
-      </Card>
+      </Card >
     );
   }
 }

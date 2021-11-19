@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, DatePicker, Row, Col, Space, Button, ConfigProvider, Modal, Spin, Select, Tag, Empty, message } from 'antd'
+import { Card, DatePicker, Row, Col, Space, Button, ConfigProvider, Modal, Spin, Select, Tag, Empty, message, Radio } from 'antd'
 import QuestionTooltip from "@/components/QuestionTooltip"
 import styles from './index.less';
 import { LoadingOutlined } from "@ant-design/icons"
@@ -34,6 +34,7 @@ class DataExtractPage extends PureComponent {
     // 分钟：mins 小时 hour  日 day  系统参数：system 质控标气信息：qcainfo
     this.defalutPollutantCode = gasPollutantList[0].value;
     this.state = {
+      GasPathMode: 0,
       currentPollutantCode: this.defalutPollutantCode,
       mins: [moment().subtract(1, "hour"), moment()],
       hour: [moment().subtract(1, "hour"), moment()],
@@ -125,6 +126,7 @@ class DataExtractPage extends PureComponent {
         BeginTime: beginTime,
         EndTime: endTime,
         Type: type,
+        GasPathMode: type === 'qcaflow' ? this.state.GasPathMode : undefined,
         PollutantCode: (type === "qcainfo" || type === "qcaflow") ? currentPollutantCode : undefined,
         DGIMN: this.props.DGIMN
       },
@@ -199,10 +201,10 @@ class DataExtractPage extends PureComponent {
 
 
   render() {
-    const { mins, hour, day, loading, currentPollutantCode } = this.state;
+    const { mins, hour, day, loading, currentPollutantCode, GasPathMode } = this.state;
     const { QCLogsStart, QCLogsAnswer, QCLogsResult, pointName } = this.props;
     const { PQLLTEXT, BQXXTEXT } = this._SELF_;
-
+    console.log('GasPathMode=', GasPathMode)
     return (
       <Spin spinning={!!loading}>
         <Card title="监测数据提取">
@@ -286,11 +288,12 @@ class DataExtractPage extends PureComponent {
               <Button type="primary" onClick={() => {
                 const that = this;
                 confirm({
-                  title: '请选择污染物',
+                  title: '提取配气流量信息',
                   okText: "确认",
                   cancelText: "取消",
                   // icon: <ExclamationCircleOutlined />,
-                  content: <div>
+                  content: <div style={{ marginTop: 20 }}>
+                    污染物：
                     <Select style={{ width: 200 }} defaultValue={this.state.currentPollutantCode} onChange={(val) => {
                       that.setState({ currentPollutantCode: val })
                     }}>
@@ -302,12 +305,20 @@ class DataExtractPage extends PureComponent {
                         })
                       }
                     </Select>
+                    <p style={{ marginTop: 20 }}>
+                      气路模式：
+                      <Radio.Group defaultValue={0}  onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
+                        <Radio value={0}>全程校验</Radio>
+                        <Radio value={1}>系统校验</Radio>
+                      </Radio.Group>
+                    </p>
                   </div>,
                   onOk() {
                     that.sendDataExtract("qcaflow");
                   },
                   onCancel() {
                     that.setState({
+                      GasPathMode: 0,
                       currentPollutantCode: that.defalutPollutantCode,
                     })
                   },
