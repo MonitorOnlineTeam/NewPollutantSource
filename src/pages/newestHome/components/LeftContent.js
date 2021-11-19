@@ -17,8 +17,9 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import styles from "../style.less"
-import CardHeader from './CardHeader'
-import ScrollTable from './ScrollTable'
+import CardHeader from './publicComponents/CardHeader'
+import ScrollTable from './publicComponents/ScrollTable'
+import MoreBtn from './publicComponents/MoreBtn'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -212,11 +213,13 @@ const planInspection = () =>{
 }
 
 const [planBtnCheck,setPlanBtnCheck] = useState(1)
-const btnChange = (key) =>{
+const btnClick = (key) =>{
   setPlanBtnCheck(key)
 }
 
-
+const moreBtnClick = (type) =>{
+  console.log(type)
+}
 
 
 const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
@@ -260,11 +263,12 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
 
          <div className={styles.operaOrder}>
            <CardHeader  title='近30日运维工单统计'/>
-           <div style={{height:'100%', padding:'26px 10px 0 0'}}>
+           <div style={{height:'100%', padding:'20px 10px 0 0'}}>
            <ReactEcharts 
               option={operaOrderOption}
-              style={{height:'calc(100% - 26px )',width:'100%'}}
+              style={{height:'calc(100% - 44px )',width:'100%'}}
              />
+             <MoreBtn style={{paddingRight:10}}  type='operaOrder' moreBtnClick={moreBtnClick}/>
             </div>
           </div>
 
@@ -274,9 +278,10 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
           </div>
 
           <div className={styles.planComplete}>
-           <CardHeader  btnChange={btnChange} showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
-           <div style={{height:'100%', padding:'26px 18px 0 0'}}>
+           <CardHeader  btnClick={btnClick} showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
+           <div style={{height:'100%', padding:'21px 18px 0 0'}}>
            <ScrollTable data={planCompleteList}  column={[]} />
+           <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/>
            </div>
           </div>
 

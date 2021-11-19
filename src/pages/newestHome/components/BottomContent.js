@@ -17,6 +17,7 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import styles from "../style.less"
+
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -25,45 +26,68 @@ const namespace = 'newestHome'
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
-
+  exportLoading: loading.effects[`${namespace}/exportnewestHomeList`],
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-    updateState:(payload)=>{ //更新代码
+    updateState:(payload)=>{ //更新参数
+        dispatch({
+          type: `${namespace}/updateState`, 
+          payload:{...payload},
+        }) 
+      },
+    getnewestHomeList : (payload,callback) =>{ //列表
       dispatch({
-        type: `${namespace}/updateState`, 
-        payload:{...payload},
-      }) 
+        type: `${namespace}/getnewestHomeList`,
+        payload:payload,
+        callback:callback
+      })
+      
     },
+
   }
 }
 const Index = (props) => {
 
 
 
+  const [form] = Form.useForm();
+
+  
+ const [tableDatas,setTableDatas] = useState([])
+ const [pollutantType,setPollutantType] = useState('')
 
 
+  const  { tableLoading,exportLoading,checkName,totalDatas } = props; 
 
   
   useEffect(() => {
-  
-  },[]); 
+      getnewestHomeList()
+  },[]);
 
-  
-  const { showBtn, type,btnCheck,btnChange } = props;
-  const btnArr = type =='plan'? [{name:"巡检",key:1}, {name:"校准",key:2}] : [{name:"近7日",key:1}, {name:"近30日",key:2}]
+
+  const getnewestHomeList = (value) =>{
+    props.getnewestHomeList({PollutantType:value},(res)=>{
+      setTableDatas(res.notExpired7List)
+    })
+  }
+
+
+
+
+
   return (
-    <div>
-          <span  className={styles.titleTextSty}>{props.title}</span>
-          <img  className={styles.titleImgSty} src='/title_bg2.png'/>
-          {showBtn?
-          <div className={styles.titleBtn}>
-            {btnArr.map(item=>{
-              return <span onClick={()=>{btnChange(item.key)}} className={btnCheck==item.key&&styles.titleCheckSty}>{item.name}</span>
-            })}
-          </div> : null}
-    </div>
+        <Row style={{flexFlow:'row nowrap'}} justify='end'> 
+          <Col span={8} className={styles.clockAbnormal}>
+           </Col>
+           <Col span={8} className={styles.consumablesStatistics}>
+
+           </Col>
+           <Col span={8} className={styles.deviceAbnormal}>
+
+           </Col>
+        </Row>  
   );
 };
 export default connect(dvaPropsData,dvaDispatch)(Index);

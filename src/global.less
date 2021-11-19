@@ -485,16 +485,18 @@ a:hover {
   }
 
 }
-#basicLayout>div>div>.homeBreadcrumb{ //首页
+#basicLayout>div>div>.homeBreadcrumb{ // 新首页 2021.11
+    height: calc(100vh - 64px);
+    padding:10px 10px 15px 10px;
+    overflow-y: auto;
    .ant-pro-page-header-wrap-page-header-warp{
     background-color: #2E3950;
+    // margin: 0 10px;
   }
   .ant-pro-page-header-wrap-children-content{
     margin: 0;
     background: unset;
-  }
-  .ant-pro-page-header-wrap-children-content{
-    height: calc(100vh - 108px);
+    height: 100%;
   }
   .ant-page-header-heading-title,span:last-child a{
     color:#fff
@@ -505,7 +507,6 @@ a:hover {
   background-image: url(/bg2.jpg);
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  padding: 10px;
 }
 #notBreadcrumbLayout {
   .ant-pro-page-header-wrap-children-content {

@@ -17,6 +17,7 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import LeftContent from './LeftContent'
+import BottomContent from './BottomContent'
 import styles from "../style.less"
 
 const { Option } = Select;
@@ -65,9 +66,10 @@ const Index = (props) => {
 
   const  { tableLoading,exportLoading,checkName,totalDatas } = props; 
 
-  
+  const [ hasAsyncData,setHasAsyncData] = useState()
   useEffect(() => {
       getnewestHomeList()
+      setHasAsyncData(true)
   },[]);
 
 
@@ -77,14 +79,26 @@ const Index = (props) => {
     })
   }
 
+  const [scrollTop,setScrollTop] = useState(0)
+  const handleScroll=(e)=>{
+    //滚动条高度
+    // console.log(e.srcElement.scrollTop)
+    setScrollTop(e.srcElement.scrollTop)
+  }
 
 
-
+  useEffect(() => {
+    let scrollEle = document.querySelector(".homeBreadcrumb");
+    // 监听
+    scrollEle.addEventListener("scroll", handleScroll);
+    // 销毁
+    return () =>  scrollEle.addEventListener("scroll", handleScroll);
+  },[hasAsyncData]);
 
   return (
   <BreadcrumbWrapper type='homePage'>
       <div className={styles.homePage}>
-        <Row style={{padding:'10px 0'}}>   {/**地图部分 和 地图两侧*/}
+        <Row style={{paddingTop:10}}>   {/**地图部分 和 地图两侧*/}
           <Col span={5} className={styles.leftContent}>
              <LeftContent />
            </Col>
@@ -95,6 +109,9 @@ const Index = (props) => {
            111
            </Col>
         </Row>  
+        <div className={styles.bottomContent}>    {/**底部组件*/}
+         <BottomContent />
+        </div>
       </div>  
    </BreadcrumbWrapper>
   );
