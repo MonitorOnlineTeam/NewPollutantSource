@@ -273,10 +273,10 @@ export default Model.extend({
             //   standardValueUtin = "%"
             // }
 
-            if (payload.PollutantCode === "a19001") {
+            if (payload.PollutantCode === "a19001" || payload.PollutantCode === 'a05001') {
               standardValueUtin = "%"
             } else {
-              standardValueUtin = "mg/m3"
+              standardValueUtin = "mg/m³"
             }
             standardValue = payload.Value;
             newStandardValueList.push(payload.Value)

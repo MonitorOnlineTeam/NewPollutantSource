@@ -32,7 +32,7 @@ const pollutantCodeList = {
   "a21002": { name: "NOx", unit: "mg/m³" },
   "a19001": { name: "O₂", unit: "%" },
   "30": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
-  "a05001": { name: "CO₂", unit: "mg/m³" },  // 二氧化碳
+  "a05001": { name: "CO₂", unit: "%" },  // 二氧化碳
   "a05002": { name: "CH₄", unit: "mg/m³" },  // 甲烷
   "a24002": { name: "C₃H₈", unit: "mg/m³" },  // 丙烷
   "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
@@ -110,7 +110,7 @@ class ViewQCProcess extends PureComponent {
             (p4Pressure.pollutantCode == "s01" && p4Pressure.isException == "1") ?
               <img src="/qualityControl/gasException.png" alt="" /> : null
           } */}
-          <p dangerouslySetInnerHTML={{ __html: gasData[0].PollutantName }}></p>
+          <p style={{ top: 20 }} dangerouslySetInnerHTML={{ __html: gasData[0].PollutantName }}></p>
         </div>
 
 

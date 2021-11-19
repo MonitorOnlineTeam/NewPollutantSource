@@ -69,13 +69,12 @@ class CheckModal extends PureComponent {
   componentDidMount() {
     this.getKeyParameterList();
     this.getqcaLogAndProcess();
-
-
   }
 
   // 折线图配置项
   lineOption = () => {
     const { standValList, valueList, timeList, currentRowData } = this.props;
+    let unit = currentRowData.PollutantName === '二氧化碳' ?  '%' :currentRowData.Unit
     let option = {
       color: ["#56f485", "#c23531"],
       legend: {
@@ -103,12 +102,12 @@ class CheckModal extends PureComponent {
               ${params[0].name}
               <br />
               ${params[0].marker}
-              ${params[0].seriesName}：${params[0].value}${currentRowData.Unit ? currentRowData.Unit : ""}
+              ${params[0].seriesName}：${params[0].value}${unit ? unit : ""}
               <br />`
             }
             if (params[1]) {
               params1 = `${params[1].marker}
-${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRowData.Unit : ""}`
+${params[1].seriesName} ：${params[1].value} ${unit ? unit : ""}`
             }
             return params0 + params1;
           }
