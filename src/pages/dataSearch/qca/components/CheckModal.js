@@ -210,6 +210,7 @@ ${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRow
   render() {
     const { currentRowData = {}, qcaLogDataList, checkModalVisible, pointName, keyParameterList, QCAType, loading } = this.props;
     const { paramsColumns, logColumns } = this._SELF_;
+    let unit = currentRowData.PollutantName === '二氧化碳' ?  '%' :currentRowData.Unit
     return (
       <Modal
         title={`${currentRowData.PollutantName ? currentRowData.PollutantName : ""} ${QCATypes[QCAType]} 详情【${pointName} 】`}
@@ -223,9 +224,9 @@ ${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRow
             <span>质控结果：{currentRowData.Result == 0 ? <Tag color="green">合格</Tag> : <Tag color="red">不合格</Tag>}</span>
             {
               QCAType != '3104' && QCAType != '3103' && <Space size={44}>
-                <span>标准气浓度：{currentRowData.StandardValue}{currentRowData.Unit}</span>
-                <span>测量值：{currentRowData.Check}{currentRowData.Unit}</span>
-                <span>量程范围：{currentRowData.SpanValue}{currentRowData.Unit}</span>
+                <span>标准气浓度：{currentRowData.StandardValue}{unit}</span>
+                <span>测量值：{currentRowData.Check}{unit}</span>
+                <span>量程范围：{currentRowData.SpanValue}{unit}</span>
                 <span>相对误差：{currentRowData.Offset}%</span>
                 <span>技术要求：{currentRowData.standard}</span>
               </Space>
@@ -233,7 +234,7 @@ ${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRow
             {   // 线性核查
               QCAType == '3104' && <Space size={44}>
                 <span>线性系数：{currentRowData.Ratio}</span>
-                <span>示值误差：{currentRowData.MaxOffset}{currentRowData.Unit}</span>
+                <span>示值误差：{currentRowData.MaxOffset}{unit}</span>
                 <span>标准要求：{currentRowData.standard}</span>
               </Space>
             }
