@@ -135,8 +135,7 @@ const { operaOrderData } = props;
            padding : [0, 0, 0, 5],
           },
         },
-        itemStyle:{
-         normal:{color: '#2f3648', barBorderRadius: [15, 15, 15 ,15] },},
+        itemStyle:{ normal:{color: '#2f3648', barBorderRadius: [15, 15, 15 ,15] },},
         barWidth: '50%',  // 柱形的宽度
         barGap: '-100%', // Make series be ove
         silent: true //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
@@ -213,7 +212,7 @@ const planInspection = () =>{
 }
 
 const [planBtnCheck,setPlanBtnCheck] = useState(1)
-const btnClick = (key) =>{
+const btnClick = (key,datatype) =>{
   setPlanBtnCheck(key)
 }
 
@@ -278,7 +277,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
           </div>
 
           <div className={styles.planComplete}>
-           <CardHeader  btnClick={btnClick} showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
+           <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
            <ScrollTable data={planCompleteList}  column={[]} />
            <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/>

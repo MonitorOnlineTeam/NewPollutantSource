@@ -64,21 +64,22 @@
     }
   }
 }
-  .pointSty,.operaOrder,.planOpera,.planComplete{
+  .pointSty,.operaOrder,.planOpera,.planComplete,.clockAbnormal,.consumablesStatistics,.deviceAbnormal{
     padding:21px 0 0 21px;
-    margin-bottom: 9px;
     position: relative;
     background:@cardBagCol;
   }
   .subjectFontSize{
     font-size: @subjectFontSize;
   }
-}
+
 
 
 .leftContent{
    
-
+  .pointSty,.operaOrder,.planOpera,.planComplete{
+    margin-bottom: 9px;
+  }
   .pointSty{
     height:224px;
     padding-bottom: 10px;
@@ -129,13 +130,31 @@
 }
 
 .bottomContent{   /* 底部部分 */
-   justify-self: end;
-  .clockAbnormal,.consumablesStatistics{
-    margin-right:10px ;
-  }
   .clockAbnormal,.consumablesStatistics,.deviceAbnormal{
     height: 285px;
+    width: calc(33.3333% - 6.66666px);
     background-color: #263249;
     
   }
+  .clockAbnormal{
+    padding-bottom: 15px;
+    .clockNumTextBag{
+      background: url(/clockNumTextBag.png) no-repeat;
+      background-position: center;
+      width: 80%;
+      height: 63px;
+      padding:5px 0 9px 0;
+    }
+    .clockNum{
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .clockText{
+      color: #06ADFB;
+      opacity: 0.4;
+    }
+  }
+
+}
+
 }

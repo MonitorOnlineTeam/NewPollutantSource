@@ -51,7 +51,7 @@ const Index = (props) => {
   },[]); 
 
   
-  const { showBtn, type,btnCheck,btnClick } = props;
+  const { showBtn, type,btnCheck,btnClick,dataType } = props;
   const btnArr = type =='plan'? [{name:"巡检",key:1}, {name:"校准",key:2}] : [{name:"近7日",key:1}, {name:"近30日",key:2}]
   return (
     <div className={styles.cardHeaderSty}>
@@ -60,7 +60,7 @@ const Index = (props) => {
           {showBtn?
           <div className={styles.titleBtn}>
             {btnArr.map(item=>{
-              return <span onClick={()=>{btnClick(item.key)}} className={btnCheck==item.key&&styles.titleCheckSty}>{item.name}</span>
+              return <span onClick={()=>{btnClick(item.key,type)}} className={btnCheck==item.key&&styles.titleCheckSty}>{item.name}</span>
             })}
           </div> : null}
     </div>

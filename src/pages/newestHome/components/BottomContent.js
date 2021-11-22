@@ -14,6 +14,8 @@ import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
+import 'echarts-liquidfill';
+import CardHeader from './publicComponents/CardHeader'
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import styles from "../style.less"
@@ -72,19 +74,141 @@ const Index = (props) => {
       setTableDatas(res.notExpired7List)
     })
   }
+  const [sceneBtnCheck,setSceneBtnCheck] = useState(1)
+  const sceneBtnClick = (key,type) =>{
+    setSceneBtnCheck(key)
+    console.log(type)
+  }
 
+  const sceneClockOption = (data)=>{
 
+    let rate = data?  data.replace('%','')/100 : data;
+    var option = {
+      series: [{
+          type: 'liquidFill',
+          data: [rate],
+          color:['#05ADFB'],
+          radius: "85%", //水球的半径
+          center: ['50%', '50%'],
+          silent: true,
+          itemStyle : { 
+            shadowBlur : 0,
+          }, 
+          outline: {
+            borderDistance: 0,//内环padding值
+            color: 'none',
+            itemStyle: { //外环
+                borderWidth: 5, //圆边线宽度
+                shadowBlur: 10,
+                shadowColor: 'rgba(63, 218, 255, 0.5)',
+                borderColor: { //线性渐变，多用于折线柱形图，前四个参数分别是 x0, y0, x2, y2, 范围从 0 - 1，相当于在图形包围盒中的百分比，
+                  type: 'linear',
+                  x: 0,         //（x,y），（x2， y2）分别表示线性渐变的起始点和结束点，globalCoord 为true 表示两个坐标点是绝对坐标        
+                  y: 0,                 
+                  x2: .2,                
+                  y2: 1,  
+                  colorStops: [
+                   {
+                      offset: 0.5,
+                      color: ['#05ADFB'], // 50% 处的颜色
+                   }, 
+                  {
+                      offset:0,
+                      color: ['#263249'], // 100% 处的颜色
+                  },
+                ],
+                globalCoord: true // 缺省为 false
+              }
+            }
+          },
+          backgroundStyle: { //内环
+            borderWidth: 5,
+            borderColor: '#263249',
+            color: 'none'
+        },
+        label: {
+          normal: {
+            formatter: function (name) {
+              let val = name.value? (name.value*100).toFixed(2) : '0.00';
+              return `{val|${ val}%}`
+            },
+              rich: {
+                  //富文本 对字体进一步设置样式。val对应的 value
+                  val: {
+                      fontSize: 20,
+                      fontWeight: "bold"
+                  }
+              }
+          }
+       },
+      },
+      ]
 
+};
+
+  return option;
+  }
 
 
   return (
-        <Row style={{flexFlow:'row nowrap'}} justify='end'> 
-          <Col span={8} className={styles.clockAbnormal}>
+        <Row style={{flexFlow:'row nowrap'}} justify='space-between'> 
+
+
+          <Col  className={styles.clockAbnormal}>       
+           <CardHeader  btnClick={sceneBtnClick}  showBtn type='weekScene' btnCheck={sceneBtnCheck} title='现场打卡异常统计'/>
+           <div style={{ padding:'11px 0 17px 0'}}>
+           <Row>
+           <div  style={{width:'50%'}}>
+                <ReactEcharts
+                  option={sceneClockOption('90%')}
+                  style={{ height: '112px',width:'100%' }}
+                /> 
+                <Row style={{padding:'3px 0 10px 0',fontWeight:'bold'}} justify='center' >计划内打卡异常率</Row> 
+                <Row justify='center'>
+                  <div className={styles.clockNumTextBag}>
+                  <Row justify='center'>
+                    <Col>
+                    <div className={styles.clockNum}>100次</div>
+                    <div className={styles.clockText}>打卡次数</div>
+                    </Col>
+                    <Col style={{paddingLeft:43}}>
+                    <div  className={styles.clockNum}>90次</div>
+                    <div  className={styles.clockText}>打卡异常次数</div>
+                    </Col>
+                   </Row>
+                   </div>
+                 </Row>
+                </div>
+           <div  style={{width:'50%'}}>
+                <ReactEcharts
+                  option={sceneClockOption('90%')}
+                  style={{ height: '112px',width:'100%' }}
+                />  
+            <Row style={{padding:'3px 0 10px 0',fontWeight:'bold'}} justify='center' >计划外打卡异常率</Row>   
+               <Row justify='center'>
+                 <div className={styles.clockNumTextBag}>
+                 <Row justify='center'>
+                   <Col>
+                   <div className={styles.clockNum}>100次</div>
+                   <div className={styles.clockText}>打卡次数</div>
+                   </Col>
+                   <Col style={{paddingLeft:43}}>
+                   <div  className={styles.clockNum}>90次</div>
+                   <div  className={styles.clockText}>打卡异常次数</div>
+                   </Col>
+                  </Row>
+                  </div>
+                </Row>
+                </div>
+           </Row>
+           </div>
            </Col>
-           <Col span={8} className={styles.consumablesStatistics}>
+            
+
+           <Col className={styles.consumablesStatistics}>
 
            </Col>
-           <Col span={8} className={styles.deviceAbnormal}>
+           <Col  className={styles.deviceAbnormal}>
 
            </Col>
         </Row>  
