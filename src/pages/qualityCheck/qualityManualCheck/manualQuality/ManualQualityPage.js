@@ -56,7 +56,7 @@ const QCStatusList = {
 class ManualQualityPage extends Component {
   state = {
     currentRowData: {},
-    GasPathMode: 1,
+    GasPathMode: 0,
     QCLogsAnswer: {},
   }
 

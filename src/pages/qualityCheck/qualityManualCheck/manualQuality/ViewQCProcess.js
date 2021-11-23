@@ -178,14 +178,16 @@ class ViewQCProcess extends PureComponent {
       {console.log("CEMSOpen=", CEMSOpen)}
       {/* CEMS连接状态 */}
       {
-        GasPathMode == 0 && (this.props.QCStatus == 1 || this.props.QCStatus == 0 || this.props.QCStatus == 2) ? <>
+        // 系统
+        GasPathMode == 1 && CEMSOpen == 1 && (this.props.QCStatus == 1 || this.props.QCStatus == 2) ? <>
           {/* true ? <> */}
           <img className={styles.CEMSLine} src="/qualityControl/CEMSLine.jpg" alt="" />
           <img className={styles.CEMSvalve} src="/qualityControl/valveOpen.jpg" alt="" />
         </> : null
       }
       {
-        GasPathMode == 1 && (this.props.QCStatus == 1 || this.props.QCStatus == 0 || this.props.QCStatus == 2) ? <>
+        // 全程
+        GasPathMode == 0 && CEMSOpen == 0 && (this.props.QCStatus == 1 || this.props.QCStatus == 2) ? <>
           {/* true ? <> */}
           <img className={styles.CEMSLine2} src="/qualityControl/CEMSLine2.png" alt="" />
           <img className={styles.CEMSvalve2} src="/qualityControl/valveOpen2.jpg" alt="" />

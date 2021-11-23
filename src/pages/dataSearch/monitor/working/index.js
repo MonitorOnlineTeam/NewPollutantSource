@@ -22,7 +22,7 @@ class working extends Component {
   changeDgimn = (value, selectItem) => {
     this.setState({
       DGIMN: value[0].key,
-      entName:  `${value[0].entName} - ${value[0].pointName}`
+      entName: `${value[0].entName} - ${value[0].pointName}`
     })
   }
   componentDidMount() {
@@ -34,21 +34,21 @@ class working extends Component {
     return (
       <>
         <NavigationTree domId="working" onItemClick={(value, selectItem) => { this.changeDgimn(value, selectItem) }} />
-        <div  id="working">
-        <BreadcrumbWrapper  titles={`【${entName}】`}>
-          <Card>
-            <Tabs type="card">
-              <TabPane tab="数据可视化" key="1">
-                {DGIMN ? <FlowChart DGIMN={DGIMN} /> : <PageLoading />}
-              </TabPane>
-              <TabPane tab="系统参数" key="2">
-                {
-                  DGIMN ? <Params DGIMN={DGIMN} /> : <PageLoading />
-                }
-              </TabPane>
-            </Tabs>
-          </Card>
-        </BreadcrumbWrapper>
+        <div id="working">
+          <BreadcrumbWrapper>
+            <Card>
+              <Tabs type="card">
+                <TabPane tab="数据可视化" key="1">
+                  {DGIMN ? <FlowChart DGIMN={DGIMN} /> : <PageLoading />}
+                </TabPane>
+                <TabPane tab="系统参数" key="2">
+                  {
+                    DGIMN ? <Params DGIMN={DGIMN} /> : <PageLoading />
+                  }
+                </TabPane>
+              </Tabs>
+            </Card>
+          </BreadcrumbWrapper>
         </div>
       </>
     );

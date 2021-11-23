@@ -122,7 +122,7 @@ export default Model.extend({
           updateObj.QCLogsStart = result.Datas[1];
           updateObj.currentPollutantCode = result.Datas[1].PollutantCode;
           updateObj.currentDGIMN = result.Datas[1].DGIMN;
-        } 
+        }
         if (result.Datas[2]) {
           updateObj.QCLogsAnswer = { ...result.Datas[2], GasPathMode: result.Datas[0].GasPathMode };
           updateObj.currentPollutantCode = result.Datas[2].PollutantCode;
@@ -173,6 +173,11 @@ export default Model.extend({
           let CEMSOpen = state.CEMSOpen;
           let code = payload.Code.replace("i", "")
           const value = payload.Value ? payload.Value * 1 : 0;
+          // CEMS阀门状态
+          if (code === "33070") {
+            console.log('33070=', payload)
+            CEMSOpen = payload.Value
+          }
 
           // 气瓶1阀门
           if (code === "33064") {
@@ -196,10 +201,10 @@ export default Model.extend({
             ValveStatus.purge = value
           }
 
-          if (code === "33068") {
-            // CEMS阀门
-            CEMSOpen = value
-          }
+          // if (code === "33068") {
+          //   // CEMS阀门
+          //   CEMSOpen = value
+          // }
 
           if (code === "32009") {
             // CEMS通信状态
@@ -404,7 +409,6 @@ export default Model.extend({
     // log - start
     updateQCLogStart(state, { payload }) {
       let QCLogsStart = state.QCLogsStart;
-      debugger
       console.log("updateQCLogStart=", payload)
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsStart = payload
@@ -418,7 +422,6 @@ export default Model.extend({
       let QCAResultLoading = state.QCAResultLoading;
       let QCLogsAnswer = { ...state.QCLogsAnswer };
       if (payload.DGIMN === state.currentDGIMN) {
-        debugger
         if (payload.Result === false) {
           QCAResultLoading = false;
         }
