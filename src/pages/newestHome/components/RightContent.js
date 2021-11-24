@@ -136,7 +136,7 @@ const Index = (props) => {
                 style={{ width: 98, height: 98 }}
               />
        <div style={{paddingBottom:12,
-                // width:'calc(100% - 115px)'
+                width:'calc(100% - 115px)'
                 }}>
          <Row align='middle'><div className={styles.realTimeNetworkLegend} style={{background:'#298CFB'}}></div>
          <div style={{width:70}}>联网数：</div>190<span>次</span>
