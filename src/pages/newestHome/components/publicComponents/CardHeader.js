@@ -60,7 +60,7 @@ const Index = (props) => {
           {showBtn?
           <div className={styles.titleBtn}>
             {btnArr.map(item=>{
-              return <span onClick={()=>{btnClick(item.key,type)}} className={btnCheck==item.key&&styles.titleCheckSty}>{item.name}</span>
+              return <span onClick={()=>{btnClick(item.key)}} className={btnCheck==item.key&&styles.titleCheckSty}>{item.name}</span>
             })}
           </div> : null}
     </div>

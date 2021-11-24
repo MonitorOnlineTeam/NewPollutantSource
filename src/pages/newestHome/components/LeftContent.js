@@ -200,7 +200,9 @@ const { operaOrderData } = props;
         data: [
           { value: type == 1 ? 99.12 : type == 2 ? 99.12 : 99.12, name: '已完成' },
           { value: type == 1 ? (100 - 99.12) : type == 2 ? (100 - 99.12) : (100 - 99.12), name: '未完成' },
-        ]
+        ],
+        // minAngle: 10,//最小角度
+        startAngle:330, //起始角度
       }
     ]
   };
@@ -253,7 +255,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   
   const  { planCompleteList } = props;
   return (
-    <div className={styles.leftContent}>
+    <div>
          <div className={styles.pointSty}>
            <CardHeader  title='运营信息统计'/>
           <Table style={{padding:'16px 15px 0 0'}}  columns={OperationColumns} dataSource={props.operationDataSource} pagination={false}/>
@@ -267,7 +269,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
               option={operaOrderOption}
               style={{height:'calc(100% - 44px )',width:'100%'}}
              />
-             <MoreBtn style={{paddingRight:10}}  type='operaOrder' moreBtnClick={moreBtnClick}/>
+             <MoreBtn style={{padding:'8px 10px 0'}}  type='operaOrder' moreBtnClick={moreBtnClick}/>
             </div>
           </div>
 

@@ -18,6 +18,7 @@ import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import LeftContent from './LeftContent'
 import BottomContent from './BottomContent'
+import RightContent from './RightContent'
 import styles from "../style.less"
 
 const { Option } = Select;
@@ -106,8 +107,8 @@ const Index = (props) => {
            111
            </Col>
            <Col span={5} className={styles.rightContent}>
-           111
-           </Col>
+            <RightContent />
+            </Col>
         </Row>  
         <div className={styles.bottomContent}>    {/**底部组件*/}
          <BottomContent />

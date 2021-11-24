@@ -63,8 +63,14 @@
      }
     }
   }
+  
 }
-  .pointSty,.operaOrder,.planOpera,.planComplete,.clockAbnormal,.consumablesStatistics,.deviceAbnormal{
+.moreBtnAbsoluteSty{
+   position: absolute;
+   right: 19px;
+   bottom: 11px;
+}
+  .pointSty,.operaOrder,.planOpera,.planComplete,.clockAbnormal,.consumablesStatistics,.deviceAbnormal,.realTimeNetworkSty,.effectiveTrans{
     padding:21px 0 0 21px;
     position: relative;
     background:@cardBagCol;
@@ -73,13 +79,13 @@
     font-size: @subjectFontSize;
   }
 
-
+  .pointSty,.operaOrder,.planOpera,.planComplete,.realTimeNetworkSty,.effectiveTrans{
+    margin-bottom: 9px;
+  }
 
 .leftContent{
    
-  .pointSty,.operaOrder,.planOpera,.planComplete{
-    margin-bottom: 9px;
-  }
+
   .pointSty{
     height:224px;
     padding-bottom: 10px;
@@ -100,7 +106,7 @@
         font-size: @subjectFontSize;
       }
       .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td, .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td, .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td, .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td{  
-        background: rgba(38, 50, 73, 0.6)  !important;
+        background: rgba(38, 50, 73, 0.8)  !important;
       }
     }
   }
@@ -122,11 +128,6 @@
     padding-bottom: 20px;
     height: 313px;
   }
-}
-.mapContent{  /* 地图部分 */
-  padding: 10px;
-}
-.rightContent{
 }
 
 .bottomContent{   /* 底部部分 */
@@ -161,6 +162,31 @@
       background-position: center;
     }
   }
+
+  .deviceAbnormal{
+    padding-bottom: 29px;
+  }
 }
 
+ .rightContent{ /* 右侧部分*/
+  .realTimeNetworkSty{
+    height:224px;
+    padding-bottom: 11px;
+    .realTimeNetworkLegend{
+     width: 12px;
+     height: 12px;
+     margin-right: 10px;
+     margin-left: 49px;
+    }
+  }
+  .effectiveTrans{ /* 有效传输率*/
+    height: 330px;
+    padding-bottom: 45px;
+  }
+}
+}
+
+
+.mapContent{  /* 地图部分 */
+  padding: 10px;
 }

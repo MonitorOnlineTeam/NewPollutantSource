@@ -51,10 +51,10 @@ const Index = (props) => {
   },[]); 
 
   
-  const { style,moreBtnClick,type } = props;
+  const { style,moreBtnClick,type,className } = props;
 
   return (
-      <Row justify='end' className={styles.moreBtnSty} style={style}>
+      <Row justify='end' className={`${styles.moreBtnSty} ${className}` } style={style} >
     <Button type="primary" ghost onClick={()=>{moreBtnClick(type)}} >
       更多 >
     </Button>
