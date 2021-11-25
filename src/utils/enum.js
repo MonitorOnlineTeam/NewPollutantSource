@@ -154,6 +154,7 @@ export const EnumPsOperationForm={
   Fault:58, //故障小时记录表
   FaultWater:59, //故障小时记录表
   FaultYan:60, //故障小时记录表
+  ReagentReplace:15, //试剂更换表单
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={

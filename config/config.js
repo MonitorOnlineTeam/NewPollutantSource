@@ -128,7 +128,7 @@ export default {
             /* 易耗品更换记录 */
             {
               path: '/appoperation/appconsumablesreplacerecord/:TaskID/:TypeID',
-              component: './AppOperation/AppConsumablesReplaceRecord',
+              component: './AppOperation/AppConsumablesReplaceRecord', 
             },
             /* 标气更换记录 */
             {
@@ -180,6 +180,11 @@ export default {
               path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID',
               component: './AppOperation/AppSparePartReplaceRecord',
             },
+            /* 试剂更换记录表 */
+            {
+              path: '/appoperation/appreagentreplaceRecord/:TaskID/:TypeID',
+              component: './AppOperation/AppReagentReplaceRecord',
+            },            
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',

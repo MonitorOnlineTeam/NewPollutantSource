@@ -62,7 +62,7 @@ const Index = (props) => {
 
   return (
     <div>
-    <Content />
+    <Content type='水质'/>
         </div>
   );
 };

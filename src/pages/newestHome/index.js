@@ -64,9 +64,9 @@ const Index = (props) => {
 
  const typeObj={
   wasteWater:<WasteWater/>,
-  wasteGas:<WasteGas />,
-  waterQuality:<WaterQuality />,
-  air:<Air />
+  wasteGas:<WasteGas/>,
+  waterQuality:<WaterQuality/>,
+  air:<Air/>
  }
 
   const  type = props.route.name;

@@ -328,3 +328,11 @@ export async function GetOperationTaskList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationTaskList', body.params, null);
     return result === null ? { Datas: null } : result;
 }
+/** 试剂更换列表 */
+export async function GetStandardLiquidRepalceRecordList(params) {
+    const body = {
+        TaskID: params.TaskID,
+    };
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetStandardLiquidRepalceRecordList', body , null);
+    return result === null ? { Datas: null } : result;
+}

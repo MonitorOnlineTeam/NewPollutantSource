@@ -24,6 +24,7 @@ import JzRecordContent from '@/pages/EmergencyTodoList/JzRecordContent'
 import MaintainRepalceRecord from '@/pages/EmergencyTodoList/MaintainRepalceRecord'
 import SparePartReplaceRecord from '@/pages/EmergencyTodoList/SparePartReplaceRecordContent'
 import FailureHoursRecord from '@/pages/EmergencyTodoList/FailureHoursRecord'
+import ReagentReplaceRecord from '@/pages/EmergencyTodoList/ReagentReplaceRecord'
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
 import { router } from 'umi'
@@ -85,12 +86,15 @@ class Index extends Component {
                 break;
             case "58":
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
-                break;
+                break; 
             case "59":
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
                 break;
             case "60":
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
+                break;
+            case "15":  //试剂更换表单
+                form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} />
                 break;
         }
         return form

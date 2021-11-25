@@ -107,7 +107,7 @@ const Index = (props) => {
            111
            </Col>
            <Col span={5} className={styles.rightContent}>
-            <RightContent />
+            <RightContent {...props}/>
             </Col>
         </Row>  
         <div className={styles.bottomContent}>    {/**底部组件*/}

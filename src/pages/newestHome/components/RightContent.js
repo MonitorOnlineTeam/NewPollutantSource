@@ -114,11 +114,88 @@ const Index = (props) => {
     };
     return option;
  }
+  const effectiveTransOption = {
 
+    color:'#298CFB',
+    tooltip: {
+      trigger: 'item',   //触发类型；轴触发，axis则鼠标hover到一条柱状图显示全部数据，item则鼠标hover到折线点显示相应数据，
+      formatter: function (params, ticket, callback) {
+        //x轴名称
+        let name = params.name
+        //值
+          let value = ''
+
+          value = params.marker + params.seriesName+": "+params.value.toFixed(2)+'%' + '<br />'
+
+        
+        return  name + '<br />' + value
+    },
+    backgroundColor: "rgba(46, 57, 80, 1)", // 提示框浮层的背景颜色。
+    // position:'inside',
+    padding: [14, 12, 14, 10],
+    axisPointer: { // 坐标轴指示器配置项。
+      type: 'none', // 'line' 直线指示器  'shadow' 阴影指示器  'none' 无指示器  'cross' 十字准星指示器。
+      snap: true, // 坐标轴指示器是否自动吸附到点上
+      },
+    },
+    grid: {
+      left: 40,
+      right: 20,
+      bottom: 45,
+      top:10,
+      // containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['09/26', '09/26', '09/26', '09/26', '09/26', '09/26', '09/26'],
+        axisLine: { //x轴
+          lineStyle: {
+            color: '#545555',
+            width: 1
+          },
+        },
+        axisLabel: {
+          textStyle: {
+            color: '#fff'
+          }
+        }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { show: false, }, //y轴
+      axisTick: { show: false },
+      axisLabel: {
+        formatter: '{value}%',
+        textStyle: {
+          color: '#fff'
+        }
+      },
+      splitLine: {  //x轴分割线
+        lineStyle: {
+          type: 'dashed',
+          color: '#545555',
+          width: 1
+        }
+      }
+    },
+    series: [
+      {
+        name: props.type,
+        data: [10.20, 32.20, 91.10, 93.00, 12.20, 33.20, 13.20],
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',     //设定为实心点
+        symbolSize: 10,   //设定实心点的大小
+      },
+      
+    ]
+  };
+ 
 
 
  const moreBtnClick = (type) =>{
-
+   console.log(type)
  }
 
  const [effectiveTransBtnCheck ,setEffectiveTransBtnCheck] = useState(2)
@@ -153,8 +230,13 @@ const Index = (props) => {
 
     <div className={styles.effectiveTrans}>
     <CardHeader btnClick={effectiveTransClick} showBtn type='week' btnCheck={effectiveTransBtnCheck} title='有效传输率' />
-     <div style={{height:'100%',paddingRight:19 }}>
+     <div style={{height:'100%',padding:'36px 19px 0 0' }}>
+        <ReactEcharts
+            option={effectiveTransOption}
+            style={{ height: '100%', width: '100%' }}
+          />
      </div>
+     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
      </div>
   </div>
   );

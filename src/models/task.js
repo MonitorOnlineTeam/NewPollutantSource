@@ -17,6 +17,7 @@ import {
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
     GetOperationLogList, GetFailureHoursRecord,
      GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
+     GetStandardLiquidRepalceRecordList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -37,6 +38,7 @@ export default Model.extend({
         StandardGasRepalceRecord: null, // 标气更换记录
         MaintainRecordDetailRecord: null, // 保养项更换记录
         SparePartReplaceRecord: null, // 备品更换记录
+        RepalceRecordList:null, // 试剂更换记录
         RecordTypes: [], // 运维表单类型
         AlarmResponseList: [],
         operationLogList: [], // 运维记录列表
@@ -412,6 +414,14 @@ export default Model.extend({
                 });
             }
         },
-
+        // 试剂更换表单
+        * GetStandardLiquidRepalceRecordList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetStandardLiquidRepalceRecordList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    RepalceRecordList: DataInfo.Datas,
+                });
+            }
+        },
     },
 });
