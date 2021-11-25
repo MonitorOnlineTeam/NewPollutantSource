@@ -10,6 +10,8 @@ import styles from './index.less';
 import config from '@/config';
 import NoticeIconView from './NoticeIconView'
 import { UnorderedListOutlined } from '@ant-design/icons';
+import webConfig from '../../../public/webConfig'
+import { router } from 'umi'
 
 const GlobalHeaderRight = props => {
 
@@ -30,14 +32,29 @@ const GlobalHeaderRight = props => {
   else {
     getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
   }
+
   const menu = (
     <Menu selectedKeys={[sessionStorage.getItem('sysMenuId')]}>
       {
         sysPollutantTypeList.map(item => {
           return <Menu.Item key={item.ID}>
             <a target="_blank" rel="noopener noreferrer" onClick={() => {
+              let url = item.Url ? new URL(item.Url) : item.Url;
               if (item.ID !== sessionStorage.getItem('sysMenuId')) {
-                window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+                debugger
+                if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
+                  if (webConfig.middlePageOpenMode === 'single') {
+                    window.location.href = url.href;
+                  } else {
+                    window.open(url);
+                  }
+                } else {
+                  if (webConfig.middlePageOpenMode === 'single') {
+                    router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+                  } else {
+                    window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+                  }
+                }
               }
             }}>
               {item.Name}

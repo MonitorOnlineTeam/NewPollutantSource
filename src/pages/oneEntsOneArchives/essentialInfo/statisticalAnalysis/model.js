@@ -1,9 +1,9 @@
 /*
  * @Author: 贾安波
  * @Date: 2021.03.23
- * @Last Modified by: 
- * @Last 
- * @desc: 
+ * @Last Modified by:
+ * @Last
+ * @desc:
  */
 import moment from 'moment';
 import * as services from './service';
@@ -32,9 +32,9 @@ export default Model.extend({
       dyhwdata: [],
       dyhwAnalData: [],
     },
-    ycTitle:'',
-    erhlTitle:'',
-    dyTitle:'',
+    ycTitle: '',
+    erhlTitle: '',
+    dyTitle: '',
     // 智能质控
     rateStatisticsByEnt: {
       beginTime: moment().format('YYYY-MM-01 HH:mm:ss'),
@@ -83,18 +83,17 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
-    homePage:"1",
-    alarmTotalData:'',
-    entDetailData:{},
-    alarmTotalDataHour:'',
-    alarmTotalDataDay:''
+    homePage: "1",
+    alarmTotalData: '',
+    entDetailData: {},
+    alarmTotalDataHour: '',
+    alarmTotalDataDay: ''
   },
   effects: {
-    *getHomePage({payload},{call,update}){
+    *getHomePage({ payload }, { call, update }) {
       const result = yield call(services.getHomePage, payload);
-      if(result.IsSuccess)
-      {
-        yield update({homePage:result.Datas});
+      if (result.IsSuccess) {
+        yield update({ homePage: result.Datas });
       }
     },
     // 获取企业及排口信息
@@ -104,13 +103,13 @@ export default Model.extend({
       const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3] });
       if (result.IsSuccess) {
         let entCode = sessionStorage.getItem('oneEntCode')
-        let data = result.Datas.filter((item)=>item.key===entCode)
+        let data = result.Datas.filter((item) => item.key === entCode)
         yield update({
           // allEntAndPointList: data,
           // currentEntInfo: result.Datas[0],
           // currentMarkersList: result.Datas[0].children,
-          currentMarkersList: data[0].children,
-          currentEntInfo:data[0],
+          currentMarkersList: data.length ? data[0].children : [],
+          currentEntInfo: data.length ? data[0] : [],
           entDetailData: data
         })
       }
@@ -237,7 +236,7 @@ export default Model.extend({
         ...payload
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
-      if (response.IsSuccess&&response.Datas[0]) {
+      if (response.IsSuccess && response.Datas[0]) {
 
         let ycdate = [];
         let ycdata = [];
@@ -342,7 +341,7 @@ export default Model.extend({
         })
       }
     },
-    
+
 
     //  当月报警统计
     *overStandardAlarmStatistics({ payload }, { call, update, select }) {
@@ -350,10 +349,10 @@ export default Model.extend({
       if (result.IsSuccess) {
         payload.dataType === 'HourData' ? yield update({
           alarmTotalDataHour: result.Datas || 0,
-        }):
-        yield update({
-          alarmTotalDataDay: result.Datas || 0
-        })
+        }) :
+          yield update({
+            alarmTotalDataDay: result.Datas || 0
+          })
       }
     },
     // 企业属性
@@ -364,15 +363,15 @@ export default Model.extend({
     //       entDetailData: result.Datas || {}
     //     })
     //   }
-    // },  
+    // },
     // 排口数量和状态
-     *getStatisticsPoint({ payload }, { call, update, select }) {
-          const result = yield call(services.getStatisticsPoint, payload);
-          if (result.IsSuccess) {
-            yield update({
-              pointData: result.Datas
-            })
-          }
-    },  
+    *getStatisticsPoint({ payload }, { call, update, select }) {
+      const result = yield call(services.getStatisticsPoint, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pointData: result.Datas
+        })
+      }
+    },
   }
 })

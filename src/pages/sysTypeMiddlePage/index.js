@@ -3,6 +3,8 @@ import { connect } from 'dva'
 import { Card, Row, Col } from 'antd'
 import styles from './index.less'
 import Cookie from 'js-cookie'
+import webConfig from '../../../public/webConfig'
+import { router } from 'umi'
 
 @connect(({ global }) => ({
   sysPollutantTypeList: global.sysPollutantTypeList,
@@ -29,9 +31,18 @@ class index extends PureComponent {
   onSysItemClick = (item) => {
     let url = item.Url ? new URL(item.Url) : item.Url;
     if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
-      window.open(url);
+      if (webConfig.middlePageOpenMode === 'single') {
+        window.location.href = url.href;
+      } else {
+        window.open(url);
+      }
     } else {
-      window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+      if (webConfig.middlePageOpenMode === 'single') {
+
+        router.push(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+      } else {
+        window.open(`/sessionMiddlePage?sysInfo=${JSON.stringify(item)}`)
+      }
     }
   }
 

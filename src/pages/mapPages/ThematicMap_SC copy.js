@@ -9,7 +9,7 @@ import {
 import { connect } from 'dva';
 import { Map, Polygon, Markers, InfoWindow, MouseTool } from 'react-amap';
 import config from "@/config";
-import styles from './index_sc.less';
+import styles from './index.less';
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import moment from 'moment';
 import { router } from "umi"
@@ -19,7 +19,6 @@ import InfoWindowContent from './component/InfoWindowContent'
 import PointDetailsModal from './component/PointDetailsModal'
 import { AppstoreOutlined } from '@ant-design/icons'
 // import webConfig from '../../../public/webConfig'
-import mapStyle from './map.less'
 
 const statusList = [
   { text: "正常", checked: false, color: "#52c41a", value: 1, count: 33, className: "green" },
@@ -28,9 +27,9 @@ const statusList = [
   { text: "异常", checked: false, color: "#fa8c16", value: 3, count: 6, className: "orange" },
 ];
 const { Search } = Input;
-const iconStyle = { fontSize: 22 }
+const iconStyle = { fontSize: 17 }
 const mapIconStyle = {
-  fontSize: 22,
+  fontSize: 17,
   borderRadius: "50%",
   background: "#fff",
   boxShadow: "rgb(255 255 255) 0px 0px 3px 2px"
@@ -39,7 +38,15 @@ const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
 let ruler;
-
+const STYLES = {
+  background: '#fff',
+  width: 176,
+  /* max-width: 300px; */
+  position: 'absolute',
+  left: -82,
+  top: -27,
+  padding: '0 10px'
+}
 @connect(({ loading, map }) => ({
   allPoints: map.allPoints,
   curPointData: map.curPointData,
@@ -92,6 +99,7 @@ class ThematicMap extends PureComponent {
           ruler = new window.AMap.RangingTool(m);
         });
         setTimeout(() => {
+          console.log('11111')
           m.setFitView();
         }, 1000)
       },
@@ -129,7 +137,7 @@ class ThematicMap extends PureComponent {
       if (_thismap) { _thismap.clearMap() }
       this.setState({
         pointsList: [],
-        activePollutant: this.props.match.params.pollutantCode,
+        activePollutant: '0',
         searchInputVal: undefined,
         infoWindowVisible: false,
         infoWindowPos: undefined,
@@ -195,18 +203,30 @@ class ThematicMap extends PureComponent {
       icon = <CustomIcon type="icon-yangchen1" style={{ ...style }} />
     }
     if (pollutantType == 5) {
-      icon = <div className={styles.AQIBox} style={{ backgroundColor: extData.Color !== '-' ? extData.Color : '#999999' }}>
-        {extData.AQI}
+      return <div style={{ marginTop: -30 }}>
+        <div className={styles.pop} style={{ marginLeft: 0, marginRight: 0, padding: '1px 10px' }}>{extData.title !== '排口0' ? extData.Abbreviation + ' - ' + extData.title : extData.Abbreviation}
+          <div onClick={() => this.onMapItemClick(extData)} className={styles.AQIBox} style={{ backgroundColor: extData.Color !== '-' ? extData.Color : '#999999', display: 'inline-block', marginLeft: 8 }}>
+            {extData.AQI}
+          </div>
+        </div>
       </div>
     }
     if (pollutantType == 6) {
       icon = <CustomIcon type="icon-richangshenghuo-shuizhan" style={{ ...style }} />
     }
-    return <Tooltip overlayClassName={styles.tooltip} color={"#fff"} title={<span style={{ color: "#000" }}>{extData.title !== '排口0' ? extData.Abbreviation + ' - ' + extData.title : extData.Abbreviation}</span>}>
+    // return <Tooltip visible={extData.title !== '排口0' ? true : false} overlayClassName={styles.tooltip} color={"#fff"} title={<span style={{ color: "#000" }}>{extData.Abbreviation} - {extData.title}</span>}>
+    //   <div onClick={() => this.onMapItemClick(extData)}>
+    //     {icon}
+    //   </div>
+    // </Tooltip>;
+    return <div style={{ marginTop: -30 }}>
+      {
+        <div className={styles.pop}> {extData.title !== '排口0' ? extData.Abbreviation + ' - ' + extData.title : extData.Abbreviation}</div>
+      }
       <div onClick={() => this.onMapItemClick(extData)}>
         {icon}
       </div>
-    </Tooltip>;
+    </div>
   }
 
   // 获取筛选状态图标颜色
@@ -230,6 +250,26 @@ class ThematicMap extends PureComponent {
   }
 
   renderMarkers = (extData) => {
+    // return <div
+    //   onMouseEnter={() => {
+    //     if (this.state.infoWindowVisible === false && !this.state.airVisible) {
+    //       this.setState({
+    //         hoverMapCenter: extData.position,
+    //         currentTitle: extData.position.title,
+    //         infoWindowHoverVisible: true,
+    //       })
+    //     }
+    //   }}
+    //   onMouseLeave={() => {
+    //     if (this.state.infoWindowVisible === false && !this.state.airVisible) {
+    //       this.setState({
+    //         infoWindowHoverVisible: false,
+    //       })
+    //     }
+    //   }}
+    // >
+    //   {this.getPollutantIcon(extData || {})}
+    // </div>
     return <div>
       {this.getPollutantIcon(extData || {})}
     </div>
@@ -261,6 +301,7 @@ class ThematicMap extends PureComponent {
       // m.setFitView();
       const timer = setInterval(() => {
         if (_thismap) {
+          console.log('11111')
           _thismap.setFitView();
           clearInterval(timer)
         }
@@ -281,6 +322,7 @@ class ThematicMap extends PureComponent {
       infoWindowPos: [extData.position.longitude, extData.position.latitude],
     }, () => {
       this.getInfoWindowData();
+      // _thismap.setCenter([extData.position.longitude, extData.position.latitude])
     })
   }
 
@@ -384,16 +426,16 @@ class ThematicMap extends PureComponent {
   getLegendIcon = (type) => {
     switch (type) {
       case 1:
-        return <><WaterOffline style={{ marginRight: 8, ...iconStyle, fontSize: 17 }} /></>
+        return <><WaterOffline style={{ marginRight: 8, fontSize: 20, ...iconStyle }} /></>
       case 2:
-        return <><GasOffline style={{ marginRight: 8, ...iconStyle, fontSize: 17 }} /></>
+        return <><GasOffline style={{ marginRight: 8, fontSize: 20, ...iconStyle }} /></>
       case 5:
         return <>
           <CustomIcon type="icon-fangwu" style={{
             color: '#999',
             marginRight: 8,
-            ...mapIconStyle,
-            fontSize: 17,
+            fontSize: 20,
+            ...mapIconStyle
           }}
           />
         </>
@@ -404,8 +446,8 @@ class ThematicMap extends PureComponent {
             style={{
               color: '#999',
               marginRight: 8,
-              ...mapIconStyle,
-              fontSize: 17,
+              fontSize: 20,
+              ...mapIconStyle
             }}
           />
         </>
@@ -414,8 +456,8 @@ class ThematicMap extends PureComponent {
           <VocIcon style={{
             color: '#999',
             marginRight: 8,
-            ...mapIconStyle,
-            fontSize: 17,
+            fontSize: 20,
+            ...mapIconStyle
           }} />
         </>
       case 12:
@@ -425,8 +467,8 @@ class ThematicMap extends PureComponent {
             style={{
               color: '#999',
               marginRight: 8,
-              ...mapIconStyle,
-              fontSize: 17,
+              fontSize: 20,
+              ...mapIconStyle
             }}
           />
         </>
@@ -518,7 +560,7 @@ class ThematicMap extends PureComponent {
               </ul>
             </div>
           }
-          <div className={`${mapStyle.mapTools} ${mapStyle.blank}`}>
+          <div className={styles.mapTools}>
             <ul>
               <li className={currentTool === 'ruler' ? styles.active : ''} onClick={() => {
                 if (currentTool === 'ruler') {
@@ -584,13 +626,11 @@ class ThematicMap extends PureComponent {
           }
           <Map
             resizeEnable={true}
-            features={['bg', 'building', 'point', 'road']}
             events={this.mapEvents}
             zoom={sysConfigInfo.ZoomLevel}
             center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
-            // mapStyle="amap://styles/macaron"
             // center={webConfig.mapCenter}
-            // mapStyle="amap://styles/darkblue"
+            mapStyle="amap://styles/darkblue"
             amapkey={amapKey}
           >
             <MouseTool events={this.toolEvents} />

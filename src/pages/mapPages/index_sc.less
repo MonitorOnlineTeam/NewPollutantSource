@@ -1,0 +1,434 @@
+@normal : rgb(14, 218, 173); // 正常
+@abnormal : rgb(255, 204, 68); // 异常
+@offline : rgb(204, 204, 204); // 离线
+@overproof : rgb(253, 108, 108); // 超标
+@NOx : #40ccdd;
+@smoke : #0edaad;
+@SO2 : #03b3ff;
+@titleColor: #d5d9e2;
+
+/*滚动条轨道颜色*/
+@scrollbar-track-color: #021e39;
+/*滚动条颜色*/
+@scrollbar-thumb-color: #305090;
+/*滚动条大小*/
+@scrollbar-width: 9px;
+
+.pageWrapper {
+  margin: -24px;
+  height: calc(100vh - 64px);
+  position: relative;
+
+  :global {
+    .amap-info-content {
+      padding: 10px 4px;
+    }
+
+    // 单选按钮样式
+    .ant-radio-group {
+      float: left;
+    }
+
+    // .ant-radio-button-wrapper {
+    //   // background: #163666;
+    //   background: #082948;
+    //   border-color: #3b6aaa;
+    //   color: #fff;
+    // }
+
+    // .ant-radio-button-wrapper:not(:first-child)::before {
+    //   background-color: #3b6aaa;
+    // }
+
+    // .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    //   background: #2b5288;
+    // }
+  }
+
+  .mapContent {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .pollutantTypeWrapper {
+      width: 100%;
+      position: absolute;
+      // color: #fff;
+      z-index: 1;
+      font-weight: bold;
+      left: 20px;
+      top: 20px;
+
+      .typeItem {
+        // background: #163666;
+        padding: 4px 10px;
+        margin-bottom: 20px;
+        // border: 1px solid #3b6aaa;
+        cursor: pointer;
+
+        &.active {
+          // border-color: #90c9ff;
+          // background: #2b5288;
+          // box-shadow: inset 1px 1px 6px #0084ff;
+          font-weight: bold;
+        }
+      }
+
+      .searchInput {
+        width: 200px;
+        float: left;
+        // border-color: #3b6aaa;
+        // background: #163666;
+        margin-left: 10px;
+
+        input {
+          background: transparent;
+          // color: #fff;
+          border: 0;
+        }
+
+        // :global {
+        //   .ant-input-search-icon::before {
+        //     border-left-color: #3b6aaa;
+        //   }
+
+        //   .ant-input-suffix {
+        //     color: #fff;
+
+        //     span {
+        //       color: #fff;
+        //     }
+        //   }
+        // }
+      }
+    }
+  }
+
+  .AQIBox {
+    min-width: 30px;
+    padding: 4px;
+    border-radius: 2px;
+    line-height: 12px;
+    color: #fff;
+    text-align: center;
+  }
+}
+
+.tooltip {
+  :global {
+    .ant-tooltip-inner {
+      padding: 2px 4px;
+      min-height: 26px;
+    }
+  }
+}
+
+// AQI图例
+.airLegend {
+  position: absolute;
+  right: 30px;
+  bottom: 40px;
+  z-index: 1;
+  // color: #fff;
+  font-weight: bold;
+
+  ul {
+    li {
+      width: 67px;
+      line-height: 14px;
+      float: left;
+
+      span {
+        width: 100%;
+        display: inline-block;
+        font-weight: 500;
+      }
+
+      span:first-child {
+        text-align: center;
+        height: 14px;
+      }
+
+      span:nth-child(2) {
+        height: 6px;
+        background-color: #00e400;
+        border-right: solid 1px #fff;
+      }
+
+      span:last-child {
+        height: 14px;
+        text-align: left;
+        margin-left: -6px;
+      }
+
+    }
+  }
+}
+
+// 图例
+.legendContent {
+  position: absolute;
+  height: 246px;
+  width: 190px;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1;
+
+  &>div {
+    background: rgba(254, 254, 254, .8);
+    float: left;
+    height: 100%;
+    border: 1px solid #d9d9d9;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .legendBox {
+    margin-right: 6px;
+    width: 100px;
+
+    ul {
+      margin: 0;
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+
+      li {
+        width: 100%;
+
+        i {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  .stateBox {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 8px;
+
+    span {
+      width: 48px;
+      line-height: 24px;
+      border-radius: 2px;
+      color: #fff;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+}
+
+// 地图弹窗样式
+.infoWindowContent {
+  width: 400px;
+  // min-height: 360px;
+
+  h3 {
+    font-weight: 500;
+    color: #000;
+    font-size: 15px;
+  }
+
+  .header {
+    padding: 10px;
+    // padding-bottom: 0;
+    border-bottom: 1px dashed #ccc;
+
+    h2 {
+      text-align: center;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+    }
+
+    p {
+      margin-top: 10px;
+
+      span {
+        font-weight: 500;
+        color: #fe0301;
+      }
+    }
+  }
+
+  .desc {
+    padding: 10px;
+    overflow: hidden;
+    border-bottom: 1px dashed #ccc;
+
+    &>div {
+      width: 50%;
+      float: left;
+    }
+
+    .desc-l {
+      p {
+        margin: 0;
+        padding: 0;
+        line-height: 26px;
+        color: #5d5d5d;
+      }
+    }
+
+    .desc-r {
+      width: 50%;
+      float: right;
+      /* width: 100px; */
+      height: 120px;
+      background: #ccc;
+
+      img {}
+    }
+  }
+
+  .data {
+    padding: 10px;
+    padding-bottom: 0;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+
+      li {
+        width: 24%;
+        background: #e8e8e8;
+        line-height: 30px;
+        height: 30px;
+        margin-right: 1px;
+        margin-bottom: 1px;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 0px 8px;
+        font-size: 13px;
+        cursor: pointer;
+
+        &.point {
+          width: 33%;
+        }
+      }
+    }
+
+    p {
+      padding: 0;
+      margin: 0;
+      margin-top: 6px;
+      color: #5d5d5d;
+      font-size: 13px;
+    }
+  }
+}
+
+.basisInfo {
+  display: flex;
+
+  &>div:first-child {
+    width: 180px;
+    height: 120px;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  &>div:last-child {
+    flex: 1;
+    margin-left: 30px;
+  }
+}
+
+.mapTools {
+  background-color: #082948;
+  border: 1px solid #3b6aaa;
+  width: 40px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 1;
+
+  li {
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    border-bottom: 1px solid #3b6aaa;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &.active {
+      background-color: #1890FF;
+    }
+
+    span {
+      font-size: 18px !important;
+    }
+  }
+}
+
+.drawSelectContent {
+  position: absolute;
+  right: 74px;
+  top: 60px;
+  z-index: 1;
+  padding: 12px 6px;
+  background-color: #082948;
+  color: #fff;
+  border: 1px solid #3b6aaa;
+
+  label {
+    color: #fff;
+    font-weight: 500;
+  }
+}
+
+.treeTitleBox {
+  display: flex;
+  width: 174px;
+  align-items: center;
+
+  .icon {
+    color: #1890FF;
+    margin-right: 6px;
+    font-size: 20px;
+  }
+
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 190px;
+    float: left;
+
+    &.regionText {
+      width: 110px;
+    }
+  }
+}
+
+.pop {
+  white-space: nowrap;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  padding: 1px 0px;
+  margin-bottom: 8px;
+  margin-left: calc(-50% - 0px);
+  margin-right: calc(50% - 16px);
+  text-align: center;
+  position: relative;
+  z-index: 10000;
+}

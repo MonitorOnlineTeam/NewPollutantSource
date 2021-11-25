@@ -243,26 +243,26 @@ const routes = [
                 path: '/map/multimediaConference',
                 component: './mapPages/MultimediaConference',
               },
-              // {
-              //   name: 'thematicMap',
-              //   path: '/map/thematicMap/:pollutantCode',
-              //   component: './mapPages/ThematicMap_SC',
-              // },
-              // {
-              //   name: 'thematicMap',
-              //   path: '/map/thematicMap',
-              //   component: './mapPages/ThematicMap_SC',
-              // },
               {
                 name: 'thematicMap',
                 path: '/map/thematicMap/:pollutantCode',
-                component: './mapPages/ThematicMap',
+                component: './mapPages/ThematicMap_SC',
               },
               {
                 name: 'thematicMap',
                 path: '/map/thematicMap',
-                component: './mapPages/ThematicMap',
+                component: './mapPages/ThematicMap_SC',
               },
+              // {
+              //   name: 'thematicMap',
+              //   path: '/map/thematicMap/:pollutantCode',
+              //   component: './mapPages/ThematicMap',
+              // },
+              // {
+              //   name: 'thematicMap',
+              //   path: '/map/thematicMap',
+              //   component: './mapPages/ThematicMap',
+              // },
               {
                 name: 'emissionsHeatMap',
                 path: '/map/emissionsHeatMap',
@@ -1116,6 +1116,12 @@ const routes = [
                 name: 'realtimeDataView',
                 path: '/monitoring/mapview/realtimeDataView',
                 component: './monitoring/overView/realtime',
+              },
+              // 数采仪在线情况统计
+              {
+                name: 'onlineStatistics',
+                path: '/monitoring/onlineStatistics',
+                component: './monitoring/overView/OnlineStatistics',
               },
               {
                 name: 'datalist',
