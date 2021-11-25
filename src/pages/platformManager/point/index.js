@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined,FundOutlined } from '@ant-design/icons';
+import { RollbackOutlined, HighlightOutlined,ToolOutlined,FundOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -83,7 +83,9 @@ export default class MonitorPoint extends Component {
       operationInfoDGIMN:'',
       operationPointName:'',
       dragDatas:[],
-      sortTitle:'开启排序'
+      sortTitle:'开启排序',
+      MNVisible:false,
+      MNEcho:''
     };
   }
 
@@ -407,6 +409,43 @@ export default class MonitorPoint extends Component {
       //    payload: {  configId: 'service_StandardLibrary',   },
       // });
   }
+  editMN=(MN)=>{
+    this.setState({ 
+      MNVisible:true,
+      MNEcho:MN
+    })
+  }
+  onSubmitMN= e =>{
+    const { dispatch,pointDataWhere } = this.props;
+    
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (values.newMN) {
+          dispatch({
+            type: 'point/updatePointDGIMN',
+            payload: {
+              oldDGIMN:this.state.MNEcho,
+              newDGIMN:values.newMN
+            },
+            callback:()=>{
+              this.setState({ MNVisible:false })
+              dispatch({
+                type: 'autoForm/getAutoFormData',
+                payload: {
+                  configId: pointConfigId,
+                  searchParams: pointDataWhere,
+                },
+              });
+            }
+          })
+
+      }else{
+
+        message.error('新设备编号(MN)不能为空！')
+      }
+    });
+
+  }
   render() {
     const {
       searchConfigItems,
@@ -579,7 +618,12 @@ export default class MonitorPoint extends Component {
                           }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     }
-
+                   <> <Divider type="vertical" />
+                 <Tooltip title="修改设备编号(MN)">
+                          <a onClick={() => {
+                            this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
+                          }}><HighlightOutlined  style={{fontSize:16}}/></a>
+                        </Tooltip></>
                   </Fragment>
                 )}
               />
@@ -656,6 +700,30 @@ export default class MonitorPoint extends Component {
       >
         <OperationInfo  location={{query:{p:this.state.operationInfoDGIMN,type:this.state.pollutantType}}} />
         </Modal>
+
+
+        <Modal
+            title="修改设备编号(MN)"
+            visible={this.state.MNVisible}
+            onCancel={()=>{this.setState({MNVisible:false})}}
+            onOk={(e)=>{this.onSubmitMN(e)}}
+            destroyOnClose
+            confirmLoading={this.props.saveLoadingMN}
+            className={styles.MNmodal}
+          >
+           <Form>
+           <Form.Item label="旧设备编号(MN)">
+             <Input value={this.state.MNEcho} disabled/>
+           </Form.Item>
+           <Form.Item label="新设备编号(MN)">
+               {getFieldDecorator('newMN', {
+                                rules: [{ required: this.state.MNVisible, message: '请输入新的设备编号(MN)' }], //设置成动态  以防影响autoform其他表单的提交
+                            })( 
+                                <Input  placeholder="请输入新的设备编号(MN)" />
+                            )} 
+           </Form.Item>
+      </Form>
+          </Modal>
         </div>
         {/* </MonitorContent> */}
       </BreadcrumbWrapper>
