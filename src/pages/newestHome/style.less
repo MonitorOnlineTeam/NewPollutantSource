@@ -70,16 +70,16 @@
    right: 19px;
    bottom: 11px;
 }
-  .pointSty,.operaOrder,.planOpera,.planComplete,.clockAbnormal,.consumablesStatistics,.deviceAbnormal,.realTimeNetworkSty,.effectiveTrans{
-    padding:21px 0 0 21px;
+  .pointSty,.operaOrder,.planOpera,.planComplete,.clockAbnormal,.consumablesStatistics,.deviceAbnormal,.realTimeNetworkSty,.effectiveTrans,.dataAlarmRes,.operationExpira{
     position: relative;
     background:@cardBagCol;
+    padding:21px 0 0 21px;
   }
   .subjectFontSize{
     font-size: @subjectFontSize;
   }
 
-  .pointSty,.operaOrder,.planOpera,.planComplete,.realTimeNetworkSty,.effectiveTrans{
+  .pointSty,.operaOrder,.planOpera,.planComplete,.realTimeNetworkSty,.effectiveTrans,.dataAlarmRes{
     margin-bottom: 9px;
   }
 
@@ -183,6 +183,14 @@
   .effectiveTrans{ /* 有效传输率*/
     height: 330px;
     padding-bottom: 45px;
+  }
+  .dataAlarmRes{
+    height:269px;
+    padding-bottom: 25px;
+  }
+  .operationExpira{ /* 运营到期点位统计*/
+    height: 313px;
+    padding-bottom: 38px;
   }
 }
 }

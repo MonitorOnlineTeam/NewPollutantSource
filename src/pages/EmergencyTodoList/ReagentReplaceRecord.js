@@ -126,7 +126,7 @@ class RepalceRecordList extends Component {
                                         维护管理单位
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
-                                {Content !== null ?Content.EnterpriseName:null}
+                                {Content !== null ?Content.MaintenanceManagementUnit:null}
                             </td>
                             <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                         安装地点

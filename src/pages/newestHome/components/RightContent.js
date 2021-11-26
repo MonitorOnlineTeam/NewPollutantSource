@@ -24,11 +24,12 @@ const { Option } = Select;
 
 const namespace = 'newestHome'
 
-
+const subjectFontSize = 14;
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
   tableLoading:newestHome.tableLoading,
+  dataAlarmResData:newestHome.dataAlarmResData
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -61,7 +62,7 @@ const Index = (props) => {
  const [pollutantType,setPollutantType] = useState('')
 
 
-  const  { tableLoading } = props; 
+  const  { tableLoading,dataAlarmResData } = props; 
 
   useEffect(() => {
       getnewestHomeList()
@@ -191,9 +192,124 @@ const Index = (props) => {
       
     ]
   };
- 
 
+ const dataAlarmResOption = {  //数据报警响应统计
+  tooltip: { show:false },
+  grid: { top:0,left: 124, right: 68, bottom: 0,},
+  xAxis: { show:false,  type: 'value'},
+  yAxis: {
+      type: 'category',
+      data: ['超时报警核实率', '异常报警响应率', '缺失报警响应率', '报警响应超时率'],
+      axisLine: { show: false},
+      axisTick: {show: false  },
+      axisLabel: {  margin:124, textStyle: { color: '#fff',fontSize:subjectFontSize,align:'left'},   
+    },       
+  },
+  series: [
+    {
+      type: 'bar', //显示背景图 
+      data: [100,100,100,100],
+      label: {
+        normal: {
+        show: true,
+        position:"right",
+        //通过formatter函数来返回想要的数据
+        formatter:function(params){
+          for(let i=0;i<dataAlarmResData.length;i++){
+            if(params.dataIndex==i){
+             return `${dataAlarmResData[i]==100? dataAlarmResData[i].toFixed(1) : dataAlarmResData[i].toFixed(2)}%`;
+           }
+          }
+         },
+         fontSize:subjectFontSize,
+         color: '#fff',
+         padding : [0, 0, 0, 12],
+        },
+      },
+      itemStyle:{ normal:{color: '#2E3647' },},
+      barWidth: '40%',  // 柱形的宽度
+      barGap: '-100%', // Make series be ove
+      silent: true //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+  },
+      {
+          type: 'bar',
+          data: dataAlarmResData,
+          label: {  normal: { show: false, }},
+          itemStyle:{
+           normal:{
+            color: function(params) {
+                var colorList = [ '#4FBCDC','#2E7AEB','#FFCC00','#FF0000'];
+                return colorList[params.dataIndex]
+            }
+           },
+          },
+          barWidth: '40%',   // 柱形的宽度
+      },
 
+                      
+  ]
+ }
+
+ const operationExpiraEchartsRef = useRef(null);
+ const operationExpiraOption = { //点位到期统计
+  title: {
+    text: '点位统计',  //图形标题，配置在中间对应位置
+    left: "center",
+    top: "44%",
+    textStyle: {
+      color: "#fff",
+      fontSize: 20,
+      align: "center",
+      fontWeight:400
+    }
+  },
+  tooltip: { show:false },
+  legend: {show:false},
+  color:['#FFB900','#F76890','#2D8BCD','#2AFAA4'],
+  series: [
+    {
+      name: '点位统计',
+      type: 'pie',
+      radius: ['60%', '90%'],
+      avoidLabelOverlap: false,
+      hoverAnimation:false,
+      label: {
+        alignTo: 'edge', // 'edge'：文字对齐，文字的边距由 label.margin 决定。
+        formatter: '{name|{b}}\n{num|{c} 个}',
+        margin: '4%',
+        lineHeight: 20,
+        rich: {
+          name:{
+            fontSize:subjectFontSize,
+          },
+          num: {
+            fontSize: 16,
+            color: '#fff',
+            padding:[0,0,5,0]
+          }
+        }
+      },
+      emphasis: {
+        label: {
+          show: true, //高亮是标签的样式
+        }
+      },
+
+      labelLine: {
+          normal: {
+            length: '3%',  // 视觉引导线第一段的长度。
+            length2:'28%', //视觉引导线第二段的长度。
+          },
+      },
+      data: [
+        { value: 20, name: '0-7日内到期' },
+        { value: 20, name: '15-30日内到期' },
+        { value: 20, name: '8-14日内到期' },
+        { value: 20, name: '过期7日内' },
+      ]
+    }
+  ]
+ }
  const moreBtnClick = (type) =>{
    console.log(type)
  }
@@ -202,6 +318,12 @@ const Index = (props) => {
  const  effectiveTransClick = (key) =>{ //有效传输率 切换日期
     setEffectiveTransBtnCheck(key)
  }
+
+ const [dataAlarmResBtnCheck ,setDataAlarmResBtnCheck] = useState(2)
+ const  dataAlarmResClick = (key) =>{ //数据报警响应 切换日期
+   setDataAlarmResBtnCheck(key)
+ }
+ 
   return (
       <div>
     <div className={styles.realTimeNetworkSty}>
@@ -228,13 +350,35 @@ const Index = (props) => {
     </div>
     </div>
 
-    <div className={styles.effectiveTrans}>
+    <div className={styles.effectiveTrans}> {/**有效传输率 */}
     <CardHeader btnClick={effectiveTransClick} showBtn type='week' btnCheck={effectiveTransBtnCheck} title='有效传输率' />
      <div style={{height:'100%',padding:'36px 19px 0 0' }}>
         <ReactEcharts
             option={effectiveTransOption}
             style={{ height: '100%', width: '100%' }}
           />
+     </div>
+     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
+     </div>
+
+     <div className={styles.dataAlarmRes}>{/**数据报警响应统计 */}
+    <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='数据报警响应统计' />
+     <div style={{height:'100%',padding:'24px 19px 15px 0' }}>
+         <ReactEcharts
+            option={dataAlarmResOption}
+            style={{ height: '100%', width: '100%' }}
+          /> 
+     </div>
+     </div>
+
+     <div className={styles.operationExpira}>{/**运营到期点位统计 */}
+    <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位统计' />
+     <div style={{height:'100%',padding:'33px 17px 36px 0' }}>
+         <ReactEcharts
+            option={operationExpiraOption}
+            style={{ height: '100%', width: '100%' }}
+            ref={operationExpiraEchartsRef}
+          />  
      </div>
      <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
      </div>

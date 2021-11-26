@@ -52,7 +52,8 @@ export default Model.extend({
       {sort:12,name:'北京',roat:'99.98%'},
       {sort:13,name:'北京',roat:'99.98%'},
       {sort:14,name:'北京',roat:'99.98%'},
-    ]
+    ],
+    dataAlarmResData:[100.00,99.00,88.33,12.88]
   },
   effects: {
     *getOperationExpirePointList({ payload,callback }, { call, put, update }) { //运维到期点位统计

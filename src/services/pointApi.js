@@ -202,7 +202,7 @@ export async function GetAnalyzerListByDGIMN(params) {
     const result = await post(`/api/rest/PollutantSourceApi/AnalyzerApi/GetAnalyzerListByDGIMN?DGIMN=${params.DGIMN}`, null, null);
     return result;
 }
-export async function UpdatePointDGIMN(params) {
+export async function UpdatePointDGIMN(params) { //更新MN号
     const result = await post(`/api/rest/PollutantSourceApi/MonitorPointApi/UpdatePointDGIMN`, params, null);
     return result;
 }
