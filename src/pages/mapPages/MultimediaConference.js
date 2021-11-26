@@ -78,7 +78,7 @@ class MultimediaConference extends PureComponent {
   }
 
   componentWillUnmount() {
-    window.TY.logout();
+    window.TY && window.TY.logout();
     thisMap = undefined;
     talkManager = undefined;
     MoniterManager = undefined;
