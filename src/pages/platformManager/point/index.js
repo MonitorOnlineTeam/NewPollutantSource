@@ -463,6 +463,7 @@ export default class MonitorPoint extends Component {
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
     const { sortTitle } = this.state;
+    const { getFieldDecorator } = this.props.form;
     if (this.props.loading || this.props.otherloading) {
       return (
         <Spin
