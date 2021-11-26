@@ -28,7 +28,11 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
     constructor(props) {
         super(props);
         this.state = {
-            DataWhere: [],
+            DataWhere: [{
+              Key: '[dbo]__[T_Bas_OutputStop]__DGIMN',
+              Value: this.props.DGIMN,
+              Where: '$=',
+            }],
             visible: false,
             ID: '',
             Evisible:false,
@@ -209,6 +213,7 @@ import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
                         searchParams={this.state.DataWhere}
                     ></SearchWrapper>
                     <SdlTable
+                        noLoad
                         style={{ marginTop: 10 }}
                         configId={configId}
                         parentcode="ddd"
