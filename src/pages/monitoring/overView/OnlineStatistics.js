@@ -210,7 +210,7 @@ class index extends Component {
             }
             return (
               <span>
-                {record.abbreviation} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
+                {record.entName} - {text}{record.outPutFlag == 1 ? <Tag color="#f50">停运</Tag> : ''}
               </span>
             );
           },
