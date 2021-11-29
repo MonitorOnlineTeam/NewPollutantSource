@@ -207,7 +207,7 @@ class ManualQualityPage extends Component {
   }
 
   //
-  blindCheckClick = (PollutantCode, QCAType) => {
+  blindCheckClick = (PollutantCode, QCAType, unit) => {
     this.props.dispatch({
       type: "qcManual/getSampleRangeFlow",
       payload: {
@@ -222,6 +222,7 @@ class ManualQualityPage extends Component {
           MYVisible: true,
           PollutantCode: PollutantCode,
           QCAType: QCAType,
+          MYUnit: unit
         })
         let that = this;
         // confirm({
@@ -381,7 +382,7 @@ class ManualQualityPage extends Component {
     if (loading) {
       return <PageLoading />
     }
-    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType, GasPathMode, QCLogsAnswer, } = this.state;
+    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType, GasPathMode, QCLogsAnswer, MYUnit } = this.state;
     return (
       <Card>
         <Row>
@@ -404,7 +405,8 @@ class ManualQualityPage extends Component {
                     {
                       item.CNList.map((check, idx) => {
                         if (check.CN === '3105') {
-                          return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.CN) }}> 盲样核查 </div>
+                          let unit = item.GasCode === 'a05001' ? '%' : item.Unit;
+                          return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.CN, unit) }}> 盲样核查 </div>
                         }
                         return <Popconfirm
                           key={idx}
@@ -500,16 +502,18 @@ class ManualQualityPage extends Component {
             </p>
           </div>
           <div>
-            <span style={{ float: 'left', marginTop: 6 }}>核查浓度：</span>
-            <div style={{ display: 'inline-block', width: '80%' }}>
-              <InputNumber style={{ width: '100%', marginBottom: 4 }} placeholder="请输入盲样核查浓度" onChange={(value) => {
-                this.setState({
-                  value: value
-                })
-              }} />
+            <span style={{ float: 'left', marginTop: 6 }}>核查浓度({MYUnit})：</span>
+            {/* <div style={{ display: 'inline-block', width: '80%' }}> */}
+            <div style={{ display: 'inline-block', width: 340 }}>
+              <InputNumber
+                style={{ width: '100%', marginBottom: 4 }} placeholder="请输入盲样核查浓度" onChange={(value) => {
+                  this.setState({
+                    value: value
+                  })
+                }} />
               <br />
               <span style={{ color: "#656565", fontSize: 13 }}>
-                <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${MYMin}-${MYMax} 】之间`}
+                <ExclamationCircleOutlined style={{ marginRight: 6 }} />{`浓度范围在【 ${MYMin}${MYUnit} - ${MYMax}${MYUnit} 】之间`}
               </span>
             </div>
           </div>
