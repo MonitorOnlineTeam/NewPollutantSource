@@ -80,7 +80,7 @@ export async function getErrorValueDataList(params) {
 
 // 导出 - 示值误差核查数据
 export async function exportErrorValueCheck(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/exportErrorValueCheck', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportErrorValueDataList', params, null);
   return result;
 }
 

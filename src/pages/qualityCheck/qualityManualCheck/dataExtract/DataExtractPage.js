@@ -179,7 +179,7 @@ class DataExtractPage extends PureComponent {
                   <Tag color="#87d068"
                     onClick={() => {
                       if (QCLogsResult.Type === "data") {
-                        router.push("/dataSearch/monitor/history") // 历史数据
+                        router.push("/monitoring/dataquery") // 历史数据
                       }
                       if (QCLogsResult.Type === "system") {
                         router.push("/dataSearch/monitor/datavisualization") // 数据可视化

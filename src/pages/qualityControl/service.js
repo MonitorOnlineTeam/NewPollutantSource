@@ -213,4 +213,14 @@ export async function editQCAComponentInfo(params) {
   return result;
 }
 
+// 获取质控仪二维码
+export async function getQCAQRCode(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/CreateQCAQRCode', params, null);
+  return result;
+}
 
+// 更改质控标准要求
+export async function UpdQCAStandardRequest(params) {
+  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/UpdQCATechnology', params, null);
+  return result;
+}

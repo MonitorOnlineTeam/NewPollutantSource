@@ -723,7 +723,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *_action({ payload, APIName, callback }, { call }) {
+      const result = yield call(services[APIName], payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
   reducers: {
     // 质控仪流程图 - 状态

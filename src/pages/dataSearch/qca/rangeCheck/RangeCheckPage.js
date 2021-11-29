@@ -164,6 +164,12 @@ class RangeCheckPage extends PureComponent {
 
   componentDidMount() {
     this.getPollutantList();
+    const { location } = this.props;
+    if (location && location.query.type === 'alarm') { //从报警信息页面跳转
+      this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
+      this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
+      this.getTableDataSource();
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -171,9 +177,10 @@ class RangeCheckPage extends PureComponent {
     const { location } = this.props;
 
     if (location && location.query.type === 'alarm') { //从报警信息页面跳转
-      this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
-      this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
-      this.getTableDataSource();
+      // debugger
+      // this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
+      // this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
+      // this.getTableDataSource();
     } else {
       if (prevProps.pollutantList !== this.props.pollutantList) {
         let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);

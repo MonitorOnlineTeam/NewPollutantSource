@@ -72,9 +72,9 @@ class TableData extends React.Component {
         //     return  <span> 数据异常报警</span>
         // case "2":
         //   return  <span> 超上限</span>
-        // case "3": 
+        // case "3":
         //   return  <span> 参数不符</span>
-        // case "3": 
+        // case "3":
         //   return  <span> 参数不符</span>
         //     default:
         //       return "-"
@@ -107,24 +107,25 @@ class TableData extends React.Component {
   }
 
   desc = (text, record, index) => {
-
     const date = record.FirstTime;
 
     const code = [ ...new Set(record.PollutantCode.split(","))].join()
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
-    const endTime = date;
+    // const endTime = date;
+    const endTime = record.AlarmTime;
     const check={
       "3101":`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
       '3102':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
       '3105':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
       '3104':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
-      '3103':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
+      '3103':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
+      '3106':`/dataSearch/qca/errorValueCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
     }
     if (record.AlarmType == 13) {  //质控核查报警
-      
+
       return  <div style={{textAlign: 'left',}}>
        { record.AlarmMsg.split(";").map((item,index)=>{
-   
+
               let see = record.PollutantCode.split(",")[index];
                return  <>
                  <span style={{  paddingRight: 5, }}  >
@@ -135,7 +136,7 @@ class TableData extends React.Component {
       })
     }
       </div>
-     
+
     } else {
         const dataType = record.DataDtype.split(",").length>1? '' : record.DataDtype;
 
@@ -150,7 +151,7 @@ class TableData extends React.Component {
           {record.AlarmType === "2" ? // 数据超标
             <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
             record.AlarmType === "0" ? //数据异常
-              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> : 
+              <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${dataType}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
               record.AlarmType === "12" ? //备案不符
                 <Link to={`/dataSearch/monitor/historyparameDetail?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName.replace(/\#/g,"%23")}-${record.PointName.replace(/\#/g,"%23")}`}&code=${code}`} >查看</Link> :
                  <></>

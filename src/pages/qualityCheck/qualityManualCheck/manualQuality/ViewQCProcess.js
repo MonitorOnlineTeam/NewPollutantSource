@@ -110,7 +110,8 @@ class ViewQCProcess extends PureComponent {
             (p4Pressure.pollutantCode == "s01" && p4Pressure.isException == "1") ?
               <img src="/qualityControl/gasException.png" alt="" /> : null
           } */}
-          <p style={{ top: 20 }} dangerouslySetInnerHTML={{ __html: gasData[0].PollutantName }}></p>
+          <p style={{ top: 18, lineHeight: '16px' }} dangerouslySetInnerHTML={{ __html: gasData[0].PollutantName }}></p>
+          {/* <p style={{ top: 20 }}>{gasData[0].PollutantName}</p> */}
         </div>
 
 
