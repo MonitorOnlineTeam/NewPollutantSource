@@ -263,16 +263,9 @@ class FlowChart extends PureComponent {
           <></>
       }
       <>
-
-
         <span className={`${styles.leng1} ${styles.commonSty}`}>废气流向</span>
         <span className={`${styles.leng2} ${styles.commonSty}`}>样气流向</span>
-        <span
-          className={`${styles.leng3} ${styles.commonSty}`} 
-          style={{background: '#eff0f5', left: 320, width: 100, height: 24}}
-        ></span>
-
-
+        <span className={`${styles.leng3} ${styles.commonSty}`}>质控气体流向</span>
       </>
       <>
         {isStop != 1 && isStop != 2 && isStop != 3 ? <span style={{ color: green.primary }} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span>
