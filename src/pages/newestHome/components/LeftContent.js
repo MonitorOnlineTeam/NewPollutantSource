@@ -4,7 +4,7 @@
  * 创建时间：2021.11.08
  */
 import React, { useState,useEffect,Fragment, useRef,useMemo  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio    } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio,Spin    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -27,20 +27,44 @@ const namespace = 'newestHome'
 const subjectFontSize = 14;
 
 
+const pollType =  {
+   '废水' : '1',
+   '废气' : '2',
+}
 const dvaPropsData =  ({ loading,newestHome }) => ({
+  operationLoading:newestHome.operationLoading,
   operationDataSource:newestHome.operationDataSource,
+  operationTaskLoading:loading.effects[`${namespace}/GetOperationTaskList`],
   operaOrderData:newestHome.operaOrderData,
+  operationPlanTaskLoading:loading.effects[`${namespace}/GetOperationPlanTaskRate`],
   planOperaList:newestHome.planOperaList,
-  planCompleteList:newestHome.planCompleteList
+  planCompleteList:newestHome.planCompleteList,
+  latelyDays30:newestHome.latelyDays30,
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-
-
     updateState:(payload)=>{ //更新参数
       dispatch({
         type: `${namespace}/updateState`, 
+        payload:{...payload},
+      }) 
+    },
+    GetOperatePointList:(payload)=>{ //运营信息统计
+      dispatch({
+        type: `${namespace}/GetOperatePointList`, 
+        payload:{...payload},
+      }) 
+    },
+    GetOperationTaskList:(payload)=>{ //运维工单统计
+      dispatch({
+        type: `${namespace}/GetOperationTaskList`, 
+        payload:{...payload},
+      }) 
+    },
+    GetOperationPlanTaskRate:(payload)=>{ //近30日计划运维情况
+      dispatch({
+        type: `${namespace}/GetOperationPlanTaskRate`, 
         payload:{...payload},
       }) 
     },
@@ -51,40 +75,63 @@ const Index = (props) => {
 
 
 
-const { operaOrderData } = props;
+const { operaOrderData,latelyDays30 } = props;
 
 
   
   useEffect(() => {
-
+    initData()
   },[]);
+  // {
+  //   "pollutantType": "sample string 1",
+  //   "beginTime": "2021-11-29 10:15:13",
+  //   "endTime": "2021-11-29 10:15:13",
+  //   "taskType": 1,
+  //   "pointType": 1,
+  //   "regionCode": "sample string 3",
+  //   "entCode": "sample string 4"
+  // }
+  const pollutantType = pollType[props.type]
+  const  initData = () =>{
+    props.GetOperatePointList({ //运营监测点信息
+      pollutantType: pollutantType,
+    })
+    props.GetOperationTaskList({ //运维工单统计
+      pollutantType: pollutantType,
+      ...latelyDays30
+    })
+    props.GetOperationPlanTaskRate({ //计划运维情况
+      pollutantType: pollutantType,
+      ...latelyDays30
+    })
+  }
 
-  const OperationColumns =  [
+  const operationColumns =  [
     {
       title: '统计类别',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'type',
+      key: 'type',
       align:'center',
       width:61,
     },
     {
       title: '运营企业',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'entCount',
+      key: 'entCount',
       align:'center',
       width:61,
     },
     {
       title: '排放口',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'disPointCount',
+      key: 'disPointCount',
       align:'center',
       width:61,
     },
     {
       title: '非排放口',
-      dataIndex: 'tags',
-      key: 'tags',
+      dataIndex: 'unDisPointCount',
+      key: 'unDisPointCount',
       align:'center',
       width:61,
     },
@@ -138,8 +185,9 @@ const { operaOrderData } = props;
         itemStyle:{ normal:{color: '#2f3648', barBorderRadius: [15, 15, 15 ,15] },},
         barWidth: '50%',  // 柱形的宽度
         barGap: '-100%', // Make series be ove
-        silent: true //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
-    },
+        silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+        barMinHeight:215,
+      },
         {
             type: 'bar',
             data: operaOrderData,
@@ -170,7 +218,14 @@ const { operaOrderData } = props;
  const { planOperaList } = props;
 
  const planOperaOption = (type) => {  //计划运维图表
-
+  // actualCalibrationCount: 0
+  // actualCalibrationRate: "0.00"
+  // autoCalibrationAllCount: 0
+  // autoCalibrationCompleteCount: 0
+  // autoCalibrationRate: "0.00"
+  // inspectionAllCount: 0
+  // inspectionCompleteCount: 0
+  // inspectionRate: "0.00"
   let color1 = ["#F9BF31", "#323A70"], color2 = ["#3BE2BA", '#323A70'],color3 = ['#F66080', '#323A70']
   let option = {
     tooltip: {
@@ -180,7 +235,7 @@ const { operaOrderData } = props;
     },
     color: type == 1 ? color1 : type == 2 ? color2 : color3,
     title: {
-      text: type == 1 ? '99.12%': type == 2 ? '99.12%' : '99.12%',
+      text: type == 1 ? `${planOperaList.inspectionRate}%`: type == 2 ? `${planOperaList.autoCalibrationRate}%` : `${planOperaList.actualCalibrationRate}%`,
       left: "center",
       top: "42%",
       textStyle: {
@@ -198,8 +253,8 @@ const { operaOrderData } = props;
         avoidLabelOverlap: false,
         label: { normal: { show: false, position: 'center'  }, },
         data: [
-          { value: type == 1 ? 99.12 : type == 2 ? 99.12 : 99.12, name: '已完成' },
-          { value: type == 1 ? (100 - 99.12) : type == 2 ? (100 - 99.12) : (100 - 99.12), name: '未完成' },
+          { value: type == 1 ? planOperaList.inspectionRate : type == 2 ? planOperaList.autoCalibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
+          { value: type == 1 ? (100 - planOperaList.inspectionRate) : type == 2 ? (100  - planOperaList.autoCalibrationRate ) : (100 - planOperaList.actualCalibrationRate), name: '未完成' },
         ],
         // minAngle: 10,//最小角度
         startAngle:330, //起始角度
@@ -233,51 +288,61 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
        style={{ width: '100%', height: 120 }}
        onEvents={{click: planInspection }}
      />
-     <div  className={styles.planOperaText} ><div style={{fontWeight:'bold'}}>计划巡检完成率</div><div>计划内次数： </div> <div>完成次数： </div></div>
+     <div  className={styles.planOperaText} ><div style={{fontWeight:'bold'}}>计划巡检完成率</div><div>计划内次数：{planOperaList.inspectionAllCount} </div> <div>完成次数：{planOperaList.inspectionCompleteCount} </div></div>
    </Col>
    <Col span={8} align='middle'>
      <ReactEcharts
        option={planOperaOption(2)}
        style={{ width: '100%', height: 120 }}
      />
-     <div   className={styles.planOperaText}><div style={{fontWeight:'bold'}}>计划校准完成率</div><div>计划内次数： </div> <div>完成次数： </div></div>
+     <div   className={styles.planOperaText}><div style={{fontWeight:'bold'}}>计划校准完成率</div><div>计划内次数：{planOperaList.autoCalibrationAllCount} </div> <div>完成次数：{planOperaList.autoCalibrationCompleteCount} </div></div>
    </Col>
    <Col span={8} align='middle'>
        <ReactEcharts
          option={planOperaOption(3)}
          style={{ width: '100%', height: 120 }}
        />
-      <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内次数： </div> <div>完成次数： </div></div>
+      <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内次数： {planOperaList.autoCalibrationAllCount}</div> <div>完成次数： {planOperaList.actualCalibrationCount}</div></div>
    </Col>
  </Row>
    </div>
 },[planOperaList])
   
-  const  { planCompleteList } = props;
+  const  { operationLoading,operationDataSource } = props; {/**运营信息统计 */}
+  const  { operationTaskLoading } = props; {/**近30日运维工单 */}
+  const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
+  const  { planCompleteList } = props;{/**计划运维工单 */}
+
   return (
     <div>
-         <div className={styles.pointSty}>
-           <CardHeader  title='运营信息统计'/>
-          <Table style={{padding:'16px 15px 0 0'}}  columns={OperationColumns} dataSource={props.operationDataSource} pagination={false}/>
+      <Spin spinning={operationLoading}>
+         <div className={styles.pointSty}> 
+           <CardHeader  title='运营信息统计'/>  
+          <Table  style={{padding:'16px 15px 0 0'}}  columns={operationColumns} dataSource={operationDataSource} pagination={false}/>
          </div>
+         </Spin>
 
-
+         <Spin spinning={operationTaskLoading}>
          <div className={styles.operaOrder}>
            <CardHeader  title='近30日运维工单统计'/>
-           <div style={{height:'100%', padding:'20px 10px 0 0'}}>
+           <div style={{height:'100%', padding:'20px 10px 0 0'}}>     
            <ReactEcharts 
               option={operaOrderOption}
               style={{height:'calc(100% - 44px )',width:'100%'}}
              />
-             <MoreBtn style={{padding:'8px 10px 0'}}  type='operaOrder' moreBtnClick={moreBtnClick}/>
+             <MoreBtn style={{padding:'8px 10px 0'}}  type='operaOrder' moreBtnClick={moreBtnClick}/>   
             </div>
           </div>
+          </Spin>
 
+          <Spin spinning={operationPlanTaskLoading}> {/**近30日计划运维情况 */}
           <div className={styles.planOpera }>
            <CardHeader  title='近30日计划运维情况'/>
             {planOperaEcharts}
           </div>
+          </Spin>
 
+          {/* <Spin spinning={true}> */}
           <div className={styles.planComplete}>
            <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
@@ -285,6 +350,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
            <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/>
            </div>
           </div>
+          {/* </Spin> */}
 
         </div>
   );

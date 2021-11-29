@@ -101,7 +101,7 @@ const Index = (props) => {
       <div className={styles.homePage}>
         <Row style={{paddingTop:10}}>   {/**地图部分 和 地图两侧*/}
           <Col span={5} className={styles.leftContent}>
-             <LeftContent />
+             <LeftContent {...props}/>
            </Col>
            <Col span={14} className={styles.mapContent}>
            111
@@ -111,7 +111,7 @@ const Index = (props) => {
             </Col>
         </Row>  
         <div className={styles.bottomContent}>    {/**底部组件*/}
-         <BottomContent />
+         <BottomContent {...props}/>
         </div>
       </div>  
    </BreadcrumbWrapper>

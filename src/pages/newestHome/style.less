@@ -9,7 +9,11 @@
     font-family: Microsoft YaHei;
     font-weight: 400;
   }
-
+  :global{
+    .ant-spin-nested-loading > div > .ant-spin .ant-spin-dot{
+      font-size: 20px;
+    }
+  }
   .cardHeaderSty{ /*标题组件*/
   .titleImgSty{
     width:100%;
@@ -90,6 +94,12 @@
     height:224px;
     padding-bottom: 10px;
     :global{
+      .ant-spin-container{
+        height:calc(224px - 75px)
+      }
+      .ant-empty-normal{
+        margin: 16px 0;
+      }
       .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td{
         padding: 8px 0;
         font-size: @subjectFontSize;
@@ -109,6 +119,7 @@
         background: rgba(38, 50, 73, 0.8)  !important;
       }
     }
+
   }
 
   .operaOrder{
