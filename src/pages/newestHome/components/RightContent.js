@@ -4,7 +4,7 @@
  * 创建时间：2021.11.03
  */
 import React, { useState,useEffect,Fragment, useRef,useMemo  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio    } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio,Spin    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -24,12 +24,18 @@ const { Option } = Select;
 
 const namespace = 'newestHome'
 
+
+
 const subjectFontSize = 14;
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
-  tableLoading:newestHome.tableLoading,
-  dataAlarmResData:newestHome.dataAlarmResData
+  effectiveTransmissionLoading:loading.effects[`${namespace}/GetEffectiveTransmissionRateList`],
+  effectiveTransmissionList:newestHome.effectiveTransmissionList,
+  dataAlarmResLoading:loading.effects[`${namespace}/GetAlarmResponse`],
+  dataAlarmResData:newestHome.dataAlarmResData,
+  pollType:newestHome.pollType,
+  latelyDays30:newestHome.latelyDays30,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -40,15 +46,18 @@ const  dvaDispatch = (dispatch) => {
           payload:{...payload},
         }) 
       },
-    getnewestHomeList : (payload,callback) =>{ //列表
+    GetEffectiveTransmissionRateList : (payload,) =>{ //传输有效率
       dispatch({
-        type: `${namespace}/getnewestHomeList`,
+        type: `${namespace}/GetEffectiveTransmissionRateList`,
         payload:payload,
-        callback:callback
       })
-      
     },
-
+    GetAlarmResponse : (payload) =>{ //数据报警响应统计
+      dispatch({
+        type: `${namespace}/GetAlarmResponse`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -58,23 +67,56 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
   
- const [tableDatas,setTableDatas] = useState([])
- const [pollutantType,setPollutantType] = useState('')
 
 
-  const  { tableLoading,dataAlarmResData } = props; 
+
+  const  {pollType, latelyDays30,dataAlarmResData } = props; 
 
   useEffect(() => {
-      getnewestHomeList()
+      initData()
   },[]);
 
 
-  const getnewestHomeList = (value) =>{
-    props.getnewestHomeList({PollutantType:value},(res)=>{
-      setTableDatas(res.notExpired7List)
+  const initData = (value) =>{
+    getEffectiveTransmissionRateList(latelyDays30)
+    getAlarmResponse(latelyDays30)
+  }
+
+  const pollutantType = pollType[props.type]
+  
+  const getEffectiveTransmissionRateList = (date) =>{//传输有效率
+    props.GetEffectiveTransmissionRateList({ 
+      pollutantType: pollutantType,
+      ...date
     })
   }
 
+  const getAlarmResponse = (date) =>{//数据报警响应统计
+    props.GetAlarmResponse({ 
+      pollutantType: pollutantType,
+      ...date
+    })
+  }
+
+ 
+  const [effectiveTransBtnCheck ,setEffectiveTransBtnCheck] = useState(latelyDays30)
+  const  effectiveTransClick = (key) =>{ //有效传输率 切换日期
+   setEffectiveTransBtnCheck(key)
+   getEffectiveTransmissionRateList(key)
+
+  }
+ 
+  const [dataAlarmResBtnCheck ,setDataAlarmResBtnCheck] = useState(latelyDays30)
+  const  dataAlarmResClick = (key) =>{ //数据报警响应 切换日期
+    setDataAlarmResBtnCheck(key)
+    getAlarmResponse(key)
+
+  }
+  
+
+  const moreBtnClick = (type) =>{
+    console.log(type)
+  }
  const reanTimeNetworkOption = () =>{
 
     let option = {
@@ -115,29 +157,50 @@ const Index = (props) => {
     };
     return option;
  }
-  const effectiveTransOption = {
+
+  const { effectiveTransmissionList } = props;
+ 
+  const effectiveTransOption = () =>{
+ 
+  let time = effectiveTransmissionList[0]? effectiveTransmissionList.map((item=> moment(item.monitorTime).format('MM/DD'))) : []
+
+  let value = effectiveTransmissionList[0]? effectiveTransmissionList.map(item=> item.effectiveTransmissionRate) : []
+
+  console.log(value)
+  const option = { //传输有效率
 
     color:'#298CFB',
     tooltip: {
-      trigger: 'item',   //触发类型；轴触发，axis则鼠标hover到一条柱状图显示全部数据，item则鼠标hover到折线点显示相应数据，
+      trigger: 'axis',   //触发类型；轴触发，axis则鼠标hover到一条柱状图显示全部数据，item则鼠标hover到折线点显示相应数据，
       formatter: function (params, ticket, callback) {
-        //x轴名称
-        let name = params.name
-        //值
-          let value = ''
+        // //x轴名称
+        // let name = params.name
+        // //值
+        //   let value = ''
+        //   value = params.marker + params.seriesName+": "+params.value +'%' + '<br />'
+        // return  name + '<br />' + value
 
-          value = params.marker + params.seriesName+": "+params.value.toFixed(2)+'%' + '<br />'
-
-        
-        return  name + '<br />' + value
+           //x轴名称 params[0].name
+           let name = params[0].name;
+           //值
+             let value = ''
+             params.map(item=>{
+             value += `${item.marker} ${item.seriesName}: ${item.value} % <br />`
+           })
+           return  name + '<br />' + value
     },
     backgroundColor: "rgba(46, 57, 80, 1)", // 提示框浮层的背景颜色。
     // position:'inside',
     padding: [14, 12, 14, 10],
     axisPointer: { // 坐标轴指示器配置项。
-      type: 'none', // 'line' 直线指示器  'shadow' 阴影指示器  'none' 无指示器  'cross' 十字准星指示器。
+      type: 'line', // 'line' 直线指示器  'shadow' 阴影指示器  'none' 无指示器  'cross' 十字准星指示器。
       snap: true, // 坐标轴指示器是否自动吸附到点上
-      },
+      lineStyle: {
+        color: '#545555',
+        opacity: 0.5,
+        width: 1
+    },
+    },
     },
     grid: {
       left: 40,
@@ -149,23 +212,30 @@ const Index = (props) => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['09/26', '09/26', '09/26', '09/26', '09/26', '09/26', '09/26'],
+      data: time,
         axisLine: { //x轴
           lineStyle: {
             color: '#545555',
-            width: 1
+            width: 1,  
           },
+        },
+        axisTick: { //x轴 去掉刻度
+          show:false
         },
         axisLabel: {
           textStyle: {
             color: '#fff'
-          }
+          },
+          // interval:0,
+          // rotate:90
         }
     },
     yAxis: {
       type: 'value',
       axisLine: { show: false, }, //y轴
       axisTick: { show: false },
+      min:0,
+      max:100,
       axisLabel: {
         formatter: '{value}%',
         textStyle: {
@@ -183,7 +253,7 @@ const Index = (props) => {
     series: [
       {
         name: props.type,
-        data: [10.20, 32.20, 91.10, 93.00, 12.20, 33.20, 13.20],
+        data: value,
         type: 'line',
         smooth: true,
         symbol: 'circle',     //设定为实心点
@@ -191,6 +261,8 @@ const Index = (props) => {
       },
       
     ]
+  }
+   return option;
   };
 
  const dataAlarmResOption = {  //数据报警响应统计
@@ -199,7 +271,7 @@ const Index = (props) => {
   xAxis: { show:false,  type: 'value'},
   yAxis: {
       type: 'category',
-      data: ['超时报警核实率', '异常报警响应率', '缺失报警响应率', '报警响应超时率'],
+      data: [ '报警响应超时率','缺失报警响应率','异常报警响应率','超标报警核实率'],
       axisLine: { show: false},
       axisTick: {show: false  },
       axisLabel: {  margin:124, textStyle: { color: '#fff',fontSize:subjectFontSize,align:'left'},   
@@ -217,7 +289,7 @@ const Index = (props) => {
         formatter:function(params){
           for(let i=0;i<dataAlarmResData.length;i++){
             if(params.dataIndex==i){
-             return `${dataAlarmResData[i]==100? dataAlarmResData[i].toFixed(1) : dataAlarmResData[i].toFixed(2)}%`;
+             return `${dataAlarmResData[i]==100? dataAlarmResData[i].toFixed(1) : dataAlarmResData[i]}%`;
            }
           }
          },
@@ -310,22 +382,12 @@ const Index = (props) => {
     }
   ]
  }
- const moreBtnClick = (type) =>{
-   console.log(type)
- }
-
- const [effectiveTransBtnCheck ,setEffectiveTransBtnCheck] = useState(2)
- const  effectiveTransClick = (key) =>{ //有效传输率 切换日期
-    setEffectiveTransBtnCheck(key)
- }
-
- const [dataAlarmResBtnCheck ,setDataAlarmResBtnCheck] = useState(2)
- const  dataAlarmResClick = (key) =>{ //数据报警响应 切换日期
-   setDataAlarmResBtnCheck(key)
- }
- 
-  return (
+  const {effectiveTransmissionLoading } = props;  //有效传输率
+  const {dataAlarmResLoading} = props; //数据报警响应
+  return ( 
       <div>
+
+   <Spin spinning={false}>
     <div className={styles.realTimeNetworkSty}>
       <CardHeader  title='实时联网率'/>
        <div style={{paddingTop:30}}>
@@ -349,18 +411,22 @@ const Index = (props) => {
      <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
     </div>
     </div>
+    </Spin>
 
+    <Spin spinning={effectiveTransmissionLoading}>
     <div className={styles.effectiveTrans}> {/**有效传输率 */}
     <CardHeader btnClick={effectiveTransClick} showBtn type='week' btnCheck={effectiveTransBtnCheck} title='有效传输率' />
      <div style={{height:'100%',padding:'36px 19px 0 0' }}>
         <ReactEcharts
-            option={effectiveTransOption}
+            option={effectiveTransOption()}
             style={{ height: '100%', width: '100%' }}
           />
      </div>
      <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
      </div>
+    </Spin>
 
+    <Spin spinning={dataAlarmResLoading}>
      <div className={styles.dataAlarmRes}>{/**数据报警响应统计 */}
     <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='数据报警响应统计' />
      <div style={{height:'100%',padding:'24px 19px 15px 0' }}>
@@ -370,6 +436,7 @@ const Index = (props) => {
           /> 
      </div>
      </div>
+     </Spin>
 
      <div className={styles.operationExpira}>{/**运营到期点位统计 */}
     <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位统计' />

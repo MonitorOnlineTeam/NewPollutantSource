@@ -27,19 +27,18 @@ const namespace = 'newestHome'
 const subjectFontSize = 14;
 
 
-const pollType =  {
-   '废水' : '1',
-   '废气' : '2',
-}
+
 const dvaPropsData =  ({ loading,newestHome }) => ({
-  operationLoading:newestHome.operationLoading,
+  operationLoading:loading.effects[`${namespace}/GetOperatePointList`],
   operationDataSource:newestHome.operationDataSource,
   operationTaskLoading:loading.effects[`${namespace}/GetOperationTaskList`],
   operaOrderData:newestHome.operaOrderData,
   operationPlanTaskLoading:loading.effects[`${namespace}/GetOperationPlanTaskRate`],
   planOperaList:newestHome.planOperaList,
+  planCompleteListLoading:loading.effects[`${namespace}/GetOperationRegionPlanTaskRate`],
   planCompleteList:newestHome.planCompleteList,
   latelyDays30:newestHome.latelyDays30,
+  pollType:newestHome.pollType,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -68,6 +67,12 @@ const  dvaDispatch = (dispatch) => {
         payload:{...payload},
       }) 
     },
+    GetOperationRegionPlanTaskRate:(payload)=>{ //计划完成率
+      dispatch({
+        type: `${namespace}/GetOperationRegionPlanTaskRate`, 
+        payload:{...payload},
+      }) 
+    },
   }
 }
 const Index = (props) => {
@@ -75,22 +80,13 @@ const Index = (props) => {
 
 
 
-const { operaOrderData,latelyDays30 } = props;
+const { operaOrderData,latelyDays30,pollType } = props;
 
 
   
   useEffect(() => {
     initData()
   },[]);
-  // {
-  //   "pollutantType": "sample string 1",
-  //   "beginTime": "2021-11-29 10:15:13",
-  //   "endTime": "2021-11-29 10:15:13",
-  //   "taskType": 1,
-  //   "pointType": 1,
-  //   "regionCode": "sample string 3",
-  //   "entCode": "sample string 4"
-  // }
   const pollutantType = pollType[props.type]
   const  initData = () =>{
     props.GetOperatePointList({ //运营监测点信息
@@ -104,8 +100,21 @@ const { operaOrderData,latelyDays30 } = props;
       pollutantType: pollutantType,
       ...latelyDays30
     })
+    getOperationRegionPlanTaskRate(1) //计划完成率
+    
+  }
+  const getOperationRegionPlanTaskRate = (taskType) =>{
+    props.GetOperationRegionPlanTaskRate({ //计划完成率
+      pollutantType: pollutantType,
+      taskType: taskType,
+    })
   }
 
+   const [planBtnCheck,setPlanBtnCheck] = useState(1)  
+   const btnClick = (key,datatype) =>{ //计划完成率  切换
+     setPlanBtnCheck(key)
+     getOperationRegionPlanTaskRate(key)
+    }
   const operationColumns =  [
     {
       title: '统计类别',
@@ -268,10 +277,7 @@ const planInspection = () =>{
   console.log(1111)
 }
 
-const [planBtnCheck,setPlanBtnCheck] = useState(1)
-const btnClick = (key,datatype) =>{
-  setPlanBtnCheck(key)
-}
+
 
 const moreBtnClick = (type) =>{
   console.log(type)
@@ -311,7 +317,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   const  { operationLoading,operationDataSource } = props; {/**运营信息统计 */}
   const  { operationTaskLoading } = props; {/**近30日运维工单 */}
   const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
-  const  { planCompleteList } = props;{/**计划运维工单 */}
+  const  { planCompleteList,planCompleteListLoading } = props;{/**计划完成率 */}
 
   return (
     <div>
@@ -342,7 +348,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
           </div>
           </Spin>
 
-          {/* <Spin spinning={true}> */}
+          <Spin spinning={planCompleteListLoading}>
           <div className={styles.planComplete}>
            <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
@@ -350,7 +356,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
            <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/>
            </div>
           </div>
-          {/* </Spin> */}
+          </Spin>
 
         </div>
   );

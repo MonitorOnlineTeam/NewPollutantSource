@@ -4,7 +4,7 @@
  * 创建时间：2021.11.03
  */
 import React, { useState, useEffect, Fragment, useRef, useMemo } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio,Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -28,9 +28,13 @@ const namespace = 'newestHome'
 
 
 
-
 const dvaPropsData = ({ loading, newestHome }) => ({
-  exportLoading: loading.effects[`${namespace}/exportnewestHomeList`],
+  exceptionSignTaskRateLoading: loading.effects[`${namespace}/GetExceptionSignTaskRate`],
+  exceptionSignTaskRateList:newestHome.exceptionSignTaskRateList,
+  consumablesLoading: loading.effects[`${namespace}/GetConsumablesList`],
+  consumablesList:newestHome.exceptionSignTaskRateList,
+  latelyDays30:newestHome.latelyDays30,
+  pollType:newestHome.pollType,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -41,17 +45,22 @@ const dvaDispatch = (dispatch) => {
         payload: { ...payload },
       })
     },
-    getnewestHomeList: (payload, callback) => { //列表
+    GetExceptionSignTaskRate:(payload)=>{ //现场打卡异常统计
       dispatch({
-        type: `${namespace}/getnewestHomeList`,
-        payload: payload,
-        callback: callback
-      })
-
+        type: `${namespace}/GetExceptionSignTaskRate`, 
+        payload:{...payload},
+      }) 
     },
-
+    GetConsumablesList:(payload)=>{ //耗材统计
+      dispatch({
+        type: `${namespace}/GetConsumablesList`, 
+        payload:{...payload},
+      }) 
+    },
   }
 }
+
+
 const Index = (props) => {
 
 
@@ -60,12 +69,14 @@ const Index = (props) => {
 
 
   const [tableDatas, setTableDatas] = useState([])
-  const [pollutantType, setPollutantType] = useState('')
 
 
-  const { tableLoading, exportLoading, checkName, totalDatas } = props;
+  const {pollType,latelyDays7, latelyDays30 } = props;
 
   const consumablesEchartsRef = useRef(null);
+
+
+  const pollutantType = pollType[props.type]
 
   useEffect(() => {
     initData()
@@ -73,28 +84,40 @@ const Index = (props) => {
   }, []);
 
   const initData = () => {
-    const getnewestHomeList = (value) => {
-      props.getnewestHomeList({ PollutantType: value }, (res) => {
-        setTableDatas(res.notExpired7List)
-      })
-    }
     let consumablesEchartsInstance = consumablesEchartsRef.current.getEchartsInstance()
-
     consumablesEchartsInstance.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: 0 }); //耗材统计默认第一条高亮
+  
+    getExceptionSignTaskRate(latelyDays30); 
+    getConsumablesList(latelyDays30)
   }
 
-  const [clockBtnCheck, setClockBtnCheck] = useState(1)
-  const clockAbnormalClick = (key) => { //现场打卡 日期切换
+  const getExceptionSignTaskRate = (date) =>{ //现场打卡异常
+    props.GetExceptionSignTaskRate({ 
+      pollutantType: pollutantType,
+      ...date
+    })
+  }
+  const getConsumablesList = (date) =>{ //耗材统计
+    props.GetConsumablesList({ 
+      pollutantType: pollutantType,
+      ...date
+    })
+  }
+  
+  const [clockBtnCheck, setClockBtnCheck] = useState(latelyDays30)
+  const clockAbnormalClick = (key) => { //现场打卡异常 日期切换
     setClockBtnCheck(key)
+    getExceptionSignTaskRate(key)
   }
 
 
-  const [consumablesCheck, setConsumablesCheck] = useState(1)
+  const [consumablesCheck, setConsumablesCheck] = useState(latelyDays30)
   const consumablesClick = (key) => { //耗材统计 日期切换
     setConsumablesCheck(key)
+    getConsumablesList(key)
   }
 
-  const [deviceAbnormalCheck, setDeviceAbnormalCheck] = useState(1)
+  const [deviceAbnormalCheck, setDeviceAbnormalCheck] = useState(latelyDays30)
   const deviceAbnormalClick = (key) => { //设备异常 日期切换
     setDeviceAbnormalCheck(key)
   }
@@ -151,7 +174,7 @@ const Index = (props) => {
         label: {
           normal: {
             formatter: function (name) {
-              let val = name.value ? (name.value * 100).toFixed(2) : '0.00';
+              let val =  (name.value * 100).toFixed(2);
               return `{val|${val}%}`
             },
             rich: {
@@ -170,6 +193,9 @@ const Index = (props) => {
 
     return option;
   }
+
+  const { consumablesList } = props;
+
   const consumablesOption = {  //耗材统计
     color: ['#00DCFF', '#FFC200'],
     tooltip: {
@@ -333,17 +359,20 @@ const Index = (props) => {
     </Col>
   </Row>
   },[])
+
+  const { exceptionSignTaskRateLoading,exceptionSignTaskRateList } = props; //现场打卡
+  const { consumablesLoading } = props; //耗材统计
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
 
-
+      <Spin spinning={exceptionSignTaskRateLoading}>
       <Col className={styles.clockAbnormal}>
         <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常统计' />
         <div style={{ paddingTop: 11 }}>
           <Row>
             <div style={{ width: '50%' }}>
               <ReactEcharts
-                option={sceneClockOption('90%')}
+                option={sceneClockOption(`${exceptionSignTaskRateList.insidePlanRate}%`)}
                 style={{ height: '112px', width: '100%' }}
               />
               <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划内打卡异常率</Row>
@@ -351,11 +380,11 @@ const Index = (props) => {
                 <div className={styles.clockNumTextBag}>
                   <Row justify='center'>
                     <Col>
-                      <div className={styles.clockNum}>100次</div>
+                      <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskCount}次</div>
                       <div className={styles.clockText}>打卡次数</div>
                     </Col>
                     <Col style={{ paddingLeft: 43 }}>
-                      <div className={styles.clockNum}>90次</div>
+                      <div className={styles.clockNum}>{exceptionSignTaskRateList.insidePlanTaskExceptionCount}次</div>
                       <div className={styles.clockText}>打卡异常次数</div>
                     </Col>
                   </Row>
@@ -364,7 +393,7 @@ const Index = (props) => {
             </div>
             <div style={{ width: '50%' }}>
               <ReactEcharts
-                option={sceneClockOption('90%')}
+                option={sceneClockOption(`${exceptionSignTaskRateList.outPlanTaskRate}%`)}
                 style={{ height: '112px', width: '100%' }}
               />
               <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划外打卡异常率</Row>
@@ -372,11 +401,11 @@ const Index = (props) => {
                 <div className={styles.clockNumTextBag}>
                   <Row justify='center'>
                     <Col>
-                      <div className={styles.clockNum}>100次</div>
+                      <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskCount}次</div>
                       <div className={styles.clockText}>打卡次数</div>
                     </Col>
                     <Col style={{ paddingLeft: 43 }}>
-                      <div className={styles.clockNum}>90次</div>
+                      <div className={styles.clockNum}>{exceptionSignTaskRateList.outPlanTaskExceptionCount}次</div>
                       <div className={styles.clockText}>打卡异常次数</div>
                     </Col>
                   </Row>
@@ -386,8 +415,9 @@ const Index = (props) => {
           </Row>
         </div>
       </Col>
+      </Spin>
 
-
+      <Spin spinning={consumablesLoading}>
       <Col className={styles.consumablesStatistics}>
         <CardHeader btnClick={consumablesClick} showBtn type='week' btnCheck={consumablesCheck} title='耗材统计' />
         <Row justify='center' align='middle' className={styles.consumablesChart} >
@@ -400,15 +430,17 @@ const Index = (props) => {
           <MoreBtn className={styles.moreBtnAbsoluteSty} type='planComplete' moreBtnClick={moreBtnClick} />
         </Row>
       </Col>
+     </Spin>
 
-
-
+     <Spin spinning={false}>
       <Col className={styles.deviceAbnormal}> {/**设备异常统计 */}
         <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常统计' />
-        <div style={{ height: '100%', padding: '41px 0 0' }}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
-           { deviceAbnormalEcharts }
+        <div style={{ height: '100%', padding: '41px 0 0' }}> 
+           { deviceAbnormalEcharts }{/**当图表有点击事件时 更新更新页面时  图表抖动 */}
         </div>
       </Col>
+    </Spin>
+
     </Row>
   );
 };

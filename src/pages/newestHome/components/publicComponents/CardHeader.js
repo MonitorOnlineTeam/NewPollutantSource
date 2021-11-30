@@ -25,7 +25,8 @@ const namespace = 'newestHome'
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
-
+  latelyDays30:newestHome.latelyDays30,
+  latelyDays7:newestHome.latelyDays7,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -51,8 +52,8 @@ const Index = (props) => {
   },[]); 
 
   
-  const { showBtn, type,btnCheck,btnClick,dataType } = props;
-  const btnArr = type =='plan'? [{name:"巡检",key:1}, {name:"校准",key:2}] : [{name:"近7日",key:1}, {name:"近30日",key:2}]
+  const { showBtn, type,btnCheck,btnClick,dataType,latelyDays30,latelyDays7 } = props;
+  const btnArr = type =='plan'? [{name:"巡检",key:1}, {name:"校准",key:2}] : [{name:"近7日",key:latelyDays7}, {name:"近30日",key:latelyDays30}]
   return (
     <div className={styles.cardHeaderSty}>
           <span  className={styles.titleTextSty}>{props.title}</span>

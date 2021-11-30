@@ -1812,7 +1812,7 @@ export default {
                     },
                     { //异常工单统计 市一级
                       name: 'abnormalWorkStatisticsDetail',
-                      path: '/Intelligentanalysis/abnormalWorkStatistics/regionDetail',
+                      path: '/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail',
                       component: './Intelligentanalysis/abnormalWorkStatistics/regionDetail',
                     },
                   ],

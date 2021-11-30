@@ -598,7 +598,7 @@ const reponseNumColumns = [
     // render:(text,record,index)=>{
     //   return  <Button type="link"
     //    onClick={()=>{
-    //     router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:JSON.stringify(record)});
+    //     router.push({pathname:`/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail`,query:JSON.stringify(record)});
     //    }}
     //   >{text}</Button>
     // }

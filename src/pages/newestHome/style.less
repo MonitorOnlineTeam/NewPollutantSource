@@ -84,12 +84,16 @@
   }
 
   .pointSty,.operaOrder,.planOpera,.planComplete,.realTimeNetworkSty,.effectiveTrans,.dataAlarmRes{
-    margin-bottom: 9px;
+    // margin-bottom: 9px;
   }
 
 .leftContent{
    
-
+  :global{
+    .ant-spin-container{
+      margin-bottom: 9px;
+    }
+   }
   .pointSty{
     height:224px;
     padding-bottom: 10px;
@@ -144,10 +148,15 @@
 .bottomContent{   /* 底部部分 */
   .clockAbnormal,.consumablesStatistics,.deviceAbnormal{
     height: 285px;
-    width: calc(33.3333% - 6.66666px);
+    width: 100%;
     background-color: #263249;
-    
   }
+  :global {
+  .ant-spin-nested-loading{
+    width: calc(33.3333% - 6.66666px);
+   }
+  }
+
   .clockAbnormal{  //现场打卡异常统计
     padding-bottom: 17px;
     .clockNumTextBag{
@@ -180,6 +189,12 @@
 }
 
  .rightContent{ /* 右侧部分*/
+
+  :global{
+    .ant-spin-container{
+      margin-bottom: 9px;
+    }
+   }
   .realTimeNetworkSty{
     height:224px;
     padding-bottom: 11px;
