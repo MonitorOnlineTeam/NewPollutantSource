@@ -19,6 +19,7 @@ import moment from 'moment'
 import LeftContent from './LeftContent'
 import BottomContent from './BottomContent'
 import RightContent from './RightContent'
+import MapContent from './MapContent'
 import styles from "../style.less"
 
 const { Option } = Select;
@@ -29,10 +30,7 @@ const namespace = 'newestHome'
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
-  tableLoading:newestHome.tableLoading,
-  totalDatas:newestHome.totalDatas,
-  exportLoading: loading.effects[`${namespace}/exportnewestHomeList`],
-  checkName:newestHome.checkName,
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -43,14 +41,6 @@ const  dvaDispatch = (dispatch) => {
           payload:{...payload},
         }) 
       },
-    getnewestHomeList : (payload,callback) =>{ //列表
-      dispatch({
-        type: `${namespace}/getnewestHomeList`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
 
   }
 }
@@ -61,24 +51,34 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
   
- const [tableDatas,setTableDatas] = useState([])
  const [pollutantType,setPollutantType] = useState('')
 
 
-  const  { tableLoading,exportLoading,checkName,totalDatas } = props; 
+  const  {  } = props; 
 
-  const [ hasAsyncData,setHasAsyncData] = useState()
   useEffect(() => {
-      getnewestHomeList()
-      setHasAsyncData(true)
+  initData()
   },[]);
 
 
-  const getnewestHomeList = (value) =>{
-    props.getnewestHomeList({PollutantType:value},(res)=>{
-      setTableDatas(res.notExpired7List)
-    })
+  const initData = () =>{
+    setMinWidth()
   }
+  const setMinWidth=(e)=>{  
+    document.querySelector("body").setAttribute('style', 'min-width:1800px');
+}
+  const cancelMinWidth=(e)=>{  
+   document.querySelector("body").setAttribute('style', 'min-width:inherit');
+  }
+ 
+  const handleResize = (e) =>{
+    if( e.target.innerWidth <=1800){
+      props.updateState({subjectFontSize:13})
+    }else{
+      props.updateState({subjectFontSize:14})
+    }
+  }
+
 
   const [scrollTop,setScrollTop] = useState(0)
   const handleScroll=(e)=>{
@@ -87,14 +87,19 @@ const Index = (props) => {
     setScrollTop(e.srcElement.scrollTop)
   }
 
-
   useEffect(() => {
     let scrollEle = document.querySelector(".homeBreadcrumb");
     // 监听
     scrollEle.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+
     // 销毁
-    return () =>  scrollEle.addEventListener("scroll", handleScroll);
-  },[hasAsyncData]);
+    return () =>  {
+      cancelMinWidth()
+      scrollEle.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    }
+  },[]);
 
   return (
   <BreadcrumbWrapper type='homePage'>
@@ -104,7 +109,7 @@ const Index = (props) => {
              <LeftContent {...props}/>
            </Col>
            <Col span={14} className={styles.mapContent}>
-           111
+             <MapContent {...props}/>
            </Col>
            <Col span={5} className={styles.rightContent}>
             <RightContent {...props}/>

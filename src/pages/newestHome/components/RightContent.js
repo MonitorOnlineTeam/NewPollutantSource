@@ -26,16 +26,20 @@ const namespace = 'newestHome'
 
 
 
-const subjectFontSize = 14;
+// const subjectFontSize = 14;
 
 
-const dvaPropsData =  ({ loading,newestHome }) => ({
+const dvaPropsData =  ({ loading,newestHome,operationExpirePoint }) => ({
   effectiveTransmissionLoading:loading.effects[`${namespace}/GetEffectiveTransmissionRateList`],
   effectiveTransmissionList:newestHome.effectiveTransmissionList,
   dataAlarmResLoading:loading.effects[`${namespace}/GetAlarmResponse`],
   dataAlarmResData:newestHome.dataAlarmResData,
+  networkingLoading:loading.effects["networkRateStatistics/getHomePageNetworkingRate"], 
+  operationExpireLoading:loading.effects["operationExpirePoint/getOperationExpirePointList"], 
+  operationExpiraData:operationExpirePoint.totalDatas,
   pollType:newestHome.pollType,
   latelyDays30:newestHome.latelyDays30,
+  subjectFontSize:newestHome.subjectFontSize
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -58,6 +62,21 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    GetHomePageNetworkingRate : (payload,callback) =>{ //实时联网率
+      dispatch({
+        type: 'networkRateStatistics/getHomePageNetworkingRate',
+        payload:payload,
+        callback:callback
+      })
+    },
+    GetOperationExpirePointList : (payload,callback) =>{ //运营到期点位
+      dispatch({
+        type: `operationExpirePoint/getOperationExpirePointList`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
   }
 }
 const Index = (props) => {
@@ -70,7 +89,7 @@ const Index = (props) => {
 
 
 
-  const  {pollType, latelyDays30,dataAlarmResData } = props; 
+  const  {pollType, latelyDays30,dataAlarmResData,subjectFontSize } = props; 
 
   useEffect(() => {
       initData()
@@ -80,6 +99,8 @@ const Index = (props) => {
   const initData = (value) =>{
     getEffectiveTransmissionRateList(latelyDays30)
     getAlarmResponse(latelyDays30)
+    getHomePageNetworkingRate()
+    getOperationExpirePointList()
   }
 
   const pollutantType = pollType[props.type]
@@ -112,8 +133,28 @@ const Index = (props) => {
     getAlarmResponse(key)
 
   }
-  
 
+  const [networking,setNetworking] = useState({networkingRate:'0.00%',networkingCount:0,offLineCount:0})
+  const getHomePageNetworkingRate = () =>{ //实时联网率
+    props.GetHomePageNetworkingRate({ 
+      PollutantType: pollutantType,
+    },(res)=>{
+      if(res.length>0){
+        let data = res[0];
+        setNetworking({
+          networkingRate: data.NetworkingRate,
+          networkingCount: data.NetworkingCount,
+          offLineCount:  data.OffLineCount,
+         })
+        }
+     })
+    }
+
+  const  getOperationExpirePointList = () =>{ //运营到期点位统计
+    props.GetOperationExpirePointList({ 
+      PollutantType: pollutantType,
+    },()=>{})
+  }
   const moreBtnClick = (type) =>{
     console.log(type)
   }
@@ -127,7 +168,7 @@ const Index = (props) => {
       },
       color: ["#298CFB", "#FCA522"],
       title: {
-        text:'90.00%',
+        text:networking.networkingRate,
         left: "center",
         top: "38%",
         textStyle: {
@@ -145,10 +186,9 @@ const Index = (props) => {
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           data: [
-            { value:  90.00 , name: '已完成' },
-            { value: 100 - 90.00, name: '未完成' },
+            { value:  networking.networkingRate.replace("%","") , name: '已完成' },
+            { value: 100 - networking.networkingRate.replace("%",""), name: '未完成' },
           ],
-          // minAngle: 0,//最小角度
           startAngle:330, //起始角度
           hoverAnimation: false, //悬浮效果
         // silent: true,
@@ -166,7 +206,6 @@ const Index = (props) => {
 
   let value = effectiveTransmissionList[0]? effectiveTransmissionList.map(item=> item.effectiveTransmissionRate) : []
 
-  console.log(value)
   const option = { //传输有效率
 
     color:'#298CFB',
@@ -185,7 +224,7 @@ const Index = (props) => {
            //值
              let value = ''
              params.map(item=>{
-             value += `${item.marker} ${item.seriesName}: ${item.value} % <br />`
+             value += `${item.marker} ${item.seriesName}: ${item.value==0? '0.00': item.value}% <br />`
            })
            return  name + '<br />' + value
     },
@@ -323,7 +362,11 @@ const Index = (props) => {
  }
 
  const operationExpiraEchartsRef = useRef(null);
- const operationExpiraOption = { //点位到期统计
+
+
+const { operationExpiraData } = props; 
+
+const operationExpiraOption = { //点位到期统计
   title: {
     text: '点位统计',  //图形标题，配置在中间对应位置
     left: "center",
@@ -345,10 +388,11 @@ const Index = (props) => {
       radius: ['60%', '90%'],
       avoidLabelOverlap: false,
       hoverAnimation:false,
+      minAngle: 90,//最小角度
       label: {
         alignTo: 'edge', // 'edge'：文字对齐，文字的边距由 label.margin 决定。
-        formatter: '{name|{b}}\n{num|{c} 个}',
-        margin: '4%',
+        formatter: '{name|{b}}\n{num|{c}个}',
+        margin: 12,
         lineHeight: 20,
         rich: {
           name:{
@@ -374,20 +418,22 @@ const Index = (props) => {
           },
       },
       data: [
-        { value: 20, name: '0-7日内到期' },
-        { value: 20, name: '15-30日内到期' },
-        { value: 20, name: '8-14日内到期' },
-        { value: 20, name: '过期7日内' },
+        { value: operationExpiraData.notExpired7, name: '0-7日内到期' },
+        { value: operationExpiraData.notExpired30, name: '15-30日内到期' },
+        { value: operationExpiraData.notExpired14, name: '8-14日内到期' },
+        { value: operationExpiraData.overdue7, name: '过期7日内' },
       ]
     }
   ]
  }
   const {effectiveTransmissionLoading } = props;  //有效传输率
   const {dataAlarmResLoading} = props; //数据报警响应
+  const { networkingLoading } = props; //实时联网率
+  const { operationExpireLoading } = props; //运营到期点位
   return ( 
       <div>
 
-   <Spin spinning={false}>
+   <Spin spinning={networkingLoading}>
     <div className={styles.realTimeNetworkSty}>
       <CardHeader  title='实时联网率'/>
        <div style={{paddingTop:30}}>
@@ -400,10 +446,10 @@ const Index = (props) => {
                 width:'calc(100% - 115px)'
                 }}>
          <Row align='middle'><div className={styles.realTimeNetworkLegend} style={{background:'#298CFB'}}></div>
-         <div style={{width:70}}>联网数：</div>190<span>次</span>
+         <div style={{width:70}}>联网数：</div>{networking.networkingCount}<span>次</span>
          </Row>
          <Row align='middle' style={{paddingTop:8}}><div className={styles.realTimeNetworkLegend} style={{background:'#FCA522'}}></div>
-         <div style={{width:70}}>未联网数：</div>20<span>次</span>
+         <div style={{width:70}}>未联网数：</div>{networking.offLineCount}<span>次</span>
          </Row>
        </div>
      </Row>
@@ -437,7 +483,8 @@ const Index = (props) => {
      </div>
      </div>
      </Spin>
-
+  
+     <Spin spinning={operationExpireLoading}>
      <div className={styles.operationExpira}>{/**运营到期点位统计 */}
     <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位统计' />
      <div style={{height:'100%',padding:'33px 17px 36px 0' }}>
@@ -449,6 +496,9 @@ const Index = (props) => {
      </div>
      <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
      </div>
+     </Spin>
+
+
   </div>
   );
 };

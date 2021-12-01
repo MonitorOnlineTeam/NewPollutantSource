@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from './service';
+import * as services from '../services/operationExpirePoint';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
@@ -10,7 +10,7 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'operationExpirePoint',
   state: {
-    totalDatas:{},
+    totalDatas:{ notExpired7:0,notExpired30:0,notExpired14:0,overdue7:0 },
     tableLoading:false,
     checkName:''
   },

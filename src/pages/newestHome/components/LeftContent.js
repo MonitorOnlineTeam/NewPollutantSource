@@ -24,7 +24,7 @@ const { Option } = Select;
 
 const namespace = 'newestHome'
 
-const subjectFontSize = 14;
+// const subjectFontSize = 14;
 
 
 
@@ -39,6 +39,7 @@ const dvaPropsData =  ({ loading,newestHome }) => ({
   planCompleteList:newestHome.planCompleteList,
   latelyDays30:newestHome.latelyDays30,
   pollType:newestHome.pollType,
+  subjectFontSize:newestHome.subjectFontSize
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -80,7 +81,7 @@ const Index = (props) => {
 
 
 
-const { operaOrderData,latelyDays30,pollType } = props;
+const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
 
 
   
@@ -182,7 +183,7 @@ const { operaOrderData,latelyDays30,pollType } = props;
           formatter:function(params){
             for(let i=0;i<operaOrderData.length;i++){
               if(params.dataIndex==i){
-               return `${operaOrderData[i]} 次`;
+               return `${operaOrderData[i]}次`;
              }
             }
            },
@@ -227,14 +228,6 @@ const { operaOrderData,latelyDays30,pollType } = props;
  const { planOperaList } = props;
 
  const planOperaOption = (type) => {  //计划运维图表
-  // actualCalibrationCount: 0
-  // actualCalibrationRate: "0.00"
-  // autoCalibrationAllCount: 0
-  // autoCalibrationCompleteCount: 0
-  // autoCalibrationRate: "0.00"
-  // inspectionAllCount: 0
-  // inspectionCompleteCount: 0
-  // inspectionRate: "0.00"
   let color1 = ["#F9BF31", "#323A70"], color2 = ["#3BE2BA", '#323A70'],color3 = ['#F66080', '#323A70']
   let option = {
     tooltip: {
@@ -265,7 +258,6 @@ const { operaOrderData,latelyDays30,pollType } = props;
           { value: type == 1 ? planOperaList.inspectionRate : type == 2 ? planOperaList.autoCalibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
           { value: type == 1 ? (100 - planOperaList.inspectionRate) : type == 2 ? (100  - planOperaList.autoCalibrationRate ) : (100 - planOperaList.actualCalibrationRate), name: '未完成' },
         ],
-        // minAngle: 10,//最小角度
         startAngle:330, //起始角度
       }
     ]

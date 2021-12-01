@@ -10,6 +10,7 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'newestHome',
   state: {
+    subjectFontSize:14,
     operationDataSource: [],
     latelyDays30:{beginTime:moment(moment().add(-31, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment().add(-1, 'day')).format('YYYY-MM-DD 23:59:59')},
     latelyDays7:{beginTime:moment(moment().add(-8, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment().add(-1, 'day')).format('YYYY-MM-DD 23:59:59')},
@@ -23,7 +24,7 @@ export default Model.extend({
     dataAlarmResData:["0.00","0.00","0.00","0.00"],
     exceptionSignTaskRateList:{insidePlanRate: "0.00",  insidePlanTaskCount: 0, insidePlanTaskExceptionCount: 0,
                                outPlanTaskCount: 0, outPlanTaskExceptionCount: 0, outPlanTaskRate: "0.00"},
-    consumablesList:[],
+    consumablesList:{consumablesReplaceCount: 0,sparePartReplaceRecordCount: 0, standardGasRepalceCoun: 0, standardLiquidRepalceCount: 0},
     },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计

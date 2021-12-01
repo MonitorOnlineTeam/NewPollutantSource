@@ -32,9 +32,10 @@ const dvaPropsData = ({ loading, newestHome }) => ({
   exceptionSignTaskRateLoading: loading.effects[`${namespace}/GetExceptionSignTaskRate`],
   exceptionSignTaskRateList:newestHome.exceptionSignTaskRateList,
   consumablesLoading: loading.effects[`${namespace}/GetConsumablesList`],
-  consumablesList:newestHome.exceptionSignTaskRateList,
+  consumablesList:newestHome.consumablesList,
   latelyDays30:newestHome.latelyDays30,
   pollType:newestHome.pollType,
+  subjectFontSize:newestHome.subjectFontSize
 })
 
 const dvaDispatch = (dispatch) => {
@@ -71,7 +72,7 @@ const Index = (props) => {
   const [tableDatas, setTableDatas] = useState([])
 
 
-  const {pollType,latelyDays7, latelyDays30 } = props;
+  const {pollType,latelyDays7, latelyDays30,subjectFontSize} = props;
 
   const consumablesEchartsRef = useRef(null);
 
@@ -125,7 +126,7 @@ const Index = (props) => {
   const moreBtnClick = (type) => {
     console.log(type)
   }
-  const sceneClockOption = (data) => {
+  const sceneClockOption = (data) => { 
 
     let rate = data ? data.replace('%', '') / 100 : data;
     var option = {
@@ -210,6 +211,7 @@ const Index = (props) => {
         type: 'pie',
         radius: ['50%', '70%'],
         avoidLabelOverlap: true,
+        minAngle: 90,//最小角度
         emphasis: {
           label: {
             show: true, //高亮是标签的样式
@@ -221,7 +223,7 @@ const Index = (props) => {
           formatter: '{name|{b}}\n{num|{c}}',
           rich: {
             name: {
-              fontSize: 14,
+              fontSize: subjectFontSize,
               color: '#fff',
               align: "left",
               padding: [5, 10, 20, 10]
@@ -247,9 +249,9 @@ const Index = (props) => {
         },
 
         data: [
-          { value: 310, name: '易耗品更换数量', },
+          { value: consumablesList.consumablesReplaceCount, name: '易耗品更换数量', },
           {
-            value: 234, name: '试剂更换数量',
+            value: consumablesList.standardLiquidRepalceCount, name: '试剂更换数量',
             itemStyle: {
               normal: {
                 color: {
@@ -267,7 +269,7 @@ const Index = (props) => {
             }
           },
           {
-            value: 135, name: '标液更换数量', itemStyle: {
+            value: consumablesList.standardGasRepalceCoun, name: '标液更换数量', itemStyle: {
               normal: {
                 color: {
                   type: 'linear', // 线性渐变
@@ -283,7 +285,7 @@ const Index = (props) => {
               },
             }
           },
-          { value: 335, name: '备品备件更换数量' },
+          { value: consumablesList.sparePartReplaceRecordCount, name: '备品备件更换数量' },
         ]
       }
     ]
