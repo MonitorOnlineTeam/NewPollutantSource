@@ -1,4 +1,5 @@
 /**
+/**
  * 功  能：统计量变化趋势
  * 创建人：贾安波
  * 创建时间：2019.10.19
@@ -181,11 +182,11 @@ export default class EntTransmissionEfficiency extends Component {
     const { EntList } = this.props;
 
     const selectList = [];
-    if (EntList.length > 0 && EntList[0]) {
-      EntList[0].map(item => {
+    if (EntList.length > 0) {
+      EntList.map(item => {
         selectList.push(
-          <Option key={item.ParentCode} value={item.ParentCode} title={item.ParentName}>
-            {item.ParentName}
+          <Option key={item[0].ParentCode} value={item[0].ParentCode} title={item[0].ParentName}>
+            {item[0].ParentName}
           </Option>,
         );
       });
