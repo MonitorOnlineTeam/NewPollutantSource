@@ -1751,7 +1751,18 @@ const routes = [
                 routes: [
                   {
                     path: '/Intelligentanalysis/emissionsStatistics',
-                    redirect: '/Intelligentanalysis/emissionStatistical/gas',
+                    redirect: '/IntelligentAnalysis/emissionStatistical/gas',
+                  },
+                  {
+                    name: 'emissionsStatisticsindex',
+                    path: '/Intelligentanalysis/emissionsStatistics/index',
+                    component: './IntelligentAnalysis/emissionStatistical/EmissionStatistical',
+                  },
+                  {
+                    // 排放量对比统计
+                    name: 'gasContrast',
+                    path: '/Intelligentanalysis/emissionsStatistics/contrast',
+                    component: './IntelligentAnalysis/emissionStatistical/Contrast',
                   },
                   {
                     // 废气排放量统计
