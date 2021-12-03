@@ -168,8 +168,8 @@ class RangeCheckPage extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
 
-    const { location } = this.props;
-
+    if (prevProps.pollutantList !== this.props.pollutantList) {
+    const { location } = this.props;    
     if (location && location.query.type === 'alarm') { //从报警信息页面跳转
       this.formRef.current.setFieldsValue({ PollutantCode: [location.query.code] })
       this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
@@ -188,6 +188,7 @@ class RangeCheckPage extends PureComponent {
         }
         this.getTableDataSource();
       }
+    }
     }
     if (prevProps.DGIMN !== this.props.DGIMN) {
       this.getPollutantList();
