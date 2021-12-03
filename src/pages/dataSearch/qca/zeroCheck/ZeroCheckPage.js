@@ -169,13 +169,12 @@ class ZeroCheckPage extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.pollutantList !== this.props.pollutantList) {
-
-      const { location } = this.props;
-
+      
+      const { location } = this.props; 
       if (location && location.query.type === 'alarm') { //从报警信息页面跳转
         this.formRef.current.setFieldsValue({ PollutantCode: location.query.code.split(",") })
         this.formRef.current.setFieldsValue({ time: [moment(location.query.startTime), moment(location.query.endTime)] })
-        this.getTableDataSource();
+        this.getTableDataSource(); 
       } else {
         let pollutantList = this.props.pollutantList.map(item => item.PollutantCode);
         if (this.props.pointType === "1") {

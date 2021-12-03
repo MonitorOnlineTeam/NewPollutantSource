@@ -113,25 +113,28 @@ class TableData extends React.Component {
     const code = [ ...new Set(record.PollutantCode.split(","))].join()
     const startTime = moment(date).format("YYYY-MM-DD 00:00:00")
     const endTime = date;
+
+    let urlPar = `type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${encodeURIComponent(`${record.ParentName}-${record.PointName}`.replace(/\s*/g,""))}`
     const check={
-      "3101":`/dataSearch/qca/zeroCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
-      '3102':`/dataSearch/qca/rangeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
-      '3105':`/dataSearch/qca/blindCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
-      '3104':`/dataSearch/qca/linearCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`,
-      '3103':`/dataSearch/qca/resTimeCheck?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}`
+      "3101":`/dataSearch/qca/zeroCheck?${urlPar}`,
+      '3102':`/dataSearch/qca/rangeCheck?${urlPar}`,
+      '3105':`/dataSearch/qca/blindCheck?${urlPar}`,
+      '3104':`/dataSearch/qca/linearCheck?${urlPar}`,
+      '3103':`/dataSearch/qca/resTimeCheck?${urlPar}`
     }
     if (record.AlarmType == 13) {  //质控核查报警
-      
       return  <div style={{textAlign: 'left',}}>
-       { record.AlarmMsg.split(";").map((item,index)=>{
-   
-              let see = record.PollutantCode.split(",")[index];
+       { record.AlarmMsg.split(";").map((item,indexs)=>{
+            
+            if(item){  
+              let see = record.PollutantCode.split(",")[indexs];
                return  <>
                  <span style={{  paddingRight: 5, }}  >
                   {item}
                </span>
                 {see?  <Link style={{  paddingRight: 8, }} to={`${check[see.split("@")[1]]}&code=${see.split("@")[0]}`} >查看</Link> : null}
                 </>
+                }
       })
     }
       </div>

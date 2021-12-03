@@ -11,7 +11,6 @@ const ZeroCheck = (props) => {
   
   const {location} = props;
 
-
   useEffect(() => {
     if(location.query&&location.query.type==='alarm' ){
       setPointName(location.query.title)  
