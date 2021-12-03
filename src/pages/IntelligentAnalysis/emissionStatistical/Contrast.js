@@ -625,7 +625,9 @@ class Contrast extends PureComponent {
                     message.error("请将时间填写完整");
                     return;
                   }
-                  this.getTableData(DataType);
+                  this.getTableData("region");
+                  this.getTableData("ent");
+                  this.getTableData("point");
                 }}>
                   查询
                 </Button>

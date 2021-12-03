@@ -569,7 +569,10 @@ class Gas extends PureComponent {
               </FormItem>
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={() => {
-                  this.getTableData(DataType);
+                  // this.getTableData(DataType);
+                  this.getTableData("region");
+                  this.getTableData("ent");
+                  this.getTableData("point");
                 }}>
                   查询
                 </Button>
