@@ -87,10 +87,10 @@ export default Model.extend({
       const response = yield call(GetEmissionsEntPointPollutant, { ...payload });
       if (response.IsSuccess) {
         if(parmarType==='RegionCode'){
-          yield update({ pointLoading: false,EntList: response.Datas.EntList, queryPar:{...queryPar,EntCode:response.Datas.EntList.length>0?response.Datas.EntList[0][0].EntCode:"",DGIMN:'',PollutantList:[]} });
+          yield update({ pointLoading: false,EntList: response.Datas.EntList, queryPar:{...queryPar,EntCode:response.Datas.EntList.length>0?response.Datas.EntList[0][0].ParentCode:"",DGIMN:'',PollutantList:[]} });
           // callback(response.Datas.EntList.length>0? response.Datas.EntList[0][0].EntCode :'')
           if(response.Datas.EntList.length>0){
-            callback( response.Datas.EntList[0][0].EntCode)
+            callback( response.Datas.EntList[0][0].ParentCode)
          }else{
             callback() 
             yield update({ loading: false,PollutantList:[],PointList:[] });

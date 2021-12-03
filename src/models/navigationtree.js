@@ -18,9 +18,9 @@ export default Model.extend({
         EntAndPoint: [],
         PollutantType: [],
         selectTreeKeys: [],
-        overallselkeys: [],
-        overallexpkeys: [],
-        pointInfo:{},
+        overallselkeys: localStorage.getItem('overallselkeys') ? [localStorage.getItem('overallselkeys')] : [],
+        overallexpkeys: localStorage.getItem('overallexpkeys') ? localStorage.getItem('overallexpkeys').split(',') : [],
+        pointInfo: localStorage.getItem('pointInfo') ? JSON.parse(localStorage.getItem('pointInfo')) : {},
         IsTree: true,
     },
     subscriptions: {

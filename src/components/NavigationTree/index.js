@@ -205,6 +205,7 @@ class NavigationTree extends Component {
           pointInfo: { ...this.props.pointInfo, show: false }
         },
       })// 根据传入的状态判断是否更新全局
+      this.setLocalStorage("", "", { ...this.props.pointInfo, show: false })
     }
   }
 
@@ -214,12 +215,12 @@ class NavigationTree extends Component {
       this.props.dispatch({
         type: 'navigationtree/updateState',
         payload: {
-          selectTreeKeys: [],
           overallselkeys: [],
           overallexpkeys: [],
           pointInfo: {},
         }
       })
+      this.setLocalStorage([], [], {})
       this.defaultKey = 0;
     }
     this.setState({
@@ -362,6 +363,7 @@ class NavigationTree extends Component {
               pointInfo: { entName: node.EntName, pointName: node.title }
             },
           })// 根据传入的状态判断是否更新全局
+          this.setLocalStorage("", '', { entName: node.EntName, pointName: node.title })
         }
         this.defaultKey = 1;
         var nowKey = [key]
@@ -379,6 +381,7 @@ class NavigationTree extends Component {
                 pointInfo: { entName: node.EntName, pointName: node.title }
               },
             })// 根据传入的状态判断是否更新全局
+            this.setLocalStorage([nowExpandKey], nowKey, { entName: node.EntName, pointName: node.title })
           }
         } else if (this.props.overallselkeys.length != 0) {
           const state = !!this.state.dataList.find(m => m.key == this.props.overallselkeys[0].toString())
@@ -601,6 +604,7 @@ class NavigationTree extends Component {
         overallexpkeys: expandedKeys,
       },
     })
+    this.setLocalStorage(expandedKeys)
   };
 
   // 复选框选中
@@ -756,7 +760,6 @@ class NavigationTree extends Component {
       this.props.dispatch({
         type: 'navigationtree/updateState',
         payload: {
-          selectTreeKeys: rtnList,
           overallselkeys: this.state.selectedKeys,
           overallexpkeys: this.state.expandedKeys,
           // entName: rtnList.entName,
@@ -764,6 +767,8 @@ class NavigationTree extends Component {
 
         },
       })
+      this.setLocalStorage(this.state.expandedKeys, this.state.selectedKeys)
+
     } else if (this.props.isMap === true && rtnList[0].IsEnt) {
     } else {
       console.log('rtnKey2=', rtnList)
@@ -771,14 +776,20 @@ class NavigationTree extends Component {
       this.props.dispatch({
         type: 'navigationtree/updateState',
         payload: {
-          selectTreeKeys: rtnList,
           overallselkeys: this.state.selectedKeys,
           overallexpkeys: this.state.expandedKeys,
           pointInfo: { entName: rtnList[0].entName, pointName: rtnList[0].pointName }
 
         },
       })
+      this.setLocalStorage(this.state.expandedKeys, this.state.selectedKeys, { entName: rtnList[0].entName, pointName: rtnList[0].pointName })
     }
+  }
+
+  setLocalStorage = (overallexpkeys, overallselkeys, pointInfo) => {
+    overallexpkeys && localStorage.setItem('overallexpkeys', overallexpkeys)
+    overallselkeys && localStorage.setItem('overallselkeys', overallselkeys)
+    pointInfo && localStorage.setItem('pointInfo', JSON.stringify(pointInfo))
   }
 
   onRadioChange = e => {
@@ -865,6 +876,10 @@ class NavigationTree extends Component {
   }
 
   render() {
+    console.log('overallexpkeys=', this.props.overallexpkeys)
+    console.log('overallselkeys=', this.props.overallselkeys)
+    console.log('selectedKeys=', this.state.selectedKeys)
+    console.log('expandedKeys=', this.state.expandedKeys)
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo } = this.props;
     // 渲染数据及企业排口图标和运行状态

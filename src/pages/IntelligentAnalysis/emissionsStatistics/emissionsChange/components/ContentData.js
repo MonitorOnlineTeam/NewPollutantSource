@@ -181,11 +181,11 @@ export default class EntTransmissionEfficiency extends Component {
     const { EntList } = this.props;
 
     const selectList = [];
-    if (EntList.length > 0) {
-      EntList.map(item => {
+    if (EntList.length > 0 && EntList[0]) {
+      EntList[0].map(item => {
         selectList.push(
-          <Option key={item[0].EntCode} value={item[0].EntCode} title={item[0].EntName}>
-            {item[0].EntName}
+          <Option key={item.ParentCode} value={item.ParentCode} title={item.ParentName}>
+            {item.ParentName}
           </Option>,
         );
       });

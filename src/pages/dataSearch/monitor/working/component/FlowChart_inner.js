@@ -235,14 +235,14 @@ class FlowChart extends PureComponent {
            src="../../../"
     />  */}
 
-      <img src="/visualization/total.png" />
+      <img src="/visualization/total.jpg" />
 
       {isStop != 1 && isStop != 2 && isStop != 3 ? //锅炉状态  非1 2 3  是不正常
         <div id='fei'>
-          <img src="/visualization/fei/1.gif" className={`${styles.fei1} ${styles.commonSty}`} />
-          <img src="/visualization/fei/1.gif" className={`${styles.fei2} ${styles.commonSty}`} />
-          <img src="/visualization/fei/1.gif" className={`${styles.fei3} ${styles.commonSty}`} />
-          <img src="/visualization/fei/4.gif" className={`${styles.fei4} ${styles.commonSty}`} />
+          {/* <img src="/visualization/fei/1.gif" className={`${styles.fei1} ${styles.commonSty}`} /> */}
+          {/* <img src="/visualization/fei/1.gif" className={`${styles.fei2} ${styles.commonSty}`} /> */}
+          {/* <img src="/visualization/fei/1.gif" className={`${styles.fei3} ${styles.commonSty}`} /> */}
+          <img src="/visualization/fei/4.gif" className={`${styles.fei4} ${styles.commonSty}`} style={{top: 814, left: 190}} />
           <img src="/visualization/fei/5.gif" className={`${styles.fei5} ${styles.commonSty}`} />
           <img src="/visualization/fei/6.gif" className={`${styles.fei6} ${styles.commonSty}`} />
         </div>
@@ -276,18 +276,20 @@ class FlowChart extends PureComponent {
 
         <span className={`${styles.leng1} ${styles.commonSty}`}>废气流向</span>
         <span className={`${styles.leng2} ${styles.commonSty}`}>样气流向</span>
-        <span className={`${styles.leng3} ${styles.commonSty}`}>质控气体流向</span>
-
+        <span
+          className={`${styles.leng3} ${styles.commonSty}`}
+          style={{ background: '#eff0f5', left: 320, width: 100, height: 24 }}
+        ></span>
 
       </>
       <>
-        {isStop != 1 && isStop != 2 && isStop != 3 ? <span style={{ color: green.primary }} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span>
+        {isStop != 1 && isStop != 2 && isStop != 3 ? <span style={{ color: green.primary,  top: 670, left: 94 }} className={`${styles.guo} ${styles.commonSty}`}>锅炉</span>
           :
-          <span style={{ color: gold[5], left: 75 }} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop == 3 ? "(停产)" : isStop == 1 ? "(停产)" : isStop == 2 ? "(停产)" : ''}</span>
+          <span style={{ color: gold[5], left: 75, top: 670 }} className={`${styles.guo} ${styles.commonSty}`}>锅炉{isStop == 3 ? "(停产)" : isStop == 1 ? "(停产)" : isStop == 2 ? "(停产)" : ''}</span>
         }
-        <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span>
-        <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span>
-        <span className={`${styles.chu} ${styles.commonSty}`}>除尘设施</span>
+        {/* <span className={`${styles.tuox} ${styles.commonSty}`}>脱销设施</span> */}
+        {/* <span className={`${styles.tuol} ${styles.commonSty}`}>脱硫设施</span> */}
+        {/* <span className={`${styles.chu} ${styles.commonSty}`}>除尘设施</span> */}
         <span className={`${styles.yan} ${styles.commonSty}`}>烟囱</span>
         <span className={`${styles.quyangt} ${styles.commonSty}`}>探头温度</span>
         <span className={`${styles.quyangg} ${styles.commonSty}`}>管线温度</span>
@@ -444,19 +446,19 @@ class FlowChart extends PureComponent {
           }
 
           if (item.PollutantCode === "a01012") { //烟气温度
-            this.setState({ yanw: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanw: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit || ''}` })
           }
           if (item.PollutantCode === "a01014") { //烟气湿度
-            this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit || ''}` })
           }
           if (item.PollutantCode === "a00000") { //烟气流量
-            this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit || ''}` })
           }
           if (item.PollutantCode === "a01011") { //烟气流速
-            this.setState({ yanls: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanls: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit || ''}` })
           }
           if (item.PollutantCode === "a01013") { //烟气静压
-            this.setState({ yanj: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanj: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit || ''}` })
           }
 
           if (item.PollutantCode === "a05001") { //二氧化碳
