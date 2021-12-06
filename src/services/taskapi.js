@@ -336,3 +336,9 @@ export async function GetStandardLiquidRepalceRecordList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetStandardLiquidRepalceRecordList', body , null);
     return result === null ? { Datas: null } : result;
 }
+
+/** 配合检查列表 */
+export async function GetCooperationInspectionRecordList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetCooperationInspectionRecordList', params , null);
+    return result === null ? { Datas: null } : result;
+}

@@ -25,6 +25,7 @@ import MaintainRepalceRecord from '@/pages/EmergencyTodoList/MaintainRepalceReco
 import SparePartReplaceRecord from '@/pages/EmergencyTodoList/SparePartReplaceRecordContent'
 import FailureHoursRecord from '@/pages/EmergencyTodoList/FailureHoursRecord'
 import ReagentReplaceRecord from '@/pages/EmergencyTodoList/ReagentReplaceRecord'
+import CooperaInspection from '@/pages/EmergencyTodoList/CooperaInspection'
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
 import { router } from 'umi'
@@ -94,8 +95,11 @@ class Index extends Component {
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
                 break;
             case "15":  //试剂更换表单
-                form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} />
+                form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
+            case "62":  //配合检查表单
+                form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;    
         }
         return form
     }
@@ -103,7 +107,7 @@ class Index extends Component {
         return (
             <BreadcrumbWrapper breadcrumb={[]} title="记录单详情">
                 <div width="70%" style={{ backgroundColor: '#fff' }}>
-                    <Button type="primary" ghost style={{ marginTop: 5, marginLeft: '85%' }} onClick={() => {
+                    <Button type="primary" ghost style={{ marginTop: 20, marginLeft: '85%' }} onClick={() => {
                         router.push(`/taskdetail/emergencydetailinfolayout/${this.props.match.params.taskID}/21`);
                     }}><FormIcon />任务单</Button>
                     <Button style={{ marginTop: 5, marginLeft: 10 }} onClick={() => {

@@ -25,7 +25,8 @@ export default Model.extend({
     exceptionSignTaskRateList:{insidePlanRate: "0.00",  insidePlanTaskCount: 0, insidePlanTaskExceptionCount: 0,
                                outPlanTaskCount: 0, outPlanTaskExceptionCount: 0, outPlanTaskRate: "0.00"},
     consumablesList:{consumablesReplaceCount: 0,sparePartReplaceRecordCount: 0, standardGasRepalceCoun: 0, standardLiquidRepalceCount: 0},
-    },
+    mapPointList:[]  
+  },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计
       const result = yield call(services.GetOperatePointList, payload);
@@ -107,6 +108,13 @@ export default Model.extend({
             message.error(result.Message)
            }    
           },
-         
+        *GetMapPointList({ payload,callback }, { call, put, update }) { //地图部分
+            const result = yield call(services.GetMapPointList, payload);
+            if (result.IsSuccess) { 
+              yield update({ mapPointList: result.Datas });
+            }else{
+              message.error(result.Message)
+             }    
+            },
   },
 })

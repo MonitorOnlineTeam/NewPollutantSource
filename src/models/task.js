@@ -17,7 +17,8 @@ import {
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
     GetOperationLogList, GetFailureHoursRecord,
      GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
-     GetStandardLiquidRepalceRecordList
+     GetStandardLiquidRepalceRecordList,
+     GetCooperationInspectionRecordList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -41,7 +42,8 @@ export default Model.extend({
         RepalceRecordList:null, // 试剂更换记录
         RecordTypes: [], // 运维表单类型
         AlarmResponseList: [],
-        operationLogList: [], // 运维记录列表
+        operationLogList: null, // 运维记录列表
+        cooperatInspectionRecordList:null, //配合检查记录
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -420,6 +422,15 @@ export default Model.extend({
             if (DataInfo.IsSuccess) {
                 yield update({
                     RepalceRecordList: DataInfo.Datas,
+                });
+            }
+        },
+       // 配合检查表单
+        * GetCooperationInspectionRecordList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetCooperationInspectionRecordList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    cooperatInspectionRecordList: DataInfo.Datas,
                 });
             }
         },

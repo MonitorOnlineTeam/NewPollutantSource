@@ -21,7 +21,7 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
-
+  
    }
   render() {
       const {missingRateVisible,missingRateCancel,type,time} = this.props;

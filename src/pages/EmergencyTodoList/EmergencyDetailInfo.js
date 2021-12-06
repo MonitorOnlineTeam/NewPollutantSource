@@ -131,7 +131,7 @@ class EmergencyDetailInfo extends Component {
                 console.log(item.ID)
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60 
-                     || item.ID === 15 ) {
+                     || item.ID === 15 || item.ID === 62 ) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -180,7 +180,10 @@ class EmergencyDetailInfo extends Component {
                             break;
                         case EnumPsOperationForm.ReagentReplace:
                             this.GoToForm(taskID, item.CnName, '15', rtnVal, key, item.FormMainID);
-                            break;                             
+                            break;
+                        case EnumPsOperationForm.cooperaInspection:
+                            this.GoToForm(taskID, item.CnName, '62', rtnVal, key, item.FormMainID);
+                             break;                                    
                         default:
                             break;
                     }

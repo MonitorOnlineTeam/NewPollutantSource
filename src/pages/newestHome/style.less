@@ -20,6 +20,11 @@
       // color:red;
     }
 }
+   :global {
+     .amap-container {
+      background-color: #001529 !important;
+    }
+  } 
   .cardHeaderSty{ /*标题组件*/
   .titleImgSty{
     width:100%;
@@ -230,6 +235,7 @@
 
 .mapContent{  /* 地图部分 */
   padding: 10px;
+  padding-top: 0;
   .mapBtn{
     position: absolute;
     top: 14px;
@@ -275,6 +281,15 @@
     height:100%;
     left: 0;
     top: 64px;
-    transition: all .3s;
+    background-color: red;
+  }
+  .mapModalShow{
+    opacity: 1;
+    transition: all .3s ease-in;
+  }
+  .mapModalHide{
+    opacity: 0;
+    z-index: -100;
+    transition: all .3s ease-in;
   }
 }

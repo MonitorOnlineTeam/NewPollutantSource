@@ -54,6 +54,6 @@ export async function GetConsumablesList(params) {
 
 //首页 地图
 export async function GetMapPointList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi//GetMapPointList', params, null);
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetMapPointList', params, null);
   return result;
 }

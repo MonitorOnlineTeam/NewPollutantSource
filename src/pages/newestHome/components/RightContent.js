@@ -19,7 +19,7 @@ import moment from 'moment'
 import CardHeader from './publicComponents/CardHeader'
 import MoreBtn from './publicComponents/MoreBtn'
 import styles from "../style.less"
-
+import MissingDataRateModel from './springFrameComponents/missingDataRate/MissingDataRateModel'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -74,9 +74,19 @@ const  dvaDispatch = (dispatch) => {
         type: `operationExpirePoint/getOperationExpirePointList`,
         payload:payload,
         callback:callback
-      })
-      
+      })  
     },
+    MissingRateDataModal : (payload,callback) =>{ //缺失数据报警响应率
+      dispatch({
+        type: 'MissingRateDataModal/updateState',
+        payload: {
+         queryPar: { 
+          beginTime: payload.beginTime,
+          endTime: payload.endTime,
+        } },
+      });
+    },
+    
   }
 }
 const Index = (props) => {
@@ -84,8 +94,6 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
-
-  
 
 
 
@@ -340,7 +348,7 @@ const Index = (props) => {
       itemStyle:{ normal:{color: '#2E3647' },},
       barWidth: '40%',  // 柱形的宽度
       barGap: '-100%', // Make series be ove
-      silent: true //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+      hoverAnimation: false //为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
   },
       {
           type: 'bar',
@@ -426,10 +434,30 @@ const operationExpiraOption = { //点位到期统计
     }
   ]
  }
+
+ const dataAlarmRes = (e) =>{
+   if(e.name ==='缺失报警响应率'){
+    setMissingRateVisible(true)
+   }
+ }
   const {effectiveTransmissionLoading } = props;  //有效传输率
   const {dataAlarmResLoading} = props; //数据报警响应
   const { networkingLoading } = props; //实时联网率
   const { operationExpireLoading } = props; //运营到期点位
+  const [missingRateVisible,setMissingRateVisible] = useState(false)
+
+  const dataAlarmEcharts = useMemo(()=>{
+
+    return <div style={{height:'100%',padding:'24px 19px 15px 0' }}>
+         <ReactEcharts
+            option={dataAlarmResOption}
+            style={{ height: '100%', width: '100%' }}
+            onEvents={{click: dataAlarmRes }}
+          /> 
+     </div>
+
+  },[dataAlarmResData])
+
   return ( 
       <div>
 
@@ -473,15 +501,10 @@ const operationExpiraOption = { //点位到期统计
     </Spin>
 
     <Spin spinning={dataAlarmResLoading}>
-     <div className={styles.dataAlarmRes}>{/**数据报警响应统计 */}
-    <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='数据报警响应统计' />
-     <div style={{height:'100%',padding:'24px 19px 15px 0' }}>
-         <ReactEcharts
-            option={dataAlarmResOption}
-            style={{ height: '100%', width: '100%' }}
-          /> 
-     </div>
-     </div>
+       <div className={styles.dataAlarmRes}>{/**数据报警响应统计 */}
+       <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='数据报警响应统计' />
+              {dataAlarmEcharts}
+              </div>
      </Spin>
   
      <Spin spinning={operationExpireLoading}>
@@ -498,7 +521,15 @@ const operationExpiraOption = { //点位到期统计
      </div>
      </Spin>
 
+     {missingRateVisible ? //缺失报警响应率弹框
+          <MissingDataRateModel type={'ent'}
+            time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
+            missingRateVisible={missingRateVisible} missingRateCancel={() => {
+              setMissingRateVisible(false)
+              props.MissingRateDataModal(dataAlarmResBtnCheck)
 
+            }} />
+          : null}
   </div>
   );
 };
