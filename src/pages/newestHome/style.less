@@ -292,4 +292,26 @@
     z-index: -100;
     transition: all .3s ease-in;
   }
+
+}
+
+.regPopSty{
+  :global {
+    .ant-popover-title{
+      background-color: #3C4860;
+      border-bottom:0;
+      // min-width: 177px;
+      // min-height: 32px;
+      min-width: 170px;
+      min-height: 30px
+    }
+    .ant-popover-inner-content{
+      background-color: #2E3950;
+    }
+    .ant-popover-content > .ant-popover-arrow{
+      border-color:#2E3950;
+      border-left-color: transparent;
+      border-top-color: transparent;
+    }
+  }
 }
