@@ -33,11 +33,12 @@ export default Model.extend({
     excellentDaysReportData: [],
     airDayRank: [],
     addUpAirDayRank: [],
+    compareWaterTableData: [],
   },
 
   effects: {
     // 获取污染物
-    *getPollutantList({ payload }, { call, put, update }) {
+    *getPollutantList({ payload, callback }, { call, put, update }) {
       const result = yield call(services.getPollutantList, payload);
       if (result.IsSuccess) {
         let defaultValue = [];
@@ -45,10 +46,11 @@ export default Model.extend({
           // defaultValue = result.Datas.length >= 2 ? [result.Datas[0].PollutantCode, result.Datas[1].PollutantCode] : [result.Datas[0].PollutantCode]
           result.Datas.map((item, index) => {
             if (item && index < 7) {
-              defaultValue.push(item.PollutantCode) 
+              defaultValue.push(item.PollutantCode)
             }
           })
         }
+        callback && callback(result.Datas)
         yield update({
           pollutantList: result.Datas,
           defaultPollutant: defaultValue
@@ -331,6 +333,17 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success("导出成功")
         window.open('/upload' + result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 站点平均值对比分析 - 数据
+    *getCompareWater({ payload, reportType }, { call, put, update }) {
+      const result = yield call(services.getCompareWater, payload);
+      if (result.IsSuccess) {
+        yield update({
+          compareWaterTableData: result.Datas
+        })
       } else {
         message.error(result.Message)
       }

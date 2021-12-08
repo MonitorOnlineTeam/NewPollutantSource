@@ -836,7 +836,7 @@ class NavigationTree extends Component {
       case '2':
         return <a><CustomIcon type="icon-kongqizhandian" style={{ fontSize: 20 }} /></a>
       case '3':
-        return <a><CustomIcon type="icon-heliu" style={{ fontSize: 16 }} /></a>
+        return <a><CustomIcon type="icon-heliu1" style={{ fontSize: 16 }} /></a>
       case '4':
         return <a><CustomIcon type="icon-tadiaobj" style={{ fontSize: 16 }} /></a>
     }

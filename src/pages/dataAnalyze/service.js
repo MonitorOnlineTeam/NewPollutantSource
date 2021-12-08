@@ -170,7 +170,11 @@ export async function exportAddUpAirRank(params) {
   return result;
 }
 
-
+// 站点平局值对比分析
+export async function getCompareWater(params) {
+  const result = post('/api/rest/PollutantSourceApi/ReportApi/getCompareWater', params, null);
+  return result;
+}
 
 
 

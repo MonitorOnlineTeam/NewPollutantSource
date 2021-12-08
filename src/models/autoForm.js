@@ -18,7 +18,7 @@ function getQueryParams(state, payload) {
     for (const key in searchForm) {
       let groupItem = {};
       // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
-      if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
+      if (searchForm[key] && searchForm[key].value && searchForm[key].value.length + '') {
         // 是否是moment对象
         const isMoment = moment.isMoment(searchForm[key].value);
         const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
@@ -61,7 +61,6 @@ function getQueryParams(state, payload) {
     ...payload.otherParams,
   };
   const searchParams = payload.searchParams || [];
-
   (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
     // group.length? postData.ConditionWhere = JSON.stringify({
     rel: '$and',
@@ -246,6 +245,7 @@ export default Model.extend({
           width: item.DF_WIDTH ? item.DF_WIDTH * 1 : item.DF_WIDTH,
           sorter: item.DF_ISSORT === 1 ? (a, b) => a[item.FullFieldName] - b[item.FullFieldName] : false,
           fixed: result.Datas.FixedFields.filter(m => m.FullFieldName === item.FullFieldName).length > 0 ? 'left' : '',
+          dateFormat: item.DF_DATEFORMAT,
           formatType: item.DF_ISFormat,
           otherConfig: item.DF_OtherOptions,
           type: item.DF_CONTROL_TYPE,
@@ -439,7 +439,9 @@ export default Model.extend({
       const result = yield call(services.postAutoFromDataUpdate, postData);
       if (result.IsSuccess) {
         message.success('修改成功！');
-        if (payload.reload) {
+        if (payload.reload === false) {
+
+        } else {
           yield put({
             type: 'getAutoFormData',
             payload: {

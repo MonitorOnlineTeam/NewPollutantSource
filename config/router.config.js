@@ -1526,6 +1526,12 @@ const routes = [
                 path: '/Intelligentanalysis/compositeIndexYOYRange',
                 component: './dataAnalyze/CompositeRangeYOYReport',
               },
+              // 站点平均值对比分析
+              {
+                name: 'PointAVGAnalyse',
+                path: '/Intelligentanalysis/pointAVGAnalyse',
+                component: './dataAnalyze/PointAVGAnalyse',
+              },
               // 优良天数报表
               {
                 name: 'excellentDaysReport',

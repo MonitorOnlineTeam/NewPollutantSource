@@ -170,6 +170,7 @@ class index extends PureComponent {
   handleCancel = () => {
     this.setState({
       isModalVisible: false,
+      WhetherT: 1,
     })
   };
 

@@ -415,19 +415,19 @@ class FlowChart extends PureComponent {
           }
 
           if (item.PollutantCode === "a01012") { //烟气温度
-            this.setState({ yanw: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanw: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
           }
           if (item.PollutantCode === "a01014") { //烟气湿度
-            this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yans: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
           }
           if (item.PollutantCode === "a00000") { //烟气流量
-            this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanll: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
           }
           if (item.PollutantCode === "a01011") { //烟气流速
-            this.setState({ yanls: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanls: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
           }
           if (item.PollutantCode === "a01013") { //烟气静压
-            this.setState({ yanj: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit}` })
+            this.setState({ yanj: `${item.Value == null || item.Value == '-' ? "-" : Number(item.Value).toFixed(2)}${item.Unit ? item.Unit : ''}` })
           }
 
 

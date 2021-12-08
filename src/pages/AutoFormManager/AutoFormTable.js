@@ -34,6 +34,7 @@ import config from '@/config'
 import styles from './index.less';
 import SdlTable from '@/components/SdlTable'
 import defaultSettings from '../../../config/defaultSettings'
+import moment from 'moment';
 
 const { confirm } = Modal;
 
@@ -443,6 +444,10 @@ class AutoFormTable extends PureComponent {
             let style = {}
             eval(`${col.otherConfig}`)
             return <span style={{ ...style }}>{text}</span>
+          }
+          // 格式化日期
+          if (col.dateFormat) {
+            text = moment(text).format(col.dateFormat)
           }
           return text && <div className={styles.ellipsisText}>
             {/* {type === '超链接' &&

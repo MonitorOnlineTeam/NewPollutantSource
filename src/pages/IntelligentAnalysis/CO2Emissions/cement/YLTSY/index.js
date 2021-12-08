@@ -179,7 +179,7 @@ class index extends PureComponent {
             footer={() => <div className="">排放量合计：{count.toFixed(2)}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={1200} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1400} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
           <Form
             style={{ marginTop: 24 }}
             {...layout}
@@ -275,7 +275,7 @@ class index extends PureComponent {
               <Col span={12}>
                 <Form.Item
                   name="FreshWeight"
-                  label="窑炉旁路防风粉尘的重量"
+                  label="窑炉旁路防风粉尘的重量(t)"
                   rules={[{ required: true, message: '请填写窑炉旁路防风粉尘的重量!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} placeholder="请填写窑炉旁路防风粉尘的重量" onChange={this.countEmissions} />
