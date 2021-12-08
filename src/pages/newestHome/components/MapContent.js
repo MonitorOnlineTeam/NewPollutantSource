@@ -3,7 +3,7 @@
  * 创建人：贾安波
  * 创建时间：2021.11.03
  */
-import React, { useState, useEffect, Fragment, useRef, useMemo } from 'react';
+import React, { useState, useEffect, Fragment, useRef, useMemo, useLayoutEffect } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined,EnvironmentFilled  } from '@ant-design/icons';
@@ -25,14 +25,15 @@ const { Option } = Select;
 const namespace = 'newestHome'
 
 
-let _thismap;
-
+let aMap = null;
+let aMapMax = null;
+let map;
 const dvaPropsData = ({ loading, newestHome }) => ({
     mapPointLoading: loading.effects[`${namespace}/GetMapPointList`],
     mapPointList: newestHome.mapPointList,
     pollType: newestHome.pollType,
     subjectFontSize: newestHome.subjectFontSize,
-    regionMarkers:newestHome.regionMarkers
+    // regionMarkers:newestHome.regionMarkers
 })
 
 const dvaDispatch = (dispatch) => {
@@ -43,10 +44,11 @@ const dvaDispatch = (dispatch) => {
                 payload: { ...payload },
             })
         },
-        GetMapPointList: (payload) => { //地图监测点
+        GetMapPointList: (payload,callback) => { //地图监测点
             dispatch({
                 type: `${namespace}/GetMapPointList`,
                 payload: { ...payload },
+                callback:callback
             })
         },
     }
@@ -54,7 +56,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const { pollType, subjectFontSize, mapPointLoading, mapPointList,regionMarkers } = props;
+    const { pollType, subjectFontSize, mapPointLoading, mapPointList } = props;
 
     useEffect(() => {
         initData()
@@ -67,16 +69,28 @@ const Index = (props) => {
     }
 
 
-
+    const [ regionMarker,setRegionMarker] = useState([])
     const getMapPointList = () => {
         props.GetMapPointList({
             pointType: pollutantType,
+        },(regionMarker)=>{
+            setRegionMarker(regionMarker)
         })
     }
 
+    useEffect(()=>{
+       console.log(1111)
+        const timer = setInterval(() => {
+            if (aMap) {
+              aMap.setFitView();
+              clearInterval(timer);
+            }
+          }, 200);
+    },[regPopoverVisible])
     const [fullScreen, setFullScreen] = useState(false)
     const operationChange = (text, mapProps) => {
-        const map = mapProps.__map__;
+         map = mapProps.__map__;
+   
         if (!map) { console.log('组件必须作为 Map 的子组件使用'); return; }
         switch (text) {
             case '放大':
@@ -110,22 +124,67 @@ const Index = (props) => {
         { text: '缩小', url: '/homeMapS.png' }]
     }
     const RightIconMapComponent = (props) => {
-        { /**右侧图标 */ }
-        return (<div className={styles.mapOperationBtn}>
+     
+        return (<div className={styles.mapOperationBtn}> 
             {operationBtnArr().map((item, index) => {
                 return <div style={{ paddingBottom: 10 }} onClick={() => { operationChange(item.text, props) }}><img title={item.text} src={item.url} /></div>
             })}
         </div>);
 
     }
-
+    const [ zoom, setZoom ] = useState(5)
     const amapEvents  = {
-        // zoomchange: (value) => {
-        // },
+        created: mapInstance => {
+            console.log(
+              '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
+            );
+            aMap = mapInstance;
+            if (config.offlineMapUrl.domain) {  //在线地图配置
+              const Layer = new window.AMap.TileLayer({
+                zIndex: 2,
+                getTileUrl(x, y, z) {
+                  return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
+                },
+              });
+              Layer.setMap(mapInstance);
+              mapInstance.setFitView();//自动适应显示你想显示的范围区域
+            
+            }
+          },
+        zoomchange: (value) => {
+            const zoom = aMap.getZoom();
+            console.log(zoom)
+            //  setZoom(zoom)
+            if(zoom>=14&&regPopoverVisible){
+                setRegPopoverVisible(false)
+                // aMap.setFitView();//自动适应显示你想显示的范围区域
+            }
+        },
         // complete: () => {
         // }
     };
-
+    // const maxAmapEvents = {
+    //     created: mapInstance => {
+    //         console.log(
+    //           '高德地图 Map 实例2创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
+    //         );
+    //         aMapMax = mapInstance;
+    //         if (config.offlineMapUrl.domain) {  //在线地图配置
+    //           const Layer = new window.AMap.TileLayer({
+    //             zIndex: 2,
+    //             getTileUrl(x, y, z) {
+    //               return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
+    //             },
+    //           });
+    //           Layer.setMap(mapInstance);
+    //           mapInstance.setFitView();//自动适应显示你想显示的范围区域
+    //         }
+    //       },
+    //     zoomchange: (value) => {
+    //         const zoom = aMapMax.getZoom();
+    //         console.log(zoom,1111)
+    //     },
+    // }
     const regPopovercontent = (extData) =>{
         return <div>
                <div>企业总数：{extData.position&&extData.position.entCount}</div>
@@ -139,6 +198,8 @@ const Index = (props) => {
     }
 
     const [regPopoverVisible,setRegPopoverVisible] = useState(false)
+    // const [zoom,setZoom] = useState(11)
+
     const renderRegionMarkers = (extData) =>{
         return <div style={{position:'relative'}}>   
                 <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={regPopoverVisible} placement="top" content={regPopovercontent(extData)} >
@@ -146,21 +207,23 @@ const Index = (props) => {
                 </Popover>
                </div>
       }
-    const MapContent = () => {
+    const MapContent = (props) => {
+
         return mapPointLoading ?
             <PageLoading />
             :
             <Map
                 amapkey={config.amapKey}
-                events={amapEvents}
+                // events={props.type=='min'? amapEvents : maxAmapEvents}
+                events={ amapEvents}
                 mapStyle="amap://styles/darkblue"
                 useAMapUI={!config.offlineMapUrl.domain}
                 // center={{ longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude }} //center 地图中心点坐标值
-                zoom={11}
+                // zoom={zoom}
             >
 
                 <Markers 
-                    markers={regionMarkers}
+                    markers={regionMarker}
                     render={renderRegionMarkers}
                 />
                 <div className={styles.mapBtn}> { /**按钮 */}
@@ -186,10 +249,10 @@ const Index = (props) => {
     return (
         <div style={{ height: '100%' }}>
 
-            <MapContent />
-            <div className={`${styles.mapModal} ${fullScreen ? styles.mapModalShow : styles.mapModalHide}`}>
-                <MapContent />
-            </div>
+            <MapContent type='min'/>
+              {fullScreen&&<div className={`${styles.mapModal} ${fullScreen ? styles.mapModalShow : styles.mapModalHide}`}>
+                <MapContent  type='max'/>
+            </div>}
         </div>
 
     );

@@ -119,7 +119,7 @@ const Index = (props) => {
 
 
   const parentCallback = (val) =>{
-    // pchildref.current._childFn(values);
+    // pchildref.current._childFn(values); 
     setOutOrInside(val)
   }
   const searchComponents = () =>{

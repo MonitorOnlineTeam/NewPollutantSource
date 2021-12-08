@@ -136,6 +136,7 @@ class NewHome extends PureComponent {
       },
       zoomchange: value => {
         const zoom = aMap.getZoom();
+        console.log('放大级别',zoom)
         if (this.state.displayType === 0) {
           if (zoom >= 9 && this.state.hideEntName) {
             this.setState({ hideEntName: false });

@@ -112,15 +112,16 @@ export default Model.extend({
         *GetMapPointList({ payload,callback }, { call, put, update }) { //地图部分
             const result = yield call(services.GetMapPointList, payload);
             if (result.IsSuccess) { 
-              const regionMarker = result.Datas.map((item)=>({
+              const regionMarker = result.Datas[0]?result.Datas.map((item)=>({
                 position:{
                   ...item
                }
-             }))
+             })): []
              yield update({
               mapPointLists:result.Datas,
               regionMarkers:regionMarker,
              })
+             callback(regionMarker)
             }else{
               message.error(result.Message)
              }    

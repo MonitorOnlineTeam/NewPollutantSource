@@ -1571,7 +1571,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
 }
  }
  outWorkOrderColumnPush(outWorkOrderColumn)
-// 暴露的子组件方法，给父组件调用
+// 暴露的子组件方法，给父组件调用   子传父
 const childRef = useRef();
 useImperativeHandle(refInstance,() => {
      return {
@@ -1586,7 +1586,7 @@ useImperativeHandle(refInstance,() => {
  const tabsChange = (key)=>{
   setTabType(key)
   setTimeout(()=>{
-    props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息
+    props.parentCallback(key) //子组件调用父组件函数方法 可以向父组件传参，刷新父组件信息 子传父
     queryPar&&queryPar.beginTime&&props.regEntGetTaskWorkOrderList({
       ...queryPar,
       regionCode:'',
