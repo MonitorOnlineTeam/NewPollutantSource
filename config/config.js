@@ -840,11 +840,11 @@ export default {
                       path: '/rolesmanager/user/userinfoindex/:configId',
                       component: './authorized/user',
                     },
-                    // {
-                    //   name: 'newUserInfo',
-                    //   path: '/rolesmanager/user/newUserInfo',
-                    //   component: './authorized/newUser',
-                    // },
+                    {
+                      name: 'newUserInfo',
+                      path: '/rolesmanager/user/newUserInfo',
+                      component: './authorized/newUser',
+                    },
                     {
                       name: 'newUserInfo',
                       path: '/rolesmanager/user/userAuthority',
