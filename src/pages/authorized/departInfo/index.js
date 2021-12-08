@@ -1158,7 +1158,7 @@ class DepartIndex extends Component {
                         }}
                         size="large"
                       />
-                    ) : this.props.EntAndPoint.length > 0 ? (
+                    ) : this.props.EntAndPoint&&this.props.EntAndPoint.length > 0 ? (
                       <Tree
                         key="key"
                         style={{ height: '560px', overflow: 'auto' }}
