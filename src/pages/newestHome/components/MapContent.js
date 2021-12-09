@@ -29,11 +29,9 @@ let aMap = null;
 let aMapMax = null;
 let map;
 const dvaPropsData = ({ loading, newestHome }) => ({
-    mapPointLoading: loading.effects[`${namespace}/GetMapPointList`],
-    mapPointList: newestHome.mapPointList,
     pollType: newestHome.pollType,
     subjectFontSize: newestHome.subjectFontSize,
-    // regionMarkers:newestHome.regionMarkers
+    mapStatusData:newestHome.mapStatusData
 })
 
 const dvaDispatch = (dispatch) => {
@@ -44,7 +42,7 @@ const dvaDispatch = (dispatch) => {
                 payload: { ...payload },
             })
         },
-        GetMapPointList: (payload,callback) => { //地图监测点
+        GetMapPointList: (payload,callback) => { //地图展示监测点
             dispatch({
                 type: `${namespace}/GetMapPointList`,
                 payload: { ...payload },
@@ -56,37 +54,74 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const { pollType, subjectFontSize, mapPointLoading, mapPointList } = props;
-
+    const { pollType, subjectFontSize, mapStatusData } = props;
+   
     useEffect(() => {
         initData()
     }, []);
 
     const pollutantType = pollType[props.type]
-
+    
     const initData = () => {
-        getMapPointList()
+        getMapPointList(1)
+        getMapPointList(2)
+        getMapPointList(3)
     }
+    const [ mapPointLoading,setMapPointLoading] = useState(true)
 
-
-    const [ regionMarker,setRegionMarker] = useState([])
-    const getMapPointList = () => {
+    const [ showType,setShowType] = useState(1) // 1 行政区下企业总数  2 企业 3 监测点
+    const [ regionMarkers,setRegionMarkers] = useState([])
+    const [ entMarkers,setEntMarkers] = useState([])
+    const [ pointMarkers,setPointMarkers] = useState([])
+    const getMapPointList = (type) => {
+        setMapPointLoading(true)
         props.GetMapPointList({
-            pointType: pollutantType,
-        },(regionMarker)=>{
-            setRegionMarker(regionMarker)
+            pollutantType:pollutantType,
+            pointType: type,
+        },(data)=>{
+            if(type==1){
+                loadRegionMarkerData(data)
+            }else if(type==2){
+                loadEntMarkerData(data)
+            }else{
+                loadPointMarkerData(data)
+                setMapPointLoading(false)
+            }
         })
     }
-
-    useEffect(()=>{
-       console.log(1111)
+  
+   const  loadRegionMarkerData = (data) =>{ //行政区
+    setRegionMarkers(data)
+    const timer = setInterval(() => {
+        if (aMap) {
+          aMap.setFitView();
+          clearInterval(timer);
+        }
+      }, 20);
+    }
+    const  loadEntMarkerData = (data) =>{ //企业
+        setEntMarkers(data)
         const timer = setInterval(() => {
             if (aMap) {
               aMap.setFitView();
               clearInterval(timer);
             }
-          }, 200);
-    },[regPopoverVisible])
+          }, 20);
+        }
+    const  loadPointMarkerData = (data) =>{ //监测点
+            setPointMarkers(data)
+            const timer = setInterval(() => {
+                if (aMap) {
+                  aMap.setFitView();
+                //   aMap.setZoom(aMap.getZoom() + 1)
+                //   aMap.setZoomAndCenter(aMap.getZoom(), [
+                //     96.01906121185537,
+                //     35.874643454131984
+                //   ]);
+                  clearInterval(timer);
+                }
+              }, 20);
+     }     
     const [fullScreen, setFullScreen] = useState(false)
     const operationChange = (text, mapProps) => {
          map = mapProps.__map__;
@@ -101,25 +136,29 @@ const Index = (props) => {
                 break;
             case '全屏':
                 setFullScreen(true)
+                loadRegionMarkerData(regionMarkers)
                 break;
             case '退出全屏':
                 setFullScreen(false)
+                loadRegionMarkerData(regionMarkers)
                 break;
             case '展示企业':
+                setShowType(1)
                 setRegPopoverVisible(true)
-                break;
-            case '隐藏企业':
-                setRegPopoverVisible(false)
-             break;                
+                loadRegionMarkerData(regionMarkers)
+                break; 
+             case '展示监测点':
+                setShowType(3)
+                loadPointMarkerData(pointMarkers)
+             break;               
         }
 
     }
-
-    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: 20 }, { text: '异常', color: '#FFCC00', val: 20 }, { text: '离线', color: '#67666A', val: 990 },
-    { text: '正常', color: '#14ECDF', val: 20 }, { text: '停运', color: '#836BFB', val: 20 }]
+    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount  }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
+    { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
 
     const operationBtnArr = () =>{
-        return [{ text: fullScreen?'退出全屏':'全屏', url: fullScreen? '/homeMapT.png' :'/homeMapQp.png' }, { text: regPopoverVisible?'隐藏企业':'展示企业', url: '/homeMapQ.png' }, { text: '监测点', url: '/homeMapJc.png' },
+        return [{ text: fullScreen?'退出全屏':'全屏', url: fullScreen? '/homeMapT.png' :'/homeMapQp.png' }, { text: '展示企业', url: '/homeMapQ.png' }, { text: '展示监测点', url: '/homeMapJc.png' },
         { text: '展示名称', url: '/homeMapZ.png' }, { text: '放大', url: '/homeMapJ.png' },
         { text: '缩小', url: '/homeMapS.png' }]
     }
@@ -132,7 +171,6 @@ const Index = (props) => {
         </div>);
 
     }
-    const [ zoom, setZoom ] = useState(5)
     const amapEvents  = {
         created: mapInstance => {
             console.log(
@@ -153,11 +191,9 @@ const Index = (props) => {
           },
         zoomchange: (value) => {
             const zoom = aMap.getZoom();
-            console.log(zoom)
-            //  setZoom(zoom)
+             console.log(zoom)
             if(zoom>=14&&regPopoverVisible){
-                setRegPopoverVisible(false)
-                // aMap.setFitView();//自动适应显示你想显示的范围区域
+                // loadRegionMarkerData(regionMarker)
             }
         },
         // complete: () => {
@@ -188,8 +224,8 @@ const Index = (props) => {
     const regPopovercontent = (extData) =>{
         return <div>
                <div>企业总数：{extData.position&&extData.position.entCount}</div>
-               <div><span style={{color:'#FF0000'}}>超标</span>企业总数：{extData.position&&extData.position.OverCount.length}</div>
-               <div><span style={{color:'#FFCC00'}}>异常</span>企业总数：{extData.position&&extData.position.OverCount.length}</div>
+               <div><span style={{color:'#FF0000'}}>超标</span>企业总数：{extData.position&&extData.position.OverCount}</div>
+               <div><span style={{color:'#FFCC00'}}>异常</span>企业总数：{extData.position&&extData.position.ExceptionCount}</div>
                </div>
     }
 
@@ -197,18 +233,30 @@ const Index = (props) => {
        return  triggerNode.parentNod
     }
 
-    const [regPopoverVisible,setRegPopoverVisible] = useState(false)
+    const [regPopoverVisible,setRegPopoverVisible] = useState(true)
     // const [zoom,setZoom] = useState(11)
 
-    const renderRegionMarkers = (extData) =>{
+    const renderRegMarkers = (extData) =>{ //行政区下 企业总数标记点
         return <div style={{position:'relative'}}>   
                 <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={regPopoverVisible} placement="top" content={regPopovercontent(extData)} >
                 <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
                 </Popover>
                </div>
       }
+   const renderEntMarkers = (extData) =>{ //企业下  企业标记点
+        return <div style={{position:'relative'}}>   
+                <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={regPopoverVisible} placement="top" content={regPopovercontent(extData)} >
+                <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
+                </Popover>
+               </div>
+      }
+    const renderPointMarkers = (extData) =>{ // 监测点 标记点
+        return <div style={{position:'relative'}}>   
+                <img src='/homeWasteWater.png' style={{position:'relative',width:30,height:30}}/>
+               </div>
+      }
+      
     const MapContent = (props) => {
-
         return mapPointLoading ?
             <PageLoading />
             :
@@ -218,14 +266,14 @@ const Index = (props) => {
                 events={ amapEvents}
                 mapStyle="amap://styles/darkblue"
                 useAMapUI={!config.offlineMapUrl.domain}
-                // center={{ longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude }} //center 地图中心点坐标值
-                // zoom={zoom}
+                // center={{ longitude:96.01906121185537, latitude: 35.874643454131984 }} //center 地图中心点坐标值
             >
 
                 <Markers 
-                    markers={regionMarker}
-                    render={renderRegionMarkers}
+                    markers={ showType==1?regionMarkers:showType==2?entMarkers:pointMarkers}
+                    render={showType==1?renderRegMarkers:showType==2?renderEntMarkers:renderPointMarkers}
                 />
+        
                 <div className={styles.mapBtn}> { /**按钮 */}
                     <Row align='middle'>
                         {typeBtnArr.map((item, index) => {

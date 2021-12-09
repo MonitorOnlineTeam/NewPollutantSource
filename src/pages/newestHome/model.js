@@ -26,7 +26,8 @@ export default Model.extend({
                                outPlanTaskCount: 0, outPlanTaskExceptionCount: 0, outPlanTaskRate: "0.00"},
     consumablesList:{consumablesReplaceCount: 0,sparePartReplaceRecordCount: 0, standardGasRepalceCoun: 0, standardLiquidRepalceCount: 0},
     mapPointList:[],
-    regionMarkers:[] 
+    regionMarkers:[],
+    mapStatusData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0}
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计
@@ -112,16 +113,17 @@ export default Model.extend({
         *GetMapPointList({ payload,callback }, { call, put, update }) { //地图部分
             const result = yield call(services.GetMapPointList, payload);
             if (result.IsSuccess) { 
-              const regionMarker = result.Datas[0]?result.Datas.map((item)=>({
+              const markers = result.Datas.list[0]?result.Datas.list.map((item)=>({
                 position:{
-                  ...item
+                  ...item,
+                  latitude:item.Latitude? item.Latitude.toFixed(2) : item.latitude,
+                  longitude:item.Longitude? item.Longitude.toFixed(2) : item.longitude,
                }
              })): []
              yield update({
-              mapPointLists:result.Datas,
-              regionMarkers:regionMarker,
+              mapStatusData:result.Datas.sum,
              })
-             callback(regionMarker)
+             callback(markers)
             }else{
               message.error(result.Message)
              }    
