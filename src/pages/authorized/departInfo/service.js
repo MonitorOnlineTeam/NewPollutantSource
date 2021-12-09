@@ -181,7 +181,20 @@ export async function getpointbydepid(params) {
     UserGroup_ID: params.UserGroup_ID,
     PollutantType: params.PollutantType,
   };
-  // const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetPointByDepID', body, null);
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetPointByDepID', body, null);
+
+  return result === null
+    ? {
+        data: null,
+      }
+    : result;
+}
+
+export async function getPointByUserID(params) {
+  const body = {
+    UserGroup_ID: params.UserGroup_ID,
+    PollutantType: params.PollutantType,
+  };
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetPointByUserID', body, null);
   return result === null
     ? {

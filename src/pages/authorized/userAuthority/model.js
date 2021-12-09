@@ -9,7 +9,7 @@ import {
     ExportUserList,
     insertPointFilterByUser
 } from './service';
-import { getregioninfobytree,getentandpoint,getpointbydepid,} from '../departInfo/service';
+import { getregioninfobytree,getentandpoint,getPointByUserID,} from '../departInfo/service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
 import { sdlMessage } from '@/utils/utils';
@@ -507,7 +507,7 @@ export default Model.extend({
                     }
     
                 }
-                const result = yield call(getpointbydepid, {
+                const result = yield call(getPointByUserID, {
                     ...payload
                 });
                 if (result.IsSuccess) {
