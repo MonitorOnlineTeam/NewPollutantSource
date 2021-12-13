@@ -116,8 +116,8 @@ export default Model.extend({
               const markers = result.Datas.list[0]?result.Datas.list.map((item)=>({
                 position:{
                   ...item,
-                  latitude:item.Latitude? item.Latitude.toFixed(2) : item.latitude,
-                  longitude:item.Longitude? item.Longitude.toFixed(2) : item.longitude,
+                  latitude:item.Latitude? item.Latitude : item.latitude,
+                  longitude:item.Longitude? item.Longitude : item.longitude,
                }
              })): []
              yield update({

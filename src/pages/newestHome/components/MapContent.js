@@ -17,7 +17,7 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import config from '@/config';
-import { Map, MouseTool, Marker, Markers, Polygon, Circle } from '@/components/ReactAmap';
+import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
 import styles from "../style.less"
 
 const { Option } = Select;
@@ -51,11 +51,18 @@ const dvaDispatch = (dispatch) => {
         },
     }
 }
+// class NewHome extends PureComponent {
+//     constructor(props) {
+//         super(props);  
+
+//     }
+
+        
 const Index = (props) => {
 
 
     const { pollType, subjectFontSize, mapStatusData } = props;
-   
+    
     useEffect(() => {
         initData()
     }, []);
@@ -63,9 +70,11 @@ const Index = (props) => {
     const pollutantType = pollType[props.type]
     
     const initData = () => {
-        getMapPointList(1)
-        getMapPointList(2)
         getMapPointList(3)
+        getMapPointList(2)
+        getMapPointList(1)
+
+
     }
     const [ mapPointLoading,setMapPointLoading] = useState(true)
 
@@ -74,69 +83,82 @@ const Index = (props) => {
     const [ entMarkers,setEntMarkers] = useState([])
     const [ pointMarkers,setPointMarkers] = useState([])
     const getMapPointList = (type) => {
-        setMapPointLoading(true)
         props.GetMapPointList({
             pollutantType:pollutantType,
             pointType: type,
         },(data)=>{
             if(type==1){
+                setMapPointLoading(false)
+                setRegionMarkers(data)
                 loadRegionMarkerData(data)
             }else if(type==2){
-                loadEntMarkerData(data)
+                setEntMarkers(data)
             }else{
-                loadPointMarkerData(data)
-                setMapPointLoading(false)
+                setPointMarkers(data)
             }
         })
     }
   
    const  loadRegionMarkerData = (data) =>{ //行政区
-    setRegionMarkers(data)
+   
     const timer = setInterval(() => {
         if (aMap) {
           aMap.setFitView();
           clearInterval(timer);
         }
-      }, 20);
+      }, 0);
     }
-    const  loadEntMarkerData = (data) =>{ //企业
-        setEntMarkers(data)
+    const  loadEntMarkerData = (data,notFitView) =>{ //企业
         const timer = setInterval(() => {
             if (aMap) {
-              aMap.setFitView();
+              !notFitView && aMap.setFitView();
               clearInterval(timer);
             }
-          }, 20);
+          }, 0);
         }
     const  loadPointMarkerData = (data) =>{ //监测点
-            setPointMarkers(data)
-            const timer = setInterval(() => {
-                if (aMap) {
-                  aMap.setFitView();
-                //   aMap.setZoom(aMap.getZoom() + 1)
-                //   aMap.setZoomAndCenter(aMap.getZoom(), [
-                //     96.01906121185537,
-                //     35.874643454131984
-                //   ]);
-                  clearInterval(timer);
-                }
-              }, 20);
+                const timer = setInterval(() => {
+                    if (aMap) {
+
+                      aMap.setFitView();
+                      aMap.setZoomAndCenter(aMap.getZoom(), [
+                            96.01906121185537,
+                            35.874643454131984
+                          ]);
+                      aMap.setZoom(aMap.getZoom() + 1)
+
+                      clearInterval(timer);
+                    }
+                  }, 0);
+
      }     
     const [fullScreen, setFullScreen] = useState(false)
     const operationChange = (text, mapProps) => {
          map = mapProps.__map__;
-   
+         aMap = mapProps.__map__;
         if (!map) { console.log('组件必须作为 Map 的子组件使用'); return; }
         switch (text) {
             case '放大':
                 map.zoomIn()
+            //    if(map.getZoom()>=10&&showType==1){
+            //        setShowType(2)
+            //    }
                 break;
             case '缩小':
                 map.zoomOut()
+                // if(map.getZoom()<10&&showType==2){
+                //     setShowType(1)
+                // }
                 break;
             case '全屏':
                 setFullScreen(true)
-                loadRegionMarkerData(regionMarkers)
+                if(showType==1){
+                    loadRegionMarkerData(regionMarkers)
+                }else if(showType==2){
+                    loadEntMarkerData(entMarkers)
+                }else{
+                    loadPointMarkerData(pointMarkers)
+                }
                 break;
             case '退出全屏':
                 setFullScreen(false)
@@ -144,7 +166,7 @@ const Index = (props) => {
                 break;
             case '展示企业':
                 setShowType(1)
-                setRegPopoverVisible(true)
+                // setRegPopoverVisible(true)
                 loadRegionMarkerData(regionMarkers)
                 break; 
              case '展示监测点':
@@ -171,34 +193,7 @@ const Index = (props) => {
         </div>);
 
     }
-    const amapEvents  = {
-        created: mapInstance => {
-            console.log(
-              '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
-            );
-            aMap = mapInstance;
-            if (config.offlineMapUrl.domain) {  //在线地图配置
-              const Layer = new window.AMap.TileLayer({
-                zIndex: 2,
-                getTileUrl(x, y, z) {
-                  return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
-                },
-              });
-              Layer.setMap(mapInstance);
-              mapInstance.setFitView();//自动适应显示你想显示的范围区域
-            
-            }
-          },
-        zoomchange: (value) => {
-            const zoom = aMap.getZoom();
-             console.log(zoom)
-            if(zoom>=14&&regPopoverVisible){
-                // loadRegionMarkerData(regionMarker)
-            }
-        },
-        // complete: () => {
-        // }
-    };
+
     // const maxAmapEvents = {
     //     created: mapInstance => {
     //         console.log(
@@ -217,10 +212,56 @@ const Index = (props) => {
     //         }
     //       },
     //     zoomchange: (value) => {
-    //         const zoom = aMapMax.getZoom();
+    //         const zoom = aMapMax.
+    // getZoom();
     //         console.log(zoom,1111)
     //     },
     // }
+    // const useComponentWillMount = func => {
+    //     const willMount = useRef(true);
+      
+    //     if (willMount.current) {
+    //       func();
+    //     }
+      
+    //     willMount.current = false;
+    //   };
+    //   useComponentWillMount(() => console.log("Runs only once before component mounts"));
+    const [aa,setAa] = useState(false)
+    const amapEvents = () => {
+    
+      return{ 
+        // created: mapInstance => {
+        //     console.log(
+        //       '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
+        //     );
+        //     aMap = mapInstance;
+        //     if (config.offlineMapUrl.domain) {  //在线地图配置
+        //       const Layer = new window.AMap.TileLayer({
+        //         zIndex: 2,
+        //         getTileUrl(x, y, z) {
+        //           return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
+        //         },
+        //       });
+        //       Layer.setMap(mapInstance);
+        //       mapInstance.setFitView();//自动适应显示你想显示的范围区域
+            
+        //     }
+        //   },
+        zoomchange: (value) => {
+            const zoom = aMap.getZoom();
+            setAa(!aa)
+             console.log(zoom)
+            if(zoom>=10&&regPopoverVisible){
+                console.log(aMap)
+                setShowType(2)
+                // loadEntMarkerData(entMarkers,true)
+            }
+        },
+        // complete: () => {
+        // }
+    }
+    };
     const regPopovercontent = (extData) =>{
         return <div>
                <div>企业总数：{extData.position&&extData.position.entCount}</div>
@@ -237,7 +278,8 @@ const Index = (props) => {
     // const [zoom,setZoom] = useState(11)
 
     const renderRegMarkers = (extData) =>{ //行政区下 企业总数标记点
-        return <div style={{position:'relative'}}>   
+        return <div style={{position:'relative'}}>  
+              
                 <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={regPopoverVisible} placement="top" content={regPopovercontent(extData)} >
                 <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
                 </Popover>
@@ -245,9 +287,7 @@ const Index = (props) => {
       }
    const renderEntMarkers = (extData) =>{ //企业下  企业标记点
         return <div style={{position:'relative'}}>   
-                <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={regPopoverVisible} placement="top" content={regPopovercontent(extData)} >
-                <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
-                </Popover>
+                <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/>
                </div>
       }
     const renderPointMarkers = (extData) =>{ // 监测点 标记点
@@ -255,7 +295,6 @@ const Index = (props) => {
                 <img src='/homeWasteWater.png' style={{position:'relative',width:30,height:30}}/>
                </div>
       }
-      
     const MapContent = (props) => {
         return mapPointLoading ?
             <PageLoading />
@@ -263,7 +302,7 @@ const Index = (props) => {
             <Map
                 amapkey={config.amapKey}
                 // events={props.type=='min'? amapEvents : maxAmapEvents}
-                events={ amapEvents}
+                events={amapEvents()}
                 mapStyle="amap://styles/darkblue"
                 useAMapUI={!config.offlineMapUrl.domain}
                 // center={{ longitude:96.01906121185537, latitude: 35.874643454131984 }} //center 地图中心点坐标值
@@ -273,7 +312,6 @@ const Index = (props) => {
                     markers={ showType==1?regionMarkers:showType==2?entMarkers:pointMarkers}
                     render={showType==1?renderRegMarkers:showType==2?renderEntMarkers:renderPointMarkers}
                 />
-        
                 <div className={styles.mapBtn}> { /**按钮 */}
                     <Row align='middle'>
                         {typeBtnArr.map((item, index) => {
@@ -293,14 +331,14 @@ const Index = (props) => {
             </Map>
 
     }
-
+    console.log(aa)
     return (
         <div style={{ height: '100%' }}>
 
-            <MapContent type='min'/>
-              {fullScreen&&<div className={`${styles.mapModal} ${fullScreen ? styles.mapModalShow : styles.mapModalHide}`}>
-                <MapContent  type='max'/>
-            </div>}
+            <MapContent/>
+              {/* {fullScreen&&<div className={`${styles.mapModal} ${fullScreen ? styles.mapModalShow : styles.mapModalHide}`}>
+                <MapContent/>
+            </div>} */}
         </div>
 
     );
