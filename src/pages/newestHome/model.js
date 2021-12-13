@@ -15,6 +15,7 @@ export default Model.extend({
     latelyDays30:{beginTime:moment(moment().add(-31, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment().add(-1, 'day')).format('YYYY-MM-DD 23:59:59')},
     latelyDays7:{beginTime:moment(moment().add(-8, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment().add(-1, 'day')).format('YYYY-MM-DD 23:59:59')},
     pollType : {'废水' : "1",'废气' : "2", },
+    modalType:{'废水':'ent','废气' : "ent"},
     operaOrderData: [],
     planOperaList:{actualCalibrationCount: 0, actualCalibrationRate: "0.00",autoCalibrationAllCount: 0,
                    autoCalibrationCompleteCount: 0,autoCalibrationRate: "0.00",  inspectionAllCount: 0,
@@ -27,7 +28,8 @@ export default Model.extend({
     consumablesList:{consumablesReplaceCount: 0,sparePartReplaceRecordCount: 0, standardGasRepalceCoun: 0, standardLiquidRepalceCount: 0},
     mapPointList:[],
     regionMarkers:[],
-    mapStatusData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0}
+    mapStatusData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
+
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计

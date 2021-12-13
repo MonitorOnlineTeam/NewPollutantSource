@@ -19,7 +19,9 @@ import moment from 'moment'
 import CardHeader from './publicComponents/CardHeader'
 import MoreBtn from './publicComponents/MoreBtn'
 import styles from "../style.less"
-import MissingDataRateModel from './springFrameComponents/missingDataRate/MissingDataRateModel'
+import MissingDataRateModal from './springModal/missingDataRate/MissingDataRateModel'
+import AbnormalAlarmRateModal from './springModal/abnormalAlarmRate'
+
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -39,7 +41,8 @@ const dvaPropsData =  ({ loading,newestHome,operationExpirePoint }) => ({
   operationExpiraData:operationExpirePoint.totalDatas,
   pollType:newestHome.pollType,
   latelyDays30:newestHome.latelyDays30,
-  subjectFontSize:newestHome.subjectFontSize
+  subjectFontSize:newestHome.subjectFontSize,
+  modalType:newestHome.pollType,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -86,7 +89,16 @@ const  dvaDispatch = (dispatch) => {
         } },
       });
     },
-    
+    AbnormalResRate : (payload,callback) =>{ //异常报警报警响应率
+      dispatch({
+        type: 'abnormalResRate/updateState',
+        payload: {
+          searchForm:{
+          PollutantType: '',
+        }
+      }
+      });
+    }, 
   }
 }
 const Index = (props) => {
@@ -97,7 +109,7 @@ const Index = (props) => {
 
 
 
-  const  {pollType, latelyDays30,dataAlarmResData,subjectFontSize } = props; 
+  const  {pollType,modalType,latelyDays30,dataAlarmResData,subjectFontSize } = props; 
 
   useEffect(() => {
       initData()
@@ -112,7 +124,8 @@ const Index = (props) => {
   }
 
   const pollutantType = pollType[props.type]
-  
+
+
   const getEffectiveTransmissionRateList = (date) =>{//传输有效率
     props.GetEffectiveTransmissionRateList({ 
       pollutantType: pollutantType,
@@ -439,13 +452,19 @@ const operationExpiraOption = { //点位到期统计
    if(e.name ==='缺失报警响应率'){
     setMissingRateVisible(true)
    }
+   if(e.name ==='异常报警响应率'){
+    setAbnormalAlarmRateVisible(true)
+   }
  }
   const {effectiveTransmissionLoading } = props;  //有效传输率
   const {dataAlarmResLoading} = props; //数据报警响应
   const { networkingLoading } = props; //实时联网率
   const { operationExpireLoading } = props; //运营到期点位
   const [missingRateVisible,setMissingRateVisible] = useState(false)
+  const [abnormalAlarmRateVisible,setAbnormalAlarmRateVisible] = useState(false)
 
+  const modalTypes = modalType[props.type]
+  
   const dataAlarmEcharts = useMemo(()=>{
 
     return <div style={{height:'100%',padding:'24px 19px 15px 0' }}>
@@ -457,7 +476,7 @@ const operationExpiraOption = { //点位到期统计
      </div>
 
   },[dataAlarmResData])
-
+  
   return ( 
       <div>
 
@@ -521,15 +540,20 @@ const operationExpiraOption = { //点位到期统计
      </div>
      </Spin>
 
-     {missingRateVisible ? //缺失报警响应率弹框
-          <MissingDataRateModel type={'ent'}
+     {missingRateVisible&& <MissingDataRateModal type={modalTypes} //缺失报警响应率弹框
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               setMissingRateVisible(false)
               props.MissingRateDataModal(dataAlarmResBtnCheck)
 
-            }} />
-          : null}
+            }} />}
+      {abnormalAlarmRateVisible &&<AbnormalAlarmRateModal type={modalTypes} //异常报警响应率弹框
+            time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]} 
+            missingRateVisible={missingRateVisible} onCancel={() => {
+              setAbnormalAlarmRateVisible(false)
+              props.AbnormalResRate()
+
+            }} />}      
   </div>
   );
 };

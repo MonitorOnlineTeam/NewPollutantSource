@@ -230,12 +230,14 @@
     padding-bottom: 38px;
   }
 }
-}
+
 
 
 .mapContent{  /* 地图部分 */
   padding: 10px;
   padding-top: 0;
+  // height: 100%;
+  // transition: all 3s;
   .mapBtn{
     position: absolute;
     top: 14px;
@@ -275,22 +277,14 @@
    }
   }
   .mapModal{
-    position:fixed;
+    position: fixed;
     z-index:1000;
     width:100%;
     height:100%;
     left: 0;
-    top: 64px;
+    top: calc(64px)
   }
-  .mapModalShow{
-    opacity: 1;
-    transition: all .3s ease-in;
-  }
-  .mapModalHide{
-    opacity: 0;
-    z-index: -100;
-    transition: all .3s ease-in;
-  }
+
 
 }
 
@@ -312,5 +306,14 @@
       border-left-color: transparent;
       border-top-color: transparent;
     }
+  }
+}
+  .mapModalShow{
+    opacity: 1;
+    transition: all .3s ease-in;
+  }
+  .mapModalHide{
+    opacity: 0;
+    transition: all .3s ease-in;
   }
 }

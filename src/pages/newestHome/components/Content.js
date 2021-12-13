@@ -100,23 +100,26 @@ const Index = (props) => {
       window.removeEventListener("resize", handleResize);
     }
   },[]);
-
+  const [fullScreen,setFullScreen] = useState(false)
+  const fullScreenClick = (visible) =>{
+     setFullScreen(visible)
+  }
   return (
   <BreadcrumbWrapper type='homePage'>
       <div className={styles.homePage}>
-        <Row style={{paddingTop:10}}>   {/**地图部分 和 地图两侧*/}
-          <Col span={5} className={styles.leftContent}>
+        <Row style={{paddingTop:10,height:'100%'}}>   {/**地图部分 和 地图两侧*/}
+          <Col span={5} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
              <LeftContent {...props}/>
            </Col>
            <Col span={14} className={styles.mapContent}>
-             <MapContent {...props}/>
+             <MapContent {...props} fullScreenClick={fullScreenClick}/>
            </Col>
-           <Col span={5} className={styles.rightContent}>
+           <Col span={5} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
             <RightContent {...props}/>
             </Col>
         </Row>  
-        <div className={styles.bottomContent}>    {/**底部组件*/}
-         <BottomContent {...props}/>
+        <div className={styles.bottomContent} style={{display: fullScreen? 'none' :''}}>    {/**底部组件*/}
+         <BottomContent {...props} />
         </div>
       </div>  
    </BreadcrumbWrapper>

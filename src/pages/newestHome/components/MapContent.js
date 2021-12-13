@@ -3,7 +3,7 @@
  * 创建人：贾安波
  * 创建时间：2021.11.03
  */
-import React, { useState, useEffect, Fragment, useRef, useMemo, useLayoutEffect } from 'react';
+import React, { PureComponent,useState, useEffect, Fragment, useRef, useMemo, useLayoutEffect } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined,EnvironmentFilled  } from '@ant-design/icons';
@@ -28,78 +28,106 @@ const namespace = 'newestHome'
 let aMap = null;
 let aMapMax = null;
 let map;
-const dvaPropsData = ({ loading, newestHome }) => ({
+
+
+
+let pollutantType={}
+@connect(({ loading, newestHome }) => ({
     pollType: newestHome.pollType,
     subjectFontSize: newestHome.subjectFontSize,
     mapStatusData:newestHome.mapStatusData
-})
+  }))
+  class Index extends PureComponent {
+    constructor(props) {
+        super(props);  
+        this.amapEvents = {
+              created: mapInstance => {
+                  console.log(
+                    '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
+                  );
+                  aMap = mapInstance;
+                  if (config.offlineMapUrl.domain) {  //在线地图配置
+                    const Layer = new window.AMap.TileLayer({
+                      zIndex: 2,
+                      getTileUrl(x, y, z) {
+                        return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
+                      },
+                    });
+                    Layer.setMap(mapInstance);
+                    mapInstance.setFitView();//自动适应显示你想显示的范围区域
+                  
+                  }
+                },
+              zoomchange: (value) => {
+                  const zoom = aMap.getZoom();
+                  const { showType } = this.state;
+                   console.log(zoom)
+                  if(zoom>=9&&showType==1){
+                      this.setState({showType:2})
+                  }
+                  if(zoom<9&&showType==2){
+                    this.setState({showType:1})
+                }
+              },
+              // complete: () => {
+              //}
+          };
+          this.state={
+            mapPointLoading:true,
+            fullScreen:false,
+            showType:1,
+            regionMarkers:[],
+            entMarkers:[],
+            pointMarkers:[]
+          }
+        }
 
-const dvaDispatch = (dispatch) => {
-    return {
-        updateState: (payload) => { //更新参数
-            dispatch({
-                type: `${namespace}/updateState`,
-                payload: { ...payload },
-            })
-        },
-        GetMapPointList: (payload,callback) => { //地图展示监测点
-            dispatch({
-                type: `${namespace}/GetMapPointList`,
-                payload: { ...payload },
-                callback:callback
-            })
-        },
-    }
-}
-// class NewHome extends PureComponent {
-//     constructor(props) {
-//         super(props);  
-
-//     }
-
+        componentDidMount() {
+            this.initData()
+        }   
         
-const Index = (props) => {
+        
+// const Index = (props) => {
 
 
-    const { pollType, subjectFontSize, mapStatusData } = props;
+
     
-    useEffect(() => {
-        initData()
-    }, []);
+//     useEffect(() => {
+//         initData()
+//     }, []);
 
-    const pollutantType = pollType[props.type]
+
     
-    const initData = () => {
-        getMapPointList(3)
-        getMapPointList(2)
-        getMapPointList(1)
+     initData = () => {
+       const { pollType } = this.props;
+        pollutantType = pollType[this.props.type]
+        this.getMapPointList(3)
+        this.getMapPointList(2)
+        this.getMapPointList(1)
 
 
     }
-    const [ mapPointLoading,setMapPointLoading] = useState(true)
-
-    const [ showType,setShowType] = useState(1) // 1 行政区下企业总数  2 企业 3 监测点
-    const [ regionMarkers,setRegionMarkers] = useState([])
-    const [ entMarkers,setEntMarkers] = useState([])
-    const [ pointMarkers,setPointMarkers] = useState([])
-    const getMapPointList = (type) => {
-        props.GetMapPointList({
-            pollutantType:pollutantType,
-            pointType: type,
-        },(data)=>{
-            if(type==1){
-                setMapPointLoading(false)
-                setRegionMarkers(data)
-                loadRegionMarkerData(data)
-            }else if(type==2){
-                setEntMarkers(data)
-            }else{
-                setPointMarkers(data)
-            }
+   
+     getMapPointList = (type) => {
+         const {dispatch} = this.props
+         dispatch({
+            type: `${namespace}/GetMapPointList`,
+            payload: {pollutantType:pollutantType, pointType: type,},  
+            callback:(data)=>{
+                if(type==1){
+                    this.setState({mapPointLoading:false})
+                    this.setState({regionMarkers:data})
+                    this.loadRegionMarkerData(data)
+                }else if(type==2){
+                    this.setState({entMarkers:data})
+                }else{
+                    this.setState({pointMarkers:data})
+                }
+            }  
         })
     }
   
-   const  loadRegionMarkerData = (data) =>{ //行政区
+    loadRegionMarkerData = (data) =>{ //行政区
    
     const timer = setInterval(() => {
         if (aMap) {
@@ -108,7 +136,7 @@ const Index = (props) => {
         }
       }, 0);
     }
-    const  loadEntMarkerData = (data,notFitView) =>{ //企业
+     loadEntMarkerData = (data,notFitView) =>{ //企业
         const timer = setInterval(() => {
             if (aMap) {
               !notFitView && aMap.setFitView();
@@ -116,7 +144,7 @@ const Index = (props) => {
             }
           }, 0);
         }
-    const  loadPointMarkerData = (data) =>{ //监测点
+    loadPointMarkerData = (data) =>{ //监测点
                 const timer = setInterval(() => {
                     if (aMap) {
 
@@ -126,73 +154,49 @@ const Index = (props) => {
                             35.874643454131984
                           ]);
                       aMap.setZoom(aMap.getZoom() + 1)
-
                       clearInterval(timer);
                     }
                   }, 0);
 
      }     
-    const [fullScreen, setFullScreen] = useState(false)
-    const operationChange = (text, mapProps) => {
+
+    operationChange = (text, mapProps) => {
          map = mapProps.__map__;
-         aMap = mapProps.__map__;
+         const { showType,regionMarkers,pointMarkers } = this.state;
         if (!map) { console.log('组件必须作为 Map 的子组件使用'); return; }
         switch (text) {
             case '放大':
                 map.zoomIn()
-            //    if(map.getZoom()>=10&&showType==1){
-            //        setShowType(2)
-            //    }
+               if(map.getZoom()>=9&&showType==1){
+                  this.setState({showType:2})
+               }
                 break;
             case '缩小':
                 map.zoomOut()
-                // if(map.getZoom()<10&&showType==2){
-                //     setShowType(1)
-                // }
-                break;
-            case '全屏':
-                setFullScreen(true)
-                if(showType==1){
-                    loadRegionMarkerData(regionMarkers)
-                }else if(showType==2){
-                    loadEntMarkerData(entMarkers)
-                }else{
-                    loadPointMarkerData(pointMarkers)
+                if(map.getZoom()<9&&showType==2){
+                    this.setState({showType:1})
                 }
                 break;
+            case '全屏':
+                this.setState({ fullScreen:true  })
+                this.props.fullScreenClick(true)
+                break;
             case '退出全屏':
-                setFullScreen(false)
-                loadRegionMarkerData(regionMarkers)
+                this.setState({ fullScreen:false  })
+                this.props.fullScreenClick(false)
                 break;
             case '展示企业':
-                setShowType(1)
-                // setRegPopoverVisible(true)
-                loadRegionMarkerData(regionMarkers)
+                this.setState({ showType:1  })
+                this.loadRegionMarkerData(regionMarkers)
                 break; 
              case '展示监测点':
-                setShowType(3)
-                loadPointMarkerData(pointMarkers)
+                this.setState({ showType:3  })
+                this.loadPointMarkerData(pointMarkers)
              break;               
         }
 
     }
-    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount  }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
-    { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
 
-    const operationBtnArr = () =>{
-        return [{ text: fullScreen?'退出全屏':'全屏', url: fullScreen? '/homeMapT.png' :'/homeMapQp.png' }, { text: '展示企业', url: '/homeMapQ.png' }, { text: '展示监测点', url: '/homeMapJc.png' },
-        { text: '展示名称', url: '/homeMapZ.png' }, { text: '放大', url: '/homeMapJ.png' },
-        { text: '缩小', url: '/homeMapS.png' }]
-    }
-    const RightIconMapComponent = (props) => {
-     
-        return (<div className={styles.mapOperationBtn}> 
-            {operationBtnArr().map((item, index) => {
-                return <div style={{ paddingBottom: 10 }} onClick={() => { operationChange(item.text, props) }}><img title={item.text} src={item.url} /></div>
-            })}
-        </div>);
-
-    }
 
     // const maxAmapEvents = {
     //     created: mapInstance => {
@@ -217,92 +221,69 @@ const Index = (props) => {
     //         console.log(zoom,1111)
     //     },
     // }
-    // const useComponentWillMount = func => {
-    //     const willMount = useRef(true);
-      
-    //     if (willMount.current) {
-    //       func();
-    //     }
-      
-    //     willMount.current = false;
-    //   };
-    //   useComponentWillMount(() => console.log("Runs only once before component mounts"));
-    const [aa,setAa] = useState(false)
-    const amapEvents = () => {
-    
-      return{ 
-        // created: mapInstance => {
-        //     console.log(
-        //       '高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
-        //     );
-        //     aMap = mapInstance;
-        //     if (config.offlineMapUrl.domain) {  //在线地图配置
-        //       const Layer = new window.AMap.TileLayer({
-        //         zIndex: 2,
-        //         getTileUrl(x, y, z) {
-        //           return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
-        //         },
-        //       });
-        //       Layer.setMap(mapInstance);
-        //       mapInstance.setFitView();//自动适应显示你想显示的范围区域
-            
-        //     }
-        //   },
-        zoomchange: (value) => {
-            const zoom = aMap.getZoom();
-            setAa(!aa)
-             console.log(zoom)
-            if(zoom>=10&&regPopoverVisible){
-                console.log(aMap)
-                setShowType(2)
-                // loadEntMarkerData(entMarkers,true)
-            }
-        },
-        // complete: () => {
-        // }
-    }
-    };
-    const regPopovercontent = (extData) =>{
+
+    // const [aa,setAa] = useState(false)
+
+
+
+//     const getRegPopupContainer = (triggerNode) =>{
+//        return  triggerNode.parentNod
+//     }
+
+//     // const [zoom,setZoom] = useState(11)
+    regPopovercontent = (extData) =>{
         return <div>
-               <div>企业总数：{extData.position&&extData.position.entCount}</div>
-               <div><span style={{color:'#FF0000'}}>超标</span>企业总数：{extData.position&&extData.position.OverCount}</div>
-               <div><span style={{color:'#FFCC00'}}>异常</span>企业总数：{extData.position&&extData.position.ExceptionCount}</div>
-               </div>
-    }
-
-    const getRegPopupContainer = (triggerNode) =>{
-       return  triggerNode.parentNod
-    }
-
-    const [regPopoverVisible,setRegPopoverVisible] = useState(true)
-    // const [zoom,setZoom] = useState(11)
-
-    const renderRegMarkers = (extData) =>{ //行政区下 企业总数标记点
+             <div>企业总数：{extData.position&&extData.position.entCount}</div>
+             <div><span style={{color:'#FF0000'}}>超标</span>企业总数：{extData.position&&extData.position.OverCount}</div>
+            <div><span style={{color:'#FFCC00'}}>异常</span>企业总数：{extData.position&&extData.position.ExceptionCount}</div>
+           </div>
+   }
+     renderRegMarkers = (extData) =>{ //行政区下 企业总数标记点
+        const { showType } = this.state;
         return <div style={{position:'relative'}}>  
               
-                <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={regPopoverVisible} placement="top" content={regPopovercontent(extData)} >
+                <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={showType==1} placement="top" content={this.regPopovercontent(extData)} >
                 <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
                 </Popover>
                </div>
       }
-   const renderEntMarkers = (extData) =>{ //企业下  企业标记点
+    renderEntMarkers = (extData) =>{ //企业下  企业标记点
         return <div style={{position:'relative'}}>   
                 <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/>
                </div>
       }
-    const renderPointMarkers = (extData) =>{ // 监测点 标记点
+   renderPointMarkers = (extData) =>{ // 监测点 标记点
         return <div style={{position:'relative'}}>   
                 <img src='/homeWasteWater.png' style={{position:'relative',width:30,height:30}}/>
                </div>
       }
-    const MapContent = (props) => {
+ mapContent = (props) => {
+    const { mapPointLoading,fullScreen,showType,regionMarkers,entMarkers,pointMarkers} = this.state;
+    const {mapStatusData,subjectFontSize} = this.props;
+        const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount  }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
+    { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
+
+    const operationBtnArr = () =>{
+        return [{ text: fullScreen?'退出全屏':'全屏', url: fullScreen? '/homeMapT.png' :'/homeMapQp.png' }, { text: '展示企业', url: '/homeMapQ.png' }, { text: '展示监测点', url: '/homeMapJc.png' },
+        { text: '展示名称', url: '/homeMapZ.png' }, { text: '放大', url: '/homeMapJ.png' },
+        { text: '缩小', url: '/homeMapS.png' }]
+    }
+    const RightIconMapComponent = (props) => {
+     
+        return (<div className={styles.mapOperationBtn}> 
+            {operationBtnArr().map((item, index) => {
+                return <div style={{ paddingBottom: 10 }} onClick={() => { this.operationChange(item.text, props) }}><img title={item.text} src={item.url} /></div>
+            })}
+        </div>);
+
+    }
         return mapPointLoading ?
             <PageLoading />
             :
             <Map
                 amapkey={config.amapKey}
                 // events={props.type=='min'? amapEvents : maxAmapEvents}
-                events={amapEvents()}
+                events={this.amapEvents}
                 mapStyle="amap://styles/darkblue"
                 useAMapUI={!config.offlineMapUrl.domain}
                 // center={{ longitude:96.01906121185537, latitude: 35.874643454131984 }} //center 地图中心点坐标值
@@ -310,7 +291,7 @@ const Index = (props) => {
 
                 <Markers 
                     markers={ showType==1?regionMarkers:showType==2?entMarkers:pointMarkers}
-                    render={showType==1?renderRegMarkers:showType==2?renderEntMarkers:renderPointMarkers}
+                    render={showType==1?this.renderRegMarkers:showType==2?this.renderEntMarkers:this.renderPointMarkers}
                 />
                 <div className={styles.mapBtn}> { /**按钮 */}
                     <Row align='middle'>
@@ -331,16 +312,17 @@ const Index = (props) => {
             </Map>
 
     }
-    console.log(aa)
-    return (
-        <div style={{ height: '100%' }}>
+    render() {
+       const { fullScreen } = this.state;
 
-            <MapContent/>
-              {/* {fullScreen&&<div className={`${styles.mapModal} ${fullScreen ? styles.mapModalShow : styles.mapModalHide}`}>
-                <MapContent/>
-            </div>} */}
+       const MapContent = this.mapContent
+    return (
+        <div style={{ height: '100%' }} className={`${fullScreen ? `${styles.mapModal}`: ''}`}>
+
+               <MapContent /> 
         </div>
 
-    );
-};
-export default connect(dvaPropsData, dvaDispatch)(Index);
+    )
+        }
+    }
+export default Index;
