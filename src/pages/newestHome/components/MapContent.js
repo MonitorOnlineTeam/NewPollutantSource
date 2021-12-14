@@ -17,17 +17,19 @@ import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
 import config from '@/config';
-import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
+// import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
 import styles from "../style.less"
 
 const { Option } = Select;
 
 const namespace = 'newestHome'
 
-
+let Map;
+let Marker;
+let Polygon;
+let Markers;
+let InfoWindow;
 let aMap = null;
-let aMapMax = null;
-let map;
 
 
 
@@ -81,20 +83,30 @@ let pollutantType={}
             pointMarkers:[]
           }
         }
-
+        componentWillMount() {
+            if (config.offlineMapUrl.domain) {
+              const amap = require('@/components/ReactAmap');
+              // Map, Marker, Polygon, Markers, InfoWindow;
+              Map = amap.Map;
+              Marker = amap.Marker;
+              Polygon = amap.Polygon;
+              Markers = amap.Markers;
+              InfoWindow = amap.InfoWindow;
+            } else {
+              const amap = require('react-amap');
+              // Map, Marker, Polygon, Markers, InfoWindow;
+              Map = amap.Map;
+              Marker = amap.Marker;
+              Polygon = amap.Polygon;
+              Markers = amap.Markers;
+              InfoWindow = amap.InfoWindow;
+            }
+          }
         componentDidMount() {
             this.initData()
         }   
         
         
-// const Index = (props) => {
-
-
-
-    
-//     useEffect(() => {
-//         initData()
-//     }, []);
 
 
     
@@ -161,7 +173,7 @@ let pollutantType={}
      }     
 
     operationChange = (text, mapProps) => {
-         map = mapProps.__map__;
+         const map = mapProps.__map__;
          const { showType,regionMarkers,pointMarkers } = this.state;
         if (!map) { console.log('组件必须作为 Map 的子组件使用'); return; }
         switch (text) {
@@ -196,41 +208,6 @@ let pollutantType={}
         }
 
     }
-
-
-    // const maxAmapEvents = {
-    //     created: mapInstance => {
-    //         console.log(
-    //           '高德地图 Map 实例2创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：',
-    //         );
-    //         aMapMax = mapInstance;
-    //         if (config.offlineMapUrl.domain) {  //在线地图配置
-    //           const Layer = new window.AMap.TileLayer({
-    //             zIndex: 2,
-    //             getTileUrl(x, y, z) {
-    //               return `${config.offlineMapUrl.domain}/gaode/${z}/${x}/${y}.png`;
-    //             },
-    //           });
-    //           Layer.setMap(mapInstance);
-    //           mapInstance.setFitView();//自动适应显示你想显示的范围区域
-    //         }
-    //       },
-    //     zoomchange: (value) => {
-    //         const zoom = aMapMax.
-    // getZoom();
-    //         console.log(zoom,1111)
-    //     },
-    // }
-
-    // const [aa,setAa] = useState(false)
-
-
-
-//     const getRegPopupContainer = (triggerNode) =>{
-//        return  triggerNode.parentNod
-//     }
-
-//     // const [zoom,setZoom] = useState(11)
     regPopovercontent = (extData) =>{
         return <div>
              <div>企业总数：{extData.position&&extData.position.entCount}</div>

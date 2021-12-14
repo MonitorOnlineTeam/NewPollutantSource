@@ -427,7 +427,11 @@ export default {
                       path: '/platformconfig/basicInfo/monitortarget/warehouse/:configId',
                       component: './AutoFormManager',
                     },
-                    
+                    {  //设备交接资料管理
+                      name: 'equiptmentHandManager',
+                      path: '/platformconfig/basicInfo/equiptmentHandManager',
+                      component: './platformManager/basicInfo/equiptmentHandManager',
+                    },
                   ]
                 },
                 { //配置信息
