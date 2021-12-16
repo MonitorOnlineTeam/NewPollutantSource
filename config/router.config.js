@@ -2457,12 +2457,22 @@ const routes = [
                   {
                     name: 'WasteWaterGovern',  //废水治理设施
                     path: '/oneEntsOneArchives/essentialInfo/wasteWaterGovern/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
+                  },
+                  {
+                    name: 'OperationInfo',  //运维信息管理
+                    path: '/oneEntsOneArchives/essentialInfo/operationInfo/:configId',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
+                  },
+                  {
+                    name: 'EquipmentManufacturer',  //设备生产厂商信息管理
+                    path: '/oneEntsOneArchives/essentialInfo/equipmentManufacturer/:configId',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
                     name: 'OutfallInfo',  //废气治理设施
                     path: '/oneEntsOneArchives/essentialInfo/wasteGasGovern/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate'
+                    component: './oneEntsOneArchives/autoformSearchTemplate'
                   },
                   {
                     name: 'StatisticalAnalysis',  //一企一档进入 统计分析
@@ -2489,7 +2499,7 @@ const routes = [
                   {
                     name: 'dischargeNumLimit', //排污许可管理 - 排放量限值
                     path: '/oneEntsOneArchives/sewageDisposal/dischargeNumLimit/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   }
 
                 ]
@@ -2524,7 +2534,7 @@ const routes = [
                   {
                     name: 'FactorSitua',
                     path: '/oneEntsOneArchives/environEmergency/factorSitua/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
 
                 ]
@@ -2541,17 +2551,17 @@ const routes = [
                   {
                     name: 'Voc',
                     path: '/oneEntsOneArchives/characteristicFactor/voc/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
                     name: 'wasterWater',
                     path: '/oneEntsOneArchives/characteristicFactor/wasterWater/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
                     name: 'wasterAir',
                     path: '/oneEntsOneArchives/characteristicFactor/wasterAir/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                 ]
               },
@@ -2567,12 +2577,12 @@ const routes = [
                   {
                     name: 'Administration', //执法信息管理-行政任务记录
                     path: '/oneEntsOneArchives/lawInfo/administration/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
                     name: 'LawEnforcement',//执法信息管理-执法任务记录
                     path: '/oneEntsOneArchives/lawInfo/lawEnforcement/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   }
                 ]
               },
@@ -2587,12 +2597,12 @@ const routes = [
                   {
                     name: 'HazardousWasteInfo',  //危废管理-危废管理
                     path: '/oneEntsOneArchives/hazardousWaste/hazardousWasteInfo/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
                     name: 'PlatformAccount',//危废管理-危废台账
                     path: '/oneEntsOneArchives/hazardousWaste/platformAccount/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                 ]
               },
@@ -2607,12 +2617,12 @@ const routes = [
                   {
                     name: 'Approval',   //环评信息管理  建设环评审批
                     path: '/oneEntsOneArchives/eiaInfo/approval/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate', 
                   },
                   {
                     name: 'AcceptanceCheck', //环评信息管理  建设项目验收
                     path: '/oneEntsOneArchives/eiaInfo/acceptanceCheck/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                 ]
               },
@@ -2627,7 +2637,7 @@ const routes = [
                   {
                     name: 'petitionComplaints',   //信访投诉情况
                     path: '/oneEntsOneArchives/petitionComplaints/situa/:configId',
-                    component: './oneEntsOneArchives/autoformTemplate',
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                 ]
               },

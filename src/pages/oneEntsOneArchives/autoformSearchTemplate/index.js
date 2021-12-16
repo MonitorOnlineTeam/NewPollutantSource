@@ -49,9 +49,11 @@ import styles from './index.less';
             },
         })
     }
-
+  
     render() {
         const { match: { params: { configId } } } = this.props;
+
+        const entCode = sessionStorage.getItem('oneEntCode')
         if (this.props.loading) {
             return (<Spin
                 style={{
@@ -71,16 +73,29 @@ import styles from './index.less';
                     <SearchWrapper
                         onSubmitForm={form => this.loadReportList(form)}
                         configId={configId}
+                        searchParams={[{
+                            Key: 'dbo.T_Bas_Enterprise.EntCode',
+                            Value: `${entCode}`,
+                            Where: '$=',
+                         },
+                       ]}
                     />
                         <AutoFormTable
                             style={{ marginTop: 10 }}
                             configId={configId}
+                            searchParams={[{
+                                Key: 'dbo.T_Bas_Enterprise.EntCode',
+                                Value: `${entCode}`,
+                                Where: '$=',
+                             },
+                           ]}
                             rowChange={(key, row) => {
                                 console.log('key=', key);
                                 this.setState({
                                     key, row,
                                 })
                             }}
+                            
                             {...this.props}
                         />
                     </Card>
