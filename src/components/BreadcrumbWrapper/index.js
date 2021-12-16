@@ -66,6 +66,11 @@ class BreadcrumbWrapper extends Component {
 
   render() {
     let title = this.props.title + this.props.extraName
+    if (this.props.hide) {
+      return <>
+        {this.props.children}
+      </>
+    }
     return (
       <PageHeaderWrapper
         title={title}
@@ -81,7 +86,7 @@ class BreadcrumbWrapper extends Component {
 }
 
 BreadcrumbWrapper.defaultProps = {
-  extraName: "", 
+  extraName: "",
 }
 
 export default BreadcrumbWrapper;

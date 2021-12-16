@@ -379,12 +379,11 @@ export default Model.extend({
         let QCStatus = state.QCStatus;
         if (payload.Code === "i32002") {
           QCStatus = payload.Value;
-          // if (payload.Value == 1) {
-          //   QCAResultLoading = true
-          // }
-          // } else {
-          //   QCAResultLoading = false
-          // }
+          if (payload.Value == 1) {
+            QCAResultLoading = true
+          } else {
+            QCAResultLoading = false
+          }
         }
         // 压力异常
         let p2Exception = state.p2Exception;
@@ -429,12 +428,15 @@ export default Model.extend({
     // log - start
     updateQCLogStart(state, { payload }) {
       let QCLogsStart = state.QCLogsStart;
+      let QCLogsResult = state.QCLogsResult;
       debugger
       console.log("updateQCLogStart=", payload)
       if (payload.DGIMN === state.currentDGIMN) {
-        QCLogsStart = payload
+        QCLogsStart = payload;
+        QCLogsResult = { Data: {} };
       }
-      return { ...state, QCLogsStart: QCLogsStart }
+      // 收到开始消息后情况结果数据
+      return { ...state, QCLogsStart: QCLogsStart, QCLogsResult: QCLogsResult }
     },
     // log - Answer
     updateQCLogAnswer(state, { payload }) {
