@@ -359,6 +359,7 @@ export default Model.extend({
         ...payload,
         searchParams: undefined,
       });
+      console.log(payload)
       if (result.IsSuccess) {
         message.success('删除成功！');
         yield put({
@@ -376,6 +377,7 @@ export default Model.extend({
         ...payload,
         FormData: JSON.stringify(payload.FormData),
       });
+      console.log(payload)
       if (result.IsSuccess) {
         message.success('添加成功！');
         yield put({

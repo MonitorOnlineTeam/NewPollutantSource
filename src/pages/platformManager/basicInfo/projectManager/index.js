@@ -251,7 +251,8 @@ const Index = (props) => {
       form2.setFieldsValue({
         ...record,
         BeginTime:moment(record.BeginTime),
-        EndTime:moment(record.BeginTime)
+        EndTime:moment(record.EndTime),
+        SignName:record.SingName
       })
 
    
@@ -435,7 +436,7 @@ const Index = (props) => {
    </BreadcrumbWrapper>
    
    <Modal
-        title={type==='edit'? '编辑合同':'添加合同'}
+        title={type==='edit'? '编辑项目':'添加项目'}
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={loadingConfirm}
@@ -485,7 +486,7 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="签订人" name="SingName" rules={[  { required: true, message: '请输入签订人!',  },]} >
+      <Form.Item label="签订人" name="SignName" rules={[  { required: true, message: '请输入签订人!',  },]} >
         <Input placeholder='请输入签订人'/>
       </Form.Item>
       </Col>
@@ -493,12 +494,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营起始日期" name="BeginTime" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运营起始日期" name="BeginTime" rules={[  { required: true, message: '请输入运营起始日期!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营结束日期" name="EndTime" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="运营结束日期" name="EndTime" rules={[  { required: true, message: '请输入运营结束日期!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
@@ -507,12 +508,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营套数" name="OperationCount" rules={[  { required: true, message: 'Please input your username!',  },]} >
+        <Form.Item label="运营套数" name="OperationCount" rules={[  { required: true, message: '请输入运营套数!',  },]} >
         <InputNumber placeholder='请输入运营套数'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营月数" name="OperationMonth" rules={[  { required: true, message: 'Please input your username!',  },]} >
+      <Form.Item label="运营月数" name="OperationMonth" rules={[  { required: true, message: '请输入运营月数!',  },]} >
         <InputNumber placeholder='请输入运营月数'/>
       </Form.Item>
       </Col>
