@@ -146,6 +146,8 @@ export default Model.extend({
         marginData["a21026"] = result.Datas[0].so2
         marginData["n00000"] = result.Datas[0].n2
         let updateObj = {};
+        let modalPollutantCode;
+        let modalQCAType;
         updateObj.QCStatus = result.Datas[0].State + "";
         // 判断是否正在质控中
         if (updateObj.QCStatus == "1") {
@@ -160,12 +162,14 @@ export default Model.extend({
           updateObj.QCLogsAnswer = result.Datas[2];
           updateObj.currentPollutantCode = result.Datas[2].PollutantCode;
           updateObj.currentDGIMN = result.Datas[2].DGIMN;
+          modalPollutantCode = result.Datas[2].PollutantCode;
+          modalQCAType = result.Datas[2].Comment;
         }
         if (result.Datas[3]) {
           updateObj.QCLogsResult = result.Datas[3];
           updateObj.currentDGIMN = result.Datas[3].DGIMN;
         }
-        yield update({ ...updateObj, marginData })
+        yield update({ ...updateObj, marginData, modalPollutantCode, modalPollutantCode })
       } else {
         message.error(result.Message)
       }
@@ -429,28 +433,44 @@ export default Model.extend({
     updateQCLogStart(state, { payload }) {
       let QCLogsStart = state.QCLogsStart;
       let QCLogsResult = state.QCLogsResult;
+      let QCAResultLoading = state.QCAResultLoading;
+      let timeList = state.timeList;
+      let valueList = state.valueList;
+      let standardValueList = state.standardValueList;
       debugger
+
       console.log("updateQCLogStart=", payload)
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsStart = payload;
+        QCAResultLoading = true;
+        // 清空图表及结果包数据
+        timeList = [];
+        valueList = [];
+        standardValueList = [];
         QCLogsResult = { Data: {} };
       }
-      // 收到开始消息后情况结果数据
-      return { ...state, QCLogsStart: QCLogsStart, QCLogsResult: QCLogsResult }
+      return {
+        ...state, QCLogsStart: QCLogsStart, QCLogsResult: QCLogsResult, QCAResultLoading: QCAResultLoading,
+        timeList, valueList, standardValueList
+      }
     },
     // log - Answer
     updateQCLogAnswer(state, { payload }) {
       console.log("updateQCLogAnswer=", payload)
       let QCLogsAnswer = state.QCLogsAnswer;
       let QCAResultLoading = state.QCAResultLoading;
+      let modalPollutantCode = state.modalPollutantCode;
+      let modalQCAType = state.modalQCAType;
       debugger
       if (payload.Result === false) {
         QCAResultLoading = false;
       }
       if (payload.DGIMN === state.currentDGIMN) {
-        QCLogsAnswer = payload
+        QCLogsAnswer = payload;
+        modalPollutantCode = payload.PollutantCode;
+        modalQCAType = payload.Comment;
       }
-      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading }
+      return { ...state, QCLogsAnswer: QCLogsAnswer, QCAResultLoading: QCAResultLoading, modalPollutantCode, modalQCAType }
     },
     // log - Result
     updateQCLogResult(state, { payload }) {
@@ -460,8 +480,8 @@ export default Model.extend({
         let QCLogsResult = state.QCLogsResult;
         let QCAResultLoading = state.QCAResultLoading;
         QCLogsResult = payload
-        QCAResultLoading = false;
-        return { ...state, QCLogsResult: QCLogsResult, QCAResultLoading: false }
+        // QCAResultLoading = false;
+        return { ...state, QCLogsResult: QCLogsResult }
       }
       return { ...state }
     },

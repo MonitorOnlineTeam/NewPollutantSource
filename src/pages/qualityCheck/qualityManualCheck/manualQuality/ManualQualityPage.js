@@ -51,6 +51,8 @@ const CheckTypeList = [
   currentDGIMN: qcManual.currentDGIMN,
   checkModalVisible: qcaCheck.checkModalVisible,
   marginData: qcManual.marginData,
+  modalQCAType: qcManual.modalQCAType,
+  modalPollutantCode: qcManual.modalPollutantCode,
   loading: loading.effects["qcManual/getStateAndRecord"],
   sendLoading: loading.effects["qcManual/sendQCACheckCMD"]
 }))
@@ -270,6 +272,7 @@ class ManualQualityPage extends Component {
   getAnswer = (QCLogsAnswer) => {
     const { QCLogsResult } = this.props;
     let str = QCLogsAnswer.Str;
+    console.log('QCLogsAnswer=,', QCLogsAnswer)
     if (str) {
       if (str === "通讯超时") {
         return <span style={{ color: "#f81d22" }}>通讯超时。</span>
@@ -283,8 +286,8 @@ class ManualQualityPage extends Component {
           收到{this.getPollutantName(QCLogsAnswer.PollutantCode)}{QCLogsAnswer.Comment}，{QCLogsAnswer.Str}。
           {
             !QCLogsResult.str && <Tag color="#87d068" onClick={() => {
-              this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment })
-              this.updateModalState({ qcImageVisible: true })
+              // this.setState({ modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment })
+              this.updateModalState({ qcImageVisible: true, modalPollutantCode: QCLogsAnswer.PollutantCode, modalQCAType: QCLogsAnswer.Comment })
             }}>查看质控过程</Tag>
           }
         </span>
@@ -368,11 +371,13 @@ class ManualQualityPage extends Component {
       currentDGIMN,
       marginData,
       loading,
+      modalQCAType,
+      modalPollutantCode,
     } = this.props;
     if (loading) {
       return <PageLoading />
     }
-    const { QCAType, currentRowData, MYMax, MYMin, modalQCAType } = this.state;
+    const { QCAType, currentRowData, MYMax, MYMin } = this.state;
     return (
       <Card>
         <Row>
@@ -488,7 +493,7 @@ class ManualQualityPage extends Component {
         {/* 核查结果弹窗 */}
         {checkModalVisible && <CheckModal QCAType={QCAType} DGIMN={DGIMN} currentRowData={currentRowData} pointName={pointName} />}
         {/* 质控过程弹窗 */}
-        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={this.state.modalPollutantCode} QCATypeName={modalQCAType} />}
+        {qcImageVisible && <ViewQCProcess pointName={pointName} pollutantCode={modalPollutantCode} QCATypeName={modalQCAType} />}
         {/*{true && <ViewQCProcess />}*/}
         <Modal
           title="盲样核查"

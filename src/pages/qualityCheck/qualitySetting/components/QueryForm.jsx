@@ -41,7 +41,7 @@ class Index extends React.Component {
       const {cycleListParams:{QCAType}} = this.props;
         // this.getTableData(this.props.dgimn)
         if(QCAType==1026){
-          this.getTableData(this.props.dgimn);
+          // this.getTableData(this.props.dgimn);
         }  
     }
   // 在componentDidUpdate中进行异步操作，驱动数据的变化
@@ -50,7 +50,8 @@ class Index extends React.Component {
 
     const {cycleListParams:{QCAType}} = this.props;
 
-    if(QCAType==1026){  //零点核查
+    // if(QCAType==1026){  //零点核查
+    if(false){  //零点核查
       if(prevProps.dgimn !==  this.props.dgimn) { 
           this.getTableData(this.props.dgimn);
       }
@@ -73,7 +74,7 @@ class Index extends React.Component {
               ...cycleListParams,
               DGIMN:dgimn,
               // PollutantCodeList:polltype == 1 ? QCAType==1026? [] : this.child.state.waterDefault : QCAType==1026? []: polltype == 2 ? this.child.state.gasDefault : []
-              PollutantCodeList: QCAType==1026? [] :pollutantCode
+              PollutantCodeList: pollutantCode
   
             }
             dispatch({
@@ -139,11 +140,12 @@ class Index extends React.Component {
 <div style={{ marginTop: 10 }}>
        
         <Form className="search-form-container" layout="inline"  onFinish={this.queryClick}>
-          {QCAType==1026?
+          {/* {QCAType==1026?
            <Row style={{flex:1}} > 
             <Button type="primary" loading={false} onClick={addClick} style={{ marginRight: 5 }}>添加</Button>
            </Row>
-          :
+          : */}
+          {false? '' :
           <Row gutter={[8,8]} style={{flex:1}} > 
             <Col xxl={5} xl={8}  lg={12}  md={24} sm={24} xs={24}>
               <Form.Item label="污染物" className='queryConditionForm'>
