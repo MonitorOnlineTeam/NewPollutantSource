@@ -216,6 +216,8 @@ const Index = (props) => {
       const values = await form.validateFields();
 
       props.getFaultUnitList({
+        pageIndex: 1,
+        pageSize: 10000,
         ...values,
       })
     } catch (errorInfo) {

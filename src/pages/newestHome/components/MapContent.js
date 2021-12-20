@@ -32,7 +32,6 @@ let InfoWindow;
 let aMap = null;
 
 
-
 let pollutantType={}
 @connect(({ loading, newestHome }) => ({
     pollType: newestHome.pollType,
@@ -63,24 +62,54 @@ let pollutantType={}
               zoomchange: (value) => {
                   const zoom = aMap.getZoom();
                   const { showType } = this.state;
-                   console.log(zoom)
-                  if(zoom>=9&&showType==1){
+                  if(zoom>=9&&showType==1){          
                       this.setState({showType:2})
+                      const { entMarkers } = this.state;
+                      this.setState({markersList: [...entMarkers]})
+                  }
+                  if(zoom>=11&&showType==2){
+                    const { entMarkers,entTitleShow } = this.state;
+                    if(!entTitleShow){
+                      this.setState({entTitleShow:true,markersList:[...entMarkers]})
+                    }
                   }
                   if(zoom<9&&showType==2){
+                    const { regionMarkers } = this.state;
                     this.setState({showType:1})
-                }
+                    this.setState({markersList:[...regionMarkers]})
+                  }
+
+                  if(zoom<11&&showType==2){
+                    const { entMarkers,entTitleShow } = this.state;
+                    if(entTitleShow){
+                      this.setState({entTitleShow:false,markersList:[...entMarkers]})
+                    }
+ 
+                  }
               },
               // complete: () => {
               //}
           };
+     // markers事件
+     this.markersEvents = {
+      created: allMarkers => {
+        this.setState({
+          allMarkers,
+        });
+      },
+      clickable: true,
+      click: (MapsOption, marker) => {
+        console.log(MapsOption, marker)
+       },
+    };
           this.state={
             mapPointLoading:true,
             fullScreen:false,
             showType:1,
             regionMarkers:[],
             entMarkers:[],
-            pointMarkers:[]
+            pointMarkers:[],
+            entTitleShow:false
           }
         }
         componentWillMount() {
@@ -128,7 +157,7 @@ let pollutantType={}
             callback:(data)=>{
                 if(type==1){
                     this.setState({mapPointLoading:false})
-                    this.setState({regionMarkers:data})
+                    this.setState({regionMarkers:data});
                     this.loadRegionMarkerData(data)
                 }else if(type==2){
                     this.setState({entMarkers:data})
@@ -140,26 +169,26 @@ let pollutantType={}
     }
   
     loadRegionMarkerData = (data) =>{ //行政区
-   
-    const timer = setInterval(() => {
+    this.setState({
+      showType:1,
+      markersList:data
+    },()=>{
+      const timer = setInterval(() => {
         if (aMap) {
           aMap.setFitView();
           clearInterval(timer);
         }
       }, 0);
+    })
+
     }
-     loadEntMarkerData = (data,notFitView) =>{ //企业
-        const timer = setInterval(() => {
-            if (aMap) {
-              !notFitView && aMap.setFitView();
-              clearInterval(timer);
-            }
-          }, 0);
-        }
     loadPointMarkerData = (data) =>{ //监测点
+      this.setState({
+        showType:3,
+        markersList:[...data]
+      },()=>{
                 const timer = setInterval(() => {
                     if (aMap) {
-
                       aMap.setFitView();
                       aMap.setZoomAndCenter(aMap.getZoom(), [
                             96.01906121185537,
@@ -169,6 +198,7 @@ let pollutantType={}
                       clearInterval(timer);
                     }
                   }, 0);
+                })
 
      }     
 
@@ -179,14 +209,32 @@ let pollutantType={}
         switch (text) {
             case '放大':
                 map.zoomIn()
-               if(map.getZoom()>=9&&showType==1){
+                if(map.getZoom()>=9&&showType==1){          
                   this.setState({showType:2})
-               }
+                  const { entMarkers } = this.state;
+                  this.setState({markersList: [...entMarkers]})
+              }
+              if(map.getZoom()>=11&&showType==2){
+                const { entMarkers,entTitleShow } = this.state;
+                if(!entTitleShow){
+                  this.setState({entTitleShow:true,markersList:[...entMarkers]})
+                }
+              }
                 break;
             case '缩小':
                 map.zoomOut()
                 if(map.getZoom()<9&&showType==2){
-                    this.setState({showType:1})
+                  const { regionMarkers } = this.state;
+                  this.setState({showType:1})
+                  this.setState({markersList:[...regionMarkers]})
+                }
+
+                if(map.getZoom()<11&&showType==2){
+                  const { entMarkers,entTitleShow } = this.state;
+                  if(entTitleShow){
+                    this.setState({entTitleShow:false,markersList:[...entMarkers]})
+                  }
+
                 }
                 break;
             case '全屏':
@@ -198,11 +246,10 @@ let pollutantType={}
                 this.props.fullScreenClick(false)
                 break;
             case '展示企业':
-                this.setState({ showType:1  })
                 this.loadRegionMarkerData(regionMarkers)
+                // this.setState({showType:1, markersList:[...this.state.regionMarkers]})
                 break; 
              case '展示监测点':
-                this.setState({ showType:3  })
                 this.loadPointMarkerData(pointMarkers)
              break;               
         }
@@ -217,15 +264,14 @@ let pollutantType={}
    }
      renderRegMarkers = (extData) =>{ //行政区下 企业总数标记点
         const { showType } = this.state;
-        return <div style={{position:'relative'}}>  
-              
+        return <div style={{position:'relative'}}>    
                 <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={showType==1} placement="top" content={this.regPopovercontent(extData)} >
                 <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
                 </Popover>
                </div>
       }
     renderEntMarkers = (extData) =>{ //企业下  企业标记点
-        return <div style={{position:'relative'}}>   
+        return <div style={{position:'relative'}}> 
                 <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/>
                </div>
       }
@@ -234,8 +280,36 @@ let pollutantType={}
                 <img src='/homeWasteWater.png' style={{position:'relative',width:30,height:30}}/>
                </div>
       }
- mapContent = (props) => {
-    const { mapPointLoading,fullScreen,showType,regionMarkers,entMarkers,pointMarkers} = this.state;
+   renderEntTitleMarkers = (extData) =>{ //企业名称  标记点  显示
+    console.log(extData)
+    return <div className={styles.entTitlePopSty}> 
+              {extData.position.entName}
+             </div>
+      }
+
+      renderMarkers = (extData) =>{
+        const {showType } = this.state;
+          if(showType==1){
+            return <div style={{position:'relative'}}>    
+            <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} overlayClassName={styles.regPopSty}   visible={showType==1} placement="top" content={this.regPopovercontent(extData)} >
+            <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
+            </Popover>
+           </div>
+          }else if(showType==2){
+            return <div style={{position:'relative'}}> 
+            <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/>
+            {this.state.entTitleShow&&<div  className={styles.entTitlePopSty}> 
+                       {extData.position.entName}
+                      </div>}
+           </div>
+          }else{
+            return <div style={{position:'relative'}}>   
+            <img src='/homeWasteWater.png' style={{position:'relative',width:30,height:30}}/>
+            </div>
+          }
+      }
+   mapContent = (props) => {
+    const { markersList,mapPointLoading,fullScreen,showType,regionMarkers,entMarkers,pointMarkers,entTitleShow} = this.state;
     const {mapStatusData,subjectFontSize} = this.props;
         const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount  }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
     { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
@@ -254,6 +328,8 @@ let pollutantType={}
         </div>);
 
     }
+  
+       console.log(entTitleShow)
         return mapPointLoading ?
             <PageLoading />
             :
@@ -267,9 +343,16 @@ let pollutantType={}
             >
 
                 <Markers 
-                    markers={ showType==1?regionMarkers:showType==2?entMarkers:pointMarkers}
-                    render={showType==1?this.renderRegMarkers:showType==2?this.renderEntMarkers:this.renderPointMarkers}
-                />
+                    // markers={ showType==1?regionMarkers:showType==2?entMarkers:pointMarkers}
+                    markers={markersList}
+                    render={this.renderMarkers}
+                    // render={showType==1?this.renderRegMarkers:showType==2?this.renderEntMarkers:this.renderPointMarkers}
+                    events={this.markersEvents}
+               />
+                {/* {entTitleShow?<Markers 
+                    markers={ entMarkers}
+                    render={this.renderEntTitleMarkers}
+               /> : null} */}
                 <div className={styles.mapBtn}> { /**按钮 */}
                     <Row align='middle'>
                         {typeBtnArr.map((item, index) => {

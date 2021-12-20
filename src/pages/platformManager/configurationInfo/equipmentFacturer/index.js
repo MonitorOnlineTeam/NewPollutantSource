@@ -194,6 +194,8 @@ const Index = (props) => {
       const values = await form.validateFields();
 
       props.getManufacturerList({
+        pageIndex: 1,
+        pageSize: 10000,
         ...values,
       })
     } catch (errorInfo) {
