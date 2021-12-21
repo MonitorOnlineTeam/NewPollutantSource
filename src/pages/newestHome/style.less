@@ -285,6 +285,27 @@
     top: calc(64px)
   }
 
+  :global{
+  .amap-info-content {
+      position: relative;
+      background: #3C4860;
+      padding: 8px;
+      line-height: 1.4;
+      overflow: auto;
+      border-radius: 1px;
+      .amap-info-close{
+        display: none;
+      }
+  }
+  .bottom-center .amap-info-sharp {
+    bottom: 2px;
+   left: 50%;
+   margin-left: -6px;
+   border-left: 6px solid transparent;
+   border-right: 6px solid transparent;
+   border-top: 6px solid #3C4860;
+   } 
+  }
 
 }
 
@@ -308,6 +329,13 @@
     }
   }
 }
+.hoverPopSty{
+  :global {
+    .ant-popover-inner-content{
+      background-color: #2E3950;
+    }
+  }
+}
   .mapModalShow{
     opacity: 1;
     transition: all .3s ease-in;
@@ -318,10 +346,9 @@
   }
 }
 
-.entTitlePopSty {
+.titlePopSty {
   // white-space: break-word;
   white-space: nowrap;
-  width: 170px;
   color: rgb(56,168,212);
   background: #000001;
   // background: #fff;
