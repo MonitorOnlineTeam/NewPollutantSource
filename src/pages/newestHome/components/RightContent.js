@@ -21,6 +21,7 @@ import MoreBtn from './publicComponents/MoreBtn'
 import styles from "../style.less"
 import MissingDataRateModal from './springModal/missingDataRate/MissingDataRateModel'
 import AbnormalAlarmRateModal from './springModal/abnormalAlarmRate'
+import OperationalExpiraModal from './springModal/operationalExpiration'
 
 const { Option } = Select;
 
@@ -47,9 +48,9 @@ const dvaPropsData =  ({ loading,newestHome,operationExpirePoint }) => ({
 
 const  dvaDispatch = (dispatch) => {
   return {
-    updateState:(payload)=>{ //更新参数
+    updateState:(payload,name)=>{ //更新参数
         dispatch({
-          type: `${namespace}/updateState`, 
+          type: `${name?name:namespace}/updateState`, 
           payload:{...payload},
         }) 
       },
@@ -177,7 +178,10 @@ const Index = (props) => {
     },()=>{})
   }
   const moreBtnClick = (type) =>{
-    console.log(type)
+    if(type==='operationExpira'){
+      props.updateState({checkName:'0~7日'},"operationExpirePoint") //防止受运维到期点位统计页面影响
+      setOperationalExpiraVisible(true)
+    }
   }
  const reanTimeNetworkOption = () =>{
 
@@ -462,7 +466,9 @@ const operationExpiraOption = { //点位到期统计
   const { operationExpireLoading } = props; //运营到期点位
   const [missingRateVisible,setMissingRateVisible] = useState(false)
   const [abnormalAlarmRateVisible,setAbnormalAlarmRateVisible] = useState(false)
+  const [operationalExpiraVisible,setOperationalExpiraVisible] = useState(false)
 
+  
   const modalTypes = modalType[props.type]
   
   const dataAlarmEcharts = useMemo(()=>{
@@ -536,24 +542,29 @@ const operationExpiraOption = { //点位到期统计
             ref={operationExpiraEchartsRef}
           />  
      </div>
-     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
+     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='operationExpira'  moreBtnClick={moreBtnClick}/>
      </div>
      </Spin>
 
-     {missingRateVisible&& <MissingDataRateModal type={modalTypes} //缺失报警响应率弹框
+     <MissingDataRateModal type={modalTypes} //缺失报警响应率弹框
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               setMissingRateVisible(false)
               props.MissingRateDataModal(dataAlarmResBtnCheck)
 
-            }} />}
-      {abnormalAlarmRateVisible &&<AbnormalAlarmRateModal type={modalTypes} //异常报警响应率弹框
+            }} /> 
+    <AbnormalAlarmRateModal type={modalTypes} //异常报警响应率弹框
+            visible={abnormalAlarmRateVisible}
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]} 
-            missingRateVisible={missingRateVisible} onCancel={() => {
+            onCancel={() => {
               setAbnormalAlarmRateVisible(false)
               props.AbnormalResRate()
-
-            }} />}      
+            }} />    
+      <OperationalExpiraModal type={modalTypes} visible={operationalExpiraVisible}
+       onCancel={()=>{
+         setOperationalExpiraVisible(false);
+         props.updateState({checkName:'0~7日'},"operationExpirePoint") //防止影响运维到期点位统计页面
+       }}/>
   </div>
   );
 };

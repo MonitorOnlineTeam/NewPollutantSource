@@ -445,7 +445,7 @@ export default {
                     {
                       name: 'operationCycle',//运维频次管理
                       path: '/platformconfig/configurationInfo/:configId',
-                      component: './AutoFormManager',
+                      component: './platformManager/configurationInfo/AutoFormManager',
                     },
                     {
                       name: 'timerManage',//定时器管理

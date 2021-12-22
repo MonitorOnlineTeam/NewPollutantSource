@@ -151,14 +151,14 @@ const Index = (props) => {
       dataIndex: 'BeginTime',
       key:'BeginTime',
       align:'center',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.BeginTime).valueOf() - moment(b.BeginTime).valueOf()
     },
     {
       title: '运营结束日期',
       dataIndex: 'EndTime',
       key:'EndTime',
       align:'center',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.EndTime).valueOf() - moment(b.EndTime).valueOf()
       
     },
     {
@@ -179,7 +179,7 @@ const Index = (props) => {
       key:'CreateTime',
       align:'center',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf()
     },
     {
       title: <span>操作</span>,
@@ -360,7 +360,7 @@ const Index = (props) => {
     className={styles['ant-advanced-search-form']}
     onFinish={onFinish}
   >  
-         <Row> 
+         <Row align='middle'> 
          <Col span={8}>
           <Form.Item   name='ProjectName' label='合同名称'>
             <Input placeholder="请输入合同名称" />
@@ -371,14 +371,14 @@ const Index = (props) => {
             <Input placeholder="请输入项目编号" />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        {expand&& <><Col span={8}>
           <Form.Item name='BegTime' label='运营起始日期' >
           <RangePicker style={{width:'100%'}}
             showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
             />
           </Form.Item>
         </Col>  
-        {expand&&<><Col span={8}>
+        <Col span={8}>
           <Form.Item   name='EntName' label='卖方公司名称'>
             <Input placeholder="请输入卖方公司名称" />
           </Form.Item>
@@ -393,19 +393,22 @@ const Index = (props) => {
           <RangePicker style={{width:'100%'}} 
            showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
           </Form.Item>
-        </Col></>}
-        </Row>   
-        <Row justify='end' align='middle'>  
+        </Col></>}   
+        <Col span={expand ? 24 : 8} style={{textAlign:expand ? 'right':'left'}}>
+        <Form.Item>
         <Button type="primary" htmlType="submit">
             查询
           </Button>
           <Button style={{  margin: '0 8px',}} onClick={() => {  form.resetFields(); }}  >
             重置
           </Button>
+         
       <a  onClick={() => {setExpand(!expand);  }} >
        {expand ? <>收起 <UpOutlined /></>  : <>展开 <DownOutlined /></>} 
       </a>
-      </Row>  
+      </Form.Item>
+      </Col>
+      </Row>   
       <Row  align='middle'>
      <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
           添加

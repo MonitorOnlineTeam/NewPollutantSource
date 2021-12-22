@@ -39,13 +39,13 @@ class Index extends PureComponent {
   }
 
   render() {
-    const { status, stopStatus, defaultPollutantCode, time } = this.props
+    const { status, stopStatus, defaultPollutantCode, time,visible } = this.props
     const { queryCondition,queryConditions, show,cityLevel } = this.state;
     return (
       <Modal
-        title="详情"
+        title="异常报警响应率"
         width={"90vw"}
-        visible={true}
+        visible={visible}
         footer={false}
         onCancel={this.onCancel}
       >

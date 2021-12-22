@@ -16,7 +16,7 @@ import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
-import styles from "./style.less"
+import styles from "./style.less" 
 const { Option } = Select;
 
 const namespace = 'operationExpirePoint'
@@ -58,34 +58,48 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-
   const [form] = Form.useForm();
 
   const echartsRef = useRef(null);
 
   
  const [tableDatas,setTableDatas] = useState([])
- const [pollutantType,setPollutantType] = useState('')
+ const [pollutantType,setPollutantType] = useState()
 
 
   const  { tableLoading,exportLoading,checkName,totalDatas } = props; 
 
   
   useEffect(() => {
-      getOperationExpirePointList()
+      getOperationExpirePointList(props.pollutantTypes?props.pollutantTypes:'')
   },[]);
-//   useEffect(() => {
-//     console.log(tableDatas)
-// },[tableDatas])
+  const  codeList = {
+    '过期15~30日':"overdue30List",
+    '过期8~14日':"overdue14List",
+    '过期7日内':"overdue7List",
+    '0~7日':"notExpired7List",
+    '8~14日':"notExpired14List",
+    '15~30日':"notExpired30List", 
+    '31~60日':"notExpired60List"
+   }
+   const  titleList = {
+    '过期15~30日':"运维过期15~30日",
+    '过期8~14日':"运维过期8~14日",
+    '过期7日内':"运维过期7日内",
+    '0~7日':"0~7日内运维到期",
+    '8~14日':"8~14日内运维到期",
+    '15~30日':"15~30日内运维到期", 
+    '31~60日':"31~60日内运维到期"
+   }
 
   const getOperationExpirePointList = (value) =>{
     props.getOperationExpirePointList({PollutantType:value},(res)=>{
-      setTableDatas(
-        [...res.overdue14List,...res.overdue7List,...res.notExpired7List,...res.notExpired14List,...res.notExpired30List,
-          ...res.notExpired30List,...res.notExpired60List
-        ]
-        )
-      
+      // setTableDatas(
+      //   [...res.overdue14List,...res.overdue7List,...res.notExpired7List,...res.notExpired14List,...res.notExpired30List,
+      //     ...res.notExpired30List,...res.notExpired60List
+      //   ]
+      //   )
+        setTableDatas([...res[`${codeList[checkName]}`]])
     })
   }
 
@@ -207,34 +221,17 @@ const Index = (props) => {
           },
           itemStyle:{
             normal:{
-              // color:(params)=>{
-              //  return  params.name == checkName ? '#ffa940' : '#64b0fd'
-              // }
-              color:'#64b0fd'
+              color:(params)=>{
+               return  params.name == checkName ? '#ffa940' : '#64b0fd'
+              }
+              // color:'#64b0fd'
             }
           }
         }
     ]
 };
   }
-  const  codeList = {
-    '过期15~30日':"overdue30List",
-    '过期8~14日':"overdue14List",
-    '过期7日内':"overdue7List",
-    '0~7日':"notExpired7List",
-    '8~14日':"notExpired14List",
-    '15~30日':"notExpired30List", 
-    '31~60日':"notExpired60List"
-   }
-   const  titleList = {
-    '过期15~30日':"运维过期15~30日",
-    '过期8~14日':"运维过期8~14日",
-    '过期7日内':"运维过期7日内",
-    '0~7日':"0~7日内运维到期",
-    '8~14日':"8~14日内运维到期",
-    '15~30日':"15~30日内运维到期", 
-    '31~60日':"31~60日内运维到期"
-   }
+
  const exports = () =>{
 
    props.exportOperationExpirePointList({Title:`${titleList[checkName]}${pollutantType==1?'废水':pollutantType==2? '废气':'全部'}监测点列表`,Code:codeList[checkName]})
@@ -270,7 +267,7 @@ const Index = (props) => {
   >  
          <Row> 
          <Form.Item name='' label=''  style={{  marginRight: 8,}} >
-             <Radio.Group onChange={onChange} defaultValue="">
+             <Radio.Group onChange={onChange} defaultValue={props.pollutantTypes?props.pollutantTypes:''}>
                 <Radio.Button value="">全部</Radio.Button>
                 <Radio.Button value="1">废水</Radio.Button>
                 <Radio.Button value="2">废气</Radio.Button>
@@ -303,7 +300,7 @@ const Index = (props) => {
   },[tableLoading])
   return (
     <div  className={styles.operationExpirePoint}>
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
      { tableLoading? <div style={{paddingBottom:100}}><PageLoading /></div>: echartsComponents}
         <div style={{color:'#f5222d',paddingBottom:8}}>
@@ -314,7 +311,7 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        scroll={{ y: 'calc(100vh - 670px)' }}
+        scroll={{ y:props.hideBreadcrumb?'calc(100vh - 805px)' : 'calc(100vh - 670px)' }}
       />  
    </Card>
    </BreadcrumbWrapper>

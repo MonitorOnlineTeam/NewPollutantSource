@@ -513,7 +513,7 @@ const projectNumCol =[
 
       <Row>
         <Col span={12}>
-        <Form.Item label="巡检频次" name="CalibrationCycle" rules={[{ required: true, message: '请输入巡检频次!',  },]} >
+        <Form.Item label="巡检频次" name="InspectionCycel" rules={[{ required: true, message: '请输入巡检频次!',  },]} >
         <Select placeholder="请选择巡检频次">
            {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
@@ -523,7 +523,7 @@ const projectNumCol =[
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="校准频次"  name="InspectionCycel" rules={[{ required: true, message: '请输入校准频次!',  },]} >
+      <Form.Item label="校准频次"  name="CalibrationCycle" rules={[{ required: true, message: '请输入校准频次!',  },]} >
       <Select placeholder="请选择校准频次">
            {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>

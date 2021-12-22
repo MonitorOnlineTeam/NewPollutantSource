@@ -8,7 +8,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
 
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined,QuestionCircleOutlined  } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -27,7 +27,8 @@ import {
   Modal,
   Carousel,
   Tabs,
-  InputNumber
+  InputNumber,
+  Tooltip
 } from 'antd';
 import { MapInteractionCSS } from 'react-map-interaction';
 import moment from 'moment';
@@ -214,6 +215,7 @@ class SdlForm extends PureComponent {
     const _fileList = isEdit ? fileList : [];
     const formItems = addFormItems[configId] || [];
     const formData = isEdit ? (editFormData[configId] || {}) : {};
+    const isNumCode = configId === "OperationCycle";
     // return addFormItems[configId].map((item) =>{
     return formItems.map((item, index) => {
       let validate = [];
@@ -250,7 +252,7 @@ class SdlForm extends PureComponent {
           break;
           case '数字':
             validator = `${inputPlaceholder}`;
-            element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
+          element = <><InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />{isNumCode&&<Tooltip title={'编号从1依次开始,系统会自动给出最新编号,无特殊情况切勿修改。'}><QuestionCircleOutlined style={{paddingLeft:5,position:'absolute',top:0}}/></Tooltip>}</>;
             break;
         case '下拉列表框':
         case '多选下拉列表':
