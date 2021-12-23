@@ -22,6 +22,9 @@ import styles from "../style.less"
 import MissingDataRateModal from './springModal/missingDataRate/MissingDataRateModel'
 import AbnormalAlarmRateModal from './springModal/abnormalAlarmRate'
 import OperationalExpiraModal from './springModal/operationalExpiration'
+import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
+import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
+import NetworkRateStatisticsModal from './springModal/networkRateStatistics'
 
 const { Option } = Select;
 
@@ -178,12 +181,20 @@ const Index = (props) => {
     },()=>{})
   }
   const moreBtnClick = (type) =>{
-    if(type==='operationExpira'){
+    switch(type){
+      case "operationExpira" :
       props.updateState({checkName:'0~7日'},"operationExpirePoint") //防止受运维到期点位统计页面影响
       setOperationalExpiraVisible(true)
+      break;
+      case "effectiveTrans" :
+      setTVisible(true)
+      break;
+      case "realTimeNetwork" :
+      setNetworkVisible(true)
+        break;
     }
   }
- const reanTimeNetworkOption = () =>{
+ const realTimeNetworkOption = () =>{
 
     let option = {
       tooltip: {
@@ -453,12 +464,18 @@ const operationExpiraOption = { //点位到期统计
  }
 
  const dataAlarmRes = (e) =>{
-   if(e.name ==='缺失报警响应率'){
+
+  switch(e.name){
+    case'缺失报警响应率':
     setMissingRateVisible(true)
-   }
-   if(e.name ==='异常报警响应率'){
+    break;
+    case'异常报警响应率':
     setAbnormalAlarmRateVisible(true)
-   }
+    break;
+    case'超标报警核实率':
+    setOverVisible(true);
+    break;
+  }
  }
   const {effectiveTransmissionLoading } = props;  //有效传输率
   const {dataAlarmResLoading} = props; //数据报警响应
@@ -467,7 +484,11 @@ const operationExpiraOption = { //点位到期统计
   const [missingRateVisible,setMissingRateVisible] = useState(false)
   const [abnormalAlarmRateVisible,setAbnormalAlarmRateVisible] = useState(false)
   const [operationalExpiraVisible,setOperationalExpiraVisible] = useState(false)
+  const [OverVisible,setOverVisible] = useState(false)
+  const [TVisible,setTVisible] = useState(false)
+  const [networkVisible,setNetworkVisible] = useState(false)
 
+  
   
   const modalTypes = modalType[props.type]
   
@@ -482,7 +503,7 @@ const operationExpiraOption = { //点位到期统计
      </div>
 
   },[dataAlarmResData])
-  
+
   return ( 
       <div>
 
@@ -492,7 +513,7 @@ const operationExpiraOption = { //点位到期统计
        <div style={{paddingTop:30}}>
       <Row align='bottom'>
       <ReactEcharts
-                option={reanTimeNetworkOption(1)}
+                option={realTimeNetworkOption(1)}
                 style={{ width: 98, height: 98 }}
               />
        <div style={{paddingBottom:12,
@@ -507,7 +528,7 @@ const operationExpiraOption = { //点位到期统计
        </div>
      </Row>
 
-     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
+     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTimeNetwork'  moreBtnClick={moreBtnClick}/>
     </div>
     </div>
     </Spin>
@@ -521,7 +542,7 @@ const operationExpiraOption = { //点位到期统计
             style={{ height: '100%', width: '100%' }}
           />
      </div>
-     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='realTime'  moreBtnClick={moreBtnClick}/>
+     <MoreBtn  className={styles.moreBtnAbsoluteSty} type='effectiveTrans'  moreBtnClick={moreBtnClick}/>
      </div>
     </Spin>
 
@@ -546,13 +567,13 @@ const operationExpiraOption = { //点位到期统计
      </div>
      </Spin>
 
-     <MissingDataRateModal type={modalTypes} //缺失报警响应率弹框
+      <MissingDataRateModal type={modalTypes} //缺失报警响应率弹框
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               setMissingRateVisible(false)
               props.MissingRateDataModal(dataAlarmResBtnCheck)
 
-            }} /> 
+            }} />
     <AbnormalAlarmRateModal type={modalTypes} //异常报警响应率弹框
             visible={abnormalAlarmRateVisible}
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]} 
@@ -565,6 +586,31 @@ const operationExpiraOption = { //点位到期统计
          setOperationalExpiraVisible(false);
          props.updateState({checkName:'0~7日'},"operationExpirePoint") //防止影响运维到期点位统计页面
        }}/>
+       <OverVerifyLstModal //超标报警核实率
+              beginTime={dataAlarmResBtnCheck.beginTime}
+              endTime={dataAlarmResBtnCheck.endTime}
+              type={modalTypes}
+              TVisible={OverVisible}
+              TCancle={() => {
+                setOverVisible(false)
+              }}
+            />
+      <TransmissionefficiencyModal  //有效传输率弹框
+                 beginTime={effectiveTransBtnCheck.beginTime}
+                 endTime={effectiveTransBtnCheck.endTime}
+                 TVisible={TVisible} 
+                 TCancle={() => {
+                  setTVisible(false)
+                }} 
+                pollutantType={modalTypes}
+                />
+      <NetworkRateStatisticsModal  //实时联网率
+                networkRateVisible={networkVisible} 
+                networkType={modalTypes}
+                networkRateCancel={() => {
+                  setNetworkVisible(false)
+                }} 
+                />          
   </div>
   );
 };

@@ -91,9 +91,16 @@ export default class OverVerifyLstModal extends Component {
   }
 
   componentDidMount() {
-    this.initData();
-    // 根据企业类型查询监测因子
-    this.getPollutantByType(this.props.pollutantByType, this.getExceptionList);
+    // this.initData();
+    // // 根据企业类型查询监测因子
+    // this.getPollutantByType(this.props.pollutantByType, this.getExceptionList);
+  }
+  componentDidUpdate(props){
+    if(props.TVisible!==this.props.TVisible&&this.props.TVisible){
+      this.initData();
+      this.getPollutantByType(this.props.type, this.getExceptionList);
+      this.setState({beginTime:props.beginTime,endTime:props.endTime,})
+    }
   }
   // 根据企业类型查询监测因子
   getPollutantByType = (val, cb) => {
@@ -222,8 +229,9 @@ export default class OverVerifyLstModal extends Component {
     // dispatch({ type: 'autoForm/getRegions', payload: { RegionCode: '', PointMark: '2' } }); //获取行政区列表
 
     dispatch({ type: 'overVerifyRate/getAttentionDegreeList', payload: { RegionCode: ''} }); //获取关注列表
+
     this.updateQueryState({
-      PollutantType: '1',
+      PollutantType: type,
       OperationPersonnel:'',
       RegionCode:'',
       regionLevel:'',
@@ -483,7 +491,6 @@ export default class OverVerifyLstModal extends Component {
         PollutantType,
         OperationPersonnel
       },
-      type,
     } = this.props;
     const { checkedValues,regionLevel } = this.state;
     return (
@@ -632,7 +639,7 @@ export default class OverVerifyLstModal extends Component {
     );
   }
   render() {
-    const {TVisible,TCancle,TTVisible} = this.props
+    const {TVisible,TCancle} = this.props
     return(
       <Modal
           centered

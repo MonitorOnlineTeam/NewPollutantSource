@@ -3,7 +3,7 @@
 @cardBagCol:#263249;
 @subjectFontSize:14px;
 .homePage{
-  *{
+  body,input,img,div,ul,li,a,span,i,p,h1,h2,h3,h4,h5,h6,strong,ins,em,del{
     font-size: @subjectFontSize;
     color:#fff;
     font-family: Microsoft YaHei;
@@ -272,10 +272,11 @@
    bottom: 24px;
    padding: 10px 13px 16px 12px;
    background: rgba(60, 72, 96, .6);
-    span{
+   .iconText{
      padding-left: 5px;
    }
   }
+
   .mapModal{
     position: fixed;
     z-index:1000;
@@ -306,7 +307,11 @@
    border-top: 6px solid #3C4860;
    } 
   }
-
+  .mapIcon {
+    span{
+      font-size: 10px;
+    }
+  }
 }
 
 .regPopSty{

@@ -10,7 +10,7 @@ import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutline
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon,GasOffline } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
@@ -303,7 +303,7 @@ let pollutantType={}
           if(showType==1){
             return <div style={{position:'relative'}}>    
             <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode}    visible={showType==1} placement="top" content={this.regPopovercontent(extData)} >
-            <img src='/location.png' style={{position:'relative',width:30,height:35}}/>
+            <img src='/location.png' style={{position:'relative',width:35,height:35}}/>
             </Popover>
            </div>
           }else if(showType==2){
@@ -328,7 +328,7 @@ let pollutantType={}
 
    mapContent = (props) => {
     const { markersList,mapPointLoading,fullScreen,showType,regionMarkers,entMarkers,pointMarkers,entTitleShow,pointTitleShow} = this.state;
-    const {mapStatusData,subjectFontSize} = this.props;
+    const {mapStatusData,subjectFontSize,pollType} = this.props;
         const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount  }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
     { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
 
@@ -345,6 +345,10 @@ let pollutantType={}
             })}
         </div>);
 
+    }
+    const iconType = {
+      "1": <><img src='/homeWasteWater.png' /> <span className={styles.iconText}>废水</span></>,
+      "2":  <><img src='/homeWasteWater.png' /><span className={styles.iconText}>废气</span></>
     }
     const {hoverTitleShow,hoverTitleLngLat,hoverEntTitle,hoverPointTitle } = this.state;
         return mapPointLoading ?
@@ -387,8 +391,10 @@ let pollutantType={}
                 <RightIconMapComponent />
 
                 <div className={styles.mapEnt} style={{ marginBottom: fullScreen ? 64 : 0 }}> { /**左下家 图标 */}
-                    <div><img src='/homeMapEnt.png' /> <span>企业</span></div>
-                    <div style={{ paddingTop: 9 }}><img src='/homeWasteWater.png' /> <span>废水</span></div>
+                    <div><img src='/homeMapEnt.png' /> <span className={styles.iconText}>企业</span></div>
+                    <div style={{ paddingTop: 9 }}>
+                      {iconType[pollutantType]}
+                      </div>
                 </div>
             </Map>
 

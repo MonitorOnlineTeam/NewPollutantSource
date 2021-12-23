@@ -323,7 +323,7 @@ export default class Index extends PureComponent {
           OverVisible ?
             <OverVerifyLstModal
               beginTime={TBeginTime}
-              endTime={TEndTime}
+              endTime={TEndTime} 
               TVisible={OverVisible}
               TCancle={() => {
                 this.setState({ OverVisible: false });

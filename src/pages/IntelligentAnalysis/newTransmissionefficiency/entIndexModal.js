@@ -83,20 +83,24 @@ export default class EntIndexModal extends Component {
   }
 
   componentWillMount() {
-    this.updateState({
-      pollutantType:this.state.PollutantType,
-      RegionCode:'',
-    });
-    this.getTableData();
-    // this.props.dispatch({
-    //   type: 'autoForm/getRegions',
-    //   payload: {
-    //     RegionCode: '',
-    //     PointMark: '2',
-    //   },
+    // this.updateState({
+    //   pollutantType:this.state.PollutantType,
+    //   RegionCode:'',
     // });
+    // this.getTableData();
   }
-
+  componentDidUpdate(props){
+    if(props.TVisible!==this.props.TVisible&&this.props.TVisible){
+      this.updateState({
+        pollutantType:this.state.PollutantType,
+        RegionCode:'',
+      });
+      this.setState({
+          PollutantType: props.pollutantType, beginTime:props.beginTime,endTime:props.endTime},()=>{
+          this.getTableData();
+        })
+    }
+  }
   updateState = payload => {
     this.props.dispatch({
       type: pageUrl.updateState,
@@ -552,8 +556,8 @@ export default class EntIndexModal extends Component {
     )
   }
   render() {
-    console.log("props.pollutantType=",this.props.pollutantType)
-    console.log("state.pollutantType=",this.state.PollutantType)
+    // console.log("props.pollutantType=",this.props.pollutantType)
+    // console.log("state.pollutantType=",this.state.PollutantType)
   const {TVisible,TCancle,TTVisible} = this.props
   return (
       <div>
