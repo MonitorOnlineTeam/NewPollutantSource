@@ -57,3 +57,14 @@ export async function GetMapPointList(params) {
   const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetMapPointList', params, null);
   return result;
 }
+
+// 获取所有污染物  地图
+export async function GetPollutantList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeCode', params, null);
+  return result;
+}
+// 获取监测点infoWindow数据
+export async function GetInfoWindowData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList', params, null);
+  return result;
+}

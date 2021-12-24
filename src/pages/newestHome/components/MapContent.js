@@ -10,7 +10,17 @@ import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutline
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
-import { DelIcon, DetailIcon, EditIcon, PointIcon,GasOffline } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon, PointIcon,EntIcon,
+  GasIcon,
+  GasOffline,
+  GasNormal,
+  GasExceed,
+  GasAbnormal,
+  WaterIcon,
+  WaterNormal,
+  WaterExceed,
+  WaterAbnormal,
+  WaterOffline,} from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
@@ -36,7 +46,9 @@ let pollutantType={}
 @connect(({ loading, newestHome }) => ({
     pollType: newestHome.pollType,
     subjectFontSize: newestHome.subjectFontSize,
-    mapStatusData:newestHome.mapStatusData
+    mapStatusData:newestHome.mapStatusData,
+    infoWindowData: newestHome.infoWindowData,
+
   }))
   class Index extends PureComponent {
     constructor(props) {
@@ -96,7 +108,20 @@ let pollutantType={}
       },
       clickable: true,
       click: (MapsOption, marker) => {
-        console.log(MapsOption, marker)
+        const {showType} = this.state;
+        console.log(showType,11111111)
+        if(showType ==3 ){ //监测点弹窗
+           const position = marker.De.extData.position;
+           
+           this.setState({
+              // hoverTitleShow:false,
+              currentClickObj: position,
+              pointInfoWindowVisible: true,
+              infoWindowPos: [position.Longitude, position.Latitude],
+            },  () => {
+              this.getInfoWindowData()
+            } );
+        } 
        },
       mouseover:(MapsOption, marker)=>{ //鼠标移入地图容器内时触发
         const {showType} = this.state;
@@ -127,6 +152,9 @@ let pollutantType={}
             hoverTitleLngLat:{},
             hoverEntTitle:'',
             hoverPointTitle:'',
+            pointInfoWindowVisible:false,
+            currentClickObj: {}, // 当前点击对象 -  监测点弹窗
+            infoWindowPos:{}
           }
         }
         componentWillMount() {
@@ -165,7 +193,21 @@ let pollutantType={}
 
 
     }
-   
+  // 获取infoWindow数据
+  getInfoWindowData = () => {
+    const { currentClickObj } = this.state;
+    this.props.dispatch({
+      type: 'newHome/getInfoWindowData',
+      payload: {
+        DGIMNs: currentClickObj.key,
+        dataType: 'HourData',
+        isLastest: true,
+        // type: PollutantType,
+        isAirOrSite: true,
+        pollutantTypes: currentClickObj.PollutantType,
+      },
+    });
+  };
      getMapPointList = (type) => {
          const {dispatch} = this.props
          dispatch({
@@ -218,6 +260,44 @@ let pollutantType={}
                 })
 
      }     
+     getIcon = (status) => {
+      let icon = '';
+      if(pollutantType==1){
+        switch (status) {
+          case 0: // 离线
+            icon = <WaterOffline />;
+            break;
+          case 1: // 正常
+            icon = <WaterNormal />;
+            break;
+          case 2: // 超标
+            icon = <WaterExceed />;
+            break;
+          case 3: // 异常
+            icon = <WaterAbnormal />;
+            break;
+        }
+        return icon;
+       };
+      
+      if(pollutantType==2){
+      switch (status) {
+        case 0: // 离线
+          icon = <GasOffline />;
+          break;
+        case 1: // 正常
+          icon = <GasNormal />;
+          break;
+        case 2: // 超标
+          icon = <GasExceed />;
+          break;
+        case 3: // 异常
+          icon = <GasAbnormal />;
+          break;
+      }
+      }
+      return icon;
+    }
 
     operationChange = (text, mapProps) => {
          const map = mapProps.__map__;
@@ -300,7 +380,7 @@ let pollutantType={}
 
       renderMarkers = (extData) =>{
         const {showType,entTitleShow,pointTitleShow } = this.state;
-          if(showType==1){
+           if(showType==1){
             return <div style={{position:'relative'}}>    
             <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode}    visible={showType==1} placement="top" content={this.regPopovercontent(extData)} >
             <img src='/location.png' style={{position:'relative',width:35,height:35}}/>
@@ -310,14 +390,17 @@ let pollutantType={}
             
             const entName = extData.position.entName;
             return <div style={{position:'relative'}}> 
-                   <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/>
+                   {/* <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/> */}
+                   <EntIcon />
+                   <div className={styles.pulse}></div>
             {entTitleShow&&<div  className={styles.titlePopSty}> 
                        {entName}
                       </div>}
            </div>
           }else{
             return <div style={{position:'relative'}}>   
-            <img src='/homeWasteWater.png' style={{position:'relative',width:30,height:30}}/>
+           {this.getIcon(extData.position.Status)}
+           <div className={styles.pulse}></div>
             {pointTitleShow&&<div> 
                        <div   className={styles.titlePopSty}>{extData.position.ParentName}</div>
                        <div   className={styles.titlePopSty}>{extData.position.PointName}</div>
@@ -325,6 +408,119 @@ let pollutantType={}
             </div>
           }
       }
+
+
+ // 监测点弹窗内容
+ infoWindowContent = () => {
+  const { currentClickObj } = this.state;
+  const { infoWindowData } = this.props;
+  let imgName =
+    pollutantType === 2  ? '/gasInfoWindow.png': pollutantType === 1? '/water.jpg': '/infoWindowImg.png';
+  if (infoWindowData.photo) {
+    imgName = `/upload/${infoWindowData.photo[0]}`;
+  }
+  const typeColorText = {
+      2: {text: '超标', color: '#FF0000'},
+      3: { text: '异常', color: '#FFCC00' },
+      0: { text: '离线', color: '#67666A'},
+      1:{ text: '正常', color: '#14ECDF'},
+   }
+  return (
+    <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
+      {this.props.infoWindowDataLoading ? <PageLoading /> :  
+
+      <>
+      <div className={styles.header}>
+        <h2>
+          {infoWindowData.entName} - {currentClickObj.title}
+        </h2>
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => {
+            this.props.dispatch({
+              type: 'newHome/updateState',
+              payload: { siteDetailsVisible: true },
+            });
+          }}
+        >
+          进入站房
+        </Button>
+        <p>
+          站点状态：
+          {currentClickObj.outPutFlag === 1 ? (
+            <span style={{ color: '#836BFB' }}>停运</span>
+          ) : (
+               <span style={{ color: currentClickObj.Status&&typeColorText[currentClickObj.Status].color }}>
+                   {currentClickObj.Status&&typeColorText[currentClickObj.Status].text}
+                </span>
+            )}
+        </p>
+      </div>
+      <div className={styles.desc}>
+        <div className={styles['desc-l']}>
+          <h3>站点信息</h3>
+          <p>区域：{infoWindowData.regionName}</p>
+          <p>经度：{currentClickObj.Longitude}</p>
+          <p>纬度：{currentClickObj.Latitude}</p>
+        </div>
+        <div className={styles['desc-r']}>
+          <img src={imgName} alt="" width="100%" height="100%" />
+        </div>
+      </div>
+      <div className={styles.data}>
+        <h3>
+          {infoWindowData.pollutantTypeCode === 2
+            ? '废气数据'
+            : infoWindowData.pollutantTypeCode === 1
+              ? '废水数据'
+              : '空气质量数据'}
+        </h3>
+        {infoWindowData.pollutantTypeCode === 5 && (
+          <div style={{ marginBottom: 10, fontSize: 13 }}>
+            <span>
+              AQI：
+              <span
+                style={{
+                  background: infoWindowData.AQI_Color,
+                  display: 'inline-block',
+                  width: 30,
+                  textAlign: 'center',
+                  height: 20,
+                  lineHeight: '20px',
+                }}
+              >
+                {infoWindowData.AQI}
+              </span>
+            </span>
+            <Divider type="vertical" />
+            <span>首要污染物：{infoWindowData.PrimaryPollutant}</span>
+          </div>
+        )}
+        <ul>
+          {infoWindowData.list.map(item => {
+            let title = `${item.label}：${item.value}`;
+            if (item.label === '风向') {
+              title = `${item.label}：${getDirLevel(item.value)}`;
+            }
+            return (
+              <Tooltip placement="topLeft" title={title}>
+                <li
+                  className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ''}
+                  title={title}
+                >
+                  {title}
+                </li>
+              </Tooltip>
+            );
+          })}
+        </ul>
+        <p>监控时间：{infoWindowData.MonitorTime}</p>
+      </div>
+</>}
+    </div>
+  );
+};
 
    mapContent = (props) => {
     const { markersList,mapPointLoading,fullScreen,showType,regionMarkers,entMarkers,pointMarkers,entTitleShow,pointTitleShow} = this.state;
@@ -347,10 +543,11 @@ let pollutantType={}
 
     }
     const iconType = {
-      "1": <><img src='/homeWasteWater.png' /> <span className={styles.iconText}>废水</span></>,
-      "2":  <><img src='/homeWasteWater.png' /><span className={styles.iconText}>废气</span></>
+      "1": <><WaterOffline /><span className={styles.iconText}>废水</span></>,
+      "2":  <><GasOffline /><span className={styles.iconText}>废气</span></>
     }
-    const {hoverTitleShow,hoverTitleLngLat,hoverEntTitle,hoverPointTitle } = this.state;
+
+    const {hoverTitleShow,hoverTitleLngLat,hoverEntTitle,hoverPointTitle,pointInfoWindowVisible,infoWindowPos } = this.state;
         return mapPointLoading ?
             <PageLoading />
             :
@@ -374,10 +571,23 @@ let pollutantType={}
                     position={hoverTitleLngLat }
                     autoMove
                     offset={[4, -35]}
+                    className={styles.titleInfoWindow}
                >
                  <div style={{whiteSpace: "nowrap"}} >企业名称：{hoverEntTitle}</div>
                  {showType==3&&<div style={{paddingTop:3,whiteSpace: "nowrap"}}>监测点名称：{hoverPointTitle}</div>}
                    </InfoWindow>
+                   <InfoWindow
+                  
+                  position={infoWindowPos}
+                  visible={pointInfoWindowVisible}
+                  offset={[4, -35]}
+                  autoMove
+                  showShadow
+                  closeWhenClickMap={false}
+                >
+                  {this.infoWindowContent()}
+                  <span onClick={()=>{this.setState({  pointInfoWindowVisible: false})}} style={{position:'absolute',cursor:'pointer',top:0,right:8,fontSize:18}}>×</span>
+                </InfoWindow>
                 <div className={styles.mapBtn}> { /**按钮 */}
                     <Row align='middle'>
                         {typeBtnArr.map((item, index) => {
@@ -391,10 +601,10 @@ let pollutantType={}
                 <RightIconMapComponent />
 
                 <div className={styles.mapEnt} style={{ marginBottom: fullScreen ? 64 : 0 }}> { /**左下家 图标 */}
-                    <div><img src='/homeMapEnt.png' /> <span className={styles.iconText}>企业</span></div>
-                    <div style={{ paddingTop: 9 }}>
+                    <Row align='middle'><EntIcon /><span className={styles.iconText}>企业</span></Row>
+                    <Row align='middle' style={{ paddingTop: 9 }}>
                       {iconType[pollutantType]}
-                      </div>
+                      </Row>
                 </div>
             </Map>
 

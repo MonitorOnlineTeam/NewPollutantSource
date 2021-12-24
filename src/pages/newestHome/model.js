@@ -29,6 +29,10 @@ export default Model.extend({
     mapPointList:[],
     regionMarkers:[],
     mapStatusData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
+    infoWindowData: { //监测点 infoWindow数据
+      list: [],
+      time: undefined
+    },
 
   },
   effects: {
@@ -130,5 +134,53 @@ export default Model.extend({
               message.error(result.Message)
              }    
             },
+   //地图 获取监测点infoWindow数据
+    *getInfoWindowData({
+      payload,
+    }, { call, update, select, put }) {
+      yield update({ infoWindowDataLoading: true })
+      const result = yield call(services.GetPollutantList, { pollutantTypes: payload.pollutantTypes });
+      if (result.IsSuccess) {
+        yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //地图 获取监测点infoWindow数据
+    *getInfoWindowPollutantList({ payload, pollutantList }, { call, update, select, put }) {
+      const result = yield call(services.GetInfoWindowData, payload);
+      console.log("pollutantList=", pollutantList)
+      if (result.IsSuccess) {
+        let list = [];
+        pollutantList.map(item => {
+          result.Datas.map(itm => {
+            if (itm[item.field]) {
+              list.push({
+                label: item.name,
+                value: itm[item.field],
+                key: item.field,
+                title: item.title,
+                status: itm[item.field + "_params"] ? itm[item.field + "_params"].split("§")[0] : null,
+                level: itm[item.field + "_Level"],
+                levelColor: itm[item.field + "_LevelColor"],
+                levelValue: itm[item.field + "_LevelValue"],
+                // ...itm,
+              })
+            }
+          })
+        })
+        console.log("list=", list)
+        let data = result.Datas[0] ? result.Datas[0] : [];
+        yield update({
+          infoWindowDataLoading:false,
+          infoWindowData: {
+            list: list,
+            ...data
+          }
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },     
   },
 })
