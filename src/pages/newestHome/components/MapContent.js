@@ -29,7 +29,7 @@ import moment from 'moment'
 import config from '@/config';
 // import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
 import styles from "../style.less"
-
+import SiteDetailsModal from './springModal/mapModal/SiteDetailsModal'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -48,7 +48,7 @@ let pollutantType={}
     subjectFontSize: newestHome.subjectFontSize,
     mapStatusData:newestHome.mapStatusData,
     infoWindowData: newestHome.infoWindowData,
-
+    infoWindowDataLoading:newestHome.infoWindowDataLoading,
   }))
   class Index extends PureComponent {
     constructor(props) {
@@ -112,7 +112,7 @@ let pollutantType={}
         console.log(showType,11111111)
         if(showType ==3 ){ //监测点弹窗
            const position = marker.De.extData.position;
-           
+           console.log(position)
            this.setState({
               // hoverTitleShow:false,
               currentClickObj: position,
@@ -127,7 +127,7 @@ let pollutantType={}
         const {showType} = this.state;
         if(showType==2 ||showType ==3 ){
            const position = marker.De.extData.position;
-           this.setState({hoverTitleShow:true,hoverEntTitle:position.entName?position.entName:position.ParentName,hoverPointTitle:position.PointName?position.PointName : null,hoverTitleLngLat:{latitude:position.latitude, longitude: position.longitude} })
+           this.setState({pointInfoWindowVisible:false,hoverTitleShow:true,hoverEntTitle:position.entName?position.entName:position.ParentName,hoverPointTitle:position.PointName?position.PointName : null,hoverTitleLngLat:{latitude:position.latitude, longitude: position.longitude} })
         }  
        },
       mouseout:(MapsOption, marker)=>{ //鼠标移出地图容器内时触发
@@ -197,9 +197,9 @@ let pollutantType={}
   getInfoWindowData = () => {
     const { currentClickObj } = this.state;
     this.props.dispatch({
-      type: 'newHome/getInfoWindowData',
+      type: 'newestHome/getInfoWindowData',
       payload: {
-        DGIMNs: currentClickObj.key,
+        DGIMNs: currentClickObj.DGIMN,
         dataType: 'HourData',
         isLastest: true,
         // type: PollutantType,
@@ -419,12 +419,45 @@ let pollutantType={}
   if (infoWindowData.photo) {
     imgName = `/upload/${infoWindowData.photo[0]}`;
   }
-  const typeColorText = {
-      2: {text: '超标', color: '#FF0000'},
-      3: { text: '异常', color: '#FFCC00' },
-      0: { text: '离线', color: '#67666A'},
-      1:{ text: '正常', color: '#14ECDF'},
-   }
+
+ // 获取筛选状态图标颜色
+ const getColor = status => {
+  let color = '';
+  switch (status) {
+    case 0: // 离线
+      color = '#67666A';
+      break;
+    case 1: // 正常
+      color = '#14ECDF';
+      break;
+    case 2: // 超标
+      color = '#FF0000';
+      break;
+    case 3: // 异常
+      color = '#FFCC00';
+      break;
+  }
+  return color;
+};
+
+ const getStatusText = status => {
+  let statusText = '';
+  switch (status) {
+    case 0:
+      statusText = '离线';
+      break;
+    case 1:
+      statusText = '正常';
+      break;
+    case 2:
+      statusText = '超标';
+      break;
+    case 3:
+      statusText = '异常';
+      break;
+  }
+  return statusText;
+};
   return (
     <div className={styles.infoWindowContent} style={{ width: 340, minHeight: 360 }}>
       {this.props.infoWindowDataLoading ? <PageLoading /> :  
@@ -432,14 +465,14 @@ let pollutantType={}
       <>
       <div className={styles.header}>
         <h2>
-          {infoWindowData.entName} - {currentClickObj.title}
+          {infoWindowData.entName} - {currentClickObj.PointName}
         </h2>
         <Button
           type="primary"
           size="small"
           onClick={() => {
             this.props.dispatch({
-              type: 'newHome/updateState',
+              type: 'newestHome/updateState',
               payload: { siteDetailsVisible: true },
             });
           }}
@@ -451,9 +484,9 @@ let pollutantType={}
           {currentClickObj.outPutFlag === 1 ? (
             <span style={{ color: '#836BFB' }}>停运</span>
           ) : (
-               <span style={{ color: currentClickObj.Status&&typeColorText[currentClickObj.Status].color }}>
-                   {currentClickObj.Status&&typeColorText[currentClickObj.Status].text}
-                </span>
+            <span style={{ color: getColor(currentClickObj.Status) }}>
+            {getStatusText(currentClickObj.Status)}
+          </span>
             )}
         </p>
       </div>
@@ -504,7 +537,7 @@ let pollutantType={}
               title = `${item.label}：${getDirLevel(item.value)}`;
             }
             return (
-              <Tooltip placement="topLeft" title={title}>
+              <Tooltip placement="top" title={title}>
                 <li
                   className={infoWindowData.pollutantTypeCode !== 5 ? styles.point : ''}
                   title={title}
@@ -610,13 +643,13 @@ let pollutantType={}
 
     }
     render() {
-       const { fullScreen } = this.state;
-
+       const { fullScreen,currentClickObj } = this.state;
        const MapContent = this.mapContent
     return (
         <div style={{ height: '100%' }} className={`${fullScreen ? `${styles.mapModal}`: ''}`}>
 
                <MapContent /> 
+               <SiteDetailsModal  data={currentClickObj} />
         </div>
 
     )

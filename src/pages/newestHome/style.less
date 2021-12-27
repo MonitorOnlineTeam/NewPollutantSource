@@ -15,7 +15,7 @@
     }
   }
   @media screen and (max-width: 1830px) {
-    *{
+    body,input,img,div,ul,li,a,span,i,p,h1,h2,h3,h4,h5,h6,strong,ins,em,del{
       font-size: 13px;
     }
 }
@@ -294,6 +294,8 @@
     left: 0;
     top: calc(64px)
   }
+  
+
   :global{
   .amap-info-content {
     position: relative;
@@ -370,7 +372,101 @@
       opacity: 0.0;
     }
   }
+  .header {
+    padding: 10px;
+    padding-bottom: 0;
+    border-bottom: 1px dashed #ccc;
+
+    h2 {
+      text-align: center;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+    }
+
+    p {
+      margin-top: 10px;
+
+      span {
+        font-weight: 500;
+        color: #fe0301;
+      }
+    }
+  }
+  .desc {
+    padding: 10px;
+    overflow: hidden;
+    border-bottom: 1px dashed #ccc;
+
+    &>div {
+      width: 50%;
+      float: left;
+    }
+
+    .desc-l {
+      p {
+        margin: 0;
+        padding: 0;
+        line-height: 26px;
+        // color: #5d5d5d;
+      }
+    }
+
+    .desc-r {
+      width: 50%;
+      float: right;
+      /* width: 100px; */
+      height: 120px;
+      background: #ccc;
+
+      img {}
+    }
+  }
+  .data {
+    padding: 10px;
+    padding-bottom: 0;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+
+      li {
+        width: 33%;
+        // background: #e8e8e8;
+        background: #2E3950;
+        line-height: 30px;
+        height: 30px;
+        margin-right: 1px;
+        margin-bottom: 1px;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 0px 8px;
+        font-size: 13px;
+
+        &.point {
+          width: 49%;
+        }
+      }
+    }
+
+    p {
+      padding: 0;
+      margin: 0;
+      margin-top: 6px;
+      // color: #5d5d5d;
+      font-size: 13px;
+    }
+  }
+
 }
+
+
 
 .regPopSty{
   :global {
@@ -423,4 +519,70 @@
   padding: 2px 0;
   // border: 1px solid #ccc;
   // padding-top:30px;
+}
+
+
+.detailsModal { //地图监测点 站点弹框
+
+  :global {
+    .ant-modal-footer {
+      padding: 0;
+    }
+  }
+
+  .modalFooter {
+    height: 100px;
+    background: #dfe6f1;
+
+    ul {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 100px;
+
+      &.center {
+        justify-content: center;
+
+        li {
+          margin-right: 80px;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+
+      li {
+        // margin-right: 80px;
+        text-align: center;
+        cursor: pointer;
+
+        img {
+          border-radius: 50%;
+          width: 56px;
+          box-shadow: 0px 0px 4px 2px #adabab;
+        }
+
+        p {
+          margin-top: 6px;
+        }
+      }
+    }
+  }
+  .basisInfo {
+    display: flex;
+  
+    &>div:first-child {
+      width: 180px;
+      height: 120px;
+  
+      img {
+        height: 100%;
+      }
+    }
+  
+    &>div:last-child {
+      flex: 1;
+      margin-left: 30px;
+    }
+  }
 }

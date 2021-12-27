@@ -33,7 +33,8 @@ export default Model.extend({
       list: [],
       time: undefined
     },
-
+    infoWindowDataLoading:false,
+    siteDetailsVisible:false
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计
@@ -135,9 +136,7 @@ export default Model.extend({
              }    
             },
    //地图 获取监测点infoWindow数据
-    *getInfoWindowData({
-      payload,
-    }, { call, update, select, put }) {
+    *getInfoWindowData({   payload, }, { call, update, select, put }) {
       yield update({ infoWindowDataLoading: true })
       const result = yield call(services.GetPollutantList, { pollutantTypes: payload.pollutantTypes });
       if (result.IsSuccess) {
