@@ -24,9 +24,9 @@ const XinJiang = true;
 // const apiHost = 'http://172.16.9.53:8036/';
 // const apiHost = 'http://220.171.32.30:8180/';  // 运维
 // const apiHost = 'http://172.16.12.61:9090/';
-const apiHost = 'http://172.16.12.152:60060/';
+// const apiHost = 'http://172.16.12.152:60060/';
 // const apiHost = 'http://60.210.111.130:50055';
-
+const apiHost = 'http://60.210.111.130:50058';
 
 // const apiHost = 'http://172.16.9.53:8036/'
 

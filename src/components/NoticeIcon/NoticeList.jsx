@@ -64,12 +64,13 @@ const NoticeList = ({
       return <>
           {record.AlarmType === "2" ? // 数据超标
              
-             <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}&loadtype=bell`} >查看</Link> :
+             <Link to={`/dataSearch/monitor/alarm/overrecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${encodeURIComponent(`${record.ParentName}-${record.PointName}`)}&code=${code}&loadtype=bell`} >查看</Link> :
              record.AlarmType === "0" ? //数据异常
-               <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}&loadtype=bell`} >查看</Link> : 
+               <Link to={`/dataSearch/monitor/alarm/exceptionRecord?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&dataType=${record.DataDtype}&title=${encodeURIComponent(`${record.ParentName}-${record.PointName}`)}&code=${code}&loadtype=bell`} >查看</Link> : 
                record.AlarmType === "12" ? //备案不符
-                 <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparameDetail?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
-                  <></>
+                //  <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparameDetail?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${`${record.ParentName}-${record.PointName}`}&code=${code}`} >查看</Link> :
+                 <Link to={`/dynamicControl/dynamicDataManage/controlData/historyparame?type=alarm&dgimn=${record.DGIMN}&startTime=${startTime}&endTime=${endTime}&title=${encodeURIComponent(`${record.ParentName}-${record.PointName}`)}&code=${code}`} >查看</Link> :      
+                 <></>
  
            }
       </>
