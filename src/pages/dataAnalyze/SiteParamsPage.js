@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2020-01-10 10:44:55
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-15 18:11:17
+ * @Last Modified time: 2021-12-08 16:10:56
  * @Description: 单站多参对比分析
  */
 import React, { PureComponent, Fragment } from 'react';
@@ -164,7 +164,7 @@ class SiteParamsPage extends PureComponent {
   }
 
   cardTitle = () => {
-    const { pollutantList, defaultPollutant, exportLoading } = this.props;
+    const { pollutantList, defaultPollutant, loading, exportLoading } = this.props;
     const { pollutantValue, time, dataType, format } = this.state;
     // const format = dataType === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
     return (
@@ -196,7 +196,7 @@ class SiteParamsPage extends PureComponent {
             dataType: dataType
           })
         }} />
-        <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+        <Button type="primary" loading={loading} style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
         <Button type="primary" loading={exportLoading} style={{ marginRight: 10 }} onClick={this.exportReport}>导出</Button>
       </>
     )

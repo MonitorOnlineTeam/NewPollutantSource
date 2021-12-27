@@ -8,6 +8,7 @@ export default Model.extend({
     Dictionaries: {},
     cementCO2Sum: [],
     cementTableCO2Sum: 0,
+    steelCO2Sum: [],
   },
   effects: {
     // 获取缺省值码表
@@ -30,6 +31,17 @@ export default Model.extend({
       if (response.IsSuccess) {
         yield update({
           cementCO2Sum: response.Datas
+        })
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 钢铁排放量汇总
+    *getSteelCO2Sum({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getSteelCO2Sum, payload);
+      if (response.IsSuccess) {
+        yield update({
+          steelCO2Sum: response.Datas
         })
       } else {
         message.error(response.Message)
@@ -60,6 +72,15 @@ export default Model.extend({
         yield update({
           cementTableCO2Sum: response.Datas
         })
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 判断是否重复 - 是否可添加
+    *JudgeIsRepeat({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.JudgeIsRepeat, payload);
+      if (response.IsSuccess) {
+        callback && callback(response.Datas)
       } else {
         message.error(response.Message)
       }

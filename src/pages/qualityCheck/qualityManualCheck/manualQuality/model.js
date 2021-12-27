@@ -107,17 +107,40 @@ export default Model.extend({
     *getStateAndRecord({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.getStateAndRecord, payload);
       if (result.IsSuccess) {
+        let updateObj = {};
+        updateObj.QCStatus = result.Datas[0].State + "";
+
+        let length = result.Datas.length;
+        // 判断是否显示loading
+        if (length == 4) {
+          // 有结果，并执行完成
+          updateObj.QCAResultLoading = false;
+        } else if (length == 3) {
+          if (result.Datas[2].Result) {
+            updateObj.QCAResultLoading = true;
+            //应答成功，等待下位机执行指令
+          } else {
+            updateObj.QCAResultLoading = false;
+            //应答失败，此时可以下发指令
+          }
+        } else if (length == 2) {
+          updateObj.QCAResultLoading = true;
+          //下发指令，等待下位机应答
+        } else if (length == 1) {
+          //查无质控日志，根据质控仪状态判断
+          // 判断是否正在质控中
+          if (updateObj.QCStatus == "1") {
+            updateObj.QCAResultLoading = true;
+          }
+        }
+
         let marginData = {};
         marginData["a19001"] = result.Datas[0].o2
         marginData["a21002"] = result.Datas[0].nox
         marginData["a21026"] = result.Datas[0].so2
         marginData["n00000"] = result.Datas[0].n2
-        let updateObj = {};
-        updateObj.QCStatus = result.Datas[0].State + "";
-        // 判断是否正在质控中
-        if (updateObj.QCStatus == "1") {
-          updateObj.QCAResultLoading = true;
-        }
+
+
         if (result.Datas[1]) {
           updateObj.QCLogsStart = result.Datas[1];
           updateObj.currentPollutantCode = result.Datas[1].PollutantCode;

@@ -10,31 +10,33 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Input, Select, DatePicker } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Input, Select, DatePicker, message } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import Debounce from 'lodash.debounce';
 
 const industry = INDUSTRYS.cement;
+const SumType = SUMTYPE.cement["热力"]
 const { Option } = Select;
 const CONFIG_ID = 'CementHeatDischarge';
-const SELECT_LIST = [{ "key": 1, "value": "外购热力" }]
+const SELECT_LIST = [{ "key": '1', "value": "外购热力" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
 };
 
-@connect(({ loading, autoForm, global }) => ({
+@connect(({ loading, autoForm, CO2Emissions }) => ({
   loading: loading.effects['autoForm/getAutoFormData'],
   getConfigLoading: loading.effects['autoForm/getPageConfig'],
   fileList: autoForm.fileList,
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
+  cementTableCO2Sum: CO2Emissions.cementTableCO2Sum,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -46,6 +48,51 @@ class index extends PureComponent {
       KEY: undefined,
       FileUuid: undefined,
     };
+  }
+
+  componentDidMount() {
+    this.getCO2TableSum();
+  }
+
+  // 判断是否可添加
+  checkIsAdd = () => {
+    this.formRef.current.validateFields().then((values) => {
+      let { EntCode, MonitorTime, HeatDischargeType } = values;
+      const { KEY, rowTime, rowType } = this.state;
+      let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
+      debugger
+      // 编辑时判断时间是否更改
+      if (KEY && rowTime === _MonitorTime && rowType == HeatDischargeType) {
+        this.onHandleSubmit();
+        return;
+      }
+      this.props.dispatch({
+        type: 'CO2Emissions/JudgeIsRepeat',
+        payload: {
+          EntCode: EntCode,
+          MonitorTime: _MonitorTime,
+          SumType: SumType,
+          TypeCode: HeatDischargeType
+        },
+        callback: (res) => {
+          if (res === true) {
+            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！');
+            return;
+          } else {
+            this.onHandleSubmit();
+          }
+        }
+      });
+    })
+  }
+
+  getCO2TableSum = () => {
+    this.props.dispatch({
+      type: 'CO2Emissions/getCO2TableSum',
+      payload: {
+        SumType: SumType,
+      }
+    });
   }
 
   // 计算排放量
@@ -112,6 +159,7 @@ class index extends PureComponent {
         configId: CONFIG_ID,
       }
     })
+    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -133,7 +181,7 @@ class index extends PureComponent {
 
   render() {
     const { isModalVisible, editData, FileUuid } = this.state;
-    const { tableInfo } = this.props;
+    const { tableInfo, cementTableCO2Sum } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementHeatDischarge.tCO2');
@@ -154,14 +202,21 @@ class index extends PureComponent {
             }}
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementHeatDischarge.AttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid }, () => {
+              this.setState({
+                KEY: key, FileUuid: FileUuid,
+                rowTime: record['dbo.T_Bas_CementHeatDischarge.MonitorTime'],
+                rowType: record['dbo.T_Bas_CementHeatDischarge.HeatDischargeType']
+              }, () => {
                 this.getFormData(FileUuid);
               })
             }}
-            footer={() => <div className="">排放量合计：{count}</div>}
+            onDeleteCallback={() => {
+              this.getCO2TableSum();
+            }}
+            footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             {...layout}
             ref={this.formRef}

@@ -1,3 +1,10 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2021-10-12 13:58:42 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2021-10-12 14:02:17
+ * @Description: 净购入电力
+ */
 import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
@@ -9,14 +16,14 @@ import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import Debounce from 'lodash.debounce';
 
-const industry = INDUSTRYS.electricity;
-const SumType = SUMTYPE.electricity["电力"]
+
+const industry = INDUSTRYS.steel;
 const { Option } = Select;
-const CONFIG_ID = 'CO2PowerDischarge';
-const SELECT_LIST = [{ "key": 1, "value": "外购电力" }]
+const CONFIG_ID = 'SteelDischarge';
+const SELECT_LIST = [{ "key": '1', "value": "外购电力" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -46,6 +53,7 @@ class index extends PureComponent {
     this.getCO2TableSum();
   }
 
+
   // 判断是否可添加
   checkIsAdd = () => {
     this.formRef.current.validateFields().then((values) => {
@@ -62,12 +70,12 @@ class index extends PureComponent {
         payload: {
           EntCode: EntCode,
           MonitorTime: _MonitorTime,
-          SumType: SumType,
+          SumType: 's-dis',
           TypeCode: PowerDischargeType
         },
         callback: (res) => {
           if (res === true) {
-            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！');
+            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！', 6);
             return;
           } else {
             this.onHandleSubmit();
@@ -77,20 +85,21 @@ class index extends PureComponent {
     })
   }
 
+
   getCO2TableSum = () => {
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
-        SumType: SumType,
+        SumType: 's-dis',
       }
     });
   }
+
   // 计算排放量
   countEmissions = () => {
-    // 排放量 = 活动数据 × 排放因子
+    // 化石燃料燃烧排放量 = 活动数据 × 排放因子
     let values = this.formRef.current.getFieldsValue();
-
-    let { EntCode, MonitorTime, ActivityData = 0, Emission = 0 } = values;
+    let { EntCode, MonitorTime, Emission = 0, ActivityData = 0 } = values;
     if (EntCode && MonitorTime) {
       this.props.dispatch({
         type: 'CO2Emissions/countEmissions',
@@ -98,12 +107,10 @@ class index extends PureComponent {
           EntCode: EntCode,
           Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
           IndustryCode: industry,
-          Type: 1,
           CalType: 'w-2',
-          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0 }
+          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0, }
         },
         callback: (res) => {
-          console.log('res=', res)
           this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
         }
       })
@@ -139,6 +146,7 @@ class index extends PureComponent {
           isModalVisible: false,
         })
         this.getTableList();
+        this.getCO2TableSum();
       })
     })
   }
@@ -151,7 +159,6 @@ class index extends PureComponent {
         configId: CONFIG_ID,
       }
     })
-    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -160,7 +167,7 @@ class index extends PureComponent {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_CO2PowerDischarge.PowerDischargeCode': this.state.KEY,
+        'dbo.T_Bas_SteelDischarge.PowerDischargeCode': this.state.KEY,
       },
       callback: (res) => {
         this.setState({
@@ -176,7 +183,6 @@ class index extends PureComponent {
     const { tableInfo, cementTableCO2Sum } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2PowerDischarge.tCO2');
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -193,11 +199,10 @@ class index extends PureComponent {
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2PowerDischarge.AttachmentID')
-              this.setState({
-                KEY: key, FileUuid: FileUuid,
-                rowTime: record['dbo.T_Bas_CO2PowerDischarge.MonitorTime'],
-                rowType: record['dbo.T_Bas_CO2PowerDischarge.PowerDischargeType']
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_SteelDischarge.AttachmentID')
+              this.setState({ KEY: key, FileUuid: FileUuid, 
+                rowTime: record['dbo.T_Bas_SteelDischarge.MonitorTime'],
+                rowType: record['dbo.T_Bas_SteelDischarge.PowerDischargeType']
               }, () => {
                 this.getFormData(FileUuid);
               })
@@ -205,7 +210,7 @@ class index extends PureComponent {
             onDeleteCallback={() => {
               this.getCO2TableSum();
             }}
-            footer={() => <div className="">排放量合计：{count}</div>}
+            footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
           />
         </Card>
         <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>

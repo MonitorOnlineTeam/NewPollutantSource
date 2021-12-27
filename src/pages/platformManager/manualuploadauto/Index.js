@@ -67,11 +67,13 @@ class Index extends Component {
                 <BreadcrumbWrapper >
                     <ContentList DGIMN={DGIMN} />
                 </BreadcrumbWrapper>
-                <NavigationTree runState="1" domId="#manualuploadauto" choice={false} onItemClick={value => {
-                    if (value.length > 0 && !value[0].IsEnt) {
-                        this.changeDgimn(value[0].key)
-                    }
-                }} />
+                <NavigationTree runState="1"
+                    // checkpPol={6}
+                    domId="#manualuploadauto" choice={false} onItemClick={value => {
+                        if (value.length > 0 && !value[0].IsEnt) {
+                            this.changeDgimn(value[0].key)
+                        }
+                    }} />
             </div>
         )
     }

@@ -2,20 +2,21 @@ import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, Button, Popover, DatePicker, Input } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, Button, Popover, DatePicker, message } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import Debounce from 'lodash.debounce';
 
 const { Option } = Select;
 const CONFIG_ID = 'CementAlternativeFuels';
 const SELECT_LISTWhere = [{ "key": 1, "value": "计算" }, { "key": 2, "value": "缺省值" }];
 const industry = INDUSTRYS.cement;
+const SumType = SUMTYPE.cement["替代"]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -28,6 +29,7 @@ const layout = {
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
   Dictionaries: CO2Emissions.Dictionaries,
+  cementTableCO2Sum: CO2Emissions.cementTableCO2Sum,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -50,9 +52,49 @@ class index extends PureComponent {
   }
 
   componentDidMount() {
-
+    this.getCO2TableSum();
   }
 
+  // 判断是否可添加
+  checkIsAdd = () => {
+    this.formRef.current.validateFields().then((values) => {
+      let { EntCode, MonitorTime, FossilType } = values;
+      const { KEY, rowTime, rowType } = this.state;
+      let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
+      debugger
+      // 编辑时判断时间是否更改
+      if (KEY && rowTime === _MonitorTime && rowType == FossilType) {
+        this.onHandleSubmit();
+        return;
+      }
+      this.props.dispatch({
+        type: 'CO2Emissions/JudgeIsRepeat',
+        payload: {
+          EntCode: EntCode,
+          MonitorTime: _MonitorTime,
+          SumType: SumType,
+          TypeCode: FossilType
+        },
+        callback: (res) => {
+          if (res === true) {
+            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！');
+            return;
+          } else {
+            this.onHandleSubmit();
+          }
+        }
+      });
+    })
+  }
+
+  getCO2TableSum = () => {
+    this.props.dispatch({
+      type: 'CO2Emissions/getCO2TableSum',
+      payload: {
+        SumType: SumType,
+      }
+    });
+  }
 
   // 根据企业和时间获取种类
   getCO2EnergyType = (formEidt) => {
@@ -168,6 +210,7 @@ class index extends PureComponent {
           isModalVisible: false,
         })
         this.getTableList();
+        this.getCO2TableSum();
       })
     })
   }
@@ -222,7 +265,7 @@ class index extends PureComponent {
 
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, typeUnit, } = this.state;
-    const { tableInfo, Dictionaries } = this.props;
+    const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CementAlternativeFuels.tCO2');
@@ -251,14 +294,21 @@ class index extends PureComponent {
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementAlternativeFuels.AttachmentID')
               const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CementAlternativeFuels.DevAttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2 }, () => {
+              this.setState({
+                KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2,
+                rowTime: record['dbo.T_Bas_CementAlternativeFuels.MonitorTime'],
+                rowType: record['dbo.T_Bas_CementAlternativeFuels.FossilType']
+              }, () => {
                 this.getFormData();
               })
             }}
-            footer={() => <div className="">排放量合计：{count.toFixed(2)}</div>}
+            onDeleteCallback={() => {
+              this.getCO2TableSum();
+            }}
+            footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             style={{ marginTop: 24 }}
             {...layout}

@@ -116,5 +116,14 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
+    // 判断是否重复 - 是否可添加
+    *JudgeIsRepeat({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.JudgeIsRepeat, payload);
+      if (response.IsSuccess) {
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
   },
 });

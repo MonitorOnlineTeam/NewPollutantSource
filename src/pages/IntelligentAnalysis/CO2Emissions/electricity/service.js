@@ -51,3 +51,9 @@ export async function getCO2EnergyType(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCO2EnergyType', params, null);
   return result;
 }
+
+// 判断是否重复 - 是否可添加
+export async function JudgeIsRepeat(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/JudgeIsRepeat', params, null);
+  return result;
+}

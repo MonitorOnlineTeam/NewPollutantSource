@@ -1,22 +1,29 @@
+/*
+ * @Author: Jiaqi 
+ * @Date: 2021-10-12 14:03:36 
+ * @Last Modified by: Jiaqi
+ * @Last Modified time: 2021-10-12 14:15:02
+ * @Description: 净购入热力
+ */
+
 import React, { PureComponent } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, DatePicker, message } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Input, Select, DatePicker, message } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import _ from 'lodash';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import Debounce from 'lodash.debounce';
 
-const industry = INDUSTRYS.electricity;
-const SumType = SUMTYPE.electricity["电力"]
+const industry = INDUSTRYS.steel;
 const { Option } = Select;
-const CONFIG_ID = 'CO2PowerDischarge';
-const SELECT_LIST = [{ "key": 1, "value": "外购电力" }]
+const CONFIG_ID = 'SteelHeatDischarge';
+const SELECT_LIST = [{ "key": '1', "value": "外购热力" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -49,11 +56,11 @@ class index extends PureComponent {
   // 判断是否可添加
   checkIsAdd = () => {
     this.formRef.current.validateFields().then((values) => {
-      let { EntCode, MonitorTime, PowerDischargeType } = values;
+      let { EntCode, MonitorTime, HeatDischargeType } = values;
       const { KEY, rowTime, rowType } = this.state;
       let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
       // 编辑时判断时间是否更改
-      if (KEY && rowTime === _MonitorTime && rowType == PowerDischargeType) {
+      if (KEY && rowTime === _MonitorTime && rowType == HeatDischargeType) {
         this.onHandleSubmit();
         return;
       }
@@ -62,12 +69,12 @@ class index extends PureComponent {
         payload: {
           EntCode: EntCode,
           MonitorTime: _MonitorTime,
-          SumType: SumType,
-          TypeCode: PowerDischargeType
+          SumType: 's-hd',
+          TypeCode: HeatDischargeType
         },
         callback: (res) => {
           if (res === true) {
-            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！');
+            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！', 6);
             return;
           } else {
             this.onHandleSubmit();
@@ -81,16 +88,16 @@ class index extends PureComponent {
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
-        SumType: SumType,
+        SumType: 's-hd',
       }
     });
   }
+
   // 计算排放量
   countEmissions = () => {
-    // 排放量 = 活动数据 × 排放因子
+    // 化石燃料燃烧排放量 = 活动数据 × 排放因子
     let values = this.formRef.current.getFieldsValue();
-
-    let { EntCode, MonitorTime, ActivityData = 0, Emission = 0 } = values;
+    let { EntCode, MonitorTime, Emission = 0, ActivityData = 0 } = values;
     if (EntCode && MonitorTime) {
       this.props.dispatch({
         type: 'CO2Emissions/countEmissions',
@@ -98,9 +105,8 @@ class index extends PureComponent {
           EntCode: EntCode,
           Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
           IndustryCode: industry,
-          Type: 1,
           CalType: 'w-2',
-          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0 }
+          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0, }
         },
         callback: (res) => {
           console.log('res=', res)
@@ -130,7 +136,7 @@ class index extends PureComponent {
           FormData: {
             ...values,
             MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00"),
-            PowerDischargeCode: KEY
+            HeatDischargeCode: KEY
           },
           reload: KEY ? true : undefined,
         }
@@ -139,6 +145,7 @@ class index extends PureComponent {
           isModalVisible: false,
         })
         this.getTableList();
+        this.getCO2TableSum();
       })
     })
   }
@@ -151,7 +158,6 @@ class index extends PureComponent {
         configId: CONFIG_ID,
       }
     })
-    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -160,7 +166,7 @@ class index extends PureComponent {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_CO2PowerDischarge.PowerDischargeCode': this.state.KEY,
+        'dbo.T_Bas_SteelHeatDischarge.HeatDischargeCode': this.state.KEY,
       },
       callback: (res) => {
         this.setState({
@@ -176,7 +182,6 @@ class index extends PureComponent {
     const { tableInfo, cementTableCO2Sum } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2PowerDischarge.tCO2');
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -193,11 +198,10 @@ class index extends PureComponent {
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2PowerDischarge.AttachmentID')
-              this.setState({
-                KEY: key, FileUuid: FileUuid,
-                rowTime: record['dbo.T_Bas_CO2PowerDischarge.MonitorTime'],
-                rowType: record['dbo.T_Bas_CO2PowerDischarge.PowerDischargeType']
+              const FileUuid = getRowCuid(record, 'dbo.T_Bas_SteelHeatDischarge.AttachmentID')
+              this.setState({ KEY: key, FileUuid: FileUuid, 
+                rowTime: record['dbo.T_Bas_SteelHeatDischarge.MonitorTime'],
+                rowType: record['dbo.T_Bas_SteelHeatDischarge.HeatDischargeType'],
               }, () => {
                 this.getFormData(FileUuid);
               })
@@ -205,7 +209,7 @@ class index extends PureComponent {
             onDeleteCallback={() => {
               this.getCO2TableSum();
             }}
-            footer={() => <div className="">排放量合计：{count}</div>}
+            footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
           />
         </Card>
         <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
@@ -216,6 +220,10 @@ class index extends PureComponent {
               ...editData,
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
+            }}
+            onValuesChange={(changedValues, allValues) => {
+              console.log('changedValues=',changedValues)
+              console.log('allValues=',allValues)
             }}
           >
             <Row>
@@ -240,12 +248,12 @@ class index extends PureComponent {
                   label="时间"
                   rules={[{ required: true, message: '请选择时间!' }]}
                 >
-                  <DatePicker picker="month" style={{ width: '100%' }} />
+                  <DatePicker picker="month" style={{ width: '100%' }} onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="PowerDischargeType"
+                  name="HeatDischargeType"
                   label="种类"
                   rules={[{ required: true, message: '请选择种类!' }]}
                 >
@@ -262,10 +270,13 @@ class index extends PureComponent {
                 <Form.Item
                   name="ActivityData"
                   label="活动数据（MWh）"
-                  rules={[{ required: true, message: '请填写活动数据!' }]}
+                  rules={[
+                    { required: true, message: '请填写活动数据!' },
+                  ]}
                 >
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据"
-                    onChange={Debounce(() => this.countEmissions(), maxWait)}
+                    // onChange={Debounce(() => this.countEmissions(), maxWait)}
+                    onChange={(value) => console.log("value=",value)}
                   />
                 </Form.Item>
               </Col>

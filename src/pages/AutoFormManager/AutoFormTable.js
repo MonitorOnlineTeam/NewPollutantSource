@@ -194,6 +194,9 @@ class AutoFormTable extends PureComponent {
         FormData: JSON.stringify(postData),
         searchParams: searchParams
       },
+      callback: (res) => {
+        this.props.onDeleteCallback && this.props.onDeleteCallback();
+      }
     })
   }
   //批量删除

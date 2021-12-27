@@ -29,3 +29,15 @@ export async function getCO2TableSum(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCO2TableSum', params, null);
   return result;
 }
+
+// 获取水泥排放量
+export async function getSteelCO2Sum(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCO2SteelSumData', params, null);
+  return result;
+}
+
+// 判断是否重复 - 是否可添加
+export async function JudgeIsRepeat(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/JudgeIsRepeat', params, null);
+  return result;
+}

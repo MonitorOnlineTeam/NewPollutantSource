@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-04-23 17:29:17
+ * @Last Modified time: 2021-12-23 11:40:46
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -386,7 +386,7 @@ export default Model.extend({
       }
     },
 
-    * del({ payload }, { call, update, put, select }) {
+    * del({ payload, callback }, { call, update, put, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       // let postData = {
       //   params: { ...payload, searchParams: undefined },
@@ -403,6 +403,7 @@ export default Model.extend({
             searchParams: payload.searchParams,
           },
         });
+        callback && callback();
       }
     },
 
