@@ -162,6 +162,11 @@ const routes = [
             path: '/realtimeLive',
             component: './SC/realtimeLive/M3U8Video',
           },
+          // {
+          //   name: 'test',
+          //   path: '/test',
+          //   component: './AutoFormManager/Test.js',
+          // },
           {
             name: 'home',
             path: '/home',
@@ -1923,6 +1928,42 @@ const routes = [
                   {
                     path: '/Intelligentanalysis/cement/XTCZFQW',
                     component: './IntelligentAnalysis/CO2Emissions/cement/XTCZFQW',
+                  },
+                ]
+              },
+              // 钢铁行业
+              {
+                name: 'cement',
+                path: '/Intelligentanalysis/steel',
+                routes: [
+                  {
+                    path: '/Intelligentanalysis/steel/fossilFuel',
+                    component: './IntelligentAnalysis/CO2Emissions/steel/fossilFuel',
+                  },
+                  {
+                    // 工业生产过程排放
+                    path: '/Intelligentanalysis/steel/industrialProcess',
+                    component: './IntelligentAnalysis/CO2Emissions/steel/industrialProcess',
+                  },
+                  {
+                    // 固碳产品隐含的排放量
+                    path: '/Intelligentanalysis/steel/carbon',
+                    component: './IntelligentAnalysis/CO2Emissions/steel/carbon',
+                  },
+                  {
+                    // 净购入电力
+                    path: '/Intelligentanalysis/steel/electricity',
+                    component: './IntelligentAnalysis/CO2Emissions/steel/electricity',
+                  },
+                  {
+                    // 净购入热力
+                    path: '/Intelligentanalysis/steel/thermal',
+                    component: './IntelligentAnalysis/CO2Emissions/steel/thermal',
+                  },
+                  // 排放量汇总
+                  {
+                    path: '/Intelligentanalysis/steel/CO2DischargeSum',
+                    component: './IntelligentAnalysis/CO2Emissions/steel/CO2DischargeSum',
                   },
                 ]
               },
