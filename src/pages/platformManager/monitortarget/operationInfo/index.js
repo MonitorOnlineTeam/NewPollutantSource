@@ -295,6 +295,7 @@ const projectNumCol =[
     // setChoiceData(value)
     form2.setFieldsValue({PorjectID:record.ID});
     setChoiceData(record.ProjectCode)
+    setPopVisible(false)
   }
   const onClearChoice=(value)=>{
     // choiceArr=value;
@@ -442,14 +443,14 @@ const projectNumCol =[
    </BreadcrumbWrapper>
    
    <Modal
-        title={type==='edit'? '编辑合同':'添加合同'}
+        title={type==='edit'? '编辑运维信息':'添加运维信息'}
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={loadingConfirm}
         onCancel={()=>{setFromVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
-        centered
+        // centered
       >
     <Form
       name="basic2"
@@ -458,7 +459,7 @@ const projectNumCol =[
       <Row>
         <Col span={12}>
         <Form.Item label="监测点列表" name="DGIMN" rules={[  { required: true, message: '请选择监测点列表!',  },]} >
-        <Select placeholder="请选择监测点列表">
+        <Select mode='multiple' placeholder="请选择监测点列表">
           {entPointList[0]&&entPointList.map(item=>{
             return <Option value={item.DGIMN}>{item.PointName}</Option>
           })
@@ -492,13 +493,14 @@ const projectNumCol =[
              </Button>
              </Form.Item>
              </Row>
-               <SdlTable style={{width:800}} loading = {projectNumListLoading} bordered    dataSource={projectTableDatas}   columns={projectNumCol}  />
+               <SdlTable  scroll={{ y: 'calc(100vh - 500px)' }} style={{width:800}} loading = {projectNumListLoading} bordered    dataSource={projectTableDatas}   columns={projectNumCol}  />
                </>}
             title=""
             trigger="click"
             visible={popVisible}
             onVisibleChange={(visible )=>{setPopVisible(visible)}}
             placement="bottom"
+            getPopupContainer={trigger => trigger.parentNode}
           >
            <Select onChange={onClearChoice} allowClear showSearch={false}   value={choiceData} dropdownClassName={styles.projectNumSty} placeholder="请选择项目编号"> </Select>
       </Popover>
