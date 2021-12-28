@@ -26,7 +26,7 @@ const namespace = 'abnormalWorkStatistics'
 
 
 
-const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
+const dvaPropsData =  ({ loading,abnormalWorkStatistics,global }) => ({
   tableDatas:abnormalWorkStatistics.cityTableDatas,
   tableLoading:abnormalWorkStatistics.cityTableLoading,
   tableTotal:abnormalWorkStatistics.cityTableTotal,
@@ -40,6 +40,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   abnormalExceptionExportLoading:loading.effects[`${namespace}/abnormalExceptionTaskListExport`],
   cityDetailExceptionExportLoading:loading.effects[`${namespace}/cityDetailExceptionTaskListExport`],
   abnormalListTotal:abnormalWorkStatistics.abnormalListTotal,
+  clientHeight:global.clientHeight
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -104,15 +105,15 @@ const Index = (props) => {
 
 
  
+  console.log(props)
 
   
     const abnormalTypes = props.location.query.abnormalTypes
     const regionName = props.location.query.regionName
      
-  
   const  { tableDatas,tableTotal,tableLoading,exportLoading,abnormalList,abnormalListTotal,abnormalLoading,cityDetailTableTotal,cityDetailTableDatas,cityDetailTableLoading } = props; 
 
-  const {abnormalExceptionExportLoading,cityDetailExceptionExportLoading } = props;
+  const {abnormalExceptionExportLoading,cityDetailExceptionExportLoading,clientHeight } = props;
 
   useEffect(() => {
     queryFinish()
@@ -862,6 +863,7 @@ const  cityColumnsPush = (col) =>{
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns : alarmColumns}
         pagination={false}
+        // scroll={{ y:props.hideBreadcrumb?clientHeight - 500 : clientHeight - 370}}
       />
       </Card>
            {/*工单异常  城市 详情 弹框*/}

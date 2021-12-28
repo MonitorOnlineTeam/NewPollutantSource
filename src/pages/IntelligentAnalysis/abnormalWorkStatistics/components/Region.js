@@ -17,6 +17,8 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
+import RegionDetail from '../regionDetail'
+
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -25,7 +27,7 @@ const namespace = 'abnormalWorkStatistics'
 
 
 
-const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
+const dvaPropsData =  ({ loading,abnormalWorkStatistics,global }) => ({
   tableDatas:abnormalWorkStatistics.tableDatas,
   pointDatas:abnormalWorkStatistics.pointDatas,
   tableLoading:abnormalWorkStatistics.tableLoading,
@@ -37,7 +39,8 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   abnormalList:abnormalWorkStatistics.abnormalList,
   queryPar:abnormalWorkStatistics.queryPar,
   dateCol:abnormalWorkStatistics.dateCol,
-  abnormalListTotal:abnormalWorkStatistics.abnormalListTotal
+  abnormalListTotal:abnormalWorkStatistics.abnormalListTotal,
+  clientHeight: global.clientHeight,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -91,7 +94,7 @@ const Index = (props,ref) => {
   const  { tableDatas,tableLoading,tableTotal,abnormalTypes,refInstance,abnormalList,abnormalListTotal,abnormalLoading,queryPar,dateCol} = props; 
   
 
-  const { exportCardExceptionLoading, exportResExceptionLoading} = props;
+  const { exportCardExceptionLoading, exportResExceptionLoading,isResponseModal,clientHeight} = props;
 
   useEffect(() => {
 
@@ -111,6 +114,8 @@ const Index = (props,ref) => {
   }
 
 
+
+  
   const columns = [
     {
       title: '序号',
@@ -129,9 +134,9 @@ const Index = (props,ref) => {
       align:'center',
       render:(text,record,index)=>{
         return  <Button type="link"
-         onClick={()=>{          
-          router.push({pathname:`/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }});
-         }}
+         onClick={()=>{   
+            router.push({pathname:`/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }})
+        }}
         >{text}</Button>
       }
     },
@@ -302,8 +307,12 @@ const Index = (props,ref) => {
       render:(text,record,index)=>{
         return  <Button type="link"
          onClick={()=>{
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}});
-         }}
+          !isResponseModal? 
+          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}})
+          :
+          setQuery({query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }})
+          setResponseModelDetail(true) 
+        }}
         >{text}</Button>
       }
     },
@@ -518,7 +527,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   }
    cityColumnsPush(cityColumns)
   cityColumnsPush(cityReponseNumColumns)
-// 暴露的子组件方法，给父组件调用
+// 暴露的子组件方法，给父组件调用 父传子
 const childRef = useRef();
 useImperativeHandle(refInstance,() => {
      return {
@@ -531,15 +540,15 @@ useImperativeHandle(refInstance,() => {
     }
 })
   return (
-      <div>
+      <div style={{height:"100%"}}>
       <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns :alarmColumns }
-        pagination={false}
+        pagination={false} 
+        scroll={{ y:props.hideBreadcrumb?clientHeight - 500 : clientHeight - 370}}
       />
-      
       {/*打卡异常 响应超时 弹框*/}
       <Modal
         title={`${regName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
@@ -558,7 +567,6 @@ useImperativeHandle(refInstance,() => {
         columns={abnormalTypes ==1? cityColumns : cityReponseNumColumns}
         dataSource={abnormalList}
         scroll={{ y: 'calc(100vh - 560px)' }}
-      
         pagination={{
           showSizeChanger: true,
           showQuickJumper: true,
@@ -569,8 +577,9 @@ useImperativeHandle(refInstance,() => {
       }}
       />
    </Card>
- 
+
       </Modal>
+      
         </div>
   );
 };

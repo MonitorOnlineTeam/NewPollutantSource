@@ -21,7 +21,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 import Region from './components/Region'
 import Ent from './components/Ent'
-
+import RegionDetail from './regionDetail'
 const namespace = 'abnormalWorkStatistics'
 
 
@@ -61,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,queryPar } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,queryPar,isResponseModal } = props; 
   
   
   useEffect(() => {
@@ -139,8 +139,8 @@ const Index = (props) => {
     onFinish={onFinish}
     initialValues={{
       exceptionType:1,
-      pollutantType:undefined,
-      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
+      pollutantType:isResponseModal?props.pollutantTypes:undefined,
+      time: isResponseModal?props.time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
   >  
 
@@ -157,12 +157,12 @@ const Index = (props) => {
             <Option value={2}>废气</Option>
             </Select>
         </Form.Item>
-        <Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
+       {!isResponseModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
             <Select style={{width:150}} placeholder='异常类型'>
                 <Option value={1}>打卡异常</Option>
                 <Option value={2}>报警响应超时率</Option>
             </Select>
-        </Form.Item>
+        </Form.Item>}
         <Form.Item>
      <Button  type="primary" htmlType='submit' >
           查询
@@ -172,12 +172,12 @@ const Index = (props) => {
      </Button> 
      
      </Form.Item>
-     <Form.Item>
+     {!isResponseModal&&<Form.Item>
      <Radio.Group defaultValue="1" onChange={showTypeChange} buttonStyle="solid">
       <Radio.Button value="1">行政区</Radio.Button>
       <Radio.Button value="2">企业</Radio.Button>
     </Radio.Group>
-    </Form.Item>
+    </Form.Item>}
       </Row> 
       :
       <>
@@ -229,14 +229,20 @@ const Index = (props) => {
      </Form>
     
   }
+
+  const [responseModelDetail, setResponseModelDetail] = useState(false)
+  const [query, setQuery] = useState({})
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
+    {!responseModelDetail?
     <Card title={searchComponents()}>
-      {showType==1? <Region    ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
+      {showType==1? <Region   isResponseModal={isResponseModal} ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
    </Card>
+   :
+    <RegionDetail location={query}/> //首页报警弹框
+    }
    </BreadcrumbWrapper>
-   
         </div>
   );
 };

@@ -25,6 +25,7 @@ import OperationalExpiraModal from './springModal/operationalExpiration'
 import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
 import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
 import NetworkRateStatisticsModal from './springModal/networkRateStatistics'
+import AlarmResponseTimeoutRateModal from './springModal/alarmResponseTimeoutRate'
 
 const { Option } = Select;
 
@@ -475,6 +476,9 @@ const operationExpiraOption = { //点位到期统计
     case'超标报警核实率':
     setOverVisible(true);
     break;
+    case'报警响应超时率':
+    setAlarmResponseVisible(true)
+    break;
   }
  }
   const {effectiveTransmissionLoading } = props;  //有效传输率
@@ -487,6 +491,7 @@ const operationExpiraOption = { //点位到期统计
   const [OverVisible,setOverVisible] = useState(false)
   const [TVisible,setTVisible] = useState(false)
   const [networkVisible,setNetworkVisible] = useState(false)
+  const [alarmResponseVisible,setAlarmResponseVisible] = useState(false)
 
   
   
@@ -610,7 +615,13 @@ const operationExpiraOption = { //点位到期统计
                 networkRateCancel={() => {
                   setNetworkVisible(false)
                 }} 
-                />          
+                />  
+      <AlarmResponseTimeoutRateModal  //报警响应超时率弹框
+        visible={alarmResponseVisible}
+        type={modalTypes}
+        onCancel={()=>{setAlarmResponseVisible(false)}}
+        time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
+      />        
   </div>
   );
 };

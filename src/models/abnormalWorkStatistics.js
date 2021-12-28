@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from './service';
+import * as services from '../services/abnormalWorkStatistics';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
