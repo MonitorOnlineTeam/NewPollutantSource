@@ -408,6 +408,26 @@ class ManualQualityPage extends Component {
                           let unit = item.GasCode === 'a05001' ? '%' : item.Unit;
                           return <div key={idx} className={styles.button} onClick={() => { this.blindCheckClick(item.GasCode, check.CN, unit) }}> 盲样核查 </div>
                         }
+                        if (check.CN === '3103') {
+                          return <Popconfirm
+                            key={idx}
+                            title={
+                              <div>
+                                <p>
+                                  气路模式：
+                                  <Radio.Group value={GasPathMode} onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
+                                    <Radio value={0}>全程校验</Radio>
+                                  </Radio.Group>
+                                </p>
+                              </div>
+                            }
+                            onConfirm={() =>
+                              this.sendQCACheckCMD(item.GasCode, check.CN)
+                            }
+                          >
+                            <div key={idx} className={styles.button} onClick={() => this.setState({ GasPathMode: 0 })}> {check.Name} </div>
+                          </Popconfirm>
+                        }
                         return <Popconfirm
                           key={idx}
                           title={

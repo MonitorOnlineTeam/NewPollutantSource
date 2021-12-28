@@ -432,11 +432,13 @@ export default Model.extend({
     // log - start
     updateQCLogStart(state, { payload }) {
       let QCLogsStart = state.QCLogsStart;
+      let QCAResultLoading = state.QCAResultLoading;
       console.log("updateQCLogStart=", payload)
       if (payload.DGIMN === state.currentDGIMN) {
-        QCLogsStart = payload
+        QCLogsStart = payload;
+        QCAResultLoading = true;
       }
-      return { ...state, QCLogsStart: QCLogsStart }
+      return { ...state, QCLogsStart: QCLogsStart, QCAResultLoading: QCAResultLoading }
     },
     // log - Answer
     updateQCLogAnswer(state, { payload }) {
