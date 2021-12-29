@@ -21,6 +21,7 @@ import moment from 'moment'
 import styles from "../style.less"
 import { InitVideo } from '@/utils/video';
 import MoreBtn from './publicComponents/MoreBtn'
+import ClockAbnormalModal from './springModal/abnormalWorkStatistics'
 
 const { Option } = Select;
 
@@ -35,7 +36,9 @@ const dvaPropsData = ({ loading, newestHome }) => ({
   consumablesList:newestHome.consumablesList,
   latelyDays30:newestHome.latelyDays30,
   pollType:newestHome.pollType,
-  subjectFontSize:newestHome.subjectFontSize
+  subjectFontSize:newestHome.subjectFontSize,
+  modalType:newestHome.pollType,
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -75,12 +78,16 @@ const Index = (props) => {
   const {pollType,latelyDays7, latelyDays30,subjectFontSize} = props;
 
   const consumablesEchartsRef = useRef(null);
+  const planInsideClockAbnormalEchartsRef = useRef(null);
+  const planOutClockAbnormalEchartsRef = useRef(null);
 
 
   const pollutantType = pollType[props.type]
 
+
   useEffect(() => {
     initData()
+
 
   }, []);
 
@@ -90,6 +97,24 @@ const Index = (props) => {
   
     getExceptionSignTaskRate(latelyDays30); 
     getConsumablesList(latelyDays30)
+
+
+    const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常统计 计划内  点击事件
+     planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
+      setClockAbnormalVisible(true)
+    });
+    const planOutClockAbnormalEchartsInstance = planOutClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常统计 计划外  点击事件
+    planOutClockAbnormalEchartsInstance.getZr().on('click', (params) => {
+      setClockAbnormalVisible(true)
+    });
+
+  //   planInsideClockAbnormalEchartsInstance.getZr().on('mousemove',(params)=> {
+  //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
+  // });
+  
+  //   planOutClockAbnormalEchartsInstance.getZr().on('mousemove', (params)=> {
+  //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
+  // })
   }
 
   const getExceptionSignTaskRate = (date) =>{ //现场打卡异常
@@ -136,7 +161,8 @@ const Index = (props) => {
         color: ['#05ADFB'],
         radius: "85%", //水球的半径
         center: ['50%', '50%'],
-        silent: true,
+        // silent: true,
+        minAngle:100,
         itemStyle: {
           shadowBlur: 0,
         },
@@ -170,7 +196,7 @@ const Index = (props) => {
         backgroundStyle: { //内环
           borderWidth: 5,
           borderColor: '#263249',
-          color: 'none'
+          color: 'none',     
         },
         label: {
           normal: {
@@ -182,7 +208,7 @@ const Index = (props) => {
               //富文本 对字体进一步设置样式。val对应的 value
               val: {
                 fontSize: 20,
-                fontWeight: "bold"
+                fontWeight: "bold",
               }
             }
           }
@@ -333,6 +359,7 @@ const Index = (props) => {
   const deviceAbnormals = () =>{
     console.log(1111)
   }
+
   const deviceAbnormalEcharts = useMemo(()=>{  
 
    return <Row type='flex' align='middle' justify='space-between'>
@@ -364,6 +391,7 @@ const Index = (props) => {
 
   const { exceptionSignTaskRateLoading,exceptionSignTaskRateList } = props; //现场打卡
   const { consumablesLoading } = props; //耗材统计
+  const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
 
@@ -376,6 +404,7 @@ const Index = (props) => {
               <ReactEcharts
                 option={sceneClockOption(`${exceptionSignTaskRateList.insidePlanRate}%`)}
                 style={{ height: '112px', width: '100%' }}
+                ref={planInsideClockAbnormalEchartsRef}
               />
               <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划内打卡异常率</Row>
               <Row justify='center'>
@@ -397,6 +426,7 @@ const Index = (props) => {
               <ReactEcharts
                 option={sceneClockOption(`${exceptionSignTaskRateList.outPlanTaskRate}%`)}
                 style={{ height: '112px', width: '100%' }}
+                ref={planOutClockAbnormalEchartsRef}
               />
               <Row style={{ padding: '3px 0 10px 0', fontWeight: 'bold' }} justify='center' >计划外打卡异常率</Row>
               <Row justify='center'>
@@ -442,7 +472,14 @@ const Index = (props) => {
         </div>
       </Col>
     </Spin>
-
+       <ClockAbnormalModal  //现场打卡异常弹框
+        modalType='clockAbnormal'
+        visible={clockAbnormalVisible}
+        type={pollutantType}
+        onCancel={()=>{setClockAbnormalVisible(false)}}
+        time={[moment(clockBtnCheck.beginTime),moment(clockBtnCheck.endTime)]}
+      />  
+    
     </Row>
   );
 };

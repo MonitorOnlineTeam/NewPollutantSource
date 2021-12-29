@@ -61,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,queryPar,isResponseModal } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,queryPar,isResponseModal,isClockAbnormalModal } = props; 
   
   
   useEffect(() => {
@@ -101,8 +101,9 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
       if(values.time[1].diff(values.time[0], 'days') <= 90){
-
-       pchildref.current._childFn(values.exceptionType);
+      
+       const exceptionType = isResponseModal? 2 : isClockAbnormalModal? 1: values.exceptionType;
+       pchildref.current._childFn(exceptionType);
        props.regEntExceptionTaskList({
           ...values,
           time:undefined,
@@ -110,6 +111,7 @@ const Index = (props) => {
           beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           regionLevel: showType==1? 1 :undefined,
+          exceptionType:exceptionType,
         })
 
 
@@ -132,6 +134,13 @@ const Index = (props) => {
     // onFinish()
 
   // }
+  const resRegionDetailModal = (query) =>{  //首页响应详情弹框
+    setQuery(query)
+    setResponseModelDetail(true)
+  }
+  const responseModelGoBack = (query) =>{ //首页响应详情返回
+    setResponseModelDetail(false)
+  }
   const searchComponents = () =>{
      return <Form
     form={form}
@@ -139,8 +148,8 @@ const Index = (props) => {
     onFinish={onFinish}
     initialValues={{
       exceptionType:1,
-      pollutantType:isResponseModal?props.pollutantTypes:undefined,
-      time: isResponseModal?props.time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
+      pollutantType:isResponseModal||isClockAbnormalModal? props.pollutantTypes : undefined,
+      time: isResponseModal||isClockAbnormalModal? props.time : [moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
   >  
 
@@ -157,7 +166,7 @@ const Index = (props) => {
             <Option value={2}>废气</Option>
             </Select>
         </Form.Item>
-       {!isResponseModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
+       {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
             <Select style={{width:150}} placeholder='异常类型'>
                 <Option value={1}>打卡异常</Option>
                 <Option value={2}>报警响应超时率</Option>
@@ -172,7 +181,7 @@ const Index = (props) => {
      </Button> 
      
      </Form.Item>
-     {!isResponseModal&&<Form.Item>
+     {!isResponseModal||!isClockAbnormalModal&&<Form.Item>
      <Radio.Group defaultValue="1" onChange={showTypeChange} buttonStyle="solid">
       <Radio.Button value="1">行政区</Radio.Button>
       <Radio.Button value="2">企业</Radio.Button>
@@ -237,10 +246,10 @@ const Index = (props) => {
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
     {!responseModelDetail?
     <Card title={searchComponents()}>
-      {showType==1? <Region   isResponseModal={isResponseModal} ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
+      {showType==1? <Region resRegionDetailModal={resRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
    </Card>
    :
-    <RegionDetail location={query}/> //首页报警弹框
+    <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail}  responseModelGoBack={responseModelGoBack} location={query}/> //首页报警弹框
     }
    </BreadcrumbWrapper>
         </div>

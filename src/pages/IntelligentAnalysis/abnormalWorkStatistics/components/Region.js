@@ -94,7 +94,7 @@ const Index = (props,ref) => {
   const  { tableDatas,tableLoading,tableTotal,abnormalTypes,refInstance,abnormalList,abnormalListTotal,abnormalLoading,queryPar,dateCol} = props; 
   
 
-  const { exportCardExceptionLoading, exportResExceptionLoading,isResponseModal,clientHeight} = props;
+  const { exportCardExceptionLoading, exportResExceptionLoading,isResponseModal,isClockAbnormalModal,clientHeight} = props;
 
   useEffect(() => {
 
@@ -310,8 +310,7 @@ const Index = (props,ref) => {
           !isResponseModal? 
           router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}})
           :
-          setQuery({query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }})
-          setResponseModelDetail(true) 
+          props.resRegionDetailModal({query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }})
         }}
         >{text}</Button>
       }
@@ -527,7 +526,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   }
    cityColumnsPush(cityColumns)
   cityColumnsPush(cityReponseNumColumns)
-// 暴露的子组件方法，给父组件调用 父传子
+// 暴露的子组件方法，给父组件调用 父传子值
 const childRef = useRef();
 useImperativeHandle(refInstance,() => {
      return {

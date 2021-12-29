@@ -75,7 +75,7 @@ let pollutantType={}
                   const zoom = aMap.getZoom();
                   const { showType } = this.state;
                   if(zoom>=9&&showType==1){          
-                      this.setState({showType:2})
+                      this.setState({showType:2,pointTitleShow:false})
                       const { entMarkers } = this.state;
                       this.setState({markersList: [...entMarkers]})
                   }
@@ -109,7 +109,6 @@ let pollutantType={}
       clickable: true,
       click: (MapsOption, marker) => {
         const {showType} = this.state;
-        console.log(showType,11111111)
         if(showType ==3 ){ //监测点弹窗
            const position = marker.De.extData.position;
            console.log(position)
@@ -307,7 +306,7 @@ let pollutantType={}
             case '放大':
                 map.zoomIn()
                 if(map.getZoom()>=9&&showType==1){          
-                  this.setState({showType:2})
+                  this.setState({showType:2,pointTitleShow:false})
                   const { entMarkers } = this.state;
                   this.setState({markersList: [...entMarkers]})
               }
@@ -347,7 +346,7 @@ let pollutantType={}
                 break; 
              case '展示监测点':
                 // if(showType!=3){
-                  this.setState({ pointTitleShow:false  })
+                  this.setState({ pointTitleShow:false, entTitleShow:false, })
                   this.loadPointMarkerData(pointMarkers)
                 // }
              break;  
@@ -401,9 +400,9 @@ let pollutantType={}
             return <div style={{position:'relative'}}>   
            {this.getIcon(extData.position.Status)}
            <div className={styles.pulse}></div>
-            {pointTitleShow&&<div> 
-                       <div   className={styles.titlePopSty}>{extData.position.ParentName}</div>
-                       <div   className={styles.titlePopSty}>{extData.position.PointName}</div>
+            {pointTitleShow&&<div  className={styles.pointTitlePopSty}> 
+                       <div   className={styles.titlePopSty} >{extData.position.ParentName}</div>
+                       <div   className={styles.titlePopSty} >{extData.position.PointName}</div>
                       </div>}
             </div>
           }

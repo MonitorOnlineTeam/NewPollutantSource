@@ -25,7 +25,7 @@ import OperationalExpiraModal from './springModal/operationalExpiration'
 import OverVerifyLstModal from '@/pages/IntelligentAnalysis/dataAlarm/overVerifyRate/components/OverVerifyLstModal'
 import TransmissionefficiencyModal from '@/pages/IntelligentAnalysis/newTransmissionefficiency/EntIndexModal'
 import NetworkRateStatisticsModal from './springModal/networkRateStatistics'
-import AlarmResponseTimeoutRateModal from './springModal/alarmResponseTimeoutRate'
+import AlarmResponseTimeoutRateModal from './springModal/abnormalWorkStatistics'
 
 const { Option } = Select;
 
@@ -47,7 +47,6 @@ const dvaPropsData =  ({ loading,newestHome,operationExpirePoint }) => ({
   pollType:newestHome.pollType,
   latelyDays30:newestHome.latelyDays30,
   subjectFontSize:newestHome.subjectFontSize,
-  modalType:newestHome.pollType,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -114,7 +113,7 @@ const Index = (props) => {
 
 
 
-  const  {pollType,modalType,latelyDays30,dataAlarmResData,subjectFontSize } = props; 
+  const  {pollType,latelyDays30,dataAlarmResData,subjectFontSize } = props; 
 
   useEffect(() => {
       initData()
@@ -128,7 +127,7 @@ const Index = (props) => {
     getOperationExpirePointList()
   }
 
-  const pollutantType = pollType[props.type]
+  
 
 
   const getEffectiveTransmissionRateList = (date) =>{//传输有效率
@@ -495,7 +494,7 @@ const operationExpiraOption = { //点位到期统计
 
   
   
-  const modalTypes = modalType[props.type]
+  const pollutantType = pollType[props.type]
   
   const dataAlarmEcharts = useMemo(()=>{
 
@@ -572,21 +571,21 @@ const operationExpiraOption = { //点位到期统计
      </div>
      </Spin>
 
-      <MissingDataRateModal type={modalTypes} //缺失报警响应率弹框
+      <MissingDataRateModal type={pollutantType} //缺失报警响应率弹框
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               setMissingRateVisible(false)
               props.MissingRateDataModal(dataAlarmResBtnCheck)
 
             }} />
-    <AbnormalAlarmRateModal type={modalTypes} //异常报警响应率弹框
+    <AbnormalAlarmRateModal type={pollutantType} //异常报警响应率弹框
             visible={abnormalAlarmRateVisible}
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]} 
             onCancel={() => {
               setAbnormalAlarmRateVisible(false)
               props.AbnormalResRate()
             }} />    
-      <OperationalExpiraModal type={modalTypes} visible={operationalExpiraVisible}
+      <OperationalExpiraModal type={pollutantType} visible={operationalExpiraVisible}
        onCancel={()=>{
          setOperationalExpiraVisible(false);
          props.updateState({checkName:'0~7日'},"operationExpirePoint") //防止影响运维到期点位统计页面
@@ -594,7 +593,7 @@ const operationExpiraOption = { //点位到期统计
        <OverVerifyLstModal //超标报警核实率
               beginTime={dataAlarmResBtnCheck.beginTime}
               endTime={dataAlarmResBtnCheck.endTime}
-              type={modalTypes}
+              type={pollutantType}
               TVisible={OverVisible}
               TCancle={() => {
                 setOverVisible(false)
@@ -607,18 +606,19 @@ const operationExpiraOption = { //点位到期统计
                  TCancle={() => {
                   setTVisible(false)
                 }} 
-                pollutantType={modalTypes}
+                pollutantType={pollutantType}
                 />
       <NetworkRateStatisticsModal  //实时联网率
                 networkRateVisible={networkVisible} 
-                networkType={modalTypes}
+                networkType={pollutantType}
                 networkRateCancel={() => {
                   setNetworkVisible(false)
                 }} 
                 />  
       <AlarmResponseTimeoutRateModal  //报警响应超时率弹框
+        modalType="alarmResponse"
         visible={alarmResponseVisible}
-        type={modalTypes}
+        type={pollutantType}
         onCancel={()=>{setAlarmResponseVisible(false)}}
         time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
       />        

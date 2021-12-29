@@ -36,17 +36,17 @@ class Index extends PureComponent {
   }
 
   render() {
-    const { visible,type,time } = this.props
+    const { visible,type,time,modalType } = this.props
     return (
       <Modal
-        title="报警响应超时率"
+        title= {modalType=='alarmResponse'?"报警响应超时率":"现场打卡异常统计"}
         width={"90vw"}
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
         destroyOnClose
       >
-        <AbnormalWorkStatistics time={time}  pollutantTypes={Number(type)} isResponseModal  hideBreadcrumb/>
+        <AbnormalWorkStatistics time={time}  pollutantTypes={Number(type)} isClockAbnormalModal={modalType=='clockAbnormal'} isResponseModal={modalType=='alarmResponse'}  hideBreadcrumb/>
       </Modal>
     );
   }

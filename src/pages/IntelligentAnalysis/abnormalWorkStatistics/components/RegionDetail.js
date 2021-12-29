@@ -854,7 +854,7 @@ const  cityColumnsPush = (col) =>{
      <Button icon={<ExportOutlined />}  style={{  marginRight: '8px'}}  loading={exportLoading}  onClick={()=>{ exports()} }>
             导出
      </Button> 
-     <Button onClick={() => {history.go(-1); }} icon={<RollbackOutlined />} >返回</Button>
+     <Button onClick={() => {!props.responseModelDetail? history.go(-1): props.responseModelGoBack() }} icon={<RollbackOutlined />} >返回</Button>
      </Form.Item>
     </Form>
     <SdlTable
@@ -863,7 +863,7 @@ const  cityColumnsPush = (col) =>{
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns : alarmColumns}
         pagination={false}
-        // scroll={{ y:props.hideBreadcrumb?clientHeight - 500 : clientHeight - 370}}
+        scroll={{ y:props.hideBreadcrumb?clientHeight - 530 : clientHeight - 400}}
       />
       </Card>
            {/*工单异常  城市 详情 弹框*/}
