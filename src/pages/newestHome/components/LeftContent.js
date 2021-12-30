@@ -20,6 +20,7 @@ import styles from "../style.less"
 import CardHeader from './publicComponents/CardHeader'
 import ScrollTable from './publicComponents/ScrollTable'
 import MoreBtn from './publicComponents/MoreBtn'
+import PlanWorkOrderStatistics from './springModal/planWorkOrderStatistics'
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -265,12 +266,14 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
   return option;
 }
 const planInspection = () =>{ 
-  // let time = currentTabKey === '1' ? [moment().subtract(7, "days").startOf("day"), moment().endOf("day")] : [moment().subtract(30, "days").startOf("day"), moment().endOf("day")]
   console.log(1111)
 }
 
 
-
+const planCalibration = () =>{  //计划校准
+ 
+  setPlanCalibrationVisible(true)
+}
 const moreBtnClick = (type) =>{
   console.log(type)
 }
@@ -292,6 +295,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
      <ReactEcharts
        option={planOperaOption(2)}
        style={{ width: '100%', height: 120 }}
+       onEvents={{click: planCalibration }}
      />
      <div   className={styles.planOperaText}><div style={{fontWeight:'bold'}}>计划校准完成率</div><div>计划内次数：{planOperaList.autoCalibrationAllCount} </div> <div>完成次数：{planOperaList.autoCalibrationCompleteCount} </div></div>
    </Col>
@@ -310,7 +314,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   const  { operationTaskLoading } = props; {/**近30日运维工单 */}
   const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
   const  { planCompleteList,planCompleteListLoading } = props;{/**计划完成率 */}
-
+  const  [planCalibrationVisible,setPlanCalibrationVisible ]  = useState(false)
   return (
     <div>
       <Spin spinning={operationLoading}>
@@ -349,7 +353,14 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
            </div>
           </div>
           </Spin>
-
+      
+       <PlanWorkOrderStatistics  //计划校准完成率弹框
+        modalType="planCalibration"
+        visible={planCalibrationVisible}
+        type={pollutantType}
+        onCancel={()=>{setPlanCalibrationVisible(false)}}
+        time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
+      />  
         </div>
   );
 };

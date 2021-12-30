@@ -61,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar,isPlanCalibrationModal } = props; 
   
   
   useEffect(() => {
@@ -128,9 +128,9 @@ const Index = (props) => {
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
-      pollutantType:undefined,
+      pollutantType:isPlanCalibrationModal? props.pollutantTypes : undefined,
       abnormalType:1,
-      time:[moment(new Date()).add(-80, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
+      time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
   >  
     {showType==1? <Row  align='middle'>
@@ -155,12 +155,12 @@ const Index = (props) => {
      </Button> 
      
      </Form.Item>
-     <Form.Item>
+     {!isPlanCalibrationModal&&<Form.Item>
      <Radio.Group defaultValue="1" onChange={showTypeChange} buttonStyle="solid">
       <Radio.Button value="1">行政区</Radio.Button>
       <Radio.Button value="2">企业</Radio.Button>
     </Radio.Group>
-    </Form.Item>
+    </Form.Item>}
       </Row> 
       :
       <>
@@ -194,7 +194,7 @@ const Index = (props) => {
     
     </Form.Item>
     
-    <Form.Item>
+  <Form.Item>
     <Radio.Group  value={showType} onChange={showTypeChange} buttonStyle="solid">
      <Radio.Button value="1">行政区</Radio.Button>
      <Radio.Button value="2">企业</Radio.Button>
@@ -208,9 +208,9 @@ const Index = (props) => {
   }
   return (
     <div  className={styles.planWorkOrderStatisticsSty}>
-    <BreadcrumbWrapper>
+    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
-      {showType==1? <Region parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
+      {showType==1? <Region isPlanCalibrationModal={isPlanCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
    </Card>
    </BreadcrumbWrapper>
    

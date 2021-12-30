@@ -1,15 +1,15 @@
 /*
  * @Author:jab
- * @Date: 2021.12.28
+ * @Date: 2021.12.30
  * @Last Modified by: 
  * @Last Modified time: 
- * @Description: 报警响应超时弹框 现场打卡异常统计弹框
+ * @Description: 计划巡检完成率弹框 计划校准完成率弹框
  */
 import React, { PureComponent } from 'react';
 import { Modal } from "antd"
 import { connect } from "dva"
 
-import AbnormalWorkStatistics from '@/pages/IntelligentAnalysis/abnormalWorkStatistics'
+import PlanWorkOrderStatistics from '@/pages/Intelligentanalysis/planWorkOrderStatistics'
 
 @connect(({ loading, newestHome, autoForm }) => ({
 }))
@@ -22,11 +22,6 @@ class Index extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.setState({
-      queryCondition: undefined,
-      queryConditions:undefined,
-      cityLevel:true
-    })
   }
 
   // 关闭弹窗
@@ -39,14 +34,14 @@ class Index extends PureComponent {
     const { visible,type,time,modalType } = this.props
     return (
       <Modal
-        title= {modalType=='alarmResponse'?"报警响应超时率":"现场打卡异常统计"}
+        title= {modalType=='planCalibration'?"计划校准完成率":"计划巡检完成率"}
         width={"90vw"}
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
         destroyOnClose
       >
-        <AbnormalWorkStatistics time={time}  pollutantTypes={Number(type)} isClockAbnormalModal={modalType=='clockAbnormal'} isResponseModal={modalType=='alarmResponse'}  hideBreadcrumb/>
+        <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)} isPlanCalibrationModal={modalType=='planCalibration'} isResponseModal={modalType=='alarmResponse'}  hideBreadcrumb/>
       </Modal>
     );
   }

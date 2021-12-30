@@ -64,7 +64,7 @@ export default Model.extend({
     *getMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取监测类别
       const result = yield call(services.GetMonitoringTypeList, payload);
       if (result.IsSuccess) {
-        yield update({ monitoringTypeList: result.Datas })
+        yield update({ monitoringTypeList: result.Datas? result.Datas.mlist : []})
       } else {
         message.error(result.Message)
       }
@@ -74,7 +74,7 @@ export default Model.extend({
       if (payload.id) {
         const result = yield call(services.GetPollutantById, payload);
         if (result.IsSuccess) {
-          yield update({ pollutantTypeList: result.Datas })
+          yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
         } else {
           message.error(result.Message)
         }

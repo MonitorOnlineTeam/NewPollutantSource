@@ -144,7 +144,7 @@ const Index = (props,ref ) => {
 
 
   
-  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance } = props; 
+  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal } = props; 
 
   const {cityTableDatas,cityTableLoading,cityTableTotal} = props; //市级别
 
@@ -1505,6 +1505,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
 
   insideWorkOrderColumnsPush(insideWorkOrderColumns)
   insideWorkOrderColumnsPush2(insideWorkOrderColumns2)
+ 
 
  const  outWorkOrderColumnPush = (col)=>{  //计划外 巡检工单
   if(dateCol&&dateCol[0]){
@@ -1597,10 +1598,18 @@ useImperativeHandle(refInstance,() => {
   },300)
 
  }
+ const handleCol = () =>{
+   if(isPlanCalibrationModal){
+    columns.splice(columns.length-2,1)
+    cityInsideRegColumns.splice(columns.length-1,1) //首页计划校准完成率弹框
+   }
+ }
+ handleCol()
+
   return (
       <div style={{height:'100%'}}>
    
-      <Tabs defaultActiveKey="1"  onChange={tabsChange} style={{height:'100%'}}>
+  {!isPlanCalibrationModal? <Tabs defaultActiveKey="1"  onChange={tabsChange} style={{height:'100%'}}>
     <Tabs.TabPane tab="计划工单统计" key="1">
     <SdlTable
         loading = {tableLoading}
@@ -1620,7 +1629,15 @@ useImperativeHandle(refInstance,() => {
       />
     </Tabs.TabPane>
   </Tabs>
-     
+  :
+  <SdlTable
+  loading = {tableLoading}
+  bordered
+  dataSource={tableDatas}
+  columns={columns}
+  pagination={false}
+  scroll={{ y:clientHeight - 500}}
+/>}
    
 
       {/**市级别弹框 */}

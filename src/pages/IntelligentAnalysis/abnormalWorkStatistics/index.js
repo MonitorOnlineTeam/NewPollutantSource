@@ -138,8 +138,16 @@ const Index = (props) => {
     setQuery(query)
     setResponseModelDetail(true)
   }
-  const responseModelGoBack = (query) =>{ //首页响应详情返回
+  const responseModelGoBack = (query) =>{ //首页响应详情弹框返回
     setResponseModelDetail(false)
+  }
+
+  const clockAbnormalRegionDetailModal = (query) =>{  //首页打卡异常详情弹框
+    setQuery(query)
+    setClockAbnormalModelDetail(true)
+  }
+  const clockAbnormalModelGoBack = (query) =>{ //首页打卡异常详情弹框返回
+    setClockAbnormalModelDetail(false)
   }
   const searchComponents = () =>{
      return <Form
@@ -181,7 +189,7 @@ const Index = (props) => {
      </Button> 
      
      </Form.Item>
-     {!isResponseModal||!isClockAbnormalModal&&<Form.Item>
+     {!isResponseModal&&!isClockAbnormalModal&&<Form.Item>
      <Radio.Group defaultValue="1" onChange={showTypeChange} buttonStyle="solid">
       <Radio.Button value="1">行政区</Radio.Button>
       <Radio.Button value="2">企业</Radio.Button>
@@ -240,16 +248,18 @@ const Index = (props) => {
   }
 
   const [responseModelDetail, setResponseModelDetail] = useState(false)
+  const [clockAbnormalModelDetail, setClockAbnormalModelDetail] = useState(false)
+
   const [query, setQuery] = useState({})
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
-    {!responseModelDetail?
+    {!responseModelDetail&&!clockAbnormalModelDetail?
     <Card title={searchComponents()}>
-      {showType==1? <Region resRegionDetailModal={resRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
+      {showType==1? <Region resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
    </Card>
    :
-    <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail}  responseModelGoBack={responseModelGoBack} location={query}/> //首页报警弹框
+    <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail} clockAbnormalModelDetail={clockAbnormalModelDetail}  responseModelGoBack={responseModelGoBack}clockAbnormalModelGoBack={clockAbnormalModelGoBack}  location={query}/> //首页报警弹框
     }
    </BreadcrumbWrapper>
         </div>

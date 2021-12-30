@@ -24,7 +24,7 @@ export async function DelEquipmentInfo(params) {
 }
 //  获取监测类别
 export async function GetMonitoringTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList',params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
   return result;
 }
 //  获取监测类型

@@ -347,7 +347,7 @@ const Index = (props) => {
       <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
-                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
                   })
                 }   
               </Select>
@@ -494,7 +494,7 @@ const Index = (props) => {
             <Select placeholder='请选择监测类别' allowClear >
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
-                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
                   })
                 }   
               </Select>

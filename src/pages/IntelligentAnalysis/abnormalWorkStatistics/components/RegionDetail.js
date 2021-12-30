@@ -854,7 +854,7 @@ const  cityColumnsPush = (col) =>{
      <Button icon={<ExportOutlined />}  style={{  marginRight: '8px'}}  loading={exportLoading}  onClick={()=>{ exports()} }>
             导出
      </Button> 
-     <Button onClick={() => {!props.responseModelDetail? history.go(-1): props.responseModelGoBack() }} icon={<RollbackOutlined />} >返回</Button>
+     <Button onClick={() => {props.responseModelDetail? props.responseModelGoBack():props.clockAbnormalModelDetail? props.clockAbnormalModelGoBack() : history.go(-1) }} icon={<RollbackOutlined />} >返回</Button>
      </Form.Item>
     </Form>
     <SdlTable
