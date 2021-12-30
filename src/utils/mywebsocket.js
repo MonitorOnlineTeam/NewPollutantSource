@@ -1,7 +1,5 @@
-import Cookie from 'js-cookie';
-import config from '../config';
-import { WaterWave } from '@/pages/dashboard/analysis/components/Charts';
 import ReconnectingWebSocket from './reconnecting-websocket'
+import { notification } from 'antd'
 
 // cg add 2018.4.1
 let websocket = null;
@@ -27,8 +25,17 @@ export function listen(callback) {
       console.log('websocket-open=', true)
     };
 
-    websocket.onclose = event => {
-      console.log('websocket-disconnected');
+    websocket.onclose = e => {
+      console.log('websocket 断开: ' + e.code + '，reason：' + e.reason + '，wasClean：' + e.wasClean)
+      console.log('websocket连接断开：', e)
+      notification.error({
+        duration: 0,
+        message: 'ws连接断开',
+        description:
+          'webscket连接已断开，请重新刷新页面',
+        onClick: () => {
+        },
+      });
     };
 
     websocket.onerror = event => {

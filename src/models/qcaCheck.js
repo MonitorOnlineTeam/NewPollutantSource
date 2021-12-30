@@ -43,7 +43,13 @@ export default Model.extend({
     *getResTimeCheckTableData({ payload, }, { call, update, put, take, select }) {
       const result = yield call(services.getResTimeCheckTableData, payload);
       if (result.IsSuccess) {
-        yield update({ resTimeCheckTableData: result.Datas })
+        let data = result.Datas.map(item => {
+          if (item.Result === 1 && item.AvgTime == 0) {
+            return { ...item, AvgTime: '-' }
+          }
+          return item;
+        })
+        yield update({ resTimeCheckTableData: data })
       } else {
         message.error(result.Message)
       }

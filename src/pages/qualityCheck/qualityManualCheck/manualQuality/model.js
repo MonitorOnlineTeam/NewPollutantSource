@@ -383,11 +383,12 @@ export default Model.extend({
         let QCStatus = state.QCStatus;
         if (payload.Code === "i32002") {
           QCStatus = payload.Value;
-          if (payload.Value == 1) {
-            QCAResultLoading = true
-          } else {
-            QCAResultLoading = false
-          }
+          console.log('质控状态：', payload.Value)
+          // if (payload.Value == 1) {
+          //   QCAResultLoading = true
+          // } else {
+          //   QCAResultLoading = false
+          // }
         }
         // 压力异常
         let p2Exception = state.p2Exception;
@@ -464,6 +465,8 @@ export default Model.extend({
       debugger
       if (payload.Result === false) {
         QCAResultLoading = false;
+      }else{
+        QCAResultLoading = true;
       }
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsAnswer = payload;
@@ -480,8 +483,8 @@ export default Model.extend({
         let QCLogsResult = state.QCLogsResult;
         let QCAResultLoading = state.QCAResultLoading;
         QCLogsResult = payload
-        // QCAResultLoading = false;
-        return { ...state, QCLogsResult: QCLogsResult }
+        QCAResultLoading = false;
+        return { ...state, QCLogsResult: QCLogsResult, QCAResultLoading: QCAResultLoading }
       }
       return { ...state }
     },
