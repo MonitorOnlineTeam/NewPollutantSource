@@ -265,14 +265,15 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
   };
   return option;
 }
-const planInspection = () =>{ 
-  console.log(1111)
-}
 
 
-const planCalibration = () =>{  //计划校准
+const planCalibration = () =>{  //计划校准弹框
  
   setPlanCalibrationVisible(true)
+}
+
+const  planInspection = () =>{ //计划巡检弹框
+  setPlanInspectionVisible(true)
 }
 const moreBtnClick = (type) =>{
   console.log(type)
@@ -315,6 +316,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
   const  { planCompleteList,planCompleteListLoading } = props;{/**计划完成率 */}
   const  [planCalibrationVisible,setPlanCalibrationVisible ]  = useState(false)
+  const  [planInspectionVisible,setPlanInspectionVisible] = useState(false)
   return (
     <div>
       <Spin spinning={operationLoading}>
@@ -359,6 +361,13 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         visible={planCalibrationVisible}
         type={pollutantType}
         onCancel={()=>{setPlanCalibrationVisible(false)}}
+        time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
+      />  
+         <PlanWorkOrderStatistics  //计划巡检完成率弹框
+        modalType="planInspection"
+        visible={planInspectionVisible}
+        type={pollutantType}
+        onCancel={()=>{setPlanInspectionVisible(false)}}
         time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
       />  
         </div>

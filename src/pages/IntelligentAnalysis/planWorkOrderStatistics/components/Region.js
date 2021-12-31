@@ -144,7 +144,7 @@ const Index = (props,ref ) => {
 
 
   
-  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal } = props; 
+  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal,isPlanInspectionModal } = props; 
 
   const {cityTableDatas,cityTableLoading,cityTableTotal} = props; //市级别
 
@@ -213,12 +213,17 @@ const Index = (props,ref ) => {
       key:'pointCount',
       align:'center',
       width: 100,
-      render:(text,record,index)=>{
-        return  <Button type="link"
-         onClick={()=>{
-          insideOperaPointClick(record)
-         }}
-        >{text}</Button>
+      render:(text,record,index)=>{ 
+        if(!isPlanCalibrationModal&&!isPlanInspectionModal){
+          return  <Button type="link"
+          onClick={()=>{
+           insideOperaPointClick(record)
+          }}
+         >{text}</Button>
+        }else{
+          return text;
+        }
+
       }
     },
     {
@@ -1601,7 +1606,11 @@ useImperativeHandle(refInstance,() => {
  const handleCol = () =>{
    if(isPlanCalibrationModal){
     columns.splice(columns.length-2,1)
-    cityInsideRegColumns.splice(columns.length-1,1) //首页计划校准完成率弹框
+    cityInsideRegColumns.splice(cityInsideRegColumns.length-2,1) //首页计划校准完成率弹框
+   }
+   if(isPlanInspectionModal){ 
+    columns.splice(columns.length-1,1)
+    cityInsideRegColumns.splice(cityInsideRegColumns.length-1,1) //首页计划巡检完成率弹框
    }
  }
  handleCol()
@@ -1609,7 +1618,7 @@ useImperativeHandle(refInstance,() => {
   return (
       <div style={{height:'100%'}}>
    
-  {!isPlanCalibrationModal? <Tabs defaultActiveKey="1"  onChange={tabsChange} style={{height:'100%'}}>
+  {!isPlanCalibrationModal&&!isPlanInspectionModal? <Tabs defaultActiveKey="1"  onChange={tabsChange} style={{height:'100%'}}>
     <Tabs.TabPane tab="计划工单统计" key="1">
     <SdlTable
         loading = {tableLoading}

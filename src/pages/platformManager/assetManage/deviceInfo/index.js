@@ -361,7 +361,7 @@ const Index = (props) => {
                  
                  {
                   pollutantTypeList[0]&&pollutantTypeList.map(item => {
-                    return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
+                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
                   })
                 }  
               </Select>}
@@ -511,7 +511,7 @@ const Index = (props) => {
               <Select placeholder='请选择监测类型' allowClear>
                           {
                    addEditPollutantTypeList[0]&&addEditPollutantTypeList.map(item => {
-                    return <Option key={item.PollutantCode} value={item.PollutantCode}>{item.PollutantName}</Option>
+                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
                   })
                 }   
               </Select>}

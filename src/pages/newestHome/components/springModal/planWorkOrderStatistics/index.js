@@ -9,7 +9,7 @@ import React, { PureComponent } from 'react';
 import { Modal } from "antd"
 import { connect } from "dva"
 
-import PlanWorkOrderStatistics from '@/pages/Intelligentanalysis/planWorkOrderStatistics'
+import PlanWorkOrderStatistics from '@/pages/IntelligentAnalysis/planWorkOrderStatistics'
 
 @connect(({ loading, newestHome, autoForm }) => ({
 }))
@@ -41,7 +41,7 @@ class Index extends PureComponent {
         onCancel={this.onCancel}
         destroyOnClose
       >
-        <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)} isPlanCalibrationModal={modalType=='planCalibration'} isResponseModal={modalType=='alarmResponse'}  hideBreadcrumb/>
+        <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)} isPlanCalibrationModal={modalType=='planCalibration'} isPlanInspectionModal={modalType=='planInspection'}  hideBreadcrumb/>
       </Modal>
     );
   }

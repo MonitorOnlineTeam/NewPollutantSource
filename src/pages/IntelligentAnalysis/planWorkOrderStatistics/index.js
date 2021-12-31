@@ -61,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar,isPlanCalibrationModal } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal } = props; 
   
   
   useEffect(() => {
@@ -128,7 +128,7 @@ const Index = (props) => {
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
-      pollutantType:isPlanCalibrationModal? props.pollutantTypes : undefined,
+      pollutantType:isPlanCalibrationModal||isPlanInspectionModal? props.pollutantTypes : undefined,
       abnormalType:1,
       time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
@@ -155,7 +155,7 @@ const Index = (props) => {
      </Button> 
      
      </Form.Item>
-     {!isPlanCalibrationModal&&<Form.Item>
+     {!isPlanCalibrationModal&&!isPlanInspectionModal&&<Form.Item>
      <Radio.Group defaultValue="1" onChange={showTypeChange} buttonStyle="solid">
       <Radio.Button value="1">行政区</Radio.Button>
       <Radio.Button value="2">企业</Radio.Button>
@@ -210,7 +210,7 @@ const Index = (props) => {
     <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
-      {showType==1? <Region isPlanCalibrationModal={isPlanCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
+      {showType==1? <Region isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
    </Card>
    </BreadcrumbWrapper>
    
