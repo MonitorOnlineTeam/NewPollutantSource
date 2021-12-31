@@ -87,7 +87,7 @@ export default Model.extend({
       if (payload.id) {
        const result = yield call(services.GetPollutantById, payload);
         if (result.IsSuccess) {
-          yield update({ addEditPollutantTypeList: result.Datas })
+          yield update({ addEditPollutantTypeList: result.Datas? result.Datas.plist : []})
         } else {
           message.error(result.Message)
         }
