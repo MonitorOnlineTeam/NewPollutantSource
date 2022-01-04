@@ -396,7 +396,7 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
@@ -407,6 +407,7 @@ class AutoFormTable extends PureComponent {
         return {
           ...col,
           width: 200,
+          align:isCenter?'center':'',
           render: (text, record) => {
             const attachmentDataSource = getAttachmentDataSource(text);
             return (
@@ -418,6 +419,7 @@ class AutoFormTable extends PureComponent {
       return {
         ...col,
         width: col.width,
+        align:isCenter&&col.dataIndex!=='dbo.T_Bas_EquipmentHandoverData.Remark'&&col.dataIndex!=='dbo.T_Bas_Storehouse.StorehouseRemark'?'center':'',
         render: (text, record) => {
           text = text ? text + "" : text;
           const type = col.formatType;
@@ -439,7 +441,7 @@ class AutoFormTable extends PureComponent {
             // return <TableText content={text} {...porps} />
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
           }
-          return text && <div className={styles.ellipsisText}>
+          return text && <div className={styles.ellipsisText} style={{display:isCenter?'inline-block':""}}>
             {/* {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             } */}

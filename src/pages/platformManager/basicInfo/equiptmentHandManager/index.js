@@ -4,7 +4,7 @@
  * 创建时间：2021.12.14
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Upload,Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Upload,Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Tabs   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,UploadOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -26,7 +26,7 @@ const { Option } = Select;
 
 const namespace = 'equiptmentHandManager'
 
-
+const { TabPane } = Tabs;
 
 
 const dvaPropsData =  ({ loading,equiptmentHandManager }) => ({
@@ -138,7 +138,7 @@ const Index = (props) => {
       FormData: {
         ...values, 
         "DGIMN":dgimn,
-        "EffectiveDate":moment().format('YYYY-MM-DD'),
+        "EffectiveDate":moment(values["EffectiveDate"]).format('YYYY-MM-DD'),
         "CreateTime":moment().format('YYYY-MM-DD'),
         "DateTimeShort":moment(values["DateTimeShort"]).format('YYYY-MM-DD'),
       },
@@ -269,6 +269,7 @@ const edit3 = (record) =>{
     CreateTime:moment(record["dbo.T_Bas_EquipmentHandoverData.CreateTime"]),
     CreateUserId:record["dbo.T_Bas_EquipmentHandoverData.CreateUserId"],
     DateTimeShort:moment(record["dbo.T_Bas_EquipmentHandoverData.DateTimeShort"]),
+    EffectiveDate:moment(record["dbo.T_Bas_EquipmentHandoverData.EffectiveDate"]),
     Name:record["dbo.T_Bas_EquipmentHandoverData.Name"],
     Remark:record["dbo.T_Bas_EquipmentHandoverData.Remark"],
     ID:record["dbo.T_Bas_EquipmentHandoverData.ID"]
@@ -311,8 +312,15 @@ form2.setFieldsValue({
            {
                 dgimn ?
                 <div>
-                     <Card title='设备运营接手资料'>
-                     <AutoFormTable 
+                   <Card title=''>
+             <Tabs
+                defaultActiveKey="1"
+                onChange={key => {
+                  // this.tabsChange(key);
+                }}
+              >
+                <TabPane tab="设备运营接手资料" key="1">
+                <AutoFormTable 
                             style={{ marginTop: 10 }}
                             // loading={}
                             configId={'EquipmentHandoverData1'}
@@ -326,10 +334,11 @@ form2.setFieldsValue({
                                     Where: '$=',
                                 },
                             ]}
+                            isCenter
                         />
-                        </Card>
-                        <Card title='接手时标准物质信息'>
-                        <AutoFormTable 
+                </TabPane>
+                <TabPane tab="接手时标准物质信息" key="2">
+                <AutoFormTable 
                         style={{ marginTop: 10 }}
                         configId={'EquipmentHandoverData3'}
                         searchParams={[{
@@ -342,10 +351,11 @@ form2.setFieldsValue({
                      onEdit={(record, key) => {
                         edit3(record, key)
                      }}
+                     isCenter
                     />
-                    </Card>
-                    <Card title='设备移交资料'>
-                    <AutoFormTable 
+                </TabPane>
+                <TabPane tab="设备移交资料" key="3">
+                <AutoFormTable 
                     style={{ marginTop: 10 }}
                     configId={'EquipmentHandoverData2'}
                     searchParams={[{
@@ -358,8 +368,11 @@ form2.setFieldsValue({
                  onEdit={(record, key) => {
                     edit2(record, key)
                  }}
+                 isCenter
                 />
-                 </Card>
+                </TabPane>
+                </Tabs>
+                </Card>
                 </div>
                    : <PageLoading />
                     }   

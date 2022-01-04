@@ -243,7 +243,7 @@ const Index = (props) => {
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
-
+    props.addEditPollutantById({id:record.PollutantType})
     form2.resetFields();
     try {
       form2.setFieldsValue({
@@ -269,18 +269,20 @@ const Index = (props) => {
   const add = () => {
     setFromVisible(true)
     setType('add')
+    props.updateState({addEditPollutantTypeList:[]})
     form2.resetFields();
-
+   
   };
 
-  const onFinish  = async () =>{  //查询
-      
+  const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
     try {
       const values = await form.validateFields();
 
       props.getEquipmentInfoList({
         ...values,
-        ManufacturerId:manufacturerId
+        ManufacturerId:manufacturerId,
+        PageIndex:pageIndexs&&!pageIndexs instanceof Object ?pageIndexs:pageIndex,
+        PageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -340,10 +342,10 @@ const Index = (props) => {
     onValuesChange={onValuesChange}
   >  
       <Row>
-      <Form.Item label="设备名称" name="EquipmentName" style={{marginRight:16}}  >
+      <Form.Item label="设备名称" name="EquipmentName"  >
             <Input placeholder="请输入设备名称" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="监测类别" name="PollutantType">
+      <Form.Item label="监测类别" name="PollutantType"  style={{marginLeft:16,marginRight:16}}>
       <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
@@ -352,8 +354,6 @@ const Index = (props) => {
                 }   
               </Select>
       </Form.Item>
-      </Row>
-      <Row>
       <Form.Item label="监测类型" name="PollutantCode"  >
               {loadingGetPollutantById? <Spin size='small' style={{width:200,textAlign:'left'}}/> 
                 :
@@ -366,7 +366,9 @@ const Index = (props) => {
                 }  
               </Select>}
       </Form.Item>
-      <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}} >
+      </Row>
+      <Row>
+      <Form.Item label="状态" name="Status"  style={{marginRight:16}} >
        <Select placeholder='请选择状态' allowClear style={{width:200}}>
            <Option key={1} value={1}>启用</Option>
            <Option key={2} value={2}>停用</Option>
@@ -410,6 +412,14 @@ const Index = (props) => {
       form2.setFieldsValue({PollutantCode:undefined})
     }
   }
+  const handleTableChange = (PageIndex, PageSize) =>{
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex,PageSize)
+  }
+  const [pageSize,setPageSize]=useState(20)
+  const [pageIndex,setPageIndex]=useState(1)
+
   return (
     <div  className={styles.deviceInfoSty}>
 
@@ -449,12 +459,12 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        // pagination={{
-        //   total:tableTotal,
-        //   pageSize: pageSize,
-        //   current: pageIndex,
-        //   onChange: handleTableChange,
-        // }}
+        pagination={{
+          total:tableTotal,
+          pageSize: pageSize,
+          current: pageIndex,
+          onChange: handleTableChange,
+        }}
       />
    </Card>
    </BreadcrumbWrapper>

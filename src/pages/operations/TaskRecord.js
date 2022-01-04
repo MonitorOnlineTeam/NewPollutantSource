@@ -159,6 +159,7 @@ class TaskRecord extends Component {
                     TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                     CompleteTime: baseReportSearchForm.CompleteTime,
                     CreateTime: baseReportSearchForm.CreateTime,
+                    OperationEntID:baseReportSearchForm.OperationEntID,
                     pageIndex: 1,
                 },
         },
@@ -185,6 +186,10 @@ class TaskRecord extends Component {
        type: 'task/GetOperationTaskList',
        payload: {},
      });
+     dispatch({
+      type: 'operations/getOperationCompanyList',
+      payload: {},
+    });
 }
 
    /** 分页 */

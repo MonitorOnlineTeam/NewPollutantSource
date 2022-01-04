@@ -425,7 +425,7 @@ export default {
                     {  //仓库管理
                       name: 'warehouse',
                       path: '/platformconfig/basicInfo/monitortarget/warehouse/:configId',
-                      component: './AutoFormManager',
+                      component: './platformManager/basicInfo/storehouseManager/AutoFormManager',
                     },
                     {  //设备交接资料管理
                       name: 'equiptmentHandManager',
