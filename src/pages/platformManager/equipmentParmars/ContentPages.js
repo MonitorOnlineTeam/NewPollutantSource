@@ -131,6 +131,8 @@ const EditableTable = (props) => {
   const [count, setCount] = useState(513);
   const [DGIMN,setDGIMN] =  useState('')
   const [parametersLists,setParametersLists] =  useState([])
+  const [totalParametersLists,setTotalParametersLists] =  useState([])
+
   const [selectParVal,setSelectParVal] =  useState('')
 
   
@@ -146,8 +148,12 @@ const EditableTable = (props) => {
         setData(res)
       })
     }
-    getParametersInfos(props.DGIMN,(res)=>{setParametersLists(res)});
-
+    getParametersInfos(props.DGIMN,(res)=>{
+      setParametersLists(res)
+    });
+    getParametersInfos('',(res)=>{
+      setTotalParametersLists(res)
+    });
     
   },[props.DGIMN]);
  
@@ -197,8 +203,17 @@ const EditableTable = (props) => {
       const row = await form.validateFields();//触发校验
       const newData = [...data];
       const index = newData.findIndex((item) => record.ID === item.ID);
- 
-     const EquipmentParametersCode=row[`EquipmentParametersCode${record.ID}`],
+
+      let parCode =   totalParametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])
+
+       if(parCode[0]){
+        parCode = row[`EquipmentParametersCode${record.ID}`]
+       }else{
+        //点击编辑为选择测量参数的情况
+        parCode = totalParametersLists.filter(item=>item.Name === row[`EquipmentParametersCode${record.ID}`])[0].ChildID
+      }
+       
+     const EquipmentParametersCode=parCode,
            Range1Min = row[`Range1Min${record.ID}`],
            Range1Max = row[`Range1Max${record.ID}`],
            Range2Min = row[`Range2Min${record.ID}`],
@@ -245,8 +260,13 @@ const EditableTable = (props) => {
          }
        getParametersInfos(DGIMN,(res)=>{setParametersLists(res) }); //重新获取下拉列表
 
-       const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
-
+       let EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])
+        if(EquipmentParametersName[0]){
+          EquipmentParametersName = EquipmentParametersName[0].Name
+        }else{
+           //点击编辑为选择测量参数的情况
+          EquipmentParametersName = row[`EquipmentParametersCode${record.ID}`]
+        }
        if(record.type=='add'){ //添加
 
           // const EquipmentParametersName  = parametersLists.filter(item=>item.ChildID === row[`EquipmentParametersCode${record.ID}`])[0].Name
