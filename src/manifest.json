@@ -1,5 +1,5 @@
 {
-  "name":"设备运维管理平台",
+  "name":"智慧运维管理平台",
   "short_name": "SDL 您身边的污染源监控专家",
   "display": "standalone",
   "start_url": "./?utm_source=homescreen",
