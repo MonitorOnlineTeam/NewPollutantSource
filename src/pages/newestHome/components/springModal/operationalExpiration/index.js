@@ -41,7 +41,7 @@ class Index extends PureComponent {
     return (
       <Modal
         title="运营到期点位统计"
-        width={"90vw"}
+        wrapClassName='spreadOverModal'
         visible={visible}
         footer={false}
         onCancel={this.onCancel}

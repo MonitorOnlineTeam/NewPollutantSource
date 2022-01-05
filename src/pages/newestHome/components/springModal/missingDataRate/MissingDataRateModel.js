@@ -28,7 +28,7 @@ export default class Index extends Component {
     return (
         <Modal
         title={type=='air'? '数据缺失报警响应率(空气站)':'数据缺失报警响应率(企业)'}
-        width={'90%'}
+        wrapClassName='spreadOverModal'
         visible={missingRateVisible}
         onCancel={missingRateCancel}
         footer={null}

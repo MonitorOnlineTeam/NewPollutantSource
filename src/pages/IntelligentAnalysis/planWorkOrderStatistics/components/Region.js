@@ -1645,7 +1645,7 @@ useImperativeHandle(refInstance,() => {
   dataSource={tableDatas}
   columns={columns}
   pagination={false}
-  scroll={{ y:clientHeight - 500}}
+  scroll={{ y:clientHeight - 420}}
 />}
    
 

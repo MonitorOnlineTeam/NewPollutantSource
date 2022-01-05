@@ -549,7 +549,7 @@ useImperativeHandle(refInstance,() => {
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns :alarmColumns }
         pagination={false} 
-        scroll={{ y:props.hideBreadcrumb?clientHeight - 500 : clientHeight - 370}}
+        scroll={{ y:props.hideBreadcrumb?clientHeight - 420: clientHeight - 370}}
       />
       {/*打卡异常 响应超时 弹框*/}
       <Modal

@@ -44,7 +44,7 @@ class Index extends PureComponent {
     return (
       <Modal
         title="异常报警响应率"
-        width={"90vw"}
+        wrapClassName='spreadOverModal'
         visible={visible}
         footer={false}
         onCancel={this.onCancel}

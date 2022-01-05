@@ -579,3 +579,19 @@ a:hover {
    }
  }
  }
+ .spreadOverModal{ //铺满页面的弹框
+   :global{
+    .ant-modal{
+      max-width: 100vw;
+      width: 100vw !important;
+      position: fixed;
+      height: 100vh;
+      top: 64px;
+      bottom: 0;
+      left: 0;
+    }
+    .ant-modal-content{
+     height: 100vh;
+    }
+   }
+ }

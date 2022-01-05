@@ -472,7 +472,7 @@ export default class EntTransmissionEfficiency extends Component {
     return (
       <Modal
       title={`实时联网率 ${ passParame.ProviceName? `-${passParame.ProviceName}` : ''}`}
-      width={'90%'}
+      wrapClassName='spreadOverModal'
       visible={networkRateVisible}
       onCancel={networkRateCancel}
       footer={null}

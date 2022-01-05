@@ -566,8 +566,7 @@ export default class EntIndexModal extends Component {
           title='有效传输率'
           visible={TVisible}
           footer={null}
-          width={'95%'}
-          destroyOnClose
+          wrapClassName='spreadOverModal'
           onCancel={TCancle}>
            {
               !this.state.showDetails && this.showModal()

@@ -35,7 +35,7 @@ class Index extends PureComponent {
     return (
       <Modal
         title= {modalType=='planCalibration'?"计划校准完成率":"计划巡检完成率"}
-        width={"90vw"}
+        wrapClassName='spreadOverModal'
         visible={visible}
         footer={false}
         onCancel={this.onCancel}

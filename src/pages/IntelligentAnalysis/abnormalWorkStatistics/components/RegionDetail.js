@@ -863,7 +863,7 @@ const  cityColumnsPush = (col) =>{
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns : alarmColumns}
         pagination={false}
-        scroll={{ y:props.hideBreadcrumb?clientHeight - 530 : clientHeight - 400}}
+        scroll={{ y:props.hideBreadcrumb?clientHeight - 450 : clientHeight - 400}}
       />
       </Card>
            {/*工单异常  城市 详情 弹框*/}

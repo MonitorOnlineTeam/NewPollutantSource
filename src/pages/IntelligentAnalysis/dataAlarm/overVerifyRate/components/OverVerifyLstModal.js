@@ -646,7 +646,7 @@ export default class OverVerifyLstModal extends Component {
           title='超标报警核实率'
           visible={TVisible}
           footer={null}
-          width={'95%'}
+          wrapClassName='spreadOverModal'
           destroyOnClose
           onCancel={TCancle}>
             {

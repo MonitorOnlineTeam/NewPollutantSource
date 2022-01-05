@@ -40,7 +40,7 @@ class Index extends PureComponent {
     return (
       <Modal
         title= {modalType=='alarmResponse'?"报警响应超时率":"现场打卡异常统计"}
-        width={"90vw"}
+        wrapClassName='spreadOverModal'
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
