@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined,HighlightOutlined,DownOutlined,EllipsisOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined,HighlightOutlined,DownOutlined,EllipsisOutlined,FileTextOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -39,6 +39,7 @@ import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
 import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
+import DeviceManager from './components/deviceManager';
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 let pointConfigId = '';
@@ -78,6 +79,7 @@ export default class MonitorPoint extends Component {
       FormData: null,
       tabKey: "1",
       MNVisible:false,
+      deviceManagerVisible:false
     };
   }
 
@@ -387,6 +389,11 @@ export default class MonitorPoint extends Component {
       MNEcho:MN
     })
   }
+  deviceManager = (row) =>{
+    this.setState({ 
+      deviceManagerVisible:true
+    }) 
+  }
   onSubmitMN= e =>{
     const { dispatch,pointDataWhere } = this.props;
     
@@ -418,7 +425,7 @@ export default class MonitorPoint extends Component {
     });
 
   }
-  onClick = ({ key }) => {
+  onMenuClick = ({ key }) => {
     const { row } = this.state;
 
     if(key==3){ //设置Cems参数
@@ -426,6 +433,9 @@ export default class MonitorPoint extends Component {
     }
     if(key==4){ //修改mn号
       this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
+    }
+    if(key==5){ //设备管理
+     this.deviceManager(row)
     }
   };
   render() {
@@ -460,17 +470,13 @@ export default class MonitorPoint extends Component {
       );
     }
     const menu = (
-      <Menu onClick={this.onClick} >
-        <Menu.Item key="3">
-          <Tooltip title="设置Cems参数"> <a><ToolOutlined style={{fontSize:16}}/></a> </Tooltip></Menu.Item>
+      <Menu onClick={this.onMenuClick} >
+          <Menu.Item key="3"> <Tooltip title="设置Cems参数"> <a><ToolOutlined style={{fontSize:16}}/></a> </Tooltip></Menu.Item>
           <Menu.Item key="4"> <Tooltip title="修改设备编号(MN)">  <a><HighlightOutlined  style={{fontSize:16}}/></a></Tooltip></Menu.Item>
+          <Menu.Item key="5"><Tooltip title="设备管理"> <a><FileTextOutlined  style={{fontSize:16}}/></a>  </Tooltip></Menu.Item>
+    
       </Menu>
     );
-    // const menu2 = (
-    //   <Menu onClick={this.onClick}>
-    //       <Menu.Item key="4"> <Tooltip title="修改设备编号(MN)">  <a><HighlightOutlined  style={{fontSize:16}}/></a></Tooltip></Menu.Item>
-    //   </Menu>
-    // );
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
@@ -583,7 +589,12 @@ export default class MonitorPoint extends Component {
                             this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
                           }}><HighlightOutlined  style={{fontSize:16}}/></a>
                         </Tooltip></>
-                    
+                        <Divider type="vertical" />
+                        <Tooltip title="设备管理">
+                          <a onClick={() => {
+                            this.deviceManager(row);
+                          }}><FileTextOutlined  style={{fontSize:16}}/></a>
+                        </Tooltip>
 
                      {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
@@ -676,6 +687,18 @@ export default class MonitorPoint extends Component {
                             )} 
            </Form.Item>
       </Form>
+          </Modal>
+
+          <Modal  //设备管理
+            title="废气-常规CEMS"
+            visible={this.state.deviceManagerVisible}
+            onCancel={()=>{this.setState({deviceManagerVisible:false})}}
+            width="90%"
+            destroyOnClose
+            footer={false}
+            wrapClassName={styles.deviceManagerSty}
+          >
+            <DeviceManager />
           </Modal>
         </div>
         {/* </MonitorContent> */}
