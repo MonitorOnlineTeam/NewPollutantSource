@@ -187,23 +187,21 @@ class Test extends PureComponent {
           <Card>
             <Form layout="inline" style={{ marginBottom: 10 }}>
               <Row>
-                <FormItem label={<span >异常开始时间</span>}>
+                <FormItem label={<span >异常时间</span>}>
                   {getFieldDecorator('time1', {
                     initialValue: [moment().subtract(1, 'month'), moment()]
                   })(
                     <RangePicker showTime format="YYYY-MM-DD HH" />
                   )}
                 </FormItem>
-                <FormItem label={<span>异常结束时间</span>}>
+                {/* <FormItem label={<span>异常结束时间</span>}>
                   {getFieldDecorator('time2', {
                     // initialValue: [moment().subtract(1, 'month'), moment()]
                   })(
                     <RangePicker showTime format="YYYY-MM-DD HH" />
                   )}
-                </FormItem>
-              </Row>
-              <Row>
-                <FormItem label={<span >异常数据类型</span>}>
+                </FormItem> */}
+                                <FormItem label={<span >异常数据类型</span>}>
                   {getFieldDecorator('DataType', {
                     // initialValue: ["HourData"]
                   })(
@@ -230,8 +228,13 @@ class Test extends PureComponent {
                   >
                     添加
                   </Button>
-                  <span style={{ color: "red", marginLeft: 10 }}>上报停运时段以外，监测数据发生异常的异常报告信息。</span>
                 </div>
+
+              </Row>
+              <Row>
+
+              
+                <span style={{ color: "red"}}>上报停运时段以外，监测数据发生异常的异常报告信息。</span>
               </Row>
             </Form>
             <SdlTable align="center" loading={queryLoding} columns={columns} dataSource={tableDataSource} />
