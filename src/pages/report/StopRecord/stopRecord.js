@@ -205,14 +205,14 @@ class index extends PureComponent {
         const { Begintime,Endtime} = this.state;
         
         return <>
-            <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
+            <label style={{fontSize:14}}>停运时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                 (dates, dataType) => {
                     this.setState({
                         Begintime: dates
                     })
                 }
             } />
-            <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
+            {/* <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
             onRef={this.onRef1} isVerification={true} dateValue={Endtime} 
             style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                 (dates, dataType) => {
@@ -221,10 +221,8 @@ class index extends PureComponent {
                         Endtime: dates
                     })
                 }
-            } />
-            
-            <div style={{ marginTop: 10,fontSize:14 }}>
-                <label>行政区:</label><Select
+            } /> */}
+                            <label>行政区:</label><Select
                     allowClear
                     showSearch
                     style={{ width: 200, marginLeft: 10, marginRight: 10 }}
@@ -252,7 +250,7 @@ class index extends PureComponent {
                     }}>
                     {this.children()}
                 </Select>
-               
+            <div style={{ marginTop: 10,fontSize:14 }}>    
                 <label>企业列表:</label><Select
                     allowClear
                     showSearch

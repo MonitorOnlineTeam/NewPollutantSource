@@ -419,28 +419,29 @@ export default class EntTransmissionEfficiency extends Component {
             <Form layout="inline">
             { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
             <Row>
-            <Form.Item label='异常开始时间'>
-             <RangePicker_   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
+            <Form.Item label='异常时间'>
+             <RangePicker_   style={{minWidth: '200px', marginRight: '13px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
             callback={(dates, dataType)=>this.dateChange(dates, dataType)}
             onRef={(ref) => {
               this.child = ref;
             }} 
             />
               </Form.Item>
-              <Form.Item label='异常截止时间'>
+              {/* <Form.Item label='异常截止时间'>
              <RangePicker_    style={{minWidth: '200px', marginRight: '10px'}} dateValue={['','']} 
             callback={(dates, dataType)=>this.dateChange2(dates, dataType)}
             onRef={(ref) => {
               this.child2 = ref;
             }} 
             />
-              </Form.Item>
-              </Row>
-          <Form.Item label='行政区'>
+              </Form.Item> */}
+            <Form.Item label='行政区'>
              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
             </Form.Item>
+              </Row>
+
               <Form.Item label='企业列表'>
-               <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} />
+               <EntAtmoList  style={{ width: 166  }} changeEnt={this.changeEnt} EntCode={EntCode} />
               </Form.Item>  
               <Form.Item label='监测点' style={{paddingLeft:10}}>
                <Select
