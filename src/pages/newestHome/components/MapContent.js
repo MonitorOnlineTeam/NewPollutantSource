@@ -379,6 +379,7 @@ let pollutantType={}
 
       renderMarkers = (extData) =>{
         const {showType,entTitleShow,pointTitleShow } = this.state;
+        const alarmStatus = extData.position.alarmStatus;
            if(showType==1){
             return <div style={{position:'relative'}}>    
             <Popover overlayClassName={styles.regPopSty} title={extData.position&&extData.position.regionName} getPopupContainer={trigger => trigger.parentNode}    visible={showType==1} placement="top" content={this.regPopovercontent(extData)} >
@@ -391,7 +392,7 @@ let pollutantType={}
             return <div style={{position:'relative'}}> 
                    {/* <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/> */}
                    <EntIcon />
-                   <div className={styles.pulse}></div>
+                   <div className={alarmStatus==1?styles.abnormalPaulse:alarmStatus==2?styles.overPaulse:''}></div>
             {entTitleShow&&<div  className={styles.titlePopSty}> 
                        {entName}
                       </div>}
@@ -399,7 +400,7 @@ let pollutantType={}
           }else{
             return <div style={{position:'relative'}}>   
            {this.getIcon(extData.position.Status)}
-           <div className={styles.pulse}></div>
+           <div className={alarmStatus==1?styles.abnormalPaulse:alarmStatus==2?styles.overPaulse:'' }></div>
             {pointTitleShow&&<div  className={styles.pointTitlePopSty}> 
                        <div   className={styles.titlePopSty} >{extData.position.ParentName}</div>
                        <div   className={styles.titlePopSty} >{extData.position.PointName}</div>

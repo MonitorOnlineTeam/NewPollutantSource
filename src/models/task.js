@@ -18,7 +18,8 @@ import {
     GetOperationLogList, GetFailureHoursRecord,
      GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
      GetStandardLiquidRepalceRecordList,
-     GetCooperationInspectionRecordList
+     GetDataConsistencyRecordForPCList,
+     GetDataConsistencyRecordNewForPCList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -44,6 +45,8 @@ export default Model.extend({
         AlarmResponseList: [],
         operationLogList: null, // 运维记录列表
         cooperatInspectionRecordList:null, //配合检查记录
+        dataConsistencyRecordList:null,//数据一致性检查表 实时
+        dataConsistencyDateRecordList:null,//数据一致性检查表 小时与日数据
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -431,6 +434,24 @@ export default Model.extend({
             if (DataInfo.IsSuccess) {
                 yield update({
                     cooperatInspectionRecordList: DataInfo.Datas,
+                });
+            }
+        },
+        //  数据一致性检查表 实时
+        * GetDataConsistencyRecordForPCList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetDataConsistencyRecordForPCList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    dataConsistencyRecordList: DataInfo.Datas,
+                });
+            }
+        },
+       //  数据一致性检查表 小时与与日数据
+        * GetDataConsistencyRecordNewForPCList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetDataConsistencyRecordNewForPCList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    dataConsistencyDateRecordList: DataInfo.Datas,
                 });
             }
         },

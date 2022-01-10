@@ -342,3 +342,15 @@ export async function GetCooperationInspectionRecordList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetCooperationInspectionRecordList', params , null);
     return result === null ? { Datas: null } : result;
 }
+
+/** 数据一致性检查表 实时 */
+export async function GetDataConsistencyRecordForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetDataConsistencyRecordForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}
+
+/** 数据一致性检查表 小时与日数据 */
+export async function GetDataConsistencyRecordNewForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetDataConsistencyRecordNewForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}

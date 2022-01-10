@@ -48,19 +48,28 @@ class FailureHoursRecord extends Component {
                 rtnVal.push(
                     <tr>
                         <td style={{ width: '18%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                            {index + 1}
+                        </td>
+                        <td  style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
+                            {item.PollutantName}
+                        </td>
+                        <td  style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                            {item.ExceptionTypeName}
+                        </td>
+                        <td  style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
                             {item.BeginTime}
                         </td>
-                        <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
+                        <td style={{ width: '18%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                             {item.EndTime}
                         </td>
-                        <td colSpan="3" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                        <td  style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
                             {item.Hour}
                         </td>
-                        <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
+                        <td  style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
                             {item.Remark}
-                        </td>
+                        </td>                    
                     </tr>
-                );
+                ); 
             });
         }
         else{
@@ -105,61 +114,83 @@ class FailureHoursRecord extends Component {
         }
         return (
             <div className={styles.FormDiv} style={style}>
-                <div className={styles.FormName}>设备故障小时数记录表</div>
-                {/* <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content !== null ? Content.EnterpriseName : null}</div> */}
+                 <div className={styles.FormName}></div>
                 <table
                     className={styles.FormTable}
                 >
                     <tbody>
+                         <tr>
+                            <td colSpan="7"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
+                             异常小时记录表
+                            </td>
+                        </tr> 
                         <tr>
-                            <td colSpan="2" style={{ width: '12%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                统计开始时间
+                            <td colSpan="2" style={{ width: '18%',minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        维护管理单位
                             </td>
-                            <td colSpan="2" style={{ width: '16%', minWidth: 150, textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ? Content.BeginTime : null}
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
+                                {Content !== null ?Content.MaintenanceManagementUnit:null}
                             </td>
-                            <td colSpan="2" style={{ width: '13%', minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                统计结束时间
+                            <td colSpan="1" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                        安装地点
                             </td>
-                            <td colSpan="2" style={{ width: '13%', minWidth: 100, textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ? Content.EndTime : null}
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                {Content !== null ?Content.PointPosition:null}
                             </td>
-                            {/* <td colSpan="2" style={{ width: '12%',minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        设备编号
-                            </td>
-                            <td colSpan="2" style={{ width: '30%',minWidth: 200, textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ?Content.EquipmentCode:null}
-                            </td> */}
                         </tr>
                         <tr>
-                            <td style={{ width: '18%', minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                开始时间
+                            <td colSpan="2" style={{ width: '18%',minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        统计开始时间
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 200 }}>
-                                结束时间
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
+                                {Content !== null ?Content.BeginTime:null}
                             </td>
-                            <td colSpan="3" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                故障小时个数
+                            <td colSpan="1" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                         统计结束时间
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', minWidth: 250 }}>
-                                故障原因
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                {Content !== null ?Content.EndTime:null}
+                            </td>
+                        </tr>
+                        <tr>
+                        <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        序号
+                            </td>
+                            <td style={{ width: '15%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        设备参数类别
+                            </td>
+                            <td style={{ width: '15%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        异常类别
+                            </td>
+
+                            <td style={{ width: '15%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        开始时间
+                            </td>
+                            <td style={{ width: '15%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        结束时间
+                            </td>
+                            <td style={{ width: '15%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        异常小时个数
+                            </td>
+                            <td style={{ width: '15%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                                        异常原因
                             </td>
                         </tr>
                         {
-                            this.renderItem(Record !== null ? Record.RecordList : null)
+                            this.renderItem(Record !== null ?Record.RecordList:null)
                         }
                         <tr>
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                运行维护人员
+                                        运行维护人员
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Record !== null ? Record.CreateUserID : null}
+                            <td colSpan="1" style={{ textAlign: 'center', fontSize: '14px' }}>
+                                {Record !== null ?Record.CreateUserID:null}
                             </td>
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                时间
+                                        时间
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
-                                {Record !== null ? Record.CreateTime : null}
+                                {Record !== null ?Record.CreateTime:null}
                             </td>
                         </tr>
                     </tbody>

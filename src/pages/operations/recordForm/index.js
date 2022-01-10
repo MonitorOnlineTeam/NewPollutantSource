@@ -26,6 +26,9 @@ import SparePartReplaceRecord from '@/pages/EmergencyTodoList/SparePartReplaceRe
 import FailureHoursRecord from '@/pages/EmergencyTodoList/FailureHoursRecord'
 import ReagentReplaceRecord from '@/pages/EmergencyTodoList/ReagentReplaceRecord'
 import CooperaInspection from '@/pages/EmergencyTodoList/CooperaInspection'
+import DataConsistencyRealTime from '@/pages/EmergencyTodoList/DataConsistencyRealTime'
+import DataConsistencyRealDate from '@/pages/EmergencyTodoList/DataConsistencyRealDate'
+
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
 import { router } from 'umi'
@@ -99,6 +102,12 @@ class Index extends Component {
                 break;
             case "62":  //配合检查表单
                 form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;    
+            case "63":  //数据一致性实时表单
+                form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;    
+            case "66":  //数据一致性小时与日数据表单
+                form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    
         }
         return form

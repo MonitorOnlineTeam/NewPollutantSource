@@ -184,7 +184,23 @@ export default {
             {
               path: '/appoperation/appreagentreplaceRecord/:TaskID/:TypeID',
               component: './AppOperation/AppReagentReplaceRecord',
-            },            
+            }, 
+            /* 配合检查记录表 */
+            {
+              path: '/appoperation/appCooperaInspection/:TaskID/:TypeID',
+              component: './AppOperation/AppCooperaInspection',
+            }, 
+            
+            /* 数据一致性记录表 小时与日数据 */
+            {
+              path: '/appoperation/appDataConsistencyRealDate/:TaskID/:TypeID',
+              component: './AppOperation/AppDataConsistencyRealDate',
+            }, 
+            /* 数据一致性记录表 实时数据 */
+            {
+              path: '/appoperation/appDataConsistencyRealTime/:TaskID/:TypeID',
+              component: './AppOperation/AppDataConsistencyRealTime',
+            },                                    
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',

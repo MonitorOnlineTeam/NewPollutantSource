@@ -76,6 +76,7 @@ import styles from './index.less';
                             style={{ marginTop: 10 }}
                             configId={configId}
                             {...this.props}
+                            isCenter
                         >
                         </SdlTable>
                     </Card>

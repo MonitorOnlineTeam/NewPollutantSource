@@ -131,7 +131,7 @@ class EmergencyDetailInfo extends Component {
                 console.log(item.ID)
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60 
-                     || item.ID === 15 || item.ID === 62 ) {
+                     || item.ID === 15 || item.ID === 62 || item.ID === 63 || item.ID === 66 ) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -154,7 +154,7 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.ClfPatrol:
                             this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID);
                             break;
-                        case EnumPsOperationForm.CheckRecord:
+                        case EnumPsOperationForm.CheckRecord: 
                             this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.TestRecord:
@@ -183,7 +183,13 @@ class EmergencyDetailInfo extends Component {
                             break;
                         case EnumPsOperationForm.cooperaInspection:
                             this.GoToForm(taskID, item.CnName, '62', rtnVal, key, item.FormMainID);
-                             break;                                    
+                             break;   
+                        case EnumPsOperationForm.dataConsistencyRealTime: //数据一致性  实时
+                                this.GoToForm(taskID, item.CnName, '63', rtnVal, key, item.FormMainID);
+                             break;   
+                        case EnumPsOperationForm.dataConsistencyDate: //数据一致性  小时与日数据
+                                this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID);
+                             break;                                   
                         default:
                             break;
                     }
@@ -224,7 +230,7 @@ class EmergencyDetailInfo extends Component {
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
                 router.push(`/operations/recordForm/${recordType}/${taskID}`)
             }}
-        >{cnName} 
+        >{cnName}  
         </Button>
         </p>);
     }
