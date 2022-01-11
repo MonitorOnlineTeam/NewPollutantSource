@@ -122,7 +122,7 @@ class RepalceRecordList extends Component {
                       {RecordList?
                       <>
                         <tr>
-                              <td  rowSpan={RecordList&&RecordList.length + 1} style={{ minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                              <td  rowSpan={RecordList.length + 1} style={{ minWidth: 100, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         实时数据
                             </td>  
                              {ColumnList&&ColumnList.map(item=>{

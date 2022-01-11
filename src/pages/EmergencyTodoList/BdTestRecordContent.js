@@ -51,11 +51,11 @@ class BdTestRecordContent extends Component {
             record.map((item, key) => {
                 rtnVal.push(
                     <tr key={key + 1}>
-                        <td>{item.InstrumentName}</td>
-                        <td>{item.InstrumentCode}</td>
-                        <td>{item.Manufacturer}</td>
-                        <td>{item.TestItem}</td>
-                        <td colSpan="2">{item.TestPrinciple}</td>
+                        <td>{item.EquipmentName}</td>
+                        <td>{item.EquipmentType}</td>
+                        <td>{item.ManufacturerName}</td>
+                        <td>{item.PollutantName}</td>
+                        <td colSpan="2">{item.AnalyticalMethod}</td>
                     </tr>
                 );
             });
@@ -230,8 +230,8 @@ class BdTestRecordContent extends Component {
             record.map((item, key) => {
                 rtnVal.push(
                     <tr key={key + 1}>
-                        <td>{item.StandardGasName}</td>
-                        <td>{item.Ndz}</td>
+                        <td>{item.Name}</td>
+                        <td>{item.ConcentrationValue}</td>
                         <td>{item.Manufacturer}</td>
                     </tr>
                 );
@@ -261,10 +261,10 @@ class BdTestRecordContent extends Component {
             record.map((item, key) => {
                 rtnVal.push(
                     <tr key={key + 1}>
-                        <td>{item.TestItem}</td>
-                        <td>{item.TestEquipmentManufacturer}</td>
-                        <td>{item.TestEquipmenCode}</td>
-                        <td>{item.MethodBasis}</td>
+                        <td>{item.Name}</td>
+                        <td>{item.Manufacturer}</td>
+                        <td>{item.EquipmentModel}</td>
+                        <td>{item.TestMethod}</td>
                     </tr>
                 );
             });
@@ -295,7 +295,10 @@ class BdTestRecordContent extends Component {
         const SCREEN_HEIGHT = this.props.scrolly === "none" ? { overflowY: 'none' } : { height: document.querySelector('body').offsetHeight - 250 };
         const Record = this.props.BdRecord !== null ? this.props.BdRecord.Record : null;
         const Content = Record !== null ? Record.Content : null;
-        let SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
+        const StandardGasList = this.props.BdRecord !== null ? this.props.BdRecord.StandardGasList : null;
+        const TestEquipmentList = this.props.BdRecord !== null ? this.props.BdRecord.TestEquipmentList : null;
+        const EquipmentInfoList = this.props.BdRecord !== null ? this.props.BdRecord.EquipmentInfoList : null;
+       let SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
         if (this.props.isloading) {
             return (<Spin
                 style={{
@@ -314,14 +317,14 @@ class BdTestRecordContent extends Component {
                 <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content !== null ? Content.EnterpriseName : null}</div>
                 <table className={styles.FormTable}>
                     <tbody>
-                        <tr>
+                        {/* <tr>
                             <td style={{ minWidth: 150 }}>
                                 CEMS供应商：
                             </td>
                             <td colSpan="5" style={{ minWidth: 150 }}>
                                 {Content !== null ? Content.CemsSupplier : null}
                             </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                             <td colSpan="6" style={{ textAlign: 'center', fontWeight: 'bold', borderBottom: '0' }}>
                                 CEMS主要仪器型号：
@@ -332,7 +335,7 @@ class BdTestRecordContent extends Component {
                                 <table style={{ width: '100%', marginTop: '0', marginBottom: '0' }} className={styles.FormTable}>
                                     <tbody>
                                         {
-                                            this.renderCemsMainInstrument(Content !== null ? Content.cemsMainInstrumentCode : null)
+                                            this.renderCemsMainInstrument(EquipmentInfoList)
                                         }
                                     </tbody>
                                 </table>
@@ -460,7 +463,7 @@ class BdTestRecordContent extends Component {
                         {this.renderCemsTestInfo(Record !== null ? Record.RecordList : null, '湿度')}
                         <tr>
                             <td rowSpan="6">校验结论</td>
-                            <td colSpan="5">如校验合格前对系统进行过处理、调整、参数修改，请说明：</td>
+                            <td colSpan="5" className={styles.tdTitle}>如校验合格前对系统进行过处理、调整、参数修改，请说明：</td>
                         </tr>
                         <tr>
                             <td colSpan="5">
@@ -468,7 +471,7 @@ class BdTestRecordContent extends Component {
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="5">如校验后，颗粒物测量仪、流速仪的原校正系统改动，请说明：</td>
+                            <td colSpan="5" className={styles.tdTitle}>如校验后，颗粒物测量仪、流速仪的原校正系统改动，请说明：</td>
                         </tr>
                         <tr>
                             <td colSpan="5">
@@ -476,7 +479,7 @@ class BdTestRecordContent extends Component {
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="5">总体校验是否合格：</td>
+                            <td colSpan="5" className={styles.tdTitle}>总体校验是否合格：</td>
                         </tr>
                         <tr>
                             <td colSpan="5">
@@ -491,7 +494,7 @@ class BdTestRecordContent extends Component {
                                 <table style={{ width: '100%', marginTop: '0', marginBottom: '0' }} className={styles.FormTable}>
                                     <tbody>
                                         {
-                                            this.renderGasInfo(Content !== null ? Content.standardGas : null)
+                                            this.renderGasInfo(StandardGasList )
                                         }
                                     </tbody>
                                 </table>
@@ -505,7 +508,7 @@ class BdTestRecordContent extends Component {
                                 <table style={{ width: '100%', marginTop: '0', marginBottom: '0' }} className={styles.FormTable}>
                                     <tbody>
                                         {
-                                            this.renderCbInfo(Content !== null ? Content.cbTestEquipment : null)
+                                            this.renderCbInfo(TestEquipmentList)
                                         }
                                     </tbody>
                                 </table>

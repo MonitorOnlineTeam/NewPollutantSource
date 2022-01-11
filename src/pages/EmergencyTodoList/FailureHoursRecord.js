@@ -100,7 +100,7 @@ class FailureHoursRecord extends Component {
         const Content = Record !== null ? Record.Content : null;
         const SignContent = Record !== null ? Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}` : null;
         const DeviceName = 'CEMS'; //设备名称
-        if (this.state.isloading) {
+        if (this.props.isloading) {
             return (<Spin
                 style={{
                     width: '100%',

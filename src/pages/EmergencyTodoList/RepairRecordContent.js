@@ -27,7 +27,8 @@ class RepairRecordContent extends Component {
         this.props.dispatch({
             type: 'task/GetRepairRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID
             }
         });
         this.setState({
@@ -38,30 +39,49 @@ class RepairRecordContent extends Component {
     renderItem = (Repair) => {
         const rtnVal = [];
         if (Repair !== null) {
-            if (Repair.Code !== null && Repair.Code.length > 0) {
-                Repair.Code.map((item, index) => {
+            if (Repair.RecordList && Repair.RecordList.length > 0) {
+                Repair.RecordList.map((item, index) => {
                     rtnVal.push(
-                        <tr key={index}>
-                            <td key={`${index}a`} rowSpan="2" style={{ width: '20%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                {item.Name}
-                            </td>
-                            <td key={`${index}b`} style={{ width: '20%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                维修情况描述
-                            </td>
-                            {
-                                this.renderItemChildOne(item.ItemID, Repair)
-                            }
-                        </tr>
-                    );
-                    rtnVal.push(
-                        <tr key={`${index}1`}>
-                            <td key={`${index}a`} style={{ width: '20%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                更换部件
-                            </td>
-                            {
-                                this.renderItemChildTwo(item.ItemID, Repair)
-                            }
-                        </tr>
+                        <tr>
+                        <td style={{ width: '5%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                            {index + 1}
+                                 </td>
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                             {item.FaultUnitName}
+                                 </td>
+                                 <td style={{ width: '9%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                             {item.FaultTime}
+                                 </td>
+     
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                              {item.MonitorPointEquipmentName}
+                                 </td>
+                                 <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                             {item.EquipmentInfoName}
+                                 </td>
+                                 <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                              {item.EquipmentNumber}
+                                 </td>
+                                 <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                             {item.ManufacturerName}
+                                 </td>
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                             {item.FaultPhenomenon}
+                                 </td>
+     
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                            {item.CauseAnalysis}
+                                 </td>
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                            {item.ProcessingMethod}
+                                 </td>
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                           {item.ProcessingResults}
+                                 </td> 
+                                 <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                            {item.Remark}
+                                 </td>                    
+                         </tr>
                     );
                 });
             }
@@ -144,65 +164,90 @@ class RepairRecordContent extends Component {
         }
         return (
             <div className={styles.FormDiv} style={style}>
-                <div className={styles.FormName}>CEMS维修记录表</div>
-                <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content !== null ? Content.EnterpriseName : null}</div>
+                <div className={styles.FormName}></div>
                 <table key="1" className={styles.FormTable}>
                     <tbody>
+                    <tr>
+                            <td colSpan="12"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
+                             设备维修记录表
+                            </td>
+                        </tr> 
                         <tr>
-                            <td style={{ width: '20%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                安装地点
+                            <td colSpan="3" style={{ width: '18%',minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        运行维护单位
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ? Content.PointPosition : null}
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
+                                {Content !== null ?Content.EnterpriseName:null}
                             </td>
-                        </tr>
-                        {
-                            this.renderItem(this.props.Repair)
-                        }
-                        <tr>
-                            <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                站房是否清理
+                            <td colSpan="3" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                        安装地点
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ? Content.IsClear : null}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                维修情况总结
-                            </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ? Content.RepairSummary : null}
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                {Content !== null ?Content.PointPosition:null}
                             </td>
                         </tr>
                         <tr>
-                            <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                备注
+                        <td style={{ width: '5%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        序号
                             </td>
-                            <td colSpan="2" style={{ width: '25%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                {Content !== null ? Content.Remark : null}
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        故障单元
                             </td>
-                        </tr>
-                        <tr>
-                            <td style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                <b>维修人:</b>{Record !== null ? Record.CreateUserID : null}
-                            </td>
-                            <td style={{ width: '25%', height: '50px', textAlign: 'center', fontSize: '14px' }} colSpan="2">
-                                <b>维修时间&nbsp;：</b>{StartTime} &nbsp;至&nbsp;{EndTime}
+                            <td style={{ width: '9%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        故障时间
                             </td>
 
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        系统型号
+                            </td>
+                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        主机名称型号
+                            </td>
+                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        主机序列号
+                            </td>
+                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        主机生产厂商
+                            </td>
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        故障现象
+                            </td>
+
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        原因分析
+                            </td>
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        处理方法
+                            </td>
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        处理结果
+                            </td> 
+                            <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
+                                        备注
+                            </td>                                                       
                         </tr>
-                    </tbody>
-                </table>
-                <table key="2" className={styles.FormTable}>
-                    <tbody>
+                        {
+                            this.renderItem(Record)
+                        }
                         <tr>
-                            <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>负责人签名：</td>
-                            <td style={{ width: '13%', height: '50px', border: '0' }}>{SignContent === null ? null : <img style={{ width: '80%', height: '110%' }} src={SignContent} />}</td>
-                        </tr>
-                        <tr>
-                            <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold' }}>签名时间：</td>
-                            <td style={{ width: '13%', height: '50px', border: '0', minWidth: 120 }}>{Record !== null ? Record.SignTime : null}</td>
+                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                       维修人
+                            </td>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
+                                {Record !== null ?Record.CreateUserID:null}
+                            </td>
+                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        维修日期
+                            </td>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
+                                {Record !== null ?Record.StartTime:null}
+                            </td>
+                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                        离开时间
+                            </td>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
+                                {Record !== null ?Record.EndTime:null}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

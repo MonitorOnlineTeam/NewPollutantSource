@@ -354,3 +354,9 @@ export async function GetDataConsistencyRecordNewForPCList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetDataConsistencyRecordNewForPCList', params , null);
     return result === null ? { Datas: null } : result;
 }
+
+/** 上月委托第三方检测次数列表 */
+export async function GetDetectionTimesRecordList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetDetectionTimesRecordList', params , null);
+    return result === null ? { Datas: null } : result;
+}

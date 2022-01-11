@@ -200,7 +200,12 @@ export default {
             {
               path: '/appoperation/appDataConsistencyRealTime/:TaskID/:TypeID',
               component: './AppOperation/AppDataConsistencyRealTime',
-            },                                    
+            },   
+              /* 上月委托第三方检测次数 */
+             {
+                path: '/appoperation/appThirdPartyTestingContent/:TaskID/:TypeID',
+                component: './AppOperation/AppThirdPartyTestingContent',
+            },             
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',

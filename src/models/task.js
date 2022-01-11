@@ -19,7 +19,8 @@ import {
      GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
      GetStandardLiquidRepalceRecordList,
      GetDataConsistencyRecordForPCList,
-     GetDataConsistencyRecordNewForPCList
+     GetDataConsistencyRecordNewForPCList,
+     GetDetectionTimesRecordList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -47,6 +48,7 @@ export default Model.extend({
         cooperatInspectionRecordList:null, //配合检查记录
         dataConsistencyRecordList:null,//数据一致性检查表 实时
         dataConsistencyDateRecordList:null,//数据一致性检查表 小时与日数据
+        detectionTimesRecordList:null,//上月委托第三方检测次数
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -455,5 +457,16 @@ export default Model.extend({
                 });
             }
         },
+         //  上月委托第三方检测次数
+       * GetDetectionTimesRecordList ({ payload, }, {call, update,select,}) {
+        const DataInfo = yield call(GetDetectionTimesRecordList, payload);
+        if (DataInfo.IsSuccess) {
+            yield update({
+                detectionTimesRecordList: DataInfo.Datas,
+            });
+        }
     },
+    },
+
+    
 });
