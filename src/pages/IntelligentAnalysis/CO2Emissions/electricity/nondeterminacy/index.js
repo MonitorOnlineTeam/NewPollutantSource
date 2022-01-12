@@ -69,7 +69,7 @@ class index extends Component {
         },
         callback: (res) => {
           if (res === true) {
-            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！', 6);
+            message.error('相同行业、种类、时间添加不能重复，请重新选择！');
             return;
           } else {
             this.onHandleSubmit();
