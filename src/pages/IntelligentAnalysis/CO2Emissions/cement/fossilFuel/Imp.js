@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, Upload, Button, Input, DatePicker, Divider } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, Upload, Button, Input, DatePicker, message } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
 import Debounce from 'lodash.debounce';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
-import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE, SELECT_TYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
 import ImportData from '@/pages/IntelligentAnalysis/CO2Emissions/components/ImportData'
 
 const industry = INDUSTRYS.cement;
+const SumType = SUMTYPE.cement["化石燃料燃烧"]
 const { Option } = Select;
 const { TextArea } = Input;
 const CONFIG_ID = 'CementFossilFuel';
@@ -67,11 +68,51 @@ class index extends Component {
     this.getCO2TableSum();
   }
 
+  // 判断是否可添加
+  checkIsAdd = () => {
+    this.formRef.current.validateFields().then((values) => {
+      let { EntCode, MonitorTime, FossilType } = values;
+      const { KEY, rowTime, rowType } = this.state;
+      let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
+      // 编辑时判断时间是否更改
+      if (KEY && rowTime === _MonitorTime && rowType == FossilType) {
+        this.onHandleSubmit();
+        return;
+      }
+      this.props.dispatch({
+        type: 'CO2Emissions/JudgeIsRepeat',
+        payload: {
+          EntCode: EntCode,
+          MonitorTime: _MonitorTime,
+          SumType: SumType,
+          TypeCode: FossilType
+        },
+        callback: (res) => {
+          if (res === true) {
+            message.error('相同种类、相同时间添加不能重复，请重新选择种类或时间！');
+            return;
+          } else {
+            this.onHandleSubmit();
+          }
+        }
+      });
+    })
+  }
+
   getCO2TableSum = () => {
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
-        SumType: 'w-foss',
+        SumType: SumType,
+      }
+    });
+  }
+
+  getTableDataSource = () => {
+    this.props.dispatch({
+      type: 'autoForm/getAutoFormData',
+      payload: {
+        configId: CONFIG_ID,
       }
     });
   }
@@ -182,6 +223,7 @@ class index extends Component {
           isModalVisible: false,
         })
         // this.getTableList();
+        this.getCO2TableSum();
       })
     })
   }
@@ -207,7 +249,6 @@ class index extends Component {
       },
       callback: (res) => {
         // Deviation, GetType
-
         this.setState({
           // CO2OxidationRateState: res.CO2OxidationRateDataType,
           // UnitCarbonContentState: res.UnitCarbonContentDataType,
@@ -274,17 +315,24 @@ class index extends Component {
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.AttachmentID')
               const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.DevAttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2 }, () => {
+              this.setState({
+                KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2,
+                rowTime: record['dbo.T_Bas_CementFossilFuel.MonitorTime'],
+                rowType: record['dbo.T_Bas_CementFossilFuel.FossilType']
+              }, () => {
                 this.getFormData();
               })
             }}
-            appendHandleButtons={(keys, rows) => {
-              return <ImportData onSuccess={() => { this.getTableList() }} />;
+            onDeleteCallback={() => {
+              this.getCO2TableSum();
             }}
-            footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
+            appendHandleButtons={(keys, rows) => {
+              return <ImportData onSuccess={() => { this.getTableDataSource() }} />;
+            }}
+            footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             {...layout}
             style={{ marginTop: 24 }}

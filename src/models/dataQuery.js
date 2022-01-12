@@ -39,7 +39,7 @@ export default Model.extend({
     dataAuditDataSource: [],
     dataFlagDataSource: [],
     tagTableTotal: 0,
-    CO2SumData: [{}, {}, {}, {}, {}, {}],
+    CO2SumData: [],
   },
   effects: {
     * querypollutantlist({ payload, callback,

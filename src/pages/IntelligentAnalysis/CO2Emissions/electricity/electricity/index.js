@@ -205,7 +205,7 @@ class index extends PureComponent {
             onDeleteCallback={() => {
               this.getCO2TableSum();
             }}
-            footer={() => <div className="">排放量合计：{count}</div>}
+            footer={() => <div className="">排放量合计（tCO₂）：{count}</div>}
           />
         </Card>
         <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>

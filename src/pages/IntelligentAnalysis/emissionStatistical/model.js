@@ -165,5 +165,71 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 废气、废水排放量同比
+    *getEmissionsListForYear({ payload, callback }, { call, put, update, select }) {
+      let queryType = payload.DataType;
+      let actionType, stateKey, loadingName;
+      switch (queryType) {
+        case "region":
+          actionType = "getEmissionsListForRegionYear";
+          stateKey = "regionYearTableDataSource";
+          loadingName = "regionYearLoading"
+          break;
+        case "ent":
+          actionType = "getEmissionsListForEntYear";
+          stateKey = "entYearTableDataSource";
+          loadingName = "entYearLoading"
+          break;
+        case "point":
+          actionType = "getEmissionsListForPointYear";
+          stateKey = "pointYearTableDataSource";
+          loadingName = "pointYearLoading"
+          break;
+      }
+      yield update({ [loadingName]: true })
+      const result = yield call(services[actionType], { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          [stateKey]: result.Datas,
+          [loadingName]: false
+        })
+      } else {
+        yield update({ [loadingName]: false })
+        message.error(result.Message)
+      }
+    },
+    // 废气、废水排放量环比
+    *getEmissionsListForChain({ payload, callback }, { call, put, update, select }) {
+      let queryType = payload.DataType;
+      let actionType, stateKey, loadingName;
+      switch (queryType) {
+        case "region":
+          actionType = "getEmissionsListForRegionChain";
+          stateKey = "regionChainTableDataSource";
+          loadingName = "regionChainLoading"
+          break;
+        case "ent":
+          actionType = "getEmissionsListForEntChain";
+          stateKey = "entChainTableDataSource";
+          loadingName = "entChainLoading"
+          break;
+        case "point":
+          actionType = "getEmissionsListForPointChain";
+          stateKey = "pointChainTableDataSource";
+          loadingName = "pointChainLoading"
+          break;
+      }
+      yield update({ [loadingName]: true })
+      const result = yield call(services[actionType], { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          [stateKey]: result.Datas,
+          [loadingName]: false
+        })
+      } else {
+        yield update({ [loadingName]: false })
+        message.error(result.Message)
+      }
+    },
   },
 });

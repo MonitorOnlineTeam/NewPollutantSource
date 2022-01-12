@@ -18,7 +18,7 @@ class index extends PureComponent {
     this.formRef = React.createRef();
     this.state = {
       year: moment(),
-      time: [moment().startOf('year'), moment()],
+      time: [moment().subtract(12, "months"), moment()],
     };
   }
 
@@ -49,7 +49,8 @@ class index extends PureComponent {
   getEchartsData = () => {
     const { entCode, time } = this.state;
     console.log('time[0].month=', time[0].month)
-    if (time[1].get('month') - time[0].get('month') < 1) {
+    if (moment(time[1]).diff(moment(time[0]), 'month') < 1) {
+      // if (time[1].get('month') - time[0].get('month') < 1) {
       message.error('最小间隔时间为2个月，请重新选择！');
       return;
     }
@@ -67,7 +68,8 @@ class index extends PureComponent {
       animation: false,
       label: {
         formatter: CO2LinearAnalysisData.formula,
-        align: 'right'
+        align: 'right',
+        fontSize: 16,
       },
       lineStyle: {
         type: 'solid'
@@ -94,36 +96,36 @@ class index extends PureComponent {
       //   { x: '7%', y: '7%', width: '38%', height: '38%' },
       // ],
       grid: {
-        left: '2%',
-        right: '100px',
+        left: '40px',
+        right: '180px',
         bottom: '6%',
         // top: "2%",
         containLabel: true
       },
       tooltip: {
         formatter: function (params, ticket, callback) {
-          console.log('params=', params)
-          return `直测排放量:    ${params.value[0]} t <br />核算排放量:    ${params.value[1]} t`
+          // console.log('params=', params)
+          return `直测二氧化碳排放当量:    ${params.value[0]} tCO₂e <br />核算二氧化碳排放当量:    ${params.value[1]} tCO₂e`
         }
       },
       toolbox: {
         show: true,
         feature: {
-          // dataZoom: {
-          //   yAxisIndex: 'none'
-          // },
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
           dataView: { readOnly: false },
           // magicType: {type: ['line', 'bar']},
-          // restore: {},
+          restore: {},
           saveAsImage: {}
         }
       },
       xAxis: [
-        { name: `直测排放量(t)`, gridIndex: 0, min: CO2LinearAnalysisData.coordMin[0], max: CO2LinearAnalysisData.coordMax[0] },
+        { name: `直测二氧化碳排放当量(tCO₂e)`, gridIndex: 0, min: CO2LinearAnalysisData.coordMin[0], max: CO2LinearAnalysisData.coordMax[0] },
       ],
       yAxis: [
         // { name: `核算排放量(t)`, gridIndex: 0, min: CO2LinearAnalysisData.coordMin[1] < 0 ? CO2LinearAnalysisData.coordMin[1] - 5 : CO2LinearAnalysisData.coordMin[1], max: CO2LinearAnalysisData.coordMax[1] + 5 },
-        { name: `核算排放量(t)`, gridIndex: 0, min: CO2LinearAnalysisData.coordMin[1], max: CO2LinearAnalysisData.coordMax[1] },
+        { name: `核算二氧化碳排放当量(tCO₂e)`, gridIndex: 0, min: CO2LinearAnalysisData.coordMin[1], max: CO2LinearAnalysisData.coordMax[1] },
       ],
       series: [
         {

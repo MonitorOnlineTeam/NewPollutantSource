@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper'
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Modal, Form, Row, Col, InputNumber, Select, Upload, Button, Input, DatePicker, Divider, message } from 'antd'
+import { Card, Modal, Form, Row, Col, InputNumber, Select, message, Button, Input, DatePicker, Divider } from 'antd'
 import FileUpload from '@/components/FileUpload';
 import { connect } from 'dva';
 import { getRowCuid } from '@/utils/utils';
@@ -11,10 +11,9 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 
-const industry = INDUSTRYS.steel;
 const { Option } = Select;
 const { TextArea } = Input;
-const CONFIG_ID = 'SteelCarbonSoildDis';
+const CONFIG_ID = 'Uncertain';
 const SELECT_LISTWhere = [{ "key": 1, "value": "计算" }, { "key": 2, "value": "缺省值" }];
 const layout = {
   labelCol: { span: 10 },
@@ -46,7 +45,6 @@ class index extends Component {
       editTotalData: {},
       RateVisible: false,
       UnitVisible: false,
-      currentTypeData: {},
       typeUnit: '',
     };
   }
@@ -58,21 +56,16 @@ class index extends Component {
   // 判断是否可添加
   checkIsAdd = () => {
     this.formRef.current.validateFields().then((values) => {
-      let { EntCode, MonitorTime, CarbonSoildDisType } = values;
-      const { KEY, rowTime, rowType } = this.state;
-      let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
-      // 编辑时判断时间是否更改
-      if (KEY && rowTime === _MonitorTime && rowType == CarbonSoildDisType) {
-        this.onHandleSubmit();
-        return;
-      }
+      const { KEY } = this.state;
+      let { IndustryCode, Year, FossilType } = values;
       this.props.dispatch({
-        type: 'CO2Emissions/JudgeIsRepeat',
+        type: 'CO2Emissions/calUnceratianData',
         payload: {
-          EntCode: EntCode,
-          MonitorTime: _MonitorTime,
-          SumType: 's-gt',
-          TypeCode: CarbonSoildDisType
+          ID: KEY,
+          TypeCode: FossilType,
+          IndustryCode: IndustryCode,
+          Year: Year.format("YYYY-01-01 00:00:00"),
+          CalType: 'CalIsRepeat',
         },
         callback: (res) => {
           if (res === true) {
@@ -82,17 +75,22 @@ class index extends Component {
             this.onHandleSubmit();
           }
         }
-      });
+      })
     })
   }
 
   getCO2TableSum = () => {
     this.props.dispatch({
-      type: 'CO2Emissions/getCO2TableSum',
+      type: 'CO2Emissions/calUnceratianData',
       payload: {
-        SumType: 's-gt',
+        CalType: 'SumUncertain',
+      },
+      callback: (res) => {
+        this.setState({
+          SumUncertain: res
+        })
       }
-    });
+    })
   }
 
   getTableDataSource = () => {
@@ -106,55 +104,65 @@ class index extends Component {
 
   // 种类change，填写缺省值
   onTypesChange = (value, option) => {
-    const { Dictionaries } = this.props;
-    this.setState({
-      currentTypeData: Dictionaries.one[value],
-      typeUnit: option['data-unit']
-    })
     let values = this.formRef.current.getFieldsValue();
-    const { EmissionDataType } = values;
-    if (EmissionDataType == 2) {
-      this.formRef.current.setFieldsValue({
-        'Emission': Dictionaries.one[value]["排放因子"],
-      });
-    }
-    this.countEmissions();
+    const { FossilType, IndustryCode, Year } = values;
+    this.props.dispatch({
+      type: 'CO2Emissions/getUnceratianData',
+      payload: {
+        TypeCode: FossilType,
+        Year: moment(Year).format("YYYY-01-01 00:00:00"),
+        IndustryCode: IndustryCode,
+      },
+      callback: (res) => {
+        this.formRef.current.setFieldsValue({
+          'CO2OxidationRate': res.CO2OxidationRate,
+          'Emission': res.Emission,
+          'LowFever': res.LowFever,
+          'UnitCarbonContent': res.UnitCarbonContent,
+          'tCO2': res.tCO2,
+        });
+      }
+    })
   }
 
   // 根据企业和时间获取种类
   getCO2EnergyType = (formEidt) => {
     let values = this.formRef.current.getFieldsValue();
-    const { EntCode, MonitorTime } = values;
+    const { IndustryCode, Year } = values;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2EnergyType',
       payload: {
-        IndustryCode: industry,
-        EntCode: EntCode,
-        SelectType: 'G',
-        Time: moment(MonitorTime).format("YYYY-MM-01 00:00:00"),
+        EntCode: 'Uncertain',
+        Time: moment(Year).format("YYYY-01-01 00:00:00"),
+        IndustryCode: IndustryCode,
       },
     })
-    !formEidt && this.countEmissions();
+    // !formEidt && this.countEmissions();
+    !formEidt && this.formRef.current.setFieldsValue({ 'FossilType': undefined })
   }
 
   // 计算排放量
   countEmissions = () => {
+    // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率 / 100 × 44 ÷ 12)
     let values = this.formRef.current.getFieldsValue();
-    let { EntCode, MonitorTime, CarbonSoildDisType, ActivityData = 0, Emission = 0 } = values;
-    if (EntCode && MonitorTime) {
+    let { IndustryCode, Year, FossilType, tCO2 = 0, ActivityData = 0, AppAccuracy = 0, LowFever = 0, Emission = 0 } = values;
+    if (IndustryCode && Year) {
       this.props.dispatch({
-        type: 'CO2Emissions/countEmissions',
+        type: 'CO2Emissions/calUnceratianData',
         payload: {
-          EntCode: EntCode,
-          Time: MonitorTime.format("YYYY-MM-01 00:00:00"),
-          IndustryCode: industry,
-          Type: CarbonSoildDisType,
-          CalType: 'w-2',
-          Data: { '活动数据': ActivityData || 0, '排放因子': Emission || 0, }
+          TypeCode: FossilType,
+          IndustryCode: IndustryCode,
+          Year: Year.format("YYYY-01-01 00:00:00"),
+          CalType: 'tCO2Uncertain',
+          Data: {
+            'CO₂排放量': tCO2 || 0, '活动水平不确定性': ActivityData || 0,
+            '排放因子不确定性': Emission || 0, '计量器具精度': AppAccuracy || 0,
+            '低位热值不确定性': LowFever || 0
+          }
         },
         callback: (res) => {
           console.log('res=', res)
-          this.formRef.current.setFieldsValue({ 'tCO2': res.toFixed(2) });
+          this.formRef.current.setFieldsValue({ 'ActivityData': res.ActivityData, 'tCO2Uncertain': res.tCO2Uncertain });
         }
       })
     }
@@ -187,8 +195,8 @@ class index extends Component {
           configId: CONFIG_ID,
           FormData: {
             ...values,
-            MonitorTime: moment(values.MonitorTime).format("YYYY-MM-01 00:00:00"),
-            CarbonSoildDisCode: KEY
+            Year: moment(values.Year).format("YYYY-01-01 00:00:00"),
+            ID: KEY
           },
           reload: KEY ? true : false,
         }
@@ -197,7 +205,6 @@ class index extends Component {
           isModalVisible: false,
         })
         this.getTableList();
-        this.getCO2TableSum();
       })
     })
   }
@@ -210,6 +217,7 @@ class index extends Component {
         configId: CONFIG_ID,
       }
     })
+    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -218,7 +226,7 @@ class index extends Component {
       type: 'autoForm/getFormData',
       payload: {
         configId: CONFIG_ID,
-        'dbo.T_Bas_SteelCarbonSoildDis.CarbonSoildDisCode': this.state.KEY,
+        'dbo.T_Cod_Uncertain.ID': this.state.KEY,
       },
       callback: (res) => {
         // Deviation, GetType
@@ -234,37 +242,10 @@ class index extends Component {
     })
   }
 
-  onSourceChange = (value, index, name, label) => {
-    const { Dictionaries } = this.props;
-    let values = this.formRef.current.getFieldsValue();
-    const { CarbonSoildDisType, } = values
-    if (CarbonSoildDisType) {
-      if (value == 2) {
-        // 缺省
-        this.formRef.current.setFieldsValue({
-          [name]: Dictionaries.one[CarbonSoildDisType][label],
-        });
-        this.countEmissions();
-      }
-    }
-    let key = 'disabled' + index;
-    this.setState({ [key]: !this.state[key] })
-  }
-
   render() {
-    const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, totalVisible, editTotalData, KEY, importVisible, currentTypeData } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, totalVisible, editTotalData, KEY, importVisible, SumUncertain } = this.state;
     const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
-    const { EntView = [] } = this.props.configIdList;
-    // const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
-    // let count = _.sumBy(dataSource, 'dbo.T_Bas_CementFossilFuel.tCO2');
-
     const TYPES = Dictionaries.two || [];
-    if (this.formRef.current) {
-      let values = this.formRef.current.getFieldsValue();
-      console.log('values=', values)
-      var { EmissionDataType } = values;
-    }
-    console.log('currentTypeData=', currentTypeData)
 
     return (
       <BreadcrumbWrapper>
@@ -283,12 +264,9 @@ class index extends Component {
               })
             }}
             onEdit={(record, key) => {
-              const FileUuid = getRowCuid(record, 'dbo.T_Bas_SteelCarbonSoildDis.AttachmentID')
-              const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_SteelCarbonSoildDis.DevAttachmentID')
+              const FileUuid = getRowCuid(record, 'dbo.T_Cod_Uncertain.AttachmentID')
               this.setState({
-                KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2,
-                rowTime: record['dbo.T_Bas_SteelCarbonSoildDis.MonitorTime'],
-                rowType: record['dbo.T_Bas_SteelCarbonSoildDis.CarbonSoildDisType']
+                KEY: key, FileUuid: FileUuid
               }, () => {
                 this.getFormData();
               })
@@ -296,51 +274,48 @@ class index extends Component {
             onDeleteCallback={() => {
               this.getCO2TableSum();
             }}
-            footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
+            footer={() => <div className="">综合不确定性：{SumUncertain}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1000} title={KEY ? "编辑" : "添加"} visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             {...layout}
             style={{ marginTop: 24 }}
             ref={this.formRef}
             initialValues={{
               ...editData,
-              EmissionDataType: editData.EmissionDataType || 2,
-              MonitorTime: moment(editData.MonitorTime),
+              Year: moment(editData.Year),
               EntCode: editData['dbo.EntView.EntCode'],
-              CarbonSoildDisType: editData['dbo.T_Bas_SteelCarbonSoildDis.CarbonSoildDisType'] ? editData['dbo.T_Bas_SteelCarbonSoildDis.CarbonSoildDisType'] + '' : undefined,
+              FossilType: editData['dbo.T_Cod_Uncertain.FossilType'] ? editData['dbo.T_Cod_Uncertain.FossilType'] + '' : undefined,
             }}
           >
             <Row>
               <Col span={12}>
                 <Form.Item
-                  name="EntCode"
-                  label="企业"
+                  name="IndustryCode"
+                  label="行业"
                   rules={[{ required: true, message: '请选择企业!' }]}
                 >
                   <Select placeholder="请选择企业" onChange={this.getCO2EnergyType}>
-                    {
-                      EntView.map(item => {
-                        return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
-                      })
-                    }
+                    <Option value={'1'} key={1}>热电</Option>
+                    <Option value={'2'} key={2}>水泥</Option>
+                    <Option value={'3'} key={3}>钢铁</Option>
                   </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="MonitorTime"
+                  name="Year"
                   label="时间"
                   rules={[{ required: true, message: '请选择时间!' }]}
                 >
-                  <DatePicker picker="month" style={{ width: '100%' }} onChange={this.getCO2EnergyType} />
+                  <DatePicker picker="year" style={{ width: '100%' }} onChange={this.getCO2EnergyType} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="CarbonSoildDisType"
-                  label="燃料种类"
+                  name="FossilType"
+                  label="能源品种"
                   rules={[{ required: true, message: '请选择燃料种类!' }]}
                 >
                   <Select placeholder="请选择燃料种类" onChange={this.onTypesChange}>
@@ -354,50 +329,74 @@ class index extends Component {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="ActivityData"
-                  label={<p>固碳产品的产量(t)</p>}
-                  rules={[{ required: true, message: '请填写固碳产品的产量!' }]}
+                  name="AppAccuracy"
+                  label='计量器具精度(%)'
+                  rules={[{ required: true, message: '请填写计量器具精度!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写固碳产品的产量" onChange={this.countEmissions} />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="EmissionDataType"
-                  label="排放因子数据来源"
-                >
-                  <Select placeholder="请选择排放因子数据来源" onChange={(value) => this.onSourceChange(value, 1, 'LowFever', '低位发热量')}>
-                    {
-                      SELECT_LISTWhere.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="Emission"
-                  label={<p>排放因子(tCO₂/t)</p>}
-                  rules={[{ required: true, message: '请填写排放因子!' }]}
-                >
-                  <InputNumber disabled={EmissionDataType ? EmissionDataType == 2 : true} style={{ width: '100%' }} placeholder="请填写排放因子"
-                    onChange={this.countEmissions}
-                  />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写计量器具精度" onChange={Debounce(() => this.countEmissions(), maxWait)} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   name="tCO2"
-                  label={
-                    <span>
-                      排放量（tCO₂）
-                      <QuestionTooltip content="排放量 = 固碳产品的产量 × 排放因子" />
-                    </span>
-                  }
-                  rules={[{ required: true, message: '请填写排放量!' }]}
+                  label='CO₂排放量'
+                  rules={[{ required: true, message: '请填写CO₂排放量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写排放量" />
+                  <InputNumber bordered={false} disabled style={{ width: '100%' }} placeholder="请填写CO₂排放量" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="LowFever"
+                  label='低位热值不确定性(%)'
+                  rules={[{ required: true, message: '请填写低位热值不确定性!' }]}
+                >
+                  <InputNumber bordered={false} disabled style={{ width: '100%' }} placeholder="请填写低位热值不确定性" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="ActivityData"
+                  label='活动水平不确定性(%)'
+                  rules={[{ required: true, message: '请填写活动水平不确定性!' }]}
+                >
+                  <InputNumber style={{ width: '100%' }} disabled placeholder="请填写活动水平不确定性" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="UnitCarbonContent"
+                  label="单位热值含碳量不确定性(%)"
+                  rules={[{ required: true, message: '请填写单位热值含碳量不确定性!' }]}
+                >
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写单位热值含碳量不确定性" disabled />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="CO2OxidationRate"
+                  label="燃料碳氧化率不确定性(%)"
+                  rules={[{ required: true, message: '请填写燃料碳氧化率不确定性!' }]}
+                >
+                  <InputNumber style={{ width: '100%' }} disabled placeholder="请填写燃料碳氧化率不确定性" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="Emission"
+                  label="排放因子不确定性(%)"
+                  rules={[{ required: true, message: '请填写排放因子不确定性!' }]}
+                >
+                  <InputNumber style={{ width: '100%' }} disabled placeholder="请填写排放因子不确定性" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="tCO2Uncertain"
+                  label="排放量不确定性(%)"
+                  rules={[{ required: true, message: '请填写排放量不确定性!' }]}
+                >
+                  <InputNumber style={{ width: '100%' }} disabled placeholder="请填写排放量不确定性" />
                 </Form.Item>
               </Col>
               <Col span={24}>
@@ -405,7 +404,7 @@ class index extends Component {
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 7 }}
                   name="AttachmentID"
-                  label="验证材料"
+                  label="计量器具检测报告或设备照片"
                 // rules={[{ required: true, message: '请填写排放量!' }]}
                 >
                   <FileUpload fileUUID={FileUuid} uploadSuccess={(fileUUID) => {

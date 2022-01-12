@@ -53,7 +53,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {
-        message.error(response.Message)
+        // message.error(response.Message)
       }
     },
     // 下载导入模板
@@ -79,6 +79,25 @@ export default Model.extend({
     // 判断是否重复 - 是否可添加
     *JudgeIsRepeat({ payload, callback }, { call, put, update, select }) {
       const response = yield call(services.JudgeIsRepeat, payload);
+      if (response.IsSuccess) {
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 获取不确定性默认数据
+    *getUnceratianData({ payload, callback }, { call, put, update, select }) {
+      const response = yield call(services.getUnceratianData, payload);
+      if (response.IsSuccess) {
+        callback && callback(response.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
+    // 不确定性计算公式
+    *calUnceratianData({ payload, callback }, { call, put, update, select }) {
+      debugger
+      const response = yield call(services.calUnceratianData, payload);
       if (response.IsSuccess) {
         callback && callback(response.Datas)
       } else {

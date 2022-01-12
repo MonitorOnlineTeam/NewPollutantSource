@@ -1776,6 +1776,18 @@ const routes = [
                     component: './IntelligentAnalysis/emissionStatistical/Contrast',
                   },
                   {
+                    // 排放量同比
+                    name: 'gasContrast',
+                    path: '/Intelligentanalysis/emissionsStatistics/year',
+                    component: './IntelligentAnalysis/emissionStatistical/Year',
+                  },
+                  {
+                    // 排放量环比
+                    name: 'gasContrast',
+                    path: '/Intelligentanalysis/emissionsStatistics/chain',
+                    component: './IntelligentAnalysis/emissionStatistical/Chain',
+                  },
+                  {
                     // 废气排放量统计
                     name: 'gas',
                     path: '/Intelligentanalysis/emissionsStatistics/gas',
@@ -1866,6 +1878,12 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/accountingReport',
                     component: './IntelligentAnalysis/CO2Emissions/electricity/accountingReport',
                   },
+                  // 不确定性分析
+                  {
+                    path: '/Intelligentanalysis/CO2Material/nondeterminacy',
+                    component: './IntelligentAnalysis/CO2Emissions/electricity/nondeterminacy',
+                  },
+                  
                 ]
               },
               // 水泥行业

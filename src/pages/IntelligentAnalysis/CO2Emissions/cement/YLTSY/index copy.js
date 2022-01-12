@@ -193,7 +193,7 @@ class index extends PureComponent {
                 this.getFormData();
               })
             }}
-            footer={() => <div className="">排放量合计：{count.toFixed(2)}</div>}
+            footer={() => <div className="">排放量合计（tCO₂）：{count.toFixed(2)}</div>}
           />
         </Card>
         <Modal destroyOnClose width={1200} title="添加" visible={isModalVisible} onOk={this.onHandleSubmit} onCancel={this.handleCancel}>

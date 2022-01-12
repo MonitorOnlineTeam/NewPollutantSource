@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Form, Divider, Space, Select, DatePicker, Button } from 'antd'
+import { Card, Form, Empty, Space, Select, DatePicker, Button, Divider } from 'antd'
 import { connect } from 'dva'
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
@@ -12,6 +12,7 @@ import moment from 'moment'
   entList: CO2Material.entList,
   GHGTableData: CO2Material.GHGTableData,
   GHGEchartsData: CO2Material.GHGEchartsData,
+  GHGChartData: CO2Material.GHGChartData,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -28,6 +29,9 @@ class index extends PureComponent {
           title: '时间',
           dataIndex: 'date',
           key: 'date',
+          render: (text) => {
+            return text ? moment(text).format('YYYY-MM-DD') : '-';
+          }
         },
         {
           title: '排放量(t)',
@@ -96,9 +100,9 @@ class index extends PureComponent {
   getOption = () => {
     const { GHGEchartsData } = this.props;
     let option = {
-      color: ['rgb(91,176,255)', '#fac858', '#91cc75'],
+      color: ['rgb(91,176,255)', '#fac858', '#fc8452', '#91cc75'],
       grid: {
-        left: '2%',
+        left: '40',
         right: '4%',
         top: '8%',
         bottom: '4%',
@@ -115,7 +119,7 @@ class index extends PureComponent {
         },
         formatter: (params) => {
           if (params) {
-            let params0 = "", params1 = "", params2 = "";
+            let params0 = "", params1 = "", params2 = "", params3 = "";
             if (params[0]) {
               params0 = `
               ${params[0].name}
@@ -131,9 +135,14 @@ ${params[1].seriesName} ：${params[1].value}（t）
             }
             if (params[2]) {
               params2 = `${params[2].marker}
-${params[2].seriesName} ：${params[2].value}（t）`
+${params[2].seriesName} ：${params[2].value}（t）<br />`
             }
-            return params0 + params1 + params2;
+
+            if (params[3]) {
+              params3 = `${params[3].marker}
+${params[3].seriesName} ：${params[3].value}（t）<br />`
+            }
+            return params0 + params1 + params2 + params3;
           }
         }
         // formatter: (params, ticket, callback) => {
@@ -143,15 +152,17 @@ ${params[2].seriesName} ：${params[2].value}（t）`
         // }
       },
       xAxis: {
-        type: 'value',
-      },
-      yAxis: {
-        name: '排放量(t)',
+
+        // name: '排放量(t)',
         type: 'category',
         data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
         axisTick: {
           show: false
         },
+      },
+      yAxis: {
+        type: 'value',
+        name: '二氧化碳排放当量(tCO₂e)',
         // splitLine: {
         //   show: true,
         //   lineStyle: {
@@ -162,40 +173,53 @@ ${params[2].seriesName} ：${params[2].value}（t）`
       series: [{
         name: '配额总量',
         data: GHGEchartsData.quota,
-        stack: '排放量',
+        // stack: '排放量',
         type: 'bar',
-        emphasis: {
-          focus: 'series'
-        },
-        label: {
-          show: true,
-          position: 'inside'
-        },
+        // emphasis: {
+        //   focus: 'series'
+        // },
+        // label: {
+        //   show: true,
+        //   position: 'inside'
+        // },
       },
       {
         name: '直测消耗',
-        data: GHGEchartsData.use.map(item => item * -1),
-        stack: '排放量',
+        data: GHGEchartsData.use,
+        // stack: '排放量',
         type: 'bar',
-        emphasis: {
-          focus: 'series'
-        },
-        label: {
-          show: true,
-          position: 'left'
-        },
+        // emphasis: {
+        //   focus: 'series'
+        // },
+        // label: {
+        //   show: true,
+        //   position: 'inside'
+        // },
+      },
+      {
+        name: '核算消耗',
+        data: GHGEchartsData.buse,
+        // stack: '排放量',
+        type: 'bar',
+        // emphasis: {
+        //   focus: 'series'
+        // },
+        // label: {
+        //   show: true,
+        //   position: 'left'
+        // },
       },
       {
         name: '剩余配额',
         data: GHGEchartsData.profit,
         type: 'bar',
-        emphasis: {
-          focus: 'series'
-        },
-        label: {
-          show: true,
-          position: 'inside'
-        },
+        // emphasis: {
+        //   focus: 'series'
+        // },
+        // label: {
+        //   show: true,
+        //   position: 'inside'
+        // },
         itemStyle: {
           color: (params) => {
             const index = params.dataIndex;
@@ -210,8 +234,49 @@ ${params[2].seriesName} ：${params[2].value}（t）`
     return option;
   }
 
+  getPieOption = () => {
+    const { GHGChartData } = this.props;
+    let option = {
+      title: {
+        // text: 'Referer of a Website',
+        // subtext: 'Fake Data',
+        // left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'right'
+      },
+      series: [
+        {
+          // name: 'Access From',
+          type: 'pie',
+          radius: '50%',
+          // data: [
+          //   { value: 1048, name: 'Search Engine' },
+          //   { value: 735, name: 'Direct' },
+          //   { value: 580, name: 'Email' },
+          //   { value: 484, name: 'Union Ads' },
+          //   { value: 300, name: 'Video Ads' }
+          // ],
+          data: GHGChartData,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+    return option;
+  }
+
   render() {
-    const { entList, GHGTableData, tableLoading } = this.props;
+    const { entList, GHGTableData, GHGChartData, tableLoading } = this.props;
     const { entCode, year, month } = this.state;
     const { columns } = this.CONST;
 
@@ -220,49 +285,51 @@ ${params[2].seriesName} ：${params[2].value}（t）`
     return (
       <BreadcrumbWrapper>
         <Card>
-          <Form
-            ref={this.formRef}
-            initialValues={{
-              // time: [moment().subtract(29, 'days'), moment()],
-            }}
-          // onFieldsChange={(changedFields, allFields) => {
-          //   console.log('changedFields=', changedFields)
-          //   console.log('allFieldss=', allFields)
-          // }}
-          >
-            <Space size="large" align="baseline">
-              <div>
-                <div class="ant-form-item-label">
-                  <label title="企业">企业</label>
-                </div>
-                <Select value={entCode} style={{ width: 240 }} placeholder="请选择企业" onChange={(value) => {
-                  this.setState({ entCode: value }, () => {
-                    // this.getEchartsData();
-                  })
-                }}>
-                  {
-                    entList.map(item => {
-                      return <Option key={item.EntCode} value={item.EntCode}>{item.EntName}</Option>
-                    })
-                  }
-                </Select>
-              </div>
-              <div>
-                <div class="ant-form-item-label">
-                  <label title="时间">时间</label>
-                </div>
-                <DatePicker value={year} allowClear={false} picker="year" onChange={(date) => {
-                  this.setState({ year: date }, () => {
-                    // this.getEchartsData();
-                  })
-                }} />
-              </div>
-              <Button type="primary" loading={tableLoading} onClick={this.getEchartsData}>查询</Button>
-            </Space>
-          </Form>
-          <Divider style={{ marginBottom: 0 }} />
+          {/*  */}
+          {/* <Divider style={{ marginBottom: 0 }} /> */}
           <div style={{ display: "flex" }}>
             <div style={{ flex: 1 }}>
+              <Form
+                ref={this.formRef}
+                initialValues={{
+                  // time: [moment().subtract(29, 'days'), moment()],
+                }}
+              // onFieldsChange={(changedFields, allFields) => {
+              //   console.log('changedFields=', changedFields)
+              //   console.log('allFieldss=', allFields)
+              // }}
+              >
+                <Space size="large" align="baseline">
+                  <div>
+                    <div class="ant-form-item-label">
+                      <label title="企业">企业</label>
+                    </div>
+                    <Select value={entCode} style={{ width: 240 }} placeholder="请选择企业" onChange={(value) => {
+                      this.setState({ entCode: value }, () => {
+                        // this.getEchartsData();
+                      })
+                    }}>
+                      {
+                        entList.map(item => {
+                          return <Option key={item.EntCode} value={item.EntCode}>{item.EntName}</Option>
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <div>
+                    <div class="ant-form-item-label">
+                      <label title="时间">时间</label>
+                    </div>
+                    <DatePicker value={year} allowClear={false} picker="year" onChange={(date) => {
+                      this.setState({ year: date }, () => {
+                        // this.getEchartsData();
+                      })
+                    }} />
+                  </div>
+                  <Button type="primary" loading={tableLoading} onClick={this.getEchartsData}>查询</Button>
+                </Space>
+              </Form>
+              <Divider />
               <ReactEcharts
                 option={this.getOption()}
                 lazyUpdate
@@ -271,15 +338,29 @@ ${params[2].seriesName} ：${params[2].value}（t）`
                 style={{ width: '100%', height: 'calc(100vh - 230px)', minHeight: '200px', marginTop: 20 }}
               />
             </div>
-            <div style={{ width: 400 }}>
+            <div style={{ width: 400, marginTop: -28 }}>
               <Card title={`排放量企业统计 - ${titleTime}`}>
-                <SdlTable
-                  loading={tableLoading}
-                  rowKey={(record, index) => index}
-                  columns={columns}
-                  dataSource={GHGTableData}
-                  scroll={{ y: 'calc(100vh - 400px)' }}
-                />
+                {
+                  !GHGChartData.length && !GHGTableData.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : ""
+                }
+                {
+                  GHGTableData.length ? <ReactEcharts
+                    option={this.getPieOption()}
+                    lazyUpdate
+                    notMerge
+                    onEvents={{ 'click': this.onChartClick }}
+                    style={{ width: '100%', minHeight: '200px', marginTop: 20 }}
+                  /> : ''
+                }
+                {
+                  GHGTableData.length ? <SdlTable
+                    loading={tableLoading}
+                    rowKey={(record, index) => index}
+                    columns={columns}
+                    dataSource={GHGTableData}
+                    scroll={{ y: 'calc(100vh - 640px)' }}
+                  /> : ''
+                }
               </Card>
             </div>
           </div>

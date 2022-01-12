@@ -315,7 +315,7 @@ class index extends Component {
             appendHandleButtons={(keys, rows) => {
               return <ImportData onSuccess={() => { this.getTableDataSource() }} />;
             }}
-            footer={() => <div className="">排放量合计：{cementTableCO2Sum}</div>}
+            footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
         <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>

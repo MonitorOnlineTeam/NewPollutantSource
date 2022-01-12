@@ -10,8 +10,10 @@ export default Model.extend({
       profit: [],
       quota: [],
       use: [],
+      buse: [],
     },
     GHGTableData: [],
+    GHGChartData: [],
     monthDischargeData: {},
     CO2LinearAnalysisData: {
       coordMax: [],
@@ -53,7 +55,8 @@ export default Model.extend({
       const response = yield call(services.getEchartsItemTableDataSource, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          GHGTableData: response.Datas,
+          GHGTableData: response.Datas.TableData,
+          GHGChartData: response.Datas.ChartData,
         });
       } else {
         message.error(response.Message)
@@ -64,7 +67,11 @@ export default Model.extend({
       const response = yield call(services.getCO2LinearAnalysis, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          CO2LinearAnalysisData: response.Datas,
+          // CO2LinearAnalysisData: response.Datas,
+          CO2LinearAnalysisData: {
+            ...response.Datas,
+            // coordMax:[99594, 84525]
+          },
         });
       } else {
         message.error(response.Message)

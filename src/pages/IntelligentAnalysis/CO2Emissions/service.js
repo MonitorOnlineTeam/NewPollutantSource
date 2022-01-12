@@ -41,3 +41,15 @@ export async function JudgeIsRepeat(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/JudgeIsRepeat', params, null);
   return result;
 }
+
+// 获取不确定性默认值
+export async function getUnceratianData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetUnceratianData', params, null);
+  return result;
+}
+
+// 获取不确定性默认值
+export async function calUnceratianData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/CalUnceratianData', params);
+  return result;
+}

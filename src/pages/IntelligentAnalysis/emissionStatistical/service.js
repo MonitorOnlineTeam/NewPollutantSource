@@ -84,3 +84,39 @@ export async function exportPointContrastData(params) {
   const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/ExportEmissionsListForPointComparison`, params);
   return result;
 }
+
+//  废气、废水排放量同比---师一级
+export async function getEmissionsListForRegionYear(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForRegionYear`, params);
+  return result;
+}
+
+//  废气、废水排放量同比---企业一级
+export async function getEmissionsListForEntYear(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForEntYear`, params);
+  return result;
+}
+
+//  废气、废水排放量同比---排口一级
+export async function getEmissionsListForPointYear(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForPointYear`, params);
+  return result;
+}
+
+//  废气、废水排放量环比---师一级
+export async function getEmissionsListForRegionChain(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForRegionChain`, params);
+  return result;
+}
+
+//  废气、废水排放量环比---企业一级
+export async function getEmissionsListForEntChain(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForEntChain`, params);
+  return result;
+}
+
+//  废气、废水排放量环比---排口一级
+export async function getEmissionsListForPointChain(params) {
+  const result = post(`/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForPointChain`, params);
+  return result;
+}

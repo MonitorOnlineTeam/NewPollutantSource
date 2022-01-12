@@ -239,7 +239,7 @@ class Gas extends PureComponent {
             ]
           },
           {
-            title: '流量（m³）',
+            title: '气体排放总量（m³）',
             dataIndex: 'FlowValue',
             key: 'FlowValue',
             width: 180,
@@ -340,7 +340,7 @@ class Gas extends PureComponent {
             ]
           },
           {
-            title: '流量（m³）',
+            title: '气体排放总量（m³）',
             dataIndex: 'FlowValue',
             key: 'FlowValue',
             align: 'center',
@@ -465,11 +465,11 @@ class Gas extends PureComponent {
             ]
           },
           {
-            title: '流量（m³）',
+            title: '气体排放总量（m³）',
             dataIndex: 'FlowValue',
             key: 'FlowValue',
             align: 'center',
-            width: 140,
+            width: 160,
           },
         ]
       },

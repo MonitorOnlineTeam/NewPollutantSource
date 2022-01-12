@@ -59,7 +59,7 @@ class index extends PureComponent {
     let option = {
       color: ['rgb(91,176,255)', '#fac858', '#91cc75'],
       grid: {
-        left: '2%',
+        left: '50',
         right: '4%',
         top: '8%',
         bottom: '4%',
@@ -107,7 +107,7 @@ ${params[1].seriesName} ：${params[1].value}（t）
         data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
       },
       yAxis: {
-        name: '排放量(t)',
+        name: '二氧化碳排放当量(tCO₂e)',
         type: 'value',
 
         // splitLine: {

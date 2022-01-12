@@ -560,10 +560,17 @@ a:hover {
 #basicLayout {
   #autoHeight {
     .ant-pro-page-header-wrap-children-content {
-      height: auto;
+      overflow-x: hidden;
+      // height: auto;
       background-color: transparent;
+      padding-bottom: 20px;
     }
   }
+
+  // #bgWrapper_transparent {
+  //   overflow-x: hidden;
+  //   background-color: transparent;
+  // }
 }
 
 #notBreadcrumbLayout {
@@ -579,12 +586,15 @@ a:hover {
     display: none;
   }
 }
-.qualitySee .pg-viewer-wrapper .document-container{
+
+.qualitySee .pg-viewer-wrapper .document-container {
   width: 100%;
 }
-.qualitySee #docx{
+
+.qualitySee #docx {
   height: calc(100vh - 270px) !important;
 }
+
 .notBorder {
   .ant-table-small {
     border: 0;
