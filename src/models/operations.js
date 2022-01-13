@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from './service';
+import * as services from '@/services/operations';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
@@ -142,8 +142,8 @@ export default Model.extend({
           });
         }
         yield update({
-          recordTypeList: result.Datas.RecordType,
-          timeLineList: result.Datas.FormList,
+          recordTypeList:result.Datas&&result.Datas.RecordType? result.Datas.RecordType : [],
+          timeLineList: result.Datas&&result.Datas.FormList?result.Datas.FormList : [],
           timeLineTotal: result.Total,
         });
       }

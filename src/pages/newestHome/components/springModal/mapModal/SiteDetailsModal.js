@@ -11,10 +11,13 @@ import styles from '../../../style.less'
 import SdlMap from '@/pages/AutoFormManager/SdlMap'
 import config from "@/config"
 import moment from 'moment'
-
-
+import OperationRecord from '@/pages/operations/TaskRecord' //运维记录
+import  OperationLog from '@/pages/operations/operationRecord' //运维日志
+import OverRecord from '@/pages/monitoring/overRecord' //超标数据
+import ExceptionRecord from '@/pages/monitoring/exceptionRecord' //异常数据
+import StopRecord from '@/pages/report/StopRecord/stopRecord' //停运记录
 const { TabPane } = Tabs;
-let tabList = ["历史数据", "运维记录", "视频预览", "超标处置", "异常数据", "超标数据", "基本信息"];
+let tabList = ["监控数据", "运维记录", "运维日志", "停运记录","视频预览", "超标数据","异常数据", "缺失数据","基本信息"];
 const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
 
 @connect(({ loading, newestHome }) => ({
@@ -26,7 +29,7 @@ class SiteDetailsModal extends PureComponent {
     super(props);
     this.state = {
       currentKey: 1,
-      itemTitle: "历史数据",
+      itemTitle: "监控数据",
     };
   }
 
@@ -64,7 +67,7 @@ class SiteDetailsModal extends PureComponent {
       }
     })
     if (data.PollutantType === "5") {
-      tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
+      tabList = ["监控数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
     }
     }
    }
@@ -74,12 +77,13 @@ class SiteDetailsModal extends PureComponent {
   }
 
   renderModalFooter = () => {
+    const { currentKey } = this.state;
     return <div className={styles.modalFooter}>
       <ul>
         {
           tabList.map((item, index) => {
-            return item ? <li onClick={() => { this.footerItemClick(index) }}>
-              <img src={`/xj/0${index + 1}.png`} alt="" />
+            return item ? <li className={currentKey === index+1? `${styles.selectSty}` : '' } onClick={() => { this.footerItemClick(index) }}>
+              {/* <img src={`/xj/0${index + 1}.png`} alt="" /> */}
               <p>{item}</p>
             </li> : ""
           })
@@ -122,8 +126,6 @@ class SiteDetailsModal extends PureComponent {
 
     if (data.PollutantType === "5") {
       tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
-    } else {
-      tabList = ["历史数据", "运维记录", "视频预览", "超标处置", "异常数据", "超标数据", "基本信息"];
     }
     let imgName = infoWindowData.pollutantTypeCode === 2 ? "/gasInfoWindow.png" : (infoWindowData.pollutantTypeCode === 1 ? "/water.jpg" : "/infoWindowImg.png")
     if (infoWindowData.photo) {
@@ -144,6 +146,7 @@ class SiteDetailsModal extends PureComponent {
             payload: { siteDetailsVisible: false }
           })
         }}
+        wrapClassName='spreadOverModal'
       >
         {
           currentKey === 1 && <div style={{ height: "60vh", overflow: "hidden" }}>
@@ -159,37 +162,53 @@ class SiteDetailsModal extends PureComponent {
             />
           </div>
         }
-        {
+       {  // 运维记录
           currentKey === 2 && <div style={{ height: "60vh", overflow: "hidden" }}>
-            <OperDetails DGIMN={data.key} />
+            <OperationRecord
+              DGIMN={data.DGIMN}
+              isHomeModal
+              hideBreadcrumb
+              initLoadData
+            />
           </div>
         }
-        {
-          currentKey === 3 && <div style={{ height: "60vh", overflow: 'auto' }}>
-            <YsyShowVideo DGIMN={data.key} initLoadData />
+        { //运维日志
+          currentKey === 3 && <div style={{ height: "60vh", overflow: "hidden" }}>
+            <OperationLog 
+            DGIMN={data.DGIMN}
+            type={data.PollutantType}
+            isHomeModal
+            hideBreadcrumb
+            />
           </div>
         }
-        {
+         {
           currentKey === 4 && data.PollutantType != "5" &&
           <div style={{ height: "60vh", overflow: 'auto' }}>
             <AlarmRecord DGIMN={data.key} initLoadData />
           </div>
         }
         {
-          currentKey === 5 &&
-          <div style={{ height: "60vh", overflow: 'auto' }}>
-            <RecordEchartTable noticeState={0} DGIMN={data.key} hideButtons={['realtime', 'minute']} initLoadData />
+          currentKey === 5 && <div style={{ height: "60vh", overflow: 'auto' }}> {/**视频预览 */}
+            <YsyShowVideo DGIMN={data.key} initLoadData />
           </div>
         }
         {
-          currentKey === 6 && data.PollutantType != "5" &&
+          currentKey === 6 && data.PollutantType != "5" &&//超标数据
           <div style={{ height: "60vh", overflow: 'auto' }}>
             <RecordEchartTableOver DGIMN={data.key} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
                lasttime={moment(moment().format('YYYY-MM-DD HH:59:59'))} initLoadData />
           </div>
         }
         {
-          currentKey === 7 &&
+          currentKey === 7 && //异常数据
+          <div style={{ height: "60vh", overflow: 'auto' }}>
+            <RecordEchartTable noticeState={0} DGIMN={data.key} hideButtons={['realtime', 'minute']} initLoadData />
+          </div>
+        }
+
+        {
+          currentKey === 9 && //基本信息
           <div style={{ height: "60vh", overflow: 'auto' }}>
             <div className={styles.basisInfo}>
               <div>
@@ -200,6 +219,7 @@ class SiteDetailsModal extends PureComponent {
                   <Descriptions.Item label="区域">{infoWindowData.Abbreviation}</Descriptions.Item>
                   <Descriptions.Item label="经度">{infoWindowData.longitude}</Descriptions.Item>
                   <Descriptions.Item label="纬度">{infoWindowData.latitude}</Descriptions.Item>
+                  <Descriptions.Item label="运维单位">{infoWindowData.operationPerson}</Descriptions.Item>
                   <Descriptions.Item label="运维负责人">{infoWindowData.operationPerson}</Descriptions.Item>
                   <Descriptions.Item label="污染物类型">{infoWindowData.pollutantType}</Descriptions.Item>
                 </Descriptions>

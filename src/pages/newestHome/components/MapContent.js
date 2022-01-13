@@ -30,6 +30,7 @@ import config from '@/config';
 // import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
 import styles from "../style.less"
 import SiteDetailsModal from './springModal/mapModal/SiteDetailsModal'
+import PollutantType from '@/pages/AutoFormManager/PollutantType';
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -111,10 +112,9 @@ let pollutantType={}
         const {showType} = this.state;
         if(showType ==3 ){ //监测点弹窗
            const position = marker.De.extData.position;
-           console.log(position)
            this.setState({
               // hoverTitleShow:false,
-              currentClickObj: position,
+              currentClickObj: {...position,PollutantType:pollutantType},
               pointInfoWindowVisible: true,
               infoWindowPos: [position.Longitude, position.Latitude],
             },  () => {
@@ -493,7 +493,7 @@ let pollutantType={}
       <div className={styles.desc}>
         <div className={styles['desc-l']}>
           <h3>站点信息</h3>
-          <p>区域：{infoWindowData.regionName}</p>
+          <p className='textOverflow' style={{width:160}} title={infoWindowData.regionCityName}>区域：{infoWindowData.regionCityName}</p>
           <p>经度：{currentClickObj.Longitude}</p>
           <p>纬度：{currentClickObj.Latitude}</p>
         </div>

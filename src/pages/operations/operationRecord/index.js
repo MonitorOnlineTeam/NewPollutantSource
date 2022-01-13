@@ -35,9 +35,10 @@ class Index extends Component {
   }
   render() {
     const { breadTitle } = this.state;
-    return (
+    const { isHomeModal } = this.props;
+    return ( 
       <div id="record">
-        <NavigationTree
+        {!isHomeModal&&<NavigationTree
           runState='1'
           domId="#record"
           choice={false}
@@ -49,11 +50,14 @@ class Index extends Component {
               });
             }
           }}
-        />
-        <BreadcrumbWrapper title={breadTitle}>
-          {this.state.dgimn && (
-            <OperationRecord DGIMN={this.state.dgimn} PollutantType={this.state.type} />
-          )}
+        />}
+        <BreadcrumbWrapper title={breadTitle} hideBreadcrumb={this.props.hideBreadcrumb}>
+        {!isHomeModal?<> { this.state.dgimn && (
+            <OperationRecord DGIMN={ this.state.dgimn} PollutantType={this.state.type} />
+          )}</>
+          :
+          <> { this.props.DGIMN && <OperationRecord DGIMN={ this.props.DGIMN} PollutantType={this.props.type} />}</>
+        }
         </BreadcrumbWrapper>
       </div>
     );

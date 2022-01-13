@@ -38,7 +38,7 @@ import ViewImagesListModal from '../../components/ImgView';
 import 'react-image-lightbox/style.css';
 import config from '@/config';
 import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataException, EnumDataLogicErr, EnumDYStatusException } from '@/utils/enum';
-
+import RecordForm  from '@/pages/operations/recordForm' 
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -73,6 +73,9 @@ class EmergencyDetailInfo extends Component {
             visibleImg: false,
             ImgListvisible: false,
             FileUuid: '',
+            processRecordVisible:false,
+            recordType:null,
+            taskID:null
         };
     }
 
@@ -235,7 +238,14 @@ class EmergencyDetailInfo extends Component {
                 //     router.push(`/operations/recordForm/${recordType}/${taskID}`)
                 // }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
-                router.push(`/operations/recordForm/${recordType}/${taskID}`)
+               this.props.isHomeModal?
+                this.setState({
+                    processRecordVisible:true,
+                    recordType:recordType,
+                    taskID:taskID
+                })
+                :
+               router.push(`/operations/recordForm/${recordType}/${taskID}`) 
             }}
         >{cnName}  
         </Button>
@@ -463,8 +473,9 @@ class EmergencyDetailInfo extends Component {
     }
 
     render() {
-        const { photoIndex } = this.state;
+        const { photoIndex,recordType,taskID } = this.state;
         const { getFieldDecorator } = this.props.form;
+        const { isHomeModal } = this.props;
         const formItemLayout = {
             labelCol: {
                 sm: { span: 5 },
@@ -750,12 +761,13 @@ class EmergencyDetailInfo extends Component {
         return (
             <div>
                 <Card
-                    title={<span style={{ fontWeight: '900' }}>任务详情</span>}
+                    title={!isHomeModal&&<span style={{ fontWeight: '900' }}>任务详情</span>}
                     extra={
-                        <div>
-                            <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
+                        !isHomeModal&&<div>
+                           <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
                             {this.getGoBack()}
-                        </div>}
+                        </div>
+                        }
                 >
 
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
@@ -902,6 +914,23 @@ class EmergencyDetailInfo extends Component {
                 {/* <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancels}>
                     <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
                 </Modal> */}
+        <Modal  
+          title="处理记录" //首页弹框 处理详情
+          visible={this.state.processRecordVisible}
+          destroyOnClose
+          wrapClassName='spreadOverModal'
+          footer={null}
+          onCancel={() => {
+            this.setState({ processRecordVisible: false })
+          }}
+          
+        >
+          <RecordForm
+           match={{params:{typeID: recordType, taskID: taskID}}}
+           isHomeModal
+           hideBreadcrumb
+          />
+        </Modal>
             </div>
         );
     }

@@ -11,7 +11,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '../../components/MonitorContent/index';
 import styles from "./RepairRecordContent.less";
-
+import moment from 'moment'
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetDetectionTimesRecordList'],
     detectionTimesRecordList: task.detectionTimesRecordList
@@ -53,6 +53,7 @@ class ThirdPartyTestingContent extends Component {
         const SCREEN_HEIGHT = this.props.scrolly === "none" ? { overflowY: 'none' } : { height: 'calc(100vh-200px)' };
         const Record = this.props.detectionTimesRecordList !== null ? this.props.detectionTimesRecordList.Record : null;
         const Content = this.props.detectionTimesRecordList !== null ? this.props.detectionTimesRecordList.Record&&this.props.detectionTimesRecordList.Record.Content : null;
+        const RecordList = this.props.detectionTimesRecordList !== null ? this.props.detectionTimesRecordList.Record&&this.props.detectionTimesRecordList.Record.RecordList : null;
         
         if (this.props.isloading) {
             return (<Spin
@@ -95,13 +96,13 @@ class ThirdPartyTestingContent extends Component {
                                         统计月份
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
-                                {Record !== null ?Record.EnterpriseName:null}
+                                {RecordList !== null ? `${moment(RecordList[0].DataTime).format('M')}月`:null}
                             </td>
                             <td colSpan="2" style={{minWidth: 250,  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                         委托第三方检测次数
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
-                                {Record !== null ?Record.PointPosition:null}
+                                {RecordList !== null ?RecordList[0].Times:null}
                             </td>
                         </tr>
                         <tr>

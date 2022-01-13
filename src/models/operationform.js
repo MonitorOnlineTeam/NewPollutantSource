@@ -75,7 +75,7 @@ export default Model.extend({
       const result = yield call(getOperationLogList, postData);
       if (result.IsSuccess) {
         yield update({
-          recordTypeList: result.Datas.RecordType,
+          recordTypeList: result.Datas&&result.Datas.RecordType? result.Datas.RecordType : [],
         });
         callback && callback();
       }

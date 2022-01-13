@@ -37,7 +37,7 @@ import CascaderMultiple from '@/components/CascaderMultiple'
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable'
-
+import  TaskRecordDetails  from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout' 
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -63,6 +63,9 @@ class TaskRecord extends Component {
       ParentType: '企业',
       expand: false,
     //  EntCode:null,
+      taskRecordDetailVisible:false,
+      TaskID:null,
+      DGIMN:null
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -142,7 +145,7 @@ class TaskRecord extends Component {
 
   /** 查询 */
   onSubmitForm=() => {
-    const { dispatch, form, gettasklistqueryparams } = this.props;
+    const { dispatch, form, gettasklistqueryparams,DGIMN,isHomeModal } = this.props;
     const baseReportSearchForm = form.getFieldsValue();
     console.log('baseReportSearchForm', baseReportSearchForm);
       dispatch({
@@ -150,7 +153,7 @@ class TaskRecord extends Component {
         payload: {
           gettasklistqueryparams: {
                     ...gettasklistqueryparams,
-                    DGIMN: baseReportSearchForm.DGIMN != undefined ? baseReportSearchForm.DGIMN.join(',') : '',
+                    DGIMN: baseReportSearchForm.DGIMN != undefined ? baseReportSearchForm.DGIMN.join(',') :isHomeModal?DGIMN:'',
                     TaskCode: baseReportSearchForm.TaskCode,
                     ExceptionType: baseReportSearchForm.ExceptionType != undefined ? baseReportSearchForm.ExceptionType : '',
                     TaskFrom: baseReportSearchForm.TaskFrom != undefined ? baseReportSearchForm.TaskFrom : '',
@@ -175,21 +178,25 @@ class TaskRecord extends Component {
   LoadData = () => {
     const {
         dispatch, gettasklistqueryparams,
+        isHomeModal,DGIMN
     } = this.props;
     dispatch({
         type: 'task/updateState',
         payload: {
-          gettasklistqueryparams,
+          gettasklistqueryparams:{
+            ...gettasklistqueryparams,
+            DGIMN:isHomeModal?DGIMN:''
+          },
         },
     })
      dispatch({
        type: 'task/GetOperationTaskList',
-       payload: {},
      });
      dispatch({
       type: 'operations/getOperationCompanyList',
       payload: {},
     });
+
 }
 
    /** 分页 */
@@ -375,11 +382,18 @@ operationCompanyList=()=>{
    return  <Option key={item.id} value={item.id}>{item.name}</Option>
   })
 }
-
+taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
+  this.setState({
+    taskRecordDetailVisible:true,
+    TaskID:TaskID,
+    DGIMN:DGIMN
+  })
+}
   render() {
-    const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams } = this.props;
+    const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams,isHomeModal } = this.props;
     const { formLayout } = this._SELF_;
     console.log('gettasklistqueryparams', gettasklistqueryparams);
+    const {TaskID,DGIMN} = this.state;
     const columns = [
       {
         title: '行政区',
@@ -507,7 +521,7 @@ operationCompanyList=()=>{
               reslist.push(
                 <Tooltip title="详情">
                 <a><ProfileOutlined
-                  onClick={() => this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} /></a>
+                  onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} /></a>
                    </Tooltip>,
               )
               if (time) {
@@ -542,7 +556,10 @@ operationCompanyList=()=>{
     } else {
       style.marginLeft = 20;
     }
-    console.log('LoadingData', LoadingData);
+    if(isHomeModal){
+     columns.splice(0,3)
+    }
+    // console.log('LoadingData', LoadingData);
     // if (LoadingData) {
     //   return (<Spin
     //     style={{
@@ -556,11 +573,11 @@ operationCompanyList=()=>{
     //   />);
     // }
     return (
-      <BreadcrumbWrapper>
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card className="contentContainer">
           <Form layout=""  className='searchForm' style={{ marginBottom: '10' }}>
               <Row>
-                  <Col md={8} sm={24}>
+               {!isHomeModal&&<Col md={8} sm={24}>
                       <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
                           {getFieldDecorator('DGIMN', {
                             initialValue: gettasklistqueryparams.DGIMN ? gettasklistqueryparams.DGIMN.split(',') : undefined,
@@ -568,7 +585,7 @@ operationCompanyList=()=>{
                             <CascaderMultiple {...this.props} style={{ width: '100%' }}/>,
                           )}
                       </FormItem>
-                  </Col>
+                  </Col>}
                   <Col md={8} sm={24}>
                       <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
                           {getFieldDecorator('CreateTime', {
@@ -844,6 +861,23 @@ operationCompanyList=()=>{
               </FormItem>
             </Row>
           </Form>
+        </Modal>
+        <Modal
+          title="任务详情"
+          visible={this.state.taskRecordDetailVisible}
+          destroyOnClose
+          wrapClassName='spreadOverModal'
+          footer={null}
+          onCancel={() => {
+            this.setState({ taskRecordDetailVisible: false })
+          }}
+          
+        >
+          <TaskRecordDetails
+           match={{params:{TaskID: TaskID, DGIMN: DGIMN}}}
+           isHomeModal
+           hideBreadcrumb
+          />
         </Modal>
       </BreadcrumbWrapper>
     );

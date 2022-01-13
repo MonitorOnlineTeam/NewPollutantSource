@@ -351,7 +351,7 @@ class OperationRecord extends Component {
         type: 'operationform/updateState',
         payload: {
           breadTitle: '运维记录',
-          currentRecordType: 11,
+          currentRecordType: this.props.currentRecordType? 11 : undefined,
         },
       });
     }

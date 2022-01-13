@@ -171,8 +171,6 @@ class RepalceRecordList extends Component {
                         </tr>
                      <tr>
                 </tr>
-            );
-        }
                           {ColumnList&&hourRecordList&&this.tableData('小时数据',ColumnList,hourRecordList)}
                           {ColumnList&&dayRecordList&&this.tableData('日数据',[],dayRecordList)}
                    
