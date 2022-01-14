@@ -10,15 +10,17 @@ import {
   Spin,
   Radio,
   Button,
-  Modal
+  Modal,
+  Row,
+  Col,
+  Switch,
 } from 'antd';
-import ReactEcharts from 'echarts-for-react';
-import { routerRedux } from 'dva/router';
 import Cookie from 'js-cookie';
 import {
   connect
 } from 'dva';
 import CustomIcon from '@/components/CustomIcon';
+import LiveVideo from "@/components/YSYVideo-React/Live"
 
 // import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
 // import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
@@ -26,7 +28,6 @@ import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 // import { getPointStatusImg } from '@/utils/getStatusImg';
-import { onlyOneEnt } from '../../config';
 import styles from './index.less';
 import { router } from 'umi';
 import Link from 'umi/link';
@@ -57,12 +58,13 @@ let Map, Marker, Polygon, Markers, InfoWindow;
   allEntAndPointList: home.allEntAndPointList,
   mounthOverData: home.mounthOverData,
   homePage: home.homePage,
+  theme: home.theme,
   configInfo: global.configInfo,
 }))
 class index extends Component {
   constructor(props) {
     super(props);
-
+    document.documentElement.className = 'home-dark-theme';
     this.state = {
       screenWidth: window.screen.width === 1600 ? 50 : 70,
       currentMonth: moment().format('MM') * 1,
@@ -441,6 +443,7 @@ class index extends Component {
     //   this.
   }
   render() {
+    console.log('theme=', this.props.theme)
     const {
       pointName,
       position,
@@ -467,6 +470,7 @@ class index extends Component {
       mounthOverData,
       homePage,
       configInfo,
+      theme,
     } = this.props;
     let pointposition = position;
     let pointvisible = visible;
@@ -497,7 +501,7 @@ class index extends Component {
     const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
     return (
       <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
-        {
+        {/* {
           isLeftLoading && <Spin
             style={{
               position: "absolute",
@@ -530,8 +534,8 @@ class index extends Component {
             }}
             size="large"
           />
-        }
-        {
+        } */}
+        {/* {
           allEntAndPointLoading && <Spin
             style={{
               position: "absolute",
@@ -546,137 +550,147 @@ class index extends Component {
             }}
             size="large"
           />
-        }
+        } */}
         <header className={styles.homeHeader}>
           <p><span>SDL</span> {configInfo.SystemName}</p>
           <a className={styles.backMenu} onClick={() => {
             router.push(Cookie.get("systemNavigateUrl"))
           }}>系统功能</a>
         </header>
-        <Map
-          resizeEnable={true}
-          events={this.mapEvents}
-          mapStyle="amap://styles/darkblue"
-          amapkey={amapKey}
-          center={mapCenter}
-        >
-          <InfoWindow
-            position={this.state.hoverMapCenter}
-            isCustom
-            showShadow
-            autoMove
-            visible={this.state.infoWindowHoverVisible}
-            offset={[4, -35]}
-          >{this.state.currentTitle}</InfoWindow>
-          <div className={styles.leftWrapper}>
-            {/* 运行分析  || 智能质控*/}
-            <div style={{ display: `${homePage ? homePage.split(',')[0] : ''}` }} className={styles.effectiveRate}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} onRef={this.onRef1}
-                assembly={homePage ? homePage.split(',')[0] : "OperationAnalysis"} />
-            </div>
-            {/* 运维统计 */}
-            <div style={{ display: `${homePage ? homePage.split(',')[1] : ''}` }} className={styles.operationsWrapper}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[1] : "OperationStatistics"} />
-            </div>
-            {/* 超标异常 */}
-            <div style={{ display: `${homePage ? homePage.split(',')[2] : ''}` }} className={styles.excessiveAbnormalWrapper}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[2] : "AlarmMessage"} />
-            </div>
-          </div>
-          <div className={styles.rightWrapper}>
-            {/* 智能监控 */}
-            <div style={{ display: `${homePage ? homePage.split(',')[3] : ''}` }} className={styles.monitoringContent}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[3] : "MonitoringStatus"} />
-            </div>
-            {/* 企业排放量 */}
-            <div style={{ display: `${homePage ? homePage.split(',')[4] : ''}` }} className={styles.emissionsContent}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[4] : "EmissionsAnalysis"} />
-            </div>
-            {/* 排污税 */}
-            <div style={{ display: `${homePage ? homePage.split(',')[5] : ''}` }} className={styles.effluentFeeContent}>
-              <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[5] : "EmissionTax"} />
-            </div>
-          </div>
-          <div className={styles.currentInfoWrapper}>
-            {
-              currentEntInfo.title && <div>
-                <span>企业</span> <br />
-                <span>{currentEntInfo.title}</span>
+        <Row gutter={[8, 8]} style={{ padding: '0 8px' }} className={styles.contentWrapper}>
+          <Col flex='3 1'>
+            <div className={styles.leftWrapper}>
+              {/* 运行分析  || 智能质控*/}
+              <div style={{ display: `${homePage ? homePage.split(',')[0] : ''}` }} className={`${styles.effectiveRate} ${styles.box}`}>
+                <i className={styles.lb}></i>
+                <i className={styles.rb}></i>
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} onRef={this.onRef1}
+                  assembly={homePage ? homePage.split(',')[0] : "OperationAnalysis"} />
               </div>
-            }
-            {
-              currentPoint && currentPoint.title && <div>
-                <span>排口</span> <br />
-                <span>{currentPoint.title}</span>
+              {/* 运维统计 */}
+              <div style={{ display: `${homePage ? homePage.split(',')[1] : ''}` }} className={`${styles.operationsWrapper}  ${styles.box}`}>
+                <i className={styles.lb}></i>
+                <i className={styles.rb}></i>
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[1] : "OperationStatistics"} />
               </div>
-            }
-          </div>
-          {/**中间污染物类型*/}
-          {
-            currentEntInfo.children && showType === "point" && <div
-              style={{
-                position: 'absolute',
-                top: '2%',
-                left: 430,
-                zIndex: 100
-              }}
-            >
-              <Radio.Group style={{}} defaultValue={this.state.radioDefaultValue} buttonStyle="solid" size="default" onChange={this.onRadioChange}>
-                {this.renderPollutantTypelist()}
-              </Radio.Group>
+              {/* 超标异常 */}
+              <div style={{ display: `${homePage ? homePage.split(',')[2] : ''}` }} className={`${styles.excessiveAbnormalWrapper}  ${styles.box}`}>
+                <i className={styles.lb}></i>
+                <i className={styles.rb}></i>
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[2] : "AlarmMessage"} />
+              </div>
             </div>
-          }
-          {
-            mounthOverData.length ? <div className={styles.overproofWrapper}>
-              <div className={styles.title}>{currentMonth}月超标汇总</div>
-              <div className={styles.content}>
-                <ul className={styles.colum}>
-                  <li>污染物</li>
-                  <li>超标次数</li>
-                  <li>超标倍数</li>
-                </ul>
-                {
-                  mounthOverData.map(item => {
-                    if (item) {
-                      return <ul>
-                        <li>{item.pollutantName}</li>
-                        <li>{item.OverCount}</li>
-                        <li>{item.OverMultiple}</li>
-                      </ul>
-                    }
-                  })
+          </Col>
+          <Col flex='5.5 1' className={styles.centerWrapper}>
+            <div className={`${styles.mapBox}`}>
+              <i className={styles.lb}></i>
+              <i className={styles.rb}></i>
+              <Switch style={{ position: 'absolute', zIndex: 1, top: 10, right: 10 }} checkedChildren="深色" unCheckedChildren="浅色" defaultChecked onChange={(value, e) => {
+                console.log('value=', value)
+                this.props.dispatch({
+                  type: 'home/updateState',
+                  payload: {
+                    theme: value ? 'dark' : 'light',
+                  }
+                })
+                // let themeLink = document.getElementById('theme-link');
+                if (value) {
+                  document.documentElement.className = 'home-dark-theme';
+                  // themeLink.href = '/theme/light.css'; // 切换 antd 组件主题(亮色)
+                } else {
+                  document.documentElement.className = 'home-light-theme';
+                  // themeLink.href = '/theme/dark.css'; // 切换 antd 组件主题(暗色)
                 }
+              }} />
+              <Map
+                resizeEnable={true}
+                events={this.mapEvents}
+                mapStyle={theme === 'dark' ? "amap://styles/darkblue" : "amap://styles/normal"}
+                amapkey={amapKey}
+                center={mapCenter}
+              >
+                <InfoWindow
+                  position={this.state.hoverMapCenter}
+                  isCustom
+                  showShadow
+                  autoMove
+                  visible={this.state.infoWindowHoverVisible}
+                  offset={[4, -35]}
+                >{this.state.currentTitle}</InfoWindow>
+                <Markers
+                  markers={currentMarkersList}
+                  events={this.markersEvents}
+                  className={this.state.special}
+                  render={this.renderMarkers}
+                />
+                {
+                  this.getpolygon(polygonChange)
+                }
+                <InfoWindow
+                  position={pointposition}
+                  visible={this.state.visible}
+                  isCustom={true}
+                  offset={[0, -25]}
+                >
+                  {pointName}
+                </InfoWindow>
+              </Map>
+            </div>
+            <Row gutter={[8, 0]} className={styles.videoBox}>
+              <Col span={12}>
+                <div className={styles.box}>
+                  <i className={styles.lb}></i>
+                  <i className={styles.rb}></i>
+                  <div className={styles.title} style={{ marginBottom: 12 }}>
+                    <p>视频监控</p>
+                  </div>
+                  <div className={styles.videoContainer}>
+                    <LiveVideo channelNo={'E36486991'} HD={1} template="simple"/>
+                  </div>
+                </div>
+              </Col>
+              <Col span={12}>
+                <div className={styles.box}>
+                  <i className={styles.lb}></i>
+                  <i className={styles.rb}></i>
+                  <div className={styles.title} style={{ marginBottom: 12 }}>
+                    <p>视频监控</p>
+                  </div>
+                  <div className={styles.videoContainer}>
+                    <div className={styles.notData}>
+                      <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+                      <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Col>
+          <Col flex='3 1'>
+            <div className={styles.rightWrapper}>
+              {/* 智能监控 */}
+              <div style={{ display: `${homePage ? homePage.split(',')[3] : ''}` }} className={`${styles.monitoringContent}  ${styles.box}`}>
+                <i className={styles.lb}></i>
+                <i className={styles.rb}></i>
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[3] : "MonitoringStatus"} />
               </div>
-            </div> : null
-          }
+              {/* 企业排放量 */}
+              <div style={{ display: `${homePage ? homePage.split(',')[4] : ''}` }} className={`${styles.emissionsContent}  ${styles.box}`}>
+                <i className={styles.lb}></i>
+                <i className={styles.rb}></i>
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[4] : "EmissionsAnalysis"} />
+              </div>
+              {/* 排污税 */}
+              <div style={{ display: `${homePage ? homePage.split(',')[5] : ''}` }} className={`${styles.effluentFeeContent}  ${styles.box}`}>
+                <i className={styles.lb}></i>
+                <i className={styles.rb}></i>
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[5] : "EmissionTax"} />
+              </div>
+            </div>
+          </Col>
+        </Row>
 
-          <Markers
-            markers={currentMarkersList}
-            events={this.markersEvents}
-            className={this.state.special}
-            render={this.renderMarkers}
-          />
-          {
-            this.getpolygon(polygonChange)
-          }
-          <InfoWindow
-            position={pointposition}
-            visible={this.state.visible}
-            isCustom={true}
-            offset={[0, -25]}
-          >
-            {pointName}
-          </InfoWindow>
-        </Map>
-        {/*<Button type="primary" onClick={() => {*/}
-        {/*this.setState({ modalVisible: true })*/}
-        {/*}}>*/}
-        {/*Open Modal*/}
-        {/*</Button>*/}
-        {/*<Modal footer={false} width="80vw" title="Basic Modal" visible={this.state.modalVisible} onCancel={() => this.setState({ modalVisible: false})}>*/}
-        {/*<EntWorkOrderStatistics />*/}
-        {/*</Modal>*/}
-      </div >
+      </div>
     );
   }
 }

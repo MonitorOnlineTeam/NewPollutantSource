@@ -70,7 +70,7 @@ class MonitoringStatus extends Component {
 
         if (Number.parseInt(currentMonth) < i) {
           // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
-          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: 'transparent', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#eb5c45', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -92,7 +92,7 @@ class MonitoringStatus extends Component {
       eyhldata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
           // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
-          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: 'transparent', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#eb5c45', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }
@@ -114,7 +114,7 @@ class MonitoringStatus extends Component {
       dyhwdata.map((ele) => {
         if (Number.parseInt(currentMonth) < i) {
           // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
-          seriesData.push({ value: outed, itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: 'transparent', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
         } else {
           seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#eb5c45', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
         }

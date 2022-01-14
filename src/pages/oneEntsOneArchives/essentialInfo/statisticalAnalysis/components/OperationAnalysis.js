@@ -1,49 +1,48 @@
 import React, { Component } from 'react';
-import styles  from '../index.less';
+import styles from '../index.less';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import config from "@/config";
 const { RunningRate, TransmissionEffectiveRate } = config;
 
 @connect(({ loading, home }) => ({
-    rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
-    rateStatisticsByEnt: home.rateStatisticsByEnt,
-  }))
+  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
+  rateStatisticsByEnt: home.rateStatisticsByEnt,
+}))
 
 class OperationAnalysis extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  };
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  componentDidMount() {
+    let entCode = sessionStorage.getItem('oneEntCode')
+    this.getData(entCode);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.DGIMN !== nextProps.DGIMN || this.props.entCode !== nextProps.entCode) {
+      this.getData(nextProps.entCode, nextProps.DGIMN);
     }
-    componentDidMount(){
-        let entCode = sessionStorage.getItem('oneEntCode')
-        this.getData(entCode);
-    }
-    componentWillReceiveProps(nextProps)
-    {
-        if (this.props.DGIMN !== nextProps.DGIMN || this.props.entCode !== nextProps.entCode) {
-             this.getData(nextProps.entCode,nextProps.DGIMN);
-        }
-    }
-    getData=(entCode,DGIMN)=>{
-        const {dispatch}=this.props;
-           // 获取智能质控数据
-        dispatch({
-            type: "home/getRateStatisticsByEnt",
-            payload: {
-            entCode,
-            DGIMN
-            }
-        })
-    }
+  }
+  getData = (entCode, DGIMN) => {
+    const { dispatch } = this.props;
+    // 获取智能质控数据
+    dispatch({
+      type: "home/getRateStatisticsByEnt",
+      payload: {
+        entCode,
+        DGIMN
+      }
+    })
+  }
 
 
-    
+
   // 智能质控
   getOption = (type) => {
     const { rateData } = this.props.rateStatisticsByEnt;
-    if(!rateData)
-    return;
+    if (!rateData)
+      return;
     let networkeRate = rateData.NetworkeRate === undefined ? 0 : (parseFloat(rateData.NetworkeRate) * 100).toFixed(0);
     let runningRate = rateData.RunningRate === undefined ? 0 : (parseFloat(rateData.RunningRate) * 100).toFixed(0);
     let transmissionEffectiveRate = rateData.TransmissionEffectiveRate === undefined ? 0 : (parseFloat(rateData.TransmissionEffectiveRate) * 100).toFixed(0);
@@ -137,7 +136,7 @@ class OperationAnalysis extends Component {
               textStyle: {
                 fontSize: 14,
                 // color: `${styles.circularText}`,
-                color:'#8591a9',
+                color: '#8591a9',
                 // fontWeight: 'bold'
               }
             },
@@ -155,23 +154,23 @@ class OperationAnalysis extends Component {
     };
     return option;
   }
-    render() {
-        const {currentMonth}=this.props;
-        return (
-        <>
-         <div className={styles.title}>
-            <p>运行分析</p>
+  render() {
+    const { currentMonth } = this.props;
+    return (
+      <>
+        <div className={styles.title}>
+          <p>运行分析</p>
+        </div>
+        <div className={styles.echartsContent}>
+          <div className={styles.echartItem}>
+            <ReactEcharts
+              option={this.getOption(1)}
+              style={{ height: '94px', width: '100%' }}
+              theme="my_theme"
+            />
+            <div className={styles.echartsTitle}>实时联网率</div>
           </div>
-          <div className={styles.echartsContent}>
-            <div className={styles.echartItem}>
-              <ReactEcharts
-                option={this.getOption(1)}
-                style={{ height: '94px', width: '100%' }}
-                theme="my_theme"
-              />
-              <div className={styles.echartsTitle}>实时联网率</div>
-            </div>
-            {/* <div className={styles.echartItem}>
+          {/* <div className={styles.echartItem}>
               <ReactEcharts
                 option={this.getOption(2)}
                 style={{ height: '94px', width: '100%' }}
@@ -179,18 +178,18 @@ class OperationAnalysis extends Component {
               />
               <div className={styles.echartsTitle}>{currentMonth}月设备运转率</div>
             </div> */}
-            <div className={styles.echartItem}>
-              <ReactEcharts
-                option={this.getOption(3)}
-                style={{ height: '94px', width: '100%' }}
-                theme="my_theme"
-              />
-              <div className={styles.echartsTitle}>{currentMonth}月传输有效率</div>
-            </div>
+          <div className={styles.echartItem}>
+            <ReactEcharts
+              option={this.getOption(3)}
+              style={{ height: '94px', width: '100%' }}
+              theme="my_theme"
+            />
+            <div className={styles.echartsTitle}>{currentMonth}月传输有效率</div>
           </div>
-          </>
-        );
-    }
+        </div>
+      </>
+    );
+  }
 }
 
 export default OperationAnalysis;

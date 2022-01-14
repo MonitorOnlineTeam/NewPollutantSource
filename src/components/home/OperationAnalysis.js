@@ -1,49 +1,60 @@
 import React, { Component } from 'react';
-import styles  from '@/pages/home/index.less';
+import styles from '@/pages/home/index.less';
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
 import config from "@/config";
 const { RunningRate, TransmissionEffectiveRate } = config;
 
 @connect(({ loading, home }) => ({
-    rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
-    rateStatisticsByEnt: home.rateStatisticsByEnt,
-  }))
+  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
+  rateStatisticsByEnt: home.rateStatisticsByEnt,
+  theme: home.theme,
+}))
 
 class OperationAnalysis extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  };
-    }
-    componentDidMount(){
-        
-        this.getData();
-    }
-    componentWillReceiveProps(nextProps)
-    {
-        if (this.props.DGIMN !== nextProps.DGIMN || this.props.entCode !== nextProps.entCode) {
-             this.getData(nextProps.entCode,nextProps.DGIMN);
-        }
-    }
-    getData=(entCode,DGIMN)=>{
-        const {dispatch}=this.props;
-           // 获取智能质控数据
-        dispatch({
-            type: "home/getRateStatisticsByEnt",
-            payload: {
-            entCode,
-            DGIMN
-            }
-        })
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  componentDidMount() {
+
+    this.getData();
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.DGIMN !== nextProps.DGIMN || this.props.entCode !== nextProps.entCode) {
+      this.getData(nextProps.entCode, nextProps.DGIMN);
     }
 
 
-    
+    if (this.props.theme !== nextProps.theme) {
+      debugger
+      if (this.myChart) {
+        let echarts_instance = this.myChart.getEchartsInstance();
+        echarts_instance.dispose();
+        debugger
+        echarts_instance.setOption(this.getOption)
+      }
+    }
+  }
+  getData = (entCode, DGIMN) => {
+    const { dispatch } = this.props;
+    // 获取智能质控数据
+    dispatch({
+      type: "home/getRateStatisticsByEnt",
+      payload: {
+        entCode,
+        DGIMN
+      }
+    })
+  }
+
+
+
   // 智能质控
   getOption = (type) => {
     const { rateData } = this.props.rateStatisticsByEnt;
-    if(!rateData)
-    return;
+    if (!rateData)
+      return;
     let networkeRate = rateData.NetworkeRate === undefined ? 0 : (parseFloat(rateData.NetworkeRate) * 100).toFixed(0);
     let runningRate = rateData.RunningRate === undefined ? 0 : (parseFloat(rateData.RunningRate) * 100).toFixed(0);
     let transmissionEffectiveRate = rateData.TransmissionEffectiveRate === undefined ? 0 : (parseFloat(rateData.TransmissionEffectiveRate) * 100).toFixed(0);
@@ -54,10 +65,31 @@ class OperationAnalysis extends Component {
     let seriesData = [];
     if (type === 1) {
       legendData = ['正常', '离线'];
-      color = ['rgb(86,244,133)', 'rgb(32,99,81)'];
+      color = ['#282c40'];
       seriesName = '实时联网率';
       seriesData = [
-        { value: networkeRate, name: '正常' },
+        {
+          value: networkeRate, name: '正常',
+          itemStyle: {
+            normal: {
+              color: { // 完成的圆环的颜色
+                colorStops: [{
+                  offset: 0,
+                  color: '#02d6fc' // 0% 处的颜色
+                }, {
+                  offset: 1,
+                  color: '#367bec' // 100% 处的颜色
+                }]
+              },
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            }
+          }
+        },
         { value: 100 - networkeRate, name: '离线' }
       ];
     } else if (type === 2) {
@@ -69,7 +101,28 @@ class OperationAnalysis extends Component {
       }
       seriesName = '设备运转率';
       seriesData = [
-        { value: runningRate, name: '达标' },
+        {
+          value: runningRate, name: '达标',
+          itemStyle: {
+            normal: {
+              color: { // 完成的圆环的颜色
+                colorStops: [{
+                  offset: 0,
+                  color: '#f4a545' // 0% 处的颜色
+                }, {
+                  offset: 1,
+                  color: '#dac534' // 100% 处的颜色
+                }]
+              },
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            }
+          }
+        },
         { value: (100 - runningRate).toFixed(2), name: '未达标' }
       ];
     } else {
@@ -81,26 +134,48 @@ class OperationAnalysis extends Component {
       }
       seriesName = '传输有效率';
       seriesData = [
-        { value: transmissionEffectiveRate, name: '达标' },
+        {
+          value: transmissionEffectiveRate, name: '达标',
+          itemStyle: {
+            normal: {
+              color: { // 完成的圆环的颜色
+                colorStops: [{
+                  offset: 0,
+                  color: '#f4a545' // 0% 处的颜色
+                }, {
+                  offset: 1,
+                  color: '#dac534' // 100% 处的颜色
+                }]
+              },
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            }
+          }
+        },
         { value: (100 - transmissionEffectiveRate).toFixed(2), name: '未达标' }
       ];
     }
+
+    let datas = {
+      value: 78,
+      company: "%",
+      ringColor: [{
+        offset: 0,
+        color: '#02d6fc' // 0% 处的颜色
+      }, {
+        offset: 1,
+        color: '#367bec' // 100% 处的颜色
+      }]
+    }
+
     let option = {
-      color: color,
+      // color: color,
+      color: ['#4b4b4e'],
       // animation: false,
-      title: {
-        show: false,
-        text: seriesName,
-        textAlign: 'center',
-        x: '65',
-        y: '115',
-        padding: 0,
-        textStyle: {
-          fontSize: 14,
-          fontWeight: 'bolder',
-          color: '#72A0BA',
-        }
-      },
       tooltip: {
         show: true,
         trigger: 'item',
@@ -117,7 +192,7 @@ class OperationAnalysis extends Component {
         {
           name: '智能质控',
           type: 'pie',
-          radius: ['50%', '70%'],
+          radius: ['66%', '76%'],
           avoidLabelOverlap: false,
           hoverAnimation: true,
           // silent: true,
@@ -136,7 +211,7 @@ class OperationAnalysis extends Component {
               },
               textStyle: {
                 fontSize: 14,
-                color: '#fff',
+                color: this.props.theme === 'dark' ? '#fff' : '#000',
               }
             },
             emphasis: {
@@ -153,23 +228,25 @@ class OperationAnalysis extends Component {
     };
     return option;
   }
-    render() {
-        const {currentMonth}=this.props;
-        return (
-        <>
-         <div className={styles.title}>
-            <p>运行分析</p>
+  render() {
+    const { currentMonth } = this.props;
+    return (
+      <>
+        <div className={styles.title}>
+          <p>运行分析</p>
+        </div>
+        <div className={styles.echartsContent}>
+          <div className={styles.echartItem}>
+            <ReactEcharts
+              ref={echart => { this.myChart = echart }}
+              option={this.getOption(1)}
+              lazyUpdate={true}
+              style={{ height: '94px', width: '100%' }}
+            // theme={this.props.theme === 'dark' ? 'dark' : 'default'}
+            />
+            <div className={styles.echartsTitle}>实时联网率</div>
           </div>
-          <div className={styles.echartsContent}>
-            <div className={styles.echartItem}>
-              <ReactEcharts
-                option={this.getOption(1)}
-                style={{ height: '94px', width: '100%' }}
-                theme="my_theme"
-              />
-              <div className={styles.echartsTitle}>实时联网率</div>
-            </div>
-            {/* <div className={styles.echartItem}>
+          {/* <div className={styles.echartItem}>
               <ReactEcharts
                 option={this.getOption(2)}
                 style={{ height: '94px', width: '100%' }}
@@ -177,18 +254,18 @@ class OperationAnalysis extends Component {
               />
               <div className={styles.echartsTitle}>{currentMonth}月设备运转率</div>
             </div> */}
-            <div className={styles.echartItem}>
-              <ReactEcharts
-                option={this.getOption(3)}
-                style={{ height: '94px', width: '100%' }}
-                theme="my_theme"
-              />
-              <div className={styles.echartsTitle}>{currentMonth}月传输有效率</div>
-            </div>
+          <div className={styles.echartItem}>
+            <ReactEcharts
+              option={this.getOption(3)}
+              style={{ height: '94px', width: '100%' }}
+              theme="my_theme"
+            />
+            <div className={styles.echartsTitle}>{currentMonth}月传输有效率</div>
           </div>
-          </>
-        );
-    }
+        </div>
+      </>
+    );
+  }
 }
 
 export default OperationAnalysis;

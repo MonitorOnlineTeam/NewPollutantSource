@@ -6,7 +6,7 @@
  * @desc: 主页model
  */
 import moment from 'moment';
-import * as services from './service';
+import * as services from '@/services/homeApi';
 import * as commonApi from '@/services/commonApi'
 import Model from '@/utils/model';
 import { message } from 'antd';
@@ -14,6 +14,7 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'home',
   state: {
+    theme: 'dark',
     allEntAndPointList: [],
     currentEntInfo: {},
     currentMarkersList: [],
@@ -87,7 +88,7 @@ export default Model.extend({
     homePage: "1"
   },
   effects: {
-    *getHomePage({ payload }, { call, update }) {
+    *getHomePage({ payload }, { call, update, take }) {
       const result = yield call(services.getHomePage, payload);
       if (result.IsSuccess) {
         yield update({ homePage: result.Datas });
@@ -95,9 +96,21 @@ export default Model.extend({
     },
     // 获取企业及排口信息
     *getAllEntAndPoint({ payload }, {
-      call, update
+      call, update, take, select
     }) {
-      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3] });
+      let global = yield select(state => state.global);
+      if (!global.configInfo) {
+        yield take('global/getSystemConfigInfo/@@end');
+        global = yield select(state => state.global);
+        payload = {
+          PollutantTypes: global.configInfo.SystemPollutantType,
+        }
+      } else {
+        payload = {
+          PollutantTypes: global.configInfo.SystemPollutantType,
+        }
+      }
+      const result = yield call(services.getAllEntAndPoint, { Status: [0, 1, 2, 3], ...payload });
       if (result.IsSuccess) {
         yield update({
           allEntAndPointList: result.Datas,
