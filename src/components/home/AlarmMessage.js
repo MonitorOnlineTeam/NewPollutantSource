@@ -51,7 +51,7 @@ class AlarmMessage extends Component {
                       speed={30}
                       gap={700}
                       height={"100%"}
-                      width={380}
+                      width={'100%'}
                     />
                   ) : <div className={styles.notData}>
                       <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />

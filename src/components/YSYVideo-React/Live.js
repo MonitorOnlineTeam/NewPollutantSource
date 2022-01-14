@@ -63,7 +63,7 @@ class Video extends PureComponent {
         autoplay: true, // 开启自动播放
         accessToken: accessToken || sessionStorage.getItem('YSYAccessToken'),
         url: url,
-        template: 'standard', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版； 
+        template: template || 'standard', // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版； 
       })
     }
   }
