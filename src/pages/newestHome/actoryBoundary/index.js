@@ -1,7 +1,7 @@
 /**
- * 功能：首页
+ * 功能：首页 水质
  * 创建人：贾安波
- * 创建时间：2021.11.03
+ * 创建时间：2021.11.04
  */
 import React, { useState,useEffect,Fragment, useRef,useMemo  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover,Radio    } from 'antd';
@@ -16,13 +16,8 @@ import Link from 'umi/link';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
 import moment from 'moment'
-import styles from "./style.less"
+import Content from '../components/Content'
 const { Option } = Select;
-import WasteWater from './wasteWater'
-import WasteGas from './wasteGas'
-import SurfaceWater from './surfaceWater'
-import ActoryBoundary from './actoryBoundary'
-import Air from './air'
 
 const namespace = 'newestHome'
 
@@ -30,20 +25,13 @@ const namespace = 'newestHome'
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
-
 })
 
 const  dvaDispatch = (dispatch) => {
   return {
-    getnewestHomeList : (payload,callback) =>{ 
-      dispatch({
-        type: `${namespace}/getnewestHomeList`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    updateState:(payload)=>{ //更新代码
+
+
+    updateState:(payload)=>{ //更新参数
       dispatch({
         type: `${namespace}/updateState`, 
         payload:{...payload},
@@ -58,27 +46,24 @@ const Index = (props) => {
 
 
 
+
+
   
   useEffect(() => {
-  
+
   },[]);
 
-  const [type,setType] = useState('wasteWater')
- const selectClick = (val)=>{
-   console.log(val)
- }
- const typeObj={
-  wasteWater:<WasteWater selectClick={selectClick}/>,
-  wasteGas:<WasteGas selectClick={selectClick}/>,
-  surfaceWater:<SurfaceWater selectClick={selectClick}/>,
-  air:<Air selectClick={selectClick}/>,
-  actoryBoundary:<ActoryBoundary selectClick={selectClick}/>
- }
+
+
+
+
+
+
 
   return (
     <div>
-     { typeObj[type]}
-    </div>
+    <Content type='厂界' selectClick={props.selectClick}/>
+        </div>
   );
 };
 export default connect(dvaPropsData,dvaDispatch)(Index);

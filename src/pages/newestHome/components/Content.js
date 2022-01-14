@@ -21,6 +21,7 @@ import BottomContent from './BottomContent'
 import RightContent from './RightContent'
 import MapContent from './MapContent'
 import styles from "../style.less"
+import { Item } from 'gg-editor';
 
 const { Option } = Select;
 
@@ -88,24 +89,43 @@ const Index = (props) => {
   }
 
   useEffect(() => {
-    let scrollEle = document.querySelector(".homeBreadcrumb");
+    // let scrollEle = document.querySelector(".homeBreadcrumb");
     // 监听
-    scrollEle.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleResize);
+    // scrollEle.addEventListener("scroll", handleScroll);
+    // window.addEventListener("resize", handleResize);
 
     // 销毁
     return () =>  {
       cancelMinWidth()
-      scrollEle.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
+      // scrollEle.removeEventListener("scroll", handleScroll);
+      // window.removeEventListener("resize", handleResize);
     }
   },[]);
   const [fullScreen,setFullScreen] = useState(false)
   const fullScreenClick = (visible) =>{
      setFullScreen(visible)
   }
+  const tabClick = (val) =>{
+    SetSelectkey(val)
+    props.selectClick(val)
+  }
+  const [selectkey,SetSelectkey] = useState('wasteWater')
+  const tabList = [
+    {text:'废水',val:"wasteWater"},
+    {text:'废气',val:"WasteGas"},
+    {text:'空气站',val:"air"},
+    {text:'地表水',val:"surfaceWater"},
+    {text:'厂界',val:"actoryBoundary"},
+  ]
+
   return (
-  <BreadcrumbWrapper type='homePage'>
+  // <BreadcrumbWrapper  hideBreadcrumb>
+     <div className={styles.homeContent}>
+      <div className={styles.headerTabSty}>
+         {tabList.map(item=>{
+           return <span  key={item.val}  className={selectkey === item.val? `${styles.selectSty}` : `${styles.normalSty}` }  onClick={()=>{tabClick(item.val)}}>{item.text}</span>
+         })}
+       </div>
       <div className={styles.homePage}>
         <Row style={{paddingTop:10,height:'100%'}}>   {/**地图部分 和 地图两侧*/}
           <Col span={5} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
@@ -122,7 +142,9 @@ const Index = (props) => {
          <BottomContent {...props} />
         </div>
       </div>  
-   </BreadcrumbWrapper>
+   </div>
+  //  </BreadcrumbWrapper>
+
   );
 };
 export default connect(dvaPropsData,dvaDispatch)(Index);

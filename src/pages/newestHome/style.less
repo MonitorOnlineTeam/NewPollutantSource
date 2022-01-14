@@ -2,7 +2,46 @@
 
 @cardBagCol:#263249;
 @subjectFontSize:14px;
+
+
+ .homeContent{ // 新首页 2021.11   导航栏
+      height: calc(100vh - 64px);
+      // min-width: 1800px;
+      padding:10px 10px 15px 10px;
+      overflow-y: auto;
+      margin: -24px;
+      background-image: url(/bg2.jpg);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      .headerTabSty{
+        background-color: #2E3950;
+        height:44px;
+        line-height: 44px;
+        // position: fixed;
+        // top: 64px;
+        // right: 15px;
+        // left: 10px;
+        // z-index: 1000
+        &>span{
+          margin-left:20px;
+          padding: 5px 18px;
+          border-radius:5px;
+          cursor: pointer;
+        }
+        .selectSty{
+          background-color:#1890FF ;
+          color: #fff;
+          transition: .3s all;
+        }
+        .normalSty{
+          background-color:rgba(187, 184, 184, 0.15) ;
+          color: #A6ADB4;
+        }
+  }
+}
+
 .homePage{
+  // margin-top: calc(44px - 10px);
   body,input,img,div,ul,li,a,span,i,p,h1,h2,h3,h4,h5,h6,strong,ins,em,del{
     font-size: @subjectFontSize;
     color:#fff;

@@ -16,6 +16,7 @@ import  OperationLog from '@/pages/operations/operationRecord' //运维日志
 import OverRecord from '@/pages/monitoring/overRecord' //超标数据
 import ExceptionRecord from '@/pages/monitoring/exceptionRecord' //异常数据
 import StopRecord from '@/pages/report/StopRecord/stopRecord' //停运记录
+import  DefectDataEnt  from '@/pages/dataSearch/defectData/ent' //缺失数据
 const { TabPane } = Tabs;
 let tabList = ["监控数据", "运维记录", "运维日志", "停运记录","视频预览", "超标数据","异常数据", "缺失数据","基本信息"];
 const modalHeight = "calc(100vh - 24vh - 55px - 48px - 90px - 48px)";
@@ -123,7 +124,6 @@ class SiteDetailsModal extends PureComponent {
   render() {
     const { data, infoWindowData } = this.props;
     const { currentKey, itemTitle } = this.state;
-
     if (data.PollutantType === "5") {
       tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
     }
@@ -173,7 +173,7 @@ class SiteDetailsModal extends PureComponent {
           </div>
         }
         { //运维日志
-          currentKey === 3 && <div style={{ height: "60vh", overflow: "hidden" }}>
+          currentKey === 3 && <div style={{ overflow: "hidden" }}>
             <OperationLog 
             DGIMN={data.DGIMN}
             type={data.PollutantType}
@@ -182,34 +182,40 @@ class SiteDetailsModal extends PureComponent {
             />
           </div>
         }
-         {
-          currentKey === 4 && data.PollutantType != "5" &&
-          <div style={{ height: "60vh", overflow: 'auto' }}>
-            <AlarmRecord DGIMN={data.key} initLoadData />
+         { //停运记录
+          currentKey === 4 &&
+          <div style={{  overflow: 'auto' }}>
+            <StopRecord DGIMN={data.DGIMN} isHomeModal  hideBreadcrumb/>
           </div>
         }
         {
-          currentKey === 5 && <div style={{ height: "60vh", overflow: 'auto' }}> {/**视频预览 */}
-            <YsyShowVideo DGIMN={data.key} initLoadData />
+          currentKey === 5 && <div style={{ overflow: 'auto' }}> {/**视频预览 */}
+            <YsyShowVideo DGIMN={data.DGIMN} initLoadData />
           </div>
         }
         {
           currentKey === 6 && data.PollutantType != "5" &&//超标数据
-          <div style={{ height: "60vh", overflow: 'auto' }}>
-            <RecordEchartTableOver DGIMN={data.key} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
+          <div style={{ overflow: 'auto' }}>
+            <RecordEchartTableOver DGIMN={data.DGIMN} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
                lasttime={moment(moment().format('YYYY-MM-DD HH:59:59'))} initLoadData />
           </div>
         }
         {
           currentKey === 7 && //异常数据
-          <div style={{ height: "60vh", overflow: 'auto' }}>
-            <RecordEchartTable noticeState={0} DGIMN={data.key} hideButtons={['realtime', 'minute']} initLoadData />
+          <div style={{ overflow: 'auto' }}>
+            <RecordEchartTable noticeState={0} DGIMN={data.DGIMN} hideButtons={['realtime', 'minute']} initLoadData />
+          </div>
+        }
+         {
+          currentKey === 8 && data.PollutantType != "5" && //缺失数据 企业
+          <div style={{ overflow: 'auto' }}>
+            <DefectDataEnt  entCode={data.ParentCode} isHomeModal  hideBreadcrumb />
           </div>
         }
 
         {
           currentKey === 9 && //基本信息
-          <div style={{ height: "60vh", overflow: 'auto' }}>
+          <div style={{  overflow: 'auto' }}>
             <div className={styles.basisInfo}>
               <div>
                 <img src={imgName} alt="" width="100%" />

@@ -118,10 +118,12 @@ export default class EntTransmissionEfficiency extends Component {
   }
 
   componentDidMount() {
+
+    this.props.isHomeModal? this.columns.splice(0,3) : null
     this.initData();
   }
   initData = () => {
-    const { dispatch, location,Atmosphere } = this.props;
+    const { dispatch, location,Atmosphere,isHomeModal,entCode } = this.props;
 
     this.updateQueryState({
       beginTime: moment()
@@ -129,7 +131,7 @@ export default class EntTransmissionEfficiency extends Component {
         .format('YYYY-MM-DD 00:00:00'),
       endTime: moment().format('YYYY-MM-DD 23:59:59'),
       AttentionCode: '',
-      EntCode: '',
+      EntCode: isHomeModal ? entCode : '',
       RegionCode: '',
       Atmosphere:Atmosphere,
       dataType:'HourData',
@@ -162,12 +164,13 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   getTableData = () => {
-    const { dispatch, queryPar } = this.props;
+    const { dispatch, queryPar,isHomeModal } = this.props;
     dispatch({
       type: pageUrl.getData,
       payload: { ...queryPar },
       callback:(dataType)=>{
-        dataType==='HourData'? this.columns[4].title='缺失小时数' : this.columns[4].title='缺失日数';
+        
+        dataType==='HourData'?  this.columns[this.columns.length-1].title='缺失小时数' : this.columns[this.columns.length-1].title='缺失日数';
       }
     });
   };
@@ -351,8 +354,8 @@ export default class EntTransmissionEfficiency extends Component {
       Atmosphere,
       exloading,
       queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,dataType,PollutantType,PageSize,PageIndex,OperationPersonnel },
+      isHomeModal
     } = this.props;
-
 
     const BtnComponents = this.btnComponents;
     return (
@@ -360,6 +363,29 @@ export default class EntTransmissionEfficiency extends Component {
           bordered={false}
           title={
             <>
+            {isHomeModal?
+
+            <Form layout="inline">
+            <Form.Item>
+                <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
+                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
+                </Form.Item>
+                <Form.Item>
+              <Select
+                    placeholder="数据类型"
+                    onChange={this._handleDateTypeChange}
+                    value={dataType}
+                    style={{ width: Atmosphere? 100 : 200}}
+                  >  
+                 <Option key='0' value='HourData'>小时</Option>
+                 <Option key='1' value='DayData'> 日均</Option>
+
+                  </Select>
+                  </Form.Item>
+              <BtnComponents />
+              </Form>
+              :
+          
               <Form layout="inline">
             
               <Row>
@@ -377,28 +403,10 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
                 <Form.Item>
                   日期查询：
-                      {/* <RangePicker
-                        showTime={{ format: 'HH:mm:ss' }}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder={['开始时间', '结束时间']}
-                        value={[moment(beginTime),moment(endTime)]}
-                        onChange={this.dateChange}
-                        onOk={this.dateOk}
-                        allowClear={false}
-                   /> */}
                 <RangePicker_  allowClear={false} onRef={this.onRef1} dataType={dataType}  style={{minWidth: '200px'}} dateValue={[moment(beginTime),moment(endTime)]} 
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
-                  {/* <Select
-                    allowClear
-                    placeholder="行政区"
-                    onChange={this.changeRegion}
-                    value={RegionCode ? RegionCode : undefined}
-                    style={{ width:  Atmosphere? 100 : 150}}
-                  >
-                    {this.regchildren()}
-                  </Select> */}
               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 {Atmosphere?
@@ -477,7 +485,7 @@ export default class EntTransmissionEfficiency extends Component {
                 :
                 null
            }
-              </Form>
+              </Form>}
             </>
           }
         >

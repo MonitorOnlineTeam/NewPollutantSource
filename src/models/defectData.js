@@ -10,7 +10,7 @@ import {
   GetEntByRegion,
   GetAttentionDegreeList,
   ExportGetAlarmDataList,
-} from './service';
+} from '../services/defectData';
 import moment from 'moment';
 import { message } from 'antd';
 export default Model.extend({

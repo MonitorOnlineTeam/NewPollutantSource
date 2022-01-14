@@ -24,8 +24,8 @@ export default class Ent extends Component {
   
 
     return (
-      <BreadcrumbWrapper >
-       <DefectData />
+      <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
+       <DefectData {...this.props}/>
       </BreadcrumbWrapper>
     );
   }

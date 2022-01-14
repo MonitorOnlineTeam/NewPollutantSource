@@ -204,7 +204,7 @@ class index extends PureComponent {
       }
     cardTitle = () => {
         const { Begintime,Endtime} = this.state;
-        
+        const { isHomeModal } = this.props;
         return <>
             <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                 (dates, dataType) => {
@@ -223,32 +223,12 @@ class index extends PureComponent {
                     })
                 }
             } />
-            
-            <div style={{ marginTop: 10,fontSize:14 }}>
+
+        {isHomeModal&&<><Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
+                <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><ExportOutlined />导出</Button></>}
+
+        {!isHomeModal&&<div style={{ marginTop: 10,fontSize:14 }}>
                 <label>行政区:</label>
-               {/*  <Select
-                    allowClear
-                    showSearch
-                    style={{ width: 200, marginLeft: 10, marginRight: 10 }}
-                    placeholder="行政区"
-                    maxTagCount={2}
-                    maxTagTextLength={5}
-                    maxTagPlaceholder="..."
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        if (option && option.props && option.props.title) {
-                            return option.props.title === input || option.props.title.indexOf(input) !== -1
-                        } else {
-                            return true
-                        }
-                    }}
-                    onChange={(value) => {
-                        this.setState({
-                            regionValue: value
-                        })
-                    }}>
-                    {this.children()}
-                </Select> */}
                <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
@@ -314,13 +294,14 @@ class index extends PureComponent {
                 </Select>
                 <Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><ExportOutlined />导出</Button>
-            </div>
+            </div>}
         </>;
     }
 
     loadData=(PageIndex, PageSize)=>{
         
         const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state;
+        const { isHomeModal,DGIMN } = this.props;
         this.props.dispatch({
             type:pageUrl.GetStopList,
             payload:{
@@ -330,7 +311,7 @@ class index extends PureComponent {
                 EndTimeEnd: Endtime[1]?moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'):null,
                 RegionCode: regionValue == undefined ?'':regionValue,
                 EntCode: entValue== undefined ?'':entValue,
-                DGIMN: pointValue== undefined ?'':pointValue,
+                DGIMN:isHomeModal?DGIMN:pointValue== undefined ?'':pointValue,
                 Status: voucher== undefined ?'':voucher,
                 PageSize:PageSize==0?20:PageSize,
                 PageIndex:PageIndex==0?1:PageIndex
@@ -391,7 +372,7 @@ class index extends PureComponent {
     }
     
     pageContent = () => {
-        const { StopList ,loading} = this.props
+        const { StopList ,loading,isHomeModal} = this.props
         const fixed = false
         const columns = [
             {
@@ -503,6 +484,7 @@ class index extends PureComponent {
                 key: 'createTime',
             },
         ]
+        isHomeModal? columns.splice(0,4) : null
         return <>{
             <SdlTable columns={columns} dataSource={StopList}
             loading={loading}
@@ -534,7 +516,7 @@ class index extends PureComponent {
         return (
             <>
                 <div id="siteParamsPage" className={style.cardTitle}>
-                    <BreadcrumbWrapper title="停运记录">
+                    <BreadcrumbWrapper title="停运记录" hideBreadcrumb={this.props.hideBreadcrumb}>
                         <Card
                             extra={
                                 <>

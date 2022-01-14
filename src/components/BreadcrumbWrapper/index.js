@@ -15,7 +15,7 @@ class index extends Component {
       return <>{this.props.children}</>
     }
     return (
-      <PageHeaderWrapper title={this.props.title}  className={this.props.hideBreadcrumb ? "hideBreadcrumb" : this.props.type==='homePage'? 'homeBreadcrumb' :''}>
+      <PageHeaderWrapper title={this.props.title}  className={this.props.hideBreadcrumb ? "hideBreadcrumb"  :''}>
         {this.props.children}
       </PageHeaderWrapper>
     );

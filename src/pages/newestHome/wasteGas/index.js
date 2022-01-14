@@ -62,7 +62,7 @@ const Index = (props) => {
 
   return (
     <div>
-    <Content type='废气'/>
+    <Content type='废气' selectClick={props.selectClick}/>
         </div>
   );
 };
