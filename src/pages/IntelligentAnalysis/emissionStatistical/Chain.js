@@ -105,10 +105,7 @@ class Chain extends PureComponent {
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
-        beginTime: moment(values.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(values.time1[1]).format('YYYY-MM-DD HH:mm:ss'),
-        // ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD HH:mm:ss'),
-        // ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: moment(values.time1).format('YYYY-MM-01 00:00:00'),
         DataType: DataType,
       }
     })
@@ -134,10 +131,7 @@ class Chain extends PureComponent {
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
-        beginTime: moment(values.time1[0]).format('YYYY-MM-DD 00:00:00'),
-        endTime: moment(values.time1[1]).format('YYYY-MM-DD 00:00:00'),
-        ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
-        ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD 00:00:00'),
+        beginTime: moment(values.time1).format('YYYY-MM-01 00:00:00'),
         DataType: this.state.DataType,
       }
     })
@@ -159,14 +153,14 @@ class Chain extends PureComponent {
         title: item.name,
         children: [
           {
-            title: '排放量',
+            title: '排放量(kg)',
             dataIndex: item.field + '-EmissionsValue',
             key: item.field + '-EmissionsValue',
             width: 180,
             align: 'center',
           },
           {
-            title: '同期排放量',
+            title: '同期排放量(kg)',
             dataIndex: item.field + '-EmissionsValue2',
             key: item.field + '-EmissionsValue2',
             width: 180,
@@ -302,19 +296,6 @@ class Chain extends PureComponent {
         key: 'PointName',
         width: 180,
       },
-      {
-        title: '是否参与企业排放量计算',
-        dataIndex: 'IsStatisti',
-        key: 'IsStatisti',
-        width: 80,
-        render: (text, record) => {
-          if (text !== undefined) {
-            return text == 0 ? "否" : "是"
-          }
-          return "-"
-        }
-        // width: 200,
-      },
       ...PFL,
       {
         title: '差额（kg）',
@@ -338,9 +319,9 @@ class Chain extends PureComponent {
             <Row>
               <FormItem label={<span style={{ ..._style }}>时间</span>}>
                 {getFieldDecorator('time1', {
-                  initialValue: [moment().subtract(14, 'days'), moment().subtract(7, 'days')]
+                  initialValue: moment()
                 })(
-                  <RangePicker />
+                  <DatePicker picker="month" />
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style, width: 74 }}>污染物类型</span>}>

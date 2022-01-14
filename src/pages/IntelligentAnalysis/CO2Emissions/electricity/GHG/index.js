@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper'
-import { Card, Form, Empty, Space, Select, DatePicker, Button, Divider } from 'antd'
+import { Card, Form, Empty, Space, Select, DatePicker, Button, Divider, Spin } from 'antd'
 import { connect } from 'dva'
 import ReactEcharts from 'echarts-for-react';
 import SdlTable from '@/components/SdlTable'
@@ -117,34 +117,34 @@ class index extends PureComponent {
         axisPointer: {
           type: 'shadow'
         },
-        formatter: (params) => {
-          if (params) {
-            let params0 = "", params1 = "", params2 = "", params3 = "";
-            if (params[0]) {
-              params0 = `
-              ${params[0].name}
-              <br />
-              ${params[0].marker}
-              ${params[0].seriesName}：${params[0].value}（t）
-              <br />`
-            }
-            if (params[1]) {
-              params1 = `${params[1].marker}
-${params[1].seriesName} ：${params[1].value}（t）
-<br />`
-            }
-            if (params[2]) {
-              params2 = `${params[2].marker}
-${params[2].seriesName} ：${params[2].value}（t）<br />`
-            }
+//         formatter: (params) => {
+//           if (params) {
+//             let params0 = "", params1 = "", params2 = "", params3 = "";
+//             if (params[0]) {
+//               params0 = `
+//               ${params[0].name}
+//               <br />
+//               ${params[0].marker}
+//               ${params[0].seriesName}：${params[0].value}（t）
+//               <br />`
+//             }
+//             if (params[1]) {
+//               params1 = `${params[1].marker}
+// ${params[1].seriesName} ：${params[1].value}（t）
+// <br />`
+//             }
+//             if (params[2]) {
+//               params2 = `${params[2].marker}
+// ${params[2].seriesName} ：${params[2].value}（t）<br />`
+//             }
 
-            if (params[3]) {
-              params3 = `${params[3].marker}
-${params[3].seriesName} ：${params[3].value}（t）<br />`
-            }
-            return params0 + params1 + params2 + params3;
-          }
-        }
+//             if (params[3]) {
+//               params3 = `${params[3].marker}
+// ${params[3].seriesName} ：${params[3].value}（t）<br />`
+//             }
+//             return params0 + params1 + params2 + params3;
+//           }
+//         }
         // formatter: (params, ticket, callback) => {
         //   let param = params[0]
         //   let format = `${param.name}<br />${param.marker}${param.value}（t）`
@@ -171,7 +171,7 @@ ${params[3].seriesName} ：${params[3].value}（t）<br />`
         // },
       },
       series: [{
-        name: '配额总量',
+        name: '配额总量(t)',
         data: GHGEchartsData.quota,
         // stack: '排放量',
         type: 'bar',
@@ -184,7 +184,7 @@ ${params[3].seriesName} ：${params[3].value}（t）<br />`
         // },
       },
       {
-        name: '直测消耗',
+        name: '直测消耗(t)',
         data: GHGEchartsData.use,
         // stack: '排放量',
         type: 'bar',
@@ -197,7 +197,7 @@ ${params[3].seriesName} ：${params[3].value}（t）<br />`
         // },
       },
       {
-        name: '核算消耗',
+        name: '核算消耗(t)',
         data: GHGEchartsData.buse,
         // stack: '排放量',
         type: 'bar',
@@ -210,7 +210,7 @@ ${params[3].seriesName} ：${params[3].value}（t）<br />`
         // },
       },
       {
-        name: '剩余配额',
+        name: '剩余配额(t)',
         data: GHGEchartsData.profit,
         type: 'bar',
         // emphasis: {
@@ -246,8 +246,12 @@ ${params[3].seriesName} ：${params[3].value}（t）<br />`
         trigger: 'item'
       },
       legend: {
+        type: 'scroll',
         orient: 'vertical',
-        left: 'right'
+        left: 'left',
+        formatter: function (name) {
+          return (name.length > 5 ? (name.slice(0, 5) + "...") : name);
+        },
       },
       series: [
         {
@@ -338,27 +342,31 @@ ${params[3].seriesName} ：${params[3].value}（t）<br />`
                 style={{ width: '100%', height: 'calc(100vh - 230px)', minHeight: '200px', marginTop: 20 }}
               />
             </div>
-            <div style={{ width: 400, marginTop: -28 }}>
-              <Card title={`排放量企业统计 - ${titleTime}`}>
+            <div style={{ width: 440, marginTop: -28 }}>
+              <Card title={`核算消耗 - ${titleTime}`}>
                 {
                   !GHGChartData.length && !GHGTableData.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : ""
                 }
                 {
-                  GHGTableData.length ? <ReactEcharts
-                    option={this.getPieOption()}
-                    lazyUpdate
-                    notMerge
-                    onEvents={{ 'click': this.onChartClick }}
-                    style={{ width: '100%', minHeight: '200px', marginTop: 20 }}
-                  /> : ''
+                  GHGTableData.length ? <Spin spinning={tableLoading}>
+                    <ReactEcharts
+                      option={this.getPieOption()}
+                      lazyUpdate
+                      notMerge
+                      style={{ width: '100%', minHeight: '200px', marginTop: 20 }}
+                    />
+                  </Spin>
+                    : ''
                 }
+              </Card>
+              <Card title={`直测消耗 - ${titleTime}`}>
                 {
                   GHGTableData.length ? <SdlTable
                     loading={tableLoading}
                     rowKey={(record, index) => index}
                     columns={columns}
                     dataSource={GHGTableData}
-                    scroll={{ y: 'calc(100vh - 640px)' }}
+                    scroll={{ y: 'calc(100vh - 700px)' }}
                   /> : ''
                 }
               </Card>

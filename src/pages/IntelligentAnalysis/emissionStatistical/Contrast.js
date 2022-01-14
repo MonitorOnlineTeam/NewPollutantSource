@@ -467,19 +467,6 @@ class Contrast extends PureComponent {
         width: 180,
       },
       {
-        title: '是否参与企业排放量计算',
-        dataIndex: 'IsStatisti',
-        key: 'IsStatisti',
-        width: 80,
-        render: (text, record) => {
-          if (text !== undefined) {
-            return text == 0 ? "否" : "是"
-          }
-          return "-"
-        }
-        // width: 200,
-      },
-      {
         title: `时间（${beginTime}至${endTime}）`,
         children: [
           {
