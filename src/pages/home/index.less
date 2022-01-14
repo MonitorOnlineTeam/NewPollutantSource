@@ -9,9 +9,9 @@
 @titleColor: #d5d9e2;
 
 /*滚动条轨道颜色*/
-@scrollbar-track-color: #021e39;
+@scrollbar-track-color: var(--scrollbar-track-color);
 /*滚动条颜色*/
-@scrollbar-thumb-color: #305090;
+@scrollbar-thumb-color: var(--scrollbar-thumb-color);
 /*滚动条大小*/
 @scrollbar-width: 9px;
 
@@ -527,7 +527,7 @@
 
     .operationsWrapper {
       flex: 1;
-      overflow-y: auto;
+      // overflow-y: auto;
     }
 
     .excessiveAbnormalWrapper {

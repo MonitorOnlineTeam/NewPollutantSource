@@ -255,124 +255,124 @@ class MonitoringStatus extends Component {
       ycLink = `${ Math.abs(ycAnalData.linkFlag.toFixed(2))
   }% (${ ycAnalData.monthSum.toFixed(2) } /${ycAnalData.flag.toFixed(2)})`;
     }
-let dyhwLink;
-if (dyhwAnalData && dyhwAnalData.linkFlag !== undefined && dyhwAnalData.length !== 0) {
-  dyhwLink = `${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
-}
-let eyhlLink;
-if (eyhlAnalData && dyhwAnalData.linkFlag !== undefined && eyhlAnalData.length !== 0) {
-  eyhlLink = `${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
-}
-
-if (DGIMN) {
-  ycLink = ycAnalData.monthSum;
-  dyhwLink = dyhwAnalData.monthSum;
-  eyhlLink = eyhlAnalData.monthSum;
-}
-return (
-  <>
-    <div className={styles.title} style={{ marginBottom: 10 }}>
-      <p>排放量分析</p>
-    </div>
-    {
-      (dyhwAnalData.monthList || ycAnalData.monthList || eyhlAnalData.monthList || eyhtAnalData.monthList) ?
-        <>
-          {/* 氮氧化物排污许可情况 */}
-          {
-            dyhwAnalData.monthList && <div className={`${styles.NOx} ${styles.content}`}>
-              <div className={styles.contentTitle}>
-                <p>{!DGIMN ? '氮氧化物排污许可情况' : '氮氧化物排污情况'}</p>
-              </div>
-              <div className={styles.pointcontent}>
-                <div className={styles.echartBox}>
-                  <ReactEcharts
-                    option={this.getlicense(3)}
-                    style={{ height: '100%' }}
-                    className="echarts-for-echarts"
-                    theme="my_theme"
-                  />
-                </div>
-                <div className={styles.desc}>
-                  {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
-                  <br />
-                  {dyhwLink}
-                </div>
-              </div>
-            </div>
-          }
-          {/* 烟尘物排污许可情况 */}
-          {
-            ycAnalData.monthList && <div className={`${styles.smoke} ${styles.content}`}>
-              <div className={styles.contentTitle}>
-                <p>{!DGIMN ? '烟尘排污许可情况' : '烟尘排污情况'}</p>
-              </div>
-              <div className={styles.pointcontent}>
-                <div className={styles.echartBox}>
-                  <ReactEcharts
-                    option={this.getlicense(1)}
-                    style={{ height: '100%' }}
-                    className="echarts-for-echarts"
-                    theme="my_theme"
-                  />
-                </div>
-                <div className={styles.desc}>
-                  {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
-                  <br />
-                  {ycLink}
-                </div>
-              </div>
-            </div>
-          }
-
-          {/* 二氧化硫排污许可情况 */}
-          {
-            eyhlAnalData.monthList && <div className={`${styles.SO2} ${styles.content}`}>
-              <div className={styles.contentTitle}>
-                <p>{!DGIMN ? '二氧化硫排污许可情况' : '二氧化硫排污情况'}</p>
-              </div>
-              <div className={styles.pointcontent}>
-                <div className={styles.echartBox}>
-                  <ReactEcharts
-                    option={this.getlicense(2)}
-                    style={{ height: '100%' }}
-                    className="echarts-for-echarts"
-                    theme="my_theme"
-                  />
-                </div>
-                <div className={styles.desc}>
-                  {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
-                  <br />
-                  {eyhlLink}
-                </div>
-              </div>
-            </div>
-          }
-          {/* 二氧化碳排污许可情况 */}
-          {
-            eyhtAnalData.monthList && <div className={`${styles.CO2} ${styles.content}`}>
-              <div className={styles.contentTitle}>
-                <p>{!DGIMN ? '二氧化碳排污许可情况' : '二氧化碳排污情况'}</p>
-              </div>
-              <div className={styles.pointcontent} style={{ paddingBottom: 0 }}>
-                <div className={styles.echartBox} style={{ width: '100%' }}>
-                  <ReactEcharts
-                    option={this.getEyhtOptions()}
-                    style={{ height: '100%' }}
-                    className="echarts-for-echarts"
-                    theme="my_theme"
-                  />
-                </div>
-              </div>
-            </div>
-          }
-        </> :
-        <div className={styles.notData}>
-          <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
-          <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
-        </div>
+    let dyhwLink;
+    if (dyhwAnalData && dyhwAnalData.linkFlag !== undefined && dyhwAnalData.length !== 0) {
+      dyhwLink = `${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
     }
-  </>
-);
+    let eyhlLink;
+    if (eyhlAnalData && dyhwAnalData.linkFlag !== undefined && eyhlAnalData.length !== 0) {
+      eyhlLink = `${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
+    }
+
+    if (DGIMN) {
+      ycLink = ycAnalData.monthSum;
+      dyhwLink = dyhwAnalData.monthSum;
+      eyhlLink = eyhlAnalData.monthSum;
+    }
+    return (
+      <>
+        <div className={styles.title} style={{ marginBottom: 10 }}>
+          <p>排放量分析</p>
+        </div>
+        {
+          (dyhwAnalData.monthList || ycAnalData.monthList || eyhlAnalData.monthList || eyhtAnalData.monthList) ?
+            <div style={{ height: 'calc(100% - 30px)', overflowY: 'auto' }}>
+              {/* 氮氧化物排污许可情况 */}
+              {
+                dyhwAnalData.monthList && <div className={`${styles.NOx} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>{!DGIMN ? '氮氧化物排污许可情况' : '氮氧化物排污情况'}</p>
+                  </div>
+                  <div className={styles.pointcontent}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        option={this.getlicense(3)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
+                      <br />
+                      {dyhwLink}
+                    </div>
+                  </div>
+                </div>
+              }
+              {/* 烟尘物排污许可情况 */}
+              {
+                ycAnalData.monthList && <div className={`${styles.smoke} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>{!DGIMN ? '烟尘排污许可情况' : '烟尘排污情况'}</p>
+                  </div>
+                  <div className={styles.pointcontent}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        option={this.getlicense(1)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
+                      <br />
+                      {ycLink}
+                    </div>
+                  </div>
+                </div>
+              }
+
+              {/* 二氧化硫排污许可情况 */}
+              {
+                eyhlAnalData.monthList && <div className={`${styles.SO2} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>{!DGIMN ? '二氧化硫排污许可情况' : '二氧化硫排污情况'}</p>
+                  </div>
+                  <div className={styles.pointcontent}>
+                    <div className={styles.echartBox}>
+                      <ReactEcharts
+                        option={this.getlicense(2)}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                    <div className={styles.desc}>
+                      {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
+                      <br />
+                      {eyhlLink}
+                    </div>
+                  </div>
+                </div>
+              }
+              {/* 二氧化碳排污许可情况 */}
+              {
+                eyhtAnalData.monthList && <div className={`${styles.CO2} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>{!DGIMN ? '二氧化碳排污许可情况' : '二氧化碳排污情况'}</p>
+                  </div>
+                  <div className={styles.pointcontent} style={{ paddingBottom: 0 }}>
+                    <div className={styles.echartBox} style={{ width: '100%' }}>
+                      <ReactEcharts
+                        option={this.getEyhtOptions()}
+                        style={{ height: '100%' }}
+                        className="echarts-for-echarts"
+                        theme="my_theme"
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+            </div> :
+            <div className={styles.notData}>
+              <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+              <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+            </div>
+        }
+      </>
+    );
   }
 }
 

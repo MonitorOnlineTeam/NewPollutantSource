@@ -637,7 +637,7 @@ class index extends Component {
               </Map>
             </div>
             <Row gutter={[8, 0]} className={styles.videoBox}>
-              <Col span={12}>
+              <Col span={12} style={{ height: '100%' }}>
                 <div className={styles.box}>
                   <i className={styles.lb}></i>
                   <i className={styles.rb}></i>
@@ -649,7 +649,7 @@ class index extends Component {
                   </div>
                 </div>
               </Col>
-              <Col span={12}>
+              <Col span={12} style={{ height: '100%' }}>
                 <div className={styles.box}>
                   <i className={styles.lb}></i>
                   <i className={styles.rb}></i>

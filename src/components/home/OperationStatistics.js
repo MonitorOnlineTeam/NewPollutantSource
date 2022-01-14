@@ -114,7 +114,7 @@ class OperationStatistics extends Component {
       <div className={styles.title}>
         <p>运维统计</p>
       </div>
-      <div className={styles.content}>
+      <div className={styles.content} style={{ height: 'calc(100% - 30px)', overflowY: 'auto' }}>
         <p className={styles.operationsNumber}>{currentMonth}月共<span>{taskCountData.TaskSum}</span>次运维任务</p>
         <div className={styles.progressContent}>
           <div className={styles.startIcon}></div>
