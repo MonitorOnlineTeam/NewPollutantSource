@@ -174,7 +174,8 @@ class OperationAnalysis extends Component {
 
     let option = {
       // color: color,
-      color: ['#4b4b4e'],
+      // color: ['#4b4b4e'],
+      color: this.props.theme === "dark" ? ['#4b4b4e'] : ['rgb(233 233 233)'],
       // animation: false,
       tooltip: {
         show: true,

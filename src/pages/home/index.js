@@ -64,7 +64,7 @@ let Map, Marker, Polygon, Markers, InfoWindow;
 class index extends Component {
   constructor(props) {
     super(props);
-    document.documentElement.className = 'home-dark-theme';
+    document.documentElement.className = props.theme === 'dark' ? 'home-dark-theme' : "home-light-theme";
     this.state = {
       screenWidth: window.screen.width === 1600 ? 50 : 70,
       currentMonth: moment().format('MM') * 1,
@@ -172,6 +172,10 @@ class index extends Component {
     this.setState({
       did: true,
     })
+
+    window._AMapSecurityConfig = {
+      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+    }
   }
 
 
@@ -587,7 +591,7 @@ class index extends Component {
             <div className={`${styles.mapBox}`}>
               <i className={styles.lb}></i>
               <i className={styles.rb}></i>
-              <Switch style={{ position: 'absolute', zIndex: 1, top: 10, right: 10 }} checkedChildren="深色" unCheckedChildren="浅色" defaultChecked onChange={(value, e) => {
+              <Switch checked={theme === 'dark' ? true : false} style={{ position: 'absolute', zIndex: 1, top: 10, right: 10 }} checkedChildren="深色" unCheckedChildren="浅色" onChange={(value, e) => {
                 console.log('value=', value)
                 this.props.dispatch({
                   type: 'home/updateState',
@@ -598,17 +602,20 @@ class index extends Component {
                 // let themeLink = document.getElementById('theme-link');
                 if (value) {
                   document.documentElement.className = 'home-dark-theme';
+                  document.documentElement.id = 'innerSystem';
                   // themeLink.href = '/theme/light.css'; // 切换 antd 组件主题(亮色)
                 } else {
                   document.documentElement.className = 'home-light-theme';
+                  document.documentElement.id = '';
                   // themeLink.href = '/theme/dark.css'; // 切换 antd 组件主题(暗色)
                 }
               }} />
               <Map
                 resizeEnable={true}
                 events={this.mapEvents}
-                mapStyle={theme === 'dark' ? "amap://styles/darkblue" : "amap://styles/normal"}
-                amapkey={amapKey}
+                zoom={5}
+                mapStyle={theme === 'dark' ? "amap://styles/32ae1bcea26191a8dd684f71c172af1f" : "amap://styles/normal"}
+                amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
                 center={mapCenter}
               >
                 <InfoWindow
