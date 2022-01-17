@@ -34,7 +34,13 @@ export default Model.extend({
       time: undefined
     },
     infoWindowDataLoading:false,
-    siteDetailsVisible:false
+    siteDetailsVisible:false,
+    tabType:"wasteWater",
+    entList:[
+      {val:'1',text:'中国嘎嘎海军大将看基金爱空间分开打见风使舵'},
+      {val:'2',text:'金发放假撒福建省解放路可接受的福建省绝地反击'},
+      {val:'3',text:'金发放qqq'},
+    ]
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计

@@ -30,7 +30,7 @@ const namespace = 'newestHome'
 
 
 const dvaPropsData =  ({ loading,newestHome }) => ({
-
+  tabType:newestHome.tabType
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -64,20 +64,42 @@ const Index = (props) => {
   },[]);
 
   const [type,setType] = useState('wasteWater')
- const selectClick = (val)=>{
-   console.log(val)
- }
- const typeObj={
-  wasteWater:<WasteWater selectClick={selectClick}/>,
-  wasteGas:<WasteGas selectClick={selectClick}/>,
-  surfaceWater:<SurfaceWater selectClick={selectClick}/>,
-  air:<Air selectClick={selectClick}/>,
-  actoryBoundary:<ActoryBoundary selectClick={selectClick}/>
- }
 
+ const [selectkey,SetSelectkey] = useState('wasteWater')
+
+
+ const tabList = [
+  {text:'废水',val:"wasteWater"},
+  {text:'废气',val:"wasteGas"},
+  {text:'空气站',val:"air"},
+  {text:'地表水',val:"surfaceWater"},
+  {text:'厂界',val:"actoryBoundary"},
+]
+ const tabClick = (val) =>{
+  SetSelectkey(val)
+  setTimeout(()=>{
+    setType(val)
+  },200)
+ 
+}
+
+const typeObj={
+  wasteWater:<WasteWater/>,
+  wasteGas:<WasteGas/>,
+  surfaceWater:<SurfaceWater/>,
+  air:<Air/>,
+  actoryBoundary:<ActoryBoundary/>
+ }
   return (
     <div>
+    <div className={styles.homeContent}>
+      <div className={styles.headerTabSty}>
+         {tabList.map(item=>{
+           return <span  key={item.val}  className={selectkey === item.val? `${styles.selectSty}` : `${styles.normalSty}` }  onClick={()=>{tabClick(item.val)}}>{item.text}</span>
+         })}
+       </div>
      { typeObj[type]}
+     </div>
     </div>
   );
 };

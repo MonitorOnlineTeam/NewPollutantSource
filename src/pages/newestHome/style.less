@@ -31,7 +31,7 @@
         .selectSty{
           background-color:#1890FF ;
           color: #fff;
-          transition: .3s all;
+          transition: .2s all;
         }
         .normalSty{
           background-color:rgba(187, 184, 184, 0.15) ;
@@ -294,6 +294,7 @@
       height: 16px;
       margin-right: 8px;
     }
+  
   }
   .mapOperationBtn{
     position: absolute;
@@ -311,16 +312,20 @@
   }
   .mapEnt{
    position: absolute;
-   left: 9px;
-   bottom: 24px;
-   padding: 10px 13px 16px 12px;
-   background: rgba(60, 72, 96, .6);
+   left: 20px;
+   top: 78px;
+   .legendBtnSty{
+    background: url('/mapBtnBag.png');
+    background-size: 100% 100%;
+    border-radius: 2px;
+    padding: 15px 22px;
+   }
    .iconText{
-     padding-left: 5px;
+     padding-left: 12px;
    }
    :global{
    .anticon{ //图例 图标大小
-     font-size: 35px !important;
+     font-size: 26px !important;
    }
   }
   }
@@ -535,7 +540,45 @@
       font-size: 13px;
     }
   }
+  .searchSty{
+    position: absolute;
+  }
+  .backSty{
+    position: absolute;
+    right: 97px;
+    top: 64px;
+  }
+   .searchSty{
+    position: absolute;
+    left: 24px;
+    top: 18px;
+    :global{
+      .ant-select{
+        .ant-select-selection-placeholder{
+          color: #999999;
+        }
+      }
+      .ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
+        background-color: #323C52;
+        border: 0;
+      }
+      .ant-select-dropdown{
+        background-color: #323C52;
+      }
+      .ant-select-item-option-active:not(.ant-select-item-option-disabled),.ant-select-item-option-selected:not(.ant-select-item-option-disabled){
+        background-color: rgba(187, 184, 184, 0.15) 
+      }
+      .ant-select-arrow{
+        top: 12px;
+        right: 18px;
+      
+      }
+      .ant-empty,.ant-select-item-empty{
+        display: none;
+      }
+    }
 
+   }
 }
 
 
