@@ -614,7 +614,7 @@ class index extends Component {
                 resizeEnable={true}
                 events={this.mapEvents}
                 zoom={5}
-                mapStyle={theme === 'dark' ? "amap://styles/32ae1bcea26191a8dd684f71c172af1f" : "amap://styles/normal"}
+                mapStyle={theme === 'dark' ? "amap://styles/32ae1bcea26191a8dd684f71c172af1f" : "amap://styles/61a40971c06013b16bdb985232b21664"}
                 amapkey={'5e60171b820065e7e9a1d6ea45abaee9'}
                 center={mapCenter}
               >
