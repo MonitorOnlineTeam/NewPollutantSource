@@ -22,17 +22,17 @@ class MonitoringStatus extends Component {
     const { pointData, theme } = this.props;
     let option = {
       color: ['#1bc78b', '#ffe400', '#f95d00', '#ababac',],
-      tooltip: {
-        show: true,
-        trigger: 'item',
-      },
+      // tooltip: {
+      //   show: true,
+      //   trigger: 'item',
+      // },
       series: [
         {
           name: '监控现状',
           type: 'pie',
           radius: ['76%', '97%'],
           avoidLabelOverlap: false,
-          hoverAnimation: true,
+          // hoverAnimation: true,
           // silent: true,
           label: {
             normal: {
