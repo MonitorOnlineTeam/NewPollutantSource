@@ -558,7 +558,8 @@ class index extends Component {
           }}>系统功能</a>
         </header>
         <Row gutter={[8, 8]} style={{ padding: '0 8px' }} className={styles.contentWrapper}>
-          <Col flex='3 1'>
+          {/* <Col flex='3 1'> */}
+          <Col style={{ width: '27%' }}>
             <div className={styles.leftWrapper}>
               {/* 运行分析  || 智能质控*/}
               <div style={{ display: `${homePage ? homePage.split(',')[0] : ''}` }} className={`${styles.effectiveRate} ${styles.box}`}>
@@ -581,7 +582,8 @@ class index extends Component {
               </div>
             </div>
           </Col>
-          <Col flex='5.5 1' className={styles.centerWrapper}>
+          {/* <Col flex='5.5 1' className={styles.centerWrapper}> */}
+          <Col flex='1' className={styles.centerWrapper}>
             <div className={`${styles.mapBox}`}>
               <i className={styles.lb}></i>
               <i className={styles.rb}></i>
@@ -645,7 +647,7 @@ class index extends Component {
                     <p>视频监控</p>
                   </div>
                   <div className={styles.videoContainer}>
-                    <LiveVideo channelNo={'E36486991'} HD={1} template="simple"/>
+                    <LiveVideo channelNo={'E36486991'} HD={1} template="simple" />
                   </div>
                 </div>
               </Col>
@@ -666,7 +668,8 @@ class index extends Component {
               </Col>
             </Row>
           </Col>
-          <Col flex='3 1'>
+          {/* <Col flex='3 1'> */}
+          <Col style={{ width: '27%' }}>
             <div className={styles.rightWrapper}>
               {/* 智能监控 */}
               <div style={{ display: `${homePage ? homePage.split(',')[3] : ''}` }} className={`${styles.monitoringContent}  ${styles.box}`}>
