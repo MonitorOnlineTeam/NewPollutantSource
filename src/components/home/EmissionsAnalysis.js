@@ -276,7 +276,7 @@ class MonitoringStatus extends Component {
         </div>
         {
           (dyhwAnalData.monthList || ycAnalData.monthList || eyhlAnalData.monthList || eyhtAnalData.monthList) ?
-            <div style={{ height: 'calc(100% - 30px)', overflowY: 'auto' }}>
+            <div style={{ height: 'calc(100% - 30px)', overflowY: 'auto', display: 'flex', flexDirection: 'column'}}>
               {/* 氮氧化物排污许可情况 */}
               {
                 dyhwAnalData.monthList && <div className={`${styles.NOx} ${styles.content}`}>
