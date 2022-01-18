@@ -36,11 +36,7 @@ export default Model.extend({
     infoWindowDataLoading:false,
     siteDetailsVisible:false,
     tabType:"wasteWater",
-    entList:[
-      {val:'1',text:'中国嘎嘎海军大将看基金爱空间分开打见风使舵'},
-      {val:'2',text:'金发放假撒福建省解放路可接受的福建省绝地反击'},
-      {val:'3',text:'金发放qqq'},
-    ]
+    entList:[]
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计
@@ -136,6 +132,11 @@ export default Model.extend({
              yield update({
               mapStatusData:result.Datas.sum,
              })
+             if(payload.pointType==2){
+              yield update({
+                entList:result.Datas.list //企业列表
+               })
+             }
              callback(markers)
             }else{
               message.error(result.Message)

@@ -46,6 +46,7 @@ let aMap = null;
 
 
 let pollutantType = {}
+
 @connect(({ loading, newestHome }) => ({
   pollType: newestHome.pollType,
   subjectFontSize: newestHome.subjectFontSize,
@@ -78,29 +79,16 @@ class Index extends PureComponent {
       zoomchange: (value) => {
         const zoom = aMap.getZoom();
         const { showType } = this.state;
-        if (zoom >= 9 && showType == 1) {
-          this.setState({ showType: 2, pointTitleShow: false })
-          const { entMarkers } = this.state;
-          this.setState({ markersList: [...entMarkers] })
-        }
-        // if(zoom>=11&&showType==2){
-        //   const { entMarkers,entTitleShow } = this.state;
-        //   if(!entTitleShow){
-        //     this.setState({entTitleShow:true,markersList:[...entMarkers]})
-        //   }
+        // if (zoom >= 9 && showType == 1) {
+        //   this.setState({ showType: 2, pointTitleShow: false })
+        //   const { entMarkers } = this.state;
+        //   this.setState({ markersList: [...entMarkers] })
         // }
-        if (zoom < 9 && showType == 2) {
-          const { regionMarkers } = this.state;
-          this.setState({ showType: 1, entTitleShow: false, pointTitleShow: false, markersList: [...regionMarkers] })
-        }
-
-        // if(zoom<11&&showType==2){
-        //   const { entMarkers,entTitleShow } = this.state;
-        //   if(entTitleShow){
-        //     this.setState({entTitleShow:false,markersList:[...entMarkers]})
-        //   }
-
+        // if (zoom < 9 && showType == 2) {
+        //   const { regionMarkers } = this.state;
+        //   this.setState({ showType: 1, entTitleShow: false, pointTitleShow: false, markersList: [...regionMarkers] })
         // }
+
       },
     };
     // markers事件
@@ -156,7 +144,8 @@ class Index extends PureComponent {
       hoverPointTitle: '',
       pointInfoWindowVisible: false,
       currentClickObj: {}, // 当前点击对象 -  监测点弹窗
-      infoWindowPos: {}
+      infoWindowPos: {},
+      selectEnt:undefined
     }
   }
   componentWillMount() {
@@ -232,6 +221,22 @@ class Index extends PureComponent {
   loadRegionMarkerData = (data) => { //行政区
     this.setState({
       showType: 1,
+      markersList: data,
+      entTitleShow: false, pointTitleShow: false,selectEnt:undefined
+    }, () => {
+      const timer = setInterval(() => {
+        if (aMap) {
+          aMap.setFitView();
+          clearInterval(timer);
+        }
+      }, 0);
+    })
+
+  }
+  loadEntMarkerData = (data) => { //企业
+    this.setState({
+      showType: 2,
+      pointTitleShow: false,
       markersList: data
     }, () => {
       const timer = setInterval(() => {
@@ -251,11 +256,7 @@ class Index extends PureComponent {
       const timer = setInterval(() => {
         if (aMap) {
           aMap.setFitView();
-          aMap.setZoomAndCenter(aMap.getZoom(), [
-            96.01906121185537,
-            35.874643454131984
-          ]);
-          aMap.setZoom(aMap.getZoom() + 1)
+          aMap.setZoomAndCenter(aMap.getZoom()+1, [96.01906121185537, 35.874643454131984]);
           clearInterval(timer);
         }
       }, 0);
@@ -308,31 +309,17 @@ class Index extends PureComponent {
     switch (text) {
       case '放大':
         map.zoomIn()
-        if (map.getZoom() >= 9 && showType == 1) {
-          this.setState({ showType: 2, pointTitleShow: false })
-          const { entMarkers } = this.state;
-          this.setState({ markersList: [...entMarkers] })
-        }
-        // if(map.getZoom()>=11&&showType==2){
-        //   const { entMarkers,entTitleShow } = this.state;
-        //   if(!entTitleShow){
-        //     this.setState({entTitleShow:true,markersList:[...entMarkers]})
-        //   }
+        // if (map.getZoom() >= 9 && showType == 1) {
+        //   this.setState({ showType: 2, pointTitleShow: false })
+        //   const { entMarkers } = this.state;
+        //   this.setState({ markersList: [...entMarkers] })
         // }
         break;
       case '缩小':
         map.zoomOut()
-        if (map.getZoom() < 9 && showType == 2) {
-          const { regionMarkers } = this.state;
-          this.setState({ showType: 1, entTitleShow: false, pointTitleShow: false, markersList: [...regionMarkers] })
-        }
-
-        // if(map.getZoom()<11&&showType==2){
-        //   const { entMarkers,entTitleShow } = this.state;
-        //   if(entTitleShow){
-        //     this.setState({entTitleShow:false,markersList:[...entMarkers]})
-        //   }
-
+        // if (map.getZoom() < 9 && showType == 2) {
+        //   const { regionMarkers } = this.state;
+        //   this.setState({ showType: 1, entTitleShow: false, pointTitleShow: false, markersList: [...regionMarkers] })
         // }
         break;
       case '全屏':
@@ -560,15 +547,13 @@ class Index extends PureComponent {
   entSearchClick = (val) =>{
    const { entList } = this.props;
    let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
-  //  listEle.style.display = 'block';
     const emptyEle = document.querySelector('.antd-pro-pages-newest-home-style-searchSty .ant-select-item-empty')
-    //  getAttribute("height")
      if(emptyEle){
-      console.log(emptyEle)
+      listEle.style.display = 'none';
      }
     if(val){
       entList.map(item=>{
-        if(item.text.match(new RegExp(`\\${val}`, 'g'))){
+        if(item.entName.match(new RegExp(`\\${val}`, 'g'))){
           listEle.style.display = 'block';
         }
       })
@@ -577,6 +562,36 @@ class Index extends PureComponent {
       listEle.style.display = 'none';
     }
 
+  }
+  entSearchChange = (val) =>{
+    const { entMarkers } = this.state; 
+    let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
+    listEle.style.display = 'none';
+    this.setState({ selectEnt:val})
+    this.searchEntEle.blur() 
+      entMarkers.map(item=>{
+        let position = item.position;
+      if(position.entCode === val){
+        this.setState({ showType: 2, pointTitleShow: false,markersList: [...entMarkers] })
+        aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
+      }
+    })
+     
+  }
+
+  onBack = () =>{
+    const { showType,regionMarkers,selectEnt,entMarkers } = this.state;
+    if(showType == 2){
+      //  this.setState({ entTitleShow: false, pointTitleShow: false,selectEnt:undefined })
+       this.loadRegionMarkerData(regionMarkers)
+      }
+    if(showType == 3){
+       if(selectEnt){ //从企业跳转到监测点
+        this.loadEntMarkerData(entMarkers)
+       }else{  //从行政区直接跳转到监测点
+        this.loadRegionMarkerData(regionMarkers)
+       }
+    }
   }
   mapContent = (props) => {
     const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow } = this.state;
@@ -603,8 +618,16 @@ class Index extends PureComponent {
       "2": <><GasOffline /><span className={styles.iconText}>废气</span></>
     }
 
-    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos } = this.state;
-
+    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt } = this.state;
+   
+    // const searchEntInput = useRef(null);
+  
+    // function entSearchSelect(val){
+    //   let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
+    //   listEle.style.display = 'none';
+    //   searchEntInput.current.blur()  
+    // }
+    
     return mapPointLoading ?
       <PageLoading />
       :
@@ -657,7 +680,7 @@ class Index extends PureComponent {
         </div>
         <RightIconMapComponent />
 
-        <div className={styles.mapEnt}> { /**右上角 图标 */}
+        <div className={styles.mapEnt}  > { /**右上角 图标 */}
           <Row className={styles.legendBtnSty} align='middle' justify='center'>
             <EntIcon />
             <span className={styles.iconText}>企业</span>
@@ -667,7 +690,7 @@ class Index extends PureComponent {
           </Row>
         </div>
 
-        <div className={styles.searchSty}>  { /**搜索 */}
+        {showType != 3 && <div className={styles.searchSty} >  { /**搜索 */}
           <Select
             showSearch
             style={{ width: 220 }}
@@ -682,19 +705,21 @@ class Index extends PureComponent {
             getPopupContainer={trigger => trigger.parentNode}
             suffixIcon={ <img src='/homeMapsearchIcon.png' />}
             onSearch={this.entSearchClick}
+            onChange={this.entSearchChange}
+            // ref={searchEntInput}
+            ref={props.searchEntInputRef}
+            value={selectEnt}
           >
-            {/* <Option value="1">Not Identified</Option>
-            <Option value="2">Closed</Option> */}
-          {entList.map(item=>{
-              return <Option value={item.val}>{item.text}</Option>
+          {entList[0]&&entList.map(item=>{
+              return <Option value={item.entCode}>{item.entName}</Option>
             })}
           </Select>
-        </div>
+        </div>}
 
-        <div className={styles.backSty}>  { /**返回 */}
+        {showType != 1 && <div className={styles.backSty} onClick={this.onBack}>  { /**返回 */}
           <img src='/homeMapBack.png' />
           <div>返回</div>
-        </div>
+        </div>}
       </Map>
 
   }
@@ -704,7 +729,7 @@ class Index extends PureComponent {
     return (
       <div style={{ height: '100%' }} className={`${fullScreen ? `${styles.mapModal}` : ''}`}>
 
-        <MapContent />
+        <MapContent  searchEntInputRef={el => this.searchEntEle = el}/>
         <SiteDetailsModal data={currentClickObj} />
       </div>
 
