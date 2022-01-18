@@ -6,7 +6,7 @@
  * @desc: 主页model
  */
 import moment from 'moment';
-import * as services from '@/services/homeApi';
+import * as services from './service';
 import * as commonApi from '@/services/commonApi'
 import Model from '@/utils/model';
 import { message } from 'antd';
