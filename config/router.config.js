@@ -172,6 +172,18 @@ const routes = [
             path: '/home',
             component: './newHome',
           },
+           // 空气质量分析
+           {
+            path: '/airQualityAnalysis',
+            name: 'airQualityAnalysis',
+            routes: [
+              // {
+              //   name: 'index',
+              //   path: '/airQualityAnalysis/xxx',
+              //   component: './airQualityAnalysis/xxx',
+              // },
+            ]
+          },
           // 应急
           {
             path: '/emergency',
@@ -1883,7 +1895,7 @@ const routes = [
                     path: '/Intelligentanalysis/CO2Material/nondeterminacy',
                     component: './IntelligentAnalysis/CO2Emissions/electricity/nondeterminacy',
                   },
-                  
+
                 ]
               },
               // 水泥行业
@@ -2676,7 +2688,7 @@ const routes = [
                   {
                     name: 'Approval',   //环评信息管理  建设环评审批
                     path: '/oneEntsOneArchives/eiaInfo/approval/:configId',
-                    component: './oneEntsOneArchives/autoformSearchTemplate', 
+                    component: './oneEntsOneArchives/autoformSearchTemplate',
                   },
                   {
                     name: 'AcceptanceCheck', //环评信息管理  建设项目验收
