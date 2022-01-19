@@ -220,3 +220,25 @@ export async function UpdateOperationArea(params) {
   const result = post('/api/rest/PollutantSourceApi/UserInfosApi/UpdateOperationArea', params, null);
   return result;
 }
+
+// 审核流程列表
+export async function GetUserDepApproveInfo(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserDepApproveInfo', params, null);
+  return result;
+}
+
+// 审核流程 添加or修改
+export async function AddOrUpdateUserDepApprove(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/AddOrUpdateUserDepApprove', params, null);
+  return result;
+}
+// 用户列表
+export async function GetUserList(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
+  return result;
+}
+// 审核流程 添加or修改
+export async function DeleteUserDepApprove(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/DeleteUserDepApprove', params, null);
+  return result;
+}

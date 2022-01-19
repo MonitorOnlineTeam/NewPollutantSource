@@ -17,6 +17,7 @@ import {
   UsergroupAddOutlined,
   UndoOutlined,
   ConsoleSqlOutlined,
+  AuditOutlined
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -57,6 +58,7 @@ import styles from './index.less';
 import { DndProvider, DragSource, DropTarget } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
+import SdlTable from '@/components/SdlTable'
 const { TreeNode } = Tree;
 const { SHOW_PARENT } = TreeSelect;
 
@@ -253,6 +255,11 @@ const rightTableColumns = [
   btnloading: loading.effects['departinfo/insertdepartinfo'],
   btnloading1: loading.effects['departinfo/upddepartinfo'],
   insertregionbyuserLoading: loading.effects['departinfo/insertregionbyuser'],
+  userDepApproveInfoList: departinfo.userDepApproveInfoList,
+  getUserDepApproveInfoLoading: loading.effects['departinfo/getUserDepApproveInfo'],
+  addOrUpdateUserDepApproveLoading: loading.effects['departinfo/addOrUpdateUserDepApprove'],
+  userList:departinfo.userList,
+  deleteUserDepApproveLoading: loading.effects['departinfo/deleteUserDepApprove'],
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -462,13 +469,119 @@ class DepartIndex extends Component {
                 </a>
                 </Popover>
               </Tooltip>
+              <Divider type="vertical" />
+              <Tooltip title="设置审批流程">
+                <a
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                     this.approvalProcessClick(record)
+                  }}
+                >
+                  <AuditOutlined  style={{ fontSize: 16 }} />
+                </a>
+              </Tooltip>
             </span>
           ),
         },
       ],
       departInfoTree:[],
-      sortTitle:'关闭排序'
+      sortTitle:'关闭排序',
+      approvalProcessVisible:false, //审核流程
+      approvalProcessEditorAddVisible:false,
+      approvalUserID:undefined,
+      approvalNode:undefined,
+      depID:undefined,
     };
+    this.depApproveColumns=[
+      {
+        title: <span>序号</span>,
+        dataIndex: 'x',
+        key: 'x',
+        align: 'center',
+        render:(text, record, index) => {
+          return index + 1
+        }
+      },
+      {
+        title: '审核人',
+        dataIndex: 'userName',
+        key: 'userName',
+      },
+      {
+        title: '审核节点',
+        dataIndex: 'node',
+        key: 'node',
+      },
+      {
+        title: '操作',
+        dataIndex: '',
+        key: 'x',
+        align: 'center',
+        render: (text, record,index) => (
+          <span>
+            <Tooltip title="编辑">
+              <a
+                onClick={() => {
+                   this.setState({ 
+                     approvalProcessEdit:false,
+                     approvalProcessEditorAddVisible:true,
+                     UserID: record.userID,
+                     Node: record.node,
+                     approvalProcessEditId:record.id
+                    })
+                }}
+              >
+                <EditOutlined style={{ fontSize: 16 }} />
+              </a>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="删除">
+              <Popconfirm
+                title="确认要删除吗?"
+                onConfirm={() => {
+                  this.props.dispatch({
+                    type: 'departinfo/deleteUserDepApprove',
+                    payload: {
+                      id: record.id,
+                    },
+                  });
+                  this.props.dispatch({
+                    type: 'departinfo/getUserDepApproveInfo',
+                    payload: {
+                      depID: record.depID,
+                    },
+                  }) 
+                }}
+                okText="是"
+                cancelText="否"
+              >
+                <a href="#">
+                  <DeleteOutlined style={{ fontSize: 16 }} />
+                </a>
+              </Popconfirm>
+            </Tooltip>
+          </span>)
+      }
+    ]
+  }
+  //获取角色列表
+  getUserList=(params)=>{
+    this.props.dispatch({
+      type: 'departinfo/getUserList',
+      payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
+    });
+  }
+  approvalProcessClick = (row) =>{ //审核流程
+    this.setState({
+      approvalProcessVisible:true,
+      depID:row.key,
+    })
+    this.props.dispatch({
+      type: 'departinfo/getUserDepApproveInfo',
+      payload: {
+        depID: row.key,
+      },
+    })                     ;
   }
   updateOperation=()=>{
     return <Form>
@@ -612,6 +725,7 @@ class DepartIndex extends Component {
       type: 'departinfo/getGroupRegionFilter',
       payload: {},
     });
+    this.getUserList({})
     // this.props.dispatch({
     //     type: 'roleinfo/getrolestreeandobj',
     //     payload: {}
@@ -1077,11 +1191,40 @@ class DepartIndex extends Component {
     saveSort=()=>{
 
     }
+    addOrUpdateUserDepApprove = () =>{ //添加修改审核流程
+      const { approvalUserID,approvalNode,depID,approvalProcessEditId,approvalProcessEdit } = this.state;
+      if(approvalUserID&&approvalNode){
+      this.props.dispatch({
+        type: 'departinfo/addOrUpdateUserDepApprove',
+        payload: {
+          ID: approvalProcessEdit?'':approvalProcessEditId,
+          UserID: approvalUserID,
+          DepID: depID,
+          Node: approvalNode
+        },
+        callback:()=>{
+         this.setState({approvalProcessEditorAddVisible:false})
+         this.props.dispatch({
+          type: 'departinfo/getUserDepApproveInfo',
+          payload: {
+            depID: depID,
+          },
+        })  
+        }
+      });
+    }else{
+      message.error('审核人和审核节点名不能为空')
+    }
+    }
+    approvalProcessEditOk=(e)=>{
+        const { approvalProcessEditId } = this.state;
+        e.preventDefault();    
+        this.addOrUpdateUserDepApprove()
+    }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { btnloading, btnloading1,insertregionbyuserLoading } = this.props;
-    const { targetKeys, disabled, showSearch,sortTitle } = this.state;
-
+    const { btnloading, btnloading1,insertregionbyuserLoading,userDepApproveInfoList } = this.props;
+    const { targetKeys, disabled, showSearch,sortTitle,selectedRowKeys } = this.state;
     const formItemLayout = {
       labelCol: {
         span: 6,
@@ -1441,7 +1584,64 @@ class DepartIndex extends Component {
 
             </div>
             {/* </MonitorContent> */}
-            
+            <Modal //审核流程弹框
+                title={selectedRowKeys&&selectedRowKeys.UserGroup_Name}
+                visible={this.state.approvalProcessVisible}
+                onCancel={()=>{this.setState({approvalProcessVisible:false})}}
+                width={'70%'}
+                destroyOnClose
+                footer={null}
+              >
+              <Button type="primary" style={{marginBottom:15}}
+                      onClick={()=>{
+                       this.setState({
+                        approvalProcessEdit:true,
+                        approvalProcessEditorAddVisible:true
+                       })
+                      }}>
+                新增
+              </Button>
+               <SdlTable
+                    rowKey={(record, index) => `complete${index}`}
+                    bordered={false}
+                    loading={this.props.getUserDepApproveInfoLoading}
+                    columns={this.depApproveColumns}
+                    dataSource={userDepApproveInfoList}
+                    onCancel={()=>{this.setState({approvalProcessVisible:false})}}
+                    pagination={false}
+                    
+                />
+              </Modal>
+              <Modal //审核流程弹框 添加or修改
+                title={this.state.approvalProcessEdit? "添加": "编辑"}
+                visible={this.state.approvalProcessEditorAddVisible}
+                onCancel={()=>{this.setState({approvalProcessEditorAddVisible:false})}}
+                width={'50%'}
+                destroyOnClose
+                okText= '保存'
+                wrapClassName={styles.approvalProcessEditSty}
+                onOk={this.approvalProcessEditOk}
+                confirmLoading={this.props.addOrUpdateUserDepApproveLoading}
+              >
+                  <Form   name="advanced_search" className={styles['ant-advanced-search-form']}>
+                        <Form.Item label="审核人"    >
+                            <Select placeholder='请选择审核人' value={this.state.approvalUserID} onChange={(val)=>{this.setState({approvalUserID:val})}}>
+                              {this.props.userList[0]&&this.props.userList.map(item=>{
+                                return   <Option value={item.ID}>{`${item.userAccount}${item.userName}`}</Option>
+                              })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            label="审批节点"
+                        >
+                              <Select placeholder='请选择审核节点'   value={this.state.approvalNode} onChange={(val)=>{this.setState({approvalNode:val})}}>
+                                       <Option value="1">一级节点</Option>
+                                       <Option value="2">二级节点</Option>
+                                       <Option value="3">三级节点</Option>
+                               </Select>
+                        </Form.Item>
+                        </Form>
+              </Modal>
           </BreadcrumbWrapper>
         }
       </Fragment>

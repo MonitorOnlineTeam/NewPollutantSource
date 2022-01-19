@@ -2,7 +2,8 @@ import Model from '@/utils/model';
 import {
     getdepartinfobytree, getdepartinfobyid, insertdepartinfo, deldepartinfo, upddepartinfo, getdeparttreeandobj, getalluser, getuserbydepid, insertdepartbyuser,
     insertregionbyuser, getregionbydepid, getregioninfobytree, getentandpoint, getpointbydepid, insertpointfilterbydepid, getGroupRegionFilter,
-    GetAlarmPushDepOrRole,InsertAlarmDepOrRole,UpdateOperationArea
+    GetAlarmPushDepOrRole,InsertAlarmDepOrRole,UpdateOperationArea,
+    GetUserDepApproveInfo,AddOrUpdateUserDepApprove,GetUserList,DeleteUserDepApprove
 } from './service';
 import { message } from 'antd';
 /*
@@ -33,6 +34,8 @@ export default Model.extend({
           },
         alarmPushDepOrRoleList:[],
         alarmPushSelect:[],
+        userDepApproveInfoList:[],
+        userList:[]
     },
     subscriptions: {
         setup({
@@ -406,6 +409,45 @@ export default Model.extend({
                     message.error(result.Message)
                 }
             },
+       // 审核流程 列表
+       *getUserDepApproveInfo({ payload,callback }, { call, update }) {
+        const result = yield call(GetUserDepApproveInfo, payload);
+        if (result.IsSuccess) {
+            yield update({
+                userDepApproveInfoList: result.Datas
+            })
+          } else {
+            message.error(result.Message)
+          }
+        },
+         // 审核流程 添加or修改
+      *addOrUpdateUserDepApprove({ payload,callback }, { call, update }) {
+            const result = yield call(AddOrUpdateUserDepApprove, payload);
+            if (result.IsSuccess) {
+                message.success(result.Message)
+                callback()
+              } else {
+                message.error(result.Message)
+              }
+            },
+       *getUserList({ payload }, { call, put, update, select }) {
+                //用户列表
+                const response = yield call(GetUserList, { ...payload });
+                if (response.IsSuccess) {
+                  yield update({
+                    userList: response.Datas,
+                  });
+                }
+          },
+       // 审核流程 删除
+      *deleteUserDepApprove({ payload,callback }, { call, update }) {
+        const result = yield call(DeleteUserDepApprove,payload);
+        if (result.IsSuccess) {
+            message.success(result.Message)
+          } else {
+            message.error(result.Message)
+          }
+        }, 
     },
 
 
