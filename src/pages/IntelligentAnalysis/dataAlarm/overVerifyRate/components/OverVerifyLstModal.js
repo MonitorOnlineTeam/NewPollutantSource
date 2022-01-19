@@ -50,7 +50,7 @@ const pageUrl = {
   loading: loading.effects[pageUrl.getData],
   total: overVerifyRate.total,
   tableDatas: overVerifyRate.tableDatas,
-  regionList: autoForm.regionList,
+  regionList: autoForm.regionList, 
   attentionList: overVerifyRate.attentionList,
   atmoStationList: common.atmoStationList,
   overVerifyRateForm: overVerifyRate.overVerifyRateForm,
@@ -89,9 +89,10 @@ export default class OverVerifyLstModal extends Component {
   }
 
   componentDidMount() {
-    this.initData();
     // 根据企业类型查询监测因子
     this.getPollutantByType(this.props.pollutantByType, this.getExceptionList);
+    this.initData();
+
   }
   // 根据企业类型查询监测因子
   getPollutantByType = (val, cb) => {
@@ -168,11 +169,11 @@ export default class OverVerifyLstModal extends Component {
               {
                 title: <span>核实率</span>,
                 width: 100,
-                dataIndex: item.PollutantCode + '_RespondedRate',
+                dataIndex: item.PollutantCode + '_RespondedRate', 
                 key: item.PollutantCode + '_RespondedRate',
                 align: 'center',
                 render: (text, record) => {
-                  return <div>{text == '-' ? text : `${text}%`}</div>;
+                  return <div>{text == '-' ? text : `${text==undefined? "" : text}%`}</div>;
                 },
               },
             ],
@@ -184,7 +185,7 @@ export default class OverVerifyLstModal extends Component {
           key: 'AllRespondedRate',
           align: 'center',
           render: (text, record) => {
-            return <div>{text == '-' ? text : `${text}%`}</div>;
+            return <div>{text == '-' ? text : `${text==undefined? "" : text}%`}</div>;
           },
         });
         this.setState(
@@ -209,8 +210,19 @@ export default class OverVerifyLstModal extends Component {
       PollutantType: '1',
       OperationPersonnel:'',
     });
+    this.setState({
+      beginTime:this.props.beginTime,
+      endTime:this.props.endTime
+    })
     setTimeout(() => {
-      this.getTableData();
+      const { dispatch, overVerifyRateForm } = this.props;
+      dispatch({
+        type: pageUrl.getData,
+        payload: { ...overVerifyRateForm,
+         beginTime:moment(this.props.beginTime).format('YYYY-MM-DD HH:mm:ss'),
+         endTime:moment(this.props.endTime).format('YYYY-MM-DD HH:mm:ss'),
+        }
+      });
     });
   };
   updateQueryState = payload => {
@@ -226,7 +238,7 @@ export default class OverVerifyLstModal extends Component {
     const { dispatch, overVerifyRateForm } = this.props;
     dispatch({
       type: pageUrl.getData,
-      payload: { ...overVerifyRateForm },
+      payload: { ...overVerifyRateForm}
     });
   };
 
@@ -234,16 +246,17 @@ export default class OverVerifyLstModal extends Component {
     this.updateQueryState({
       PollutantType: value,
     });
-    this.props.dispatch({
-      type: 'overVerifyRate/updateState',
-      payload: {
-        pollutantByType:value,
-      },
-    });
+    // this.props.dispatch({
+    //   type: 'overVerifyRate/updateState',
+    //   payload: {
+    //     pollutantByType:value,
+    //   },
+    // });
     this.getPollutantByType(value, this.getExceptionList);
-    setTimeout(() => {
+    setTimeout(()=>{
       this.getTableData();
-    });
+    })
+    
   };
   changePperation=(value)=>{
     this.updateQueryState({
@@ -407,7 +420,7 @@ export default class OverVerifyLstModal extends Component {
               key: item.PollutantCode + '_RespondedRate',
               align: 'center',
               render: (text, record) => {
-                return <div>{text == '-' ? text : `${text}%`}</div>;
+                return <div>{text == '-' ? text : `${text==undefined? "" : text}%`}</div>;
               },
             },
           ],
@@ -421,7 +434,7 @@ export default class OverVerifyLstModal extends Component {
       key: 'AllRespondedRate',
       align: 'center',
       render: (text, record) => {
-        return <div>{text == '-' ? text : `${text}%`}</div>;
+        return <div>{text == '-' ? text : `${text==undefined? "" : text}%`}</div>;
       },
     });
     this.setState({
@@ -563,7 +576,8 @@ export default class OverVerifyLstModal extends Component {
           rowKey={(record, index) => `complete${index}`}
           loading={this.props.loading}
           columns={this.state.columns}
-          dataSource={this.props.tableDatas.data}
+          dataSource={this.props.tableDatas.data} 
+          scroll={{ y: 'calc(100vh - 650px)' }}
           // pagination={{
             // showSizeChanger: true,
             // showQuickJumper: true,
