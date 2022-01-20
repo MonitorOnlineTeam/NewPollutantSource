@@ -209,11 +209,9 @@ export default class OverVerifyLstModal extends Component {
     this.updateQueryState({
       PollutantType: '1',
       OperationPersonnel:'',
+      beginTime: moment(this.props.beginTime).format('YYYY-MM-DD HH:mm:ss'),
+      endTime: moment(this.props.endTime).format('YYYY-MM-DD HH:mm:ss'),
     });
-    this.setState({
-      beginTime:this.props.beginTime,
-      endTime:this.props.endTime
-    })
     setTimeout(() => {
       const { dispatch, overVerifyRateForm } = this.props;
       dispatch({
