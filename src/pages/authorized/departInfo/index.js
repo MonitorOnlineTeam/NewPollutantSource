@@ -509,8 +509,8 @@ class DepartIndex extends Component {
       },
       {
         title: '审核节点',
-        dataIndex: 'node',
-        key: 'node',
+        dataIndex: 'nodeName',
+        key: 'nodeName',
       },
       {
         title: '操作',

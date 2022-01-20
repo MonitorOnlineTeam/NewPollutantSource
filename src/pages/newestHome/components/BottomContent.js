@@ -22,6 +22,7 @@ import styles from "../style.less"
 import { InitVideo } from '@/utils/video';
 import MoreBtn from './publicComponents/MoreBtn'
 import ClockAbnormalModal from './springModal/abnormalWorkStatistics'
+import ConsumablesStatisticsModal from './springModal/consumablesStatistics'
 
 const { Option } = Select;
 
@@ -147,9 +148,13 @@ const Index = (props) => {
   const deviceAbnormalClick = (key) => { //设备异常 日期切换
     setDeviceAbnormalCheck(key)
   }
-
+   
+  const [consumablesStatisticsVisible,setConsumablesStatisticsVisible] = useState(false)
   const moreBtnClick = (type) => {
-    console.log(type)
+    if(type === 'consumables'){ //耗材统计
+      setConsumablesStatisticsVisible(true)
+    }
+
   }
   const sceneClockOption = (data) => { 
 
@@ -459,7 +464,7 @@ const Index = (props) => {
             style={{ height: '182px', width: '100%' }}
             ref={consumablesEchartsRef}
           />
-          <MoreBtn className={styles.moreBtnAbsoluteSty} type='planComplete' moreBtnClick={moreBtnClick} />
+          <MoreBtn className={styles.moreBtnAbsoluteSty} type='consumables' moreBtnClick={moreBtnClick} />
         </Row>
       </Col>
      </Spin>
@@ -478,7 +483,13 @@ const Index = (props) => {
         type={pollutantType}
         onCancel={()=>{setClockAbnormalVisible(false)}}
         time={[moment(clockBtnCheck.beginTime),moment(clockBtnCheck.endTime)]}
-      />  
+      />
+      <ConsumablesStatisticsModal  //耗材统计弹框
+        visible={consumablesStatisticsVisible}
+        type={Number(pollutantType)}
+        onCancel={()=>{setConsumablesStatisticsVisible(false)}}
+        time={[moment(consumablesCheck.beginTime),moment(consumablesCheck.endTime)]}
+      />    
     
     </Row>
   );

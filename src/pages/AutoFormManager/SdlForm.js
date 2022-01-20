@@ -252,7 +252,7 @@ class SdlForm extends PureComponent {
           break;
           case '数字':
             validator = `${inputPlaceholder}`;
-          element = <><InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />{isNumCode&&<Tooltip title={'编号从1依次开始,系统会自动给出最新编号,无特殊情况切勿修改。'}><QuestionCircleOutlined style={{paddingLeft:5,position:'absolute',top:0}}/></Tooltip>}</>;
+            element = <InputNumber style={{ width: '100%' }} min={0} placeholder={'请输入' + item.labelText} allowClear />;
             break;
         case '下拉列表框':
         case '多选下拉列表':

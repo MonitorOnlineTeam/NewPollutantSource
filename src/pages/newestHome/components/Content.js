@@ -119,6 +119,7 @@ const Index = (props) => {
            <Col span={14} className={styles.mapContent}>
              <MapContent {...props} fullScreenClick={fullScreenClick}/>
            </Col>
+           
            <Col span={5} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
             <RightContent {...props}/>
             </Col>
