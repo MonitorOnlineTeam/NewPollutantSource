@@ -29,6 +29,7 @@ import CooperaInspection from '@/pages/EmergencyTodoList/CooperaInspection'
 import DataConsistencyRealTime from '@/pages/EmergencyTodoList/DataConsistencyRealTime'
 import DataConsistencyRealDate from '@/pages/EmergencyTodoList/DataConsistencyRealDate'
 import ThirdPartyTestingContent from '@/pages/EmergencyTodoList/ThirdPartyTestingContent'
+import WaterQualityCalibrationRecord from '@/pages/EmergencyTodoList/WaterQualityCalibrationRecord'
 
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
@@ -115,7 +116,12 @@ class Index extends Component {
                 break;    
             case "65":  //上月委托第三方检测次数表单 废水
                 form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                    
+                break;   
+            case "16":  //水质校准记录表
+                form = <WaterQualityCalibrationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                   
+                
+                
         }
         return form
     }

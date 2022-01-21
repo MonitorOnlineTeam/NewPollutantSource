@@ -31,7 +31,8 @@ class SparePartReplaceRecordContent extends Component {
         this.props.dispatch({
             type: 'task/GetSparePartReplaceRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             },
         });
         this.setState({

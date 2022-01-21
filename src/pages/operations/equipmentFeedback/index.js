@@ -1,5 +1,5 @@
 /**
- * 功  能：耗材统计
+ * 功  能：设备故障反馈
  * 创建人：贾安波
  * 创建时间：2021.1.21
  */
@@ -15,18 +15,18 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
-import styles from "../style.less"
+import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'consumablesStatistics'
+const namespace = 'equipmentFeedback'
 
 
 
 
-const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.regTableDatas,
+const dvaPropsData =  ({ loading,equipmentFeedback,global }) => ({
+  tableDatas:equipmentFeedback.regTableDatas,
   tableLoading: loading.effects[`${namespace}/regGetConsumablesRIHList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
@@ -150,8 +150,15 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
+  const onExport = () =>{
+    console.log('导出')
+  }
+  const [expand, setExpand] = useState(true)
   return (
-    <div  className={styles.consumablesStatisticsSty}>
+    <div  className={styles.equipmentFeedbackSty}>
+
+    <BreadcrumbWrapper>
+    <Card title={
     <Form
     form={form}
     name="advanced_search"
@@ -161,28 +168,83 @@ const Index = (props) => {
       abnormalType:1,
       time:time
     }}
-    layout='inline'
-    style={{paddingBottom:15}}
+    className={styles.queryForm}
   >  
-     <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
-         <RangePicker allowClear={false} style={{width:'100%'}} 
-          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
-    </Form.Item> 
-    <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='监测点类型' style={{width:150}}>
-           <Option value={1}>废水</Option>
-           <Option value={2}>废气</Option>
+     <Row>
+       <Col span={6}>
+     <Form.Item label='行政区' name='pollutantType' >
+       <RegionList />
+       </Form.Item>
+       </Col>
+       <Col span={6}>
+       <Form.Item  label='企业' name='pollutantType'>
+        <Select showSearch placeholder='请选择'>
+            {/* {
+            options.map(item => {
+              return <Option value={item.value}>{item.label}</Option>
+            })
+          } */}
            </Select>
        </Form.Item>
+       </Col>
+       <Col span={6}>
+       <Form.Item label='监测点' name='pollutantType' >
+        <Select placeholder='请选择'>
+            {/* {
+            options.map(item => {
+              return <Option value={item.value}>{item.label}</Option>
+            })
+          } */}
+           </Select>
+       </Form.Item>
+       </Col>
+       <Col span={6}>
+       <Form.Item label='故障单元' name='pollutantType'>
+         <Input placeholder='请输入'/>
+       </Form.Item>
+       </Col>
+
+      </Row>
+       {expand&&<Row>
+      <Col span={6}>
+      <Form.Item label='故障时间' name='time'>
+         <RangePicker allowClear={false} />
+      </Form.Item> 
+      </Col>
+      <Col span={6}>
+      <Form.Item label='主机名称型号' name='pollutantType'>
+         <Input placeholder='请输入'/>
+       </Form.Item>
+       </Col>
+       <Col span={6}>
+       <Form.Item label='故障现象' name='pollutantType'>
+         <Input placeholder='请输入'/>
+       </Form.Item>
+       </Col>
+       <Col span={6}>
+          <Form.Item label='处理状态' name='pollutantType' >
+            <Radio.Group>
+            <Radio value={1}>待解决</Radio>
+            <Radio value={2}>已解决</Radio>
+          </Radio.Group>
+       </Form.Item>
+       </Col>
+       </Row>}
        <Form.Item>
-           <Button  type="primary" htmlType='submit' >
-         查询
-    </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
-           导出
-    </Button> 
+       <Button type="primary" htmlType="submit">
+            查询
+          </Button>
+          <Button style={{  margin: '0 8px'}} onClick={() => {  form.resetFields(); }}  >
+            重置
+          </Button> 
+          <Button style={{  marginRight: 8}}  icon={<ExportOutlined />} onClick={onExport}>
+              导出
+            </Button>
+    <a  onClick={() => {setExpand(!expand);  }} >
+       {expand ? <>收起 <UpOutlined /></>  : <>展开 <DownOutlined /></>} 
+      </a>
     </Form.Item>
-  </Form>
+  </Form>}>
   <SdlTable
         loading = {tableLoading}
         bordered
@@ -191,8 +253,10 @@ const Index = (props) => {
         scroll={{ y: clientHeight - 500}}
         pagination={false}
       />
-   
-        </div>
+   </Card>
+    </BreadcrumbWrapper>
+    </div>
+
   );
 };
 export default connect(dvaPropsData,dvaDispatch)(Index);

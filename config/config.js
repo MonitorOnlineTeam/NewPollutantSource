@@ -205,7 +205,12 @@ export default {
              {
                 path: '/appoperation/appThirdPartyTestingContent/:TaskID/:TypeID',
                 component: './AppOperation/AppThirdPartyTestingContent',
-            },             
+            },  
+            /* 校准记录 */
+            {
+              path: '/appoperation/appWaterQualityCalibrationRecord/:TaskID/:TypeID',
+              component: './AppOperation/AppWaterQualityCalibrationRecord',
+            },            
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',
@@ -943,9 +948,9 @@ export default {
                   component: './operations/CommandDispatchReport',
                 },
                 {
-                  path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
-                  name: 'CommandDispatchReportDetails',
-                  component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+                  path: '/operations/equipmentFeedback', //开发设备故障反馈
+                  name: 'EquipmentFeedback',
+                  component: './operations/equipmentFeedback',
                 },
                //企业运维管理
                {
@@ -972,7 +977,12 @@ export default {
                     component: './operations/operationEntManage/operationPerson/OperationPersonDetail',
                   },
               ]
-              },                  
+              }, 
+              {
+                path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                name: 'CommandDispatchReportDetails',
+                component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+              },                 
               ],
             },
             {

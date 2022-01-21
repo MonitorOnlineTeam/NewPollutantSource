@@ -160,6 +160,7 @@ export const EnumPsOperationForm={
   dataConsistencyDate:66, //数据一致性核查小时与日数据表单
   ThirdPartyTestingData:73,//上月委托第三方检测次数
   ThirdPartyTestingDataWater:65,//上月委托第三方检测次数  废水
+  WaterQualityCalibrationRecord:16,//水质校准记录
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={

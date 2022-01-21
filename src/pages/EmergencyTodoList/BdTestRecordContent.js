@@ -33,7 +33,8 @@ class BdTestRecordContent extends Component {
         this.props.dispatch({
             type: 'task/GetBdTestRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             }
         });
     }

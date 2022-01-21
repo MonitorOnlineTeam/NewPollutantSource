@@ -31,7 +31,8 @@ class RepalceRecordList extends Component {
         this.props.dispatch({
             type: 'task/GetStandardLiquidRepalceRecordList',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             },
         });
         this.setState({

@@ -27,7 +27,8 @@ class StopCemsRecordContent extends Component {
         this.props.dispatch({
             type: 'task/GetStopCemsRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             }
         });
 

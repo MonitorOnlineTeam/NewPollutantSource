@@ -134,7 +134,7 @@ class EmergencyDetailInfo extends Component {
                 console.log(item.ID)
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60 
-                     || item.ID === 15 || item.ID === 62 || item.ID === 63 || item.ID === 66 || item.ID === 73 || item.ID === 65  ) {
+                     || item.ID === 15 || item.ID === 62 || item.ID === 63 || item.ID === 66 || item.ID === 73 || item.ID === 65  || item.ID === 16) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -199,7 +199,9 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.ThirdPartyTestingDataWater: //上月委托第三方检测次数 废水
                            this.GoToForm(taskID, item.CnName, '65', rtnVal, key, item.FormMainID);
                          break;                            
-                          
+                         case EnumPsOperationForm.WaterQualityCalibrationRecord: //水质校准记录表
+                         this.GoToForm(taskID, item.CnName, '16', rtnVal, key, item.FormMainID);
+                       break;                              
                         default:
                             break;
                     }
@@ -513,7 +515,7 @@ class EmergencyDetailInfo extends Component {
             TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
             RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
 
-            if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+            if (this.props.taskInfo.Datas[0].AlarmList&&this.props.taskInfo.Datas[0].AlarmList.length > 0) {
                 this.props.taskInfo.Datas[0].AlarmList.map(item => {
                     if (item !== null) {
                         let AlarmType = '';
@@ -712,7 +714,7 @@ class EmergencyDetailInfo extends Component {
             width: 200,
             key: 'AlarmMsg',
         }];
-        if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+        if (this.props.taskInfo.Datas[0].AlarmList&&this.props.taskInfo.Datas[0].AlarmList.length > 0) {
             // 超标列
             if (this.props.taskInfo.Datas[0].AlarmList[0].AlarmType === '2') {
                 columns = columns.concat({

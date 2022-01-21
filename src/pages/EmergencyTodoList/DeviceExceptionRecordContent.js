@@ -25,7 +25,8 @@ class DeviceExceptionRecordContent extends Component {
         this.props.dispatch({
             type: 'task/GetDeviceExceptionRecord',
             payload: {
-                TaskID: this.props.TaskID
+                TaskID: this.props.TaskID,
+                TypeID: this.props.TypeID,
             }
         });
 

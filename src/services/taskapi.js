@@ -360,3 +360,9 @@ export async function GetDetectionTimesRecordList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetDetectionTimesRecordList', params , null);
     return result === null ? { Datas: null } : result;
 }
+
+/** 水质校准记录列表 */
+export async function GetWaterCalibrationRecordForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterCalibrationRecordForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}

@@ -485,7 +485,7 @@ class DepartIndex extends Component {
         },
       ],
       departInfoTree:[],
-      sortTitle:'关闭排序',
+      sortTitle:'开启排序',
       approvalProcessVisible:false, //审核流程
       approvalProcessEditorAddVisible:false,
       approvalUserID:undefined,
@@ -1615,7 +1615,7 @@ class DepartIndex extends Component {
               <Modal //审核流程弹框 添加or修改
                 title={this.state.approvalProcessEdit? "添加": "编辑"}
                 visible={this.state.approvalProcessEditorAddVisible}
-                onCancel={()=>{this.setState({approvalProcessEditorAddVisible:false})}}
+                onCancel={()=>{this.setState({approvalProcessEditorAddVisible:false,approvalUserID:undefined,approvalNode:undefined})}}
                 width={'50%'}
                 destroyOnClose
                 okText= '保存'
@@ -1625,9 +1625,13 @@ class DepartIndex extends Component {
               >
                   <Form   name="advanced_search" className={styles['ant-advanced-search-form']}>
                         <Form.Item label="审核人"    >
-                            <Select placeholder='请选择审核人' value={this.state.approvalUserID} onChange={(val)=>{this.setState({approvalUserID:val})}}>
+                            <Select showSearch
+                                filterOption={(input, option) =>
+                                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                              placeholder='请选择审核人' value={this.state.approvalUserID} onChange={(val)=>{this.setState({approvalUserID:val})}}>
                               {this.props.userList[0]&&this.props.userList.map(item=>{
-                                return   <Option value={item.ID}>{`${item.userAccount}${item.userName}`}</Option>
+                                return   <Option value={item.ID}>{`${item.userAccount} - ${item.userName}`}</Option>
                               })}
                             </Select>
                         </Form.Item>
