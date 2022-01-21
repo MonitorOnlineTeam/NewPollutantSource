@@ -23,7 +23,7 @@ class monitorTest extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            time: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            time: [moment().subtract(1, 'years'), moment().subtract(1, 'days')],
             showType: "data",
             columns: [
                 {
