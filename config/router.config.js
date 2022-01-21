@@ -177,13 +177,30 @@ const routes = [
             path: '/airQualityAnalysis',
             name: 'airQualityAnalysis',
             routes: [
-              // {
-              //   name: 'index',
-              //   path: '/airQualityAnalysis/xxx',
-              //   component: './airQualityAnalysis/xxx',
-              // },
+              {
+                name: 'monthAQI',
+                path: '/airQualityAnalysis/monthAQI/:type',
+                component: './airQualityAnalysis/monthAQI',
+              },
+              {
+                name: 'primaryPol',
+                path: '/airQualityAnalysis/primaryPol/:type',
+                component: './airQualityAnalysis/primaryPol',
+              },
             ]
           },
+           // 目标考核台账
+           {
+            name: 'monitorTest',
+            path: '/monitorTest',
+            component: './monitorTest',
+          },
+            // 污染玫瑰
+            {
+              name: 'polRose',
+              path: '/polRose/:type',
+              component: './polRose',
+            },
           // 应急
           {
             path: '/emergency',

@@ -8,3 +8,24 @@ export async function getHomePage(params) {
   } : result;
 }
 
+export async function GetAirAQIMonth(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetAirAQIMonth', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
+
+export async function GetAirPrimaryPolMonth(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetAirPrimaryPolMonth', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
+
+export async function GetMonthPoint(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetMonthPoint', params, null);
+  return result === null ? {
+    data: null
+  } : result;
+}
+
