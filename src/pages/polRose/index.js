@@ -291,27 +291,28 @@ class polRose extends PureComponent {
                                     </Button>
                                 </Form.Item>
                             </Form>
-                            <div style={{ display: "flex" }}>
-                                <ReactEcharts
-                                    option={this.getOptions()}
-                                    lazyUpdate={true}
-                                    style={{ height: 'calc(100vh - 250px)', width: '100%' }}
-                                    className="echarts-for-echarts"
-                                    theme="my_theme"
-                                />
-                            </div>
-                            <div style={{ width: 440, marginTop: -28 }}>
-                                <Card title={`详细数据`}>
+                            <Row>
+                                <Col flex="auto">
+                                    <ReactEcharts
+                                        option={this.getOptions()}
+                                        lazyUpdate={true}
+                                        style={{ height: 'calc(100vh - 250px)', width: '100%' }}
+                                        className="echarts-for-echarts"
+                                        theme="my_theme"
+                                    />
+                                </Col>
+                                <Col flex="400px">
                                     {
                                         RoleData["tableData"] && <SdlTable
                                             loading={loading}
                                             rowKey={(record, index) => index}
                                             columns={columns}
+                                            // pagination={false}
                                             dataSource={RoleData["tableData"]}
                                         />
                                     }
-                                </Card>
-                            </div>
+                                </Col>
+                            </Row>
                         </Card>
                     </BreadcrumbWrapper>
                 </div>

@@ -8,6 +8,13 @@ export default Model.extend({
     AQIMonthData: {},
     PrimaryData: {},
     MonthAvgData: {},
+    yearAndChainData: {
+      xData: [],
+      current: { date: '', data: [] },
+      year: { date: '', data: [] },
+      chain: { date: '', data: [] }
+    },
+    calendarData: [],
   },
   effects: {
     /*月份AQI分析**/
@@ -58,5 +65,28 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    // 获取同比环比数据
+    *getYearAndChain({ payload }, { call, put, update }) {
+      const result = yield call(services.GetMonthPoint, payload);
+      if (result.IsSuccess) {
+        yield update({
+          yearAndChainData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取污染日历数据
+    *getPolCalendar({ payload }, { call, put, update }) {
+      const result = yield call(services.GetPolCalendar, payload);
+      if (result.IsSuccess) {
+        yield update({
+          calendarData: [...result.Datas]
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
   }
 })

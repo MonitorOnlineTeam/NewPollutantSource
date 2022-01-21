@@ -187,6 +187,29 @@ const routes = [
                 path: '/airQualityAnalysis/primaryPol/:type',
                 component: './airQualityAnalysis/primaryPol',
               },
+              {
+                name: 'index',
+                path: '/airQualityAnalysis/yearAndChain',
+                component: './airQualityAnalysis/yearAndChain',
+              },
+              // 污染日历 - 单站点
+              {
+                name: 'pollutionCalendar',
+                path: '/airQualityAnalysis/pollutionCalendar/single',
+                component: './airQualityAnalysis/pollutionCalendar/Single',
+              },
+              // 污染日历 - 多站点
+              {
+                name: 'pollutionCalendar',
+                path: '/airQualityAnalysis/pollutionCalendar/multiple',
+                component: './airQualityAnalysis/pollutionCalendar/Multiple',
+              },
+              // 污染日历 - 多站点
+              // {
+              //   name: 'pollutionCalendar',
+              //   path: '/airQualityAnalysis/weatherAnalysis',
+              //   component: './airQualityAnalysis/weatherAnalysis',
+              // },
             ]
           },
            // 目标考核台账
