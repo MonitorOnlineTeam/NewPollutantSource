@@ -57,7 +57,6 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
-  const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time } = props; 
   
@@ -67,14 +66,9 @@ const Index = (props) => {
   
   },[]);
 
-  const showTypeChange = (e) =>{
-     setShowType(e.target.value)
-     setOutOrInside(1)
-  }
+
   
-  useEffect(()=>{
-    onFinish();
-  },[showType])
+
 
   const exports = async  () => {
     const values = await form.validateFields();
@@ -100,26 +94,26 @@ const Index = (props) => {
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
-  },
-  {
-    title: '备品备件更换数量',
-    dataIndex: 'entName',
-    key:'entName',
-    align:'center',
     render:(text,record,index)=>{
-     return  <div style={{textAlign:"left"}}>{text}</div>
+      return  <Button type="link" onClick={()=>{ regionDetail(record)  }} >{text}</Button>
     }
   },
   {
+    title: '备品备件更换数量',
+    dataIndex: 'sparePartCount',
+    key:'sparePartCount',
+    align:'center',
+  },
+  {
     title: '易耗品更换数量',
-    dataIndex: 'pointName',
-    key:'pointName',
+    dataIndex: 'consumablesCount',
+    key:'consumablesCount',
     align:'center',
   },
   {
     title: '试剂更换数量',
-    dataIndex: 'pointName',
-    key:'pointName',
+    dataIndex: 'standardLiquidCount',
+    key:'standardLiquidCount',
     align:'center',
   },
 ]
@@ -129,26 +123,25 @@ const Index = (props) => {
   const onFinish  = async () =>{  //查询
     try {
       const values = await form.validateFields();
-      if(values.time[1].diff(values.time[0], 'days') <= 90){
-
-        props.regEntGetTaskWorkOrderList({
+        props.regGetConsumablesRIHList({
           ...values,
           time:undefined,
-          staticType:showType,
           beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-          outOrInside:outOrInside,
-          regionLevel:showType ==1? 1 : undefined,
-          pageIndex:showType ==2? 1 : undefined,
-          pageSize:showType ==2? 10 : undefined,
+          pointType:1,
+          pageIndex: undefined,
+          pageSize: undefined,
+
         })
-      }else{
-        message.warning('日期单位不能超过90天，请重新选择')
-      }
 
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
+  }
+
+
+  const regionDetail = (row) =>{
+
   }
   return (
     <div  className={styles.consumablesStatisticsSty}>

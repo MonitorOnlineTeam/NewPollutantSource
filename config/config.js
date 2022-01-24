@@ -952,6 +952,11 @@ export default {
                   name: 'EquipmentFeedback',
                   component: './operations/equipmentFeedback',
                 },
+                {
+                  path: '/operations/equipmentFeedback/detail', //开发设备故障反馈 详情
+                  name: 'EquipmentFeedback',
+                  component: './operations/equipmentFeedback/detail',
+                },
                //企业运维管理
                {
                 name: 'operationEntManage',

@@ -10,19 +10,39 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'equipmentFeedback',
   state: {
-
+    faultFeedbackList:[],
+    tableTotal:1
   },
   effects: {
-   //地图 获取监测点infoWindow数据
-    *getInfoWindowData({   payload, }, { call, update, select, put }) {
-      yield update({ infoWindowDataLoading: true })
-      const result = yield call(services.GetPollutantList, { pollutantTypes: payload.pollutantTypes });
+   //列表
+    *getFaultFeedbackList({   payload, }, { call, update, select, put }) {
+      const result = yield call(services.GetFaultFeedbackList, { ... payload });
       if (result.IsSuccess) {
-        yield put({ type: "getInfoWindowPollutantList", payload: payload, pollutantList: result.Datas });
+        yield update({faultFeedbackList: result.Datas,tableTotal:result.Total });
       } else {
         message.error(result.Message)
       }
     },
+   //编辑
+   *updateFaultFeedbackIsSolve({   payload,callback }, { call, update, select, put }) {
+    const result = yield call(services.UpdateFaultFeedbackIsSolve, { ... payload });
+    if (result.IsSuccess) {
+      message.success(result.Message)
+      callback()
+    } else {
+      message.error(result.Message)
+    }
+  },
+  //导出
+  *exportFaultFeedback({   payload,callback }, { call, update, select, put }) {
+    const result = yield call(services.ExportFaultFeedback, { ... payload });
+    if (result.IsSuccess) {
+      downloadFile(result.Datas);
+      message.success(result.Message)
+    } else {
+      message.error(result.Message)
+    }
+  }, 
   }
 
 })
