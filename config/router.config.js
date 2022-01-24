@@ -204,12 +204,12 @@ const routes = [
                 path: '/airQualityAnalysis/pollutionCalendar/multiple',
                 component: './airQualityAnalysis/pollutionCalendar/Multiple',
               },
-              // 污染日历 - 多站点
-              // {
-              //   name: 'pollutionCalendar',
-              //   path: '/airQualityAnalysis/weatherAnalysis',
-              //   component: './airQualityAnalysis/weatherAnalysis',
-              // },
+              // 气象图
+              {
+                name: 'weatherAnalysis',
+                path: '/airQualityAnalysis/weatherAnalysis',
+                component: './airQualityAnalysis/weatherAnalysis',
+              },
             ]
           },
            // 目标考核台账

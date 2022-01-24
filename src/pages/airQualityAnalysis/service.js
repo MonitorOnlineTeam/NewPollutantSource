@@ -25,3 +25,9 @@ export async function GetPolCalendar(params) {
   const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetPolCalendar', params, null);
   return result;
 }
+
+// 气象图数据
+export async function getWeatherAnalysisData(params) {
+  const result = await post('/api/rest/PollutantSourceApi/ReportApi/GetMeteData', params, null);
+  return result;
+}
