@@ -210,7 +210,17 @@ export default {
             {
               path: '/appoperation/appWaterQualityCalibrationRecord/:TaskID/:TypeID',
               component: './AppOperation/AppWaterQualityCalibrationRecord',
-            },            
+            },   
+            /* 标准溶液核查记录 */
+            {
+              path: '/appoperation/appStandardSolutionVerificationRecord/:TaskID/:TypeID',
+              component: './AppOperation/AppStandardSolutionVerificationRecord',
+            },      
+            /* 设备参数变动记录 */
+            {
+              path: '/appoperation/appDeviceParameterChange/:TaskID/:TypeID',
+              component: './AppOperation/AppDeviceParameterChange',
+            },    
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',

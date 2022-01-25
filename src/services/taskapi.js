@@ -366,3 +366,15 @@ export async function GetWaterCalibrationRecordForPCList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterCalibrationRecordForPCList', params , null);
     return result === null ? { Datas: null } : result;
 }
+
+/** 标准溶液核查记录列表 */
+export async function GetWaterCheckRecordRecordForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterCheckRecordRecordForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}
+
+/** 设备参数变动记录列表 */
+export async function GetWaterParametersChangeRecordForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterParametersChangeRecordForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}

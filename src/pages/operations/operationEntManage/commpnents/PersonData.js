@@ -26,7 +26,8 @@ import {
   Upload,
   Switch,
   message,
-  Divider
+  Divider,
+  Spin
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -81,7 +82,9 @@ function getBase64(file) {
   atmoStationList:common.atmoStationList,
   editFormData:autoForm.editFormData,
   operationList:operationPerson.operationList,
-  duplicateList:operationPerson.duplicateList
+  duplicateList:operationPerson.duplicateList,
+  confirmAddLoading: loading.effects['autoForm/add'],
+  confirmEditLoading: loading.effects['autoForm/saveEdit'],
 }))
 @Form.create()
 export default class PersonData extends Component {
@@ -102,7 +105,8 @@ export default class PersonData extends Component {
       switchGas:true,
       switchWater:true,
       pageSize:20,
-      pageIndex:1
+      pageIndex:1,
+      editLoading:false
     };
     this.columns =  [
       {
@@ -241,12 +245,13 @@ export default class PersonData extends Component {
    edit=(row)=>{  //编辑
 
     const {dispatch,form:{setFieldsValue},editFormData} = this.props;
-
+    
     this.setState({
       visible:true,
       switchGas:true,
       switchWater:true,
       type:'edit',
+      editLoading:true
     },()=>{
       // 获取详情页面数据
       dispatch({
@@ -321,10 +326,13 @@ export default class PersonData extends Component {
                 },
                 callback:res=>{
                   this.setState({
-                    gasPhoto:res
+                    gasPhoto:res,
                   })
                 }
                });
+               this.setState({ editLoading:false })
+            }else{
+              this.setState({ editLoading:false })
             }
           }
         })
@@ -616,11 +624,12 @@ export default class PersonData extends Component {
         visible={this.state.visible}
         onOk={this.onFinish}
         // footer={null}
-        // confirmLoading={confirmLoading}
+        confirmLoading={this.state.type==='edit'? this.props.confirmEditLoading:this.props.confirmAddLoading}
         onCancel={this.cancel}
         className={styles.operationModal}
         destroyOnClose
       >
+        <Spin spinning={this.state.editLoading}>
         <Form
       name="basic"
       ref={this.formRef}
@@ -905,6 +914,7 @@ export default class PersonData extends Component {
         </Button>
       </Form.Item> */}
     </Form>
+    </Spin>
       </Modal>
         <Modal  zIndex={1100} visible={this.state.previewVisible} footer={null} onCancel={()=>{this.setState({previewVisible:false})}}>
           <img alt="photo" style={{ width: '100%' }} src={previewImage} />

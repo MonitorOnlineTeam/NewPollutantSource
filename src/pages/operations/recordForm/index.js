@@ -30,6 +30,8 @@ import DataConsistencyRealTime from '@/pages/EmergencyTodoList/DataConsistencyRe
 import DataConsistencyRealDate from '@/pages/EmergencyTodoList/DataConsistencyRealDate'
 import ThirdPartyTestingContent from '@/pages/EmergencyTodoList/ThirdPartyTestingContent'
 import WaterQualityCalibrationRecord from '@/pages/EmergencyTodoList/WaterQualityCalibrationRecord'
+import StandardSolutionVerificationRecord from '@/pages/EmergencyTodoList/StandardSolutionVerificationRecord'
+import DeviceParameterChange from '@/pages/EmergencyTodoList/DeviceParameterChange'
 
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
@@ -120,8 +122,13 @@ class Index extends Component {
             case "16":  //水质校准记录表
                 form = <WaterQualityCalibrationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                   
-                
-                
+            case "70":  //标准溶液核查记录表
+                form = <StandardSolutionVerificationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break; 
+            case "72":  //设备参数记录表
+            form = <DeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                    
+                    
         }
         return form
     }

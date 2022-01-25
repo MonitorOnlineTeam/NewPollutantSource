@@ -21,7 +21,9 @@ import {
      GetDataConsistencyRecordForPCList,
      GetDataConsistencyRecordNewForPCList,
      GetDetectionTimesRecordList,
-     GetWaterCalibrationRecordForPCList
+     GetWaterCalibrationRecordForPCList,
+     GetWaterCheckRecordRecordForPCList,
+     GetWaterParametersChangeRecordForPCList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -51,6 +53,8 @@ export default Model.extend({
         dataConsistencyDateRecordList:null,//数据一致性检查表 小时与日数据
         detectionTimesRecordList:null,//上月委托第三方检测次数
         waterCalibrationRecordList:null,//水质校准记录
+        WaterCheckRecordRecordForPCList:null,//标准溶液核查记录
+        WaterParametersChangeRecordForPCList:null,//设备参数变动记录
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -468,8 +472,26 @@ export default Model.extend({
                 waterCalibrationRecordList: DataInfo.Datas,
             });
         }
-    },
-
+      },
+       //  标准溶液核查
+        *GetWaterCheckRecordRecordForPCList ({ payload, }, {call, update,select,}) {
+        const DataInfo = yield call(GetWaterCheckRecordRecordForPCList, payload); 
+        if (DataInfo.IsSuccess) {
+            yield update({
+                WaterCheckRecordRecordForPCList: DataInfo.Datas,
+            });
+        }
+        },
+        //  设备参数变动
+        *GetWaterParametersChangeRecordForPCList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetWaterParametersChangeRecordForPCList, payload); 
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    WaterParametersChangeRecordForPCList: DataInfo.Datas,
+                });
+            }
+            },
+           
 
     },
 
