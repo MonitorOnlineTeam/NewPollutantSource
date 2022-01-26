@@ -23,7 +23,8 @@ import {
      GetDetectionTimesRecordList,
      GetWaterCalibrationRecordForPCList,
      GetWaterCheckRecordRecordForPCList,
-     GetWaterParametersChangeRecordForPCList
+     GetWaterParametersChangeRecordForPCList,
+     GetGasParametersChangeRecordForPCList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -54,7 +55,8 @@ export default Model.extend({
         detectionTimesRecordList:null,//上月委托第三方检测次数
         waterCalibrationRecordList:null,//水质校准记录
         WaterCheckRecordRecordForPCList:null,//标准溶液核查记录
-        WaterParametersChangeRecordForPCList:null,//设备参数变动记录
+        WaterParametersChangeRecordForPCList:null,//设备参数变动记录 废水
+        GasParametersChangeRecordForPCList:null,//设备参数变动记录 废气
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -482,7 +484,7 @@ export default Model.extend({
             });
         }
         },
-        //  设备参数变动
+        //  设备参数变动 废水
         *GetWaterParametersChangeRecordForPCList ({ payload, }, {call, update,select,}) {
             const DataInfo = yield call(GetWaterParametersChangeRecordForPCList, payload); 
             if (DataInfo.IsSuccess) {
@@ -491,7 +493,16 @@ export default Model.extend({
                 });
             }
             },
-           
+        //  设备参数变动 废气
+        *GetGasParametersChangeRecordForPCList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetGasParametersChangeRecordForPCList, payload); 
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    GasParametersChangeRecordForPCList: DataInfo.Datas,
+                });
+            }
+            },
+                
 
     },
 

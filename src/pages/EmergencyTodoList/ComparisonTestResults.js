@@ -3,7 +3,7 @@
  * @Date: 2022.1.25
  * @LastEditors: 
  * @LastEditTime: 
- * @Description: 页面：设备参数变动记录 废水
+ * @Description: 页面：比对试验结果记录表
  */
 import React, { Component } from 'react';
 import { Spin } from 'antd';
@@ -17,9 +17,9 @@ import MonitorContent from '../../components/MonitorContent/index';
     tableTable: task.WaterParametersChangeRecordForPCList
 }))
 /*
-页面：设备参数变动记录 废水
+页面：比对试验结果记录表
 */
-class StandardSolutionVerificationRecord extends Component {
+class ComparisonTestResults extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -105,40 +105,49 @@ class StandardSolutionVerificationRecord extends Component {
                 >
                     <tbody>
                          <tr>
-                            <td colSpan="5"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
+                            <td colSpan="9"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
                               设备参数变动记录 
                             </td>
                         </tr> 
                         <tr>
-                            <td colSpan="1" style={{ minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                统计起始时间
+                            <td colSpan="2" style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                 运维单位
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px',minWidth: 150 }}>
                                 {Content !== null ?Content.BeginTime:null}
                             </td>
-                            <td colSpan="1" style={{  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
-                                        统计截止时间
+                            <td colSpan="2" style={{  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                                        对比试验日期
                             </td>
-                            <td colSpan="1" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 150 }}>
                                 {Content !== null ?Content.EndTime:null}
                             </td>
                         </tr>
                         <tr>
-                           <td  style={{ minWidth: 150, height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
-                                  测量项目         
+                           <td rowSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
+                                  对比项目         
                             </td>
-                            <td style={{ minWidth: 150,  height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
-                                     参数
+                            <td rowSpan={2} style={{ minWidth: 150,  height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
+                                     序号
                             </td>
-                            <td style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                   参数值(变更前)
+                            <td  rowSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   单位
                             </td>  
-                            <td style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                   参数值(变更后)
+                            <td rowSpan={2}  style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   在线监测一起测定结果
                             </td>
-                            <td style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                   修改日期
-                            </td>                                
+                            <td  colSpan="2" style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   对比方法测定结果
+                            </td>  
+                            <td rowSpan={2} style={{ minWidth: 150,  height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
+                                  对比方法测定结果平均值
+                            </td>
+                            <td  rowSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   测定误差
+                            </td>  
+                            <td rowSpan={2}  style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   是否合格
+                            </td>                              
                          </tr>
                          {IsFlag?
                          <>
@@ -162,16 +171,16 @@ class StandardSolutionVerificationRecord extends Component {
                         <tr> <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }} colSpan="5">无参数变动</td></tr>
                     }
                          <tr>
-                            <td colSpan="1" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                      填写人
+                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                      运行维护人员
                             </td>
-                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
+                            <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px' }}>
                                 {Record !== null ?Record.CreateUserID:null}
                             </td>
-                            <td colSpan="1" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                     填写时间
+                            <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                     填写日期
                             </td>
-                            <td colSpan="1" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
+                            <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
                                 {Record !== null ?Record.CreateTime:null}
                             </td>
                         </tr> 
@@ -182,4 +191,4 @@ class StandardSolutionVerificationRecord extends Component {
     }
 }
 
-export default StandardSolutionVerificationRecord;
+export default ComparisonTestResults;

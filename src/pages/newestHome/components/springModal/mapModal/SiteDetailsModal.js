@@ -225,7 +225,7 @@ class SiteDetailsModal extends PureComponent {
                   <Descriptions.Item label="区域">{infoWindowData.Abbreviation}</Descriptions.Item>
                   <Descriptions.Item label="经度">{infoWindowData.longitude}</Descriptions.Item>
                   <Descriptions.Item label="纬度">{infoWindowData.latitude}</Descriptions.Item>
-                  <Descriptions.Item label="运维单位">{infoWindowData.operationPerson}</Descriptions.Item>
+                  <Descriptions.Item label="运维单位">{infoWindowData.operationCompany}</Descriptions.Item>
                   <Descriptions.Item label="运维负责人">{infoWindowData.operationPerson}</Descriptions.Item>
                   <Descriptions.Item label="污染物类型">{infoWindowData.pollutantType}</Descriptions.Item>
                 </Descriptions>

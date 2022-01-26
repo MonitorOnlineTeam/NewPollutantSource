@@ -373,8 +373,14 @@ export async function GetWaterCheckRecordRecordForPCList(params) {
     return result === null ? { Datas: null } : result;
 }
 
-/** 设备参数变动记录列表 */
+/** 设备参数变动记录列表 废水*/
 export async function GetWaterParametersChangeRecordForPCList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterParametersChangeRecordForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}
+
+/** 设备参数变动记录列表 废气*/
+export async function GetGasParametersChangeRecordForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasParametersChangeRecordForPCList', params , null);
     return result === null ? { Datas: null } : result;
 }

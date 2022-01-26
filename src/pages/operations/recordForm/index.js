@@ -32,6 +32,8 @@ import ThirdPartyTestingContent from '@/pages/EmergencyTodoList/ThirdPartyTestin
 import WaterQualityCalibrationRecord from '@/pages/EmergencyTodoList/WaterQualityCalibrationRecord'
 import StandardSolutionVerificationRecord from '@/pages/EmergencyTodoList/StandardSolutionVerificationRecord'
 import DeviceParameterChange from '@/pages/EmergencyTodoList/DeviceParameterChange'
+import GasDeviceParameterChange from '@/pages/EmergencyTodoList/GasDeviceParameterChange'
+import ComparisonTestResults from '@/pages/EmergencyTodoList/ComparisonTestResults'
 
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
@@ -126,9 +128,15 @@ class Index extends Component {
                 form = <StandardSolutionVerificationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break; 
             case "72":  //设备参数记录表
-            form = <DeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;                    
-                    
+                form = <DeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;   
+            case "64":  //设备参数记录表 废气
+                form = <GasDeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;       
+            case "3456":  //实际水样比对试验结果记录表
+                form = <ComparisonTestResults TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                                                
+                                     
         }
         return form
     }

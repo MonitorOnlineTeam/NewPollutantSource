@@ -57,6 +57,7 @@ const Index = (props) => {
     visible={props.visible}
     footer={false}
     onCancel={props.onCancel}
+    destroyOnClose
   >
    <Region {...props}/>
 

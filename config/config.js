@@ -216,11 +216,21 @@ export default {
               path: '/appoperation/appStandardSolutionVerificationRecord/:TaskID/:TypeID',
               component: './AppOperation/AppStandardSolutionVerificationRecord',
             },      
-            /* 设备参数变动记录 */
+            /* 设备参数变动记录 废水*/
             {
               path: '/appoperation/appDeviceParameterChange/:TaskID/:TypeID',
               component: './AppOperation/AppDeviceParameterChange',
-            },    
+            },  
+            /* 设备参数变动记录 废气*/
+            {
+              path: '/appoperation/appGasDeviceParameterChange/:TaskID/:TypeID',
+              component: './AppOperation/AppGasDeviceParameterChange',
+            },  
+            /* 实际水样对比实验结果记录表*/
+            {
+              path: '/appoperation/comparisonTestResults/:TaskID/:TypeID',
+              component: './AppOperation/AppComparisonTestResults',
+            }, 
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',
@@ -285,31 +295,7 @@ export default {
             {
               name: 'newestHome',
               path: '/newestHome',
-              routes: [
-                {
-                  path: '/newestHome',
-                  redirect: '/newestHome/wasteWater',
-                },
-                {
-                    name: 'wasteWater',//废水
-                    path: '/newestHome/wasteWater',
-                    component: './newestHome',  
-                },
-                {
-                  name: 'wasteGas', //废气
-                  path: '/newestHome/wasteGas',
-                  component: './newestHome',  
-               },
-              {
-                name:'waterQuality', //水质
-                path: '/newestHome/waterQuality',
-                component: './newestHome', 
-              },{
-                name: 'air', //空气站
-                path: '/newestHome/air',
-                component: './newestHome',  
-              }
-              ]
+              component: './newestHome',
             },
             {
               name: 'test',

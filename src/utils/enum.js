@@ -162,7 +162,9 @@ export const EnumPsOperationForm={
   ThirdPartyTestingDataWater:65,//上月委托第三方检测次数  废水
   WaterQualityCalibrationRecord:16,//水质校准记录
   StandardSolutionVerificationRecord:70,//标准溶液核查记录表
-  DeviceParameterChangeRecord:72//设备参数变动记录表
+  DeviceParameterChangeRecord:72,//设备参数变动记录表 废水
+  GasDeviceParameterChangeRecord:64,//设备参数变动记录表 废气
+  ComparisonTestResultsRecord:3456,//实际水样比对试验结果记录表
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={
