@@ -15,6 +15,13 @@ export default Model.extend({
       chain: { date: '', data: [] }
     },
     calendarData: [],
+    weatherAnalysisData: {
+      xData: [],
+      wind: [],
+      temp: [], // 温度
+      humi: [], // 湿度
+      press: [], // 气压
+    },
   },
   effects: {
     /*月份AQI分析**/
@@ -82,6 +89,17 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           calendarData: [...result.Datas]
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取气象图数据
+    *getWeatherAnalysis({ payload }, { call, put, update }) {
+      const result = yield call(services.getWeatherAnalysisData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          weatherAnalysisData: result.Datas
         })
       } else {
         message.error(result.Message)
