@@ -75,6 +75,12 @@ class monitorTest extends PureComponent {
                     width: 80,
                 },
                 {
+                    title: 'PM₂.₅均值',
+                    dataIndex: 'PM25',
+                    key: 'PM25',
+                    width: 90,
+                },
+                {
                     title: '监测天数',
                     dataIndex: 'AllDays',
                     key: 'AllDays',
@@ -97,6 +103,15 @@ class monitorTest extends PureComponent {
                     dataIndex: 'ExcellentRate',
                     key: 'ExcellentRate',
                     width: 80,
+                    render:(text, record)=>{
+                        if(text>=90)
+                        {
+                            return <span style={{color: '#3eb536'}}>{text}</span>
+                        }else
+                        {
+                            return <span style={{color: '#f41015'}}>{text}</span>
+                        }
+                    }
                 },
             ]
         };
@@ -150,7 +165,16 @@ class monitorTest extends PureComponent {
                     },
                     itemStyle: {
                         normal: {
-                            color: "#67c23a",
+                            color: function(params){
+                                var index_color=params.value;
+                                if(index_color>=90)
+                                {
+                                    return "#3eb536"
+                                }else
+                                {
+                                    return "#f41015"
+                                }
+                            },
                         },
                     },
                 }

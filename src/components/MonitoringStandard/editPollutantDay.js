@@ -30,7 +30,7 @@ const { Panel } = Collapse;
   editpollutant: standardLibrary.editpollutant,
 }))
 @Form.create()
-class EditPollutant extends Component {
+class EditPollutantDay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,6 +57,8 @@ class EditPollutant extends Component {
             this.props.form.setFieldsValue({
               UpperLimit: this.props.editpollutant.UpperLimit,
               LowerLimit: this.props.editpollutant.LowerLimit,
+              DayUpperLimit: this.props.editpollutant.DayUpperLimit,
+              DayLowerLimit: this.props.editpollutant.DayLowerLimit,
               AlarmContinuityCount: this.props.editpollutant.AlarmContinuityCount,
               OverrunContinuityCount: this.props.editpollutant.OverrunContinuityCount,
               ZeroContinuityCount: this.props.editpollutant.ZeroContinuityCount,
@@ -89,21 +91,22 @@ class EditPollutant extends Component {
           flag = true;
         }
         if (values.UpperLimit < values.LowerLimit) {
-          message.error('错误：报警上限小于报警下限！', 3).then(() => {
+          message.error('错误：小时报警上限小于小时报警下限！', 3).then(() => {
             flag = false;
           });
           flag = false;
         } else {
           flag = true;
         }
-        // if (values.DayUpperLimit < values.DayLowerLimit) {
-        //   message.error('错误：报警上限小于报警下限！', 3).then(() => {
-        //     flag = false;
-        //   });
-        //   flag = false;
-        // } else {
-        //   flag = true;
-        // }
+        if (values.DayUpperLimit < values.DayLowerLimit) {
+          message.error('错误：日报警上限小于日报警下限！', 3).then(() => {
+            flag = false;
+          });
+          flag = false;
+        } else {
+          flag = true;
+        }
+        console.log('limit=',values.DayUpperLimit)
         if (!err && flag === true) {
           that.props.dispatch({
             type: 'standardLibrary/editmonitorpointPollutant',
@@ -113,6 +116,8 @@ class EditPollutant extends Component {
               AlarmType: values.AlarmType,
               UpperLimit: values.UpperLimit === isNullOrUndefined ? 0 : values.UpperLimit,
               LowerLimit: values.LowerLimit === isNullOrUndefined ? 0 : values.LowerLimit,
+              DayUpperLimit: values.DayUpperLimit === isNullOrUndefined ? 0 : values.DayUpperLimit,
+              DayLowerLimit: values.DayLowerLimit === isNullOrUndefined ? 0 : values.DayLowerLimit,
               AbnormalUpperLimit:
                 values.AbnormalUpperLimit === isNullOrUndefined ? 0 : values.AbnormalUpperLimit,
               AbnormalLowerLimit:
@@ -202,15 +207,31 @@ class EditPollutant extends Component {
               </Row>
               <Row gutter={48}>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警上限">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="小时报警上限">
                     {getFieldDecorator('UpperLimit', {
                       initialValue: 0,
                     })(<InputNumber min={0} max={10000} step={0.1} />)}
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="报警下限">
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="小时报警下限">
                     {getFieldDecorator('LowerLimit', {
+                      initialValue: 0,
+                    })(<InputNumber min={0} max={10000} step={0.1} />)}
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row gutter={48}>
+                <Col span={12}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="日报警上限">
+                    {getFieldDecorator('DayUpperLimit', {
+                      initialValue: 0,
+                    })(<InputNumber min={0} max={10000} step={0.1} />)}
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} label="日报警下限">
+                    {getFieldDecorator('DayLowerLimit', {
                       initialValue: 0,
                     })(<InputNumber min={0} max={10000} step={0.1} />)}
                   </FormItem>
@@ -312,4 +333,4 @@ class EditPollutant extends Component {
     );
   }
 }
-export default EditPollutant;
+export default EditPollutantDay;

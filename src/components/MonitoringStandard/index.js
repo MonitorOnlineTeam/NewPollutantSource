@@ -24,6 +24,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import EditPollutant from './editPollutant';
+import EditPollutantDay from './editPollutantDay';
 import styles from './index.less';
 import MonitorContent from '@/components/MonitorContent';
 import SdlTable from '@/components/SdlTable';
@@ -147,9 +148,9 @@ class MonitoringStandard extends Component {
                 key: 'PollutantCode',
                 // width: '10%',
                 align: 'left',
-                fixed:'left',
+                fixed: 'left',
                 render: (text, record) => text,
-                
+
             },
             {
                 title: '污染物名称',
@@ -157,7 +158,7 @@ class MonitoringStandard extends Component {
                 key: 'PollutantName',
                 // width: '10%',
                 align: 'left',
-                fixed:'left',
+                fixed: 'left',
                 render: (text, record) => text,
             },
 
@@ -166,7 +167,7 @@ class MonitoringStandard extends Component {
                 dataIndex: 'AlarmType',
                 key: 'AlarmType',
                 // width: 200,
-                fixed:'left',
+                fixed: 'left',
                 render: (text, record) => {
                     if (text === 0) {
                         return (
@@ -277,7 +278,7 @@ class MonitoringStandard extends Component {
                                         onClick={() => this.IsEnabled(1, record)}
                                     >
                                         <ExclamationCircleOutlined /> 未监测
-                  </a>
+                                    </a>
                                 </Button>
                             </span>
                         );
@@ -289,7 +290,245 @@ class MonitoringStandard extends Component {
                                 {' '}
                                 <a title="单击从监测中移除" onClick={() => this.IsEnabled(0, record)}>
                                     <SettingOutlined spin={true} /> 监测中
-                </a>
+                                </a>
+                            </Button>
+                        </span>
+                    );
+                },
+            },
+            {
+                title: '是否参与考核',
+                dataIndex: 'IsStatisti',
+                key: 'IsStatisti',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    return <Switch onChange={() => {
+                        this.changeUseStatisti(record)
+                    }} disabled={record.IsUse === '0'} checkedChildren="是" unCheckedChildren="否" checked={text == 1} />
+                },
+            },
+            {
+                title: '操作',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (record.IsUse === '1') {
+                        return (
+
+                            <Tooltip title="编辑污染物">
+                                <a
+                                    onClick={() =>
+                                        this.setState({
+                                            Fvisible: true,
+                                            title: '编辑污染物',
+                                            width: '50%',
+                                            PollutantCode: record.PollutantCode,
+                                        })
+                                    }
+                                ><EditIcon /></a>
+                            </Tooltip>
+
+                        );
+                    }
+                    return <Tooltip >
+                        <a style={{ color: '#D1D1D1' }}><EditIcon /></a>
+                    </Tooltip>;
+                },
+            },
+        ];
+        const columnsDay = [
+            {
+                title: '污染物编号',
+                dataIndex: 'PollutantCode',
+                key: 'PollutantCode',
+                // width: '10%',
+                align: 'left',
+                fixed: 'left',
+                render: (text, record) => text,
+
+            },
+            {
+                title: '污染物名称',
+                dataIndex: 'PollutantName',
+                key: 'PollutantName',
+                // width: '10%',
+                align: 'left',
+                fixed: 'left',
+                render: (text, record) => text,
+            },
+
+            {
+                title: '报警类型',
+                dataIndex: 'AlarmType',
+                key: 'AlarmType',
+                // width: 200,
+                fixed: 'left',
+                render: (text, record) => {
+                    if (text === 0) {
+                        return (
+                            <span>
+                                {' '}
+                                <Tag> 无报警 </Tag>{' '}
+                            </span>
+                        );
+                    }
+                    if (text === 1) {
+                        return (
+                            <span>
+                                {' '}
+                                <Tag color="green"> 上限报警 </Tag>{' '}
+                            </span>
+                        );
+                    }
+                    if (text === 2) {
+                        return (
+                            <span>
+                                {' '}
+                                <Tag color="cyan"> 下限报警 </Tag>{' '}
+                            </span>
+                        );
+                    }
+                    if (text === 3) {
+                        return (
+                            <span>
+                                {' '}
+                                <Tag color="lime"> 区间报警 </Tag>{' '}
+                            </span>
+                        );
+                    }
+                },
+            },
+            {
+                title: '检出上限',
+                dataIndex: 'AbnormalUpperLimit',
+                key: 'AbnormalUpperLimit',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => text,
+            },
+            {
+                title: '检出下限',
+                dataIndex: 'AbnormalLowerLimit',
+                key: 'AbnormalLowerLimit',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => text,
+            },
+            {
+                title: '小时报警上限',
+                dataIndex: 'UpperLimit',
+                key: 'UpperLimit',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === '0') {
+                        return '-';
+                    }
+
+                    return text;
+                },
+            },
+            {
+                title: '小时报警下限',
+                dataIndex: 'LowerLimit',
+                key: 'LowerLimit',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === '0') {
+                        return '-';
+                    }
+
+                    return text;
+                },
+            },
+            {
+                title: '小时标准值',
+                dataIndex: 'StandardValue',
+                key: 'StandardValue',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === 0) {
+                        return '-';
+                    }
+
+                    return text;
+                },
+            },
+            {
+                title: '日报警上限',
+                dataIndex: 'DayUpperLimit',
+                key: 'DayUpperLimit',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === '0') {
+                        return '-';
+                    }
+
+                    return text;
+                },
+            },
+            {
+                title: '日报警下限',
+                dataIndex: 'DayLowerLimit',
+                key: 'DayLowerLimit',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === '0') {
+                        return '-';
+                    }
+
+                    return text;
+                },
+            },
+            {
+                title: '日标准值',
+                dataIndex: 'DayStandardValue',
+                key: 'DayStandardValue',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === 0) {
+                        return '-';
+                    }
+
+                    return text;
+                },
+            },
+            {
+                title: '监测状态',
+                dataIndex: 'IsUse',
+                key: 'IsUse',
+                // width: '10%',
+                align: 'center',
+                render: (text, record) => {
+                    if (text === '0') {
+                        return (
+                            <span>
+                                <Button size="small" type="dashed">
+                                    <a
+                                        title="单击设置为监测中"
+                                        style={{ color: '#D1D1D1' }}
+                                        onClick={() => this.IsEnabled(1, record)}
+                                    >
+                                        <ExclamationCircleOutlined /> 未监测
+                                    </a>
+                                </Button>
+                            </span>
+                        );
+                    }
+                    return (
+                        <span>
+                            {' '}
+                            <Button size="small" color="blue">
+                                {' '}
+                                <a title="单击从监测中移除" onClick={() => this.IsEnabled(0, record)}>
+                                    <SettingOutlined spin={true} /> 监测中
+                                </a>
                             </Button>
                         </span>
                     );
@@ -358,7 +597,7 @@ class MonitoringStandard extends Component {
                 style={{ width: '100%' }}
                 bodyStyle={{ paddingBottom: 0 }}
                 extra={
-                    <Button
+                    <>{pollutantType == "5" ? "" : <Button
                         onClick={() => {
                             this.setState({
                                 standardlibraryModal: true,
@@ -367,14 +606,16 @@ class MonitoringStandard extends Component {
                         icon={<SearchOutlined />}
                     >
                         查看标准库
-            </Button>
+                    </Button>}
+                    </>
+
                 }
             >
                 <SdlTable
                     rowKey={(record, index) => `complete${index}`}
                     bordered={false}
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
-                    columns={columns}
+                    columns={pollutantType == "5" ? columnsDay : columns}
                     dataSource={standardTableDatas}
                     className={styles.tableSty}
                 //  pagination={{ pageSize: 20 }}
@@ -435,12 +676,20 @@ class MonitoringStandard extends Component {
                     }}
                 >
                     {
-                        Fvisible && <EditPollutant
-                            pid={this.state.PollutantCode}
-                            DGIMN={this.state.DGIMN}
-                            onRef={this.onRef1}
-                            oncancel={this.oncancel}
-                        />
+                        Fvisible && <>{
+                            pollutantType == "5" ? <EditPollutantDay
+                                pid={this.state.PollutantCode}
+                                DGIMN={this.state.DGIMN}
+                                onRef={this.onRef1}
+                                oncancel={this.oncancel}
+                            /> :
+                                <EditPollutant
+                                    pid={this.state.PollutantCode}
+                                    DGIMN={this.state.DGIMN}
+                                    onRef={this.onRef1}
+                                    oncancel={this.oncancel}
+                                />
+                        } </>
                     }
                 </Modal>
             </Card>

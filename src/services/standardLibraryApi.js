@@ -373,26 +373,9 @@ export async function getMonitorPointPollutantDetails(params) {
 }
 // 编辑污染物
 export async function editmonitorpointPollutant(params) {
-  const body = {
-    DGIMN: params.DGIMN,
-    PollutantCode: params.PollutantCode,
-    AlarmType: params.AlarmType,
-    LowerLimit: params.LowerLimit,
-    UpperLimit: params.UpperLimit,
-    AlarmDescription: params.AlarmDescription,
-    AlarmContinuityCount: params.AlarmContinuityCount,
-    OverrunContinuityCount: params.OverrunContinuityCount,
-    ZeroContinuityCount: params.ZeroContinuityCount,
-    SerialContinuityCount: params.SerialContinuityCount,
-    AbnormalUpperLimit: params.AbnormalUpperLimit,
-    AbnormalLowerLimit: params.AbnormalLowerLimit,
-    ExceptionType: params.ExceptionType,
-    IsStatisti: params.IsStatisti,
-  };
   const result = post(
     '/api/rest/PollutantSourceApi/StandardLibraryApi/EditMonitorPointPollutant',
-    body,
-    null,
+    params,
   );
   return result === null
     ? {
