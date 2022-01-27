@@ -13,8 +13,8 @@ import styles from "./ConsumablesReplaceRecordContent.less";
 import MonitorContent from '../../components/MonitorContent/index';
 
 @connect(({ task, loading }) => ({
-    isloading: loading.effects['task/GetWaterParametersChangeRecordForPCList'],
-    tableTable: task.WaterParametersChangeRecordForPCList
+    isloading: loading.effects['task/GetWaterComparisonTestRecordForPCList'],
+    tableTable: task.WaterComparisonTestRecordForPCList
 }))
 /*
 页面：比对试验结果记录表
@@ -29,7 +29,7 @@ class ComparisonTestResults extends Component {
 
     componentDidMount() {
         this.props.dispatch({
-            type: 'task/GetWaterParametersChangeRecordForPCList',
+            type: 'task/GetWaterComparisonTestRecordForPCList',
             payload: {
                 TaskID: this.props.TaskID,
                 TypeID: this.props.TypeID,
@@ -44,23 +44,37 @@ class ComparisonTestResults extends Component {
         let rtnVal = []
 
         if (record !== null && record.length > 0) {
-          let  recordList = record.filter((item)=>item.ItemName===par);
-           rtnVal = [<tr> <td rowSpan={recordList.length+1} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>  {par} </td></tr>];
-
+          let  recordList = record.filter((item)=>item.ParametersName===par);
+             rtnVal=[<tr><td rowSpan={recordList.length + 1} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>  
+                       {par } 
+                      </td></tr>]
             recordList.map((item, index) => {
                 rtnVal.push(
-                    <tr key={item.Parameters}>
+                    <tr key={index}>
+
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.Parameters}
+                        {item.Number}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.Befor}
+                        {item.Unit}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.After}
+                        {item.OnlineMonitoringValue}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.ChageTime}
+                        {item.AlignmentMethodValue1}
+                    </td>
+                    <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                        {item.AlignmentMethodValue2}
+                    </td> 
+                    <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                        {item.AlignmentMethodAvgValue}
+                    </td>
+                    <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                        {item.ErrorValue}
+                    </td>
+                    <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                        {item.IsQualified}
                     </td>
                 </tr>
                 );
@@ -83,8 +97,7 @@ class ComparisonTestResults extends Component {
         }
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
         const Record=this.props.tableTable!==null?this.props.tableTable.Record:null;
-        const Content=Record!==null?Record.Content:null;
-        const IsFlag = Record&&Record.Content&&Record.Content.IsFlag;
+        const Content=Record!==null?Record.Content:null;;
         if (this.props.isloading) {
             return (<Spin
                 style={{
@@ -106,7 +119,7 @@ class ComparisonTestResults extends Component {
                     <tbody>
                          <tr>
                             <td colSpan="9"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>
-                              设备参数变动记录 
+                            实际水样比对试验结果记录表 
                             </td>
                         </tr> 
                         <tr>
@@ -136,9 +149,9 @@ class ComparisonTestResults extends Component {
                             <td rowSpan={2}  style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                    在线监测一起测定结果
                             </td>
-                            <td  colSpan="2" style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                             <td   colSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                    对比方法测定结果
-                            </td>  
+                            </td>      
                             <td rowSpan={2} style={{ minWidth: 150,  height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
                                   对比方法测定结果平均值
                             </td>
@@ -149,28 +162,36 @@ class ComparisonTestResults extends Component {
                                    是否合格
                             </td>                              
                          </tr>
-                         {IsFlag?
-                         <>
+                         <tr>
+                           <td   style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   1
+                            </td> 
+                            <td   style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                                   2
+                            </td> 
+                            </tr>
                          {
                             this.renderItem(Record !== null ?Record.RecordList:null,"COD")
                         } 
                         {
-                            this.renderItem(Record !== null ?Record.RecordList:null,"氨氮")
+                            this.renderItem(Record !== null ?Record.RecordList:null,"NH3-N")
                         } 
                         {
-                            this.renderItem(Record !== null ?Record.RecordList:null,"总磷")
+                            this.renderItem(Record !== null ?Record.RecordList:null,"TP")
                         } 
                         {
-                            this.renderItem(Record !== null ?Record.RecordList:null,"总氮")
+                            this.renderItem(Record !== null ?Record.RecordList:null,"TN")
                         } 
                        {
                             this.renderItem(Record !== null ?Record.RecordList:null,"pH")
                         } 
-                        </>
-                        :
-                        <tr> <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }} colSpan="5">无参数变动</td></tr>
-                    }
-                         <tr>
+                        {
+                            this.renderItem(Record !== null ?Record.RecordList:null,"温度")
+                        } 
+                        {
+                             this.renderItem(Record !== null ?Record.RecordList:null,"流量")
+                        }
+                          <tr>
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                       运行维护人员
                             </td>
@@ -183,7 +204,7 @@ class ComparisonTestResults extends Component {
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
                                 {Record !== null ?Record.CreateTime:null}
                             </td>
-                        </tr> 
+                        </tr>  
                     </tbody>
                 </table>
             </div>

@@ -24,7 +24,8 @@ import {
      GetWaterCalibrationRecordForPCList,
      GetWaterCheckRecordRecordForPCList,
      GetWaterParametersChangeRecordForPCList,
-     GetGasParametersChangeRecordForPCList
+     GetGasParametersChangeRecordForPCList,
+     GetWaterComparisonTestRecordForPCList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -57,6 +58,7 @@ export default Model.extend({
         WaterCheckRecordRecordForPCList:null,//标准溶液核查记录
         WaterParametersChangeRecordForPCList:null,//设备参数变动记录 废水
         GasParametersChangeRecordForPCList:null,//设备参数变动记录 废气
+        WaterComparisonTestRecordForPCList:null,//实际水样对比实验结果记录表
         // 运维记录参数
         operationRzWhere: {
             beginTime: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -502,8 +504,17 @@ export default Model.extend({
                 });
             }
             },
-                
-
+        //  实际水样对比实验结果记录表
+        *GetWaterComparisonTestRecordForPCList ({ payload, }, {call, update,select,}) {
+        const DataInfo = yield call(GetWaterComparisonTestRecordForPCList, payload); 
+        if (DataInfo.IsSuccess) {
+            yield update({
+                WaterComparisonTestRecordForPCList: DataInfo.Datas,
+            });
+        }
+        },
+                              
+            
     },
 
     

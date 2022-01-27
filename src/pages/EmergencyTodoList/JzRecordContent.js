@@ -11,6 +11,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import MonitorContent from '../../components/MonitorContent/index';
 import styles from "./JzRecordContent.less";
+import moment from 'moment'
 //import * as fstream from 'fstream';
 
 @connect(({ task, loading }) => ({
@@ -200,7 +201,7 @@ class JzRecordContent extends Component {
                                         校准日期
                             </td>
                             <td style={{ width: '16%', height: '30px', minWidth: 150 }}>
-                                {Content!==null?Content.AdjustDate:null}
+                                {Content!==null?moment(Content.AdjustStartTime).format("YYYY-MM-DD"):null}
                             </td>
                         </tr>
                         <tr>
@@ -252,7 +253,7 @@ class JzRecordContent extends Component {
                         </tr>
                     </tbody>
                 </table>
-                <table className={styles.FormTable}>
+                {/* <table className={styles.FormTable}>
                     <tbody>
                         <tr>
                             <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold', minWidth: 800 }}>负责人签名：</td>
@@ -263,7 +264,7 @@ class JzRecordContent extends Component {
                             <td style={{ width: '13%', height: '50px', border: '0', minWidth: 150 }}>{Record!==null?Record.SignTime:null}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> */}
             </div>
         );
     }

@@ -133,7 +133,7 @@ class Index extends Component {
             case "64":  //设备参数记录表 废气
                 form = <GasDeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;       
-            case "3456":  //实际水样比对试验结果记录表
+            case "19":  //实际水样比对试验结果记录表
                 form = <ComparisonTestResults TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                                                
                                      

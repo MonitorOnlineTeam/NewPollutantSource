@@ -135,7 +135,7 @@ class EmergencyDetailInfo extends Component {
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60 
                      || item.ID === 15 || item.ID === 62 || item.ID === 63 || item.ID === 66 || item.ID === 73 || item.ID === 65  || item.ID === 16
-                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 3456) {
+                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -212,8 +212,11 @@ class EmergencyDetailInfo extends Component {
                          case EnumPsOperationForm.GasDeviceParameterChangeRecord: //设备参数变动记录表 废气
                          this.GoToForm(taskID, item.CnName, '64', rtnVal, key, item.FormMainID);
                          case EnumPsOperationForm.ComparisonTestResultsRecord: //实际水样比对试验结果记录表
-                         this.GoToForm(taskID, item.CnName, '3456', rtnVal, key, item.FormMainID);
-                         break;                                                                                                          
+                         this.GoToForm(taskID, item.CnName, '19', rtnVal, key, item.FormMainID);
+                         break;    EquipmentNameplate 
+                         case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
+                         this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                         break;                                                                                                       
                         default:
                             break;
                     }
@@ -234,32 +237,33 @@ class EmergencyDetailInfo extends Component {
             style={{ marginBottom: '5px' }}
             icon={<CheckCircleOutlined />}
             onClick={() => {
-                // if (recordType == '-1') {
-                //     // 获取详情图片
-                //     this.props.dispatch({
-                //         type: 'common/getOperationImageList',
-                //         payload: {
-                //             FormMainID,
-                //             // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
-                //         },
-                //         callback: res => {
-                //             this.setState({
-                //                 visibleImg: true,
-                //             })
-                //         },
-                //     })
-                // } else {
-                //     router.push(`/operations/recordForm/${recordType}/${taskID}`)
-                // }
+                if( this.props.isHomeModal){
+                    this.setState({
+                        processRecordVisible:true,
+                        recordType:recordType,
+                        taskID:taskID
+                    })
+                }
+                if (recordType == '-1') {
+                    // 获取详情图片
+                    this.props.dispatch({
+                        type: 'common/getOperationImageList',
+                        payload: {
+                            FormMainID,
+                            // FormMainID:"c521b4a0-5b67-45a8-9ad1-d6ca67bdadda"
+                        },
+                        callback: res => {
+                            this.setState({
+                                visibleImg: true,
+                            })
+                        },
+                    })
+                } else {
+                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
+                }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
-               this.props.isHomeModal?
-                this.setState({
-                    processRecordVisible:true,
-                    recordType:recordType,
-                    taskID:taskID
-                })
-                :
-               router.push(`/operations/recordForm/${recordType}/${taskID}`) 
+
+            //    router.push(`/operations/recordForm/${recordType}/${taskID}`) 
             }}
         >{cnName}  
         </Button>

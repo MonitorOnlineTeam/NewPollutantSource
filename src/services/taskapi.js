@@ -384,3 +384,8 @@ export async function GetGasParametersChangeRecordForPCList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasParametersChangeRecordForPCList', params , null);
     return result === null ? { Datas: null } : result;
 }
+/** 实际水样对比实验结果记录表*/
+export async function GetWaterComparisonTestRecordForPCList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetWaterComparisonTestRecordForPCList', params , null);
+    return result === null ? { Datas: null } : result;
+}
