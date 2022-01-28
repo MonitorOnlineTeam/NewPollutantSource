@@ -19,7 +19,7 @@ import styles from "../style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
-
+import Point from './Point'
 const namespace = 'consumablesStatistics'
 
 
@@ -70,7 +70,8 @@ const Index = (props) => {
 
   const initData =  () => {
       props.regDetailGetConsumablesRIHList({
-        ...props.queryPar
+        ...props.queryPar,
+         pointType:2,
     })
   console.log(props.regionCode)
  };
@@ -80,8 +81,7 @@ const Index = (props) => {
     const values = await form.validateFields();
       props.exportTaskWorkOrderList({
         ...queryPar,
-        pageIndex:undefined,
-        pageSize:undefined,
+        pointType:2,
     })
 
  };
@@ -96,12 +96,12 @@ const Index = (props) => {
     }
   },
   {
-    title: '省',
+    title: '省/市',
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
     render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ regionDetail(record)  }} >{text}</Button>
+      return  <Button type="link" onClick={()=>{ pointDetail(record)  }} >{text}</Button>
     }
   },
   {
@@ -123,14 +123,24 @@ const Index = (props) => {
     align:'center',
   },
 ]
+   const [pointVisible,setPointVisible] = useState(false)
+   const [regionName,setRegionName] = useState()
+   const pointDetail = (row) =>{
+    setPointVisible(true)
+        props.updateState({
+         queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
 
-
-  const [regionDetailVisible,setRegionDetailVisible] = useState(false)
 
   return (
     <div  className={styles.consumablesStatisticsSty}>
 
-      <Form.Item   style={{paddingBottom:'16px'}}>
+  <Form.Item   style={{paddingBottom:'16px'}}>
     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button>
@@ -144,6 +154,16 @@ const Index = (props) => {
         scroll={{ y: clientHeight - 500}}
         pagination={false}
       />
+       <Modal
+        title={`${regionName} - 监测点`}
+        visible={pointVisible}
+        onCancel={()=>{setPointVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <Point />
+        </Modal>
         </div>
   );
 };

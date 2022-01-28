@@ -4,7 +4,7 @@
  * 创建时间：2021.1.21
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined,RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -19,16 +19,16 @@ import styles from "../style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
-import RegionDetail from './RegionDetail'
-import SpareParts from './SpareParts'
+const { TabPane } = Tabs;
+import Point from './Point'
+
+
+
 
 const namespace = 'consumablesStatistics'
-
-
-
 const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.regTableDatas,
-  tableLoading: loading.effects[`${namespace}/regGetConsumablesRIHList`],
+  tableDatas:consumablesStatistics.regDetailTableDatas,
+  tableLoading:loading.effects[`${namespace}/regDetailGetConsumablesRIHList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
   queryPar:consumablesStatistics.queryPar,
@@ -42,9 +42,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regGetConsumablesRIHList:(payload)=>{ // 行政区
+    regDetailGetConsumablesRIHList:(payload)=>{ // 行政区详情
       dispatch({
-        type: `${namespace}/regGetConsumablesRIHList`,
+        type: `${namespace}/regDetailGetConsumablesRIHList`,
         payload:payload,
       })
     },
@@ -69,17 +69,30 @@ const Index = (props) => {
   },[]);
 
 
-  
+ const onFinish  = async () =>{  //查询
 
+    try {
+      const values = await form.validateFields();
+        props.regDetailGetConsumablesRIHList({ 
+            ...props.queryPar,
+            ...values, 
+            pointType:4,
+            articlesType:1,
+            
+         })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
 
-  const exports = async  () => {
-    const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
-        pageIndex:undefined,
-        pageSize:undefined,
-    })
+//   const exports = async  () => {
+//     const values = await form.validateFields();
+//       props.exportTaskWorkOrderList({
+//         ...queryPar,
+//         pointType:2,
+//     })
 
- };
+//  };
  const columns = [
   {
     title: '序号',
@@ -91,12 +104,12 @@ const Index = (props) => {
     }
   },
   {
-    title: '省',
+    title: '省/市',
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
     render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ regionDetail(record)  }} >{text}</Button>
+      return  <Button type="link" onClick={()=>{ pointDetail(record)  }} >{text}</Button>
     }
   },
   {
@@ -104,9 +117,6 @@ const Index = (props) => {
     dataIndex: 'sparePartCount',
     key:'sparePartCount',
     align:'center',
-    render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ sparePartsDetail(record)  }} >{text}</Button>
-    }
   },
   {
     title: '易耗品更换数量',
@@ -121,32 +131,10 @@ const Index = (props) => {
     align:'center',
   },
 ]
+   const [pointVisible,setPointVisible] = useState(false)
 
- 
-  const onFinish  = async () =>{  //查询
-
-    try {
-      const values = await form.validateFields();
-      const par = {
-        ...values,
-        time:undefined,
-        beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        pointType:1,
-      }
-        props.regGetConsumablesRIHList({ ...par  })
-        props.updateState({
-          queryPar:{ ...par }
-        })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
-  
-  const [regionDetailVisible,setRegionDetailVisible] = useState(false)
-
-  const regionDetail = (row) =>{ 
-    setRegionDetailVisible(true)
+   const pointDetail = (row) =>{
+    setPointVisible(true)
     props.updateState({
       queryPar:{
         ...props.queryPar,
@@ -155,22 +143,13 @@ const Index = (props) => {
     })
   }
 
-  const [sparePartsVisible,setSparePartsVisible] = useState(false)
 
-  const [regionName,setRegionName] = useState()
-  const sparePartsDetail = (row) =>{  //备品备件详情
-    setSparePartsVisible(true)
-    props.updateState({
-      queryPar:{
-        ...props.queryPar,
-        regionCode:row.regionCode
-      }
-    })
-    setRegionName(row.regionName)
-  }
   return (
     <div  className={styles.consumablesStatisticsSty}>
-   {!regionDetailVisible? <><Form
+  <Tabs defaultActiveKey="1" style={{ marginBottom: 32 }} type="card">
+          <TabPane tab="汇总" key="1">
+
+          <Form
     form={form}
     name="advanced_search"
     onFinish={onFinish}
@@ -182,16 +161,15 @@ const Index = (props) => {
     layout='inline'
     style={{paddingBottom:15}}
   >  
-     <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
-         <RangePicker allowClear={false} style={{width:'100%'}} 
-          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+     <Form.Item label='仓库名称' name='time'  style={{paddingRight:'16px'}}>
+      <Input placeholder='请输入'/>
     </Form.Item> 
-    <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='监测点类型' style={{width:150}}>
-           <Option value={1}>废水</Option>
-           <Option value={2}>废气</Option>
-           </Select>
-       </Form.Item>
+    <Form.Item label='存货编号' name='time'  style={{paddingRight:'16px'}}>
+      <Input placeholder='请输入'/>
+    </Form.Item> 
+    <Form.Item label='备品备件名称' name='time'  style={{paddingRight:'16px'}}>
+      <Input placeholder='请输入'/>
+    </Form.Item> 
        <Form.Item>
            <Button  type="primary" htmlType='submit' >
          查询
@@ -199,9 +177,9 @@ const Index = (props) => {
     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
-    </Form.Item>
-  </Form>
-  <SdlTable
+    </Form.Item> 
+    </Form>
+    <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
@@ -209,22 +187,11 @@ const Index = (props) => {
         scroll={{ y: clientHeight - 500}}
         pagination={false}
       />
-      </>
-      :
-   
-     <RegionDetail  onGoBack={()=>{setRegionDetailVisible(false)}}/>  // 行政区详情弹框 
-    }
-
-       <Modal
-        title={`${regionName} - 备品备件更换数量`}
-        visible={sparePartsVisible}
-        onCancel={()=>{setSparePartsVisible(false)}}
-        footer={null}
-        destroyOnClose
-        width='90%'
-      >
-        <SpareParts />
-        </Modal>
+          </TabPane>
+          <TabPane tab="明细" key="2">
+            明细
+          </TabPane>
+        </Tabs>
         </div>
   );
 };

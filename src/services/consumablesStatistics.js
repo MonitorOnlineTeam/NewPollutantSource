@@ -11,3 +11,9 @@ export async function regDetailGetConsumablesRIHList(params) {
   const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetConsumablesRIHList',params, null);
   return result;
 }
+
+// 耗材统计 监测点
+export async function pointGetConsumablesRIHList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetConsumablesRIHList',params, null);
+  return result;
+}

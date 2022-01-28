@@ -12,6 +12,7 @@ export default Model.extend({
   state: {
     regTableDatas:[],
     regDetailTableDatas:[],
+    pointTableDatas:[],
     queryPar:{}
   },
   effects: {
@@ -37,8 +38,18 @@ export default Model.extend({
         yield update({ tableLoading:false})
       }
     },
+    *pointGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 监测点
+      const result = yield call(services.pointGetConsumablesRIHList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          pointTableDatas:result.Datas,
+        })
+      }else{
+        message.error(result.Message)
+        yield update({ tableLoading:false})
+      }
+    },  
     
-
     // *workEntExportTaskWorkList({ payload,callback }, { call, put, update }) { //企业工单数 导出
     //   const result = yield call(services.workEntExportTaskWorkList, payload);
     //   if (result.IsSuccess) {
