@@ -48,72 +48,80 @@ const { RangePicker } = DatePicker;
   },
 })
 class index extends PureComponent {
-  state = {
-    showTime: true,
-    format: 'YYYY-MM-DD HH',
-    pollutantType: "1",
-    checkedValues: [],
-  }
-  _SELF_ = {
-    formLayout: {
-      labelCol: { span: 8 },
-      wrapperCol: { span: 16 },
-    },
-    columns: [
-      {
-        title: '行政区',
-        dataIndex: 'RegionName',
-        key: 'RegionName',
+  constructor(props) {
+    super(props);
+    this.sysPollutantCodes = sessionStorage.getItem('sysPollutantCodes');
+    this.pollutantCodes = this.sysPollutantCodes ? this.sysPollutantCodes.split(',') : [1, 2, 5];
+    this.newTabIndex = 0;
+    this.state = {
+      showTime: true,
+      format: 'YYYY-MM-DD HH',
+      pollutantType: "1",
+      checkedValues: [],
+      entType: this.pollutantCodes[0],
+    }
+    this._SELF_ = {
+      formLayout: {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
       },
-      {
-        title: '数据异常企业数',
-        dataIndex: 'CountEnt',
-        key: 'CountEnt',
-      },
-      {
-        title: '数据异常监测点数',
-        dataIndex: 'CountPoint',
-        key: 'CountPoint',
-      },
-      {
-        title: '数据类型',
-        dataIndex: 'DataType',
-        key: 'DataType',
-      },
-      {
-        title: '零值个数',
-        dataIndex: 'ExceptionTypeLingZhi',
-        key: 'ExceptionTypeLingZhi',
-        render: (text, record) => {
-          return <a onClick={() => {
-            let queryCondition = this.state.queryCondition;
-            queryCondition.RegionCode = record.RegionCode;
-            queryCondition.ExceptionType = 1;
-            queryCondition.RegionName = record.RegionName;
-            queryCondition = JSON.stringify(queryCondition)
-            router.push(`/dataquerymanager/abnormalData/details?queryCondition=${queryCondition}`)
-          }}>{text}</a>
-        }
-      },
-      {
-        title: '超量程个数',
-        dataIndex: 'ExceptionTypeChao',
-        key: 'ExceptionTypeChao',
-        render: (text, record) => {
-          return <a onClick={() => {
-            let queryCondition = this.state.queryCondition;
-            queryCondition.RegionCode = record.RegionCode;
-            queryCondition.ExceptionType = 2;
-            queryCondition.RegionName = record.RegionName;
-            queryCondition = JSON.stringify(queryCondition)
-            router.push(`/dataquerymanager/abnormalData/details?queryCondition=${queryCondition}`)
-          }}>{text}</a>
-        }
-      },
-    ]
+      columns: [
+        {
+          title: '行政区',
+          dataIndex: 'RegionName',
+          key: 'RegionName',
+        },
+        {
+          title: '数据异常企业数',
+          dataIndex: 'CountEnt',
+          key: 'CountEnt',
+        },
+        {
+          title: '数据异常监测点数',
+          dataIndex: 'CountPoint',
+          key: 'CountPoint',
+        },
+        {
+          title: '数据类型',
+          dataIndex: 'DataType',
+          key: 'DataType',
+        },
+        {
+          title: '零值个数',
+          dataIndex: 'ExceptionTypeLingZhi',
+          key: 'ExceptionTypeLingZhi',
+          render: (text, record) => {
+            return <a onClick={() => {
+              let queryCondition = this.state.queryCondition;
+              queryCondition.RegionCode = record.RegionCode;
+              queryCondition.ExceptionType = 1;
+              queryCondition.RegionName = record.RegionName;
+              queryCondition = JSON.stringify(queryCondition)
+              router.push(`/dataquerymanager/abnormalData/details?queryCondition=${queryCondition}`)
+            }}>{text}</a>
+          }
+        },
+        {
+          title: '超量程个数',
+          dataIndex: 'ExceptionTypeChao',
+          key: 'ExceptionTypeChao',
+          render: (text, record) => {
+            return <a onClick={() => {
+              let queryCondition = this.state.queryCondition;
+              queryCondition.RegionCode = record.RegionCode;
+              queryCondition.ExceptionType = 2;
+              queryCondition.RegionName = record.RegionName;
+              queryCondition = JSON.stringify(queryCondition)
+              router.push(`/dataquerymanager/abnormalData/details?queryCondition=${queryCondition}`)
+            }}>{text}</a>
+          }
+        },
+      ]
+    }
   }
 
   componentDidMount() {
+    // this.props.form.setFieldsValue({ "outlet": this.state.entType })
     // 获取行政区列表
     this.props.dispatch({
       type: 'autoForm/getRegions',
@@ -135,7 +143,7 @@ class index extends PureComponent {
     this.props.dispatch({
       type: "abnormalData/getPollutantByType",
       payload: {
-        type: this.props.form.getFieldValue("PollutantType")
+        type: this.state.entType
       },
       callback: (res) => {
         this.setState({ checkedValues: res.map(item => item.PollutantCode) }, () => {
@@ -257,7 +265,6 @@ class index extends PureComponent {
     const { form: { getFieldDecorator }, regionList, abnormalDataTime, attentionList, divisorList, exceptionDataSource, loading } = this.props;
     const { formLayout, columns } = this._SELF_;
     const { format, showTime, checkedValues } = this.state;
-    console.log("attentionList=", attentionList)
     let _regionList = regionList.length ? regionList[0].children : [];
     return (
       <BreadcrumbWrapper>
@@ -307,7 +314,7 @@ class index extends PureComponent {
                     //     })
                     //   }
                     // </Select>,
-                    <RegionList  changeRegion={(value) => {}}  RegionCode={this.props.form.getFieldValue('Region')} />
+                    <RegionList changeRegion={(value) => { }} RegionCode={this.props.form.getFieldValue('Region')} />
                   )}
                 </FormItem>
               </Col>
@@ -329,21 +336,47 @@ class index extends PureComponent {
                 </FormItem>
               </Col>
               <Col md={4}>
-                <FormItem {...formLayout} label="企业类型" style={{ width: '100%' }}>
-                  {getFieldDecorator('PollutantType', {
-                    initialValue: '1',
-                  })(
-                    <Select placeholder="请选择企业类型" onChange={(value) => {
-                      this.setState({ pollutantType: value }, () => {
-                        this.getPollutantByType(true)
-                      })
-                    }}>
-                      <Option value="1">废水</Option>
-                      <Option value="2">废气</Option>
-                      <Option value="5">空气站</Option>
-                    </Select>
-                  )}
-                </FormItem>
+                <Form.Item label="企业类型" >
+                  {
+                    getFieldDecorator('outlet', {
+                      initialValue: this.state.entType
+                    })(
+                      <Select
+                      style={{ width: '100%' }}
+                        //defaultValue={'1'}
+                        placeholder="企业类型"
+                        maxTagCount={2}
+                        maxTagTextLength={5}
+                        maxTagPlaceholder="..."
+                        onChange={(value, options) => {
+                          this.props.dispatch({
+                            type: 'abnormalData/getPollutantByType',
+                            payload: {
+                              type: value
+                            }
+                          })
+                          this.setState({
+                            entType: value,
+                          })
+
+                        }}>
+                        {
+                          this.pollutantCodes.map(item => {
+                            switch (item) {
+                              case '1':
+                                return <Option value="1">废水</Option>;
+                              case '2':
+                                return <Option value="2">废气</Option>;
+                              case '5':
+                                return <Option value="5">空气站</Option>;
+                            }
+                          })
+                        }
+                      </Select>
+                    )
+                  }
+
+                </Form.Item>
               </Col>
 
               <Col md={24} style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
@@ -363,14 +396,14 @@ class index extends PureComponent {
                 )}
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.getExceptionList}>
                   查询
-                      </Button>
+                </Button>
                 <Button
                   style={{ margin: '0 5px' }}
                   icon={<ExportOutlined />}
                   onClick={this.exportExceptionList}
                 >
                   导出
-                      </Button>
+                </Button>
               </Col>
             </Row>
           </Form>

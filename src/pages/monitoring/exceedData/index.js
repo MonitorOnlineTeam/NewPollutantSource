@@ -399,7 +399,7 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'PollutantData.PointNum-' + item.PollutantCode,
+                                dataIndex: ['PollutantData', 'PointNum-' + item.PollutantCode],
                                 key: 'PollutantData.PointNum-' + item.PollutantCode,
                             },
                             {
@@ -407,7 +407,7 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'PollutantData.ExceedNum-' + item.PollutantCode,
+                                dataIndex: ['PollutantData', 'ExceedNum-' + item.PollutantCode],
                                 key: 'PollutantData.ExceedNum-' + item.PollutantCode,
                                 render: (text, record) => {
                                     return <a onClick={this.exCountHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode, false, record.EntCode, item.PollutantName)}>{text}</a>
@@ -418,7 +418,7 @@ class index extends PureComponent {
                                 width: 100,
                                 align: 'center',
                                 fixed: fixed,
-                                dataIndex: 'PollutantData.MaxMultiple-' + item.PollutantCode,
+                                dataIndex: ['PollutantData', 'MaxMultiple-' + item.PollutantCode],
                                 key: 'PollutantData.MaxMultiple-' + item.PollutantCode,
                                 render: (text) => {
                                     return text == null ? '-' : toDecimal3(text)
@@ -1059,6 +1059,17 @@ class index extends PureComponent {
         this.setState({ panes, activeKey });
     };
 
+    getEntText = () => {
+        switch (this.state.entType) {
+            case '1':
+                return '废水';
+            case '2':
+                return '废气';
+            case '5':
+                return '空气站';
+        }
+    }
+
     pageContent = () => {
         const fixed = false
 
@@ -1116,7 +1127,8 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.EntNum-' + item.PollutantCode,
+                        // dataIndex: 'PollutantData.EntNum-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'EntNum-' + item.PollutantCode],
                         key: 'PollutantData.EntNum-' + item.PollutantCode,
                         render: (text, record) => {
                             return <a onClick={this.exEntHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode)}>{text}</a>
@@ -1127,7 +1139,7 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.PointNum-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'PointNum-' + item.PollutantCode],
                         key: 'PollutantData.PointNum-' + item.PollutantCode,
                     },
                     {
@@ -1135,7 +1147,7 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.ExceedNum-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'ExceedNum-' + item.PollutantCode],
                         key: 'PollutantData.ExceedNum-' + item.PollutantCode,
                         render: (text, record) => {
                             return <a onClick={this.exCountHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode, false, '', item.PollutantName)}>{text}</a>
@@ -1146,7 +1158,7 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.MaxMultiple-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'MaxMultiple-' + item.PollutantCode],
                         key: 'PollutantData.MaxMultiple-' + item.PollutantCode,
                         render: (text) => {
                             return text == null ? '-' : toDecimal3(text)
@@ -1182,7 +1194,7 @@ class index extends PureComponent {
                 onEdit={this.onEdit}
                 onTabClick={this.onTabClick}
             >
-                <TabPane tab={this.state.entTypeText} key='1' closable={false}>
+                <TabPane tab={this.getEntText()} key='1' closable={false}>
                     {
                         <SdlTable columns={columns} dataSource={ExceedDataList}
                             scroll={{ x: scrollWith }}
@@ -1517,7 +1529,7 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.PointNum-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'PointNum-' + item.PollutantCode],
                         key: 'PollutantData.PointNum-' + item.PollutantCode,
                     },
                     {
@@ -1525,7 +1537,7 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.ExceedNum-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'ExceedNum-' + item.PollutantCode],
                         key: 'PollutantData.ExceedNum-' + item.PollutantCode,
                         render: (text, record) => {
                             return <a onClick={this.exCountHandle.bind(this, record.PollutantData['PolCode-' + item.PollutantCode], record.RegionCode, true, record.EntCode)}>{text}</a>
@@ -1536,7 +1548,7 @@ class index extends PureComponent {
                         width: 100,
                         align: 'center',
                         fixed: fixed,
-                        dataIndex: 'PollutantData.MaxMultiple-' + item.PollutantCode,
+                        dataIndex: ['PollutantData', 'MaxMultiple-' + item.PollutantCode],
                         key: 'PollutantData.MaxMultiple-' + item.PollutantCode,
                         render: (text) => {
                             return text == null ? '-' : toDecimal3(text)

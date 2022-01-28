@@ -115,7 +115,7 @@ export default Model.extend({
       }
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
-        if (payload.TabType == '1' || payload.TabType == '2') {
+        if (payload.TabType == '1' || payload.TabType == '2'||payload.TabType == '5') {
 
           yield update({
             ExceedDataList: result.Datas,
@@ -184,7 +184,7 @@ export default Model.extend({
       }
       const result = yield call(ExportExceedDataList, body, null)
       if (result.IsSuccess) {
-        if (payload.TabType == '1' || payload.TabType == '2') {
+        if (payload.TabType == '1' || payload.TabType == '2'||payload.TabType == '5') {
 
           downloadFile(`/upload${result.Datas}`)
         }
