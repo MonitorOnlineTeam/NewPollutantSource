@@ -1,7 +1,7 @@
 /**
- * 功  能：耗材统计 备品备件
+ * 功  能：耗材统计 易耗品
  * 创建人：贾安波
- * 创建时间：2022.1.28
+ * 创建时间：2022.1.29
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs   } from 'antd';
@@ -85,7 +85,8 @@ const Index = (props) => {
       ...props.queryPar,
       ...values, 
       pointType:4,
-      articlesType:1,
+      articlesType:2,
+      pollutantType: 2,
       pageIndex:PageIndex? PageIndex: pageIndex1,
       pageSize:PageSize? PageSize: pageSize1,
       
@@ -96,7 +97,8 @@ const Index = (props) => {
       ...props.queryPar,
       ...values, 
       pointType:5,
-      articlesType:1,
+      articlesType:2,
+      pollutantType: 2,
       pageIndex:PageIndex? PageIndex: pageIndex1,
       pageSize:PageSize? PageSize: pageSize1,
    })
@@ -167,7 +169,7 @@ const columns1 = [
     align:'center',
   },
   {
-    title: '备品备件名称',
+    title: '易耗品名称',
     dataIndex: 'name',
     key:'name',
     align:'center',
@@ -229,7 +231,7 @@ const columns2 = [
     align:'center',
   },
   {
-    title: '备品备件名称',
+    title: '易耗品名称',
     dataIndex: 'name',
     key:'name',
     align:'center',
@@ -244,6 +246,18 @@ const columns2 = [
     title: '单位',
     dataIndex: 'unit',
     key:'unit',
+    align:'center',
+  },
+  {
+    title: '更换人员',
+    dataIndex: 'operationName',
+    key:'operationName',
+    align:'center',
+  },
+  {
+    title: '更换时间',
+    dataIndex: 'replaceDate',
+    key:'replaceDate',
     align:'center',
   },
 ]
@@ -268,7 +282,7 @@ const columns2 = [
     <Form.Item label='存货编号' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='备品备件名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>
@@ -299,7 +313,7 @@ const columns2 = [
     <Form.Item label='存货编号' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='备品备件名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>

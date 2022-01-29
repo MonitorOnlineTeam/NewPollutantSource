@@ -13,6 +13,10 @@ export default Model.extend({
     regTableDatas:[],
     regDetailTableDatas:[],
     pointTableDatas:[],
+    summaryTableDatas:[],
+    detailedTableDatas:[],
+    summaryTableTotal:null,
+    detailedTableTotal:null,
     queryPar:{}
   },
   effects: {
@@ -24,7 +28,6 @@ export default Model.extend({
         })
       }else{
         message.error(result.Message)
-        yield update({ tableLoading:false})
       }
     },
     *regDetailGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 行政区详情
@@ -35,7 +38,6 @@ export default Model.extend({
         })
       }else{
         message.error(result.Message)
-        yield update({ tableLoading:false})
       }
     },
     *pointGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 监测点
@@ -46,9 +48,30 @@ export default Model.extend({
         })
       }else{
         message.error(result.Message)
-        yield update({ tableLoading:false})
       }
-    },  
+    }, 
+    *summaryGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 备品备件 汇总
+      const result = yield call(services.summaryGetConsumablesRIHList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          summaryTableDatas:result.Datas,
+          summaryTableTotal:result.Total,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },   
+    *detailedGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 备品备件 明细
+      const result = yield call(services.detailedGetConsumablesRIHList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          detailedTableDatas:result.Datas,
+          detailedTableTotal:result.Total,
+        })
+      }else{
+        message.error(result.Message)
+      }
+    },   
     
     // *workEntExportTaskWorkList({ payload,callback }, { call, put, update }) { //企业工单数 导出
     //   const result = yield call(services.workEntExportTaskWorkList, payload);

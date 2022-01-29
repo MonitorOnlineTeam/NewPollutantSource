@@ -17,3 +17,17 @@ export async function pointGetConsumablesRIHList(params) {
   const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetConsumablesRIHList',params, null);
   return result;
 }
+
+// 耗材统计  汇总
+export async function summaryGetConsumablesRIHList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetConsumablesRIHList',params, null);
+  return result;
+}
+
+// 耗材统计  明细
+export async function detailedGetConsumablesRIHList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetConsumablesRIHList',params, null);
+  return result;
+}
+
+

@@ -21,6 +21,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 import RegionDetail from './RegionDetail'
 import SpareParts from './SpareParts'
+import Consumables from './Consumables'
 
 const namespace = 'consumablesStatistics'
 
@@ -113,6 +114,9 @@ const Index = (props) => {
     dataIndex: 'consumablesCount',
     key:'consumablesCount',
     align:'center',
+    render:(text,record,index)=>{
+      return  <Button type="link" onClick={()=>{ consumablesDetail(record)  }} >{text}</Button>
+    }
   },
   {
     title: '试剂更换数量',
@@ -154,12 +158,23 @@ const Index = (props) => {
       }
     })
   }
+  const [regionName,setRegionName] = useState()
 
   const [sparePartsVisible,setSparePartsVisible] = useState(false)
-
-  const [regionName,setRegionName] = useState()
   const sparePartsDetail = (row) =>{  //备品备件详情
     setSparePartsVisible(true)
+    props.updateState({
+      queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
+  
+  const [consumablesVisible,setConsumablesVisible ] = useState(false)
+  const consumablesDetail = (row) =>{  //易耗品详情
+    setConsumablesVisible(true)
     props.updateState({
       queryPar:{
         ...props.queryPar,
@@ -206,7 +221,6 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={ columns}
-        scroll={{ y: clientHeight - 500}}
         pagination={false}
       />
       </>
@@ -225,6 +239,17 @@ const Index = (props) => {
       >
         <SpareParts />
         </Modal>
+        <Modal
+        title={`${regionName} - 备品备件更换数量`}
+        visible={consumablesVisible}
+        onCancel={()=>{setConsumablesVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <Consumables />
+        </Modal>
+        
         </div>
   );
 };

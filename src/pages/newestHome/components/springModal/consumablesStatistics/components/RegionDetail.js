@@ -20,6 +20,9 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 import Point from './Point'
+import SpareParts from './SpareParts'
+import Consumables from './Consumables'
+
 const namespace = 'consumablesStatistics'
 
 
@@ -73,7 +76,6 @@ const Index = (props) => {
         ...props.queryPar,
          pointType:2,
     })
-  console.log(props.regionCode)
  };
 
 
@@ -109,12 +111,18 @@ const Index = (props) => {
     dataIndex: 'sparePartCount',
     key:'sparePartCount',
     align:'center',
+    render:(text,record,index)=>{
+      return  <Button type="link" onClick={()=>{ sparePartsDetail(record)  }} >{text}</Button>
+    }
   },
   {
     title: '易耗品更换数量',
     dataIndex: 'consumablesCount',
     key:'consumablesCount',
     align:'center',
+    render:(text,record,index)=>{
+      return  <Button type="link" onClick={()=>{ consumablesDetail(record)  }} >{text}</Button>
+    }
   },
   {
     title: '试剂更换数量',
@@ -136,7 +144,31 @@ const Index = (props) => {
     setRegionName(row.regionName)
   }
 
+  const [sparePartsVisible,setSparePartsVisible] = useState(false)
 
+
+  const sparePartsDetail = (row) =>{  //备品备件详情
+    setSparePartsVisible(true)
+    props.updateState({
+      queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
+
+  const [consumablesVisible,setConsumablesVisible ] = useState(false)
+  const consumablesDetail = (row) =>{  //易耗品详情
+    setConsumablesVisible(true)
+    props.updateState({
+      queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
   return (
     <div  className={styles.consumablesStatisticsSty}>
 
@@ -151,7 +183,6 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={ columns}
-        scroll={{ y: clientHeight - 500}}
         pagination={false}
       />
        <Modal
@@ -163,6 +194,26 @@ const Index = (props) => {
         width='90%'
       >
         <Point />
+        </Modal>
+        <Modal
+        title={`${regionName} - 备品备件更换数量`}
+        visible={sparePartsVisible}
+        onCancel={()=>{setSparePartsVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <SpareParts />
+        </Modal>
+        <Modal
+        title={`${regionName} - 备品备件更换数量`}
+        visible={consumablesVisible}
+        onCancel={()=>{setConsumablesVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <Consumables />
         </Modal>
         </div>
   );
