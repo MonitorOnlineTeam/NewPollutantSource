@@ -130,7 +130,7 @@ const Index = (props) => {
   }
   const [pageIndex2,setPageIndex2] = useState(1)
   const [pageSize2,setPageSize2] = useState(10)
-  const handleTableChange2 = async (PageIndex, PageSize )=>{ //分页  汇总
+  const handleTableChange2 = async (PageIndex, PageSize )=>{ //分页  明细
     setPageSize2(PageSize)
     setPageIndex2(PageIndex)
     const values = await form2.validateFields();

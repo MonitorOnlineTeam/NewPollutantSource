@@ -22,6 +22,8 @@ const { Option } = Select;
 import RegionDetail from './RegionDetail'
 import SpareParts from './SpareParts'
 import Consumables from './Consumables'
+import ReagentReplace from './ReagentReplace'
+import ReferenceMaterialReplace from './ReferenceMaterialReplace'
 
 const namespace = 'consumablesStatistics'
 
@@ -61,7 +63,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
   
   
   useEffect(() => {
@@ -123,10 +125,13 @@ const Index = (props) => {
     dataIndex: 'standardLiquidCount',
     key:'standardLiquidCount',
     align:'center',
+    render:(text,record,index)=>{
+      return  <Button type="link" onClick={()=>{reagentReplaceDetail(record)  }} >{text}</Button>
+    }
   },
 ]
 
- 
+
   const onFinish  = async () =>{  //查询
 
     try {
@@ -142,6 +147,7 @@ const Index = (props) => {
         props.updateState({
           queryPar:{ ...par }
         })
+        
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -183,6 +189,42 @@ const Index = (props) => {
     })
     setRegionName(row.regionName)
   }
+
+  
+  const [reagentReplaceVisible,setReagentReplaceVisible ] = useState(false)
+  const reagentReplaceDetail = (row) =>{ //试剂更换数量
+    setReagentReplaceVisible(true)
+    props.updateState({
+      queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
+  const [referenceMaterialReplaceVisible,setReferenceMaterialReplaceVisible ] = useState(false)
+  const referenceMaterialReplaceDetail = (row) =>{ //标准物质更换数量
+    setReferenceMaterialReplaceVisible(true)
+    props.updateState({
+      queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
+  
+  queryPar.pollutantType==2&&columns.splice(-1,1,
+      {
+      title: '标准物质更换数量',
+      dataIndex: 'standardGasCount',
+      key:'standardGasCount',
+      align:'center',
+      render:(text,record,index)=>{
+        return  <Button type="link" onClick={()=>{referenceMaterialReplaceDetail(record)  }} >{text}</Button>
+      }
+    })
+  
   return (
     <div  className={styles.consumablesStatisticsSty}>
    {!regionDetailVisible? <><Form
@@ -249,7 +291,26 @@ const Index = (props) => {
       >
         <Consumables />
         </Modal>
-        
+        <Modal
+        title={`${regionName} - 试剂更换数量`}
+        visible={reagentReplaceVisible}
+        onCancel={()=>{setReagentReplaceVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <ReagentReplace />
+        </Modal>
+        <Modal
+        title={`${regionName} - 标准物质更换数量`}
+        visible={referenceMaterialReplaceVisible}
+        onCancel={()=>{setReferenceMaterialReplaceVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <ReferenceMaterialReplace />
+        </Modal> 
         </div>
   );
 };

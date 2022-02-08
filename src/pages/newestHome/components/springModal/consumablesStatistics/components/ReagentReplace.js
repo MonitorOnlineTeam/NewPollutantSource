@@ -1,7 +1,7 @@
 /**
- * 功  能：耗材统计 易耗品
+ * 功  能：耗材统计 备品备件
  * 创建人：贾安波
- * 创建时间：2022.1.29
+ * 创建时间：2022.1.28
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tabs   } from 'antd';
@@ -80,25 +80,23 @@ const Index = (props) => {
 
 
 
-  const summaryGetConsumablesRIHLists =(values,PageIndex,PageSize)=>{
+  const summaryGetConsumablesRIHLists =(values,PageIndex,PageSize)=>{ //汇总
     props.summaryGetConsumablesRIHList({ 
       ...props.queryPar,
       ...values, 
       pointType:4,
-      articlesType:2,
-      pollutantType: 2,
+      articlesType:4,
       pageIndex:PageIndex? PageIndex: pageIndex1,
       pageSize:PageSize? PageSize: pageSize1,
       
    })
   }
-  const detailedGetConsumablesRIHLists =(values,PageIndex,PageSize)=>{
+  const detailedGetConsumablesRIHLists =(values,PageIndex,PageSize)=>{ //明细
     props.detailedGetConsumablesRIHList({ 
       ...props.queryPar,
       ...values, 
       pointType:5,
-      articlesType:2,
-      pollutantType: 2,
+      articlesType:4,
       pageIndex:PageIndex? PageIndex: pageIndex1,
       pageSize:PageSize? PageSize: pageSize1,
    })
@@ -157,19 +155,13 @@ const columns1 = [
     }
   },
   {
-    title: '仓库名称',
-    dataIndex: 'storehouseName',
-    key:'storehouseName',
-    align:'center',
-  },
-  {
     title: '存货编码',
     dataIndex: 'partCode',
     key:'partCode',
     align:'center',
   },
   {
-    title: '易耗品名称',
+    title: '试剂名称',
     dataIndex: 'name',
     key:'name',
     align:'center',
@@ -219,7 +211,7 @@ const columns2 = [
     align:'center',
   },
   {
-    title: '仓库名称',
+    title: '设备名称',
     dataIndex: 'storehouseName',
     key:'storehouseName',
     align:'center',
@@ -231,7 +223,7 @@ const columns2 = [
     align:'center',
   },
   {
-    title: '易耗品名称',
+    title: '试剂名称',
     dataIndex: 'name',
     key:'name',
     align:'center',
@@ -259,6 +251,14 @@ const columns2 = [
     dataIndex: 'replaceDate',
     key:'replaceDate',
     align:'center',
+    width:150,
+  },
+  {
+    title: '有效日期',
+    dataIndex: 'overdueDate',
+    key:'overdueDate',
+    align:'center',
+    width:150,
   },
 ]
 
@@ -276,13 +276,10 @@ const columns2 = [
     layout='inline'
     style={{paddingBottom:15}}
   >  
-     <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编号' name='partCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编号' name='stockCode'  style={{paddingRight:'16px'}}>
-      <Input placeholder='请输入' allowClear/>
-    </Form.Item> 
-    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='试剂名称' name='name'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>
@@ -307,13 +304,13 @@ const columns2 = [
      <Form.Item label='企业名称' name='entName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
      </Form.Item>
-     <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:'16px'}}>
+     <Form.Item label='设备名称' name='warehouseName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编号' name='stockCode'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编号' name='partCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='试剂名称' name='name'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>

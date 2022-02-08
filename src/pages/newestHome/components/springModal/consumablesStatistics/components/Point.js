@@ -59,7 +59,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
   
   
   useEffect(() => {
@@ -136,7 +136,13 @@ const Index = (props) => {
   },
 ]
 
-
+queryPar.pollutantType==2&&columns.splice(-1,1,
+  {
+  title: '标准物质更换数量',
+  dataIndex: 'standardGasCount',
+  key:'standardGasCount',
+  align:'center',
+})
 
   return (
     <div  className={styles.consumablesStatisticsSty}>
