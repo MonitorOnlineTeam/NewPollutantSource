@@ -381,7 +381,7 @@ export default class Index extends Component {
         });
     }
     //状态回调
-    IsUsedChange = (e) => {
+    IsUsedChange = (value) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'SparepartManage/updateState',
@@ -389,7 +389,7 @@ export default class Index extends Component {
                 sparepartManageParameters: {
                     ...this.props.sparepartManageParameters,
                     ...{
-                        IsUsed: e.target.value?e.target.value :'' ,
+                        IsUsed: value?value :'' ,
                     }
                 }
             }
@@ -588,18 +588,20 @@ export default class Index extends Component {
                     bordered={false}>
                     <div>
                         <Form layout="inline">
+                            <Row style={{paddingBottom:8}}>
                             <Form.Item>
+                               <div style={{minWidth:70,display:'inline-block',textAlign:'right'}}> 编码 ：</div>
                                 <Input placeholder="编码" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartCode} onChange={this.PartCodeChange} />
                             </Form.Item>
 
-                            <Form.Item>
+                            <Form.Item label='备品备件名称'>
                                 <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
                             </Form.Item>
 
-                            <Form.Item>
+                            <Form.Item label='备品备件型号'>
                                 <Input placeholder="备品备件型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
                             </Form.Item>
-
+                            
                             {/* <Form.Item>
                                 <Input placeholder="服务站名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.SparePartsStationCode} onChange={this.SparePartsStationNameChange} />
                             </Form.Item> */}
@@ -613,12 +615,11 @@ export default class Index extends Component {
                                      }
                                 </Select>
                             </Form.Item>
+                            </Row>
                             <Form.Item>
                                 设备类型：
-                            <Select placeholder="设备类型" allowClear style={{ width: 120 }} value={sparepartManageParameters.EquipmentType? sparepartManageParameters.EquipmentType : undefined} onChange={this.EquipmentTypeChange}>
-                                    {/* <Option value="1">废水</Option>
-                                    <Option value="2">废气</Option>
-                                    <Option value="5">环境质量</Option> */}
+                            <Select placeholder="设备类型" allowClear style={{ width: 150 }} value={sparepartManageParameters.EquipmentType? sparepartManageParameters.EquipmentType : undefined} onChange={this.EquipmentTypeChange}>
+ 
                                                                         {
                                       monitoringTypeList[0]&&monitoringTypeList.map(item => {
                                        return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -628,20 +629,15 @@ export default class Index extends Component {
                             </Form.Item>
 
                             <Form.Item>
-                                状态 ：
-                            {/* onChange={this.onChange} value={this.state.value} */}
-                                <Radio.Group placeholder="状态" value={sparepartManageParameters.IsUsed&&sparepartManageParameters.IsUsed.toString()? sparepartManageParameters.IsUsed.toString() :undefined } onChange={this.IsUsedChange}>
-                                    <Radio value={undefined}>全部</Radio>
-                                    <Radio value={"1"}>启用</Radio>
-                                    <Radio value={"0"}>禁用</Radio>
-                                </Radio.Group>
+                               <div style={{minWidth:98,display:'inline-block',textAlign:'right'}}> 状态 ：</div>
+                                <Select placeholder="设备类型"  style={{ width: 150 }} allowClear value={sparepartManageParameters.IsUsed&&sparepartManageParameters.IsUsed.toString()? sparepartManageParameters.IsUsed.toString() :undefined } onChange={this.IsUsedChange}>
+                                    <Option value="1">启用</Option>
+                                    <Option value="0">禁用</Option>
+                                  </Select>
                             </Form.Item>
 
                             <Form.Item>
-                                <Button onClick={this.changes}
-                                    type="primary"
-                                >查询
-                            </Button>
+                                <Button onClick={this.changes} type="primary" >查询 </Button>
                             </Form.Item>
 
                             <Form.Item>

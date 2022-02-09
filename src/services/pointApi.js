@@ -206,3 +206,17 @@ export async function UpdatePointDGIMN(params) { //更新MN号
     const result = await post(`/api/rest/PollutantSourceApi/MonitorPointApi/UpdatePointDGIMN`, params, null);
     return result;
 }
+export async function GetMonitorPointVerificationItem(params) { //获取点位关联数据核查信息
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetMonitorPointVerificationItem`, params, null);
+    return result;
+}
+
+export async function GetMonitorPointVerificationList(params) { //获取数据核查信息码表
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetMonitorPointVerificationList`, params, null);
+    return result;
+}
+
+export async function AddMonitorPointVerificationItem(params) { //添加或者修改点位关联数据核查信息
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/AddMonitorPointVerificationItem`, params, null);
+    return result;
+}

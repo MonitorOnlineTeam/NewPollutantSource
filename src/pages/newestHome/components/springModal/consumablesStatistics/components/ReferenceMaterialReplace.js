@@ -211,12 +211,6 @@ const columns2 = [
     align:'center',
   },
   {
-    title: '设备名称',
-    dataIndex: 'storehouseName',
-    key:'storehouseName',
-    align:'center',
-  },
-  {
     title: '存货编码',
     dataIndex: 'partCode',
     key:'partCode',
@@ -276,10 +270,10 @@ const columns2 = [
     layout='inline'
     style={{paddingBottom:15}}
   >  
-    <Form.Item label='存货编号' name='partCode'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='标准物质名称' name='name'  style={{paddingRight:'16px'}}>
+    <Form.Item label='标准物质名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>
@@ -304,13 +298,10 @@ const columns2 = [
      <Form.Item label='企业名称' name='entName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
      </Form.Item>
-     <Form.Item label='设备名称' name='warehouseName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编号' name='partCode'  style={{paddingRight:'16px'}}>
-      <Input placeholder='请输入' allowClear/>
-    </Form.Item> 
-    <Form.Item label='标准物质名称' name='name'  style={{paddingRight:'16px'}}>
+    <Form.Item label='标准物质名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>

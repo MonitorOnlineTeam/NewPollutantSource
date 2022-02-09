@@ -86,7 +86,6 @@ const Index = (props) => {
       ...values, 
       pointType:4,
       articlesType:2,
-      pollutantType: 2,
       pageIndex:PageIndex? PageIndex: pageIndex1,
       pageSize:PageSize? PageSize: pageSize1,
       
@@ -98,7 +97,6 @@ const Index = (props) => {
       ...values, 
       pointType:5,
       articlesType:2,
-      pollutantType: 2,
       pageIndex:PageIndex? PageIndex: pageIndex1,
       pageSize:PageSize? PageSize: pageSize1,
    })
@@ -279,7 +277,7 @@ const columns2 = [
      <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编号' name='stockCode'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
     <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
@@ -310,7 +308,7 @@ const columns2 = [
      <Form.Item label='仓库名称' name='warehouseName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='存货编号' name='stockCode'  style={{paddingRight:'16px'}}>
+    <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
     <Form.Item label='易耗品名称' name='sparePartsName'  style={{paddingRight:'16px'}}>

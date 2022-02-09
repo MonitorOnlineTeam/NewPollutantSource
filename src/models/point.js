@@ -9,7 +9,9 @@ import Model from '@/utils/model';
 import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
 import MonitoringStandard from '@/components/MonitoringStandard';
-import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode,UpdatePointDGIMN } from '@/services/pointApi';
+import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode,UpdatePointDGIMN,
+    GetMonitorPointVerificationItem,GetMonitorPointVerificationList,AddMonitorPointVerificationItem
+} from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 
 export default Model.extend({
@@ -23,6 +25,8 @@ export default Model.extend({
         MainInstrumentName: [], // 主要仪器名称
         CemsList: [], //
         CorporationCode: null,
+        pointVerificationItem:[],
+        pointVerificationList:[],
     },
     effects: {
 
@@ -192,8 +196,40 @@ export default Model.extend({
             } else {
                 sdlMessage(result.Message, 'error');
             }
-        }
-        
+        },
+        //获取点位关联数据核查信息
+        *getMonitorPointVerificationItem({callback, payload }, { call, put, update, select }) {
+            const result = yield call(GetMonitorPointVerificationItem, payload);
+            if (result.IsSuccess) { 
+                callback(result.Datas);
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        },  
+        //获取数据核查信息码表
+        *getMonitorPointVerificationList({callback, payload }, { call, put, update, select }) {
+            const result = yield call(GetMonitorPointVerificationList, payload);
+            if (result.IsSuccess) {
+                 if(result.Datas&&result.Datas[0]){
+                   const data =  result.Datas.map(item=>{
+                        return  { label: item.Name, value:  item.ChildID }
+                    })
+                    yield update({ pointVerificationList:data  })
+                 }
+               
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        },     
+        //添加或者修改点位关联数据核查信息
+        *addMonitorPointVerificationItem({callback, payload }, { call, put, update, select }) {
+            const result = yield call(AddMonitorPointVerificationItem, payload);
+            if (result.IsSuccess) {
+                sdlMessage(result.Message, 'success');
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        },             
     },
     reducers: {
         // 保存搜索框数据

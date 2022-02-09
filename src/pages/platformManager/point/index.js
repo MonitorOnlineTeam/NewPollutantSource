@@ -21,6 +21,7 @@ import {
   InputNumber,
   Tooltip,
   Tabs,
+  Checkbox,
 } from 'antd';
 import { EditIcon, DetailIcon, DelIcon  } from '@/utils/icon'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
@@ -50,7 +51,8 @@ let pointConfigIdEdit = '';
   otherloading: loading.effects['monitorTarget/getPollutantTypeList'],
   saveLoadingAdd: loading.effects['point/addPoint'],
   saveLoadingEdit: loading.effects['point/editPoint'],
-  saveLoadingMN:loading.effects['point/updatePointDGIMN'],
+  addMonitorPointVerificationLoading: loading.effects['point/addMonitorPointVerificationItem'],
+  getMonitorPointVerificationItemLoading: loading.effects['point/getMonitorPointVerificationItem'] || false,
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -61,7 +63,8 @@ let pointConfigIdEdit = '';
   isEdit: monitorTarget.isEdit,
   defaultPollutantCode: common.defaultPollutantCode,
   configInfo: global.configInfo,
-  CorporationCode: point.CorporationCode
+  CorporationCode: point.CorporationCode,
+  pointVerificationList: point.pointVerificationList,
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -97,6 +100,10 @@ export default class MonitorPoint extends Component {
           this.getPageConfig(res);
         },
       },
+    });
+    dispatch({
+      type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
+      payload: {},
     });
   }
 
@@ -234,8 +241,21 @@ export default class MonitorPoint extends Component {
 
   onSubmitForm() {
     const { dispatch, match, pointDataWhere, form } = this.props;
-
-    form.validateFields((err, values) => {
+    const { FormData } = this.state;
+     if(this.state.tabKey==2){ //污染物信息
+        this.modelClose()
+     }else if(this.state.tabKey==3){ //数据核查项
+      dispatch({
+        type: 'point/addMonitorPointVerificationItem',
+        payload: {
+            ID:'',
+            DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
+            ItemCode: this.state.itemCode.toString(),
+            PlatformNum: this.state.platformNum,
+        },
+      });
+     }else{
+      form.validateFields((err, values) => {
       if (!err) {
         const FormData = handleFormData(values);
         if (!Object.keys(FormData).length) {
@@ -279,6 +299,7 @@ export default class MonitorPoint extends Component {
         })
       }
     });
+  }
   }
 
   delPoint(PointCode, DGIMN) {
@@ -352,7 +373,7 @@ export default class MonitorPoint extends Component {
   onTabPaneChange = (key) => {
  
     const { selectedPointCode, FormData } = this.state;
-    if (key == "2") {
+    if (key != "1") {
    
        if(this.state.selectedPointCode || FormData)
        {
@@ -382,7 +403,36 @@ export default class MonitorPoint extends Component {
       return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]} 
       pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
+  getDataVerification = () =>{
 
+    return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
+           <div className={styles.dataVerificationSty}>
+          <Form.Item label="核查项" >
+          <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
+         </Form.Item>
+         <Form.Item label="监控平台数量" >
+          <Input  value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange}/>
+          </Form.Item>
+     </div>
+     </Spin>
+  }
+
+  dataVerificationChange = (val) =>{ //核查项 多选
+    this.setState({itemCode:val})
+  }
+  platformNumChange=(e)=>{//核查项 平台数量
+    this.setState({platformNum:e.target.value})
+  }
+
+  getEquipmentPar = () =>{ //设备参数项
+    return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
+           <div className={styles.dataVerificationSty}>
+          <Form.Item label="设备参数类别" >
+          <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
+         </Form.Item>
+     </div>
+     </Spin>
+  }
   editMN=(MN)=>{
     this.setState({ 
       MNVisible:true,
@@ -438,6 +488,19 @@ export default class MonitorPoint extends Component {
      this.deviceManager(row)
     }
   };
+
+  loadingStatus = () =>{
+    const { tabKey } = this.state;
+    const { saveLoadingAdd,  saveLoadingEdit,addMonitorPointVerificationLoading } = this.props;
+    if(tabKey==1){
+      return  !this.state.isEdit ? saveLoadingAdd : saveLoadingEdit
+    }
+    if(tabKey==3){ //数据核查项
+      return  addMonitorPointVerificationLoading
+      
+    }
+    
+  }
   render() {
     const {
       searchConfigItems,
@@ -477,6 +540,7 @@ export default class MonitorPoint extends Component {
     
       </Menu>
     );
+    const { tabKey } = this.state;
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
@@ -547,6 +611,18 @@ export default class MonitorPoint extends Component {
                           this.setState({
                             cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
                             FormData: row
+                          })
+                          this.props.dispatch({
+                            type: 'point/getMonitorPointVerificationItem',
+                            payload: {
+                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
+                            },
+                            callback:(res)=>{
+                              this.setState({
+                                itemCode: res&&res.code ? res.code:undefined,
+                                platformNum:res&&res.platformNum ? res.platformNum:undefined,
+                              })
+                            }
                           })
                         }}
                       >
@@ -620,7 +696,7 @@ export default class MonitorPoint extends Component {
               !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
                 取消
             </Button>,
-                <> <Button key="submit" type="primary" loading={!this.state.isEdit ? saveLoadingAdd : saveLoadingEdit} onClick={this.onSubmitForm.bind(this)}>
+                <><Button key="submit" type="primary" loading={this.loadingStatus()} onClick={this.onSubmitForm.bind(this)}>
                   确定
             </Button><Button key="submit" onClick={this.modelClose}>
                   取消
@@ -646,7 +722,14 @@ export default class MonitorPoint extends Component {
               <TabPane tab="污染物信息" key="2">
                 {this.getTabInfo()}
               </TabPane>
+              <TabPane tab="数据核查项" key="3">
+                {this.getDataVerification()}
+              </TabPane>
+              <TabPane tab="设备参数项" key="4">
+                {this.getEquipmentPar()}
+              </TabPane>
             </Tabs>
+
             ):(
               <AutoFormViewItems
                 configId={pointConfigIdEdit}
@@ -654,7 +737,7 @@ export default class MonitorPoint extends Component {
               />
             )
           }
-          
+
           </Modal>
           <Modal
             title="设置Cems参数"
