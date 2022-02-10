@@ -57,7 +57,7 @@ class RepairRecordContent extends Component {
                                               {item.MonitorPointEquipmentName}
                                  </td>
                                  <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
-                                             {item.EquipmentInfoName}
+                                             {item.EquipmentName}
                                  </td>
                                  <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '' }}>
                                               {item.EquipmentNumber}

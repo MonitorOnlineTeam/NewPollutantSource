@@ -220,3 +220,47 @@ export async function AddMonitorPointVerificationItem(params) { //添加或者�
     const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/AddMonitorPointVerificationItem`, params, null);
     return result;
 }
+
+export async function GetParamInfoList(params) { //获取设备参数项列表
+    const result = await post(`/api/rest/PollutantSourceApi/OperationBasicApi/GetParamInfoList`, params, null);
+    return result;
+}
+
+export async function GetParamCodeList(params) { //设备参数项码表
+    const result = await post(`/api/rest/PollutantSourceApi/OperationBasicApi/GetParamCodeList`, params, null);
+    return result;
+}
+
+export async function AddPointParamInfo(params) { //添加设备参数项
+    const result = await post(`/api/rest/PollutantSourceApi/OperationBasicApi/AddPointParamInfo`, params, null);
+    return result;
+}
+
+
+
+/*******监测点设备管理  ***** */
+export async function GetPointEquipmentInfo(params) { //获取站点设备信息
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPointEquipmentInfo`, params, null);
+    return result;
+}
+
+export async function AddOrUpdateEquipmentInfo(params) { //添加或者修改设备参数信息
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdateEquipmentInfo`, params, null);
+    return result;
+}
+
+export async function GetPointEquipmentParameters(params) { //列表显示
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPointEquipmentParameters`, params, null);
+    return result;
+}
+
+
+export async function GetManufacturerList(params) { //设备厂商 列表
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);
+    return result;
+  }
+
+export async function GetMonitoringTypeList(params) { // 获取监测类别
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList',params, null);
+    return result;
+  }

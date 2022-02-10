@@ -53,6 +53,8 @@ let pointConfigIdEdit = '';
   saveLoadingEdit: loading.effects['point/editPoint'],
   addMonitorPointVerificationLoading: loading.effects['point/addMonitorPointVerificationItem'],
   getMonitorPointVerificationItemLoading: loading.effects['point/getMonitorPointVerificationItem'] || false,
+  addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
+  getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -65,6 +67,7 @@ let pointConfigIdEdit = '';
   configInfo: global.configInfo,
   CorporationCode: point.CorporationCode,
   pointVerificationList: point.pointVerificationList,
+  paramCodeList:point.paramCodeList,
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -105,6 +108,7 @@ export default class MonitorPoint extends Component {
       type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
       payload: {},
     });
+
   }
 
 
@@ -140,6 +144,10 @@ export default class MonitorPoint extends Component {
           pointConfigId = `${pointConfigIdEdit}New`;
         }
       }
+      dispatch({
+        type: 'point/getParamCodeList', //设备参数项码表
+        payload: {pollutantType: type},
+      });
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
     }
@@ -190,7 +198,6 @@ export default class MonitorPoint extends Component {
 
   /** 设置运维周期 */
   showMaintenancereminder = DGIMN => {
-    console.log(DGIMN);
     this.setState({
       Mvisible: true,
       DGIMN,
@@ -250,11 +257,21 @@ export default class MonitorPoint extends Component {
         payload: {
             ID:'',
             DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
-            ItemCode: this.state.itemCode.toString(),
+            ItemCode: this.state.itemCode? this.state.itemCode.toString() : '',
             PlatformNum: this.state.platformNum,
         },
       });
-     }else{
+     }else if(this.state.tabKey==4){ //设备参数项
+      dispatch({
+        type: 'point/addPointParamInfo',
+        payload: {
+            pollutantType:this.state.pollutantType,
+            DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
+            pollutantList:this.state.equipmentPol? this.state.equipmentPol : '',
+
+        },
+      }) 
+      }else{
       form.validateFields((err, values) => {
       if (!err) {
         const FormData = handleFormData(values);
@@ -425,13 +442,16 @@ export default class MonitorPoint extends Component {
   }
 
   getEquipmentPar = () =>{ //设备参数项
-    return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
+    return <Spin spinning={this.props.getParamInfoListLoading}>
            <div className={styles.dataVerificationSty}>
           <Form.Item label="设备参数类别" >
-          <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
+          <Checkbox.Group value={this.state.equipmentPol}  options={this.props.paramCodeList} onChange={this.equipmentParChange} />
          </Form.Item>
      </div>
      </Spin>
+  }
+  equipmentParChange = (val) =>{
+    this.setState({equipmentPol:val})
   }
   editMN=(MN)=>{
     this.setState({ 
@@ -491,7 +511,7 @@ export default class MonitorPoint extends Component {
 
   loadingStatus = () =>{
     const { tabKey } = this.state;
-    const { saveLoadingAdd,  saveLoadingEdit,addMonitorPointVerificationLoading } = this.props;
+    const { saveLoadingAdd,  saveLoadingEdit,addMonitorPointVerificationLoading,addPointParamInfoLoading } = this.props;
     if(tabKey==1){
       return  !this.state.isEdit ? saveLoadingAdd : saveLoadingEdit
     }
@@ -499,7 +519,10 @@ export default class MonitorPoint extends Component {
       return  addMonitorPointVerificationLoading
       
     }
-    
+    if(tabKey==4){ //设备参数
+      return  addPointParamInfoLoading
+      
+    }   
   }
   render() {
     const {
@@ -612,7 +635,7 @@ export default class MonitorPoint extends Component {
                             cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
                             FormData: row
                           })
-                          this.props.dispatch({
+                          this.props.dispatch({ //数据核查 回显数据
                             type: 'point/getMonitorPointVerificationItem',
                             payload: {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
@@ -624,6 +647,19 @@ export default class MonitorPoint extends Component {
                               })
                             }
                           })
+
+                          this.props.dispatch({ //设备参数 回显数据
+                            type: 'point/getParamInfoList',
+                            payload: {
+                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
+                              pollutantType:this.state.pollutantType
+                            },
+                            callback:(res)=>{
+                              this.setState({
+                                equipmentPol: res&&res.code ? res.code:undefined,
+                              })
+                            }
+                          })                         
                         }}
                       >
                         <EditIcon />      

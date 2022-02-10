@@ -4,7 +4,7 @@
  * 创建时间：2021.10.13
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Popover   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -200,16 +200,57 @@ const Index = (props) => {
       }),
     };
   });
- 
 
+
+   const [choiceData,setChoiceData] = useState()
+  const onClearChoice=(value)=>{
+    form2.setFieldsValue({PorjectID:value});
+    setChoiceData(value)
+  }
+
+ const [popVisible,setPopVisible] = useState(false)
+ const SelectPopover = () =>{
+     return <Popover
+             content={<>
+              <Row>
+                <Form.Item  style={{marginRight:8}} >
+                  <Input allowClear placeholder="请输入设备厂家"  onChange={(e)=>{ setProjectNum(e.target.value)}}/>
+                </Form.Item>
+                <Form.Item  style={{marginRight:8}} >
+                  <Input allowClear placeholder="请输入系统型号"  onChange={(e)=>{ setProjectNum(e.target.value)}}/>
+                </Form.Item>
+                <Form.Item  style={{marginRight:8}} >
+                  <Select allowClear placeholder="请选择监测类别"  onChange={(e)=>{ setProjectNum(e.target.value)}}>
+                  
+                  </Select>
+                
+                </Form.Item>
+              <Form.Item> 
+               <Button type="primary" onClick={()=>{}}>
+               查询
+             </Button>
+             </Form.Item>
+             </Row>
+               <SdlTable  scroll={{ y: 'calc(100vh - 500px)' }} style={{width:800}} loading = {false} bordered    dataSource={[]}   columns={[]}  />
+               </>}
+            title=""
+            trigger="click"
+            visible={popVisible}
+            onVisibleChange={(visible )=>{setPopVisible(visible)}}
+            placement="bottom"
+            getPopupContainer={trigger => trigger.parentNode}
+          >
+           <Select onChange={onClearChoice} allowClear showSearch={false}   value={choiceData} dropdownClassName={styles.popSelectSty} placeholder="请选择">
+           </Select>
+      </Popover>
+ }
 
 const SystemInfo = () =>{
   return <div>
    <Row gutter={16}>
   <Col span={6}>
 <Form.Item label="气态污染物CEMS设备生成商" name="layout">
-   <Select  placeholder="请选择">
-   </Select>
+    <SelectPopover />
  </Form.Item>
  </Col>
  <Col span={6} >
@@ -234,7 +275,7 @@ const SystemInfo = () =>{
  </div>
 }
 
- 
+
 
   return (
     <div>

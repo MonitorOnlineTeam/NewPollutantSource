@@ -25,7 +25,8 @@ import {
      GetWaterCheckRecordRecordForPCList,
      GetWaterParametersChangeRecordForPCList,
      GetGasParametersChangeRecordForPCList,
-     GetWaterComparisonTestRecordForPCList
+     GetWaterComparisonTestRecordForPCList,
+     GetCooperationInspectionRecordList
 } from '../services/taskapi';
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
@@ -460,7 +461,7 @@ export default Model.extend({
             }
         },
        //  数据一致性检查表 小时与与日数据
-        * GetDataConsistencyRecordNewForPCList ({ payload, }, {call, update,select,}) {
+        *GetDataConsistencyRecordNewForPCList ({ payload, }, {call, update,select,}) {
             const DataInfo = yield call(GetDataConsistencyRecordNewForPCList, payload);
             if (DataInfo.IsSuccess) {
                 yield update({
@@ -468,7 +469,17 @@ export default Model.extend({
                 });
             }
         },
-         //  上月委托第三方检测次数
+
+        //上月委托第三方检测次数
+        *GetDetectionTimesRecordList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetDetectionTimesRecordList, payload); 
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    detectionTimesRecordList: DataInfo.Datas,
+                });
+            }
+          },
+         // 水质校准记录
        *GetWaterCalibrationRecordForPCList ({ payload, }, {call, update,select,}) {
         const DataInfo = yield call(GetWaterCalibrationRecordForPCList, payload); 
         if (DataInfo.IsSuccess) {

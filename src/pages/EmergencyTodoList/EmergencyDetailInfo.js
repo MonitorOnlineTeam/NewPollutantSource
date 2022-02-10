@@ -39,6 +39,7 @@ import 'react-image-lightbox/style.css';
 import config from '@/config';
 import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataException, EnumDataLogicErr, EnumDYStatusException } from '@/utils/enum';
 import RecordForm  from '@/pages/operations/recordForm' 
+import SdlTable from '@/components/SdlTable';
 
 const { Description } = DescriptionList;
 const { TextArea } = Input;
@@ -77,6 +78,38 @@ class EmergencyDetailInfo extends Component {
             recordType:null,
             taskID:null
         };
+        this.column =  [
+            {
+                title: '审批编号',
+                dataIndex: 'examNumber',
+                key: 'examNumber',
+                align: 'center',
+            },
+            {
+                title: '审批状态',
+                dataIndex: 'examMsg',
+                key: 'examMsg',
+                align: 'center',
+            },
+            {
+                title: '审批结果',
+                dataIndex: 'examStaus',
+                key: 'examStaus',
+                align: 'center',
+            },
+            {
+                title: '审批人',
+                dataIndex: 'examPerson',
+                key: 'examPerson',
+                align: 'center',
+            },
+            {
+                title: '审批时间',
+                dataIndex: 'examTime',
+                key: 'examTime',
+                align: 'center',
+            },            
+        ]
     }
 
     componentDidMount = () => {
@@ -149,8 +182,8 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.StandardGasReplace:
                             this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID);
                             break;
-                        case EnumPsOperationForm.CqfPatrol:
-                            this.GoToForm(taskID, item.CnName, '5', rtnVal, key, item.FormMainID);
+                        case EnumPsOperationForm.CqfPatrol://CEMS日常巡检记录表
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
                             this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID);
@@ -164,8 +197,8 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.TestRecord:
                             this.GoToForm(taskID, item.CnName, '9', rtnVal, key, item.FormMainID);
                             break;
-                        case EnumPsOperationForm.DataException:
-                            this.GoToForm(taskID, item.CnName, '10', rtnVal, key, item.FormMainID);
+                        case EnumPsOperationForm.DataException://异常报告记录
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.Maintain:
                             this.GoToForm(taskID, item.CnName, '27', rtnVal, key, item.FormMainID);
@@ -211,9 +244,10 @@ class EmergencyDetailInfo extends Component {
                          break; 
                          case EnumPsOperationForm.GasDeviceParameterChangeRecord: //设备参数变动记录表 废气
                          this.GoToForm(taskID, item.CnName, '64', rtnVal, key, item.FormMainID);
+                         break; 
                          case EnumPsOperationForm.ComparisonTestResultsRecord: //实际水样比对试验结果记录表
                          this.GoToForm(taskID, item.CnName, '19', rtnVal, key, item.FormMainID);
-                         break;    EquipmentNameplate 
+                         break;
                          case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
                          this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                          break;                                                                                                       
@@ -807,6 +841,9 @@ class EmergencyDetailInfo extends Component {
                                 <Description term="创建人">{isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
                                 <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
                             </DescriptionList>
+                            <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
+                                <Description term="审批状态">{isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}</Description>
+                            </DescriptionList>
                             {
                                 (isExistTask ? this.props.taskInfo.Datas[0].TaskType : null) === EnumPatrolTaskType.PatrolTask ? null : AlarmList.length === 0 ? null : (<Divider style={{ marginBottom: 20 }} />)
                             }
@@ -823,6 +860,14 @@ class EmergencyDetailInfo extends Component {
                                     <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} />
                                 </Description>
                             </DescriptionList>
+                        </Card>
+                        <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
+                                <Table
+                                    bordered
+                                    columns={this.column}
+                                    dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}
+                                    pagination={false}
+                                 />
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">

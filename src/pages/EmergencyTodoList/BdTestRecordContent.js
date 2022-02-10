@@ -525,7 +525,7 @@ class BdTestRecordContent extends Component {
                         </tr>
                     </tbody>
                 </table>
-                <table className={styles.FormTable}>
+                {/* <table className={styles.FormTable}>
                     <tbody>
                         <tr>
                             <td style={{ width: '87%', height: '50px', textAlign: 'right', border: '0', fontWeight: 'bold', minWidth: 800 }}>负责人签名：</td>
@@ -536,7 +536,7 @@ class BdTestRecordContent extends Component {
                             <td style={{ width: '13%', height: '50px', border: '0' }}>{Record !== null ? Record.SignTime : null}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> */}
             </div>
         );
     }

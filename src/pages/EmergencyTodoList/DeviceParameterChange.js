@@ -11,6 +11,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./ConsumablesReplaceRecordContent.less";
 import MonitorContent from '../../components/MonitorContent/index';
+import moment from 'moment';
 
 @connect(({ task, loading }) => ({
     isloading: loading.effects['task/GetWaterParametersChangeRecordForPCList'],
@@ -114,13 +115,13 @@ class StandardSolutionVerificationRecord extends Component {
                                 统计起始时间
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
-                                {Content !== null ?Content.BeginTime:null}
+                                {Content !== null ?moment(Content.BeginTime).format("YYYY-MM-DD hh:00:00"):null}
                             </td>
                             <td colSpan="1" style={{  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                         统计截止时间
                             </td>
                             <td colSpan="1" style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
-                                {Content !== null ?Content.EndTime:null}
+                                {Content !== null ? moment(Content.EndTime).format("YYYY-MM-DD hh:00:00") :null}
                             </td>
                         </tr>
                         <tr>

@@ -135,7 +135,7 @@ export default class UpdateSparepartManage extends Component {
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
-                                label={'备品备件型号'}>
+                                label={'规格型号'}>
                                 {getFieldDecorator('Code', {
                                     initialValue: isExists ? item.Code : null,
                                     rules: [
@@ -203,7 +203,7 @@ export default class UpdateSparepartManage extends Component {
                         </Col>
                     </Row>
                     <Row gutter={24}>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                        {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
                                 label={'设备类型'}>
@@ -211,7 +211,7 @@ export default class UpdateSparepartManage extends Component {
                                     initialValue: isExists ? item.EquipmentType : null,
                                     rules: [
                                         {
-                                            required: true,
+                                            required: false,
                                             message: '请选择设备类型!',
                                         },
                                     ],
@@ -219,9 +219,6 @@ export default class UpdateSparepartManage extends Component {
                                     <Select
                                         placeholder="请选择"
                                     >
-                                        {/* <Option key='1'>废水</Option>
-                                        <Option key='2'>废气</Option>
-                                        <Option key='5'>环境质量</Option> */}
                                       {
                                       monitoringTypeList[0]&&monitoringTypeList.map(item => {
                                        return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -229,8 +226,8 @@ export default class UpdateSparepartManage extends Component {
                                            }  
                                     </Select>
                                 )}
-                            </FormItem>
-                        </Col>
+                            </FormItem> 
+                        </Col>*/}
                         {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -272,6 +269,10 @@ export default class UpdateSparepartManage extends Component {
                                     <Select
                                         placeholder="请选择"
                                         allowClear
+                                        showSearch
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                          }
                                     >
                                          {
                                             storehouseList[0]&&storehouseList.map(item => <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>)

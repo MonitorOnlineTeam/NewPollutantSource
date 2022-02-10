@@ -160,6 +160,7 @@ class TaskRecord extends Component {
                     TaskStatus: baseReportSearchForm.TaskStatus != undefined ? baseReportSearchForm.TaskStatus : '',
                     OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
                     TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
+                    ApproveStatus: baseReportSearchForm.ApproveStatus != undefined ? baseReportSearchForm.ApproveStatus : '',//审批状态
                     CompleteTime: baseReportSearchForm.CompleteTime,
                     CreateTime: baseReportSearchForm.CreateTime,
                     OperationEntID:baseReportSearchForm.OperationEntID,
@@ -434,7 +435,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
           }
           if (text === '3') {
           return <span>工作超时</span>;
-}
+          }
         },
       },
       {
@@ -480,10 +481,14 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
         },
       },
       {
+        title: '审批状态',
+        dataIndex: 'auditStatusName',
+        key: 'auditStatusName',
+      },
+      {
         title: '运维人',
         dataIndex: 'OperationsUserName',
         key: 'OperationsUserName',
-
       },
       {
         title: '完成时间',
@@ -719,6 +724,25 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                               itemName="dbo.T_Cod_RecordTypes.PollutantTypeName"
                               itemValue="dbo.T_Cod_RecordTypes.ID"
                             />,
+                          )}
+                      </FormItem>
+                  </Col>
+                  <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+                      <FormItem {...formLayout} label="审批状态" style={{ width: '100%' }}>
+                          {getFieldDecorator('ApproveStatus', {
+                            initialValue: gettasklistqueryparams.TaskType ? gettasklistqueryparams.TaskType : undefined,
+                          })(
+                            <Select
+                                  placeholder="请选择"
+                                  style={{ width: '100%' }}
+                                  allowClear
+                                  filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                              >
+                                  <Option key="0" value="0">待审批</Option>
+                                  <Option key="1" value="1">审批中</Option>
+                                  <Option key="2" value="2">审批通过</Option>
+                                  <Option key="3" value="3">审批未通过</Option>
+                              </Select>,
                           )}
                       </FormItem>
                   </Col>

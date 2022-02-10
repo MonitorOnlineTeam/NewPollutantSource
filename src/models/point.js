@@ -10,7 +10,9 @@ import * as services from '@/services/autoformapi';
 import { getPollutantTypeList } from '@/services/baseapi';
 import MonitoringStandard from '@/components/MonitoringStandard';
 import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode,UpdatePointDGIMN,
-    GetMonitorPointVerificationItem,GetMonitorPointVerificationList,AddMonitorPointVerificationItem
+    GetMonitorPointVerificationItem,GetMonitorPointVerificationList,AddMonitorPointVerificationItem,
+    AddPointParamInfo,GetParamInfoList,GetParamCodeList,
+    GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetManufacturerList,GetMonitoringTypeList,
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 
@@ -25,8 +27,10 @@ export default Model.extend({
         MainInstrumentName: [], // 主要仪器名称
         CemsList: [], //
         CorporationCode: null,
-        pointVerificationItem:[],
         pointVerificationList:[],
+        paramCodeList:[],
+        manufacturerList:[],//设备厂家
+        monitoringTypeList:[],//监测类别
     },
     effects: {
 
@@ -229,7 +233,89 @@ export default Model.extend({
             } else {
                 sdlMessage(result.Message, 'error');
             }
+        },   
+        //设备参数项码表
+        *getParamInfoList({callback, payload }, { call, put, update, select }) {
+            const result = yield call(GetParamInfoList, payload);
+            if (result.IsSuccess) { 
+                let data = []
+                if(result.Datas&&result.Datas[0]){
+                    data =  result.Datas.map(item=>{
+                        return item.id
+                    })
+                }
+                callback({code:data});
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        },  
+        //获取数据核查信息码表
+        *getParamCodeList({callback, payload }, { call, put, update, select }) {
+            const result = yield call(GetParamCodeList, payload);
+            if (result.IsSuccess) {
+                 if(result.Datas&&result.Datas[0]){
+                   const data =  result.Datas.map(item=>{
+                        return  { label: item.Name, value:  item.ChildID }
+                    })
+                    yield update({ paramCodeList:data  })
+                 }
+               
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        },     
+        //添加设备参数项
+        *addPointParamInfo({callback, payload }, { call, put, update, select }) {
+            const result = yield call(AddPointParamInfo, payload);
+            if (result.IsSuccess) {
+                sdlMessage(result.Message, 'success');
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        },   
+        /*******监测点设备管理  ***** */
+       *getPointEquipmentInfo({callback, payload }, { call, put, update, select }) {
+                const result = yield call(GetPointEquipmentInfo, payload);
+                if (result.IsSuccess) {
+                    sdlMessage(result.Message, 'success');
+                } else {
+                    sdlMessage(result.Message, 'error');
+                }
+            }, 
+        *addOrUpdateEquipmentInfo({callback, payload }, { call, put, update, select }) {
+            const result = yield call(AddOrUpdateEquipmentInfo, payload);
+            if (result.IsSuccess) {
+                sdlMessage(result.Message, 'success');
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
+        }, 
+         *getPointEquipmentParameters({callback, payload }, { call, put, update, select }) {
+            const result = yield call(GetPointEquipmentParameters, payload);
+            if (result.IsSuccess) {
+                sdlMessage(result.Message, 'success');
+            } else {
+                sdlMessage(result.Message, 'error');
+            }
         },             
+        *getManufacturerList({ payload,callback }, { call, put, update }) { //设备厂家列表
+            const result = yield call(GetManufacturerList, payload);
+            if (result.IsSuccess) {
+              yield update({
+                manufacturerList:result.Datas,
+              })
+            }else{
+              message.error(result.Message)
+            }
+          },
+        *getMonitoringTypeList({ payload,callback }, { call, put, update }) { //获取监测类别
+            const result = yield call(GetMonitoringTypeList, payload);
+            if (result.IsSuccess) {
+              yield update({ monitoringTypeList:result.Datas})
+            }else{
+              message.error(result.Message)
+            }
+          },
     },
     reducers: {
         // 保存搜索框数据

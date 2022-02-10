@@ -28,9 +28,8 @@ class RepalceRecordList extends Component {
     }
 
     componentDidMount() {
-        console.log(1111)
         this.props.dispatch({
-            type: 'task/GetCooperationInspectionRecordList',
+            type: 'task/GetCooperationInspectionRecordList', 
             payload: {
                 TaskID: this.props.TaskID,
                 TypeID: this.props.TypeID,

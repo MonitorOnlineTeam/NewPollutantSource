@@ -482,13 +482,13 @@ export default class Index extends Component {
             // {Code: "266", Name: "污染源(气)"}
             // 1: {Code: "267", Name: "大气环境"}
             // 2: {Code: "268", Name: "水环境"}
-            {
-                title: '设备类型',
-                dataIndex: 'EquipmentType',
-                key: 'EquipmentType',
-                width: 100,
-                align: 'center',
-                render: (text, row, index) => {
+            // {
+            //     title: '设备类型',
+            //     dataIndex: 'EquipmentType',
+            //     key: 'EquipmentType',
+            //     width: 100,
+            //     align: 'center',
+            //     render: (text, row, index) => {
                     // switch (text) {
                     //     case '1':
                     //         text = "废水";
@@ -507,13 +507,13 @@ export default class Index extends Component {
                     //         break;
                     // }
                     // return text;
-                   return monitoringTypeList.map(item=>{
-                        if(item.Code === text){
-                           return item.Name
-                        }
-                    })
-                },
-            },
+                //    return monitoringTypeList.map(item=>{
+                //         if(item.Code === text){
+                //            return item.Name
+                //         }
+                //     })
+                // },
+            // },
             // {
             //     title: '服务站',
             //     dataIndex: 'SparePartsStationName',
@@ -538,10 +538,10 @@ export default class Index extends Component {
                 render: (text, row, index) => {
                     switch (text) {
                         case 0:
-                            text = "禁用";
+                            text = <Tag color="error">停用</Tag>
                             break;
                         case 1:
-                            text = "启用";
+                            text = <Tag color="processing">启用</Tag>
                             break;
                     }
                     return text;
@@ -598,25 +598,16 @@ export default class Index extends Component {
                                 <Input placeholder="备品备件名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.PartName} onChange={this.PartNameChange} />
                             </Form.Item>
 
-                            <Form.Item label='备品备件型号'>
-                                <Input placeholder="备品备件型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
+                            <Form.Item label='规格型号'>
+                                <Input placeholder="规格型号" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.Code} onChange={this.Codechange} />
                             </Form.Item>
                             
                             {/* <Form.Item>
                                 <Input placeholder="服务站名称" allowClear={true} style={{ width: 150 }} value={sparepartManageParameters.SparePartsStationCode} onChange={this.SparePartsStationNameChange} />
                             </Form.Item> */}
-                            <Form.Item>
-                               仓库名称：
-                            <Select placeholder="仓库名称" allowClear style={{ width: 120 }}  onChange={this.storehouseChange}>
-                                     {
-                                      storehouseList[0]&&storehouseList.map(item=>{
-                                      return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
-                                      })
-                                     }
-                                </Select>
-                            </Form.Item>
+   
                             </Row>
-                            <Form.Item>
+                            {/* <Form.Item>
                                 设备类型：
                             <Select placeholder="设备类型" allowClear style={{ width: 150 }} value={sparepartManageParameters.EquipmentType? sparepartManageParameters.EquipmentType : undefined} onChange={this.EquipmentTypeChange}>
  
@@ -626,13 +617,27 @@ export default class Index extends Component {
                                           })
                                            }  
                                 </Select>
+                            </Form.Item> */}
+                         <Form.Item>
+                               仓库名称：
+                            <Select placeholder="仓库名称"
+                                    showSearch
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                      }
+                                    allowClear style={{ width: 150 }}  onChange={this.storehouseChange}>
+                                     {
+                                      storehouseList[0]&&storehouseList.map(item=>{
+                                      return <Option key={item.ID} value={item.ID}>{item.StorehouseName}</Option>
+                                      })
+                                     }
+                                </Select>
                             </Form.Item>
-
                             <Form.Item>
                                <div style={{minWidth:98,display:'inline-block',textAlign:'right'}}> 状态 ：</div>
-                                <Select placeholder="设备类型"  style={{ width: 150 }} allowClear value={sparepartManageParameters.IsUsed&&sparepartManageParameters.IsUsed.toString()? sparepartManageParameters.IsUsed.toString() :undefined } onChange={this.IsUsedChange}>
+                                <Select placeholder="状态"  style={{ width: 150 }} allowClear value={sparepartManageParameters.IsUsed&&sparepartManageParameters.IsUsed.toString()? sparepartManageParameters.IsUsed.toString() :undefined } onChange={this.IsUsedChange}>
                                     <Option value="1">启用</Option>
-                                    <Option value="0">禁用</Option>
+                                    <Option value="0">停用</Option>
                                   </Select>
                             </Form.Item>
 

@@ -512,7 +512,7 @@ export default {
                     {
                       name: 'referenceMaterial',//标准物质
                       path: '/platformconfig/assetManage/referenceMaterial/:configId',
-                      component: './OperationSysManager/StandardGasManage/',
+                      component: './OperationSysManager/StandardGasManage',
                     },
                     {
                       name: 'StandardLiquid',//试剂信息
