@@ -10,6 +10,28 @@ import config from '@/config';
 import moment from 'moment'
 import * as services from '@/services/autoformapi';
 
+function formatDateFormat(format) {
+  let _format = 'YYYY-MM-DD HH:mm:ss';
+  switch (format) {
+    case 'YYYY':
+      _format = 'YYYY-01-01 00:00:00';
+      break;
+    case 'YYYY-MM':
+      _format = 'YYYY-MM-01 00:00:00';
+      break;
+    case 'YYYY-MM-DD':
+      _format = 'YYYY-MM-DD 00:00:00';
+      break;
+    case 'YYYY-MM-DD HH':
+      _format = 'YYYY-MM-DD HH:00:00';
+      break;
+    case 'YYYY-MM-DD HH:mm':
+      _format = 'YYYY-MM-DD HH:mm:00';
+      break;
+  }
+  return _format;
+}
+
 function getQueryParams(state, payload) {
   const group = [];
   const { configId } = payload;
@@ -23,22 +45,23 @@ function getQueryParams(state, payload) {
         const isMoment = moment.isMoment(searchForm[key].value);
         const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
         let format = state.dateFormat[configId][key] || 'YYYY-MM-DD HH:mm:ss';
+        let _format = formatDateFormat(format);
         if (isArrMoment) {
           console.log("searchForm[key]=", searchForm[key])
           groupItem = [{
             Key: key,
-            Value: moment(searchForm[key].value[0]).format(format),
+            Value: moment(searchForm[key].value[0]).format(_format),
             Where: '$gte',
           }, {
             Key: key,
-            Value: moment(searchForm[key].value[1]).format(format),
+            Value: moment(searchForm[key].value[1]).format(_format),
             Where: '$lte',
           }]
           group.push(...groupItem);
         } else {
           groupItem = {
             Key: key,
-            Value: isMoment ? moment(searchForm[key].value).format(format) : searchForm[key].value.toString(),
+            Value: isMoment ? moment(searchForm[key].value).format(_format) : searchForm[key].value.toString(),
           };
           for (const whereKey in state.whereList[configId]) {
             if (key === whereKey) {
