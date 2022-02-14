@@ -37,6 +37,7 @@ import CascaderMultiple from '@/components/CascaderMultiple'
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable'
+import styles from './index.less'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -52,6 +53,7 @@ const { Option } = Select;
   datatable: task.datatable,
   LoadingData: loading.effects['task/GetOperationTaskList'],
   clientHeight: global.clientHeight,
+  operationCompanyList:operations.operationCompanyList
 }))
 @Form.create()
 class TaskRecord extends Component {
@@ -157,6 +159,7 @@ class TaskRecord extends Component {
                     TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                     CompleteTime: baseReportSearchForm.CompleteTime,
                     CreateTime: baseReportSearchForm.CreateTime,
+                    OperationEntID:baseReportSearchForm.OperationEntID,
                     pageIndex: 1,
                 },
         },
@@ -179,10 +182,15 @@ class TaskRecord extends Component {
           gettasklistqueryparams,
         },
     })
-     dispatch({
+    dispatch({
        type: 'task/GetOperationTaskList',
        payload: {},
      });
+    dispatch({
+      type: 'operations/getOperationCompanyList',
+      payload: {},
+    });
+    this.taskParentTypeChange(2) //监控目标 派单
 }
 
    /** 分页 */
@@ -234,7 +242,7 @@ onChange = (pageIndex, pageSize) => {
                   OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
                   TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                   CompleteTime: baseReportSearchForm.CompleteTime,
-                    CreateTime: baseReportSearchForm.CompleteTime,
+                  CreateTime: baseReportSearchForm.CompleteTime,
                   pageIndex,
                   pageSize,
               },
@@ -244,6 +252,8 @@ onChange = (pageIndex, pageSize) => {
     type: 'task/GetOperationTaskList',
     payload: {},
   });
+
+  
 }
 
   // 派单
@@ -362,18 +372,30 @@ getTaskTypeInfo=() => {
   return res;
 }
 
-
+  //运维单位列表
+  operationCompanyList=()=>{
+  const { operationCompanyList } = this.props;
+    return operationCompanyList.map(item=>{
+    return  <Option key={item.id} value={item.id}>{item.name}</Option>
+  })
+  }
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams } = this.props;
     const { formLayout } = this._SELF_;
     console.log('gettasklistqueryparams', gettasklistqueryparams);
     const columns = [
       {
-      title: '企业名称',
-      dataIndex: 'EntName',
-      key: 'EntName',
-
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        align:'center'
       },
+      // {
+      // title: '企业名称',
+      // dataIndex: 'EntName',
+      // key: 'EntName',
+
+      // },
       {
         title: '监测点名称',
         dataIndex: 'PointName',
@@ -381,26 +403,30 @@ getTaskTypeInfo=() => {
 
       },
       {
+        title: '运维单位',
+        dataIndex: 'operationCompanyName',
+        key: 'operationCompanyName',
+      },
+      // {
+      //   title: '运维状态',
+      //   dataIndex: 'ExceptionType',
+      //   key: 'ExceptionType',
+      //   render: (text, record) => {
+      //     if (text === '1') {
+      //       return <span>打卡异常</span>;
+      //     }
+      //     if (text === '2') {
+      //       return <span>报警响应异常</span>;
+      //     }
+      //     if (text === '3') {
+      //     return <span>工作超时</span>;
+      //    }
+      //   },
+      // },
+      {
         title: '任务单号',
         dataIndex: 'TaskCode',
         key: 'TaskCode',
-
-      },
-      {
-        title: '运维状态',
-        dataIndex: 'ExceptionType',
-        key: 'ExceptionType',
-        render: (text, record) => {
-          if (text === '1') {
-            return <span>打卡异常</span>;
-          }
-          if (text === '2') {
-            return <span>报警响应异常</span>;
-          }
-          if (text === '3') {
-          return <span>工作超时</span>;
-}
-        },
       },
       {
         title: '任务来源',
@@ -408,11 +434,11 @@ getTaskTypeInfo=() => {
         key: 'TaskFrom',
         render: (text, record) => {
           if (text === 1) {
-            return <span><Tag color="purple">手动创建</Tag></span>;
+            return <span><Tag color="purple">手工创建</Tag></span>;
           }
-          if (text === 2) {
-            return <span><Tag color="red">报警响应</Tag></span>;
-          }
+          // if (text === 2) {
+          //   return <span><Tag color="red">报警响应</Tag></span>;
+          // }
           if (text === 3) {
             return <span><Tag color="blue">监管派单</Tag></span>;
           }
@@ -544,16 +570,21 @@ getTaskTypeInfo=() => {
                           )}
                       </FormItem>
                   </Col>
+
                   <Col md={8} sm={24}>
-                      <FormItem {...formLayout} label="任务单号" style={{ width: '100%' }}>
-                          {getFieldDecorator('TaskCode', {
-                            initialValue: gettasklistqueryparams.TaskCode,
+                      <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
+                          {getFieldDecorator('CreateTime', {
+                            initialValue: gettasklistqueryparams.CreateTime,
                           })(
-                            <Input placeholder="请输入" allowClear />,
+                            <RangePicker_
+                            dateValue={ gettasklistqueryparams.CreateTime}
+                            style={{ width: '100%' }}
+                            format="YYYY-MM-DD HH:MM"
+                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:MM" />,
                           )}
                       </FormItem>
                   </Col>
-                  <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+                  {/* <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="运维状态" style={{ width: '100%' }}>
                           {getFieldDecorator('ExceptionType', {
                             initialValue: gettasklistqueryparams.ExceptionType ? gettasklistqueryparams.ExceptionType : undefined,
@@ -569,7 +600,24 @@ getTaskTypeInfo=() => {
                             </Select>,
                           )}
                       </FormItem>
-                  </Col>
+                  </Col> */}
+
+                  <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+                      <FormItem {...formLayout} label="运维单位" style={{ width: '100%' }}>
+                          {getFieldDecorator('OperationEntID', {
+                            initialValue: gettasklistqueryparams.OperationEntID ? gettasklistqueryparams.OperationEntID : undefined,
+                          })(
+                            <Select
+                            showSearch
+                            placeholder="请选择"
+                            allowClear
+                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            >
+                              {this.operationCompanyList()}
+                            </Select>,
+                          )}
+                      </FormItem>
+                  </Col> 
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="任务来源" style={{ width: '100%' }}>
                           {getFieldDecorator('TaskFrom', {
@@ -581,8 +629,8 @@ getTaskTypeInfo=() => {
                                   allowClear
                                   filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                               >
-                                  <Option key="1" value="1">手动创建</Option>
-                                  <Option key="2" value="2">报警响应</Option>
+                                  <Option key="1" value="1">手工创建</Option>
+                                  {/* <Option key="2" value="2">报警响应</Option> */}
                                   <Option key="3" value="3">监管派单</Option>
                                   <Option key="4" value="4">自动派单</Option>
                               </Select>,
@@ -636,15 +684,11 @@ getTaskTypeInfo=() => {
                       </FormItem>
                   </Col>
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
-                      <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
-                          {getFieldDecorator('CreateTime', {
-                            initialValue: gettasklistqueryparams.CreateTime,
+                      <FormItem {...formLayout} label="任务单号" style={{ width: '100%' }}>
+                          {getFieldDecorator('TaskCode', {
+                            initialValue: gettasklistqueryparams.TaskCode,
                           })(
-                            <RangePicker_
-                            dateValue={ gettasklistqueryparams.CreateTime}
-                            style={{ width: '100%' }}
-                            format="YYYY-MM-DD HH:MM"
-                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:MM" />,
+                            <Input placeholder="请输入" allowClear />,
                           )}
                       </FormItem>
                   </Col>
@@ -722,9 +766,10 @@ getTaskTypeInfo=() => {
           onCancel={() => {
             this.setState({ visible: false })
           }}
+          wrapClassName={styles.addTask}
         >
           <Form layout="inline">
-            <Row>
+             {/* <Row>
             <FormItem {...formLayout} label="监控类型" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator('taskParentType', {
                   rules: [
@@ -734,13 +779,13 @@ getTaskTypeInfo=() => {
                     },
                   ],
                 })(
-                  <Select placeholder="请选择监控类型" onChange={this.taskParentTypeChange}>
+                  <Select placeholder="请选择监控类型" style={{ minWidth: 200 }} onChange={this.taskParentTypeChange}>
                     <Option value={1}>企业</Option>
                     <Option value={2}>大气站</Option>
                   </Select>,
                 )}
               </FormItem>
-            </Row>
+            </Row>  */}
 
             <Row>
             <FormItem {...formLayout} label={this.state.ParentType} style={{ width: '100%', marginBottom: 10 }}>
@@ -753,14 +798,14 @@ getTaskTypeInfo=() => {
                     },
                   ],
                 })(
-                  <Select placeholder={`请选择${this.state.ParentType}`} onChange={this.taskParentChange}>
+                  <Select placeholder={`请选择${this.state.ParentType}`} onChange={this.taskParentChange} style={{ minWidth: 200 }} >
                      {this.getTargetInfoList()}
                   </Select>,
                 )}
               </FormItem>
             </Row>
             <Row>
-            <FormItem {...formLayout} label="监测点" style={{ width: '100%', marginBottom: 10 }}>
+            <FormItem {...formLayout} label="监测点"   style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator('taskpoint', {
                   rules: [
                     {
@@ -769,7 +814,10 @@ getTaskTypeInfo=() => {
                     },
                   ],
                 })(
-                  <Select placeholder="请选择监测点" onChange={this.taskPointChange}>
+                  <Select 
+                  placeholder="请选择监测点" showSearch  
+                  filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  style={{ minWidth: 200 }} onChange={this.taskPointChange} >
                      {this.getPointInfoList()}
                   </Select>,
                 )}
@@ -786,7 +834,7 @@ getTaskTypeInfo=() => {
                     },
                   ],
                 })(
-                  <Select placeholder="请选择任务类型">
+                  <Select placeholder="请选择任务类型" style={{ minWidth: 200 }} >
                     {this.getTaskTypeInfo()}
                   </Select>,
                 )}
@@ -796,7 +844,7 @@ getTaskTypeInfo=() => {
               <FormItem {...formLayout} label="描述" style={{ width: '100%', marginBottom: 10 }}>
                 {getFieldDecorator('remark', {
                 })(
-                  <TextArea placeholder="请填写描述" rows={4} />,
+                  <TextArea placeholder="请填写描述" rows={4} style={{ minWidth: 200 }} />,
                 )}
               </FormItem>
             </Row>

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined,FundOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -40,6 +40,8 @@ import SelectPollutantType from '@/components/SelectPollutantType'
 import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
 import InstrumentInfo from './InstrumentInfo'
+import OperationInfo from './operationInfo';
+
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 let pointConfigId = '';
@@ -78,6 +80,8 @@ export default class MonitorPoint extends Component {
       FormData: null,
       tabKey: "1",
       modalProps: {},
+      operationInfoDGIMN:'',
+      operationPointName:'',
     };
   }
 
@@ -525,6 +529,12 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
+                    <Divider type="vertical" />
+                      <Tooltip title="运维信息">
+                      <a onClick={() => {
+                         this.setState({operationPointName:row['dbo.T_Bas_CommonPoint.PointName'],operationInfoDGIMN:row['dbo.T_Cod_MonitorPointBase.DGIMN'],operationInfoVisible:true})
+                      }}><FundOutlined style={{fontSize:16}}/>  </a>
+                    </Tooltip> 
                     {
                       row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
                         <Tooltip title="设置CEMS参数">
@@ -602,6 +612,18 @@ export default class MonitorPoint extends Component {
           >
             <AnalyzerManage DGIMN={this.state.DGIMN} onClose={() => { this.setState({ Mvisible: false }) }} />
           </Modal>
+          <Modal
+            title={this.state.operationPointName + '-运维信息'}
+            visible={this.state.operationInfoVisible}
+            width={'80%'}
+            footer={false}
+            onCancel={()=>{
+              this.setState({operationInfoVisible:false})
+            }}
+            destroyOnClose
+          >
+        <OperationInfo  location={{query:{p:this.state.operationInfoDGIMN,type:this.state.pollutantType}}} />
+        </Modal>
         </div>
         {/* </MonitorContent> */}
       </BreadcrumbWrapper>

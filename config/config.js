@@ -7,7 +7,9 @@ import routes from './router.config.js'
 // const API_HOST = 'http://172.16.12.165:7070/';
 // const API_HOST = 'http://172.16.12.165:5001/';
 // const API_HOST = 'http://172.16.12.183:50059/';
-const API_HOST = 'http://223.84.203.227:50060/';
+// const API_HOST = 'http://223.84.203.227:50060/';
+const API_HOST = 'http://172.16.12.39:6300/'; //江西
+
 
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
