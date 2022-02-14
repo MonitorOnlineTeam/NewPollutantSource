@@ -38,7 +38,8 @@ class MaintenanceCycle extends Component {
         super(props);
 
         this.state = {
-            type: '233',
+            // type: '233',
+            type: '260',
             ID: '',
             DGIMN: this.props.DGIMN,
             loadings: false,
@@ -209,7 +210,8 @@ class MaintenanceCycle extends Component {
                     <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} >
                         <FormItem
                             {...formItemLayout}
-                            label={this.state.type == '233' ? '巡检周期(天)' : this.state.type == '235' ? '校准周期(天)' : '校验周期(天)'}
+                            // label={this.state.type == '233' ? '巡检周期(天)' : this.state.type == '235' ? '校准周期(天)' : '校验周期(天)'}
+                            label={this.state.type == '260' ? '质控周期(天)' : this.state.type == '261' ? '运维周期(天)':null}
                         >
                             {getFieldDecorator('RemindCycle', {
                                 rules: [{
@@ -226,7 +228,8 @@ class MaintenanceCycle extends Component {
                     <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                         <FormItem
                             {...formItemLayout}
-                            label={this.state.type == '233' ? '最新一次巡检日期' : this.state.type == '235' ? '最新一次校准日期' : '最新一次校验日期'}
+                            // label={this.state.type == '233' ? '最新一次巡检日期' : this.state.type == '235' ? '最新一次校准日期' : '最新一次校验日期'}
+                            label={this.state.type == '260' ? '最新一次质控日期' : this.state.type == '261' ? '最新一次运维日期' : null}
                         >
                             {getFieldDecorator('LastRemindDate', {
                                 rules: [{
@@ -273,18 +276,25 @@ class MaintenanceCycle extends Component {
         return (
             <div>
                 <Card>
-                    <Tabs defaultActiveKey="233" onChange={this.onChange}>
-                        <TabPane tab="日常巡检提醒" key="233">
+                    {/* <Tabs defaultActiveKey="233" onChange={this.onChange}> */}
+                    <Tabs defaultActiveKey="260" onChange={this.onChange}>
+                        {/* <TabPane tab="日常巡检提醒" key="233">
                             {this.state.type === '233' ? this.getfromData() : ''}
-                        </TabPane>
+                        </TabPane> */}
                         {/* <TabPane tab="系统保养周期提醒" key="234">
                             {this.state.type === '234' ? this.getfromData() : ''}
                         </TabPane> */}
-                        <TabPane tab="校准周期提醒" key="235">
+                        {/* <TabPane tab="校准周期提醒" key="235">
                             {this.state.type === '235' ? this.getfromData() : ''}
-                        </TabPane>
-                        <TabPane tab="校验周期提醒" key="236">
+                        </TabPane> */}
+                        {/* <TabPane tab="校验周期提醒" key="236">
                             {this.state.type === '236' ? this.getfromData() : ''}
+                        </TabPane> */}
+                        <TabPane tab="质控周期提醒" key="260">
+                            {this.state.type === '260' ? this.getfromData() : ''}
+                        </TabPane>
+                        <TabPane tab="运维周期提醒" key="261">
+                            {this.state.type === '261' ? this.getfromData() : ''}
                         </TabPane>
                     </Tabs>
                 </Card>
