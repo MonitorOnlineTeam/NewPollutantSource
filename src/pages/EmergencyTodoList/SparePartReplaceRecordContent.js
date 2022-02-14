@@ -3,7 +3,7 @@
  * @Date: 2019-08-22 09:36:43
  * @LastEditors: lzp
  * @LastEditTime: 2019-09-18 11:29:32
- * @Description: 易耗品更换记录表
+ * @Description: 备品备件更换记录表
  */
 import React, { Component } from 'react';
 import { Spin } from 'antd';
@@ -17,7 +17,7 @@ import MonitorContent from '../../components/MonitorContent/index';
     SparePartReplaceRecord: task.SparePartReplaceRecord
 }))
 /*
-页面：易耗品更换记录表
+页面：备品备件更换记录表
 */
 class SparePartReplaceRecordContent extends Component {
     constructor(props) {

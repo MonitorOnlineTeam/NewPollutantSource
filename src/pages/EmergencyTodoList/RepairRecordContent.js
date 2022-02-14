@@ -240,13 +240,13 @@ class RepairRecordContent extends Component {
                                         维修日期
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
-                                {Record !== null ?Record.StartTime:null}
+                                {Record !== null ?StartTime:null}
                             </td>
                             <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         离开时间
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
-                                {Record !== null ?Record.EndTime:null}
+                                {Record !== null ?EndTime:null}
                             </td>
                         </tr>
                     </tbody>

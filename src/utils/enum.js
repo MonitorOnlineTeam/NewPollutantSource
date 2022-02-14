@@ -140,8 +140,10 @@ export const EnumRequstResult={
 //污染源运维表单
 export const EnumPsOperationForm={
   Repair:1, //维修记录表
+  RepairWater:12, //维修记录表
   StopMachine:2, //停机记录表
   YhpReplace:3, //易耗品更换记录表
+  YhpReplaceWaterWater:14, //易耗品更换记录表 废水
   StandardGasReplace:4, //标准气体更换记录表
   CqfPatrol:5, //完全抽取法CEMS日常巡检记录表
   CyfPatrol:6, //稀释采样法CEMS日常巡检记录表
@@ -151,13 +153,17 @@ export const EnumPsOperationForm={
   DataException:10, //CEMS设备数据异常记录表
   Maintain:27, //保养记录表
   SparePartReplace:28, //备品备件更换记录表
+  SparePartReplaceWater:20, //备品备件更换记录表 废水
   Fault:58, //故障小时记录表
   FaultWater:59, //故障小时记录表
   FaultYan:60, //故障小时记录表
   ReagentReplace:15, //试剂更换表单
+  cooperaInspectionWater:61, //配合检查表单 废水
   cooperaInspection:62, //配合检查表单
   dataConsistencyRealTime:63, //数据一致性核查实时表单
+  dataConsistencyRealTimeWater:18, //数据一致性核查实时表单 废水
   dataConsistencyDate:66, //数据一致性核查小时与日数据表单
+  dataConsistencyDateWater:74, //数据一致性核查小时与日数据表单 废水
   ThirdPartyTestingData:73,//上月委托第三方检测次数
   ThirdPartyTestingDataWater:65,//上月委托第三方检测次数  废水
   WaterQualityCalibrationRecord:16,//水质校准记录

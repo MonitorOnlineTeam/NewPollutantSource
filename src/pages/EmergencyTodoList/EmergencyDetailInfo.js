@@ -166,19 +166,25 @@ class EmergencyDetailInfo extends Component {
             if (item.FormMainID !== null) {
                 console.log(item.ID)
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
-                if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60 
-                     || item.ID === 15 || item.ID === 62 || item.ID === 63 || item.ID === 66 || item.ID === 73 || item.ID === 65  || item.ID === 16
-                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67) {
+                if ((types === '2' && !config.XinJiang)|| item.ID === 58 || item.ID === 59 || item.ID === 60 
+                     || item.ID === 15 || item.ID === 61 ||  item.ID === 62 || item.ID === 63 || item.ID === 18 ||  item.ID === 66 || item.ID === 74 || item.ID === 73 || item.ID === 65  || item.ID === 16
+                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 ) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
                             break;
+                        case EnumPsOperationForm.RepairWater:
+                                this.GoToForm(taskID, item.CnName, '12', rtnVal, key, item.FormMainID);
+                                break;                            
                         case EnumPsOperationForm.StopMachine:
                             this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.YhpReplace:
                             this.GoToForm(taskID, item.CnName, '3', rtnVal, key, item.FormMainID);
                             break;
+                        case EnumPsOperationForm.YhpReplaceWaterWater: //易耗品更换记录 废水
+                            this.GoToForm(taskID, item.CnName, '14', rtnVal, key, item.FormMainID);
+                            break;                            
                         case EnumPsOperationForm.StandardGasReplace:
                             this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID);
                             break;
@@ -206,6 +212,9 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.SparePartReplace:
                             this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
                             break;
+                        case EnumPsOperationForm.SparePartReplaceWater://备品备件更换记录表 废水
+                                this.GoToForm(taskID, item.CnName, '20', rtnVal, key, item.FormMainID);
+                            break;                            
                         case EnumPsOperationForm.Fault:
                             this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID);
                             break;
@@ -218,15 +227,21 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.ReagentReplace:
                             this.GoToForm(taskID, item.CnName, '15', rtnVal, key, item.FormMainID);
                             break;
+                        case EnumPsOperationForm.cooperaInspectionWater:
+                                this.GoToForm(taskID, item.CnName, '61', rtnVal, key, item.FormMainID);
+                            break;    
                         case EnumPsOperationForm.cooperaInspection:
                             this.GoToForm(taskID, item.CnName, '62', rtnVal, key, item.FormMainID);
                              break;   
                         case EnumPsOperationForm.dataConsistencyRealTime: //数据一致性  实时
                                 this.GoToForm(taskID, item.CnName, '63', rtnVal, key, item.FormMainID);
                              break;   
-                        case EnumPsOperationForm.dataConsistencyDate: //数据一致性  小时与日数据
-                                this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID);
-                             break;   
+                        case EnumPsOperationForm.dataConsistencyRealTimeWater: //数据一致性  实时 废水
+                                this.GoToForm(taskID, item.CnName, '18', rtnVal, key, item.FormMainID);
+                             break;                            
+                        case EnumPsOperationForm.dataConsistencyDateWater: //数据一致性  小时与日数据 废水
+                             this.GoToForm(taskID, item.CnName, '74', rtnVal, key, item.FormMainID);
+                          break;                                
                         case EnumPsOperationForm.ThirdPartyTestingData: //上月委托第三方检测次数
                              this.GoToForm(taskID, item.CnName, '73', rtnVal, key, item.FormMainID);
                           break;      

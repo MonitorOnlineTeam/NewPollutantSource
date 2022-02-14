@@ -264,3 +264,9 @@ export async function GetMonitoringTypeList(params) { // 获取监测类别
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringTypeList',params, null);
     return result;
   }
+
+
+export async function GetSystemModelList(params) { //系统型号
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList',params, null);
+    return result;
+  }

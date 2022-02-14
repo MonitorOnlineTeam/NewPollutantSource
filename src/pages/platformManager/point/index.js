@@ -461,7 +461,8 @@ export default class MonitorPoint extends Component {
   }
   deviceManager = (row) =>{
     this.setState({ 
-      deviceManagerVisible:true
+      deviceManagerVisible:true,
+      deviceManagerMN:row["dbo.T_Bas_CommonPoint.DGIMN"]
     }) 
   }
   onSubmitMN= e =>{
@@ -817,7 +818,7 @@ export default class MonitorPoint extends Component {
             footer={false}
             wrapClassName={styles.deviceManagerSty}
           >
-            <DeviceManager />
+            <DeviceManager DGIMN={this.state.deviceManagerMN} pollutantType={this.state.pollutantType}/>
           </Modal>
         </div>
         {/* </MonitorContent> */}

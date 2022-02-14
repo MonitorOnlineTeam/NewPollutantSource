@@ -127,13 +127,13 @@ class ComparisonTestResults extends Component {
                                  运维单位
                             </td>
                             <td colSpan="3" style={{ textAlign: 'center', fontSize: '14px',minWidth: 150 }}>
-                                {Content !== null ?Content.BeginTime:null}
+                                {Content !== null ?Content.MaintenanceManagementUnit:null}
                             </td>
                             <td colSpan="2" style={{  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
                                         对比试验日期
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 150 }}>
-                                {Content !== null ?Content.EndTime:null}
+                                {Content !== null ?Content.TestTime:null}
                             </td>
                         </tr>
                         <tr>

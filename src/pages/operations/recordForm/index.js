@@ -61,12 +61,18 @@ class Index extends Component {
             case "1"://维修记录表
                 form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
+            case "12"://维修记录表 废水
+                form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                
             case "2"://停机记录表
                 form = <StopCemsRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "3"://易耗品更换记录表
                 form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
+            case "14"://易耗品更换记录表 废水
+                form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                
             case "4"://标准气体更换记录表
                 form = <StandardGasRepalceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
@@ -94,6 +100,9 @@ class Index extends Component {
             case "28"://备品更换记录表
                 form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
+            case "20"://备品更换记录表 废水
+                form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                
             case "58":
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break; 
@@ -106,15 +115,24 @@ class Index extends Component {
             case "15":  //试剂更换表单
                 form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
+            case "61":  //配合检查表单 废水
+                form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;
             case "62":  //配合检查表单
                 form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    
             case "63":  //数据一致性实时表单
                 form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
-                break;    
+                break;   
+            case "18":  //数据一致性实时表单 废水
+                form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break; 
             case "66":  //数据一致性小时与日数据表单
                 form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    
+            case "74":  //数据一致性小时与日数据表单 废水
+                form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
+                break;                
             case "73":  //上月委托第三方检测次数表单
                 form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    

@@ -66,7 +66,7 @@ export async function GetJzHistoryList(params) {
 export async function GetConsumablesReplaceRecord(params) {
     const body = {
         TaskID: params.TaskID,
-        TypeID: params.TypeIDs,
+        TypeID: params.TypeID,
     };
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetConsumablesReplaceRecordList?', body, null);
     return result === null ? {
@@ -90,7 +90,7 @@ export async function GetFailureHoursRecord(params) {
 export async function GetSparePartReplaceRecord(params) {
     const body = {
         TaskID: params.TaskID,
-        TypeID: params.TypeIDs,
+        TypeID: params.TypeID,
     };
     const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetSparePartReplaceRecordList?', body, null);
     return result === null ? {

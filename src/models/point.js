@@ -12,7 +12,8 @@ import MonitoringStandard from '@/components/MonitoringStandard';
 import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentName, GetChildCems, AddAnalyzer, GetAnalyzerListByDGIMN, factoryTest, getEnterpriseCorporationCode,UpdatePointDGIMN,
     GetMonitorPointVerificationItem,GetMonitorPointVerificationList,AddMonitorPointVerificationItem,
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
-    GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetManufacturerList,GetMonitoringTypeList,
+    GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
+    GetManufacturerList,GetSystemModelList
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 
@@ -31,6 +32,7 @@ export default Model.extend({
         paramCodeList:[],
         manufacturerList:[],//设备厂家
         monitoringTypeList:[],//监测类别
+        systemModelList:[],//系统型号
     },
     effects: {
 
@@ -273,6 +275,8 @@ export default Model.extend({
                 sdlMessage(result.Message, 'error');
             }
         },   
+
+        
         /*******监测点设备管理  ***** */
        *getPointEquipmentInfo({callback, payload }, { call, put, update, select }) {
                 const result = yield call(GetPointEquipmentInfo, payload);
@@ -312,6 +316,24 @@ export default Model.extend({
             const result = yield call(GetMonitoringTypeList, payload);
             if (result.IsSuccess) {
               yield update({ monitoringTypeList:result.Datas})
+            }else{
+              message.error(result.Message)
+            }
+          },
+        *getManufacturerList({ payload,callback }, { call, put, update }) { //获取厂商列表
+            const result = yield call(GetManufacturerList, payload);
+            if (result.IsSuccess) {
+              yield update({ manufacturerList:result.Datas})
+            }else{
+              message.error(result.Message)
+            }
+          },
+          *getSystemModelList({ payload,callback }, { call, put, update }) { //系统型号列表
+            const result = yield call(GetSystemModelList, payload);
+            if (result.IsSuccess) {
+              yield update({
+                systemModelList:result.Datas,
+              })
             }else{
               message.error(result.Message)
             }
