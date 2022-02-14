@@ -249,7 +249,7 @@ onChange = (pageIndex, pageSize) => {
                   OperationsUserId: baseReportSearchForm.OperationsUserId != undefined ? baseReportSearchForm.OperationsUserId : '',
                   TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                   CompleteTime: baseReportSearchForm.CompleteTime,
-                    CreateTime: baseReportSearchForm.CreateTime,
+                  CreateTime: baseReportSearchForm.CreateTime,
                   pageIndex,
                   pageSize,
               },
