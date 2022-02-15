@@ -10,18 +10,17 @@ import { Row, Col, Layout, Table, List, Button, Spin, Card } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./MaintainRepalceRecord.less";
-import MonitorContent from '../../components/MonitorContent/index';
 
 @connect(({ task, loading }) => ({
-    isloading: loading.effects['task/MaintainRecordDetail'],
-    MaintainRecordDetailRecord: task.MaintainRecordDetailRecord
+    isloading: loading.effects['task/GetOperationRecordList'],
+    operationRecordList: task.operationRecordList
 }))
 
 /*
 运维记录表
 */
 
-class QualityControlRecordContent extends Component {
+class OperationRecordContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,7 +29,7 @@ class QualityControlRecordContent extends Component {
 
     componentDidMount() {
         this.props.dispatch({
-            type: 'task/MaintainRecordDetail',
+            type: 'task/GetOperationRecordList',
             payload: {
                 TaskID: this.props.TaskID,
                 TypeID: this.props.TypeID,
@@ -54,7 +53,7 @@ class QualityControlRecordContent extends Component {
             }
         }
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
-        const Record=this.props.MaintainRecordDetailRecord!==null?this.props.MaintainRecordDetailRecord.Record:null;
+        const Record=this.props.operationRecordList!==null?this.props.operationRecordList.Record:null;
         const Content=Record!==null?Record.Content:null;
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;  
         if (this.props.isloading) {
@@ -94,13 +93,13 @@ class QualityControlRecordContent extends Component {
                                         是否故障
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null ? Content.MaintenanceManagementUnit:null}
+                                {Content!==null ? Content.IsFaultName:null}
                             </td>
                             <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         设备状态
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null ? Content.PointPosition:null}
+                                {Content!==null ? Content.EquipmentStatusName:null}
                             </td>
                         </tr>
                         <tr>
@@ -108,7 +107,7 @@ class QualityControlRecordContent extends Component {
                                         告警问题
                             </td>
                             <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                               {Content!==null ? Content.PointPosition:null}
+                               {Content!==null ? Content.AlarmProblem:null}
                             </td>
                         </tr>
                         <tr>
@@ -116,7 +115,7 @@ class QualityControlRecordContent extends Component {
                                         处理方式
                             </td>
                             <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                               {Content!==null ? Content.PointPosition:null}
+                               {Content!==null ? Content.TreatmentMethod:null}
                             </td>
                         </tr>
                         <tr>
@@ -124,7 +123,7 @@ class QualityControlRecordContent extends Component {
                                         维修内容
                             </td>
                             <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                               {Content!==null ? Content.PointPosition:null}
+                               {Content!==null ? Content.MaintenanceContent:null}
                             </td>
                         </tr>
                         <tr>
@@ -148,4 +147,4 @@ class QualityControlRecordContent extends Component {
     }
 }
 
-export default QualityControlRecordContent;
+export default OperationRecordContent;

@@ -16,8 +16,9 @@ import {
     GetBdTestRecord, RevokeTask,
     GetPatrolType, GetRepairRecord, MaintainRecordDetail, GetSparePartReplaceRecord,
     GetOperationLogList, GetFailureHoursRecord,
-     GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
-} from '../services/taskapi';
+    GetOperationFormDetail, GetTaskDitailsAttachment, GetOperationTaskList,
+    GetQualityRecordList,GetOperationRecordList,
+} from '../services/taskapi'; 
 import Model from '@/utils/model';
 import { EnumRequstResult } from '../utils/enum';
 import { GetAlarmResponseList } from '../services/AlarmResponseApi';
@@ -37,6 +38,8 @@ export default Model.extend({
         StandardGasRepalceRecord: null, // 标气更换记录
         MaintainRecordDetailRecord: null, // 保养项更换记录
         SparePartReplaceRecord: null, // 备品更换记录
+        qualityRecordList:null, //质控记录表
+        operationRecordList:null,//运维记录表
         RecordTypes: [], // 运维表单类型
         AlarmResponseList: [],
         operationLogList: [], // 运维记录列表
@@ -408,6 +411,24 @@ export default Model.extend({
                 });
             }
         },
+        //  获取大气站质控表单 
+        * GetQualityRecordList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetQualityRecordList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    qualityRecordList: DataInfo.Datas,
+                });
+            }
+        },
 
+        //  获取大气站运维表单 
+        * GetOperationRecordList ({ payload, }, {call, update,select,}) {
+            const DataInfo = yield call(GetOperationRecordList, payload);
+            if (DataInfo.IsSuccess) {
+                yield update({
+                    operationRecordList: DataInfo.Datas,
+                });
+            }
+        },
     },
 });

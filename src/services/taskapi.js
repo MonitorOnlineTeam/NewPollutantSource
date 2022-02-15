@@ -328,3 +328,15 @@ export async function GetOperationTaskList(params) {
     const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationTaskList', body.params, null);
     return result === null ? { Datas: null } : result;
 }
+
+/** 获取大气站质控表单 */
+export async function GetQualityRecordList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetQualityRecordList', params , null);
+    return result === null ? { Datas: null } : result;
+}
+
+/** 获取大气站运维表单 */
+export async function GetOperationRecordList(params) {
+    const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetOperationRecordList', params , null);
+    return result === null ? { Datas: null } : result;
+}

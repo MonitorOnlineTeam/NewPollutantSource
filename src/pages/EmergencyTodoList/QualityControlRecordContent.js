@@ -10,15 +10,14 @@ import { Row, Col, Layout, Table, List, Button, Spin, Card } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import styles from "./MaintainRepalceRecord.less";
-import MonitorContent from '../../components/MonitorContent/index';
 
 @connect(({ task, loading }) => ({
-    isloading: loading.effects['task/MaintainRecordDetail'],
-    MaintainRecordDetailRecord: task.MaintainRecordDetailRecord
+    isloading: loading.effects['task/GetQualityRecordList'],
+    qualityRecordList: task.qualityRecordList
 }))
 
 /*
-质控记录表
+ 质控记录表
 */
 
 class QualityControlRecordContent extends Component {
@@ -30,7 +29,7 @@ class QualityControlRecordContent extends Component {
 
     componentDidMount() {
         this.props.dispatch({
-            type: 'task/MaintainRecordDetail',
+            type: 'task/GetQualityRecordList',
             payload: {
                 TaskID: this.props.TaskID,
                 TypeID: this.props.TypeID,
@@ -51,16 +50,16 @@ class QualityControlRecordContent extends Component {
                             {index+1}
                         </td>
                         <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.DateOfChange}
+                            {item.QualityItemName}
                         </td>
                         <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.MaintainName}
+                            {item.QualityTypeName}
                         </td>
                         <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.Remark}
+                            {item.RelativeError}
                         </td>
                         <td colSpan="2" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                            {item.AnotherTimeOfChange}
+                            {item.IsQualifiedName}
                         </td>
                     </tr>
                 );
@@ -82,7 +81,7 @@ class QualityControlRecordContent extends Component {
             }
         }
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
-        const Record=this.props.MaintainRecordDetailRecord!==null?this.props.MaintainRecordDetailRecord.Record:null;
+        const Record=this.props.qualityRecordList!==null?this.props.qualityRecordList.Record:null;
         const Content=Record!==null?Record.Content:null;
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;  
         if (this.props.isloading) {

@@ -24,6 +24,9 @@ import JzRecordContent from '@/pages/EmergencyTodoList/JzRecordContent'
 import MaintainRepalceRecord from '@/pages/EmergencyTodoList/MaintainRepalceRecord'
 import SparePartReplaceRecord from '@/pages/EmergencyTodoList/SparePartReplaceRecordContent'
 import FailureHoursRecord from '@/pages/EmergencyTodoList/FailureHoursRecord'
+import QualityControlRecordContent from '@/pages/EmergencyTodoList/QualityControlRecordContent'//质控记录
+import OperationRecordContent from '@/pages/EmergencyTodoList/OperationRecordContent' //运维记录
+
 import Button from 'antd/es/button/button';
 import { FormIcon } from '@/utils/icon';
 import { router } from 'umi'
@@ -92,6 +95,12 @@ class Index extends Component {
             case "60":
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
                 break;
+            case "61": //质控记录
+                form = <QualityControlRecordContent TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
+                break; 
+            case "62": //运维记录
+                form = <OperationRecordContent TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
+                break;                                 
         }
         return form
     }
