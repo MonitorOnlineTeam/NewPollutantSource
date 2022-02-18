@@ -810,7 +810,7 @@ export default class MonitorPoint extends Component {
           </Modal>
 
           <Modal  //设备管理
-            title="废气-常规CEMS"
+            title={this.state.pollutantType==1? "废水-VOCS" : "废气"}
             visible={this.state.deviceManagerVisible}
             onCancel={()=>{this.setState({deviceManagerVisible:false})}}
             width="90%"
@@ -818,7 +818,7 @@ export default class MonitorPoint extends Component {
             footer={false}
             wrapClassName={styles.deviceManagerSty}
           >
-            <DeviceManager DGIMN={this.state.deviceManagerMN} pollutantType={this.state.pollutantType}/>
+            <DeviceManager onCancel={()=>{this.setState({deviceManagerVisible:false})}} DGIMN={this.state.deviceManagerMN} pollutantType={this.state.pollutantType}/>
           </Modal>
         </div>
         {/* </MonitorContent> */}

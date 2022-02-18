@@ -13,9 +13,11 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     GetMonitorPointVerificationItem,GetMonitorPointVerificationList,AddMonitorPointVerificationItem,
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
-    GetManufacturerList,GetSystemModelList
+    GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
+    
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
+import cuid from 'cuid';
 
 export default Model.extend({
     namespace: 'point',
@@ -30,9 +32,16 @@ export default Model.extend({
         CorporationCode: null,
         pointVerificationList:[],
         paramCodeList:[],
+        monitoringTypeList:[],
         manufacturerList:[],//设备厂家
         monitoringTypeList:[],//监测类别
         systemModelList:[],//系统型号
+        pollutantTypeList:[],//监测类型 
+        monitoringTypeList2:[],//监测类别 设备信息
+        equipmentInfoList:[],//设备信息
+        pollutantTypeList2:[],//监测类型 
+        tableDatas:[],//设备参数
+        pointSystemInfo:[],//系统信息 回显
     },
     effects: {
 
@@ -278,10 +287,12 @@ export default Model.extend({
 
         
         /*******监测点设备管理  ***** */
+
+
        *getPointEquipmentInfo({callback, payload }, { call, put, update, select }) {
                 const result = yield call(GetPointEquipmentInfo, payload);
                 if (result.IsSuccess) {
-                    sdlMessage(result.Message, 'success');
+                    callback(result.Datas)
                 } else {
                     sdlMessage(result.Message, 'error');
                 }
@@ -290,6 +301,7 @@ export default Model.extend({
             const result = yield call(AddOrUpdateEquipmentInfo, payload);
             if (result.IsSuccess) {
                 sdlMessage(result.Message, 'success');
+                callback()
             } else {
                 sdlMessage(result.Message, 'error');
             }
@@ -297,7 +309,11 @@ export default Model.extend({
          *getPointEquipmentParameters({callback, payload }, { call, put, update, select }) {
             const result = yield call(GetPointEquipmentParameters, payload);
             if (result.IsSuccess) {
-                sdlMessage(result.Message, 'success');
+                 
+                let data = result.Datas? result.Datas.map(item=>{
+                    return {...item,key:cuid()}
+                }) : []
+                callback(data)
             } else {
                 sdlMessage(result.Message, 'error');
             }
@@ -332,9 +348,54 @@ export default Model.extend({
             const result = yield call(GetSystemModelList, payload);
             if (result.IsSuccess) {
               yield update({
-                systemModelList:result.Datas,
+                systemModelList:result.Datas.rtnlist,
               })
             }else{
+              message.error(result.Message)
+            }
+          },
+          *getMonitoringTypeList2({ payload, callback }, { call, put, update }) { //设备信息 获取监测类别
+            const result = yield call(GetMonitoringTypeList2, payload);
+            if (result.IsSuccess) {
+              yield update({ monitoringTypeList2: result.Datas? result.Datas.mlist : []})
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型
+
+            if (payload.id) {
+              const result = yield call(GetPollutantById, payload);
+              if (result.IsSuccess) {
+                yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
+              } else {
+                message.error(result.Message)
+              }
+            } else {
+              yield update({ pollutantTypeList: [] })
+            }
+          },
+          *getPollutantById2({ payload, callback }, { call, put, update }) { //获取监测类型
+
+            if (payload.id) {
+              const result = yield call(GetPollutantById2, payload);
+              if (result.IsSuccess) {
+                yield update({ pollutantTypeList2: result.Datas? result.Datas.plist : []})
+                callback()
+              } else {
+                message.error(result.Message)
+              }
+            } else {
+              yield update({ pollutantTypeList: [] })
+            }
+          },
+          *getEquipmentInfoList({ payload, callback }, { call, put, update }) { //列表 设备信息
+            const result = yield call(GetEquipmentInfoList, payload);
+            if (result.IsSuccess) {
+              yield update({
+                equipmentInfoList: result.Datas,
+              })
+            } else {
               message.error(result.Message)
             }
           },

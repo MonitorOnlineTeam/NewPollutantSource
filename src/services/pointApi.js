@@ -270,3 +270,24 @@ export async function GetSystemModelList(params) { //系统型号
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelList',params, null);
     return result;
   }
+
+
+export async function GetEquipmentInfoList(params) { //设备信息
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentInfoList',params, null);
+    return result;
+  }
+  
+  export async function GetMonitoringTypeList2(params) { //设备信息  获取监测类别 
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+    return result;
+  }
+
+  export async function GetPollutantById(params) {   //设备信息  获取监测类型
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+    return result;
+  }
+
+  export async function GetPollutantById2(params) {   //设备信息  获取监测类型
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+    return result;
+  }
