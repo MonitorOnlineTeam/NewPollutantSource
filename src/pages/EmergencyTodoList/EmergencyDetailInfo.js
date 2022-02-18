@@ -462,7 +462,7 @@ class EmergencyDetailInfo extends Component {
             TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
             RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
 
-            if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+            if (this.props.taskInfo.Datas[0]&&this.props.taskInfo.Datas[0].AlarmList&&this.props.taskInfo.Datas[0].AlarmList.length > 0) {
                 this.props.taskInfo.Datas[0].AlarmList.map(item => {
                     if (item !== null) {
                         let AlarmType = '';
@@ -661,7 +661,7 @@ class EmergencyDetailInfo extends Component {
             width: 200,
             key: 'AlarmMsg',
         }];
-        if (this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+        if (this.props.taskInfo.Datas[0]&&this.props.taskInfo.Datas[0].AlarmList&&this.props.taskInfo.Datas[0].AlarmList.length > 0) {
             // 超标列
             if (this.props.taskInfo.Datas[0].AlarmList[0].AlarmType === '2') {
                 columns = columns.concat({

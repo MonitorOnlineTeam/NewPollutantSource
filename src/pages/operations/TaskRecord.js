@@ -278,6 +278,7 @@ onChange = (pageIndex, pageSize) => {
             this.setState({
               visible: false,
             })
+            this.onSubmitForm()
           },
         })
       }
