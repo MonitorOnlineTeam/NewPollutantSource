@@ -42,6 +42,7 @@ const dvaPropsData = ({ loading, point }) => ({
   addOrUpdateEquipmentInfoLoading:loading.effects[`${namespace}/addOrUpdateEquipmentInfo`],
   tableDatasLoading:loading.effects[`${namespace}/getPointEquipmentParameters`],
   pointSystemInfoLoading:loading.effects[`${namespace}/getPointEquipmentInfo`],
+  monitoringCategoryTypeLoading:loading.effects[`${namespace}/getMonitoringCategoryType`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -118,6 +119,12 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
+    getMonitoringCategoryType: (payload) => { //监测类型
+      dispatch({
+        type: `${namespace}/getMonitoringCategoryType`,
+        payload: payload,
+      })
+    },
   }
 }
 
@@ -150,11 +157,11 @@ const Index = (props) => {
       form.setFieldsValue({
         GasEquipment:res&&res.gasEquipment? res.gasEquipment : '',
         PMEquipment: res&&res.pMEquipment? res.pMEquipment : '',
-        // GasManufacturer: res.gasManufacturer,
-        // PMManufacturer: res.pMManufacturer
+        GasManufacturer: res.gasManufacturer,
+        PMManufacturer: res.pMManufacturer
       })
-      // setGaschoiceData(gasManufacturerData)
-      // setPmchoiceData(pmManufacturerData)
+      setGaschoiceData(res.gasManufacturerName)
+      setPmchoiceData(res.pMManufacturerName)
     })
   }
 
@@ -168,7 +175,6 @@ const Index = (props) => {
   const isEditing = (record) => record.key === editingKey;
 
   const edit = (record) => {
-    console.log(record)
     formDevice.setFieldsValue({
       ...record,
       Range1Min: record.Range1? record.Range1.split("-")[0] :'',
@@ -176,7 +182,6 @@ const Index = (props) => {
       Range2Min: record.Range1? record.Range2.split("-")[0] :'',
       Range2Max: record.Range1? record.Range2.split("-")[1] :'',
       EquipmentManufacturer:record.EquipmentManufacturer,
-      EquipmentInfoID: record.EquipmentName,
       EquipmentModel: record.EquipmentModel,
       EquipmentNumber: record.EquipmentNumber,
       Equipment: record.Equipment,
@@ -185,7 +190,8 @@ const Index = (props) => {
     setDevicePollutantName(record.PollutantName) //设备参数
     record.type!="add"? setParchoiceDeViceID(record.EquipmentManufacturerID) : null //设备厂家
     setEditingKey(record.key);
-    // props.updateState({pollutantTypeList2:[]})
+    console.log(record)
+    props.getMonitoringCategoryType({PollutantCode:record.PollutantCode})
 
   };
 
@@ -215,8 +221,7 @@ const Index = (props) => {
                        Range2:row.Range2Min||row.Range2Max? `${row.Range2Min}-${row.Range2Max}`: null,
                        PollutantName:devicePollutantName,
                        PollutantCode:row.PollutantCode,
-                       EquipmentManufacturerId: parchoiceDeViceID, //设备厂家
-                       EquipmentName:record.EquipmentName? record.EquipmentName : row.EquipmentInfoID,//设备名称
+                       EquipmentManufacturerID: parchoiceDeViceID, //设备厂家
                       };
           const item = record.type==='add'? {...newData[index],key:cuid() } : {...newData[index]}
           newData.splice(index, 1, { ...item, ...row, ...editRow});
@@ -261,7 +266,7 @@ const Index = (props) => {
     },
     {
       title: '设备名称',
-      dataIndex: 'EquipmentName',
+      dataIndex: 'EquipmentInfoID',
       align: 'center',
       editable: true,
     },
@@ -414,7 +419,6 @@ const Index = (props) => {
           formDevice.setFieldsValue({ PollutantCode: record.PollutantCode})
           setDevicePollutantName(record.PollutantName)
       })
-
   }
   const onParClearChoice = (value) => {//设备参数清除
     formDevice.setFieldsValue({ EquipmentManufacturer: value,PollutantCode:undefined,EquipmentInfoID :'', EquipmentModel: '', });
@@ -745,12 +749,14 @@ const Index = (props) => {
   }) => {
     let inputNode = '';
     if (dataIndex ==='EquipmentManufacturer') {
-      inputNode = <Select onClick={()=>{setParPopVisible(!parPopVisible);onFinish3()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
+      inputNode = <Select onClick={()=>{setParPopVisible(!parPopVisible);form3.resetFields();onFinish3()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入${title}`} />
     } else {
       inputNode = <Input placeholder={`请输入${title}`} />
     }
+
+    const parLoading = record&&record.type&&record.type==='add'? props.loadingGetPollutantById2 : props.monitoringCategoryTypeLoading; //监测参数提示loading
     return (
       <td {...restProps}>
         {editing ? (
@@ -773,7 +779,7 @@ const Index = (props) => {
               </Form.Item>
             </Form.Item> : dataIndex ==='PollutantName'? //监测参数
             
-            <>{props.loadingGetPollutantById2 ? <Spin size='small' style={{ width: 150, textAlign: 'left' }} />
+            <>{ parLoading? <Spin size='small' style={{ width: 150, textAlign: 'left' }} />
                      :
                      <Form.Item  name={`PollutantCode`} style={{ margin: 0 }}>
             <Select placeholder='请选择监测参数' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}  style={{ width: 150 }}>
@@ -785,7 +791,7 @@ const Index = (props) => {
       </Select></Form.Item>}</>
       :
             <Form.Item
-              name={dataIndex==='EquipmentName'? "EquipmentInfoID" : `${dataIndex}`}
+              name={`${dataIndex}`}
               style={{ margin: 0 }}
             //  rules={[ {   required: dataIndex==="EquipmentParametersCode"&&true,  message: ``  } ]}
             >
@@ -804,12 +810,11 @@ const Index = (props) => {
     }
     try {
       const values = await form.validateFields();
-       
+       console.log(data)
       const  parList =  data.map(itme=>{
-        return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range1,EquipmentManufacturer:itme.EquipmentManufacturerId,
-                EquipmentInfoID:itme.EquipmentName,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.EquipmentNumber}
+        return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range1,EquipmentManufacturer:itme.EquipmentManufacturerID,
+                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.EquipmentNumber}
       })
-      console.log(parList)
       const  par =  {
         equipmentModel: pollutantType ==1? null : {...values,DGIMN:DGIMN},
         equipmentParametersList:parList[0]? parList : [],
@@ -861,7 +866,9 @@ const Index = (props) => {
         name="advanced_search3"
         onFinish={() => { onFinish3() }}
         onValuesChange={onValuesChange3}
-        initialValues={{ManufacturerId:manufacturerList[0] && manufacturerList[0].ID}}
+        initialValues={{
+          ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+        }}
       >
         <Row>
           <span>

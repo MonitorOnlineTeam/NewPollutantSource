@@ -509,10 +509,15 @@ export default {
                       path: '/platformconfig/assetManage/spareParts/:configId',
                       component: './OperationSysManager/SparepartManage',
                     },
+                    // {
+                    //   name: 'referenceMaterial',//标准物质
+                    //   path: '/platformconfig/assetManage/referenceMaterial/:configId',
+                    //   component: './OperationSysManager/StandardGasManage',
+                    // },
                     {
-                      name: 'referenceMaterial',//标准物质
-                      path: '/platformconfig/assetManage/referenceMaterial/:configId',
-                      component: './OperationSysManager/StandardGasManage',
+                      name: '标准物质',//标准物质
+                      path: '/platformconfig/assetManage/referenceMaterial',
+                      component: './platformManager/assetManage/referenceMaterial',
                     },
                     {
                       name: 'StandardLiquid',//试剂信息

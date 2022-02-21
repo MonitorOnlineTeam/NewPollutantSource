@@ -15,6 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
+import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
@@ -32,7 +33,7 @@ const dvaPropsData =  ({ loading,equipmentFacturer }) => ({
   tableTotal:equipmentFacturer.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
   loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
-  // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  maxNum:equipmentFacturer.maxNum,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -97,7 +98,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm,exportLoading,maxNum } = props; 
   useEffect(() => {
     onFinish();
   
@@ -185,7 +186,7 @@ const Index = (props) => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
-
+    form2.setFieldsValue({ManufacturerCode:maxNum});
   };
 
   const onFinish  = async () =>{  //查询
@@ -305,9 +306,10 @@ const Index = (props) => {
       </Row>
       <Row>  
         <Col span={24}>
-        <Form.Item hidden  label="编号" name="Sort" >
-        <InputNumber />
+        <Form.Item   label="编号" name="ManufacturerCode" >
+        <InputNumber placeholder='请输入编号'/>
       </Form.Item>
+        <NumTips />
       </Col>
       </Row>
       <Row>

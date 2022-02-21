@@ -16,6 +16,7 @@ export default Model.extend({
     tableTotal:0,
     manufacturerList:[],
     equipmentTypeList:[],
+    maxNum:null,
   },
   effects: {
     *getFaultUnitList({ payload,callback }, { call, put, update }) { //列表

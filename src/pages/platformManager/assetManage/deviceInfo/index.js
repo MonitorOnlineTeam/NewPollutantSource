@@ -18,6 +18,7 @@ import RegionList from '@/components/RegionList'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
+import NumTips from '@/components/NumTips'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -41,7 +42,8 @@ const dvaPropsData =  ({ loading,deviceInfo,global }) => ({
   loadingManufacturer: loading.effects[`${namespace}/getManufacturerList`],
   loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
   loadingAddEditPollutantById :loading.effects[`${namespace}/addEditPollutantById`] || false,
-  addEditPollutantTypeList:deviceInfo.addEditPollutantTypeList
+  addEditPollutantTypeList:deviceInfo.addEditPollutantTypeList,
+  maxNum:deviceInfo.maxNum,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -137,7 +139,7 @@ const Index = (props) => {
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList } = props; 
+  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum} = props; 
   useEffect(() => {
     props.getManufacturerList({},(data)=>{
       if(data[0]){
@@ -271,7 +273,7 @@ const Index = (props) => {
     setType('add')
     props.updateState({addEditPollutantTypeList:[]})
     form2.resetFields();
-   
+    form2.setFieldsValue({EquipmentCode:maxNum})
   };
 
   const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
@@ -494,11 +496,20 @@ const Index = (props) => {
       </Col>
       </Row>
       <Row>
+      <Col span={12}>
+        <Form.Item label="编号" name="EquipmentCode" rules={[  { required: true, message: '请输入设备名称'  }]} >
+          <InputNumber placeholder="请输入编号"  allowClear/>
+      </Form.Item>
+       <NumTips />
+      </Col>
         <Col span={12}>
         <Form.Item label="设备名称" name="EquipmentName" rules={[  { required: true, message: '请输入设备名称'  }]} >
           <Input placeholder="请输入设备名称"  allowClear/>
       </Form.Item>
       </Col>
+      </Row>
+
+      <Row>
       <Col span={12}>
         <Form.Item label="监测类别" name="PollutantType" rules={[  { required: true, message: '请输入监测类别'  }]} >
             <Select placeholder='请选择监测类别' allowClear >
@@ -510,10 +521,6 @@ const Index = (props) => {
               </Select>
       </Form.Item>
       </Col>
-      </Row>
-
-
-      <Row>
       <Col span={12}>
         <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请输入监测类型'  }]}>
               {loadingAddEditPollutantById? <Spin size='small' /> 
@@ -527,28 +534,30 @@ const Index = (props) => {
               </Select>}
       </Form.Item>
       </Col>
+      </Row>
+
+      <Row>
       <Col span={12}>
         <Form.Item label="设备品牌" name="EquipmentBrand" rules={[  { required: true, message: '请选择监测类型'  }]} >
              <Input placeholder='请输入设备品牌' allowClear/>
       </Form.Item>
       
       </Col>
-      </Row>
-       <Row>
        <Col span={12}>
         <Form.Item label="设备型号" name="EquipmentType" rules={[  { required: true, message: '请输入设备型号'  }]} >
              <Input placeholder='请输入设备型号' allowClear/>
       </Form.Item>
       
       </Col>
+      </Row>
+
+      <Row>
       <Col span={12}>
         <Form.Item label="分析方法" name="AnalyticalMethod" rules={[  { required: true, message: '请输入分析方法'  }]} >
              <Input placeholder='请输入分析方法' allowClear/>
       </Form.Item>
       
       </Col>
-        </Row>
-      <Row>
         <Col span={12}>
         <Form.Item label="状态" name="Status" >
            <Radio.Group>

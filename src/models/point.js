@@ -14,7 +14,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
-    
+    GetMonitoringCategoryType,
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 import cuid from 'cuid';
@@ -42,6 +42,7 @@ export default Model.extend({
         pollutantTypeList2:[],//监测类型 
         tableDatas:[],//设备参数
         pointSystemInfo:[],//系统信息 回显
+        monitoringCategoryTypeList:[]
     },
     effects: {
 
@@ -394,6 +395,16 @@ export default Model.extend({
             if (result.IsSuccess) {
               yield update({
                 equipmentInfoList: result.Datas,
+              })
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *getMonitoringCategoryType({ payload, callback }, { call, put, update }) { //根据监测参数获取 监测类型
+            const result = yield call(GetMonitoringCategoryType, payload);
+            if (result.IsSuccess) {
+              yield update({
+                pollutantTypeList2: result.Datas,
               })
             } else {
               message.error(result.Message)

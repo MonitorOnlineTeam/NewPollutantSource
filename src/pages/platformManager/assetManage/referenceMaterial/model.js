@@ -8,17 +8,12 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'deviceInfo',
+  namespace: 'referenceMaterial',
   state: {
     tableDatas: [],
     parametersList: [],
     tableLoading: false,
     tableTotal: 0,
-    monitoringTypeList: [],
-    manufacturerList: [],
-    pollutantTypeList: [],
-    addEditPollutantTypeList: [],
-    maxNum:null,
   },
   effects: {
     *getEquipmentInfoList({ payload, callback }, { call, put, update }) { //列表
@@ -58,49 +53,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *getMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取监测类别
-      const result = yield call(services.GetMonitoringTypeList, payload);
-      if (result.IsSuccess) {
-        yield update({ monitoringTypeList: result.Datas? result.Datas.mlist : []})
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型
-
-      if (payload.id) {
-        const result = yield call(services.GetPollutantById, payload);
-        if (result.IsSuccess) {
-          yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
-        } else {
-          message.error(result.Message)
-        }
-      } else {
-        yield update({ pollutantTypeList: [] })
-      }
-
-    },
-    *addEditPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型
-      if (payload.id) {
-       const result = yield call(services.GetPollutantById, payload);
-        if (result.IsSuccess) {
-          yield update({ addEditPollutantTypeList: result.Datas? result.Datas.plist : []})
-        } else {
-          message.error(result.Message)
-        }
-      } else {
-        yield update({ addEditPollutantTypeList: [] })
-      }
-    },
-    *getManufacturerList({ payload, callback }, { call, put, update }) { //获取厂商列表
-      const result = yield call(services.GetManufacturerList, payload);
-      if (result.IsSuccess) {
-        yield update({ manufacturerList: result.Datas })
-        callback(result.Datas)
       } else {
         message.error(result.Message)
       }

@@ -14,7 +14,8 @@ export default Model.extend({
     parametersList:[],
     tableLoading:false,
     tableTotal:0,
-    pointDatas:[]
+    pointDatas:[],
+    maxNum:null,
   },
   effects: {
     *getOnlineTimerManageList({ payload,callback }, { call, put, update }) { //列表
@@ -23,7 +24,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
-          tableDatas:result.Datas,
+          tableDatas:result.Datas?result.Datas.list : [],
+          maxNum:result.Datas.MaxNum,
           tableLoading:false
         })
       }else{

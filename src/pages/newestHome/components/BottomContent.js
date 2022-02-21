@@ -257,7 +257,7 @@ const Index = (props) => {
               fontSize: subjectFontSize,
               color: '#fff',
               align: "left",
-              padding: [5, 10, 20, 10]
+              padding: [5, 10, 18, 10]
             },
             num: {
               fontSize: 20,

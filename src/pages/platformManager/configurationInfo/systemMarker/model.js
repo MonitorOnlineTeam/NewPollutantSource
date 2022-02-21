@@ -15,7 +15,8 @@ export default Model.extend({
     tableLoading:false,
     tableTotal:0,
     monitoringTypeList:[],
-    manufacturerList:[]
+    manufacturerList:[],
+    maxNum:null,
   },
   effects: {
     *getSystemModelList({ payload,callback }, { call, put, update }) { //列表
@@ -24,8 +25,9 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
-          tableDatas:result.Datas,
-          tableLoading:false
+          tableDatas:result.Datas? result.Datas.rtnlist : [],
+          tableLoading:false,
+          maxNum:result.Datas.MaxNum,
         })
       }else{
         message.error(result.Message)

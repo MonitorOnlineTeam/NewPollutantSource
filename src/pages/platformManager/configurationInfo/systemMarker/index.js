@@ -17,6 +17,7 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+import NumTips from '@/components/NumTips'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -35,6 +36,7 @@ const dvaPropsData =  ({ loading,systemMarker }) => ({
   monitoringTypeList:systemMarker.monitoringTypeList,
   manufacturerList:systemMarker.manufacturerList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  maxNum:systemMarker.maxNum,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -113,7 +115,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading } = props; 
+  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading,maxNum } = props; 
   useEffect(() => {
     onFinish();
     props.getManufacturerList({})
@@ -215,7 +217,7 @@ const Index = (props) => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
-
+    form2.setFieldsValue({SystemCode:maxNum})
   };
 
   const onFinish  = async () =>{  //查询
@@ -358,14 +360,14 @@ const Index = (props) => {
       </Form.Item> 
       </Col>
       </Row>
-      <Row>  
-        <Col span={24}>
-        <Form.Item hidden  label="编号" name="SystemCode" >
+
+      <Row>
+        <Col span={12}>
+        <Form.Item   label="编号" name="SystemCode" >
         <InputNumber placeholder='请输入编号' />
       </Form.Item>
+      <NumTips />
       </Col>
-      </Row>
-      <Row>
         <Col span={12}>
         <Form.Item label="设备厂家" name="ManufacturerID" rules={[  { required: true, message: '请输入设备厂家'  }]} >
              <Select placeholder='请选择设备厂家' allowClear>
@@ -377,21 +379,23 @@ const Index = (props) => {
               </Select>
       </Form.Item>
       </Col>
+      </Row>
+
+      <Row>
       <Col span={12}>
         <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请输入系统名称'  }]} >
             <Input placeholder="请输入系统名称" allowClear/>
       </Form.Item>
       </Col>
-      </Row>
 
-
-      <Row>
       <Col span={12}>
         <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true, message: '请输入系统型号'  }]}>
         <Input placeholder='请输入系统型号' allowClear/>
-
       </Form.Item>
       </Col>
+      </Row>
+
+      <Row>
       <Col span={12}>
         <Form.Item label="监测类别" name="MonitoringType" rules={[  { required: true, message: '请选择监测类别'  }]} >
              <Select placeholder='请选择监测类别' allowClear>
@@ -402,10 +406,8 @@ const Index = (props) => {
                 }   
               </Select>
       </Form.Item>
-      
       </Col>
-      </Row>
-      <Row>
+
         <Col span={12}>
         <Form.Item label="状态" name="Status" >
            <Radio.Group>
@@ -415,7 +417,6 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       </Row>
-
 
      
     </Form>

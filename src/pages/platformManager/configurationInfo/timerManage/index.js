@@ -15,6 +15,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
+import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
@@ -32,7 +33,7 @@ const dvaPropsData =  ({ loading,timerManage }) => ({
   tableTotal:timerManage.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/addOnlineTimerManage`],
   loadingEditConfirm: loading.effects[`${namespace}/editOnlineTimerManage`],
-  // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  maxNum:timerManage.maxNum,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -97,7 +98,7 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,loadingAddConfirm,loadingEditConfirm,tableLoading,exportLoading } = props; 
+  const  { tableDatas,tableTotal,loadingAddConfirm,loadingEditConfirm,tableLoading,exportLoading,maxNum } = props; 
   useEffect(() => {
     onFinish();
   
@@ -192,6 +193,7 @@ const Index = (props) => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
+    form2.setFieldsValue({Sort:maxNum});
 
   };
 
@@ -293,16 +295,16 @@ const Index = (props) => {
       </Row>
       <Row>  
         <Col span={24}>
-        <Form.Item hidden={type==='add'} label="编号" name="Sort" >
+        <Form.Item label="编号" name="Sort" >
         <InputNumber placeholder='请输入编号' />
       </Form.Item>
+        <NumTips />
       </Col>
       </Row>
       <Row>
         <Col span={24}>
         <Form.Item label="定时器名称" name="TimerName" rules={[  { required: true, message: '请输入定时器名称'  }]} >
         <Input placeholder='请输入定时器名称'/>
-
       </Form.Item>
       </Col>
       </Row>

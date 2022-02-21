@@ -291,3 +291,8 @@ export async function GetEquipmentInfoList(params) { //设备信息
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
     return result;
   }
+
+  export async function GetMonitoringCategoryType(params) {   //设备信息  获取监测类型
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringCategoryType',params,null);
+    return result;
+  }
