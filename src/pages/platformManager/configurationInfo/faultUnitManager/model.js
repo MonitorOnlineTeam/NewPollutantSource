@@ -25,7 +25,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
-          tableDatas:result.Datas,
+          tableDatas:result.Datas? result.Datas.flist:[],
+          maxNum:result.Datas?result.Datas.MaxNum:null,
           tableLoading:false
         })
       }else{

@@ -31,8 +31,8 @@ const dvaPropsData =  ({ loading,referenceMaterial,global }) => ({
   tableDatas:referenceMaterial.tableDatas,
   tableLoading:referenceMaterial.tableLoading,
   tableTotal:referenceMaterial.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addEquipmentInfo`],
-  loadingEditConfirm: loading.effects[`${namespace}/editEquipmentInfo`],
+  loadingAddConfirm: loading.effects[`${namespace}/addStandardGas`],
+  loadingEditConfirm: loading.effects[`${namespace}/editStandardGas`],
   clientHeight: global.clientHeight,
 })
 
@@ -44,31 +44,31 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getEquipmentInfoList:(payload)=>{ //列表
+    getStandardGasList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getEquipmentInfoList`,
+        type: `${namespace}/getStandardGasList`,
         payload:payload,
       })
     },
-    addEquipmentInfo : (payload,callback) =>{ // 添加
+    addStandardGas : (payload,callback) =>{ // 添加
       dispatch({
-        type: `${namespace}/addEquipmentInfo`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editEquipmentInfo : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editEquipmentInfo`,
+        type: `${namespace}/addStandardGas`,
         payload:payload,
         callback:callback
       })
       
     },
-    delEquipmentInfo:(payload,callback)=>{ //删除
+    editStandardGas : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/delEquipmentInfo`, 
+        type: `${namespace}/editStandardGas`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    delStandardGas:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/delStandardGas`, 
         payload:payload,
         callback:callback
       }) 
@@ -83,14 +83,10 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN,setDGIMN] =  useState('')
-  const [expand,setExpand] = useState(false)
+
   const [fromVisible,setFromVisible] = useState(false)
-  const [tableVisible,setTableVisible] = useState(false)
+
 
   const [type,setType] = useState('add')
 
@@ -193,7 +189,7 @@ const Index = (props) => {
   };
 
   const del =  (record) => {
-    props.delEquipmentInfo({ID:record.ID},()=>{
+    props.delStandardGas({ID:record.ID},()=>{
         onFinish();
     })
   };
@@ -213,7 +209,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
-      props.getEquipmentInfoList({
+      props.getStandardGasList({
         ...values,
         ManufacturerId:manufacturerId,
         PageIndex:pageIndexs&&!pageIndexs instanceof Object ?pageIndexs:pageIndex,
@@ -227,7 +223,7 @@ const Index = (props) => {
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addEquipmentInfo({
+      type==='add'? props.addStandardGas({
         ...values,
         ManufacturerId:manufacturerId
       },()=>{
@@ -235,7 +231,7 @@ const Index = (props) => {
         onFinish()
       })
       :
-     props.editEquipmentInfo({
+     props.editStandardGas({
         ...values,
         ManufacturerId:manufacturerId
       },()=>{

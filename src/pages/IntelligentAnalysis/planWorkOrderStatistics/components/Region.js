@@ -1236,7 +1236,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       </Form>
       <Row style={{paddingTop:8}}>
      <span style={{color:'#f5222d',fontSize:14}}>
-     {insideWorkType==1? "计划巡检工单由系统自动派发,在巡检周期内必须完成,否则将被系统自动关闭。" : "计划校准工单由系统自动派发，在校准周期内没有被完成，将被系统自动关闭。"}
+     {insideWorkType==1? "计划巡检工单由系统自动派发，在巡检周期内必须完成，否则将被系统自动关闭。" : "计划校准工单由系统自动派发，在校准周期内必须完成，否则将被系统自动关闭。"}
         </span>
      </Row>
       </>
@@ -1652,7 +1652,7 @@ useImperativeHandle(refInstance,() => {
       {/**市级别弹框 */}
       <Modal
         title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-                   内完成的计划工单完成情况`}
+                  ${tabType==1?'内完成的计划工单情况' :'内完成的计划外工单情况' }`}
         visible={cityVisible}
         onCancel={()=>{setCityVisible(false)}}
         footer={null}

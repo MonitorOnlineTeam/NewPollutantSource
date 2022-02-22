@@ -43,6 +43,8 @@ const dvaPropsData = ({ loading, point }) => ({
   tableDatasLoading:loading.effects[`${namespace}/getPointEquipmentParameters`],
   pointSystemInfoLoading:loading.effects[`${namespace}/getPointEquipmentInfo`],
   monitoringCategoryTypeLoading:loading.effects[`${namespace}/getMonitoringCategoryType`],
+  systemModelListTotal: point.systemModelListTotal,
+  equipmentInfoListTotal:point.systemModelListTotal,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -134,7 +136,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   const [dates, setDates] = useState([]);
-  const { DGIMN, pollutantType, manufacturerList, systemModelList, pollutantTypeList,pollutantTypeList2,equipmentInfoList,pointSystemInfo } = props;
+  const { DGIMN, pollutantType, manufacturerList, systemModelList,systemModelListTotal, pollutantTypeList,pollutantTypeList2,equipmentInfoList,pointSystemInfo,equipmentInfoListTotal } = props;
 
 
   useEffect(() => {
@@ -177,10 +179,10 @@ const Index = (props) => {
   const edit = (record) => {
     formDevice.setFieldsValue({
       ...record,
-      Range1Min: record.Range1? record.Range1.split("-")[0] :'',
-      Range1Max: record.Range1? record.Range1.split("-")[1] :'',
-      Range2Min: record.Range1? record.Range2.split("-")[0] :'',
-      Range2Max: record.Range1? record.Range2.split("-")[1] :'',
+      Range1Min: record.Range1? record.Range1.split("~")[0] :'',
+      Range1Max: record.Range1? record.Range1.split("~")[1] :'',
+      Range2Min: record.Range1? record.Range2.split("~")[0] :'',
+      Range2Max: record.Range1? record.Range2.split("~")[1] :'',
       EquipmentManufacturer:record.EquipmentManufacturer,
       EquipmentModel: record.EquipmentModel,
       EquipmentNumber: record.EquipmentNumber,
@@ -426,20 +428,26 @@ const Index = (props) => {
     props.updateState({pollutantTypeList2:[]}) //清除监测参数
   }
 
-
+  const [pageIndex2,setPageIndex2] = useState(1)
+  const [pageSize2,setPageSize2] = useState(10)
   const onFinish2 = async () => { //生成商弹出框 查询
     try {
       const values = await form2.validateFields();
       props.getSystemModelList({
-        pageIndex: 1,
-        pageSize: 100000,
+        pageIndex: pageIndex2,
+        pageSize: pageSize2,
         ...values,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
-
+  const handleTableChange2 =   async (PageIndex, PageSize)=>{ //分页
+    const values = await form2.validateFields();
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    props.getSystemModelList({...values,PageIndex,PageSize})
+  }
   const [popVisible, setPopVisible] = useState(false)
   const [pmPopVisible, setPmPopVisible] = useState(false) //颗粒物弹出框
   
@@ -493,7 +501,17 @@ const Index = (props) => {
              </Button>
             </Form.Item>
           </Row>
-          <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 800 }} loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol} />
+          <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 800 }} 
+                    loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol}
+                    pagination={{
+                      total:systemModelListTotal,
+                      pageSize: pageSize2,
+                      current: pageIndex2,
+                      showSizeChanger: true,
+                      showQuickJumper: true,
+                      onChange: handleTableChange2,
+                    }}
+          />
         </Form>
       }
     >
@@ -574,24 +592,28 @@ const Index = (props) => {
       }
     },
   ];
-  const [pageSize3, setPageSize3] = useState(20)
+  const [pageSize3, setPageSize3] = useState(10)
   const [pageIndex3, setPageIndex3] = useState(1)
-  const onFinish3 = async () => {  //查询 设备信息
+  const onFinish3 = async (pageIndex,pageSize) => {  //查询 设备信息
     try {
       const values = await form3.validateFields();
 
       props.getEquipmentInfoList({
         ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
         ...values,
-        PageIndex: 1,
-        PageSize: 1000000
+        PageIndex:pageIndex&&!pageIndex instanceof Object ?pageIndex:pageIndex3,
+        PageSize:pageSize?pageSize:pageSize3
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
 
-
+  const handleTableChange3 = (PageIndex, PageSize) =>{
+    setPageIndex3(PageIndex)
+    setPageSize3(PageSize)
+    onFinish3(PageIndex,PageSize)
+  }
   const onValuesChange3 = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'PollutantType') {
       props.getPollutantById({ id: hangedValues.PollutantType })
@@ -731,11 +753,11 @@ const Index = (props) => {
       setDevicePollutantName(data[0]? data[0].Name : '')
     } 
   }
-  const handleTableChange = (PageIndex, PageSize) => {
-    setPageIndex(PageIndex)
-    setPageSize(PageSize)
-    onFinish(PageIndex, PageSize)
-  }
+  // const handleTableChange = (PageIndex, PageSize) => {
+  //   setPageIndex(PageIndex)
+  //   setPageSize(PageSize)
+  //   onFinish(PageIndex, PageSize)
+  // }
  
   const EditableCell = ({
     editing,
@@ -849,7 +871,7 @@ const Index = (props) => {
           dataSource={data}
           columns={mergedColumns}
           rowClassName="editable-row"
-          pagination={false}
+          // pagination={false}
           scroll={{ y: 'calc(100vh - 380px)' }}
           loading={props.tableDatasLoading}
         />
@@ -912,7 +934,19 @@ const Index = (props) => {
            </Button>
           </Form.Item>
         </Row>
-        <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 900 }} loading={props.loadingGetEquipmentInfoList} bordered dataSource={equipmentInfoList} columns={deviceCol} />
+        <SdlTable scroll={{ y: 'calc(100vh - 500px)' }}
+                 style={{ width: 900 }} loading={props.loadingGetEquipmentInfoList}
+                  bordered dataSource={equipmentInfoList} columns={deviceCol}
+                  pagination={{
+                    total:equipmentInfoListTotal,
+                    pageSize: pageSize3,
+                    current: pageIndex3,
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    onChange: handleTableChange3,
+                  }}
+                  
+                  />
       </Form>
       </Modal>
     </div>

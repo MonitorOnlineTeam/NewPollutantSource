@@ -16,9 +16,9 @@ export default Model.extend({
     tableTotal: 0,
   },
   effects: {
-    *getEquipmentInfoList({ payload, callback }, { call, put, update }) { //列表
+    *getStandardGasList({ payload, callback }, { call, put, update }) { //列表
       yield update({ tableLoading: true })
-      const result = yield call(services.GetEquipmentInfoList, payload);
+      const result = yield call(services.GetStandardGasList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
@@ -30,8 +30,8 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    *addEquipmentInfo({ payload, callback }, { call, put, update }) { //添加
-      const result = yield call(services.AddEquipmentInfo, payload);
+    *addStandardGas({ payload, callback }, { call, put, update }) { //添加
+      const result = yield call(services.AddStandardGas, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -39,8 +39,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *editEquipmentInfo({ payload, callback }, { call, put, update }) { //修改
-      const result = yield call(services.EditEquipmentInfo, payload);
+    *editStandardGas({ payload, callback }, { call, put, update }) { //修改
+      const result = yield call(services.EditStandardGas, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -48,8 +48,8 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *delEquipmentInfo({ payload, callback }, { call, put, update }) { //删除
-      const result = yield call(services.DelEquipmentInfo, payload);
+    *delStandardGas({ payload, callback }, { call, put, update }) { //删除
+      const result = yield call(services.DelStandardGas, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()

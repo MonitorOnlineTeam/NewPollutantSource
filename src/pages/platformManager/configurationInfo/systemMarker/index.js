@@ -220,14 +220,16 @@ const Index = (props) => {
     form2.setFieldsValue({SystemCode:maxNum})
   };
 
+
+
   const onFinish  = async () =>{  //查询
       
     try {
       const values = await form.validateFields();
 
       props.getSystemModelList({
-        pageIndex: 1,
-        pageSize: 10000,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
         ...values,
       })
     } catch (errorInfo) {
@@ -256,12 +258,14 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
-  // const handleTableChange =   async (PageIndex, )=>{ //分页
-  //   const values = await form.validateFields();
-  //   setPageSize(PageSize)
-  //   setPageIndex(PageIndex)
-  //   props.getProjectInfoList({...values,PageIndex,PageSize})
-  // }
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(20)
+  const handleTableChange =   async (PageIndex, PageSize)=>{ //分页
+    const values = await form.validateFields();
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    props.getSystemModelList({...values,PageIndex,PageSize})
+  }
   const searchComponents = () =>{
     return  <Form
     form={form}
@@ -326,12 +330,14 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        // pagination={{
-        //   total:tableTotal,
-        //   pageSize: pageSize,
-        //   current: pageIndex,
-        //   onChange: handleTableChange,
-        // }}
+        pagination={{
+          total:tableTotal,
+          pageSize: pageSize,
+          current: pageIndex,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          onChange: handleTableChange,
+        }}
       />
    </Card>
    </BreadcrumbWrapper>

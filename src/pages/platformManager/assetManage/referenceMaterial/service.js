@@ -1,24 +1,24 @@
 import { post, get, getNew } from '@/utils/request';
 
-//设备信息 列表
-export async function GetEquipmentInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentInfoList',params, null);
+//列表
+export async function GetStandardGasList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetStandardGasList',params, null);
   return result;
 }
-//设备信息 添加
-export async function AddEquipmentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddEquipmentInfo',params, null);
+// 添加
+export async function AddStandardGas(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddStandardGas',params, null);
   return result;
 }
 
-// 设备信息 修改
-export async function EditEquipmentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditEquipmentInfo',params, null);
+// 修改
+export async function EditStandardGas(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditStandardGas',params, null);
   return result;
 }
  
-// 设备信息  删除
-export async function DelEquipmentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelEquipmentInfo',params, null);
+//  删除
+export async function DelStandardGas(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelStandardGas',params, null);
   return result;
 }

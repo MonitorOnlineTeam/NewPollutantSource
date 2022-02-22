@@ -100,8 +100,7 @@ const Index = (props) => {
   const [tableVisible,setTableVisible] = useState(false)
 
   const [type,setType] = useState('add')
-  // const [pageSize,setPageSize] = useState(20)
-  // const [pageIndex,setPageIndex] = useState(1)
+
   
   
   const isEditing = (record) => record.key === editingKey;
@@ -211,14 +210,16 @@ const Index = (props) => {
     form2.setFieldsValue({FaultUnitCode:maxNum})
   };
 
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(20)
   const onFinish  = async () =>{  //查询
       
     try {
       const values = await form.validateFields();
 
       props.getFaultUnitList({
-        pageIndex: 1,
-        pageSize: 10000,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
         ...values,
       })
     } catch (errorInfo) {
@@ -247,12 +248,12 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
-  // const handleTableChange =   async (PageIndex, )=>{ //分页
-  //   const values = await form.validateFields();
-  //   setPageSize(PageSize)
-  //   setPageIndex(PageIndex)
-  //   props.getProjectInfoList({...values,PageIndex,PageSize})
-  // }
+  const handleTableChange =   async (PageIndex, PageSize)=>{ //分页
+    const values = await form.validateFields();
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    props.getFaultUnitList({...values,PageIndex,PageSize})
+  }
   const searchComponents = () =>{
      return  <Form
     form={form}
@@ -299,12 +300,14 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        // pagination={{
-        //   total:tableTotal,
-        //   pageSize: pageSize,
-        //   current: pageIndex,
-        //   onChange: handleTableChange,
-        // }}
+        pagination={{
+          total:tableTotal,
+          pageSize: pageSize,
+          current: pageIndex,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          onChange: handleTableChange,
+        }}
       />
    </Card>
    </BreadcrumbWrapper>

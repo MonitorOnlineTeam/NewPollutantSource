@@ -27,7 +27,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
-          tableDatas: result.Datas,
+          tableDatas:result.Datas? result.Datas.mlist:[],
+          maxNum:result.Datas?result.Datas.MaxNum:null,
           tableLoading: false
         })
       } else {
@@ -99,8 +100,8 @@ export default Model.extend({
     *getManufacturerList({ payload, callback }, { call, put, update }) { //获取厂商列表
       const result = yield call(services.GetManufacturerList, payload);
       if (result.IsSuccess) {
-        yield update({ manufacturerList: result.Datas })
-        callback(result.Datas)
+        yield update({ manufacturerList: result.Datas? result.Datas.mlist:[] })
+        callback(result.Datas? result.Datas.mlist:[])
       } else {
         message.error(result.Message)
       }

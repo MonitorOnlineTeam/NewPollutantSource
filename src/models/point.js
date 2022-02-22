@@ -36,9 +36,11 @@ export default Model.extend({
         manufacturerList:[],//设备厂家
         monitoringTypeList:[],//监测类别
         systemModelList:[],//系统型号
+        systemModelListTotal:null,
         pollutantTypeList:[],//监测类型 
         monitoringTypeList2:[],//监测类别 设备信息
         equipmentInfoList:[],//设备信息
+        equipmentInfoListTotal:null,
         pollutantTypeList2:[],//监测类型 
         tableDatas:[],//设备参数
         pointSystemInfo:[],//系统信息 回显
@@ -319,16 +321,16 @@ export default Model.extend({
                 sdlMessage(result.Message, 'error');
             }
         },             
-        *getManufacturerList({ payload,callback }, { call, put, update }) { //设备厂家列表
-            const result = yield call(GetManufacturerList, payload);
-            if (result.IsSuccess) {
-              yield update({
-                manufacturerList:result.Datas,
-              })
-            }else{
-              message.error(result.Message)
-            }
-          },
+        // *getManufacturerList({ payload,callback }, { call, put, update }) { //设备厂家列表
+        //     const result = yield call(GetManufacturerList, payload);
+        //     if (result.IsSuccess) {
+        //       yield update({
+        //         manufacturerList:result.Datas,
+        //       })
+        //     }else{
+        //       message.error(result.Message)
+        //     }
+        //   },
         *getMonitoringTypeList({ payload,callback }, { call, put, update }) { //获取监测类别
             const result = yield call(GetMonitoringTypeList, payload);
             if (result.IsSuccess) {
@@ -350,6 +352,7 @@ export default Model.extend({
             if (result.IsSuccess) {
               yield update({
                 systemModelList:result.Datas.rtnlist,
+                systemModelListTotal:result.Total,
               })
             }else{
               message.error(result.Message)
@@ -394,7 +397,8 @@ export default Model.extend({
             const result = yield call(GetEquipmentInfoList, payload);
             if (result.IsSuccess) {
               yield update({
-                equipmentInfoList: result.Datas,
+                equipmentInfoList: result.Datas?result.Datas.mlist : [],
+                equipmentInfoListTotal: result.Total,
               })
             } else {
               message.error(result.Message)
