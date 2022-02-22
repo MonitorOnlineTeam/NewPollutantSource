@@ -92,8 +92,7 @@ const Index = (props) => {
   const [tableVisible,setTableVisible] = useState(false)
 
   const [type,setType] = useState('add')
-  // const [pageSize,setPageSize] = useState(20)
-  // const [pageIndex,setPageIndex] = useState(1)
+
   
   
   const isEditing = (record) => record.key === editingKey;
@@ -197,6 +196,9 @@ const Index = (props) => {
 
   };
 
+
+  // const [pageIndex,setPageIndex] = useState(1)
+  // const [pageSize,setPageSize] = useState(20)
   const onFinish  = async () =>{  //查询
       
     try {
@@ -231,12 +233,11 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
-  // const handleTableChange =   async (PageIndex, )=>{ //分页
-  //   const values = await form.validateFields();
-  //   setPageSize(PageSize)
-  //   setPageIndex(PageIndex)
-  //   props.getProjectInfoList({...values,PageIndex,PageSize})
-  // }
+  const handleTableChange =   async (PageIndex, PageSize)=>{ //分页
+          setPageIndex(PageIndex)
+          setPageSize(PageSize)
+          onFinish(PageIndex,PageSize)
+  }
   const searchComponents = () =>{
      return  <Form
     form={form}

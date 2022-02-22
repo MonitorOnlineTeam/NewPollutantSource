@@ -188,9 +188,15 @@ const Index = (props) => {
     }
   };
 
-  const del =  (record) => {
+  const del =  async(record) => {
+    const values = await form.validateFields();
     props.delStandardGas({ID:record.ID},()=>{
-        onFinish();
+      setPageIndex(1)
+      props.getStandardGasList({
+        ...values,
+        PageIndex:1,
+        PageSize:pageSize
+      })
     })
   };
 
@@ -212,7 +218,7 @@ const Index = (props) => {
       props.getStandardGasList({
         ...values,
         ManufacturerId:manufacturerId,
-        PageIndex:pageIndexs&&!pageIndexs instanceof Object ?pageIndexs:pageIndex,
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
         PageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {

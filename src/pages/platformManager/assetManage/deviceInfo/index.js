@@ -258,9 +258,16 @@ const Index = (props) => {
     }
   };
 
-  const del =  (record) => {
+  const del =  async (record) => {
+    const values = await form.validateFields();
     props.delEquipmentInfo({ID:record.ID},()=>{
-        onFinish();
+      setPageIndex(1)
+      props.getEquipmentInfoList({
+        ManufacturerId:manufacturerId,
+        PageIndex:1,
+        PageSize:pageSize,
+        ...values,
+      })
     })
   };
 
@@ -277,13 +284,14 @@ const Index = (props) => {
   };
 
   const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
+
     try {
       const values = await form.validateFields();
 
       props.getEquipmentInfoList({
         ...values,
         ManufacturerId:manufacturerId,
-        PageIndex:pageIndexs&&!pageIndexs instanceof Object ?pageIndexs:pageIndex,
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
         PageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {

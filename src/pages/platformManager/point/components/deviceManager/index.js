@@ -594,15 +594,15 @@ const Index = (props) => {
   ];
   const [pageSize3, setPageSize3] = useState(10)
   const [pageIndex3, setPageIndex3] = useState(1)
-  const onFinish3 = async (pageIndex,pageSize) => {  //查询 设备信息
+  const onFinish3 = async (pageIndexs,pageSizes) => {  //查询 设备信息
     try {
       const values = await form3.validateFields();
 
       props.getEquipmentInfoList({
         ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
         ...values,
-        PageIndex:pageIndex&&!pageIndex instanceof Object ?pageIndex:pageIndex3,
-        PageSize:pageSize?pageSize:pageSize3
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndex:pageIndex3,
+        PageSize:pageSizes?pageSizes:pageSize3
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);

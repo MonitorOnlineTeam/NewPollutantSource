@@ -312,7 +312,7 @@ const projectNumCol =[
     form2.setFieldsValue({PorjectID:value});
     setChoiceData(value)
   }
-  const del = async (record) => {
+  const del =  (record) => {
     props.deleteOperationPoint({ID:record.ID},()=>{
        onFinish()
     })

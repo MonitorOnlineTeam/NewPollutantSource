@@ -203,9 +203,15 @@ const Index = (props) => {
     }
   };
 
-  const del =  (record) => {
+  const del =  async(record) => {
+    const values = await form.validateFields();
     props.delSystemModel({ID:record.ID},()=>{
-        onFinish();
+      setPageIndex(1)
+      props.getSystemModelList({
+        pageIndex: 1,
+        pageSize: pageSize,
+        ...values,
+      })
     })
   };
 

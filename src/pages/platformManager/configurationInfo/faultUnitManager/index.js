@@ -193,9 +193,16 @@ const Index = (props) => {
     }
   };
 
-  const del =  (record) => {
+  const del =  async(record) => {
+
+    const values = await form.validateFields();
     props.delFaultUnit({ID:record.ID},()=>{
-        onFinish();
+      setPageIndex(1)
+      props.getFaultUnitList({
+        pageIndex: 1,
+        pageSize: pageSize,
+        ...values,
+      })
     })
   };
 
