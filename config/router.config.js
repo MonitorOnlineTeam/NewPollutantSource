@@ -162,6 +162,11 @@ const routes = [
             path: '/realtimeLive',
             component: './SC/realtimeLive/M3U8Video',
           },
+          {
+            name: 'openIframe',
+            path: '/openIframe/:url',
+            component: './openIframe/index',
+          },
           // {
           //   name: 'test',
           //   path: '/test',
@@ -1083,7 +1088,7 @@ const routes = [
               }
             ],
           },
-
+         
           {
             name: 'dataquerymanager',
             path: '/dataquerymanager',
@@ -1318,6 +1323,7 @@ const routes = [
               // },
             ],
           },
+         
           {
             path: '/platformconfig',
             name: 'platformconfig',
