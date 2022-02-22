@@ -3,6 +3,7 @@ import * as services from './service';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
+import { sdlMessage } from '@/utils/utils';
 import { router } from 'umi';
 import config from '@/config';
 
@@ -74,8 +75,10 @@ export default Model.extend({
       ETime: '',
       CommandDispatchType: '',
     },
-    operationCompanyList:[]
-
+    operationCompanyList:[],
+    qualityTypeList:[],//质控类型
+    qualityPollutantList:[],//质控污染物
+    qualityRecordList:[],
   },
   effects: {
     // 获取日历信息
@@ -447,15 +450,41 @@ export default Model.extend({
     //查询公司运维单位列表信息
     *getOperationCompanyList({ payload }, { call, put, update, select }) {
       const result = yield call(services.getOperationCompanyList, payload);
-
-      if (result.IsSuccess) {
-        yield update({
-          operationCompanyList: result.Datas,
-        });
+      if (result.IsSuccess) {  
+        yield update({  operationCompanyList: result.Datas,   });
       } else {
         sdlMessage(result.Message, "warning");
       }
-    },       
+    }, 
+    // 获取质控结果信息   
+    *getQualityRecordList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getQualityRecordList, payload);
+      if (result.IsSuccess) {
+        yield update({  qualityRecordList: result.Datas,   });
+      } else {
+        sdlMessage(result.Message, "warning");
+      }
+    }, 
+    //获取质控类型信息
+    *getQualityTypeList({ payload,callback}, { call, put, update, select }) {
+      const result = yield call(services.getQualityTypeList, payload);
+      if (result.IsSuccess) {
+        yield update({  qualityTypeList: result.Datas,   });
+        callback(result.Datas)
+      } else {
+        sdlMessage(result.Message, "warning");
+      }
+    },
+    //获取质控污染物信息
+    *getQualityPollutantList({ payload,callback }, { call, put, update, select }) {
+      const result = yield call(services.getQualityPollutantList, payload);
+      if (result.IsSuccess) {
+        yield update({  qualityPollutantList: result.Datas   });
+        callback(result.Datas)
+      } else {
+        sdlMessage(result.Message, "warning");
+      }
+    },     
   },
   reducers: {
     // 更新车辆申请state

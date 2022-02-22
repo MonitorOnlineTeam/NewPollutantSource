@@ -137,3 +137,22 @@ export async function getOperationCompanyList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationCompanyList', params, null);
   return result;
 }
+
+
+//获取质控结果信息  
+export async function getQualityRecordList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQualityRecordList', params, null);
+  return result;
+}
+
+//获取质控污染物信息
+export async function getQualityPollutantList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQualityPollutantList', params, null);
+  return result;
+}
+
+//获取质控类型信息
+export async function getQualityTypeList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQualityTypeList', params, null);
+  return result;
+}

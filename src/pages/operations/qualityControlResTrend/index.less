@@ -1,0 +1,59 @@
+.legendContainer {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    top: 38px;
+  
+    &>div {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      z-index: 1;
+      font-size: 13px;
+      cursor: pointer;
+  
+      i {
+        display: inline-block;
+        width: 24px;
+        height: 14px;
+        background: #cccccc;
+        border-radius: 4px;
+        margin-right: 4px;
+  
+        &.active {
+          background: #248000;
+        }
+      }
+    }
+  }
+  
+  .bottomLegendContainer {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    bottom: 18px;
+  
+    .legendItem {
+      display: flex;
+      margin-right: 40px;
+      z-index: 1;
+      // font-size: 13px;
+      color: #000;
+      cursor: pointer;
+  
+      .sanjiao {
+        width: 0;
+        height: 0;
+        border-right: 10px solid transparent;
+        border-left: 10px solid transparent;
+        border-bottom: 18px solid #248000;
+        margin-right: 4px;
+        &.bhg {
+          border-bottom: 18px solid #ff0000;
+        }
+      }
+    }
+  }
+  

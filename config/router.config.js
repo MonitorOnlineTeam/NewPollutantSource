@@ -962,6 +962,11 @@ const routes = [
                 path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
                 component: './OperationSysManager/operationEntManage/operationPerson/OperationPersonDetail',
               },
+              {
+                name: 'QualityControlResTrend', //质控结果趋势
+                path: '/operations/qualityControlResTrend',
+                component: './operations/qualityControlResTrend',
+              },
             ],
           },
           {
