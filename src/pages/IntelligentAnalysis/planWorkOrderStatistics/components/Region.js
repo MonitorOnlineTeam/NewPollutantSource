@@ -144,7 +144,7 @@ const Index = (props,ref ) => {
 
 
   
-  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal,isPlanInspectionModal } = props; 
+  const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
 
   const {cityTableDatas,cityTableLoading,cityTableTotal} = props; //市级别
 
@@ -208,13 +208,13 @@ const Index = (props,ref ) => {
       width: 100,
     },
     {
-      title: <span>运营监测点数<Tooltip title={'点击运营监测点数，可以查看运营监测点在条件日期内派发计划工单情况。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+      title: <span>运营监测点数<Tooltip title={`点击运营监测点数，可以查看运营监测点在条件日期内${isActualCalibrationModal?"实际校准":"派发计划"}工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
       width: 100,
       render:(text,record,index)=>{ 
-        if(!isPlanCalibrationModal&&!isPlanInspectionModal){
+        if(!isPlanCalibrationModal&&!isPlanInspectionModal&&!isActualCalibrationModal){
           return  <Button type="link"
           onClick={()=>{
            insideOperaPointClick(record)
@@ -358,7 +358,7 @@ const Index = (props,ref ) => {
       children: [
         {
           title: <span>总数</span>,
-          dataIndex: 'inspectionCount',
+          dataIndex: 'inspectionCount', 
           key: 'inspectionCount',
           width: 50,
           align:'center',
@@ -1612,13 +1612,61 @@ useImperativeHandle(refInstance,() => {
     columns.splice(columns.length-1,1)
     cityInsideRegColumns.splice(cityInsideRegColumns.length-1,1) //首页计划巡检完成率弹框
    }
+   if(isActualCalibrationModal){ //首页 实际校准完成率弹框
+    const data = {
+      title: '校准工单',
+      width:200,
+      children: [
+        {
+          title: <span>计划次数<Tooltip  title={'日期条件内，实际校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          dataIndex: 'calibrationCount',
+          key: 'calibrationCount',
+          width: 50,
+          align:'center',
+          render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(2,record,'calibrationCount')}}>{text}</Button>
+          }
+        },
+        {
+          title:  <span>实际完成数</span>,
+          dataIndex: 'calibrationCompleteCount',
+          key: 'calibrationCompleteCount',
+          width: 50,
+          align:'center',
+        },
+        {
+          title: '实际完成率',
+          dataIndex: 'calibrationRate',
+          key: 'calibrationRate',
+          width: 100,
+          align:'center',
+          sorter: (a, b) => a.calibrationRate - b.calibrationRate,
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text&&text}
+                  size="small"
+                  style={{width:'85%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    }
+    columns.splice(columns.length-2,2,data)
+    cityInsideRegColumns.splice(cityInsideRegColumns.length-2,2,data) //首页计划巡检完成率弹框
+   }
  }
  handleCol()
 
   return (
       <div style={{height:'100%'}}>
    
-  {!isPlanCalibrationModal&&!isPlanInspectionModal? <Tabs defaultActiveKey="1"  onChange={tabsChange} style={{height:'100%'}}>
+  {!isPlanCalibrationModal&&!isPlanInspectionModal&&!isActualCalibrationModal? <Tabs defaultActiveKey="1"  onChange={tabsChange} style={{height:'100%'}}>
     <Tabs.TabPane tab="计划工单统计" key="1">
     <SdlTable
         loading = {tableLoading}
@@ -1652,7 +1700,7 @@ useImperativeHandle(refInstance,() => {
       {/**市级别弹框 */}
       <Modal
         title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-                  ${tabType==1?'内完成的计划工单情况' :'内完成的计划外工单情况' }`}
+                  ${isActualCalibrationModal?'实际校准工单完成情况':tabType==1?`内完成的计划工单情况` :'内完成的计划外工单情况' }`}
         visible={cityVisible}
         onCancel={()=>{setCityVisible(false)}}
         footer={null}
@@ -1707,7 +1755,7 @@ useImperativeHandle(refInstance,() => {
         {/**计划内 省级&&市级工单数弹框  计划巡检 计划校准*/}
         <Modal
         title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-        ${insideWorkType==1?  '内派发的计划巡检工单完成情况' :'内派发的计划校准工单完成情况' }`}
+        ${isActualCalibrationModal?'实际校准工单完成情况': insideWorkType==1?  '内派发的计划巡检工单完成情况' :'内派发的计划校准工单完成情况' }`}
         visible={insideWorkOrderVisible}
         onCancel={()=>{setInsideWorkOrderVisible(false)}}
         footer={null}

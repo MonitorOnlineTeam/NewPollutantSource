@@ -34,12 +34,13 @@ const dvaPropsData = ({ loading, newestHome }) => ({
   exceptionSignTaskRateLoading: loading.effects[`${namespace}/GetExceptionSignTaskRate`],
   exceptionSignTaskRateList:newestHome.exceptionSignTaskRateList,
   consumablesLoading: loading.effects[`${namespace}/GetConsumablesList`],
+  exceptionListLoading: loading.effects[`${namespace}/GetOpertionExceptionList`],
   consumablesList:newestHome.consumablesList,
   latelyDays30:newestHome.latelyDays30,
   pollType:newestHome.pollType,
   subjectFontSize:newestHome.subjectFontSize,
   modalType:newestHome.pollType,
-
+  opertionExceptionList:newestHome.opertionExceptionList,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -59,6 +60,12 @@ const dvaDispatch = (dispatch) => {
     GetConsumablesList:(payload)=>{ //耗材统计
       dispatch({
         type: `${namespace}/GetConsumablesList`, 
+        payload:{...payload},
+      }) 
+    },
+    GetOpertionExceptionList:(payload)=>{ //异常设备统计
+      dispatch({
+        type: `${namespace}/GetOpertionExceptionList`, 
         payload:{...payload},
       }) 
     },
@@ -98,7 +105,7 @@ const Index = (props) => {
   
     getExceptionSignTaskRate(latelyDays30); 
     getConsumablesList(latelyDays30)
-
+    getOpertionExceptionList(latelyDays30)
 
     const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常统计 计划内  点击事件
      planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
@@ -108,7 +115,7 @@ const Index = (props) => {
     planOutClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
     });
-
+ 
   //   planInsideClockAbnormalEchartsInstance.getZr().on('mousemove',(params)=> {
   //       planInsideClockAbnormalEchartsInstance.getZr().setCursorStyle('pointer');
   // });
@@ -130,7 +137,12 @@ const Index = (props) => {
       ...date
     })
   }
-  
+  const getOpertionExceptionList = (date) =>{ //设备异常统计
+    props.GetOpertionExceptionList({ 
+      pollutantType: pollutantType,
+      ...date
+    })
+  }
   const [clockBtnCheck, setClockBtnCheck] = useState(latelyDays30)
   const clockAbnormalClick = (key) => { //现场打卡异常 日期切换
     setClockBtnCheck(key)
@@ -147,6 +159,7 @@ const Index = (props) => {
   const [deviceAbnormalCheck, setDeviceAbnormalCheck] = useState(latelyDays30)
   const deviceAbnormalClick = (key) => { //设备异常 日期切换
     setDeviceAbnormalCheck(key)
+    getOpertionExceptionList(key)
   }
    
   const [consumablesStatisticsVisible,setConsumablesStatisticsVisible] = useState(false)
@@ -321,8 +334,8 @@ const Index = (props) => {
       }
     ]
   };
-  const deviceAbnormalOption = (type) => {  //计划运维图表
-
+  const deviceAbnormalOption = (type) => {  //设备异常统计图表
+   const { opertionExceptionList } = props; 
     let color1 = ["#FFCC00", "#323A70"], color2 = ["#FF0000", '#323A70'], color3 = ['#3571EA', '#323A70']
     let option = {
       tooltip: {
@@ -332,7 +345,7 @@ const Index = (props) => {
       },
       color: type == 1 ? color1 : type == 2 ? color2 : color3,
       title: {
-        text: type == 1 ? '90.00%' : type == 2 ? '90.00%' : '90.00%',
+        text: type == 1 ? `${opertionExceptionList.exceptionRate}%` : type == 2 ? `${opertionExceptionList.failureRate}%` : `${opertionExceptionList.repairRate}%`,
         left: "center",
         top: "42%",
         textStyle: {
@@ -350,8 +363,8 @@ const Index = (props) => {
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           data: [
-            { value: type == 1 ? 90.00 : type == 2 ? 90.00 : 90.00, name: '已完成' },
-            { value: type == 1 ? (100 - 90.00) : type == 2 ? (100 - 90.00) : (100 - 90.00), name: '未完成' },
+            { value: type == 1 ? opertionExceptionList.exceptionRate : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
+            { value: type == 1 ? (100 - opertionExceptionList.exceptionRate) : type == 2 ? (100 - opertionExceptionList.failureRate) : (100 - opertionExceptionList.repairRate), name: '未完成' },
           ],
           // minAngle: 0,//最小角度
           startAngle:350, //起始角度
@@ -366,7 +379,6 @@ const Index = (props) => {
   }
 
   const deviceAbnormalEcharts = useMemo(()=>{  
-
    return <Row type='flex' align='middle' justify='space-between'>
     <Col span={8} align='middle'>
 
@@ -397,6 +409,7 @@ const Index = (props) => {
   const { exceptionSignTaskRateLoading,exceptionSignTaskRateList } = props; //现场打卡
   const { consumablesLoading } = props; //耗材统计
   const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
+  const { exceptionListLoading } = props; //设备异常统计
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
 
@@ -469,7 +482,7 @@ const Index = (props) => {
       </Col>
      </Spin>
 
-     <Spin spinning={false}>
+     <Spin spinning={exceptionListLoading}>
       <Col className={styles.deviceAbnormal}> {/**设备异常统计 */}
         <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常统计' />
         <div style={{ height: '100%', padding: '41px 0 0' }}> 

@@ -61,7 +61,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
   
   
   useEffect(() => {
@@ -128,7 +128,7 @@ const Index = (props) => {
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
-      pollutantType:isPlanCalibrationModal||isPlanInspectionModal? props.pollutantTypes : undefined,
+      pollutantType:isPlanCalibrationModal||isPlanInspectionModal||isActualCalibrationModal ? props.pollutantTypes : undefined,
       abnormalType:1,
       time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
@@ -141,7 +141,7 @@ const Index = (props) => {
            />
      </Form.Item>
       <Form.Item label = '监测点类型' name='pollutantType' style={{padding:'0 8px'}}>
-         <Select placeholder='监测点类型'>
+         <Select placeholder='监测点类型' style={{width:120}}>
             <Option value={1}>废水</Option>
             <Option value={2}>废气</Option>
             </Select>
@@ -155,7 +155,7 @@ const Index = (props) => {
      </Button> 
      
      </Form.Item>
-     {!isPlanCalibrationModal&&!isPlanInspectionModal&&<Form.Item>
+     {!isPlanCalibrationModal&&!isPlanInspectionModal&&!isActualCalibrationModal&&<Form.Item>
      <Radio.Group defaultValue="1" onChange={showTypeChange} buttonStyle="solid">
       <Radio.Button value="1">行政区</Radio.Button>
       <Radio.Button value="2">企业</Radio.Button>
@@ -178,7 +178,7 @@ const Index = (props) => {
        </Row>
        <Row style={{paddingTop:8}}>
        <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='监测点类型' style={{width:150}}>
+        <Select placeholder='监测点类型' style={{width:120}}>
            <Option value={1}>废水</Option>
            <Option value={2}>废气</Option>
            </Select>
@@ -210,7 +210,7 @@ const Index = (props) => {
     <div  className={styles.planWorkOrderStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card title={searchComponents()}>
-      {showType==1? <Region isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
+      {showType==1? <Region isPlanCalibrationModal={isPlanCalibrationModal} isisPlanInspectionModal={isPlanInspectionModal} isActualCalibrationModal={isActualCalibrationModal} parentCallback={parentCallback} {...props} ref={pchildref}/> : <Ent parentCallback={parentCallback}/>}
    </Card>
    </BreadcrumbWrapper>
    

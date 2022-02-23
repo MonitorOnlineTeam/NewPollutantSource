@@ -48,6 +48,12 @@ export async function GetConsumablesList(params) {
   return result;
 }
 
+//首页 设备异常统计 
+export async function GetOpertionExceptionList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetOpertionExceptionList', params, null);
+  return result;
+}
+
 
 
 
@@ -68,3 +74,5 @@ export async function GetInfoWindowData(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AllTypeSummaryList', params, null);
   return result;
 }
+
+

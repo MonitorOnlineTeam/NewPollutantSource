@@ -26,6 +26,7 @@ export default Model.extend({
     exceptionSignTaskRateList:{insidePlanRate: "0.00",  insidePlanTaskCount: 0, insidePlanTaskExceptionCount: 0,
                                outPlanTaskCount: 0, outPlanTaskExceptionCount: 0, outPlanTaskRate: "0.00"},
     consumablesList:{consumablesReplaceCount: 0,sparePartReplaceRecordCount: 0, standardGasRepalceCoun: 0, standardLiquidRepalceCount: 0},
+    opertionExceptionList:{exceptionRate: "0.00" ,failureRate: "0.00",repairRate: "57.14"},
     mapPointList:[],
     regionMarkers:[],
     mapStatusData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
@@ -36,7 +37,8 @@ export default Model.extend({
     infoWindowDataLoading:false,
     siteDetailsVisible:false,
     tabType:"wasteWater",
-    entList:[]
+    entList:[],
+
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计
@@ -119,6 +121,17 @@ export default Model.extend({
             message.error(result.Message)
            }    
           },
+          *GetOpertionExceptionList({ payload,callback }, { call, put, update }) { //异常设备统计
+            const result = yield call(services.GetOpertionExceptionList, payload);
+            if (result.IsSuccess) { 
+              yield update({ opertionExceptionList: result.Datas });
+            }else{
+              message.error(result.Message)
+             }    
+            },
+
+
+
         *GetMapPointList({ payload,callback }, { call, put, update }) { //地图部分
             const result = yield call(services.GetMapPointList, payload);
             if (result.IsSuccess) { 

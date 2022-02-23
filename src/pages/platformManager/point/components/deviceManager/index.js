@@ -159,11 +159,11 @@ const Index = (props) => {
       form.setFieldsValue({
         GasEquipment:res&&res.gasEquipment? res.gasEquipment : '',
         PMEquipment: res&&res.pMEquipment? res.pMEquipment : '',
-        GasManufacturer: res.gasManufacturer,
-        PMManufacturer: res.pMManufacturer
+        GasManufacturer:res&&res.gasManufacturer? res.gasManufacturer : '',
+        PMManufacturer: res&&res.pMManufacturer? res.pMManufacturer: ''
       })
-      setGaschoiceData(res.gasManufacturerName)
-      setPmchoiceData(res.pMManufacturerName)
+      setGaschoiceData(res&&res.gasManufacturerName? res.gasManufacturerName : undefined)
+      setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
     })
   }
 
@@ -181,8 +181,8 @@ const Index = (props) => {
       ...record,
       Range1Min: record.Range1? record.Range1.split("~")[0] :'',
       Range1Max: record.Range1? record.Range1.split("~")[1] :'',
-      Range2Min: record.Range1? record.Range2.split("~")[0] :'',
-      Range2Max: record.Range1? record.Range2.split("~")[1] :'',
+      Range2Min: record.Range2? record.Range2.split("~")[0] :'',
+      Range2Max: record.Range2? record.Range2.split("~")[1] :'',
       EquipmentManufacturer:record.EquipmentManufacturer,
       EquipmentModel: record.EquipmentModel,
       EquipmentNumber: record.EquipmentNumber,
@@ -192,7 +192,6 @@ const Index = (props) => {
     setDevicePollutantName(record.PollutantName) //设备参数
     record.type!="add"? setParchoiceDeViceID(record.EquipmentManufacturerID) : null //设备厂家
     setEditingKey(record.key);
-    console.log(record)
     props.getMonitoringCategoryType({PollutantCode:record.PollutantCode})
 
   };
@@ -219,8 +218,8 @@ const Index = (props) => {
         console.log(row)
         if (index > -1) {
           const editRow = { 
-                       Range1:row.Range1Min||row.Range1Max? `${row.Range1Min}-${row.Range1Max}`: null,
-                       Range2:row.Range2Min||row.Range2Max? `${row.Range2Min}-${row.Range2Max}`: null,
+                       Range1:row.Range1Min||row.Range1Max? `${row.Range1Min}~${row.Range1Max}`: null,
+                       Range2:row.Range2Min||row.Range2Max? `${row.Range2Min}~${row.Range2Max}`: null,
                        PollutantName:devicePollutantName,
                        PollutantCode:row.PollutantCode,
                        EquipmentManufacturerID: parchoiceDeViceID, //设备厂家
@@ -791,11 +790,12 @@ const Index = (props) => {
                 <InputNumber placeholder={`最小值`} />
               </Form.Item>
               <span style={{ display: 'inline-block', width: '24px', lineHeight: '32px', textAlign: 'center' }}>
-                -
+                ~
         </span>
               <Form.Item
+                name={`${dataIndex}Max`}
                 //  rules={[ {   required: dataIndex==="Range1"&&true,   message: `` } ]}
-                style={{ display: 'inline-block', margin: 0 }} name={`${dataIndex}Max`}
+                style={{ display: 'inline-block', margin: 0 }} 
               >
                 <InputNumber placeholder={`最大值`} />
               </Form.Item>
@@ -834,7 +834,7 @@ const Index = (props) => {
       const values = await form.validateFields();
        console.log(data)
       const  parList =  data.map(itme=>{
-        return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range1,EquipmentManufacturer:itme.EquipmentManufacturerID,
+        return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range2,EquipmentManufacturer:itme.EquipmentManufacturerID,
                 EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.EquipmentNumber}
       })
       const  par =  {
@@ -871,9 +871,9 @@ const Index = (props) => {
           dataSource={data}
           columns={mergedColumns}
           rowClassName="editable-row"
-          // pagination={false}
           scroll={{ y: 'calc(100vh - 380px)' }}
           loading={props.tableDatasLoading}
+          pagination={false}
         />
         </Form>
         <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleAdd()} >

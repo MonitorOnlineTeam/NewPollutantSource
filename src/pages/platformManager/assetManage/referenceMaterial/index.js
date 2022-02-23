@@ -1,5 +1,5 @@
 /**
- * 功  能：标准物质
+ * 功  能：标准气体
  * 创建人：贾安波
  * 创建时间：2022.02.21
  */
@@ -92,7 +92,7 @@ const Index = (props) => {
 
   
   
-  const [deveiceName,setDeveiceName] = useState('')
+
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
@@ -104,50 +104,44 @@ const Index = (props) => {
   const columns = [
     {
       title: '存货编号',
-      dataIndex: 'EquipmentCode',
-      key:'EquipmentCode',
+      dataIndex: 'StandardGasCode',
+      key:'StandardGasCode',
       align:'center',
     },
     {
-      title: '标准物质名称',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      title: '标准气体名称',
+      dataIndex: 'StandardGasName',
+      key:'StandardGasName',
       align:'center',
     },
     {
       title: '规格型号',
-      dataIndex: 'EquipmentBrand',
-      key:'EquipmentBrand',
-      align:'center',
-    },
-    {
-      title: '库存数量',
-      dataIndex: 'EquipmentName',
-      key:'EquipmentName',
+      dataIndex: 'Component',
+      key:'Component',
       align:'center',
     },
     {
       title: '单位',
-      dataIndex: 'AnalyticalMethod',
-      key:'AnalyticalMethod',
+      dataIndex: 'Unit',
+      key:'Unit',
       align:'center',
     },
     {
       title: '供应商',
-      dataIndex: 'EquipmentType',
-      key:'EquipmentType',
+      dataIndex: 'Manufacturer',
+      key:'Manufacturer',
       align:'center',
     },  
     {
       title: '使用状态',
-      dataIndex: 'Status',
-      key:'Status', 
+      dataIndex: 'IsUsed',
+      key:'IsUsed', 
       align:'center',
       render: (text, record) => {
         if (text === 1) {
           return <span><Tag color="blue">启用</Tag></span>;
         }
-        if (text === 2) {
+        if (text === 0) {
           return <span><Tag color="red">停用</Tag></span>;
         }
       },
@@ -180,7 +174,6 @@ const Index = (props) => {
     try {
       form2.setFieldsValue({
         ...record,
-        MonitoringType:record.MonitoringTypeID
       })
 
     } catch (errInfo) {
@@ -218,8 +211,8 @@ const Index = (props) => {
       props.getStandardGasList({
         ...values,
         ManufacturerId:manufacturerId,
-        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
-        PageSize:pageSizes?pageSizes:pageSize
+        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
+        pageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -260,31 +253,31 @@ const Index = (props) => {
     form={form}
     name="advanced_search"
     initialValues={{
-      Status:1
+      IsUsed:1
     }}
     className={styles["ant-advanced-search-form"]}
     onFinish={onFinish}
     onValuesChange={onValuesChange}
   >  
       <Row>
-      <Form.Item label="存货编号" name="PollutantType" >
+      <Form.Item label="存货编号" name="StandardGasCode" >
         <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="标准物质名称" name="EquipmentName"   style={{marginLeft:16,marginRight:16}}>
+      <Form.Item label="标准气体名称" name="StandardGasName"   style={{marginLeft:16,marginRight:16}}>
             <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="规格型号" name="PollutantCode"  >
+      <Form.Item label="规格型号" name="Component"  >
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
       </Row>
       <Row>
-      <Form.Item label="供应商" name="PollutantCode">
+      <Form.Item label="供应商" name="Manufacturer">
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="使用状态" name="Status" style={{marginLeft:16,marginRight:16}} className={styles.status} >
+      <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} className={styles.status} >
         <Radio.Group style={{width:200}}>
             <Radio value={1}>启用</Radio>
-            <Radio value={2}>停用</Radio>
+            <Radio value={0}>停用</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item>
@@ -313,7 +306,7 @@ const Index = (props) => {
     onFinish(PageIndex,PageSize)
   }
   const codeContent = <div style={{width:300}}>
-    如果标准物质没有编码，则按从下
+    如果标准气体没有编码，则按从下
     规则定义编码，格式: B+年+
     月+日+001 (累计排序)，如:B20200601001、 B20200601002
   </div>
@@ -334,13 +327,15 @@ const Index = (props) => {
           total:tableTotal,
           pageSize: pageSize,
           current: pageIndex,
+          showSizeChanger: true,
+          showQuickJumper: true,
           onChange: handleTableChange,
         }}
       />
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={`${type==='add'? '添加':'编辑'} - ${deveiceName}` }
+        title={`${type==='add'? '添加':'编辑'}` }
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
@@ -353,7 +348,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        Status:1
+        IsUsed:1
       }}
       onValuesChange={onAddEditValuesChange}
     > 
@@ -366,13 +361,13 @@ const Index = (props) => {
       </Row>
       <Row>
         <Col span={12}>
-        <Form.Item label="存货编号" name="EquipmentName" rules={[  { required: true, message: '请输入设备名称'  }]} >
+        <Form.Item label="存货编号" name="StandardGasCode" rules={[  { required: true, message: '请输入设备名称'  }]} >
           <Input placeholder="请输入"  allowClear/>
       </Form.Item>
        <NumTips content={codeContent}/>
       </Col>
       <Col span={12}>
-        <Form.Item label="标准物质名称" name="PollutantType" rules={[  { required: true, message: '请输入标准物质名称'  }]} >
+        <Form.Item label="标准气体名称" name="StandardGasName" rules={[  { required: true, message: '请输入标准气体名称'  }]} >
         <Input placeholder="请输入"  allowClear/>
       </Form.Item>
       </Col>
@@ -381,26 +376,25 @@ const Index = (props) => {
 
       <Row>
       <Col span={12}>
-        <Form.Item label="规格型号" name="PollutantCode"  rules={[  { required: true, message: '请输入规格型号'  }]}>
+        <Form.Item label="规格型号" name="Component"  rules={[  { required: true, message: '请输入规格型号'  }]}>
         <Input placeholder="请输入"  allowClear/>
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="库存数量" name="EquipmentBrand" rules={[  { required: true, message: '请输入库存数量'  }]} >
-             <InputNumber placeholder='请输入' allowClear/>
-      </Form.Item>
-      
+        <Form.Item label="单位" name="Unit" >
+             <Input placeholder='请输入' allowClear/>
+      </Form.Item>     
       </Col>
       </Row>
+
        <Row>
-       <Col span={12}>
-        <Form.Item label="单位" name="EquipmentType" >
+      <Col span={12}>
+         <Form.Item label="供应商" name="Manufacturer" rules={[  { required: true, message: '请输入供应商'  }]} >
              <Input placeholder='请输入' allowClear/>
       </Form.Item>
-      
       </Col>
       <Col span={12}>
-      <Form.Item label="使用状态" name="Status" >
+      <Form.Item label="使用状态" name="IsUsed" >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
              <Radio value={2}>停用</Radio>
@@ -408,16 +402,6 @@ const Index = (props) => {
          </Form.Item>
       </Col>
         </Row>
-      <Row>
-        <Col span={12}>
-
-         <Form.Item label="供应商" name="AnalyticalMethod" rules={[  { required: true, message: '请输入供应商'  }]} >
-             <Input placeholder='请输入' allowClear/>
-      
-      </Form.Item>
-      </Col>
-      </Row>
-     
     </Form>
       </Modal>
         </div>

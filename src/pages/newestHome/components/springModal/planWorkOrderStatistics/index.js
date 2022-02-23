@@ -34,14 +34,18 @@ class Index extends PureComponent {
     const { visible,type,time,modalType } = this.props
     return (
       <Modal
-        title= {modalType=='planCalibration'?"计划校准完成率":"计划巡检完成率"}
+        title= {modalType=='planCalibration'?"计划校准完成率":modalType=='planInspection'? "计划巡检完成率" :"实际校准完成率" }
         wrapClassName='spreadOverModal'
         visible={visible}
         footer={false}
         onCancel={this.onCancel}
         destroyOnClose
       >
-        <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)} isPlanCalibrationModal={modalType=='planCalibration'} isPlanInspectionModal={modalType=='planInspection'}  hideBreadcrumb/>
+        <PlanWorkOrderStatistics time={time}  pollutantTypes={Number(type)}
+          isPlanCalibrationModal={modalType=='planCalibration'}
+          isPlanInspectionModal={modalType=='planInspection'} 
+          isActualCalibrationModal={modalType=='actualCalibration'} 
+          hideBreadcrumb/>
       </Modal>
     );
   }

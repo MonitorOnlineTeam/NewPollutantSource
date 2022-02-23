@@ -275,6 +275,12 @@ const planCalibration = () =>{  //计划校准弹框
 const  planInspection = () =>{ //计划巡检弹框
   setPlanInspectionVisible(true)
 }
+
+const actualCalibration = () =>{  //实际校准弹框
+ 
+  setActualInspectionVisible(true)
+}
+
 const moreBtnClick = (type) =>{
   console.log(type)
 }
@@ -304,6 +310,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
        <ReactEcharts
          option={planOperaOption(3)}
          style={{ width: '100%', height: 120 }}
+         onEvents={{click: actualCalibration }}
        />
       <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内次数： {planOperaList.autoCalibrationAllCount}</div> <div>完成次数： {planOperaList.actualCalibrationCount}</div></div>
    </Col>
@@ -317,6 +324,8 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   const  { planCompleteList,planCompleteListLoading } = props;{/**计划完成率 */}
   const  [planCalibrationVisible,setPlanCalibrationVisible ]  = useState(false)
   const  [planInspectionVisible,setPlanInspectionVisible] = useState(false)
+  const  [actualInspectionVisible,setActualInspectionVisible] = useState(false)
+
   return (
     <div>
       <Spin spinning={operationLoading}>
@@ -368,6 +377,13 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         visible={planInspectionVisible}
         type={pollutantType}
         onCancel={()=>{setPlanInspectionVisible(false)}}
+        time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
+      />  
+      <PlanWorkOrderStatistics  //计划校准完成率弹框
+        modalType="actualCalibration"
+        visible={actualInspectionVisible}
+        type={pollutantType}
+        onCancel={()=>{setActualInspectionVisible(false)}}
         time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
       />  
         </div>

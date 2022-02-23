@@ -342,7 +342,7 @@ export default Model.extend({
         *getManufacturerList({ payload,callback }, { call, put, update }) { //获取厂商列表
             const result = yield call(GetManufacturerList, payload);
             if (result.IsSuccess) {
-              yield update({ manufacturerList:result.Datas})
+              yield update({ manufacturerList: result.Datas? result.Datas.mlist : []})
             }else{
               message.error(result.Message)
             }
@@ -351,7 +351,7 @@ export default Model.extend({
             const result = yield call(GetSystemModelList, payload);
             if (result.IsSuccess) {
               yield update({
-                systemModelList:result.Datas.rtnlist,
+                systemModelList: result.Datas? result.Datas.rtnlist : [],
                 systemModelListTotal:result.Total,
               })
             }else{
