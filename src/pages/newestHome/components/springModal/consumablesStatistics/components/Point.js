@@ -26,7 +26,7 @@ const namespace = 'consumablesStatistics'
 
 
 const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.regDetailTableDatas,
+  tableDatas:consumablesStatistics.pointTableDatas,
   tableLoading:loading.effects[`${namespace}/regDetailGetConsumablesRIHList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,

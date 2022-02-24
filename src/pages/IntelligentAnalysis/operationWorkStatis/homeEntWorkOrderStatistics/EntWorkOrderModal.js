@@ -52,10 +52,11 @@ class EntWorkOrderModal extends PureComponent {
             visible={showModal}
             onCancel={onCloseListener}
             footer={null}
+            wrapClassName='spreadOverModal'
         >
           {
             this.state.page=='EntWorkOrderStatistics'?
-              (<EntWorkOrderStatistics changePage ={this.changePage} pollutantTypeCode = {pollutantTypeCode}></EntWorkOrderStatistics>)
+              (<EntWorkOrderStatistics changePage ={this.changePage} location={{query:this.state.query}} pollutantTypeCode = {pollutantTypeCode}></EntWorkOrderStatistics>)
             :this.state.page=='EntStaticstics'?
               (<EntStaticstics goBack={this.goBack} location={{query:this.state.query}}></EntStaticstics>)
             :this.state.page=='RegionStaticstics'?

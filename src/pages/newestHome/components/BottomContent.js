@@ -23,6 +23,8 @@ import { InitVideo } from '@/utils/video';
 import MoreBtn from './publicComponents/MoreBtn'
 import ClockAbnormalModal from './springModal/abnormalWorkStatistics'
 import ConsumablesStatisticsModal from './springModal/consumablesStatistics'
+import EquipmentAbnormalRateModal from './springModal/equipmentAbnormalRate'
+
 
 const { Option } = Select;
 
@@ -167,7 +169,7 @@ const Index = (props) => {
     if(type === 'consumables'){ //耗材统计
       setConsumablesStatisticsVisible(true)
     }
-
+ 
   }
   const sceneClockOption = (data) => { 
 
@@ -374,8 +376,8 @@ const Index = (props) => {
     return option;
   }
 
-  const deviceAbnormals = () =>{
-    console.log(1111)
+  const deviceAbnormals = () =>{ //设备异常率
+    setEquipmentAbnormalRateVisible(true)
   }
 
   const deviceAbnormalEcharts = useMemo(()=>{  
@@ -410,6 +412,7 @@ const Index = (props) => {
   const { consumablesLoading } = props; //耗材统计
   const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
   const { exceptionListLoading } = props; //设备异常统计
+  const [equipmentAbnormalRateVisible,setEquipmentAbnormalRateVisible ] = useState(false) //设备异常率 弹框
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
 
@@ -503,7 +506,12 @@ const Index = (props) => {
         onCancel={()=>{setConsumablesStatisticsVisible(false)}}
         time={[moment(consumablesCheck.beginTime),moment(consumablesCheck.endTime)]}
       />    
-    
+      <EquipmentAbnormalRateModal  //设备异常率弹框
+        visible={equipmentAbnormalRateVisible}
+        type={Number(pollutantType)}
+        onCancel={()=>{setEquipmentAbnormalRateVisible(false)}}
+        time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
+      />     
     </Row>
   );
 };

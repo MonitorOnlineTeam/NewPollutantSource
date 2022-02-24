@@ -1,5 +1,5 @@
 /**
- * 功  能：耗材统计
+ * 功  能：设备异常
  * 创建人：贾安波
  * 创建时间：
  */
@@ -20,7 +20,7 @@ import Region from './components/Region'
 
 
 
-const dvaPropsData =  ({ loading,consumablesStatistics }) => ({
+const dvaPropsData =  ({ loading,equipmentAbnormalRate }) => ({
 
 })
 
@@ -52,7 +52,7 @@ const Index = (props) => {
 
   return (
     <Modal
-    title="耗材统计"
+    title="设备异常率"
     wrapClassName='spreadOverModal'
     visible={props.visible}
     footer={false}

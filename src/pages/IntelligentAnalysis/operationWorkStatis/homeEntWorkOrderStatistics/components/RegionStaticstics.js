@@ -69,13 +69,21 @@ class RegionStaticstics extends PureComponent {
   }
 
   getColumns=()=>{
-    const columns = [];
+    const columns = [{
+      title: '序号',
+      dataIndex: 'num',
+      key: 'num',
+      render:(text, record,index)=>{
+        return index + 1
+      }
+   },];
     this.props.secondTableTitleData.map((item,index)=>{
       columns.push({
         title: item.TypeName,
         dataIndex: item.ID,
         key: item.ID,
         width: 120,
+        sorter: index>=3? (a, b) => a[item.ID] - b[item.ID] : undefined,
       });
     })
     return columns;
@@ -92,7 +100,7 @@ class RegionStaticstics extends PureComponent {
       <Card>
         <Form layout="inline" style={{ marginBottom: 20 }}>
           <Row>
-              <FormItem  label="企业">
+              <FormItem  label="">
                   {getFieldDecorator('EntCode', {})
                   (
                   <Select 
@@ -117,10 +125,15 @@ class RegionStaticstics extends PureComponent {
                   icon={<RollbackOutlined />} 
                   style={{ marginLeft: 10 }} 
                   onClick={()=>{
-                    if(this.props.goBack)
+                    if(this.props.goBack){
+                      this.props.dispatch({
+                        type:'entWorkOrderStatistics/updateState',
+                        payload:{param:this.props.location.query}
+                     })
                      this.props.goBack('CityStaticstics',this.props.location.query)
-                    else
+                    }else{
                       history.go(-1)
+                    }
                   }}
                 >
                   返回

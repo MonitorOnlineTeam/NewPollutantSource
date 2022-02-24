@@ -37,6 +37,14 @@ class EntWorkOrderStatistics extends PureComponent {
   _SELF_ = {
     columns:[
       {
+        title: '序号',
+        dataIndex: 'num',
+        key: 'num',
+        render:(text, record,index)=>{
+          return index + 100
+        }
+     },
+      {
         title: '行政区',
         dataIndex: '00_RegionName',
         key: '00_RegionName',
@@ -69,70 +77,19 @@ class EntWorkOrderStatistics extends PureComponent {
           }
         },
         width: 180,
-      },{
-          title: '企业',
-          children: [
-            {
-              title: '企业数',
-              dataIndex: '00_Enters',
-              key: '00_Enters',
-              width: 120,
-              align:'center',
-            },
-            {
-              title: '运维企业数',
+      },
+        {
+              title: '运营企业数',
               dataIndex: '00_Opsenters',
               key: '00_Opsenters',
-              render: (text, record) => { 
-                // const values = this.props.form.getFieldsValue();
-                const values = this.props.location.query;
-                const {initialForm:{RegionCode},changePage,dispatch, param} = this.props;
-
-                const query={
-                  RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
-                  PollutantTypeCode: values&&values.PollutantTypeCode,
-                  AttentionCode: values&&values.AttentionCode?values.AttentionCode:"",
-                  BeginTime: values&&values.BeginTime,
-                  EndTime: values&&values.EndTime,
-                  type:'city'
-                }
-
-                if(changePage){
-                  return <a onClick={()=>{
-                    dispatch({
-                      type:'entWorkOrderStatistics/updateState',
-                      payload:{  param:query  }  })
-                    changePage({page:'EntStaticstics',query:query.PollutantTypeCode?query: param})
-                  
-                  }}>{text}</a>
-                }else{
-                  return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
-                          {text}
-                      </Link>
-                }
-              },
-              width: 120,
-              align:'center',
-            },
-          ],
+              sorter: (a, b) => a['00_Opsenters'] - b['00_Opsenters'],
       },{
-        title: '监测点',
-        children: [
-          {
-            title: '监测点数',
-            dataIndex: '00_Points',
-            key: '00_Points',
-            width: 120,
-            align:'center',
-          },
-          {
-            title: '运维监测点数',
+            title: '运营监测点数',
             dataIndex: '00_Opspoints',
             key: '00_Opspoints',
             width: 120,
             align:'center',
-          },
-        ],
+            sorter: (a, b) => a['00_Opspoints'] - b['00_Opspoints'],
       },
     ]
   }
@@ -177,7 +134,6 @@ class EntWorkOrderStatistics extends PureComponent {
     // console.log("values=", values)
    const { param } = this.props;
 
-   console.log(param)
     // 获取一级数据标题头
     this.props.dispatch({
       type: 'entWorkOrderStatistics/getTableTitleData',
@@ -215,6 +171,7 @@ class EntWorkOrderStatistics extends PureComponent {
           dataIndex: item.ID,
           key: item.ID,
           width: 120,
+          sorter: (a, b) => a[item.ID] - b[item.ID],
         });
       }
     })

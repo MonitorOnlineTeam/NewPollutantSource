@@ -21,6 +21,8 @@ import CardHeader from './publicComponents/CardHeader'
 import ScrollTable from './publicComponents/ScrollTable'
 import MoreBtn from './publicComponents/MoreBtn'
 import PlanWorkOrderStatistics from './springModal/planWorkOrderStatistics'
+import EntWorkOrderModal from '@/pages/IntelligentAnalysis/operationWorkStatis/homeEntWorkOrderStatistics/EntWorkOrderModal'
+
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -75,7 +77,14 @@ const  dvaDispatch = (dispatch) => {
         payload:{...payload},
       }) 
     },
+    entWorkOrderStatistics:(payload)=>{ //运维工单统计弹框
+      dispatch({
+        type: `entWorkOrderStatistics/GetOperationRegionPlanTaskRate`, 
+        payload:{...payload},
+      }) 
+    }
   }
+  
 }
 const Index = (props) => {
 
@@ -281,8 +290,8 @@ const actualCalibration = () =>{  //实际校准弹框
   setActualInspectionVisible(true)
 }
 
-const moreBtnClick = (type) =>{
-  console.log(type)
+const moreBtnClick = (type) =>{ //近30日运维工单统计
+  setOrderModalVisible(true)
 }
 
 
@@ -318,6 +327,20 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
    </div>
 },[planOperaList])
   
+ const   cancel=()=>{
+
+  props.entWorkOrderStatistics({
+    payload: {
+      initialForm: {
+        Time:[moment().subtract(30, "days").startOf("day"), moment().endOf("day")],
+        RegionCode:undefined,
+        AttentionCode:undefined,
+        PollutantTypeCode:'1',
+        },
+    },
+});
+
+}
   const  { operationLoading,operationDataSource } = props; {/**运营信息统计 */}
   const  { operationTaskLoading } = props; {/**近30日运维工单 */}
   const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
@@ -325,7 +348,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   const  [planCalibrationVisible,setPlanCalibrationVisible ]  = useState(false)
   const  [planInspectionVisible,setPlanInspectionVisible] = useState(false)
   const  [actualInspectionVisible,setActualInspectionVisible] = useState(false)
-
+  const  [orderModalVisible,setOrderModalVisible] = useState(false) 
   return (
     <div>
       <Spin spinning={operationLoading}>
@@ -386,6 +409,14 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         onCancel={()=>{setActualInspectionVisible(false)}}
         time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
       />  
+      <EntWorkOrderModal  //近30日运维工单统计
+            showModal={orderModalVisible}
+            onCloseListener={ () => { 
+                setOrderModalVisible(false)
+                cancel();
+              }}
+            pollutantTypeCode={pollutantType}
+          />      
         </div>
   );
 };

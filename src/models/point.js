@@ -385,7 +385,7 @@ export default Model.extend({
               const result = yield call(GetPollutantById2, payload);
               if (result.IsSuccess) {
                 yield update({ pollutantTypeList2: result.Datas? result.Datas.plist : []})
-                callback()
+                callback(result.Datas? result.Datas.plist : [])
               } else {
                 message.error(result.Message)
               }

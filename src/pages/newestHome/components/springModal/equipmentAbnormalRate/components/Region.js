@@ -1,10 +1,10 @@
 /**
- * 功  能：耗材统计
- * 创建人：贾安波
- * 创建时间：2021.1.21
+ * 功  能：设备异常率
+ * 创建人：jab
+ * 创建时间：2021.2.24
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Spin, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Checkbox,   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined,RollbackOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -20,17 +20,21 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 import RegionDetail from './RegionDetail'
+import point from '@/models/point';
 
-const namespace = 'consumablesStatistics'
+const namespace = 'equipmentAbnormalRate'
 
 
 
-const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.regTableDatas,
-  tableLoading: loading.effects[`${namespace}/regGetConsumablesRIHList`],
+const dvaPropsData =  ({ loading,equipmentAbnormalRate,global,point }) => ({
+  tableDatas:equipmentAbnormalRate.regTableDatas,
+  tableLoading: loading.effects[`${namespace}/regGetExecptionRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
-  queryPar:consumablesStatistics.queryPar,
+  queryPar:equipmentAbnormalRate.queryPar,
+  pollutantTypeListLoading: loading.effects[`point/getPollutantById2`],
+  pollutantTypeList:point.pollutantTypeList2,
+  coommonCol:equipmentAbnormalRate.coommonCol
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -41,10 +45,17 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regGetConsumablesRIHList:(payload)=>{ // 行政区
+    regGetExecptionRateList:(payload)=>{ // 行政区
       dispatch({
-        type: `${namespace}/regGetConsumablesRIHList`,
+        type: `${namespace}/regGetExecptionRateList`,
         payload:payload,
+      })
+    },
+    getPollutantById:(payload,callback)=>{ // 设备参数类别
+      dispatch({
+        type: `point/getPollutantById2`,
+        payload:payload,
+        callback:callback
       })
     },
     // exportTaskWorkOrderList:(payload)=>{ // 导出
@@ -59,17 +70,28 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,pollutantTypeList,pollutantTypeListLoading,coommonCol } = props; 
   
   
   useEffect(() => {
-    onFinish();
+    initData();
   
   },[]);
 
 
   
-
+  const [parType,setParType] = useState([])
+  const initData = () =>{
+    
+    props.getPollutantById({id:type==1?'1b27155c-5b8b-439a-987c-8100723c2866':'31f8f6f9-5700-443b-8570-9229b36fa00c'},(data)=>{
+      const parList = data.map(item=>{
+        return { label: item.Name, value: item.ID }
+      })
+      setParType(parList)
+      form.setFieldsValue({parameterCategory:parList.map(item=>item.value) })
+      onFinish();
+    }) 
+  }
 
   const exports = async  () => {
     const values = await form.validateFields();
@@ -79,85 +101,7 @@ const Index = (props) => {
     })
 
  };
- const coommonCol = [
-  {
-    title: <span>异常类别（率）</span>,
-    align:'center',
-    children: [
-      {
-        title: '数据缺失',
-        dataIndex: 'age',
-        key: 'age',
-        width: 150,
-        sorter: (a, b) => a.age - b.age,
-        render: (text, record) => {
-          return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-        }
-      },
-      {
-        title: '在线监测系统停运',
-        dataIndex: 'age',
-        key: 'age',
-        width: 200,
-        sorter: (a, b) => a.age - b.age,
-        render: (text, record) => {
-          return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-        }
-      },
-      {
-        title: '数据恒定值',
-        dataIndex: 'age',
-        key: 'age',
-        width: 150,
-        sorter: (a, b) => a.age - b.age,
-        render: (text, record) => {
-          return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-        }
-      },
-      {
-        title: '数据0值',
-        dataIndex: 'age',
-        key: 'age',
-        width: 150,
-        sorter: (a, b) => a.age - b.age,
-        render: (text, record) => {
-          return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-        }
-      },
-      {
-        title: '数据故障',
-        dataIndex: 'age',
-        key: 'age',
-        width: 150,
-        sorter: (a, b) => a.age - b.age,
-        render: (text, record) => {
-          return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-        }
-      },
-      {
-        title: '系统维护数据',
-        dataIndex: 'age',
-        key: 'age',
-        width: 150,
-        sorter: (a, b) => a.age - b.age,
-        render: (text, record) => {
-          return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-        }
-      },
-     ]
-    },
-    {
-      title: '异常率',
-      dataIndex: 'age',
-      key: 'age',
-      width: 150,
-      sorter: (a, b) => a.age - b.age,
-      render: (text, record) => {
-        return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-      }
-    }
-  
- ]
+
  const columns = [
   {
     title: '序号',
@@ -179,15 +123,15 @@ const Index = (props) => {
   },
   {
     title: '运营企业数',
-    dataIndex: 'sparePartCount',
-    key:'sparePartCount',
+    dataIndex: 'entCount',
+    key:'entCount',
     align:'center',
     sorter: (a, b) => a.age - b.age,
   },
   {
     title: '运营监测点数',
-    dataIndex: 'consumablesCount',
-    key:'consumablesCount',
+    dataIndex: 'pointCount',
+    key:'pointCount',
     align:'center',
     sorter: (a, b) => a.age - b.age,
 
@@ -205,9 +149,10 @@ const Index = (props) => {
         time:undefined,
         beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
         endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
         pointType:1,
       }
-        props.regGetConsumablesRIHList({ ...par  })
+        props.regGetExecptionRateList({ ...par  })
         props.updateState({
           queryPar:{ ...par }
         })
@@ -228,87 +173,34 @@ const Index = (props) => {
       }
     })
   }
-  const [regionName,setRegionName] = useState()
-
-  const [sparePartsVisible,setSparePartsVisible] = useState(false)
-  const sparePartsDetail = (row) =>{  //备品备件详情
-    setSparePartsVisible(true)
-    props.updateState({
-      queryPar:{
-        ...props.queryPar,
-        regionCode:row.regionCode
-      }
-    })
-    setRegionName(row.regionName)
-  }
-  
-  const [consumablesVisible,setConsumablesVisible ] = useState(false)
-  const consumablesDetail = (row) =>{  //易耗品详情
-    setConsumablesVisible(true)
-    props.updateState({
-      queryPar:{
-        ...props.queryPar,
-        regionCode:row.regionCode
-      }
-    })
-    setRegionName(row.regionName)
-  }
 
   
-  const [reagentReplaceVisible,setReagentReplaceVisible ] = useState(false)
-  const reagentReplaceDetail = (row) =>{ //试剂更换数量
-    setReagentReplaceVisible(true)
-    props.updateState({
-      queryPar:{
-        ...props.queryPar,
-        regionCode:row.regionCode
-      }
-    })
-    setRegionName(row.regionName)
-  }
-  const [referenceMaterialReplaceVisible,setReferenceMaterialReplaceVisible ] = useState(false)
-  const referenceMaterialReplaceDetail = (row) =>{ //标准物质更换数量
-    setReferenceMaterialReplaceVisible(true)
-    props.updateState({
-      queryPar:{
-        ...props.queryPar,
-        regionCode:row.regionCode
-      }
-    })
-    setRegionName(row.regionName)
-  }
+
   
-  queryPar.pollutantType==2&&columns.splice(-1,1,
-      {
-      title: '标准物质更换数量',
-      dataIndex: 'standardGasCount',
-      key:'standardGasCount',
-      align:'center',
-      render:(text,record,index)=>{
-        return  <Button type="link" onClick={()=>{referenceMaterialReplaceDetail(record)  }} >{text}</Button>
-      }
-    })
+
+
   
+  console.log(parType,parType.map(item=>item.value))
   return (
-    <div  className={styles.consumablesStatisticsSty}>
+    <div  className={styles.equipmentAbnormalRateSty}>
    {!regionDetailVisible? <><Form
     form={form}
     name="advanced_search"
     onFinish={onFinish}
     initialValues={{
       pollutantType:type,
-      abnormalType:1,
-      time:time
+      time:time,
     }}
-    layout='inline'
     style={{paddingBottom:15}}
+    loading={tableLoading}
   >  
+  <Row>
      <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
          <RangePicker allowClear={false} style={{width:'100%'}} 
           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
     </Form.Item> 
     <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='监测点类型' style={{width:150}}>
+        <Select placeholder='请选择' style={{width:150}}>
            <Option value={1}>废水</Option>
            <Option value={2}>废气</Option>
            </Select>
@@ -321,7 +213,16 @@ const Index = (props) => {
            导出
     </Button> 
     </Form.Item>
+    </Row>
+    <Row style={{paddingTop:8}}>
+    <Form.Item label='设备参数类别' name='parameterCategory'>
+      {pollutantTypeListLoading? <Spin size='small'/> :
+      <Checkbox.Group  options={parType} />
+       } 
+       </Form.Item>
+    </Row>
   </Form>
+
   <SdlTable
         loading = {tableLoading}
         bordered

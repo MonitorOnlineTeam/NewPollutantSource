@@ -1,7 +1,7 @@
 /**
- * 功  能：耗材统计
- * 创建人：贾安波
- * 创建时间：2021.1.21
+ * 功  能：设备异常率
+ * 创建人：jab
+ * 创建时间：2021.2.24
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -26,8 +26,8 @@ const namespace = 'consumablesStatistics'
 
 
 const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.regDetailTableDatas,
-  tableLoading:loading.effects[`${namespace}/regDetailGetConsumablesRIHList`],
+  tableDatas:consumablesStatistics.pointTableDatas,
+  tableLoading:loading.effects[`${namespace}/regDetailGetExecptionRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
   queryPar:consumablesStatistics.queryPar,
@@ -41,9 +41,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regDetailGetConsumablesRIHList:(payload)=>{ // 行政区详情
+    regDetailGetExecptionRateList:(payload)=>{ // 行政区详情
       dispatch({
-        type: `${namespace}/regDetailGetConsumablesRIHList`,
+        type: `${namespace}/regDetailGetExecptionRateList`,
         payload:payload,
       })
     },
@@ -69,7 +69,7 @@ const Index = (props) => {
 
 
   const initData =  () => {
-      props.regDetailGetConsumablesRIHList({
+      props.regDetailGetExecptionRateList({
         ...props.queryPar,
          pointType:3,
     })

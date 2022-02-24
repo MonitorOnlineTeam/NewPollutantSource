@@ -35,6 +35,14 @@ class EntWorkOrderStatistics extends PureComponent {
   _SELF_ = {
     columns:[
       {
+        title: '序号',
+        dataIndex: 'num',
+        key: 'num',
+        render:(text, record,index)=>{
+          return index + 1
+        }
+     },
+      {
         title: '行政区',
         dataIndex: '00_RegionName',
         key: '00_RegionName',
@@ -61,62 +69,21 @@ class EntWorkOrderStatistics extends PureComponent {
           }
         },
         width: 180,
-      },{
-          title: '企业',
-          children: [
-            {
-              title: '企业数',
-              dataIndex: '00_Enters',
-              key: '00_Enters',
-              width: 120,
-              align:'center',
-            },
-            {
-              title: '运维企业数',
+      },
+         {
+              title: '运营企业数',
               dataIndex: '00_Opsenters',
               key: '00_Opsenters',
-              render: (text, record) => { 
-                const values = this.props.form.getFieldsValue();
-                const {initialForm:{RegionCode},changePage} = this.props;
-
-                const query={
-                  RegionCode :RegionCode?RegionCode:record["00_RegionCode"],            
-                  PollutantTypeCode: values.PollutantTypeCode,
-                  AttentionCode: values.AttentionCode?values.AttentionCode:"",
-                  BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
-                  EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
-                }
-                if(changePage){
-                  return <a onClick={()=>{changePage({page:'EntStaticstics',query})}}>{text}</a>
-                }else{
-                  return <Link to={{  pathname: '/Intelligentanalysis/operationWorkStatis/entWorkOrderStatistics/EntStaticstics',query}} >
-                          {text}
-                      </Link>
-                }
-              },
-              width: 120,
-              align:'center',
-            },
-          ],
-      },{
-        title: '监测点',
-        children: [
-          {
-            title: '监测点数',
-            dataIndex: '00_Points',
-            key: '00_Points',
-            width: 120,
-            align:'center',
-          },
-          {
-            title: '运维监测点数',
+              sorter: (a, b) => a['00_Opsenters'] - b['00_Opsenters'],
+      },
+         {
+            title: '运营监测点数',
             dataIndex: '00_Opspoints',
             key: '00_Opspoints',
             width: 120,
             align:'center',
+            sorter: (a, b) => a['00_Opspoints'] - b['00_Opspoints'],
           },
-        ],
-      },
     ]
   }
 
@@ -192,6 +159,7 @@ class EntWorkOrderStatistics extends PureComponent {
           dataIndex: item.ID,
           key: item.ID,
           width: 120,
+          sorter: (a, b) => a[item.ID] - b[item.ID],
         });
       }
     })
@@ -234,21 +202,7 @@ class EntWorkOrderStatistics extends PureComponent {
                     )}
                 </FormItem>
 
-                <FormItem label="关注程度">
-                    {getFieldDecorator('AttentionCode', {
-                      initialValue:initialForm.AttentionCode,
-                    })(
-                        <Select allowClear style={{ width: 200 }} placeholder="请选择关注程度">
-                        {
-                            attentionList.map(item => <Option key={item.AttentionCode} value={item.AttentionCode}>
-                                {item.AttentionName}
-                            </Option>)
-                        }
-                        </Select>,
-                    )}
-                </FormItem>
-
-                <FormItem label="企业类型">
+                <FormItem label="企业类型" hidden>
                     {getFieldDecorator('PollutantTypeCode', {
                       initialValue: pollutantTypeCode?pollutantTypeCode:initialForm.PollutantTypeCode,
                     })(

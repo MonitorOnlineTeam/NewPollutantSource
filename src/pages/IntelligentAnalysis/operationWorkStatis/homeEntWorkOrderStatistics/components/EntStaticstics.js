@@ -112,7 +112,14 @@ class EntStaticstics extends PureComponent {
   }
 
   getColumns=()=>{
-    const columns = [];
+    const columns = [{
+      title: '序号',
+      dataIndex: 'num',
+      key: 'num',
+      render:(text, record,index)=>{
+        return index + 1
+      }
+   },];
     const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
     
     this.props.thirdTableTitleData.map((item,index)=>{
@@ -138,6 +145,7 @@ class EntStaticstics extends PureComponent {
           dataIndex: item.ID,
           key: item.ID,
           width: 120,
+          sorter: (a, b) => a[item.ID] - b[item.ID],
         });
       }
     })
@@ -157,7 +165,7 @@ class EntStaticstics extends PureComponent {
       <Card>
         <Form layout="inline" style={{ marginBottom: 20 }}>
           <Row>
-              <FormItem  label="企业">
+              <FormItem  label="">
                   {getFieldDecorator('EntCode', {
                    
                   })(
