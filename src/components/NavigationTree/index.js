@@ -869,7 +869,6 @@ class NavigationTree extends Component {
     //   return false
     // }
     if (((nextProps.noticeList.length && this.props.noticeList.length === nextProps.noticeList.length) && _.isEqual(this.state, nextState)) && !this.props.EntAndPointLoading && this.state.EntAndPoint.length) {
-      console.log('2222')
       return false
     }
     return true;

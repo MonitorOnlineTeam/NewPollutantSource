@@ -5,6 +5,7 @@ import { Table, Input, InputNumber, Popconfirm, Form,Spin,Tabs, Typography,Card,
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import ReactEcharts from 'echarts-for-react';
 import PageLoading from '@/components/PageLoading'
+import NavigationTree from '@/components/NavigationTree';
 import moment from 'moment'
 import styles from './index.less';
 const { RangePicker } = DatePicker;
@@ -19,6 +20,7 @@ const dvaPropsData =  ({ loading,operations,global }) => ({
   loadingQualityTypeList:loading.effects[`${namespace}/getQualityTypeList`],
   qualityTypeList:operations.qualityTypeList,
   qualityPollutantList:operations.qualityPollutantList,
+  qualityRecordList:operations.qualityRecordList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -55,40 +57,43 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const [form] = Form.useForm();
 
-  const { qualityPollutantList } = props;
+  const [ DGIMN,setDGIMN ] = useState();
+  
+  const [legendTypeList,setLegendTypeList] = useState([])
+
+  const { qualityRecordList } = props;
 
 
   useEffect(() => {
+    if(DGIMN)
     props.getQualityPollutantList({},(data)=>{ //获取质控类型信息
       if(data){
         const pollutantCodeDefaultData = data.map(item=>{
           return item.ChildID
         })
         form.setFieldsValue({pollutantCode: pollutantCodeDefaultData})
+        setLegendTypeList(data)
+        setCurrentPollutant(data[0]?data[0].ChildID : null)
       }
 
       props.getQualityTypeList({},(res)=>{
-        setTabkey(res&&res[0]?res[0].ChildID : null)
-        onFinish()
+        const defaultTypeID = res&&res[0]?res[0].ChildID : null
+        setTabkey(defaultTypeID)
+        onFinish(defaultTypeID)
       }) 
     }) //获取质控污染物信息
-
-  },[]);
+  },[DGIMN]);
 
 
   const getOption = () => {
-    const { zeroChartData } = props;
-
-    const valueMax = _.max(zeroChartData.dataList) ? _.max(zeroChartData.dataList) : 0;
-    const standardMax = _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.max([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
-    let max = _.max([valueMin, valueMax]) + 5
-
-
-    const valueMin = _.min(zeroChartData.dataList) ? _.min(zeroChartData.dataList) : 0;
-    const standardMin = _.min([zeroChartData.standard.top, zeroChartData.standard.lower]) ? _.min([zeroChartData.standard.top, zeroChartData.standard.lower]) : 0
-    let min = _.min([valueMin, standardMin]) + -5
-
-
+    let data = []
+    if(qualityRecordList[0]){
+      qualityRecordList.map(item=>{
+        if(item.QualityItem == currentPollutant){
+          data.push(item)
+        }
+      })
+    }
     return {
       title: {
         text: "24小时零点漂移历史数据",
@@ -117,100 +122,79 @@ const Index = (props) => {
         right: '10%',
         bottom: '80px',
         top: "80px",
-        containLabel: true
+        containLabel: true,   
       },
       xAxis: {
         type: 'category',
-        // data: zeroChartData.timeList
+        data: data[0]? data.map(item=>item.QualityTime) : []
       },
       yAxis: {
         name: '(%)',
-        type: 'value',
-        // max: Math.ceil(max),
-        // min: Math.ceil(min)
+        type: 'value',      
       },
-      visualMap: [{
-        show: false,
-        pieces: [{
-          gt: 0,
-          lte: zeroChartData.standard.top,
-          color: '#248000'
-        }, {
-          gt: zeroChartData.standard.lower,
-          lte: 0,
-          color: '#248000'
-        }, {
-          gt: zeroChartData.standard.top,
-          lte: Math.ceil(max),
-          color: '#ff0000'
-        }, {
-          gt: Math.ceil(min),
-          lte: zeroChartData.standard.lower,
-          color: '#ff0000'
-        }],
-        seriesIndex: 0
-      }],
-      series: [{
-        name: "相对误差",
-        data: zeroChartData.dataList,
-        type: 'line',
-        symbol: 'triangle',
-        symbolSize: 20,
-        lineStyle: {
-          width: 2,
-          type: 'dashed'
-        },
-        markLine: {
-          silent: true,
-          data: [
-            {
-              yAxis: zeroChartData.standard.top,
-              label: {
-                normal: {
-                  formatter: `标准要求${zeroChartData.standard.top}%` // 基线名称
-                }
+      series: [
+        {
+          data: data[0]? data.map(item=>item.RelativeError) : [],
+          type: 'line',
+          symbol: 'triangle',
+          symbolSize: 20,
+          lineStyle: {
+            color: '#5470C6',
+            width: 4,
+            type: 'dashed'
+          },
+          itemStyle: {
+            borderWidth: 3,
+            color: function (params,index) {
+              let color;
+              const isQualified = data[0]? data.map(item=>item.IsQualified)[params.dataIndex] .toString() == 1 :true;
+              if (isQualified) {
+                 color = "#248000"
+              } else {
+                color = "#ff0000"
               }
-            },
-            {
-              yAxis: zeroChartData.standard.lower,
-              label: {
-                normal: {
-                  formatter: `标准要求${zeroChartData.standard.lower}%` // 基线名称
-                }
-              }
+              return color;
             }
-          ]
-        },
-        itemStyle: {
-          borderWidth: 3,
-          // borderColor: 'yellow',
-          color: function (params) {
-            let color;
-            if (params.data > zeroChartData.standard.top || params.data < zeroChartData.standard.lower) {
-              color = "#ff0000"
-            } else {
-              color = "#248000"
-            }
-            return color;
           }
         }
-      }]
+      ]
     };
   }
-  const onFinish  = async () =>{  //查询
+  const onFinish  = async (typeID) =>{  //查询
+
     try {
       const values = await form.validateFields();
       props.getQualityRecordList({
         beginTime: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
         pollutantCode:values.pollutantCode&&values.pollutantCode[0]? values.pollutantCode.toString() : '',
-        typeID:tabKey
+        typeID: typeID && !(typeID instanceof Object) ? typeID : tabKey,
+        DGIMN:DGIMN,
       })
+
+
+        if(typeID instanceof Object){ //非初始化加载的时候
+        let data = []  //图例
+        qualityPollutantList.map(item=>{
+          values.pollutantCode.map(code=>{
+            if(item.ChildID === code){
+              data.push(item)
+            } 
+          })
+        })
+        setLegendTypeList([...data])
+        setCurrentPollutant(data[0]?data[0].ChildID : null)
+        }
+
+
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
-
+  const onValuesChange = (hangedValues, allValues)=>{
+    if(Object.keys(hangedValues).join() == 'pollutantCode'){
+    }
+  }
 
   const SearchComponents = () =>{
     return  <Form
@@ -221,20 +205,21 @@ const Index = (props) => {
     initialValues={{
       time:[moment(new Date()).add(-30, 'day').startOf('day'), moment(new Date()).add(-1, 'day').endOf('day')]
     }}
+    onValuesChange={onValuesChange}
   > 
-  <Form.Item name='time' label='开始/结束时间'>
+  <Form.Item name='time' label='开始/结束时间' style={{paddingBottom:5}}>
           <RangePicker   style={{width:'100%'}} 
                         allowClear={false}
                         showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
      </Form.Item>
-      <Form.Item label = '污染物' name='pollutantCode' style={{padding:'0 8px'}}>
-        {props.loadingQualityPollutantList?<Spin size='small'/> : <Select maxTagCount={4} style={{width:260}} mode='multiple' placeholder='请选择'>
+      <Form.Item label = '污染物' name='pollutantCode' style={{paddingBottom:5}}>
+        {props.loadingQualityPollutantList?<Spin size='small'/> : <Select maxTagCount={4}   style={{width:260}} mode='multiple' placeholder='请选择'>
            {qualityPollutantList.map(item=> <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>)}
             </Select>}
         </Form.Item>
         <Form.Item>
-     <Button  type="primary" htmlType='submit' >
+     <Button  type="primary" htmlType='submit' loading={props.loadingQualityRecordList}>
           查询
      </Button>
      {/* <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
@@ -247,38 +232,80 @@ const Index = (props) => {
   const  [tabKey,setTabkey] =useState()
   const tabChange = (key) =>{
     setTabkey(key)
+    onFinish(key)
   }
-  return (
-      <BreadcrumbWrapper id="zeroCheck">
-         <Card title={<SearchComponents />}>
+
+   const { qualityTypeList,qualityPollutantList } = props;
+ 
+   
+   const [currentPollutant,setCurrentPollutant] = useState(null)
+  
+  return (<div id='qualityControlResTrend'>
+
+    <NavigationTree  runState='1'   domId="#record" choice={false}  onItemClick={value => {
+      if (value.length > 0 && !value[0].IsEnt) {
+        setDGIMN(value[0].key)
+      }
+    }}
+  />
+      <BreadcrumbWrapper>
+
+         <Card title={<SearchComponents />} >
          {props.loadingQualityTypeList? <PageLoading /> :<Tabs defaultActiveKey={tabKey} type="card" onChange={tabChange}>    
         :<>
-          {props.qualityTypeList.map(item=>{
+          {qualityTypeList.map(item=>{
             return  <TabPane tab={item.Name} key={item.ChildID}>
-            Content of card tab 1
+            {props.loadingQualityRecordList?
+             <PageLoading />
+             :
+             <div style={{ position: "relative" }}>
+                     <div className={styles.legendContainer}>
+          {
+            legendTypeList.map(item => {
+              return <div key={item.ChildID} className={styles.legendItem} onClick={() => {
+                setCurrentPollutant(item.ChildID)
+
+                // qualityRecordList[0]&&qualityRecordList.map(code=>{
+                //   if(code.QualityItem == item.ChildID){
+                //   props.updateState({ qualityRecordList: code })
+                //   }
+                // })
+              }}>
+                <i className={currentPollutant === item.ChildID ? styles.active : ""}></i>
+                {item.Name}
+              </div>
+            })
+          }
+
+            </div>
+             <ReactEcharts
+             option={getOption()}
+             style={{ height: "calc(100vh - 270px)" }}
+             className="echarts-for-echarts"
+             theme="my_theme"
+           /> 
+
+           <div className={styles.bottomLegendContainer}>
+           <div className={styles.legendItem}>
+             <i className={styles.sanjiao}></i>
+             合格
+             </div>
+           <div className={styles.legendItem}>
+             <i className={`${styles.sanjiao} ${styles.bhg}`}></i>
+             不合格
+             </div>
+         </div>
+         </div>
+            }
           </TabPane>
           })} 
 
         </>
         </Tabs>}
-       {/* <ReactEcharts
-          option={getOption()}
-          style={{ height: "calc(100vh - 270px)" }}
-          className="echarts-for-echarts"
-          theme="my_theme"
-        /> */}
-        {/* <div className={styles.bottomLegendContainer}>
-          <div className={styles.legendItem}>
-            <i className={styles.sanjiao}></i>
-            合格
-            </div>
-          <div className={styles.legendItem}>
-            <i className={`${styles.sanjiao} ${styles.bhg}`}></i>
-            不合格
-            </div>
-        </div> */}
+ 
         </Card>
       </BreadcrumbWrapper>
+      </div>
   );
 }
 export default connect(dvaPropsData,dvaDispatch)(Index);
