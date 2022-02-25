@@ -21,17 +21,18 @@ const { TextArea } = Input;
 const { Option } = Select;
 import Point from './Point'
 
-const namespace = 'consumablesStatistics'
+const namespace = 'equipmentAbnormalRate'
 
 
 
 
-const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.regDetailTableDatas,
+const dvaPropsData =  ({ loading,equipmentAbnormalRate,global }) => ({
+  tableDatas:equipmentAbnormalRate.regDetailTableDatas,
   tableLoading:loading.effects[`${namespace}/regDetailGetExecptionRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
-  queryPar:consumablesStatistics.queryPar,
+  queryPar:equipmentAbnormalRate.queryPar,
+  coommonCol:equipmentAbnormalRate.coommonCol,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -88,8 +89,6 @@ const Index = (props) => {
  const columns = [
   {
     title: '序号',
-    dataIndex: 'x',
-    key:'x',
     align:'center',
     render:(text,record,index)=>{
      return  index +1 
@@ -100,43 +99,34 @@ const Index = (props) => {
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
+    ellipsis: true,
+    width:150,
     render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ pointDetail(record)  }} >{text}</Button>
+      return  <a onClick={()=>{ pointDetail(record)  }} >{text}</a>
     }
   },
   {
-    title: '备品备件更换数量',
-    dataIndex: 'sparePartCount',
-    key:'sparePartCount',
+    title: '运营企业数',
+    dataIndex: 'entCount',
+    key:'entCount',
     align:'center',
-    render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ sparePartsDetail(record)  }} >{text}</Button>
-    }
+    sorter: (a, b) => a.entCount - b.entCount,
   },
   {
-    title: '易耗品更换数量',
-    dataIndex: 'consumablesCount',
-    key:'consumablesCount',
+    title: '运营监测点数',
+    dataIndex: 'pointCount',
+    key:'pointCount',
     align:'center',
-    render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{ consumablesDetail(record)  }} >{text}</Button>
-    }
+    sorter: (a, b) => a.pointCount - b.pointCount,
+
   },
-  {
-    title: '试剂更换数量',
-    dataIndex: 'standardLiquidCount',
-    key:'standardLiquidCount',
-    align:'center',
-    render:(text,record,index)=>{
-      return  <Button type="link" onClick={()=>{reagentReplaceDetail(record)  }} >{text}</Button>
-    }
-  },
+  ...coommonCol
 ]
    const [pointVisible,setPointVisible] = useState(false)
    const [regionName,setRegionName] = useState()
    const pointDetail = (row) =>{
     setPointVisible(true)
-        props.updateState({
+    props.updateState({
          queryPar:{
         ...props.queryPar,
         regionCode:row.regionCode
@@ -148,20 +138,11 @@ const Index = (props) => {
   const [sparePartsVisible,setSparePartsVisible] = useState(false)
 
 
-  const sparePartsDetail = (row) =>{  //备品备件详情
-    setSparePartsVisible(true)
-    props.updateState({
-      queryPar:{
-        ...props.queryPar,
-        regionCode:row.regionCode
-      }
-    })
-    setRegionName(row.regionName)
-  }
+ 
 
 
   return (
-    <div  className={styles.consumablesStatisticsSty}>
+    <div  className={styles.equipmentAbnormalRateSty}>
 
   <Form.Item   style={{paddingBottom:'16px'}}>
     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
@@ -186,47 +167,6 @@ const Index = (props) => {
       >
         <Point />
         </Modal>
-        <Modal
-        title={`${regionName} - 备品备件更换数量`}
-        visible={sparePartsVisible}
-        onCancel={()=>{setSparePartsVisible(false)}}
-        footer={null}
-        destroyOnClose
-        width='90%'
-      >
-        <SpareParts />
-        </Modal>
-        <Modal
-        title={`${regionName} - 备品备件更换数量`}
-        visible={consumablesVisible}
-        onCancel={()=>{setConsumablesVisible(false)}}
-        footer={null}
-        destroyOnClose
-        width='90%'
-      >
-        <Consumables />
-        </Modal>
-        <Modal
-        title={`${regionName} - 试剂更换数量`}
-        visible={reagentReplaceVisible}
-        onCancel={()=>{setReagentReplaceVisible(false)}}
-        footer={null}
-        destroyOnClose
-        width='90%'
-      >
-        <ReagentReplace />
-        </Modal>
-
-        <Modal
-        title={`${regionName} - 标准物质更换数量`}
-        visible={referenceMaterialReplaceVisible}
-        onCancel={()=>{setReferenceMaterialReplaceVisible(false)}}
-        footer={null}
-        destroyOnClose
-        width='90%'
-      >
-        <ReferenceMaterialReplace />
-        </Modal> 
         </div>
   );
 };

@@ -147,6 +147,7 @@ export default class MonitorPoint extends Component {
       dispatch({
         type: 'point/getParamCodeList', //设备参数项码表
         payload: {pollutantType: type},
+        callback:()=>{}
       });
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');

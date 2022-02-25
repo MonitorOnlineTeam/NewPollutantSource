@@ -1,7 +1,7 @@
 /**
- * 功  能：耗材统计
- * 创建人：贾安波
- * 创建时间：2021.1.21
+ * 功  能：设备故障率
+ * 创建人：jab
+ * 创建时间：2021.2.25
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -20,17 +20,17 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'consumablesStatistics'
+const namespace = 'equipmentFailureRate'
 
 
 
 
-const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.pointTableDatas,
-  tableLoading:loading.effects[`${namespace}/pointGetConsumablesRIHList`],
+const dvaPropsData =  ({ loading,equipmentFailureRate,global }) => ({
+  tableDatas:equipmentFailureRate.pointTableDatas,
+  tableLoading:loading.effects[`${namespace}/pointGetFailureRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
-  queryPar:consumablesStatistics.queryPar,
+  queryPar:equipmentFailureRate.queryPar,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -41,9 +41,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    pointGetConsumablesRIHList:(payload)=>{ // 监测点详情
+    pointGetFailureRateList:(payload)=>{ // 监测点详情
       dispatch({
-        type: `${namespace}/pointGetConsumablesRIHList`,
+        type: `${namespace}/pointGetFailureRateList`,
         payload:payload,
       })
     },
@@ -69,11 +69,11 @@ const Index = (props) => {
 
 
   const initData =  () => {
-      props.pointGetConsumablesRIHList({
+      props.pointGetFailureRateList({
         ...props.queryPar,
+         entName:entName,
          pointType:3,
     })
-  console.log(props.regionCode)
  };
 
 
@@ -81,6 +81,7 @@ const Index = (props) => {
     const values = await form.validateFields();
       props.exportTaskWorkOrderList({
         ...queryPar,
+        entName:entName,
         pointType:3,
     })
 
@@ -88,8 +89,6 @@ const Index = (props) => {
  const columns = [
   {
     title: '序号',
-    dataIndex: 'x',
-    key:'x',
     align:'center',
     render:(text,record,index)=>{
      return  index +1 
@@ -100,9 +99,11 @@ const Index = (props) => {
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
+    ellipsis: true,
+    width:150,
   },
   {
-    title: '企业',
+    title: '企业名称',
     dataIndex: 'entName',
     key:'entName',
     align:'center',
@@ -111,47 +112,40 @@ const Index = (props) => {
     }
   },
   {
-    title: '监测点',
+    title: '监测点名称',
     dataIndex: 'pointName',
     key:'pointName',
     align:'center',
   },
   {
-    title: '备品备件更换数量',
-    dataIndex: 'sparePartCount',
-    key:'sparePartCount',
+    title: '故障率',
+    dataIndex: 'failureRate',
+    key: 'failureRate',
+    width: 150,
     align:'center',
-  },
-  {
-    title: '易耗品更换数量',
-    dataIndex: 'consumablesCount',
-    key:'consumablesCount',
-    align:'center',
-  },
-  {
-    title: '试剂更换数量',
-    dataIndex: 'standardLiquidCount',
-    key:'standardLiquidCount',
-    align:'center',
-  },
+    sorter: (a, b) => a.failureRate - b.failureRate,
+    render: (text, record) => {
+      return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+    }
+  }
 ]
 
-queryPar.pollutantType==2&&columns.splice(-1,1,
-  {
-  title: '标准物质更换数量',
-  dataIndex: 'standardGasCount',
-  key:'standardGasCount',
-  align:'center',
-})
-
+  const [entName,setEntName ] = useState()
   return (
-    <div  className={styles.consumablesStatisticsSty}>
-
-      <Form.Item   style={{paddingBottom:'16px'}}>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
-           导出
+    <div  className={styles.equipmentFailureRateSty}>
+      <Form layout='inline'>
+      <Form.Item style={{ paddingBottom: '16px' }}>
+        <Input placeholder='请输入企业名称' allowClear onChange={(e) => { setEntName(e.target.value) }} />
+        </Form.Item>
+        <Form.Item style={{ paddingBottom: '16px' }}>
+        <Button type='primary' loading={tableLoading} style={{ margin: '0 8px', }} onClick={() => { initData() }}>
+          查询
+     </Button>
+        <Button icon={<ExportOutlined />} loading={exportLoading} onClick={() => { exports() }}>
+          导出
     </Button>
-    </Form.Item>
+      </Form.Item>
+      </Form>
     <SdlTable
         loading = {tableLoading}
         bordered

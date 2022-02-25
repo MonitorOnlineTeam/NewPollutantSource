@@ -1,7 +1,7 @@
 /**
- * 功  能：耗材统计
- * 创建人：贾安波
- * 创建时间：2021.1.21
+ * 功  能：设备故障修复率
+ * 创建人：jab
+ * 创建时间：2021.2.25
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -19,18 +19,19 @@ import styles from "../style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
+import Point from './Point'
 
-const namespace = 'consumablesStatistics'
+const namespace = 'equipmentFailurerePairRate'
 
 
 
 
-const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
-  tableDatas:consumablesStatistics.pointTableDatas,
-  tableLoading:loading.effects[`${namespace}/pointGetConsumablesRIHList`],
+const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global }) => ({
+  tableDatas:equipmentFailurerePairRate.regDetailTableDatas,
+  tableLoading:loading.effects[`${namespace}/regDetailGetRepairRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
-  queryPar:consumablesStatistics.queryPar,
+  queryPar:equipmentFailurerePairRate.queryPar,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -41,9 +42,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    pointGetConsumablesRIHList:(payload)=>{ // 监测点详情
+    regDetailGetRepairRateList:(payload)=>{ // 行政区详情
       dispatch({
-        type: `${namespace}/pointGetConsumablesRIHList`,
+        type: `${namespace}/regDetailGetRepairRateList`,
         payload:payload,
       })
     },
@@ -69,11 +70,10 @@ const Index = (props) => {
 
 
   const initData =  () => {
-      props.pointGetConsumablesRIHList({
+      props.regDetailGetRepairRateList({
         ...props.queryPar,
-         pointType:3,
+         pointType:2,
     })
-  console.log(props.regionCode)
  };
 
 
@@ -81,15 +81,13 @@ const Index = (props) => {
     const values = await form.validateFields();
       props.exportTaskWorkOrderList({
         ...queryPar,
-        pointType:3,
+        pointType:2,
     })
 
  };
  const columns = [
   {
     title: '序号',
-    dataIndex: 'x',
-    key:'x',
     align:'center',
     render:(text,record,index)=>{
      return  index +1 
@@ -100,66 +98,83 @@ const Index = (props) => {
     dataIndex: 'regionName',
     key:'regionName',
     align:'center',
-  },
-  {
-    title: '企业',
-    dataIndex: 'entName',
-    key:'entName',
-    align:'center',
+    ellipsis: true,
+    width:150,
     render:(text,record,index)=>{
-      return  <div style={{textAlign:'left'}} >{text}</div>
+      return  <a onClick={()=>{ pointDetail(record)  }} >{text}</a>
     }
   },
   {
-    title: '监测点',
-    dataIndex: 'pointName',
-    key:'pointName',
+    title: '故障总数(维修工单数)',
+    dataIndex: 'entCount',
+    key:'entCount',
     align:'center',
+    sorter: (a, b) => a.entCount - b.entCount,
   },
   {
-    title: '备品备件更换数量',
-    dataIndex: 'sparePartCount',
-    key:'sparePartCount',
+    title: '完成数(完成工单数)',
+    dataIndex: 'pointCount',
+    key:'pointCount',
     align:'center',
+    sorter: (a, b) => a.pointCount - b.pointCount,
   },
   {
-    title: '易耗品更换数量',
-    dataIndex: 'consumablesCount',
-    key:'consumablesCount',
+    title: '故障修复率',
+    dataIndex: 'repairRate',
+    key: 'repairRate',
+    width: 150,
     align:'center',
-  },
-  {
-    title: '试剂更换数量',
-    dataIndex: 'standardLiquidCount',
-    key:'standardLiquidCount',
-    align:'center',
-  },
+    sorter: (a, b) => a.repairRate - b.repairRate,
+    render: (text, record) => {
+      return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+    }
+  }
 ]
+   const [pointVisible,setPointVisible] = useState(false)
+   const [regionName,setRegionName] = useState()
+   const pointDetail = (row) =>{
+    setPointVisible(true)
+    props.updateState({
+         queryPar:{
+        ...props.queryPar,
+        regionCode:row.regionCode
+      }
+    })
+    setRegionName(row.regionName)
+  }
 
-queryPar.pollutantType==2&&columns.splice(-1,1,
-  {
-  title: '标准物质更换数量',
-  dataIndex: 'standardGasCount',
-  key:'standardGasCount',
-  align:'center',
-})
+  const [sparePartsVisible,setSparePartsVisible] = useState(false)
+
+
+ 
+
 
   return (
-    <div  className={styles.consumablesStatisticsSty}>
+    <div  className={styles.equipmentFailurerePairRateSty}>
 
-      <Form.Item   style={{paddingBottom:'16px'}}>
+  <Form.Item   style={{paddingBottom:'16px'}}>
     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button>
+    <Button  onClick={() => {props.onGoBack() }}> <RollbackOutlined />返回 </Button>
     </Form.Item>
     <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={ columns}
-        scroll={{ y: clientHeight - 500}}
         pagination={false}
       />
+       <Modal
+        title={`${regionName} - 监测点`}
+        visible={pointVisible}
+        onCancel={()=>{setPointVisible(false)}}
+        footer={null}
+        destroyOnClose
+        width='90%'
+      >
+        <Point />
+        </Modal>
         </div>
   );
 };

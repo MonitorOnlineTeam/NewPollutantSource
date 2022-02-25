@@ -24,6 +24,8 @@ import MoreBtn from './publicComponents/MoreBtn'
 import ClockAbnormalModal from './springModal/abnormalWorkStatistics'
 import ConsumablesStatisticsModal from './springModal/consumablesStatistics'
 import EquipmentAbnormalRateModal from './springModal/equipmentAbnormalRate'
+import EquipmentFailureRate from './springModal/equipmentFailureRate'
+import EquipmentFailurerePairRate from './springModal/equipmentFailurerePairRate'
 
 
 const { Option } = Select;
@@ -380,6 +382,12 @@ const Index = (props) => {
     setEquipmentAbnormalRateVisible(true)
   }
 
+  const deviceFailureRate = () =>{ //设备异常率
+    setEquipmentFailureRateVisible(true)
+  }
+  const deviceFailurerePairRate = () =>{ //设备故障修复率
+    setEquipmentFailurerePairRateVisible(true)
+  }
   const deviceAbnormalEcharts = useMemo(()=>{  
    return <Row type='flex' align='middle' justify='space-between'>
     <Col span={8} align='middle'>
@@ -395,6 +403,7 @@ const Index = (props) => {
       <ReactEcharts
         option={deviceAbnormalOption(2)}
         style={{ width: '100%', height: 151 }}
+        onEvents={{ click: deviceFailureRate }}
       />
       <div>设备故障率</div>
     </Col>
@@ -402,6 +411,7 @@ const Index = (props) => {
       <ReactEcharts
         option={deviceAbnormalOption(3)}
         style={{ width: '100%', height: 151 }}
+        onEvents={{ click: deviceFailurerePairRate }}
       />
       <div>设备修复率</div>
     </Col>
@@ -413,6 +423,10 @@ const Index = (props) => {
   const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
   const { exceptionListLoading } = props; //设备异常统计
   const [equipmentAbnormalRateVisible,setEquipmentAbnormalRateVisible ] = useState(false) //设备异常率 弹框
+  const [equipmentFailureRateVisible,setEquipmentFailureRateVisible ] = useState(false) //设备故障率 弹框
+  const [equipmentFailurerePairRateVisible,setEquipmentFailurerePairRateVisible ] = useState(false) //设备故障修复率 弹框
+ 
+  
   return (
     <Row style={{ flexFlow: 'row nowrap' }} justify='space-between'>
 
@@ -511,7 +525,20 @@ const Index = (props) => {
         type={Number(pollutantType)}
         onCancel={()=>{setEquipmentAbnormalRateVisible(false)}}
         time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
-      />     
+      />  
+      <EquipmentFailureRate  //设备故障率弹框
+        visible={equipmentFailureRateVisible}
+        type={Number(pollutantType)}
+        onCancel={()=>{setEquipmentFailureRateVisible(false)}}
+        time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
+      />  
+      <EquipmentFailurerePairRate //设备故障修复率弹框
+        visible={equipmentFailurerePairRateVisible}
+        type={Number(pollutantType)}
+        onCancel={()=>{setEquipmentFailurerePairRateVisible(false)}}
+        time={[moment(deviceAbnormalCheck.beginTime),moment(deviceAbnormalCheck.endTime)]}
+      /> 
+         
     </Row>
   );
 };

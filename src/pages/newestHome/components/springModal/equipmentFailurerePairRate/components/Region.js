@@ -1,7 +1,7 @@
 /**
- * 功  能：设备异常率
+ * 功  能：设备故障修复率
  * 创建人：jab
- * 创建时间：2021.2.24
+ * 创建时间：2021.2.25
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Spin, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Checkbox,   } from 'antd';
@@ -22,18 +22,16 @@ const { Option } = Select;
 import RegionDetail from './RegionDetail'
 import point from '@/models/point';
 
-const namespace = 'equipmentAbnormalRate'
+const namespace = 'equipmentFailurerePairRate'
 
 
 
-const dvaPropsData =  ({ loading,equipmentAbnormalRate,global,point }) => ({
-  tableDatas:equipmentAbnormalRate.regTableDatas,
-  tableLoading: loading.effects[`${namespace}/regGetExecptionRateList`],
+const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global,point }) => ({
+  tableDatas:equipmentFailurerePairRate.regTableDatas,
+  tableLoading: loading.effects[`${namespace}/regGetRepairRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
-  queryPar:equipmentAbnormalRate.queryPar,
-  paramCodeListLoading: loading.effects[`point/getParamCodeList`],
-  coommonCol:equipmentAbnormalRate.coommonCol,
+  queryPar:equipmentFailurerePairRate.queryPar,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -44,17 +42,10 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regGetExecptionRateList:(payload)=>{ // 行政区
+    regGetRepairRateList:(payload)=>{ // 行政区
       dispatch({
-        type: `${namespace}/regGetExecptionRateList`,
+        type: `${namespace}/regGetRepairRateList`,
         payload:payload,
-      })
-    },
-    getParamCodeList:(payload,callback)=>{ // 设备参数类别
-      dispatch({
-        type: `point/getParamCodeList`,
-        payload:payload,
-        callback:callback
       })
     },
     // exportTaskWorkOrderList:(payload)=>{ // 导出
@@ -69,7 +60,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,paramCodeListLoading,coommonCol } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
   
   
   useEffect(() => {
@@ -81,12 +72,7 @@ const Index = (props) => {
   
   const [parType,setParType] = useState([])
   const initData = () =>{
-    
-    props.getParamCodeList({pollutantType:type},(data)=>{
-      setParType(data)
-      form.setFieldsValue({parameterCategory:data.map(item=>item.value) })
       onFinish();
-    }) 
   }
 
   const exports = async  () => {
@@ -116,21 +102,30 @@ const Index = (props) => {
     }
   },
   {
-    title: '运营企业数',
+    title: '故障总数(维修工单数)',
     dataIndex: 'entCount',
     key:'entCount',
     align:'center',
     sorter: (a, b) => a.entCount - b.entCount,
   },
   {
-    title: '运营监测点数',
+    title: '完成数(完成工单数)',
     dataIndex: 'pointCount',
     key:'pointCount',
     align:'center',
     sorter: (a, b) => a.pointCount - b.pointCount,
-
   },
-  ...coommonCol
+  {
+    title: '故障修复率',
+    dataIndex: 'repairRate',
+    key: 'repairRate',
+    width: 150,
+    align:'center',
+    sorter: (a, b) => a.repairRate - b.repairRate,
+    render: (text, record) => {
+      return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+    }
+  }
 ]
 
 
@@ -146,7 +141,7 @@ const Index = (props) => {
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
         pointType:1,
       }
-        props.regGetExecptionRateList({ ...par  })
+        props.regGetRepairRateList({ ...par  })
         props.updateState({
           queryPar:{ ...par }
         })
@@ -175,7 +170,7 @@ const Index = (props) => {
 
   
   return (
-    <div  className={styles.equipmentAbnormalRateSty}>
+    <div  className={styles.equipmentFailurerePairRateSty}>
    {!regionDetailVisible? <><Form
     form={form}
     name="advanced_search"
@@ -206,13 +201,6 @@ const Index = (props) => {
            导出
     </Button> 
     </Form.Item>
-    </Row>
-    <Row style={{paddingTop:8}}>
-    <Form.Item label='设备参数类别' name='parameterCategory'>
-      {paramCodeListLoading? <Spin size='small'/> :
-      <Checkbox.Group  options={parType} />
-       } 
-       </Form.Item>
     </Row>
   </Form>
 

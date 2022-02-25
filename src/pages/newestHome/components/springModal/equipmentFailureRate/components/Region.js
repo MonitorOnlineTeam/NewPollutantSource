@@ -1,7 +1,7 @@
 /**
- * 功  能：设备异常率
+ * 功  能：设备故障率
  * 创建人：jab
- * 创建时间：2021.2.24
+ * 创建时间：2021.2.25
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Spin, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Checkbox,   } from 'antd';
@@ -22,18 +22,17 @@ const { Option } = Select;
 import RegionDetail from './RegionDetail'
 import point from '@/models/point';
 
-const namespace = 'equipmentAbnormalRate'
+const namespace = 'equipmentFailureRate'
 
 
 
-const dvaPropsData =  ({ loading,equipmentAbnormalRate,global,point }) => ({
-  tableDatas:equipmentAbnormalRate.regTableDatas,
-  tableLoading: loading.effects[`${namespace}/regGetExecptionRateList`],
+const dvaPropsData =  ({ loading,equipmentFailureRate,global,point }) => ({
+  tableDatas:equipmentFailureRate.regTableDatas,
+  tableLoading: loading.effects[`${namespace}/regGetFailureRateList`],
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
   clientHeight: global.clientHeight,
-  queryPar:equipmentAbnormalRate.queryPar,
+  queryPar:equipmentFailureRate.queryPar,
   paramCodeListLoading: loading.effects[`point/getParamCodeList`],
-  coommonCol:equipmentAbnormalRate.coommonCol,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -44,9 +43,9 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regGetExecptionRateList:(payload)=>{ // 行政区
+    regGetFailureRateList:(payload)=>{ // 行政区
       dispatch({
-        type: `${namespace}/regGetExecptionRateList`,
+        type: `${namespace}/regGetFailureRateList`,
         payload:payload,
       })
     },
@@ -69,7 +68,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,paramCodeListLoading,coommonCol } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,paramCodeListLoading } = props; 
   
   
   useEffect(() => {
@@ -86,7 +85,7 @@ const Index = (props) => {
       setParType(data)
       form.setFieldsValue({parameterCategory:data.map(item=>item.value) })
       onFinish();
-    }) 
+    })  
   }
 
   const exports = async  () => {
@@ -128,9 +127,18 @@ const Index = (props) => {
     key:'pointCount',
     align:'center',
     sorter: (a, b) => a.pointCount - b.pointCount,
-
   },
-  ...coommonCol
+  {
+    title: '故障率',
+    dataIndex: 'failureRate',
+    key: 'failureRate',
+    width: 150,
+    align:'center',
+    sorter: (a, b) => a.failureRate - b.failureRate,
+    render: (text, record) => {
+      return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
+    }
+  }
 ]
 
 
@@ -146,7 +154,7 @@ const Index = (props) => {
         parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
         pointType:1,
       }
-        props.regGetExecptionRateList({ ...par  })
+        props.regGetFailureRateList({ ...par  })
         props.updateState({
           queryPar:{ ...par }
         })
@@ -175,7 +183,7 @@ const Index = (props) => {
 
   
   return (
-    <div  className={styles.equipmentAbnormalRateSty}>
+    <div  className={styles.equipmentFailureRateSty}>
    {!regionDetailVisible? <><Form
     form={form}
     name="advanced_search"

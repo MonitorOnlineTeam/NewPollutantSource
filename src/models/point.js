@@ -272,6 +272,7 @@ export default Model.extend({
                         return  { label: item.Name, value:  item.ChildID }
                     })
                     yield update({ paramCodeList:data  })
+                    callback(data)
                  }
                
             } else {
