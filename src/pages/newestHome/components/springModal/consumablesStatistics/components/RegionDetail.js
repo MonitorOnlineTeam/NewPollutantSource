@@ -52,12 +52,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportConsumablesRIHList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportConsumablesRIHList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -75,7 +75,7 @@ const Index = (props) => {
 
   const initData =  () => {
       props.regDetailGetConsumablesRIHList({
-        ...props.queryPar,
+        ...queryPar,
          pointType:2,
     })
  };
@@ -83,7 +83,7 @@ const Index = (props) => {
 
   const exports = async  () => {
     const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
+      props.exportConsumablesRIHList({
         ...queryPar,
         pointType:2,
     })
@@ -142,7 +142,7 @@ const Index = (props) => {
     setPointVisible(true)
         props.updateState({
          queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -156,7 +156,7 @@ const Index = (props) => {
     setSparePartsVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -168,7 +168,7 @@ const Index = (props) => {
     setConsumablesVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -180,7 +180,7 @@ const Index = (props) => {
     setReagentReplaceVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -191,7 +191,7 @@ const Index = (props) => {
     setReferenceMaterialReplaceVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })

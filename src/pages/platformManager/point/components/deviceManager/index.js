@@ -835,7 +835,7 @@ const Index = (props) => {
        console.log(data)
       const  parList =  data.map(itme=>{
         return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range2,EquipmentManufacturer:itme.EquipmentManufacturerID,
-                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.EquipmentNumber}
+                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.Equipment}
       })
       const  par =  {
         equipmentModel: pollutantType ==1? null : {...values,DGIMN:DGIMN},

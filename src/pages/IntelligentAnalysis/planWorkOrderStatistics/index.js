@@ -54,6 +54,15 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+
+    /**实际工单统计 */
+
+    regEntActualGetTaskWorkOrderList:(payload)=>{ // 计划工单统计
+      dispatch({
+        type: `${namespace}/regEntActualGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -95,8 +104,8 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
       if(values.time[1].diff(values.time[0], 'days') <= 90){
-
-        props.regEntGetTaskWorkOrderList({
+        
+        let par = {
           ...values,
           time:undefined,
           staticType:showType,
@@ -106,7 +115,9 @@ const Index = (props) => {
           regionLevel:showType ==1? 1 : undefined,
           pageIndex:showType ==2? 1 : undefined,
           pageSize:showType ==2? 10 : undefined,
-        })
+        }
+        !isActualCalibrationModal?  props.regEntGetTaskWorkOrderList(par):
+        props.regEntActualGetTaskWorkOrderList(par)
       }else{
         message.warning('日期单位不能超过90天，请重新选择')
       }

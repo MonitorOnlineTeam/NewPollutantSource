@@ -58,19 +58,19 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportConsumablesRIHList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportConsumablesRIHList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
   const pchildref = useRef();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
-  const  { summaryTableDatas,summaryTableLoading,summaryTableTotal,detailedTableDatas,detailedTableLoading,detailedTableTotal,exportLoading,clientHeight,type,time } = props; 
+  const  { summaryTableDatas,summaryTableLoading,summaryTableTotal,detailedTableDatas,detailedTableLoading,detailedTableTotal,exportLoading,clientHeight,type,time,queryPar } = props; 
   
   
   useEffect(() => {
@@ -82,7 +82,7 @@ const Index = (props) => {
 
   const summaryGetConsumablesRIHLists =(values,PageIndex,PageSize)=>{
     props.summaryGetConsumablesRIHList({ 
-      ...props.queryPar,
+      ...queryPar,
       ...values, 
       pointType:4,
       articlesType:1,
@@ -93,7 +93,7 @@ const Index = (props) => {
   }
   const detailedGetConsumablesRIHLists =(values,PageIndex,PageSize)=>{
     props.detailedGetConsumablesRIHList({ 
-      ...props.queryPar,
+      ...queryPar,
       ...values, 
       pointType:5,
       articlesType:1,
@@ -136,14 +136,18 @@ const Index = (props) => {
     const values = await form2.validateFields();
     detailedGetConsumablesRIHLists(values,PageIndex, PageSize)
   } 
-//   const exports = async  () => {
-//     const values = await form.validateFields();
-//       props.exportTaskWorkOrderList({
-//         ...queryPar,
-//         pointType:2,
-//     })
+  const exports = async  () => {
+    const values = tabsType==1?  await form1.validateFields() : await form2.validateFields();
+      props.exportConsumablesRIHList({
+        ...queryPar,
+        ...values, 
+        pointType:tabsType==1? 4 : 5,
+        articlesType:1,
+        pageIndex:undefined,
+        pageSize:undefined,
+    })
 
-//  };
+ };
 const columns1 = [
   {
     title: '序号',

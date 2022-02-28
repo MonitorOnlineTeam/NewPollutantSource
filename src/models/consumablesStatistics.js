@@ -72,15 +72,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },   
-    
-    // *workEntExportTaskWorkList({ payload,callback }, { call, put, update }) { //企业工单数 导出
-    //   const result = yield call(services.workEntExportTaskWorkList, payload);
-    //   if (result.IsSuccess) {
-    //     message.success('下载成功');
-    //       downloadFile(`/upload${result.Datas}`);
-    //      } else {
-    //     message.warning(result.Message);
-    //   }
-    // }, 
+    *exportConsumablesRIHList({ payload,callback }, { call, put, update }) { //行政区 导出
+      // yield update(payload.pointType==1?{exportloading: true}:{exportloading: true} )
+      const result = yield call(services.exportConsumablesRIHList, payload);
+       if (result.IsSuccess) {
+           message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+          } else {
+         message.warning(result.Message);
+       }
+    },
   },
 })

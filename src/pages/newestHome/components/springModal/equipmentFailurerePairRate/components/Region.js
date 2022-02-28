@@ -103,17 +103,17 @@ const Index = (props) => {
   },
   {
     title: '故障总数(维修工单数)',
-    dataIndex: 'entCount',
-    key:'entCount',
+    dataIndex: 'repairCount',
+    key:'repairCount',
     align:'center',
-    sorter: (a, b) => a.entCount - b.entCount,
+    sorter: (a, b) => a.repairCount - b.repairCount,
   },
   {
     title: '完成数(完成工单数)',
-    dataIndex: 'pointCount',
-    key:'pointCount',
+    dataIndex: 'repariComCount',
+    key:'repariComCount',
     align:'center',
-    sorter: (a, b) => a.pointCount - b.pointCount,
+    sorter: (a, b) => a.repariComCount - b.repariComCount,
   },
   {
     title: '故障修复率',

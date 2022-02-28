@@ -31,3 +31,11 @@ export async function detailedGetConsumablesRIHList(params) {
 }
 
 
+// 耗材统计  导出
+export async function exportConsumablesRIHList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/exportConsumablesRIHList',params, null);
+  return result;
+}
+
+
+

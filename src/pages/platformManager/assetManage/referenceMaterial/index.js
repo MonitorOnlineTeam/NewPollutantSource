@@ -1,7 +1,7 @@
 /**
- * 功  能：标准气体
+ * 功  能：标准气体 试剂信息
  * 创建人：贾安波
- * 创建时间：2022.02.21
+ * 创建时间：2022.02.21 02.28
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
@@ -96,7 +96,9 @@ const Index = (props) => {
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm, } = props; 
+  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm,match:{path} } = props;
+  
+  const typeRemark = path==='/platformconfig/assetManage/referenceMaterial'? 1 : 2
   useEffect(() => {
    onFinish()
   },[]);
@@ -109,7 +111,7 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '标准气体名称',
+      title: `${typeRemark ==1?"标准气体名称": "试剂名称"}`,
       dataIndex: 'StandardGasName',
       key:'StandardGasName',
       align:'center',
@@ -253,7 +255,8 @@ const Index = (props) => {
     form={form}
     name="advanced_search"
     initialValues={{
-      IsUsed:1
+      IsUsed:1,
+      Remark:typeRemark,
     }}
     className={styles["ant-advanced-search-form"]}
     onFinish={onFinish}
@@ -263,7 +266,7 @@ const Index = (props) => {
       <Form.Item label="存货编号" name="StandardGasCode" >
         <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="标准气体名称" name="StandardGasName"   style={{marginLeft:16,marginRight:16}}>
+      <Form.Item label={typeRemark ==1?"标准气体名称": "试剂名称"} name="StandardGasName"   style={{marginLeft:16,marginRight:16}}>
             <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
       <Form.Item label="规格型号" name="Component"  >
@@ -274,10 +277,16 @@ const Index = (props) => {
       <Form.Item label="供应商" name="Manufacturer">
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} className={styles.status} >
+      <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} className={typeRemark ==1? styles.status : ''} >
         <Radio.Group style={{width:200}}>
             <Radio value={1}>启用</Radio>
             <Radio value={0}>停用</Radio>
+        </Radio.Group>
+      </Form.Item>
+      <Form.Item hidden label="类型"  name="Remark" >
+        <Radio.Group style={{width:200}}>
+            <Radio value={1}>标准气体</Radio>
+            <Radio value={2}>试剂信息</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item>
@@ -292,6 +301,12 @@ const Index = (props) => {
      </Button>
      </Form.Item>
      </Row>
+     <Form.Item hidden label="类型"  name="Remark" >
+        <Radio.Group style={{width:200}}>
+            <Radio value={1}>标准气体</Radio>
+            <Radio value={2}>试剂信息</Radio>
+        </Radio.Group>
+      </Form.Item>
      </Form>
   }
 
@@ -348,7 +363,8 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        IsUsed:1
+        IsUsed:1,
+        Remark:typeRemark,
       }}
       onValuesChange={onAddEditValuesChange}
     > 
@@ -367,7 +383,7 @@ const Index = (props) => {
        <NumTips content={codeContent}/>
       </Col>
       <Col span={12}>
-        <Form.Item label="标准气体名称" name="StandardGasName" rules={[  { required: true, message: '请输入标准气体名称'  }]} >
+        <Form.Item label={typeRemark==1?"标准气体名称" :"试剂名称"} name="StandardGasName" rules={[  { required: true, message: '请输入标准气体名称'  }]} >
         <Input placeholder="请输入"  allowClear/>
       </Form.Item>
       </Col>
@@ -402,6 +418,12 @@ const Index = (props) => {
          </Form.Item>
       </Col>
         </Row>
+        <Form.Item hidden label="类型"  name="Remark" >
+        <Radio.Group style={{width:200}}>
+            <Radio value={1}>标准气体</Radio>
+            <Radio value={2}>试剂信息</Radio>
+        </Radio.Group>
+      </Form.Item>
     </Form>
       </Modal>
         </div>

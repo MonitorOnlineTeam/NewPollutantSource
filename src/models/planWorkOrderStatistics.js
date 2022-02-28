@@ -48,14 +48,13 @@ export default Model.extend({
           tableDatas:result.Datas,
           tableLoading:false,
           queryPar:{...payload,entCode:undefined,entName:undefined},
-        })
-
-        
+        })    
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
+
     *cityGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区市 级别 第一级
       const result = yield call(services.cityGetTaskWorkOrderList, payload);
       if (result.IsSuccess) {
@@ -170,5 +169,49 @@ export default Model.extend({
         message.warning(result.Message);
       }
     }, 
+ 
+
+    /******** 实际校准完成率 *********/
+    *regEntActualGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级 
+      yield update({ tableLoading:true})
+      const result = yield call(services.regEntActualGetTaskWorkOrderList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          tableTotal:result.Total,
+          tableDatas:result.Datas,
+          tableLoading:false,
+          queryPar:{...payload,entCode:undefined,entName:undefined},
+        })    
+      }else{
+        message.error(result.Message)
+        yield update({ tableLoading:false})
+      }
+    },
+    *cityActualGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级 
+      const result = yield call(services.cityActualGetTaskWorkOrderList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          cityTableTotal:result.Total,
+          cityTableDatas:result.Datas,
+          queryPar:{...payload,entCode:undefined,entName:undefined},
+        })    
+      }else{
+        message.error(result.Message)
+      }
+    },
+
+    *insideOrOutsideWorkActualGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区  计划内 计划外 工单数弹框
+      const result = yield  call(services.insideOrOutsideWorkActualGetTaskWorkOrderList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          insideOrOutsiderWorkTableDatas:result.Datas,
+          insideOrOutsiderWorkTableTotal:result.Total,
+          dateCol:result.Datas[0]&&result.Datas[0].datePick,
+          queryPar:{...payload,entCode:undefined,entName:undefined},
+        })  
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

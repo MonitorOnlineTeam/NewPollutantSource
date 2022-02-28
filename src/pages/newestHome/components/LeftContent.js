@@ -291,7 +291,14 @@ const actualCalibration = () =>{  //实际校准弹框
 }
 
 const moreBtnClick = (type) =>{ //近30日运维工单统计
-  setOrderModalVisible(true)
+  switch(type){
+    case "operaOrder" :
+    setOrderModalVisible(true)
+    break;
+    case "planComplete" : //计划完成率
+    // setTVisible(true)
+    break;
+  }
 }
 
 
@@ -383,7 +390,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
            <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
            <ScrollTable data={planCompleteList}  column={[]} />
-           <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/>
+           {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
            </div>
           </div>
           </Spin>

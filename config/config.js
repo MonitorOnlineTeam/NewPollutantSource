@@ -521,8 +521,8 @@ export default {
                     },
                     {
                       name: 'StandardLiquid',//试剂信息
-                      path: '/platformconfig/assetManage/reagentInfo/:configId',
-                      component: './AutoFormManager',
+                      path: '/platformconfig/assetManage/reagentInfo',
+                      component: './platformManager/assetManage/referenceMaterial',
                     },
                     
                   ]

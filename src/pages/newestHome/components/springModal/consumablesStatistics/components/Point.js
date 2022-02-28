@@ -47,12 +47,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportConsumablesRIHList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportConsumablesRIHList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -70,7 +70,7 @@ const Index = (props) => {
 
   const initData =  () => {
       props.pointGetConsumablesRIHList({
-        ...props.queryPar,
+        ...queryPar,
          pointType:3,
     })
   console.log(props.regionCode)
@@ -78,8 +78,7 @@ const Index = (props) => {
 
 
   const exports = async  () => {
-    const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
+      props.exportConsumablesRIHList({
         ...queryPar,
         pointType:3,
     })

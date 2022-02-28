@@ -32,7 +32,7 @@ const namespace = 'consumablesStatistics'
 const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
   tableDatas:consumablesStatistics.regTableDatas,
   tableLoading: loading.effects[`${namespace}/regGetConsumablesRIHList`],
-  exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  exportLoading: loading.effects[`${namespace}/exportConsumablesRIHList`],
   clientHeight: global.clientHeight,
   queryPar:consumablesStatistics.queryPar,
 })
@@ -51,12 +51,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportConsumablesRIHList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportConsumablesRIHList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -77,9 +77,12 @@ const Index = (props) => {
 
   const exports = async  () => {
     const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
-        pageIndex:undefined,
-        pageSize:undefined,
+      props.exportConsumablesRIHList({
+        ...values,
+        time:undefined,
+        beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        pointType:1,
     })
 
  };
@@ -159,7 +162,7 @@ const Index = (props) => {
     setRegionDetailVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -171,7 +174,7 @@ const Index = (props) => {
     setSparePartsVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -183,7 +186,7 @@ const Index = (props) => {
     setConsumablesVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -196,7 +199,7 @@ const Index = (props) => {
     setReagentReplaceVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
@@ -207,7 +210,7 @@ const Index = (props) => {
     setReferenceMaterialReplaceVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })

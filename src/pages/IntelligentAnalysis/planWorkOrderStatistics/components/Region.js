@@ -37,10 +37,12 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   queryPar:planWorkOrderStatistics.queryPar,
   cityTableDatas:planWorkOrderStatistics.cityTableDatas,
   cityTableLoading:loading.effects[`${namespace}/cityGetTaskWorkOrderList`],
+  cityActualTableLoading:loading.effects[`${namespace}/cityActualGetTaskWorkOrderList`],
   cityTableTotal:planWorkOrderStatistics.cityTableTotal,
   regPointTableDatas:planWorkOrderStatistics.regPointTableDatas,
   regPointTableLoading:loading.effects[`${namespace}/regPointGetTaskWorkOrderList`],
   insideOrOutsideWorkLoading:loading.effects[`${namespace}/insideOrOutsideWorkGetTaskWorkOrderList`],
+  insideOrOutsideWorkActualLoading:loading.effects[`${namespace}/insideOrOutsideWorkActualGetTaskWorkOrderList`],
   insideOrOutsiderWorkTableDatas:planWorkOrderStatistics.insideOrOutsiderWorkTableDatas,
   insideOrOutsiderWorkTableTotal:planWorkOrderStatistics.insideOrOutsiderWorkTableTotal,
   clientHeight: global.clientHeight,
@@ -117,6 +119,21 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+
+
+    /**实际工单统计 */
+    cityActualGetTaskWorkOrderList:(payload)=>{ // 市级别
+      dispatch({
+        type: `${namespace}/cityActualGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
+    insideOrOutsideWorkActualGetTaskWorkOrderList:(payload)=>{ //  计划内or计划外 工单数 弹框
+      dispatch({
+        type: `${namespace}/insideOrOutsideWorkActualGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props,ref ) => {
@@ -146,11 +163,11 @@ const Index = (props,ref ) => {
   
   const  {clientHeight, tableDatas,tableTotal,tableLoading,pointLoading,exportLoading,exportPointLoading,refInstance,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
 
-  const {cityTableDatas,cityTableLoading,cityTableTotal} = props; //市级别
+  const {cityTableDatas,cityTableLoading,cityTableTotal,cityActualTableLoading} = props; //市级别
 
   const { regPointTableDatas,regPointTableLoading ,regPointTableDatasTotal} = props; //监测点
 
-  const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading,insideOrOutsiderWorkTableTotal } = props; //计划内or计划外工单数
+  const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading,insideOrOutsiderWorkTableTotal,insideOrOutsideWorkActualLoading } = props; //计划内or计划外工单数
 
    const { cityDetailExportLoading,workRegExportLoading,cityRegExportLoading,operaPointExportLoading }  = props; //导出
   useEffect(() => {
@@ -990,12 +1007,18 @@ const regionClick = (record) =>{
   setRegName(record.regionName)
   setRegionCode(record.regionCode)
   setCityDetailRegionCode(record.regionCode)//计划外 市级详情 全部合计Code
-   props.cityGetTaskWorkOrderList({
+  !isActualCalibrationModal? props.cityGetTaskWorkOrderList({
+    ...queryPar,
+    regionCode: record.regionCode,
+    staticType: 1,
+    regionLevel: 2,
+  }): props.cityActualGetTaskWorkOrderList({ //实际校准率
     ...queryPar,
     regionCode: record.regionCode,
     staticType: 1,
     regionLevel: 2,
   })
+  
 }
 
 
@@ -1083,7 +1106,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
 
   
   const insideOrOutsideWorkGetTaskWorkOrderList = (par)=>{ //计划内or计划外弹框
-    props.insideOrOutsideWorkGetTaskWorkOrderList({
+    const pars ={
       ...queryPar,
       pageIndex:1,
       pageSize:10,
@@ -1091,7 +1114,10 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       ...par,
       regionLevel:undefined,
       staticType:3,
-    })
+    }
+   !isActualCalibrationModal? props.insideOrOutsideWorkGetTaskWorkOrderList(pars)
+                             :props.insideOrOutsideWorkActualGetTaskWorkOrderList(pars)
+    
   }
   const [insideWorkType, setInsideWorkType] = useState()
   const [insideWorkOrderVisible, setInsideWorkOrderVisible] = useState(false)
@@ -1619,8 +1645,8 @@ useImperativeHandle(refInstance,() => {
       children: [
         {
           title: <span>计划次数<Tooltip  title={'日期条件内，实际校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-          dataIndex: 'calibrationCount',
-          key: 'calibrationCount',
+          dataIndex: 'taskCount',
+          key: 'taskCount',
           width: 50,
           align:'center',
           render:(text,record,index)=>{
@@ -1629,15 +1655,15 @@ useImperativeHandle(refInstance,() => {
         },
         {
           title:  <span>实际完成数</span>,
-          dataIndex: 'calibrationCompleteCount',
-          key: 'calibrationCompleteCount',
+          dataIndex: 'taskCompleteCount',
+          key: 'taskCompleteCount',
           width: 50,
           align:'center',
         },
         {
           title: '实际完成率',
-          dataIndex: 'calibrationRate',
-          key: 'calibrationRate',
+          dataIndex: 'taskRate',
+          key: 'taskRate',
           width: 100,
           align:'center',
           sorter: (a, b) => a.calibrationRate - b.calibrationRate,
@@ -1709,7 +1735,7 @@ useImperativeHandle(refInstance,() => {
       >
      <Card title={  searchCityRegComponents()}>
      <SdlTable
-        loading = {cityTableLoading}
+        loading = {!isActualCalibrationModal? cityTableLoading : cityActualTableLoading}
         bordered
         dataSource={cityTableDatas}
         total={cityTableTotal}
@@ -1764,7 +1790,7 @@ useImperativeHandle(refInstance,() => {
       >
      <Card title={  searchWorkComponents()}>
      <SdlTable
-        loading = {insideOrOutsideWorkLoading}
+        loading = {!isActualCalibrationModal? insideOrOutsideWorkLoading : insideOrOutsideWorkActualLoading}
         bordered
         dataSource={insideOrOutsiderWorkTableDatas}
         columns={insideWorkType==1? insideWorkOrderColumns : insideWorkOrderColumns2}
