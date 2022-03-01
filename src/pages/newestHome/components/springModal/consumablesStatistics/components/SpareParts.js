@@ -33,7 +33,8 @@ const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
   detailedTableDatas:consumablesStatistics.detailedTableDatas,
   detailedTableLoading:loading.effects[`${namespace}/detailedGetConsumablesRIHList`],
   detailedTableTotal:consumablesStatistics.detailedTableTotal,
-  // exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  exportLoading1: consumablesStatistics.exportSpareSumLoading,
+  exportLoading2: consumablesStatistics.exportSpareDetailLoading,
   clientHeight: global.clientHeight,
   queryPar:consumablesStatistics.queryPar,
 })
@@ -70,7 +71,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
-  const  { summaryTableDatas,summaryTableLoading,summaryTableTotal,detailedTableDatas,detailedTableLoading,detailedTableTotal,exportLoading,clientHeight,type,time,queryPar } = props; 
+  const  { summaryTableDatas,summaryTableLoading,summaryTableTotal,detailedTableDatas,detailedTableLoading,detailedTableTotal,exportLoading1,exportLoading2,clientHeight,type,time,queryPar } = props; 
   
   
   useEffect(() => {
@@ -279,7 +280,7 @@ const columns2 = [
            <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading1} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     </Form.Item> 
@@ -310,7 +311,7 @@ const columns2 = [
            <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading2} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     </Form.Item> 

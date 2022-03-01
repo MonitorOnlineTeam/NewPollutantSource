@@ -20,6 +20,9 @@ export default Model.extend({
     regDetailTableDatas:[],
     pointTableDatas:[],
     queryPar:{},
+    exportRegLoading:false,
+    exportRegDetailLoading: false,
+    exportPointLoading: false,
   },
   effects: {
     *regGetFailureRateList({ payload,callback }, { call, put, update }) { //行政区
@@ -52,6 +55,21 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-
+    *exportFailureRateList({ payload,callback }, { call, put, update }) { //导出
+      const exportStatus = (flag) =>{
+        return payload.pointType==1? {exportRegLoading: flag}:
+               payload.pointType==2 ? {exportRegDetailLoading: flag}:{exportPointLoading: flag}
+        }
+        yield update(exportStatus(true))
+        const result = yield call(services.exportFailureRateList, payload);
+         if (result.IsSuccess) {
+            message.success('下载成功');
+           downloadFile(`/upload${result.Datas}`);
+           yield update(exportStatus(false))
+          } else {
+         message.warning(result.Message);
+         yield update(exportStatus(false))
+       }
+    },
   },
 })

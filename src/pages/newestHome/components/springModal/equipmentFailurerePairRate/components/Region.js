@@ -29,7 +29,7 @@ const namespace = 'equipmentFailurerePairRate'
 const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global,point }) => ({
   tableDatas:equipmentFailurerePairRate.regTableDatas,
   tableLoading: loading.effects[`${namespace}/regGetRepairRateList`],
-  exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  exportLoading: equipmentFailurerePairRate.exportRegLoading,
   clientHeight: global.clientHeight,
   queryPar:equipmentFailurerePairRate.queryPar,
 })
@@ -48,12 +48,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportRepairRateList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportRepairRateList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -77,10 +77,15 @@ const Index = (props) => {
 
   const exports = async  () => {
     const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
-        pageIndex:undefined,
-        pageSize:undefined,
-    })
+    const par = {
+      ...values,
+      time:undefined,
+      beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+      endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+      parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
+      pointType:1,
+    }
+      props.exportRepairRateList(par)
 
  };
 
@@ -157,7 +162,7 @@ const Index = (props) => {
     setRegionDetailVisible(true)
     props.updateState({
       queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })

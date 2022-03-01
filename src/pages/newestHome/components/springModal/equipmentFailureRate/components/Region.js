@@ -29,7 +29,7 @@ const namespace = 'equipmentFailureRate'
 const dvaPropsData =  ({ loading,equipmentFailureRate,global,point }) => ({
   tableDatas:equipmentFailureRate.regTableDatas,
   tableLoading: loading.effects[`${namespace}/regGetFailureRateList`],
-  exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  exportLoading: equipmentFailureRate.exportRegLoading,
   clientHeight: global.clientHeight,
   queryPar:equipmentFailureRate.queryPar,
   paramCodeListLoading: loading.effects[`point/getParamCodeList`],
@@ -56,12 +56,12 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportFailureRateList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportFailureRateList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -90,9 +90,13 @@ const Index = (props) => {
 
   const exports = async  () => {
     const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
-        pageIndex:undefined,
-        pageSize:undefined,
+      props.exportFailureRateList({
+        ...values,
+        time:undefined,
+        beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        parameterCategory:values.parameterCategory? values.parameterCategory.toString() :'',
+        pointType:1,
     })
 
  };

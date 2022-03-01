@@ -1,5 +1,5 @@
 /**
- * 功  能：耗材统计 备品备件
+ * 功  能：耗材统计-标准物质更换
  * 创建人：贾安波
  * 创建时间：2022.1.28
  */
@@ -33,7 +33,8 @@ const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
   detailedTableDatas:consumablesStatistics.detailedTableDatas,
   detailedTableLoading:loading.effects[`${namespace}/detailedGetConsumablesRIHList`],
   detailedTableTotal:consumablesStatistics.detailedTableTotal,
-  // exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  exportLoading1: consumablesStatistics.exportReferenceSumLoading,
+  exportLoading2: consumablesStatistics.exportReferenceDetailLoading,
   clientHeight: global.clientHeight,
   queryPar:consumablesStatistics.queryPar,
 })
@@ -46,13 +47,13 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    summaryGetConsumablesRIHList:(payload)=>{ // 备品备件 汇总
+    summaryGetConsumablesRIHList:(payload)=>{ // 标准物质更换 汇总
       dispatch({
         type: `${namespace}/summaryGetConsumablesRIHList`,
         payload:payload,
       })
     },
-    detailedGetConsumablesRIHList:(payload)=>{ // 备品备件 明细
+    detailedGetConsumablesRIHList:(payload)=>{ // 标准物质更换 明细
       dispatch({
         type: `${namespace}/detailedGetConsumablesRIHList`,
         payload:payload,
@@ -70,7 +71,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
-  const  { summaryTableDatas,summaryTableLoading,summaryTableTotal,detailedTableDatas,detailedTableLoading,detailedTableTotal,exportLoading,clientHeight,type,time,queryPar } = props; 
+  const  { summaryTableDatas,summaryTableLoading,summaryTableTotal,detailedTableDatas,detailedTableLoading,detailedTableTotal,exportLoading1,exportLoading2,clientHeight,type,time,queryPar } = props; 
   
   
   useEffect(() => {
@@ -139,11 +140,12 @@ const Index = (props) => {
   const exports = async  () => {
     const values = tabsType==1?  await form1.validateFields() : await form2.validateFields();
       props.exportConsumablesRIHList({
-        pointType:tabsType==1? 4 : 5,
+        ...queryPar,
         ...values,
+        pointType:tabsType==1? 4 : 5,
         articlesType:3,
-        pageIndex:PageIndex? PageIndex: pageIndex1,
-        pageSize:PageSize? PageSize: pageSize1,
+        pageIndex:undefined,
+        pageSize:undefined,
     })
 
  };
@@ -283,7 +285,7 @@ const columns2 = [
            <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading1} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     </Form.Item> 
@@ -311,7 +313,7 @@ const columns2 = [
            <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading2} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     </Form.Item> 

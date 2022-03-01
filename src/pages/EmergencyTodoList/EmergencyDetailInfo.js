@@ -265,7 +265,10 @@ class EmergencyDetailInfo extends Component {
                          break;
                          case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
                          this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
-                         break;                                                                                                       
+                         break; 
+                         case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
+                         this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                         break;                         
                         default:
                             break;
                     }

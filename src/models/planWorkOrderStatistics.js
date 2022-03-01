@@ -36,7 +36,11 @@ export default Model.extend({
     cityDetailTableDatas:[],
     entOutsidePointListTotal:[],
     entOutsidePointListDatas:[],
-    regPointTableDatasTotal:[]
+    regPointTableDatasTotal:[],
+    exportActualRegLoading:false,
+    exportActualRegDetailLoading:false,
+    exportActualRegTaskLoading:false,
+    exportActualRegDetailTaskLoading:false,
   },
   effects: {
     *regEntGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级
@@ -121,7 +125,7 @@ export default Model.extend({
         message.success('下载成功');
           downloadFile(`/upload${result.Datas}`);
          } else {
-        message.warning(result.Message);
+          message.warning(result.Message);
       }
     }, 
     *exportCityDetailTaskWorkList({ payload,callback }, { call, put, update }) { //城市详情 导出
@@ -213,5 +217,24 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *exportActualTaskWorkOrderList({ payload,callback }, { call, put, update }) { // 导出
+      const exportStatus = (flag) =>{
+        return payload.regionLevel==1&&payload.staticType==1? {exportActualRegLoading: flag}:
+               payload.regionLevel==2&&payload.staticType==1? {exportActualRegDetailLoading: flag}:
+               payload.regionLevel==1&&payload.staticType==3?{exportActualRegTaskLoading: flag}:{exportActualRegDetailTaskLoading :flag }
+              }
+              yield update(exportStatus(true))
+      const result = yield call(services.exportActualTaskWorkOrderList, payload);     
+      if (result.IsSuccess) {
+          message.success('下载成功');
+          downloadFile(`/upload${result.Datas}`);
+          yield update(exportStatus(false))
+         } else {
+           message.warning(result.Message);
+           yield update(exportStatus(false))
+      }
+    }, 
+
+
   },
 })

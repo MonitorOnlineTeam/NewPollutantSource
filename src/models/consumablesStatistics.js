@@ -17,7 +17,18 @@ export default Model.extend({
     detailedTableDatas:[],
     summaryTableTotal:null,
     detailedTableTotal:null,
-    queryPar:{}
+    queryPar:{},
+    exportRegLoading:false,
+    exportRegDetailLoading: false,
+    exportPointLoading: false,
+    exportSpareSumLoading: false,
+    exportSpareDetailLoading: false,
+    exportConsumSumLoading: false,
+    exportConsumDetailLoading: false,
+    exportReagentSumLoading: false,
+    exportReagentDetailLoading: false,
+    exportReferenceSumLoading:false,
+    exportReferenceDetailLoading:false,
   },
   effects: {
     *regGetConsumablesRIHList({ payload,callback }, { call, put, update }) { //耗材统计 行政区
@@ -73,13 +84,29 @@ export default Model.extend({
       }
     },   
     *exportConsumablesRIHList({ payload,callback }, { call, put, update }) { //行政区 导出
-      // yield update(payload.pointType==1?{exportloading: true}:{exportloading: true} )
+     const exportStatus = (flag) =>{
+     return payload.pointType==1? {exportRegLoading: flag}:
+            payload.pointType==2 ? {exportRegDetailLoading: flag}:
+            payload.pointType==3 ? {exportPointLoading: flag}:
+            payload.pointType==4&&payload.articlesType==1? {exportSpareSumLoading: flag}:
+            payload.pointType==5&&payload.articlesType==1? {exportSpareDetailLoading: flag}:
+            payload.pointType==4&&payload.articlesType==2? {exportConsumSumLoading: flag}:
+            payload.pointType==5&&payload.articlesType==2? {exportConsumDetailLoading: flag}:
+            payload.pointType==4&&payload.articlesType==4? {exportReagentSumLoading: flag}: //试剂更换
+            payload.pointType==5&&payload.articlesType==4? {exportReagentDetailLoading: flag}:
+            payload.pollutantType==2&&payload.pointType==4? {exportReferenceSumLoading: flag}://标准物质更换 属于废气
+            {exportReferenceDetailLoading: flag}
+     }
+     console.log(exportStatus(true))
+      yield update(exportStatus(true))
       const result = yield call(services.exportConsumablesRIHList, payload);
        if (result.IsSuccess) {
            message.success('下载成功');
            downloadFile(`/upload${result.Datas}`);
+           yield update(exportStatus(false))
           } else {
-         message.warning(result.Message);
+            message.warning(result.Message);
+            yield update(exportStatus(false))
        }
     },
   },

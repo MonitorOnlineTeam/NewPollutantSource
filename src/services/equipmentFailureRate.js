@@ -25,3 +25,8 @@ export async function pointGetFailureRateList(params) {
 }
 
 
+// 导出
+export async function exportFailureRateList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportFailureRateList',params, null);
+  return result;
+}

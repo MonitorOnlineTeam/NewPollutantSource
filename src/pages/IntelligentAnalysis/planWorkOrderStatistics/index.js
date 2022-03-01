@@ -31,7 +31,8 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics }) => ({
   tableDatas:planWorkOrderStatistics.tableDatas,
   tableLoading:planWorkOrderStatistics.tableLoading,
   exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
-  queryPar:planWorkOrderStatistics.queryPar
+  queryPar:planWorkOrderStatistics.queryPar,
+  exportActualRegLoading:planWorkOrderStatistics.exportActualRegLoading,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -57,9 +58,15 @@ const  dvaDispatch = (dispatch) => {
 
     /**实际工单统计 */
 
-    regEntActualGetTaskWorkOrderList:(payload)=>{ // 计划工单统计
+    regEntActualGetTaskWorkOrderList:(payload)=>{ // 计划工单统计 实际
       dispatch({
         type: `${namespace}/regEntActualGetTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
+    exportActualTaskWorkOrderList:(payload)=>{ // 实际 导出
+      dispatch({
+        type: `${namespace}/exportActualTaskWorkOrderList`,
         payload:payload,
       })
     },
@@ -70,7 +77,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,pointLoading,exportLoading,exportPointLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,tableLoading,exportLoading,exportActualRegLoading,queryPar,isPlanCalibrationModal,isPlanInspectionModal,isActualCalibrationModal } = props; 
   
   
   useEffect(() => {
@@ -89,11 +96,19 @@ const Index = (props) => {
 
   const exports = async  () => {
     const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
-        ...queryPar,
-        pageIndex:undefined,
-        pageSize:undefined,
-    })
+
+     const par ={
+      ...queryPar,
+      regionLevel:1,
+      pageIndex:undefined,
+      pageSize:undefined,
+    }
+     if(!isActualCalibrationModal){
+      props.exportTaskWorkOrderList(par)
+     }else{ //实际校准完成率
+      props.exportActualTaskWorkOrderList(par)
+     }
+  
 
  };
 
@@ -161,7 +176,7 @@ const Index = (props) => {
      <Button  type="primary" htmlType='submit' >
           查询
      </Button>
-     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+     <Button icon={<ExportOutlined />} loading={ !isActualCalibrationModal? exportLoading : exportActualRegLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
             导出
      </Button> 
      

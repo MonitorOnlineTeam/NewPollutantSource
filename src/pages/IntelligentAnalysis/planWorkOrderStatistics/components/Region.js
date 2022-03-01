@@ -55,6 +55,9 @@ const dvaPropsData =  ({ loading,planWorkOrderStatistics,global }) => ({
   workRegExportLoading:loading.effects[`${namespace}/workRegExportTaskWorkList`],
   cityRegExportLoading:loading.effects[`${namespace}/cityRegExportTaskWorkList`],
   operaPointExportLoading:loading.effects[`${namespace}/operaPointExportTaskWorkList`],
+  exportActualRegDetailLoading:planWorkOrderStatistics.exportActualRegDetailLoading,
+  exportActualRegTaskLoading:planWorkOrderStatistics.exportActualRegTaskLoading,
+  exportActualRegDetailTaskLoading:planWorkOrderStatistics.exportActualRegDetailTaskLoading,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -134,6 +137,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    exportActualTaskWorkOrderList:(payload)=>{ // 计划工单统计 导出
+      dispatch({
+        type: `${namespace}/exportActualTaskWorkOrderList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props,ref ) => {
@@ -169,7 +178,7 @@ const Index = (props,ref ) => {
 
   const { insideOrOutsiderWorkTableDatas,insideOrOutsideWorkLoading,insideOrOutsiderWorkTableTotal,insideOrOutsideWorkActualLoading } = props; //计划内or计划外工单数
 
-   const { cityDetailExportLoading,workRegExportLoading,cityRegExportLoading,operaPointExportLoading }  = props; //导出
+   const { cityDetailExportLoading,workRegExportLoading,cityRegExportLoading,operaPointExportLoading,exportActualRegDetailLoading,exportActualRegTaskLoading,exportActualRegDetailTaskLoading }  = props; //导出
   useEffect(() => {
 
   
@@ -1198,15 +1207,21 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     }) 
   }
   const workRegExports =   () =>{ //导出 工单
-    props.workRegExportTaskWorkList({
+
+    const par = {
       ...queryPar,
       taskType:outTypePar[outType],
-      regionLevel:undefined,
       staticType:3,
       regionCode:regionCode,
       pageIndex:undefined,
       pageSize:undefined,
-    })
+      regionLevel:isActualCalibrationModal&&cityVisible? 2 : isActualCalibrationModal? 1 :undefined
+    }
+    if(!isActualCalibrationModal){
+    props.workRegExportTaskWorkList(par)
+   }else{
+    props.exportActualTaskWorkOrderList(par) 
+   }
   }
   const [ workRegForm ]= Form.useForm()
   const searchWorkComponents = () =>{ //计划内  查询 工单
@@ -1227,7 +1242,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      <Button  type="primary" htmlType='submit'>
           查询
      </Button>
-     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={workRegExportLoading}  onClick={()=>{ workRegExports()} }>
+     <Button icon={<ExportOutlined />}  style={{  margin: '0 8px'}}  loading={!isActualCalibrationModal? workRegExportLoading : isActualCalibrationModal&&cityVisible? exportActualRegDetailTaskLoading : exportActualRegTaskLoading}  onClick={()=>{ workRegExports()} }>
             导出
      </Button> 
      
@@ -1313,16 +1328,22 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
    }
 
    const cityRegExports = () =>{
-    props.cityRegExportTaskWorkList({
+
+    const par ={
       ...queryPar,
       regionCode: cityDetailRegionCode,
       regionLevel: 2,
       pageIndex:undefined,
       pageSize:undefined,
-    })
+    }
+    if(!isActualCalibrationModal){  
+      props.cityRegExportTaskWorkList(par)
+     }else{
+      props.exportActualTaskWorkOrderList(par) //实际校准完成率
+     }
    }
    const searchCityRegComponents = ()=>{ //市级别弹框 
-    return <Button icon={<ExportOutlined />}   loading={cityRegExportLoading}  onClick={()=>{ cityRegExports()} }>
+    return <Button icon={<ExportOutlined />}   loading={!isActualCalibrationModal? cityRegExportLoading : exportActualRegDetailLoading}  onClick={()=>{ cityRegExports()} }>
             导出
          </Button> 
    }

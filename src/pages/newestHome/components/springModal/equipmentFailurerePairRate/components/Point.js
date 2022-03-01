@@ -28,7 +28,7 @@ const namespace = 'equipmentFailurerePairRate'
 const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global }) => ({
   tableDatas:equipmentFailurerePairRate.pointTableDatas,
   tableLoading:loading.effects[`${namespace}/pointGetRepairRateList`],
-  exportLoading: loading.effects[`${namespace}/exportTaskWorkOrderList`],
+  exportLoading: equipmentFailurerePairRate.exportPointLoading,
   clientHeight: global.clientHeight,
   queryPar:equipmentFailurerePairRate.queryPar,
 })
@@ -47,12 +47,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    // exportTaskWorkOrderList:(payload)=>{ // 导出
-    //   dispatch({
-    //     type: `${namespace}/exportTaskWorkOrderList`,
-    //     payload:payload,
-    //   })
-    // },
+    exportRepairRateList:(payload)=>{ // 导出
+      dispatch({
+        type: `${namespace}/exportRepairRateList`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -79,7 +79,7 @@ const Index = (props) => {
 
   const exports = async  () => {
     const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
+      props.exportRepairRateList({
         ...queryPar,
         entName:entName,
         pointType:3,
