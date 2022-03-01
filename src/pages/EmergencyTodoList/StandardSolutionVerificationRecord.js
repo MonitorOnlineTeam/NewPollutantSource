@@ -154,7 +154,7 @@ class StandardSolutionVerificationRecord extends Component {
                                 {Record !== null ?Record.CreateUserID:null}
                             </td>
                             <td colSpan="1" style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                        时间
+                                        运行维护时间
                             </td>
                             <td colSpan="1" style={{ textAlign: 'center', fontSize: '14px', colSpan: '2' }}>
                                 {Record !== null ?Record.CreateTime:null}

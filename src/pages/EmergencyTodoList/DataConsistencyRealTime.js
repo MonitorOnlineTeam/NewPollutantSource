@@ -144,7 +144,7 @@ class RepalceRecordList extends Component {
                                            index>0&&objItem=='时间'?
                                            ''
                                            :
-                                           <td  style={{ textAlign: 'center'}}> {item[objItem]} </td>
+                                           <td  style={{ textAlign: 'center'}}> {item[objItem] } </td>
                                         })   
                                        }
                                      </tr> 

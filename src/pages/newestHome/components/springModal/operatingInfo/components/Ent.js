@@ -1,7 +1,7 @@
 /**
- * 功  能：设备故障修复率
+ * 功  能：运营企业监测点
  * 创建人：jab
- * 创建时间：2021.2.25
+ * 创建时间：2021.3.2
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -20,17 +20,16 @@ import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'equipmentFailurerePairRate'
+const namespace = 'operatingInfo'
 
 
 
 
-const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global }) => ({
-  tableDatas:equipmentFailurerePairRate.pointTableDatas,
-  tableLoading:loading.effects[`${namespace}/pointGetRepairRateList`],
-  exportLoading: equipmentFailurerePairRate.exportPointLoading,
+const dvaPropsData =  ({ loading,operatingInfo,global }) => ({
+  tableDatas:operatingInfo.tableDatas,
+  tableLoading:loading.effects[`${namespace}/getOperateRIHPointList`],
+  exportLoading: loading.effects[`${namespace}/exportOperateRIHPointList`],
   clientHeight: global.clientHeight,
-  queryPar:equipmentFailurerePairRate.queryPar,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -41,15 +40,15 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    pointGetRepairRateList:(payload)=>{ // 监测点详情
+    getOperateRIHPointList:(payload)=>{ // 列表
       dispatch({
-        type: `${namespace}/pointGetRepairRateList`,
+        type: `${namespace}/getOperateRIHPointList`,
         payload:payload,
       })
     },
-    exportRepairRateList:(payload)=>{ // 导出
+    exportOperateRIHPointList:(payload)=>{ // 导出
       dispatch({
-        type: `${namespace}/exportRepairRateList`,
+        type: `${namespace}/exportOperateRIHPointList`,
         payload:payload,
       })
     },
@@ -59,7 +58,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,pollutantType } = props; 
   
   
   useEffect(() => {
@@ -69,20 +68,19 @@ const Index = (props) => {
 
 
   const initData =  () => {
-      props.pointGetRepairRateList({
-        ...props.queryPar,
-         entName:entName,
-         pointType:3,
+      props.getOperateRIHPointList({
+        regionCode:regionCode,
+        pollutantType:pollutantType,
+        pointType:1,
     })
  };
 
 
   const exports = async  () => {
-    const values = await form.validateFields();
-      props.exportRepairRateList({
-        ...queryPar,
-        entName:entName,
-        pointType:3,
+      props.exportOperateRIHPointList({
+        regionCode:regionCode,
+        pollutantType:pollutantType,
+        pointType:1,
     })
 
  };
@@ -111,45 +109,14 @@ const Index = (props) => {
       return  <div style={{textAlign:'left'}} >{text}</div>
     }
   },
-  {
-    title: '监测点名称',
-    dataIndex: 'pointName',
-    key:'pointName',
-    align:'center',
-  },
-  {
-    title: '故障总数(维修工单数)',
-    dataIndex: 'repairCount',
-    key:'repairCount',
-    align:'center',
-    sorter: (a, b) => a.repairCount - b.repairCount,
-  },
-  {
-    title: '完成数(完成工单数)',
-    dataIndex: 'repariComCount',
-    key:'repariComCount',
-    align:'center',
-    sorter: (a, b) => a.repariComCount - b.repariComCount,
-  },
-  {
-    title: '故障修复率',
-    dataIndex: 'repairRate',
-    key: 'repairRate',
-    width: 150,
-    align:'center',
-    sorter: (a, b) => a.repairRate - b.repairRate,
-    render: (text, record) => {
-      return<Progress percent={text&&text}  size="small" style={{width:'85%'}} status='normal'  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}  />
-    }
-  }
 ]
 
-  const [entName,setEntName ] = useState()
+  const [regionCode,setRegionCode ] = useState()
   return (
-    <div  className={styles.equipmentFailurerePairRateSty}>
+    <div  className={styles.operatingInfoSty}>
       <Form layout='inline'>
       <Form.Item style={{ paddingBottom: '16px' }}>
-        <Input placeholder='请输入企业名称' allowClear onChange={(e) => { setEntName(e.target.value) }} />
+        <RegionList levelNum={2}  selectType={'2,是'} style={{ width: 200 }}  changeRegion={(val)=>{setRegionCode(val)}} />
         </Form.Item>
         <Form.Item style={{ paddingBottom: '16px' }}>
         <Button type='primary' loading={tableLoading} style={{ margin: '0 8px', }} onClick={() => { initData() }}>

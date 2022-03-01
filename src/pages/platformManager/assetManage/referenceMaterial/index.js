@@ -321,8 +321,7 @@ const Index = (props) => {
     onFinish(PageIndex,PageSize)
   }
   const codeContent = <div style={{width:300}}>
-    如果标准气体没有编码，则按从下
-    规则定义编码，格式: B+年+
+    如果{typeRemark==1? '标准气体':'试剂信息'}没有编码，则按用以下规则定义编码，格式: B+年+
     月+日+001 (累计排序)，如:B20200601001、 B20200601002
   </div>
 

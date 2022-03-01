@@ -22,6 +22,7 @@ import ScrollTable from './publicComponents/ScrollTable'
 import MoreBtn from './publicComponents/MoreBtn'
 import PlanWorkOrderStatistics from './springModal/planWorkOrderStatistics'
 import EntWorkOrderModal from '@/pages/IntelligentAnalysis/operationWorkStatis/homeEntWorkOrderStatistics/EntWorkOrderModal'
+import OperatingInfo from './springModal/operatingInfo'
 
 const { Option } = Select;
 
@@ -140,6 +141,9 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       key: 'entCount',
       align:'center',
       width:61,
+      render: (text, record) => {
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('ent')}}>{text}</span>
+      }
     },
     {
       title: '排放口',
@@ -147,6 +151,9 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       key: 'disPointCount',
       align:'center',
       width:61,
+      render: (text, record) => {
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point')}}>{text}</span>
+      }
     },
     {
       title: '非排放口',
@@ -154,6 +161,9 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       key: 'unDisPointCount',
       align:'center',
       width:61,
+      render: (text, record) => {
+        return <span  style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point')}}>{text}</span>
+      }
     },
   ]
   const changeBarData = (data)=>{
@@ -300,6 +310,12 @@ const moreBtnClick = (type) =>{ //近30日运维工单统计
     break;
   }
 }
+ 
+const [operatingInfoType, setOperatingInfoType] = useState()
+const operatingInfo = (type) =>{
+  setOperatingInfoVisible(true)
+  setOperatingInfoType(type)
+}
 
 
 const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
@@ -348,6 +364,17 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
 });
 
 }
+
+  pollutantType == 1 &&operationColumns.splice(2,2,{
+      title: '监测点',
+      dataIndex: 'allPointCount',
+      key: 'allPointCount',
+      align:'center',
+      width:61,
+      render: (text, record) => {
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point')}}>{text}</span>
+      }
+  })
   const  { operationLoading,operationDataSource } = props; {/**运营信息统计 */}
   const  { operationTaskLoading } = props; {/**近30日运维工单 */}
   const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
@@ -355,7 +382,8 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
   const  [planCalibrationVisible,setPlanCalibrationVisible ]  = useState(false)
   const  [planInspectionVisible,setPlanInspectionVisible] = useState(false)
   const  [actualInspectionVisible,setActualInspectionVisible] = useState(false)
-  const  [orderModalVisible,setOrderModalVisible] = useState(false) 
+  const  [orderModalVisible,setOrderModalVisible] = useState(false)
+  const  [operatingInfoVisible,setOperatingInfoVisible ] = useState(false)
   return (
     <div>
       <Spin spinning={operationLoading}>
@@ -416,14 +444,21 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         onCancel={()=>{setActualInspectionVisible(false)}}
         time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
       />  
-      <EntWorkOrderModal  //近30日运维工单统计
+          <EntWorkOrderModal  //近30日运维工单统计
             showModal={orderModalVisible}
             onCloseListener={ () => { 
                 setOrderModalVisible(false)
                 cancel();
               }}
             pollutantTypeCode={pollutantType}
-          />      
+          />
+         <OperatingInfo  //运营信息统计
+             visible={operatingInfoVisible}
+             type={pollutantType}
+             onCancel={()=>{setOperatingInfoVisible(false)}}
+             type={operatingInfoType}
+             pollutantType={pollutantType}
+          />         
         </div>
   );
 };

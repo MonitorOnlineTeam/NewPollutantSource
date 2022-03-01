@@ -24,4 +24,8 @@ export async function pointGetExecptionRateList(params) {
   return result;
 }
 
-
+//导出
+export async function exportExecptionRateList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportExecptionRateList',params, null);
+  return result;
+}

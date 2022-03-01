@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
-import { LeftOutlined,RollbackOutlined} from '@ant-design/icons';
+import { LeftOutlined,RollbackOutlined,ExportOutlined} from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Card, Col, Row, Select, Input, Checkbox, Button, message, Modal } from 'antd';
@@ -18,6 +18,7 @@ const { Option } = Select;
   secondTableDataSource:entWorkOrderStatistics.secondTableDataSource,
   entList:entWorkOrderStatistics.entList,
   loading: loading.effects["entWorkOrderStatistics/getSecondTableDataSource"],
+  exportLoading:loading.effects["entWorkOrderStatistics/exportThird"]
 }))
 @Form.create()
 class RegionStaticstics extends PureComponent {
@@ -65,7 +66,17 @@ class RegionStaticstics extends PureComponent {
 
   // 导出
   onExport = () => {
-   
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/exportThird',
+      payload: { 
+        PollutantTypeCode,
+        AttentionCode,
+        RegionCode,
+        EntCode: entCode,
+        BeginTime,
+        EndTime,
+      },
+    });
   }
 
   getColumns=()=>{
@@ -139,16 +150,15 @@ class RegionStaticstics extends PureComponent {
                   返回
                 </Button>
                 {
-                  /*       
+                  
                   <Button
-                      style={{ margin: '0 5px' }}
-                      icon="export"
-                      loading={exportLoading}
-                      onClick={this.onExport}
-                  >
-                      导出
-                  </Button>
-                  */
+                  style={{ margin: '0 5px' }}
+                  icon={<ExportOutlined />}
+                  loading={exportLoading}
+                  onClick={this.onExport}
+              >
+                  导出
+              </Button>
                 }
 
               </div>

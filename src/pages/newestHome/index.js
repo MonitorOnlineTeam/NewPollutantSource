@@ -71,9 +71,9 @@ const Index = (props) => {
  const tabList = [
   {text:'废水',val:"wasteWater"},
   {text:'废气',val:"wasteGas"},
-  {text:'空气站',val:"air"},
-  {text:'地表水',val:"surfaceWater"},
-  {text:'厂界',val:"actoryBoundary"},
+  // {text:'空气站',val:"air"},
+  // {text:'地表水',val:"surfaceWater"},
+  // {text:'厂界',val:"actoryBoundary"},
 ]
  const tabClick = (val) =>{
   SetSelectkey(val)

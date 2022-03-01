@@ -362,8 +362,8 @@ class Index extends PureComponent {
   regPopovercontent = (extData) => {
     return <div>
       <div>企业总数：{extData.position && extData.position.entCount}</div>
-      <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.OverCount}</div>
-      <div><span style={{ color: '#FFCC00' }}>异常</span>企业总数：{extData.position && extData.position.ExceptionCount}</div>
+      <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.OverCount? extData.position.OverCount : 0}</div>
+      <div><span style={{ color: '#FFCC00' }}>异常</span>企业总数：{extData.position && extData.position.ExceptionCount? extData.position.ExceptionCount : 0}</div>
     </div>
   }
 

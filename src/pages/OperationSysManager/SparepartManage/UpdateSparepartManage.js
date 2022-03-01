@@ -196,7 +196,7 @@ export default class UpdateSparepartManage extends Component {
                                 })(
                                     <Radio.Group>
                                         <Radio key={1} value={1}>启用</Radio>
-                                        <Radio key={0} value={0}>禁用</Radio>
+                                        <Radio key={0} value={0}>停用</Radio>
                                     </Radio.Group>
                                 )}
                             </FormItem>

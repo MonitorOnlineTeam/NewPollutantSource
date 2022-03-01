@@ -85,3 +85,9 @@ export async function  insideOrOutsideWorkActualGetTaskWorkOrderList(params) {
   const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/GetTaskWorkOrderList',params, null);
   return result;
 }
+
+
+export async function exportActualTaskWorkOrderList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportTaskWorkOrderList',params, null);
+  return result;
+}

@@ -9,7 +9,7 @@ import { Link, router } from 'umi'
 import SdlTable from '@/components/SdlTable'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import RegionList from '@/components/RegionList'
-import { LeftOutlined,RollbackOutlined} from '@ant-design/icons';
+import { LeftOutlined,RollbackOutlined,ExportOutlined} from '@ant-design/icons';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -21,7 +21,8 @@ const { Option } = Select;
   tableTitleData:entWorkOrderStatistics.tableTitleData,
   tableDataSource:entWorkOrderStatistics.tableDataSource,
   loading: loading.effects["entWorkOrderStatistics/getTableDataSource"],
-  param:entWorkOrderStatistics.param
+  param:entWorkOrderStatistics.param,
+  exportLoading:loading.effects["entWorkOrderStatistics/exportSecond"],
 }))
 @Form.create()
 class EntWorkOrderStatistics extends PureComponent {
@@ -155,9 +156,21 @@ class EntWorkOrderStatistics extends PureComponent {
     });
   }
 
-  // 导出
+  // 导出 二级
   onExport = () => {
-   
+    
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/exportSecond',
+      payload: { 
+        PollutantTypeCode: values&&values.PollutantTypeCode?values.PollutantTypeCode:param.PollutantTypeCode,
+        AttentionCode: values&&values.AttentionCode?values.AttentionCode:param.AttentionCode?param.AttentionCode:'',
+        RegionCode: values&&values.RegionCode?values.RegionCode:param.RegionCode?param.RegionCode:'',
+        EntCode: "",
+        BeginTime: values&&values.BeginTime?values.BeginTime:param.BeginTime,
+        EndTime: values&&values.EndTime?values.EndTime:param.EndTime,
+        regionLevel:'2'
+      },
+    });
   }
 
   getColumns=()=>{
@@ -238,14 +251,14 @@ class EntWorkOrderStatistics extends PureComponent {
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                     {/* <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.search}>查询</Button> */}
     
-                    {/* <Button
+                    <Button
                         style={{ margin: '0 5px' }}
-                        icon="export"
+                        icon={<ExportOutlined />}
                         loading={exportLoading}
                         onClick={this.onExport}
                     >
                         导出
-                    </Button> */}
+                    </Button> 
                                     <Button 
                   icon={<RollbackOutlined />} 
                   style={{ marginLeft: 10 }} 

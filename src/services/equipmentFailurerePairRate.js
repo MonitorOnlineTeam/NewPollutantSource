@@ -24,4 +24,10 @@ export async function pointGetRepairRateList(params) {
   return result;
 }
 
+// 监测点
+export async function exportRepairRateList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/OperationHomeApi/ExportRepairRateList',params, null);
+  return result;
+}
+
 

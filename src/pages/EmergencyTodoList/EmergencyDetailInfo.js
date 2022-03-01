@@ -168,7 +168,7 @@ class EmergencyDetailInfo extends Component {
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
                 if ((types === '2' && !config.XinJiang)|| item.ID === 58 || item.ID === 59 || item.ID === 60 
                      || item.ID === 15 || item.ID === 61 ||  item.ID === 62 || item.ID === 63 || item.ID === 18 ||  item.ID === 66 || item.ID === 74 || item.ID === 73 || item.ID === 65  || item.ID === 16
-                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 ) {
+                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 || item.ID === 75) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -238,7 +238,10 @@ class EmergencyDetailInfo extends Component {
                              break;   
                         case EnumPsOperationForm.dataConsistencyRealTimeWater: //数据一致性  实时 废水
                                 this.GoToForm(taskID, item.CnName, '18', rtnVal, key, item.FormMainID);
-                             break;                            
+                             break;   
+                             case EnumPsOperationForm.dataConsistencyDate: //数据一致性  小时与日数据 废气
+                             this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID);
+                          break;                          
                         case EnumPsOperationForm.dataConsistencyDateWater: //数据一致性  小时与日数据 废水
                              this.GoToForm(taskID, item.CnName, '74', rtnVal, key, item.FormMainID);
                           break;                                
@@ -265,7 +268,10 @@ class EmergencyDetailInfo extends Component {
                          break;
                          case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
                          this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
-                         break;                                                                                                       
+                         break; 
+                         case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
+                         this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                         break;                         
                         default:
                             break;
                     }

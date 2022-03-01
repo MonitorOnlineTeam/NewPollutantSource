@@ -197,22 +197,28 @@ class LogTimeList extends Component {
                     fontSize: 13,
                   }}
                   onClick={() => {
-                    if (
-                      config.XinJiang &&
-                      node.TypeID != 58 &&
-                      node.TypeID != 59 &&
-                      node.TypeID != 60
-                    ) {
+                     // 新疆兵团只要任务图片 故障小时数记录表不使用图片
+                    // if (
+                    //   config.XinJiang &&
+                    //   node.TypeID != 58 &&
+                    //   node.TypeID != 59 &&
+                    //   node.TypeID != 60
+                    // ) {
+                    //   this.getOperationImageList(node);
+                    // } else if (
+                    //   node.PollutantType !== 2 &&
+                    //   node.TypeID != 58 &&
+                    //   node.TypeID != 59 &&
+                    //   node.TypeID != 60
+                    // ) {
+                    //   // 查看图片
+                    //   this.getOperationImageList(node);
+                    // } else {
+                    //   router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
+                    // }
+                    if(node.TypeID==67 || node.TypeID ==10 || node.TypeID == 5 ||  node.TypeID == 75){
                       this.getOperationImageList(node);
-                    } else if (
-                      node.PollutantType !== 2 &&
-                      node.TypeID != 58 &&
-                      node.TypeID != 59 &&
-                      node.TypeID != 60
-                    ) {
-                      // 查看图片
-                      this.getOperationImageList(node);
-                    } else {
+                    }else{
                       router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
                     }
                   }}

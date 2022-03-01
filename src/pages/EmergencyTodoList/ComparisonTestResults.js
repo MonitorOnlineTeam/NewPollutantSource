@@ -130,7 +130,7 @@ class ComparisonTestResults extends Component {
                                 {Content !== null ?Content.MaintenanceManagementUnit:null}
                             </td>
                             <td colSpan="2" style={{  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
-                                        对比试验日期
+                                        比对试验日期
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px',minWidth: 150 }}>
                                 {Content !== null ?Content.TestTime:null}
@@ -138,7 +138,7 @@ class ComparisonTestResults extends Component {
                         </tr>
                         <tr>
                            <td rowSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
-                                  对比项目         
+                                  比对项目         
                             </td>
                             <td rowSpan={2} style={{ minWidth: 150,  height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
                                      序号
@@ -150,10 +150,10 @@ class ComparisonTestResults extends Component {
                                    在线监测一起测定结果
                             </td>
                              <td   colSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                   对比方法测定结果
+                                   比对方法测定结果
                             </td>      
                             <td rowSpan={2} style={{ minWidth: 150,  height: '50px', textAlign: 'center', backgroundColor: '#FFF', fontSize: '14px', fontWeight: '500' }}>
-                                  对比方法测定结果平均值
+                                  比对方法测定结果平均值
                             </td>
                             <td  rowSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                    测定误差

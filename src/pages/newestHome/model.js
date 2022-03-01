@@ -47,12 +47,12 @@ export default Model.extend({
         let item = result.Datas;
         let data = [{
           key: '1', type: '总数',  entCount: item.allEntCount,  disPointCount: item.allDischargePointCount,
-          unDisPointCount: item.allUnDischargePointCount,
-        },{  key: '2', type: '暂停运维',entCount: item.endEntCount, disPointCount: item.endDischargePointCount, 
-           unDisPointCount: item.endUnDischargePointCount,
+          unDisPointCount: item.allUnDischargePointCount,allPointCount:item.allPointCount,
         },{
-          key: '3', type: '结束运维', entCount: item.endProjectEntCount, disPointCount: item.endDischargeProjectEntCount,
-          unDisPointCount: item.endUnDischargeProjectEntCount,
+          key: '2', type: '结束运维', entCount: item.endProjectEntCount, disPointCount: item.endDischargeProjectEntCount,
+          unDisPointCount: item.endUnDischargeProjectEntCount,allPointCount:item.endProjectPointCount,
+        },{  key: '3', type: '运维暂停',entCount: item.endEntCount, disPointCount: item.endDischargePointCount, 
+           unDisPointCount: item.endUnDischargePointCount,allPointCount:item.endPointCount,
         }]
          yield update({ operationDataSource: data });
       }else{

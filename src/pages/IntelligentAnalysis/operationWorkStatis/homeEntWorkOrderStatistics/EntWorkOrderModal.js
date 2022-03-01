@@ -53,6 +53,7 @@ class EntWorkOrderModal extends PureComponent {
             onCancel={onCloseListener}
             footer={null}
             wrapClassName='spreadOverModal'
+            destroyOnClose
         >
           {
             this.state.page=='EntWorkOrderStatistics'?

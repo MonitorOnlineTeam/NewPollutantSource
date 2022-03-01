@@ -3,6 +3,7 @@ import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Card, Col, Row, Select, Input, Checkbox, Button, message, Modal } from 'antd';
+import {  ExportOutlined } from '@ant-design/icons';
 import { connect } from 'dva'
 import moment from 'moment'
 import { Link, router } from 'umi'
@@ -20,6 +21,7 @@ const { Option } = Select;
   tableTitleData:entWorkOrderStatistics.tableTitleData,
   tableDataSource:entWorkOrderStatistics.tableDataSource,
   loading: loading.effects["entWorkOrderStatistics/getTableDataSource"],
+  exportLoading:loading.effects["entWorkOrderStatistics/exportReport"],
 }))
 @Form.create()
 class EntWorkOrderStatistics extends PureComponent {
@@ -143,9 +145,21 @@ class EntWorkOrderStatistics extends PureComponent {
     });
   }
 
-  // 导出
+  // 导出 一级页面
   onExport = () => {
-   
+    let values = this.props.form.getFieldsValue();
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/exportReport',
+      payload: { 
+        PollutantTypeCode: values.PollutantTypeCode,
+        AttentionCode: values.AttentionCode?values.AttentionCode:"",
+        RegionCode: values.RegionCode?values.RegionCode:"",
+        EntCode: "",
+        BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
+        EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+      },
+    });
+    
   }
 
   getColumns=()=>{
@@ -219,16 +233,16 @@ class EntWorkOrderStatistics extends PureComponent {
                 <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                     <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={this.search}>查询</Button>
                     {
-                      /*     
+                       
                     <Button
                         style={{ margin: '0 5px' }}
-                        icon="export"
+                        icon={<ExportOutlined />}
                         loading={exportLoading}
                         onClick={this.onExport}
                     >
                         导出
                     </Button>
-                    */
+                    
                    }
                 </div>
             </Row>

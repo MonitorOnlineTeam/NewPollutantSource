@@ -49,9 +49,9 @@ class RepalceRecordList extends Component {
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         { index + 1 }
                     </td>
-                    <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
+                    {/* <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.EquipmentName}
-                    </td>
+                    </td> */}
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.InventoryCode}
                     </td>
@@ -140,9 +140,9 @@ class RepalceRecordList extends Component {
                         <td style={{ width: '8%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         序号
                             </td>
-                            <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            {/* <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         设备名称
-                            </td>
+                            </td> */}
                             <td style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         存货编号
                             </td>

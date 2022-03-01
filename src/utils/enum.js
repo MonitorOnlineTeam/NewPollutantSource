@@ -162,7 +162,7 @@ export const EnumPsOperationForm={
   cooperaInspection:62, //配合检查表单
   dataConsistencyRealTime:63, //数据一致性核查实时表单
   dataConsistencyRealTimeWater:18, //数据一致性核查实时表单 废水
-  dataConsistencyDate:66, //数据一致性核查小时与日数据表单
+  dataConsistencyDate:66, //数据一致性核查小时与日数据表单 废气
   dataConsistencyDateWater:74, //数据一致性核查小时与日数据表单 废水
   ThirdPartyTestingData:73,//上月委托第三方检测次数
   ThirdPartyTestingDataWater:65,//上月委托第三方检测次数  废水
@@ -172,6 +172,7 @@ export const EnumPsOperationForm={
   GasDeviceParameterChangeRecord:64,//设备参数变动记录表 废气
   ComparisonTestResultsRecord:19,//实际水样比对试验结果记录表
   EquipmentNameplate:67,//设备铭牌
+  CheckRecordImg:75,//CEMS零点量程漂移与校准记录表 图片弹框类型
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={

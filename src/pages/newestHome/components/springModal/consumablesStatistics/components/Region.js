@@ -32,7 +32,7 @@ const namespace = 'consumablesStatistics'
 const dvaPropsData =  ({ loading,consumablesStatistics,global }) => ({
   tableDatas:consumablesStatistics.regTableDatas,
   tableLoading: loading.effects[`${namespace}/regGetConsumablesRIHList`],
-  exportLoading: loading.effects[`${namespace}/exportConsumablesRIHList`],
+  exportLoading: consumablesStatistics.exportRegLoading,
   clientHeight: global.clientHeight,
   queryPar:consumablesStatistics.queryPar,
 })
@@ -285,7 +285,7 @@ const Index = (props) => {
         <SpareParts />
         </Modal>
         <Modal
-        title={`${regionName} - 备品备件更换数量`}
+        title={`${regionName} - 易耗品更换数量`}
         visible={consumablesVisible}
         onCancel={()=>{setConsumablesVisible(false)}}
         footer={null}
