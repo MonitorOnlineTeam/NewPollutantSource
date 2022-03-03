@@ -52,6 +52,7 @@ class EntWorkOrderModal extends PureComponent {
             visible={showModal}
             onCancel={onCloseListener}
             footer={null}
+            destroyOnClose
         >
           {
             this.state.page=='EntWorkOrderStatistics'?

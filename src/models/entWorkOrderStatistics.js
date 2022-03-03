@@ -81,7 +81,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`/upload${result.Datas}`);
-        message.error(result.Message);
+      }else{
+        message.warning(result.Message)
       }
     },
 
@@ -114,8 +115,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`/upload${result.Datas}`);
-      } else {
-        message.error(result.Message);
+      }else{
+        message.warning(result.Message)
       }
     },
     
@@ -148,8 +149,8 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`/upload${result.Datas}`);
-      } else {
-        message.error(result.Message)
+      }else{
+        message.warning(result.Message)
       }
     },
 
@@ -180,9 +181,10 @@ export default Model.extend({
     *exportFour({ payload }, { call, put, update, select }) {
       const result = yield call(services.exportFour, { ...payload });
       if (result.IsSuccess) {
-        window.open(result.Datas)
-      } else {
-        message.error(result.Message)
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      }else{
+        message.warning(result.Message)
       }
     },
   },

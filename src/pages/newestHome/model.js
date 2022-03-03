@@ -49,8 +49,8 @@ export default Model.extend({
           key: '1', type: '总数',  entCount: item.allEntCount,  disPointCount: item.allDischargePointCount,
           unDisPointCount: item.allUnDischargePointCount,allPointCount:item.allPointCount,
         },{
-          key: '2', type: '结束运维', entCount: item.endProjectEntCount, disPointCount: item.endDischargeProjectEntCount,
-          unDisPointCount: item.endUnDischargeProjectEntCount,allPointCount:item.endProjectPointCount,
+          key: '2', type: '运维中', entCount: item.normalEntCount, disPointCount: item.normalDischargePointCount,
+          unDisPointCount: item.normalUnDischargePointCount,allPointCount:item.normalPointCount,
         },{  key: '3', type: '运维暂停',entCount: item.endEntCount, disPointCount: item.endDischargePointCount, 
            unDisPointCount: item.endUnDischargePointCount,allPointCount:item.endPointCount,
         }]

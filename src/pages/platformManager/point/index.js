@@ -445,6 +445,7 @@ export default class MonitorPoint extends Component {
   getEquipmentPar = () =>{ //设备参数项
     return <Spin spinning={this.props.getParamInfoListLoading}>
            <div className={styles.dataVerificationSty}>
+           <div style={{color:'#f5222d',paddingBottom:5}}> 设备参数类别是异常小时数记录电子表单的一个字段,设置后,运维工程师才能在APP上填写。</div>
           <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol}  options={this.props.paramCodeList} onChange={this.equipmentParChange} />
          </Form.Item>

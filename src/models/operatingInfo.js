@@ -24,6 +24,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
             tableDatas:result.Datas,
+            tableTotal:result.Total,
         })
       }else{
         message.error(result.Message)

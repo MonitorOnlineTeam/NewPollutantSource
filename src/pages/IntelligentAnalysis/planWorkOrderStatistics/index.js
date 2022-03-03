@@ -102,6 +102,7 @@ const Index = (props) => {
       regionLevel:1,
       pageIndex:undefined,
       pageSize:undefined,
+      homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
     }
      if(!isActualCalibrationModal){
       props.exportTaskWorkOrderList(par)

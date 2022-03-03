@@ -29,7 +29,7 @@ export async function getTableDataSource(params) {
 // 导出数据 - 全省
 export async function exportReport(params) {
   const result = post(
-    `/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForRegion`,
+    `/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskStatic`,
     params,
   );
   return result;
@@ -50,7 +50,7 @@ export async function getSecondTableDataSource(params) {
 // 导出数据 - 二级页面 行政区
 export async function exportSecond(params) {
   const result = post(
-    `/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForPoint`,
+    `/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskStatic`,
     params,
   );
   return result;
@@ -70,7 +70,7 @@ export async function getThirdTableDataSource(params) {
 
 // 导出数据 - 三级页面 企业
 export async function exportThird(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForPoint`, params);
+  const result = post(`/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskStatic`, params);
   return result;
 }
 
@@ -88,7 +88,7 @@ export async function getFourTableDataSource(params) {
 
 // 导出数据 - 四级页面 站点
 export async function exportFour(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionAlarmRateListForPoint`, params);
+  const result = post(`/api/rest/PollutantSourceApi/TaskFormApi/ExportTaskStatic`, params);
   return result;
 }
 

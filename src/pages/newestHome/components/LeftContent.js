@@ -351,7 +351,6 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
 },[planOperaList])
   
  const   cancel=()=>{
-
   props.entWorkOrderStatistics({
     payload: {
       initialForm: {

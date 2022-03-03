@@ -407,7 +407,7 @@ class OperationRecord extends Component {
                 recordTypeList.map(item => {
                   return (
                     <Option value={item.TypeId} key={item.TypeId}>
-                      {item.Abbreviation}
+                      {item.CnName}
                     </Option>
                   );
                 })}

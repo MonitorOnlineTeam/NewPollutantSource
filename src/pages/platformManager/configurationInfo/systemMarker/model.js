@@ -72,7 +72,7 @@ export default Model.extend({
     *getManufacturerList({ payload,callback }, { call, put, update }) { //获取厂商列表
       const result = yield call(services.GetManufacturerList, payload);
       if (result.IsSuccess) {
-        yield update({ manufacturerList:result.Datas})
+        yield update({ manufacturerList:result.Datas&&result.Datas.mlist? result.Datas.mlist : []})
       }else{
         message.error(result.Message)
       }

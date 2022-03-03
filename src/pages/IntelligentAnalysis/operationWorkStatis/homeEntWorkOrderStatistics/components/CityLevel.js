@@ -158,7 +158,8 @@ class EntWorkOrderStatistics extends PureComponent {
 
   // 导出 二级
   onExport = () => {
-    
+    const values = this.props.location.query;
+    const { param } = this.props;
     this.props.dispatch({
       type: 'entWorkOrderStatistics/exportSecond',
       payload: { 
@@ -168,7 +169,8 @@ class EntWorkOrderStatistics extends PureComponent {
         EntCode: "",
         BeginTime: values&&values.BeginTime?values.BeginTime:param.BeginTime,
         EndTime: values&&values.EndTime?values.EndTime:param.EndTime,
-        regionLevel:'2'
+        regionLevel:'2',
+        titleType:1,
       },
     });
   }

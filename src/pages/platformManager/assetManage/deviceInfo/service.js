@@ -24,15 +24,19 @@ export async function DelEquipmentInfo(params) {
 }
 //  获取监测类别
 export async function GetMonitoringTypeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+  const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
   return result;
 }
 //  获取监测类型
 export async function GetPollutantById(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+  const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
   return result;
 }
-
+//  获取设备名称
+export async function  GetEquipmentName(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
+  return result;
+}
 //  获取设备厂商列表
 export async function GetManufacturerList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);

@@ -27,6 +27,7 @@ const namespace = 'operatingInfo'
 
 const dvaPropsData =  ({ loading,operatingInfo,global }) => ({
   tableDatas:operatingInfo.tableDatas,
+  tableTotal:operatingInfo.tableTotal,
   tableLoading:loading.effects[`${namespace}/getOperateRIHPointList`],
   exportLoading: loading.effects[`${namespace}/exportOperateRIHPointList`],
   clientHeight: global.clientHeight,
@@ -58,7 +59,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,pollutantType } = props; 
+  const  { tableDatas,tableTotal,tableLoading,exportLoading,clientHeight,pollutantType } = props; 
   
   
   useEffect(() => {
@@ -67,14 +68,23 @@ const Index = (props) => {
   },[]);
 
 
-  const initData =  () => {
+  const initData =  (PageIndex,PageSize) => {
       props.getOperateRIHPointList({
         regionCode:regionCode,
         pollutantType:pollutantType,
         pointType:1,
+        pageIndex:PageIndex?PageIndex: pageIndex ,
+        pageSize:PageSize?PageSize: pageSize,
     })
  };
 
+ const [pageIndex,setPageIndex] = useState(1)
+ const [pageSize,setPageSize] = useState(20)
+  const onChange = (PageIndex, PageSize) => {
+      setPageIndex(PageIndex)
+      setPageSize(PageSize)
+      initData(PageIndex,PageSize)
+  }
 
   const exports = async  () => {
       props.exportOperateRIHPointList({
@@ -132,8 +142,14 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={ columns}
-        scroll={{ y: clientHeight - 500}}
-        pagination={false}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          total: tableTotal,
+          pageSize: pageSize,
+          current: pageIndex,
+          onChange: onChange,
+        }}
       />
         </div>
   );

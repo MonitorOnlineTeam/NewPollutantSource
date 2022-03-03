@@ -66,15 +66,24 @@ class RegionStaticstics extends PureComponent {
 
   // 导出
   onExport = () => {
+
+    const {location:{query:{PollutantTypeCode,AttentionCode,RegionCode,BeginTime,EndTime}}} = this.props;
+    // 获取一级数据标题头
+    this.props.dispatch({
+      type: 'entWorkOrderStatistics/getSecondTableTitleData',
+      payload: { PollutantTypeCode: PollutantTypeCode },
+    });
+
     this.props.dispatch({
       type: 'entWorkOrderStatistics/exportThird',
       payload: { 
         PollutantTypeCode,
         AttentionCode,
         RegionCode,
-        EntCode: entCode,
+        EntCode: this.state.entCode,
         BeginTime,
         EndTime,
+        titleType:2,
       },
     });
   }
@@ -120,7 +129,7 @@ class RegionStaticstics extends PureComponent {
                         (input, option) =>option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                       } 
                       style={{ width: 200 }} 
-                      onChange={v=>{this.getTableDataSource(v)}} 
+                      onChange={v=>{this.setState({entCode:v}); this.getTableDataSource(v)}} 
                       allowClear placeholder="请选择企业">
                       {
                         entList.map((item,index) => <Option key={'entList${index}'} value={item.EntCode}>

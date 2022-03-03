@@ -140,7 +140,7 @@ class SparePartReplaceRecordContent extends Component {
                             <td colSpan="3" style={{ width: '30%',minWidth: 200, textAlign: 'center', fontSize: '14px' }}>
                                 {Content !== null ?Content.EquipmentCode:null}
                             </td> */}
-                             <td colSpan="9"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>备品备件更换记录</td>
+                             <td colSpan="9"  style={{ textAlign:'center',fontWeight:'bold',fontSize:16}}>备品备件更换记录表</td>
                         </tr>
                          <tr>
                             <td colSpan="2" style={{ width: '18%',minWidth: 250, height: '50px', textAlign: 'center', fontSize: '14px' }}>

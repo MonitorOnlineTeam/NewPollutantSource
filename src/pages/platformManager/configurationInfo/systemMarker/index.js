@@ -284,7 +284,9 @@ const Index = (props) => {
   >   
       <Row>
         <Form.Item label="设备厂家" name="ManufacturerID" >
-             <Select placeholder='请选择设备厂家' allowClear style={{width:200}}>
+             <Select placeholder='请选择设备厂家' allowClear showSearch
+             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+             style={{width:200}}>
                 {
                manufacturerList[0]&&manufacturerList.map(item => {
                     return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
@@ -382,7 +384,10 @@ const Index = (props) => {
       </Col>
         <Col span={12}>
         <Form.Item label="设备厂家" name="ManufacturerID" rules={[  { required: true, message: '请输入设备厂家'  }]} >
-             <Select placeholder='请选择设备厂家' allowClear>
+             <Select placeholder='请选择设备厂家' allowClear showSearch
+             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+             
+             >
                 {
                manufacturerList[0]&&manufacturerList.map(item => {
                     return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>

@@ -157,6 +157,7 @@ class EntWorkOrderStatistics extends PureComponent {
         EntCode: "",
         BeginTime: values.Time[0].format("YYYY-MM-DD HH:mm:ss"),
         EndTime: values.Time[1].format("YYYY-MM-DD HH:mm:ss"),
+        titleType:1,
       },
     });
     

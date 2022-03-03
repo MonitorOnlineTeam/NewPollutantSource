@@ -1215,7 +1215,8 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       regionCode:regionCode,
       pageIndex:undefined,
       pageSize:undefined,
-      regionLevel:isActualCalibrationModal&&cityVisible? 2 : isActualCalibrationModal? 1 :undefined
+      regionLevel:isActualCalibrationModal&&cityVisible? 2 : isActualCalibrationModal? 1 :undefined,
+      homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
     }
     if(!isActualCalibrationModal){
     props.workRegExportTaskWorkList(par)
@@ -1335,6 +1336,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       regionLevel: 2,
       pageIndex:undefined,
       pageSize:undefined,
+      homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
     }
     if(!isActualCalibrationModal){  
       props.cityRegExportTaskWorkList(par)

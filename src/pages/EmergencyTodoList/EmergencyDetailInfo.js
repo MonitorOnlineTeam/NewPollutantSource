@@ -92,7 +92,7 @@ class EmergencyDetailInfo extends Component {
                 align: 'center',
             },
             {
-                title: '审批结果',
+                title: '备注',
                 dataIndex: 'examStaus',
                 key: 'examStaus',
                 align: 'center',

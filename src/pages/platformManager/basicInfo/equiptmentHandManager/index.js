@@ -192,6 +192,7 @@ const Index = (props) => {
 
 
   const onFinish2  = async () =>{  //添加 备移交资料
+    form2.setFieldsValue({ "Files":filesCuid} )
     try {
       const values = await form2.validateFields();
       typeName==='添加'? props.autoFormAdd(autoFormAddEditPar(values)) : props.autoFormEdit(autoFormAddEditPar(values))
@@ -265,6 +266,14 @@ const Index = (props) => {
 const edit3 = (record) =>{
   setVisible3(true)
   setTypeName('编辑')
+  const files = record["dbo.T_Bas_EquipmentHandoverData.Files"];
+  if(files){
+      const  FilesID = files.split("|")[files.split("|").length-2]    
+      props.getAttachmentLists({FileUuid:FilesID},(fileList)=>{ setFileList(fileList);setFilesCuid(FilesID)}) 
+  }else{
+    setFilesCuid(cuid())
+    setFileList([])
+  }
   form3.setFieldsValue({
     CreateTime:moment(record["dbo.T_Bas_EquipmentHandoverData.CreateTime"]),
     CreateUserId:record["dbo.T_Bas_EquipmentHandoverData.CreateUserId"],
