@@ -149,13 +149,13 @@ class SiteDetailsModal extends PureComponent {
         wrapClassName='spreadOverModal'
       >
         {
-          currentKey === 1 && <div style={{ height: "60vh", overflow: "hidden" }}>
+          currentKey === 1 && <div style={{ height: "100vh", overflow: "hidden" }}>
             <DataQuery
               DGIMN={data.DGIMN}
               initLoadData
-              chartHeight='calc(60vh - 190px)'
+              chartHeight='calc(100vh - 190px)'
               // style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }}
-              tableHeight={"calc(60vh - 318px)"}
+              tableHeight={"calc(100vh - 318px)"}
               pointName={data.PointName}
               pollutantTypes={data.PollutantType}
               entName={data.ParentName}
@@ -163,7 +163,7 @@ class SiteDetailsModal extends PureComponent {
           </div>
         }
        {  // 运维记录
-          currentKey === 2 && <div style={{ height: "60vh", overflow: "hidden" }}>
+          currentKey === 2 && <div style={{ height: "100vh", overflow: "hidden" }}>
             <OperationRecord
               DGIMN={data.DGIMN}
               isHomeModal

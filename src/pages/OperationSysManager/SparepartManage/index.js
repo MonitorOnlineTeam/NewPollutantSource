@@ -42,7 +42,9 @@ const { Search } = Input;
     sparepartManageParameters: SparepartManage.sparepartManageParameters,
     pageCount: SparepartManage.pageCount,
     storehouseList:SparepartManage.storehouseList,
-    monitoringTypeList:SparepartManage.monitoringTypeList
+    monitoringTypeList:SparepartManage.monitoringTypeList,
+    confirmLoading: loading.effects['SparepartManage/UpdateSpareParts'],
+
 }))
 @Form.create()
 
@@ -711,6 +713,7 @@ export default class Index extends Component {
                         width={this.state.width}
                         onCancel={this.onCancel}
                         onOk={this.handleSubmit}
+                        confirmLoading={this.props.confirmLoading}
                     >
                         {
                             <UpdateSparepartManage

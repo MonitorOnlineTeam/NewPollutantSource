@@ -115,9 +115,9 @@ const Index = (props) => {
     dataIndex: 'entName',
     key:'entName',
     align:'center',
-    render:(text,record,index)=>{
-      return  <div style={{textAlign:'left'}} >{text}</div>
-    }
+    // render:(text,record,index)=>{
+    //   return  <div style={{textAlign:'left'}} >{text}</div>
+    // }
   },
 ]
 

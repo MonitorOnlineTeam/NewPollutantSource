@@ -212,7 +212,7 @@ export async function GetMonitorPointVerificationItem(params) { //获取点位�
 }
 
 export async function GetMonitorPointVerificationList(params) { //获取数据核查信息码表
-    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetMonitorPointVerificationList`, params, null);
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetMonitorPointVerificationList?PollutantType=${params.pollutantType}`, {}, null);
     return result;
 }
 
@@ -278,17 +278,17 @@ export async function GetEquipmentInfoList(params) { //设备信息
   }
   
   export async function GetMonitoringTypeList2(params) { //设备信息  获取监测类别 
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
     return result;
   }
 
   export async function GetPollutantById(params) {   //设备信息  获取监测类型
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
     return result;
   }
 
   export async function GetPollutantById2(params) {   //设备信息  获取监测类型
-    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/'+params.id, null);
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
     return result;
   }
 

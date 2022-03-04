@@ -31,6 +31,8 @@ export default Model.extend({
         CemsList: [], //
         CorporationCode: null,
         pointVerificationList:[],
+        pointRealTimeList:[],
+        pointHourItemList:[],
         paramCodeList:[],
         monitoringTypeList:[],
         manufacturerList:[],//设备厂家
@@ -228,11 +230,25 @@ export default Model.extend({
         *getMonitorPointVerificationList({callback, payload }, { call, put, update, select }) {
             const result = yield call(GetMonitorPointVerificationList, payload);
             if (result.IsSuccess) {
-                 if(result.Datas&&result.Datas[0]){
-                   const data =  result.Datas.map(item=>{
-                        return  { label: item.Name, value:  item.ChildID }
-                    })
-                    yield update({ pointVerificationList:data  })
+                 if(result.Datas){
+                    if(result.Datas.Verificatiolist){ //核查项
+                        const data =  result.Datas.Verificatiolist.map(item=>{
+                            return  { label: item.Name, value:  item.ChildID }
+                        })
+                        yield update({ pointVerificationList:data  })
+                    }
+                    if(result.Datas.RealTimeItem){ //实时
+                        const data =  result.Datas.RealTimeItem.map(item=>{
+                            return  { label: item.Name, value:  item.ChildID }
+                        })
+                        yield update({ pointRealTimeList:data  })
+                    }
+                    if(result.Datas.HourItem){ //小时
+                        const data =  result.Datas.HourItem.map(item=>{
+                            return  { label: item.Name, value:  item.ChildID }
+                        })
+                        yield update({ pointHourItemList:data  })
+                    }
                  }
                
             } else {

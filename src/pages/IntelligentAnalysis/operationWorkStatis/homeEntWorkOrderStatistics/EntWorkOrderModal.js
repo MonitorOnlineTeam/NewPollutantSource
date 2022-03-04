@@ -50,7 +50,7 @@ class EntWorkOrderModal extends PureComponent {
             title={'近30日运维工单统计（企业）'}
             width={'90%'}
             visible={showModal}
-            onCancel={onCloseListener}
+            onCancel={()=>{onCloseListener();this.setState({page:'EntWorkOrderStatistics'})}}
             footer={null}
             wrapClassName='spreadOverModal'
             destroyOnClose

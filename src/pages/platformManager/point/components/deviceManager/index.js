@@ -416,7 +416,7 @@ const Index = (props) => {
                             EquipmentModel: record.EquipmentType, });
       setParchoiceDeViceID(record.ID)
       setParPopVisible(false)
-      props.getPollutantById2({ id: record.PollutantType },()=>{
+      props.getPollutantById2({ id: record.PollutantType,type:1 },()=>{
           formDevice.setFieldsValue({ PollutantCode: record.PollutantCode})
           setDevicePollutantName(record.PollutantName)
       })
@@ -615,7 +615,7 @@ const Index = (props) => {
   }
   const onValuesChange3 = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'PollutantType') {
-      props.getPollutantById({ id: hangedValues.PollutantType })
+      props.getPollutantById({ id: hangedValues.PollutantType,type:1 })
       form3.setFieldsValue({ PollutantCode: undefined })
     }
   }

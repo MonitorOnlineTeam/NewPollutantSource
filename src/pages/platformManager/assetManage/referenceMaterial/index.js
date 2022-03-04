@@ -143,7 +143,7 @@ const Index = (props) => {
         if (text === 1) {
           return <span><Tag color="blue">启用</Tag></span>;
         }
-        if (text === 0) {
+        if (text === 2) {
           return <span><Tag color="red">停用</Tag></span>;
         }
       },
@@ -255,7 +255,7 @@ const Index = (props) => {
     form={form}
     name="advanced_search"
     initialValues={{
-      IsUsed:1,
+      // IsUsed:1,
       Remark:typeRemark,
     }}
     className={styles["ant-advanced-search-form"]}
@@ -278,10 +278,10 @@ const Index = (props) => {
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
       <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} className={typeRemark ==1? styles.status : ''} >
-        <Radio.Group style={{width:200}}>
-            <Radio value={1}>启用</Radio>
-            <Radio value={0}>停用</Radio>
-        </Radio.Group>
+      <Select placeholder='请选择状态' allowClear style={{width:200}}>
+           <Option key={1} value={1}>启用</Option>
+           <Option key={2} value={2}>停用</Option>
+        </Select>
       </Form.Item>
       <Form.Item hidden label="类型"  name="Remark" >
         <Radio.Group style={{width:200}}>
@@ -321,7 +321,7 @@ const Index = (props) => {
     onFinish(PageIndex,PageSize)
   }
   const codeContent = <div style={{width:300}}>
-    如果{typeRemark==1? '标准气体':'试剂信息'}没有编码，则按用以下规则定义编码，格式: B+年+
+    如果{typeRemark==1? '标准气体':'试剂信息'}没有编码，则按以下规则定义编码，格式: B+年+
     月+日+001 (累计排序)，如:B20200601001、 B20200601002
   </div>
 

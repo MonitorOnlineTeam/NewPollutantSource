@@ -363,12 +363,12 @@ const Index = (props) => {
          <Row align='middle'> 
          <Col span={8}>
           <Form.Item   name='ProjectName' label='合同名称'>
-            <Input placeholder="请输入合同名称" />
+            <Input placeholder="请输入合同名称" allowClear/>
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item name='ProjectCode' label='项目编号' >
-            <Input placeholder="请输入项目编号" />
+            <Input placeholder="请输入项目编号" allowClear/>
           </Form.Item>
         </Col>
         {expand&& <><Col span={8}>
@@ -385,7 +385,8 @@ const Index = (props) => {
         </Col>
         <Col span={8}>
           <Form.Item name='RegionCode' label='客户所在地' >
-           <RegionList style={{ width: '100%' }} />
+           {/* <RegionList style={{ width: '100%' }} /> */}
+           <Input  placeholder='请输入客户所在地'/>
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -459,20 +460,20 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="合同名称" name="ProjectName" rules={[  { required: true, message: '请输入合同名称!',  },]} >
-        <Input placeholder='请输入合同名称'/>
+        <Input placeholder='请输入合同名称' allowClear/>
       </Form.Item>
       </Col>
       <Col span={12}>
         <Form.Item label="项目编号" name="ProjectCode" rules={[  { required: true, message: '请输入项目编号!',  },]} >
-        <Input  placeholder='请输入项目编号'/>
+        <Input  placeholder='请输入项目编号' allowClear/>
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={12}>
         <Form.Item label="客户所在地" name="RegionCode" rules={[  { required: true, message: '请输入客户所在地!',  },]} >
-        <RegionList style={{ width: '100%' }} />
-
+        {/* <RegionList style={{ width: '100%' }} /> */}
+        <Input  placeholder='请输入客户所在地'/>
       </Form.Item>
       </Col>
       <Col span={12}>

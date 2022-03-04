@@ -22,7 +22,12 @@ const { Option } = Select;
 }))
 @Form.create()
 class RegionStaticstics extends PureComponent {
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      entCode:'',
+    };
+  }
   componentDidMount() {
     // 获取企业列表
     const {location:{query:{RegionCode}}} = this.props;

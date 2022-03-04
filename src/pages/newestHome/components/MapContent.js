@@ -6,7 +6,7 @@
 import React, { PureComponent, useState, useEffect, Fragment, useRef, useMemo, useLayoutEffect } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, EnvironmentFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, EnvironmentFilled, RightOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -100,7 +100,7 @@ class Index extends PureComponent {
       },
       clickable: true,
       click: (MapsOption, marker) => {
-        const { showType } = this.state;
+        const { showType,pointMarkers } = this.state;
         if (showType == 3) { //监测点弹窗
           const position = marker.De.extData.position;
           this.setState({
@@ -111,6 +111,9 @@ class Index extends PureComponent {
           }, () => {
             this.getInfoWindowData()
           });
+        }
+        if(showType == 2){ //企业 点击进入监测点
+          this.loadPointMarkerData(pointMarkers,true)
         }
       },
       mouseover: (MapsOption, marker) => { //鼠标移入地图容器内时触发
@@ -145,7 +148,8 @@ class Index extends PureComponent {
       pointInfoWindowVisible: false,
       currentClickObj: {}, // 当前点击对象 -  监测点弹窗
       infoWindowPos: {},
-      selectEnt:undefined
+      selectEnt:undefined,
+      pointIconGo:false,
     }
   }
   componentWillMount() {
@@ -218,14 +222,14 @@ class Index extends PureComponent {
     })
   }
 
-  loadRegionMarkerData = (data) => { //行政区
+  loadRegionMarkerData = (data,flag) => { //行政区
     this.setState({
       showType: 1,
       markersList: data,
       entTitleShow: false, pointTitleShow: false,selectEnt:undefined
     }, () => {
       const timer = setInterval(() => {
-        if (aMap) {
+        if (aMap&&!flag) {
           aMap.setFitView();
           clearInterval(timer);
         }
@@ -233,14 +237,14 @@ class Index extends PureComponent {
     })
 
   }
-  loadEntMarkerData = (data) => { //企业
+  loadEntMarkerData = (data,flag) => { //企业
     this.setState({
       showType: 2,
       pointTitleShow: false,
       markersList: data
     }, () => {
       const timer = setInterval(() => {
-        if (aMap) {
+        if (aMap&&!flag) {
           aMap.setFitView();
           clearInterval(timer);
         }
@@ -248,15 +252,15 @@ class Index extends PureComponent {
     })
 
   }
-  loadPointMarkerData = (data) => { //监测点
+  loadPointMarkerData = (data,flag) => { //监测点
     this.setState({
       showType: 3,
       markersList: [...data]
     }, () => {
       const timer = setInterval(() => {
-        if (aMap) {
+        if (aMap&&!flag) {
           aMap.setFitView();
-          aMap.setZoomAndCenter(aMap.getZoom()+1, [96.01906121185537, 35.874643454131984]);
+          // aMap.setZoomAndCenter(aMap.getZoom()+1, [96.01906121185537, 35.874643454131984]);
           clearInterval(timer);
         }
       }, 0);
@@ -302,6 +306,10 @@ class Index extends PureComponent {
     return icon;
   }
 
+  goEnt=()=>{
+    const {  entMarkers } = this.state;
+    this.loadEntMarkerData(entMarkers,true)
+  }
   operationChange = (text, mapProps) => {
     const map = mapProps.__map__;
     const { showType, regionMarkers, pointMarkers, entMarkers, entTitleShow, pointTitleShow } = this.state;
@@ -330,13 +338,14 @@ class Index extends PureComponent {
         this.setState({ fullScreen: false })
         this.props.fullScreenClick(false)
         break;
-      case '展示企业':
+      case '展示企业': //行政区
+        this.setState({pointIconGo:false})
         this.loadRegionMarkerData(regionMarkers)
         // this.setState({showType:1, markersList:[...this.state.regionMarkers]})
         break;
       case '展示监测点':
         // if(showType!=3){
-        this.setState({ pointTitleShow: false, entTitleShow: false, })
+        this.setState({ pointTitleShow: false, entTitleShow: false,pointIconGo:true })
         this.loadPointMarkerData(pointMarkers)
         // }
         break;
@@ -359,7 +368,7 @@ class Index extends PureComponent {
     }
 
   }
-  regPopovercontent = (extData) => {
+  regPopovercontent = (extData) => { 
     return <div>
       <div>企业总数：{extData.position && extData.position.entCount}</div>
       <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.OverCount? extData.position.OverCount : 0}</div>
@@ -372,7 +381,7 @@ class Index extends PureComponent {
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
       return <div style={{ position: 'relative' }}>
-        <Popover overlayClassName={styles.regPopSty} title={extData.position && extData.position.regionName} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} >
+        <Popover overlayClassName={styles.regPopSty} title={()=><Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={()=>{this.goEnt()}}/> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} >
           <img src='/location.png' style={{ position: 'relative', width: 35, height: 35 }} />
         </Popover>
       </div>
@@ -545,6 +554,7 @@ class Index extends PureComponent {
     );
   };
   entSearchClick = (val) =>{
+    
    const { entList } = this.props;
    let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     const emptyEle = document.querySelector('.antd-pro-pages-newest-home-style-searchSty .ant-select-item-empty')
@@ -564,43 +574,64 @@ class Index extends PureComponent {
 
   }
   entSearchChange = (val) =>{
-    const { entMarkers } = this.state; 
+    const { entMarkers,selectEnt } = this.state; 
     let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     listEle.style.display = 'none';
     this.setState({ selectEnt:val})
     this.searchEntEle.blur() 
-      entMarkers.map(item=>{
-        let position = item.position;
-      if(position.entCode === val){
-        this.setState({ showType: 2, pointTitleShow: false,markersList: [...entMarkers] })
-        aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
+     console.log(val)
+      if(val){
+        entMarkers.map(item=>{
+          let position = item.position;
+        if(position.entCode === val){
+          this.setState({ showType: 2, pointTitleShow: false,markersList: [...entMarkers] })
+          aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
+        }
+      })
       }
-    })
+
      
   }
 
+  entFocus = () =>{
+    const { selectEnt } = this.state;
+    this.setState({ selectEnt:undefined})
+    // if(selectEnt){
+    //   this.props.dispatch({
+    //     type: 'newestHome/updateState',
+    //     payload: {
+    //       entList: [],
+    //     },
+    //   })
+    // }
+
+  }
+  entBlur =() =>{
+    
+  }
   onBack = () =>{
     const { showType,regionMarkers,selectEnt,entMarkers } = this.state;
     if(showType == 2){
       //  this.setState({ entTitleShow: false, pointTitleShow: false,selectEnt:undefined })
-       this.loadRegionMarkerData(regionMarkers)
+       this.loadRegionMarkerData(regionMarkers,true)
       }
     if(showType == 3){
-       if(selectEnt){ //从企业跳转到监测点
-        this.loadEntMarkerData(entMarkers)
-       }else{  //从行政区直接跳转到监测点
-        this.loadRegionMarkerData(regionMarkers)
-       }
+      this.loadEntMarkerData(entMarkers)
+      //  if(selectEnt){ //从企业跳转到监测点
+      //   this.loadEntMarkerData(entMarkers)
+      //  }else{  //从行政区直接跳转到监测点
+      //   this.loadRegionMarkerData(regionMarkers)
+      //  }
     }
   }
   mapContent = (props) => {
-    const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow } = this.state;
+    const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow,pointIconGo} = this.state;
     const { mapStatusData, subjectFontSize, pollType,entList } = this.props;
     const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
     { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
 
     const operationBtnArr = () => {
-      return [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/homeMapT.png' : '/homeMapQp.png' }, { text: '展示企业', url: '/homeMapQ.png' }, { text: '展示监测点', url: '/homeMapJc.png' },
+      return [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/homeMapT.png' : '/homeMapQp.png' }, { text: '展示企业', url: !pointIconGo? '/homeMapQA.png' : '/homeMapQ.png' }, { text: '展示监测点', url:pointIconGo?'/homeMapJcA.png' : '/homeMapJc.png' },
       { text: entTitleShow || pointTitleShow ? '隐藏名称' : '展示名称', url: '/homeMapZ.png' }, { text: '放大', url: '/homeMapJ.png' },
       { text: '缩小', url: '/homeMapS.png' }]
     }
@@ -618,7 +649,7 @@ class Index extends PureComponent {
       "2": <><GasOffline /><span className={styles.iconText}>废气</span></>
     }
 
-    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt } = this.state;
+    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt, } = this.state;
    
     // const searchEntInput = useRef(null);
   
@@ -706,9 +737,12 @@ class Index extends PureComponent {
             suffixIcon={ <img src='/homeMapsearchIcon.png' />}
             onSearch={this.entSearchClick}
             onChange={this.entSearchChange}
+            onFocus={this.entFocus}
+            onBlur={this.entBlur}
             // ref={searchEntInput}
             ref={props.searchEntInputRef}
             value={selectEnt}
+            defaultActiveFirstOption={false}
           >
           {entList[0]&&entList.map(item=>{
               return <Option value={item.entCode}>{item.entName}</Option>
@@ -716,7 +750,7 @@ class Index extends PureComponent {
           </Select>
         </div>}
 
-        {showType != 1 && <div className={styles.backSty} onClick={this.onBack}>  { /**返回 */}
+        {showType != 1 && !pointIconGo && <div className={styles.backSty} onClick={this.onBack}>  { /**返回 */}
           <img src='/homeMapBack.png' />
           <div>返回</div>
         </div>}

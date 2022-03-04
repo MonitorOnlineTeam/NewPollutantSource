@@ -67,6 +67,8 @@ let pointConfigIdEdit = '';
   configInfo: global.configInfo,
   CorporationCode: point.CorporationCode,
   pointVerificationList: point.pointVerificationList,
+  pointRealTimeList:point.pointRealTimeList,
+  pointHourItemList:point.pointHourItemList,
   paramCodeList:point.paramCodeList,
 }))
 @Form.create()
@@ -85,7 +87,10 @@ export default class MonitorPoint extends Component {
       FormData: null,
       tabKey: "1",
       MNVisible:false,
-      deviceManagerVisible:false
+      deviceManagerVisible:false,
+      itemCode:[],
+      realtimePollutantCode:[],
+      hourPollutantCode:[],
     };
   }
 
@@ -104,10 +109,7 @@ export default class MonitorPoint extends Component {
         },
       },
     });
-    dispatch({
-      type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
-      payload: {},
-    });
+
 
   }
 
@@ -148,6 +150,10 @@ export default class MonitorPoint extends Component {
         type: 'point/getParamCodeList', //设备参数项码表
         payload: {pollutantType: type},
         callback:()=>{}
+      });
+      dispatch({
+        type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
+        payload: {pollutantType:type},
       });
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
@@ -244,6 +250,10 @@ export default class MonitorPoint extends Component {
       isEdit: false,
       selectedPointCode: '',
       isView: false,
+      itemCode:[],
+      realtimePollutantCode:[],
+      hourPollutantCode:[],
+      platformNum:'',
     });
   };
 
@@ -259,6 +269,8 @@ export default class MonitorPoint extends Component {
             ID:'',
             DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
             ItemCode: this.state.itemCode? this.state.itemCode.toString() : '',
+            RealtimePollutantCode: this.state.realtimePollutantCode? this.state.realtimePollutantCode.toString() : '',
+            HourPollutantCode: this.state.hourPollutantCode? this.state.hourPollutantCode.toString() : '',
             PlatformNum: this.state.platformNum,
         },
       });
@@ -428,6 +440,12 @@ export default class MonitorPoint extends Component {
           <Form.Item label="核查项" >
           <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
          </Form.Item>
+         <Form.Item label="实时数据一致性核因子" >
+          <Checkbox.Group value={this.state.realtimePollutantCode}  options={this.props.pointRealTimeList} onChange={this.realtimePollutantChange} />
+         </Form.Item>
+         <Form.Item label="小时日数据一致性核查因子" >
+          <Checkbox.Group value={this.state.hourPollutantCode}  options={this.props.pointHourItemList} onChange={this.hourPollutantChange} />
+         </Form.Item>
          <Form.Item label="监控平台数量" >
           <Input  value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange}/>
           </Form.Item>
@@ -438,6 +456,13 @@ export default class MonitorPoint extends Component {
   dataVerificationChange = (val) =>{ //核查项 多选
     this.setState({itemCode:val})
   }
+  realtimePollutantChange= (val)=>{
+    this.setState({realtimePollutantCode:val})
+  }
+  hourPollutantChange =(val) =>{
+    this.setState({hourPollutantCode:val})
+  }
+
   platformNumChange=(e)=>{//核查项 平台数量
     this.setState({platformNum:e.target.value})
   }
@@ -445,7 +470,7 @@ export default class MonitorPoint extends Component {
   getEquipmentPar = () =>{ //设备参数项
     return <Spin spinning={this.props.getParamInfoListLoading}>
            <div className={styles.dataVerificationSty}>
-           <div style={{color:'#f5222d',paddingBottom:5}}> 设备参数类别是异常小时数记录电子表单的一个字段,设置后,运维工程师才能在APP上填写。</div>
+           <div style={{color:'#f5222d',paddingBottom:5}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
           <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol}  options={this.props.paramCodeList} onChange={this.equipmentParChange} />
          </Form.Item>
@@ -646,6 +671,8 @@ export default class MonitorPoint extends Component {
                             callback:(res)=>{
                               this.setState({
                                 itemCode: res&&res.code ? res.code:undefined,
+                                realtimePollutantCode:res&&res.RealTimeItem ? res.RealTimeItem:undefined,
+                                hourPollutantCode:res&&res.HourItem ? res.HourItem:undefined,
                                 platformNum:res&&res.platformNum ? res.platformNum:undefined,
                               })
                             }

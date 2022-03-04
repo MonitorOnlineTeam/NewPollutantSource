@@ -147,8 +147,6 @@ const Index = (props) => {
   const [tableVisible,setTableVisible] = useState(false)
 
   const [type,setType] = useState('add')
-  // const [pageSize,setPageSize] = useState(20)
-  // const [pageIndex,setPageIndex] = useState(1)
   
   
   const [deveiceName,setDeveiceName] = useState('')
@@ -305,10 +303,14 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
 
+      if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
+        setPageIndex(1)
+      }
+
       props.getEquipmentInfoList({
         ...values,
         ManufacturerId:manufacturerId,
-        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         PageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {

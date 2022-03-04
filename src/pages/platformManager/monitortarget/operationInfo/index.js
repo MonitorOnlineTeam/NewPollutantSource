@@ -153,7 +153,11 @@ const Index = (props) => {
     props.operationList();//运维列表
     props.getEntPointList({EntID:props.location.query.p});//企业运维列表
     props.cycleList();//运维频次
-
+    
+    console.log()
+        // InspectionCycel
+    // CalibrationCycle:
+    // ParameterCheck:
   }
 
   const projectNumList=()=>{
@@ -191,13 +195,19 @@ const Index = (props) => {
       key:'inspectionCycelName',
       align:'center',
     },
+
     {
       title: '校准频次',
       dataIndex: 'calibrationCycleName',
       key:'calibrationCycleName',
       align:'center',
     },
-
+    {
+      title: '参数核对频次',
+      dataIndex: 'parameterCheckName',
+      key:'parameterCheckName',
+      align:'center',
+    },
     {
       title: '运营起始日期',
       dataIndex: 'operationBeginTime',
@@ -287,28 +297,11 @@ const projectNumCol =[
 
 
   const choice = (record) =>{
-    // choiceArr.push(record.ProjectCode)
-    // const  value = Array.from(new Set(choiceArr))
-    // choiceID.push(record.ID)
-    // const  idArr = Array.from(new Set(choiceID))
-    // form2.setFieldsValue({PorjectID:idArr[0]? idArr.toString() : ''});
-    // setChoiceData(value)
     form2.setFieldsValue({PorjectID:record.ID});
     setChoiceData(record.ProjectCode)
     setPopVisible(false)
   }
   const onClearChoice=(value)=>{
-    // choiceArr=value;
-    // setChoiceData(choiceArr)
-    // choiceID=[];
-    // projectTableDatas.map(item=>{
-    //   value.map(items=>{
-    //     if(item.ProjectCode === items){
-    //       choiceID.push(item.ID) 
-    //     }
-    //   })
-    // })
-    // form2.setFieldsValue({PorjectID:choiceID[0]? choiceID.toString() : ''});
     form2.setFieldsValue({PorjectID:value});
     setChoiceData(value)
   }
@@ -323,6 +316,7 @@ const projectNumCol =[
 
   
   const add = () => {
+    setType("add")
     setChoiceData([])
     form2.resetFields();
     setFromVisible(true)
@@ -331,9 +325,10 @@ const projectNumCol =[
   const edit = async (record) => {
     form2.setFieldsValue({ ...record,
       PorjectID:record.projectID,OperationCompany:record.companyID,
-      InspectionCycel:record.inspectionCycel,CalibrationCycle:record.calibrationCycle,
+      InspectionCycel:record.inspectionCycel,CalibrationCycle:record.calibrationCycle,ParameterCheck:record.parameterCheck,
       RegionCode:record.regionCode,BeginTime:moment(record.actualBeginTime),EndTime:moment(record.actualEndTime)});
     setChoiceData(record.projectCode)
+    setType("edit")
     setFromVisible(true)
   };
 
@@ -355,7 +350,11 @@ const projectNumCol =[
     try {
       const values = await form2.validateFields();
       props.updateOrAddProjectRelation(
-        {...values,BeginTime:values.BeginTime.format('YYYY-MM-DD 00:00:00'),EndTime:values.EndTime.format('YYYY-MM-DD 23:59:59')},()=>{
+        {
+          ...values,
+          BeginTime:values.BeginTime.format('YYYY-MM-DD 00:00:00'),EndTime:values.EndTime.format('YYYY-MM-DD 23:59:59'),
+          DGIMN:type==='edit'?[values.DGIMN] : values.DGIMN,
+        },()=>{
         setFromVisible(false);
         onFinish();
      })
@@ -427,7 +426,26 @@ const projectNumCol =[
   }
   const operationDataSource = operationInfoList['OperationMaintenanceEnterprise']&&operationInfoList['OperationMaintenanceEnterprise'].dataSource ? operationInfoList['OperationMaintenanceEnterprise'].dataSource : [];
   const operationCycleDataSource = operationInfoList['OperationCycle']&&operationInfoList['OperationCycle'].dataSource ? operationInfoList['OperationCycle'].dataSource : [];
-
+ 
+  operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+   
+     const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
+    if( code==1){
+      form2.setFieldsValue({
+        InspectionCycel:id
+      })
+    }
+    if(code==2){
+      form2.setFieldsValue({
+        CalibrationCycle:id
+      })
+    }
+    if(code ==3){
+      form2.setFieldsValue({
+        ParameterCheck:id
+      })
+    }
+  })
   return (
     <div  className={styles.entOperationInfo}>
     <BreadcrumbWrapper>
@@ -459,7 +477,7 @@ const projectNumCol =[
       <Row>
         <Col span={12}>
         <Form.Item label="监测点列表" name="DGIMN" rules={[  { required: true, message: '请选择监测点列表!',  },]} >
-        <Select mode='multiple' placeholder="请选择监测点列表">
+        <Select mode={type==='edit'? null: 'multiple'} placeholder="请选择监测点列表">
           {entPointList[0]&&entPointList.map(item=>{
             return <Option value={item.DGIMN}>{item.PointName}</Option>
           })
@@ -515,8 +533,8 @@ const projectNumCol =[
 
       <Row>
         <Col span={12}>
-        <Form.Item label="巡检频次" name="InspectionCycel" rules={[{ required: true, message: '请输入巡检频次!',  },]} >
-        <Select placeholder="请选择巡检频次">
+        <Form.Item label="巡检频次" name="InspectionCycel" rules={[{ required: true, message: '请选择巡检频次!',  },]} >
+        <Select placeholder="请选择巡检频次" disabled>
            {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
            })
@@ -525,8 +543,8 @@ const projectNumCol =[
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="校准频次"  name="CalibrationCycle" rules={[{ required: true, message: '请输入校准频次!',  },]} >
-      <Select placeholder="请选择校准频次">
+      <Form.Item label="校准频次"  name="CalibrationCycle" rules={[{ required: true, message: '请选择校准频次!',  },]} >
+      <Select placeholder="请选择校准频次" disabled>
            {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
            })
@@ -536,36 +554,41 @@ const projectNumCol =[
       </Col>
       </Row>
       <Row>
+      <Col span={12}>
+      <Form.Item label="参数核对频次"  name="ParameterCheck" rules={[{ required: true, message: '请选择参数核对频次!',  },]} >
+      <Select placeholder="请选择参数核对频次" disabled>
+           {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+             return <Option value={item['dbo.T_Cod_OperationCycle.ID']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
+           })
+          }
+        </Select> 
+      </Form.Item>
+      </Col>
         <Col span={12}>
         <Form.Item label="实际起始日期" name="BeginTime" rules={[{ required: true, message: '请选择实际起始日期!',  },]} >
         <DatePicker  disabledDate={startDisabledDate} />
       </Form.Item>
       </Col>
+
+      </Row>
+      <Row>
       <Col span={12}>
       <Form.Item label="实际结束日期"  name="EndTime" rules={[{ required: true, message: '请选择实际结束日期!',  },]} >
         <DatePicker  disabledDate={endDisabledDate} />
       </Form.Item>
       </Col>
-      </Row>
-      <Row>
         <Col span={12}>
         <Form.Item label="备注" name='Remark' hidden={type==='add'}>
         <Input placeholder='请输入备注信息'/>
       </Form.Item>
       </Col>
+      </Row>
+
       <Col span={12}>
       <Form.Item label="ID"  name="ID" hidden>
           <Input />
       </Form.Item> 
       </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-        <Form.Item label="备注" name='Remark' hidden={type==='add'}>
-        <Input placeholder='请输入备注信息'/>
-      </Form.Item>
-      </Col>
-      </Row>
     </Form>
       </Modal>
         </div>
