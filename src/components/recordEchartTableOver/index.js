@@ -513,6 +513,7 @@ class Index extends Component {
                                             style={{ paddingBottom: 0 }}
                                             columns={column}
                                             dataSource={this.props.overfirstData}
+                                            scroll={{ y: this.props.tableHeight || undefined }}
                                             pagination={{
                                                 // showSizeChanger: true,
                                                 showQuickJumper: true,

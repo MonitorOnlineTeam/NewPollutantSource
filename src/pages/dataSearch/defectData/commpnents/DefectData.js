@@ -360,7 +360,7 @@ export default class EntTransmissionEfficiency extends Component {
     const BtnComponents = this.btnComponents;
     return (
         <Card
-          bordered={false}
+          // bordered={false}
           title={
             <>
             {isHomeModal?
@@ -495,6 +495,7 @@ export default class EntTransmissionEfficiency extends Component {
               loading={this.props.loading}
               columns={this.columns}
               // bordered={false}
+              scroll={{ y: this.props.tableHeight || undefined }}
               dataSource={this.props.tableDatas}
               pagination={{
                 showSizeChanger: true,

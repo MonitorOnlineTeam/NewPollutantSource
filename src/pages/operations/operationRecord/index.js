@@ -56,7 +56,7 @@ class Index extends Component {
             <OperationRecord DGIMN={ this.state.dgimn} PollutantType={this.state.type} />
           )}</>
           :
-          <> { this.props.DGIMN && <OperationRecord DGIMN={ this.props.DGIMN} PollutantType={this.props.type} />}</>
+          <> { this.props.DGIMN && <OperationRecord DGIMN={ this.props.DGIMN} PollutantType={this.props.type} {...this.props}/>}</>
         }
         </BreadcrumbWrapper>
       </div>

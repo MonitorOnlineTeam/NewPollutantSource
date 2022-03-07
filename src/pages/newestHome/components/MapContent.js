@@ -150,6 +150,8 @@ class Index extends PureComponent {
       infoWindowPos: {},
       selectEnt:undefined,
       pointIconGo:false,
+      entLists:[],
+      mapBtnStatusIndex:-1,
     }
   }
   componentWillMount() {
@@ -414,7 +416,7 @@ class Index extends PureComponent {
     const { currentClickObj } = this.state;
     const { infoWindowData } = this.props;
     let imgName =
-      pollutantType === 2 ? '/gasInfoWindow.png' : pollutantType === 1 ? '/water.jpg' : '/infoWindowImg.png';
+      pollutantType == 2 ? '/gasInfoWindow.png' : pollutantType == 1 ? '/water.jpg' : '/infoWindowImg.png';
     if (infoWindowData.photo) {
       imgName = `/upload/${infoWindowData.photo[0]}`;
     }
@@ -561,34 +563,30 @@ class Index extends PureComponent {
      if(emptyEle){
       listEle.style.display = 'none';
      }
-    if(val){
-      entList.map(item=>{
-        if(item.entName.match(new RegExp(`\\${val}`, 'g'))){
-          listEle.style.display = 'block';
-        }
-      })
-     
-    }else{
-      listEle.style.display = 'none';
-    }
+     this.setState({entLists:entList},()=>{
+      if(val){
+        this.state.entLists.map(item=>{
+          if(item.entName.match(new RegExp(`\\${val}`, 'g'))){
+            listEle.style.display = 'block';
+          }
+        })
+       
+      }else{
+        listEle.style.display = 'none';
+      }
+     })
+ 
 
   }
   entSearchChange = (val) =>{
-    const { entMarkers,selectEnt } = this.state; 
+    const { entMarkers } = this.state; 
     let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     listEle.style.display = 'none';
-    this.setState({ selectEnt:val})
-    this.searchEntEle.blur() 
-     console.log(val)
-      if(val){
-        entMarkers.map(item=>{
-          let position = item.position;
-        if(position.entCode === val){
-          this.setState({ showType: 2, pointTitleShow: false,markersList: [...entMarkers] })
-          aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
-        }
-      })
-      }
+    this.setState({ selectEnt:val},()=>{
+      this.searchEntEle.blur()
+
+    })
+
 
      
   }
@@ -596,35 +594,45 @@ class Index extends PureComponent {
   entFocus = () =>{
     const { selectEnt } = this.state;
     this.setState({ selectEnt:undefined})
-    // if(selectEnt){
-    //   this.props.dispatch({
-    //     type: 'newestHome/updateState',
-    //     payload: {
-    //       entList: [],
-    //     },
-    //   })
-    // }
 
   }
   entBlur =() =>{
-    
+    const { entMarkers,selectEnt } = this.state;
+    this.setState({entLists:[]})
+    if(selectEnt){
+      entMarkers.map(item=>{
+        let position = item.position;
+      if(position.entName === selectEnt){
+        this.setState({ showType: 2, pointTitleShow: false,markersList: [item] })
+        aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
+        this.setState({entLists:[]})
+      }
+    })
+    }else{
+      this.loadEntMarkerData(entMarkers)
+    }
   }
   onBack = () =>{
     const { showType,regionMarkers,selectEnt,entMarkers } = this.state;
     if(showType == 2){
-      //  this.setState({ entTitleShow: false, pointTitleShow: false,selectEnt:undefined })
-       this.loadRegionMarkerData(regionMarkers,true)
+       this.loadRegionMarkerData(regionMarkers)
       }
     if(showType == 3){
       this.loadEntMarkerData(entMarkers)
-      //  if(selectEnt){ //从企业跳转到监测点
-      //   this.loadEntMarkerData(entMarkers)
-      //  }else{  //从行政区直接跳转到监测点
-      //   this.loadRegionMarkerData(regionMarkers)
-      //  }
+  
     }
   }
-  mapContent = (props) => {
+
+  mapBtnClick = (index) =>{
+    const { mapBtnStatusIndex } = this.state;
+    if(mapBtnStatusIndex!==index){
+      this.setState({mapBtnStatusIndex:index})
+    }else{
+      this.setState({mapBtnStatusIndex:-1})
+    }
+    
+  }
+  mapContent = (props) => { 
     const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow,pointIconGo} = this.state;
     const { mapStatusData, subjectFontSize, pollType,entList } = this.props;
     const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
@@ -649,7 +657,7 @@ class Index extends PureComponent {
       "2": <><GasOffline /><span className={styles.iconText}>废气</span></>
     }
 
-    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt, } = this.state;
+    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt,mapBtnStatusIndex, } = this.state;
    
     // const searchEntInput = useRef(null);
   
@@ -700,9 +708,9 @@ class Index extends PureComponent {
           <span onClick={() => { this.setState({ pointInfoWindowVisible: false }) }} style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}>×</span>
         </InfoWindow>
         <div className={styles.mapBtn}> { /**按钮 */}
-          <Row align='middle'>
+          <Row align='middle'> 
             {typeBtnArr.map((item, index) => {
-              return <Row className={styles.typeBtnSty} align='middle' justify='center'>
+              return <Row onClick={()=>{this.mapBtnClick(index)}}  className={index===mapBtnStatusIndex? styles.typeBtnActiveSty :  styles.typeBtnSty } align='middle' justify='center'>
                 <div className={styles.colorBlock} style={{ background: `${item.color}` }}></div>
                 <span style={{ fontSize: subjectFontSize }}>{item.text} {item.val}</span>
               </Row>
@@ -744,8 +752,8 @@ class Index extends PureComponent {
             value={selectEnt}
             defaultActiveFirstOption={false}
           >
-          {entList[0]&&entList.map(item=>{
-              return <Option value={item.entCode}>{item.entName}</Option>
+          {this.state.entLists[0]&&this.state.entLists.map(item=>{
+              return <Option value={item.entName}>{item.entName}</Option>
             })}
           </Select>
         </div>}

@@ -730,7 +730,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="审批状态" style={{ width: '100%' }}>
                           {getFieldDecorator('ApproveStatus', {
-                            initialValue: gettasklistqueryparams.TaskType ? gettasklistqueryparams.TaskType : undefined,
+                            initialValue: gettasklistqueryparams.ApproveStatus ? gettasklistqueryparams.ApproveStatus : undefined,
                           })(
                             <Select
                                   placeholder="请选择"
@@ -794,6 +794,9 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                 total: gettasklistqueryparams.total,
               }}
               columns={columns}
+              // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
+              scroll={{ y: this.props.tableHeight || undefined }}
+
         />
         </Card>
         <Modal

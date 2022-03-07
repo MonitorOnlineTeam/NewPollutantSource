@@ -438,8 +438,10 @@ class OperationRecord extends Component {
           <Card.Grid
             style={{
               width: '100%',
-              height: 'calc(100vh - 270px)',
+              height: !this.props.isHomeModal? 'calc(100vh - 270px)' : 'calc(100vh - 295px)',
               overflow: 'auto',
+              marginBottom:10,
+              paddingBottom:44,
               ...this.props.style,
             }}
           >

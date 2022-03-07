@@ -149,13 +149,13 @@ class SiteDetailsModal extends PureComponent {
         wrapClassName='spreadOverModal'
       >
         {
-          currentKey === 1 && <div style={{ height: "100vh", overflow: "hidden" }}>
+          currentKey === 1 && <div>
             <DataQuery
               DGIMN={data.DGIMN}
               initLoadData
-              chartHeight='calc(100vh - 190px)'
+              chartHeight='calc(100vh - 310px)'
               // style={{ height: modalHeight, overflow: 'auto', height: 'calc(100vh - 350px)' }}
-              tableHeight={"calc(100vh - 318px)"}
+              tableHeight={"calc(100vh - 480px)"}
               pointName={data.PointName}
               pollutantTypes={data.PollutantType}
               entName={data.ParentName}
@@ -163,17 +163,18 @@ class SiteDetailsModal extends PureComponent {
           </div>
         }
        {  // 运维记录
-          currentKey === 2 && <div style={{ height: "100vh", overflow: "hidden" }}>
+          currentKey === 2 && <div>
             <OperationRecord
               DGIMN={data.DGIMN}
               isHomeModal
               hideBreadcrumb
               initLoadData
+              tableHeight={"calc(100vh - 480px)"}
             />
           </div>
         }
         { //运维日志
-          currentKey === 3 && <div style={{ overflow: "hidden" }}>
+          currentKey === 3 && <div style={{ overflow: 'auto' }}>
             <OperationLog 
             DGIMN={data.DGIMN}
             type={data.PollutantType}
@@ -185,7 +186,7 @@ class SiteDetailsModal extends PureComponent {
          { //停运记录
           currentKey === 4 &&
           <div style={{  overflow: 'auto' }}>
-            <StopRecord DGIMN={data.DGIMN} isHomeModal  hideBreadcrumb/>
+            <StopRecord DGIMN={data.DGIMN} isHomeModal  hideBreadcrumb  tableHeight={"calc(100vh - 480px)"}/>
           </div>
         }
         {
@@ -196,20 +197,20 @@ class SiteDetailsModal extends PureComponent {
         {
           currentKey === 6 && data.PollutantType != "5" &&//超标数据
           <div style={{ overflow: 'auto' }}>
-            <RecordEchartTableOver DGIMN={data.DGIMN} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
+            <RecordEchartTableOver tableHeight={"calc(100vh - 480px)"} DGIMN={data.DGIMN} noticeState={0} hideButtons={['realtime', 'minute']} firsttime={moment(moment().format('YYYY-MM-DD HH:00:00'))}
                lasttime={moment(moment().format('YYYY-MM-DD HH:59:59'))} initLoadData />
           </div>
         }
         {
           currentKey === 7 && //异常数据
           <div style={{ overflow: 'auto' }}>
-            <RecordEchartTable noticeState={0} DGIMN={data.DGIMN} hideButtons={['realtime', 'minute']} initLoadData />
+            <RecordEchartTable tableHeight={"calc(100vh - 480px)"} noticeState={0} DGIMN={data.DGIMN} hideButtons={['realtime', 'minute']} initLoadData  />
           </div>
         }
          {
           currentKey === 8 && data.PollutantType != "5" && //缺失数据 企业
           <div style={{ overflow: 'auto' }}>
-            <DefectDataEnt  entCode={data.ParentCode} isHomeModal  hideBreadcrumb />
+            <DefectDataEnt  entCode={null} isHomeModal  hideBreadcrumb   tableHeight={"calc(100vh - 480px)"}/>
           </div>
         }
 
@@ -249,7 +250,7 @@ class SiteDetailsModal extends PureComponent {
               path={infoWindowData.entCoordinateSet || []}
               handleMarker={true}
               handlePolygon={true}
-              style={{ height: data.PollutantType !== "5" ? 300 : 430 }}
+              style={{ height: data.PollutantType !== "5" ? 500 : 630 }}
               zoom={12}
             />
           </div>

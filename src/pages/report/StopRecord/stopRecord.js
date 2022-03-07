@@ -487,7 +487,8 @@ class index extends PureComponent {
         isHomeModal? columns.splice(0,4) : null
         return <>{
             <SdlTable columns={columns} dataSource={StopList}
-            loading={loading}
+                loading={loading}
+                scroll={{ y: this.props.tableHeight || undefined }}
                 pagination={{
                     showSizeChanger: true,
                     showQuickJumper: true,
