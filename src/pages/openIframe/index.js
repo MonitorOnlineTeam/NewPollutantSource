@@ -42,15 +42,16 @@ export default class UserInfoIndex extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: this.props.match.params.url,
+            url: '',
         };
     }
 
     componentDidMount() {
-        var urlReal=this.state.url.replace(/&/g,"/")
+        var urlReal=this.props.match.params.url.replace(/&/g,"/").replace(/-/g,"#")
         this.setState({
             url:urlReal
         })
+        console.log('url='+urlReal)
     }
     
 
