@@ -99,7 +99,6 @@ class QualityControlRecordContent extends Component {
         return (
             <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>质控记录表</div>
-                <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
                 <table className={styles.FormTable}>
                     <tbody>
                         <tr>

@@ -110,6 +110,16 @@ const routes = [
             path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID',
             component: './AppOperation/AppSparePartReplaceRecord',
           },
+           /* 运维记录表 */
+          {
+              path: '/appoperation/appOperationRecordContent/:TaskID/:TypeID',
+              component: './AppOperation/AppOperationRecordContent',
+           },
+            /* 质控记录表 */
+          {
+            path: '/appoperation/appQualityControlRecordContent/:TaskID/:TypeID',
+            component: './AppOperation/AppQualityControlRecordContent',
+          },
           /* 手机端二维码 */
           { path: '/appoperation/appqrcodemain', component: './AppOperation/AppQRCodeMain' },
           /* 扫码查运维页面 */

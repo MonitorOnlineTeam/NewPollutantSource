@@ -1,7 +1,7 @@
 /*
- * @Author: lzp
+ * @Author: 
  * @Date: 2022-02-14
- * @LastEditors: lzp
+ * @LastEditors: 
  * @LastEditTime: 2022-02-14
  * @Description: 运维记录表
  */
@@ -71,7 +71,7 @@ class OperationRecordContent extends Component {
         return (
             <div className={styles.FormDiv} style={style}>
                 <div className={styles.FormName}>运维记录表</div>
-                <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div>
+                {/* <div className={styles.HeadDiv} style={{ fontWeight: 'bold' }}>企业名称：{Content!==null ? Content.EnterpriseName:null}</div> */}
                 <table className={styles.FormTable}>
                     <tbody>
                         <tr>
@@ -103,26 +103,26 @@ class OperationRecordContent extends Component {
                             </td>
                         </tr>
                         <tr>
-                          <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                          <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
                                         告警问题
                             </td>
-                            <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
                                {Content!==null ? Content.AlarmProblem:null}
                             </td>
                         </tr>
                         <tr>
-                          <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                          <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
                                         处理方式
                             </td>
-                            <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
                                {Content!==null ? Content.TreatmentMethod:null}
                             </td>
                         </tr>
                         <tr>
-                          <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                          <td colSpan="2"  style={{ width: '18%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
                                         维修内容
                             </td>
-                            <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
+                            <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
                                {Content!==null ? Content.MaintenanceContent:null}
                             </td>
                         </tr>
