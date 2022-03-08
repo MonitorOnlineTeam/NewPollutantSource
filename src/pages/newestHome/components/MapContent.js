@@ -646,7 +646,7 @@ class Index extends PureComponent {
       this.loadEntMarkerData(entMarkers)
     }
 
-    this.setState({selectEnt:undefined})
+    this.setState({selectEnt:undefined,mapBtnStatusIndex:-1})
   }
 
   mapBtnClick = (index,item) =>{
