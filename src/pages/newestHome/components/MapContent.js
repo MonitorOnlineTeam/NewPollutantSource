@@ -22,6 +22,8 @@ import {
   WaterExceed,
   WaterAbnormal,
   WaterOffline,
+  WaterStop,
+  GasStop,
 } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -113,7 +115,7 @@ class Index extends PureComponent {
           });
         }
         if(showType == 2){ //企业 点击进入监测点
-          this.loadPointMarkerData(pointMarkers,true)
+          this.loadPointMarkerData(pointMarkers)
         }
       },
       mouseover: (MapsOption, marker) => { //鼠标移入地图容器内时触发
@@ -228,7 +230,7 @@ class Index extends PureComponent {
     this.setState({
       showType: 1,
       markersList: data,
-      entTitleShow: false, pointTitleShow: false,selectEnt:undefined
+      entTitleShow: false, pointTitleShow: false,
     }, () => {
       const timer = setInterval(() => {
         if (aMap&&!flag) {
@@ -243,7 +245,7 @@ class Index extends PureComponent {
     this.setState({
       showType: 2,
       pointTitleShow: false,
-      markersList: data
+      markersList: data,
     }, () => {
       const timer = setInterval(() => {
         if (aMap&&!flag) {
@@ -276,7 +278,7 @@ class Index extends PureComponent {
         case 0: // 离线
           icon = <WaterOffline />;
           break;
-        case 1: // 正常
+        case 1: // 在线
           icon = <WaterNormal />;
           break;
         case 2: // 超标
@@ -284,6 +286,9 @@ class Index extends PureComponent {
           break;
         case 3: // 异常
           icon = <WaterAbnormal />;
+          break;
+        case 4: // 停运
+          icon = <WaterStop />;
           break;
       }
       return icon;
@@ -294,7 +299,7 @@ class Index extends PureComponent {
         case 0: // 离线
           icon = <GasOffline />;
           break;
-        case 1: // 正常
+        case 1: // 在线
           icon = <GasNormal />;
           break;
         case 2: // 超标
@@ -303,6 +308,9 @@ class Index extends PureComponent {
         case 3: // 异常
           icon = <GasAbnormal />;
           break;
+        case 4: // 停运
+          icon = <GasStop />;
+          break;
       }
     }
     return icon;
@@ -310,7 +318,7 @@ class Index extends PureComponent {
 
   goEnt=()=>{
     const {  entMarkers } = this.state;
-    this.loadEntMarkerData(entMarkers,true)
+    this.loadEntMarkerData(entMarkers)
   }
   operationChange = (text, mapProps) => {
     const map = mapProps.__map__;
@@ -391,20 +399,22 @@ class Index extends PureComponent {
 
       const entName = extData.position.entName;
       return <div style={{ position: 'relative' }}>
-        {/* <img src='/homeMapEnt.png' style={{position:'relative',width:30,height:30}}/> */}
+
         <EntIcon />
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {entTitleShow && <div className={styles.titlePopSty}>
           {entName}
         </div>}
       </div>
-    } else {
+    } else { //监测点
       return <div style={{ position: 'relative' }}>
         {this.getIcon(extData.position.Status)}
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {pointTitleShow && <div className={styles.pointTitlePopSty}>
-          <div className={styles.titlePopSty} >{extData.position.ParentName}</div>
-          <div className={styles.titlePopSty} >{extData.position.PointName}</div>
+          <div className={styles.titlePopSty} >
+            <div>{extData.position.ParentName}</div>
+            <div>{extData.position.PointName}</div>
+          </div>
         </div>}
       </div>
     }
@@ -428,8 +438,8 @@ class Index extends PureComponent {
         case 0: // 离线
           color = '#67666A';
           break;
-        case 1: // 正常
-          color = '#14ECDF';
+        case 1: // 在线
+          color = '#5fc15d';
           break;
         case 2: // 超标
           color = '#FF0000';
@@ -448,7 +458,7 @@ class Index extends PureComponent {
           statusText = '离线';
           break;
         case 1:
-          statusText = '正常';
+          statusText = '在线';
           break;
         case 2:
           statusText = '超标';
@@ -456,6 +466,9 @@ class Index extends PureComponent {
         case 3:
           statusText = '异常';
           break;
+        case 4:
+          statusText = '停运';
+            break;
       }
       return statusText;
     };
@@ -555,7 +568,7 @@ class Index extends PureComponent {
       </div>
     );
   };
-  entSearchClick = (val) =>{
+  entSearch = (val) =>{
     
    const { entList } = this.props;
    let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
@@ -578,8 +591,7 @@ class Index extends PureComponent {
  
 
   }
-  entSearchChange = (val) =>{
-    const { entMarkers } = this.state; 
+  entChange = (val) =>{
     let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     listEle.style.display = 'none';
     this.setState({ selectEnt:val},()=>{
@@ -597,46 +609,65 @@ class Index extends PureComponent {
 
   }
   entBlur =() =>{
-    const { entMarkers,selectEnt } = this.state;
+    const { entMarkers,selectEnt,showType,pointMarkers } = this.state;
     this.setState({entLists:[]})
     if(selectEnt){
-      entMarkers.map(item=>{
-        let position = item.position;
-      if(position.entName === selectEnt){
-        this.setState({ showType: 2, pointTitleShow: false,markersList: [item] })
-        aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
-        this.setState({entLists:[]})
-      }
-    })
+      if(showType==3){ //对应的监测点
+        pointMarkers.map(item=>{
+          let position = item.position;
+          if(position.ParentName === selectEnt){
+            this.loadPointMarkerData([item])
+            aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
+            this.setState({entLists:[]})
+           }
+         })
+      }else{ //对应的企业
+       entMarkers.map(item=>{
+           let position = item.position;
+           if(position.entName === selectEnt){
+             this.loadEntMarkerData([item]);
+             aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
+             this.setState({entLists:[]})
+            }
+          })
+       }
     }else{
-      this.loadEntMarkerData(entMarkers)
+      showType==3? this.loadPointMarkerData(pointMarkers) : this.loadEntMarkerData(entMarkers);
     }
   }
   onBack = () =>{
     const { showType,regionMarkers,selectEnt,entMarkers } = this.state;
+
+    
     if(showType == 2){
        this.loadRegionMarkerData(regionMarkers)
       }
     if(showType == 3){
       this.loadEntMarkerData(entMarkers)
-  
     }
+
+    this.setState({selectEnt:undefined})
   }
 
-  mapBtnClick = (index) =>{
-    const { mapBtnStatusIndex } = this.state;
+  mapBtnClick = (index,item) =>{
+    const { mapBtnStatusIndex,pointMarkers } = this.state;
     if(mapBtnStatusIndex!==index){
       this.setState({mapBtnStatusIndex:index})
+      const selectData = pointMarkers.filter(pointItem=>{
+        return   item.status == pointItem.position.Status 
+      })
+      this.loadPointMarkerData(selectData)
     }else{
       this.setState({mapBtnStatusIndex:-1})
+      this.loadPointMarkerData(pointMarkers)
     }
     
   }
   mapContent = (props) => { 
     const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow,pointIconGo} = this.state;
     const { mapStatusData, subjectFontSize, pollType,entList } = this.props;
-    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount },
-    { text: '正常', color: '#14ECDF', val: mapStatusData.stopCount }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount }]
+    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount,status:1 }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount,status:3}, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount,status:0 },
+    { text: '在线', color: '#5fc15d', val: mapStatusData.stopCount ,status:1}, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount,status:4 }]
 
     const operationBtnArr = () => {
       return [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/homeMapT.png' : '/homeMapQp.png' }, { text: '展示企业', url: !pointIconGo? '/homeMapQA.png' : '/homeMapQ.png' }, { text: '展示监测点', url:pointIconGo?'/homeMapJcA.png' : '/homeMapJc.png' },
@@ -653,8 +684,8 @@ class Index extends PureComponent {
 
     }
     const iconType = {
-      "1": <><WaterOffline /><span className={styles.iconText}>废水</span></>,
-      "2": <><GasOffline /><span className={styles.iconText}>废气</span></>
+      "1": <><WaterIcon /><span className={styles.iconText}>废水</span></>,
+      "2": <><GasIcon /><span className={styles.iconText}>废气</span></>
     }
 
     const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt,mapBtnStatusIndex, } = this.state;
@@ -672,15 +703,12 @@ class Index extends PureComponent {
       :
       <Map
         amapkey={config.amapKey}
-        // events={props.type=='min'? amapEvents : maxAmapEvents}
         events={this.amapEvents}
         mapStyle="amap://styles/darkblue"
         useAMapUI={!config.offlineMapUrl.domain}
-      // center={{ longitude:96.01906121185537, latitude: 35.874643454131984 }} //center 地图中心点坐标值
       >
 
         <Markers
-          // markers={ showType==1?regionMarkers:showType==2?entMarkers:pointMarkers}
           markers={markersList}
           render={this.renderMarkers}
           events={this.markersEvents}
@@ -710,7 +738,7 @@ class Index extends PureComponent {
         <div className={styles.mapBtn}> { /**按钮 */}
           <Row align='middle'> 
             {typeBtnArr.map((item, index) => {
-              return <Row onClick={()=>{this.mapBtnClick(index)}}  className={index===mapBtnStatusIndex? styles.typeBtnActiveSty :  styles.typeBtnSty } align='middle' justify='center'>
+              return <Row onClick={()=>{this.mapBtnClick(index,item)}}  className={index===mapBtnStatusIndex? styles.typeBtnActiveSty :  styles.typeBtnSty } align='middle' justify='center'>
                 <div className={styles.colorBlock} style={{ background: `${item.color}` }}></div>
                 <span style={{ fontSize: subjectFontSize }}>{item.text} {item.val}</span>
               </Row>
@@ -729,7 +757,7 @@ class Index extends PureComponent {
           </Row>
         </div>
 
-        {showType != 3 && <div className={styles.searchSty} >  { /**搜索 */}
+        {<div className={styles.searchSty} >  { /**搜索 */}
           <Select
             showSearch
             style={{ width: 220 }}
@@ -743,8 +771,8 @@ class Index extends PureComponent {
             }
             getPopupContainer={trigger => trigger.parentNode}
             suffixIcon={ <img src='/homeMapsearchIcon.png' />}
-            onSearch={this.entSearchClick}
-            onChange={this.entSearchChange}
+            onSearch={this.entSearch}
+            onChange={this.entChange}
             onFocus={this.entFocus}
             onBlur={this.entBlur}
             // ref={searchEntInput}

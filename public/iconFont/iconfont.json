@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "28102159",
+      "name": "废气-停运",
+      "font_class": "feiqi-tingyun",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "28102075",
+      "name": "废水-停运",
+      "font_class": "feishui-tingyun",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "4812584",
+      "name": "河流",
+      "font_class": "heliu1",
+      "unicode": "e74c",
+      "unicode_decimal": 59212
+    },
+    {
       "icon_id": "22697598",
       "name": "恶臭监测",
       "font_class": "echoujiance",

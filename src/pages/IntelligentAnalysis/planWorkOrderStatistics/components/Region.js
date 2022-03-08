@@ -234,7 +234,7 @@ const Index = (props,ref ) => {
       width: 100,
     },
     {
-      title: <span>运营监测点数<Tooltip title={`点击运营监测点数，可以查看运营监测点在条件日期内${isActualCalibrationModal?"实际校准":"派发计划"}工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+    title: <span>运营监测点数{!isActualCalibrationModal&&<Tooltip title={`点击运营监测点数，可以查看运营监测点在条件日期内${isActualCalibrationModal?"实际校准":"派发计划"}工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip>}</span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
@@ -1664,30 +1664,29 @@ useImperativeHandle(refInstance,() => {
    if(isActualCalibrationModal){ //首页 实际校准完成率弹框
     const data = {
       title: '校准工单',
-      width:200,
       children: [
         {
-          title: <span>计划次数<Tooltip  title={'日期条件内，实际校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+        title: <span>计划次数{<Tooltip  title={'日期条件内，按计划派发的校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip>}</span>,
           dataIndex: 'taskCount',
           key: 'taskCount',
-          width: 50,
+          width: 100,
           align:'center',
           render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(2,record,'calibrationCount')}}>{text}</Button>
           }
         },
         {
-          title:  <span>实际完成数</span>,
+        title:  <span>实际完成次数<Tooltip title={`日期条件内，按计划派发的校准工单数+手工申请的校准工单数。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'taskCompleteCount',
           key: 'taskCompleteCount',
-          width: 50,
+          width: 150,
           align:'center',
         },
         {
           title: '实际完成率',
           dataIndex: 'taskRate',
           key: 'taskRate',
-          width: 100,
+          width: 150,
           align:'center',
           sorter: (a, b) => a.calibrationRate - b.calibrationRate,
           render: (text, record) => {
@@ -1706,8 +1705,52 @@ useImperativeHandle(refInstance,() => {
         },
       ],
     }
-    columns.splice(columns.length-2,2,data)
-    cityInsideRegColumns.splice(cityInsideRegColumns.length-2,2,data) //首页计划巡检完成率弹框
+    const data2 = {
+      title: '校准工单',
+      children: [
+        {
+        title: <span>计划次数</span>,
+          dataIndex: 'taskCount',
+          key: 'taskCount',
+          width: 100,
+          align:'center',
+          render:(text,record,index)=>{
+          return insideWorkOrderVisible? text : <Button type="link" onClick={()=>{workOrderNum(2,record,'calibrationCount')}}>{text}</Button>
+          }
+        },
+        {
+        title:  <span>实际完成次数</span>,
+          dataIndex: 'taskCompleteCount',
+          key: 'taskCompleteCount',
+          width: 150,
+          align:'center',
+        },
+        {
+          title: '实际完成率',
+          dataIndex: 'taskRate',
+          key: 'taskRate',
+          width: 150,
+          align:'center',
+          sorter: (a, b) => a.calibrationRate - b.calibrationRate,
+          render: (text, record) => {
+            return (
+              <div>
+                <Progress
+                  percent={text&&text}
+                  size="small"
+                  style={{width:'85%'}}
+                  status='normal'
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                />
+              </div>
+            );
+          }
+        },
+      ],
+    }
+    columns.splice(columns.length-2,2,data)  //首页计划巡检完成率弹框
+    cityInsideRegColumns.splice(cityInsideRegColumns.length-2,2,data2)
+    insideWorkOrderColumns2.splice(insideWorkOrderColumns2.length-2,1,data2)//计划次数弹框
    }
  }
  handleCol()

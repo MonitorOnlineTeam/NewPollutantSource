@@ -699,8 +699,9 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             <RangePicker_
                             style={{ width: '100%' }}
                             dateValue={ gettasklistqueryparams.CompleteTime}
-                            format="YYYY-MM-DD HH:MM"
-                            callback={(dates, type) => this.dateCallBack(dates, type, 'CompleteTime')} allowClear showTime="YYYY-MM-DD HH:MM" />,
+                            format="YYYY-MM-DD HH:mm:ss"
+                            showTime="YYYY-MM-DD HH:mm:ss"
+                            callback={(dates, type) => this.dateCallBack(dates, type, 'CompleteTime')} allowClear />,
                           )}
                       </FormItem>
                   </Col>
