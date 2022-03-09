@@ -121,12 +121,21 @@ class OperationRecord extends Component {
       this.props.dispatch({
         type: 'operationform/updateState',
         payload: {
-          currentRecordType: value,
+          currentRecordType: value, //下拉框选中的值 运维记录
         },
       });
+      setTimeout(() => {
+        this.props.dispatch({
+          type: 'autoForm/getPageConfig',
+          payload: {
+            configId: this.getRecordType(this.props.DGIMN),
+          },
+        });
+      }, 0);
     }
     if (maintenanceFlag === 'log') {
-      this.setState({ maintenanceSelectValue: value });
+      this.setState({ maintenanceSelectValue: value }); //下拉框选中的值 运维日志
+      
     }
 
     // if (value == '8') {
@@ -139,14 +148,14 @@ class OperationRecord extends Component {
     //     }
     //   })
     // } else {
-    setTimeout(() => {
-      this.props.dispatch({
-        type: 'autoForm/getPageConfig',
-        payload: {
-          configId: this.getRecordType(this.props.DGIMN),
-        },
-      });
-    }, 0);
+          // setTimeout(() => {
+          //   this.props.dispatch({
+          //     type: 'autoForm/getPageConfig',
+          //     payload: {
+          //       configId: this.getRecordType(this.props.DGIMN),
+          //     },
+          //   });
+          // }, 0);
     // }
   };
   // onTreeSearch = (val) => {
@@ -335,15 +344,17 @@ class OperationRecord extends Component {
     //运维按钮组操作事件
 
     this.setState({ maintenanceFlag: e.target.value });
-
+    const { recordTypeList } = this.props;
     if (e.target.value === 'log') {
       //运维日志
       this.props.dispatch({
         type: 'operationform/updateState',
         payload: {
           breadTitle: '运维日志',
+          currentRecordType: this.props.currentRecordType? this.props.currentRecordType : null ,
         },
       });
+      this.setState({ maintenanceSelectValue: this.props.currentRecordType }); //下拉框选中的值 运维日志
     }
     if (e.target.value === 'operationrecord') {
       //运维记录
@@ -351,7 +362,7 @@ class OperationRecord extends Component {
         type: 'operationform/updateState',
         payload: {
           breadTitle: '运维记录',
-          currentRecordType: this.props.currentRecordType? 11 : undefined,
+          currentRecordType: this.props.currentRecordType? this.props.currentRecordType : recordTypeList&&recordTypeList[0]&&recordTypeList[0].TypeId ,
         },
       });
     }

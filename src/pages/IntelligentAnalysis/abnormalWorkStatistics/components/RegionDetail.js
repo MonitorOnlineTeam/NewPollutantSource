@@ -104,8 +104,7 @@ const Index = (props) => {
 
 
 
- 
-  console.log(props)
+
 
   
     const abnormalTypes = props.location.query.abnormalTypes
@@ -127,6 +126,7 @@ const Index = (props) => {
          props.cityExceptionTaskList({
             ...queryPar,
             regionCode: regionCodes,
+            staticType:1,
             regionLevel: 2,
           })                                               
     }
@@ -134,6 +134,7 @@ const Index = (props) => {
       props.regDetaiExportExceptionTaskList({
         ...queryPar,
         regionCode: regionCodes,
+        staticType:1,
         regionLevel: 2,
         pageIndex:undefined,
         pageSize:undefined,
@@ -141,7 +142,7 @@ const Index = (props) => {
     }
   const abnormalNumber = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>打卡异常：每个监测点设置了电子围栏，填写运维工单时需要打卡，如果电子围栏外打卡，则判断定工单打卡异常工单。</li>
+    <li>打卡异常：每个监测点设置了电子围栏，填写运维工单时需要打卡，如果在电子围栏外打卡，则判断定工单为打卡异常工单。</li>
   </ol>
   }
   const alarmResponse = () =>{
@@ -187,7 +188,7 @@ const Index = (props) => {
           align:'center',
         },
         {
-          title:  <span>打卡异常数<Tooltip overlayClassName='customTooltipSty' title={abnormalNumber()}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          title:  <span>打卡异常数</span>,
           dataIndex: 'insidePlanExceptionCount',
           key: 'insidePlanExceptionCount',
           width: 100,
@@ -370,9 +371,10 @@ const Index = (props) => {
     dataIndex: 'entName',
     key:'entName',
     width: 200,
-    render:(text)=>{
-     return <div style={{textAlign:'left'}}>{text}</div>
-    }
+    align:'center',
+    // render:(text)=>{
+    //  return <div style={{textAlign:'left'}}>{text}</div>
+    // }
   },
   {
     title: '监测点名称',
@@ -497,9 +499,10 @@ const cityAlarmColumns = [
     dataIndex: 'entName',
     key:'entName',
     width: 200,
-    render:(text)=>{
-     return <div style={{textAlign:'left'}}>{text}</div>
-    }
+    align:'center',
+    // render:(text)=>{
+    //  return <div style={{textAlign:'left'}}>{text}</div>
+    // }
   },
   {
     title: '监测点名称',
@@ -562,9 +565,10 @@ const abnormalNumColumns = [
     dataIndex: 'entName',
     key:'entName',
     width: 200,
-    render:(text)=>{
-     return <div style={{textAlign:'left'}}>{text}</div>
-    },
+    align:'center',
+    // render:(text)=>{
+    //  return <div style={{textAlign:'left'}}>{text}</div>
+    // },
   },
   {
     title: '监测点名称',
@@ -657,10 +661,10 @@ const reponseNumColumns = [
     ...queryPar,
     regionCode:regionCode,
     staticType:2,
-    regionLevel: 2,
     pageIndex:pageIndexs?pageIndexs:pageIndex,
     pageSize:pageSizes?pageSizes:pageSize,
-    ...par
+    ...par,
+    regionLevel: undefined,
   })
 
  }
@@ -688,10 +692,11 @@ const reponseNumColumns = [
     regionCode:regionCode,
     outOrInside:outOrInside,
     staticType:3,
-    regionLevel: 2,
     pageIndex:pageIndexs?pageIndexs:pageIndex,
     pageSize:pageSizes?pageSizes:pageSize,
-    ...par
+    ...par,
+    regionLevel: undefined,
+
   })
 
  }
@@ -724,24 +729,10 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
 
       const values = await regionForm.validateFields();
       if(tableVisible){
-         // props.abnormalExceptionTaskList({
-      //   ...queryPar,
-      //   staticType:staticType,
-      //   regionCode:regionCode,
-      //   outOrInside:outOrInside,
-      //   ...values,
-      //   regionLevel:2,
-      // })
         setPageIndex(1)
         setPageSize(10)
         abnormalExceptionTaskList(regionCode,outOrInside,1,10,values)
       }else{
-        // props.cityDetailExceptionTaskList({
-      //   ...queryPar,
-      //   regionCode:regionCode,
-      //   staticType:staticType,
-      //   ...values,
-      //   regionLevel:2,
         setCityDetailPageIndex(1)
         setCityDetailPageSize(10)
         cityDetailExceptionTaskList(regionCode,1,10,values)
@@ -759,6 +750,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
         staticType:staticType,
         regionCode:regionCode,
         outOrInside:outOrInside,
+        regionLevel:undefined,
         pageIndex:undefined,
         pageSize:undefined,
       })
@@ -767,7 +759,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
         ...queryPar,
         regionCode:regionCode,
         staticType:staticType,
-        regionLevel:2,
+        regionLevel:undefined,
         pageIndex:undefined,
         pageSize:undefined,
       })
@@ -799,11 +791,11 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
      </Col>
 
 
-     <Col>
+     {/* <Col>
      <Row align='middle'><div style={{background:'#faad14',width:24,height:12,marginRight:5}}></div>
        <span> {abnormalTypes ==1? '打卡异常数' : '报警响应超时工单数'}</span>
       </Row>
-     </Col>
+     </Col> */}
     </Row>
      </Form>
   }
@@ -813,7 +805,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
 const  cityColumnsPush = (col) =>{
   if(dateCol&&dateCol[0]){
     col.push({
-      title: '计划异常工单分布',
+      title:abnormalTypes==1? '打卡异常工单分布' : '报警响应超时工单分布',
       width:200, 
       align:'center',
       children:dateCol.map((item,index)=>{
@@ -906,7 +898,7 @@ const  cityColumnsPush = (col) =>{
         width='90%'
       >
      <Card title={searchComponents()}>
-       <SdlTable
+       <SdlTable 
         loading = {abnormalLoading}
         bordered
         dataSource={abnormalList}

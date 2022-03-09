@@ -119,6 +119,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
     props.GetOperationRegionPlanTaskRate({ //计划完成率
       pollutantType: pollutantType,
       taskType: taskType,
+      ...latelyDays30
     })
   }
 
@@ -414,7 +415,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
 
           <Spin spinning={planCompleteListLoading}>
           <div className={styles.planComplete}>
-           <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='计划完成率'/>
+           <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日计划完成率'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
            <ScrollTable data={planCompleteList}  column={[]} />
            {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}

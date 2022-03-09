@@ -234,7 +234,7 @@ const Index = (props,ref ) => {
       width: 100,
     },
     {
-    title: <span>运营监测点数{!isActualCalibrationModal&&<Tooltip title={`点击运营监测点数，可以查看运营监测点在条件日期内${isActualCalibrationModal?"实际校准":"派发计划"}工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip>}</span>,
+    title: <span>运营监测点数{!isActualCalibrationModal&&!isPlanCalibrationModal&&<Tooltip title={`点击运营监测点数，可以查看运营监测点在条件日期内派发计划"}工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip>}</span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
@@ -445,11 +445,11 @@ const Index = (props,ref ) => {
         },
         {
           title: '完成率',
-          dataIndex: 'inspectionRate',
-          key: 'inspectionRate',
+          dataIndex: 'calibrationRate',
+          key: 'calibrationRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) => a.calibrationRate - b.calibrationRate,
           render: (text, record) => {
             return (
               <div>
@@ -1278,7 +1278,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       </Form>
       <Row style={{paddingTop:8}}>
      <span style={{color:'#f5222d',fontSize:14}}>
-     {insideWorkType==1? "计划巡检工单由系统自动派发，在巡检周期内必须完成，否则将被系统自动关闭。" : "计划校准工单由系统自动派发，在校准周期内必须完成，否则将被系统自动关闭。"}
+     {insideWorkType==1? "计划巡检工单由系统自动派发，在巡检周期内必须完成，否则将被系统自动关闭。" : `计划校准工单由系统自动派发，在校准周期内${isActualCalibrationModal? "没有被完成" : "必须完成"}，否则将被系统自动关闭。`}
         </span>
      </Row>
       </>

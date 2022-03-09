@@ -46,6 +46,7 @@ const dvaPropsData =  ({ loading,newestHome,operationExpirePoint }) => ({
   operationExpiraData:operationExpirePoint.totalDatas,
   pollType:newestHome.pollType,
   latelyDays30:newestHome.latelyDays30,
+  latelyDays7:newestHome.latelyDays7,
   subjectFontSize:newestHome.subjectFontSize,
 })
 
@@ -113,7 +114,7 @@ const Index = (props) => {
 
 
 
-  const  {pollType,latelyDays30,dataAlarmResData,subjectFontSize } = props; 
+  const  {pollType,latelyDays7,latelyDays30,dataAlarmResData,subjectFontSize } = props; 
 
   useEffect(() => {
       initData()
@@ -121,8 +122,8 @@ const Index = (props) => {
 
 
   const initData = (value) =>{
-    getEffectiveTransmissionRateList(latelyDays30)
-    getAlarmResponse(latelyDays30)
+    getEffectiveTransmissionRateList(latelyDays7)
+    getAlarmResponse(latelyDays7)
     getHomePageNetworkingRate()
     getOperationExpirePointList()
   }
@@ -145,14 +146,14 @@ const Index = (props) => {
   }
 
  
-  const [effectiveTransBtnCheck ,setEffectiveTransBtnCheck] = useState(latelyDays30)
+  const [effectiveTransBtnCheck ,setEffectiveTransBtnCheck] = useState(latelyDays7)
   const  effectiveTransClick = (key) =>{ //有效传输率 切换日期
    setEffectiveTransBtnCheck(key)
    getEffectiveTransmissionRateList(key)
 
   }
  
-  const [dataAlarmResBtnCheck ,setDataAlarmResBtnCheck] = useState(latelyDays30)
+  const [dataAlarmResBtnCheck ,setDataAlarmResBtnCheck] = useState(latelyDays7)
   const  dataAlarmResClick = (key) =>{ //数据报警响应 切换日期
     setDataAlarmResBtnCheck(key)
     getAlarmResponse(key)
@@ -421,11 +422,12 @@ const operationExpiraOption = { //点位到期统计
     {
       name: '点位统计',
       type: 'pie',
-      radius: ['60%', '90%'],
+      radius: ['56%', '85%'],
       avoidLabelOverlap: false,
       hoverAnimation:false,
       minAngle: 90,//最小角度
       label: {
+        position: 'outer',
         alignTo: 'edge', // 'edge'：文字对齐，文字的边距由 label.margin 决定。
         formatter: '{name|{b}}\n{num|{c}个}',
         margin: 12,
@@ -560,7 +562,7 @@ const operationExpiraOption = { //点位到期统计
      <Spin spinning={operationExpireLoading}>
      <div className={styles.operationExpira}>{/**运营到期点位统计 */}
     <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位统计' />
-     <div style={{height:'100%',padding:'33px 17px 36px 0' }}>
+     <div style={{height:'100%',padding:'30px 17px 30px 0' }}>
          <ReactEcharts
             option={operationExpiraOption}
             style={{ height: '100%', width: '100%' }}

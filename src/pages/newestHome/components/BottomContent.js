@@ -41,6 +41,7 @@ const dvaPropsData = ({ loading, newestHome }) => ({
   exceptionListLoading: loading.effects[`${namespace}/GetOpertionExceptionList`],
   consumablesList:newestHome.consumablesList,
   latelyDays30:newestHome.latelyDays30,
+  latelyDays7:newestHome.latelyDays7,
   pollType:newestHome.pollType,
   subjectFontSize:newestHome.subjectFontSize,
   modalType:newestHome.pollType,
@@ -107,9 +108,9 @@ const Index = (props) => {
     let consumablesEchartsInstance = consumablesEchartsRef.current.getEchartsInstance()
     consumablesEchartsInstance.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: 0 }); //耗材统计默认第一条高亮
   
-    getExceptionSignTaskRate(latelyDays30); 
-    getConsumablesList(latelyDays30)
-    getOpertionExceptionList(latelyDays30)
+    getExceptionSignTaskRate(latelyDays7); 
+    getConsumablesList(latelyDays7)
+    getOpertionExceptionList(latelyDays7)
 
     const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常统计 计划内  点击事件
      planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
@@ -147,20 +148,20 @@ const Index = (props) => {
       ...date
     })
   }
-  const [clockBtnCheck, setClockBtnCheck] = useState(latelyDays30)
+  const [clockBtnCheck, setClockBtnCheck] = useState(latelyDays7)
   const clockAbnormalClick = (key) => { //现场打卡异常 日期切换
     setClockBtnCheck(key)
     getExceptionSignTaskRate(key)
   }
 
 
-  const [consumablesCheck, setConsumablesCheck] = useState(latelyDays30)
+  const [consumablesCheck, setConsumablesCheck] = useState(latelyDays7)
   const consumablesClick = (key) => { //耗材统计 日期切换
     setConsumablesCheck(key)
     getConsumablesList(key)
   }
 
-  const [deviceAbnormalCheck, setDeviceAbnormalCheck] = useState(latelyDays30)
+  const [deviceAbnormalCheck, setDeviceAbnormalCheck] = useState(latelyDays7)
   const deviceAbnormalClick = (key) => { //设备异常 日期切换
     setDeviceAbnormalCheck(key)
     getOpertionExceptionList(key)
@@ -245,7 +246,13 @@ const Index = (props) => {
 
   const { consumablesList } = props;
 
-  const consumablesOption = {  //耗材统计
+  const consumablesOption = ()=>{
+    
+    const commonData =[
+        { value: consumablesList.consumablesReplaceCount, name: '易耗品更换数量', },
+        { value: consumablesList.sparePartReplaceRecordCount, name: '备品备件更换数量' },
+      ]
+    return {  //耗材统计
     color: ['#00DCFF', '#FFC200'],
     tooltip: {
       show: false
@@ -296,8 +303,8 @@ const Index = (props) => {
 
         },
 
-        data: [
-          { value: consumablesList.consumablesReplaceCount, name: '易耗品更换数量', },
+        data: pollutantType==1?[
+          ...commonData,
           {
             value: consumablesList.standardLiquidRepalceCount, name: '试剂更换数量',
             itemStyle: {
@@ -316,8 +323,11 @@ const Index = (props) => {
               },
             }
           },
-          {
-            value: consumablesList.standardGasRepalceCoun, name: '标液更换数量', itemStyle: {
+
+        ]:[
+          ...commonData,
+            {
+            value: consumablesList.standardGasRepalceCoun, name: '标准气体更换数量', itemStyle: {
               normal: {
                 color: {
                   type: 'linear', // 线性渐变
@@ -333,10 +343,10 @@ const Index = (props) => {
               },
             }
           },
-          { value: consumablesList.sparePartReplaceRecordCount, name: '备品备件更换数量' },
         ]
       }
     ]
+  }
   };
   const deviceAbnormalOption = (type) => {  //设备异常统计图表
    const { opertionExceptionList } = props; 
@@ -490,7 +500,7 @@ const Index = (props) => {
         <Row justify='center' align='middle' className={styles.consumablesChart} >
           <div style={{ position: 'absolute', height: '167px', width: '167px', borderRadius: '50%', border: '1px solid #2d3d59' }}></div>
           <ReactEcharts
-            option={consumablesOption}
+            option={consumablesOption()}
             style={{ height: '182px', width: '100%' }}
             ref={consumablesEchartsRef}
           />

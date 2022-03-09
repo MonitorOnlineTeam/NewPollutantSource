@@ -111,7 +111,7 @@ const Index = (props) => {
     },[]);
   const abnormalNumber = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>打卡异常：每个监测点设置了电子围栏，填写运维工单时需要打卡，如果电子围栏外打卡，则判断定工单打卡异常工单。</li>
+    <li>打卡异常：每个监测点设置了电子围栏，填写运维工单时需要打卡，如果在电子围栏外打卡，则判断定工单为打卡异常工单。</li>
   </ol>
   }
   const alarmResponse = () =>{
@@ -133,9 +133,9 @@ const Index = (props) => {
       dataIndex: 'entName',
       key:'entName',
       align:'center',
-      render:(text)=>{
-      return <div style={{textAlign:'left'}}>{text}</div>
-      }
+      // render:(text)=>{
+      // return <div style={{textAlign:'left'}}>{text}</div>
+      // }
     },
     {
       title: '监测点名称',
@@ -334,9 +334,9 @@ const Index = (props) => {
       align:'center',
       width: 150,
       fixed: 'left',
-      render:(text)=>{
-        return <div style={{textAlign:'left'}}>{text}</div>
-       }
+      // render:(text)=>{
+      //   return <div style={{textAlign:'left'}}>{text}</div>
+      //  }
     },
     {
       title: '监测点名称',

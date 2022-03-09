@@ -98,10 +98,15 @@ const Index = (props) => {
     const values = await form.validateFields();
 
      const par ={
-      ...queryPar,
-      regionLevel:1,
-      pageIndex:undefined,
-      pageSize:undefined,
+      ...values,
+      time:undefined,
+      staticType:showType,
+      beginTime:moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+      endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
+      outOrInside:outOrInside,
+      regionLevel:showType ==1? 1 : undefined,
+      pageIndex: undefined,
+      pageSize: undefined,
       homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
     }
      if(!isActualCalibrationModal){

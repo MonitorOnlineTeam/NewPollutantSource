@@ -102,7 +102,7 @@ const Index = (props,ref) => {
     },[]);
   const abnormalNumber = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>打卡异常：每个监测点设置了电子围栏，填写运维工单时需要打卡，如果电子围栏外打卡，则判断定工单打卡异常工单。</li>
+    <li>打卡异常：每个监测点设置了电子围栏，填写运维工单时需要打卡，如果在电子围栏外打卡，则判断定工单为打卡异常工单。</li>
   </ol>
   }
   
@@ -267,10 +267,8 @@ const Index = (props,ref) => {
       dataIndex: 'entName',
       key:'entName',
       width: 200,
+      align:'center',
       fixed: 'left',
-      render:(text)=>{
-       return <div style={{textAlign:'left'}}>{text}</div>
-      }
     },
 
     {
@@ -376,10 +374,11 @@ const Index = (props,ref) => {
       dataIndex: 'entName',
       key:'entName',
       width: 150,
+      align:'center',
       fixed: 'left',
-      render:(text)=>{
-        return <div style={{textAlign:'left'}}>{text}</div>
-       }
+      // render:(text)=>{
+      //   return <div style={{textAlign:'left'}}>{text}</div>
+      //  }
     },
     {
       title: '监测点名称',
@@ -480,7 +479,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
 
      <Col>
      <Row align='middle'><div style={{background:'rgb(247,152,34)',width:20,height:10,marginRight:5}}></div>
-     <span>{abnormalTypes ==1? '打卡异常数' : '报警响应超时工单数'}</span>
+     <span>{abnormalTypes ==1? '打卡异常工单数' : '报警响应超时工单数'}</span>
      </Row>
      </Col>
     </Row>
@@ -499,7 +498,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   const  cityColumnsPush = (col) =>{
     if(dateCol&&dateCol[0]){
       col.push({
-        title: '工单分布',
+        title: '打卡异常工单分布',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{
@@ -528,7 +527,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   } 
   }
    cityColumnsPush(cityColumns)
-  cityColumnsPush(cityReponseNumColumns)
+   cityColumnsPush(cityReponseNumColumns)
 // 暴露的子组件方法，给父组件调用 父传子值
 const childRef = useRef();
 useImperativeHandle(refInstance,() => {
