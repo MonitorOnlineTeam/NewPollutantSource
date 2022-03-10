@@ -365,7 +365,7 @@ const Index = (props) => {
         formatter:function(params){
           for(let i=0;i<dataAlarmResData.length;i++){
             if(params.dataIndex==i){
-             return `${dataAlarmResData[i]==100? dataAlarmResData[i].toFixed(1) : dataAlarmResData[i]}%`;
+             return `${dataAlarmResData[i]==100? Number(dataAlarmResData[i]).toFixed(1) : dataAlarmResData[i]}%`;
            }
           }
          },

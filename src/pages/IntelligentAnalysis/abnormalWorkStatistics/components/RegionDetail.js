@@ -791,11 +791,11 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
      </Col>
 
 
-     {/* <Col>
+  {tableVisible&&<Col>
      <Row align='middle'><div style={{background:'#faad14',width:24,height:12,marginRight:5}}></div>
        <span> {abnormalTypes ==1? '打卡异常数' : '报警响应超时工单数'}</span>
       </Row>
-     </Col> */}
+     </Col>}
     </Row>
      </Form>
   }

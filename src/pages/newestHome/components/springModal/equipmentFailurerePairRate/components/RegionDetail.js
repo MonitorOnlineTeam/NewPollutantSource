@@ -32,6 +32,7 @@ const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global }) => ({
   exportLoading: equipmentFailurerePairRate.exportRegDetailLoading,
   clientHeight: global.clientHeight,
   queryPar:equipmentFailurerePairRate.queryPar,
+  tableTotal:equipmentFailurerePairRate.regDetailTableTotal,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -60,7 +61,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,tableTotal } = props; 
   
   
   useEffect(() => {
@@ -73,6 +74,8 @@ const Index = (props) => {
       props.regDetailGetRepairRateList({
         ...queryPar,
          pointType:2,
+         pageIndex:pageIndex,
+         pageSize:pageSize,
     })
  };
 
@@ -85,6 +88,21 @@ const Index = (props) => {
     })
 
  };
+
+ const [pageIndex,setPageIndex] = useState(1)
+ const [pageSize,setPageSize] = useState(20)
+
+ const handleTableChange = (PageIndex, PageSize )=>{ //分页
+  setPageIndex(PageIndex)
+  setPageSize(PageSize)
+  props.regDetailGetRepairRateList({
+    ...queryPar,
+    pointType:2,
+    pageIndex:PageIndex,
+    pageSize:PageSize,
+  })
+ }
+
  const columns = [
   {
     title: '序号',
@@ -136,19 +154,19 @@ const Index = (props) => {
     setPointVisible(true)
     props.updateState({
          queryPar:{
-        ...props.queryPar,
+        ...queryPar,
         regionCode:row.regionCode
       }
     })
     setRegionName(row.regionName)
   }
 
+
+
+
+
+
   const [sparePartsVisible,setSparePartsVisible] = useState(false)
-
-
- 
-
-
   return (
     <div  className={styles.equipmentFailurerePairRateSty}>
 
@@ -163,7 +181,14 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={ columns}
-        pagination={false}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          current:pageIndex,
+          pageSize:pageSize,
+          total:tableTotal,
+          onChange: handleTableChange,
+      }}
       />
        <Modal
         title={`${regionName} - 监测点`}

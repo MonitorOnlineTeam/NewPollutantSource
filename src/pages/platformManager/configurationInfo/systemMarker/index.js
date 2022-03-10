@@ -119,7 +119,8 @@ const Index = (props) => {
   useEffect(() => {
     onFinish();
     props.getManufacturerList({})
-    props.getMonitoringTypeList({})
+    props.getMonitoringTypeList({},()=>{})
+    
   },[]);
 
   const columns = [
@@ -224,6 +225,13 @@ const Index = (props) => {
     setType('add')
     form2.resetFields();
     form2.setFieldsValue({SystemCode:maxNum})
+    if(monitoringTypeList&&monitoringTypeList[0]){ //监测类别默认值
+      monitoringTypeList.map(item=>{
+      if(item.Code==266){
+       form2.setFieldsValue({MonitoringType:item.Code})
+      }
+    })
+   }
   };
 
 
@@ -400,22 +408,8 @@ const Index = (props) => {
 
       <Row>
       <Col span={12}>
-        <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请输入系统名称'  }]} >
-            <Input placeholder="请输入系统名称" allowClear/>
-      </Form.Item>
-      </Col>
-
-      <Col span={12}>
-        <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true, message: '请输入系统型号'  }]}>
-        <Input placeholder='请输入系统型号' allowClear/>
-      </Form.Item>
-      </Col>
-      </Row>
-
-      <Row>
-      <Col span={12}>
         <Form.Item label="监测类别" name="MonitoringType" rules={[  { required: true, message: '请选择监测类别'  }]} >
-             <Select placeholder='请选择监测类别' allowClear>
+             <Select placeholder='请选择监测类别' allowClear disabled>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
                     return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -424,7 +418,19 @@ const Index = (props) => {
               </Select>
       </Form.Item>
       </Col>
+      <Col span={12}>
+        <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请输入系统名称'  }]} >
+            <Input placeholder="请输入系统名称" allowClear/>
+      </Form.Item>
+      </Col>
+      </Row>
 
+      <Row>
+      <Col span={12}>
+        <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true, message: '请输入系统型号'  }]}>
+        <Input placeholder='请输入系统型号' allowClear/>
+      </Form.Item>
+      </Col>
         <Col span={12}>
         <Form.Item label="状态" name="Status" >
            <Radio.Group>

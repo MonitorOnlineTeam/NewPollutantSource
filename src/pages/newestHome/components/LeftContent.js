@@ -437,7 +437,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         onCancel={()=>{setPlanInspectionVisible(false)}}
         time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
       />  
-      <PlanWorkOrderStatistics  //计划校准完成率弹框
+      <PlanWorkOrderStatistics  //实际校准完成率弹框
         modalType="actualCalibration"
         visible={actualInspectionVisible}
         type={pollutantType}

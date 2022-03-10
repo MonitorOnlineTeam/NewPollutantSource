@@ -23,6 +23,8 @@ export default Model.extend({
     exportRegLoading:false,
     exportRegDetailLoading: false,
     exportPointLoading: false,
+    regDetailTableTotal:0,
+    pointTableTotal:0,
   },
   effects: {
     *regGetRepairRateList({ payload,callback }, { call, put, update }) { //行政区
@@ -40,6 +42,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           regDetailTableDatas:result.Datas,
+          regDetailTableTotal:result.Total,
         })
       }else{
         message.error(result.Message)
@@ -50,6 +53,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           pointTableDatas:result.Datas,
+          pointTableTotal:result.Total,
         })
       }else{
         message.error(result.Message)

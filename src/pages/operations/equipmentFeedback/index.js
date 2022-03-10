@@ -167,7 +167,7 @@ const Index = (props) => {
      }
   },  
   {
-    title: '回馈人',
+    title: '反馈人',
     dataIndex: 'CreatUserName',
     key:'CreatUserName',
     align:'center',
@@ -249,13 +249,12 @@ const Index = (props) => {
     })
   }
   const changeEnt = (val) =>{
-   console.log(val)
   }
 
   const onValuesChange = (hangedValues, allValues)=>{
-    console.log(hangedValues)
     if(Object.keys(hangedValues).join() == 'EntCode'){
       props.getPointByEntCode({EntCode:hangedValues.EntCode})
+      form.setFieldsValue({DGIMN:undefined})
     }
   }
   const [expand, setExpand] = useState(true)
@@ -290,12 +289,12 @@ const Index = (props) => {
      <Row>
        <Col span={6}>
      <Form.Item label='行政区' name='RegionCode' >
-       <RegionList />
+       <RegionList style={{width:'100%'}} />
        </Form.Item>
        </Col>
        <Col span={6}>
        <Form.Item  label='企业' name='EntCode'>
-        <EntAtmoList changeEnt={changeEnt}  />
+        <EntAtmoList changeEnt={changeEnt} style={{width:'100%'}} />
        </Form.Item>
        </Col>
        <Col span={6}>
@@ -303,7 +302,7 @@ const Index = (props) => {
          { pointLoading?
            <Spin size='small'/>
            :
-          <Select placeholder='请选择'>
+          <Select placeholder='请选择' allowClear>
           {
             pointListByEntCode[0]&&pointListByEntCode.map(item => {
               return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
@@ -315,7 +314,7 @@ const Index = (props) => {
        </Col>
        <Col span={6}>
        <Form.Item label='故障单元' name='FaultUnitName'>
-         <Input placeholder='请输入'/>
+         <Input placeholder='请输入' allowClear/>
        </Form.Item>
        </Col>
 
@@ -323,17 +322,17 @@ const Index = (props) => {
        {expand&&<Row>
       <Col span={6}>
       <Form.Item label='故障时间' name='Time'>
-         <RangePicker allowClear={false} />
+         <RangePicker allowClear />
       </Form.Item> 
       </Col>
       <Col span={6}>
       <Form.Item label='主机名称型号' name='EquipmentName'>
-         <Input placeholder='请输入'/>
+         <Input placeholder='请输入' allowClear/>
        </Form.Item>
        </Col>
        <Col span={6}>
        <Form.Item label='故障现象' name='FaultPhenomenon'>
-         <Input placeholder='请输入'/>
+         <Input placeholder='请输入' allowClear/>
        </Form.Item>
        </Col>
        <Col span={6}>

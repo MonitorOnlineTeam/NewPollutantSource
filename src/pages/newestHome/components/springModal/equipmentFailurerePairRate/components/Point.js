@@ -31,6 +31,7 @@ const dvaPropsData =  ({ loading,equipmentFailurerePairRate,global }) => ({
   exportLoading: equipmentFailurerePairRate.exportPointLoading,
   clientHeight: global.clientHeight,
   queryPar:equipmentFailurerePairRate.queryPar,
+  tableTotal:equipmentFailurerePairRate.pointTableTotal,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -59,7 +60,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar } = props; 
+  const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,queryPar,tableTotal } = props; 
   
   
   useEffect(() => {
@@ -70,9 +71,11 @@ const Index = (props) => {
 
   const initData =  () => {
       props.pointGetRepairRateList({
-        ...props.queryPar,
+        ...queryPar,
          entName:entName,
          pointType:3,
+         pageIndex:pageIndex,
+         pageSize:pageSize,
     })
  };
 
@@ -86,6 +89,21 @@ const Index = (props) => {
     })
 
  };
+ const [pageIndex,setPageIndex] = useState(1)
+ const [pageSize,setPageSize] = useState(20)
+
+ const handleTableChange = (PageIndex, PageSize )=>{ //分页
+  setPageIndex(PageIndex)
+  setPageSize(PageSize)
+  props.pointGetRepairRateList({
+    ...queryPar,
+    entName:entName,
+    pointType:3,
+    pageIndex:PageIndex,
+    pageSize:PageSize,
+  })
+ }
+
  const columns = [
   {
     title: '序号',
@@ -107,9 +125,9 @@ const Index = (props) => {
     dataIndex: 'entName',
     key:'entName',
     align:'center',
-    render:(text,record,index)=>{
-      return  <div style={{textAlign:'left'}} >{text}</div>
-    }
+    // render:(text,record,index)=>{
+    //   return  <div style={{textAlign:'left'}} >{text}</div>
+    // }
   },
   {
     title: '监测点名称',
@@ -166,7 +184,14 @@ const Index = (props) => {
         dataSource={tableDatas}
         columns={ columns}
         scroll={{ y: clientHeight - 500}}
-        pagination={false}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          current:pageIndex,
+          pageSize:pageSize,
+          total:tableTotal,
+          onChange: handleTableChange,
+      }}
       />
         </div>
   );

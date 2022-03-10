@@ -65,7 +65,7 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="省/市" >
-        {data.ProjectName}
+        {data.RegionName}
       </Form.Item>
       </Col>
       <Col span={12}>
@@ -144,7 +144,7 @@ const Index = (props) => {
         <Col span={12}>
 
       <Form.Item label="处理状态"  >
-      {data.IsSolve ==1?'待解决':"已解决"}
+      {data.IsSolve ==1?'待解决':data.IsSolve ==2?"已解决" : null}
       </Form.Item>
       </Col>
         <Col span={12}>

@@ -211,9 +211,9 @@ const columns2 = [
     dataIndex: 'entName',
     key:'entName',
     align:'center',
-    render:(text,record,index)=>{
-      return  <div style={{textAlign:'left'}} >{text}</div>
-    }
+    // render:(text,record,index)=>{
+    //   return  <div style={{textAlign:'left'}} >{text}</div>
+    // }
   },
   {
     title: '监测点名称',
@@ -250,6 +250,19 @@ const columns2 = [
     dataIndex: 'unit',
     key:'unit',
     align:'center',
+  },
+  {
+    title: '更换人员',
+    dataIndex: 'operationName',
+    key:'operationName',
+    align:'center',
+  },
+  {
+    title: '更换时间',
+    dataIndex: 'replaceDate',
+    key:'replaceDate',
+    align:'center',
+    width:150,
   },
 ]
 

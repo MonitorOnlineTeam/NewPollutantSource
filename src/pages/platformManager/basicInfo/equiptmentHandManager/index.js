@@ -139,7 +139,7 @@ const Index = (props) => {
         ...values, 
         "DGIMN":dgimn,
         "EffectiveDate":moment(values["EffectiveDate"]).format('YYYY-MM-DD'),
-        "CreateTime":moment().format('YYYY-MM-DD'),
+        "CreateTime":moment().format('YYYY-MM-DD HH:mm:ss'),
         "DateTimeShort":moment(values["DateTimeShort"]).format('YYYY-MM-DD'),
       },
       searchParams:[{
@@ -165,11 +165,7 @@ const Index = (props) => {
       }
     }
   }
-    const userCookie = Cookie.get('currentUser');
-    let userId = '';
-    if (userCookie) {
-      userId = JSON.parse(userCookie).User_ID;
-    }
+
   const [filesCuid,setFilesCuid]= useState()
   const onFinish1  = async () =>{  //添加 设备运营接手资料
     form1.setFieldsValue({ "Files":filesCuid} )
@@ -315,6 +311,11 @@ form2.setFieldsValue({
 })
 }
 
+const userCookie = Cookie.get('currentUser');
+let userId = '';
+if (userCookie) {
+  userId = JSON.parse(userCookie).User_ID;
+}
   return (
     <div id="dataquery"  className={styles.equiptmentHandManagerSty}>
     <BreadcrumbWrapper>
@@ -491,15 +492,15 @@ form2.setFieldsValue({
         wrapClassName={styles['equiptmentHandModalSty']}
         width={'40%'}
         centered
-        initialValues={{
-          CreateUserId:userId,
-          CreateTime:moment(),
-        }}
       >
         <Form
            form={form2}
            name="advanced_search1"
            className={styles['ant-advanced-search-form']}
+           initialValues={{
+            CreateUserId:userId,
+            CreateTime:moment(),
+          }}
         >  
           <Form.Item   name='Name' label='接手资料名称'>
             <Input placeholder="请输入移交资料名称" />

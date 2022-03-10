@@ -206,7 +206,7 @@ const Index = (props) => {
     setRegionName(row.regionName)
   }
   const [referenceMaterialReplaceVisible,setReferenceMaterialReplaceVisible ] = useState(false)
-  const referenceMaterialReplaceDetail = (row) =>{ //标准物质更换数量
+  const referenceMaterialReplaceDetail = (row) =>{ //标准气体更换数量
     setReferenceMaterialReplaceVisible(true)
     props.updateState({
       queryPar:{
@@ -219,7 +219,7 @@ const Index = (props) => {
   
   queryPar.pollutantType==2&&columns.splice(-1,1,
       {
-      title: '标准物质更换数量',
+      title: '标准气体更换数量',
       dataIndex: 'standardGasCount',
       key:'standardGasCount',
       align:'center',
@@ -305,7 +305,7 @@ const Index = (props) => {
         <ReagentReplace />
         </Modal>
         <Modal
-        title={`${regionName} - 标准物质更换数量`}
+        title={`${regionName} - 标准气体更换数量`}
         visible={referenceMaterialReplaceVisible}
         onCancel={()=>{setReferenceMaterialReplaceVisible(false)}}
         footer={null}

@@ -882,7 +882,7 @@ const Index = (props) => {
         <Row justify='end'> <Button type="primary" loading={props.addOrUpdateEquipmentInfoLoading} onClick={submits} > 保存</Button></Row>
       </Form>
       
-      <Modal visible={parPopVisible}  getContainer={false} onCancel={()=>{setParPopVisible(false)}} width={900} destroyOnClose footer={null} closable={false} maskStyle={{display:'none'}}>
+      <Modal  visible={parPopVisible}  getContainer={false} onCancel={()=>{setParPopVisible(false)}} width={"70%"} destroyOnClose footer={null} closable={false} maskStyle={{display:'none'}}>
       <Form
         form={form3}
         name="advanced_search3"
@@ -935,7 +935,7 @@ const Index = (props) => {
           </Form.Item>
         </Row>
         <SdlTable scroll={{ y: 'calc(100vh - 500px)' }}
-                 style={{ width: 900 }} loading={props.loadingGetEquipmentInfoList}
+                 loading={props.loadingGetEquipmentInfoList}
                   bordered dataSource={equipmentInfoList} columns={deviceCol}
                   pagination={{
                     total:equipmentInfoListTotal,

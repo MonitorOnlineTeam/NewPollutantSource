@@ -380,7 +380,7 @@ const Index = (props) => {
             { value: type == 1 ? opertionExceptionList.exceptionRate : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
             { value: type == 1 ? (100 - opertionExceptionList.exceptionRate) : type == 2 ? (100 - opertionExceptionList.failureRate) : (100 - opertionExceptionList.repairRate), name: '未完成' },
           ],
-          // minAngle: 0,//最小角度
+          minAngle: 0,//最小角度
           startAngle:350, //起始角度
         }
       ]
@@ -423,10 +423,10 @@ const Index = (props) => {
         style={{ width: '100%', height: 151 }}
         onEvents={{ click: deviceFailurerePairRate }}
       />
-      <div>设备修复率</div>
+      <div>故障修复率</div>
     </Col>
   </Row>
-  },[])
+  },[props.opertionExceptionList])
 
   const { exceptionSignTaskRateLoading,exceptionSignTaskRateList } = props; //现场打卡
   const { consumablesLoading } = props; //耗材统计

@@ -12,8 +12,8 @@ export default Model.extend({
   state: {
     subjectFontSize:14,
     operationDataSource: [],
-    latelyDays30:{beginTime:moment(moment().add(-31, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment().add(-1, 'day')).format('YYYY-MM-DD 23:59:59')},
-    latelyDays7:{beginTime:moment(moment().add(-8, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment().add(-1, 'day')).format('YYYY-MM-DD 23:59:59')},
+    latelyDays30:{beginTime:moment(moment().add(-30, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment()).format('YYYY-MM-DD 23:59:59')},
+    latelyDays7:{beginTime:moment(moment().add(-7, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment()).format('YYYY-MM-DD 23:59:59')},
     pollType : {'废水' : "1",'废气' : "2", },
     // modalType:{'废水':'ent','废气' : "ent"},
     operaOrderData: [],
@@ -108,7 +108,7 @@ export default Model.extend({
          const result = yield call(services.GetAlarmResponse, payload);
          if (result.IsSuccess) { 
            let item = result.Datas;
-          //  yield update({ dataAlarmResData: [item.overTimeRate,item.missRate,item.exceptionRate,item.operationRate] });
+           yield update({ dataAlarmResData: [item.overTimeRate,item.missRate,item.exceptionRate,item.operationRate] });
          }else{
            message.error(result.Message)
           }    

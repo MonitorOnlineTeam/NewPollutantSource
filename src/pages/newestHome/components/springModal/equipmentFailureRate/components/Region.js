@@ -181,7 +181,14 @@ const Index = (props) => {
   }
 
   
-
+  const onValuesChange = (hangedValues, allValues)=>{
+    if(Object.keys(hangedValues).join() == 'pollutantType'){
+      props.getParamCodeList({pollutantType:hangedValues.pollutantType},(data)=>{
+        setParType(data)
+        form.setFieldsValue({parameterCategory:data.map(item=>item.value) })
+      }) 
+    }
+  }
   
 
 
@@ -198,6 +205,7 @@ const Index = (props) => {
     }}
     style={{paddingBottom:15}}
     loading={tableLoading}
+    onValuesChange={onValuesChange}
   >  
   <Row>
      <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>

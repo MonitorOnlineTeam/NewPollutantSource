@@ -105,12 +105,12 @@ const Index = (props) => {
     dataIndex: 'entName',
     key:'entName',
     align:'center',
-    render:(text,record,index)=>{
-      return  <div style={{textAlign:'left'}} >{text}</div>
-    }
+    // render:(text,record,index)=>{
+    //   return  <div style={{textAlign:'left'}} >{text}</div>
+    // }
   },
   {
-    title: '监测点',
+    title: '监测点名称',
     dataIndex: 'pointName',
     key:'pointName',
     align:'center',
@@ -137,7 +137,7 @@ const Index = (props) => {
 
 queryPar.pollutantType==2&&columns.splice(-1,1,
   {
-  title: '标准物质更换数量',
+  title: '标准气体更换数量',
   dataIndex: 'standardGasCount',
   key:'standardGasCount',
   align:'center',

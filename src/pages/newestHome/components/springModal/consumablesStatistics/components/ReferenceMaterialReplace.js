@@ -1,5 +1,5 @@
 /**
- * 功  能：耗材统计-标准物质更换
+ * 功  能：耗材统计-标准气体更换
  * 创建人：贾安波
  * 创建时间：2022.1.28
  */
@@ -47,13 +47,13 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    summaryGetConsumablesRIHList:(payload)=>{ // 标准物质更换 汇总
+    summaryGetConsumablesRIHList:(payload)=>{ // 标准气体更换 汇总
       dispatch({
         type: `${namespace}/summaryGetConsumablesRIHList`,
         payload:payload,
       })
     },
-    detailedGetConsumablesRIHList:(payload)=>{ // 标准物质更换 明细
+    detailedGetConsumablesRIHList:(payload)=>{ // 标准气体更换 明细
       dispatch({
         type: `${namespace}/detailedGetConsumablesRIHList`,
         payload:payload,
@@ -166,7 +166,7 @@ const columns1 = [
     align:'center',
   },
   {
-    title: '标准物质名称',
+    title: '标准气体名称',
     dataIndex: 'name',
     key:'name',
     align:'center',
@@ -205,9 +205,9 @@ const columns2 = [
     dataIndex: 'entName',
     key:'entName',
     align:'center',
-    render:(text,record,index)=>{
-      return  <div style={{textAlign:'left'}} >{text}</div>
-    }
+    // render:(text,record,index)=>{
+    //   return  <div style={{textAlign:'left'}} >{text}</div>
+    // }
   },
   {
     title: '监测点名称',
@@ -222,7 +222,7 @@ const columns2 = [
     align:'center',
   },
   {
-    title: '标准物质名称',
+    title: '标准气体名称',
     dataIndex: 'name',
     key:'name',
     align:'center',
@@ -278,7 +278,7 @@ const columns2 = [
     <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='标准物质名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='标准气体名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>
@@ -306,7 +306,7 @@ const columns2 = [
     <Form.Item label='存货编码' name='stockCode'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
-    <Form.Item label='标准物质名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
+    <Form.Item label='标准气体名称' name='sparePartsName'  style={{paddingRight:'16px'}}>
       <Input placeholder='请输入' allowClear/>
     </Form.Item> 
        <Form.Item>

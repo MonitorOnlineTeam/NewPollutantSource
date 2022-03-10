@@ -482,9 +482,9 @@ const Index = (props,ref ) => {
       align:'center',
       width: 150,
       fixed: 'left',
-      render:(text,record,index)=>{
-       return  <div style={{textAlign:"left"}}>{text}</div>
-      }
+      // render:(text,record,index)=>{
+      //  return  <div style={{textAlign:"left"}}>{text}</div>
+      // }
     },
     {
       title: '监测点名称',
@@ -559,9 +559,9 @@ const Index = (props,ref ) => {
       align:'center',
       width: 150,
       fixed: 'left',
-      render:(text,record,index)=>{
-       return  <div style={{textAlign:"left"}}>{text}</div>
-      }
+      // render:(text,record,index)=>{
+      //  return  <div style={{textAlign:"left"}}>{text}</div>
+      // }
     },
     {
       title: '监测点名称',
@@ -856,9 +856,9 @@ const Index = (props,ref ) => {
       key:'entName',
       align:'center',
       width: 150,
-      render:(text,record,index)=>{
-       return  <div style={{textAlign:"left"}}>{text}</div>
-      }
+      // render:(text,record,index)=>{
+      //  return  <div style={{textAlign:"left"}}>{text}</div>
+      // }
     },
     {
       title: '监测点名称',
@@ -938,9 +938,9 @@ const Index = (props,ref ) => {
       align:'center',
       width: 150,
       fixed: 'left',
-      render:(text,record,index)=>{
-       return  <div style={{textAlign:"left"}}>{text}</div>
-      }
+      // render:(text,record,index)=>{
+      //  return  <div style={{textAlign:"left"}}>{text}</div>
+      // }
     },
     {
       title: '监测点名称',
@@ -963,9 +963,9 @@ const Index = (props,ref ) => {
       key:'entName',
       align:'center',
       width: 150,
-      render:(text,record,index)=>{
-       return  <div style={{textAlign:"left"}}>{text}</div>
-      }
+      // render:(text,record,index)=>{
+      //  return  <div style={{textAlign:"left"}}>{text}</div>
+      // }
     },
     {
       title: '监测点名称',
