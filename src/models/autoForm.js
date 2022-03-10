@@ -245,6 +245,7 @@ export default Model.extend({
               : '',
           formatType: item.DF_ISFormat,
           otherConfig: item.DF_OtherOptions,
+          dateFormat: item.DF_DATEFORMAT,
           type: item.DF_CONTROL_TYPE,
         }));
         const checkboxOrRadio = result.Datas.MulType;

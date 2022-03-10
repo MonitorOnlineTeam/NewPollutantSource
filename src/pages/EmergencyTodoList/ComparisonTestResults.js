@@ -147,7 +147,7 @@ class ComparisonTestResults extends Component {
                                    单位
                             </td>  
                             <td rowSpan={2}  style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                                   在线监测测定结果
+                                   在线监测仪器测定结果
                             </td>
                              <td   colSpan={2} style={{ minWidth: 150, height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                    比对方法测定结果

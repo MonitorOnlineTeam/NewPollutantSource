@@ -22,6 +22,7 @@ import {
   message,
   Upload,
 } from 'antd';
+import moment from 'moment';
 import { router } from "umi";
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -440,6 +441,10 @@ class AutoFormTable extends PureComponent {
             }
             // return <TableText content={text} {...porps} />
             return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
+          }
+          // 格式化日期
+          if (col.dateFormat) {
+            text = moment(text).format(col.dateFormat)
           }
           return text && <div className={styles.ellipsisText} style={{display:isCenter?'inline-block':""}}>
             {/* {type === '超链接' &&
