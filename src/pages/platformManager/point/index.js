@@ -437,6 +437,7 @@ export default class MonitorPoint extends Component {
 
     return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
            <div className={styles.dataVerificationSty}>
+          <div style={{color:'#f5222d',paddingBottom:10,paddingLeft:126}}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
           <Form.Item label="核查项" >
           <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
          </Form.Item>
@@ -446,8 +447,9 @@ export default class MonitorPoint extends Component {
          <Form.Item label="小时日数据一致性核查因子" >
           <Checkbox.Group value={this.state.hourPollutantCode}  options={this.props.pointHourItemList} onChange={this.hourPollutantChange} />
          </Form.Item>
-         <Form.Item label="监控平台数量" >
-          <Input  value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange}/>
+         <Form.Item label="监控平台数量" className='platformNumSty' >
+          <InputNumber style={{width:'50%',}} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange}/>
+          <span style={{color:'#f5222d',paddingLeft:10}}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
           </Form.Item>
      </div>
      </Spin>
@@ -463,13 +465,13 @@ export default class MonitorPoint extends Component {
     this.setState({hourPollutantCode:val})
   }
 
-  platformNumChange=(e)=>{//核查项 平台数量
-    this.setState({platformNum:e.target.value})
+  platformNumChange=(value)=>{//核查项 平台数量
+    this.setState({platformNum:value})
   }
 
   getEquipmentPar = () =>{ //设备参数项
     return <Spin spinning={this.props.getParamInfoListLoading}>
-           <div className={styles.dataVerificationSty}>
+           <div>
            <div style={{color:'#f5222d',paddingBottom:5}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
           <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol}  options={this.props.paramCodeList} onChange={this.equipmentParChange} />

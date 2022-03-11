@@ -32,6 +32,7 @@ export default class Index extends Component {
         visible={missingRateVisible}
         onCancel={missingRateCancel}
         footer={null}
+        destroyOnClose
     >
            <MissingRateModelData  Atmosphere={type=='air'?true:false} time={time} types={type} isModel={true} />
         </Modal>

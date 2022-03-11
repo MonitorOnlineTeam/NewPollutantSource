@@ -213,7 +213,7 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectPointDetail',
-      payload: { ...queryPar },
+      payload: { ...queryPar,Rate:1, },
       callback: data => {
          downloadFile(`/upload${data}`);
         },

@@ -377,7 +377,9 @@ const Index = (props) => {
       itemStyle:{ normal:{color: '#2E3647' },},
       barWidth: '40%',  // 柱形的宽度
       barGap: '-100%', // Make series be ove
-      hoverAnimation: false //为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+      hoverAnimation: false, //为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+      // silent: true, //图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。  为了防止鼠标悬浮让此柱状图显示在真正的柱状图上面 
+      avoidLabelOverlap:true,
   },
       {
           type: 'bar',
@@ -393,7 +395,7 @@ const Index = (props) => {
           },
           barWidth: '40%',   // 柱形的宽度
       },
-
+   
                       
   ]
  }
@@ -573,7 +575,7 @@ const operationExpiraOption = { //点位到期统计
      </div>
      </Spin>
 
-      <MissingDataRateModal type={pollutantType} //缺失报警响应率弹框
+      <MissingDataRateModal type={'ent'} //缺失报警响应率弹框
             time={[moment(dataAlarmResBtnCheck.beginTime),moment(dataAlarmResBtnCheck.endTime)]}
             missingRateVisible={missingRateVisible} missingRateCancel={() => {
               setMissingRateVisible(false)

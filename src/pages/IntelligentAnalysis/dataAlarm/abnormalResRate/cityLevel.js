@@ -274,7 +274,7 @@ class index extends PureComponent {
     //   endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
     // }
     this.props.dispatch({
-      type: "abnormalResRate/exportReport",
+      type: "abnormalResRate/exportExceptionAlarmRateListForCity",
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,

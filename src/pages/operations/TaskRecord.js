@@ -103,6 +103,7 @@ class TaskRecord extends Component {
       expand: !this.state.expand,
     }, () => {
       // 展开、收起重新计算table高度
+      if(!this.props.tableHeight){
       const tableElement = document.getElementsByClassName('ant-table-wrapper');
       if (tableElement.length) {
         const tableOffsetTop = this.getOffsetTop(tableElement[0]) + 110;
@@ -112,6 +113,7 @@ class TaskRecord extends Component {
           tableBodyEle[0].style.maxHeight = `${scrollYHeight}px`;
         }
       }
+    }
     });
   }
 
@@ -577,6 +579,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
     //     size="large"
     //   />);
     // }
+
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card className="contentContainer">
@@ -796,7 +799,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
               }}
               columns={columns}
               // scroll={{ y: isHomeModal? this.props.clientHeight - 480 :null }}
-              scroll={{ y: this.props.tableHeight || undefined }}
+              scroll={{ y: this.state.expand?"calc(100vh - 630px)": this.props.tableHeight || undefined }}
 
         />
         </Card>

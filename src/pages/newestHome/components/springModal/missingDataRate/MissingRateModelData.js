@@ -250,7 +250,7 @@ export default class Index extends PureComponent {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'MissingRateDataModal/exportDefectDataSummary',
-      payload: this.state.level? { ...queryPar,RegionCode:this.state.regionCode,regionLevel:this.state.level } :{ ...queryPar },
+      payload: this.state.level? { ...queryPar,RegionCode:this.state.regionCode,regionLevel:this.state.level,Rate:1, } :{ ...queryPar,Rate:1, },
       callback: data => {
          downloadFile(`/upload${data}`);
         },

@@ -71,7 +71,7 @@ class ComparisonTestResults extends Component {
                         {item.AlignmentMethodAvgValue}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.ErrorValue}
+                        {item.ErrorValue? item.ErrorValue.replace(/,/g,"") : null}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
                         {item.IsQualified}

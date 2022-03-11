@@ -141,6 +141,7 @@ class Index extends PureComponent {
       regionMarkers: [],
       entMarkers: [],
       pointMarkers: [],
+      allPointMarkers:[],
       entTitleShow: false,
       pointTitleShow: false,
       hoverTitleShow: false,
@@ -221,6 +222,8 @@ class Index extends PureComponent {
           this.setState({ entMarkers: data })
         } else {
           this.setState({ pointMarkers: data })
+          this.setState({ allPointMarkers: data })
+
         }
       }
     })
@@ -381,8 +384,8 @@ class Index extends PureComponent {
   regPopovercontent = (extData) => { 
     return <div>
       <div>企业总数：{extData.position && extData.position.entCount}</div>
-      <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.OverCount? extData.position.OverCount : 0}</div>
-      <div><span style={{ color: '#FFCC00' }}>异常</span>企业总数：{extData.position && extData.position.ExceptionCount? extData.position.ExceptionCount : 0}</div>
+      <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.overCount? extData.position.overCount : 0}</div>
+      <div><span style={{ color: '#FFCC00' }}>异常</span>企业总数：{extData.position && extData.position.exceptionCount? extData.position.exceptionCount : 0}</div>
     </div>
   }
 
@@ -650,12 +653,13 @@ class Index extends PureComponent {
   }
 
   mapBtnClick = (index,item) =>{
-    const { mapBtnStatusIndex,pointMarkers } = this.state;
+    const { mapBtnStatusIndex,pointMarkers,allPointMarkers } = this.state;
     if(mapBtnStatusIndex!==index){
       this.setState({mapBtnStatusIndex:index})
-      const selectData = pointMarkers.filter(pointItem=>{
+      const selectData = allPointMarkers.filter(pointItem=>{
         return   item.status == pointItem.position.Status 
       })
+      this.setState({pointMarkers:selectData})
       this.loadPointMarkerData(selectData)
     }else{
       this.setState({mapBtnStatusIndex:-1})
@@ -666,8 +670,8 @@ class Index extends PureComponent {
   mapContent = (props) => { 
     const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow,pointIconGo} = this.state;
     const { mapStatusData, subjectFontSize, pollType,entList } = this.props;
-    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount,status:1 }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount,status:3}, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount,status:0 },
-    { text: '在线', color: '#5fc15d', val: mapStatusData.stopCount ,status:1}, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount,status:4 }]
+    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount,status:2}, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount,status:3}, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount,status:0 },
+    { text: '在线', color: '#5fc15d', val: mapStatusData.normalCount ,status:1}, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount,status:4 }]
 
     const operationBtnArr = () => {
       return [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/homeMapT.png' : '/homeMapQp.png' }, { text: '展示企业', url: !pointIconGo? '/homeMapQA.png' : '/homeMapQ.png' }, { text: '展示监测点', url:pointIconGo?'/homeMapJcA.png' : '/homeMapJc.png' },
