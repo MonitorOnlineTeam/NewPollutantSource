@@ -34,7 +34,9 @@ const dvaPropsData =  ({ loading,equipmentFeedback,global,common }) => ({
   pointListByEntCode:common.pointListByEntCode,
   pointLoading:loading.effects['common/getPointByEntCode'],
   clientHeight: global.clientHeight,
-  tableTotal:global.tableTotal
+  tableTotal:global.tableTotal,
+  entList:equipmentFeedback.entList,
+  entLoading:loading.effects['common/getFaultFeedbackEntPoint'],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -70,7 +72,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    
+    getFaultFeedbackEntPoint:(payload)=>{ // 企业列表
+      dispatch({
+        type: `${namespace}/getFaultFeedbackEntPoint`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -83,7 +90,7 @@ const Index = (props) => {
   
   useEffect(() => {
     onFinish(pageIndex,pageSize);
-  
+    props.getFaultFeedbackEntPoint({})
   },[]);
 
 
@@ -159,9 +166,9 @@ const Index = (props) => {
     align:'center',
     render:(text,record,index)=>{
       if(text == 1){
-        return  '待解决'
-      } else if(text == 2){
         return  '已解决'
+      } else{
+        return  '待解决'
       }
      
      }
@@ -272,6 +279,8 @@ const Index = (props) => {
   }
 
   const [ IsSolve, SetIsSolve ] = useState(1)
+
+  const {entList, entLoading } = props;
   return (
     <div  className={styles.equipmentFeedbackSty}>
 
@@ -294,7 +303,17 @@ const Index = (props) => {
        </Col>
        <Col span={6}>
        <Form.Item  label='企业' name='EntCode'>
-        <EntAtmoList changeEnt={changeEnt} style={{width:'100%'}} />
+       { entLoading?
+           <Spin size='small'/>
+           :
+          <Select placeholder='请选择' allowClear>
+          {
+            entList&&entList.map(item => {
+              return <Option key={item.ParentCode} value={item.ParentCode} >{item.ParentName}</Option>
+            })
+          } 
+           </Select> 
+        }
        </Form.Item>
        </Col>
        <Col span={6}>
@@ -339,8 +358,8 @@ const Index = (props) => {
           <Form.Item label='处理状态' name='IsSolve' >
             <Radio.Group>
             <Radio value={undefined}>全部</Radio>
-            <Radio value={1}>待解决</Radio>
-            <Radio value={2}>已解决</Radio>
+            <Radio value={0}>待解决</Radio>
+            <Radio value={1}>已解决</Radio>
           </Radio.Group>
        </Form.Item>
        </Col>
@@ -389,8 +408,8 @@ const Index = (props) => {
           <Row>
             <span>处理状态：</span>
             <Radio.Group value={IsSolve} onChange={(e)=>{{SetIsSolve(e.target.value)}}}>
-            <Radio value={1}>待解决</Radio>
-            <Radio value={2}>已解决</Radio>
+            <Radio value={0}>待解决</Radio>
+            <Radio value={1}>已解决</Radio>
           </Radio.Group>
          </Row>
     </Modal>

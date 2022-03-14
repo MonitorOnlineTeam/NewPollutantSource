@@ -17,6 +17,7 @@ export default Model.extend({
     monitoringTypeList:[],
     manufacturerList:[],
     maxNum:null,
+    systemModelNameList:[],
   },
   effects: {
     *getSystemModelList({ payload,callback }, { call, put, update }) { //列表
@@ -77,6 +78,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *getSystemModelNameList({ payload,callback }, { call, put, update }) { //获取系统名称列表
+      const result = yield call(services.GetSystemModelNameList, payload);
+      if (result.IsSuccess) {
+        yield update({ systemModelNameList:result.Datas})
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
   },
 })

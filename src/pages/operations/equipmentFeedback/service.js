@@ -18,3 +18,9 @@ export async function ExportFaultFeedback(params) {
   return result;
 }
 
+
+//设备故障反馈 企业下拉列表
+export async function GetFaultFeedbackEntPoint(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetFaultFeedbackEntPoint?EntCode='+params.entCode, params, null);
+  return result;
+}

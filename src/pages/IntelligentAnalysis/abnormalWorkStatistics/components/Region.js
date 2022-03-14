@@ -309,7 +309,7 @@ const Index = (props,ref) => {
         return  <Button type="link"
          onClick={()=>{
           !isResponseModal? 
-          router.push({pathname:`/Intelligentanalysis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}})
+          router.push({pathname:`/Intelligentanalysis/operationWorkStatis/abnormalWorkStatistics/regionDetail`,query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes}})
           :
           props.resRegionDetailModal({query:{data:JSON.stringify(queryPar),regionName:record.regionName,regionCode:record.regionCode,abnormalTypes:abnormalTypes }})
         }}
@@ -498,7 +498,7 @@ const abnormalNum = (row,outOrInside) =>{  //打卡异常  响应超时
   const  cityColumnsPush = (col) =>{
     if(dateCol&&dateCol[0]){
       col.push({
-        title: '打卡异常工单分布',
+        title: abnormalTypes==1? '打卡异常工单分布' : '报警响应超时工单分布',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{

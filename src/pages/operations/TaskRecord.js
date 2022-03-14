@@ -395,7 +395,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams,isHomeModal } = this.props;
     const { formLayout } = this._SELF_;
-    console.log('gettasklistqueryparams', gettasklistqueryparams);
+    // console.log('gettasklistqueryparams', gettasklistqueryparams);
     const {TaskID,DGIMN} = this.state;
     const columns = [
       {
@@ -532,7 +532,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                    </Tooltip>,
               )
               if (time) {
-                console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
+                // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
                 // 当前时间 > 完成时间显示驳回
                 if (moment().diff(time, 'days') < 7) {
                   reslist.push(
@@ -602,8 +602,9 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             <RangePicker_
                             dateValue={ gettasklistqueryparams.CreateTime}
                             style={{ width: '100%' }}
+                            allowClear={false}
                             format="YYYY-MM-DD HH:mm:ss"
-                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} allowClear showTime="YYYY-MM-DD HH:mm:ss" />,
+                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')}  showTime="YYYY-MM-DD HH:mm:ss" />,
                           )}
                       </FormItem>
                      
@@ -705,7 +706,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             format="YYYY-MM-DD HH:mm:ss"
                             showTime="YYYY-MM-DD HH:mm:ss"
                             callback={(dates, type) => this.dateCallBack(dates, type, 'CompleteTime')} allowClear />,
-                          )}
+                         )}
                       </FormItem>
                   </Col>
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>

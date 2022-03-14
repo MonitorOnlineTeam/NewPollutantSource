@@ -331,7 +331,7 @@ const Index = (props) => {
           width: 100,
           align:'center',
           render:(text, record)=>{
-            return  <Button type="link" onClick={()=>{abnormalNum(record,1)}}>{text}</Button>
+            return  <Button type="link" onClick={()=>{abnormalNum(record)}}>{text}</Button>
           }
         },
         {
@@ -609,48 +609,29 @@ const reponseNumColumns = [
     // }
   },
   {
-    title: <span>报警响应工单<Tooltip overlayClassName='customTooltipSty' title={alarmResponse()}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-    width:200,
-    children: [
-      {
-        title: '总数',
-        dataIndex: 'outPlanCount',
-        key: 'outPlanCount',
-        width: 50,
-        align:'center',
-      },
-      {
-        title: "响应超时数",
-        dataIndex: 'outPlanExceptionCount',
-        key: 'outPlanExceptionCount',
-        width: 100,
-        align:'center',
-        render:(text, record)=>{
-          return  <Button type="link" onClick={()=>{abnormalNum(record)}}>{text}</Button>
-        }
-      },
-      {
-        title: '超时率',
-        dataIndex: 'outRate',
-        key: 'outRate',
-        width: 100,
-        align:'center',
-        render: (text, record) => {
-          return (
-            <div>
-            <Progress
-              percent={text&&text}
-              size="small"
-              style={{width:'80%'}}
-              status='normal'
-              format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
-            />
-          </div>
-          );
-        }
-      },
-    ],
-  }
+    title: '企业名称',
+    dataIndex: 'entName',
+    key:'entName',
+    align:'center',
+    width: 150,
+    fixed: 'left',
+    // render:(text)=>{
+    //   return <div style={{textAlign:'left'}}>{text}</div>
+    //  }
+  },
+  {
+    title: '监测点名称',
+    dataIndex: 'pointName',
+    key:'pointName',
+    align:'center',
+    fixed: 'left',
+  },
+  {
+    title: '响应超时数',
+    dataIndex: 'exceptionCount',
+    key:'exceptionCount',
+    align:'center',
+  },
 ];
 
 
@@ -822,7 +803,8 @@ const  cityColumnsPush = (col) =>{
               render:(text,row,index)=>{
                  return row.datePick.map(dateItem=>{
                     if(dateItem.date == item.date){
-                       return dateItem.count;
+                      return dateItem.count? <span style={{color:'rgb(247,152,34)'}}>{dateItem.count}</span>: dateItem.count;
+
                     }
                   })
               } 

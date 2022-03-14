@@ -33,3 +33,9 @@ export async function GetManufacturerList(params) {
   return result;
 }
 
+
+// 系统型号 获取系统名称列表
+export async function GetSystemModelNameList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetSystemModelNameList',params, null);
+  return result;
+}

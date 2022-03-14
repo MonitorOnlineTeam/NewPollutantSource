@@ -4,7 +4,7 @@
  * 创建时间：2021.11
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin,   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -37,6 +37,9 @@ const dvaPropsData =  ({ loading,systemMarker }) => ({
   manufacturerList:systemMarker.manufacturerList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
   maxNum:systemMarker.maxNum,
+  systemModelNameList:systemMarker.systemModelNameList,
+  systemModelNameListLoading: loading.effects[`${namespace}/getSystemModelNameList`],
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -90,6 +93,13 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       }) 
     },
+    getSystemModelNameList:(payload,callback)=>{ //系统名称
+      dispatch({
+        type: `${namespace}/getSystemModelNameList`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
   }
 }
 const Index = (props) => {
@@ -115,11 +125,12 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading,maxNum } = props; 
+  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading,maxNum,systemModelNameList,systemModelNameListLoading } = props; 
   useEffect(() => {
     onFinish();
     props.getManufacturerList({})
     props.getMonitoringTypeList({},()=>{})
+    props.getSystemModelNameList({})
     
   },[]);
 
@@ -196,6 +207,7 @@ const Index = (props) => {
     try {
       form2.setFieldsValue({
         ...record,
+        SystemName:record.ChildID,
         MonitoringType:record.MonitoringTypeID.toString()
       })
 
@@ -302,8 +314,17 @@ const Index = (props) => {
                 } 
               </Select>
       </Form.Item>
-      <Form.Item label="系统名称" name="SystemName" style={{margin:'0 16px'}}  >
-            <Input placeholder="请输入系统名称" style={{width:200}} allowClear/>
+      <Form.Item label="系统名称" name="SystemName"  style={{margin:'0 16px'}}>
+              {systemModelNameListLoading?<Spin size='small'/>
+              :
+              <Select placeholder='请选择系统名称' allowClear style={{width:200}}>
+              {
+               systemModelNameList[0]&&systemModelNameList.map(item => {
+                 return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+               })
+             }   
+           </Select>
+        }
       </Form.Item>
       <Form.Item label="系统型号" name="SystemModel" >
         <Input placeholder='请输入系统型号' style={{width:200}} allowClear/>
@@ -337,6 +358,7 @@ const Index = (props) => {
      </Row>
      </Form>
   }
+
   return (
     <div  className={styles.systemMarkerSty}>
     <BreadcrumbWrapper>
@@ -419,8 +441,17 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请输入系统名称'  }]} >
-            <Input placeholder="请输入系统名称" allowClear/>
+        <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请选择系统名称'  }]} >
+              {systemModelNameListLoading?<Spin size='small'/>
+              :
+              <Select placeholder='请选择系统名称' allowClear>
+              {
+               systemModelNameList[0]&&systemModelNameList.map(item => {
+                 return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+               })
+             }   
+           </Select>
+        }
       </Form.Item>
       </Col>
       </Row>

@@ -206,14 +206,14 @@ class index extends PureComponent {
         const { Begintime,Endtime} = this.state;
         const { isHomeModal } = this.props;
         return <>
-            <label style={{fontSize:14}}>停运开始时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
+            <label style={{fontSize:14}}>停运时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                 (dates, dataType) => {
                     this.setState({
                         Begintime: dates
                     })
                 }
             } />
-            <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
+            {/* <label style={{fontSize:14}}>停运截止时间:</label><RangePicker_ 
             onRef={this.onRef1} isVerification={true} dateValue={Endtime} 
             style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                 (dates, dataType) => {
@@ -222,18 +222,20 @@ class index extends PureComponent {
                         Endtime: dates
                     })
                 }
-            } />
+            } /> */}
+            {!isHomeModal&&<>
+            <label>行政区:</label>
+               <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+                    this.setState({
+                        regionValue: value
+                    })
+                }} RegionCode={this.state.regionValue}/></>}
 
         {isHomeModal&&<><Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><ExportOutlined />导出</Button></>}
 
         {!isHomeModal&&<div style={{ marginTop: 10,fontSize:14 }}>
-                <label>行政区:</label>
-               <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
-                    this.setState({
-                        regionValue: value
-                    })
-                }} RegionCode={this.state.regionValue}/>
+                
                 <label>企业列表:</label><Select
                     allowClear
                     showSearch

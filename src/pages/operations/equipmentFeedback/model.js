@@ -11,7 +11,8 @@ export default Model.extend({
   namespace: 'equipmentFeedback',
   state: {
     faultFeedbackList:[],
-    tableTotal:1
+    tableTotal:1,
+    entList:[],
   },
   effects: {
    //列表
@@ -43,6 +44,16 @@ export default Model.extend({
       message.error(result.Message)
     }
   }, 
-  }
 
+    //企业下拉列表
+    *getFaultFeedbackEntPoint({   payload,callback }, { call, update, select, put }) {
+      const result = yield call(services.GetFaultFeedbackEntPoint, { ... payload });
+      if (result.IsSuccess) {
+        yield update({entList: result.Datas?result.Datas.entList :[] });
+      } else {
+        message.error(result.Message)
+      }
+    },
+  }
+  
 })

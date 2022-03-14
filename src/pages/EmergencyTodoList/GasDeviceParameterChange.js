@@ -57,7 +57,7 @@ class GasDeviceParameterChange extends Component {
                         {item.RangeAfterChange}
                     </td>
                     <td style={{ height: '50px', textAlign: 'center', fontSize: '14px' }}>
-                        {item.ChangeTime}
+                       { item.ChangeTime? moment(item.ChangeTime).format("YYYY-MM-DD"): null}
                     </td>
                 </tr>
                 );
@@ -111,13 +111,13 @@ class GasDeviceParameterChange extends Component {
                                     统计起始时间
                             </td>
                             <td  style={{ textAlign: 'center', fontSize: '14px',minWidth: 200 }}>
-                                 {Content !== null ? moment(Content.BeginTime).format("YYYY-MM-DD hh:00:00") : null}
+                                 {Content !== null ? moment(Content.BeginTime).format("YYYY-MM-DD HH:00:00") : null}
                             </td>
                             <td  style={{  height: '50px', textAlign: 'center', fontSize: '14px',minWidth: 250,fontWeight:'bold' }}>
                                        统计截止时间
                             </td>
                             <td  style={{ textAlign: 'center', fontSize: '14px',minWidth: 250 }}>
-                                {Content !== null ? moment(Content.EndTime).format("YYYY-MM-DD hh:00:00"):null}
+                                {Content !== null ? moment(Content.EndTime).format("YYYY-MM-DD HH:00:00"):null}
                             </td>
                         </tr>
                         <tr>

@@ -144,7 +144,7 @@ const Index = (props) => {
         <Col span={12}>
 
       <Form.Item label="处理状态"  >
-      {data.IsSolve ==1?'待解决':data.IsSolve ==2?"已解决" : null}
+      {data.IsSolve ==1?'已解决': "待解决"}
       </Form.Item>
       </Col>
         <Col span={12}>
