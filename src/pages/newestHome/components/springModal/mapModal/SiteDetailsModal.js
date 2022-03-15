@@ -51,6 +51,13 @@ class SiteDetailsModal extends PureComponent {
     // if (data.PollutantType === "5") {
     //   tabList = ["历史数据", "运维记录", "视频预览", "", "异常数据", "", "基本信息"];
     // }
+
+  }
+  componentWillUnmount(){
+    this.props.dispatch({
+      type: "newestHome/updateState",
+       payload: { siteDetailsVisible:false, }
+     })
   }
   componentDidUpdate(props){
     if(props.siteDetailsVisible!==this.props.siteDetailsVisible&&this.props.siteDetailsVisible){
