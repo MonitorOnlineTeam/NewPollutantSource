@@ -124,7 +124,7 @@ class SearchWrapper extends Component {
   }
 
   onSubmitForm() {
-    const { resultConfigId, configId, searchForm, whereList, dispatch, searchParams } = this.props;
+    const { resultConfigId, configId, searchForm, whereList, dispatch, searchParams,sort, } = this.props;
     // TODO 主要用于 关联表业务  查询条件configId 与 列表configId不一样的问题  参考 维护监测点页面需求
     if (resultConfigId) {
       dispatch({
@@ -146,11 +146,13 @@ class SearchWrapper extends Component {
       })
     }
     setTimeout(() => {
+      console.log(this.props.sort)
       dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
           configId: resultConfigId || configId,
-          searchParams: searchParams
+          searchParams: searchParams,
+          otherParams: sort? {SortFileds:"RegionCode",IsAsc: true} : undefined
         }
       });
     }, 0)

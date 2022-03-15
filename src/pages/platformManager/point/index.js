@@ -664,6 +664,7 @@ export default class MonitorPoint extends Component {
                     uid={this.state.cuid}
                     isEdit={this.state.isEdit}
                     keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                    isModal
                   />
               </TabPane>
               <TabPane tab="污染物信息" key="2">

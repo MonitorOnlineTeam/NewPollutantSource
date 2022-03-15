@@ -233,6 +233,7 @@ export default class MonitorTarget extends Component {
                     <SearchWrapper
                         onSubmitForm={form => this.loadReportList(form)}
                         configId={configId}
+                        sort={true}
                     ></SearchWrapper>
                     <AutoFormTable
                         sort={true}

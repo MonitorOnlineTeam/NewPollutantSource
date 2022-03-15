@@ -693,7 +693,9 @@ class SdlForm extends PureComponent {
     // }
     return (
       <Fragment>
+       <Spin  spinning={this.props.isModal&&this.props.isEdit? this.props.fileLoading : false}> {/*弹框编辑的加载状态loading*/}
         {this.renderContent()}
+        </Spin>
       </Fragment>
     );
   }
