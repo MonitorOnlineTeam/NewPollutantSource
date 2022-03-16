@@ -84,7 +84,11 @@ export async function getPointByEntCode(params) {
   const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode', params, null);
   return result;
 }
-
+// 根据企业获取排口
+export async function getPointByEntCode2(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetPointByEntCode', params, null);
+  return result;
+}
 /**
  * 基本信息-更新监测点的运营开始结束时间
  * @param {传递参数} 传递参数

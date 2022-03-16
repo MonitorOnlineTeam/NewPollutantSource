@@ -1,10 +1,10 @@
 /**
- * 功  能：设备故障反馈
+ * 功  能：远程督查
  * 创建人：贾安波
- * 创建时间：2021.1.21
+ * 创建时间：2021.3.16
  */
 import React, { useState,useEffect,useRef,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Tabs,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined,ProfileOutlined,EditOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -20,23 +20,21 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 const { TextArea } = Input;
 const { Option } = Select;
+const { TabPane } = Tabs;
 
-const namespace = 'equipmentFeedback'
+const namespace = 'remoteSupervision'
 
 
 
 
-const dvaPropsData =  ({ loading,equipmentFeedback,global,common }) => ({
-  tableDatas:equipmentFeedback.faultFeedbackList,
+const dvaPropsData =  ({ loading,remoteSupervision,global,common }) => ({
+  tableDatas:remoteSupervision.faultFeedbackList,
   tableLoading: loading.effects[`${namespace}/getFaultFeedbackList`],
   editLoading: loading.effects[`${namespace}/updateFaultFeedbackIsSolve`],
-  exportLoading: loading.effects[`${namespace}/exportFaultFeedback`],
   pointListByEntCode:common.pointListByEntCode,
-  pointLoading:loading.effects['common/getPointByEntCode'],
   clientHeight: global.clientHeight,
   tableTotal:global.tableTotal,
-  entList:equipmentFeedback.entList,
-  entLoading:loading.effects['common/getFaultFeedbackEntPoint'],
+  entList:remoteSupervision.entList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -60,10 +58,11 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       })
     },
-    getPointByEntCode:(payload)=>{ // 根据企业获取监测点
+    getPointByEntCode:(payload,callback)=>{ // 根据企业获取监测点
       dispatch({
-        type: 'common/getPointByEntCode',
+        type: `${namespace}/getPointByEntCode`,
         payload:payload,
+        callback:callback
       })
     },
     exportFaultFeedback:(payload)=>{ // 导出
@@ -83,6 +82,7 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
+  const [form2] = Form.useForm(); //添加编辑表单
   const [showType,setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const  { tableDatas,tableLoading,exportLoading,clientHeight,type,time,tableTotal } = props; 
@@ -109,15 +109,6 @@ const Index = (props) => {
  const [ID,setID] = useState()
  const columns = [
   {
-    title: '序号',
-    dataIndex: 'x',
-    key:'x',
-    align:'center',
-    render:(text,record,index)=>{
-     return  index +1 
-    }
-  },
-  {
     title: '省/市',
     dataIndex: 'RegionName',
     key:'RegionName',
@@ -136,31 +127,13 @@ const Index = (props) => {
     align:'center',
   },
   {
-    title: '故障单元',
-    dataIndex: 'FaultUnitName',
-    key:'FaultUnitName',
-    align:'center',
-  },
-  {
-    title: '故障时间',
+    title: '核查月份',
     dataIndex: 'FaultTime',
     key:'FaultTime',
     align:'center',
   },
   {
-    title: '主机名称型号',
-    dataIndex: 'EquipmentName',
-    key:'EquipmentName',
-    align:'center',
-  },
-  {
-    title: '故障现象',
-    dataIndex: 'FaultPhenomenon',
-    key:'FaultPhenomenon',
-    align:'center',
-  },
-  {
-    title: '处理状态',
+    title: '核查结果',
     dataIndex: 'IsSolve',
     key:'IsSolve',
     align:'center',
@@ -174,13 +147,13 @@ const Index = (props) => {
      }
   },  
   {
-    title: '反馈人',
+    title: '核查人',
     dataIndex: 'CreatUserName',
     key:'CreatUserName',
     align:'center',
   },
   {
-    title: '反馈时间',
+    title: '核查时间',
     dataIndex: 'CreatDateTime',
     key:'CreatDateTime', 
     align:'center',
@@ -205,11 +178,17 @@ const Index = (props) => {
             <Divider type="vertical" />
         <Tooltip title="详情">
           <a onClick={ () => {
-            router.push({pathname:'/operations/equipmentFeedback/detail', query: {detailData: JSON.stringify(record) }}) 
+            router.push({pathname:'/operations/remoteSupervision/detail', query: {detailData: JSON.stringify(record) }}) 
           }}>
             <ProfileOutlined style={{ fontSize: 16 }} />
           </a>
         </Tooltip>
+        <Divider type="vertical" />
+        <Tooltip title="删除">
+                    <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => del(record)} okText="是" cancelText="否">
+                    <a href="#" ><DelIcon/></a>
+                 </Popconfirm>
+         </Tooltip>
         </>
       )
           }
@@ -236,17 +215,10 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onExport = async () =>{
-    const values = await form.validateFields();
-    props.exportFaultFeedback({
-      ...values,
-      time:undefined,
-      FaultBTime:values.Time? moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss") : undefined,
-      FaultETime:values.Time?moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"): undefined,
-    })
-  
+  const add = async () =>{
+    setVisible(true)
   }
-  const onEdit = () =>{
+  const save = () =>{
     props.updateFaultFeedbackIsSolve({
       ID:ID,
       IsSolve:IsSolve
@@ -257,17 +229,35 @@ const Index = (props) => {
   }
   const changeEnt = (val) =>{
   }
+  
+  const [pointList,setPointList ] = useState([])
+  const [pointLoading,setPointLoading ] = useState(false)
 
   const onValuesChange = (hangedValues, allValues)=>{
     if(Object.keys(hangedValues).join() == 'EntCode'){
-      props.getPointByEntCode({EntCode:hangedValues.EntCode})
+      setPointLoading(true)
+      props.getPointByEntCode({EntCode:hangedValues.EntCode},(res)=>{
+        setPointList(res)
+        setPointLoading(false)
+      })
       form.setFieldsValue({DGIMN:undefined})
     }
   }
-  const [expand, setExpand] = useState(true)
+
+  const [pointList2,setPointList2 ] = useState([])
+  const [pointLoading2,setPointLoading2 ] = useState(false)
+  const onValuesChange2 = (hangedValues, allValues)=>{ //添加 编辑
+    if(Object.keys(hangedValues).join() == 'EntCode'){
+      setPointLoading2(true)
+      props.getPointByEntCode({EntCode:hangedValues.EntCode},(res)=>{
+        setPointList2(res)
+        setPointLoading2(false)
+      })
+      form2.setFieldsValue({DGIMN:undefined})
+    }
+  }
   const [visible,setVisible] = useState(false)
 
-  const { pointLoading, pointListByEntCode} = props;
 
   const [pageSize,setPageSize] = useState(20)
   const [pageIndex,setPageIndex] = useState(1)
@@ -278,11 +268,14 @@ const Index = (props) => {
     onFinish(PageIndex,PageSize)
   }
 
+  const tabsChange = (key) =>{
+
+  }
   const [ IsSolve, SetIsSolve ] = useState(1)
 
   const {entList, entLoading } = props;
   return (
-    <div  className={styles.equipmentFeedbackSty}>
+    <div  className={styles.remoteSupervisionSty}>
 
     <BreadcrumbWrapper>
     <Card title={
@@ -295,75 +288,38 @@ const Index = (props) => {
     className={styles.queryForm}
     onValuesChange={onValuesChange}
   >  
-     <Row wrap={false}>
-       <Col span={6}>
+    <Row >
      <Form.Item label='行政区' name='RegionCode' >
-       <RegionList style={{width:'100%'}} />
+       <RegionList levelNum={2} />
        </Form.Item>
-       </Col>
-       <Col span={6}>
        <Form.Item  label='企业' name='EntCode'>
-       { entLoading?
-           <Spin size='small'/>
-           :
-          <Select placeholder='请选择' allowClear>
-          {
-            entList&&entList.map(item => {
-              return <Option key={item.ParentCode} value={item.ParentCode} >{item.ParentName}</Option>
-            })
-          } 
-           </Select> 
-        }
+         <EntAtmoList  />
        </Form.Item>
-       </Col>
-       <Col span={6}>
-       <Form.Item label='监测点' name='DGIMN' >
+       <Form.Item label='监测点名称' name='DGIMN' >
          { pointLoading?
            <Spin size='small'/>
            :
           <Select placeholder='请选择' allowClear>
           {
-            pointListByEntCode[0]&&pointListByEntCode.map(item => {
+            pointList[0]&&pointList.map(item => {
               return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
             })
           } 
            </Select> 
         }
        </Form.Item>
-       </Col>
-       <Col span={6}>
-       <Form.Item label='故障单元' name='FaultUnitName'>
-         <Input placeholder='请输入' allowClear/>
-       </Form.Item>
-       </Col>
+       </Row>
 
-      </Row>
-       {expand&&<Row wrap={false}>
-      <Col span={6}>
-      <Form.Item label='故障时间' name='Time'>
-         <RangePicker allowClear />
+       <Row >
+      <Form.Item label='核查月份' name='Time'>
+         <DatePicker  allowClear picker="month"  />
       </Form.Item> 
-      </Col>
-      <Col span={6}>
-      <Form.Item label='主机名称型号' name='EquipmentName'>
-         <Input placeholder='请输入' allowClear/>
+      <Form.Item label='核查结果' name='EquipmentName'>
+         <Select placeholder='请选择' allowClear>
+              <Option key={1} value={1} >合格</Option>
+              <Option key={2} value={2} >不合格</Option>
+           </Select>
        </Form.Item>
-       </Col>
-       <Col span={6}>
-       <Form.Item label='故障现象' name='FaultPhenomenon'>
-         <Input placeholder='请输入' allowClear/>
-       </Form.Item>
-       </Col>
-       <Col span={6}>
-          <Form.Item label='处理状态' name='IsSolve' >
-            <Radio.Group>
-            <Radio value={undefined}>全部</Radio>
-            <Radio value={0}>待解决</Radio>
-            <Radio value={1}>已解决</Radio>
-          </Radio.Group>
-       </Form.Item>
-       </Col>
-       </Row>}
        <Form.Item>
        <Button type="primary" loading={tableLoading}  htmlType="submit">
             查询
@@ -371,13 +327,11 @@ const Index = (props) => {
           <Button  style={{  margin: '0 8px'}} onClick={() => {  form.resetFields(); }}  >
             重置
           </Button> 
-          <Button style={{  marginRight: 8}} loading={exportLoading}  icon={<ExportOutlined />} onClick={onExport}>
-              导出
+          <Button style={{  marginRight: 8}} loading={exportLoading} onClick={add}>
+              添加
             </Button>
-    <a  onClick={() => {setExpand(!expand);  }} >
-       {expand ? <>收起 <UpOutlined /></>  : <>展开 <DownOutlined /></>} 
-      </a>
-    </Form.Item>
+       </Form.Item>
+       </Row>
   </Form>}>
   <SdlTable
         loading = {tableLoading}
@@ -397,21 +351,60 @@ const Index = (props) => {
    </Card>
     </BreadcrumbWrapper>
     <Modal
-      title='编辑'
+      title='添加'
       visible={visible}
-      onOk={onEdit}
+      onOk={save}
       destroyOnClose={true}
       onCancel={()=>{setVisible(false);SetIsSolve(1)}}
       width='50%'
-      confirmLoading={props.editLoading}
-    >
-          <Row>
-            <span>处理状态：</span>
-            <Radio.Group value={IsSolve} onChange={(e)=>{{SetIsSolve(e.target.value)}}}>
-            <Radio value={0}>待解决</Radio>
-            <Radio value={1}>已解决</Radio>
-          </Radio.Group>
-         </Row>
+      // confirmLoading={props.addEditLoading}
+      wrapClassName={styles.modalSty}
+    >    <Form
+    form={form2} 
+    name="advanced_search"
+    initialValues={{
+    }}
+    className={styles.queryForm}
+    onValuesChange={onValuesChange2}
+  >  
+     <Row>
+       <Form.Item  label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称!' }]}>
+         <EntAtmoList  />
+       </Form.Item>
+       <Form.Item label='监测点名称'   name='DGIMN' style={{padding:'0 10px'}}  rules={[{ required: true, message: '请选择监测点名称!' }]}>
+         { pointLoading2?
+           <Spin size='small'/>
+           :
+          <Select placeholder='请选择' allowClear>
+          {
+            pointList2[0]&&pointList2.map(item => {
+              return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+            })
+          } 
+           </Select> 
+        }
+       </Form.Item>
+
+
+      <Form.Item label='核查月份' name='Time' rules={[{ required: true, message: '请选择核查月份!' }]}>
+         <DatePicker  allowClear picker="month"/>
+      </Form.Item>
+      </Row>
+
+
+      <Tabs
+                defaultActiveKey="1"
+                onChange={key => {
+                  tabsChange(key);
+                }}
+              >
+                <TabPane tab="数据一致性核查表" key="1">
+                  </TabPane>
+                  <TabPane tab="参数一致性核查表" key="2">
+                  </TabPane>
+            </Tabs>
+  </Form>
+
     </Modal>
     </div>
 
