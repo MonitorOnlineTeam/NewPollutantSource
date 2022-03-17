@@ -340,7 +340,7 @@ const Index = (props) => {
     { label: '否', value: "1"},
     { label: '不适用', value: "2" },
   ])
-  const onManualChange = (val,index) => { //手工修正结果
+  const onManualChange = (val,name,index) => { //手工修正结果
     switch (index) {
       case 0:
         const ele = document.getElementById(`advanced_search_rangCheck${index}`)
@@ -486,7 +486,7 @@ const Index = (props) => {
           render: (text, record,index) => {
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
               <Form.Item name='EntCode' name={`rangCheck${index}`}>
-                <Checkbox.Group  options={manualOptions} onChange={(val)=>{onManualChange(val,index)}} />
+                <Checkbox.Group  options={manualOptions} onChange={(val)=>{onManualChange(val,`rangCheck${index}`,index)}} />
               </Form.Item>
             </Row>
           }
