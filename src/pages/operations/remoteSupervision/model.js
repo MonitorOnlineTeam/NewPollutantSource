@@ -10,9 +10,13 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'remoteSupervision',
   state: {
-    faultFeedbackList:[],
     tableTotal:1,
     entList:[],
+    addDataConsistencyData:[
+      {par:'so2',}, {par:'so3',}, {par:'so4',}, {par:'so5',}, {par:'so6',}, {par:'so7',}, {par:'so8',}, {par:'so9',},
+      {par:'so9',}, {par:'so10',}, {par:'so11',}, {par:'so12',}, {par:'so13',}, {par:'so14',}, {par:'so15',}, {par:'so16',},
+      {par:'so17',}, {par:'so18',}, {par:'so19',},
+    ],
   },
   effects: {
    //列表

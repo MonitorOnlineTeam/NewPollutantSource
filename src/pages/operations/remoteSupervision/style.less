@@ -17,7 +17,10 @@
          }
      }
  }
- .modalSty  :global{
+ .modalSty {
+
+
+    .queryPar  :global{
     .ant-select,.ant-input,.ant-picker{
         width: 200px !important;
      }
@@ -25,7 +28,39 @@
         padding-bottom: 10px;
         padding-right: 10px;
        }
+    .ant-form-item-explain, .ant-form-item-extra{
+        position: absolute;
+        top: 30px;
+   }
+    }
+    .tabSty  :global{
+        .ant-form-item{
+            margin: 0;
+     }  
+     .ant-table.ant-table-middle .ant-table-title, .ant-table.ant-table-middle .ant-table-footer, .ant-table.ant-table-middle .ant-table-thead > tr > th, .ant-table.ant-table-middle .ant-table-tbody > tr > td, .ant-table.ant-table-middle tfoot > tr > th, .ant-table.ant-table-middle tfoot > tr > td {
+         padding: 20px 8px;
+     }
+      .ant-form-item-explain, .ant-form-item-extra{
+          font-size: 12px;
+          position: absolute;
+          top: 30px;
+     }
+     .ant-select,.ant-input,.ant-picker{
+        width: 80px;
+     }
+     .ant-tabs-content{
+        height: calc(100vh - 400px);
+        overflow: auto;
+    }
+    .ant-table-body{
+        overflow: auto !important;
+    }
+    .light{
+        background-color: #fff;
+    }
+    }
  }
+
  .remoteSupervisionDetailSty{
     :global{
         .ant-form-item{
