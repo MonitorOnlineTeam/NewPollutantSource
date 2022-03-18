@@ -986,8 +986,13 @@ export default {
               }, 
               {
                 path: '/operations/remoteSupervision', //远程督查
-                name: 'taskRecord',
+                name: 'remoteSupervision',
                 component: './operations/remoteSupervision',
+              },
+              {
+                path: '/operations/remoteSupervision/detail', //远程督查 详情
+                name: 'remoteSupervisionDetail',
+                component: './operations/remoteSupervision/detail',
               },
               {
                 path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',

@@ -12,13 +12,24 @@ export async function GetStationByRegion(params) {
 
   return result;
 }
+// //根据行政区获取 企业列表
+
+// export async function GetEntByRegion(params) {
+//   const result = post(
+//     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
+//     params.RegionCode,
+//     null,
+//     null,
+//   );
+
+//   return result;
+// }
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-    params.RegionCode,
-    null,
+    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion',
+    params,
     null,
   );
 

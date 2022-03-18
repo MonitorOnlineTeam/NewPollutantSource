@@ -4,15 +4,19 @@
  * 创建时间：2022.3.16
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Card,Row,Col,Button,Form   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
+
 
 import { RollbackOutlined } from '@ant-design/icons';
 
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import styles from "../style.less"
+import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
+import SdlTable from '@/components/SdlTable'
 
-
+const { Option } = Select;
+const { TabPane } = Tabs;
 
 const namespace = 'equipmentFeedback'
 
@@ -55,7 +59,7 @@ const Index = (props) => {
     <BreadcrumbWrapper>
     <Card title={
      <Row justify='space-between'>
-        <span>详情</span>
+        <span>查看信息</span>
         <Button onClick={() => {props.history.go(-1);   }} ><RollbackOutlined />返回</Button>
      </Row>
     }>
@@ -63,106 +67,68 @@ const Index = (props) => {
       name="detail"
     >
       <Row>
-        <Col span={12}>
-        <Form.Item label="省/市" >
-        {data.RegionName}
-      </Form.Item>
-      </Col>
-      <Col span={12}>
+      <Col span={6}>
         <Form.Item label="企业名称">
         {data.ParentName }
       </Form.Item>
       </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
+        <Col span={6}>
         <Form.Item label="监测点名称" >
         {data.PointName }
       </Form.Item>
       </Col>
-      <Col span={12}>
-      <Form.Item label="故障单元">
-      {data.FaultUnitName }
+      <Col span={6}>
+        <Form.Item label="核查月份" >
+        {data.RegionName}
+      </Form.Item>
+      </Col>
+      <Col span={6}>
+        <Form.Item label="核查结果" >
+        {data.RegionName}
       </Form.Item>
       </Col>
       </Row>
 
       <Row>
-        <Col span={12}>
-        <Form.Item label="故障时间">
+        <Col span={6}>
+        <Form.Item label="核查人">
         {data.FaultTime }
       </Form.Item>
       </Col>
-      <Col span={12}>
-      <Form.Item label="系统型号"  >
+      <Col span={6}>
+      <Form.Item label="核查时间"  >
         {data.MonitorPointEquipmentName  }
       </Form.Item>
       </Col>
       </Row>
-
-      <Row>
-        <Col span={12}>
-        <Form.Item label="主机名称型号"  >
-        {data.EquipmentName }
-      </Form.Item>
-      </Col>
-      <Col span={12}>
-      <Form.Item label="主机序列号" >
-      {data.EquipmentNumber }
-      </Form.Item>
-      </Col>
-      </Row>
-
-
-      <Row>
-        <Col span={12}>
-        <Form.Item label="主机生产厂商" >
-        {data.ManufacturerName  }
-      </Form.Item>
-      </Col>
-      <Col span={12}>
-      <Form.Item label="故障现象"  >
-      {data.FaultPhenomenon }
-      </Form.Item>
-      </Col>
-      </Row>
-
-      <Row align='middle'>
-        <Col span={12}>
-
-      <Form.Item label="原因分析"  >
-      {data.CauseAnalysis }
-      </Form.Item>
-      </Col>
-        <Col span={12}>
-        <Form.Item label="处理方法"  >
-        {data.ProcessingMethod }
-      </Form.Item>
-       </Col>
-      </Row>
-      <Row align='middle'>
-        <Col span={12}>
-
-      <Form.Item label="处理状态"  >
-      {data.IsSolve ==1?'已解决': "待解决"}
-      </Form.Item>
-      </Col>
-        <Col span={12}>
-        <Form.Item label="反馈人"  >
-        {data.CreatUserName }
-      </Form.Item>
-       </Col>
-      </Row>  
-
-      <Row align='middle'>
-        <Col span={12}>
-
-      <Form.Item label="反馈时间"  >
-      {data.CreatDateTime }
-      </Form.Item>
-      </Col>
-      </Row>  
     </Form>
+    <Tabs>
+    <TabPane tab="数据一致性核查表" key="1">
+              <SdlTable
+                // loading={this.props.exceptionDataLoading}
+                columns={[]}
+                dataSource={[]}
+                pagination={false}
+                scroll={{ y: '100vh' }}
+              />
+               <SdlTable
+                // loading={this.props.exceptionDataLoading}
+                columns={[]}
+                dataSource={[]}
+                pagination={false}
+                scroll={{ y: '100vh' }}
+              />
+            </TabPane>
+            <TabPane tab="参数一致性核查表" key="2">
+              <SdlTable
+                // loading={this.props.exceptionDataLoading}
+                columns={[]}
+                dataSource={[]}
+                pagination={false}
+                scroll={{ y: '100vh' }}
+              />
+            </TabPane>
+          </Tabs>
    </Card>
    </BreadcrumbWrapper>
         </div>
