@@ -197,7 +197,6 @@ export default Model.extend({
           align: 'center',
           render: (text, record) => {
             let showDetail = "";
-            debugger
             switch (historyparams.datatype) {
               case "month":
                 return moment(text).format("YYYY-MM");

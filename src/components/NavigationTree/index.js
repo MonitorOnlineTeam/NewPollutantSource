@@ -142,7 +142,7 @@ class NavigationTree extends Component {
   }
 
 
-  componentDidMount() {
+  initTree = () => {
     if (this.props.pointInfo) {
       this.props.dispatch({
         type: 'navigationtree/updateState',
@@ -179,11 +179,16 @@ class NavigationTree extends Component {
         RunState: state,
         PollutantTypes: this.state.PollutantTypes,
         isFilter: this.props.isMap,
+        ...this.props.payloadParams
       },
       callback: data => {
         this.loadCallback(data, true)
       },
     })
+  }
+
+  componentDidMount() {
+    this.initTree();
     // this.onChangeSearch(null)
 
     // panelDataList.splice(0, panelDataList.length)
@@ -249,6 +254,10 @@ class NavigationTree extends Component {
         this.tilingData(nextProps.EntAndPoint)
       }
       this.generateList(nextProps.EntAndPoint, nextProps.selKeys, nextProps.overAll)
+    }
+
+    if(JSON.stringify(this.props.payloadParams) !== JSON.stringify(nextProps.payloadParams)) {
+      this.initTree();
     }
   }
 
@@ -474,6 +483,7 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
+        ...this.props.payloadParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -581,7 +591,7 @@ class NavigationTree extends Component {
         Status: this.state.screenList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
-
+        ...this.props.payloadParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -672,6 +682,7 @@ class NavigationTree extends Component {
         Status: typeList,
         RunState: this.state.RunState,
         isFilter: this.props.isMap,
+        ...this.props.payloadParams
       },
       callback: data => {
         this.loadCallback(data)
@@ -879,6 +890,7 @@ class NavigationTree extends Component {
     console.log('overallselkeys=', this.props.overallselkeys)
     console.log('selectedKeys=', this.state.selectedKeys)
     console.log('expandedKeys=', this.state.expandedKeys)
+    console.log('payloadParams=', this.props.payloadParams)
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     const { configInfo } = this.props;
     // 渲染数据及企业排口图标和运行状态
@@ -1052,6 +1064,7 @@ class NavigationTree extends Component {
 // 如果传入的domId为空则默认使用以下id
 NavigationTree.defaultProps = {
   domId: '#contentWrapper',
+  payloadParams: {},
 }
 
 export default NavigationTree

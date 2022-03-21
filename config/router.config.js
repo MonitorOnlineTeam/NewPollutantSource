@@ -40,6 +40,12 @@ const routes = [
         path: '/summaryProject',
         component: './projectSummary/index',
       },
+      // 克里斯金差值图
+      {
+        name: 'krigingMap',
+        path: '/krigingMap',
+        component: './krigingMap/index',
+      },
       // appoperation
       {
         path: '/appoperation',
@@ -1098,7 +1104,7 @@ const routes = [
               }
             ],
           },
-         
+
           {
             name: 'dataquerymanager',
             path: '/dataquerymanager',
@@ -1333,7 +1339,7 @@ const routes = [
               // },
             ],
           },
-         
+
           {
             path: '/platformconfig',
             name: 'platformconfig',

@@ -30,8 +30,19 @@ class Index extends Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        console.log('this.props.location.query.device=',this.props.location.query.device);
+        if (this.props.location.query.device !== prevProps.location.query.device) {
+            this.setState({
+                loading: true
+            }, () => {
+                this.setState({ loading: false })
+            })
+        }
+    }
+
     render() {
-        const { dgimn, pointName, entName, title, Type } = this.state;
+        const { dgimn, pointName, entName, title, Type, loading } = this.state;
         return (
             <div id="dataquery">
                 <BreadcrumbWrapper titles={`【${title}】`}>
@@ -44,12 +55,14 @@ class Index extends Component {
                             : <PageLoading />
                     }
                 </BreadcrumbWrapper>
-                <NavigationTree runState='1' domId="#dataquery" choice={false} onItemClick={value => {
-                    if (value.length > 0 && !value[0].IsEnt) {
-                        console.log('value=', value)
-                        this.changeDgimn(value)
-                    }
-                }} />
+                {
+                    loading ? "" : <NavigationTree runState='1' domId="#dataquery" payloadParams={{ Col7: this.props.location.query.device }} choice={false} onItemClick={value => {
+                        if (value.length > 0 && !value[0].IsEnt) {
+                            console.log('value=', value)
+                            this.changeDgimn(value)
+                        }
+                    }} />
+                }
             </div>
         );
     }

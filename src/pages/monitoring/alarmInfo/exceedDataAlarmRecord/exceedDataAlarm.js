@@ -631,7 +631,7 @@ class index extends PureComponent {
         ]
         column.map(col => {
           let addColumns = {
-            title: col.PollutantName,
+            title: col.PollutantName + "报警次数",
             align: 'center',
             fixed: fixed,
             children: [
@@ -646,28 +646,28 @@ class index extends PureComponent {
                   return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
                 }
               },
-              {
-                title: "已核实报警次数",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: col.PollutantCode + '_respondedCount',
-                key: col.PollutantCode + '_respondedCount',
-                render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '1', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
-                }
-              },
-              {
-                title: "待核实报警次数",
-                width: 100,
-                align: 'center',
-                fixed: fixed,
-                dataIndex: col.PollutantCode + '_noRespondedCount',
-                key: col.PollutantCode + '_noRespondedCount',
-                render: (text, record) => {
-                  return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '0', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
-                }
-              },
+              // {
+              //   title: "已核实报警次数",
+              //   width: 100,
+              //   align: 'center',
+              //   fixed: fixed,
+              //   dataIndex: col.PollutantCode + '_respondedCount',
+              //   key: col.PollutantCode + '_respondedCount',
+              //   render: (text, record) => {
+              //     return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '1', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
+              //   }
+              // },
+              // {
+              //   title: "待核实报警次数",
+              //   width: 100,
+              //   align: 'center',
+              //   fixed: fixed,
+              //   dataIndex: col.PollutantCode + '_noRespondedCount',
+              //   key: col.PollutantCode + '_noRespondedCount',
+              //   render: (text, record) => {
+              //     return <a onClick={this.EntAlarmHandle.bind(this, record.regionCode, record.entCode, '0', col.PollutantCode, record.entName, record.pointName, record.DGIMN)}>{text}</a>
+              //   }
+              // },
             ]
           }
           columns.push(addColumns)
@@ -824,28 +824,28 @@ class index extends PureComponent {
               return <a onClick={this.AlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
             }
           },
-          {
-            title: "已核实报警次数",
-            width: 100,
-            align: 'center',
-            fixed: fixed,
-            dataIndex: col.PollutantCode + '_respondedCount',
-            key: col.PollutantCode + '_respondedCount',
-            render: (text, record) => {
-              return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
-            }
-          },
-          {
-            title: "待核实报警次数",
-            width: 100,
-            align: 'center',
-            fixed: fixed,
-            dataIndex: col.PollutantCode + '_noRespondedCount',
-            key: col.PollutantCode + '_noRespondedCount',
-            render: (text, record) => {
-              return <a onClick={this.StayAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
-            }
-          },
+          // {
+          //   title: "已核实报警次数",
+          //   width: 100,
+          //   align: 'center',
+          //   fixed: fixed,
+          //   dataIndex: col.PollutantCode + '_respondedCount',
+          //   key: col.PollutantCode + '_respondedCount',
+          //   render: (text, record) => {
+          //     return <a onClick={this.AlreadyAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
+          //   }
+          // },
+          // {
+          //   title: "待核实报警次数",
+          //   width: 100,
+          //   align: 'center',
+          //   fixed: fixed,
+          //   dataIndex: col.PollutantCode + '_noRespondedCount',
+          //   key: col.PollutantCode + '_noRespondedCount',
+          //   render: (text, record) => {
+          //     return <a onClick={this.StayAlarmNumHandle.bind(this, record.regionCode, col.PollutantCode, record.regionName, record.DGIMN)}>{text}</a>
+          //   }
+          // },
         ]
       }
       columns.push(addColumns)
