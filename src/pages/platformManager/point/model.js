@@ -11,6 +11,7 @@ export default Model.extend({
     factorySelectList: [],
     methodSelectList: [],
     monitorItem: "",
+    unitInfoList: [],
   },
 
   effects: {
@@ -106,6 +107,42 @@ export default Model.extend({
             DGIMN: payload.DGIMN
           }
         })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 获取机组列表
+    *getUnitList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getUnitList, payload);
+      if (result.IsSuccess) {
+        yield update({ unitInfoList: result.Datas })
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 添加机组
+    *AddCrewInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.AddCrewInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 删除机组
+    *DeleteCrewInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.DeleteCrewInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback();
+      } else {
+        message.error(result.Message);
+      }
+    },
+    // 修改机组
+    *UpdateCrewInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.UpdateCrewInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback();
       } else {
         message.error(result.Message);
       }

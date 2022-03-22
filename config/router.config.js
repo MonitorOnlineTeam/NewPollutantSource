@@ -172,8 +172,8 @@ const routes = [
             path: '/home',
             component: './newHome',
           },
-           // 空气质量分析
-           {
+          // 空气质量分析
+          {
             path: '/airQualityAnalysis',
             name: 'airQualityAnalysis',
             routes: [
@@ -212,18 +212,18 @@ const routes = [
               },
             ]
           },
-           // 目标考核台账
-           {
+          // 目标考核台账
+          {
             name: 'monitorTest',
             path: '/monitorTest',
             component: './monitorTest',
           },
-            // 污染玫瑰
-            {
-              name: 'polRose',
-              path: '/polRose/:type',
-              component: './polRose',
-            },
+          // 污染玫瑰
+          {
+            name: 'polRose',
+            path: '/polRose/:type',
+            component: './polRose',
+          },
           // 应急
           {
             path: '/emergency',
@@ -501,6 +501,11 @@ const routes = [
                 name: 'addEditEquipment',
                 path: '/platformconfig/equipmentManage/:DGIMN/:id',
                 component: './platformManager/equipmentManage/AddEditEquipmentPage',
+              },
+              {
+                name: 'UnitInfoPage',
+                path: '/platformconfig/monitortarget/AEnterpriseTest/1/unitInfoPage/:entCode/:entName',
+                component: './platformManager/point/UnitInfoPage',
               },
               {
                 name: 'monitortarget',

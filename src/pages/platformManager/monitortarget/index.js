@@ -5,7 +5,7 @@
  * @Date: 2019年7月29日15:11:59
  */
 import React, { Component, Fragment } from 'react';
-import { CalendarTwoTone, QrcodeOutlined } from '@ant-design/icons';
+import { CalendarTwoTone, QrcodeOutlined, DatabaseOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -53,7 +53,8 @@ const { confirm } = Modal;
 export default class MonitorTarget extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+        };
     }
 
     componentDidMount() {
@@ -291,7 +292,12 @@ export default class MonitorTarget extends Component {
                                     this.CreatQRCode(row);
                                 }}><QrcodeOutlined /></a>
                             </Tooltip>
-
+                            <Divider type="vertical" />
+                            <Tooltip title="机组信息">
+                                <a onClick={() => {
+                                    router.push('/platformconfig/monitortarget/AEnterpriseTest/1/unitInfoPage/' + row['dbo.T_Bas_Enterprise.EntCode'] + '/' + row['dbo.T_Bas_Enterprise.EntName'])
+                                }}><DatabaseOutlined /></a>
+                            </Tooltip>
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"
                         {...this.props}

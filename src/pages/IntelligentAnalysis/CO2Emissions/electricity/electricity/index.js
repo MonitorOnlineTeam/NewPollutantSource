@@ -16,7 +16,7 @@ const industry = INDUSTRYS.electricity;
 const SumType = SUMTYPE.electricity["电力"]
 const { Option } = Select;
 const CONFIG_ID = 'CO2PowerDischarge';
-const SELECT_LIST = [{ "key": 1, "value": "外购电力" }]
+const SELECT_LIST = [{ "key": '1', "value": "外购电力" }]
 const layout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -29,6 +29,7 @@ const layout = {
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
   cementTableCO2Sum: CO2Emissions.cementTableCO2Sum,
+  unitInfoList: CO2Emissions.unitInfoList,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -49,7 +50,7 @@ class index extends PureComponent {
   // 判断是否可添加
   checkIsAdd = () => {
     this.formRef.current.validateFields().then((values) => {
-      let { EntCode, MonitorTime, PowerDischargeType } = values;
+      let { EntCode, MonitorTime, PowerDischargeType, CrewCode } = values;
       const { KEY, rowTime, rowType } = this.state;
       let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
       // 编辑时判断时间是否更改
@@ -63,7 +64,8 @@ class index extends PureComponent {
           EntCode: EntCode,
           MonitorTime: _MonitorTime,
           SumType: SumType,
-          TypeCode: PowerDischargeType
+          TypeCode: PowerDischargeType,
+          CrewCode: CrewCode,
         },
         callback: (res) => {
           if (res === true) {
@@ -166,14 +168,43 @@ class index extends PureComponent {
         this.setState({
           editData: res,
           isModalVisible: true,
+        }, () => {
+          this.getCO2EnergyType()
         })
+      }
+    })
+  }
+
+  // 根据企业获取机组
+  getCO2EnergyType = () => {
+    let values = this.formRef.current.getFieldsValue();
+    const { EntCode, MonitorTime } = values;
+    this.getUnitList(EntCode)
+  }
+
+  // 获取机组信息
+  getUnitList = (entCode) => {
+    this.props.dispatch({
+      type: 'CO2Emissions/getUnitList',
+      payload: {
+        EntCode: entCode
+      }
+    })
+  }
+
+  // 重置机组
+  resetUnitInfoList = () => {
+    this.props.dispatch({
+      type: 'CO2Emissions/updateState',
+      payload: {
+        unitInfoList: [],
       }
     })
   }
 
   render() {
     const { isModalVisible, editData, FileUuid } = this.state;
-    const { tableInfo, cementTableCO2Sum } = this.props;
+    const { tableInfo, cementTableCO2Sum, unitInfoList } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
     let count = _.sumBy(dataSource, 'dbo.T_Bas_CO2PowerDischarge.tCO2');
@@ -191,6 +222,7 @@ class index extends PureComponent {
                 KEY: undefined,
                 FileUuid: undefined,
               })
+              this.resetUnitInfoList();
             }}
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2PowerDischarge.AttachmentID')
@@ -216,6 +248,7 @@ class index extends PureComponent {
               ...editData,
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
+              CrewCode: editData['dbo.T_Bas_CO2PowerDischarge.CrewCode'],
             }}
           >
             <Row>
@@ -225,7 +258,7 @@ class index extends PureComponent {
                   label="企业"
                   rules={[{ required: true, message: '请选择企业!' }]}
                 >
-                  <Select placeholder="请选择企业">
+                  <Select placeholder="请选择企业" onChange={this.getCO2EnergyType}>
                     {
                       EntView.map(item => {
                         return <Option value={item["dbo.EntView.EntCode"]} key={item["dbo.EntView.EntCode"]}>{item["dbo.EntView.EntName"]}</Option>
@@ -267,6 +300,21 @@ class index extends PureComponent {
                   <InputNumber style={{ width: '100%' }} min={0} placeholder="请填写活动数据"
                     onChange={Debounce(() => this.countEmissions(), maxWait)}
                   />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="CrewCode"
+                  label="机组"
+                  rules={[{ required: true, message: '请选择机组!' }]}
+                >
+                  <Select placeholder="请选择机组">
+                    {
+                      unitInfoList.map(item => {
+                        return <Option value={item.CrewCode} key={item.CrewCode}>{item.CrewName}</Option>
+                      })
+                    }
+                  </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>

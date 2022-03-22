@@ -31,6 +31,7 @@ const layout = {
   configIdList: autoForm.configIdList,
   Dictionaries: CO2Emissions.Dictionaries,
   cementTableCO2Sum: CO2Emissions.cementTableCO2Sum,
+  unitInfoList: CO2Emissions.unitInfoList,
 }))
 class index extends PureComponent {
   constructor(props) {
@@ -53,7 +54,7 @@ class index extends PureComponent {
   // 判断是否可添加
   checkIsAdd = () => {
     this.formRef.current.validateFields().then((values) => {
-      let { EntCode, MonitorTime, DesulfurizerType } = values;
+      let { EntCode, MonitorTime, DesulfurizerType, CrewCode } = values;
       const { KEY, rowTime, rowType } = this.state;
       let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
       // 编辑时判断时间是否更改
@@ -67,7 +68,8 @@ class index extends PureComponent {
           EntCode: EntCode,
           MonitorTime: _MonitorTime,
           SumType: SumType,
-          TypeCode: DesulfurizerType
+          TypeCode: DesulfurizerType,
+          CrewCode: CrewCode
         },
         callback: (res) => {
           if (res === true) {
@@ -90,6 +92,16 @@ class index extends PureComponent {
     });
   }
 
+  // 获取机组信息
+  getUnitList = (entCode) => {
+    this.props.dispatch({
+      type: 'CO2Emissions/getUnitList',
+      payload: {
+        EntCode: entCode
+      }
+    })
+  }
+
   // 根据企业和时间获取种类
   getCO2EnergyType = (formEidt) => {
     let values = this.formRef.current.getFieldsValue();
@@ -103,6 +115,7 @@ class index extends PureComponent {
         Time: moment(MonitorTime).format("YYYY-MM-01 00:00:00"),
       },
     })
+    this.getUnitList(EntCode)
     // !formEidt && this.countEmissions();
   }
 
@@ -214,9 +227,19 @@ class index extends PureComponent {
     })
   }
 
+  // 重置机组
+  resetUnitInfoList = () => {
+    this.props.dispatch({
+      type: 'CO2Emissions/updateState',
+      payload: {
+        unitInfoList: [],
+      }
+    })
+  }
+
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, totalVisible, typeUnit, editTotalData } = this.state;
-    const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
+    const { tableInfo, Dictionaries, cementTableCO2Sum, unitInfoList } = this.props;
     const { EntView = [] } = this.props.configIdList;
 
     const TYPES = Dictionaries.two || [];
@@ -238,6 +261,7 @@ class index extends PureComponent {
                 FileUuid: undefined,
                 FileUuid2: undefined,
               })
+              this.resetUnitInfoList();
             }}
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2Desulphurization.AttachmentID')
@@ -266,6 +290,8 @@ class index extends PureComponent {
               MonitorTime: moment(editData.MonitorTime),
               EntCode: editData['dbo.EntView.EntCode'],
               GetType: editData.GetType,
+              CrewCode: editData['dbo.T_Bas_CO2Desulphurization.CrewCode'],
+              DesulfurizerType: editData['dbo.T_Bas_CO2Desulphurization.DesulfurizerType'],
             }}
           >
             <Row>
@@ -310,6 +336,21 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
+                  name="CrewCode"
+                  label="机组"
+                  rules={[{ required: true, message: '请选择机组!' }]}
+                >
+                  <Select placeholder="请选择机组">
+                    {
+                      unitInfoList.map(item => {
+                        return <Option value={item.CrewCode} key={item.CrewCode}>{item.CrewName}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
                   name="CarbonateConsumption"
                   label={<p>脱硫剂中碳酸盐消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写脱硫剂中碳酸盐消耗量!' }]}
@@ -319,7 +360,20 @@ class index extends PureComponent {
                   />
                 </Form.Item>
               </Col>
+
               <Col span={12}>
+                <Form.Item
+                  // labelCol={{ span: 5 }}
+                  // wrapperCol={{ span: 7 }}
+                  name="DevAttachmentID"
+                  label="证明材料"
+                >
+                  <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
+                    this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
+                  }} />
+                </Form.Item>
+              </Col>
+              {/* <Col span={12}>
                 <Form.Item
                   name="GetType"
                   label="获取方式"
@@ -333,19 +387,7 @@ class index extends PureComponent {
                     }
                   </Select>
                 </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  // labelCol={{ span: 5 }}
-                  // wrapperCol={{ span: 7 }}
-                  name="DevAttachmentID"
-                  label="证明材料"
-                >
-                  <FileUpload fileUUID={FileUuid2} uploadSuccess={(fileUUID) => {
-                    this.formRef.current.setFieldsValue({ DevAttachmentID: fileUUID })
-                  }} />
-                </Form.Item>
-              </Col>
+              </Col> */}
               <Col span={12}>
                 <Form.Item
                   name="CarbonateEmission"

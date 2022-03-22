@@ -9,6 +9,7 @@ export default Model.extend({
     cementCO2Sum: [],
     cementTableCO2Sum: 0,
     steelCO2Sum: [],
+    unitInfoList: [],
   },
   effects: {
     // 获取缺省值码表
@@ -102,6 +103,15 @@ export default Model.extend({
         callback && callback(response.Datas)
       } else {
         message.error(response.Message)
+      }
+    },
+    // 获取机组列表
+    *getUnitList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.getUnitList, payload);
+      if (result.IsSuccess) {
+        yield update({ unitInfoList: result.Datas })
+      } else {
+        message.error(result.Message);
       }
     },
   },

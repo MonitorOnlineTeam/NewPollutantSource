@@ -53,3 +53,9 @@ export async function calUnceratianData(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/CalUnceratianData', params);
   return result;
 }
+
+// 获取机组列表数据
+export async function getUnitList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCrewInfo', params);
+  return result;
+}

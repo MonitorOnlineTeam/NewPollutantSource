@@ -54,4 +54,26 @@ export async function deleteInstrument(params) {
   return result;
 }
 
+// 获取机组列表数据
+export async function getUnitList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCrewInfo', params);
+  return result;
+}
 
+// 添加机组
+export async function AddCrewInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddCrewInfo', params);
+  return result;
+}
+
+// 删除机组
+export async function DeleteCrewInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteCrewInfo', params);
+  return result;
+}
+
+// 修改机组
+export async function UpdateCrewInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdateCrewInfo', params);
+  return result;
+}

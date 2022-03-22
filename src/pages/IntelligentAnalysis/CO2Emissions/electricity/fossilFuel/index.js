@@ -30,6 +30,7 @@ const layout = {
   tableInfo: autoForm.tableInfo,
   configIdList: autoForm.configIdList,
   Dictionaries: CO2Emissions.Dictionaries,
+  unitInfoList: CO2Emissions.unitInfoList,
   cementTableCO2Sum: CO2Emissions.cementTableCO2Sum,
 }))
 class index extends PureComponent {
@@ -61,7 +62,7 @@ class index extends PureComponent {
   // 判断是否可添加
   checkIsAdd = () => {
     this.formRef.current.validateFields().then((values) => {
-      let { EntCode, MonitorTime, FossilType } = values;
+      let { EntCode, MonitorTime, FossilType, CrewCode } = values;
       const { KEY, rowTime, rowType } = this.state;
       let _MonitorTime = MonitorTime.format("YYYY-MM-01 00:00:00");
       // 编辑时判断时间是否更改
@@ -75,7 +76,8 @@ class index extends PureComponent {
           EntCode: EntCode,
           MonitorTime: _MonitorTime,
           SumType: SumType,
-          TypeCode: FossilType
+          TypeCode: FossilType,
+          CrewCode: CrewCode
         },
         callback: (res) => {
           if (res === true) {
@@ -98,6 +100,16 @@ class index extends PureComponent {
     });
   }
 
+  // 获取机组信息
+  getUnitList = (entCode) => {
+    this.props.dispatch({
+      type: 'CO2Emissions/getUnitList',
+      payload: {
+        EntCode: entCode
+      }
+    })
+  }
+
   // 根据企业和时间获取种类
   getCO2EnergyType = (formEidt) => {
     let values = this.formRef.current.getFieldsValue();
@@ -110,6 +122,7 @@ class index extends PureComponent {
         Time: moment(MonitorTime).format("YYYY-MM-01 00:00:00"),
       },
     })
+    this.getUnitList(EntCode)
     !formEidt && this.countEmissions();
   }
 
@@ -298,6 +311,15 @@ class index extends PureComponent {
     })
   }
 
+  // 重置机组
+  resetUnitInfoList = () => {
+    this.props.dispatch({
+      type: 'CO2Emissions/updateState',
+      payload: {
+        unitInfoList: [],
+      }
+    })
+  }
 
   getFloat = function (num, n) {
     n = n ? parseInt(n) : 0;
@@ -311,7 +333,7 @@ class index extends PureComponent {
 
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, disabled1, disabled2, disabled3, currentTypeData, typeUnit, totalVisible, KEY, editTotalData } = this.state;
-    const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
+    const { tableInfo, Dictionaries, cementTableCO2Sum, unitInfoList } = this.props;
 
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
@@ -339,6 +361,7 @@ class index extends PureComponent {
                 FileUuid: undefined,
                 FileUuid2: undefined,
               })
+              this.resetUnitInfoList();
             }}
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CO2FossilFuel.AttachmentID')
@@ -371,6 +394,7 @@ class index extends PureComponent {
               GetType: editData.GetType,
               EntCode: editData['dbo.EntView.EntCode'],
               FossilType: editData['dbo.T_Bas_CO2FossilFuel.FossilType'] ? editData['dbo.T_Bas_CO2FossilFuel.FossilType'] + '' : undefined,
+              CrewCode: editData['dbo.T_Bas_CO2FossilFuel.CrewCode'],
             }}
           >
             <Row>
@@ -415,6 +439,21 @@ class index extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item
+                  name="CrewCode"
+                  label="机组"
+                  rules={[{ required: true, message: '请选择机组!' }]}
+                >
+                  <Select placeholder="请选择机组">
+                    {
+                      unitInfoList.map(item => {
+                        return <Option value={item.CrewCode} key={item.CrewCode}>{item.CrewName}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
                   name="AnnualConsumption"
                   label={<p>消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写消耗量!' }]}
@@ -422,21 +461,7 @@ class index extends PureComponent {
                   <InputNumber style={{ width: '100%' }} placeholder="消耗量" onChange={this.countEmissions} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="GetType"
-                  label="获取方式"
-                  rules={[{ required: true, message: '请选择获取方式!' }]}
-                >
-                  <Select placeholder="请选择获取方式">
-                    {
-                      GET_SELECT_LIST.map(item => {
-                        return <Option value={item.key} key={item.key}>{item.value}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
+
               <Col span={12}>
                 <Form.Item
                   name="DevAttachmentID"
@@ -643,6 +668,21 @@ class index extends PureComponent {
                     title="碳氧化率计算">
                     <Button style={{ position: 'absolute', top: 0, right: 0 }} type="primary">计算</Button>
                   </Popover>}
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="GetType"
+                  label="获取方式"
+                  rules={[{ required: true, message: '请选择获取方式!' }]}
+                >
+                  <Select placeholder="请选择获取方式">
+                    {
+                      GET_SELECT_LIST.map(item => {
+                        return <Option value={item.key} key={item.key}>{item.value}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
