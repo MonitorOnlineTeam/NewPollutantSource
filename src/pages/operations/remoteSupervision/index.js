@@ -97,15 +97,59 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
-  const [form2] = Form.useForm(); //添加编辑表单
+  const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
+  const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
+
   const [showType, setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, tableTotal } = props;
+  const { tableDatas, tableLoading, exportLoading, clientHeight, type, time, tableTotal, addDataConsistencyData, } = props;
+  const [rangReq, setRangReq] = useState({})
+  const [remark, setRemark] = useState({})
+  const [indicaValReq, setIndicaValReq] = useState({}) //示值
+  const [remark2, setRemark2] = useState({})
 
+  const [setValReq, setSetValReq] = useState({})
+  const [traceValReq, setTraceValReq] = useState({})
+  const [remark3, setRemark3] = useState({})
 
   useEffect(() => {
     onFinish(pageIndex, pageSize);
     props.getFaultFeedbackEntPoint({})
+    if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断量程 是否 是否必填的
+      let analysisParRangObj = {}, parRemarkObj = {};
+      let indicaValReqObj = {}, parRemark2Obj = {};
+
+      addDataConsistencyData.map((item, index) => {
+        analysisParRangObj[`${item.par}RangFlag`] = true; //量程 量程一致性
+        parRemarkObj[`${item.par}RemarkFlag`] = false;
+
+        indicaValReqObj[`${item.par}IndicaValFlag`] = true;//示值 实时数据一致性
+        parRemark2Obj[`${item.par}Remark2Flag`] = false;
+      })
+      setRangReq(analysisParRangObj)
+      setRemark(parRemarkObj)
+
+      setIndicaValReq(indicaValReqObj)
+      setRemark2(parRemark2Obj)
+    }
+
+
+  
+    if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断设定值 溯源值是否必填的 参数一致性核查表参数一致性核查表
+      let setValObj = {}, traceValObj = {}, parRemark3Obj = {};
+
+      addParconsistencyData.map((item, index) => {
+        setValObj[`${item.par}SetValFalg`] = true;
+        traceValObj[`${item.par}TraceValFlag`] = true;
+        parRemark3Obj[`${item.par}Remark3Flag`] = false;
+      })
+      setSetValReq(setValObj)
+      setTraceValReq(traceValObj)
+      setRemark3(parRemark3Obj)
+
+    }
+
+
   }, []);
 
 
@@ -122,6 +166,10 @@ const Index = (props) => {
 
   };
   const [ID, setID] = useState()
+
+
+
+
   const columns = [
     {
       title: '省/市',
@@ -239,16 +287,30 @@ const Index = (props) => {
     setIsDisPlayCheck3(false)
     setIsDisPlayCheck4(false)
 
-    
+
   }
-  const save = () => {
-    props.updateFaultFeedbackIsSolve({
-      ID: ID,
-      IsSolve: IsSolve
-    }, () => {
-      setVisible(false)
-      onFinish(pageIndex, pageSize)
-    })
+  const save = async () => {
+    // props.updateFaultFeedbackIsSolve({
+    //   ID: ID,
+    // }, () => {
+    //   setVisible(false)
+    //   onFinish(pageIndex, pageSize)
+    // })
+    try {
+      const values = await form2.validateFields();
+      // props.getFaultFeedbackList({
+      //   ...values,
+      //   time: undefined,
+      //   FaultBTime: values.Time ? moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss") : undefined,
+      //   FaultETime: values.Time ? moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss") : undefined,
+      //   pageIndex: pageIndex,
+      //   pageSize: pageSize,
+      // })
+
+
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
   }
   const changeEnt = (val) => {
   }
@@ -256,9 +318,12 @@ const Index = (props) => {
   const [pointList, setPointList] = useState([])
   const [pointLoading, setPointLoading] = useState(false)
 
+
+
+
   const onValuesChange = (hangedValues, allValues) => {
     if (Object.keys(hangedValues).join() == 'EntCode') {
-      if(!hangedValues.EntCode){ //清空时 不走请求
+      if (!hangedValues.EntCode) { //清空时 不走请求
         form.setFieldsValue({ DGIMN: undefined })
         setPointList([])
         return;
@@ -276,7 +341,7 @@ const Index = (props) => {
   const [pointLoading2, setPointLoading2] = useState(false)
   const onValuesChange2 = (hangedValues, allValues) => { //添加 编辑
     if (Object.keys(hangedValues).join() == 'EntCode') {
-      if(!hangedValues.EntCode){//清空时 
+      if (!hangedValues.EntCode) {//清空时 
         form2.setFieldsValue({ DGIMN: undefined })
         setPointList2([])
         return;
@@ -306,14 +371,16 @@ const Index = (props) => {
     onFinish(PageIndex, PageSize)
   }
 
+  const [tabType, setTabType] = useState(1)
   const tabsChange = (key) => {
-
+    setTabType(key)
   }
 
   const { entList, entLoading } = props;
   const [dasChecked, setDasChecked] = useState(false)
   const onDasChange = (e) => { //DAS量程
     setDasChecked(e.target.checked)
+    console.log(e.target.checked)
   }
 
   const [numChecked, setNumChecked] = useState(false)
@@ -368,9 +435,9 @@ const Index = (props) => {
     { label: '否', value: "1" },
     { label: '不适用', value: "2" },
   ])
-  const onManualChange = (val, name, index) => { //手工修正结果
+  const onManualChange = (val, row, index, type) => { //手工修正结果
 
-    const ele = document.getElementById(`advanced_search_rangCheck${index}`)
+    const ele = type == 1 ? document.getElementById(`advanced_search_rangCheck${index}`) : type == 2 ? document.getElementById(`advanced_search_rangCheck2${index}`) : document.getElementById(`advanced_search_rangCheck3${index}`)
     for (var i = 0; i < ele.childNodes.length; i++) {
       if (val.toString() != i) {
         // ele.childNodes[i].setAttribute('class','ant-checkbox-wrapper ant-checkbox-wrapper-disabled ant-checkbox-group-item') //设置禁用样式
@@ -380,53 +447,78 @@ const Index = (props) => {
         ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
       }
     }
+
+    switch (type) {
+      case 1: // 量程一致性核查表
+        if (val[0] == 2) { //不适用 量程 可不填
+          setRangReq({ ...rangReq, [`${row.par}RangFlag`]: false })
+          setRemark({ ...remark, [`${row.par}RemarkFlag`]: true })
+          // setTimeout(()=>{
+          //   form2.validateFields([`${row.par}Rang`]);
+          // })
+        } else {
+          setRangReq({ ...rangReq, [`${row.par}RangFlag`]: true })
+          setRemark({ ...remark, [`${row.par}RemarkFlag`]: false })
+        }
+        break;
+      case 2: // 实时一致性核查表
+        if (val[0] == 2) { //不适用 示值 可不填
+          setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: false })
+          setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: true })
+        } else {
+          setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: true })
+          setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: false })
+        }
+
+    }
+
   }
-  const isJudge=(row)=>{
+  const isJudge = (row) => {
     console.log(row.par)
   }
   //颗粒物 有无显示屏
- const [isDisPlayCheck1,setIsDisPlayCheck1] = useState(false)
- const [isDisPlayCheck2,setIsDisPlayCheck2] = useState(false)
- const isDisplayChange=(e,name)=>{
-  const displayEle1 = document.getElementById(`advanced_search_isDisplay1`);
-  const displayEle2 = document.getElementById(`advanced_search_isDisplay2`);
-  if(name==='isDisplay1'){
-    setIsDisPlayCheck1(e.target.checked)
-    displayEle2.setAttribute("disabled", true)
+  const [isDisPlayCheck1, setIsDisPlayCheck1] = useState(false)
+  const [isDisPlayCheck2, setIsDisPlayCheck2] = useState(false)
+  const isDisplayChange = (e, name) => {
+    const displayEle1 = document.getElementById(`advanced_search_isDisplay1`);
+    const displayEle2 = document.getElementById(`advanced_search_isDisplay2`);
+    if (name === 'isDisplay1') {
+      setIsDisPlayCheck1(e.target.checked)
+      displayEle2.setAttribute("disabled", true)
+    }
+    if (name === 'isDisplay2') {
+      setIsDisPlayCheck2(e.target.checked)
+      displayEle1.setAttribute("disabled", true)
+    }
+    if (!e.target.checked) { //取消选中状态
+      setIsDisPlayCheck1(e.target.checked)
+      setIsDisPlayCheck2(e.target.checked)
+      displayEle1.removeAttribute("disabled")
+      displayEle2.removeAttribute("disabled")
+    }
   }
-  if(name==='isDisplay2'){
-    setIsDisPlayCheck2(e.target.checked)
-    displayEle1.setAttribute("disabled", true)
-  }
-  if(!e.target.checked){ //取消选中状态
-    setIsDisPlayCheck1(e.target.checked)
-    setIsDisPlayCheck2(e.target.checked)
-    displayEle1.removeAttribute("disabled") 
-    displayEle2.removeAttribute("disabled")
-  }
- }
 
-   //流速 有无显示屏
-   const [isDisPlayCheck3,setIsDisPlayCheck3] = useState(false)
-   const [isDisPlayCheck4,setIsDisPlayCheck4] = useState(false)
-   const isDisplayChange2 =(e,name)=>{
+  //流速 有无显示屏
+  const [isDisPlayCheck3, setIsDisPlayCheck3] = useState(false)
+  const [isDisPlayCheck4, setIsDisPlayCheck4] = useState(false)
+  const isDisplayChange2 = (e, name) => {
     const displayEle3 = document.getElementById(`advanced_search_isDisplay3`);
     const displayEle4 = document.getElementById(`advanced_search_isDisplay4`);
-    if(name==='isDisplay3'){
+    if (name === 'isDisplay3') {
       setIsDisPlayCheck3(e.target.checked)
       displayEle4.setAttribute("disabled", true)
     }
-    if(name==='isDisplay4'){
+    if (name === 'isDisplay4') {
       setIsDisPlayCheck4(e.target.checked)
       displayEle3.setAttribute("disabled", true)
     }
-    if(!e.target.checked){ //取消选中状态
+    if (!e.target.checked) { //取消选中状态
       setIsDisPlayCheck3(e.target.checked)
       setIsDisPlayCheck4(e.target.checked)
-      displayEle3.removeAttribute("disabled") 
+      displayEle3.removeAttribute("disabled")
       displayEle4.removeAttribute("disabled")
     }
-   }
+  }
   const columns2 = [
     {
       title: '序号',
@@ -447,10 +539,10 @@ const Index = (props) => {
           children: text,
           props: {},
         };
-        if (text=='颗粒物'&&record.isDisplay==1 || text=='流速'&&record.isDisplay==3) {
+        if (text == '颗粒物' && record.isDisplay == 1 || text == '流速' && record.isDisplay == 3) {
           obj.props.rowSpan = 2;
         }
-        if (text=='颗粒物'&&record.isDisplay==2  || text=='流速'&&record.isDisplay==4) {
+        if (text == '颗粒物' && record.isDisplay == 2 || text == '流速' && record.isDisplay == 4) {
           obj.props.rowSpan = 0;
         }
         return obj;
@@ -470,25 +562,25 @@ const Index = (props) => {
               case 1:
                 return <Row align='middle' justify='center'>
                   <Form.Item name='isDisplay1'>
-                    <Checkbox  onChange={(e)=>{isDisplayChange(e,'isDisplay1')}}>有显示屏</Checkbox>
+                    <Checkbox onChange={(e) => { isDisplayChange(e, 'isDisplay1') }}>有显示屏</Checkbox>
                   </Form.Item></Row>
                 break;
               case 2:
                 return <Row align='middle' justify='center'>
-                  <Form.Item  name='isDisplay2'>
-                  <Checkbox onChange={(e)=>{isDisplayChange(e,'isDisplay2')}}>无显示屏</Checkbox>
+                  <Form.Item name='isDisplay2'>
+                    <Checkbox onChange={(e) => { isDisplayChange(e, 'isDisplay2') }}>无显示屏</Checkbox>
                   </Form.Item> <NumTips style={{ top: 'auto', right: 12 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
                 break;
               case 3:
                 return <Row align='middle' style={{ paddingLeft: 12 }}>
                   <Form.Item name='isDisplay3' rules={[{ required: false, message: '请选择' }]}>
-                    <Checkbox  onChange={(e)=>{isDisplayChange2(e,'isDisplay3')}}>差压法</Checkbox>
+                    <Checkbox onChange={(e) => { isDisplayChange2(e, 'isDisplay3') }}>差压法</Checkbox>
                   </Form.Item></Row>
                 break;
               case 4:
                 return <Row align='middle' style={{ paddingLeft: 12 }}>
                   <Form.Item name='isDisplay4' rules={[{ required: false, message: '请选择' }]}>
-                    <Checkbox  onChange={(e)=>{isDisplayChange2(e,'isDisplay4')}}>只测流速法</Checkbox>
+                    <Checkbox onChange={(e) => { isDisplayChange2(e, 'isDisplay4') }}>只测流速法</Checkbox>
                   </Form.Item></Row>
                 break;
               default:
@@ -506,33 +598,33 @@ const Index = (props) => {
           key: 'age',
           width: 300,
           render: (text, record) => {
-            if(record.par==='NOx'||record.par==='标杆流量'){
+            if (record.par === 'NOx' || record.par === '标杆流量') {
               return '—'
-            }else{
-              let disabledFlag  = false;
-              switch(record.isDisplay){
+            } else {
+              let disabledFlag = false;
+              switch (record.isDisplay) {
                 case 1: case 2:
-                disabledFlag = record.isDisplay==1&&!isDisPlayCheck1 || record.isDisplay==2&&!isDisPlayCheck2? true : false 
-                 break;
-                 case 3: case 4:
-                disabledFlag = record.isDisplay==3&&!isDisPlayCheck3 || record.isDisplay==4&&!isDisPlayCheck4? true : false 
-                   break;
+                  disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                  break;
+                case 3: case 4:
+                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                  break;
               }
-            return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最小值'  disabled={disabledFlag} onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-              <span style={{ padding: '0 2px' }}> - </span>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最大值' disabled={disabledFlag}  onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: true, message: '请选择' }]}>
-                <Select placeholder='单位列表' disabled={disabledFlag} onBlur={()=>{isJudge(record)}}>
-                </Select>
-              </Form.Item>
-            </Row>
+              return <Row justify='center' align='middle'>
+                <Form.Item name={`${record.par}AnalyzerRang1`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <Input placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+                <span style={{ padding: '0 2px' }}> - </span>
+                <Form.Item name='EntCode' rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <Input placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+                <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                  <Select placeholder='单位列表' disabled={disabledFlag} onBlur={() => { isJudge(record) }}>
+                  </Select>
+                </Form.Item>
+              </Row>
+            }
           }
-        }
         },
         {
           title: <Row align='middle' justify='center'> <Checkbox checked={dasChecked} onChange={onDasChange}>DAS量程</Checkbox></Row>,
@@ -541,34 +633,34 @@ const Index = (props) => {
           key: 'age',
           width: 300,
           render: (text, record) => {
-            if(record.par==='NOx'||record.par==='标杆流量'){
+            if (record.par === 'NOx' || record.par === '标杆流量') {
               return '—'
-            }else{              
-              let disabledFlag  = false;
-              switch(record.isDisplay){
+            } else {
+              let disabledFlag = false;
+              switch (record.isDisplay) {
                 case 1: case 2:
-                disabledFlag = (record.isDisplay==1&&!isDisPlayCheck1 || !dasChecked) || (record.isDisplay==2&&!isDisPlayCheck2 || !dasChecked)? true : false 
-                 break;
-                 case 3: case 4:
-                disabledFlag = (record.isDisplay==3&&!isDisPlayCheck3||!dasChecked )|| (record.isDisplay==4&&!isDisPlayCheck4|| !dasChecked) ? true : false 
-                   break;
-                 default:
-                  disabledFlag=!dasChecked
+                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !dasChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !dasChecked) ? true : false
+                  break;
+                case 3: case 4:
+                  disabledFlag = (record.isDisplay == 3 && !isDisPlayCheck3 || !dasChecked) || (record.isDisplay == 4 && !isDisPlayCheck4 || !dasChecked) ? true : false
+                  break;
+                default:
+                  disabledFlag = !dasChecked
               }
-            return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]} >
-                <Input placeholder='最小值' disabled={disabledFlag} onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-              <span style={{ padding: '0 2px' }}> - </span>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最大值' disabled={disabledFlag}  onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: true, message: '请选择' }]}>
-                <Input placeholder='单位列表' disabled={disabledFlag}  onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-            </Row>
+              return <Row justify='center' align='middle'>
+                <Form.Item name={[`${record.par}DsRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]} >
+                  <Input placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+                <span style={{ padding: '0 2px' }}> - </span>
+                <Form.Item name='EntCode' rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <Input placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+                <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                  <Input placeholder='单位列表' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+              </Row>
+            }
           }
-        }
         },
         {
           title: <Row align='middle' justify='center'><Checkbox checked={numChecked} onChange={onNumChange}>数采仪量程</Checkbox></Row>,
@@ -577,34 +669,34 @@ const Index = (props) => {
           key: 'age',
           width: 300,
           render: (text, record) => {
-            if(record.par==='NOx'||record.par==='标杆流量'){
+            if (record.par === 'NOx' || record.par === '标杆流量') {
               return '—'
-            }else{
-              let disabledFlag  = false;
-              switch(record.isDisplay){
+            } else {
+              let disabledFlag = false;
+              switch (record.isDisplay) {
                 case 1: case 2:
-                disabledFlag = (record.isDisplay==1&&!isDisPlayCheck1 || !numChecked) || (record.isDisplay==2&&!isDisPlayCheck2 || !numChecked)? true : false 
-                 break;
-                 case 3: case 4:
-                disabledFlag = record.isDisplay==3&&!isDisPlayCheck3&&!numChecked || (record.isDisplay==4&&!isDisPlayCheck2 || !numChecked)? true : false 
-                   break;
-                 default:
-                  disabledFlag=!numChecked
+                  disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !numChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !numChecked) ? true : false
+                  break;
+                case 3: case 4:
+                  disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 && !numChecked || (record.isDisplay == 4 && !isDisPlayCheck2 || !numChecked) ? true : false
+                  break;
+                default:
+                  disabledFlag = !numChecked
               }
-            return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最小值' disabled={disabledFlag} onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-              <span style={{ padding: '0 2px' }}> - </span>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最大值' disabled={disabledFlag} onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: true, message: '请选择' }]}>
-                <Input placeholder='单位列表' disabled={disabledFlag} onBlur={()=>{isJudge(record)}}/>
-              </Form.Item>
-            </Row>
+              return <Row justify='center' align='middle'>
+                <Form.Item name='EntCode' rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <Input placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+                <span style={{ padding: '0 2px' }}> - </span>
+                <Form.Item name='EntCode' rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <Input placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+                <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                  <Input placeholder='单位列表' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                </Form.Item>
+              </Row>
+            }
           }
-        }
         },
         {
           title: '量程一致性(自动判断)',
@@ -613,7 +705,7 @@ const Index = (props) => {
           key: 'age',
           width: 150,
           render: (text, record) => {
-            if(record.par==='NOx'||record.par==='标杆流量'){
+            if (record.par === 'NOx' || record.par === '标杆流量') {
               return '—'
             }
             return <Row justify='center' align='middle'>
@@ -633,12 +725,12 @@ const Index = (props) => {
           key: 'age',
           width: 220,
           render: (text, record, index) => {
-            if(record.par==='NOx'||record.par==='标杆流量'){
+            if (record.par === 'NOx' || record.par === '标杆流量') {
               return '—'
             }
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-              <Form.Item name='EntCode' name={`rangCheck${index}`}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `rangCheck${index}`, index) }} />
+              <Form.Item name={`rangCheck${index}`}>
+                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, index, 1) }} />
               </Form.Item>
             </Row>
           }
@@ -650,10 +742,10 @@ const Index = (props) => {
           key: 'age',
           width: 100,
           render: (text, record) => {
-            if(record.par==='NOx'||record.par==='标杆流量'){
+            if (record.par === 'NOx' || record.par === '标杆流量') {
               return '—'
             }
-            return <Form.Item name='EntCode' rules={[{ required: false, message: '请输入' }]}>
+            return <Form.Item name={`${record.par}Remark`} rules={[{ required: remark[`${record.par}RemarkFlag`], message: '请输入' }]}>
               <Input placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -708,10 +800,10 @@ const Index = (props) => {
           children: text,
           props: {},
         };
-        if (text=='颗粒物'&&record.isDisplay==1) {
+        if (text == '颗粒物' && record.isDisplay == 1) {
           obj.props.rowSpan = 2;
         }
-        if (text=='颗粒物'&&record.isDisplay==2 ) {
+        if (text == '颗粒物' && record.isDisplay == 2) {
           obj.props.rowSpan = 0;
         }
         return obj;
@@ -727,8 +819,8 @@ const Index = (props) => {
           key: 'type',
           width: 130,
           render: (text, record) => {
-        
-            return  text? text : '—'
+
+            return text ? text : '—'
 
 
 
@@ -741,15 +833,15 @@ const Index = (props) => {
           key: 'age',
           width: 300,
           render: (text, record) => {
-            if(record.par==='NOx'||record.par==='标杆流量' || record.par==='流速' || record.par==='颗粒物'&&record.type==='标杆浓度'){
+            if (record.par === 'NOx' || record.par === '标杆流量' || record.par === '流速' || record.par === '颗粒物' && record.type === '标杆浓度') {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='请输入' onBlur={()=>{isJudge(record)}}/>
+              <Form.Item name={`${record.par}indicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}>
+                <Input placeholder='请输入' onBlur={() => { isJudge(record) }} />
               </Form.Item>
-              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: true, message: '请选择' }]}>
-                <Select placeholder='单位列表' onBlur={()=>{isJudge(record)}}>
+              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}>
+                <Select placeholder='单位列表' onBlur={() => { isJudge(record) }}>
                 </Select>
               </Form.Item>
             </Row>
@@ -763,11 +855,11 @@ const Index = (props) => {
           width: 300,
           render: (text, record) => {
             return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]} >
-                <Input placeholder='请输入' disabled={!dasChecked} onBlur={()=>{isJudge(record)}}/>
+              <Form.Item name='EntCode' rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} >
+                <Input placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record) }} />
               </Form.Item>
-              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: true, message: '请选择' }]}>
-                <Input placeholder='单位列表' disabled={!dasChecked} onBlur={()=>{isJudge(record)}}/>
+              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}>
+                <Input placeholder='单位列表' disabled={!dasChecked} onBlur={() => { isJudge(record) }} />
               </Form.Item>
             </Row>
           }
@@ -779,19 +871,19 @@ const Index = (props) => {
           key: 'age',
           width: 300,
           render: (text, record) => {
-            if(record.par==='NO'||record.par==='NOx'){
+            if (record.par === 'NO' || record.par === 'NOx') {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最小值' disabled={!numChecked} onBlur={()=>{isJudge(record)}}/>
+              <Form.Item name='EntCode' rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
+                <Input placeholder='最小值' disabled={!numChecked} onBlur={() => { isJudge(record) }} />
               </Form.Item>
               <span style={{ padding: '0 2px' }}> - </span>
-              <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-                <Input placeholder='最大值' disabled={!numChecked} onBlur={()=>{isJudge(record)}}/>
+              <Form.Item name='EntCode' rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
+                <Input placeholder='最大值' disabled={!numChecked} onBlur={() => { isJudge(record) }} />
               </Form.Item>
-              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: true, message: '请选择' }]}>
-                <Input placeholder='单位列表' disabled={!numChecked} onBlur={()=>{isJudge(record)}}/>
+              <Form.Item name='EntCode' style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}>
+                <Input placeholder='单位列表' disabled={!numChecked} onBlur={() => { isJudge(record) }} />
               </Form.Item>
             </Row>
           }
@@ -804,8 +896,8 @@ const Index = (props) => {
           width: 150,
           render: (text, record) => {
             return <Row justify='center' align='middle'>
-              <Form.Item name='EntCode2' disabled>
-                <Radio.Group>
+              <Form.Item name='EntCode2'>
+                <Radio.Group disabled>
                   <Radio value={1}>是</Radio>
                   <Radio value={2}>否</Radio>
                 </Radio.Group>
@@ -821,8 +913,8 @@ const Index = (props) => {
           width: 220,
           render: (text, record, index) => {
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-              <Form.Item name='EntCode' name={`rangCheck${index}`}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `rangCheck${index}`, index) }} />
+              <Form.Item name={`rangCheck2${index}`}>
+                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, index, 2) }} />
               </Form.Item>
             </Row>
           }
@@ -834,7 +926,7 @@ const Index = (props) => {
           key: 'age',
           width: 100,
           render: (text, record) => {
-            return <Form.Item name='EntCode' rules={[{ required: false, message: '请输入' }]}>
+            return <Form.Item name='EntCode' rules={[{ required: remark2[`${record.par}Remark2Flag`], message: '请输入' }]}>
               <Input placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -882,7 +974,7 @@ const Index = (props) => {
       key: 'par',
       align: 'center',
       render: (text, record, index) => {
-      return <div style={{textAlign:'left'}}>{text}</div>
+        return <div style={{ textAlign: 'left' }}>{text}</div>
       }
     },
     {
@@ -891,9 +983,9 @@ const Index = (props) => {
       dataIndex: 'isDisplay',
       key: 'isDisplay',
       render: (text, record) => {
-          return  <Form.Item name='EntCode2' rules={[{ required: false, message: '请选择' }]}>
-                <Checkbox />
-              </Form.Item>
+        return <Form.Item name='EntCode2' rules={[{ required: false, message: '请选择' }]}>
+          <Checkbox />
+        </Form.Item>
 
       }
     },
@@ -903,10 +995,10 @@ const Index = (props) => {
       dataIndex: 'age',
       key: 'age',
       render: (text, record) => {
-        return  <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-            <Input placeholder='最小值' style={{ width: '100%' }}/>
-          </Form.Item>
-  
+        return <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
+          <Input placeholder='最小值' style={{ width: '100%' }} />
+        </Form.Item>
+
       }
     },
     {
@@ -915,10 +1007,10 @@ const Index = (props) => {
       dataIndex: 'age',
       key: 'age',
       render: (text, record) => {
-        return  <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
-            <Input placeholder='最小值' style={{ width: '100%' }}/>
-          </Form.Item>
-  
+        return <Form.Item name='EntCode' rules={[{ required: true, message: '请输入' }]}>
+          <Input placeholder='最小值' style={{ width: '100%' }} />
+        </Form.Item>
+
       }
     },
     {
@@ -946,8 +1038,8 @@ const Index = (props) => {
       width: 220,
       render: (text, record, index) => {
         return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-          <Form.Item name='EntCode' name={`rangCheck${index}`}>
-            <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, `rangCheck${index}`, index) }} />
+          <Form.Item name={`rangCheck3${index}`}>
+            <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, index, 3) }} />
           </Form.Item>
         </Row>
       }
@@ -973,10 +1065,10 @@ const Index = (props) => {
 
       render: (text, record, index) => {
         return <div>
-        <Form.Item name='Files' >
-          <a style={{paddingRight:8}} onClick={() => { setFileVisible(true) }}>上传附件</a>
-        </Form.Item>
-      </div>;
+          <Form.Item name='Files' >
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileVisible(true) }}>上传附件</a>
+          </Form.Item>
+        </div>;
 
       }
     },
@@ -986,14 +1078,15 @@ const Index = (props) => {
       dataIndex: 'file',
       key: 'file',
       render: (text, record, index) => {
-        return <div style={{textAlign:'left'}}>{text}</div>
-        }
+        return <div style={{ textAlign: 'left' }}>{text}</div>
+      }
     }
   ]
 
-  const { addDataConsistencyData, addParconsistencyData,addRealTimeConsistencyData } = props;
+  const { addParconsistencyData, addRealTimeConsistencyData } = props;
 
   const [fileVisible, setFileVisible] = useState(false)
+
   return (
     <div className={styles.remoteSupervisionSty}>
 
@@ -1013,7 +1106,7 @@ const Index = (props) => {
                 <RegionList levelNum={2} />
               </Form.Item>
               <Form.Item label='企业' name='EntCode'>
-                <EntAtmoList pollutantType={2}/>
+                <EntAtmoList pollutantType={2} />
               </Form.Item>
               <Form.Item label='监测点名称' name='DGIMN' >
                 {pointLoading ?
@@ -1081,7 +1174,7 @@ const Index = (props) => {
         wrapClassName={styles.modalSty}
         okText='保存'
       >    <Form
-        form={form2}
+        form={tabType == 1 ? form2 : form3}
         name="advanced_search"
         initialValues={{
         }}
@@ -1090,7 +1183,7 @@ const Index = (props) => {
       >
           <Row className={styles.queryPar}>
             <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称!' }]}>
-              <EntAtmoList pollutantType={2}/>
+              <EntAtmoList pollutantType={2} />
             </Form.Item>
             <Form.Item label='监测点名称' name='DGIMN' style={{ padding: '0 10px' }} rules={[{ required: true, message: '请选择监测点名称!' }]}>
               {pointLoading2 ?
@@ -1128,27 +1221,27 @@ const Index = (props) => {
                 pagination={false}
                 scroll={{ y: '100vh' }}
               />
-               <SdlTable
+              <SdlTable
                 // loading={this.props.exceptionDataLoading}
                 columns={columns3}
                 dataSource={addRealTimeConsistencyData}
                 pagination={false}
                 scroll={{ y: '100vh' }}
               />
-          <Row style={{color:'#f5222d',marginTop:10}}>
-            <span style={{paddingRight:10}}>注：</span>
-           <ol type="1" style={{listStyle:'auto'}}>
-            <li>填写数值，带单位；</li>
-            <li>项目无DAS，可只填写实时数据内容；若使用我司数采仪，仍需简单核算、确认历史数据情况；</li>
-            <li>数字里传输数据须完全一致；模拟量传输，实时数据数据差值/量程≤1‰ (参考HJ/T 477-2009)；</li>
-            <li>多量程仅核查正常使用量程；</li>
-            <li>“数采仪里程”选项，若数采仪使用数字量方式传输且不需设定量程，可不勾选；</li>
-            <li>若同时存在普通数采仪及动态管控仪数采仪，“数采仪”相关选项选择向“国发平台”发送数据的数采仪；</li>
-            <li>颗粒物数值一致性： ≤10mg/m3的、绝对误差≤3mg/m3、 >10mg/m3的、绝对误差≤5mg/m3；</li>
-            <li>流速直测法的(如热质式、超声波式)，有显示屏的填写设置量程，无显示屏的填写铭牌量程；</li>
-            <li>手工修正结果填写“是、否、不适用“三项，不适用必须备注填写原因</li>
-          </ol>
-          </Row>
+              <Row style={{ color: '#f5222d', marginTop: 10 }}>
+                <span style={{ paddingRight: 10 }}>注：</span>
+                <ol type="1" style={{ listStyle: 'auto' }}>
+                  <li>填写数值，带单位；</li>
+                  <li>项目无DAS，可只填写实时数据内容；若使用我司数采仪，仍需简单核算、确认历史数据情况；</li>
+                  <li>数字里传输数据须完全一致；模拟量传输，实时数据数据差值/量程≤1‰ (参考HJ/T 477-2009)；</li>
+                  <li>多量程仅核查正常使用量程；</li>
+                  <li>“数采仪里程”选项，若数采仪使用数字量方式传输且不需设定量程，可不勾选；</li>
+                  <li>若同时存在普通数采仪及动态管控仪数采仪，“数采仪”相关选项选择向“国发平台”发送数据的数采仪；</li>
+                  <li>颗粒物数值一致性： ≤10mg/m3的、绝对误差≤3mg/m3、 >10mg/m3的、绝对误差≤5mg/m3；</li>
+                  <li>流速直测法的(如热质式、超声波式)，有显示屏的填写设置量程，无显示屏的填写铭牌量程；</li>
+                  <li>手工修正结果填写“是、否、不适用“三项，不适用必须备注填写原因</li>
+                </ol>
+              </Row>
             </TabPane>
             <TabPane tab="参数一致性核查表" key="2">
               <SdlTable
@@ -1158,14 +1251,14 @@ const Index = (props) => {
                 pagination={false}
                 scroll={{ y: '100vh' }}
               />
-          <Row style={{color:'#f5222d',marginTop:10}}>
-            <span style={{paddingRight:10}}>注：</span>
-           <ol type="1" style={{listStyle:'auto'}}>
-            <li>设定值一般在DAS查阅；若现场无DAS，应在其他对应设备查阅，如数采仪；</li>
-            <li>无72小时调试检测报告的，应向客户发送告知函；</li>
-            <li>已上传告知函的，同一点位可不再上传相应附件；</li>
-          </ol>
-          </Row>
+              <Row style={{ color: '#f5222d', marginTop: 10 }}>
+                <span style={{ paddingRight: 10 }}>注：</span>
+                <ol type="1" style={{ listStyle: 'auto' }}>
+                  <li>设定值一般在DAS查阅；若现场无DAS，应在其他对应设备查阅，如数采仪；</li>
+                  <li>无72小时调试检测报告的，应向客户发送告知函；</li>
+                  <li>已上传告知函的，同一点位可不再上传相应附件；</li>
+                </ol>
+              </Row>
             </TabPane>
           </Tabs>
         </Form>

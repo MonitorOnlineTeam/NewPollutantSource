@@ -18,9 +18,9 @@ export default Model.extend({
       {par:'流速',isDisplay:4}, {par:'标杆流量',}, {par:'so19',},
     ],
     addRealTimeConsistencyData:[
-      {par:'so2',}, {par:'NO',}, {par:'NO2',}, {par:'NOx',}, {par:'so6',}, {par:'so7',}, {par:'so8',}, {par:'so9',},
-      {par:'so9',}, {par:'so10',}, {par:'颗粒物',type:'原始浓度'}, {par:'颗粒物',type:'标杆浓度'}, {par:'so13',}, {par:'so14',}, {par:'so15',}, {par:'流速'},
-      {par:'标杆流量'}, {par:'so18',}, {par:'so19',},
+      {par:'so2',}, {par:'so3',}, {par:'so4',}, {par:'so5',}, {par:'NOx',}, {par:'so7',}, {par:'so8',}, {par:'so9',},
+      {par:'so9',}, {par:'so10',}, {par:'颗粒物',isDisplay:1}, {par:'颗粒物',isDisplay:2}, {par:'so13',}, {par:'so14',}, {par:'so15',}, {par:'流速',isDisplay:3},
+      {par:'流速',isDisplay:4}, {par:'标杆流量',}, {par:'so19',},
     ],
     addParconsistencyData:[
       {par:'so2',}, {par:'so3',}, {par:'so4',}, {par:'so5',}, {par:'so6',}, {par:'so7',}, {par:'so8',}, {par:'so9',},
