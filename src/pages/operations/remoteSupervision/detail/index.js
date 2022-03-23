@@ -18,7 +18,7 @@ import SdlTable from '@/components/SdlTable'
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-const namespace = 'equipmentFeedback'
+const namespace = 'remoteSupervision'
 
 
 
@@ -34,7 +34,12 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-
+    getConsistencyCheckInfo:(payload)=>{ 
+      dispatch({
+        type: `${namespace}/getConsistencyCheckInfo`,
+        payload:payload,
+      })
+    },
   }
 }
 const Index = (props) => {
