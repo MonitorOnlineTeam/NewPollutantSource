@@ -58,7 +58,6 @@ export default Model.extend({
               addRealTimeList.push({...item,par:item.ChildID})
             }  
           })
-         console.log(pollutantList,addRealTimeList)
         }
         if(resultParList && resultParList[0]){
               resultParList.map((item,index)=>{
