@@ -76,16 +76,38 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },  
-    getPointConsistencyParam: (payload) => {  //获取数据一致性核查列表 添加参数列表
+    getPointConsistencyParam: (payload,callback) => {  //获取数据一致性核查列表 添加参数列表
       dispatch({
         type: `${namespace}/getPointConsistencyParam`,
         payload: payload,
+        callback:callback
       })
     },
     getNoxValue: (payload) => { // 获取NOx数采仪实时数据
       dispatch({
         type: `${namespace}/getNoxValue`,
         payload: payload,
+      })
+    },
+    judgeConsistencyRangeCheck:(payload,callback)=>{ //量程一致性检查 自动判断
+      dispatch({
+        type: `${namespace}/judgeConsistencyRangeCheck`,
+        payload: payload,
+        callback:callback,
+      })
+    },
+    judgeConsistencyCouCheck:(payload,callback)=>{ //数据一致性检查 自动判断
+      dispatch({
+        type: `${namespace}/judgeConsistencyCouCheck`,
+        payload: payload,
+        callback:callback,
+      })
+    },
+    judgeParamCheck:(payload,callback)=>{ //参数一致性检查 自动判断
+      dispatch({
+        type: `${namespace}/judgeParamCheck`,
+        payload: payload,
+        callback:callback,
       })
     },
   }
@@ -100,6 +122,10 @@ const Index = (props) => {
   const [showType, setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData,consistencyCheckDetail,parLoading, } = props;
+  
+  const [rangUnit, setRangUnit] = useState({})//量程单位
+  
+  
   const [rangReq, setRangReq] = useState({})
   const [remark, setRemark] = useState({})
   const [indicaValReq, setIndicaValReq] = useState({}) //示值
@@ -107,6 +133,7 @@ const Index = (props) => {
 
   const [traceValReq, setTraceValReq] = useState({})
   const [remark3, setRemark3] = useState({})
+
 
   useEffect(() => {
     onFinish(pageIndex, pageSize);
@@ -366,7 +393,7 @@ const Index = (props) => {
 
     }
     if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //监测点
-         props.getPointConsistencyParam({DGIMN: hangedValues.DGIMN})
+         props.getPointConsistencyParam({DGIMN: hangedValues.DGIMN},(pollutantList,addRealTimeList,paramList)=>{})
     }
   }
   const [visible, setVisible] = useState(false)
@@ -396,7 +423,6 @@ const Index = (props) => {
   const [dasChecked, setDasChecked] = useState(false)
   const onDasChange = (e) => { //DAS量程
     setDasChecked(e.target.checked)
-    console.log(e.target.checked)
   }
 
   const [numChecked, setNumChecked] = useState(false)
@@ -476,7 +502,7 @@ const Index = (props) => {
           setRemark({ ...remark, [`${row.par}RemarkFlag`]: false })
         }
         break;
-      case 2: // 实时一致性核查表
+      case 2: // 实时数据一致性核查表
         if (val[0] == 2) { //不适用 示值 可不填
           setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: false })
           setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: true })
@@ -497,8 +523,109 @@ const Index = (props) => {
     }
 
   }
-  const isJudge = (row) => {
-    console.log(row.par)
+
+
+  const isJudge =  (row,type) => {
+    
+
+     switch(type){
+       case 1 : // 量程一致性核查表 自动判断
+       const analyzerRang1= form2.getFieldValue(`${row.par}AnalyzerRang1`), analyzerRang2 = form2.getFieldValue(`${row.par}AnalyzerRang2`), analyzerUnit = form2.getFieldValue(`${row.par}AnalyzerUnit`);  
+       const dsRang1 = form2.getFieldValue(`${row.par}DsRang1`),  dsRang2 = form2.getFieldValue(`${row.par}DsRang2`),   dsUnit = form2.getFieldValue(`${row.par}DsUnit`);
+       const scyRang1 = form2.getFieldValue(`${row.par}ScyRang1`),  scyRang2 = form2.getFieldValue(`${row.par}ScyRang2`),   scyUnit = form2.getFieldValue(`${row.par}ScyUnit`);
+      
+       const analyzerFlag =  analyzerRang1&&analyzerRang2&&analyzerUnit? true : false;
+       const dsRangFlag = dsRang1&&dsRang2&&dsUnit? true : false;
+       const scyRangFlag = scyRang1&&scyRang2? true : false;
+             if(analyzerFlag&&dsRangFlag&&!scyRang1&&!scyRang2&&!scyUnit){ //只判断分析仪和DAS量程填完的状态
+                       props.judgeConsistencyRangeCheck({
+                        PollutantCode:row.ChildID,
+                        Special:row.isDisplay==1 || row.isDisplay==3? 1 : row.isDisplay==2|| row.isDisplay==4 ? 2 : undefined,
+                        AnalyzerMin: analyzerRang1, AnalyzerMax:analyzerRang2, AnalyzerUnit: analyzerUnit,
+                        DASMin: dsRang1,  DASMax: dsRang2,  DASUnit: dsUnit},(data)=>{
+                          form2.setFieldsValue({[`${row.par}RangUniformity`] :data })
+                        })
+             }
+             if(analyzerFlag&&scyRangFlag &&scyUnit&&dsRang1&&!dsRang2&&!dsUnit ){ //同上
+              props.judgeConsistencyRangeCheck({
+                PollutantCode:row.ChildID,
+                Special:row.isDisplay==1 || row.isDisplay==3? 1 : row.isDisplay==2|| row.isDisplay==4 ? 2 : undefined,
+                AnalyzerMin: analyzerRang1,AnalyzerMax:analyzerRang2,  AnalyzerUnit: analyzerUnit,
+                DataMin: scyRang1,  DataMax: scyRang2, DataUnit: scyUnit},(data)=>{
+                  form2.setFieldsValue({[`${row.par}RangUniformity`] :data })
+                })
+            }
+             if(analyzerFlag&&dsRangFlag&&scyRangFlag){
+              props.judgeConsistencyRangeCheck({
+                PollutantCode:row.ChildID,
+                Special:row.isDisplay==1 || row.isDisplay==3? 1 : row.isDisplay==2|| row.isDisplay==4 ? 2 : undefined,
+                AnalyzerMin: analyzerRang1, AnalyzerMax:analyzerRang2, AnalyzerUnit: analyzerUnit,
+                DASMin: dsRang1,  DASMax: dsRang2,  DASUnit: dsUnit, DataMin: scyRang1,  DataMax: scyRang2, DataUnit: scyUnit},(data)=>{
+                  form2.setFieldsValue({[`${row.par}RangUniformity`] :data })
+                })
+             
+            }
+
+       break;
+       case 2 : // 实时数据一致性核查表 自动判断
+       const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`),  indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
+       const dsData = form2.getFieldValue(`${row.par}DsData`),   dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
+       const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
+       
+       
+       const indicaValFlag = indicaVal&&indicaUnit? true : false;
+       const dsDataFlag = dsData&&dsDataUnit? true : false; //只判断DAS示值填完的状态
+       const scyDataFlag = scyData&&scyDataUnit? true : false;
+
+             if(indicaValFlag&&dsDataFlag&&!scyData&&!scyDataUnit){
+                       props.judgeConsistencyCouCheck({
+                        PollutantCode:row.ChildID,
+                        CouType :row.concentrationType==='原始浓度'?  1 : row.concentrationType==='标杆浓度' ? 2 : undefined,
+                        AnalyzerCou: indicaVal,  AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
+                        DASCou: dsData,  DASCouUnit: dsDataUnit //DAS示值和单位
+                      },(data)=>{
+                          form2.setFieldsValue({[`${row.par}DataUniformity`] :data })
+                        })
+             }
+             if(indicaValFlag&&scyDataFlag&&!dsData&&!dsDataUnit){
+              props.judgeConsistencyCouCheck({
+                PollutantCode:row.ChildID,
+                CouType :row.concentrationType==='原始浓度'?  1 : row.concentrationType==='标杆浓度' ? 2 : undefined,
+                AnalyzerCou: indicaVal,  AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
+                DataCou: scyData, DataUnit: scyDataUnit //数采仪
+                },(data)=>{
+                  form2.setFieldsValue({[`${row.par}DataUniformity`] :data })
+                })
+            }
+             if(indicaValFlag&&dsDataFlag&&scyDataFlag){
+              props.judgeConsistencyCouCheck({
+                PollutantCode:row.ChildID,
+                CouType :row.concentrationType==='原始浓度'?  1 : row.concentrationType==='标杆浓度' ? 2 : undefined,
+                AnalyzerCou: indicaVal,  AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
+                DASCou: dsData,  DASCouUnit: dsDataUnit, //DAS示值和单位
+                DataCou: scyData, DataUnit: scyDataUnit //数采仪
+              },(data)=>{
+                  form2.setFieldsValue({[`${row.par}DataUniformity`] :data })
+                })
+            }
+
+       break;
+       case 3 : // 参数一致性核查表 自动判断
+       const setVal = form3.getFieldValue(`${row.par}SetVal`),
+            traceVal = form3.getFieldValue(`${row.par}TraceVal`);
+             if(setVal&&traceVal){
+               if(setVal==traceVal){
+                form3.setFieldsValue({[`${row.par}Uniform`] :1 })
+               }else{
+                form3.setFieldsValue({[`${row.par}Uniform`] :2})
+               }
+                //  props.judgeParamCheck({ PollutantCode:row.ChildID,   SetValue: setVal,   TraceabilityValue: traceVal, },(data)=>{
+                //   form3.setFieldsValue({[`${row.par}Uniform`] :data })
+                //  })
+             }
+
+       break;
+     }
   }
   //颗粒物 有无显示屏
   const [isDisPlayCheck1, setIsDisPlayCheck1] = useState(false)
@@ -542,6 +669,22 @@ const Index = (props) => {
       displayEle3.removeAttribute("disabled")
       displayEle4.removeAttribute("disabled")
     }
+  }
+
+  const unitFormat = (record) =>{
+    return  record.Col1&&record.Col1.split(',').map((item,index)=>{
+      if(record.Name=='流速'&&record.isDisplay==3){ //差压法
+        if(index<=1){ //只取前两个
+          return <Option value={item}>{item}</Option>  
+        }
+      } else if(record.Name=='流速'&&record.isDisplay==4){ //只测流速法
+        if(index>1){ //只取最后一个
+          return <Option value={item}>{item}</Option>  
+        }   
+      }else{
+      return <Option value={item}>{item}</Option>
+      }
+    })
   }
   const columns2 = [
     {
@@ -636,14 +779,15 @@ const Index = (props) => {
               }
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}AnalyzerRang1`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <Input placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 <Form.Item name={`${record.par}AnalyzerRang2`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <Input placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
                 </Form.Item>
                 <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
-                  <Select placeholder='单位列表' disabled={disabledFlag} onBlur={() => { isJudge(record) }}>
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record,1) }}>
+                      {unitFormat(record)}
                   </Select>
                 </Form.Item>
               </Row>
@@ -673,14 +817,16 @@ const Index = (props) => {
               }
               return <Row justify='center' align='middle'>
                 <Form.Item name={[`${record.par}DsRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]} >
-                  <Input placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 <Form.Item name={[`${record.par}DsRang2`]}  rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <Input placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
                 </Form.Item>
                 <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
-                  <Input placeholder='单位列表' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record,1) }}>
+                   {unitFormat(record)}
+                  </Select>
                 </Form.Item>
               </Row>
             }
@@ -709,14 +855,16 @@ const Index = (props) => {
               }
               return <Row justify='center' align='middle'>
                 <Form.Item name={[`${record.par}ScyRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <Input placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 <Form.Item name={[`${record.par}ScyRang2`]}  rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <Input placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
                 </Form.Item>
                 <Form.Item name={[`${record.par}ScyUnit`]}  style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
-                  <Input placeholder='单位列表' disabled={disabledFlag} onBlur={() => { isJudge(record) }} />
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record,1) }}>
+                    {unitFormat(record)}
+                  </Select>
                 </Form.Item>
               </Row>
             }
@@ -733,7 +881,7 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={[`${record.par}RangUniformity`]}>
+              <Form.Item name={`${record.par}RangUniformity`}>
                 <Radio.Group disabled>
                   <Radio value={1}>是</Radio>
                   <Radio value={2}>否</Radio>
@@ -834,7 +982,7 @@ const Index = (props) => {
       }
     },
     {
-      title: '实时一致性核查表',
+      title: '实时数据一致性核查表',
       children: [
         {
           title: '浓度类型',
@@ -858,12 +1006,13 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={`${record.par}indicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}>
-                <Input placeholder='请输入' onBlur={() => { isJudge(record) }} />
+              <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}>
+                <InputNumber placeholder='请输入'  onBlur={() => { isJudge(record,2) }} />
               </Form.Item>
-              <Form.Item name={`${record.par}indicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}>
-                <Select placeholder='单位列表' onBlur={() => { isJudge(record) }}>
-                </Select>
+              <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}>
+              <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record,2) }}>
+                 {unitFormat(record)}
+                  </Select>
               </Form.Item>
             </Row>
           }
@@ -877,10 +1026,12 @@ const Index = (props) => {
           render: (text, record) => {
             return <Row justify='center' align='middle'>
               <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} >
-                <Input placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record) }} />
+                <InputNumber placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record,2) }} />
               </Form.Item>
-              <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}>
-                <Input placeholder='单位列表' disabled={!dasChecked} onBlur={() => { isJudge(record) }} />
+              <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}>
+              <Select allowClear placeholder='单位列表' disabled={!dasChecked} onChange={() => { isJudge(record,2) }}>
+                 {unitFormat(record)}
+                  </Select>
               </Form.Item>
             </Row>
           }
@@ -896,15 +1047,13 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={[`${record.par}ScyData1`]}  rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
-                <Input placeholder='最小值' disabled={!numChecked} onBlur={() => { isJudge(record) }} />
+              <Form.Item name={[`${record.par}ScyData`]}  rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
+                <InputNumber placeholder='请输入' disabled={!numChecked} onBlur={() => { isJudge(record,2) }} />
               </Form.Item>
-              <span style={{ padding: '0 2px' }}> - </span>
-              <Form.Item name={[`${record.par}ScyData2`]} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
-                <Input placeholder='最大值' disabled={!numChecked} onBlur={() => { isJudge(record) }} />
-              </Form.Item>
-              <Form.Item name={[`${record.par}ScyUnit`]}  style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}>
-                <Input placeholder='单位列表' disabled={!numChecked} onBlur={() => { isJudge(record) }} />
+              <Form.Item name={[`${record.par}ScyDataUnit`]}  style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}>
+                <Select allowClear placeholder='单位列表' disabled={!numChecked} onChange={() => { isJudge(record,2) }}>
+                   {unitFormat(record)}
+                  </Select>
               </Form.Item>
             </Row>
           }
@@ -1004,7 +1153,7 @@ const Index = (props) => {
       dataIndex: 'isDisplay',
       key: 'isDisplay',
       render: (text, record) => {
-        return <Form.Item name='EntCode2' rules={[{ required: false, message: '请选择' }]}>
+        return <Form.Item name={`${record.par}IsEnable`}  rules={[{ required: false, message: '请选择' }]}>
           <Checkbox />
         </Form.Item>
 
@@ -1016,8 +1165,8 @@ const Index = (props) => {
       dataIndex: 'par',
       key: 'par',
       render: (text, record) => {
-        return <Form.Item name='EntCode' rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
-          <Input placeholder='请输入' style={{ width: '100%' }} />
+        return <Form.Item  name={`${record.par}SetVal`}  rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+          <InputNumber placeholder='请输入'  onBlur={() => { isJudge(record,3) }} style={{ width: '100%' }} />
         </Form.Item>
 
       }
@@ -1028,8 +1177,8 @@ const Index = (props) => {
       dataIndex: 'par',
       key: 'par',
       render: (text, record) => {
-        return <Form.Item name='EntCode' rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
-          <Input placeholder='请输入' style={{ width: '100%' }} />
+        return <Form.Item name={`${record.par}TraceVal`}  rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+          <InputNumber placeholder='请输入'  onBlur={() => { isJudge(record,3) }} style={{ width: '100%' }} />
         </Form.Item>
 
       }
@@ -1042,7 +1191,7 @@ const Index = (props) => {
       width: 150,
       render: (text, record) => {
         return <Row justify='center' align='middle'>
-          <Form.Item name='EntCode2'>
+          <Form.Item name={`${record.par}Uniform`}>
             <Radio.Group disabled>
               <Radio value={1}>是</Radio>
               <Radio value={2}>否</Radio>

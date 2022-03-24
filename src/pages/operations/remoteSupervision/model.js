@@ -35,7 +35,7 @@ export default Model.extend({
       }
     },
     //获取数据 添加参数列表
-    *getPointConsistencyParam({ payload, }, { call, update, select, put }) {
+    *getPointConsistencyParam({ payload,callback }, { call, update, select, put }) {
       const result = yield call(services.GetPointConsistencyParam, { ...payload });
       if (result.IsSuccess) {
         let pollutantList = [],addRealTimeList=[],paramList=[];
@@ -47,10 +47,10 @@ export default Model.extend({
          resultPollList.map((item,index)=>{
             if(item.Name === '颗粒物'|| item.Name === '流速'){
               if(item.Name === '颗粒物'){ //不push 只添加   达到替换的目的
-                pollutantList.splice(index, 0, {...item, isDisplay:1,par:item.ChildID},{...item, isDisplay:2,par:item.ChildID})
-                addRealTimeList.splice(index, 0, {...item, concentrationType:'原始浓度',par:item.ChildID},{...item, concentrationType:'标杆浓度',par:item.ChildID})
+                pollutantList.splice(index, 0, {...item, isDisplay:1,par:item.ChildID},{...item, isDisplay:2,par:item.ChildID+'a',})
+                addRealTimeList.splice(index, 0, {...item, concentrationType:'原始浓度',par:item.ChildID,isDisplay:6, },{...item, concentrationType:'标杆浓度',par:item.ChildID+'c',})
               }else{
-                pollutantList.splice(index+1, 0, {...item, isDisplay:3,par:item.ChildID},{...item, isDisplay:4,par:item.ChildID})
+                pollutantList.splice(index+1, 0, {...item, isDisplay:3,par:item.ChildID},{...item, isDisplay:4,par:item.ChildID+'b'})
                 addRealTimeList.splice(index+1, 0, {...item,par:item.ChildID}) //不变    
               }  
             }else{
@@ -65,10 +65,12 @@ export default Model.extend({
   
           })
         }
-        yield update({  addDataConsistencyData: pollutantList, 
-                        addParconsistencyData : paramList,addRealTimeData:addRealTimeList});
+        yield update({  addDataConsistencyData: pollutantList, addRealTimeData:addRealTimeList,
+                        addParconsistencyData : paramList});
+        callback(pollutantList,addRealTimeList,paramList)
       } else {
         yield update({  addDataConsistencyData: [], addParconsistencyData : [],addRealTimeData:[] });
+        callback([],[],[])
         message.error(result.Message)
       }
     },
@@ -118,7 +120,6 @@ export default Model.extend({
     *judgeConsistencyRangeCheck({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.JudgeConsistencyRangeCheck, { ...payload });
       if (result.IsSuccess) {
-        message.success(result.Message)
         callback(result.Datas)
       } else {
         message.error(result.Message)
@@ -128,13 +129,20 @@ export default Model.extend({
     *judgeConsistencyCouCheck({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.JudgeConsistencyCouCheck, { ...payload });
       if (result.IsSuccess) {
-        message.success(result.Message)
         callback(result.Datas)
       } else {
         message.error(result.Message)
       }
     },
-
+    //参数一致性检查 自动判断
+    *judgeParamCheck({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.JudgeParamCheck, { ...payload });
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
   }
 
 })
