@@ -48,8 +48,8 @@ export default Model.extend({
             if(item.Name === '颗粒物'|| item.Name === '流速'){
               if(item.Name === '颗粒物'){ //不push 只添加   达到替换的目的
                 pollutantList.splice(index, 0, {...item, isDisplay:1,par:item.ChildID},{...item, isDisplay:2,par:item.ChildID+'a',})
-                addRealTimeList.splice(index, 0, {...item, concentrationType:'原始浓度',par:item.ChildID,isDisplay:6, },{...item, concentrationType:'标杆浓度',par:item.ChildID+'c',})
-              }else{
+                addRealTimeList.splice(index, 0, {...item, concentrationType:'原始浓度',par:item.ChildID, },{...item, concentrationType:'标杆浓度',par:item.ChildID+'c',})
+              }else{ //流速
                 pollutantList.splice(index+1, 0, {...item, isDisplay:3,par:item.ChildID},{...item, isDisplay:4,par:item.ChildID+'b'})
                 addRealTimeList.splice(index+1, 0, {...item,par:item.ChildID}) //不变    
               }  
@@ -108,7 +108,6 @@ export default Model.extend({
     *getNoxValue({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.GetNoxValue, { ...payload });
       if (result.IsSuccess) {
-        message.success(result.Message)
         callback(result.Datas)
       } else {
         message.error(result.Message)
