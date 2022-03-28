@@ -12,6 +12,7 @@ export default Model.extend({
   state: {
     entList: [],
     tableData: [],
+    tableTotal:null,
     consistencyCheckDetail: [],
     addDataConsistencyData:[],
     addRealTimeData:[],

@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined,IssuesCloseOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -168,7 +168,8 @@ const Index = (props) => {
 
 
   useEffect(() => {
-    onFinish(pageIndex, pageSize);
+
+     onFinish(pageIndex,pageSize)
     if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断量程 是否 是否必填的
       let analysisParRangObj = {}, parRemarkObj = {};
       let indicaValReqObj = {}, parRemark2Obj = {};
@@ -223,63 +224,74 @@ const Index = (props) => {
   const [ID, setID] = useState()
 
 
-
+  const issueTipContent =  <div>
+  <p style={{marginBottom:5}}>1、待下发：督查结果未发送通知给点运维负责人。</p>
+  <p style={{marginBottom:0}}>2、待下发：督查结果已下发通知给点运维负责人。</p>
+</div>
 
   const columns = [
     {
       title: '省/市',
-      dataIndex: 'RegionName',
-      key: 'RegionName',
+      dataIndex: 'regionName',
+      key: 'regionName',
       align: 'center',
     },
     {
       title: '企业名称',
-      dataIndex: 'ParentName',
-      key: 'ParentName',
+      dataIndex: 'entName',
+      key: 'entName',
       align: 'center',
     },
     {
       title: '监测点名称',
-      dataIndex: 'PointName',
-      key: 'PointName',
+      dataIndex: 'pointName',
+      key: 'pointName',
       align: 'center',
     },
     {
       title: '核查月份',
-      dataIndex: 'FaultTime',
-      key: 'FaultTime',
+      dataIndex: 'dateTime',
+      key: 'dateTime',
       align: 'center',
     },
     {
       title: '核查结果',
-      dataIndex: 'IsSolve',
-      key: 'IsSolve',
+      dataIndex: 'resultCheck',
+      key: 'resultCheck',
       align: 'center',
-      render: (text, record, index) => {
-        if (text == 1) {
-          return '已解决'
-        } else {
-          return '待解决'
-        }
-
-      }
     },
     {
       title: '核查人',
-      dataIndex: 'CreatUserName',
-      key: 'CreatUserName',
+      dataIndex: 'userName',
+      key: 'userName',
       align: 'center',
     },
     {
       title: '核查时间',
-      dataIndex: 'CreatDateTime',
-      key: 'CreatDateTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       align: 'center',
+      render: (text, record) => {
+        return moment(text).format("YYYY-MM")
+      }   
+    },
+    {
+      title: <span style={{position:'relative'}}>下发状态 <NumTips content={issueTipContent}  style={{ top: 2,}} /></span>,
+      dataIndex: 'issue',
+      key: 'issue',
+      align: 'center',
+      render: (text, record) => {
+        return text==='待下发'? <span style={{color:'#f5222d'}}>{text}</span> : <span>{text}</span>
+      }   
+    },
+    {
+      title: '下发时间',
+      dataIndex: 'issueTime',
+      key: 'issueTime',
+      align: 'center', 
     },
     {
       title: '操作',
-      dataIndex: 'pointName',
-      key: 'pointName',
       align: 'center',
       render: (text, record) => {
         return (
@@ -306,6 +318,12 @@ const Index = (props) => {
                 <a href="#" ><DelIcon /></a>
               </Popconfirm>
             </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="下发">
+              <Popconfirm title="确定要下发督查结果给点位的运维负责人吗？" onConfirm={() => issue(record)} okText="是" cancelText="否">
+                <a href="#" ><IssuesCloseOutlined style={{fontSize:16}}/></a>
+              </Popconfirm>
+            </Tooltip>
           </>
         )
       }
@@ -313,18 +331,22 @@ const Index = (props) => {
     }
   ]
 
+  const del = (record) =>{ //删除
 
+  }
+  const issue = (record) =>{ //下发
+
+  }
   const [outOrInside, setOutOrInside] = useState(1)
   const onFinish = async (pageIndex, pageSize) => {  //查询
     try {
       const values = await form.validateFields();
-      console.log(values)
       props.getRemoteInspectorList({
         ...values,
         month: undefined,
-        DateTime: values.month ? moment(values.month).format("YYYY-MM") : undefined,
-        // pageIndex: pageIndex,
-        // pageSize: pageSize,
+        DateTime: values.month ? moment(values.month).format("YYYY-MM-01 00:00:00") : undefined,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
       })
 
 
@@ -358,7 +380,7 @@ const Index = (props) => {
       const commonData = {
               ...commonValues,
               month:undefined,
-              DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM") : undefined,
+              DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-01 00:00:00") : undefined,
               RangeUpload:  commonValues.files1,
               CouUpload: commonValues.files1
             }
@@ -419,25 +441,28 @@ const Index = (props) => {
         } catch (errorInfo) {
           console.log('Failed:', errorInfo);
         }
-      }else{
+      }else{  //参数一致性核查表
         try {
           const values = await form3.validateFields();
-          const  paramDataList =  addRealTimeData.map(item=>{
+          const  paramDataList =  addParconsistencyData.map(item=>{
             return {
                   PollutantCode:item.ChildID,
-                  Status:values[`${item.par}IsEnable`], 
+                  Status:values[`${item.par}IsEnable`]&&values[`${item.par}IsEnable`][0]==1? 1 : 2, 
                   SetValue: values[`${item.par}SetVal`], 
                   TraceabilityValue:values[`${item.par}TraceVal`],
                   AutoUniformity:values[`${item.par}DsData`], 
                   Uniformity:values[`${item.par}Uniform`], 
                   Remark: values[`${item.par}Remark3`], 
-                  // Upload:values[`${item.par}ScyDataUnit`], 
+                  Upload:values[`${item.par}ParFiles`], 
                   }
             }) 
           props.addOrUpdParamCheck({
             Data:commonData,
             ParamDataList:paramDataList,
-          },()=>{ })
+          },()=>{ 
+            setVisible(false)
+            onFinish(1,20)
+          })
         } catch (errorInfo) {
           console.log('Failed:', errorInfo);
         }
@@ -497,7 +522,6 @@ const Index = (props) => {
               
             let filesCuidObj = {},filesListObj={};
             paramList.map((item, index) => {
-              console.log(cuid())
               filesCuidObj[`${item.par}ParFiles`] = cuid();
               filesListObj[`${item.par}ParFiles`] = [];
             })
@@ -515,11 +539,11 @@ const Index = (props) => {
   const [pageSize, setPageSize] = useState(20)
   const [pageIndex, setPageIndex] = useState(1)
 
-  // const handleTableChange = (PageIndex, PageSize) => { //分页 打卡异常 响应超时 弹框
-  //   setPageIndex(PageIndex)
-  //   setPageSize(PageSize)
-  //   onFinish(PageIndex, PageSize)
-  // }
+  const handleTableChange = (PageIndex, PageSize) => { //分页 打卡异常 响应超时 弹框
+    setPageIndex(PageIndex)
+    setPageSize(PageSize)
+    onFinish(PageIndex, PageSize)
+  }
 
   const [tabType, setTabType] = useState(1)
   const tabsChange = (key) => {
@@ -654,10 +678,10 @@ const Index = (props) => {
       case 3: // 参数一致性核查表
         if (val[0] == 3) { 
           setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: false })
-          setRemark3({ ...remark2, [`${row.par}Remark3Flag`]: true })
+          setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: true })
         } else {
           setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: true })
-          setRemark3({ ...remark2, [`${row.par}Remark3Flag`]: false })
+          setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: false })
         }
     }
 
@@ -1321,7 +1345,7 @@ const Index = (props) => {
       key: 'isDisplay',
       render: (text, record) => {
         return <Form.Item name={`${record.par}IsEnable`}  rules={[{ required: false, message: '请选择' }]}>
-          <Checkbox />
+         <Checkbox.Group> <Checkbox  value={1} ></Checkbox></Checkbox.Group>
         </Form.Item>
 
       }
@@ -1441,6 +1465,7 @@ const Index = (props) => {
             name="advanced_search"
             onFinish={() => { onFinish(pageIndex, pageSize) }}
             initialValues={{
+              month:moment(moment().format('YYYY-MM'))
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
@@ -1468,7 +1493,7 @@ const Index = (props) => {
 
             <Row >
               <Form.Item label='核查月份' name='month'>
-                <DatePicker allowClear picker="month" />
+                <DatePicker allowClear={false} picker="month" />
               </Form.Item>
               <Form.Item label='核查结果' name='CheckStatus'>
                 <Select placeholder='请选择' allowClear>
@@ -1495,15 +1520,14 @@ const Index = (props) => {
             dataSource={tableDatas}
             columns={columns}
             scroll={{ y: clientHeight - 500 }}
-            // pagination={{
-            //   showSizeChanger: true,
-            //   showQuickJumper: true,
-            //   total: tableTotal,
-            //   pageSize: pageSize,
-            //   current: pageIndex,
-            //   onChange: handleTableChange,
-            // }}
-            pagination={false}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              total: tableTotal,
+              pageSize: pageSize,
+              current: pageIndex,
+              onChange: handleTableChange,
+            }}
           />
         </Card>
       </BreadcrumbWrapper>
