@@ -76,10 +76,11 @@ export default Model.extend({
       }
     },
     //获取量程数据一致性详情
-    *getConsistencyCheckInfo({ payload, }, { call, update, select, put }) {
+    *getConsistencyCheckInfo({ payload,callback }, { call, update, select, put }) {
       const result = yield call(services.GetConsistencyCheckInfo, { ...payload });
       if (result.IsSuccess) {
         yield update({ consistencyCheckDetail: result.Datas });
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -89,7 +90,7 @@ export default Model.extend({
       const result = yield call(services.AddOrUpdConsistencyCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -99,7 +100,7 @@ export default Model.extend({
       const result = yield call(services.AddOrUpdParamCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -137,6 +138,15 @@ export default Model.extend({
     //参数一致性检查 自动判断
     *judgeParamCheck({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.JudgeParamCheck, { ...payload });
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //删除
+    *deleteRemoteInspector({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.DeleteRemoteInspector, { ...payload });
       if (result.IsSuccess) {
         callback(result.Datas)
       } else {

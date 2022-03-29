@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined,IssuesCloseOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined, IssuesCloseOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -46,13 +46,14 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common }) => ({
   parLoading: loading.effects[`${namespace}/getPointConsistencyParam`],
   saveLoading1: loading.effects[`${namespace}/addOrUpdConsistencyCheck`],
   saveLoading2: loading.effects[`${namespace}/addOrUpdParamCheck`],
+  editLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`],
   pointListByEntCode: common.pointListByEntCode,
   clientHeight: global.clientHeight,
   entList: remoteSupervision.entList,
   addDataConsistencyData: remoteSupervision.addDataConsistencyData,
   addRealTimeData: remoteSupervision.addRealTimeData,
   addParconsistencyData: remoteSupervision.addParconsistencyData,
-  consistencyCheckDetail:remoteSupervision.consistencyCheckDetail,
+  consistencyCheckDetail: remoteSupervision.consistencyCheckDetail,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -71,7 +72,7 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    deleteAttach: (file)=>{ //删除照片
+    deleteAttach: (file) => { //删除照片
       dispatch({
         type: "autoForm/deleteAttach",
         payload: {
@@ -85,53 +86,67 @@ const dvaDispatch = (dispatch) => {
         type: `${namespace}/getRemoteInspectorList`,
         payload: payload,
       })
-    },  
-    getPointConsistencyParam: (payload,callback) => {  //获取数据一致性核查列表 添加参数列表
+    },
+    getPointConsistencyParam: (payload, callback) => {  //获取数据一致性核查列表 添加参数列表
       dispatch({
         type: `${namespace}/getPointConsistencyParam`,
         payload: payload,
-        callback:callback
+        callback: callback
       })
     },
-    getNoxValue: (payload,callback) => { // 获取NOx数采仪实时数据
+    getNoxValue: (payload, callback) => { // 获取NOx数采仪实时数据
       dispatch({
         type: `${namespace}/getNoxValue`,
         payload: payload,
-        callback:callback
+        callback: callback
       })
     },
-    judgeConsistencyRangeCheck:(payload,callback)=>{ //量程一致性检查 自动判断
+    judgeConsistencyRangeCheck: (payload, callback) => { //量程一致性检查 自动判断
       dispatch({
         type: `${namespace}/judgeConsistencyRangeCheck`,
         payload: payload,
-        callback:callback,
+        callback: callback,
       })
     },
-    judgeConsistencyCouCheck:(payload,callback)=>{ //数据一致性检查 自动判断
+    judgeConsistencyCouCheck: (payload, callback) => { //数据一致性检查 自动判断
       dispatch({
         type: `${namespace}/judgeConsistencyCouCheck`,
         payload: payload,
-        callback:callback,
+        callback: callback,
       })
     },
-    judgeParamCheck:(payload,callback)=>{ //参数一致性检查 自动判断
+    judgeParamCheck: (payload, callback) => { //参数一致性检查 自动判断
       dispatch({
         type: `${namespace}/judgeParamCheck`,
         payload: payload,
-        callback:callback,
+        callback: callback,
       })
     },
-    addOrUpdConsistencyCheck:(payload,callback)=>{  //添加或修改数据一致性核查
+    addOrUpdConsistencyCheck: (payload, callback) => {  //添加或修改数据一致性核查
       dispatch({
         type: `${namespace}/addOrUpdConsistencyCheck`,
         payload: payload,
-        callback:callback,
+        callback: callback,
       })
     },
-    addOrUpdParamCheck:(payload,callback)=>{  //添加或修改参数一致性核查表
+    addOrUpdParamCheck: (payload, callback) => {  //添加或修改参数一致性核查表
       dispatch({
         type: `${namespace}/addOrUpdParamCheck`,
         payload: payload,
+        callback: callback,
+      })
+    },
+    deleteRemoteInspector: (payload, callback) => {  //删除
+      dispatch({
+        type: `${namespace}/deleteRemoteInspector`,
+        payload: payload,
+        callback: callback,
+      })
+    },
+    getConsistencyCheckInfo:(payload,callback)=>{  //编辑获取详情
+      dispatch({
+        type: `${namespace}/getConsistencyCheckInfo`,
+        payload:payload,
         callback:callback,
       })
     },
@@ -143,14 +158,31 @@ const Index = (props) => {
   const [form2] = Form.useForm(); //添加编辑表单  数据一致性核查表
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
-  
+
   const [showType, setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData,consistencyCheckDetail,parLoading,saveLoading1,saveLoading2 } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, saveLoading1, saveLoading2,editLoading } = props;
+
+ 
+
   
-  const [rangUnit, setRangUnit] = useState({})//量程单位
-  
-  
+
+
+
+  const [filePar, setFilePar] = useState() //参数一致性核查表 上传附件 点击字段
+  const [filesCuidList, setFilesCuidList] = useState({}) //参数一致性核查表 上传附件
+  const [filesList3, setFilesLis3] = useState({}) //参数一致性核查表 参数附件列表
+
+  useEffect(() => {
+
+    onFinish(pageIndex, pageSize)
+
+
+
+  }, []);
+
+
+
   const [rangReq, setRangReq] = useState({})
   const [remark, setRemark] = useState({})
   const [indicaValReq, setIndicaValReq] = useState({}) //示值
@@ -159,57 +191,48 @@ const Index = (props) => {
   const [traceValReq, setTraceValReq] = useState({})
   const [remark3, setRemark3] = useState({})
 
-  const [filesCuidList, setFilesCuidList] = useState({}) //参数一致性核查表 上传附件
-  const [filesList3, setFilesLis3] = useState({}) //参数一致性核查表 参数附件列表
 
+ 
+  useEffect(()=>{
+    reqinit()
+  },[addDataConsistencyData,addParconsistencyData])
 
-  
-  const [filePar, setFilePar] = useState() //参数一致性核查表 上传附件 点击字段
+ const reqinit = () =>{ //初始化是否校验
+  if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断量程 是否 是否必填的
+    let analysisParRangObj = {}, parRemarkObj = {};
+    let indicaValReqObj = {}, parRemark2Obj = {};
 
+    addDataConsistencyData.map((item, index) => {
+      analysisParRangObj[`${item.par}RangFlag`] = true; //量程 量程一致性
+      parRemarkObj[`${item.par}RemarkFlag`] = false;
 
-  useEffect(() => {
+    })
+    setRangReq(analysisParRangObj)
+    setRemark(parRemarkObj)
 
-     onFinish(pageIndex,pageSize)
-    if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断量程 是否 是否必填的
-      let analysisParRangObj = {}, parRemarkObj = {};
-      let indicaValReqObj = {}, parRemark2Obj = {};
-
-      addDataConsistencyData.map((item, index) => {
-        analysisParRangObj[`${item.par}RangFlag`] = true; //量程 量程一致性
-        parRemarkObj[`${item.par}RemarkFlag`] = false;
-
-      })
-      setRangReq(analysisParRangObj)
-      setRemark(parRemarkObj)
-
-      addRealTimeData.map((item, index) => {
-        indicaValReqObj[`${item.par}IndicaValFlag`] = true;//示值 实时数据一致性
-        parRemark2Obj[`${item.par}Remark2Flag`] = false;
-      })
-      setIndicaValReq(indicaValReqObj)
-      setRemark2(parRemark2Obj)
-    }
-
-
-  
-    if (addParconsistencyData && addParconsistencyData[0]) { //动态生成判断设定值 溯源值是否必填的 参数一致性核查表参数一致性核查表
-      let setValObj = {}, traceValObj = {}, parRemark3Obj = {};
-      
-      addParconsistencyData.map((item, index) => {
-        traceValObj[`${item.par}TraceValFlag`] = true;
-        parRemark3Obj[`${item.par}Remark3Flag`] = false;
-      })
-
-      
-      setTraceValReq(traceValObj)
-      setRemark3(parRemark3Obj)
-    }
-
-
-  }, []);
+    addRealTimeData.map((item, index) => {
+      indicaValReqObj[`${item.par}IndicaValFlag`] = true;//示值 实时数据一致性
+      parRemark2Obj[`${item.par}Remark2Flag`] = false;
+    })
+    setIndicaValReq(indicaValReqObj)
+    setRemark2(parRemark2Obj)
+  }
 
 
 
+  if (addParconsistencyData && addParconsistencyData[0]) { //动态生成判断设定值 溯源值是否必填的 参数一致性核查表参数一致性核查表
+    let setValObj = {}, traceValObj = {}, parRemark3Obj = {};
+
+    addParconsistencyData.map((item, index) => {
+      traceValObj[`${item.par}TraceValFlag`] = false;
+      parRemark3Obj[`${item.par}Remark3Flag`] = false;
+    })
+
+
+    setTraceValReq(traceValObj)
+    setRemark3(parRemark3Obj)
+  }
+ }
 
 
   const exports = async () => {
@@ -224,10 +247,10 @@ const Index = (props) => {
   const [ID, setID] = useState()
 
 
-  const issueTipContent =  <div>
-  <p style={{marginBottom:5}}>1、待下发：督查结果未发送通知给点运维负责人。</p>
-  <p style={{marginBottom:0}}>2、待下发：督查结果已下发通知给点运维负责人。</p>
-</div>
+  const issueTipContent = <div>
+    <p style={{ marginBottom: 5 }}>1、待下发：督查结果未发送通知给点运维负责人。</p>
+    <p style={{ marginBottom: 0 }}>2、待下发：督查结果已下发通知给点运维负责人。</p>
+  </div>
 
   const columns = [
     {
@@ -271,24 +294,21 @@ const Index = (props) => {
       dataIndex: 'createTime',
       key: 'createTime',
       align: 'center',
-      render: (text, record) => {
-        return moment(text).format("YYYY-MM")
-      }   
     },
     {
-      title: <span style={{position:'relative'}}>下发状态 <NumTips content={issueTipContent}  style={{ top: 2,}} /></span>,
+      title: <span style={{ position: 'relative' }}>下发状态 <NumTips content={issueTipContent} style={{ top: 2, }} /></span>,
       dataIndex: 'issue',
       key: 'issue',
       align: 'center',
       render: (text, record) => {
-        return text==='待下发'? <span style={{color:'#f5222d'}}>{text}</span> : <span>{text}</span>
-      }   
+        return text === '待下发' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
+      }
     },
     {
       title: '下发时间',
       dataIndex: 'issueTime',
       key: 'issueTime',
-      align: 'center', 
+      align: 'center',
     },
     {
       title: '操作',
@@ -296,32 +316,31 @@ const Index = (props) => {
       render: (text, record) => {
         return (
           <>
-            <Tooltip title="编辑">
+            {record.flag && <><Tooltip title="编辑">
               <a onClick={() => {
-                setVisible(true)
-                setID(record.ID)
+                edit(record)
               }}  >
                 <EditOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
-            <Divider type="vertical" />
+              <Divider type="vertical" /></>}
             <Tooltip title="详情">
               <a onClick={() => {
-                router.push({ pathname: '/operations/remoteSupervision/detail', query: { detailData: JSON.stringify(record) } })
+                router.push({ pathname: '/operations/remoteSupervision/detail', query: { id: record.id } })
               }}>
                 <ProfileOutlined style={{ fontSize: 16 }} />
               </a>
             </Tooltip>
-            <Divider type="vertical" />
-            <Tooltip title="删除">
-              <Popconfirm title="确定要删除此条信息吗？" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a href="#" ><DelIcon /></a>
-              </Popconfirm>
-            </Tooltip>
+            {record.flag && <> <Divider type="vertical" />
+              <Tooltip title="删除">
+                <Popconfirm title="确定要删除此条信息吗？" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a href="#" ><DelIcon /></a>
+                </Popconfirm>
+              </Tooltip></>}
             <Divider type="vertical" />
             <Tooltip title="下发">
               <Popconfirm title="确定要下发督查结果给点位的运维负责人吗？" onConfirm={() => issue(record)} okText="是" cancelText="否">
-                <a href="#" ><IssuesCloseOutlined style={{fontSize:16}}/></a>
+                <a href="#" ><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>
@@ -330,11 +349,24 @@ const Index = (props) => {
 
     }
   ]
+  const [title,setTitle] = useState('添加')
+  const [editId,setEditId] = useState()
 
-  const del = (record) =>{ //删除
-
+  const edit = (record) => { //编辑
+    setTitle('编辑')
+    setVisible(true)
+    resetData()
+    setEditId(record.id)
+    props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
+     console.log(data)
+    })
   }
-  const issue = (record) =>{ //下发
+  const del = (record) => { //删除
+    props.deleteRemoteInspector({ ID: record.id }, () => {
+      onFinish(1, 20)
+    })
+  }
+  const issue = (record) => { //下发
 
   }
   const [outOrInside, setOutOrInside] = useState(1)
@@ -354,8 +386,8 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-   const resetData=()=>{
-    commonForm.resetFields();
+  const resetData = (flag) => {
+    !flag&&commonForm.resetFields();
     form2.resetFields();
     form3.resetFields();
     setDasChecked(false)
@@ -364,114 +396,123 @@ const Index = (props) => {
     setIsDisPlayCheck2(false)
     setIsDisPlayCheck3(false)
     setIsDisPlayCheck4(false)
-    setFileList1([]) ;setFileList2([]); //清除附件
-    props.updateState({addDataConsistencyData:[],addRealTimeData:[], addParconsistencyData:[]})
-   }
+    setFileList1([]); setFileList2([]); //清除附件
+    !flag&&setAddId();
+    !flag&&props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
+  }
   const add = async () => {
+
+    setTitle('添加')
     setVisible(true)
     resetData()
+    
   }
-  const save = async () => {
-
-
-    try  {
-      const commonValues = await commonForm.validateFields();
-       
+  const [addId,setAddId] = useState();
+  const save = () => {
+    commonForm.validateFields().then(commonValues => {
       const commonData = {
-              ...commonValues,
-              month:undefined,
-              DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-01 00:00:00") : undefined,
-              RangeUpload:  commonValues.files1,
-              CouUpload: commonValues.files1
-            }
-      if(tabType==1){
-        try {
-          const values = await form2.validateFields();
-         const  dataList1 =  addDataConsistencyData.map(item=>{
-          return {
-                 PollutantCode:item.ChildID,
-                 AnalyzerMin: values[`${item.par}AnalyzerRang1`],
-                 AnalyzerMax: values[`${item.par}AnalyzerRang2`],         
-                 AnalyzerUnit: values[`${item.par}AnalyzerUnit`],
-                 DASMin: dasChecked? values[`${item.par}DsRang1`] : undefined,
-                 DASMax: dasChecked? values[`${item.par}DsRang2`] : undefined, 
-                 DASUnit: dasChecked?  values[`${item.par}DsUnit`] : undefined, 
-                 DataMin: numChecked? values[`${item.par}ScyRang1`]: undefined, 
-                 DataMax: numChecked? values[`${item.par}ScyRang2`] : undefined, 
-                 DataUnit: numChecked? values[`${item.par}ScyUnit`]: undefined, 
-                 RangeAutoStatus: values[`${item.par}RangUniformity`], //量程一致性(自动判断)
-                 RangeStatus: values[`${item.par}RangCheck`], 
-                 RangeRemark:values[`${item.par}Remark`],
-                 Special:item.isDisplay==1 || item.isDisplay==3? 1 : item.isDisplay==2 || item.isDisplay==4? 2 : undefined,//颗粒物有无显示屏 流速差压法和只测流速法
-                 DASStatus: dasChecked? 1 : 2,
-                 DataStatus: numChecked? 1 : 2,
-
-
-                }
-          })
-          const  dataList2 =  addRealTimeData.map(item=>{
-            return {
-                  AnalyzerCou: values[`${item.par}IndicaVal`], 
-                  AnalyzerCouUnit:values[`${item.par}IndicaUnit`],
-                  DASCou:values[`${item.par}DsData`], 
-                  DASCouUnit:values[`${item.par}DsDataUnit`], 
-                  DataCou: values[`${item.par}ScyData`], 
-                  DataCouUnit:values[`${item.par}ScyDataUnit`], 
-                  CouAutoStatus: values[`${item.par}DataUniformity`],
-                  CouStatus:values[`${item.par}RangCheck2`], 
-                  CouRemrak:values[`${item.par}Remark2`],
-                  CouType : item.concentrationType=='原始浓度' ? 1 :  item.concentrationType=='标杆浓度'? 2 : undefined,
-                  }
-            })
-            let dataList =[];
-            dataList1.map((item1,index1)=>{ //合并两个表格的数据     
-              dataList2.map((item2,index2)=>{
-                if(index1==index2){
-                  dataList.push({...item1,...item2})
-                }
-              })
-            })
-          props.addOrUpdConsistencyCheck({
-            Data:commonData,
-            DataList:dataList,
-            ParamDataList:[],
-          })
-    
-    
-        } catch (errorInfo) {
-          console.log('Failed:', errorInfo);
-        }
-      }else{  //参数一致性核查表
-        try {
-          const values = await form3.validateFields();
-          const  paramDataList =  addParconsistencyData.map(item=>{
-            return {
-                  PollutantCode:item.ChildID,
-                  Status:values[`${item.par}IsEnable`]&&values[`${item.par}IsEnable`][0]==1? 1 : 2, 
-                  SetValue: values[`${item.par}SetVal`], 
-                  TraceabilityValue:values[`${item.par}TraceVal`],
-                  AutoUniformity:values[`${item.par}DsData`], 
-                  Uniformity:values[`${item.par}Uniform`], 
-                  Remark: values[`${item.par}Remark3`], 
-                  Upload:values[`${item.par}ParFiles`], 
-                  }
-            }) 
-          props.addOrUpdParamCheck({
-            Data:commonData,
-            ParamDataList:paramDataList,
-          },()=>{ 
-            setVisible(false)
-            onFinish(1,20)
-          })
-        } catch (errorInfo) {
-          console.log('Failed:', errorInfo);
-        }
+        ...commonValues,
+        ID:title==='添加'?  addId : editId,
+        month: undefined,
+        DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-01 00:00:00") : undefined,
       }
-  
+      if (tabType == 1) {
+        form2.validateFields().then((values) => {
+          const dataList1 = addDataConsistencyData.map(item => {
+            return {
+              PollutantCode: item.ChildID,
+              AnalyzerMin: values[`${item.par}AnalyzerRang1`],
+              AnalyzerMax: values[`${item.par}AnalyzerRang2`],
+              AnalyzerUnit: values[`${item.par}AnalyzerUnit`],
+              DASMin: dasChecked ? values[`${item.par}DsRang1`] : undefined,
+              DASMax: dasChecked ? values[`${item.par}DsRang2`] : undefined,
+              DASUnit: dasChecked ? values[`${item.par}DsUnit`] : undefined,
+              DataMin: numChecked ? values[`${item.par}ScyRang1`] : undefined,
+              DataMax: numChecked ? values[`${item.par}ScyRang2`] : undefined,
+              DataUnit: numChecked ? values[`${item.par}ScyUnit`] : undefined,
+              RangeAutoStatus: values[`${item.par}RangUniformity`], //量程一致性(自动判断)
+              RangeStatus: values[`${item.par}RangCheck`],
+              RangeRemark: values[`${item.par}Remark`],
+              Special: item.isDisplay == 1&&isDisPlayCheck1 || item.isDisplay == 3 &&isDisPlayCheck3 ? 1 : item.isDisplay == 2&&isDisPlayCheck2 || item.isDisplay == 4 &&isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和只测流速法
+              DASStatus: dasChecked ? 1 : 2,
+              DataStatus: numChecked ? 1 : 2,
+            }
+          })
+          const dataList2 = addRealTimeData.map(item => {
+            return {
+              AnalyzerCou: values[`${item.par}IndicaVal`],
+              AnalyzerCouUnit: values[`${item.par}IndicaUnit`],
+              DASCou: dasChecked ? values[`${item.par}DsData`] : undefined,
+              DASCouUnit: dasChecked ? values[`${item.par}DsDataUnit`] : undefined,
+              DataCou: numChecked ? values[`${item.par}ScyData`] : undefined,
+              DataCouUnit: numChecked ? values[`${item.par}ScyDataUnit`] : undefined,
+              CouAutoStatus: values[`${item.par}DataUniformity`],
+              CouStatus: values[`${item.par}RangCheck2`],
+              CouRemrak: values[`${item.par}Remark2`],
+              CouType: item.concentrationType == '原始浓度' ? 1 : item.concentrationType == '标杆浓度' ? 2 : undefined,
+            }
+          })
+            dataList1.map((item,index)=>{ // 合并颗粒物和流速的数据  数据一致性核查表
+              if(item.PollutantCode=='411'&&!item.Special || item.PollutantCode=='415'&&!item.Special ){
+                dataList1.splice(index,1)
+              }
+            })
+          let dataList = [];
+          dataList1.map((item1, index1) => { //合并两个表格的数据     
+            dataList2.map((item2, index2) => {
+              if (index1 == index2) {
+                dataList.push({ ...item1, ...item2 })
+              }
+            })
+          })
 
-    }catch(errorInfo){
-      console.log('Failed:', errorInfo);
-    }
+          // props.addOrUpdConsistencyCheck({
+          //   Data: { ...commonData, RangeUpload: values.files1, CouUpload: values.files2 },
+          //   DataList: dataList,
+          // }, (id) => {
+          //   title==='添加'&&setAddId(id)
+          //   onFinish(pageIndex, pageSize)
+          // })
+        }).catch((info) => {
+          console.log('Validate Failed2:', info);
+        });
+
+
+
+
+      } else {  //参数一致性核查表
+        form3.validateFields().then(values => {
+          const paramDataList = addParconsistencyData.map(item => {
+            return {
+              CheckItem: item.ChildID,
+              Status: values[`${item.par}IsEnable`] && values[`${item.par}IsEnable`][0] == 1 ? 1 : 2,
+              SetValue: values[`${item.par}SetVal`],
+              TraceabilityValue: values[`${item.par}TraceVal`],
+              AutoUniformity: values[`${item.par}DsData`],
+              Uniformity: values[`${item.par}Uniform`],
+              Remark: values[`${item.par}Remark3`],
+              Upload: values[`${item.par}ParFiles`],
+            }
+          })
+          props.addOrUpdParamCheck({
+            Data: commonData,
+            ParamDataList: paramDataList,
+          }, (id) => {
+            title==='添加'&&setAddId(id)
+            onFinish(pageIndex, pageSize)
+          })
+        }).catch((info) => {
+          console.log('Validate Failed3:', info);
+        });
+
+      }
+    }).catch((info) => {
+      console.log('Validate Failed:', info);
+    });
+
+
+
+
 
   }
   const changeEnt = (val) => {
@@ -517,20 +558,21 @@ const Index = (props) => {
 
     }
     if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //监测点
-         props.getPointConsistencyParam({DGIMN: hangedValues.DGIMN},(pollutantList,addRealTimeList,paramList)=>{
-          if (paramList && paramList[0]) { //附件 cuid
-              
-            let filesCuidObj = {},filesListObj={};
-            paramList.map((item, index) => {
-              filesCuidObj[`${item.par}ParFiles`] = cuid();
-              filesListObj[`${item.par}ParFiles`] = [];
-            })
-      
-            setFilesCuidList(filesCuidObj)
-            setFilesLis3(filesListObj)
+      props.getPointConsistencyParam({ DGIMN: hangedValues.DGIMN }, (pollutantList, addRealTimeList, paramList) => {
+         resetData(true)
+        if (paramList && paramList[0]) { //附件 cuid
 
-          }
-         })
+          let filesCuidObj = {}, filesListObj = {};
+          paramList.map((item, index) => {
+            filesCuidObj[`${item.par}ParFiles`] = cuid();
+            filesListObj[`${item.par}ParFiles`] = [];
+          })
+
+          setFilesCuidList(filesCuidObj)
+          setFilesLis3(filesListObj)
+
+        }
+      })
     }
   }
   const [visible, setVisible] = useState(false)
@@ -548,12 +590,12 @@ const Index = (props) => {
   const [tabType, setTabType] = useState(1)
   const tabsChange = (key) => {
     setTabType(key)
-    if(key==1){
-       form2.resetFields()
-    }else{
-      form3.resetFields()
-    }
-   
+    // if (key == 1) {
+    //   form2.resetFields()
+    // } else {
+    //   form3.resetFields()
+    // }
+
   }
 
   const { entList, entLoading } = props;
@@ -581,36 +623,39 @@ const Index = (props) => {
   const [previewTitle, setPreviewTitle] = useState()
   const [previewImage, setPreviewImage] = useState()
 
-  const [fileType, setFileType] = useState(1) 
+  const [fileType, setFileType] = useState(1)
 
 
-  const filesCuid3 = () =>{
-    for(var key in filesCuidList){   
-      if(key==filePar){
+  const filesCuid3 = () => {
+    for (var key in filesCuidList) {
+      if (key == filePar) {
         return filesCuidList[key]
-      }   
-   } 
+      }
+    }
   }
   const uploadProps = { // 设备运营接手资料  资料附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     data: {
-      FileUuid: fileType==1? filesCuid1 : fileType==2? filesCuid2 :  filesCuid3() ,
+      FileUuid: fileType == 1 ? filesCuid1 : fileType == 2 ? filesCuid2 : filesCuid3(),
       FileActualType: '0',
     },
     listType: "picture-card",
     onChange(info) {
-      if(fileType==1){ setFileList1(info.fileList) }else if(fileType==2){ setFileList2(info.fileList)
-      }else{
-       setFilesLis3({
-         ...filesList3,
-         [filePar]:info.fileList
-       })
+      if (fileType == 1) { setFileList1(info.fileList) } else if (fileType == 2) {
+        setFileList2(info.fileList)
+      } else {
+        setFilesLis3({
+          ...filesList3,
+          [filePar]: info.fileList
+        })
       }
       if (info.file.status === 'done') {
-        if(fileType==1){ form2.setFieldsValue({files1:filesCuid1}) 
-        }else if(fileType==2){  form2.setFieldsValue({files2:filesCuid2})
-        }else{
-          form3.setFieldsValue({[filePar]:filesCuid3()})
+        if (fileType == 1) {
+          form2.setFieldsValue({ files1: filesCuid1 })
+        } else if (fileType == 2) {
+          form2.setFieldsValue({ files2: filesCuid2 })
+        } else {
+          form3.setFieldsValue({ [filePar]: filesCuid3() })
         }
 
       }
@@ -632,7 +677,7 @@ const Index = (props) => {
       setPreviewVisible(true)
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
     },
-    fileList:  fileType==1?  fileList1 : fileType==2? fileList2 : filesList3[filePar] ,
+    fileList: fileType == 1 ? fileList1 : fileType == 2 ? fileList2 : filesList3[filePar],
   };
   // cosnt []
   const [manualOptions, setManualOptions] = useState([
@@ -676,7 +721,7 @@ const Index = (props) => {
 
 
       case 3: // 参数一致性核查表
-        if (val[0] == 3) { 
+        if (val[0] == 3) {
           setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: false })
           setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: true })
         } else {
@@ -687,135 +732,137 @@ const Index = (props) => {
 
   }
 
-  let NO,NO2; //获取NOx的值
+  let NO, NO2; //获取NOx的值
 
-  const isJudge =  (row,type) => {
-    
+  const isJudge = (row, type) => {
 
-     switch(type){
-       case 1 : // 量程一致性核查表 自动判断
-       const analyzerRang1= form2.getFieldValue(`${row.par}AnalyzerRang1`), analyzerRang2 = form2.getFieldValue(`${row.par}AnalyzerRang2`), analyzerUnit = form2.getFieldValue(`${row.par}AnalyzerUnit`);  
-       const dsRang1 = form2.getFieldValue(`${row.par}DsRang1`),  dsRang2 = form2.getFieldValue(`${row.par}DsRang2`),   dsUnit = form2.getFieldValue(`${row.par}DsUnit`);
-       const scyRang1 = form2.getFieldValue(`${row.par}ScyRang1`),  scyRang2 = form2.getFieldValue(`${row.par}ScyRang2`),   scyUnit = form2.getFieldValue(`${row.par}ScyUnit`);
-      
-       const analyzerFlag =  analyzerRang1&&analyzerRang2&&analyzerUnit? true : false;
-       const dsRangFlag = dsRang1&&dsRang2&&dsUnit? true : false;
-       const scyRangFlag = scyRang1&&scyRang2? true : false;
-             if(analyzerFlag&&dsRangFlag&&!scyRang1&&!scyRang2&&!scyUnit){ //只判断分析仪和DAS量程填完的状态
-                       props.judgeConsistencyRangeCheck({
-                        PollutantCode:row.ChildID,
-                        Special:row.isDisplay==1 || row.isDisplay==3? 1 : row.isDisplay==2|| row.isDisplay==4 ? 2 : undefined,
-                        AnalyzerMin: analyzerRang1, AnalyzerMax:analyzerRang2, AnalyzerUnit: analyzerUnit,
-                        DASMin: dsRang1,  DASMax: dsRang2,  DASUnit: dsUnit,
-                        DASStatus:dasChecked? 1 : 2,
-                        DataStatus:numChecked? 1 : 2,
-                      },(data)=>{
-                          form2.setFieldsValue({[`${row.par}RangUniformity`] :data })
-                        })
-             }
-             if(analyzerFlag&&scyRangFlag &&scyUnit&&dsRang1&&!dsRang2&&!dsUnit ){ //同上
-              props.judgeConsistencyRangeCheck({
-                PollutantCode:row.ChildID,
-                Special:row.isDisplay==1 || row.isDisplay==3? 1 : row.isDisplay==2|| row.isDisplay==4 ? 2 : undefined,
-                AnalyzerMin: analyzerRang1,AnalyzerMax:analyzerRang2,  AnalyzerUnit: analyzerUnit,
-                DataMin: scyRang1,  DataMax: scyRang2, DataUnit: scyUnit,
-                DASStatus:dasChecked? 1 : 2,
-                DataStatus:numChecked? 1 : 2,
-              },(data)=>{
-                  form2.setFieldsValue({[`${row.par}RangUniformity`] :data })
-                })
-            }
-             if(analyzerFlag&&dsRangFlag&&scyRangFlag){
-              props.judgeConsistencyRangeCheck({
-                PollutantCode:row.ChildID,
-                Special:row.isDisplay==1 || row.isDisplay==3? 1 : row.isDisplay==2|| row.isDisplay==4 ? 2 : undefined,
-                AnalyzerMin: analyzerRang1, AnalyzerMax:analyzerRang2, AnalyzerUnit: analyzerUnit,
-                DASMin: dsRang1,  DASMax: dsRang2,  DASUnit: dsUnit, DataMin: scyRang1,  DataMax: scyRang2, DataUnit: scyUnit,
-                DASStatus:dasChecked? 1 : 2,
-                DataStatus:numChecked? 1 : 2,
-              },(data)=>{
-                  form2.setFieldsValue({[`${row.par}RangUniformity`] :data })
-                })
-             
-            }
+    const analyzerRang1 = form2.getFieldValue(`${row.par}AnalyzerRang1`), analyzerRang2 = form2.getFieldValue(`${row.par}AnalyzerRang2`), analyzerUnit = form2.getFieldValue(`${row.par}AnalyzerUnit`);
+    const analyzerFlag = analyzerRang1 && analyzerRang2 && analyzerUnit || row.Name=='NOx' ? true : false;
 
-       break;
-       case 2 : // 实时数据一致性核查表 自动判断
-       const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`),  indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
-       const dsData = form2.getFieldValue(`${row.par}DsData`),   dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
-       const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
-       
-       
-       const indicaValFlag = indicaVal&&indicaUnit? true : false;
-       const dsDataFlag = dsData&&dsDataUnit? true : false; //只判断DAS示值填完的状态
-       const scyDataFlag = scyData&&scyDataUnit? true : false;
+    switch (type) {
+      case 1: // 量程一致性核查表 自动判断
+        const dsRang1 = form2.getFieldValue(`${row.par}DsRang1`), dsRang2 = form2.getFieldValue(`${row.par}DsRang2`), dsUnit = form2.getFieldValue(`${row.par}DsUnit`);
+        const scyRang1 = form2.getFieldValue(`${row.par}ScyRang1`), scyRang2 = form2.getFieldValue(`${row.par}ScyRang2`), scyUnit = form2.getFieldValue(`${row.par}ScyUnit`);
 
-             if(indicaValFlag&&dsDataFlag&&!scyData&&!scyDataUnit){
-                       props.judgeConsistencyCouCheck({
-                        PollutantCode:row.ChildID,
-                        CouType :row.concentrationType==='原始浓度'?  1 : row.concentrationType==='标杆浓度' ? 2 : undefined,
-                        AnalyzerCou: indicaVal,  AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-                        DASCou: dsData,  DASCouUnit: dsDataUnit, //DAS示值和单位
-                        DASStatus:dasChecked? 1 : 2,
-                        DataStatus:numChecked? 1 : 2,
-                      },(data)=>{
-                          form2.setFieldsValue({[`${row.par}DataUniformity`] :data })
-                        })
-             }
-             if(indicaValFlag&&scyDataFlag&&!dsData&&!dsDataUnit){
-              props.judgeConsistencyCouCheck({
-                PollutantCode:row.ChildID,
-                CouType :row.concentrationType==='原始浓度'?  1 : row.concentrationType==='标杆浓度' ? 2 : undefined,
-                AnalyzerCou: indicaVal,  AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-                DataCou: scyData, DataUnit: scyDataUnit, //数采仪
-                DASStatus:dasChecked? 1 : 2,
-                DataStatus:numChecked? 1 : 2,
-                },(data)=>{
-                  form2.setFieldsValue({[`${row.par}DataUniformity`] :data })
-                })
-            }
-             if(indicaValFlag&&dsDataFlag&&scyDataFlag){
-              props.judgeConsistencyCouCheck({
-                PollutantCode:row.ChildID,
-                CouType :row.concentrationType==='原始浓度'?  1 : row.concentrationType==='标杆浓度' ? 2 : undefined,
-                AnalyzerCou: indicaVal,  AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-                DASCou: dsData,  DASCouUnit: dsDataUnit, //DAS示值和单位
-                DataCou: scyData, DataUnit: scyDataUnit, //数采仪
-                DASStatus:dasChecked? 1 : 2,
-                DataStatus:numChecked? 1 : 2,
-              },(data)=>{
-                  form2.setFieldsValue({[`${row.par}DataUniformity`] :data })
-                })
-            }
-             
-               if(row.Name==='NO'){
-                 NO = form2.getFieldValue(`${row.par}IndicaVal`);
-               }
-               if(row.Name==='NO2'){
-                NO2 = form2.getFieldValue(`${row.par}IndicaVal`);
-              }
-              if(NO&&NO2){  //获取NOx数采仪实时数据
-                props.getNoxValue({  NO:NO,NO2:NO2  },(data)=>{
-                  form2.setFieldsValue({[`402ScyData`] :data })
-                })
-            }
-       break;
-       case 3 : // 参数一致性核查表 自动判断
-       const setVal = form3.getFieldValue(`${row.par}SetVal`),
-            traceVal = form3.getFieldValue(`${row.par}TraceVal`);
-             if(setVal&&traceVal){
-               if(setVal==traceVal){
-                form3.setFieldsValue({[`${row.par}Uniform`] :1 })
-               }else{
-                form3.setFieldsValue({[`${row.par}Uniform`] :2})
-               }
-                //  props.judgeParamCheck({ PollutantCode:row.ChildID,   SetValue: setVal,   TraceabilityValue: traceVal, },(data)=>{
-                //   form3.setFieldsValue({[`${row.par}Uniform`] :data })
-                //  })
-             }
+        const dsRangFlag = dsRang1 && dsRang2 && dsUnit ? true : false;
+        const scyRangFlag = scyRang1 && scyRang2 ? true : false;
+        if (analyzerFlag && dsRangFlag && !scyRang1 && !scyRang2 && !scyUnit) { //只判断分析仪和DAS量程填完的状态
+          props.judgeConsistencyRangeCheck({
+            PollutantCode: row.ChildID,
+            Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
+            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit,
+            DASStatus: dasChecked ? 1 : 2,
+            DataStatus: numChecked ? 1 : 2,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
+          })
+        }
+        if (analyzerFlag && scyRangFlag && scyUnit && dsRang1 && !dsRang2 && !dsUnit) { //同上
+          props.judgeConsistencyRangeCheck({
+            PollutantCode: row.ChildID,
+            Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
+            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
+            DASStatus: dasChecked ? 1 : 2,
+            DataStatus: numChecked ? 1 : 2,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
+          })
+        }
+        if (analyzerFlag && dsRangFlag && scyRangFlag) {
+          props.judgeConsistencyRangeCheck({
+            PollutantCode: row.ChildID,
+            Special: row.isDisplay == 1 || row.isDisplay == 3 ? 1 : row.isDisplay == 2 || row.isDisplay == 4 ? 2 : undefined,
+            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit, DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
+            DASStatus: dasChecked ? 1 : 2,
+            DataStatus: numChecked ? 1 : 2,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
+          })
 
-       break;
-     }
+        }
+
+        break;
+      case 2: // 实时数据一致性核查表 自动判断
+        const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
+        const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
+        const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
+
+        const indicaValFlag = indicaVal && indicaUnit || row.concentrationType=='标杆浓度' || row.Name =='流速' ||  row.Name=='NOx' ? true : false;
+        const dsDataFlag = dsData && dsDataUnit  ?  true : false; //只判断DAS示值填完的状态
+        const scyDataFlag = scyData && scyDataUnit ? true : false;
+
+        if (analyzerFlag && indicaValFlag && dsDataFlag && !scyData && !scyDataUnit) {
+          props.judgeConsistencyCouCheck({
+            PollutantCode: row.ChildID,
+            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
+            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
+            DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
+            DASStatus: dasChecked ? 1 : 2,
+            DataStatus: numChecked ? 1 : 2,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+          })
+        }
+        if (analyzerFlag && indicaValFlag && scyDataFlag && !dsData && !dsDataUnit) {
+          props.judgeConsistencyCouCheck({
+            PollutantCode: row.ChildID,
+            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
+            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
+            DataCou: scyData, DataUnit: scyDataUnit, //数采仪
+            DASStatus: dasChecked ? 1 : 2,
+            DataStatus: numChecked ? 1 : 2,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+          })
+        }
+        if (analyzerFlag && indicaValFlag && dsDataFlag && scyDataFlag) {
+          props.judgeConsistencyCouCheck({
+            PollutantCode: row.ChildID,
+            CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
+            AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
+            AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
+            DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
+            DataCou: scyData, DataUnit: scyDataUnit, //数采仪
+            DASStatus: dasChecked ? 1 : 2,
+            DataStatus: numChecked ? 1 : 2,
+          }, (data) => {
+            form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
+          })
+        }
+
+        if (row.Name === 'NO') {
+          NO = form2.getFieldValue(`${row.par}IndicaVal`);
+        }
+        if (row.Name === 'NO2') {
+          NO2 = form2.getFieldValue(`${row.par}IndicaVal`);
+        }
+        if (NO && NO2) {  //获取NOx数采仪实时数据
+          props.getNoxValue({ NO: NO, NO2: NO2 }, (data) => {
+            form2.setFieldsValue({ [`402ScyData`]: data })
+          })
+        }
+        break;
+      case 3: // 参数一致性核查表 自动判断
+        const setVal = form3.getFieldValue(`${row.par}SetVal`),
+          traceVal = form3.getFieldValue(`${row.par}TraceVal`);
+        if (setVal && traceVal) {
+          if (setVal == traceVal) {
+            form3.setFieldsValue({ [`${row.par}Uniform`]: 1 })
+          } else {
+            form3.setFieldsValue({ [`${row.par}Uniform`]: 2 })
+          }
+          //  props.judgeParamCheck({ PollutantCode:row.ChildID,   SetValue: setVal,   TraceabilityValue: traceVal, },(data)=>{
+          //   form3.setFieldsValue({[`${row.par}Uniform`] :data })
+          //  })
+        }
+
+        break;
+    }
   }
   //颗粒物 有无显示屏
   const [isDisPlayCheck1, setIsDisPlayCheck1] = useState(false)
@@ -861,18 +908,18 @@ const Index = (props) => {
     }
   }
 
-  const unitFormat = (record) =>{
-    return  record.Col1&&record.Col1.split(',').map((item,index)=>{
-      if(record.Name=='流速'&&record.isDisplay==3){ //差压法
-        if(index<=1){ //只取前两个
-          return <Option value={item}>{item}</Option>  
+  const unitFormat = (record) => {
+    return record.Col1 && record.Col1.split(',').map((item, index) => {
+      if (record.Name == '流速' && record.isDisplay == 3) { //差压法
+        if (index <= 1) { //只取前两个
+          return <Option value={item}>{item}</Option>
         }
-      } else if(record.Name=='流速'&&record.isDisplay==4){ //只测流速法
-        if(index>1){ //只取最后一个
-          return <Option value={item}>{item}</Option>  
-        }   
-      }else{
-      return <Option value={item}>{item}</Option>
+      } else if (record.Name == '流速' && record.isDisplay == 4) { //只测流速法
+        if (index > 1) { //只取最后一个
+          return <Option value={item}>{item}</Option>
+        }
+      } else {
+        return <Option value={item}>{item}</Option>
       }
     })
   }
@@ -969,15 +1016,15 @@ const Index = (props) => {
               }
               return <Row justify='center' align='middle'>
                 <Form.Item name={`${record.par}AnalyzerRang1`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
                 <Form.Item name={`${record.par}AnalyzerRang2`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
+                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
-                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record,1) }}>
-                      {unitFormat(record)}
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
+                    {unitFormat(record)}
                   </Select>
                 </Form.Item>
               </Row>
@@ -996,7 +1043,7 @@ const Index = (props) => {
             } else {
               let disabledFlag = false;
               switch (record.isDisplay) {
-              
+
                 case 1: case 2:
                   disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !dasChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !dasChecked) ? true : false
                   break;
@@ -1008,15 +1055,15 @@ const Index = (props) => {
               }
               return <Row justify='center' align='middle'>
                 <Form.Item name={[`${record.par}DsRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]} >
-                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
-                <Form.Item name={[`${record.par}DsRang2`]}  rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
+                <Form.Item name={[`${record.par}DsRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
-                <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record,1) }}>
-                   {unitFormat(record)}
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
+                    {unitFormat(record)}
                   </Select>
                 </Form.Item>
               </Row>
@@ -1037,7 +1084,7 @@ const Index = (props) => {
               switch (record.isDisplay) {
                 case 1: case 2:
                   disabledFlag = (record.isDisplay == 1 && !isDisPlayCheck1 || !numChecked) || (record.isDisplay == 2 && !isDisPlayCheck2 || !numChecked) ? true : false
-                  break;             
+                  break;
                 case 3: case 4:
                   disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || !numChecked || (record.isDisplay == 4 && !isDisPlayCheck4 || !numChecked) ? true : false
                   break;
@@ -1046,14 +1093,14 @@ const Index = (props) => {
               }
               return <Row justify='center' align='middle'>
                 <Form.Item name={[`${record.par}ScyRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
+                  <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
-                <Form.Item name={[`${record.par}ScyRang2`]}  rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
-                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record,1) }} />
+                <Form.Item name={[`${record.par}ScyRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                  <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
-                <Form.Item name={[`${record.par}ScyUnit`]}  style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
-                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record,1) }}>
+                <Form.Item name={[`${record.par}ScyUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                  <Select allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
                 </Form.Item>
@@ -1092,7 +1139,7 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-              <Form.Item  name={[`${record.par}RangCheck`]}>
+              <Form.Item name={[`${record.par}RangCheck`]}>
                 <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
               </Form.Item>
             </Row>
@@ -1124,9 +1171,8 @@ const Index = (props) => {
             const obj = {
               children: <div>
                 <Form.Item name='files1' >
-                  <a onClick={() => {setFileType(1); setFileVisible(true) }}>上传附件</a>
+                  <a onClick={() => { setFileType(1); setFileVisible(true) }}>上传附件</a>
                 </Form.Item>
-                {/* <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} /> */}
               </div>,
               props: {},
             };
@@ -1143,6 +1189,15 @@ const Index = (props) => {
       ]
     },
   ]
+
+  const isEnableChange = (values,name) =>{
+    let setValObj = {}, traceValObj = {}, parRemark3Obj = {};
+    if(values[0]){ //选中
+      setTraceValReq({...traceValReq,[`${name}TraceValFlag`]: true})
+    }else{
+      setTraceValReq({...traceValReq,[`${name}TraceValFlag`]: false})
+    }
+  }
   const columns3 = [
     {
       title: '序号',
@@ -1197,13 +1252,13 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={`${record.par}IndicaVal`} rules={[{ required:  indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}>
-                <InputNumber placeholder='请输入'  onBlur={() => { isJudge(record,2) }} />
+              <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}>
+                <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
               <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}>
-              <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record,2) }}>
-                 {unitFormat(record)}
-                  </Select>
+                <Select allowClear placeholder='单位列表' onChange={() => { isJudge(record, 2) }}>
+                  {unitFormat(record)}
+                </Select>
               </Form.Item>
             </Row>
           }
@@ -1217,12 +1272,12 @@ const Index = (props) => {
           render: (text, record) => {
             return <Row justify='center' align='middle'>
               <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} >
-                <InputNumber placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record,2) }} />
+                <InputNumber placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
               <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}>
-              <Select allowClear placeholder='单位列表' disabled={!dasChecked} onChange={() => { isJudge(record,2) }}>
-                 {unitFormat(record)}
-                  </Select>
+                <Select allowClear placeholder='单位列表' disabled={!dasChecked} onChange={() => { isJudge(record, 2) }}>
+                  {unitFormat(record)}
+                </Select>
               </Form.Item>
             </Row>
           }
@@ -1238,13 +1293,13 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={[`${record.par}ScyData`]}  rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
-                <InputNumber placeholder='请输入' style={{minWidth:85}} disabled={record.Name === 'NOx'? true : !numChecked} onBlur={() => { isJudge(record,2) }} />
+              <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
+                <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={record.Name === 'NOx' ? true : !numChecked} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
-              <Form.Item name={[`${record.par}ScyDataUnit`]}  style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}>
-                <Select allowClear placeholder='单位列表' disabled={!numChecked} onChange={() => { isJudge(record,2) }}>
-                   {unitFormat(record)}
-                  </Select>
+              <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}>
+                <Select allowClear placeholder='单位列表' disabled={!numChecked} onChange={() => { isJudge(record, 2) }}>
+                  {unitFormat(record)}
+                </Select>
               </Form.Item>
             </Row>
           }
@@ -1274,7 +1329,7 @@ const Index = (props) => {
           width: 220,
           render: (text, record, index) => {
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
-              <Form.Item  name={[`${record.par}RangCheck2`]}>
+              <Form.Item name={[`${record.par}RangCheck2`]}>
                 <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck2`, 2) }} />
               </Form.Item>
             </Row>
@@ -1302,7 +1357,7 @@ const Index = (props) => {
             const obj = {
               children: <div>
                 <Form.Item name='files2' >
-                  <a onClick={() => {setFileType(2); setFileVisible(true) }}>上传附件</a>
+                  <a onClick={() => { setFileType(2); setFileVisible(true) }}>上传附件</a>
                 </Form.Item>
               </div>,
               props: {},
@@ -1344,8 +1399,8 @@ const Index = (props) => {
       dataIndex: 'isDisplay',
       key: 'isDisplay',
       render: (text, record) => {
-        return <Form.Item name={`${record.par}IsEnable`}  rules={[{ required: false, message: '请选择' }]}>
-         <Checkbox.Group> <Checkbox  value={1} ></Checkbox></Checkbox.Group>
+        return <Form.Item name={`${record.par}IsEnable`} rules={[{ required: false, message: '请选择' }]}>
+          <Checkbox.Group onChange={(value)=>{isEnableChange(value,`${record.par}` )}}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
         </Form.Item>
 
       }
@@ -1356,8 +1411,8 @@ const Index = (props) => {
       dataIndex: 'par',
       key: 'par',
       render: (text, record) => {
-        return <Form.Item  name={`${record.par}SetVal`}  rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
-          <InputNumber placeholder='请输入'  onBlur={() => { isJudge(record,3) }} style={{ width: '100%' }} />
+        return <Form.Item name={`${record.par}SetVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+          <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
         </Form.Item>
 
       }
@@ -1368,8 +1423,8 @@ const Index = (props) => {
       dataIndex: 'par',
       key: 'par',
       render: (text, record) => {
-        return <Form.Item name={`${record.par}TraceVal`}  rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
-          <InputNumber placeholder='请输入'  onBlur={() => { isJudge(record,3) }} style={{ width: '100%' }} />
+        return <Form.Item name={`${record.par}TraceVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+          <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
         </Form.Item>
 
       }
@@ -1412,7 +1467,7 @@ const Index = (props) => {
       key: 'par',
       width: 150,
       render: (text, record) => {
-        return <Form.Item  name={`${record.par}Remark3`} rules={[{ required: remark3[`${record.par}Remark3Flag`], message: '请输入' }]}>
+        return <Form.Item name={`${record.par}Remark3`} rules={[{ required: remark3[`${record.par}Remark3Flag`], message: '请输入' }]}>
           <Input placeholder='请输入' style={{ width: '100%' }} />
         </Form.Item>
       }
@@ -1427,7 +1482,7 @@ const Index = (props) => {
       render: (text, record, index) => {
         return <div>
           <Form.Item name={`${record.par}ParFiles`} >
-            <a style={{ paddingRight: 8 }} onClick={() => {setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true); }}>上传附件</a>
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true); }}>上传附件</a>
           </Form.Item>
         </div>;
 
@@ -1444,8 +1499,8 @@ const Index = (props) => {
     }
   ]
 
-  const ModalCommonContent =  () =>{
-    
+  const ModalCommonContent = () => {
+
   }
 
   const { addParconsistencyData } = props;
@@ -1454,7 +1509,7 @@ const Index = (props) => {
 
 
 
- 
+
   return (
     <div className={styles.remoteSupervisionSty}>
 
@@ -1465,7 +1520,7 @@ const Index = (props) => {
             name="advanced_search"
             onFinish={() => { onFinish(pageIndex, pageSize) }}
             initialValues={{
-              month:moment(moment().format('YYYY-MM'))
+              month: moment(moment().format('YYYY-MM'))
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
@@ -1477,8 +1532,8 @@ const Index = (props) => {
               <Form.Item label='企业' name='EntCode'>
                 <EntAtmoList pollutantType={2} />
               </Form.Item>
-              <Spin spinning={pointLoading} size='small' style={{top:-8,left:20}}>
-              <Form.Item label='监测点名称' name='DGIMN' >
+              <Spin spinning={pointLoading} size='small' style={{ top: -8, left: 20 }}>
+                <Form.Item label='监测点名称' name='DGIMN' >
 
                   <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
                     {
@@ -1487,7 +1542,7 @@ const Index = (props) => {
                       })
                     }
                   </Select>
-              </Form.Item>
+                </Form.Item>
               </Spin>
             </Row>
 
@@ -1532,45 +1587,45 @@ const Index = (props) => {
         </Card>
       </BreadcrumbWrapper>
       <Modal
-        title='添加'
+        title={title}
         visible={visible}
         onOk={save}
         destroyOnClose
         onCancel={() => { setVisible(false); }}
         width='98%'
-        confirmLoading={tabType==1? saveLoading1 : saveLoading2}
+        confirmLoading={tabType == 1 ? saveLoading1 : saveLoading2}
         wrapClassName={styles.modalSty}
         okText='保存'
         getContainer={false}
-      > 
-      
+      >
+         <Spin spinning={title==='编辑'&&editLoading}>
         <Form
-        form={commonForm}
-        name={"advanced_search" }
-        initialValues={{
-        }}
-        className={styles.queryForm2}
-        onValuesChange={onValuesChange2}
-      > 
+          form={commonForm}
+          name={"advanced_search"}
+          initialValues={{
+          }}
+          className={styles.queryForm2}
+          onValuesChange={onValuesChange2}
+        >
 
           <Row className={styles.queryPar}>
             <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称!' }]}>
-              <EntAtmoList pollutantType={2} allowClear={false}/>
+              <EntAtmoList pollutantType={2} allowClear={false} />
             </Form.Item>
-            <Spin spinning={pointLoading2} size='small' style={{top:-8,left:20}}>
-              <Form.Item label='监测点名称' name='DGIMN'  rules={[{ required: true, message: '请选择监测点名称!' }]} >
-                  <Select placeholder='请选择'   showSearch optionFilterProp="children">
-                    {
-                      pointList2[0] && pointList2.map(item => {
-                        return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
-                      })
-                    }
-                  </Select>
+            <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: 20 }}>
+              <Form.Item label='监测点名称' name='DGIMN' rules={[{ required: true, message: '请选择监测点名称!' }]} >
+                <Select placeholder='请选择' showSearch optionFilterProp="children">
+                  {
+                    pointList2[0] && pointList2.map(item => {
+                      return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                    })
+                  }
+                </Select>
               </Form.Item>
-              </Spin>
+            </Spin>
 
             <Form.Item label='核查月份' name='month' rules={[{ required: true, message: '请选择核查月份!' }]}>
-              <DatePicker  picker="month" />
+              <DatePicker picker="month" />
             </Form.Item>
           </Row>
 
@@ -1583,71 +1638,71 @@ const Index = (props) => {
             className={styles.tabSty}
           >
             <TabPane tab="数据一致性核查表" key="1">
-            <Form
-               form={form2}
-               name={"advanced_search" }
-               initialValues={{ }}
-               className={styles.queryForm2}
+              <Form
+                form={form2}
+                name={"advanced_search"}
+                initialValues={{}}
+                className={styles.queryForm2}
                 onValuesChange={onValuesChange2}
-                > 
-              <SdlTable
-                loading={parLoading}
-                columns={columns2}
-                dataSource={addDataConsistencyData}
-                pagination={false}
-                scroll={{ y: '100vh' }}
-              />
-              <SdlTable
-                loading={parLoading}
-                columns={columns3}
-                dataSource={addRealTimeData}
-                pagination={false}
-                scroll={{ y: '100vh' }}
-              />
-              <Row style={{ color: '#f5222d', marginTop: 10 }}>
-                <span style={{ paddingRight: 10 }}>注：</span>
-                <ol type="1" style={{ listStyle: 'auto' }}>
-                  <li>填写数值，带单位；</li>
-                  <li>项目无DAS，可只填写实时数据内容；若使用我司数采仪，仍需简单核算、确认历史数据情况；</li>
-                  <li>数字里传输数据须完全一致；模拟量传输，实时数据数据差值/量程≤1‰ (参考HJ/T 477-2009)；</li>
-                  <li>多量程仅核查正常使用量程；</li>
-                  <li>“数采仪里程”选项，若数采仪使用数字量方式传输且不需设定量程，可不勾选；</li>
-                  <li>若同时存在普通数采仪及动态管控仪数采仪，“数采仪”相关选项选择向“国发平台”发送数据的数采仪；</li>
-                  <li>颗粒物数值一致性： ≤10mg/m3的、绝对误差≤3mg/m3、 >10mg/m3的、绝对误差≤5mg/m3；</li>
-                  <li>流速直测法的(如热质式、超声波式)，有显示屏的填写设置量程，无显示屏的填写铭牌量程；</li>
-                  <li>手工修正结果填写“是、否、不适用“三项，不适用必须备注填写原因</li>
-                </ol>
-              </Row>
+              >
+                <SdlTable
+                  loading={parLoading}
+                  columns={columns2}
+                  dataSource={addDataConsistencyData}
+                  pagination={false}
+                  scroll={{ y: '100vh' }}
+                />
+                <SdlTable
+                  loading={parLoading}
+                  columns={columns3}
+                  dataSource={addRealTimeData}
+                  pagination={false}
+                  scroll={{ y: '100vh' }}
+                />
+                <Row style={{ color: '#f5222d', marginTop: 10 }}>
+                  <span style={{ paddingRight: 10 }}>注：</span>
+                  <ol type="1" style={{ listStyle: 'auto' }}>
+                    <li>填写数值，带单位；</li>
+                    <li>项目无DAS，可只填写实时数据内容；若使用我司数采仪，仍需简单核算、确认历史数据情况；</li>
+                    <li>数字里传输数据须完全一致；模拟量传输，实时数据数据差值/量程≤1‰ (参考HJ/T 477-2009)；</li>
+                    <li>多量程仅核查正常使用量程；</li>
+                    <li>“数采仪里程”选项，若数采仪使用数字量方式传输且不需设定量程，可不勾选；</li>
+                    <li>若同时存在普通数采仪及动态管控仪数采仪，“数采仪”相关选项选择向“国发平台”发送数据的数采仪；</li>
+                    <li>颗粒物数值一致性： ≤10mg/m3的、绝对误差≤3mg/m3、 >10mg/m3的、绝对误差≤5mg/m3；</li>
+                    <li>流速直测法的(如热质式、超声波式)，有显示屏的填写设置量程，无显示屏的填写铭牌量程；</li>
+                    <li>手工修正结果填写“是、否、不适用“三项，不适用必须备注填写原因</li>
+                  </ol>
+                </Row>
               </Form>
             </TabPane>
             <TabPane tab="参数一致性核查表" key="2">
-            <Form
-               form={form3}
-               name={"advanced_search" }
-               initialValues={{ }}
-               className={styles.queryForm2}
+              <Form
+                form={form3}
+                name={"advanced_search"}
+                initialValues={{}}
+                className={styles.queryForm2}
                 onValuesChange={onValuesChange2}
-                > 
-              <SdlTable
-                loading={parLoading}
-                columns={columns4}
-                dataSource={addParconsistencyData}
-                pagination={false}
-                scroll={{ y: '100vh' }}
-              />
-              <Row style={{ color: '#f5222d', marginTop: 10 }}>
-                <span style={{ paddingRight: 10 }}>注：</span>
-                <ol type="1" style={{ listStyle: 'auto' }}>
-                  <li>设定值一般在DAS查阅；若现场无DAS，应在其他对应设备查阅，如数采仪；</li>
-                  <li>无72小时调试检测报告的，应向客户发送告知函；</li>
-                  <li>已上传告知函的，同一点位可不再上传相应附件；</li>
-                </ol>
-              </Row>
+              >
+                <SdlTable
+                  loading={parLoading}
+                  columns={columns4}
+                  dataSource={addParconsistencyData}
+                  pagination={false}
+                  scroll={{ y: '100vh' }}
+                />
+                <Row style={{ color: '#f5222d', marginTop: 10 }}>
+                  <span style={{ paddingRight: 10 }}>注：</span>
+                  <ol type="1" style={{ listStyle: 'auto' }}>
+                    <li>设定值一般在DAS查阅；若现场无DAS，应在其他对应设备查阅，如数采仪；</li>
+                    <li>无72小时调试检测报告的，应向客户发送告知函；</li>
+                    <li>已上传告知函的，同一点位可不再上传相应附件；</li>
+                  </ol>
+                </Row>
               </Form>
             </TabPane>
           </Tabs>
         </Form>
-
+        </Spin>
       </Modal>
 
       <Modal
