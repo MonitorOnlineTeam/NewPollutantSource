@@ -26,7 +26,6 @@ const namespace = 'remoteSupervision'
 
 const dvaPropsData =  ({ loading,remoteSupervision,global }) => ({
   tableLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`],
-  consistencyCheckDetail:remoteSupervision.consistencyCheckDetail,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -47,16 +46,34 @@ const  dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-    const {location:{query:{ id}},consistencyCheckDetail,tableLoading }= props;
+    const {location:{query:{ id}},tableLoading }= props;
   
 
     const [rangeUpload,setRangeUpload] = useState()
     const [couUpload,setCouUpload] = useState()
+    const [consistencyCheckDetail,setConsistencyCheckDetail] = useState({})
+    const [tableData1,setTableData1] = useState([])  
 
   useEffect(() => {
     props.getConsistencyCheckInfo({ID:id},(data)=>{
       setRangeUpload(data.rangeUploadFormat)
       setCouUpload(data.couUploadFormat)
+
+     // 量程一致性核查表 数据
+     let data1 = data.consistencyCheckList&&data.consistencyCheckList.filter(item=> !item.DataList.CouType)
+      for(let i=0;i<data1.length;i++){
+         if(data1[i].PollutantName === '颗粒物'){
+            data1.splice(i+1,0,{PollutantName:'颗粒物',DataList:{ flag:data1[i].DataList.Special==1? 1 :2  }})
+           break;
+         }
+      }
+      for(let j=0;j<data1.length;j++){
+        if(data1[j].PollutantName === '流速'){  
+          data1.splice(j+1,0,{PollutantName:'流速',DataList:{ flag:data1[j].DataList.Special==1? 1 :2}})
+         break;
+       }
+     }
+      setTableData1(data1)
     })
   
   },[]);
@@ -71,6 +88,8 @@ const Index = (props) => {
     })
    return fileList;
   }
+
+
   const columns1= [
     {
       title: '序号',
@@ -91,10 +110,11 @@ const Index = (props) => {
           children: text,
           props: {},
         };
-        if (text == '颗粒物' && record.DataList.Special == 1 || text == '流速' &&  record.DataList.Special == 1) {
+       
+        if (text == '颗粒物' && record.DataList.Special || text == '流速' && record.DataList.Special) {
           obj.props.rowSpan = 2;
         }
-        if (text == '颗粒物' && record.DataList.Special == 2 || text == '流速' && record.DataList.Special == 2) {
+        if (text == '颗粒物' && !record.DataList.Special || text == '流速' && !record.DataList.Special) {
           obj.props.rowSpan = 0;
         }
         return obj;
@@ -106,38 +126,33 @@ const Index = (props) => {
         {
           title: '有无显示屏',
           align: 'center',
-          dataIndex: 'isDisplay',
-          key: 'isDisplay',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           render: (text, record) => {
-            switch (text) {
-              case 1:
-                return <Row align='middle' justify='center'>
-                  <Form.Item name='isDisplay1'>
-                    <Checkbox onChange={(e) => { isDisplayChange(e, 'isDisplay1') }}>有显示屏</Checkbox>
-                  </Form.Item></Row>
-                break;
-              case 2:
-                return <Row align='middle' justify='center'>
-                  <Form.Item name='isDisplay2'>
-                    <Checkbox onChange={(e) => { isDisplayChange(e, 'isDisplay2') }}>无显示屏</Checkbox>
-                  </Form.Item> <NumTips style={{ top: 'auto', right: 12 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
-                break;
-              case 3:
-                return <Row align='middle' style={{ paddingLeft: 12 }}>
-                  <Form.Item name='isDisplay3' rules={[{ required: false, message: '请选择' }]}>
-                    <Checkbox onChange={(e) => { isDisplayChange2(e, 'isDisplay3') }}>差压法</Checkbox>
-                  </Form.Item></Row>
-                break;
-              case 4:
-                return <Row align='middle' style={{ paddingLeft: 12 }}>
-                  <Form.Item name='isDisplay4' rules={[{ required: false, message: '请选择' }]}>
-                    <Checkbox onChange={(e) => { isDisplayChange2(e, 'isDisplay4') }}>只测流速法</Checkbox>
-                  </Form.Item></Row>
-                break;
-              default:
-                return '—'
-                break;
-
+            if(text=='颗粒物'){
+              if(record.DataList.Special&&record.DataList.Special==1 ){
+                return   <Checkbox checked={true} disabled>有显示屏</Checkbox> 
+            }else if(record.DataList.Special&&record.DataList.Special==2){
+              return <Checkbox checked={true} disabled>无显示屏</Checkbox>
+             }else if(record.DataList.flag==2){
+              return  <Checkbox checked={false} disabled>有显示屏</Checkbox>
+             }else{
+              return  <Checkbox checked={false} disabled>无显示屏</Checkbox>
+             }
+          
+          }else if(text=='流速'){
+              if(record.DataList.Special&&record.DataList.Special==1 ){
+                return   <div  style={{marginLeft:-12}}><Checkbox checked={true} disabled>差压法</Checkbox></div>
+            }else if(record.DataList.Special&&record.DataList.Special==2){
+              return <Checkbox style={{marginLeft:15}} checked={true} disabled>只测流速法</Checkbox>
+             }else if(record.DataList.flag==2){
+              return   <div  style={{marginLeft:-12}}><Checkbox checked={false} disabled>差压法</Checkbox></div>
+             }else{
+              return  <Checkbox  style={{marginLeft:15}} checked={false} disabled>只测流速法</Checkbox>
+             }
+            
+          }else {
+              return '—'
             }
 
           }
@@ -145,13 +160,13 @@ const Index = (props) => {
         {
           title: '分析仪量程',
           align: 'center',
-          dataIndex: 'par',
-          key: 'par',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             } else {
-              return text
+              return '1111'
             }
           }
         },
@@ -171,61 +186,61 @@ const Index = (props) => {
         {
           title: <Row align='middle' justify='center'><Checkbox checked={false}  disabled></Checkbox><span style={{paddingLeft:5}}>数采仪量程</span></Row>,
           align: 'center',
-          dataIndex: 'par',
-          key: 'par',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             } else {
-             return text;
+              return '222'
             }
           }
         },
         {
           title: '量程一致性(自动判断)',
           align: 'center',
-          dataIndex: 'par',
-          key: 'par',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             }else{
-              return text
+              return '333'
             }
           }
         },
         {
           title: '手工修正结果',
           align: 'center',
-          dataIndex: 'par',
-          key: 'par',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           render: (text, record, index) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             }else{
-              return text
+              return '444'
             }
           }
         },
         {
           title: '备注',
           align: 'center',
-          dataIndex: 'par',
-          key: 'par',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           width: 100,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             }else{
-              return text
+              return '555'
             }
           }
         },
         {
           title: '附件',
           align: 'center',
-          dataIndex: 'par',
-          key: 'par',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
           width: 150,
           render: (text, record, index) => {
             const attachmentDataSource = getAttachmentDataSource(rangeUpload);
@@ -236,7 +251,7 @@ const Index = (props) => {
               props: {},
             };
             if (index === 0) {
-              obj.props.rowSpan = consistencyCheckDetail.consistencyCheckList.length;
+              obj.props.rowSpan = tableData1.length;
             } else {
               obj.props.rowSpan = 0;
             }
@@ -461,9 +476,9 @@ const Index = (props) => {
 
 
 
- 
 
 
+   console.log(tableData1)
   return (
     <div className={styles.remoteSupervisionDetailSty}>
     <BreadcrumbWrapper>
@@ -517,7 +532,7 @@ const Index = (props) => {
               <SdlTable
                 loading={tableLoading}
                 columns={columns1}
-                dataSource={consistencyCheckDetail.consistencyCheckList}
+                dataSource={tableData1}
                 pagination={false}
                 scroll={{ y: '100vh' }}
               />
