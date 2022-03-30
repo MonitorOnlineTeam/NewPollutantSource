@@ -55,6 +55,8 @@ class OperationRecordContent extends Component {
         const SCREEN_HEIGHT=this.props.scrolly==="none"?{overflowY:'none'}:{height:document.querySelector('body').offsetHeight - 250};
         const Record=this.props.operationRecordList!==null?this.props.operationRecordList.Record:null;
         const Content=Record!==null?Record.Content:null;
+        const RecordList=this.props.operationRecordList&&this.props.operationRecordList.Record&&this.props.operationRecordList.Record.RecordList!==null?this.props.operationRecordList.Record.RecordList[0]:null;
+
         const SignContent =Record!==null?Record.SignContent === null ? null : `data:image/jpeg;base64,${Record.SignContent}`:null;  
         if (this.props.isloading) {
             return (<Spin
@@ -93,13 +95,13 @@ class OperationRecordContent extends Component {
                                         是否故障
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null ? Content.IsFaultName:null}
+                                {RecordList!==null ? RecordList.IsFaultName:null}
                             </td>
                             <td colSpan="2" style={{ width: '18%', height: '50px', textAlign: 'center', fontSize: '14px' }}>
                                         设备状态
                             </td>
                             <td colSpan="2" style={{ textAlign: 'center', fontSize: '14px' }}>
-                                {Content!==null ? Content.EquipmentStatusName:null}
+                                {RecordList!==null ? RecordList.EquipmentStatusName:null}
                             </td>
                         </tr>
                         <tr>
@@ -107,7 +109,7 @@ class OperationRecordContent extends Component {
                                         告警问题
                             </td>
                             <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
-                               {Content!==null ? Content.AlarmProblem:null}
+                               {RecordList!==null ? RecordList.AlarmProblem:null}
                             </td>
                         </tr>
                         <tr>
@@ -115,7 +117,7 @@ class OperationRecordContent extends Component {
                                         处理方式
                             </td>
                             <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
-                               {Content!==null ? Content.TreatmentMethod:null}
+                               {RecordList!==null ? RecordList.TreatmentMethod:null}
                             </td>
                         </tr>
                         <tr>
@@ -123,7 +125,7 @@ class OperationRecordContent extends Component {
                                         维修内容
                             </td>
                             <td colSpan="6"  style={{ width: '14%', height: '50px', textAlign: 'center', backgroundColor: '#fff', fontSize: '14px', fontWeight: '500' }}>
-                               {Content!==null ? Content.MaintenanceContent:null}
+                               {RecordList!==null ? RecordList.MaintenanceContent:null}
                             </td>
                         </tr>
                         <tr>

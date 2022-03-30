@@ -294,6 +294,7 @@ onChange = (pageIndex, pageSize) => {
         taskId: key,
       },
     })
+    this.LoadData()
   }
 
   // 监控类型选择

@@ -197,22 +197,25 @@ class LogTimeList extends Component {
                     fontSize: 13,
                   }}
                   onClick={() => {
-                    if (
-                      config.XinJiang &&
-                      node.TypeID != 58 &&
-                      node.TypeID != 59 &&
-                      node.TypeID != 60
-                    ) {
-                      this.getOperationImageList(node);
-                    } else if (
-                      node.PollutantType !== 2 &&
-                      node.TypeID != 58 &&
-                      node.TypeID != 59 &&
-                      node.TypeID != 60
-                    ) {
-                      // 查看图片
-                      this.getOperationImageList(node);
-                    } else {
+                    // if (
+                    //   config.XinJiang &&
+                    //   node.TypeID != 58 &&
+                    //   node.TypeID != 59 &&
+                    //   node.TypeID != 60
+                    // ) {
+                    //   this.getOperationImageList(node);
+                    // } else if (
+                    //   node.PollutantType !== 2 &&
+                    //   node.TypeID != 58 &&
+                    //   node.TypeID != 59 && 
+                    //   node.TypeID != 60
+                    // ) {
+                    //   // 查看图片
+                    //   this.getOperationImageList(node);
+                    // } else {
+                    //   router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
+                    // }
+                    if( node.TypeID == 61 || node.TypeID == 62){
                       router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
                     }
                   }}
