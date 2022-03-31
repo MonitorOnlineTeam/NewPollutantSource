@@ -70,3 +70,9 @@ export async function JudgeParamCheck(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/JudgeParamCheck`, params, null);
   return result;
 }
+
+//下发
+export async function IssueRemoteInspector(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskProcessingApi/IssueRemoteInspector`, params, null);
+  return result;
+}

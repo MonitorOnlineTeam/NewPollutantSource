@@ -1,5 +1,5 @@
 import moment from 'moment';
-import * as services from './service';
+import * as services from '../services/remoteSupervision';
 import Cookie from 'js-cookie';
 import Model from '@/utils/model';
 import { message } from 'antd';
@@ -49,7 +49,7 @@ export default Model.extend({
             if(item.Name === '颗粒物'|| item.Name === '流速'){
               if(item.Name === '颗粒物'){ //不push 只添加   达到替换的目的
                 pollutantList.splice(index, 0, {...item, isDisplay:1,par:item.ChildID},{...item, isDisplay:2,par:item.ChildID+'a',})
-                addRealTimeList.splice(index, 0, {...item, concentrationType:'原始浓度',par:item.ChildID, },{...item, concentrationType:'标杆浓度',par:item.ChildID+'c',})
+                addRealTimeList.splice(index, 0, {...item, concentrationType:'原始浓度',par:item.ChildID +'c', },{...item, concentrationType:'标杆浓度',par:item.ChildID+'d',})
               }else{ //流速
                 pollutantList.splice(index+1, 0, {...item, isDisplay:3,par:item.ChildID},{...item, isDisplay:4,par:item.ChildID+'b'})
                 addRealTimeList.splice(index+1, 0, {...item,par:item.ChildID}) //不变    
@@ -148,11 +148,21 @@ export default Model.extend({
     *deleteRemoteInspector({ payload, callback }, { call, update, select, put }) {
       const result = yield call(services.DeleteRemoteInspector, { ...payload });
       if (result.IsSuccess) {
-        callback(result.Datas)
+        callback()
       } else {
         message.error(result.Message)
       }
     },
+    //下发
+    *issueRemoteInspector({ payload, callback }, { call, update, select, put }) {
+      const result = yield call(services.IssueRemoteInspector, { ...payload });
+      if (result.IsSuccess) {
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    
   }
 
 })

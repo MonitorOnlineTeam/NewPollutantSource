@@ -115,6 +115,11 @@ export default {
           path: '/appoperation',
           component: '../layouts/BlankLayout',
           routes: [
+            /* 督查详情 移动端 */
+            {
+              path: '/appoperation/appRemoteSupervisionDetail/:id',
+              component: './AppOperation/AppRemoteSupervisionDetail',
+            },
             /* 维修记录 */
             {
               path: '/appoperation/apprepairrecord/:TaskID/:TypeID',
@@ -990,7 +995,7 @@ export default {
                 component: './operations/remoteSupervision',
               },
               {
-                path: '/operations/remoteSupervision/detail', //远程督查 详情
+                path: '/operations/remoteSupervision/detail/:id', //远程督查 详情
                 name: 'remoteSupervisionDetail',
                 component: './operations/remoteSupervision/detail',
               },
