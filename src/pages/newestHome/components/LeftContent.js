@@ -258,7 +258,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
     },
     color: type == 1 ? color1 : type == 2 ? color2 : color3,
     title: {
-      text: type == 1 ? `${planOperaList.inspectionRate}%`: type == 2 ? `${planOperaList.autoCalibrationRate}%` : `${planOperaList.actualCalibrationRate}%`,
+      text: type == 1 ? `${planOperaList.inspectionRate=="-"? '-': `${planOperaList.inspectionRate}%` }`: type == 2 ? `${planOperaList.autoCalibrationRate}%` : `${planOperaList.actualCalibrationRate}%`,
       left: "center",
       top: "42%",
       textStyle: {
@@ -276,8 +276,8 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
         avoidLabelOverlap: false,
         label: { normal: { show: false, position: 'center'  }, },
         data: [
-          { value: type == 1 ? planOperaList.inspectionRate : type == 2 ? planOperaList.autoCalibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
-          { value: type == 1 ? (100 - planOperaList.inspectionRate) : type == 2 ? (100  - planOperaList.autoCalibrationRate ) : (100 - planOperaList.actualCalibrationRate), name: '未完成' },
+          { value: type == 1 ? `${planOperaList.inspectionRate} `: type == 2 ? planOperaList.autoCalibrationRate : planOperaList.actualCalibrationRate, name: '已完成' },
+          { value: type == 1 ? (100 - `${planOperaList.inspectionRate=='-'? 100 : planOperaList.inspectionRate  }`) : type == 2 ? (100  - `${planOperaList.autoCalibrationRate=='-'? 100 : planOperaList.autoCalibrationRate  }`) : (100 - `${planOperaList.actualCalibrationRate=='-'? 100 : planOperaList.actualCalibrationRate  }`), name: '未完成' },
         ],
         startAngle:330, //起始角度
       }

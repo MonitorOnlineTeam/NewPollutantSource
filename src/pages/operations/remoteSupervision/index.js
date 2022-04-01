@@ -360,6 +360,25 @@ const Index = (props) => {
   const [title,setTitle] = useState('添加')
   const [editId,setEditId] = useState()
   
+
+  const rangReqFun = (val,par) =>{ //量程 手工修正结果回显校验处理
+    if(val.RangeStatus==3){
+      setRangReq({ ...rangReq, [`${par}RangFlag`]: false })
+     }
+  }
+  const indicaValReqFun = (val,par) =>{ //实时数据 手工修正结果回显校验处理
+    if(val.CouStatus==3){
+      setIndicaValReq({ ...indicaValReq, [`${par}IndicaValFlag`]: false })
+     }
+  }
+  const traceValReqFun = (val,par) =>{ //参数一致性核查表 手工修正结果回显校验处理
+    if(val.CouStatus==3){
+      setTraceValReq({ ...traceValReq, [`${par}TraceValFlag`]: false })
+     }
+  }
+ 
+
+ 
   const echoForamt = (code,val) =>{ //格式化 编辑回显
     form2.setFieldsValue({
       [`${code}AnalyzerRang1`]:val.AnalyzerMin,
@@ -417,19 +436,23 @@ const Index = (props) => {
              if(val.Special==1){ //有显示屏
                echoForamt(code,val)
                setIsDisPlayCheck1(true)
+               rangReqFun(val,`${code}`)
              }
              if(val.Special==2){ //无显示屏
               echoForamt(`${code}a`,val)
               setIsDisPlayCheck2(true)
+              rangReqFun(val,`${code}a`)
              }
            }
             if(val.CouType){ 
             
                if(val.CouType==1){ //原始浓度
                 echoForamt(`${code}c`,val)
+                indicaValReqFun(val,`${code}c`)
                }
                if(val.CouType==2){ //标杆浓度
                 echoForamt(`${code}d`,val)
+                indicaValReqFun(val,`${code}d`)
                }
 
             }
@@ -438,20 +461,28 @@ const Index = (props) => {
             if(val.Special==1){ //差压法
               echoForamt(code,val)
               setIsDisPlayCheck3(true)
+              rangReqFun(val,`${code}`)
             }
             if(val.Special==2){ //只测流速法
               echoForamt(`${code}b`,val)
               setIsDisPlayCheck4(true)
+              rangReqFun(val,`${code}b`)
+
             }
           }else{
             echoForamt(code,val)
+            rangReqFun(val,code)
           }
 
          }else{
            echoForamt(code,val)
+           rangReqFun(val,code)
+           indicaValReqFun(val,code)
          }
         setNumChecked(val.DataStatus==1?true : false )
         setDasChecked(val.DASStatus==1?true : false)
+     
+
         })
 
         if(data.rangeUpload&&data.rangeUpload[0]){  //量程一致性核查表 附件
@@ -499,7 +530,7 @@ const Index = (props) => {
             [`${code}Remark3`]:item.Remark,
             [`${code}ParFiles`]:item.Upload,
           })
-          uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList.map(item=>{
+          uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
             if(!item.IsDelete){
             return {
               uid: item.GUID,
@@ -509,7 +540,7 @@ const Index = (props) => {
             }
           }
            })
-   
+           traceValReqFun(item,code)
          })
          setFilesList3({ ...uploadList })
 
@@ -596,7 +627,7 @@ const Index = (props) => {
               DataMax: numChecked ? values[`${item.par}ScyRang2`] : undefined,
               DataUnit: numChecked ? values[`${item.par}ScyUnit`] : undefined,
               RangeAutoStatus: values[`${item.par}RangUniformity`], //量程一致性(自动判断)
-              RangeStatus: values[`${item.par}RangCheck`]&&values[`${item.par}RangCheck`][0]?  values[`${item.par}RangCheck`] : undefined,
+              RangeStatus: values[`${item.par}RangCheck`]&&values[`${item.par}RangCheck`][0]?  values[`${item.par}RangCheck`][0] : undefined,
               RangeRemark: values[`${item.par}Remark`],
               Special: item.isDisplay == 1&&isDisPlayCheck1 || item.isDisplay == 3 &&isDisPlayCheck3 ? 1 : item.isDisplay == 2&&isDisPlayCheck2 || item.isDisplay == 4 &&isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和只测流速法
               DASStatus: dasChecked ? 1 : 2,
@@ -623,6 +654,7 @@ const Index = (props) => {
                 dataList1.splice(index,1)
               }
             })
+          
           let dataList = [],obj1=null,obj2=null,obj3=null;
           dataList1.map((item1, index1) => { //合并两个表格的数据     
             dataList2.map((item2, index2) => {
@@ -643,8 +675,9 @@ const Index = (props) => {
                }
             })
           })
-          obj1&&dataList.push(obj1,obj2,obj3)
 
+          dataList.push(obj1,obj2,obj3)
+          dataList =  dataList.filter(item=>item) //去除值为空的情况
 
           props.addOrUpdConsistencyCheck({
             Data: { ...commonData, RangeUpload: values.files1, CouUpload: values.files2 },
@@ -653,6 +686,10 @@ const Index = (props) => {
             title==='添加'&&setAddId(id)
             onFinish(pageIndex, pageSize)
           })
+
+
+
+
         }).catch((info) => {
           console.log('Validate Failed2:', info);
         });
@@ -817,6 +854,7 @@ const Index = (props) => {
   }
   const uploadProps = { // 设备运营接手资料  资料附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    accept:'image/*',
     data: {
       FileUuid: fileType == 1 ? filesCuid1 : fileType == 2 ? filesCuid2 : filesCuid3(),
       FileActualType: '0',
@@ -859,7 +897,7 @@ const Index = (props) => {
       setPreviewVisible(true)
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
     },
-    fileList: fileType == 1 ? fileList1 : fileType == 2 ? fileList2 : filesList3[filePar],
+    fileList: fileType == 1 ? fileList1 : fileType == 2 ? fileList2 : fileType == 3? filesList3[filePar] : [],
   };
   const [manualOptions, setManualOptions] = useState([
     { label: '是', value: 1 },
@@ -917,11 +955,12 @@ const Index = (props) => {
 
   const isJudge = (row, type) => {
 
-    const analyzerRang1 = form2.getFieldValue(`${row.par}AnalyzerRang1`), analyzerRang2 = form2.getFieldValue(`${row.par}AnalyzerRang2`), analyzerUnit = form2.getFieldValue(`${row.par}AnalyzerUnit`);
-    const analyzerFlag = analyzerRang1 && analyzerRang2 && analyzerUnit || row.Name=='NOx' ? true : false;
+    let analyzerRang1,analyzerRang2,analyzerUnit,analyzerFlag;
 
     switch (type) {
       case 1: // 量程一致性核查表 自动判断
+         analyzerRang1 = form2.getFieldValue(`${row.par}AnalyzerRang1`), analyzerRang2 = form2.getFieldValue(`${row.par}AnalyzerRang2`), analyzerUnit = form2.getFieldValue(`${row.par}AnalyzerUnit`);
+         analyzerFlag = analyzerRang1 && analyzerRang2 && analyzerUnit || row.Name=='NOx' ? true : false;
         const dsRang1 = form2.getFieldValue(`${row.par}DsRang1`), dsRang2 = form2.getFieldValue(`${row.par}DsRang2`), dsUnit = form2.getFieldValue(`${row.par}DsUnit`);
         const scyRang1 = form2.getFieldValue(`${row.par}ScyRang1`), scyRang2 = form2.getFieldValue(`${row.par}ScyRang2`), scyUnit = form2.getFieldValue(`${row.par}ScyUnit`);
 
@@ -967,6 +1006,11 @@ const Index = (props) => {
 
         break;
       case 2: // 实时数据一致性核查表 自动判断
+         analyzerRang1 = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) : form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
+         analyzerRang2 = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerRang2`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) : form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),    
+         analyzerUnit = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) : form2.getFieldValue(`${row.ChildID}AnalyzerUnit`),
+         analyzerFlag = analyzerRang1 && analyzerRang2 && analyzerUnit || row.Name=='NOx' ? true : false;
+
         const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
         const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
@@ -974,7 +1018,7 @@ const Index = (props) => {
         const indicaValFlag = indicaVal && indicaUnit || row.concentrationType=='标杆浓度' || row.Name =='流速' ||  row.Name=='NOx' ? true : false;
         const dsDataFlag = dsData && dsDataUnit  ?  true : false; //只判断DAS示值填完的状态
         const scyDataFlag = scyData && scyDataUnit ? true : false;
-
+    console.log()
         if (analyzerFlag && indicaValFlag && dsDataFlag && !scyData && !scyDataUnit) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
@@ -1319,9 +1363,18 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             }
+            let disabledFlag = false;
+            switch (record.isDisplay) {
+              case 1: case 2:
+                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                break;
+              case 3: case 4:
+                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                break;
+            }
             return <Row justify='center' align='middle' style={{ marginLeft: 3 }}>
               <Form.Item name={[`${record.par}RangCheck`]}>
-                <Checkbox.Group options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
+                <Checkbox.Group disabled={disabledFlag} options={manualOptions} onChange={(val) => { onManualChange(val, record, `${record.par}RangCheck`, 1) }} />
               </Form.Item>
             </Row>
           }
@@ -1336,8 +1389,17 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标杆流量') {
               return '—'
             }
+            let disabledFlag = false;
+            switch (record.isDisplay) {
+              case 1: case 2:
+                disabledFlag = record.isDisplay == 1 && !isDisPlayCheck1 || record.isDisplay == 2 && !isDisPlayCheck2 ? true : false
+                break;
+              case 3: case 4:
+                disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
+                break;
+            }
             return <Form.Item name={`${record.par}Remark`} rules={[{ required: remark[`${record.par}RemarkFlag`], message: '请输入' }]}>
-              <Input placeholder='请输入' style={{ width: '100%' }} />
+              <Input disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
         },

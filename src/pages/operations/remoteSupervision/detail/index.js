@@ -69,24 +69,47 @@ const Index = (props) => {
 
 
      // 量程一致性核查表 数据
-     let data1 = data.consistencyCheckList&&data.consistencyCheckList.filter(item=> !item.DataList.CouType)
+     let data1 = data.consistencyCheckList&&data.consistencyCheckList.filter(item=> !(item.DataList.CouType&&item.PollutantName==='颗粒物' || !item.DataList.CouType&&!item.DataList.Special&&item.PollutantName==='流速'))
+      let flag1 = true,flag2=true;
       for(let i=0;i<data1.length;i++){
          if(data1[i].PollutantName === '颗粒物'){
             data1.splice(i+1,0,{PollutantName:'颗粒物',DataList:{ flag:data1[i].DataList.Special==1? 1 :2  }})
-           break;
+            flag1 = false;
+            break;
          }
       }
+
       for(let j=0;j<data1.length;j++){
         if(data1[j].PollutantName === '流速'){  
           data1.splice(j+1,0,{PollutantName:'流速',DataList:{ flag:data1[j].DataList.Special==1? 1 :2}})
-         break;
+          flag2 = false;
+          break;
        }
+
      }
+     //颗粒物和流速都未选择的状态
+     for(let k=0;k< data.consistencyCheckList.length;k++){
+      if(flag1&&data.consistencyCheckList[k].PollutantName==='颗粒物'){
+        data1.splice(k+1,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})
+        break;
+      }
+   }
+   for(let l=0;l< data.consistencyCheckList.length;l++){
+    if(flag1&&data.consistencyCheckList[l].PollutantName==='流速'){
+      data1.splice(l+1,0,{PollutantName:'流速',DataList:{ flag:3 }},{PollutantName:'流速',DataList:{ flag:4 }})
+      break;
+    }
+ }
+   
+
+
       setTableData1(data1)
 
      // 实时护具一致性核查表 数据
      let data2 = data.consistencyCheckList&&data.consistencyCheckList.filter(item=> !(item.DataList.Special&&item.PollutantName==='颗粒物'))
-      setTableData2(data2)
+     
+     console.log(data2)
+     setTableData2(data2)
 
 
     })
@@ -119,19 +142,25 @@ const Index = (props) => {
       dataIndex: 'PollutantName',
       key: 'PollutantName',
       align: 'center',
-      width: 100,
       render: (text, record, index) => {
         const obj = {
           children: text,
           props: {},
         };
        
-        if (text == '颗粒物' && record.DataList.Special || text == '流速' && record.DataList.Special) {
+        if (text == '颗粒物' && record.DataList.Special || text == '流速' && record.DataList.Special)  {
           obj.props.rowSpan = 2;
         }
-        if (text == '颗粒物' && !record.DataList.Special || text == '流速' && !record.DataList.Special) {
+        if(text == '颗粒物' && record.DataList.flag==3 || text == '流速' && record.DataList.flag==3){
+          obj.props.rowSpan = 2;
+        }
+        if (text == '颗粒物' && !record.DataList.Special && record.DataList.flag!=3 && record.DataList.flag!=4   || text == '流速' && !record.DataList.Special && record.DataList.flag!=3 && record.DataList.flag!=4 ) {
           obj.props.rowSpan = 0;
         }
+        if ( text == '颗粒物' && record.DataList.flag==4 ||  text == '流速' && record.DataList.flag==4 ) {
+          obj.props.rowSpan = 0;
+        }
+        console.log(obj)
         return obj;
       }
     },
@@ -143,12 +172,13 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:200,
           render: (text, record) => {
             if(text=='颗粒物'){
-              if(record.DataList.Special&&record.DataList.Special==1 ){
-                return   <Checkbox checked={true} >有显示屏</Checkbox> 
-            }else if(record.DataList.Special&&record.DataList.Special==2){
-              return <Checkbox checked={true} >无显示屏</Checkbox>
+              if(record.DataList.Special&&record.DataList.Special==1 || record.DataList.flag==3){
+                return   <Checkbox checked={ record.DataList.flag? false: true} >有显示屏</Checkbox> 
+            }else if(record.DataList.Special&&record.DataList.Special==2 || record.DataList.flag==4){
+              return <Checkbox checked={ record.DataList.flag? false: true} >无显示屏</Checkbox>
              }else if(record.DataList.flag==2){
               return  <Checkbox checked={false} >有显示屏</Checkbox>
              }else{
@@ -156,14 +186,14 @@ const Index = (props) => {
              }
           
           }else if(text=='流速'){
-              if(record.DataList.Special&&record.DataList.Special==1 ){
-                return   <div  style={{marginLeft:-12}}><Checkbox checked={true} >差压法</Checkbox></div>
-            }else if(record.DataList.Special&&record.DataList.Special==2){
-              return <Checkbox style={{marginLeft:15}} checked={true} >只测流速法</Checkbox>
+              if(record.DataList.Special&&record.DataList.Special==1 || record.DataList.flag==3){
+                return   <div  style={{marginLeft:-12}}><Checkbox checked={ record.DataList.flag? false: true} >差压法</Checkbox></div>
+            }else if(record.DataList.Special&&record.DataList.Special==2 || record.DataList.flag==4){
+              return <Checkbox style={{marginLeft:15}} checked={ record.DataList.flag? false: true} >只测流速法</Checkbox>
              }else if(record.DataList.flag==2){
               return   <div  style={{marginLeft:-12}}><Checkbox checked={false} >差压法</Checkbox></div>
              }else{
-              return  <Checkbox  style={{marginLeft:15}} checked={false} >只测流速法</Checkbox>
+              return  <Checkbox  style={{marginLeft:15}}   checked={false} >只测流速法</Checkbox>
              }
             
           }else {
@@ -300,10 +330,11 @@ const Index = (props) => {
           children: text,
           props: {},
         };
-        if (text == '颗粒物' && record.DataList.CouType == '1') {
+       
+        if (text == '颗粒物' && record.DataList.CouType == 1) {
           obj.props.rowSpan = 2;
         }
-        if (text == '颗粒物' && record.DataList.CouType == '2') {
+       if (text == '颗粒物' && record.DataList.CouType == 2) {
           obj.props.rowSpan = 0;
         }
         return obj;

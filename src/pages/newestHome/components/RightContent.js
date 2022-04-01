@@ -205,7 +205,7 @@ const Index = (props) => {
       },
       color: ["#298CFB", "#FCA522"],
       title: {
-        text:networking.networkingRate,
+        text: networking.networkingRate=='-'? "-" : networking.networkingRate,
         left: "center",
         top: "38%",
         textStyle: {
@@ -224,7 +224,7 @@ const Index = (props) => {
           label: { normal: { show: false, position: 'center' }, },
           data: [
             { value:  networking.networkingRate.replace("%","") , name: '已完成' },
-            { value: 100 - networking.networkingRate.replace("%",""), name: '未完成' },
+            { value:  networking.networkingRate=='-'? "-": 100 - networking.networkingRate.replace("%",""), name: '未完成' },
           ],
           startAngle:330, //起始角度
           hoverAnimation: false, //悬浮效果
@@ -365,7 +365,7 @@ const Index = (props) => {
         formatter:function(params){
           for(let i=0;i<dataAlarmResData.length;i++){
             if(params.dataIndex==i){
-             return `${dataAlarmResData[i]==100? Number(dataAlarmResData[i]).toFixed(1) : dataAlarmResData[i]}%`;
+             return dataAlarmResData[i]=="-"? '-' : `${dataAlarmResData[i]==100? Number(dataAlarmResData[i]).toFixed(1) : dataAlarmResData[i]}%`;
            }
           }
          },
