@@ -639,6 +639,9 @@ class AutoFormTable extends PureComponent {
               </Button>
             </Dropdown> : null
           }
+          {
+            this.props.promptText&&<span style={{color:'#f5222d',lineHeight:'32px'}}>{this.props.promptText}</span>
+          }
           {/* {
             React.Children.map(this.props.children, (child, i) => {
               // if (child.props["data-position"] === "top") {

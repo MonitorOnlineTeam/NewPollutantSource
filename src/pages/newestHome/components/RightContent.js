@@ -224,7 +224,7 @@ const Index = (props) => {
           label: { normal: { show: false, position: 'center' }, },
           data: [
             { value:  networking.networkingRate.replace("%","") , name: '已完成' },
-            { value:  networking.networkingRate=='-'? "-": 100 - networking.networkingRate.replace("%",""), name: '未完成' },
+            { value:  networking.networkingRate=='-'? 0 : 100 - networking.networkingRate.replace("%",""), name: '未完成' },
           ],
           startAngle:330, //起始角度
           hoverAnimation: false, //悬浮效果

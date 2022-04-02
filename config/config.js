@@ -2008,6 +2008,12 @@ export default {
                   path: '/dataSearch/deviceParam',
                   component: './dataSearch/deviceParam',
                 },
+                //污染源信息
+                {
+                  name: 'PollutantInfo',
+                  path: '/dataSearch/pollutantInfo', 
+                  component: './dataSearch/pollutantInfo',
+                },
               ],
             },
             {

@@ -176,7 +176,7 @@ const Index = (props) => {
   }
   const sceneClockOption = (data) => { 
 
-    let rate = data ? data.replace('%', '') / 100 : data;
+    let rate = data=='-' ? "-" : data? data.replace('%', '') / 100 : data;
     var option = {
       series: [{
         type: 'liquidFill',
@@ -224,8 +224,8 @@ const Index = (props) => {
         label: {
           normal: {
             formatter: function (name) {
-              let val =  (name.value * 100).toFixed(2);
-              return `{val|${val}%}`
+              let val = name.value=='-'? '-' : (name.value * 100).toFixed(2);
+              return val=='-'?'-' : `{val|${val}%}`
             },
             rich: {
               //富文本 对字体进一步设置样式。val对应的 value
@@ -359,7 +359,7 @@ const Index = (props) => {
       },
       color: type == 1 ? color1 : type == 2 ? color2 : color3,
       title: {
-        text: type == 1 ? `${opertionExceptionList.exceptionRate}%` : type == 2 ? `${opertionExceptionList.failureRate}%` : `${opertionExceptionList.repairRate}%`,
+        text: type == 1 ? opertionExceptionList.exceptionRate=='-'?'-': ` ${opertionExceptionList.exceptionRate}%` : type == 2 ? opertionExceptionList.exceptionRate=='-'?'-':  `${opertionExceptionList.exceptionRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
         left: "center",
         top: "42%",
         textStyle: {
@@ -378,7 +378,7 @@ const Index = (props) => {
           label: { normal: { show: false, position: 'center' }, },
           data: [
             { value: type == 1 ? opertionExceptionList.exceptionRate : type == 2 ? opertionExceptionList.failureRate: opertionExceptionList.repairRate, name: '已完成' },
-            { value: type == 1 ? (100 - opertionExceptionList.exceptionRate) : type == 2 ? (100 - opertionExceptionList.failureRate) : (100 - opertionExceptionList.repairRate), name: '未完成' },
+            { value: type == 1 ? opertionExceptionList.exceptionRate=='-'? 0 : (100 -  opertionExceptionList.exceptionRate) : type == 2 ? opertionExceptionList.failureRate=='-'? 0 : (100 - opertionExceptionList.failureRate) : opertionExceptionList.repairRate=='-'? 0  : (100 - opertionExceptionList.repairRate), name: '未完成' },
           ],
           minAngle: 0,//最小角度
           startAngle:350, //起始角度
@@ -447,7 +447,7 @@ const Index = (props) => {
           <Row>
             <div style={{ width: '50%' }}>
               <ReactEcharts
-                option={sceneClockOption(`${exceptionSignTaskRateList.insidePlanRate}%`)}
+                option={sceneClockOption(exceptionSignTaskRateList.insidePlanRate=='-'? '-': ` ${ exceptionSignTaskRateList.insidePlanRate}%`)}
                 style={{ height: '112px', width: '100%' }}
                 ref={planInsideClockAbnormalEchartsRef}
               />
@@ -469,7 +469,7 @@ const Index = (props) => {
             </div>
             <div style={{ width: '50%' }}>
               <ReactEcharts
-                option={sceneClockOption(`${exceptionSignTaskRateList.outPlanTaskRate}%`)}
+                option={sceneClockOption(exceptionSignTaskRateList.outPlanTaskRate=='-'? '-': `${exceptionSignTaskRateList.outPlanTaskRate}%`)}
                 style={{ height: '112px', width: '100%' }}
                 ref={planOutClockAbnormalEchartsRef}
               />
