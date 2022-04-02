@@ -126,7 +126,7 @@ class QualityControlRecordContent extends Component {
                                         质控类型
                             </td>
                             <td colSpan="2"  style={{ width: '12%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
-                                        相对误差
+                                        相对误差(%)
                             </td>
                             <td colSpan="2"  style={{ width: '10%', height: '50px', textAlign: 'center', backgroundColor: '#FAFAFA', fontSize: '14px', fontWeight: '600' }}>
                                         是否合格
