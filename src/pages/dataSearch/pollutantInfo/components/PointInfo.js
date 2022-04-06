@@ -223,12 +223,14 @@ const Index = (props) => {
             }}
         >  
            <Row>
-            <Form.Item label='行政区' name='regionCode' >
-                <RegionList levelNum={2} />
-            </Form.Item>
-            <Form.Item label='企业' name='entName'style={{padding:'0 8px'}}>
+
+           <Form.Item label='企业' name='entName'>
             <Input allowClear placeholder='请输入'/>
            </Form.Item>
+            <Form.Item label='行政区' name='regionCode' style={{padding:'0 8px'}}>
+                <RegionList levelNum={2} />
+            </Form.Item>
+
             <Form.Item label = '监测点类型' name='pollutantType' >
               <Select placeholder='请选择' style={{width:200}}>
                 <Option value={1}>废水</Option>
@@ -237,7 +239,7 @@ const Index = (props) => {
              </Form.Item>
             </Row>
             <Row  align='middle' style={{  paddingTop:5 }}>
-            <Form.Item>
+            <Form.Item style={{marginBottom:0}}>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
                     查询
        </Button>

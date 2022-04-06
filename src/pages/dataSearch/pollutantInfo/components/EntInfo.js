@@ -1,7 +1,7 @@
 
 
 /**
- * 功  能：污染源信息 数据核查
+ * 功  能：污染源信息 设备
  * 创建人：jab
  * 创建时间：2022.04.02
  */
@@ -32,10 +32,10 @@ const namespace = 'pollutantInfo'
 
 
 const dvaPropsData = ({ loading, pollutantInfo, global }) => ({
-    tableDatas: pollutantInfo.verificationTableDatas,
-    tableTotal: pollutantInfo.verificationTableTotal,
-    tableLoading: loading.effects[`${namespace}/getVerificationItemOfPoint`],
-    exportLoading: loading.effects[`${namespace}/exportVerificationItemOfPoint`],
+    tableDatas: pollutantInfo.entListTableDatas,
+    projectTableDatas: pollutantInfo.entListTableTotal,
+    tableLoading: loading.effects[`${namespace}/getEntInfoList`],
+    exportLoading: loading.effects[`${namespace}/exportEntInfoList`],
     clientHeight: global.clientHeight,
 })
 
@@ -49,13 +49,13 @@ const dvaDispatch = (dispatch) => {
         },
         getTableData: (payload) => { //列表
             dispatch({
-                type: `${namespace}/getVerificationItemOfPoint`,
+                type: `${namespace}/getEntInfoList`,
                 payload: payload,
             })
         },
         exportData: (payload, callback) => { // 导出
             dispatch({
-                type: `${namespace}/exportVerificationItemOfPoint`,
+                type: `${namespace}/exportEntInfoList`,
                 payload: payload,
                 callback: callback
             })
@@ -71,7 +71,6 @@ const Index = (props) => {
 
     const [form] = Form.useForm();
 
-    const [manufacturerId, setManufacturerId] = useState(undefined)
 
     const { tableDatas, tableTotal, tableLoading, exportLoading } = props;
 
@@ -91,45 +90,54 @@ const Index = (props) => {
         },
         {
             title: '行政区',
-            dataIndex: 'RegionName',
-            key: 'RegionName',
+            dataIndex: 'regionName',
+            key: 'regionName',
             align: 'center',
         },
 
         {
             title: '企业名称',
-            dataIndex: 'EntName',
-            key: 'EntName',
+            dataIndex: 'entName',
+            key: 'entName',
             align: 'center',
         },
         {
-            title: '监测点名称',
-            dataIndex: 'PointName',
-            key: 'PointName',
+            title: '企业简称',
+            dataIndex: 'abbreviation',
+            key: 'abbreviation',
             align: 'center',
         },
         {
-            title: '监测点类型',
-            dataIndex: 'PollutantTypeName',
-            key: 'PollutantTypeName',
+            title: '企业地址',
+            dataIndex: 'address',
+            key: 'address',
             align: 'center',
         },
         {
-            title: '实时数据一致性核查因子',
-            dataIndex: 'RealtimePollutantName',
-            key: 'RealtimePollutantName',
+            title: '经纬度',
+            dataIndex: 'longitude',
+            key: 'longitude',
+            align: 'center',
+            render: (text, record, index) => {
+                return `${text},${record.latitude}`
+            }
+        },
+        {
+            title: '环保负责人',
+            dataIndex: 'environmentPrincipal',
+            key: 'environmentPrincipal',
             align: 'center',
         },
         {
-            title: '小时日数据一致性核查因子',
-            dataIndex: 'HourPollutantName',
-            key: 'HourPollutantName',
+            title: '办公电话',
+            dataIndex: 'officePhone',
+            key: 'officePhone',
             align: 'center',
         },
         {
-            title: '接入监控平台数量',
-            dataIndex: 'PlatformNum',
-            key: 'PlatformNum',
+            title: '移动电话',
+            dataIndex: 'mobilePhone',
+            key: 'mobilePhone',
             align: 'center',
         },
     ];
@@ -144,7 +152,6 @@ const Index = (props) => {
 
             props.getTableData({
                 ...values,
-                ManufacturerId: manufacturerId,
                 pageIndex: pageIndexs,
                 pageSize: pageSizes
             })
@@ -202,7 +209,9 @@ const Index = (props) => {
          </Button>
             </Form.Item>
         </Form>
-            <div style={{ color: '#f5222d', paddingTop: 12, fontSize: 14 }}> 数据核查项根据监测点现场真实情况进行设置，设置的选项作为APP数据一致性核查电子表单中的检查项字段，设置后，运维工程师才能在APP上填写数据一致性核查电子表单。</div>
+            <div style={{ color: '#f5222d', paddingTop: 12, fontSize: 14 }}>
+            下面列表只展示当前在运营的企业，运营到期的企业将不显示。
+</div>
         </>
     }
     return (

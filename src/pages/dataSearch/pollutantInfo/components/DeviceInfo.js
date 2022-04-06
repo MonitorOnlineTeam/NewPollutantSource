@@ -194,7 +194,15 @@ const Index = (props) => {
         })
 
     };
-
+    const onValuesChange = (hangedValues, allValues)=>{
+        if(Object.keys(hangedValues).join() == 'pollutantType'){
+          props.getParamCodeList({pollutantType:hangedValues.pollutantType},(data)=>{
+            setParType(data)
+            form.setFieldsValue({parameterCategory:data.map(item=>item.value) })
+          }) 
+        }
+      }
+    
     const [pageSize, setPageSize] = useState(20)
     const [pageIndex, setPageIndex] = useState(1)
 
@@ -206,28 +214,35 @@ const Index = (props) => {
             initialValues={{
                 pollutantType: 1
             }}
+            onValuesChange={onValuesChange}
         >  
            <Row>
-            <Form.Item label='行政区' name='RegionCode' >
-                <RegionList levelNum={2} />
-            </Form.Item>
-            <Form.Item label='企业' name='EntName'style={{padding:'0 8px'}}>
+           <Form.Item label='企业名称' name='EntName'>
              <Input allowClear placeholder='请输入'/>
             </Form.Item>
+            <Form.Item label='行政区' name='RegionCode' style={{padding:'0 8px'}}>
+                <RegionList levelNum={2} />
+            </Form.Item>
+
             <Form.Item label = '监测点类型' name='pollutantType' >
               <Select placeholder='请选择' style={{width:200}}>
                 <Option value={1}>废水</Option>
                 <Option value={2}>废气</Option>
                </Select>
              </Form.Item>
-             <Form.Item label = '监测参数' name='pollutantTypes' style={{padding:'0 8px'}}>
-              <Select placeholder='请选择' style={{width:200}}>
-                <Option value={1}>废水</Option>
-                <Option value={2}>废气</Option>
-               </Select>
-             </Form.Item>
+             {/* <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: 20 }}>
+              <Form.Item label='监测参数' name='DGIMN' >
+                <Select placeholder='请选择' showSearch optionFilterProp="children">
+                  {
+                    pointList2[0] && pointList2.map(item => {
+                      return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                    })
+                  }
+                </Select>
+              </Form.Item>
+            </Spin> */}
             </Row>
-            <Row style={{  paddingTop:5 }}>
+            <Row style={{marginBottom:0,  paddingTop:5 }}>
             <Form.Item>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
                     查询
@@ -251,6 +266,7 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={columns}
+                    scroll={{y:'calc(100vh - 400px)'}}
                     pagination={{
                         total: tableTotal,
                         pageSize: pageSize,

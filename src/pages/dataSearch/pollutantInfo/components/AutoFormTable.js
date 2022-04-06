@@ -119,19 +119,6 @@ export default class Maintain extends Component {
                         >
                         </AutoFormTable>
                     </Card>
-                    <Modal  
-                    title={this.state.pointTitle}
-                    visible={this.state.visible}
-                    footer={null}
-                    destroyOnClose={true}
-                    onCancel={()=>{this.setState({visible:false})}}>
-                     <AutoFormTable
-                            isCenter
-                            style={{ marginTop: 10 }}
-                            configId={configId}
-                        >
-                        </AutoFormTable>
-                    </Modal>
                 </div>
         );
     }

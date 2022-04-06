@@ -28,7 +28,8 @@ import SystemInfo from './components/SystemInfo'
 import DevicePar from './components/DevicePar'
 import DeviceInfo from './components/DeviceInfo'
 import PointInfo from './components/PointInfo'
-
+import OperationInfo  from './components/OperationInfo'
+import EntInfo  from './components/EntInfo'
 
 const namespace = 'pollutantInfo'
 const dvaPropsData =  ({ loading,pollutantInfo,global }) => ({
@@ -68,13 +69,13 @@ const Index = (props) => {
   <Card>
     <Tabs tabPosition='left'>
           <TabPane tab="企业信息" key="1">
-          <AutoFormTable  configId='AEnterpriseTest' promptText='下面列表只展示当前在运营的企业，运营到期的企业将不显示。'/>
+          <EntInfo props/>
           </TabPane>
           <TabPane tab="监测点信息" key="2">
           <PointInfo props/>
           </TabPane>
           <TabPane tab="运营信息" key="3">
-          <AutoFormTable isHistory configId='AEnterpriseTest'/>
+          <OperationInfo props/>
           </TabPane>
           <TabPane tab="系统信息" key="4">
             <SystemInfo props/>

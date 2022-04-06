@@ -21,6 +21,13 @@ export default Model.extend({
     monitorParamTableTotal:0,
     pointListTableDatas:[],
     pointListTableTotal:0,
+    operationInfoTableDatas: [],
+    operationInfoTableTotal: 0,
+    projectRelationLoading:true,
+    historyProjectRelationLoading:true,
+    historyOperationInfo:[],
+    entListTableDatas: [],
+    entListTableTotal: 0,
   },
   effects: {
     *getSystemModelOfPoint({ payload, callback }, { call, put, update }) { //系统信息
@@ -99,6 +106,49 @@ export default Model.extend({
     },
     *exportPointInfoList({ payload }, { call, put, update, select }) { //导出 监测点信息
       const result = yield call(services.ExportPointInfoList, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+    }, 
+    *getEntProjectRelationList ({ payload, callback }, { call, put, update }) { //运营信息
+      !payload.EntID?   yield update({ projectRelationLoading:true }) : yield update({ historyProjectRelationLoading:true })
+      const result = yield call(services.GetEntProjectRelationList, payload);
+      if (result.IsSuccess) {
+        if(!payload.EntID){
+          yield update({ projectRelationLoading:false })
+          yield update({
+            operationInfoTableDatas: result.Datas,
+            operationInfoTableTotal: result.Total,
+          })
+        }else{ //历史运营信息
+          yield update({ historyProjectRelationLoading:false })
+          yield update({
+            historyOperationInfo: result.Datas,
+          })
+        }
+
+      } else {
+        !payload.EntID?   yield update({ projectRelationLoading:false }) : yield update({ historyProjectRelationLoading:false })
+        message.error(result.Message)
+      }
+    },
+
+    *getEntInfoList ({ payload, callback }, { call, put, update }) { //企业信息
+      const result = yield call(services.GetEntInfoList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entListTableDatas: result.Datas,
+          entListTableTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *exportEntInfoList({ payload }, { call, put, update, select }) { //导出 企业信息
+      const result = yield call(services.ExportEntInfoList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
         downloadFile(`/upload${result.Datas}`);

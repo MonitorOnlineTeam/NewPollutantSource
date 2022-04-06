@@ -41,3 +41,20 @@ export async function ExportPointInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPointInfoList',params, null);
   return result;
 }
+
+//运营信息
+export async function GetEntProjectRelationList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntProjectRelationList', params, null);
+  return result;
+}
+//企业信息 
+export async function GetEntInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntInfoList',params, null);
+  return result;
+}
+//企业信息 导出
+export async function ExportEntInfoList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEntInfoList',params, null);
+  return result;
+}
+   

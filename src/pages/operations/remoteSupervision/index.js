@@ -1009,7 +1009,7 @@ const Index = (props) => {
          analyzerRang1 = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) : form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
          analyzerRang2 = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerRang2`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) : form2.getFieldValue(`${row.ChildID}AnalyzerRang2`),    
          analyzerUnit = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) : form2.getFieldValue(`${row.ChildID}AnalyzerUnit`),
-         analyzerFlag = analyzerRang1 && analyzerRang2 && analyzerUnit || row.Name=='NOx' ? true : false;
+         analyzerFlag = analyzerRang1 && analyzerRang2 && analyzerUnit || row.Name=='颗粒物' || row.Name =='流速'  ? true : false;
 
         const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
@@ -1018,7 +1018,6 @@ const Index = (props) => {
         const indicaValFlag = indicaVal && indicaUnit || row.concentrationType=='标杆浓度' || row.Name =='流速' ||  row.Name=='NOx' ? true : false;
         const dsDataFlag = dsData && dsDataUnit  ?  true : false; //只判断DAS示值填完的状态
         const scyDataFlag = scyData && scyDataUnit ? true : false;
-    console.log()
         if (analyzerFlag && indicaValFlag && dsDataFlag && !scyData && !scyDataUnit) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,

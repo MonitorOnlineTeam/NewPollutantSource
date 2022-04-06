@@ -71,7 +71,6 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
   
-  const [ manufacturerId, setManufacturerId] = useState(undefined)
 
   const  { tableDatas,tableTotal,tableLoading,exportLoading} = props;
   
@@ -132,7 +131,6 @@ const Index = (props) => {
 
       props.getTableData({
         ...values,
-        ManufacturerId:manufacturerId,
         pageIndex:pageIndexs,
         pageSize:pageSizes
       })
@@ -172,11 +170,11 @@ const Index = (props) => {
     }}
     layout='inline'
   >    
+        <Form.Item label='企业名称' name='EntName'>
+       <Input allowClear placeholder='请输入'/>
+      </Form.Item>
       <Form.Item label='行政区' name='RegionCode' >
         <RegionList levelNum={2} />
-      </Form.Item>
-      <Form.Item label='企业' name='EntName'>
-       <Input allowClear placeholder='请输入'/>
       </Form.Item>
       <Form.Item>
         <Button   loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
