@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { connect } from 'dva'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { Table, Input, InputNumber, Popconfirm, Form,Spin,Tabs, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -62,7 +62,7 @@ const Index = (props) => {
   const [legendTypeList,setLegendTypeList] = useState([])
 
   const { qualityRecordList } = props;
-
+  const echartsRef = useRef(null);
 
   useEffect(() => {
     if(DGIMN)
@@ -74,6 +74,7 @@ const Index = (props) => {
         form.setFieldsValue({pollutantCode: pollutantCodeDefaultData})
         setLegendTypeList(data)
         setCurrentPollutant(data[0]?data[0].ChildID : null)
+        setCurrentPollutantName(data[0]?data[0].Name : null)
       }
 
       props.getQualityTypeList({},(res)=>{
@@ -86,7 +87,15 @@ const Index = (props) => {
 
 
   const getOption = () => {
+
+
     let data = []
+
+    let selectName =  qualityTypeList.filter(item=>{
+      return item.ChildID == tabKey
+    })
+    selectName = selectName[0]? selectName[0].Name : ''
+
     if(qualityRecordList[0]){
       qualityRecordList.map(item=>{
         if(item.QualityItem == currentPollutant){
@@ -96,14 +105,14 @@ const Index = (props) => {
     }
     return {
       title: {
-        text: "24小时零点漂移历史数据",
+        text: `${currentPollutantName}${selectName}历史数据`,
         left: 'center'
       },
       tooltip: {
         trigger: 'axis',
         formatter: (params, ticket, callback) => {
           let param = params[0]
-          let format = `${param.name}<br />${param.marker}${param.value}%`
+          let format = `${param.name}<br /> ${param.marker} 相对误差：${param.value}%`
           return format
         }
       },
@@ -129,7 +138,7 @@ const Index = (props) => {
         data: data[0]? data.map(item=>item.QualityTime) : []
       },
       yAxis: {
-        name: '(%)',
+        name: '相对误差（%）',
         type: 'value',      
       },
       series: [
@@ -147,7 +156,7 @@ const Index = (props) => {
             borderWidth: 3,
             color: function (params,index) {
               let color;
-              const isQualified = data[0]? data.map(item=>item.IsQualified)[params.dataIndex] .toString() == 1 :true;
+              const isQualified = data[0]? data.map(item=>item.IsQualified)[params.dataIndex].toString() == 1 :true;
               if (isQualified) {
                  color = "#248000"
               } else {
@@ -160,6 +169,8 @@ const Index = (props) => {
       ]
     };
   }
+
+
   const onFinish  = async (typeID) =>{  //查询
 
     try {
@@ -170,8 +181,8 @@ const Index = (props) => {
         pollutantCode:values.pollutantCode&&values.pollutantCode[0]? values.pollutantCode.toString() : '',
         typeID: typeID && !(typeID instanceof Object) ? typeID : tabKey,
         DGIMN:DGIMN,
+        time:undefined,
       })
-
 
         if(typeID instanceof Object){ //非初始化加载的时候
         let data = []  //图例
@@ -184,6 +195,7 @@ const Index = (props) => {
         })
         setLegendTypeList([...data])
         setCurrentPollutant(data[0]?data[0].ChildID : null)
+        setCurrentPollutantName(data[0]?data[0].Name : null)
         }
 
 
@@ -230,13 +242,17 @@ const Index = (props) => {
   </Form>
   }
   const  [tabKey,setTabkey] =useState()
+
+
   const tabChange = (key) =>{
     setTabkey(key)
     onFinish(key)
+
   }
 
    const { qualityTypeList,qualityPollutantList } = props;
  
+   const [currentPollutantName,setCurrentPollutantName] = useState('')
    
    const [currentPollutant,setCurrentPollutant] = useState(null)
   
@@ -264,12 +280,7 @@ const Index = (props) => {
             legendTypeList.map(item => {
               return <div key={item.ChildID} className={styles.legendItem} onClick={() => {
                 setCurrentPollutant(item.ChildID)
-
-                // qualityRecordList[0]&&qualityRecordList.map(code=>{
-                //   if(code.QualityItem == item.ChildID){
-                //   props.updateState({ qualityRecordList: code })
-                //   }
-                // })
+                setCurrentPollutantName(item.Name)
               }}>
                 <i className={currentPollutant === item.ChildID ? styles.active : ""}></i>
                 {item.Name}
@@ -283,6 +294,7 @@ const Index = (props) => {
              style={{ height: "calc(100vh - 270px)" }}
              className="echarts-for-echarts"
              theme="my_theme"
+            //  ref={echartsRef}  
            /> 
 
            <div className={styles.bottomLegendContainer}>
