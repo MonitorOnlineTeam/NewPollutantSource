@@ -28,6 +28,7 @@ export default Model.extend({
     historyOperationInfo:[],
     entListTableDatas: [],
     entListTableTotal: 0,
+    pollutantTypeList:[],
   },
   effects: {
     *getSystemModelOfPoint({ payload, callback }, { call, put, update }) { //系统信息
@@ -156,5 +157,47 @@ export default Model.extend({
         message.warning(result.Message)
       }
     }, 
+
+    *getEquipmentParametersOfPont ({ payload, callback }, { call, put, update }) { //设备信息
+      const result = yield call(services.GetEquipmentParametersOfPont, payload);
+      if (result.IsSuccess) {
+        yield update({
+          entListTableDatas: result.Datas,
+          entListTableTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *exportEquipmentParametersOfPont({ payload }, { call, put, update, select }) { //导出 设备信息
+      const result = yield call(services.ExportEquipmentParametersOfPont, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+    }, 
+    *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型
+        const result = yield call(services.GetPollutantById, payload);
+
+        if (result.IsSuccess) {
+          let data = [];
+           if(result.Datas&&result.Datas.mlist){
+            result.Datas.mlist.map((item,index)=>{
+              if(index<=1){
+                data.push(item)
+              }
+            })
+           }else{
+             data = []
+           }
+          yield update({ pollutantTypeList: data})
+          callback(data)
+        } else {
+          message.error(result.Message)
+          yield update({ pollutantTypeList: []})
+        }
+    },
   },
 })

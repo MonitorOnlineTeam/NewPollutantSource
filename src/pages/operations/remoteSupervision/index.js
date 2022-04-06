@@ -974,6 +974,7 @@ const Index = (props) => {
             DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit,
             DASStatus: dasChecked ? 1 : 2,
             DataStatus: numChecked ? 1 : 2,
+
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
@@ -1021,6 +1022,7 @@ const Index = (props) => {
         if (analyzerFlag && indicaValFlag && dsDataFlag && !scyData && !scyDataUnit) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
+            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和只测流速法
             CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
@@ -1034,6 +1036,7 @@ const Index = (props) => {
         if (analyzerFlag && indicaValFlag && scyDataFlag && !dsData && !dsDataUnit) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
+            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和只测流速法
             CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
@@ -1047,6 +1050,7 @@ const Index = (props) => {
         if (analyzerFlag && indicaValFlag && dsDataFlag && scyDataFlag) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
+            Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和只测流速法
             CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位

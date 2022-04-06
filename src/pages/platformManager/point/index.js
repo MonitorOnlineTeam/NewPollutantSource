@@ -845,7 +845,7 @@ export default class MonitorPoint extends Component {
             title={this.state.pollutantType==1? "废水-VOCS" : "废气"}
             visible={this.state.deviceManagerVisible}
             onCancel={()=>{this.setState({deviceManagerVisible:false})}}
-            width="90%"
+            width="95%"
             destroyOnClose
             footer={false}
             wrapClassName={styles.deviceManagerSty}

@@ -31,12 +31,16 @@ const namespace = 'pollutantInfo'
 
 
 
-const dvaPropsData = ({ loading, pollutantInfo, global }) => ({
+const dvaPropsData = ({ loading, pollutantInfo, global,point }) => ({
     tableDatas: pollutantInfo.verificationTableDatas,
     tableTotal: pollutantInfo.verificationTableTotal,
-    tableLoading: loading.effects[`${namespace}/getVerificationItemOfPoint`],
-    exportLoading: loading.effects[`${namespace}/exportVerificationItemOfPoint`],
+    tableLoading: loading.effects[`${namespace}/getEquipmentParametersOfPont`],
+    exportLoading: loading.effects[`${namespace}/exportEquipmentParametersOfPont`],
     clientHeight: global.clientHeight,
+    pollutantTypeList:pollutantInfo.pollutantTypeList,
+    pollutantByIdLoading: loading.effects[`${namespace}/getPollutantById`] || false,
+    pollutantTypeList2: point.pollutantTypeList2,
+    loadingGetPollutantById2: loading.effects[`point/getPollutantById2`] || false,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -49,19 +53,32 @@ const dvaDispatch = (dispatch) => {
         },
         getTableData: (payload) => { //列表
             dispatch({
-                type: `${namespace}/getVerificationItemOfPoint`,
+                type: `${namespace}/getEquipmentParametersOfPont`,
                 payload: payload,
             })
         },
         exportData: (payload, callback) => { // 导出
             dispatch({
-                type: `${namespace}/exportVerificationItemOfPoint`,
+                type: `${namespace}/exportEquipmentParametersOfPont`,
                 payload: payload,
                 callback: callback
             })
 
         },
-
+        getPollutantById: (payload,callback) => { //监测类型
+            dispatch({
+              type: `${namespace}/getPollutantById`,
+              payload: payload,
+              callback:callback,
+            })
+          },
+          getPollutantById2: (payload,callback) => { //监测类别
+            dispatch({
+              type: `point/getPollutantById2`,
+              payload: payload,
+              callback:callback
+            })
+          },
 
     }
 }
@@ -73,11 +90,23 @@ const Index = (props) => {
 
     const [manufacturerId, setManufacturerId] = useState(undefined)
 
-    const { tableDatas, tableTotal, tableLoading, exportLoading } = props;
+    const { tableDatas, tableTotal, tableLoading, exportLoading,pollutantTypeList,pollutantByIdLoading,pollutantTypeList2,loadingGetPollutantById2 } = props;
 
 
     useEffect(() => {
-        onFinish(pageIndex, pageSize)
+            props.getPollutantById({id:undefined},(res)=>{
+                if(res){
+                    form.setFieldsValue({PollutantType:res?res[1].ID:undefined})
+                    props.getPollutantById2({id:res?res[1].ID:'',type:1},()=>{
+                        form.setFieldsValue({PollutantCode:undefined})
+                        onFinish(pageIndex, pageSize);
+                      }) //监测类别
+                }
+
+            })
+            
+
+      
     }, []);
     
     const [columns,setColumns]= useState([
@@ -195,11 +224,11 @@ const Index = (props) => {
 
     };
     const onValuesChange = (hangedValues, allValues)=>{
-        if(Object.keys(hangedValues).join() == 'pollutantType'){
-          props.getParamCodeList({pollutantType:hangedValues.pollutantType},(data)=>{
-            setParType(data)
-            form.setFieldsValue({parameterCategory:data.map(item=>item.value) })
-          }) 
+        if(Object.keys(hangedValues).join() == 'PollutantType'){
+          props.getPollutantById2({id:hangedValues.PollutantType,type:1},()=>{
+            form.setFieldsValue({PollutantCode:undefined})
+
+          }) //监测类别
         }
       }
     
@@ -211,9 +240,6 @@ const Index = (props) => {
             form={form}
             name="advanced_search"
             onFinish={() => { onFinish(pageIndex, pageSize) }}
-            initialValues={{
-                pollutantType: 1
-            }}
             onValuesChange={onValuesChange}
         >  
            <Row>
@@ -223,24 +249,29 @@ const Index = (props) => {
             <Form.Item label='行政区' name='RegionCode' style={{padding:'0 8px'}}>
                 <RegionList levelNum={2} />
             </Form.Item>
-
-            <Form.Item label = '监测点类型' name='pollutantType' >
+            <Spin spinning={pollutantByIdLoading} size='small' style={{ top: -5, left: 20 }}>
+            <Form.Item label = '监测点类型' name='PollutantType' >
               <Select placeholder='请选择' style={{width:200}}>
-                <Option value={1}>废水</Option>
-                <Option value={2}>废气</Option>
+              {
+                  pollutantTypeList[0] && pollutantTypeList.map(item => {
+                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+                  })
+                }
                </Select>
              </Form.Item>
-             {/* <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: 20 }}>
-              <Form.Item label='监测参数' name='DGIMN' >
-                <Select placeholder='请选择' showSearch optionFilterProp="children">
-                  {
-                    pointList2[0] && pointList2.map(item => {
-                      return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
-                    })
-                  }
+             </Spin> 
+             <Spin spinning={loadingGetPollutantById2} size='small' style={{ top: -5, left: 20 }}>
+              <Form.Item label='监测参数' name='PollutantCode' style={{marginLeft:8}}>
+                <Select placeholder='请选择' showSearch optionFilterProp="children"  style={{width:200}}>
+
+                {
+                  pollutantTypeList2[0] && pollutantTypeList2.map(item => {
+                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+                  })
+                }
                 </Select>
               </Form.Item>
-            </Spin> */}
+            </Spin> 
             </Row>
             <Row style={{marginBottom:0,  paddingTop:5 }}>
             <Form.Item>

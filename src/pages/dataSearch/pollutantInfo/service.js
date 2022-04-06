@@ -57,4 +57,19 @@ export async function ExportEntInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEntInfoList',params, null);
   return result;
 }
-   
+
+//设备信息
+export async function GetEquipmentParametersOfPont(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEquipmentParametersOfPont',params, null);
+  return result;
+}
+//设备信息 导出
+export async function ExportEquipmentParametersOfPont(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEquipmentParametersOfPont',params, null);
+  return result;
+}
+  //设备信息  获取监测类型
+  export async function GetPollutantById(params) { 
+    const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
+    return result;
+  }

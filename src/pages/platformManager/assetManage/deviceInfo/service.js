@@ -42,3 +42,4 @@ export async function GetManufacturerList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);
   return result;
 }
+

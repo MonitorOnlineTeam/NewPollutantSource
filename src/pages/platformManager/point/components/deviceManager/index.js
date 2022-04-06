@@ -243,6 +243,7 @@ const Index = (props) => {
       title: '监测参数',
       dataIndex: 'PollutantName',
       align: 'center',
+      width: 100,
       editable: true,
     },
     {
@@ -266,14 +267,32 @@ const Index = (props) => {
       editable: true,
     },
     {
+      title: '手填设备厂家',
+      dataIndex: 'aaa',
+      align: 'center',
+      editable: true,
+    },
+    {
       title: '设备名称',
       dataIndex: 'EquipmentInfoID',
       align: 'center',
       editable: true,
     },
     {
+      title: '手填设备名称',
+      dataIndex: 'bbb',
+      align: 'center',
+      editable: true,
+    },
+    {
       title: '设备型号',
       dataIndex: 'EquipmentModel',
+      align: 'center',
+      editable: true,
+    },
+    {
+      title: '手填设备名称',
+      dataIndex: 'ccc',
       align: 'center',
       editable: true,
     },
@@ -772,9 +791,9 @@ const Index = (props) => {
     if (dataIndex ==='EquipmentManufacturer') {
       inputNode = <Select onClick={()=>{setParPopVisible(!parPopVisible);form3.resetFields();onFinish3()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
     } else if (inputType === 'number') {
-      inputNode = <InputNumber placeholder={`请输入${title}`} />
+      inputNode = <InputNumber placeholder={`请输入`} />
     } else {
-      inputNode = <Input placeholder={`请输入${title}`} />
+      inputNode = <Input placeholder={`请输入`} />
     }
 
     const parLoading = record&&record.type&&record.type==='add'? props.loadingGetPollutantById2 : props.monitoringCategoryTypeLoading; //监测参数提示loading
@@ -801,10 +820,10 @@ const Index = (props) => {
               </Form.Item>
             </Form.Item> : dataIndex ==='PollutantName'? //监测参数
             
-            <>{ parLoading? <Spin size='small' style={{ width: 150, textAlign: 'left' }} />
+            <>{ parLoading? <Spin size='small' style={{ textAlign: 'left' }} />
                      :
                      <Form.Item  name={`PollutantCode`} style={{ margin: 0 }}>
-            <Select placeholder='请选择监测参数' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}  style={{ width: 150 }}>
+            <Select placeholder='请选择' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
             {
              pollutantTypeList2[0] && pollutantTypeList2.map(item => {
             return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
