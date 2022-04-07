@@ -25,8 +25,8 @@ const namespace = 'pollutantInfo'
 
 
 const dvaPropsData = ({ loading, pollutantInfo, autoForm }) => ({
+    tableTotal: pollutantInfo.operationInfoTableTotal,
     tableDatas: pollutantInfo.operationInfoTableDatas,
-    projectTableDatas: pollutantInfo.operationInfoTableTotal,
     tableLoading: pollutantInfo.projectRelationLoading,
     historyOperationInfo:pollutantInfo.historyOperationInfo,
     historyOperationInfoLoading: pollutantInfo.historyProjectRelationLoading,
@@ -70,7 +70,7 @@ const Index = (props) => {
 
 
 
-    const { tableDatas, tableLoading, exportLoading } = props;
+    const {tableTotal, tableDatas, tableLoading, exportLoading } = props;
 
 
     useEffect(() => {
@@ -81,7 +81,7 @@ const Index = (props) => {
 
 
     const initData = () => {
-        onFinish();
+        onFinish(pageIndex,pageSize);
     }
 
 
@@ -246,11 +246,13 @@ const Index = (props) => {
     };
 
 
-    const onFinish = async () => {  //查询
+    const onFinish = async (pageIndexs, pageSizes) => {  //查询
         try {
             const values = await form.validateFields();
             const par = {
                 ...values,
+                pageIndex: pageIndexs,
+                pageSize: pageSizes,
                 OperatTime:undefined,
                 ActualTime:undefined,
                 OperationBeginTime: values.OperatTime&&moment(values.OperatTime[0]).format("YYYY-MM-DD HH:ss:mm"),
@@ -269,11 +271,18 @@ const Index = (props) => {
         props.getEntProjectRelationList({EntID:record.entID})
     }
 
+    const [pageSize, setPageSize] = useState(20)
+    const [pageIndex, setPageIndex] = useState(1)
+    const handleTableChange = (PageIndex, PageSize) => {
+        setPageIndex(PageIndex)
+        setPageSize(PageSize)
+        onFinish(PageIndex, PageSize)
+    }
     const searchComponents = () => {
         return <Form
             name="advanced_search"
             form={form}
-            onFinish={onFinish}
+            onFinish={() => { onFinish(pageIndex, pageSize) }}
         >
 
             <Row>
@@ -328,6 +337,14 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={columns}
+                    pagination={{
+                        total: tableTotal,
+                        pageSize: pageSize,
+                        current: pageIndex,
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        onChange: handleTableChange,
+                    }}
                 />
             </Card>
 

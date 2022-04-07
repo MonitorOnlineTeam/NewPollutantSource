@@ -568,7 +568,7 @@ const Index = (props) => {
       </Col>
       <Col span={6}>
         <Form.Item label="核查结果" >
-        {consistencyCheckDetail.resultCheck}
+        {consistencyCheckDetail.resultCheck === '不合格' ? <span style={{ color: '#f5222d' }}>{consistencyCheckDetail.resultCheck}</span> : <span>{consistencyCheckDetail.resultCheck}</span>}
       </Form.Item>
       </Col>
       </Row>

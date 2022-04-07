@@ -33,6 +33,7 @@ const namespace = 'pollutantInfo'
 
 const dvaPropsData = ({ loading, pollutantInfo, global }) => ({
     tableDatas: pollutantInfo.entListTableDatas,
+    tableTotal: pollutantInfo.entListTableTotal,
     projectTableDatas: pollutantInfo.entListTableTotal,
     tableLoading: loading.effects[`${namespace}/getEntInfoList`],
     exportLoading: loading.effects[`${namespace}/exportEntInfoList`],
