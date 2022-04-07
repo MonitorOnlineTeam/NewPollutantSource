@@ -179,6 +179,7 @@ const Index = (props) => {
 
 
     const onFinish = async (pageIndexs, pageSizes) => {  //查询
+        
         try {
             const values = await form.validateFields();
             
@@ -188,16 +189,18 @@ const Index = (props) => {
                 pageIndex: pageIndexs,
                 pageSize: pageSizes
             },()=>{
-                console.log(values)
-                if( values.pollutantType=='31f8f6f9-5700-443b-8570-9229b36fa00c'){ //废气
-                    columns.splice(columns.length-1,0,{
-                        title: '配备',
-                        dataIndex: 'PlatformNum',
-                        key: 'PlatformNum',
-                        align: 'center',
-                    })
+                if( values.PollutantType=='31f8f6f9-5700-443b-8570-9229b36fa00c'){ //废气
+                    if(!columns.filter(item=>item.title=='配备')[0]){
+                        columns.splice(columns.length-1,0,{
+                            title: '配备',
+                            dataIndex: 'Equipment',
+                            key: 'Equipment',
+                            align: 'center',
+                        })
+                    }
+
                 }else{
-                   setColumns(columns.filter(item=>item.Name!='配备'))
+                   setColumns(columns.filter(item=>item.title!='配备'))
                 }
             })
 

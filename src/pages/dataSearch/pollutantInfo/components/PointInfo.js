@@ -159,9 +159,8 @@ const Index = (props) => {
             
             props.getTableData({
                 ...values,
-                ManufacturerId: manufacturerId,
-                pageIndex: pageIndexs,
-                pageSize: pageSizes
+                PageIndex: pageIndexs,
+                PageSize: pageSizes
             },()=>{
                 if( values.pollutantType==2){
                     columns.splice(columns.length-3,0,{
@@ -224,7 +223,7 @@ const Index = (props) => {
         >  
            <Row>
 
-           <Form.Item label='企业' name='entName'>
+           <Form.Item label='企业名称' name='entName'>
             <Input allowClear placeholder='请输入'/>
            </Form.Item>
             <Form.Item label='行政区' name='regionCode' style={{padding:'0 8px'}}>
