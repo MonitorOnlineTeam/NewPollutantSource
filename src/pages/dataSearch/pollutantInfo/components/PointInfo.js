@@ -159,8 +159,8 @@ const Index = (props) => {
             
             props.getTableData({
                 ...values,
-                PageIndex: pageIndexs,
-                PageSize: pageSizes
+                pageIndex: pageIndexs,
+                pageSize: pageSizes
             },()=>{
                 if( values.pollutantType==2){
                     columns.splice(columns.length-3,0,{
