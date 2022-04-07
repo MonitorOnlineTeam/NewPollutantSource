@@ -29,6 +29,8 @@ export default Model.extend({
     entListTableDatas: [],
     entListTableTotal: 0,
     pollutantTypeList:[],
+    deviceInfoTableDatas: [],
+    deviceInfoTableTotal: 0,
   },
   effects: {
     *getSystemModelOfPoint({ payload, callback }, { call, put, update }) { //系统信息
@@ -48,7 +50,7 @@ export default Model.extend({
       const result = yield call(services.ExportSystemModelOfPoint, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -68,7 +70,7 @@ export default Model.extend({
       const result = yield call(services.ExportVerificationItemOfPoint, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -88,7 +90,7 @@ export default Model.extend({
       const result = yield call(services.ExportMonitorPointParamOfPoint, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -162,9 +164,10 @@ export default Model.extend({
       const result = yield call(services.GetEquipmentParametersOfPont, payload);
       if (result.IsSuccess) {
         yield update({
-          entListTableDatas: result.Datas,
-          entListTableTotal: result.Total,
+          deviceInfoTableDatas: result.Datas,
+          deviceInfoTableTotal: result.Total,
         })
+        callback();
       } else {
         message.error(result.Message)
       }
@@ -173,7 +176,7 @@ export default Model.extend({
       const result = yield call(services.ExportEquipmentParametersOfPont, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`/upload${result.Datas}`);
+        downloadFile(`${result.Datas}`);
       }else{
         message.warning(result.Message)
       }

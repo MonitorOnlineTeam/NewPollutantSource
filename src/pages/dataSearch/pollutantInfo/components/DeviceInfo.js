@@ -32,8 +32,8 @@ const namespace = 'pollutantInfo'
 
 
 const dvaPropsData = ({ loading, pollutantInfo, global,point }) => ({
-    tableDatas: pollutantInfo.verificationTableDatas,
-    tableTotal: pollutantInfo.verificationTableTotal,
+    tableDatas: pollutantInfo.deviceInfoTableDatas,
+    tableTotal: pollutantInfo.deviceInfoTableTotal,
     tableLoading: loading.effects[`${namespace}/getEquipmentParametersOfPont`],
     exportLoading: loading.effects[`${namespace}/exportEquipmentParametersOfPont`],
     clientHeight: global.clientHeight,
@@ -51,10 +51,11 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        getTableData: (payload) => { //列表
+        getTableData: (payload,callback) => { //列表
             dispatch({
                 type: `${namespace}/getEquipmentParametersOfPont`,
                 payload: payload,
+                callback:callback
             })
         },
         exportData: (payload, callback) => { // 导出
@@ -139,38 +140,38 @@ const Index = (props) => {
         },
         {
             title: '监测参数',
-            dataIndex: 'PollutantTypeName',
-            key: 'PollutantTypeName',
+            dataIndex: 'PollutantName',
+            key: 'PollutantName',
             align: 'center',
         },
         {
             title: '设备名称',
-            dataIndex: 'RealtimePollutantName',
-            key: 'RealtimePollutantName',
+            dataIndex: 'EquipmentName',
+            key: 'EquipmentName',
             align: 'center',
         },
         {
             title: '设备型号',
-            dataIndex: 'HourPollutantName',
-            key: 'HourPollutantName',
+            dataIndex: 'EquipmentType',
+            key: 'EquipmentType',
             align: 'center',
         },
         {
             title: '设备序列号',
-            dataIndex: 'PlatformNum',
-            key: 'PlatformNum',
+            dataIndex: 'EquipmentNumber',
+            key: 'EquipmentNumber',
             align: 'center',
         },
         {
             title: '设备厂家',
-            dataIndex: 'PlatformNum',
-            key: 'PlatformNum',
+            dataIndex: 'ManufacturerName',
+            key: 'ManufacturerName',
             align: 'center',
         },
         {
             title: '量程',
-            dataIndex: 'PlatformNum',
-            key: 'PlatformNum',
+            dataIndex: 'Range',
+            key: 'Range',
             align: 'center',
         },
     ])
@@ -187,7 +188,8 @@ const Index = (props) => {
                 pageIndex: pageIndexs,
                 pageSize: pageSizes
             },()=>{
-                if( values.pollutantType==2){
+                console.log(values)
+                if( values.pollutantType=='31f8f6f9-5700-443b-8570-9229b36fa00c'){ //废气
                     columns.splice(columns.length-1,0,{
                         title: '配备',
                         dataIndex: 'PlatformNum',

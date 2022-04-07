@@ -385,7 +385,7 @@ const Index = (props) => {
       [`${code}AnalyzerRang2`]:val.AnalyzerMax,
       [`${code}AnalyzerUnit`]:val.AnalyzerUnit,
       [`${code}DsRang1`]:val.DASMin,
-      [`${code}DsRang2`]:val.DASMin,
+      [`${code}DsRang2`]:val.DASMax,
       [`${code}DsUnit`]:val.DASUnit,
       [`${code}ScyRang1`]:val.DataMin,
       [`${code}ScyRang2`]:val.DataMax,
