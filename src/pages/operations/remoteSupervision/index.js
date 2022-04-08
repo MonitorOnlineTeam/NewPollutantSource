@@ -216,14 +216,14 @@ const Index = (props) => {
 
     })
     setRangReq(analysisParRangObj)
-    setRemark(parRemarkObj)
+    // setRemark(parRemarkObj)
 
     addRealTimeData.map((item, index) => {
       indicaValReqObj[`${item.par}IndicaValFlag`] = true;//示值 实时数据一致性
       parRemark2Obj[`${item.par}Remark2Flag`] = false;
     })
     setIndicaValReq(indicaValReqObj)
-    setRemark2(parRemark2Obj)
+    // setRemark2(parRemark2Obj)
   }
 
 
@@ -236,7 +236,7 @@ const Index = (props) => {
       parRemark3Obj[`${item.par}Remark3Flag`] = false;
     })
     setTraceValReq(traceValObj)
-    setRemark3(parRemark3Obj)
+    // setRemark3(parRemark3Obj)
   }
  }
 
@@ -512,31 +512,31 @@ const Index = (props) => {
           setFileList2(fileList)
         }
 
-        let uploadList = {}
-        data.consistentParametersCheckList.map(item=>{ //参数一致性核查表
-          let code = item.CheckItem 
-          form3.setFieldsValue({
-            [`${code}IsEnable`]: item.Status? [item.Status] : [],
-            [`${code}SetVal`]:item.SetValue,
-            [`${code}TraceVal`]:item.TraceabilityValue,
-            [`${code}Uniform`]:item.AutoUniformity,
-            [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
-            [`${code}Remark3`]:item.Remark,
-            [`${code}ParFiles`]:item.Upload,
-          })
-          uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
-            if(!item.IsDelete){
-            return {
-              uid: item.GUID,
-              name: item.FileName,
-              status: 'done',
-              url: `\\upload\\${item.FileName}`,
-            }
-          }
-           })
+        // let uploadList = {}
+        // data.consistentParametersCheckList.map(item=>{ //参数一致性核查表
+        //   let code = item.CheckItem 
+        //   form3.setFieldsValue({
+        //     [`${code}IsEnable`]: item.Status? [item.Status] : [],
+        //     [`${code}SetVal`]:item.SetValue,
+        //     [`${code}TraceVal`]:item.TraceabilityValue,
+        //     [`${code}Uniform`]:item.AutoUniformity,
+        //     [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
+        //     [`${code}Remark3`]:item.Remark,
+        //     [`${code}ParFiles`]:item.Upload,
+        //   })
+        //   uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
+        //     if(!item.IsDelete){
+        //     return {
+        //       uid: item.GUID,
+        //       name: item.FileName,
+        //       status: 'done',
+        //       url: `\\upload\\${item.FileName}`,
+        //     }
+        //   }
+        //    })
 
-         })
-         setFilesList3({ ...uploadList })
+        //  })
+        //  setFilesList3({ ...uploadList })
 
 
          })
@@ -840,13 +840,37 @@ const Index = (props) => {
     setTabType(key)
 
     if(key==2){
+      let uploadList = {}
       consistencyCheckDetail.consistentParametersCheckList&&consistencyCheckDetail.consistentParametersCheckList.map(item=>{ //参数一致性核查表
             let code = item.CheckItem;
-           setTimeout(()=>{
+            form3.setFieldsValue({
+              [`${code}IsEnable`]: item.Status? [item.Status] : [],
+              [`${code}SetVal`]:item.SetValue,
+              [`${code}TraceVal`]:item.TraceabilityValue,
+              [`${code}Uniform`]:item.AutoUniformity,
+              [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
+              [`${code}Remark3`]:item.Remark,
+              [`${code}ParFiles`]:item.Upload,
+            })
+            uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
+              if(!item.IsDelete){
+              return {
+                uid: item.GUID,
+                name: item.FileName,
+                status: 'done',
+                url: `\\upload\\${item.FileName}`,
+              }
+            }
+             })
+           
+           
+            setTimeout(()=>{
             onManualChange(item.Uniformity&&[item.Uniformity], {...item, par:`${code}`}, `${code}RangCheck3`, 3)//编辑 手工修正结果 参数
 
            })
        })
+
+       setFilesList3({ ...uploadList })
     }
   }
 
@@ -955,29 +979,29 @@ const Index = (props) => {
       case 1: // 量程一致性核查表
         if (val[0] == 3) { //不适用 量程 可不填
           setRangReq({ ...rangReq, [`${row.par}RangFlag`]: false })
-          setRemark({ ...remark, [`${row.par}RemarkFlag`]: true })
+          // setRemark({ ...remark, [`${row.par}RemarkFlag`]: true })
         } else {
           setRangReq({ ...rangReq, [`${row.par}RangFlag`]: true })
-          setRemark({ ...remark, [`${row.par}RemarkFlag`]: false })
+          // setRemark({ ...remark, [`${row.par}RemarkFlag`]: false })
         }
         break;
       case 2: // 实时数据一致性核查表
         if (val[0] == 3) { //不适用 示值 可不填
           setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: false })
-          setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: true })
+          // setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: true })
         } else {
           setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: true })
-          setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: false })
+          // setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: false })
         }
 
 
       case 3: // 参数一致性核查表
         if (val[0] == 3) {
           setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: false })
-          setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: true })
+          // setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: true })
         } else {
           setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: true })
-          setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: false })
+          // setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: false })
         }
     }
 
@@ -1039,26 +1063,29 @@ const Index = (props) => {
 
         break;
       case 2: // 实时数据一致性核查表 自动判断
-           console.log(row)
-           if(title=='添加'){
-              if(row.concentrationType=='原始浓度'){
-                 analyzerRang1 = form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`)
-                }else if(row.concentrationType=='标杆浓度'){
+      console.log(row)
+                if(row.Name=='颗粒物'){ 
+                 // isDisPlayCheck2 无显示屏  isDisPlayCheck4   直测流速法
+                  analyzerRang1 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) :  isDisPlayCheck1? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`) : undefined;
+                  analyzerRang2 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}aAnalyzerRang2`) : isDisPlayCheck1? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
+                  analyzerUnit =  isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) :  isDisPlayCheck1? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
+                }else if(row.Name=='流速'){
+                  analyzerRang1 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`): undefined;
+                  analyzerRang2 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
+                  analyzerUnit =  isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
+
+               }else{
+                analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
+                analyzerRang2 =  form2.getFieldValue(`${row.ChildID}AnalyzerRang2`), 
+                analyzerUnit =   form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
                }
 
-           }
-           if(title=='编辑'){
-
-           }
-          console.log(isDisPlayCheck2)
-          analyzerRang1 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) : form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
-          analyzerRang2 = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerRang2`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) : form2.getFieldValue(`${row.ChildID}AnalyzerRang2`), 
-          analyzerUnit = isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) : isDisPlayCheck4 ? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) : form2.getFieldValue(`${row.ChildID}AnalyzerUnit`);
 
 
- 
-         analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit || row.Name=='颗粒物' || row.Name =='流速' || row.Name=='标干流量' ? true : false;
+
+               console.log(analyzerRang1,analyzerRang2,)
+         analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit  || row.Name =='流速' || row.Name=='标干流量' ? true : false;
 
         const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
@@ -1451,7 +1478,9 @@ const Index = (props) => {
                 disabledFlag = record.isDisplay == 3 && !isDisPlayCheck3 || record.isDisplay == 4 && !isDisPlayCheck4 ? true : false
                 break;
             }
-            return <Form.Item name={`${record.par}Remark`} rules={[{ required: remark[`${record.par}RemarkFlag`], message: '请输入' }]}>
+            
+            // return <Form.Item name={`${record.par}Remark`} rules={[{ required: remark[`${record.par}RemarkFlag`], message: '请输入' }]}>
+             return <Form.Item name={`${record.par}Remark`} rules={[{ required: false, message: '请输入' }]}> 
               <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -1656,8 +1685,9 @@ const Index = (props) => {
           key: 'par',
           width: 180,
           render: (text, record) => {
-            return <Form.Item name={`${record.par}Remark2`} rules={[{ required: remark2[`${record.par}Remark2Flag`], message: '请输入' }]}>
-              <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
+            // return <Form.Item name={`${record.par}Remark2`} rules={[{ required: remark2[`${record.par}Remark2Flag`], message: '请输入' }]}>
+            return <Form.Item name={`${record.par}Remark2`} rules={[{ required: false, message: '请输入' }]}>  
+            <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
         },
@@ -1791,7 +1821,8 @@ const Index = (props) => {
       key: 'par',
       width: 180,
       render: (text, record) => {
-        return <Form.Item name={`${record.par}Remark3`} rules={[{ required: remark3[`${record.par}Remark3Flag`], message: '请输入' }]}>
+        // return <Form.Item name={`${record.par}Remark3`} rules={[{ required: remark3[`${record.par}Remark3Flag`], message: '请输入' }]}>
+         return <Form.Item name={`${record.par}Remark3`} rules={[{ required: false, message: '请输入' }]}> 
           <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
         </Form.Item>
       }
