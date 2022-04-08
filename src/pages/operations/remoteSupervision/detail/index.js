@@ -105,10 +105,9 @@ const Index = (props) => {
 
       setTableData1(data1)
 
-     // 实时护具一致性核查表 数据
+     // 实时数据一致性核查表 数据
      let data2 = data.consistencyCheckList&&data.consistencyCheckList.filter(item=> !(item.DataList.Special&&item.PollutantName==='颗粒物'))
      
-     console.log(data2)
      setTableData2(data2)
 
 
@@ -189,11 +188,11 @@ const Index = (props) => {
               if(record.DataList.Special&&record.DataList.Special==1 || record.DataList.flag==3){
                 return   <div  style={{marginLeft:-12}}><Checkbox checked={ record.DataList.flag? false: true} >差压法</Checkbox></div>
             }else if(record.DataList.Special&&record.DataList.Special==2 || record.DataList.flag==4){
-              return <Checkbox style={{marginLeft:15}} checked={ record.DataList.flag? false: true} >只测流速法</Checkbox>
+              return <Checkbox style={{marginLeft:15}} checked={ record.DataList.flag? false: true} >直测流速法</Checkbox>
              }else if(record.DataList.flag==2){
               return   <div  style={{marginLeft:-12}}><Checkbox checked={false} >差压法</Checkbox></div>
              }else{
-              return  <Checkbox  style={{marginLeft:15}}   checked={false} >只测流速法</Checkbox>
+              return  <Checkbox  style={{marginLeft:15}}   checked={false} >直测流速法</Checkbox>
              }
             
           }else {
@@ -208,7 +207,7 @@ const Index = (props) => {
           dataIndex: 'PollutantName',
           key: 'PollutantName',
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量') {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
               return record.DataList.AnalyzerMin? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMin}` : null;
@@ -221,7 +220,7 @@ const Index = (props) => {
           dataIndex: 'par',
           key: 'par',
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量') {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
                return record.DataList.DASMin? `${record.DataList.DASMin}-${record.DataList.DASMax}` : null;
@@ -234,7 +233,7 @@ const Index = (props) => {
           dataIndex: 'PollutantName',
           key: 'PollutantName',
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量') {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
               return record.DataList.DataMin? `${record.DataList.DataMin}-${record.DataList.DataMax}` : null;
@@ -248,7 +247,7 @@ const Index = (props) => {
           dataIndex: 'PollutantName',
           key: 'PollutantName',
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量') {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             }else{
               return record.DataList.RangeAutoStatus==1? '是' : record.DataList.RangeAutoStatus==2 ? '否' : null
@@ -261,7 +260,7 @@ const Index = (props) => {
           dataIndex: 'PollutantName',
           key: 'PollutantName',
           render: (text, record, index) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量') {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             }else{  
               let  rangeStatus = record.DataList.RangeStatus;
@@ -276,11 +275,12 @@ const Index = (props) => {
           key: 'PollutantName',
           width: 100,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量') {
+            if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             }else{
-              return record.RangeRemark
+              return record.DataList.RangeRemark
             }
+            
           }
         },
         {
@@ -360,7 +360,7 @@ const Index = (props) => {
           dataIndex: 'PollutantName',
           key: 'PollutantName',
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标杆流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
+            if (record.Name === 'NOx' || record.Name === '标干流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
               return '—'
             }
             return record.DataList.AnalyzerCou
@@ -412,8 +412,11 @@ const Index = (props) => {
         {
           title: '备注',
           align: 'center',
-          dataIndex: 'CouRemrak',
-          key: 'CouRemrak',
+          dataIndex: 'PollutantName',
+          key: 'PollutantName',
+          render: (text, record) => {
+              return record.DataList.CouRemrak
+          }
         },
         {
           title: '附件',
@@ -503,8 +506,8 @@ const Index = (props) => {
     {
       title: '备注',
       align: 'center',
-      dataIndex: 'Remark',
-      key: 'Remark',
+      dataIndex: 'Remrak',
+      key: 'Remrak',
       width: 150,
     },
     {

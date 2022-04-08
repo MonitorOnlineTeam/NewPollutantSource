@@ -320,7 +320,7 @@ const projectNumCol =[
     form2.setFieldsValue({ ...record,
       PorjectID:record.projectID,OperationCompany:record.companyID,
       InspectionCycel:record.inspectionCycel,CalibrationCycle:record.calibrationCycle,ParameterCheck:record.parameterCheck,
-      RegionCode:record.regionCode,BeginTime:moment(record.actualBeginTime),EndTime:moment(record.actualEndTime)});
+      RegionCode:record.regionCode,BeginTime:record.actualBeginTime? moment(record.actualBeginTime) : undefined,EndTime:record.actualEndTime? moment(record.actualEndTime) : undefined});
     setChoiceData(record.projectCode)
     setType("edit")
     setFromVisible(true)

@@ -54,18 +54,18 @@ export default Model.extend({
           weixiangyingCount += item.weixiangyingCount;
           xiangyingCount += item.xiangyingCount;
         })
-        const totalRow = {
-          regionName:'全部合计',
-          regionCode:'',
-          entCount:entCount,
-          pointCount:pointCount,
-          exceptionCount:exceptionCount,
-          weixiangyingCount:weixiangyingCount,
-          xiangyingCount:xiangyingCount
-        }
+        // const totalRow = {
+        //   regionName:'全部合计',
+        //   regionCode:'',
+        //   entCount:entCount,
+        //   pointCount:pointCount,
+        //   exceptionCount:exceptionCount,
+        //   weixiangyingCount:weixiangyingCount,
+        //   xiangyingCount:xiangyingCount
+        // }
         yield update({
-          tableDatas: response.Datas.length>0? [...response.Datas,totalRow] : response.Datas,
-          // tableDatas:response.Datas,
+          // tableDatas: response.Datas.length>0? [...response.Datas,totalRow] : response.Datas,
+          tableDatas:response.Datas,
           total: response.Total,
         });
       } 

@@ -236,6 +236,12 @@ const Index = (props) => {
       },
     },
     {
+      title: 'CIS同步编码',
+      dataIndex: 'CISCode',
+      key:'CISCode',
+      align:'center',
+    },
+    {
       title: <span>操作</span>,
       dataIndex: 'x',
       key: 'x',
@@ -599,7 +605,15 @@ const Index = (props) => {
       </Form.Item>
       
       </Col>
-        <Col span={12}>
+      <Col span={12}>
+        <Form.Item label="CIS同步编码" name="CISCode">
+        <Input placeholder='请输入CIS同步编码' allowClear/>
+      </Form.Item>
+      </Col>
+      </Row>
+
+      <Row>
+      <Col span={12}>
         <Form.Item label="状态" name="Status" >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
@@ -608,7 +622,6 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       </Row>
-     
     </Form>
       </Modal>
         </div>
