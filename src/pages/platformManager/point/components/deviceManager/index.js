@@ -165,7 +165,22 @@ const Index = (props) => {
       setGaschoiceData(res&&res.gasManufacturerName? res.gasManufacturerName : undefined)
       setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
     })
-  }
+
+    //废水 废气 默认加载监测参数
+      if( pollutantType==1){
+        props.getPollutantById2({ id:'1b27155c-5b8b-439a-987c-8100723c2866',type:1 },(data)=>{
+
+        })
+      }
+      // if(pollutantType==2){
+      //   props.getPollutantById2({ id:'1b27155c-5b8b-439a-987c-8100723c2866',type:1 },(data)=>{
+
+      //   })
+      // }
+    }
+
+    
+
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -267,35 +282,19 @@ const Index = (props) => {
       editable: true,
     },
     {
-      title: '手填设备厂家',
-      dataIndex: 'aaa',
-      align: 'center',
-      editable: true,
-    },
-    {
       title: '设备名称',
       dataIndex: 'EquipmentInfoID',
       align: 'center',
       editable: true,
     },
-    {
-      title: '手填设备名称',
-      dataIndex: 'bbb',
-      align: 'center',
-      editable: true,
-    },
+
     {
       title: '设备型号',
       dataIndex: 'EquipmentModel',
       align: 'center',
       editable: true,
     },
-    {
-      title: '手填设备名称',
-      dataIndex: 'ccc',
-      align: 'center',
-      editable: true,
-    },
+
     {
       title: '设备序列号',
       dataIndex: 'EquipmentNumber',
@@ -339,7 +338,26 @@ const Index = (props) => {
       },
     },
   ];
-  if(pollutantType==1){
+  if(pollutantType==1){    
+    columns.splice(5,0,{
+      title: '手填设备厂家',
+      dataIndex: 'ManualEquipmentManufacturer',
+      align: 'center',
+      editable: true,
+   })
+    columns.splice(7,0,{
+        title: '手填设备名称',
+        dataIndex: 'ManualEquipmentName',
+        align: 'center',
+        editable: true,
+    })
+    columns.splice(9,0,{
+        title: '手填设备型号',
+        dataIndex: 'ManualEquipmentModel',
+        align: 'center',
+        editable: true,
+  })
+
     columns = columns.filter(item=>{
       return item.dataIndex !='Equipment'
    })
@@ -430,6 +448,8 @@ const Index = (props) => {
   }
 
   const [devicePollutantName,setDevicePollutantName] = useState() 
+  const [isManual,setIsManual] = useState(false) //是否手填
+
   const deviceColChoice = (record) => { //设备参数选择
     formDevice.setFieldsValue({ EquipmentManufacturer: record.ManufacturerName, EquipmentInfoID : record.EquipmentName,
                             EquipmentModel: record.EquipmentType, });
@@ -438,12 +458,14 @@ const Index = (props) => {
       props.getPollutantById2({ id: record.PollutantType,type:1 },()=>{
           formDevice.setFieldsValue({ PollutantCode: record.PollutantCode})
           setDevicePollutantName(record.PollutantName)
+          setIsManual(true)
       })
   }
   const onParClearChoice = (value) => {//设备参数清除
     formDevice.setFieldsValue({ EquipmentManufacturer: value,PollutantCode:undefined,EquipmentInfoID :'', EquipmentModel: '', });
     setParchoiceDeViceID(value)
     props.updateState({pollutantTypeList2:[]}) //清除监测参数
+    setIsManual(false)
   }
 
   const [pageIndex2,setPageIndex2] = useState(1)
@@ -760,7 +782,7 @@ const Index = (props) => {
       editable: true,
     }
     setData([...data, newData])
-    props.updateState({pollutantTypeList2:[]})
+    pollutantType!=1&&props.updateState({pollutantTypeList2:[]})
    }
   };
 
@@ -793,7 +815,7 @@ const Index = (props) => {
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
     } else {
-      inputNode = <Input placeholder={`请输入`} />
+      inputNode = <Input  title={formDevice.getFieldValue([dataIndex])} disabled={title==='设备名称'||title==='设备型号'? true : title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? isManual : false} placeholder={`请输入`} />
     }
 
     const parLoading = record&&record.type&&record.type==='add'? props.loadingGetPollutantById2 : props.monitoringCategoryTypeLoading; //监测参数提示loading
@@ -823,7 +845,7 @@ const Index = (props) => {
             <>{ parLoading? <Spin size='small' style={{ textAlign: 'left' }} />
                      :
                      <Form.Item  name={`PollutantCode`} style={{ margin: 0 }}>
-            <Select placeholder='请选择' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+            <Select placeholder='请选择' allowClear={isManual?false:true} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
             {
              pollutantTypeList2[0] && pollutantTypeList2.map(item => {
             return <Option key={item.ID} value={item.ID}>{item.Name}</Option>

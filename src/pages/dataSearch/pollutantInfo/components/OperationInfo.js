@@ -289,7 +289,7 @@ const Index = (props) => {
                 <Form.Item name='EntName' label='企业名称' >
                     <Input placeholder="请输入" allowClear/>
                 </Form.Item>
-                <Form.Item label='行政区' name='RegionCode' style={{ margin: '0 8px', }}>
+                <Form.Item label='行政区' name='regionCode' style={{ margin: '0 8px', }}>
                     <RegionList levelNum={2} />
                 </Form.Item>
 

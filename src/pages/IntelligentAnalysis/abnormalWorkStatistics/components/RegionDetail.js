@@ -125,6 +125,7 @@ const Index = (props) => {
      
          props.cityExceptionTaskList({
             ...queryPar,
+            outOrInside:undefined,
             regionCode: regionCodes,
             staticType:1,
             regionLevel: 2,
@@ -645,6 +646,7 @@ const reponseNumColumns = [
     pageIndex:pageIndexs?pageIndexs:pageIndex,
     pageSize:pageSizes?pageSizes:pageSize,
     ...par,
+    outOrInside:undefined,
     regionLevel: undefined,
   })
 

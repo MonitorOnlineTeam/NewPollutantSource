@@ -143,7 +143,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       align:'center',
       width:61,
       render: (text, record) => {
-        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('ent')}}>{text}</span>
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('ent',record)}}>{text}</span>
       }
     },
     {
@@ -153,7 +153,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       align:'center',
       width:61,
       render: (text, record) => {
-        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point')}}>{text}</span>
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
       }
     },
     {
@@ -163,7 +163,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       align:'center',
       width:61,
       render: (text, record) => {
-        return <span  style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point')}}>{text}</span>
+        return <span  style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
       }
     },
   ]
@@ -313,9 +313,12 @@ const moreBtnClick = (type) =>{ //近30日运维工单统计
 }
  
 const [operatingInfoType, setOperatingInfoType] = useState()
-const operatingInfo = (type) =>{
+const [operatingStatus, setOperatingStatus] = useState(1)
+
+const operatingInfo = (type,record) =>{
   setOperatingInfoVisible(true)
   setOperatingInfoType(type)
+  record.type==='运维中'? setOperatingStatus(1) : setOperatingStatus(2)
 }
 
 
@@ -372,7 +375,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
       align:'center',
       width:61,
       render: (text, record) => {
-        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point')}}>{text}</span>
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
       }
   })
   const  { operationLoading,operationDataSource } = props; {/**运营信息统计 */}
@@ -458,6 +461,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
              onCancel={()=>{setOperatingInfoVisible(false)}}
              type={operatingInfoType}
              pollutantType={pollutantType}
+             operatingStatus={operatingStatus}
           />         
         </div>
   );

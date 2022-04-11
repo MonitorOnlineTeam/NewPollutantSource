@@ -8,7 +8,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'projectManager',
+  namespace: 'projectInfo',
   state: {
     tableDatas:[],
     parametersList:[],
@@ -41,15 +41,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-    *deleteProjectInfo({ payload,callback }, { call, put, update }) { //删除
-      const result = yield call(services.DeleteProjectInfo, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
-      }else{
-        message.error(result.Message)
-      }
-    },
+
     *getProjectPointList({ payload,callback }, { call, put, update }) { //运维监测点信息
       const result = yield call(services.GetProjectPointList, payload);
       if (result.IsSuccess) {

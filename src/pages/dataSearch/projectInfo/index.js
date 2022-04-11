@@ -1,7 +1,7 @@
 /**
- * 功  能：项目管理
+ * 功  能：项目信息
  * 创建人：贾安波
- * 创建时间：2021.08.18
+ * 创建时间：2022.04.11
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker   } from 'antd';
@@ -20,17 +20,17 @@ import Cookie from 'js-cookie';
 
 const { Option } = Select;
 
-const namespace = 'projectManager'
+const namespace = 'projectInfo'
 
 
 
 
-const dvaPropsData =  ({ loading,projectManager }) => ({
-  tableDatas:projectManager.tableDatas,
-  pointDatas:projectManager.pointDatas,
-  pointDatasTotal:projectManager.pointDatasTotal,
-  tableLoading:projectManager.tableLoading,
-  tableTotal:projectManager.tableTotal,
+const dvaPropsData =  ({ loading,projectInfo }) => ({
+  tableDatas:projectInfo.tableDatas,
+  pointDatas:projectInfo.pointDatas,
+  tableLoading:projectInfo.tableLoading,
+  tableTotal:projectInfo.tableTotal,
+  pointDatasTotal:projectInfo.pointDatasTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdateProjectInfo`],
   pointLoading: loading.effects[`${namespace}/getProjectPointList`],
   exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
@@ -112,13 +112,14 @@ const Index = (props) => {
   const [type,setType] = useState('add')
   const [pageIndex,setPageIndex] = useState(1)
   const [pageSize,setPageSize] = useState(20)
+
   
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,loadingConfirm, pointDatas,pointDatasTotal,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
+  const  { tableDatas,tableTotal,loadingConfirm,pointDatas,pointDatasTotal,tableLoading,pointLoading,exportLoading,exportPointLoading } = props; 
   useEffect(() => {
-    onFinish(pageIndex,pageSize);
+    onFinish(pageIndex,pageSize)
   
   },[]);
 
@@ -190,28 +191,7 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-               
-               <Fragment> <Tooltip title="详情">
-                 <Link  style={{padding:'0 5px'}} to={{  pathname: '/platformconfig/basicInfo/projectManager/detail',
-                       query: { 
-                         data: JSON.stringify(record)
-                        },
-                       }}
-                       >
-                    <DetailIcon />
-                </Link>
-                </Tooltip><Divider type="vertical" /></Fragment>
-
-               <Fragment> <Tooltip title="删除">
-                  <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
-               </Popconfirm>
-               </Tooltip>
-               <Divider type="vertical" />
                <Fragment> <Tooltip title="运维监测点信息">  <a href="javasctipt:;" onClick={()=>{operaInfo(record)}} ><PointIcon /></a></Tooltip></Fragment>
-               
-               </Fragment> 
              </span>
       }
     },
@@ -244,32 +224,7 @@ const Index = (props) => {
     },
   ]
 
-  const edit = async (record) => {
-    setFromVisible(true)
-    setType('edit')
-    form2.resetFields();
-    try {
-      form2.setFieldsValue({
-        ...record,
-        BeginTime:moment(record.BeginTime),
-        EndTime:moment(record.EndTime),
-        SignName:record.SingName
-      })
 
-   
-
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
-  const del =  (record) => {
-    props.deleteProjectInfo({ID:record.ID},()=>{
-        setPageIndex(1);
-        setPageSize(20);
-        onFinish(1,20);
-    })
-  };
 
 
   const [ID,setID] = useState();
@@ -283,7 +238,7 @@ const Index = (props) => {
    setProjectName(record.ProjectName)
    setPageIndex2(1)
    setPageSize2(10)
-   props.getProjectPointList({ID:record.ID,ProjectCode:record.ProjectCode,PageIndex:1,PageSize:10, })
+   props.getProjectPointList({ID:record.ID,ProjectCode:record.ProjectCode,PageIndex:1,PageSize:10,})
   };
   
 
@@ -321,12 +276,9 @@ const Index = (props) => {
 
       props.getProjectInfoList({
         ...values,
-        BegBeginTime:values.BegTime&&moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        BegEndTime:values.BegTime&&moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-        EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BeginTime:values.BegTime&&moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime:values.BegTime&&moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
         BegTime:undefined,
-        EndTime:undefined,
         PageIndex:PageIndex,
         PageSize:PageSize,
       })
@@ -359,8 +311,6 @@ const Index = (props) => {
     setPageIndex(PageIndex)
     onFinish(PageIndex,PageSize)
   }
-
-
   const [pageIndex2,setPageIndex2] = useState(1)
   const [pageSize2,setPageSize2] = useState(10)
 
@@ -388,32 +338,25 @@ const Index = (props) => {
             <Input placeholder="请输入项目编号" allowClear/>
           </Form.Item>
         </Col>
-        {expand&& <><Col span={8}>
-          <Form.Item name='BegTime' label='运营起始日期' >
+        {expand&& <>  <Col span={8}>
+          <Form.Item name='BegTime' label='运营日期' >
           <RangePicker style={{width:'100%'}}
             showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
             />
           </Form.Item>
         </Col>  
-        <Col span={8}>
+         <Col span={8}>
           <Form.Item   name='EntName' label='卖方公司名称'>
             <Input placeholder="请输入卖方公司名称" />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item name='RegionCode' label='客户所在地' >
-           {/* <RegionList style={{ width: '100%' }} /> */}
            <Input  placeholder='请输入客户所在地'/>
           </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='EndTime' label='运营结束日期' format='YYYY-MM-DD 23:59:59'>
-          <RangePicker style={{width:'100%'}} 
-           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
-          </Form.Item>
         </Col></>}   
-        <Col span={expand ? 24 : 8} style={{textAlign:expand ? 'right':'left'}}>
-        <Form.Item>
+        <Col span={8} >
+        <Form.Item style={{marginLeft:30}}>
         <Button type="primary" htmlType="submit">
             查询
           </Button>
@@ -438,15 +381,15 @@ const Index = (props) => {
      </Form>
   }
   return (
-    <div  className={styles.projectManagerSty}>
+    <div  className={styles.projectInfoSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
         loading = {tableLoading}
         bordered
-        scroll={{ y:expand? 'calc(100vh - 470px)' : 'calc(100vh - 370px)'}}
         dataSource={tableDatas}
         columns={columns}
+        scroll={{ y:expand? 'calc(100vh - 420px)' : 'calc(100vh - 370px)'}}
         pagination={{
           total:tableTotal,
           pageSize: pageSize,

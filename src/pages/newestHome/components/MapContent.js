@@ -75,8 +75,10 @@ class Index extends PureComponent {
           });
           Layer.setMap(mapInstance);
           mapInstance.setFitView();//自动适应显示你想显示的范围区域
-
+        
         }
+       
+      console.log(mapInstance)
       },
       zoomchange: (value) => {
         const zoom = aMap.getZoom();
@@ -96,9 +98,11 @@ class Index extends PureComponent {
     // markers事件
     this.markersEvents = {
       created: allMarkers => {
-        this.setState({
-          allMarkers,
-        });
+        console.log('高德地图 Marker 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：');
+       
+        // this.setState({
+        //   allMarkers,
+        // });
       },
       clickable: true,
       click: (MapsOption, marker) => {
@@ -166,6 +170,7 @@ class Index extends PureComponent {
       Polygon = amap.Polygon;
       Markers = amap.Markers;
       InfoWindow = amap.InfoWindow;
+      console.log(amap)
     } else {
       const amap = require('react-amap');
       // Map, Marker, Polygon, Markers, InfoWindow;
@@ -272,6 +277,9 @@ class Index extends PureComponent {
         }
       }, 0);
     })
+
+  }
+  loadPointMarkerDatas=()=>{
 
   }
   getIcon = (status) => {
@@ -416,9 +424,9 @@ class Index extends PureComponent {
         {pointTitleShow && <div className={styles.pointTitlePopSty}>
           <div className={styles.titlePopSty} >
             <div>{extData.position.ParentName}</div>
-            <div>{extData.position.PointName}</div>
+             <div>{extData.position.PointName}</div>
           </div>
-        </div>}
+        </div>} 
       </div>
     }
   }
@@ -701,7 +709,6 @@ class Index extends PureComponent {
     //   listEle.style.display = 'none';
     //   searchEntInput.current.blur()  
     // }
-    
     return mapPointLoading ?
       <PageLoading />
       :
@@ -710,12 +717,14 @@ class Index extends PureComponent {
         events={this.amapEvents}
         mapStyle="amap://styles/darkblue"
         useAMapUI={!config.offlineMapUrl.domain}
+        
       >
 
         <Markers
           markers={markersList}
           render={this.renderMarkers}
           events={this.markersEvents}
+          useCluster
         />
         <InfoWindow
           visible={hoverTitleShow}

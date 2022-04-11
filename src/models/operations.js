@@ -37,7 +37,7 @@ export default Model.extend({
     vehicleList: [],
     applyVehicleList: [],
     vehicleApplicationForm: {
-      Applicant: Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')).UserId,
+      Applicant: Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId,
       current: 1,
       pageSize: 10,
       total: 0,

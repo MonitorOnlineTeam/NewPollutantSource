@@ -50,7 +50,7 @@ const Index = (props) => {
 
  
 
-  const { type, pollutantType } = props;
+  const { type, pollutantType,operatingStatus } = props;
   return (
     <Modal
     title={type=='ent'? "运营企业" : "运营企业监测点"}

@@ -22,9 +22,12 @@ const XinJiang = false;
 
 //  const apiHost = 'http://localhost:52198/';
 // const apiHost = 'http://220.171.32.30:8180/';
-// const apiHost = 'http://172.16.12.135:50206/';
+// const apiHost = 'http://172.16.12.135:50209/';
 // const apiHost = 'http://localhost:52198/';
 const apiHost = 'http://172.16.12.234:61002/';
+
+// const apiHost = 'http://172.16.12.135:50210/';
+
 // const apiHost = 'http://172.16.12.57:61000/';
 
 
