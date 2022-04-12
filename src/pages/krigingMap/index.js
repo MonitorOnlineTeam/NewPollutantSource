@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import AMapLoader from '@amap/amap-jsapi-loader';
 import { Map, Polygon, Markers, InfoWindow, MouseTool } from 'react-amap';
 import { Row, Slider, Drawer, DatePicker, Button, Space, Divider, Spin, message } from 'antd';
-import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons'
+import { CaretRightOutlined, PauseOutlined, LoadingOutlined } from '@ant-design/icons'
 import styles from './index.less'
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import ReactEcharts from 'echarts-for-react';
@@ -10,6 +10,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import createThem from './draw.js'
 import SdlTable from '@/components/SdlTable'
+import _ from 'lodash'
 
 const amapKey = '5e60171b820065e7e9a1d6ea45abaee9';
 const pollutantTypeList = [
@@ -104,7 +105,6 @@ class index extends PureComponent {
       this.handleMarker(this.props.mapData)
     }
     if (prevProps.time !== this.props.time) {
-      debugger
       this.setState({
         updateTime: this.props.time
       })
@@ -114,14 +114,72 @@ class index extends PureComponent {
 
   handleMarker = (mapData) => {
     let markersList = [];
-    let _mapData = [...mapData, {
-      AQI: 136,
-      AQI_Color: "#00e400",
+    let _mapData = [...mapData,
+    // let _mapData = [
+    // 114.895079,27.5516
+    // {
+    //   AQI: 82,
+    //   AQI_Color: "#00e400",
+    //   Num: 2,
+    //   AQI_Level: 0,
+    //   Latitude: 27.246794,
+    //   Longitude: 115.137833,
+    //   PointName: "西口空气站",
+    //   PrimaryPollutant: ""
+    // },
+    // {
+    //   AQI: 82,
+    //   AQI_Color: "#00e400",
+    //   Num: 2,
+    //   AQI_Level: 1,
+    //   Latitude: 27.046794,
+    //   Longitude: 115.237833,
+    //   // Latitude: 0,
+    //   // Longitude: 0,
+    //   PointName: "测试空气站1",
+    //   PrimaryPollutant: ""
+    // },
+    // // {
+    // //   AQI: 82,
+    // //   AQI_Color: "#00e400",
+    // //   Num: 2,
+    // //   AQI_Level: 2,
+    // //   Latitude: 0,
+    // //   Longitude: 0,
+    // //   PointName: "测试空气站2",
+    // //   PrimaryPollutant: ""
+    // // },
+    // {
+    //   AQI: 82,
+    //   AQI_Color: "#00e400",
+    //   Num: 2,
+    //   AQI_Level: 2,
+    //   Latitude: 27.146794,
+    //   Longitude: 115.337833,
+    //   // Latitude: 0,
+    //   // Longitude: 0,
+    //   PointName: "测试空气站2",
+    //   PrimaryPollutant: ""
+    // },
+    {
+      AQI: 80,
+      AQI_Level: 2,
+      AQI_Color: "#f3dd22",
       Latitude: 27.076599,
       Longitude: 115.369221,
-      PointName: "北口空气站",
+      PointName: "测试空气站2",
       PrimaryPollutant: ""
-    }]
+    },
+    {
+      AQI: 30,
+      AQI_Color: "#00e400",
+      AQI_Level: 1,
+      Latitude: 27.495262,
+      Longitude: 114.971797,
+      PointName: "测试空气站",
+      PrimaryPollutant: ""
+    },
+    ]
     this.map.remove(this.state.markersList)
     _mapData.map(item => {
       let marker = new this.AMap.Marker({
@@ -130,7 +188,7 @@ class index extends PureComponent {
             <i style='border-top-color: ${item.AQI_Color}'></i>
             ${item.AQI}
           </div>
-          <div class="content" style="width: ${item.PointName.length * 18}px, left: ${(item.PointName.length * 18 - 60) / 2 * -1}px">
+          <div class="content" style="width: ${item.PointName.length * 18}px; left: ${(item.PointName.length * 18 - 60) / 2 * -1}px">
             ${item.PointName}
           </div>
         <div>`,
@@ -144,7 +202,8 @@ class index extends PureComponent {
       markersList: markersList
     }, () => {
       console.log('_mapData=', _mapData);
-      createThem(this.AMap, _mapData, this.map, 'AQI')
+      let newMapData = _.sortBy(_mapData, function (o) { return o.AQI_Level; });
+      createThem(this.AMap, newMapData, this.map, this.gif)
     })
   }
 
@@ -161,6 +220,9 @@ class index extends PureComponent {
         // viewMode: "3D",         //是否为3D地图模式
         zoom: 11,                //初始化地图级别
         center: [115.135963, 27.229697], //初始化地图中心点位置
+        WebGLParams: {
+          preserveDrawingBuffer: true
+        }
       });
       this.AMap = AMap;
       this.getMapData();
@@ -220,12 +282,37 @@ class index extends PureComponent {
 
   }
 
+  // // 开始播放
+  // start = () => {
+  //   const { dateTimeAllData } = this.props;
+  //   this.setState({
+  //     start: true
+  //   })
+  //   timer = setInterval(() => {
+  //     let count = this.state.count + 1;
+  //     if (count === dateTimeAllData.length) {
+  //       clearInterval(timer);
+  //       this.setState({
+  //         start: false
+  //       })
+  //     } else {
+  //       this.handleMarker([...dateTimeAllData[count].Value])
+  //     }
+  //     this.setState({
+  //       count: count,
+  //       updateTime: dateTimeAllData[count].Time
+  //     })
+  //   }, 1000)
+  // }
+
   // 开始播放
   start = () => {
     const { dateTimeAllData } = this.props;
     this.setState({
       start: true
     })
+
+
     timer = setInterval(() => {
       let count = this.state.count + 1;
       if (count === dateTimeAllData.length) {
@@ -352,12 +439,57 @@ class index extends PureComponent {
     };
   }
 
+  renderGif = () => {
+    this.setState({
+      gifLoading: true
+    })
+    const { dateTimeAllData } = this.props;
+    let gif = new window.GIF({
+      workers: 2,
+      quality: 10,
+      width: 1000,
+      height: 1000,
+      workerScript: '/gif/gif.worker.js',
+    })
+    this.gif = gif;
+    let count = 0;
+    timer = setInterval(() => {
+      count += 1;
+      if (count === dateTimeAllData.length) {
+        clearInterval(timer);
+        gif.on('finished', (blob) => {
+          debugger
+          //下载动作
+          var el = document.createElement('a');
+          el.href = URL.createObjectURL(blob);
+          el.download = '克里金插值GIF图'; //设置下载文件名称
+          document.body.appendChild(el);
+          var evt = document.createEvent("MouseEvents");
+          evt.initEvent("click", false, false);
+          el.dispatchEvent(evt);
+          document.body.removeChild(el);
+          this.handleMarker(this.props.mapData);
+          this.setState({
+            gifLoading: false
+          })
+        });
+        gif.render();
+      } else {
+        let data = dateTimeAllData[count].Value;
+        // createThem(this.AMap, data, this.map, this.gif)
+        this.handleMarker(data)
+      }
+      console.log('count=', count);
+      console.log('length=', dateTimeAllData.length);
+    })
+  }
+
   render() {
     const { mapData, dateTimeAllData, rankHourData, rankLoading, mapLoading } = this.props;
-    const { start, count, markersList, selectPollutant, updateTime, beginTime, endTime, timeLineData } = this.state;
+    const { start, count, gifLoading, selectPollutant, updateTime, beginTime, endTime, timeLineData } = this.state;
     console.log('timeLineData=', timeLineData);
     return (
-      <div className={styles.pageContaniner}>
+      <div className={styles.pageContaniner} >
         <div className={styles.rankWrapper}>
           <Drawer width={400} closable={false} mask={false} placement="left" visible={true}>
             <Spin spinning={rankLoading}>
@@ -384,14 +516,18 @@ class index extends PureComponent {
         </div>
 
         <div id="mapContainer" className={styles.mapWrapper} style={{ height: '100vh' }}>
-          {/* <Spin spinning={true} wrapperClassName={styles.mapSpin} style={{ height: '100vh', position: 'relative' }}> */}
-          <InfoWindow
-            position={[115.135963, 27.229697]}
-            visible={true}
-            isCustom
-          >
-            <h3>Window 1</h3>
-          </InfoWindow>
+          {
+            mapLoading && <div className={styles.gifLoading}>
+              <LoadingOutlined />
+              {/* <p>生成GIF中，请等待...</p> */}
+            </div>
+          }
+          {
+            gifLoading && <div className={styles.gifLoading}>
+              <LoadingOutlined />
+              <p>生成GIF中，请等待...</p>
+            </div>
+          }
           <Space className={styles.searchTime}>
             <RangePicker defaultValue={[beginTime, endTime]} style={{ width: 300 }}
               disabledDate={(current) => {
@@ -420,8 +556,9 @@ class index extends PureComponent {
               })
               this.getMapData();
             }}>查询</Button>
+            <Button onClick={() => this.renderGif()}>下载GIF</Button>
           </Space>
-          <div class='airLegend' style={{ position: 'absolute', right: 6, top: 6, zIndex: 1 }}>
+          {/* <div class='airLegend' style={{ position: 'absolute', right: 6, top: 6, zIndex: 1 }}>
             <ul>
               {
                 airLevel.map(item => <li>
@@ -431,8 +568,8 @@ class index extends PureComponent {
                 </li>)
               }
             </ul>
-          </div>
-          <div className={styles.timeBar}>
+          </div> */}
+          <div className={styles.timeBar} style={{ top: 10 }}>
             数据更新时间: {moment(updateTime).format("YYYY-MM-DD HH:00")}
           </div>
           <ul className={styles.pollutantSelectContainer}>
@@ -452,7 +589,7 @@ class index extends PureComponent {
             <div className={styles.content}>
               <Slider
                 value={count}
-                max={dateTimeAllData.lenth}
+                max={dateTimeAllData.length}
                 // max={100}
                 // float: left;
                 // width: calc(100% - 60px);
@@ -490,7 +627,6 @@ class index extends PureComponent {
               </div>
             </div>
           </div>
-          {/* </Spin> */}
         </div>
       </div>
     );

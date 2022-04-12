@@ -33,7 +33,6 @@ export default Model.extend({
       if (result.IsSuccess) {
         let currentTime = moment().subtract(1, 'hours').format("YYYY-MM-DD HH:00:00")
         let filterData = result.Datas.filter(item => item.Time === currentTime);
-        debugger
         let mapData = [];
         let time = "";
         if (filterData.length) {
