@@ -1,5 +1,6 @@
 import Model from '@/utils/model';
-import { message } from 'antd'
+import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { Badge, Popover, message, Button } from 'antd';
 import {
   queryhistorydatalist,
 } from '../services/monitordata';
@@ -8,9 +9,78 @@ import {
 }
   from '../services/baseapi';
 import * as services from '../services/dataQueryApi'
-import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+// import { formatPollutantPopover, getDirLevel } from '@/utils/utils';
+import { getDirLevel } from '@/utils/utils';
 import moment from 'moment';
 import { airLevel, AQIPopover, IAQIPopover } from '@/pages/monitoring/overView/tools';
+
+
+function formatPollutantPopover({ value, additional, isShowBtn, btnClick }) {
+  if (additional) {
+    const additionalInfo = additional.split('§');
+    if (additionalInfo[0] == 0) {
+      const content = (
+        <div>
+          <div style={{ marginBottom: 10 }}>
+            <WarningOutlined style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} />
+            <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据超标</span>
+          </div>
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="success" text={`标准值：${additionalInfo[2]}`} />
+          </li>
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="error" text={`超标倍数：${additionalInfo[3]}`} />
+          </li>
+          {
+            isShowBtn && <li style={{ listStyle: 'none', marginBottom: 10 }}>
+              <Button style={{ width: '100%' }} type="primary" onClick={() => btnClick(1)}>污染溯源</Button>
+            </li>
+          }
+        </div>
+      );
+      return (
+        <Popover content={content}>
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            <span style={{ color: '#ff0000', cursor: 'pointer' }}>
+              {value || (value === 0 ? 0 : '-')}
+            </span>
+          </div>
+        </Popover>
+      );
+    } else {
+      const content = (
+        <div>
+          <div style={{ marginBottom: 10 }}>
+            <CloseCircleOutlined style={{ color: '#ff0000', fontSize: 25, marginRight: 10 }} />
+            <span style={{ fontWeight: 'Bold', fontSize: 16 }}>数据异常</span>
+          </div>
+          <li style={{ listStyle: 'none', marginBottom: 10 }}>
+            <Badge status="warning" text={`异常原因：${additionalInfo[2]}`} />
+          </li>
+        </div>
+      );
+      return (
+        <Popover content={content}>
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+            <span style={{ color: '#F3AC00', cursor: 'pointer' }}>
+              {value || (value === 0 ? 0 : '-')}
+            </span>
+          </div>
+        </Popover>
+      );
+    }
+  }
+  return value ? (
+    <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{value}</div>
+  ) : value === 0 ? (
+    0
+  ) : (
+    '-'
+  );
+}
+
+
+
 export default Model.extend({
   namespace: 'dataquery',
   state: {
@@ -40,6 +110,7 @@ export default Model.extend({
     dataFlagDataSource: [],
     tagTableTotal: 0,
     CO2SumData: [],
+    traceModalVisible: false
   },
   effects: {
     * querypollutantlist({ payload, callback,
@@ -76,8 +147,13 @@ export default Model.extend({
         yield update({ pollutantlist: [], datalist: null, chartdata: null, columns: null, datatable: null, total: 0, DGIMN: payload.dgimn });
       }
     },
+    * updateVisible({ payload, }, { call, update, put, take, select }) {
+      yield update({
+        traceModalVisible: true,
+      });
+    },
     * queryhistorydatalist({
-      payload, from,
+      payload, from, btnClickCallback
     }, { select, call, update }) {
       const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
       let _historyparams = { ...historyparams, ...payload };
@@ -184,10 +260,20 @@ export default Model.extend({
               if (item.PollutantName === '风向') {
                 text = getDirLevel(text)
               }
-              return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+              return formatPollutantPopover({
+                value: text,
+                additional: record[`${item.PollutantCode}_params`],
+                isShowBtn: item.PollutantCode === 'a34004' || item.PollutantCode === 'a21026' || item.PollutantCode === 'a21004',
+                btnClick: (params) => {
+                  btnClickCallback(record.DataGatherCode, item.PollutantCode);
+                }
+              })
             },
           });
         });
+
+
+
         columns = [{
           title: '时间',
           dataIndex: 'MonitorTime',
@@ -266,7 +352,15 @@ export default Model.extend({
               if (item.PollutantName === '风向') {
                 text = getDirLevel(text)
               }
-              return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
+              return formatPollutantPopover({
+                value: text,
+                additional: record[`${item.PollutantCode}_params`],
+                isShowBtn: item.PollutantCode === 'a34004' || item.PollutantCode === 'a21026' || item.PollutantCode === 'a21004',
+                btnClick: () => {
+                  btnClickCallback(record.DataGatherCode, item.PollutantCode);
+                }
+              })
+              // return formatPollutantPopover(text, record[`${item.PollutantCode}_params`])
             },
           });
         });

@@ -3,7 +3,7 @@ import moment from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Card, Spin, message, Empty, Radio, Row, Col, Button, Select } from 'antd';
+import { Card, Spin, message, Empty, Radio, Row, Col, Button, Select, Modal } from 'antd';
 import { connect } from 'dva';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import ButtonGroup_ from '@/components/ButtonGroup'
@@ -29,6 +29,7 @@ const { Option } = Select;
     total: dataquery.total,
     tablewidth: dataquery.tablewidth,
     historyparams: dataquery.historyparams,
+    traceModalVisible: dataquery.traceModalVisible,
 }))
 
 class DataQuery extends Component {
@@ -45,7 +46,8 @@ class DataQuery extends Component {
             selectP: '',
             dgimn: '',
             dateValue: [moment(new Date()).add(-60, 'minutes'), moment(new Date())],
-            dataType: "realtime"
+            dataType: "realtime",
+            traceModalData: {}
         };
     }
 
@@ -271,8 +273,22 @@ class DataQuery extends Component {
         dispatch({
             type: 'dataquery/queryhistorydatalist',
             payload: {
-                searchDataType: this.state.searchDataType
+                searchDataType: this.state.searchDataType,
             },
+            btnClickCallback: (dgimn, code) => {
+                this.setState({
+                    traceModalData: {
+                        dgimn,
+                        code
+                    }
+                })
+                dispatch({
+                    type: 'dataquery/updateVisible',
+                    payload: {
+                        traceModalVisible: true
+                    }
+                })
+            }
         });
     }
 
@@ -448,8 +464,8 @@ class DataQuery extends Component {
     }
 
     render() {
-        const { dataType, dateValue, displayType, searchDataType } = this.state;
-        const { pointName, entName, pollutantlist, Type } = this.props;
+        const { dataType, dateValue, displayType, searchDataType, traceModalData } = this.state;
+        const { pointName, entName, pollutantlist, Type, traceModalVisible } = this.props;
         let flag = "", mode = [];
         if (pollutantlist && pollutantlist[0]) {
             flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
@@ -540,7 +556,12 @@ class DataQuery extends Component {
 
 
                 </Card>
-            </div >
+                <Modal width="90vw" bodyStyle={{height: '80vh'}} destroyOnClose title="污染溯源" footer={[]} visible={traceModalVisible} onCancel={() => {
+                    this.props.dispatch({ type: 'dataquery/updateState', payload: { traceModalVisible: false } })
+                }}>
+                    <iframe frameborder="no" allowtransparency="yes" style={{ height: '100%', width: '100%' }} src={`http://172.16.12.39:9021/#/charts/traceTheSource/traceTheSource?dgimnId=${traceModalData.dgimn}&pollutant=${traceModalData.code}`}></iframe>
+                </Modal>
+            </div>
         );
     }
 }
