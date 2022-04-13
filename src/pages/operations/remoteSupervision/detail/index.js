@@ -78,7 +78,6 @@ const Index = (props) => {
             break;
          }
       }
-
       for(let j=0;j<data1.length;j++){
         if(data1[j].PollutantName === '流速'){  
           data1.splice(j+1,0,{PollutantName:'流速',DataList:{ flag:data1[j].DataList.Special==1? 1 :2}})
@@ -87,21 +86,23 @@ const Index = (props) => {
        }
 
      }
+
+     setTimeout(()=>{
+       
+     })
      //颗粒物和流速都未选择的状态
      for(let k=0;k< data.consistencyCheckList.length;k++){
       if(flag1&&data.consistencyCheckList[k].PollutantName==='颗粒物'){
         data1.splice(k+1,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})
         break;
       }
-   }
+    }
    for(let l=0;l< data.consistencyCheckList.length;l++){
-    if(flag1&&data.consistencyCheckList[l].PollutantName==='流速'){
+    if(flag2&&data.consistencyCheckList[l].PollutantName==='流速'){
       data1.splice(l+1,0,{PollutantName:'流速',DataList:{ flag:3 }},{PollutantName:'流速',DataList:{ flag:4 }})
       break;
     }
- }
-   
-
+   }
 
       setTableData1(data1)
 
@@ -159,7 +160,6 @@ const Index = (props) => {
         if ( text == '颗粒物' && record.DataList.flag==4 ||  text == '流速' && record.DataList.flag==4 ) {
           obj.props.rowSpan = 0;
         }
-        console.log(obj)
         return obj;
       }
     },
@@ -545,7 +545,7 @@ const Index = (props) => {
   return (
     <div className={styles.remoteSupervisionDetailSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
-    <Card title={ type!='mobile'&&<Row justify='space-between'>
+    <Card  style={{paddingBottom:10}} title={ type!='mobile'&&<Row justify='space-between'>
         <span>详情</span>
         <Button onClick={() => {props.history.go(-1);   }} ><RollbackOutlined />返回</Button>
      </Row>

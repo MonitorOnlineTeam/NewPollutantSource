@@ -254,7 +254,7 @@ export default Model.extend({
     // 申请车辆
     *addVehicleApplication({ payload }, { call, put, update }) {
       const postData = {
-        Applicant: JSON.parse(Cookie.get('currentUser')).UserId,
+        Applicant:Cookie.get('currentUser')&&JSON.parse(Cookie.get('currentUser'))&& JSON.parse(Cookie.get('currentUser')).UserId,
         ...payload,
       };
       const result = yield call(services.addVehicleApplication, postData);

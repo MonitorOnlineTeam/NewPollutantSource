@@ -138,6 +138,7 @@ const Index = (props) => {
   const [dates, setDates] = useState([]);
   const { DGIMN, pollutantType, manufacturerList, systemModelList,systemModelListTotal, pollutantTypeList,pollutantTypeList2,equipmentInfoList,pointSystemInfo,equipmentInfoListTotal } = props;
 
+  const [defaultPollData, setDefaultPollData] = useState([]);
 
   useEffect(() => {
     initData()
@@ -149,7 +150,6 @@ const Index = (props) => {
     props.getManufacturerList({})
     //设备信息
     props.getMonitoringTypeList2({})
-    props.updateState({pollutantTypeList2:[]})
 
     //回显数据
     props.getPointEquipmentParameters({DGIMN:DGIMN,PollutantType:pollutantType},(res)=>{ //设备参数
@@ -166,20 +166,21 @@ const Index = (props) => {
       setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
     })
 
-    //废水 废气 默认加载监测参数
+    //废水  默认加载监测参数
       if( pollutantType==1){
         props.getPollutantById2({ id:'1b27155c-5b8b-439a-987c-8100723c2866',type:1 },(data)=>{
-
+          setDefaultPollData(data)
         })
       }
-      // if(pollutantType==2){
-      //   props.getPollutantById2({ id:'1b27155c-5b8b-439a-987c-8100723c2866',type:1 },(data)=>{
-
-      //   })
-      // }
+    //废气
+      if(pollutantType==2){
+        props.getPollutantById2({ id:'31f8f6f9-5700-443b-8570-9229b36fa00c',type:1 },(data)=>{
+          setDefaultPollData(data)
+        })
+      }
     }
 
-    
+  
 
 
   const [form] = Form.useForm();
@@ -230,7 +231,6 @@ const Index = (props) => {
         const newData = [...data];
         const key = record.key;
         const index = newData.findIndex((item) => key === item.key);
-        console.log(row)
         if (index > -1) {
           const editRow = { 
                        Range1:row.Range1Min||row.Range1Max? `${row.Range1Min}~${row.Range1Max}`: null,
@@ -464,7 +464,8 @@ const Index = (props) => {
   const onParClearChoice = (value) => {//设备参数清除
     formDevice.setFieldsValue({ EquipmentManufacturer: value,PollutantCode:undefined,EquipmentInfoID :'', EquipmentModel: '', });
     setParchoiceDeViceID(value)
-    props.updateState({pollutantTypeList2:[]}) //清除监测参数
+    // props.updateState({pollutantTypeList2:[]}) //清除监测参数 
+    props.updateState({pollutantTypeList2:defaultPollData})//恢复默认
     setIsManual(false)
   }
 
@@ -782,7 +783,9 @@ const Index = (props) => {
       editable: true,
     }
     setData([...data, newData])
-    pollutantType!=1&&props.updateState({pollutantTypeList2:[]})
+    // pollutantType!=1&&props.updateState({pollutantTypeList2:[]})
+    setIsManual(false)
+    props.updateState({pollutantTypeList2:defaultPollData})
    }
   };
 
@@ -815,7 +818,7 @@ const Index = (props) => {
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
     } else {
-      inputNode = <Input  title={formDevice.getFieldValue([dataIndex])} disabled={title==='设备名称'||title==='设备型号'? true : title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? isManual : false} placeholder={`请输入`} />
+      inputNode = <Input  title={formDevice.getFieldValue([dataIndex])} disabled={title==='设备名称'||title==='设备型号'? true : title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? isManual : false} placeholder={  title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? `CIS同步使用` : `请输入`} />
     }
 
     const parLoading = record&&record.type&&record.type==='add'? props.loadingGetPollutantById2 : props.monitoringCategoryTypeLoading; //监测参数提示loading
@@ -845,7 +848,7 @@ const Index = (props) => {
             <>{ parLoading? <Spin size='small' style={{ textAlign: 'left' }} />
                      :
                      <Form.Item  name={`PollutantCode`} style={{ margin: 0 }}>
-            <Select placeholder='请选择' allowClear={isManual?false:true} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+            <Select placeholder='请选择' disabled={isManual? true : false} allowClear={isManual?false:true} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
             {
              pollutantTypeList2[0] && pollutantTypeList2.map(item => {
             return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -873,10 +876,13 @@ const Index = (props) => {
     }
     try {
       const values = await form.validateFields();
-       console.log(data)
       const  parList =  data.map(itme=>{
         return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range2,EquipmentManufacturer:itme.EquipmentManufacturerID,
-                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.Equipment}
+                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.Equipment,
+                ManualEquipmentManufacturer: itme.ManualEquipmentManufacturer,
+                ManualEquipmentModel: itme.ManualEquipmentModel,
+                ManualEquipmentName: itme.ManualEquipmentName,
+              }
       })
       const  par =  {
         equipmentModel: pollutantType ==1? null : {...values,DGIMN:DGIMN},

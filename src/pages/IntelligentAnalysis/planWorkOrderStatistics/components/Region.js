@@ -189,7 +189,7 @@ const Index = (props,ref ) => {
   const plannedInspectTip =()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
     <li>通过该页面可以查看监测点派发计划工单情况。</li>
-    <li>运维状态：已结束则系统停止派发计划工单情况。</li>
+    <li>运维状态：运维暂停则系统停止派发计划工单情况。</li>
   </ol>
   }
   const workOrderTip = ()=>{
@@ -284,11 +284,11 @@ const Index = (props,ref ) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -1123,6 +1123,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       ...par,
       regionLevel:undefined,
       staticType:3,
+      homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
     }
    !isActualCalibrationModal? props.insideOrOutsideWorkGetTaskWorkOrderList(pars)
                              :props.insideOrOutsideWorkActualGetTaskWorkOrderList(pars)
@@ -1428,7 +1429,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      <Radio.Group onChange={operaPointClick}  buttonStyle="solid"   style={{  margin: '0 8px'}}>
       <Radio.Button value={undefined}>全部</Radio.Button>
       <Radio.Button value="1">进行中</Radio.Button>
-      <Radio.Button value="2">已结束</Radio.Button>
+      <Radio.Button value="2">运维暂停</Radio.Button>
     </Radio.Group>
     </Form.Item>
     <Form.Item>

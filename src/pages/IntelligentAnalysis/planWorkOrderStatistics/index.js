@@ -136,6 +136,7 @@ const Index = (props) => {
           regionLevel:showType ==1? 1 : undefined,
           pageIndex:showType ==2? 1 : undefined,
           pageSize:showType ==2? 10 : undefined,
+          homePageIndex: isPlanInspectionModal? 1 :isPlanCalibrationModal? 2 : undefined,
         }
         !isActualCalibrationModal?  props.regEntGetTaskWorkOrderList(par):
         props.regEntActualGetTaskWorkOrderList(par)

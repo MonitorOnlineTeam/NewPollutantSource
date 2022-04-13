@@ -494,6 +494,11 @@ export default {
                       path: '/platformconfig/configurationInfo/faultUnit/faultUnitManager',
                       component: './platformManager/configurationInfo/faultUnitManager',
                     },
+                    {
+                      name: 'checkInfo',//核查信息
+                      path: '/platformconfig/configurationInfo/check/checkInfo',
+                      component: './platformManager/configurationInfo/checkInfo',
+                    },
                   ]
                 },
                 { //资产管理

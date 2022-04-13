@@ -318,7 +318,7 @@ const [operatingStatus, setOperatingStatus] = useState(1)
 const operatingInfo = (type,record) =>{
   setOperatingInfoVisible(true)
   setOperatingInfoType(type)
-  record.type==='运维中'? setOperatingStatus(1) : setOperatingStatus(2)
+  record.type==='运维中'? setOperatingStatus(1) : record.type==='运维暂停'? setOperatingStatus(2) : setOperatingStatus(undefined);
 }
 
 

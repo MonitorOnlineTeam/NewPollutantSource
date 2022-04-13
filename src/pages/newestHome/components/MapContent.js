@@ -45,6 +45,8 @@ let Polygon;
 let Markers;
 let InfoWindow;
 let aMap = null;
+let massMarks = null;
+let labelMarker = null;
 
 
 let pollutantType = {}
@@ -55,7 +57,7 @@ let pollutantType = {}
   mapStatusData: newestHome.mapStatusData,
   infoWindowData: newestHome.infoWindowData,
   infoWindowDataLoading: newestHome.infoWindowDataLoading,
-  entList:newestHome.entList,
+  entList: newestHome.entList,
 }))
 class Index extends PureComponent {
   constructor(props) {
@@ -75,10 +77,10 @@ class Index extends PureComponent {
           });
           Layer.setMap(mapInstance);
           mapInstance.setFitView();//自动适应显示你想显示的范围区域
-        
+
         }
-       
-      console.log(mapInstance)
+
+        console.log(mapInstance)
       },
       zoomchange: (value) => {
         const zoom = aMap.getZoom();
@@ -99,14 +101,13 @@ class Index extends PureComponent {
     this.markersEvents = {
       created: allMarkers => {
         console.log('高德地图 Marker 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：');
-       
         // this.setState({
         //   allMarkers,
         // });
       },
       clickable: true,
       click: (MapsOption, marker) => {
-        const { showType,pointMarkers } = this.state;
+        const { showType, pointMarkers } = this.state;
         if (showType == 3) { //监测点弹窗
           const position = marker.De.extData.position;
           this.setState({
@@ -118,7 +119,7 @@ class Index extends PureComponent {
             this.getInfoWindowData()
           });
         }
-        if(showType == 2){ //企业 点击进入监测点
+        if (showType == 2) { //企业 点击进入监测点
           this.loadPointMarkerData(pointMarkers)
         }
       },
@@ -145,7 +146,7 @@ class Index extends PureComponent {
       regionMarkers: [],
       entMarkers: [],
       pointMarkers: [],
-      allPointMarkers:[],
+      allPointMarkers: [],
       entTitleShow: false,
       pointTitleShow: false,
       hoverTitleShow: false,
@@ -155,10 +156,11 @@ class Index extends PureComponent {
       pointInfoWindowVisible: false,
       currentClickObj: {}, // 当前点击对象 -  监测点弹窗
       infoWindowPos: {},
-      selectEnt:undefined,
-      pointIconGo:false,
-      entLists:[],
-      mapBtnStatusIndex:-1,
+      selectEnt: undefined,
+      pointIconGo: false,
+      entLists: [],
+      mapBtnStatusIndex: -1,
+      isMassive: false,
     }
   }
   componentWillMount() {
@@ -179,6 +181,8 @@ class Index extends PureComponent {
       Polygon = amap.Polygon;
       Markers = amap.Markers;
       InfoWindow = amap.InfoWindow;
+
+
     }
   }
   componentDidMount() {
@@ -234,14 +238,14 @@ class Index extends PureComponent {
     })
   }
 
-  loadRegionMarkerData = (data,flag) => { //行政区
+  loadRegionMarkerData = (data, flag) => { //行政区
     this.setState({
       showType: 1,
       markersList: data,
       entTitleShow: false, pointTitleShow: false,
     }, () => {
       const timer = setInterval(() => {
-        if (aMap&&!flag) {
+        if (aMap && !flag) {
           aMap.setFitView();
           clearInterval(timer);
         }
@@ -249,14 +253,14 @@ class Index extends PureComponent {
     })
 
   }
-  loadEntMarkerData = (data,flag) => { //企业
+  loadEntMarkerData = (data, flag) => { //企业
     this.setState({
       showType: 2,
       pointTitleShow: false,
       markersList: data,
     }, () => {
       const timer = setInterval(() => {
-        if (aMap&&!flag) {
+        if (aMap && !flag) {
           aMap.setFitView();
           clearInterval(timer);
         }
@@ -264,24 +268,114 @@ class Index extends PureComponent {
     })
 
   }
-  loadPointMarkerData = (data,flag) => { //监测点
-    this.setState({
-      showType: 3,
-      markersList: [...data]
-    }, () => {
-      const timer = setInterval(() => {
-        if (aMap&&!flag) {
-          aMap.setFitView();
-          // aMap.setZoomAndCenter(aMap.getZoom()+1, [96.01906121185537, 35.874643454131984]);
-          clearInterval(timer);
-        }
-      }, 0);
+  loadPointMarkerData = (data, flag) => { //监测点 
+
+    massMarks && massMarks.clear(aMap);//清除海量点
+
+    if (pollutantType == 2 && data.length >= 1000) { //废气 监测点多的情况 海量加载
+
+      const warnData = data[0] && data.filter(item => item.position.alarmStatus) //报警点 常规加载
+      this.setState({
+        showType: 3,
+        markersList: warnData,
+        isMassive: true,
+      })
+      const normalData = data[0] && data.filter(item => !item.position.alarmStatus) //正常点
+      this.loadMassivePointMarkerData(normalData)
+
+
+
+    } else {
+      this.setState({
+        showType: 3,
+        markersList: [...data]
+      }, () => {
+        const timer = setInterval(() => {
+          if (aMap && !flag) {
+            aMap.setFitView();
+            // aMap.setZoomAndCenter(aMap.getZoom()+1, [96.01906121185537, 35.874643454131984]);
+            clearInterval(timer);
+          }
+        }, 0);
+      })
+    }
+
+
+
+  }
+
+  // getIcon = (status) => {
+  //   let icon = '';
+  //   if (pollutantType == 1) {
+  //     switch (status) {
+  //       case 0: // 离线
+  //         icon = <WaterOffline />;
+  //         break;
+  //       case 1: // 在线
+  //         icon = <WaterNormal />;
+  //         break;
+  //       case 2: // 超标
+  //         icon = <WaterExceed />;
+  //         break;
+  //       case 3: // 异常
+  //         icon = <WaterAbnormal />;
+  //         break;
+  //       case 4: // 停运
+  //         icon = <WaterStop />;
+  //         break;
+  //     }
+  //     return icon;
+  //   };
+  loadMassivePointMarkerData = (data) => { //海量加载 监测点
+    let _this = this;
+    let pointData = data.map(item => {
+      return { lnglat: [item.position.Longitude, item.position.Latitude], ...item, style: item.position.alarmStatus - 1 }
+    })
+    let imgType = [0, 1, 2, 3, 4];
+    let styleObject = imgType.map(item => { //废气
+      return {
+        url: `/gas${item}.png`,  // 图标地址
+        size: new window.AMap.Size(32, 32),      // 图标大小
+        anchor: new window.AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
+      }
     })
 
-  }
-  loadPointMarkerDatas=()=>{
+    massMarks = new window.AMap.MassMarks(pointData, {
+      zIndex: 999,  // 海量点图层叠加的顺序
+      zooms: [3, 19],  // 在指定地图缩放级别范围内展示海量点图层
+      style: styleObject  // 设置样式对象
+    });
 
+    massMarks.setMap(aMap);
+    const timer = setInterval(() => {
+      aMap.setFitView();
+      // aMap.setZoom(aMap.getZoom()-1);
+      clearInterval(timer);
+    }, 0);
+    // 为 massMarks 绑定事件
+    massMarks.on('click', (e) => {
+      const position = e.data.position;
+      _this.setState({
+        hoverTitleShow: false,
+        currentClickObj: { ...position, PollutantType: pollutantType },
+        pointInfoWindowVisible: true,
+        infoWindowPos: [position.Longitude, position.Latitude],
+      }, () => {
+        _this.getInfoWindowData()
+      });
+
+    })
+    massMarks.on('mouseover', (e) => {
+      const position = e.data.position;
+      this.setState({ pointInfoWindowVisible: false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+
+    })
+    massMarks.on('mouseout', (e) => {
+      const position = e.data.position;
+      this.setState({ hoverTitleShow: false, hoverEntTitle: '', hoverPointTitle: '', hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+    })
   }
+
   getIcon = (status) => {
     let icon = '';
     if (pollutantType == 1) {
@@ -327,8 +421,8 @@ class Index extends PureComponent {
     return icon;
   }
 
-  goEnt=()=>{
-    const {  entMarkers } = this.state;
+  goEnt = () => {
+    const { entMarkers } = this.state;
     this.loadEntMarkerData(entMarkers)
   }
   operationChange = (text, mapProps) => {
@@ -360,13 +454,13 @@ class Index extends PureComponent {
         this.props.fullScreenClick(false)
         break;
       case '展示企业': //行政区
-        this.setState({pointIconGo:false})
+        this.setState({ pointIconGo: false })
         this.loadRegionMarkerData(regionMarkers)
         // this.setState({showType:1, markersList:[...this.state.regionMarkers]})
         break;
       case '展示监测点':
         // if(showType!=3){
-        this.setState({ pointTitleShow: false, entTitleShow: false,pointIconGo:true })
+        this.setState({ pointTitleShow: false, entTitleShow: false, pointIconGo: true })
         this.loadPointMarkerData(pointMarkers)
         // }
         break;
@@ -375,8 +469,16 @@ class Index extends PureComponent {
           this.setState({ entTitleShow: true, markersList: [...entMarkers] })
         }
         if (showType == 3 && !pointTitleShow) {
+          if(this.state.isMassive){
+            const noramalData = pointMarkers.filter(item =>!item.alarmStatus)
+            this.renderPointTitleLabelMarker(noramalData);
+            const warinData = pointMarkers.filter(item =>item.alarmStatus)
+            this.setState({ pointTitleShow: true, markersList: [...warinData] })
+            return;
+          }
           this.setState({ pointTitleShow: true, markersList: [...pointMarkers] })
         }
+        // if(){}
         break;
       case '隐藏名称':
         if (showType == 2 && entTitleShow) {
@@ -389,11 +491,52 @@ class Index extends PureComponent {
     }
 
   }
-  regPopovercontent = (extData) => { 
+  //海量标注 监测点显示名称
+  renderPointTitleLabelMarker = (data) => {
+    console.log(data)
+    // 创建一个 LabelMarker 实例 
+      labelMarker=[];
+
+      data[0]&&data.map(item=>{
+      labelMarker.push(new window.AMap.LabelMarker({
+      position: [item.position.longitude,item.position.latitude],
+      opacity: 1,
+      zIndex: 999,
+      text: {
+        content: `${item.position.ParentName} - ${item.position.PointName}`,
+        direction: 'center',
+        offset: [0, 40],
+        style: {
+          fontSize: 15,
+          fillColor: '#fff',
+          strokeColor: 'rgba(255,0,0,0.5)',
+          strokeWidth: 2,
+          padding: [3, 10],
+          backgroundColor: 'yellow',
+          borderColor: '#ccc',
+          borderWidth: 3,
+        }
+      }
+    })
+    )
+
+  })
+  console.log(labelMarker)
+    // 创建一个 LabelsLayer 实例来承载 LabelMarker，[LabelsLayer 文档](https://lbs.amap.com/api/jsapi-v2/documentation#labelslayer)
+    let labelsLayer = new window.AMap.LabelsLayer({
+      collision: true,
+    });
+
+    // 将 LabelMarker 实例添加到 LabelsLayer 上
+    labelsLayer.add(labelMarker);
+    // 将 LabelsLayer 添加到地图上
+    aMap.add(labelsLayer);
+  }
+  regPopovercontent = (extData) => {
     return <div>
       <div>企业总数：{extData.position && extData.position.entCount}</div>
-      <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.overCount? extData.position.overCount : 0}</div>
-      <div><span style={{ color: '#FFCC00' }}>异常</span>企业总数：{extData.position && extData.position.exceptionCount? extData.position.exceptionCount : 0}</div>
+      <div><span style={{ color: '#FF0000' }}>超标</span>企业总数：{extData.position && extData.position.overCount ? extData.position.overCount : 0}</div>
+      <div><span style={{ color: '#FFCC00' }}>异常</span>企业总数：{extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</div>
     </div>
   }
 
@@ -402,7 +545,7 @@ class Index extends PureComponent {
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
       return <div style={{ position: 'relative' }}>
-        <Popover overlayClassName={styles.regPopSty} title={()=><Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={()=>{this.goEnt()}}/> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} >
+        <Popover overlayClassName={styles.regPopSty} title={() => <Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={() => { this.goEnt() }} /> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} >
           <img src='/location.png' style={{ position: 'relative', width: 35, height: 35 }} />
         </Popover>
       </div>
@@ -424,9 +567,9 @@ class Index extends PureComponent {
         {pointTitleShow && <div className={styles.pointTitlePopSty}>
           <div className={styles.titlePopSty} >
             <div>{extData.position.ParentName}</div>
-             <div>{extData.position.PointName}</div>
+            <div>{extData.position.PointName}</div>
           </div>
-        </div>} 
+        </div>}
       </div>
     }
   }
@@ -479,7 +622,7 @@ class Index extends PureComponent {
           break;
         case 4:
           statusText = '停运';
-            break;
+          break;
       }
       return statusText;
     };
@@ -579,110 +722,110 @@ class Index extends PureComponent {
       </div>
     );
   };
-  entSearch = (val) =>{
-    
-   const { entList } = this.props;
-   let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
+  entSearch = (val) => {
+
+    const { entList } = this.props;
+    let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     const emptyEle = document.querySelector('.antd-pro-pages-newest-home-style-searchSty .ant-select-item-empty')
-     if(emptyEle){
+    if (emptyEle) {
       listEle.style.display = 'none';
-     }
-     this.setState({entLists:entList},()=>{
-      if(val){
-        this.state.entLists.map(item=>{
-          if(item.entName.match(new RegExp(`\\${val}`, 'g'))){
+    }
+    this.setState({ entLists: entList }, () => {
+      if (val) {
+        this.state.entLists.map(item => {
+          if (item.entName.match(new RegExp(`\\${val}`, 'g'))) {
             listEle.style.display = 'block';
           }
         })
-       
-      }else{
+
+      } else {
         listEle.style.display = 'none';
       }
-     })
- 
+    })
+
 
   }
-  entChange = (val) =>{
+  entChange = (val) => {
     let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     listEle.style.display = 'none';
-    this.setState({ selectEnt:val},()=>{
+    this.setState({ selectEnt: val }, () => {
       this.searchEntEle.blur()
 
     })
 
 
-     
+
   }
 
-  entFocus = () =>{
+  entFocus = () => {
     const { selectEnt } = this.state;
-    this.setState({ selectEnt:undefined})
+    this.setState({ selectEnt: undefined })
 
   }
-  entBlur =() =>{
-    const { entMarkers,selectEnt,showType,pointMarkers } = this.state;
-    this.setState({entLists:[]})
-    if(selectEnt){
-      if(showType==3){ //对应的监测点
-        pointMarkers.map(item=>{
+  entBlur = () => {
+    const { entMarkers, selectEnt, showType, pointMarkers } = this.state;
+    this.setState({ entLists: [] })
+    if (selectEnt) {
+      if (showType == 3) { //对应的监测点
+        pointMarkers.map(item => {
           let position = item.position;
-          if(position.ParentName === selectEnt){
+          if (position.ParentName === selectEnt) {
             this.loadPointMarkerData([item])
-            aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
-            this.setState({entLists:[]})
-           }
-         })
-      }else{ //对应的企业
-       entMarkers.map(item=>{
-           let position = item.position;
-           if(position.entName === selectEnt){
-             this.loadEntMarkerData([item]);
-             aMap.setZoomAndCenter(14, [ position.longitude,position.latitude]);
-             this.setState({entLists:[]})
-            }
-          })
-       }
-    }else{
-      showType==3? this.loadPointMarkerData(pointMarkers) : this.loadEntMarkerData(entMarkers);
+            aMap.setZoomAndCenter(14, [position.longitude, position.latitude]);
+            this.setState({ entLists: [] })
+          }
+        })
+      } else { //对应的企业
+        entMarkers.map(item => {
+          let position = item.position;
+          if (position.entName === selectEnt) {
+            this.loadEntMarkerData([item]);
+            aMap.setZoomAndCenter(14, [position.longitude, position.latitude]);
+            this.setState({ entLists: [] })
+          }
+        })
+      }
+    } else {
+      showType == 3 ? this.loadPointMarkerData(pointMarkers) : this.loadEntMarkerData(entMarkers);
     }
   }
-  onBack = () =>{
-    const { showType,regionMarkers,selectEnt,entMarkers } = this.state;
+  onBack = () => {
+    const { showType, regionMarkers, selectEnt, entMarkers } = this.state;
 
-    
-    if(showType == 2){
-       this.loadRegionMarkerData(regionMarkers)
-      }
-    if(showType == 3){
+
+    if (showType == 2) {
+      this.loadRegionMarkerData(regionMarkers)
+    }
+    if (showType == 3) {
       this.loadEntMarkerData(entMarkers)
     }
 
-    this.setState({selectEnt:undefined,mapBtnStatusIndex:-1})
+    this.setState({ selectEnt: undefined, mapBtnStatusIndex: -1 })
   }
 
-  mapBtnClick = (index,item) =>{
-    const { mapBtnStatusIndex,pointMarkers,allPointMarkers } = this.state;
-    if(mapBtnStatusIndex!==index){
-      this.setState({mapBtnStatusIndex:index})
-      const selectData = allPointMarkers.filter(pointItem=>{
-        return   item.status == pointItem.position.Status 
+  mapBtnClick = (index, item) => {
+    const { mapBtnStatusIndex, pointMarkers, allPointMarkers } = this.state;
+    if (mapBtnStatusIndex !== index) {
+      this.setState({ mapBtnStatusIndex: index })
+      const selectData = allPointMarkers.filter(pointItem => {
+        return item.status == pointItem.position.Status
       })
-      this.setState({pointMarkers:selectData})
+      this.setState({ pointMarkers: selectData })
       this.loadPointMarkerData(selectData)
-    }else{
-      this.setState({mapBtnStatusIndex:-1})
+    } else {
+      this.setState({ mapBtnStatusIndex: -1 })
       this.loadPointMarkerData(pointMarkers)
     }
-    
+
   }
-  mapContent = (props) => { 
-    const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow,pointIconGo} = this.state;
-    const { mapStatusData, subjectFontSize, pollType,entList } = this.props;
-    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount,status:2}, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount,status:3}, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount,status:0 },
-    { text: '在线', color: '#5fc15d', val: mapStatusData.normalCount ,status:1}, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount,status:4 }]
+  mapContent = (props) => {
+    const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow, pointIconGo } = this.state;
+    const { mapStatusData, subjectFontSize, pollType, entList } = this.props;
+    const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount, status: 2 }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount, status: 3 }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount, status: 0 },
+    { text: '在线', color: '#5fc15d', val: mapStatusData.normalCount, status: 1 }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount, status: 4 }]
 
     const operationBtnArr = () => {
-      return [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/homeMapT.png' : '/homeMapQp.png' }, { text: '展示企业', url: !pointIconGo? '/homeMapQA.png' : '/homeMapQ.png' }, { text: '展示监测点', url:pointIconGo?'/homeMapJcA.png' : '/homeMapJc.png' },
+      return [{ text: fullScreen ? '退出全屏' : '全屏', url: fullScreen ? '/homeMapT.png' : '/homeMapQp.png' }, { text: '展示企业', url: !pointIconGo ? '/homeMapQA.png' : '/homeMapQ.png' }, { text: '展示监测点', url: pointIconGo ? '/homeMapJcA.png' : '/homeMapJc.png' },
       { text: entTitleShow || pointTitleShow ? '隐藏名称' : '展示名称', url: '/homeMapZ.png' }, { text: '放大', url: '/homeMapJ.png' },
       { text: '缩小', url: '/homeMapS.png' }]
     }
@@ -700,10 +843,10 @@ class Index extends PureComponent {
       "2": <><GasIcon /><span className={styles.iconText}>废气</span></>
     }
 
-    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos,selectEnt,mapBtnStatusIndex, } = this.state;
-   
+    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive, } = this.state;
+
     // const searchEntInput = useRef(null);
-  
+
     // function entSearchSelect(val){
     //   let listEle = document.querySelector(".antd-pro-pages-newest-home-style-searchSty .ant-select-dropdown");
     //   listEle.style.display = 'none';
@@ -717,20 +860,20 @@ class Index extends PureComponent {
         events={this.amapEvents}
         mapStyle="amap://styles/darkblue"
         useAMapUI={!config.offlineMapUrl.domain}
-        
+
       >
 
         <Markers
           markers={markersList}
           render={this.renderMarkers}
           events={this.markersEvents}
-          useCluster
+        // useCluster
         />
         <InfoWindow
           visible={hoverTitleShow}
           position={hoverTitleLngLat}
           autoMove
-          offset={[4, -35]}
+          offset={isMassive ? [10, -5] : [4, -35]}
           className={styles.titleInfoWindow}
         >
           <div style={{ whiteSpace: "nowrap" }} >企业名称：{hoverEntTitle}</div>
@@ -740,7 +883,7 @@ class Index extends PureComponent {
 
           position={infoWindowPos}
           visible={pointInfoWindowVisible}
-          offset={[4, -35]}
+          offset={isMassive ? [10, -5] : [4, -35]}
           autoMove
           showShadow
           closeWhenClickMap={false}
@@ -749,9 +892,9 @@ class Index extends PureComponent {
           <span onClick={() => { this.setState({ pointInfoWindowVisible: false }) }} style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}>×</span>
         </InfoWindow>
         <div className={styles.mapBtn}> { /**按钮 */}
-          <Row align='middle'> 
+          <Row align='middle'>
             {typeBtnArr.map((item, index) => {
-              return <Row onClick={()=>{this.mapBtnClick(index,item)}}  className={index===mapBtnStatusIndex? styles.typeBtnActiveSty :  styles.typeBtnSty } align='middle' justify='center'>
+              return <Row onClick={() => { this.mapBtnClick(index, item) }} className={index === mapBtnStatusIndex ? styles.typeBtnActiveSty : styles.typeBtnSty} align='middle' justify='center'>
                 <div className={styles.colorBlock} style={{ background: `${item.color}` }}></div>
                 <span style={{ fontSize: subjectFontSize }}>{item.text} {item.val}</span>
               </Row>
@@ -783,7 +926,7 @@ class Index extends PureComponent {
               optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
             }
             getPopupContainer={trigger => trigger.parentNode}
-            suffixIcon={ <img src='/homeMapsearchIcon.png' />}
+            suffixIcon={<img src='/homeMapsearchIcon.png' />}
             onSearch={this.entSearch}
             onChange={this.entChange}
             onFocus={this.entFocus}
@@ -793,7 +936,7 @@ class Index extends PureComponent {
             value={selectEnt}
             defaultActiveFirstOption={false}
           >
-          {this.state.entLists[0]&&this.state.entLists.map(item=>{
+            {this.state.entLists[0] && this.state.entLists.map(item => {
               return <Option value={item.entName}>{item.entName}</Option>
             })}
           </Select>
@@ -812,7 +955,7 @@ class Index extends PureComponent {
     return (
       <div style={{ height: '100%' }} className={`${fullScreen ? `${styles.mapModal}` : ''}`}>
 
-        <MapContent  searchEntInputRef={el => this.searchEntEle = el}/>
+        <MapContent searchEntInputRef={el => this.searchEntEle = el} />
         <SiteDetailsModal data={currentClickObj} />
       </div>
 
