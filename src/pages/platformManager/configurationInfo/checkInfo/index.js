@@ -56,7 +56,6 @@ const  dvaDispatch = (dispatch) => {
   }
 }
 
-// snippets
 const Index = (props) => {
 
   const [form] = Form.useForm();

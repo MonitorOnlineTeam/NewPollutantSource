@@ -46,11 +46,12 @@ let Markers;
 let InfoWindow;
 let aMap = null;
 let massMarks = null;
-let labelMarker = null;
-
+let labelsLayer = null;
+let labelsMarker = null;
 
 let pollutantType = {}
 
+let massPointTitleColor = 'rgb(23, 30, 70)'
 @connect(({ loading, newestHome }) => ({
   pollType: newestHome.pollType,
   subjectFontSize: newestHome.subjectFontSize,
@@ -126,7 +127,7 @@ class Index extends PureComponent {
       mouseover: (MapsOption, marker) => { //鼠标移入地图容器内时触发
         const { showType } = this.state;
         if (showType == 2 || showType == 3) {
-          const position = marker.De.extData.position;
+          const position = marker.De&&marker.De.extData.position;
           this.setState({ pointInfoWindowVisible: false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
         }
       },
@@ -166,23 +167,18 @@ class Index extends PureComponent {
   componentWillMount() {
     if (config.offlineMapUrl.domain) {
       const amap = require('@/components/ReactAmap');
-      // Map, Marker, Polygon, Markers, InfoWindow;
       Map = amap.Map;
       Marker = amap.Marker;
       Polygon = amap.Polygon;
       Markers = amap.Markers;
       InfoWindow = amap.InfoWindow;
-      console.log(amap)
     } else {
       const amap = require('react-amap');
-      // Map, Marker, Polygon, Markers, InfoWindow;
       Map = amap.Map;
       Marker = amap.Marker;
       Polygon = amap.Polygon;
       Markers = amap.Markers;
       InfoWindow = amap.InfoWindow;
-
-
     }
   }
   componentDidMount() {
@@ -237,8 +233,17 @@ class Index extends PureComponent {
       }
     })
   }
+  
+  clearMass = () =>{ //清除海量点(废气 监测点)和海量标签(废气 监测点标题)
+    massMarks&&massMarks.hide(aMap);
+    if(labelsMarker&&labelsLayer){
+      labelsLayer.remove(labelsMarker)
+      aMap.remove(labelsLayer);
+    }
 
+  }
   loadRegionMarkerData = (data, flag) => { //行政区
+    this.clearMass();
     this.setState({
       showType: 1,
       markersList: data,
@@ -269,8 +274,8 @@ class Index extends PureComponent {
 
   }
   loadPointMarkerData = (data, flag) => { //监测点 
-
-    massMarks && massMarks.clear(aMap);//清除海量点
+  
+    this.clearMass();
 
     if (pollutantType == 2 && data.length >= 1000) { //废气 监测点多的情况 海量加载
 
@@ -348,7 +353,7 @@ class Index extends PureComponent {
 
     massMarks.setMap(aMap);
     const timer = setInterval(() => {
-      aMap.setFitView();
+      // aMap.setFitView();
       // aMap.setZoom(aMap.getZoom()-1);
       clearInterval(timer);
     }, 0);
@@ -367,12 +372,12 @@ class Index extends PureComponent {
     })
     massMarks.on('mouseover', (e) => {
       const position = e.data.position;
-      this.setState({ pointInfoWindowVisible: false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+      _this.setState({ pointInfoWindowVisible: false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
 
     })
     massMarks.on('mouseout', (e) => {
       const position = e.data.position;
-      this.setState({ hoverTitleShow: false, hoverEntTitle: '', hoverPointTitle: '', hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+      _this.setState({ hoverTitleShow: false, hoverEntTitle: '', hoverPointTitle: '', hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
     })
   }
 
@@ -421,8 +426,11 @@ class Index extends PureComponent {
     return icon;
   }
 
-  goEnt = () => {
+  goEnt = (extData) => {
     const { entMarkers } = this.state;
+     
+    console.log(extData,entMarkers)
+    // const data = entMarkers.filter(item.position.=>)
     this.loadEntMarkerData(entMarkers)
   }
   operationChange = (text, mapProps) => {
@@ -459,10 +467,8 @@ class Index extends PureComponent {
         // this.setState({showType:1, markersList:[...this.state.regionMarkers]})
         break;
       case '展示监测点':
-        // if(showType!=3){
         this.setState({ pointTitleShow: false, entTitleShow: false, pointIconGo: true })
         this.loadPointMarkerData(pointMarkers)
-        // }
         break;
       case '展示名称':
         if (showType == 2 && !entTitleShow) {
@@ -478,7 +484,6 @@ class Index extends PureComponent {
           }
           this.setState({ pointTitleShow: true, markersList: [...pointMarkers] })
         }
-        // if(){}
         break;
       case '隐藏名称':
         if (showType == 2 && entTitleShow) {
@@ -486,6 +491,14 @@ class Index extends PureComponent {
         }
         if (showType == 3 && pointTitleShow) {
           this.setState({ pointTitleShow: false, markersList: [...pointMarkers] })
+
+          if(this.state.isMassive){
+             labelsLayer.remove(labelsMarker)
+             aMap.remove(labelsLayer)
+             const warinData = pointMarkers.filter(item =>item.alarmStatus)
+             this.setState({ pointTitleShow: false, markersList: [...warinData] })
+            return;
+          }
         }
         break;
     }
@@ -493,42 +506,38 @@ class Index extends PureComponent {
   }
   //海量标注 监测点显示名称
   renderPointTitleLabelMarker = (data) => {
-    console.log(data)
-    // 创建一个 LabelMarker 实例 
-      labelMarker=[];
-
+    // 创建一个 labelsMarker 实例 
+      labelsMarker=[];
+  
       data[0]&&data.map(item=>{
-      labelMarker.push(new window.AMap.LabelMarker({
+      labelsMarker.push(new window.AMap.LabelMarker({
       position: [item.position.longitude,item.position.latitude],
       opacity: 1,
-      zIndex: 999,
+      zIndex: 98,
       text: {
         content: `${item.position.ParentName} - ${item.position.PointName}`,
         direction: 'center',
         offset: [0, 40],
         style: {
-          fontSize: 15,
+          fontSize: 14,
           fillColor: '#fff',
-          strokeColor: 'rgba(255,0,0,0.5)',
-          strokeWidth: 2,
-          padding: [3, 10],
-          backgroundColor: 'yellow',
-          borderColor: '#ccc',
-          borderWidth: 3,
+          padding: [4,8],
+          backgroundColor: massPointTitleColor,
+          borderColor: 'rgba(56,168,212)', //2.0 支持的属性 框架不行 框架好久没更新了 指定2.0 各种兼容问题
+          borderWidth: 1,//同上
         }
       }
     })
     )
 
   })
-  console.log(labelMarker)
     // 创建一个 LabelsLayer 实例来承载 LabelMarker，[LabelsLayer 文档](https://lbs.amap.com/api/jsapi-v2/documentation#labelslayer)
-    let labelsLayer = new window.AMap.LabelsLayer({
-      collision: true,
+     labelsLayer = new window.AMap.LabelsLayer({
+      collision: false,
     });
 
-    // 将 LabelMarker 实例添加到 LabelsLayer 上
-    labelsLayer.add(labelMarker);
+    // 将 labelsMarker 实例添加到 LabelsLayer 上
+    labelsLayer.add(labelsMarker);
     // 将 LabelsLayer 添加到地图上
     aMap.add(labelsLayer);
   }
@@ -541,11 +550,11 @@ class Index extends PureComponent {
   }
 
   renderMarkers = (extData) => {
-    const { showType, entTitleShow, pointTitleShow } = this.state;
+    const { showType, entTitleShow, pointTitleShow,isMassive } = this.state;
     const alarmStatus = extData.position.alarmStatus;
     if (showType == 1) {
       return <div style={{ position: 'relative' }}>
-        <Popover overlayClassName={styles.regPopSty} title={() => <Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={() => { this.goEnt() }} /> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} >
+        <Popover overlayClassName={styles.regPopSty} title={() => <Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={() => { this.goEnt(extData) }} /> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} >
           <img src='/location.png' style={{ position: 'relative', width: 35, height: 35 }} />
         </Popover>
       </div>
@@ -564,12 +573,15 @@ class Index extends PureComponent {
       return <div style={{ position: 'relative' }}>
         {this.getIcon(extData.position.Status)}
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
-        {pointTitleShow && <div className={styles.pointTitlePopSty}>
+        {pointTitleShow&&isMassive?
+            <div style={{padding:'4px 8px',backgroundColor:massPointTitleColor}}>{extData.position.ParentName} - {extData.position.PointName}</div>
+           :
+          pointTitleShow? <div className={styles.pointTitlePopSty}>
           <div className={styles.titlePopSty} >
             <div>{extData.position.ParentName}</div>
             <div>{extData.position.PointName}</div>
           </div>
-        </div>}
+        </div> : null }
       </div>
     }
   }
@@ -859,7 +871,8 @@ class Index extends PureComponent {
         amapkey={config.amapKey}
         events={this.amapEvents}
         mapStyle="amap://styles/darkblue"
-        useAMapUI={!config.offlineMapUrl.domain}
+        // useAMapUI={!config.offlineMapUrl.domain}
+        version='1.4.19'
 
       >
 
@@ -867,6 +880,7 @@ class Index extends PureComponent {
           markers={markersList}
           render={this.renderMarkers}
           events={this.markersEvents}
+          extData={markersList}
         // useCluster
         />
         <InfoWindow
