@@ -1000,6 +1000,11 @@ export default {
                 component: './operations/remoteSupervision',
               },
               {
+                path: '/operations/remoteSupervisionRecord', //远程督查记录
+                name: 'remoteSupervisionRecord',
+                component: './operations/remoteSupervision',
+              },
+              {
                 path: '/operations/remoteSupervision/detail/:id', //远程督查 详情
                 name: 'remoteSupervisionDetail',
                 component: './operations/remoteSupervision/detail',

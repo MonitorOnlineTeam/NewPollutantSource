@@ -587,6 +587,11 @@ const Index = (props) => {
         {consistencyCheckDetail.createTime  }
       </Form.Item>
       </Col>
+      <Col span={6}>
+      <Form.Item label="点位负责运维人"  >
+        {consistencyCheckDetail.userName  }
+      </Form.Item>
+      </Col>
       </Row>
     </Form>
     <Tabs>

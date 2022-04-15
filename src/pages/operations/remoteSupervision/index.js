@@ -176,7 +176,8 @@ const Index = (props) => {
   
 
 
-
+  const isRecord =  props.match.path ==='/operations/remoteSupervisionRecord'? true : false;
+  
   const [filePar, setFilePar] = useState() //参数一致性核查表 上传附件 点击字段
   const [filesCuidList, setFilesCuidList] = useState({}) //参数一致性核查表 上传附件
   const [filesList3, setFilesList3] = useState({}) //参数一致性核查表 参数附件列表
@@ -255,7 +256,7 @@ const Index = (props) => {
 
   const issueTipContent = <div>
     <p style={{ marginBottom: 5 }}>1、待下发：督查结果未发送通知给点运维负责人。</p>
-    <p style={{ marginBottom: 0 }}>2、待下发：督查结果已下发通知给点运维负责人。</p>
+    <p style={{ marginBottom: 0 }}>2、已下发：督查结果已下发通知给点运维负责人。</p>
   </div>
 
   const columns = [
@@ -305,6 +306,12 @@ const Index = (props) => {
       align: 'center',
     },
     {
+      title: '点位运维负责人',
+      dataIndex: 'userName',
+      key: 'userName',
+      align: 'center',
+    },
+    {
       title: <span style={{ position: 'relative' }}>下发状态 <NumTips content={issueTipContent} style={{ top: 2, }} /></span>,
       dataIndex: 'issue',
       key: 'issue',
@@ -324,33 +331,43 @@ const Index = (props) => {
       align: 'center',
       width:150,
       render: (text, record) => {
+         const issue = record.issue;
+         const flag = record.flag;
+
+      let detail =  <Tooltip title="详情">
+      <a onClick={() => {
+        router.push({ pathname: `/operations/remoteSupervision/detail/${record.id}` })
+      }}>
+        <ProfileOutlined style={{ fontSize: 16 }} />
+      </a>
+    </Tooltip>
+       if(isRecord){ //远程督查记录页面
+        return detail 
+       }
         return (
           <>
-            {record.flag && <><Tooltip title="编辑">
+            {record.flag && <><Tooltip  title={"编辑"}>
               <a onClick={() => {
-                edit(record)
+               if(issue==='已下发' || !flag){
+                return;
+               } 
+               edit(record)
               }}  >
-                <EditOutlined style={{ fontSize: 16 }} />
+                <EditOutlined disabled style={{cursor:issue==='已下发'&&'not-allowed',  fontSize: 16 }} />
               </a>
             </Tooltip>
               <Divider type="vertical" /></>}
-            <Tooltip title="详情">
-              <a onClick={() => {
-                router.push({ pathname: `/operations/remoteSupervision/detail/${record.id}` })
-              }}>
-                <ProfileOutlined style={{ fontSize: 16 }} />
-              </a>
-            </Tooltip>
-            {record.flag && <> <Divider type="vertical" />
+            {detail}
+             <Divider type="vertical" />
               <Tooltip title="删除">
-                <Popconfirm title="确定要删除此条信息吗？" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon /></a>
+                <Popconfirm   disabled={issue==='已下发'|| !flag} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a href="#"  style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed'}}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
-              </Tooltip></>}
+              </Tooltip>
             <Divider type="vertical" />
-            <Tooltip title="下发">
-              <Popconfirm title="确定要下发督查结果给点位的运维负责人吗？" onConfirm={() => issue(record)} okText="是" cancelText="否">
-                <a href="#" ><IssuesCloseOutlined style={{ fontSize: 16 }} /></a>
+            <Tooltip  title="下发">
+              <Popconfirm disabled={!issue||issue==='已下发'|| !flag} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issue(record)} okText="是" cancelText="否">
+                <a href="#" style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed'}}><IssuesCloseOutlined  style={{cursor:!issue||issue==='已下发'|| !flag&&'not-allowed', fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>
@@ -598,7 +615,7 @@ const Index = (props) => {
     
   }
   const [addId,setAddId] = useState();
-  const save = () => {
+  const save = (type) => {
     commonForm.validateFields().then(commonValues => {
       const commonData = {
         ...commonValues,
@@ -1915,9 +1932,9 @@ const Index = (props) => {
                 <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                   重置
                 </Button>
-                <Button style={{ marginRight: 8 }} onClick={add}>
+               {!isRecord&&<Button style={{ marginRight: 8 }} onClick={add}>
                   添加
-            </Button>
+            </Button>}
               </Form.Item>
             </Row>
           </Form>}>
@@ -1949,6 +1966,18 @@ const Index = (props) => {
         wrapClassName={styles.modalSty}
         okText='保存'
         getContainer={false}
+        footer={[
+          <Button  onClick={() => { setVisible(false)}}>
+            取消
+          </Button>,
+          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 : saveLoading2}>
+            保存
+          </Button>,
+          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading1 : saveLoading2} >
+            提交
+          </Button>,
+        ]}
+      >
       >
          <Spin spinning={title==='编辑'&&editLoading}>
         <Form
@@ -1979,6 +2008,10 @@ const Index = (props) => {
 
             <Form.Item label='核查月份' name='month' rules={[{ required: true, message: '请选择核查月份!' }]}>
               <DatePicker allowClear={false} picker="month" style={{width:200}}/>
+            </Form.Item>
+
+            <Form.Item label='点位运维负责人' name='UserName' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
+              <Input />
             </Form.Item>
           </Row>
 

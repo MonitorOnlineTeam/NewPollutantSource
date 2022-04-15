@@ -249,7 +249,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
  const { planOperaList } = props;
 
  const planOperaOption = (type) => {  //计划运维图表
-  let color1 = ["#F9BF31", "#323A70"], color2 = ["#3BE2BA", '#323A70'],color3 = ['#F66080', '#323A70']
+  let color1 = ["#3DBDFF", "#3DBDFF"], color2 = ["#FFDD54", '#FFDD54'],color3 = ['#F66080', '#323A70']
   let option = {
     tooltip: {
       show: false,
@@ -260,19 +260,30 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
     title: {
       text: type == 1 ? `${planOperaList.inspectionRate=="-"? '-': `${planOperaList.inspectionRate}%` }`: type == 2 ? `${planOperaList.autoCalibrationRate}%` : `${planOperaList.actualCalibrationRate}%`,
       left: "center",
-      top: "42%",
+      top: "48%",
       textStyle: {
         color: type == 1 ? color1[0] : type == 2 ? color2[0] : color3[0],
-        fontSize: 18,
+        fontSize: 16,
         align: "center",
         fontWeight: 'bold',
+      },
+    },
+    graphic: {
+      type: "text",
+      left: "center",
+      top: "38%",
+      style: {
+        text: type == 1 ?'巡检完成率' :'校准完成率',
+        textAlign: "center",
+        fill: "#fff",
+        fontSize: 12,
       }
     },
     series: [
       {
         name: type == 1 ? '计划巡检完成率' : type == 2 ? '计划校准完成率' : '实际校准完成率',
         type: 'pie',
-        radius: ['70%', '83%'],
+        radius: ['70%', '80%'],
         avoidLabelOverlap: false,
         label: { normal: { show: false, position: 'center'  }, },
         data: [
@@ -323,34 +334,43 @@ const operatingInfo = (type,record) =>{
 
 
 const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
-  return <div style={{height:'100%', padding:'24px 11px 0 0'}}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
-  <Row type='flex' align='middle' justify='space-between'>
-   <Col span={8} align='middle'>
-
+  return <div style={{height:'100%', padding:'5px 0 10px 21px'}}> {/**当图表有点击事件时 更新更新页面时  图表抖动 */}
+   <Row type='flex'  align='middle'>    
      <ReactEcharts
        option={planOperaOption(1)} 
-       style={{ width: '100%', height: 120 }}
+       style={{ width: 105, height: 105 }}
        onEvents={{click: planInspection }}
      />
-     <div  className={styles.planOperaText} ><div style={{fontWeight:'bold'}}>计划巡检完成率</div><div>计划内次数：{planOperaList.inspectionAllCount} </div> <div>完成次数：{planOperaList.inspectionCompleteCount} </div></div>
-   </Col>
-   <Col span={8} align='middle'>
+     <img  style={{padding:'0 10px 0 24px'}} src='./homePlanSplitLine.png' />
+     <div  className={styles.planOperaText} >
+       <div>计划内次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div>计划内完成次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.inspectionOutCompleteCount }</span> </div>
+    </div>
+   </Row>
+
+
+     <Row type='flex'  align='middle'>    
      <ReactEcharts
-       option={planOperaOption(2)}
-       style={{ width: '100%', height: 120 }}
-       onEvents={{click: planCalibration }}
+       option={planOperaOption(2)} 
+       style={{ width: 105, height: 105 }}
+       onEvents={{click: planInspection }}
      />
-     <div   className={styles.planOperaText}><div style={{fontWeight:'bold'}}>计划校准完成率</div><div>计划内次数：{planOperaList.autoCalibrationAllCount} </div> <div>完成次数：{planOperaList.autoCalibrationCompleteCount} </div></div>
-   </Col>
-   <Col span={8} align='middle'>
+     <img style={{padding:'0 10px 0 24px'}} src='./homePlanSplitLine.png' />
+     <div className={styles.planOperaText} >
+       <div>计划内次数：<span style={{color:'#FFDD54'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div>计划内完成次数：<span style={{color:'#FFDD54'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.autoCalibrationOutCompleteCount  }</span> </div>
+    </div>
+   </Row>
+   {/* <Col span={8} align='middle'>
        <ReactEcharts
          option={planOperaOption(3)}
          style={{ width: '100%', height: 120 }}
          onEvents={{click: actualCalibration }}
        />
       <div className={styles.planOperaText}> <div  style={{fontWeight:'bold'}}>实际校准完成率</div><div>计划内次数： {planOperaList.autoCalibrationAllCount}</div> <div>完成次数： {planOperaList.actualCalibrationCount}</div></div>
-   </Col>
- </Row>
+   </Col> */}
    </div>
 },[planOperaList])
   
