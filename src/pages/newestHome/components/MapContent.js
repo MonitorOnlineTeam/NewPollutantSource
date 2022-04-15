@@ -556,9 +556,9 @@ class Index extends PureComponent {
       return <div style={{ position: 'relative',width:110,height:110, background:'url("/homeMapBorder.png")',backgroundSize:'100% 100%',cursor:'default' }}>
         {/* <Popover overlayClassName={styles.regPopSty} title={() => <Row justify='space-between' align='middle'><span> {extData.position && extData.position.regionName} </span>  <RightOutlined onClick={() => { this.goEnt(extData) }} /> </Row>} getPopupContainer={trigger => trigger.parentNode} visible={showType == 1} placement="top" content={this.regPopovercontent(extData)} > */}
         {/* </Popover> */}
-          <div title={extData.position && extData.position.regionName} className='textOverflow' style={{color:"#4BF3F9",position: 'absolute',left:10,top:15,fontSize:12,lineHeight:'12px', width:'calc(100% - 14px - 10px - 14px)'}}> {extData.position && extData.position.regionName} </div> 
+          <div title={extData.position && extData.position.regionName} className='textOverflow' style={{color:"#4BF3F9",position: 'absolute',left:10,top:18,fontSize:12,lineHeight:'12px', width:'calc(100% - 14px - 10px - 14px)'}}> {extData.position && extData.position.regionName} </div> 
           <img src='/location.png' style={{ position: 'absolute',top:'100%',left:'calc(50% - 10px)', width: 20, height: 20 }} />
-          <RightOutlined onClick={() => { this.goEnt(extData) }} style={{color:"#4BF3F9",position: 'absolute',top:15,right:8,fontSize: 14}}/>
+          <RightOutlined onClick={() => { this.goEnt(extData) }} style={{color:"#4BF3F9",position: 'absolute',top:18,right:8,fontSize: 14}}/>
           {this.regPopovercontent(extData)}
       </div>
     } else if (showType == 2) {
