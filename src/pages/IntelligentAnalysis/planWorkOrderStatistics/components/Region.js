@@ -328,11 +328,11 @@ const Index = (props,ref ) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -410,11 +410,11 @@ const Index = (props,ref ) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -454,11 +454,11 @@ const Index = (props,ref ) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -528,11 +528,11 @@ const Index = (props,ref ) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -605,11 +605,11 @@ const Index = (props,ref ) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );

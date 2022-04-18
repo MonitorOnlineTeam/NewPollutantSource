@@ -112,7 +112,6 @@ class Index extends PureComponent {
         if (showType == 3) { //监测点弹窗
           const position = marker.De.extData.position;
           this.setState({
-            // hoverTitleShow:false,
             currentClickObj: { ...position, PollutantType: pollutantType },
             pointInfoWindowVisible: true,
             infoWindowPos: [position.Longitude, position.Latitude],
@@ -126,17 +125,22 @@ class Index extends PureComponent {
       },
       mouseover: (MapsOption, marker) => { //鼠标移入地图容器内时触发
         const { showType } = this.state;
-        if (showType == 2 || showType == 3) {
-          const position = marker.De&&marker.De.extData.position;
-          this.setState({ pointInfoWindowVisible: false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+        const position = marker.De&&marker.De.extData.position;
+        if(position){
+          if (showType == 2 ) {
+            this.setState({ pointInfoWindowVisible: false,hoverTitleShow:false, hoverEntTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName,  hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+          }
+        if(showType == 3){
+            this.setState({ pointInfoWindowVisible: false,hoverEntTitleShow:false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+          }
         }
+
       },
       mouseout: (MapsOption, marker) => { //鼠标移出地图容器内时触发
         const { showType } = this.state;
         if (showType == 2 || showType == 3) {
-          const position = marker.De.extData.position;
-          this.setState({ hoverTitleShow: false, hoverEntTitle: '', hoverPointTitle: '', hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
-
+           const position = marker.De.extData.position;
+            this.setState({ hoverTitleShow: false,hoverEntTitleShow:false})
         }
       }
     };
@@ -149,8 +153,9 @@ class Index extends PureComponent {
       pointMarkers: [],
       allPointMarkers: [],
       entTitleShow: false,
+      hoverEntTitleShow: false,
       pointTitleShow: false,
-      hoverTitleShow: false,
+      hoverTitleShow: false,//监测点hover 气泡卡片
       hoverTitleLngLat: {},
       hoverEntTitle: '',
       hoverPointTitle: '',
@@ -276,12 +281,14 @@ class Index extends PureComponent {
   loadPointMarkerData = (data, flag) => { //监测点 
   
     this.clearMass();
-
+    this.setState({
+      showType: 3,
+      hoverEntTitleShow:false,
+    })
     if (pollutantType == 2 && data.length >= 1000) { //废气 监测点多的情况 海量加载
 
       const warnData = data[0] && data.filter(item => item.position.alarmStatus) //报警点 常规加载
       this.setState({
-        showType: 3,
         markersList: warnData,
         isMassive: true,
       })
@@ -292,7 +299,6 @@ class Index extends PureComponent {
 
     } else {
       this.setState({
-        showType: 3,
         markersList: [...data]
       }, () => {
         const timer = setInterval(() => {
@@ -370,14 +376,16 @@ class Index extends PureComponent {
       });
 
     })
+    const { showType } = this.state;
     massMarks.on('mouseover', (e) => {
       const position = e.data.position;
-      _this.setState({ pointInfoWindowVisible: false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+      if(position){
+        _this.setState({ pointInfoWindowVisible: false,hoverEntTitleShow:false, hoverTitleShow: true, hoverEntTitle: position.entName ? position.entName : position.ParentName, hoverPointTitle: position.PointName ? position.PointName : null, hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+      }
 
     })
     massMarks.on('mouseout', (e) => {
-      const position = e.data.position;
-      _this.setState({ hoverTitleShow: false, hoverEntTitle: '', hoverPointTitle: '', hoverTitleLngLat: { latitude: position.latitude, longitude: position.longitude } })
+         _this.setState({ hoverTitleShow: false,hoverEntTitleShow:false})
     })
   }
 
@@ -504,6 +512,15 @@ class Index extends PureComponent {
     }
 
   }
+  pointNum = (type) =>{
+    console.log(this.state.pointMarkers)
+    if(type == 1){ //超标点位数
+     
+    }
+    if(type == 2){ //异常点位数
+
+    }
+  }
   //海量标注 监测点显示名称
   renderPointTitleLabelMarker = (data) => {
     // 创建一个 labelsMarker 实例 
@@ -544,8 +561,8 @@ class Index extends PureComponent {
   regPopovercontent = (extData) => {
     return <div className={styles.regPopoverSty} style={{position:'absolute',margin:'0 auto',top:'calc(35px + (65px - 54px)/2)',left:12}}>
       <div>企业总数 : {extData.position && extData.position.entCount}</div>
-      <div><span style={{ color: '#FF0000' }}>超标</span>点位数 : {extData.position && extData.position.overCount ? extData.position.overCount : 0}</div>
-      <div><span style={{ color: '#FFCC00' }}>异常</span>点位数 : {extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</div>
+      <div><span style={{ color: '#FF0000' }}>超标</span>点位数 : <span style={{cursor:'pointer'}} onClick={()=>{this.pointNum(1)}}>{extData.position && extData.position.overCount ? extData.position.overCount : 0}</span></div>
+      <div><span style={{ color: '#FFCC00' }}>异常</span>点位数 : <span style={{cursor:'pointer'}} onClick={()=>{this.pointNum(2)}}>{extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</span></div>
     </div>
   }
 
@@ -815,7 +832,7 @@ class Index extends PureComponent {
       this.loadEntMarkerData(entMarkers)
     }
 
-    this.setState({ selectEnt: undefined, mapBtnStatusIndex: -1 })
+    this.setState({ selectEnt: undefined, mapBtnStatusIndex: -1,pointInfoWindowVisible:false })
   }
 
   mapBtnClick = (index, item) => {
@@ -858,7 +875,7 @@ class Index extends PureComponent {
       "2": <><GasIcon /><span className={styles.iconText}>废气</span></>
     }
 
-    const { hoverTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive, } = this.state;
+    const { hoverTitleShow,hoverEntTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive, } = this.state;
 
     // const searchEntInput = useRef(null);
 
@@ -886,7 +903,16 @@ class Index extends PureComponent {
           extData={markersList}
         // useCluster
         />
-        <InfoWindow
+        <InfoWindow //企业 hover
+          visible={hoverEntTitleShow}
+          position={hoverTitleLngLat}
+          autoMove
+          offset={isMassive ? [10, -5] : [4, -35]}
+          className={styles.titleInfoWindow}
+        >
+          <div style={{ whiteSpace: "nowrap" }} >企业名称：{hoverEntTitle}</div>
+        </InfoWindow>
+        <InfoWindow //监测点 hover
           visible={hoverTitleShow}
           position={hoverTitleLngLat}
           autoMove
@@ -894,7 +920,7 @@ class Index extends PureComponent {
           className={styles.titleInfoWindow}
         >
           <div style={{ whiteSpace: "nowrap" }} >企业名称：{hoverEntTitle}</div>
-          {showType == 3 && <div style={{ paddingTop: 3, whiteSpace: "nowrap" }}>监测点名称：{hoverPointTitle}</div>}
+          <div style={{ paddingTop: 3, whiteSpace: "nowrap" }}>监测点名称：{hoverPointTitle}</div>
         </InfoWindow>
         <InfoWindow
 

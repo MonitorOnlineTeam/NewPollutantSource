@@ -441,7 +441,7 @@ export default class MonitorPoint extends Component {
           <Form.Item label="核查项" >
           <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
          </Form.Item>
-         <Form.Item label="实时数据一致性核因子" >
+         <Form.Item label="实时数据一致性核查因子" >
           <Checkbox.Group value={this.state.realtimePollutantCode}  options={this.props.pointRealTimeList} onChange={this.realtimePollutantChange} />
          </Form.Item>
          <Form.Item label="小时日数据一致性核查因子" >
@@ -757,7 +757,7 @@ export default class MonitorPoint extends Component {
             visible={this.state.visible}
             onOk={this.onSubmitForm.bind(this)}
             onCancel={this.handleCancel}
-            width="60%"
+            width={'80%'}
             destroyOnClose
             bodyStyle={{paddingBottom:0}}
             footer={[

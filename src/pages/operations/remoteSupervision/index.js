@@ -346,28 +346,28 @@ const Index = (props) => {
        }
         return (
           <>
-            {record.flag && <><Tooltip  title={"编辑"}>
+            {record.flag && <><Tooltip  title={issue==='已下发'? null : "编辑"}>
               <a onClick={() => {
                if(issue==='已下发' || !flag){
                 return;
                } 
                edit(record)
               }}  >
-                <EditOutlined disabled style={{cursor:issue==='已下发'&&'not-allowed',  fontSize: 16 }} />
+                <EditOutlined disabled style={{cursor:issue==='已下发'&&'not-allowed', color:issue==='已下发'&&'#00000040',  fontSize: 16 }} />
               </a>
             </Tooltip>
               <Divider type="vertical" /></>}
             {detail}
              <Divider type="vertical" />
-              <Tooltip title="删除">
+              <Tooltip title={ issue==='已下发'|| !flag? null : "删除"} >
                 <Popconfirm   disabled={issue==='已下发'|| !flag} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a href="#"  style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed'}}><DelIcon style={{ fontSize: 16 }}/></a>
+                  <a href="#"  style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed', color:(!issue||issue==='已下发'|| !flag)&&'#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
               </Tooltip>
             <Divider type="vertical" />
-            <Tooltip  title="下发">
+            <Tooltip   title={!issue||issue==='已下发'|| !flag? null : "下发"} >
               <Popconfirm disabled={!issue||issue==='已下发'|| !flag} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issue(record)} okText="是" cancelText="否">
-                <a href="#" style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed'}}><IssuesCloseOutlined  style={{cursor:!issue||issue==='已下发'|| !flag&&'not-allowed', fontSize: 16 }} /></a>
+                <a href="#" style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed', color:(!issue||issue==='已下发'|| !flag)&&'#00000040', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>

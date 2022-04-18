@@ -393,7 +393,7 @@ if (userCookie) {
                 }} />
    </BreadcrumbWrapper>
    <Modal
-        title={`设备运营接手资料-添加 - ${typeName}`}
+        title={`设备运营接手资料 - ${typeName}`}
         visible={visible1}
         onCancel={() => {
           setVisible1(false)
@@ -412,8 +412,8 @@ if (userCookie) {
             CreateTime:moment(),
           }}
         >  
-          <Form.Item   name='Name' label='接手资料名称'>
-            <Input placeholder="请输入接手资料名称" />
+          <Form.Item   name='Name' label='移交资料名称'>
+            <Input placeholder="请输入移交资料名称" />
           </Form.Item>
           <Form.Item   name='Files' label='资料附件'>
            <Upload {...uploadProps} style={{width:'100%'}}>
@@ -502,7 +502,7 @@ if (userCookie) {
             CreateTime:moment(),
           }}
         >  
-          <Form.Item   name='Name' label='接手资料名称'>
+          <Form.Item   name='Name' label='移交资料名称'>
             <Input placeholder="请输入移交资料名称" />
           </Form.Item>
           <Form.Item   name='Files' label='资料附件'>

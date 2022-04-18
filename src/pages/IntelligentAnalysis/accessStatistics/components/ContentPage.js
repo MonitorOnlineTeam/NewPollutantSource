@@ -472,7 +472,7 @@ export default class EntTransmissionEfficiency extends Component {
 
             </Form.Item>
             <Form.Item>
-            <Select placeholder='请选择污染源' onChange={this.pollChange}>
+            <Select placeholder='请选择行业属性' onChange={this.pollChange}>
               {/* {
                 ss.map(item=>{
                 return <Option value={item.ss}>{item.ss}</Option>
@@ -482,7 +482,7 @@ export default class EntTransmissionEfficiency extends Component {
 
             </Form.Item>
             <Form.Item>
-            <Select placeholder='请选择售服务' onChange={this.afterSaleChange}>
+            <Select placeholder='请选择售业务属性' onChange={this.afterSaleChange}>
               {/* {
                 ss.map(item=>{
                 return <Option value={item.ss}>{item.ss}</Option>

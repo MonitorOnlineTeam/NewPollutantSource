@@ -50,6 +50,7 @@ class MonitoringStandard extends Component {
             title: '',
             width: '500',
             PollutantCode: null,
+            PollutantName:null,
             standardLibraryModal: false,
         };
     }
@@ -327,6 +328,8 @@ class MonitoringStandard extends Component {
                                             title: '编辑污染物',
                                             width: '50%',
                                             PollutantCode: record.PollutantCode,
+                                            PollutantName: record.PollutantName,
+
                                         })
                                     }
                                 ><EditIcon /></a>
@@ -380,12 +383,13 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
+                    scroll={{ y: 'calc(100vh - 480px)' }}
                 //  pagination={{ pageSize: 20 }}
                 />
                 <Modal
                     visible={standardlibraryModal}
                     title={'选择标准库'}
-                    width={'50%'}
+                    width={'80%'}
                     footer={false}
                     destroyOnClose={true} // 清除上次数据
                     onCancel={() => {
@@ -427,10 +431,11 @@ class MonitoringStandard extends Component {
                 </Modal>
                 <Modal
                     visible={Fvisible}
-                    title={this.state.title}
+                    title={`${this.state.PollutantName} - ${this.state.title}`}
                     width={this.state.width}
                     footer={false}
                     destroyOnClose={true} // 清除上次数据
+                    width={'80%'}
                     onCancel={() => {
                         this.setState({
                             Fvisible: false,
