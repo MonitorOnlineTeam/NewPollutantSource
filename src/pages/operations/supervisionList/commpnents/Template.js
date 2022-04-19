@@ -270,6 +270,7 @@ const Index = (props) => {
       dataIndex: 'ParentName',
       key: 'ParentName',
       align: 'center',
+      editable: true,
     },
   ]
 
@@ -281,7 +282,7 @@ const Index = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: 'select',
+        inputType: record.title ==='督查类别'? 'select' : 'input',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: true,
@@ -417,13 +418,15 @@ const Index = (props) => {
             components={{
               body: {
                 cell: ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
-                 const inputNode = <Select placeholder={`请选择${title}`}>
+                 const inputNode = inputType==='select'? <Select placeholder={`请选择${title}`}>
                  {
                    inspectorTypeList[0] && inspectorTypeList.map(item => {
                      return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
                    })
                  }
                </Select>
+               :
+               <TextArea rows={1} placeholder={`请输入${title}`}/>;
                 return <td {...restProps}>
                     {editing ?  inputNode
                       :
