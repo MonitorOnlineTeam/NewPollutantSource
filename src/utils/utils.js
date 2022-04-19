@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
-import { Badge, Popover, message } from 'antd';
+import { Badge, Popover, message, Button } from 'antd';
 import moment from 'moment';
 
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -84,6 +84,9 @@ export function formatPollutantPopover(value, additional) {
           <li style={{ listStyle: 'none', marginBottom: 10 }}>
             <Badge status="error" text={`超标倍数：${additionalInfo[3]}`} />
           </li>
+          {/*<li style={{ listStyle: 'none', marginBottom: 10 }}>*/}
+            {/*<Button style={{ width: '100%' }} type="primary" onClick={() => btnClickCallback(1)}>污染溯源</Button>*/}
+          {/*</li>*/}
         </div>
       );
       return (
@@ -123,8 +126,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-        '-'
-      );
+    '-'
+  );
 }
 export function asc(a, b) {
   //数字类型
@@ -303,7 +306,7 @@ export function timeDifference(beginDates, endDates) {
     return false;
   }
 }
-//截取小数点后两位  
+//截取小数点后两位
 export function interceptTwo(value) {
   const data = value.toString();
   // data.indexOf(".") ==-1 是整数时  补零
@@ -341,7 +344,7 @@ export function isInsidePolygon(lng, lat, poly) {
 
 // /* 判断是否是内网IP */
 export function isInnerIPFn() {
-  
+
   let isInnerIp = false;// 默认给定IP不是内网IP
   // var returnIP = '';
   // const innerIp = webSocketPushURL.split(',')[0];
@@ -361,7 +364,7 @@ export function isInnerIPFn() {
     curPageUrl = curPageUrl.split('.');// 通过一点来划分数组
 
 
-  
+
     const ipAddress = `${curPageUrl[0]}.${curPageUrl[1]}.${curPageUrl[2]}.${curPageUrl[3]}`;
 
     const ipNum = getIpNum(ipAddress);
@@ -382,7 +385,7 @@ export function isInnerIPFn() {
     // }
   }
   // return returnIP;
-   return isInnerIp
+  return isInnerIp
 }
 function getIpNum(ipAddress) { /* 获取IP数 */
   const ip = ipAddress.split('.');

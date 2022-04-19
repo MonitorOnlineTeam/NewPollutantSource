@@ -447,7 +447,7 @@ var kriging = function () {
 		// Clear screen 
 		var ctx = canvas.getContext("2d");
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+		// console.log('grid=',grid);
 		// Starting boundaries
 		var range = [xlim[1] - xlim[0], ylim[1] - ylim[0], grid.zlim[1] - grid.zlim[0]];
 		var i, j, x, y, z;
@@ -460,11 +460,28 @@ var kriging = function () {
 				if (grid[i][j] == undefined) continue;
 				x = canvas.width * (i * grid.width + grid.xlim[0] - xlim[0]) / range[0];
 				y = canvas.height * (1 - (j * grid.width + grid.ylim[0] - ylim[0]) / range[1]);
+				// console.log('grid[i][j]=',grid[i][j]);
 				z = (grid[i][j] - grid.zlim[0]) / range[2];
 				if (z < 0.0) z = 0.0;
 				if (z > 1.0) z = 1.0;
 
-				ctx.fillStyle = colors[Math.floor((colors.length - 1) * z)];
+				// debugger
+				// console.log('grid=',grid);
+				// console.log('zlim=',grid.zlim);
+				console.log('z=', z);
+				let color = '';
+				// if(grid.zlim[0] > 154){
+				// 	color = "#ff0000"
+				// }else{
+				// 	color = '#00e400'
+				// }
+
+				color = colors[Math.floor((colors.length - 1) * z)]
+				if(isNaN(z)) {
+					color = colors[0]
+				}
+				// ctx.fillStyle = colors[Math.floor((colors.length - 1) * z)];
+				ctx.fillStyle = color;
 				ctx.fillRect(Math.round(x - wx / 2), Math.round(y - wy / 2), wx, wy);
 			}
 

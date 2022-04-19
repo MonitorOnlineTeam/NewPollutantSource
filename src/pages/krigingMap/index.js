@@ -161,25 +161,26 @@ class index extends PureComponent {
     //   PointName: "测试空气站2",
     //   PrimaryPollutant: ""
     // },
-    {
-      AQI: 80,
-      AQI_Level: 2,
-      AQI_Color: "#f3dd22",
-      Latitude: 27.076599,
-      Longitude: 115.369221,
-      PointName: "测试空气站2",
-      PrimaryPollutant: ""
-    },
-    {
-      AQI: 30,
-      AQI_Color: "#00e400",
-      AQI_Level: 1,
-      Latitude: 27.495262,
-      Longitude: 114.971797,
-      PointName: "测试空气站",
-      PrimaryPollutant: ""
-    },
+    // {
+    //   AQI: 80,
+    //   AQI_Level: 2,
+    //   AQI_Color: "#f3dd22",
+    //   Latitude: 27.076599,
+    //   Longitude: 115.369221,
+    //   PointName: "测试空气站2",
+    //   PrimaryPollutant: ""
+    // },
+    // {
+    //   AQI: 30,
+    //   AQI_Color: "#00e400",
+    //   AQI_Level: 1,
+    //   Latitude: 27.495262,
+    //   Longitude: 114.971797,
+    //   PointName: "测试空气站",
+    //   PrimaryPollutant: ""
+    // },
     ]
+    console.log('_mapData=',_mapData)
     this.map.remove(this.state.markersList)
     _mapData.map(item => {
       let marker = new this.AMap.Marker({
