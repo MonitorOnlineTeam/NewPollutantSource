@@ -348,7 +348,7 @@ class index extends PureComponent {
     let pollutantTypeList = selectedPollutantCode === 2 ? pollutantTypeListGas : pollutantTypeListWater;
     return (
       <div className={styles.pageContaniner} >
-        <div id="mapContainer" className={styles.mapWrapper} style={{ height: '100vh' }}>
+        <div id="mapContainer" className={styles.mapWrapper}>
           {
             mapLoading && <div className={styles.gifLoading}>
               <LoadingOutlined />

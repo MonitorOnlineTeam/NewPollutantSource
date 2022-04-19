@@ -115,72 +115,72 @@ class index extends PureComponent {
   handleMarker = (mapData) => {
     let markersList = [];
     let _mapData = [...mapData,
-    // let _mapData = [
-    // 114.895079,27.5516
-    // {
-    //   AQI: 82,
-    //   AQI_Color: "#00e400",
-    //   Num: 2,
-    //   AQI_Level: 0,
-    //   Latitude: 27.246794,
-    //   Longitude: 115.137833,
-    //   PointName: "西口空气站",
-    //   PrimaryPollutant: ""
-    // },
-    // {
-    //   AQI: 82,
-    //   AQI_Color: "#00e400",
-    //   Num: 2,
-    //   AQI_Level: 1,
-    //   Latitude: 27.046794,
-    //   Longitude: 115.237833,
-    //   // Latitude: 0,
-    //   // Longitude: 0,
-    //   PointName: "测试空气站1",
-    //   PrimaryPollutant: ""
-    // },
-    // // {
-    // //   AQI: 82,
-    // //   AQI_Color: "#00e400",
-    // //   Num: 2,
-    // //   AQI_Level: 2,
-    // //   Latitude: 0,
-    // //   Longitude: 0,
-    // //   PointName: "测试空气站2",
-    // //   PrimaryPollutant: ""
-    // // },
-    // {
-    //   AQI: 82,
-    //   AQI_Color: "#00e400",
-    //   Num: 2,
-    //   AQI_Level: 2,
-    //   Latitude: 27.146794,
-    //   Longitude: 115.337833,
-    //   // Latitude: 0,
-    //   // Longitude: 0,
-    //   PointName: "测试空气站2",
-    //   PrimaryPollutant: ""
-    // },
-    // {
-    //   AQI: 80,
-    //   AQI_Level: 2,
-    //   AQI_Color: "#f3dd22",
-    //   Latitude: 27.076599,
-    //   Longitude: 115.369221,
-    //   PointName: "测试空气站2",
-    //   PrimaryPollutant: ""
-    // },
-    // {
-    //   AQI: 30,
-    //   AQI_Color: "#00e400",
-    //   AQI_Level: 1,
-    //   Latitude: 27.495262,
-    //   Longitude: 114.971797,
-    //   PointName: "测试空气站",
-    //   PrimaryPollutant: ""
-    // },
+      // let _mapData = [
+      // 114.895079,27.5516
+      // {
+      //   AQI: 82,
+      //   AQI_Color: "#00e400",
+      //   Num: 2,
+      //   AQI_Level: 0,
+      //   Latitude: 27.246794,
+      //   Longitude: 115.137833,
+      //   PointName: "西口空气站",
+      //   PrimaryPollutant: ""
+      // },
+      // {
+      //   AQI: 82,
+      //   AQI_Color: "#00e400",
+      //   Num: 2,
+      //   AQI_Level: 1,
+      //   Latitude: 27.046794,
+      //   Longitude: 115.237833,
+      //   // Latitude: 0,
+      //   // Longitude: 0,
+      //   PointName: "测试空气站1",
+      //   PrimaryPollutant: ""
+      // },
+      // // {
+      // //   AQI: 82,
+      // //   AQI_Color: "#00e400",
+      // //   Num: 2,
+      // //   AQI_Level: 2,
+      // //   Latitude: 0,
+      // //   Longitude: 0,
+      // //   PointName: "测试空气站2",
+      // //   PrimaryPollutant: ""
+      // // },
+      // {
+      //   AQI: 82,
+      //   AQI_Color: "#00e400",
+      //   Num: 2,
+      //   AQI_Level: 2,
+      //   Latitude: 27.146794,
+      //   Longitude: 115.337833,
+      //   // Latitude: 0,
+      //   // Longitude: 0,
+      //   PointName: "测试空气站2",
+      //   PrimaryPollutant: ""
+      // },
+      // {
+      //   AQI: 80,
+      //   AQI_Level: 2,
+      //   AQI_Color: "#f3dd22",
+      //   Latitude: 27.076599,
+      //   Longitude: 115.369221,
+      //   PointName: "测试空气站2",
+      //   PrimaryPollutant: ""
+      // },
+      // {
+      //   AQI: 30,
+      //   AQI_Color: "#00e400",
+      //   AQI_Level: 1,
+      //   Latitude: 27.495262,
+      //   Longitude: 114.971797,
+      //   PointName: "测试空气站",
+      //   PrimaryPollutant: ""
+      // },
     ]
-    console.log('_mapData=',_mapData)
+    console.log('_mapData=', _mapData)
     this.map.remove(this.state.markersList)
     _mapData.map(item => {
       let marker = new this.AMap.Marker({
@@ -492,7 +492,7 @@ class index extends PureComponent {
     return (
       <div className={styles.pageContaniner} >
         <div className={styles.rankWrapper}>
-          <Drawer width={400} closable={false} mask={false} placement="left" visible={true}>
+          <Drawer width={400} closable={false} mask={false} placement="left" visible={true} style={{ marginTop: 64 }}>
             <Spin spinning={rankLoading}>
               <div style={{ fontSize: 18, fontWeight: 500 }}>{selectPollutant.name}小时排名</div>
               <Divider orientation="left" plain>数据更新时间：{moment().subtract(1, 'hours').format("YYYY-MM-DD HH:00")}</Divider>
@@ -516,7 +516,7 @@ class index extends PureComponent {
           </Drawer>
         </div>
 
-        <div id="mapContainer" className={styles.mapWrapper} style={{ height: '100vh' }}>
+        <div id="mapContainer" className={styles.mapWrapper}>
           {
             mapLoading && <div className={styles.gifLoading}>
               <LoadingOutlined />

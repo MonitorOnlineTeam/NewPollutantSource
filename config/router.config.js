@@ -25,6 +25,11 @@ const routes = [
         path: '/homepage',
         component: './home',
       },
+      // {
+      //   name: 'test',
+      //   path: '/test',
+      //   component: './Test/Test',
+      // },
       {
         name: 'sysTypeMiddlePage',
         path: '/sysTypeMiddlePage',
@@ -40,12 +45,7 @@ const routes = [
         path: '/summaryProject',
         component: './projectSummary/index',
       },
-      // 克里斯金差值图
-      {
-        name: 'krigingMap',
-        path: '/krigingMap',
-        component: './krigingMap/index',
-      },
+
       // appoperation
       {
         path: '/appoperation',
@@ -116,12 +116,12 @@ const routes = [
             path: '/appoperation/appsparepartreplacerecord/:TaskID/:TypeID',
             component: './AppOperation/AppSparePartReplaceRecord',
           },
-           /* 运维记录表 */
+          /* 运维记录表 */
           {
-              path: '/appoperation/appOperationRecordContent/:TaskID/:TypeID',
-              component: './AppOperation/AppOperationRecordContent',
-           },
-            /* 质控记录表 */
+            path: '/appoperation/appOperationRecordContent/:TaskID/:TypeID',
+            component: './AppOperation/AppOperationRecordContent',
+          },
+          /* 质控记录表 */
           {
             path: '/appoperation/appQualityControlRecordContent/:TaskID/:TypeID',
             component: './AppOperation/AppQualityControlRecordContent',
@@ -173,6 +173,18 @@ const routes = [
         // authority: ['admin', 'user'],
         routes: [
           { path: '/', redirect: '' },
+          // 克里斯金差值图
+          {
+            name: 'krigingMap',
+            path: '/krigingMap',
+            component: './krigingMap/index',
+          },
+          // 克里斯金差值图
+          {
+            name: 'emissionsKrigingMap',
+            path: '/emissionsKrigingMap',
+            component: './krigingMap/emissions/index',
+          },
           {
             name: 'realtimeLive',
             path: '/realtimeLive',
@@ -193,8 +205,8 @@ const routes = [
             path: '/home',
             component: './newHome',
           },
-           // 空气质量分析
-           {
+          // 空气质量分析
+          {
             path: '/airQualityAnalysis',
             name: 'airQualityAnalysis',
             routes: [
@@ -233,18 +245,18 @@ const routes = [
               },
             ]
           },
-           // 目标考核台账
-           {
+          // 目标考核台账
+          {
             name: 'monitorTest',
             path: '/monitorTest',
             component: './monitorTest',
           },
-            // 污染玫瑰
-            {
-              name: 'polRose',
-              path: '/polRose/:type',
-              component: './polRose',
-            },
+          // 污染玫瑰
+          {
+            name: 'polRose',
+            path: '/polRose/:type',
+            component: './polRose',
+          },
           // 应急
           {
             path: '/emergency',
