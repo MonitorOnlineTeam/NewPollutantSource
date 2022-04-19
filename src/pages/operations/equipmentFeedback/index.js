@@ -97,15 +97,6 @@ const Index = (props) => {
   
 
 
-  const exports = async  () => {
-    const values = await form.validateFields();
-      props.exportTaskWorkOrderList({
-        ...queryPar,
-        pageIndex:undefined,
-        pageSize:undefined,
-    })
-
- };
  const [ID,setID] = useState()
  const columns = [
   {
@@ -114,7 +105,7 @@ const Index = (props) => {
     key:'x',
     align:'center',
     render:(text,record,index)=>{
-     return  index +1 
+     return  index + 1 
     }
   },
   {
@@ -302,11 +293,11 @@ const Index = (props) => {
        </Form.Item>
        </Col>
        <Col span={6}>
-       <Form.Item  label='企业' name='EntCode'>
+       <Form.Item  label='企业' name='EntCode' classNam={styles.entSty}>
        { entLoading?
            <Spin size='small'/>
            :
-          <Select placeholder='请选择' allowClear>
+          <Select placeholder='请选择' allowClear >
           {
             entList&&entList.map(item => {
               return <Option key={item.ParentCode} value={item.ParentCode} >{item.ParentName}</Option>

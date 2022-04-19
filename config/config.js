@@ -995,6 +995,11 @@ export default {
               ]
               }, 
               {
+                path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                name: 'CommandDispatchReportDetails',
+                component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+              },   
+              {
                 path: '/operations/remoteSupervision', //远程督查
                 name: 'remoteSupervision',
                 component: './operations/remoteSupervision',
@@ -1010,10 +1015,10 @@ export default {
                 component: './operations/remoteSupervision/detail',
               },
               {
-                path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
-                name: 'CommandDispatchReportDetails',
-                component: './EmergencyTodoList/EmergencyDetailInfoLayout',
-              },                 
+                path: '/operations/supervisionList', //督查项清单
+                name: 'supervisionList',
+                component: './operations/supervisionList',
+              }, 
               ],
             },
             {
