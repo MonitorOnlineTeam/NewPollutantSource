@@ -260,8 +260,8 @@ const Index = (props) => {
     },
     {
       title: '督查类别',
-      dataIndex: 'RegionName',
-      key: 'RegionName',
+      dataIndex: 'InspectorTypeName',
+      key: 'InspectorTypeName',
       align: 'center',
       editable: true,
     },
@@ -417,14 +417,15 @@ const Index = (props) => {
             components={{
               body: {
                 cell: ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
-                  return <td {...restProps}>
-                    {editing ? <Select placeholder={`请选择${title}`}>
-                      {
-                        inspectorTypeList[0] && inspectorTypeList.map(item => {
-                          return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
-                        })
-                      }
-                    </Select>
+                 const inputNode = <Select placeholder={`请选择${title}`}>
+                 {
+                   inspectorTypeList[0] && inspectorTypeList.map(item => {
+                     return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
+                   })
+                 }
+               </Select>
+                return <td {...restProps}>
+                    {editing ?  inputNode
                       :
                       children
                     }
