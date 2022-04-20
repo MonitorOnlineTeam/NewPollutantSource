@@ -153,7 +153,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       align:'center',
       width:61,
       render: (text, record) => {
-        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
+        return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record,0)}}>{text}</span>
       }
     },
     {
@@ -163,7 +163,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       align:'center',
       width:61,
       render: (text, record) => {
-        return <span  style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
+        return <span  style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record,1)}}>{text}</span>
       }
     },
   ]
@@ -325,10 +325,12 @@ const moreBtnClick = (type) =>{ //近30日运维工单统计
  
 const [operatingInfoType, setOperatingInfoType] = useState()
 const [operatingStatus, setOperatingStatus] = useState(1)
+const [outputType, setOutputType] = useState(undefined)
 
-const operatingInfo = (type,record) =>{
+const operatingInfo = (type,record,outputType) =>{
   setOperatingInfoVisible(true)
   setOperatingInfoType(type)
+  setOutputType(outputType) //排口类型
   record.type==='运维中'? setOperatingStatus(1) : record.type==='运维暂停'? setOperatingStatus(2) : setOperatingStatus(undefined);
 }
 
@@ -482,6 +484,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
              type={operatingInfoType}
              pollutantType={pollutantType}
              operatingStatus={operatingStatus}
+             outputType={outputType}
           />         
         </div>
   );

@@ -278,7 +278,7 @@ const Index = (props) => {
               <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
                 重置
           </Button>
-              <Button type="primary" style={{ marginRight: 8 }} onClick={add}>
+              <Button type="primary" icon={<PlusOutlined />} style={{ marginRight: 8 }} onClick={add}>
                 添加
             </Button>
             </Form.Item>
@@ -347,7 +347,7 @@ const Index = (props) => {
           </Col>
           <Col span={24}>
             <Form.Item label="督查类别描述" name="InspectorTypeDescribe" rules={[{ required: true, message: '请输入' }]}>
-              <TextArea  row={1} placeholder='请输入'/>
+              <TextArea  rows={1} placeholder='请输入'/>
             </Form.Item>
           </Col>
           <Col span={24}>

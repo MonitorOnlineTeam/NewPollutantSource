@@ -1978,7 +1978,6 @@ const Index = (props) => {
           </Button>,
         ]}
       >
-      >
          <Spin spinning={title==='编辑'&&editLoading}>
         <Form
           form={commonForm}

@@ -1019,6 +1019,11 @@ export default {
                 name: 'supervisionList',
                 component: './operations/supervisionList',
               }, 
+              {
+                path: '/operations/supervisionManager', //运维督查管理
+                name: 'supervisionList',
+                component: './operations/supervisionManager',
+              }, 
               ],
             },
             {

@@ -59,7 +59,7 @@ const Index = (props) => {
   const pchildref = useRef();
   const [form] = Form.useForm();
   const [dates, setDates] = useState([]);
-  const  { tableDatas,tableTotal,tableLoading,exportLoading,clientHeight,pollutantType,operatingStatus, } = props; 
+  const  { tableDatas,tableTotal,tableLoading,exportLoading,clientHeight,pollutantType,operatingStatus,outputType, } = props; 
   
   
   useEffect(() => {
@@ -76,6 +76,7 @@ const Index = (props) => {
         pageIndex:PageIndex?PageIndex: pageIndex ,
         pageSize:PageSize?PageSize: pageSize,
         operationStatus:operatingStatus,
+        outputType:outputType
     })
  };
 

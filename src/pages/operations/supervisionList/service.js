@@ -29,3 +29,37 @@ export async function ChangeInspectorTypeStatus(params) {
   const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/ChangeInspectorTypeStatus/${params.ID}?Status=${params.Status}`, null, null);
   return result;
 }
+
+
+//督查模板 列表
+export async function GetInspectorTemplateList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorTemplateList', params, null);
+  return result;
+}
+//督查模板 添加或修改
+export async function AddOrEditInspectorTemplate(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddOrEditInspectorTemplate', params, null);
+  return result;
+}
+//督查模板 删除
+export async function DeleteInspectorTemplate(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteInspectorTemplate/'+params.ID, null, null);
+  return result;
+}
+//督查模板 类别描述
+export async function GetInspectorTypeList(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorTypeList?PollutantType=${params.PollutantType}`, null, null);
+  return result;
+}
+
+//督查模板 更改模板状态
+export async function ChangeInspectorTemplateStatus(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/ChangeInspectorTemplateStatus?InspectorNum=${params.InspectorNum}&Status=${params.Status}`, null, null);
+  return result;
+}
+//督查模板 督察模板详细
+export async function GetInspectorTemplateView(params) {
+  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorTemplateView?InspectorNum=${params.InspectorNum}`, null, null);
+  return result;
+}
+
