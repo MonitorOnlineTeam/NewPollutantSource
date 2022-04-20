@@ -194,7 +194,6 @@ const Index = (props) => {
   }
   
 
-  const [outOrInside, setOutOrInside] = useState(1)
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
