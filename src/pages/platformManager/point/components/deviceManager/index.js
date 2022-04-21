@@ -485,8 +485,8 @@ const Index = (props) => {
   }
   const handleTableChange2 =   async (PageIndex, PageSize)=>{ //分页
     const values = await form2.validateFields();
-    setPageSize(PageSize)
-    setPageIndex(PageIndex)
+    setPageSize2(PageSize)
+    setPageIndex2(PageIndex)
     props.getSystemModelList({...values,PageIndex,PageSize})
   }
   const [popVisible, setPopVisible] = useState(false)

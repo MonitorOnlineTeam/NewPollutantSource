@@ -21,6 +21,8 @@ export default Model.extend({
     attentionList: [],
     pointListByEntCode: [],
     pollutantListByDgimn: [],
+    userList: [],
+    entLoading:true,
   },
 
   effects: {
@@ -35,11 +37,26 @@ export default Model.extend({
     },
     *getEntByRegion({ payload }, { call, put, update, select }) {
       //企业列表
+      yield update({ entLoading: true, });
       const response = yield call(services.GetEntByRegion, { ...payload });
       if (response.IsSuccess) {
         yield update({
           priseList: response.Datas,
+          entLoading: false,
         });
+      }else{
+        message.error(response.Message)
+        yield update({ priseList: [], entLoading: false,  });
+      }
+    },
+    *getEntByRegionCallBack({ payload,callback }, { call, put, update, select }) {
+      //企业列表 回调
+      const response = yield call(services.GetEntByRegion, { ...payload });
+      if (response.IsSuccess) {
+        callback(response.Datas)
+      }else{
+        message.error(response.Message)
+        callback([])
       }
     },
     *getAttentionDegreeList({ payload }, { call, put, update, select }) {
@@ -217,5 +234,16 @@ export default Model.extend({
       });
       payload.callback(result);
     },
+
+  // 用户列表
+  *getUserList({ payload }, { call, update }) {
+    const result = yield call(services.GetUserList, payload);
+    if (result.IsSuccess) {
+      yield update({
+        userList: result.Datas,
+      });
+    }
   },
+  },
+
 });

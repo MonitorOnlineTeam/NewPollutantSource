@@ -49,7 +49,8 @@ export default class Index extends Component {
   return selectList;
   };
   componentDidMount() {
-    const {type,dispatch,regionCode,pollutantType} = this.props;
+    const {type,dispatch,regionCode,pollutantType,priseList,atmoStationList,} = this.props;
+
     type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
  
   
@@ -57,9 +58,8 @@ export default class Index extends Component {
    componentDidUpdate(props) {
     const { type,dispatch,regionCode,pollutantType } = this.props;
 
-    if (props.regionCode !== regionCode) {
+    if (props.regionCode !== regionCode || props.pollutantType !== pollutantType) {
        type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
-
     }
   }
   render() {

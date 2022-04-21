@@ -11,7 +11,6 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
-import EntAtmoList from '@/components/EntAtmoList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import NumTips from '@/components/NumTips'
@@ -96,12 +95,9 @@ const Index = (props) => {
   const columns = [
     {
       title: '序号',
-      dataIndex: 'x',
-      key: 'x',
+      dataIndex: 'TypeNum',
+      key: 'TypeNum',
       align: 'center',
-      render: (text, record, index) => {
-        return index + 1
-      }
     },
     {
       title: '点位类型',
@@ -123,8 +119,8 @@ const Index = (props) => {
     },
     {
       title: '分值',
-      dataIndex: 'FaultUnitName',
-      key: 'FaultUnitName',
+      dataIndex: 'Fraction',
+      key: 'Fraction',
       align: 'center',
     },
 

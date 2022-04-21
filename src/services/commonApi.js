@@ -119,3 +119,8 @@ export async function getPollutantListByDgimn(params) {
 }
 
 
+// 用户列表
+export async function GetUserList(params) {
+  const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
+  return result;
+}

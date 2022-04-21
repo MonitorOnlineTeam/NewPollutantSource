@@ -11,7 +11,6 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
 import RegionList from '@/components/RegionList'
-import EntAtmoList from '@/components/EntAtmoList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import NumTips from '@/components/NumTips'
@@ -133,6 +132,9 @@ const Index = (props) => {
       dataIndex: 'EffectiveDate',
       key: 'EffectiveDate',
       align: 'center',
+      render: (text, record) => {
+        return text&&moment(text).format("YYYY-MM-DD")
+      },
     },
 
     {
@@ -202,8 +204,8 @@ const Index = (props) => {
         pageIndex: pageIndexs,
         pageSize: pageSizes
       })
-
-
+      setSelectedRowKeys([])
+      setSelectRow(null)
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -217,41 +219,46 @@ const Index = (props) => {
   const edit = (row) => {
     setVisible(true)
     setEditInspectorNum(row.InspectorNum)
-    getInspectorTypeList(row.PollutantType) //先获取描述内容列表
-    props.getInspectorTemplateView({
-      InspectorNum: row.InspectorNum,
-    }, (data) => {
-      if(data){
-        form2.setFieldsValue({
-          PollutantType:data.PollutantTypeName=='废气'? 2 : 1,
-          InspectorName:data.InspectorName,
-          EffectiveDate: moment(data.EffectiveDate),
-        })
-      }
-
-      let echoData = []
-      const inspectorTypeModelList = data.InspectorTypeModelList;
-      if(inspectorTypeModelList&&inspectorTypeModelList[0]){
-        const echoData  = inspectorTypeModelList.map(item=>{
-          return {
-            Sort:item.Sort,
-            InspectorTypeId: item.InspectorTypeId,
-            InspectorContent: item.InspectorContent,
-            ID: cuid(),
-            editable: true,
-            type:'edit',
-          }
-        
-        })
-        setData([ ...echoData])
-        echoData.map(item=>{
+    getInspectorTypeList(row.PollutantType,()=>{ //先获取描述内容列表
+      props.getInspectorTemplateView({
+        InspectorNum: row.InspectorNum,
+      }, (data) => {
+        if(data){
           form2.setFieldsValue({
-             [`InspectorTypeId${item.ID}`] : item.InspectorTypeId,
-             [`InspectorContent${item.ID}`] : item.InspectorContent,
+            PollutantType:data.PollutantTypeName=='废气'? 2 : 1,
+            InspectorName:data.InspectorName,
+            EffectiveDate:data.EffectiveDate&&moment(data.EffectiveDate),
           })
-        })
-      }
-    })
+        }
+  
+        let echoData = []
+        const inspectorTypeModelList = data.InspectorTypeModelList;
+        if(inspectorTypeModelList&&inspectorTypeModelList[0]){
+          const echoData  = inspectorTypeModelList.map(item=>{
+            return {
+              Sort:item.Sort,
+              InspectorTypeId: item.InspectorTypeId,
+              InspectorContent: item.InspectorContent,
+              ID: cuid(),
+              editable: true,
+              type:'edit',
+            }
+          
+          })
+          setData([ ...echoData])
+          echoData.map(item=>{
+            form2.setFieldsValue({
+               [`InspectorTypeId${item.ID}`] : item.InspectorTypeId,
+               [`InspectorContent${item.ID}`] : item.InspectorContent,
+            })
+          })
+        }
+      })
+
+
+
+    }) 
+
   }
 
   const detail = (row) => {
@@ -261,10 +268,11 @@ const Index = (props) => {
     }, (data) => {  })
   }
 
-  const getInspectorTypeList = (type) =>{
+  const getInspectorTypeList = (type,callback) =>{
     props.getInspectorTypeList({ PollutantType: type },()=>{
-      form2.resetFields();
-      form2.setFieldsValue({PollutantType:type})
+       form2.resetFields();
+       form2.setFieldsValue({PollutantType:type})
+       callback&&callback();
     })
   }
   const add = () => {
@@ -273,13 +281,15 @@ const Index = (props) => {
     getInspectorTypeList(2)
 
   }
+
+  const [copyAddLoading,setCopyAddLoading ] = useState(false)
  const copyAdd = () =>{
-   
   if(selectRow&&selectRow.length>=2){
     message.warning('只能选中一行数据')
     return;
   }
   if(selectRow&&selectRow[0]){
+    setCopyAddLoading(true)
     props.getInspectorTemplateView({
       InspectorNum: selectRow[0].InspectorNum,
     }, (data) => {  
@@ -293,9 +303,11 @@ const Index = (props) => {
       props.addOrEditInspectorTemplate({
         PollutantType:selectRow[0].PollutantType,
         InspectorName:selectRow[0].InspectorName,
+        EffectiveDate:'',
         Status:0,
-        InspectorTemplateList:inspectorTemplateList
+        InspectorTemplateList:inspectorTemplateList,
       }, () => {
+        setCopyAddLoading(false)
         setVisible(false)
         onFinish()
       })
@@ -319,7 +331,7 @@ const Index = (props) => {
         InspectorNum: title==='编辑'? editInspectorNum : undefined,
         PollutantType:values.PollutantType,
         InspectorName:values.InspectorName,
-        EffectiveDate: moment(values.EffectiveDate).startOf('days'),
+        EffectiveDate: moment(values.EffectiveDate).startOf('days').format("YYYY-MM-DD HH:mm:ss"),
         InspectorTemplateList:inspectorTemplateList
       }
       props.addOrEditInspectorTemplate({
@@ -337,8 +349,12 @@ const Index = (props) => {
 
 
   const [selectRow,setSelectRow ] = useState(null)
+  const [selectedRowKeys,setSelectedRowKeys ] = useState([])
+
   const rowSelection = {
+    selectedRowKeys:selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys)
       setSelectRow(selectedRows)
     },
   };
@@ -454,7 +470,7 @@ const Index = (props) => {
             </Form.Item>
           </Form>}>
         <SdlTable
-          loading={tableLoading}
+          loading={tableLoading  || copyAddLoading }
           bordered
           dataSource={tableDatas}
           columns={columns}
@@ -504,7 +520,7 @@ const Index = (props) => {
                 <Option value={1}>废水</Option>
               </Select>
             </Form.Item>
-             <Form.Item label='督查表名称' name='InspectorName' rules={[{ required: true, message: '请输入督查表名称' }]} style={{ margin:'0 8px'}}>
+             <Form.Item label='督查表名称' name='InspectorName' rules={[{ required: true, message: '请输入督查表名称' }]} style={{ margin:'0 16px'}}>
               <Input placeholder='请输入' allowClear/>
             </Form.Item>
             <Form.Item label="生效日期" name="EffectiveDate"  >
