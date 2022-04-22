@@ -471,7 +471,7 @@ const Index = (props) => {
 
   const [pageIndex2,setPageIndex2] = useState(1)
   const [pageSize2,setPageSize2] = useState(10)
-  const onFinish2 = async () => { //生成商弹出框 查询
+  const onFinish2 = async (pageIndex2,pageSize2) => { //生成商弹出框 查询
     try {
       const values = await form2.validateFields();
       props.getSystemModelList({
@@ -495,7 +495,7 @@ const Index = (props) => {
    useEffect(()=>{
      if(pmPopVisible || popVisible){
        form2.resetFields()
-       onFinish2()
+       onFinish2(1,10)
      }
    },[pmPopVisible,popVisible])
   const { monitoringTypeList } = props;
@@ -511,7 +511,7 @@ const Index = (props) => {
         <Form
           form={form2}
           name="advanced_search2"
-          onFinish={() => { onFinish2() }}
+          onFinish={() => { onFinish2(pageIndex2,pageSize2) }}
         >
           <Row>
             <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >

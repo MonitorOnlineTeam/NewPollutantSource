@@ -18,19 +18,19 @@ export default class Index extends Component {
     
   }
   children = () => { //用户列表
-    const { userList} = this.props;
-   
-     if (userList.length > 0) {
-      return userList.map(item =><Option key={item.ID} value={item.ID} title={item.userName}>
-              {item.userName}
+    const { userList ,data } = this.props;
+    const list = data ? data :userList;
+     if (list.length > 0) {
+      return list.map(item =><Option key={item.ID} value={item.ID} title={item.UserName}>
+              {item.UserName}
              </Option>
       ); 
   }
   };
   componentDidMount() {
-      const {dispatch, userList} = this.props;
+      const {dispatch,userList, data} = this.props;
 
-      userList.length<=0&&dispatch({ type: 'common/getUserList', payload: {},  })   
+      userList.length<=0 || !data&&dispatch({ type: 'common/getUserList', payload: {},  })   
 
 
    }

@@ -14,11 +14,12 @@ export default Model.extend({
     parametersList: [],
     tableLoading: false,
     tableTotal: 0,
+    operationInfoList:[],
   },
   effects: {
-    *getStandardGasList({ payload, callback }, { call, put, update }) { //列表
+    *getInspectorOperationManageList({ payload, callback }, { call, put, update }) { //列表
       yield update({ tableLoading: true })
-      const result = yield call(services.GetStandardGasList, payload);
+      const result = yield call(services.GetInspectorOperationManageList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
@@ -30,29 +31,19 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    *addStandardGas({ payload, callback }, { call, put, update }) { //添加
-      const result = yield call(services.AddStandardGas, payload);
+    *getInspectorOperationInfoList({ payload, callback }, { call, put, update }) { //获取单个督查表实体
+      const result = yield call(services.GetInspectorOperationInfoList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
+        yield update({  operationInfoList: result.Datas, })
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }
     },
-    *editStandardGas({ payload, callback }, { call, put, update }) { //修改
-      const result = yield call(services.EditStandardGas, payload);
+    *getPointParames({ payload, callback }, { call, put, update }) { //获取单个排口默认值
+      const result = yield call(services.GetPointParames, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *delStandardGas({ payload, callback }, { call, put, update }) { //删除
-      const result = yield call(services.DelStandardGas, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }

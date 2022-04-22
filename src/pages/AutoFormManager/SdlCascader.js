@@ -45,7 +45,7 @@ class SdlCascader extends Component {
     //     PointMark: "2"
     //   }
     // })
-    if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId){
+    if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId  ){
     //   !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
     //   // payload: {
     //   //   ConfigId: configId,
@@ -73,7 +73,7 @@ class SdlCascader extends Component {
 
   }
   componentDidUpdate(props){
-    const { regionList,configId, itemName } = this.props;
+    const { regionList,configId, itemName,data } = this.props;
     if (props.regionList !== regionList && (itemName === 'dbo.T_Cod_Region.RegionName' || !configId)) {
       this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }) 
 

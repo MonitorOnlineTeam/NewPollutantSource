@@ -15,6 +15,8 @@
     .fromModal  :global {
       .ant-modal-body{
         padding: 10px  70px 10px  90px;
+        height: calc(100vh - 250px);
+        overflow-y: auto;
       }
 
       .ant-form-item{
@@ -23,7 +25,7 @@
       .ant-form-item-control-input,.ant-spin-spinning{
         width:calc(100% - 80px - 20px) !important;
       }
-      .ant-input,.ant-select,.ant-picker,.ant-input-number,.ant-input-affix-wrapper{
+      .ant-input,.ant-select,.ant-picker,.ant-input-number,.ant-input-affix-wrapper,.ant-cascader-picker{
         // width: 100% !important;
         width:calc(100% - 80px - 20px) !important;
       }
@@ -48,8 +50,44 @@
         // .ant-modal-body{
         //   padding-right: calc(24px + 70px);
         // }
-
+        .ant-popover{ //气态生产商 气泡框
+          .ant-pagination-options-size-changer.ant-select{
+            width: auto !important;
+           }
+           .ant-form-item-control-input,.ant-spin-spinning{
+            width:150px !important;
+          }
+          .ant-input,.ant-select,.ant-picker,.ant-input-number,.ant-input-affix-wrapper{
+            width:150px !important;
+          }
+          .ant-form-item{
+            margin-bottom: 10px;
+          }
+        }
 
    
- 
+        .supervisionContentSty{
+          .ant-form-item-control-input,.ant-spin-spinning{
+            width:100% !important;
+          }
+          .ant-input,.ant-select,.ant-picker,.ant-input-number,.ant-input-affix-wrapper{
+            width:100% !important;
+          }
+          .ant-form-item{
+            margin-bottom: 0;
+          }
+          .ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder{
+            text-align: left;
+          }
+          .summaryTableSty{
+            .ant-table-thead{
+              display: none;
+            }
+          }
+          .impTableSty,.commonlyTableSty,.summaryTableSty{
+            .ant-table.ant-table-bordered > .ant-table-container{
+              border-top: 0;
+            } 
+          }
+        }
     } 

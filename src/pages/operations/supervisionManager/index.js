@@ -23,7 +23,8 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import UserList from '@/components/UserList'
-import pollutantInfo from '@/pages/dataSearch/pollutantInfo';
+import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
+
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -32,19 +33,21 @@ const namespace = 'supervisionManager'
 
 
 
-const dvaPropsData = ({ loading, supervisionManager, global,common,point }) => ({
+const dvaPropsData = ({ loading, supervisionManager, global,common,point,autoForm }) => ({
   tableDatas: supervisionManager.tableDatas,
   tableLoading: supervisionManager.tableLoading,
   tableTotal: supervisionManager.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addStandardGas`],
+  pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
+  infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
+  regLoading: loading.effects[`autoForm/getRegions`],
   entLoading:common.entLoading,
   clientHeight: global.clientHeight,
   monitoringTypeList: point.monitoringTypeList,
-  manufacturerList: point.manufacturerList,
   systemModelList: point.systemModelList,
-  loadingSystemModel: loading.effects[`${namespace}/getSystemModelList`]|| false,
+  loadingSystemModel: loading.effects[`point/getSystemModelList`]|| false,
   systemModelListTotal: point.systemModelListTotal,
+  operationInfoList: supervisionManager.operationInfoList,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -53,35 +56,6 @@ const dvaDispatch = (dispatch) => {
       dispatch({
         type: `${namespace}/updateState`,
         payload: payload,
-      })
-    },
-    getStandardGasList: (payload) => { //列表
-      dispatch({
-        type: `${namespace}/getStandardGasList`,
-        payload: payload,
-      })
-    },
-    addStandardGas: (payload, callback) => { // 添加
-      dispatch({
-        type: `${namespace}/addStandardGas`,
-        payload: payload,
-        callback: callback
-      })
-
-    },
-    editStandardGas: (payload, callback) => { // 修改
-      dispatch({
-        type: `${namespace}/editStandardGas`,
-        payload: payload,
-        callback: callback
-      })
-
-    },
-    delStandardGas: (payload, callback) => { //删除
-      dispatch({
-        type: `${namespace}/delStandardGas`,
-        payload: payload,
-        callback: callback
       })
     },
     getPointByEntCode: (payload, callback) => { //监测点
@@ -104,18 +78,35 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getManufacturerList: (payload) => { //厂商列表
-      dispatch({
-        type: `point/getManufacturerList`,
-        payload: payload,
-      })
-    },
     getSystemModelList: (payload) => { //列表 系统型号
       dispatch({
         type: `point/getSystemModelList`,
         payload: payload,
       })
     },
+    getInspectorOperationManageList: (payload) => { //列表
+      dispatch({
+        type: `${namespace}/getInspectorOperationManageList`,
+        payload: payload,
+      })
+    },
+    getInspectorOperationInfoList: (payload,callback) => {//获取单个督查表实体
+      dispatch({
+        type: `${namespace}/getInspectorOperationInfoList`,
+        payload: payload,
+        callback:callback,
+      })
+
+    },
+    getPointParames: (payload, callback) => { //获取单个排口默认值
+      dispatch({
+        type: `${namespace}/getPointParames`,
+        payload: payload,
+        callback: callback
+      })
+
+    },
+
   }
 }
 const Index = (props) => {
@@ -124,6 +115,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
 
 
 
@@ -138,7 +130,7 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, loadingAddConfirm, userLoading,entLoading,manufacturerList,systemModelList,} = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading,infoloading, userLoading,entLoading,systemModelList,operationInfoList,} = props;
 
   useEffect(() => {  
     initData()
@@ -146,17 +138,17 @@ const Index = (props) => {
 
   const initData = () =>{
     onFinish()
+    props.getInspectorOperationInfoList({ID:''},(data)=>{ })
     props.getMonitoringTypeList({})
-    props.getManufacturerList({})
   }
 
   const columns = [
     {
       title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
       align: 'center',
-      render: (text, record, index) => {
-        return index + 1
-      }
+      width:50,
     },
     {
       title: '行政区',
@@ -171,7 +163,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '是否排口',
+      title: '站点名称',
       dataIndex: 'Component',
       key: 'Component',
       align: 'center',
@@ -189,30 +181,6 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '气态CEMS设备生产商',
-      dataIndex: 'Manufacturer',
-      key: 'Manufacturer',
-      align: 'center',
-    },
-    {
-      title: '气态CEMS设备规格型号',
-      dataIndex: 'StandardGasCode',
-      key: 'StandardGasCode',
-      align: 'center',
-    },
-    {
-      title: `颗粒物CEMS设备规格型号`,
-      dataIndex: 'StandardGasName',
-      key: 'StandardGasName',
-      align: 'center',
-    },
-    {
-      title: '设备备注',
-      dataIndex: 'Component',
-      key: 'Component',
-      align: 'center',
-    },
-    {
       title: '督查人员',
       dataIndex: 'Unit',
       key: 'Unit',
@@ -226,8 +194,8 @@ const Index = (props) => {
     },
     {
       title: '运维人员',
-      dataIndex: 'Unit',
-      key: 'Unit',
+      dataIndex: 'OperationUser',
+      key: 'OperationUser',
       align: 'center',
     },
     {
@@ -330,23 +298,25 @@ const Index = (props) => {
 
 
 
-
+  
   const add = () => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
-    getEntList(2)
+    getEntList(2);
   };
 
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
 
-      props.getStandardGasList({
+      props.getInspectorOperationManageList({
         ...values,
-        ManufacturerId: manufacturerId,
+        BTime: values.time&&moment(values.time[0]).format('YYYY-MM—DD HH:mm:ss'),
+        ETime: values.time&&moment(values.time[1]).format('YYYY-MM—DD HH:mm:ss'),
+        time:undefined,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
-        pageSize: pageSizes ? pageSizes : pageSize
+        pageSize: pageSizes ? pageSizes : pageSize,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -414,7 +384,12 @@ const Index = (props) => {
        form2.setFieldsValue({ EntCode: undefined })
        setPollutantType(hangedValues.PollutantType)
     }
-    
+    if (Object.keys(hangedValues).join() == 'DGIMN') {
+       props.getPointParames({DGIMN:hangedValues.DGIMN},(data)=>{
+         console.log(data)
+         form2.setFieldsValue({...data,RegionCode:data.RegionCode?data.RegionCode.split(','):undefined })
+       })
+   }
   }
 
   const searchComponents = () => {
@@ -429,12 +404,14 @@ const Index = (props) => {
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
+        <Spin  size='small' spinning={props.regLoading} style={{ top: -8,left:20 }}>
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
+        </Spin>
         <Spin spinning={entLoading} size='small' style={{ top: -8 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
-          <EntAtmoList  style={{ width: 350}} />
+          <EntAtmoList  style={{ width: 380}} />
         </Form.Item>
         </Spin>
         <Spin spinning={pointLoading} size='small' style={{ top: -8,left:20 }}>
@@ -452,21 +429,21 @@ const Index = (props) => {
       </Row>
 
       <Row>
-        <Form.Item label="督查人员" name="IsUsed"  >
-          <Select placeholder='请选择' allowClear style={{ width: 150 }}>
-
-          </Select>
+      <Spin spinning={infoloading} size='small' style={{top:-8,left:20}}>
+        <Form.Item label="督查人员" name="Inspector"  >
+         <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
+        </Spin>
         <Form.Item label="督查日期" name="time" style={{ marginLeft:8,marginRight:8 }}  >
             <RangePicker_
-              style={{ width: 350}}
+              style={{ width: 380}}
               allowClear={true}
               format="YYYY-MM-DD HH:mm:ss"
               showTime="YYYY-MM-DD HH:mm:ss" />
         </Form.Item>
-        <Spin spinning={userLoading} size='small' style={{top:-8,left:20}}>
-        <Form.Item label="运维人员" name="IsUsed" style={{ marginRight: 8 }}  >
-          <UserList  style={{ width: 150}}/>
+        <Spin spinning={infoloading} size='small' style={{top:-8,left:20}}>
+        <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
+        <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
         </Spin>
         <Form.Item>
@@ -540,11 +517,11 @@ const Index = (props) => {
 
   const generatorColChoice = (record) => {
     if (popVisible) {
-      form.setFieldsValue({ GasManufacturer: record.ID, GasEquipment: record.SystemModel });
+      form2.setFieldsValue({ GasManufacturer: record.ID, GasEquipment: record.SystemModel });
       setGaschoiceData(record.ManufacturerName)
       setPopVisible(false)
     } else {//颗粒物
-      form.setFieldsValue({ PMManufacturer: record.ID, PMEquipment: record.SystemModel });
+      form2.setFieldsValue({ PMManufacturer: record.ID, PMEquipment: record.SystemModel });
       setPmchoiceData(record.ManufacturerName)
       setPmPopVisible(false)
     }
@@ -555,19 +532,19 @@ const Index = (props) => {
   const [pmchoiceData, setPmchoiceData] = useState()
 
   const onClearChoice = (value) => {
-    form.setFieldsValue({ GasManufacturer: value, GasEquipment: '' });
+    form2.setFieldsValue({ GasManufacturer: value, GasEquipment: '' });
     setGaschoiceData(value)
   }
 
   const onPmClearChoice = (value) => {
-    form.setFieldsValue({ PMManufacturer: value, PMEquipment: '' });
+    form2.setFieldsValue({ PMManufacturer: value, PMEquipment: '' });
     setPmchoiceData(value)
   }
   const [pageIndex2,setPageIndex2] = useState(1)
   const [pageSize2,setPageSize2] = useState(10)
-  const onFinish2 = async () => { //生成商弹出框 查询
+  const onFinish3 = async (pageIndex2,pageSize2) => { //生成商弹出框 查询
     try {
-      const values = await form2.validateFields();
+      const values = await form3.validateFields();
       props.getSystemModelList({
         pageIndex: pageIndex2,
         pageSize: pageSize2,
@@ -578,7 +555,7 @@ const Index = (props) => {
     }
   }
   const handleTableChange2 =   async (PageIndex, PageSize)=>{ //分页
-    const values = await form2.validateFields();
+    const values = await form3.validateFields();
     setPageSize2(PageSize)
     setPageIndex2(PageIndex)
     props.getSystemModelList({...values,PageIndex,PageSize})
@@ -588,30 +565,37 @@ const Index = (props) => {
 
    useEffect(()=>{
      if(pmPopVisible || popVisible){
-       form2.resetFields()
-       onFinish2()
+       form3.resetFields()
+       setPageIndex2(1)
+       setPageSize2(10)
+       onFinish3(1,10)
      }
    },[pmPopVisible,popVisible])
 
 
   const { monitoringTypeList } = props;
+ 
+  const manufacturerList  = operationInfoList&&operationInfoList.EquipmentManufacturerList || [];
   const selectPopover = (type) => {
     return <Popover
       title=""
       trigger="click"
       visible={type === 'pm' ? pmPopVisible : popVisible}
       onVisibleChange={(visible) => { type === 'pm' ? setPmPopVisible(visible) : setPopVisible(visible) }}
-      placement={"bottom"}
+      placement={"right"}
       getPopupContainer={trigger => trigger.parentNode}
       content={
         <Form
-          form={form2}
-          name="advanced_search2"
-          onFinish={() => { onFinish2() }}
+          form={form3}
+          name="advanced_search3"
+          onFinish={() => { onFinish3(pageIndex2,pageSize2) }}
+          initialValues={{
+            ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+          }}
         >
           <Row>
             <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
-              <Select placeholder='请选择设备厂家' showSearch allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
+              <Select placeholder='请选择设备厂家'    showSearch allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>
                 {
                   manufacturerList[0] && manufacturerList.map(item => {
                     return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
@@ -623,7 +607,7 @@ const Index = (props) => {
               <Input allowClear placeholder="请输入系统型号" />
             </Form.Item>
             <Form.Item style={{ marginRight: 8 }} name="MonitoringType">
-              <Select allowClear placeholder="请选择监测类别" style={{ width: 150 }}>
+              <Select allowClear placeholder="请选择监测类别">
                 {
                   monitoringTypeList[0] && monitoringTypeList.map(item => {
                     return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -638,7 +622,7 @@ const Index = (props) => {
              </Button>
             </Form.Item>
           </Row>
-          <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 800 }} 
+          <SdlTable scroll={{ y: 'calc(100vh - 550px)' }} style={{ width: 800 }} 
                     loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol}
                     pagination={{
                       total:props.systemModelListTotal,
@@ -652,10 +636,204 @@ const Index = (props) => {
         </Form>
       }
     >
-      <Select onChange={type === 'pm' ? onPmClearChoice : onClearChoice} allowClear showSearch={false} value={type === 'pm' ? pmchoiceData : gaschoiceData} dropdownClassName={styles.popSelectSty} placeholder="请选择">
+      <Select onChange={type === 'pm' ? onPmClearChoice : onClearChoice} allowClear showSearch={false} value={type === 'pm' ? pmchoiceData : gaschoiceData} dropdownClassName={'popSelectSty'} placeholder="请选择">
       </Select>
     </Popover>
   }
+  const renderContent = (value, row, index) => {
+    const obj = {
+      children: value,
+      props: {},
+    };
+    if (index === 4) {
+      obj.props.colSpan = 0;
+    }
+    return obj;
+  };
+  const supervisionCol1 = [ {
+    title: <span style={{fontWeight:'bold',fontSize:14}}>原则问题（否决项，出现1项此点位得0分）</span>,
+    align: 'center',
+    children:[
+    {
+      title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
+      align: 'center',
+      width:100,
+    },
+    {
+      title: '督查内容',
+      dataIndex: 'aa',
+      key: 'aa',
+      align: 'center',
+      width:380,
+      render: (text, record) => {
+        return <div style={{textAlign:"left"}}>{text}</div>
+      },
+    },
+    {
+      title: `有无原则问题`,
+      dataIndex: 'StandardGasName',
+      key: 'StandardGasName',
+      align: 'center',
+      width:200,
+      render: (text, record) => {
+        return <Form.Item>
+               <Select placeholder='请选择'> <Option>有</Option>   <Option>无</Option>     </Select>
+             </Form.Item>
+      },
+    },
+    {
+      title: '问题描述',
+      dataIndex: 'Component',
+      key: 'Component',
+      align: 'center',
+      render: (text, record) => {
+        return <Form.Item>
+               <TextArea rows={1} placeholder='请输入'/>
+             </Form.Item>
+      },
+    }]
+  }
+  ]
+
+    const supervisionCol2 = [ {
+      title: <span style={{fontWeight:'bold',fontSize:14}}>重点问题（每项5分，共60分）</span>,
+      align: 'center',
+      children:[
+      {
+        title: '序号',
+        dataIndex: 'Sort',
+        key: 'Sort',
+        align: 'center',
+        width:100,
+      },
+      {
+        title: '督查内容',
+        dataIndex: 'StandardGasCode',
+        key: 'StandardGasCode',
+        align: 'center',
+        width:380,
+      },
+      {
+        title: `扣分`,
+        dataIndex: 'StandardGasName',
+        key: 'StandardGasName',
+        align: 'center',
+        width:200,
+        render: (text, record) => {
+          return <Form.Item>
+                 <InputNumber placeholder='请输入' />
+               </Form.Item>
+        },
+      },
+      {
+        title: '说明',
+        dataIndex: 'Component',
+        key: 'Component',
+        align: 'center',
+        render: (text, record) => {
+          return <Form.Item>
+                 <TextArea rows={1} placeholder='请输入'/>
+               </Form.Item>
+        },
+       }]
+      }]
+
+      const supervisionCol3 = [{
+        title: <span style={{fontWeight:'bold',fontSize:14}}>一般问题（每项2分，共40分）</span>,
+        align: 'center',
+        children:[ 
+        {
+          title: '序号',
+          dataIndex: 'Sort',
+          key: 'Sort',
+          align: 'center',
+          width:100,
+        },
+        {
+          title: '督查内容',
+          dataIndex: 'StandardGasCode',
+          key: 'StandardGasCode',
+          align: 'center',
+          width:380,
+        },
+        {
+          title: `扣分`,
+          dataIndex: 'StandardGasName',
+          key: 'StandardGasName',
+          align: 'center',
+          width:200,
+          render: (text, record) => {
+            return <Form.Item>
+                   <InputNumber placeholder='请输入' />
+                 </Form.Item>
+          },
+        },
+        {
+          title: '说明',
+          dataIndex: 'Component',
+          key: 'Component',
+          align: 'center',
+          render: (text, record) => {
+            return <Form.Item>
+                   <TextArea rows={1} placeholder='请输入'/>
+                 </Form.Item>
+          },
+        }]
+        }]
+        const supervisionCol4 = [
+          {
+            align:'center',
+            render: (text, record,index) => {
+             return  index == 0? '总分': '评价'
+             },
+            },
+            {
+              align:'center',
+              render: (text, record,index) => {
+                if(index==0){
+                  return <Form.Item>
+                  <InputNumber placeholder='请输入' />
+                </Form.Item>
+                }else{    
+                return {
+                  children: <Form.Item>  <TextArea rows={1} placeholder='请输入' /></Form.Item>,
+                  props: {colSpan:3},
+                };
+                }
+
+              }
+            },
+            {
+              align:'center',
+              render: (text, record,index) => {
+                const obj = {
+                  children: '附件',
+                  props: {},
+                };
+                if (index === 1) {
+                  obj.props.colSpan = 0;
+                }
+                return obj;
+              }
+            },
+            {
+              key: 'Component',
+              render: (text, record,index) => {
+                const obj = {
+                  children: <Form.Item>
+                  <InputNumber placeholder='请输入' />
+                </Form.Item>,
+                  props: {},
+                };
+                if (index === 1) {
+                  obj.props.colSpan = 0;
+                }
+                return obj;
+              }
+            },
+      ]
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper>
@@ -680,11 +858,21 @@ const Index = (props) => {
         title={`${type === 'add' ? '添加' : '编辑'}`}
         visible={fromVisible}
         onOk={onModalOk}
-        confirmLoading={type === 'add' ? loadingAddConfirm : loadingEditConfirm}
         onCancel={() => { setFromVisible(false) }}
         className={styles.fromModal}
         destroyOnClose
         width='80%'
+        footer={[
+          <Button  onClick={() => { setFromVisible(false)}}>
+            取消
+          </Button>,
+          // <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 : saveLoading2}>
+          //   保存
+          // </Button>,
+          // <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading1 : saveLoading2} >
+          //   提交
+          // </Button>,
+        ]}
       >
         <Form
           name="basic"
@@ -704,7 +892,7 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-            <Spin spinning={false} size='small' style={{ top: -9 }}>
+            <Spin spinning={infoloading} size='small' style={{ top: -9 }}>
               <Form.Item label='督查类别' name="StandardGasName" rules={[{ required: true, message: '请输入督查类别' }]} >
                <Select>
                  </Select>
@@ -715,7 +903,7 @@ const Index = (props) => {
             <Col span={12}>
             <Spin spinning={entLoading2} size='small' style={{ top: -9 }}>
               <Form.Item label="企业名称" name="EntCode" rules={[{ required: true, message: '请输入企业名称' }]}>
-              <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }} >
+              <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" >
               {
                 entList[0] && entList.map(item => {
                   return <Option key={item.EntCode} value={item.EntCode} >{item.EntName}</Option>
@@ -729,7 +917,7 @@ const Index = (props) => {
             <Spin spinning={pointLoading2} size='small' style={{ top: -9}}>
             <Form.Item label='站点名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
 
-            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }} >
+            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
               {
                 pointList2[0] && pointList2.map(item => {
                   return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
@@ -741,28 +929,28 @@ const Index = (props) => {
             </Col>
 
             {pollutantType==2&& <Col span={12}>
-              <Form.Item label="是否排口" name="Manufacturer" rules={[{ required: true, message: '请选择是否排口' }]} >
-              <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
-                <Option value={1}>排放口</Option>
-                <Option value={0}>非排放口</Option>
+              <Form.Item label="是否排口" name="OutputType" rules={[{ required: true, message: '请选择是否排口' }]} >
+              <Select placeholder='请选择' optionFilterProp="children">
+                <Option value={"1"}>排放口</Option>
+                <Option value={"0"}>非排放口</Option>
               </Select>
               </Form.Item>
             </Col>}
             <Col span={12}>
               <Form.Item label='行政区' name='RegionCode' rules={[{ required: true, message: '请选择行政区' }]}>
-               <RegionList levelNum={3} />
+               <SdlCascader  selectType='3,是'/>
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label="监测因子" name="Manufacturer" rules={[{ required: true, message: '请输入监测因子' }]} >
+              <Form.Item label="监测因子" name="PollutantCode" rules={[{ required: true, message: '请输入监测因子' }]} >
                <Input placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
             <Col span={12}>
-             <Spin spinning={userLoading} size='small' style={{top:-8,left:0}} >
+             <Spin spinning={infoloading} size='small' style={{top:-8,left:0}} >
              <Form.Item label="督查人员" name="IsUsed"  rules={[{ required: true, message: '请输入督查人员' }]} >
-                  <UserList/>
+              <UserList    data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
             </Col >
@@ -772,9 +960,9 @@ const Index = (props) => {
               </Form.Item>
               </Col >
             <Col span={12}>
-              <Spin spinning={userLoading} size='small' style={{top:-8,left:0}}>
+              <Spin spinning={infoloading} size='small' style={{top:-8,left:0}}>
                <Form.Item label="运维人员" name="IsUsed"  rules={[{ required: true, message: '请输入运维人员' }]}>
-                  <UserList/>
+               <UserList  data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
             </Col>
@@ -783,40 +971,59 @@ const Index = (props) => {
 
           <div className={'deviceInfoSty'}>
            <TitleComponents text='设备信息'/>
-           <Row>
+            {pollutantType==1?
+            <>
+               <Row>
             <Col span={12}>
-            <Form.Item label='气态CEMS设备生产商' name='DGIMN' rules={[{ required: false, message: '请选择气态CEMS设备生产商' }]}>
-             {/* {selectPopover()} */}
-             <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }} >
+            <Spin spinning={infoloading} size='small' style={{top:-8,left:0}} >
+            <Form.Item label='设备厂家' name='DGIMsN' >
+
+            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" >
               {
-                entList[0] && entList.map(item => {
-                  return <Option key={item.EntCode} value={item.EntCode} >{item.EntName}</Option>
+                pointList2[0] && pointList2.map(item => {
+                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
                 })
               }
             </Select>
           </Form.Item>
+          </Spin>
+          </Col>
+          <Col span={12}>
+            <Form.Item label='设备类型' name='DGIMsN'>
+              <Input placeholder='请输入' allowClear/>
+          </Form.Item>
+          </Col>
+          
+          <Col span={24}>
+          <Form.Item label='备注' name='Remark'>
+                  <TextArea rows={1} placeholder='请输入' allowClear/>
+              </Form.Item>
+            </Col>
+          </Row>
+            </>
+            :
+            <>
+           <Row>
+            <Col span={12}>
+            <Form.Item label='气态CEMS设备生产商' name='GasManufacturer' rules={[{ required: false, message: '请选择气态CEMS设备生产商' }]}>
+             {selectPopover()}
+          </Form.Item>
             </Col>
             <Col span={12}>
-                 <Form.Item label='气态CEMS设备规格型号' name='DGIMN' rules={[{ required: false, message: '请输入气态CEMS设备规格型号' }]}>
-                  <Input placeholder='请输入' allowClear/>
+                 <Form.Item label='气态CEMS设备规格型号' name='GasEquipment' rules={[{ required: false, message: '请输入气态CEMS设备规格型号' }]}>
+                 <Input placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
           </Row>
 
            <Row>
             <Col span={12}>
-            <Form.Item label='颗粒物CEMS设备生产商' name='DGIMN' rules={[{ required: false, message: '请选择颗粒物CEMS设备生产商' }]}>
-            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children"  >
-              {/* {
-                pointList2[0] && pointList2.map(item => {
-                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
-                })
-              } */}
-            </Select>
+            <Form.Item label='颗粒物CEMS设备生产商' name='PMManufacturer' rules={[{ required: false, message: '请选择颗粒物CEMS设备生产商' }]}>
+            {selectPopover('pm')}
           </Form.Item>
             </Col>
             <Col span={12}>
-                 <Form.Item label='颗粒物CEMS设备规格型号' name='DGIMN' rules={[{ required: false, message: '请输入颗粒物CEMS设备规格型号' }]}>
+                 <Form.Item label='颗粒物CEMS设备规格型号' name='PMEquipment' rules={[{ required: false, message: '请输入颗粒物CEMS设备规格型号' }]}>
                   <Input placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
@@ -828,6 +1035,41 @@ const Index = (props) => {
               </Form.Item>
             </Col>
           </Row>
+          </>}
+           </div>
+
+           <div className={'supervisionContentSty'}>
+           <TitleComponents text='督查内容'/>
+             <Table 
+              bordered
+              dataSource={[{Sort:1,aa:'督查内儿童'}]}
+              columns={supervisionCol1}
+              rowClassName="editable-row"
+              pagination={false}
+             />
+             <Table 
+              bordered
+              dataSource={[{Sort:1,aa:'督查内儿童'}]}
+              columns={supervisionCol2}
+              rowClassName="editable-row"
+              className="impTableSty"
+              pagination={false}
+             />
+            <Table 
+              bordered
+              dataSource={[{Sort:1,aa:'督查内儿童'}]}
+              columns={supervisionCol3}
+              rowClassName="editable-row"
+              pagination={false}
+              className={'commonlyTableSty'}
+             />
+             <Table 
+              bordered
+              dataSource={[{Sort:1},{Sort:2}]}
+              columns={supervisionCol4}
+              className="summaryTableSty"
+              pagination={false}
+             />
            </div>
         </Form>
       </Modal>
