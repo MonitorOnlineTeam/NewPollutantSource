@@ -48,6 +48,32 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *addOrEditInspectorOperation({ payload, callback }, { call, put, update }) { //添加或修改督查模板
+      const result = yield call(services.AddOrEditInspectorOperation, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *getInspectorOperationView({ payload, callback }, { call, put, update }) { //详情
+      const result = yield call(services.GetInspectorOperationView, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *exportInspectorOperationManage({ payload, callback }, { call, put, update }) { //导出
+      const result = yield call(services.ExportInspectorOperationManage, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        downloadFile(`${result.Datas}`)
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 })

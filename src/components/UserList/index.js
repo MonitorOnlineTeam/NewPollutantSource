@@ -21,8 +21,8 @@ export default class Index extends Component {
     const { userList ,data } = this.props;
     const list = data ? data :userList;
      if (list.length > 0) {
-      return list.map(item =><Option key={item.ID} value={item.ID} title={item.UserName}>
-              {item.UserName}
+      return list.map(item =><Option key={item.ID} value={item.ID} title={item.userName}>
+              {item.userName}
              </Option>
       ); 
   }
@@ -38,7 +38,7 @@ export default class Index extends Component {
 
   }
   render() {
-      const {userId,changeUser,userLoading,style} = this.props
+      const {userLoading,style} = this.props
     return (
 
         <Select
@@ -46,8 +46,6 @@ export default class Index extends Component {
         showSearch
         optionFilterProp="children"
         placeholder={'请输入'}
-        onChange={changeUser}
-        value={userId ? userId : undefined}
         style={{width:'200px'}}
         {...this.props}
       >

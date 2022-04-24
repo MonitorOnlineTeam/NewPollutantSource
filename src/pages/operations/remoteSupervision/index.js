@@ -353,7 +353,7 @@ const Index = (props) => {
                } 
                edit(record)
               }}  >
-                <EditOutlined disabled style={{cursor:issue==='已下发'&&'not-allowed', color:issue==='已下发'&&'#00000040',  fontSize: 16 }} />
+                <EditOutlined  style={{cursor:issue==='已下发'&&'not-allowed', color:issue==='已下发'&&'#00000040',  fontSize: 16 }} />
               </a>
             </Tooltip>
               <Divider type="vertical" /></>}
@@ -926,7 +926,7 @@ const Index = (props) => {
       }
     }
   }
-  const uploadProps = { // 设备运营接手资料  资料附件上传 
+  const uploadProps = { //附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     accept:'image/*',
     data: {
@@ -2110,7 +2110,6 @@ const Index = (props) => {
         title={previewTitle}
         footer={null}
         onCancel={() => { setPreviewVisible(false) }}
-      // width={'35%'}
 
       >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />

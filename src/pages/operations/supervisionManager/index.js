@@ -4,9 +4,9 @@
  * 创建时间：2022.04.20
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag,Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Upload, Tag,Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined,UploadOutlined,EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -24,6 +24,8 @@ import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
 import UserList from '@/components/UserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
+import cuid from 'cuid';
+import { getBase64  } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -48,6 +50,11 @@ const dvaPropsData = ({ loading, supervisionManager, global,common,point,autoFor
   loadingSystemModel: loading.effects[`point/getSystemModelList`]|| false,
   systemModelListTotal: point.systemModelListTotal,
   operationInfoList: supervisionManager.operationInfoList,
+  saveLoading1: loading.effects[`${namespace}/addOrEditInspectorOperation`],
+  exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
+
+  
+  
 })
 
 const dvaDispatch = (dispatch) => {
@@ -106,7 +113,37 @@ const dvaDispatch = (dispatch) => {
       })
 
     },
+    deleteAttach: (file) => { //删除照片
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+        }
+      })
+    },
+    addOrEditInspectorOperation: (payload, callback) => { //添加或修改
+      dispatch({
+        type: `${namespace}/addOrEditInspectorOperation`,
+        payload: payload,
+        callback: callback
+      })
 
+    },
+    getInspectorOperationView: (payload, callback) => { //详情
+      dispatch({
+        type: `${namespace}/getInspectorOperationView`,
+        payload: payload,
+        callback: callback
+      })
+    },
+    exportInspectorOperationManage: (payload, callback) => { //导出
+      dispatch({
+        type: `${namespace}/exportInspectorOperationManage`,
+        payload: payload,
+        callback: callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -117,6 +154,7 @@ const Index = (props) => {
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
 
+  const [tableForm] = Form.useForm();
 
 
   const [fromVisible, setFromVisible] = useState(false)
@@ -130,108 +168,120 @@ const Index = (props) => {
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading,infoloading, userLoading,entLoading,systemModelList,operationInfoList,} = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading,infoloading,exportLoading, userLoading,entLoading,systemModelList,operationInfoList,saveLoading1,} = props;
 
   useEffect(() => {  
     initData()
   }, []);
 
   const initData = () =>{
-    onFinish()
+   onFinish()
+   setTimeout(()=>{
     props.getInspectorOperationInfoList({ID:''},(data)=>{ })
     props.getMonitoringTypeList({})
+   })
+
   }
 
   const columns = [
     {
       title: '序号',
-      dataIndex: 'Sort',
-      key: 'Sort',
       align: 'center',
       width:50,
+      render:(text,record,index)=>{
+        return index+1
+      }
     },
     {
       title: '行政区',
-      dataIndex: 'StandardGasCode',
-      key: 'StandardGasCode',
+      dataIndex: 'RegionName',
+      key: 'RegionName',
       align: 'center',
     },
     {
       title: `企业名称`,
-      dataIndex: 'StandardGasName',
-      key: 'StandardGasName',
+      dataIndex: 'EntName',
+      key: 'EntName',
       align: 'center',
     },
     {
       title: '站点名称',
-      dataIndex: 'Component',
-      key: 'Component',
+      dataIndex: 'PointName',
+      key: 'PointName',
       align: 'center',
     },
     {
       title: '督查类别',
-      dataIndex: 'Unit',
-      key: 'Unit',
+      dataIndex: 'InspectorTypeName',
+      key: 'InspectorTypeName',
       align: 'center',
     },
     {
       title: '监测因子',
-      dataIndex: 'Manufacturer',
-      key: 'Manufacturer',
+      dataIndex: 'PollutantCodeName',
+      key: 'PollutantCodeName',
       align: 'center',
+      width:300,
     },
     {
       title: '督查人员',
-      dataIndex: 'Unit',
-      key: 'Unit',
+      dataIndex: 'InspectorName',
+      key: 'InspectorName',
       align: 'center',
     },
     {
       title: '督查日期',
-      dataIndex: 'Manufacturer',
-      key: 'Manufacturer',
+      dataIndex: 'InspectorDate',
+      key: 'InspectorDate',
       align: 'center',
     },
     {
       title: '运维人员',
-      dataIndex: 'OperationUser',
-      key: 'OperationUser',
+      dataIndex: 'OperationUserName',
+      key: 'OperationUserName',
       align: 'center',
     },
     {
       title: '原则问题数量',
-      dataIndex: 'Manufacturer',
-      key: 'Manufacturer',
+      dataIndex: 'PrincipleProblemNum',
+      key: 'PrincipleProblemNum',
       align: 'center',
     },
     {
       title: '重点问题数量',
-      dataIndex: 'Manufacturer',
-      key: 'Manufacturer',
+      dataIndex: 'importanProblemNum',
+      key: 'importanProblemNum',
       align: 'center',
     },
     {
       title: '一般问题数量',
-      dataIndex: 'StandardGasCode',
-      key: 'StandardGasCode',
+      dataIndex: 'CommonlyProblem',
+      key: 'CommonlyProblem',
       align: 'center',
     },
     {
       title: `原则问题`,
-      dataIndex: 'StandardGasName',
-      key: 'StandardGasName',
+      dataIndex: 'PrincipleProblem',
+      key: 'PrincipleProblem',
+      align: 'center',
+    },
+    {
+      title: '重点问题',
+      dataIndex: 'importanProblem',
+      key: 'importanProblem',
       align: 'center',
     },
     {
       title: '一般问题',
-      dataIndex: 'Component',
-      key: 'Component',
+      dataIndex: 'CommonlyProblem',
+      key: 'CommonlyProblem',
       align: 'center',
     },
+
     {
       title: '总分',
-      dataIndex: 'Unit',
-      key: 'Unit',
+      dataIndex: 'TotalScore',
+      key: 'TotalScore',
       align: 'center',
     },
     {
@@ -241,34 +291,67 @@ const Index = (props) => {
       align: 'center',
       width: 180,
       render: (text, record) => {
+        const flag = record.IsFlag;
         return <span>
-          
-          <Fragment><Tooltip title="编辑"> <a href="#" onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          <Fragment><Tooltip  title={!flag?"运维督查记录已超过30天，不可编辑": "编辑"}> <a href="#" onClick={() => { 
+            if(!flag){
+              return;
+            }
+            edit(record)
+            
+            }} ><EditOutlined style={{cursor:!flag&&'not-allowed', color:!flag&&'#00000040',  fontSize: 16 }}/></a> </Tooltip><Divider type="vertical" /> </Fragment>
           <Fragment><Tooltip title='详情'> <a href="#" onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment> <Tooltip title="删除">
-            <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-              <a href="#" ><DelIcon /></a>
-            </Popconfirm>
-          </Tooltip>
-          </Fragment>
         </span>
       }
     },
   ];
 
-
+ const [detailLoading,setDetailLoading ] = useState(false)
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
     form2.resetFields();
-    try {
+    setDetailLoading(true)
+
+
+    props.getInspectorOperationInfoList({ID:record.ID},(data)=>{
+    
+     
+      const echoData = data.Info&&data.Info[0];
+
+      const pollType = echoData&&echoData.PollutantType;
       form2.setFieldsValue({
-        ...record,
+        ...echoData,
+        EntCode:undefined,
+        DGIMN:undefined,
+        ID:record.ID,
+        RegionCode:echoData.RegionCode.split(","),
+        PollutantCode:echoData.PollutantCode.split(","),
+        InspectorDate:moment(echoData.InspectorDate),
       })
 
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
+     
+
+      setDetailLoading(false)
+      setPollutantType(pollType)
+
+      getEntList(pollType,()=>{ //单独获取企业填写的值
+      form2.setFieldsValue({
+        EntCode:echoData.EntCode,
+      })
+
+      })
+      setPointLoading2(true)
+      props.getPointByEntCode({ EntCode: echoData.EntCode }, (res) => { //单独获取监测点填写的值
+        setPointList2(res)
+        setPointLoading2(false)
+        form2.setFieldsValue({
+          DGIMN:echoData.DGIMN,
+        })
+      })
+
+
+    })
   };
  const detail = (record) =>{
 
@@ -288,11 +371,12 @@ const Index = (props) => {
 
   const [entLoading2,setEntLoading2 ] = useState(false)
   const [entList,setEntList ] = useState([])
-  const getEntList = (pollutantType) =>{
+  const getEntList = (pollutantType,callback) =>{
     setEntLoading2(true)
     props.getEntByRegionCallBack({RegionCode:'',PollutantType:pollutantType},(data)=>{
       setEntList(data)
-      setEntLoading2(false)
+      setEntLoading2(false);
+      callback&&callback();
     })
   }
 
@@ -312,8 +396,8 @@ const Index = (props) => {
 
       props.getInspectorOperationManageList({
         ...values,
-        BTime: values.time&&moment(values.time[0]).format('YYYY-MM—DD HH:mm:ss'),
-        ETime: values.time&&moment(values.time[1]).format('YYYY-MM—DD HH:mm:ss'),
+        BTime: values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+        ETime: values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
         time:undefined,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
@@ -322,23 +406,69 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onModalOk = async () => { //添加 or 编辑弹框
+  const exports = async () =>{ //导出
+    const values = await form.validateFields();
 
+    props.exportInspectorOperationManage({
+      ...values,
+      BTime: values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
+      ETime: values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+      time:undefined,
+    })
+  }
+  const formatData = (data) =>{
+    return data.map(item=>{
+      return {
+        InspectorTypeID: item.InspectorTypeID,
+        InspectorContentID: item.InspectorContentID,
+        InspectorNum: item.InspectorNum,
+        ParentID: item.ParentID,
+        Inspector: tableForm.getFieldValue([`Inspector${item.Sort}`]),
+        Remark: tableForm.getFieldValue([`Remark${item.Sort}`]),
+      }
+    })
+  }
+  const save = async(type) =>{
+    const values = await form2.validateFields();
     try {
-      const values = await form2.validateFields();//触发校验
-       props.addStandardGas({
-        ...values,
-        ManufacturerId: manufacturerId
-      }, () => {
-        setFromVisible(false)
-        onFinish()
-      })
-        
+      let principleProblemList = operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList || [];
+      let importanProblemList = operationInfoList.importanProblemList&&operationInfoList.importanProblemList || [];
+      let commonlyProblemList = operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList || [];
 
-    } catch (errInfo) {
-      console.log('错误信息:', errInfo);
+      if(principleProblemList){
+        principleProblemList = formatData(principleProblemList)
+      }
+      if(importanProblemList){
+        importanProblemList = formatData(importanProblemList)
+      }
+      if(commonlyProblemList){
+        commonlyProblemList = formatData(commonlyProblemList)
+      }
+
+
+    
+     const data = {
+      ...values,
+      RegionCode:values.RegionCode.join(","),
+      PollutantCode:values.PollutantCode.join(","),
+      InspectorDate:moment(values.InspectorDate).format("YYYY-MM-DD HH:mm:ss"),
+      IsSubmit:type,
+      TotalScore: tableForm.getFieldValue([`TotalScore`]),
+      Files:  tableForm.getFieldValue([`Files`]),
+      Evaluate:  tableForm.getFieldValue([`Evaluate`]),
+      InspectorOperationInfoList:[...principleProblemList,...importanProblemList,...commonlyProblemList],
+      
+     }
+      props.addOrEditInspectorOperation(data,()=>{
+        setFromVisible(false)
+        onFinish(1,20)
+      })
+   
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
     }
   }
+
 
   const [pointList, setPointList] = useState([])
   const [pointLoading, setPointLoading] = useState(false)
@@ -354,8 +484,9 @@ const Index = (props) => {
       props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
         setPointList(res)
         setPointLoading(false)
+        console.log(res[0].DGIMN)
+        form.setFieldsValue({ DGIMN: res[0].DGIMN })
       })
-      form.setFieldsValue({ DGIMN: undefined })
     }
   }
 
@@ -381,13 +512,18 @@ const Index = (props) => {
 
     if (Object.keys(hangedValues).join() == 'PollutantType') {
        getEntList(hangedValues.PollutantType)
-       form2.setFieldsValue({ EntCode: undefined })
+       form2.resetFields();
+       form2.setFieldsValue({PollutantType:hangedValues.PollutantType});
        setPollutantType(hangedValues.PollutantType)
     }
     if (Object.keys(hangedValues).join() == 'DGIMN') {
        props.getPointParames({DGIMN:hangedValues.DGIMN},(data)=>{
-         console.log(data)
-         form2.setFieldsValue({...data,RegionCode:data.RegionCode?data.RegionCode.split(','):undefined })
+         form2.setFieldsValue({
+          ...data,
+          OutType:data.OutType ? data.OutType : '1',
+          RegionCode:data.RegionCode?data.RegionCode.split(','):undefined,
+          PollutantCode:data.PollutantCode?data.PollutantCode.split(','):undefined,
+        })
        })
    }
   }
@@ -417,7 +553,7 @@ const Index = (props) => {
         <Spin spinning={pointLoading} size='small' style={{ top: -8,left:20 }}>
           <Form.Item label='监测点名称' name='DGIMN' >
 
-            <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 150 }}>
+            <Select placeholder='请选择'  showSearch optionFilterProp="children" style={{ width: 150 }}>
               {
                 pointList[0] && pointList.map(item => {
                   return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
@@ -447,16 +583,21 @@ const Index = (props) => {
         </Form.Item>
         </Spin>
         <Form.Item>
-          <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
+          <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
             查询
      </Button>
           <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
             重置
      </Button>
-          <Button icon={<PlusOutlined />} type="primary" onClick={() => { add() }} >
+     <Button icon={<PlusOutlined />} type="primary" style={{ marginRight: 8 }} onClick={() => { add() }} >
             添加
-     </Button>
+       </Button>
+        <Button  icon={<ExportOutlined />} onClick={()=>{exports()}} loading={exportLoading}>
+              导出
+            </Button>
+            
         </Form.Item>
+
       </Row>
     </Form>
   }
@@ -663,8 +804,8 @@ const Index = (props) => {
     },
     {
       title: '督查内容',
-      dataIndex: 'aa',
-      key: 'aa',
+      dataIndex: 'ContentItem',
+      key: 'ContentItem',
       align: 'center',
       width:380,
       render: (text, record) => {
@@ -673,23 +814,23 @@ const Index = (props) => {
     },
     {
       title: `有无原则问题`,
-      dataIndex: 'StandardGasName',
-      key: 'StandardGasName',
+      dataIndex: 'Inspector',
+      key: 'Inspector',
       align: 'center',
       width:200,
       render: (text, record) => {
-        return <Form.Item>
-               <Select placeholder='请选择'> <Option>有</Option>   <Option>无</Option>     </Select>
+        return <Form.Item name={`Inspector${record.Sort}`}>
+               <Select placeholder='请选择'> <Option value={'0'}>有</Option>   <Option value={null}>无</Option>     </Select>
              </Form.Item>
       },
     },
     {
       title: '问题描述',
-      dataIndex: 'Component',
-      key: 'Component',
+      dataIndex: 'Remark',
+      key: 'Remark',
       align: 'center',
       render: (text, record) => {
-        return <Form.Item>
+        return <Form.Item name={`Remark${record.Sort}`}>
                <TextArea rows={1} placeholder='请输入'/>
              </Form.Item>
       },
@@ -710,30 +851,30 @@ const Index = (props) => {
       },
       {
         title: '督查内容',
-        dataIndex: 'StandardGasCode',
-        key: 'StandardGasCode',
+        dataIndex: 'ContentItem',
+        key: 'ContentItem',
         align: 'center',
         width:380,
       },
       {
         title: `扣分`,
-        dataIndex: 'StandardGasName',
-        key: 'StandardGasName',
+        dataIndex: 'Inspector',
+        key: 'Inspector',
         align: 'center',
         width:200,
         render: (text, record) => {
-          return <Form.Item>
+          return <Form.Item name={`Inspector${record.Sort}`}>
                  <InputNumber placeholder='请输入' />
                </Form.Item>
         },
       },
       {
         title: '说明',
-        dataIndex: 'Component',
-        key: 'Component',
+        dataIndex: 'Remark',
+        key: 'Remark',
         align: 'center',
         render: (text, record) => {
-          return <Form.Item>
+          return <Form.Item name={`Remark${record.Sort}`}>
                  <TextArea rows={1} placeholder='请输入'/>
                </Form.Item>
         },
@@ -753,30 +894,30 @@ const Index = (props) => {
         },
         {
           title: '督查内容',
-          dataIndex: 'StandardGasCode',
-          key: 'StandardGasCode',
+          dataIndex: 'ContentItem',
+          key: 'ContentItem',
           align: 'center',
           width:380,
         },
         {
           title: `扣分`,
-          dataIndex: 'StandardGasName',
-          key: 'StandardGasName',
+          dataIndex: 'Inspector',
+          key: 'Inspector',
           align: 'center',
           width:200,
           render: (text, record) => {
-            return <Form.Item>
+            return <Form.Item  name={`Inspector${record.Sort}`}>
                    <InputNumber placeholder='请输入' />
                  </Form.Item>
           },
         },
         {
           title: '说明',
-          dataIndex: 'Component',
-          key: 'Component',
+          dataIndex: 'Remark',
+          key: 'Remark',
           align: 'center',
           render: (text, record) => {
-            return <Form.Item>
+            return <Form.Item name={`Remark${record.Sort}`}>
                    <TextArea rows={1} placeholder='请输入'/>
                  </Form.Item>
           },
@@ -793,12 +934,12 @@ const Index = (props) => {
               align:'center',
               render: (text, record,index) => {
                 if(index==0){
-                  return <Form.Item>
-                  <InputNumber placeholder='请输入' />
+                  return <Form.Item name='TotalScore'>
+                  <InputNumber disabled />
                 </Form.Item>
                 }else{    
                 return {
-                  children: <Form.Item>  <TextArea rows={1} placeholder='请输入' /></Form.Item>,
+                  children: <Form.Item name='Evaluate'>  <TextArea   rows={1} placeholder='请输入' /></Form.Item>,
                   props: {colSpan:3},
                 };
                 }
@@ -822,8 +963,8 @@ const Index = (props) => {
               key: 'Component',
               render: (text, record,index) => {
                 const obj = {
-                  children: <Form.Item>
-                  <InputNumber placeholder='请输入' />
+                  children: <Form.Item name='Files'>
+                    <a onClick={() => {  setFileVisible(true) }}>上传附件</a>
                 </Form.Item>,
                   props: {},
                 };
@@ -834,6 +975,55 @@ const Index = (props) => {
               }
             },
       ]
+  const pollutantList = () =>{
+     const data = pollutantType == 1 ? operationInfoList.WaterPollutantList : operationInfoList.GasPollutantList;
+     return  data&&data.map(item => {
+        return <Option key={item.PollutantCode} value={item.PollutantCode} >{item.PollutantName}</Option>
+      })
+   
+  }
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [previewTitle, setPreviewTitle] = useState()
+  const [previewImage, setPreviewImage] = useState()
+
+  const [fileVisible, setFileVisible] = useState(false)
+  const [filesCuid1, setFilesCuid1] = useState(cuid())
+  const [fileList1, setFileList1] = useState([])
+
+  const uploadProps = { //附件上传 
+    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    // accept:'image/*',
+    data: {
+      FileUuid: filesCuid1 ,
+      FileActualType: '0',
+    },
+    listType: "picture-card",
+    onChange(info) {
+      setFileList1(info.fileList) 
+      if (info.file.status === 'done') {
+        form2.setFieldsValue({ Files: filesCuid1 })
+
+      }
+      if (info.file.status === 'error') {
+        message.error('上传文件失败！')
+      }
+    },
+    onPreview: async file => { //预览
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      setPreviewImage(file.url || file.preview)
+      setPreviewVisible(true)
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+    },
+    onRemove: (file) => {
+      if (!file.error) {
+        props.deleteAttach(file)
+      }
+
+    },
+    fileList: fileList1,
+  };
   return (
     <div className={styles.supervisionManagerSty}>
       <BreadcrumbWrapper>
@@ -857,7 +1047,6 @@ const Index = (props) => {
       <Modal
         title={`${type === 'add' ? '添加' : '编辑'}`}
         visible={fromVisible}
-        onOk={onModalOk}
         onCancel={() => { setFromVisible(false) }}
         className={styles.fromModal}
         destroyOnClose
@@ -866,23 +1055,27 @@ const Index = (props) => {
           <Button  onClick={() => { setFromVisible(false)}}>
             取消
           </Button>,
-          // <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 : saveLoading2}>
-          //   保存
-          // </Button>,
-          // <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading1 : saveLoading2} >
-          //   提交
-          // </Button>,
+          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1}>
+            保存
+          </Button>,
+          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading1} >
+            提交
+          </Button>,
         ]}
       >
+       <div style={{fontSize:16,padding:6,textAlign:'center',fontWeight:'bold'}}>运维督查表</div>
+
+       <Spin spinning={detailLoading}>
+
         <Form
           name="basic"
           form={form2}
           initialValues={{
-            PollutantType: '2',
+            PollutantType:'2'
           }}
           onValuesChange={onAddEditValuesChange}
         >
-            <div style={{fontSize:16,padding:6,textAlign:'center',fontWeight:'bold'}}>运维督查表</div>
+        
           <div className={'essentialInfoSty'}>
            <TitleComponents text='基本信息'/>
            <Row>
@@ -892,9 +1085,14 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-            <Spin spinning={infoloading} size='small' style={{ top: -9 }}>
-              <Form.Item label='督查类别' name="StandardGasName" rules={[{ required: true, message: '请输入督查类别' }]} >
-               <Select>
+            <Spin spinning={type=='add'&&infoloading  } size='small' style={{ top: -9 }}>
+              <Form.Item label='督查类别' name="InspectorType" rules={[{ required: true, message: '请输入督查类别' }]} >
+               <Select placeholder='请选择'>
+               {
+               operationInfoList.InspectorTypeList&&operationInfoList.InspectorTypeList.map(item => {
+                  return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
+                })
+              }
                  </Select>
               </Form.Item>
               </Spin>
@@ -929,10 +1127,10 @@ const Index = (props) => {
             </Col>
 
             {pollutantType==2&& <Col span={12}>
-              <Form.Item label="是否排口" name="OutputType" rules={[{ required: true, message: '请选择是否排口' }]} >
+              <Form.Item label="是否排口" name="OutType" rules={[{ required: true, message: '请选择是否排口' }]} >
               <Select placeholder='请选择' optionFilterProp="children">
-                <Option value={"1"}>排放口</Option>
-                <Option value={"0"}>非排放口</Option>
+                <Option value={"0"}>排放口</Option>
+                <Option value={"1"}>非排放口</Option>
               </Select>
               </Form.Item>
             </Col>}
@@ -943,25 +1141,29 @@ const Index = (props) => {
             </Col>
 
             <Col span={12}>
+            <Spin spinning={type=='add'&&infoloading } size='small' style={{top:-8,left:0}} >
               <Form.Item label="监测因子" name="PollutantCode" rules={[{ required: true, message: '请输入监测因子' }]} >
-               <Input placeholder='请输入' allowClear/>
+              <Select placeholder='请选择' mode='multiple' maxTagPlaceholder="...">
+                { pollutantList() }
+                 </Select>
               </Form.Item>
+              </Spin> 
             </Col>
             <Col span={12}>
-             <Spin spinning={infoloading} size='small' style={{top:-8,left:0}} >
-             <Form.Item label="督查人员" name="IsUsed"  rules={[{ required: true, message: '请输入督查人员' }]} >
+             <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}} >
+             <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
               <UserList    data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
             </Col >
             <Col span={12}>
-              <Form.Item label="督查日期" name="time" rules={[{ required: true, message: '请选择督查日期' }]} >
+              <Form.Item label="督查日期" name="InspectorDate" rules={[{ required: true, message: '请选择督查日期' }]} >
                 <DatePicker /> 
               </Form.Item>
               </Col >
             <Col span={12}>
-              <Spin spinning={infoloading} size='small' style={{top:-8,left:0}}>
-               <Form.Item label="运维人员" name="IsUsed"  rules={[{ required: true, message: '请输入运维人员' }]}>
+              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}}>
+               <Form.Item label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
                <UserList  data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
@@ -969,19 +1171,20 @@ const Index = (props) => {
             </Row>
           </div>
 
+
           <div className={'deviceInfoSty'}>
            <TitleComponents text='设备信息'/>
             {pollutantType==1?
             <>
                <Row>
             <Col span={12}>
-            <Spin spinning={infoloading} size='small' style={{top:-8,left:0}} >
-            <Form.Item label='设备厂家' name='DGIMsN' >
+            <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}} >
+            <Form.Item label='设备厂家' name='GasManufacturer' >
 
             <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" >
               {
-                pointList2[0] && pointList2.map(item => {
-                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                manufacturerList[0] && manufacturerList.map(item => {
+                  return <Option key={item.ID} value={item.ID} >{item.ManufacturerName}</Option>
                 })
               }
             </Select>
@@ -989,13 +1192,13 @@ const Index = (props) => {
           </Spin>
           </Col>
           <Col span={12}>
-            <Form.Item label='设备类型' name='DGIMsN'>
+            <Form.Item label='设备类型' name='GasEquipment'>
               <Input placeholder='请输入' allowClear/>
           </Form.Item>
           </Col>
           
           <Col span={24}>
-          <Form.Item label='备注' name='Remark'>
+          <Form.Item label='备注' name='EquipmentRemark'>
                   <TextArea rows={1} placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
@@ -1030,26 +1233,39 @@ const Index = (props) => {
           </Row>
           <Row>
           <Col span={24}>
-          <Form.Item label='备注' name='Remark'>
+          <Form.Item label='备注' name='EquipmentRemark'>
                   <TextArea rows={1} placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
           </Row>
           </>}
            </div>
+           </Form>
 
            <div className={'supervisionContentSty'}>
+            <Form  name="tableForm"   form={tableForm}  >
            <TitleComponents text='督查内容'/>
+            {!operationInfoList.PrincipleProblemList&&!operationInfoList.importanProblemList&&!operationInfoList.CommonlyProblemList?
+            
+              <Table 
+              bordered
+              dataSource={[]}
+              columns={[]}
+              pagination={false}
+              locale={{ emptyText: '暂无模板数据' }}
+              />
+              :
+              <>
              <Table 
               bordered
-              dataSource={[{Sort:1,aa:'督查内儿童'}]}
-              columns={supervisionCol1}
+              dataSource={operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList}
+              columns={supervisionCol1} 
               rowClassName="editable-row"
               pagination={false}
              />
              <Table 
               bordered
-              dataSource={[{Sort:1,aa:'督查内儿童'}]}
+              dataSource={operationInfoList.importanProblemList&&operationInfoList.importanProblemList}
               columns={supervisionCol2}
               rowClassName="editable-row"
               className="impTableSty"
@@ -1057,7 +1273,7 @@ const Index = (props) => {
              />
             <Table 
               bordered
-              dataSource={[{Sort:1,aa:'督查内儿童'}]}
+              dataSource={operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList}
               columns={supervisionCol3}
               rowClassName="editable-row"
               pagination={false}
@@ -1070,8 +1286,39 @@ const Index = (props) => {
               className="summaryTableSty"
               pagination={false}
              />
+           </>
+           }
+           
+             </Form>
+           
            </div>
-        </Form>
+           
+           </Spin>
+      </Modal>
+
+      <Modal
+        title='上传附件'
+        visible={fileVisible}
+        onOk={() => { setFileVisible(false) }}
+        destroyOnClose
+        onCancel={() => { setFileVisible(false) }}
+        width={'50%'}
+      >
+        <Upload {...uploadProps} style={{ width: '100%' }} >
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>上传</div>
+          </div>
+        </Upload>
+      </Modal>
+      <Modal //预览上传附件
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        onCancel={() => { setPreviewVisible(false) }}
+
+      >
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </div>
   );
