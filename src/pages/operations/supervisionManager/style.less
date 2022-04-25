@@ -43,13 +43,12 @@
         .ant-form-item-label{
           width: 175px;
        }
+       .waterDeviceInfo  { //废水
+        .ant-form-item-label{
+          width: 80px;
+        }
       }
-        // .ant-form-item{
-        //   padding-left: 70px;
-        // }
-        // .ant-modal-body{
-        //   padding-right: calc(24px + 70px);
-        // }
+      }
         .ant-popover{ //气态生产商 气泡框
           .ant-pagination-options-size-changer.ant-select{
             width: auto !important;
@@ -92,5 +91,20 @@
           .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
             padding: 4px 16px;
           }
+        }
+
+
+        .supervisionDetailSty{//详情表格
+          .impTableSty,.commonlyTableSty,.summaryTableSty{
+            .ant-table.ant-table-bordered > .ant-table-container{
+              border-top: 0;
+            } 
+          }
+          .summaryTableSty{
+            .ant-table-thead{
+              display: none;
+            }
+          }
+
         }
     } 

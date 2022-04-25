@@ -60,7 +60,6 @@ export default Model.extend({
     *getInspectorOperationView({ payload, callback }, { call, put, update }) { //详情
       const result = yield call(services.GetInspectorOperationView, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
         callback(result.Datas)
       } else {
         message.error(result.Message)

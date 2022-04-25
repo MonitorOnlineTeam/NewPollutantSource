@@ -26,6 +26,7 @@ import UserList from '@/components/UserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
 import { getBase64  } from '@/utils/utils';
+import Detail from './Detail';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -129,13 +130,6 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
 
-    },
-    getInspectorOperationView: (payload, callback) => { //详情
-      dispatch({
-        type: `${namespace}/getInspectorOperationView`,
-        payload: payload,
-        callback: callback
-      })
     },
     exportInspectorOperationManage: (payload, callback) => { //导出
       dispatch({
@@ -255,8 +249,8 @@ const Index = (props) => {
     },
     {
       title: '一般问题数量',
-      dataIndex: 'CommonlyProblem',
-      key: 'CommonlyProblem',
+      dataIndex: 'CommonlyProblemNum',
+      key: 'CommonlyProblemNum',
       align: 'center',
     },
     {
@@ -306,34 +300,42 @@ const Index = (props) => {
     },
   ];
 
+ const [ defaultEvaluate, setDefaultEvaluate] =  useState(undefined)
  const [detailLoading,setDetailLoading ] = useState(false)
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
     form2.resetFields();
+    tableForm.resetFields();
+    setFileList1([])
     setDetailLoading(true)
-
-
+  
+    form2.setFieldsValue({
+      ID:record.ID,
+    })
     props.getInspectorOperationInfoList({ID:record.ID},(data)=>{
     
      
       const echoData = data.Info&&data.Info[0];
 
       const pollType = echoData&&echoData.PollutantType;
+      setPollutantType(pollType)
+
       form2.setFieldsValue({
         ...echoData,
         EntCode:undefined,
         DGIMN:undefined,
-        ID:record.ID,
         RegionCode:echoData.RegionCode.split(","),
         PollutantCode:echoData.PollutantCode.split(","),
         InspectorDate:moment(echoData.InspectorDate),
       })
 
-     
+      setGaschoiceData(echoData&&echoData.GasManufacturerName? echoData.GasManufacturerName : undefined)
+      setPmchoiceData(echoData&&echoData.PMManufacturerName? echoData.PMManufacturerName : undefined)
+      tableForm.setFieldsValue({Evaluate:echoData.Evaluate})//评价
+      setDefaultEvaluate(echoData&&echoData.Evaluate? echoData.Evaluate : undefined)//评价默认值
 
       setDetailLoading(false)
-      setPollutantType(pollType)
 
       getEntList(pollType,()=>{ //单独获取企业填写的值
       form2.setFieldsValue({
@@ -349,12 +351,54 @@ const Index = (props) => {
           DGIMN:echoData.DGIMN,
         })
       })
+      
+      const echoPrincipleProblemList = data.PrincipleProblemList&&data.PrincipleProblemList; //原则问题
+       echoPrincipleProblemList.map(item=>{
+         tableForm.setFieldsValue({
+           [`Inspector${item.Sort}`] : item.Inspector,
+           [`Remark${item.Sort}`] : item.Remark,
+        })
+      })
+      const echoImportanProblemList = data.importanProblemList&&data.importanProblemList; //重点问题
+        echoImportanProblemList.map(item=>{
+         tableForm.setFieldsValue({
+           [`Inspector${item.Sort}`] : item.Inspector,
+           [`Remark${item.Sort}`] : item.Remark,
+        })
+      })
+      const echoCommonlyProblemList = data.CommonlyProblemList&&data.CommonlyProblemList; //一般问题
+        echoCommonlyProblemList.map(item=>{
+         tableForm.setFieldsValue({
+           [`Inspector${item.Sort}`] : item.Inspector,
+           [`Remark${item.Sort}`] : item.Remark,
+        })
+      })
 
 
-    })
+      if(echoData.Files){ // 附件
+        setFilesCuid1(echoData.Files)
+        tableForm.setFieldsValue({Files:echoData.Files})
+        let fileList = echoData.FilesList.map(item=>{
+          if(!item.IsDelete){
+            return  {
+              uid: item.GUID,
+              name: item.FileName,
+              status: 'done',
+              url: `\\upload\\${item.FileName}`,
+            }
+            
+          }
+        })
+        fileList = fileList.filter(item=>item!=undefined)
+        setFileList1(fileList)
+      }
+      })
   };
+  const [detailVisible,setDetailVisible ] = useState(false)
+  const [detailId,setDetailId ] = useState(null)
  const detail = (record) =>{
-
+  setDetailId(record.ID);
+  setDetailVisible(true)
 }
   const del = async (record) => {
     const values = await form.validateFields();
@@ -387,6 +431,12 @@ const Index = (props) => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
+    tableForm.resetFields();
+    setGaschoiceData(null);//清空生产商的值 
+    setPmchoiceData(null);
+    setEvaluate(null); //评价
+    setFileList1([])
+    setFilesCuid1(cuid())
     getEntList(2);
   };
 
@@ -455,10 +505,12 @@ const Index = (props) => {
       IsSubmit:type,
       TotalScore: tableForm.getFieldValue([`TotalScore`]),
       Files:  tableForm.getFieldValue([`Files`]),
-      Evaluate:  tableForm.getFieldValue([`Evaluate`]),
+      Evaluate: tableForm.getFieldValue([`Evaluate`]),
       InspectorOperationInfoList:[...principleProblemList,...importanProblemList,...commonlyProblemList],
       
      }
+
+    //  console.log(data)
       props.addOrEditInspectorOperation(data,()=>{
         setFromVisible(false)
         onFinish(1,20)
@@ -565,7 +617,7 @@ const Index = (props) => {
       </Row>
 
       <Row>
-      <Spin spinning={infoloading} size='small' style={{top:-8,left:20}}>
+      <Spin  spinning={infoloading&&type!=='edit'} size='small' style={{top:-8,left:20}}>
         <Form.Item label="督查人员" name="Inspector"  >
          <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
@@ -577,7 +629,7 @@ const Index = (props) => {
               format="YYYY-MM-DD HH:mm:ss"
               showTime="YYYY-MM-DD HH:mm:ss" />
         </Form.Item>
-        <Spin spinning={infoloading} size='small' style={{top:-8,left:20}}>
+        <Spin spinning={infoloading&&type!=='edit'} size='small' style={{top:-8,left:20}}>
         <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
         <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
@@ -658,11 +710,11 @@ const Index = (props) => {
 
   const generatorColChoice = (record) => {
     if (popVisible) {
-      form2.setFieldsValue({ GasManufacturer: record.ID, GasEquipment: record.SystemModel });
+      form2.setFieldsValue({ GasManufacturer: record.ManufacturerID, GasEquipment: record.SystemModel });
       setGaschoiceData(record.ManufacturerName)
       setPopVisible(false)
     } else {//颗粒物
-      form2.setFieldsValue({ PMManufacturer: record.ID, PMEquipment: record.SystemModel });
+      form2.setFieldsValue({ PMManufacturer: record.ManufacturerID, PMEquipment: record.SystemModel });
       setPmchoiceData(record.ManufacturerName)
       setPmPopVisible(false)
     }
@@ -837,7 +889,9 @@ const Index = (props) => {
     }]
   }
   ]
+    
 
+  const [evaluate,setEvaluate]  = useState(null);
     const supervisionCol2 = [ {
       title: <span style={{fontWeight:'bold',fontSize:14}}>重点问题（每项5分，共60分）</span>,
       align: 'center',
@@ -864,7 +918,7 @@ const Index = (props) => {
         width:200,
         render: (text, record) => {
           return <Form.Item name={`Inspector${record.Sort}`}>
-                 <InputNumber placeholder='请输入' />
+                 <InputNumber placeholder='请输入' max={-0.1}/>
                </Form.Item>
         },
       },
@@ -873,12 +927,8 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
-        render: (text, record) => {
-          return <Form.Item name={`Remark${record.Sort}`}>
-                 <TextArea rows={1} placeholder='请输入'/>
-               </Form.Item>
-        },
-       }]
+       },]
+
       }]
 
       const supervisionCol3 = [{
@@ -907,7 +957,7 @@ const Index = (props) => {
           width:200,
           render: (text, record) => {
             return <Form.Item  name={`Inspector${record.Sort}`}>
-                   <InputNumber placeholder='请输入' />
+                   <InputNumber placeholder='请输入' max={-0.1}/>
                  </Form.Item>
           },
         },
@@ -939,11 +989,10 @@ const Index = (props) => {
                 </Form.Item>
                 }else{    
                 return {
-                  children: <Form.Item name='Evaluate'>  <TextArea   rows={1} placeholder='请输入' /></Form.Item>,
+                children: <> {!detailLoading&&<TextArea defaultValue={type=='add'? undefined : defaultEvaluate} onChange={(e)=>{tableForm.setFieldsValue({Evaluate:e.target.value}) }}  rows={1} placeholder='请输入' />}</>,
                   props: {colSpan:3},
                 };
                 }
-
               }
             },
             {
@@ -963,7 +1012,7 @@ const Index = (props) => {
               key: 'Component',
               render: (text, record,index) => {
                 const obj = {
-                  children: <Form.Item name='Files'>
+                  children: <Form.Item>
                     <a onClick={() => {  setFileVisible(true) }}>上传附件</a>
                 </Form.Item>,
                   props: {},
@@ -1001,7 +1050,7 @@ const Index = (props) => {
     onChange(info) {
       setFileList1(info.fileList) 
       if (info.file.status === 'done') {
-        form2.setFieldsValue({ Files: filesCuid1 })
+        tableForm.setFieldsValue({ Files: filesCuid1 })
 
       }
       if (info.file.status === 'error') {
@@ -1055,10 +1104,10 @@ const Index = (props) => {
           <Button  onClick={() => { setFromVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1}>
+          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1 || detailLoading}>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading1} >
+          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading1 || detailLoading} >
             提交
           </Button>,
         ]}
@@ -1176,7 +1225,7 @@ const Index = (props) => {
            <TitleComponents text='设备信息'/>
             {pollutantType==1?
             <>
-               <Row>
+               <Row className={'waterDeviceInfo'}>
             <Col span={12}>
             <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}} >
             <Form.Item label='设备厂家' name='GasManufacturer' >
@@ -1239,7 +1288,13 @@ const Index = (props) => {
             </Col>
           </Row>
           </>}
+
+          <Form.Item hidden name="ID" >
+                <Input />
+              </Form.Item>
            </div>
+
+
            </Form>
 
            <div className={'supervisionContentSty'}>
@@ -1316,9 +1371,20 @@ const Index = (props) => {
         title={previewTitle}
         footer={null}
         onCancel={() => { setPreviewVisible(false) }}
-
+        destroyOnClose
       >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
+      <Modal //详情
+        visible={detailVisible}
+        title={'详情'}
+        footer={null}
+        width={'80%'}
+        className={styles.fromModal}
+        onCancel={() => { setDetailVisible(false) }}
+        destroyOnClose
+      >
+        <Detail ID={detailId}/>
       </Modal>
     </div>
   );

@@ -328,3 +328,18 @@ export  function getBase64(file) {
     reader.onerror = error => reject(error);
   });
 }
+
+export  function getAttachmentArrDataSource (fileInfo) {
+  if(fileInfo&&fileInfo[0]){
+    return fileInfo.map(item => {
+      return {
+        name: item.FileName,
+        attach: item.FileName,
+      }
+    })
+  }else{
+    return [];
+  }
+
+ 
+}

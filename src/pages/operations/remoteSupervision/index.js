@@ -417,6 +417,7 @@ const Index = (props) => {
 
       //共同的字段
      commonForm.setFieldsValue({
+       UserName:data.userName,
        EntCode: data.entCode,
        month:  moment(moment(data.dateTime).format("YYYY-MM")) 
      })
@@ -498,6 +499,7 @@ const Index = (props) => {
 
         if(data.rangeUpload&&data.rangeUpload[0]){  //量程一致性核查表 附件
           form2.setFieldsValue({files1:data.rangeUpload[0].FileUuid})
+          setFilesCuid1(data.rangeUpload[0].FileUuid)
            const fileList = data.rangeUpload.map(item=>{
             if(!item.IsDelete){
               return  {
@@ -514,6 +516,7 @@ const Index = (props) => {
     
         if(data.couUpload&&data.couUpload[0]){ //实时数据一致性核查表 附件
           form2.setFieldsValue({files2:data.couUpload[0].FileUuid})
+          setFilesCuid2(data.couUpload[0].FileUuid)
           let fileList = data.couUpload.map(item=>{
             if(!item.IsDelete){
               return  {
@@ -607,10 +610,12 @@ const Index = (props) => {
     !flag&&setAddId();
     !flag&&props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
   }
-  const add = async () => {
+  const add =  () => {
 
     setTitle('添加')
     setVisible(true)
+    setFilesCuid1(cuid())
+    setFilesCuid2(cuid())
     resetData()
     
   }
@@ -803,8 +808,7 @@ const Index = (props) => {
       resetData(true)
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
-     if (paramList && paramList[0]) { //附件 cuid
-
+     if (paramList && paramList[0]&&title==='添加') { //附件 cuid
        let filesCuidObj = {}, filesListObj = {};
        paramList.map((item, index) => {
          filesCuidObj[`${item.par}ParFiles`] = cuid();
@@ -858,6 +862,8 @@ const Index = (props) => {
 
     if(key==2){
       let uploadList = {}
+
+      let filesCuidObj = {}, filesListObj = {};
       consistencyCheckDetail.consistentParametersCheckList&&consistencyCheckDetail.consistentParametersCheckList.map(item=>{ //参数一致性核查表
             let code = item.CheckItem;
             form3.setFieldsValue({
@@ -869,24 +875,25 @@ const Index = (props) => {
               [`${code}Remark3`]:item.Remark,
               [`${code}ParFiles`]:item.Upload,
             })
-            uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
-              if(!item.IsDelete){
+            uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(items=>{
+              if(!items.IsDelete){
               return {
-                uid: item.GUID,
-                name: item.FileName,
+                uid: items.GUID,
+                name: items.FileName,
                 status: 'done',
-                url: `\\upload\\${item.FileName}`,
+                url: `\\upload\\${items.FileName}`,
               }
             }
              })
-           
-           
+
+           filesCuidObj[`${code}ParFiles`] = item.Upload;
             setTimeout(()=>{
             onManualChange(item.Uniformity&&[item.Uniformity], {...item, par:`${code}`}, `${code}RangCheck3`, 3)//编辑 手工修正结果 参数
 
            })
        })
 
+       setFilesCuidList(filesCuidObj)
        setFilesList3({ ...uploadList })
     }
   }
@@ -2010,7 +2017,7 @@ const Index = (props) => {
             </Form.Item>
 
             <Form.Item label='点位运维负责人' name='UserName' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
-              <Input />
+              <Input  placeholder='请输入'/>
             </Form.Item>
           </Row>
 
@@ -2036,6 +2043,7 @@ const Index = (props) => {
                   dataSource={addDataConsistencyData}
                   pagination={false}
                   scroll={{  y: 'auto' }}
+                  sticky
                 />
                 <SdlTable
                   loading={parLoading}
@@ -2043,6 +2051,7 @@ const Index = (props) => {
                   dataSource={addRealTimeData}
                   pagination={false}
                   scroll={{ y: 'auto' }}
+                  sticky
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>
                   <span style={{ paddingRight: 10 }}>注：</span>
@@ -2074,6 +2083,7 @@ const Index = (props) => {
                   dataSource={addParconsistencyData}
                   pagination={false}
                   scroll={{ y: 'auto' }}
+                  sticky
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>
                   <span style={{ paddingRight: 10 }}>注：</span>

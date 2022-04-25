@@ -424,11 +424,11 @@ const Index = (props) => {
 
   const generatorColChoice = (record) => {
     if (popVisible) {
-      form.setFieldsValue({ GasManufacturer: record.ID, GasEquipment: record.SystemModel });
+      form.setFieldsValue({ GasManufacturer: record.ManufacturerID, GasEquipment: record.SystemModel });
       setGaschoiceData(record.ManufacturerName)
       setPopVisible(false)
     } else {//颗粒物
-      form.setFieldsValue({ PMManufacturer: record.ID, PMEquipment: record.SystemModel });
+      form.setFieldsValue({ PMManufacturer: record.ManufacturerID, PMEquipment: record.SystemModel });
       setPmchoiceData(record.ManufacturerName)
       setPmPopVisible(false)
     }
