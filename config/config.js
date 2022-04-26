@@ -1020,10 +1020,26 @@ export default {
                 component: './operations/supervisionList',
               }, 
               {
-                path: '/operations/supervisionManager', //运维督查管理
+                path: '/operations/supervisionManager', //运维督查管理 远程督查
                 name: 'supervisionList',
                 component: './operations/supervisionManager',
               }, 
+              {
+                path: '/operations/siteInspector', //运维督查管理 现场督查
+                name: 'siteInspector',
+                component: './operations/supervisionManager',
+              }, 
+              
+              {
+                path: '/operations/supervisionRecod', //运维督查记录
+                name: 'supervisionRecod',
+                component: './operations/supervisionManager',
+              }, 
+              {
+                path: '/operations/supervisionAnalySumm', //督查分析总结
+                name: 'supervisionAnalySumm',
+                component: './operations/supervisionAnalySumm',
+              },
               ],
             },
             {

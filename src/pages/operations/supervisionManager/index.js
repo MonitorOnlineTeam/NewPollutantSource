@@ -1,12 +1,12 @@
 /**
- * 功  能：运维督查管理
+ * 功  能：运维督查管理 
  * 创建人：jab
  * 创建时间：2022.04.20
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Upload, Tag,Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined,UploadOutlined,EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined,UploadOutlined,EditOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled, UnlockFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -142,7 +142,11 @@ const dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
+  const {match:{ path }} = props;
 
+  const isRecord = path ===  '/operations/supervisionRecod' ? true : false; //是否为运维督查记录
+  const inspectorType = path ===  '/operations/siteInspector' ? 1 : 
+                        path ===  '/operations/supervisionManager'?  2 : ''; // 是否为现场督查 1 现场 2 远程  其他为运维督查记录
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -171,7 +175,7 @@ const Index = (props) => {
   const initData = () =>{
    onFinish()
    setTimeout(()=>{
-    props.getInspectorOperationInfoList({ID:''},(data)=>{ })
+    props.getInspectorOperationInfoList({ID:'',InspectorType:inspectorType },(data)=>{ })
     props.getMonitoringTypeList({})
    })
 
@@ -181,7 +185,7 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      width:50,
+      width:80,
       render:(text,record,index)=>{
         return index+1
       }
@@ -228,6 +232,9 @@ const Index = (props) => {
       dataIndex: 'InspectorDate',
       key: 'InspectorDate',
       align: 'center',
+      render:(text,record,index)=>{
+        return text? moment(text).format("YYYY-MM-DD") : null;
+      }
     },
     {
       title: '运维人员',
@@ -285,6 +292,9 @@ const Index = (props) => {
       align: 'center',
       width: 180,
       render: (text, record) => {
+        if(isRecord){
+          return  <Tooltip title='详情'> <a href="#" onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
+        }
         const flag = record.IsFlag;
         return <span>
           <Fragment><Tooltip  title={!flag?"运维督查记录已超过30天，不可编辑": "编辑"}> <a href="#" onClick={() => { 
@@ -313,13 +323,18 @@ const Index = (props) => {
     form2.setFieldsValue({
       ID:record.ID,
     })
-    props.getInspectorOperationInfoList({ID:record.ID},(data)=>{
+    props.getInspectorOperationInfoList({ID:record.ID,InspectorType:inspectorType},(data)=>{
     
      
       const echoData = data.Info&&data.Info[0];
 
       const pollType = echoData&&echoData.PollutantType;
       setPollutantType(pollType)
+
+      setDefaultEvaluate(echoData&&echoData.Evaluate? echoData.Evaluate : undefined)//评价默认值
+
+      setDetailLoading(false)
+
 
       form2.setFieldsValue({
         ...echoData,
@@ -329,13 +344,14 @@ const Index = (props) => {
         PollutantCode:echoData.PollutantCode.split(","),
         InspectorDate:moment(echoData.InspectorDate),
       })
+    
+
 
       setGaschoiceData(echoData&&echoData.GasManufacturerName? echoData.GasManufacturerName : undefined)
       setPmchoiceData(echoData&&echoData.PMManufacturerName? echoData.PMManufacturerName : undefined)
-      tableForm.setFieldsValue({Evaluate:echoData.Evaluate})//评价
-      setDefaultEvaluate(echoData&&echoData.Evaluate? echoData.Evaluate : undefined)//评价默认值
 
-      setDetailLoading(false)
+
+      
 
       getEntList(pollType,()=>{ //单独获取企业填写的值
       form2.setFieldsValue({
@@ -352,6 +368,10 @@ const Index = (props) => {
         })
       })
       
+      //督查内容
+      tableForm.setFieldsValue({Evaluate:echoData.Evaluate})//评价
+      tableForm.setFieldsValue({ TotalScore: echoData.TotalScore}) //总分
+
       const echoPrincipleProblemList = data.PrincipleProblemList&&data.PrincipleProblemList; //原则问题
        echoPrincipleProblemList.map(item=>{
          tableForm.setFieldsValue({
@@ -449,6 +469,7 @@ const Index = (props) => {
         BTime: values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
         ETime: values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
         time:undefined,
+        InspectorType:inspectorType,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
         pageSize: pageSizes ? pageSizes : pageSize,
       })
@@ -641,9 +662,9 @@ const Index = (props) => {
           <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
             重置
      </Button>
-     <Button icon={<PlusOutlined />} type="primary" style={{ marginRight: 8 }} onClick={() => { add() }} >
+      {!isRecord&&<Button icon={<PlusOutlined />} type="primary" style={{ marginRight: 8 }} onClick={() => { add() }} >
             添加
-       </Button>
+       </Button>}
         <Button  icon={<ExportOutlined />} onClick={()=>{exports()}} loading={exportLoading}>
               导出
             </Button>
@@ -849,10 +870,11 @@ const Index = (props) => {
     children:[
     {
       title: '序号',
-      dataIndex: 'Sort',
-      key: 'Sort',
       align: 'center',
-      width:100,
+      width:80,
+      render:(text,record,index)=>{
+        return index+1
+      }
     },
     {
       title: '督查内容',
@@ -898,10 +920,11 @@ const Index = (props) => {
       children:[
       {
         title: '序号',
-        dataIndex: 'Sort',
-        key: 'Sort',
         align: 'center',
-        width:100,
+        width:80,
+        render:(text,record,index)=>{
+          return index+1
+        }
       },
       {
         title: '督查内容',
@@ -927,6 +950,11 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
+        render: (text, record) => {
+          return <Form.Item name={`Remark${record.Sort}`}>
+                 <TextArea rows={1} placeholder='请输入'/>
+               </Form.Item>
+        },
        },]
 
       }]
@@ -935,13 +963,14 @@ const Index = (props) => {
         title: <span style={{fontWeight:'bold',fontSize:14}}>一般问题（每项2分，共40分）</span>,
         align: 'center',
         children:[ 
-        {
-          title: '序号',
-          dataIndex: 'Sort',
-          key: 'Sort',
-          align: 'center',
-          width:100,
-        },
+          {
+            title: '序号',
+            align: 'center',
+            width:80,
+            render:(text,record,index)=>{
+              return index+1
+            }
+          },
         {
           title: '督查内容',
           dataIndex: 'ContentItem',
@@ -957,7 +986,7 @@ const Index = (props) => {
           width:200,
           render: (text, record) => {
             return <Form.Item  name={`Inspector${record.Sort}`}>
-                   <InputNumber placeholder='请输入' max={-0.1}/>
+                   <InputNumber  placeholder='请输入' max={-0.1}/>
                  </Form.Item>
           },
         },

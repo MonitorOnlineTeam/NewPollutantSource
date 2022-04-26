@@ -117,7 +117,7 @@ export async function getSummaryYearReport(params) {
 }
 
 /**
- * 获取企业及排口
+ * 
  */
 export async function getEntAndPoint(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
@@ -125,7 +125,7 @@ export async function getEntAndPoint(params) {
 }
 
 /**
- * 获取企业及排口
+ * 
  */
 export async function getSmokeReportData(params) {
   const result = await post('/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataListGas', params, null);

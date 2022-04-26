@@ -7,7 +7,7 @@ export async function GetInspectorOperationManageList(params) {
 }
 //获取单个督查表实体
 export async function GetInspectorOperationInfoList(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationInfoList?ID=${params.ID}&InspectorType=${params.InspectorType}`, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationInfoList?ID='+params.ID,params, null);
   return result;
 }
 

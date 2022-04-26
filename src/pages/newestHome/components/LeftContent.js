@@ -343,22 +343,21 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
        style={{ width: 105, height: 105 }}
        onEvents={{click: planInspection }}
      />
-     <img  style={{padding:'0 10px 0 24px'}} src='./homePlanSplitLine.png' />
+     <img  style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div  className={styles.planOperaText} >
        <div>计划内次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
        <div>计划内完成次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
        <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.inspectionOutCompleteCount }</span> </div>
     </div>
    </Row>
-
-
+     <div style={{ width:'100%', height: 1,marginLeft:-21, background:"rgba(65, 66, 69, 0.5)"}}></div>
      <Row type='flex'  align='middle'>    
      <ReactEcharts
        option={planOperaOption(2)} 
        style={{ width: 105, height: 105 }}
        onEvents={{click: planInspection }}
      />
-     <img style={{padding:'0 10px 0 24px'}} src='./homePlanSplitLine.png' />
+     <img style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div className={styles.planOperaText} >
        <div>计划内次数：<span style={{color:'#FFDD54'}}>{planOperaList.inspectionAllCount}</span></div>
        <div>计划内完成次数：<span style={{color:'#FFDD54'}}>{planOperaList.inspectionAllCount}</span></div>

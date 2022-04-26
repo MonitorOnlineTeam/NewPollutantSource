@@ -76,7 +76,6 @@ const Index = (props) => {
             
     }
   
- console.log(props)
  const supervisionCol1 = [ {
     title: <span style={{fontWeight:'bold',fontSize:14}}>原则问题（否决项，出现1项此点位得0分）</span>,
     align: 'center',
@@ -298,7 +297,7 @@ const Index = (props) => {
               </Col >
             <Col span={12}>
                <Form.Item label="运维人员"  >
-               {infoList&&infoList.InspectorName}
+               {infoList&&infoList.OperationUserName}
               
                </Form.Item>
             </Col>

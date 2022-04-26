@@ -67,6 +67,7 @@ const Index = (props) => {
   },[]);
 
  const  save =(values)=>{
+   console.log(values)
    props.saveData({ ...values},()=>{
     getData();
   })
@@ -74,14 +75,14 @@ const Index = (props) => {
 
   const getData =()=>{
     props.getData({},(data)=>{
-      form.setFieldsValue({aa:data})
+      form.setFieldsValue({...data})
     });
   }
   return (
     <div  className={styles.checkInfoSty}>
     <BreadcrumbWrapper>
     <Card title={''}>
-    {/* <Spin loading={loadingGetData}> */}
+    <Spin spinning={loadingGetData}>
     <Form
       name="basic"
       form={form}
@@ -89,8 +90,14 @@ const Index = (props) => {
     > 
       <Row align='middle' style={{padding:'15px 0 10px 0'}}>
         <Col span={8}>
-      <Form.Item  label='核查标准' name='qq' >
+      <Form.Item  label='核查标准' name='Standard' >
           <InputNumber placeholde='请输入'  style={{width:'100%'}}/>
+      </Form.Item> 
+      <Form.Item  hidden name='ID' >
+          <Input/>
+      </Form.Item> 
+      <Form.Item  hidden name='Status' >
+          <Input/>
       </Form.Item> 
       </Col>
       <div style={{paddingBottom:8}}>
@@ -108,7 +115,7 @@ const Index = (props) => {
       </Col>
       </Row>
       </Form>
-      {/* </Spin> */}
+      </Spin>
    </Card>
    </BreadcrumbWrapper>
    

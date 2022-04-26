@@ -1087,7 +1087,6 @@ const Index = (props) => {
 
         break;
       case 2: // 实时数据一致性核查表 自动判断
-      console.log(row)
                 if(row.Name=='颗粒物'){ 
                  // isDisPlayCheck2 无显示屏  isDisPlayCheck4   直测流速法
                   analyzerRang1 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}aAnalyzerRang1`) :  isDisPlayCheck1? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`) : undefined;
@@ -1095,9 +1094,9 @@ const Index = (props) => {
                   analyzerUnit =  isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}aAnalyzerUnit`) :  isDisPlayCheck1? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
                 }else if(row.Name=='流速'){
-                  analyzerRang1 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`): undefined;
-                  analyzerRang2 =  isDisPlayCheck2?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
-                  analyzerUnit =  isDisPlayCheck2? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
+                  analyzerRang1 =  isDisPlayCheck4?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang1`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang1`): undefined;
+                  analyzerRang2 =  isDisPlayCheck4?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
+                  analyzerUnit =  isDisPlayCheck4? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
                }else{
                 analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
@@ -1106,9 +1105,6 @@ const Index = (props) => {
                }
 
 
-
-
-               console.log(analyzerRang1,analyzerRang2,)
          analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit  || row.Name =='流速' || row.Name=='标干流量' ? true : false;
 
         const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
@@ -1118,7 +1114,8 @@ const Index = (props) => {
         const indicaValFlag = (indicaVal||indicaVal==0) && indicaUnit || row.concentrationType=='标杆浓度' || row.Name =='流速' ||  row.Name=='NOx' || row.Name=='标干流量'? true : false;
         const dsDataFlag = (dsData||dsData==0) && dsDataUnit  ?  true : false; //只判断DAS示值填完的状态
         const scyDataFlag = (scyData||scyData==0) && scyDataUnit ? true : false;
-        console.log(form2.getFieldsValue())
+
+
         if (analyzerFlag && indicaValFlag && dsDataFlag && !(scyData||scyData==0)) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
@@ -1140,7 +1137,7 @@ const Index = (props) => {
             CouType: row.concentrationType === '原始浓度' ? 1 : row.concentrationType === '标杆浓度' ? 2 : undefined,
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
-            DataCou: scyData, DataUnit: scyDataUnit, //数采仪
+            DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
             DASStatus: dasChecked ? 1 : 2,
             DataStatus: numChecked ? 1 : 2,
           }, (data) => {
@@ -1155,7 +1152,7 @@ const Index = (props) => {
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
             DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
-            DataCou: scyData, DataUnit: scyDataUnit, //数采仪
+            DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
             DASStatus: dasChecked ? 1 : 2,
             DataStatus: numChecked ? 1 : 2,
           }, (data) => {
@@ -1214,7 +1211,7 @@ const Index = (props) => {
     }
   }
 
-  //流速 有无显示屏
+  //流速 
   const [isDisPlayCheck3, setIsDisPlayCheck3] = useState(false)
   const [isDisPlayCheck4, setIsDisPlayCheck4] = useState(false)
   const isDisplayChange2 = (e, name) => {
@@ -1242,11 +1239,11 @@ const Index = (props) => {
         if (index <= 1) { //只取前两个
           return <Option value={item}>{item}</Option>
         }
-      } else if (record.Name == '流速' && record.isDisplay == 4) { //直测流速法
+      } else if (record.Name == '流速' && (record.isDisplay == 4 || !record.isDisplay  ) ) { //直测流速法 或 实时数据一致性核查表 
         if (index > 1) { //只取最后一个
           return <Option value={item}>{item}</Option>
         }
-      } else {
+      }else {
         return <Option value={item}>{item}</Option>
       }
     })
@@ -1302,7 +1299,7 @@ const Index = (props) => {
                 return <Row align='middle' justify='center'>
                   <Form.Item name='isDisplay2'>
                     <Checkbox checked={isDisPlayCheck2} onChange={(e) => { isDisplayChange(e, 'isDisplay2') }}>无显示屏</Checkbox>
-                  </Form.Item> <NumTips style={{ top: 'auto', right: 12 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
+                  </Form.Item> <NumTips style={{ top: 'auto', right: 12,zIndex:2 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
                 break;
               case 3:
                 return <Row align='middle' style={{ paddingLeft: 12 }}>
@@ -1344,14 +1341,20 @@ const Index = (props) => {
                   break;
               }
               return <Row justify='center' align='middle'>
-                <Form.Item name={`${record.par}AnalyzerRang1`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                {/* <Form.Item name={`${record.par}AnalyzerRang1`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
+                <Form.Item name={`${record.par}AnalyzerRang1`} >
+              
                   <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
-                <Form.Item name={`${record.par}AnalyzerRang2`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                {/* <Form.Item name={`${record.par}AnalyzerRang2`} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
+                <Form.Item name={`${record.par}AnalyzerRang2`} >
+                 
                   <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
-                <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                {/* <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}> */}
+                <Form.Item name={`${record.par}AnalyzerUnit`} style={{ marginLeft: 5 }} >
+                
                   <Select  allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
@@ -2043,7 +2046,7 @@ const Index = (props) => {
                   dataSource={addDataConsistencyData}
                   pagination={false}
                   scroll={{  y: 'auto' }}
-                  sticky
+                  // sticky
                 />
                 <SdlTable
                   loading={parLoading}
@@ -2051,7 +2054,7 @@ const Index = (props) => {
                   dataSource={addRealTimeData}
                   pagination={false}
                   scroll={{ y: 'auto' }}
-                  sticky
+                  // sticky
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>
                   <span style={{ paddingRight: 10 }}>注：</span>
