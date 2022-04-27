@@ -100,7 +100,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '点位类型',
+      title: '点位类别',
       dataIndex: 'PollutantTypeName',
       key: 'PollutantTypeName',
       align: 'center',
@@ -109,6 +109,12 @@ const Index = (props) => {
       title: '督查类别',
       dataIndex: 'InspectorTypeName',
       key: 'InspectorTypeName',
+      align: 'center',
+    },
+    {
+      title: '督查类别描述',
+      dataIndex: 'InspectorTypeDescribe',
+      key: 'InspectorTypeDescribe',
       align: 'center',
     },
     {
@@ -184,7 +190,10 @@ const Index = (props) => {
     }
   }
   const del = (row) => {
-    props.deleteInspectorType({ ID: row.ID }, () => { onFinish(1,20) })
+    props.deleteInspectorType({ ID: row.ID }, () => { 
+      setPageIndex(1)
+      onFinish(1,pageSize)
+     })
   }
   const statusChange = (row) => {
     props.changeInspectorTypeStatus({ ID: row.ID,Status:row.Status }, () => { onFinish(pageIndex,pageSize) })
@@ -213,7 +222,7 @@ const Index = (props) => {
       ...values,
     }, () => {
       setVisible(false)
-      onFinish()
+      onFinish(pageIndex,pageSize)
     })
    } catch (errInfo) {
      console.log('错误信息:', errInfo);
@@ -321,7 +330,7 @@ const Index = (props) => {
             <NumTips />
           </Col>
           <Col span={24}>
-            <Form.Item label="点位类型" name="PollutantType" rules={[{ required: true, message: '请选择点位类型' }]} >
+            <Form.Item label="点位类别" name="PollutantType" rules={[{ required: true, message: '请选择点位类型' }]} >
               <Select placeholder='请选择'>
                 <Option value={2}>废气</Option>
                 <Option value={1}>废水</Option>

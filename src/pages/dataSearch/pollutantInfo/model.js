@@ -114,8 +114,8 @@ export default Model.extend({
         downloadFile(`/upload${result.Datas}`);
       }else{
         message.warning(result.Message)
-      }
-    }, 
+       }
+    },
     *getEntProjectRelationList ({ payload, callback }, { call, put, update }) { //运营信息
       !payload.EntID?   yield update({ projectRelationLoading:true }) : yield update({ historyProjectRelationLoading:true })
       const result = yield call(services.GetEntProjectRelationList, payload);
@@ -138,7 +138,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *exportEntProjectRelationList({ payload }, { call, put, update, select }) { //导出 运营信息
+      const result = yield call(services.ExportEntProjectRelationList, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`/upload${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+       }
+    },
     *getEntInfoList ({ payload, callback }, { call, put, update }) { //企业信息
       const result = yield call(services.GetEntInfoList, payload);
       if (result.IsSuccess) {

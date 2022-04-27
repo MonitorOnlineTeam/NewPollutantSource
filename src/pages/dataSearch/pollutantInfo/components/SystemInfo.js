@@ -103,13 +103,19 @@ const Index = (props) => {
       align:'center',
     },
     {
+      title: '气态污染物CEMS设备生产商',
+      dataIndex: 'GasManufacturer',
+      key:'GasManufacturer',
+      align:'center',
+    },
+    {
       title: '气态污染物CEMS设备规格型号',
       dataIndex: 'GasEquipment',
       key:'GasEquipment',
       align:'center',
     },
     {
-      title: '颗粒物CEMS设备生成商',
+      title: '颗粒物CEMS设备生产商',
       dataIndex: 'PMManufacturer',
       key:'PMManufacturer',
       align:'center',

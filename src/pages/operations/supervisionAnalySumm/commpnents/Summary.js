@@ -25,10 +25,8 @@ const namespace = 'supervisionAnalySumm'
 
 
 const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
-  tableDatas: supervisionAnalySumm.inspectorTypeItemList,
-  tableTotal: supervisionAnalySumm.inspectorTypeItemListTotal,
-  tableLoading: loading.effects[`${namespace}/getInspectorTypeItemList`],
-  saveLoading: loading.effects[`${namespace}/addOrEditInspectorTypeItem`],
+  tableDatas: supervisionAnalySumm.inspectorSummaryList,
+  tableLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
   inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
   exportLoading: loading.effects[`${namespace}/exportLoading`],
   assessmentMethodList:supervisionAnalySumm.assessmentMethodList,
@@ -42,9 +40,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getInspectorTypeItemList: (payload) => { // 列表
+    getInspectorSummaryList: (payload) => { // 列表
       dispatch({
-        type: `${namespace}/getInspectorTypeItemList`,
+        type: `${namespace}/getInspectorSummaryList`,
         payload: payload,
       })
     },
@@ -54,7 +52,7 @@ const Index = (props) => {
 
   const [form] = Form.useForm();
 
-  const { tableDatas, tableTotal,tableLoading,exportLoading, } = props;
+  const { tableDatas,tableLoading,exportLoading, } = props;
 
 
   useEffect(() => {
@@ -170,11 +168,9 @@ const Index = (props) => {
   const onFinish = async () => {  //查询
     try {
       const values = await form.validateFields();
-      props.getInspectorTypeItemList({
+      props.getInspectorSummaryList({
         ...values,
       })
-
-
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -197,7 +193,7 @@ const Index = (props) => {
           <Form
             form={form}
             name="advanced_search"
-            onFinish={() => { onFinish(pageIndex,pageSize) }}
+            onFinish={() => { onFinish() }}
             initialValues={{
             }}
             className={styles.queryForm}
@@ -218,7 +214,7 @@ const Index = (props) => {
               </Row>
 
             <Row>
-            <Form.Item label='统计日期' name='Status' >
+            <Form.Item label='统计日期' name='Status111' >
             <RangePicker_
               style={{ width: 386}}
               allowClear={true}
@@ -228,7 +224,7 @@ const Index = (props) => {
 
             <Spin spinning={false  } size='small' style={{ top: -9 }}>
               <Form.Item label='督查类别' name="InspectorType" style={{margin:'0 16px'}} >
-               <Select placeholder='请选择' style={{ width: 150}} >
+               <Select placeholder='请选择' style={{ width: 150}} allowClear    showSearch optionFilterProp="children">
                {/* {
                operationInfoList.InspectorTypeList&&operationInfoList.InspectorTypeList.map(item => {
                   return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>

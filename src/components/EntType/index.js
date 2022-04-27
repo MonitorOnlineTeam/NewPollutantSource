@@ -31,8 +31,8 @@ export default class Index extends Component {
        style={{ width: 150 }}
        {...this.props}
      >
-       <Option value="1">废水</Option>
        <Option value="2">废气</Option>
+       <Option value="1">废水</Option>
      </Select>
     );
   }

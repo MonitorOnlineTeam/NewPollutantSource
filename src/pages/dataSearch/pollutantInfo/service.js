@@ -47,6 +47,11 @@ export async function GetEntProjectRelationList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntProjectRelationList', params, null);
   return result;
 }
+//运营信息 导出
+export async function ExportEntProjectRelationList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEntProjectRelationList', params, null);
+  return result;
+}
 //企业信息 
 export async function GetEntInfoList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntInfoList',params, null);

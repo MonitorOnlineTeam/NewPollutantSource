@@ -747,7 +747,7 @@ const Index = (props) => {
       </Row>
       <Row gutter={[16, 16]}>
         <Col span={6}>
-          <Form.Item label="颗粒物CEMS设备生成商" name="PMManufacturer">
+          <Form.Item label="颗粒物CEMS设备生产商" name="PMManufacturer">
             {selectPopover('pm')}
           </Form.Item>
         </Col>

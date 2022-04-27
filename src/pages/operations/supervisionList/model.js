@@ -94,13 +94,18 @@ export default Model.extend({
     },
     // 添加or修改
     *addOrEditInspectorTemplate({ payload, callback }, { call, update, select, put }) {
-      const result = yield call(services.AddOrEditInspectorTemplate, { ...payload });
-      if (result.IsSuccess) {
-        message.success(result.Message)
+      
+      if(payload.InspectorTemplateList&&payload.InspectorTemplateList[0]){
+       const result = yield call(services.AddOrEditInspectorTemplate, { ...payload });
+        if (result.IsSuccess) {
+         message.success(result.Message)
         callback()
-      } else {
+       } else {
         message.error(result.Message)
-      }
+       }
+      }else{
+      message.warning('模板数据不能为空')
+    }
     },
     // 删除
     *deleteInspectorTemplate({ payload, callback }, { call, update, select, put }) {

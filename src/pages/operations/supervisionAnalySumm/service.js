@@ -1,8 +1,8 @@
 import { post, get, getNew } from '@/utils/request';
 
-//列表
-export async function GetInspectorOperationManageList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationManageList',params, null);
+//列表 督查总结
+export async function GetInspectorSummaryList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetInspectorSummaryList',params, null);
   return result;
 }
 //获取单个督查表实体

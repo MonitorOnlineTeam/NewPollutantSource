@@ -38,6 +38,7 @@ export default Model.extend({
         callback(result.Datas)
       } else {
         message.error(result.Message)
+        callback()
       }
     },
     *getPointParames({ payload, callback }, { call, put, update }) { //获取单个排口默认值
@@ -70,6 +71,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
         downloadFile(`${result.Datas}`)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteInspectorOperation({ payload, callback }, { call, put, update }) { //删除
+      const result = yield call(services.DeleteInspectorOperation, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback();
       } else {
         message.error(result.Message)
       }

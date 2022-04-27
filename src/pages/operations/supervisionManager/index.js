@@ -138,6 +138,13 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
+    deleteInspectorOperation: (payload, callback) => { //删除
+      dispatch({
+        type: `${namespace}/deleteInspectorOperation`,
+        payload: payload,
+        callback: callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -168,6 +175,9 @@ const Index = (props) => {
 
   const { tableDatas, tableTotal, tableLoading, pointParamesLoading,infoloading,exportLoading, userLoading,entLoading,systemModelList,operationInfoList,saveLoading1,} = props;
 
+
+  const userCookie = Cookie.get('currentUser');
+
   useEffect(() => {  
     initData()
   }, []);
@@ -175,7 +185,7 @@ const Index = (props) => {
   const initData = () =>{
    onFinish()
    setTimeout(()=>{
-    props.getInspectorOperationInfoList({ID:'',InspectorType:inspectorType },(data)=>{ })
+    props.getInspectorOperationInfoList({ID:'',InspectorType:inspectorType,PollutantType:"2" },(data)=>{ })
     props.getMonitoringTypeList({})
    })
 
@@ -304,7 +314,18 @@ const Index = (props) => {
             edit(record)
             
             }} ><EditOutlined style={{cursor:!flag&&'not-allowed', color:!flag&&'#00000040',  fontSize: 16 }}/></a> </Tooltip><Divider type="vertical" /> </Fragment>
-          <Fragment><Tooltip title='详情'> <a href="#" onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+          <Fragment>
+            <Tooltip title='详情'> <a href="#" onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" /> </Fragment>
+            <Fragment>
+            <Tooltip placement="left" title="删除" title={!flag?"运维督查记录已超过30天，不可删除": "删除"}>
+              <Popconfirm disabled={!flag} placement="left" title="确定要删除这条数据吗？" 
+              onConfirm={() =>{
+                if(!flag){ return;  }del(record) } 
+              } okText="是" cancelText="否">
+                <a href="#"  style={{cursor:!flag&&'not-allowed', color:!flag&&'#00000040'}} > <DelIcon  style={{fontSize: 16 }}/> </a>
+              </Popconfirm>
+            </Tooltip>
+            </Fragment>
         </span>
       }
     },
@@ -323,9 +344,15 @@ const Index = (props) => {
     form2.setFieldsValue({
       ID:record.ID,
     })
-    props.getInspectorOperationInfoList({ID:record.ID,InspectorType:inspectorType},(data)=>{
-    
-     
+    props.getInspectorOperationInfoList(
+    {
+    ID:record.ID,
+    InspectorType:inspectorType,    
+    },(data)=>{
+      
+      if(!data){
+        return
+      }
       const echoData = data.Info&&data.Info[0];
 
       const pollType = echoData&&echoData.PollutantType;
@@ -422,13 +449,9 @@ const Index = (props) => {
 }
   const del = async (record) => {
     const values = await form.validateFields();
-    props.delStandardGas({ ID: record.ID }, () => {
+    props.deleteInspectorOperation({ ID: record.ID }, () => {
       setPageIndex(1)
-      props.getStandardGasList({
-        ...values,
-        PageIndex: 1,
-        PageSize: pageSize
-      })
+      onFinish(1,pageSize)
     })
   };
 
@@ -452,6 +475,7 @@ const Index = (props) => {
     setType('add')
     form2.resetFields();
     tableForm.resetFields();
+    form2.setFieldsValue({Inspector : userCookie&&JSON.parse(userCookie).UserId})
     setGaschoiceData(null);//清空生产商的值 
     setPmchoiceData(null);
     setEvaluate(null); //评价
@@ -484,6 +508,7 @@ const Index = (props) => {
       ...values,
       BTime: values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
       ETime: values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+      InspectorType:inspectorType,
       time:undefined,
     })
   }
@@ -534,7 +559,7 @@ const Index = (props) => {
     //  console.log(data)
       props.addOrEditInspectorOperation(data,()=>{
         setFromVisible(false)
-        onFinish(1,20)
+        onFinish()
       })
    
     } catch (errorInfo) {
@@ -567,6 +592,7 @@ const Index = (props) => {
   const [pointList2, setPointList2] = useState([])
   const [pointLoading2, setPointLoading2] = useState(false)
   const [pollutantType,setPollutantType] = useState("2")
+  const [contentLoading,setContentLoading] = useState(false)
 
   const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时的监测类型请求
     if (Object.keys(hangedValues).join() == 'EntCode') {
@@ -587,7 +613,15 @@ const Index = (props) => {
        getEntList(hangedValues.PollutantType)
        form2.resetFields();
        form2.setFieldsValue({PollutantType:hangedValues.PollutantType});
-       setPollutantType(hangedValues.PollutantType)
+       setPollutantType(hangedValues.PollutantType) 
+       setGaschoiceData(null);//清空生产商的值 
+       setPmchoiceData(null);
+       setEvaluate(null); //评价
+
+       setContentLoading(true)
+       props.getInspectorOperationInfoList({  ID:'',InspectorType:inspectorType,PollutantType:hangedValues.PollutantType,  },()=>{
+        setContentLoading(false)
+      })
     }
     if (Object.keys(hangedValues).join() == 'DGIMN') {
        props.getPointParames({DGIMN:hangedValues.DGIMN},(data)=>{
@@ -620,11 +654,11 @@ const Index = (props) => {
         </Spin>
         <Spin spinning={entLoading} size='small' style={{ top: -8 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
-          <EntAtmoList  style={{ width: 380}} />
+          <EntAtmoList  style={{ width: 300}} />
         </Form.Item>
         </Spin>
         <Spin spinning={pointLoading} size='small' style={{ top: -8,left:20 }}>
-          <Form.Item label='监测点名称' name='DGIMN' >
+          <Form.Item label='站点名称' name='DGIMN' >
 
             <Select placeholder='请选择'  showSearch optionFilterProp="children" style={{ width: 150 }}>
               {
@@ -645,10 +679,9 @@ const Index = (props) => {
         </Spin>
         <Form.Item label="督查日期" name="time" style={{ marginLeft:8,marginRight:8 }}  >
             <RangePicker_
-              style={{ width: 380}}
-              allowClear={true}
-              format="YYYY-MM-DD HH:mm:ss"
-              showTime="YYYY-MM-DD HH:mm:ss" />
+              style={{ width: 300}}
+              allowClear={false}
+              format="YYYY-MM-DD"/>
         </Form.Item>
         <Spin spinning={infoloading&&type!=='edit'} size='small' style={{top:-8,left:20}}>
         <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
@@ -932,6 +965,9 @@ const Index = (props) => {
         key: 'ContentItem',
         align: 'center',
         width:380,
+        render: (text, record) => {
+          return <div style={{textAlign:"left"}}>{text}</div>
+        },
       },
       {
         title: `扣分`,
@@ -977,6 +1013,9 @@ const Index = (props) => {
           key: 'ContentItem',
           align: 'center',
           width:380,
+          render: (text, record) => {
+            return <div style={{textAlign:"left"}}>{text}</div>
+          },
         },
         {
           title: `扣分`,
@@ -1163,7 +1202,7 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-            <Spin spinning={type=='add'&&infoloading  } size='small' style={{ top: -9 }}>
+            <Spin spinning={type=='add'&&infoloading  } size='small' style={{ top: -3 }}>
               <Form.Item label='督查类别' name="InspectorType" rules={[{ required: true, message: '请输入督查类别' }]} >
                <Select placeholder='请选择'>
                {
@@ -1177,7 +1216,7 @@ const Index = (props) => {
             </Col>
 
             <Col span={12}>
-            <Spin spinning={entLoading2} size='small' style={{ top: -9 }}>
+            <Spin spinning={entLoading2} size='small' style={{ top: -3 }}>
               <Form.Item label="企业名称" name="EntCode" rules={[{ required: true, message: '请输入企业名称' }]}>
               <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" >
               {
@@ -1190,7 +1229,7 @@ const Index = (props) => {
               </Spin>
             </Col>
             <Col span={12}>
-            <Spin spinning={pointLoading2} size='small' style={{ top: -9}}>
+            <Spin spinning={pointLoading2} size='small' style={{ top: -3}}>
             <Form.Item label='站点名称' name='DGIMN' rules={[{ required: true, message: '请选择站点名称' }]}>
 
             <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
@@ -1276,7 +1315,7 @@ const Index = (props) => {
           </Col>
           
           <Col span={24}>
-          <Form.Item label='备注' name='EquipmentRemark'>
+          <Form.Item label='设备备注' name='EquipmentRemark'>
                   <TextArea rows={1} placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
@@ -1311,7 +1350,7 @@ const Index = (props) => {
           </Row>
           <Row>
           <Col span={24}>
-          <Form.Item label='备注' name='EquipmentRemark'>
+          <Form.Item label='设备备注' name='EquipmentRemark'>
                   <TextArea rows={1} placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
@@ -1327,16 +1366,17 @@ const Index = (props) => {
            </Form>
 
            <div className={'supervisionContentSty'}>
+             <Spin spinning={contentLoading}>
             <Form  name="tableForm"   form={tableForm}  >
            <TitleComponents text='督查内容'/>
-            {!operationInfoList.PrincipleProblemList&&!operationInfoList.importanProblemList&&!operationInfoList.CommonlyProblemList?
-            
+            {!(operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0])&&!(operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0])&&!(operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0])?
               <Table 
               bordered
               dataSource={[]}
               columns={[]}
               pagination={false}
-              locale={{ emptyText: '暂无模板数据' }}
+              locale={{ emptyText: '暂无模板数据' }} 
+              className="emptyTableSty"
               />
               :
               <>
@@ -1374,7 +1414,7 @@ const Index = (props) => {
            }
            
              </Form>
-           
+           </Spin>
            </div>
            
            </Spin>

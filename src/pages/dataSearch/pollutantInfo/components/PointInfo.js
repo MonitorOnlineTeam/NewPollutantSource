@@ -156,7 +156,6 @@ const Index = (props) => {
     const onFinish = async (pageIndexs, pageSizes) => {  //查询
         try {
             const values = await form.validateFields();
-            
             props.getTableData({
                 ...values,
                 pageIndex: pageIndexs,
@@ -180,7 +179,7 @@ const Index = (props) => {
                         align: 'center',  
                     })
                 }else{
-                   setColumns(columns.filter(item=>item.outPutType!='CEMS监测原理'&&item.CEMSPrinciple!='CEMS监测原理'&&item.CEMSType!='CEMS类型'))
+                   setColumns(columns.filter(item=>item.title!='排口类型'&&item.title!='CEMS监测原理'&&item.title!='CEMS类型'))
                 }
             })
 
@@ -208,7 +207,6 @@ const Index = (props) => {
         })
 
     };
-
     const [pageSize, setPageSize] = useState(20)
     const [pageIndex, setPageIndex] = useState(1)
 

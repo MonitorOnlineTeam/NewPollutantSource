@@ -116,7 +116,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '点位类型',
+      title: '点位类别',
       dataIndex: 'PollutantTypeName',
       key: 'PollutantTypeName',
       align: 'center',
@@ -155,6 +155,12 @@ const Index = (props) => {
       title: '创建人',
       dataIndex: 'CreateUser',
       key: 'CreateUser',
+      align: 'center',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
       align: 'center',
     },
     {
@@ -212,7 +218,10 @@ const Index = (props) => {
   }
 
   const del = (row) => {
-    props.deleteInspectorTemplate({ ID: row.InspectorNum }, () => { onFinish(1,20) })
+    props.deleteInspectorTemplate({ ID: row.InspectorNum }, () => {
+      setPageIndex(1)
+      onFinish(1,pageSize)
+      })
   }
  
   const [editInspectorNum,setEditInspectorNum ] = useState()
@@ -277,6 +286,7 @@ const Index = (props) => {
   }
   const add = () => {
     setVisible(true)
+    setTitle('添加')
     setData([])
     getInspectorTypeList(2)
 
@@ -300,6 +310,7 @@ const Index = (props) => {
                 Sort: item.Sort,
               }
       })
+
       props.addOrEditInspectorTemplate({
         PollutantType:selectRow[0].PollutantType,
         InspectorName:selectRow[0].InspectorName,
@@ -309,7 +320,7 @@ const Index = (props) => {
       }, () => {
         setCopyAddLoading(false)
         setVisible(false)
-        onFinish()
+         onFinish(pageIndex, pageSize)
       })
     })
   }else{
@@ -318,7 +329,7 @@ const Index = (props) => {
 
  }
   const save = async () => {
-    const values = await form2.getFieldValue();
+    const values = await form2.validateFields();
     try {
       const inspectorTemplateList = data.map((item,index)=>{
        return {
@@ -331,14 +342,15 @@ const Index = (props) => {
         InspectorNum: title==='编辑'? editInspectorNum : undefined,
         PollutantType:values.PollutantType,
         InspectorName:values.InspectorName,
-        EffectiveDate: moment(values.EffectiveDate).startOf('days').format("YYYY-MM-DD HH:mm:ss"),
+        EffectiveDate:values.EffectiveDate? moment(values.EffectiveDate).startOf('days').format("YYYY-MM-DD HH:mm:ss") : null,
         InspectorTemplateList:inspectorTemplateList
       }
+    
       props.addOrEditInspectorTemplate({
         ...par,
       }, () => {
         setVisible(false)
-        onFinish()
+         onFinish(pageIndex, pageSize)
       })
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -361,21 +373,22 @@ const Index = (props) => {
 
 
 
-  const columns2 = [
+
+
+  const detailCol = [
     {
       title: '序号',
       dataIndex: 'Sort',
       key: 'Sort',
       align: 'center',
-      width:200,
+      width:'8%',
     },
     {
       title: '督查类别描述',
       dataIndex: `${visible? "InspectorTypeId" : 'InspectorTypeName' }`,
-      dataIndex: `${visible? "InspectorTypeId" : 'InspectorTypeName' }`,
-      width:300,
       align: 'center',
       editable: true,
+      width:'45%',
     },
     {
       title: '督查内容',
@@ -383,10 +396,45 @@ const Index = (props) => {
       key: 'InspectorContent',
       align: 'center',
       editable: true,
+      width:'45%',
     },
   ]
 
-  const addCol = columns2.map((col) => {
+  const columns2 = [
+    {
+      title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
+      align: 'center',
+      width:'10%',
+    },
+    {
+      title: '督查类别描述',
+      dataIndex: `${visible? "InspectorTypeId" : 'InspectorTypeName' }`,
+      align: 'center',
+      editable: true,
+      width:'39%',
+    },
+    {
+      title: '督查内容',
+      dataIndex: 'InspectorContent',
+      key: 'InspectorContent',
+      align: 'center',
+      editable: true,
+      width:'39%',
+    },
+    {
+      title: '操作',
+      align: 'center',
+      width:'8%',
+      render: (text, record) => {
+          return  <span onClick={() => { cancel(record) }}> {/*编辑的删除 */}
+              <a>删除</a>
+            </span>
+      }
+    }
+  ]
+ const addCol =  columns2.map((col) => {
     if (!col.editable) {
       return col;
     }
@@ -402,6 +450,16 @@ const Index = (props) => {
       }),
     };
   });
+
+
+
+  const cancel = (record) => {
+      const newData = [...data];
+      const index = newData.findIndex((item) => record.Sort === item.Sort);
+      const item = newData[index];
+      newData.splice(index, 1);
+      setData(newData);
+    };
   const [data, setData ] =useState([])
   const handleAdd = () => {
     const newData = {
@@ -488,8 +546,6 @@ const Index = (props) => {
           }}
           className={styles.temTabele}
         />
-        <div style={{ paddingTop: 10, color: '#f5222d' }}>废气督查类别：原则问题（否觉项，出现1项此点位得0分）、重点问题（每项4分，共60分）、一般问题（每项2分，共40分）</div>
-        <div style={{ color: '#f5222d' }}>废水督查类别：原则问题（否觉项，出现1项此点位得0分）、重点问题（每项4分，共60分）、一般问题（每项2分，共40分）</div>
       </Card>
       <Modal
         title={title}
@@ -501,6 +557,7 @@ const Index = (props) => {
         width='80%'
         wrapClassName={styles.telModalSty}
         confirmLoading={title==='添加'? saveloading : saveloading||detailLoading}
+        wrapClassName='spreadOverModal'
       >
         <Spin spinning={title==='添加'? false : detailLoading}>
         <Form
@@ -513,8 +570,8 @@ const Index = (props) => {
           onValuesChange={onValuesChange}
           
         >
-          <Row>
-            <Form.Item label="点位类型" name="PollutantType" >
+          <Row style={{paddingBottom:8}}>
+            <Form.Item label="点位类别" name="PollutantType" >
               <Select placeholder='请选择'  style={{ width: 150 }}>
                 <Option value={2}>废气</Option>
                 <Option value={1}>废水</Option>
@@ -527,8 +584,11 @@ const Index = (props) => {
               <DatePicker style={{ width: 150 }} />
             </Form.Item>
           </Row>
+          <div className={styles.addEditTable} >
           <Table
             loading={tableLoading}
+            className={'compactTableSty'}
+            scroll={{y:'calc(100vh - 390px)'}}
             components={{
               body: {
                 cell: ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
@@ -545,12 +605,12 @@ const Index = (props) => {
                     {editing ?
                     inputType==='select'?
                     <Spin spinning={inspectorTypeDescloading} size='small' style={{ top: 'auto', left: 'auto' }}>
-                    <Form.Item   name={`${dataIndex}${record.ID}`}    style={{ margin: 0  }} >
+                    <Form.Item   name={`${dataIndex}${record.ID}`} rules={[{ required: true, message: `${title}不能为空` }]}   style={{ margin: 0  }} >
                     {inputNode}
                     </Form.Item>
                     </Spin>
                     :
-                    <Form.Item   name={`${dataIndex}${record.ID}`}    style={{ margin: 0  }} >
+                    <Form.Item   name={`${dataIndex}${record.ID}`}  rules={[{ required: true, message: `${title}不能为空` }]}  style={{ margin: 0  }} >
                        {inputNode}
                        </Form.Item>
                       :
@@ -567,6 +627,7 @@ const Index = (props) => {
             rowClassName="editable-row"
             pagination={false}
           />
+          </div>
           <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleAdd()} >
             新增成员
        </Button>
@@ -583,6 +644,7 @@ const Index = (props) => {
         onCancel={() => { setDetailVisible(false); }}
         width='80%'
         footer={null}
+        wrapClassName='spreadOverModal'
       >
         <Spin spinning={detailLoading}>
        <Card
@@ -590,7 +652,7 @@ const Index = (props) => {
           <Form>
           <Row>
             <Col span={8}>
-          <Form.Item label="点位类型" name="PollutantType" >
+          <Form.Item label="点位类别" name="PollutantType" >
             <span>{inspectorTemplateView.PollutantTypeName} </span>
           </Form.Item>
           </Col>
@@ -608,7 +670,7 @@ const Index = (props) => {
         <SdlTable
           bordered
           dataSource={inspectorTemplateView.InspectorTypeModelList}
-          columns={columns2}
+          columns={detailCol}
           scroll={{ y: clientHeight - 500 }}
           pagination={false}
         />

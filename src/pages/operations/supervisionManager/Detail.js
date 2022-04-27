@@ -104,7 +104,7 @@ const Index = (props) => {
       align: 'center',
       width:200,
       render: (text, record) => {
-        return <div>{text ==0? '有原则' : '无原则'}</div>
+        return <div>{text ==0? '有' : '无'}</div>
       },
     },
     {
@@ -112,6 +112,9 @@ const Index = (props) => {
       dataIndex: 'Remark',
       key: 'Remark',
       align: 'center',
+      render: (text, record) => {
+        return <div style={{textAlign:"left"}}>{text}</div>
+      },
     }]
   }
   ]
@@ -133,6 +136,9 @@ const Index = (props) => {
         key: 'ContentItem',
         align: 'center',
         width:380,
+        render: (text, record) => {
+          return <div style={{textAlign:"left"}}>{text}</div>
+        },
       },
       {
         title: `扣分`,
@@ -146,6 +152,9 @@ const Index = (props) => {
         dataIndex: 'Remark',
         key: 'Remark',
         align: 'center',
+        render: (text, record) => {
+          return <div style={{textAlign:"left"}}>{text}</div>
+        },
        }]
       }]
 
@@ -166,6 +175,9 @@ const Index = (props) => {
           key: 'ContentItem',
           align: 'center',
           width:380,
+          render: (text, record) => {
+            return <div style={{textAlign:"left"}}>{text}</div>
+          },
         },
         {
           title: `扣分`,
@@ -179,6 +191,9 @@ const Index = (props) => {
           dataIndex: 'Remark',
           key: 'Remark',
           align: 'center',
+          render: (text, record) => {
+            return <div style={{textAlign:"left"}}>{text}</div>
+          },
         }]
         }]
         const supervisionCol4 = [

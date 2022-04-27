@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, BarChartOutlined, CodeSandboxCircleFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RollbackOutlined, ProfileOutlined, CodeSandboxCircleFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
@@ -30,6 +30,7 @@ const dvaPropsData = ({ loading, pollutantInfo, autoForm }) => ({
     tableLoading: pollutantInfo.projectRelationLoading,
     historyOperationInfo:pollutantInfo.historyOperationInfo,
     historyOperationInfoLoading: pollutantInfo.historyProjectRelationLoading,
+    exportLoading: loading.effects[`${namespace}/exportEntProjectRelationList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -177,7 +178,7 @@ const Index = (props) => {
                 return <span>
                     <Fragment>
                         <Tooltip title="历史运营详情">
-                            <a href="#" onClick={()=>{historyDetail(record)}}>  <BarChartOutlined style={{ fontSize: 16 }} /></a>
+                            <a href="#" onClick={()=>{historyDetail(record)}}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
                         </Tooltip>
                     </Fragment>
                 </span>
@@ -268,7 +269,7 @@ const Index = (props) => {
     const historyDetail = (record) =>{
         setVisible(true)
         setEntTitle(`${record.parentName}-${record.pointName}`)
-        props.getEntProjectRelationList({EntID:record.entID})
+        props.getEntProjectRelationList({EntID:record.entID,DGIMN:record.DGIMN})
     }
 
     const [pageSize, setPageSize] = useState(20)

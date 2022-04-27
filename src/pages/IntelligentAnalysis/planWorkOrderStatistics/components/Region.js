@@ -698,16 +698,16 @@ const Index = (props,ref ) => {
             return  <Button type="link" onClick={()=>{workOrderNum(3,record,'repairCount')}}>{text}</Button>
           }
         },
-        {
-          title: '配合对比工单数',
-          dataIndex: 'matchingComparisonCompleteCount',
-          key: 'matchingComparisonCompleteCount',
-          width: 100,
-          align:'center',
-          render:(text,record,index)=>{
-            return  <Button type="link" onClick={()=>{workOrderNum(3,record,'matchingComparisonCount')}}>{text}</Button>
-          }
-        },
+        // {
+        //   title: '配合对比工单数',
+        //   dataIndex: 'matchingComparisonCompleteCount',
+        //   key: 'matchingComparisonCompleteCount',
+        //   width: 100,
+        //   align:'center',
+        //   render:(text,record,index)=>{
+        //     return  <Button type="link" onClick={()=>{workOrderNum(3,record,'matchingComparisonCount')}}>{text}</Button>
+        //   }
+        // },
         {
           title: '配合检查工单数',
           dataIndex: 'cooperationInspectionCompleteCount',

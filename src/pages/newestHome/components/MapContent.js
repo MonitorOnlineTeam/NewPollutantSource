@@ -437,9 +437,9 @@ class Index extends PureComponent {
   goEnt = (extData) => {
     const { entMarkers } = this.state;
      
-    console.log(extData,entMarkers)
-    // const data = entMarkers.filter(item.position.=>)
-    this.loadEntMarkerData(entMarkers)
+    const data = entMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode);
+
+    this.loadEntMarkerData(data)
   }
   operationChange = (text, mapProps) => {
     const map = mapProps.__map__;

@@ -579,3 +579,11 @@ a:hover {
  .popSelectSty{ //下拉弹出框表格 默认下拉列表隐藏
   display: none;
  }
+ .compactTableSty :global{ //form 表格 缩小边距
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+    padding: 4px 16px;
+  }
+  .ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder{
+    text-align: left;
+  }
+}

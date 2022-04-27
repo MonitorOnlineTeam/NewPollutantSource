@@ -202,9 +202,9 @@ const Index = (props) => {
 
 
  
-  useEffect(()=>{
-    reqinit()
-  },[addDataConsistencyData,addParconsistencyData])
+  // useEffect(()=>{
+  //   reqinit()
+  // },[addDataConsistencyData,addParconsistencyData])
 
  const reqinit = () =>{ //初始化是否校验
   if (addDataConsistencyData && addDataConsistencyData[0]) { //动态生成判断量程 是否 是否必填的
@@ -841,7 +841,9 @@ const Index = (props) => {
 
     }
     if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //监测点
-      getPointConsistencyParam(hangedValues.DGIMN)
+      setTimeout(()=>{
+        getPointConsistencyParam(hangedValues.DGIMN)
+      },180)
     }
   }
   const [visible, setVisible] = useState(false)
@@ -999,35 +1001,35 @@ const Index = (props) => {
       }
     }
    
-    switch (type) {
-      case 1: // 量程一致性核查表
-        if (val[0] == 3) { //不适用 量程 可不填
-          setRangReq({ ...rangReq, [`${row.par}RangFlag`]: false })
-          // setRemark({ ...remark, [`${row.par}RemarkFlag`]: true })
-        } else {
-          setRangReq({ ...rangReq, [`${row.par}RangFlag`]: true })
-          // setRemark({ ...remark, [`${row.par}RemarkFlag`]: false })
-        }
-        break;
-      case 2: // 实时数据一致性核查表
-        if (val[0] == 3) { //不适用 示值 可不填
-          setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: false })
-          // setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: true })
-        } else {
-          setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: true })
-          // setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: false })
-        }
+    // switch (type) {
+    //   case 1: // 量程一致性核查表
+    //     if (val[0] == 3) { //不适用 量程 可不填
+    //       setRangReq({ ...rangReq, [`${row.par}RangFlag`]: false })
+    //       setRemark({ ...remark, [`${row.par}RemarkFlag`]: true })
+    //     } else {
+    //       setRangReq({ ...rangReq, [`${row.par}RangFlag`]: true })
+    //       setRemark({ ...remark, [`${row.par}RemarkFlag`]: false })
+    //     }
+    //     break;
+    //   case 2: // 实时数据一致性核查表
+    //     if (val[0] == 3) { //不适用 示值 可不填
+    //       setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: false })
+    //       setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: true })
+    //     } else {
+    //       setIndicaValReq({ ...indicaValReq, [`${row.par}IndicaValFlag`]: true })
+    //       setRemark2({ ...remark2, [`${row.par}Remark2Flag`]: false })
+    //     }
 
 
-      case 3: // 参数一致性核查表
-        if (val[0] == 3) {
-          setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: false })
-          // setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: true })
-        } else {
-          setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: true })
-          // setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: false })
-        }
-    }
+    //   case 3: // 参数一致性核查表
+    //     if (val[0] == 3) {
+    //       setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: false })
+    //       setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: true })
+    //     } else {
+    //       setTraceValReq({ ...traceValReq, [`${row.par}TraceValFlag`]: true })
+    //       setRemark3({ ...remark3, [`${row.par}Remark3Flag`]: false })
+    //     }
+    // }
 
   }
 
@@ -1386,14 +1388,17 @@ const Index = (props) => {
                   disabledFlag = !dasChecked
               }
               return <Row justify='center' align='middle'>
-                <Form.Item name={[`${record.par}DsRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]} >
+                {/* <Form.Item name={[`${record.par}DsRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]} > */}
+                <Form.Item name={[`${record.par}DsRang1`]} >
                   <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
-                <Form.Item name={[`${record.par}DsRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                {/* <Form.Item name={[`${record.par}DsRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
+                <Form.Item name={[`${record.par}DsRang2`]}>
                   <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
-                <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                {/* <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}> */}
+                <Form.Item name={[`${record.par}DsUnit`]} style={{ marginLeft: 5 }} >
                   <Select   allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
@@ -1424,14 +1429,17 @@ const Index = (props) => {
                   disabledFlag = !numChecked
               }
               return <Row justify='center' align='middle'>
-                <Form.Item name={[`${record.par}ScyRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                {/* <Form.Item name={[`${record.par}ScyRang1`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}  
+                <Form.Item name={[`${record.par}ScyRang1`]}>
                   <InputNumber placeholder='最小值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
                 <span style={{ padding: '0 2px' }}> - </span>
-                <Form.Item name={[`${record.par}ScyRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}>
+                {/* <Form.Item name={[`${record.par}ScyRang2`]} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请输入' }]}> */}
+                <Form.Item name={[`${record.par}ScyRang2`]} >
                   <InputNumber placeholder='最大值' disabled={disabledFlag} onBlur={() => { isJudge(record, 1) }} />
                 </Form.Item>
-                <Form.Item name={[`${record.par}ScyUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}>
+                {/* <Form.Item name={[`${record.par}ScyUnit`]} style={{ marginLeft: 5 }} rules={[{ required: !disabledFlag ? rangReq[`${record.par}RangFlag`] : !disabledFlag, message: '请选择' }]}> */}
+                <Form.Item name={[`${record.par}ScyUnit`]} style={{ marginLeft: 5 }} >        
                   <Select   allowClear placeholder='单位列表' disabled={disabledFlag} onChange={() => { isJudge(record, 1) }}>
                     {unitFormat(record)}
                   </Select>
@@ -1507,7 +1515,7 @@ const Index = (props) => {
             }
             
             // return <Form.Item name={`${record.par}Remark`} rules={[{ required: remark[`${record.par}RemarkFlag`], message: '请输入' }]}>
-             return <Form.Item name={`${record.par}Remark`} rules={[{ required: false, message: '请输入' }]}> 
+             return <Form.Item name={`${record.par}Remark`}> 
               <TextArea rows={1} disabled={disabledFlag} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -1622,10 +1630,12 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}>
+              {/* <Form.Item name={`${record.par}IndicaVal`} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请输入' }]}> */}
+              <Form.Item name={`${record.par}IndicaVal`}>    
                 <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
-              <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}>
+              {/* <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }} rules={[{ required: indicaValReq[`${record.par}IndicaValFlag`], message: '请选择' }]}> */}
+              <Form.Item name={`${record.par}IndicaUnit`} style={{ marginLeft: 5 }}> 
                 <Select   allowClear placeholder='单位列表' onChange={() => { isJudge(record, 2) }}>
                   {unitFormat(record)}
                 </Select>
@@ -1641,10 +1651,12 @@ const Index = (props) => {
           width: 300,
           render: (text, record) => {
             return <Row justify='center' align='middle'>
-              <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} >
+              {/* <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} > */}
+              <Form.Item name={[`${record.par}DsData`]} >         
                 <InputNumber placeholder='请输入' disabled={!dasChecked} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
-              <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}>
+              {/* <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请选择' }]}> */}
+              <Form.Item name={[`${record.par}DsDataUnit`]} style={{ marginLeft: 5 }}>      
                 <Select  allowClear placeholder='单位列表' disabled={!dasChecked} onChange={() => { isJudge(record, 2) }}>
                   {unitFormat(record)}
                 </Select>
@@ -1663,11 +1675,13 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}>
+              {/* <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}> */}
+              <Form.Item name={[`${record.par}ScyData`]}>       
                 <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numChecked} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
-              <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}>
-                <Select  allowClear placeholder='单位列表' disabled={!numChecked} onChange={() => { isJudge(record, 2) }}>
+              {/* <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}> */}
+              <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }}> 
+               <Select  allowClear placeholder='单位列表' disabled={!numChecked} onChange={() => { isJudge(record, 2) }}>
                   {unitFormat(record)}
                 </Select>
               </Form.Item>
@@ -1713,7 +1727,7 @@ const Index = (props) => {
           width: 180,
           render: (text, record) => {
             // return <Form.Item name={`${record.par}Remark2`} rules={[{ required: remark2[`${record.par}Remark2Flag`], message: '请输入' }]}>
-            return <Form.Item name={`${record.par}Remark2`} rules={[{ required: false, message: '请输入' }]}>  
+            return <Form.Item name={`${record.par}Remark2`}>  
             <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
             </Form.Item>
           }
@@ -1771,7 +1785,7 @@ const Index = (props) => {
       key: 'isDisplay',
       render: (text, record) => {
 
-        return <Form.Item name={`${record.par}IsEnable`} rules={[{ required: false, message: '请选择' }]}>
+        return <Form.Item name={`${record.par}IsEnable`}>
           <Checkbox.Group onChange={(value)=>{isEnableChange(value,`${record.par}` )}}> <Checkbox value={1} ></Checkbox></Checkbox.Group>
         </Form.Item>
 
@@ -1785,8 +1799,9 @@ const Index = (props) => {
       render: (text, record) => {
         if(record.Name==='停炉信号接入有备案材料' || record.Name==='停炉信号激活时工况真实性' ){
             return '—'
-        }
-        return <Form.Item name={`${record.par}SetVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+        } 
+        //return <Form.Item name={`${record.par}SetVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+        return  <Form.Item name={`${record.par}SetVal`} > 
           <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
         </Form.Item>
 
@@ -1801,7 +1816,8 @@ const Index = (props) => {
         if(record.Name==='停炉信号接入有备案材料' || record.Name==='停炉信号激活时工况真实性' ){
           return '—'
       }
-        return <Form.Item name={`${record.par}TraceVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+        // return <Form.Item name={`${record.par}TraceVal`} rules={[{ required: traceValReq[`${record.par}TraceValFlag`], message: '请输入' }]}>
+        return <Form.Item name={`${record.par}TraceVal`}>
           <InputNumber placeholder='请输入' onBlur={() => { isJudge(record, 3) }} style={{ width: '100%' }} />
         </Form.Item>
 
@@ -1849,7 +1865,7 @@ const Index = (props) => {
       width: 180,
       render: (text, record) => {
         // return <Form.Item name={`${record.par}Remark3`} rules={[{ required: remark3[`${record.par}Remark3Flag`], message: '请输入' }]}>
-         return <Form.Item name={`${record.par}Remark3`} rules={[{ required: false, message: '请输入' }]}> 
+         return <Form.Item name={`${record.par}Remark3`}> 
           <TextArea rows={1} placeholder='请输入' style={{ width: '100%' }} />
         </Form.Item>
       }
@@ -2000,7 +2016,7 @@ const Index = (props) => {
         >
 
           <Row className={styles.queryPar}>
-            <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称!' }]}>
+            <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
               <EntAtmoList pollutantType={2} allowClear={false} style={{width:200}}/>
             </Form.Item>
             <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: 20 }}>

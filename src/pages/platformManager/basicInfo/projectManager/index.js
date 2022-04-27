@@ -266,8 +266,7 @@ const Index = (props) => {
   const del =  (record) => {
     props.deleteProjectInfo({ID:record.ID},()=>{
         setPageIndex(1);
-        setPageSize(20);
-        onFinish(1,20);
+        onFinish(1,pageSize);
     })
   };
 

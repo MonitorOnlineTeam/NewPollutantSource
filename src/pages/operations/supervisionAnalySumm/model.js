@@ -10,25 +10,19 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'supervisionAnalySumm',
   state: {
-    tableDatas: [],
+    inspectorSummaryList: [],
     parametersList: [],
     tableLoading: false,
     tableTotal: 0,
     operationInfoList:[],
   },
   effects: {
-    *getInspectorOperationManageList({ payload, callback }, { call, put, update }) { //列表
-      yield update({ tableLoading: true })
-      const result = yield call(services.GetInspectorOperationManageList, payload);
+    *getInspectorSummaryList({ payload, callback }, { call, put, update }) { //列表 督查总结
+      const result = yield call(services.GetInspectorSummaryList, payload);
       if (result.IsSuccess) {
-        yield update({
-          tableTotal: result.Total,
-          tableDatas: result.Datas,
-          tableLoading: false
-        })
+        yield update({ inspectorSummaryList: result.Datas, })
       } else {
         message.error(result.Message)
-        yield update({ tableLoading: false })
       }
     },
     *getInspectorOperationInfoList({ payload, callback }, { call, put, update }) { //获取单个督查表实体

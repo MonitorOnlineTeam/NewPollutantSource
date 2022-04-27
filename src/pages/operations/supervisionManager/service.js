@@ -7,7 +7,7 @@ export async function GetInspectorOperationManageList(params) {
 }
 //获取单个督查表实体
 export async function GetInspectorOperationInfoList(params) {
-  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationInfoList?ID=${params.ID}&InspectorType=${params.InspectorType}`, null);
+  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationInfoList?ID=${params.ID}&InspectorType=${params.InspectorType}&PollutantType=${params.PollutantType}`, null);
   return result;
 }
 
@@ -33,3 +33,9 @@ export async function ExportInspectorOperationManage(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportInspectorOperationManage',params, null);
   return result;
 }
+//删除运维督查信息
+export async function DeleteInspectorOperation(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteInspectorOperation/'+params.ID,null, null);
+  return result;
+}
+
