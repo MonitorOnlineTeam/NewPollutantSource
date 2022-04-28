@@ -580,10 +580,16 @@ a:hover {
   display: none;
  }
  .compactTableSty :global{ //form 表格 缩小边距
-  .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td{
     padding: 4px 16px;
+  }
+  .ant-table.ant-table-middle .ant-table-title, .ant-table.ant-table-middle .ant-table-footer, .ant-table.ant-table-middle .ant-table-thead > tr > th, .ant-table.ant-table-middle .ant-table-tbody > tr > td, .ant-table.ant-table-middle tfoot > tr > th, .ant-table.ant-table-middle tfoot > tr > td{
+    padding: 4px 16px; //左侧固定
   }
   .ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder{
     text-align: left;
+  }
+  .ant-table-row:nth-child(2n+1) .ant-table-cell-fix-left, .ant-table-row:nth-child(2n+1) .ant-table-cell-fix-right{
+    background-color: #fff;//左侧固定
   }
 }

@@ -26,6 +26,7 @@ const namespace = 'remoteSupervision'
 
 const dvaPropsData =  ({ loading,remoteSupervision,global }) => ({
   tableLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`],
+  clientHeight: global.clientHeight,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -46,7 +47,7 @@ const  dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-    const {match:{params:{id}},tableLoading,type }= props;
+    const {match:{params:{id}},tableLoading,type,clientHeight }= props;
    
     const [rangeUpload,setRangeUpload] = useState()
     const [couUpload,setCouUpload] = useState()
@@ -565,8 +566,8 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={6}>
-        <Form.Item label="核查月份" >
-        {moment(consistencyCheckDetail.dateTime).format("YYYY-MM")}
+        <Form.Item label="核查日期" >
+        {moment(consistencyCheckDetail.dateTime).format("YYYY-MM-DD")}
       </Form.Item>
       </Col>
       <Col span={6}>
@@ -601,7 +602,7 @@ const Index = (props) => {
                 columns={columns1}
                 dataSource={tableData1}
                 pagination={false}
-                scroll={{ y: '100vh' }}
+                scroll={{ y: clientHeight - 480}}
               />
                <SdlTable
                 loading={tableLoading}
@@ -617,7 +618,7 @@ const Index = (props) => {
                 columns={columns3}
                 dataSource={consistencyCheckDetail.consistentParametersCheckList}
                 pagination={false}
-                scroll={{ y: '100vh' }}
+                scroll={{ y: clientHeight - 480}}
               />
             </TabPane>
           </Tabs>

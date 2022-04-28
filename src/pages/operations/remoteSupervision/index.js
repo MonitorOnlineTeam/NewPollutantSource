@@ -279,7 +279,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '核查月份',
+      title: '核查日期',
       dataIndex: 'dateTime',
       key: 'dateTime',
       align: 'center',
@@ -292,6 +292,45 @@ const Index = (props) => {
       render: (text, record) => {
         return text === '不合格' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
       }
+    },
+    {
+      title: '量程是否一致',
+      dataIndex: 'rangeStatus',
+      key: 'rangeStatus',
+      align: 'center',
+    },
+    {
+      title: '数据是否一致',
+      dataIndex: 'couStatus',
+      key: 'couStatus',
+      align: 'center',
+    },
+    {
+      title: '参数是否一致',
+      dataIndex: 'paramStatus',
+      key: 'paramStatus',
+      align: 'center',
+    },
+    {
+      title: '量程一致性问题数量',
+      dataIndex: 'couErrCount',
+      key: 'couErrCount',
+      align: 'center',
+      width:180,
+    },
+    {
+      title: '数据一致性问题数量',
+      dataIndex: 'couErrCount',
+      key: 'couErrCount',
+      align: 'center',
+      width:180,
+    },
+    {
+      title: '参数一致性问题数量',
+      dataIndex: 'paramErrCount',
+      key: 'paramErrCount',
+      align: 'center',
+      width:180,
     },
     {
       title: '核查人',
@@ -1255,7 +1294,8 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      width: 50,
+      fixed:'left',
+      width: 80,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -1265,6 +1305,7 @@ const Index = (props) => {
       dataIndex: 'Name',
       key: 'Name',
       align: 'center',
+      fixed:'left',
       width: 100,
       render: (text, record, index) => {
         const obj = {
@@ -1310,7 +1351,7 @@ const Index = (props) => {
                   </Form.Item></Row>
                 break;
               case 4:
-                return <Row align='middle' style={{ paddingLeft: 12 }}>
+                return <Row align='middle' style={{ paddingLeft: 9 }}>
                   <Form.Item name='isDisplay4' rules={[{ required: false, message: '请选择' }]}>
                     <Checkbox checked={isDisPlayCheck4} onChange={(e) => { isDisplayChange2(e, 'isDisplay4') }}>直测流速法</Checkbox>
                   </Form.Item></Row>
@@ -1328,7 +1369,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 300,
+          width: 320,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -1370,7 +1411,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 300,
+          width: 320,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -1412,7 +1453,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 300,
+          width: 320,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -1453,7 +1494,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 150,
+          width: 170,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -1525,7 +1566,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 80,
+          width: 100,
           render: (text, record, index) => {
             // const attachmentDataSource = getAttachmentDataSource(text);
             const obj = {
@@ -1580,7 +1621,8 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      width: 50,
+      width: 80,
+      fixed:'left',
       render: (text, record, index) => {
         return index + 1;
       }
@@ -1590,6 +1632,7 @@ const Index = (props) => {
       dataIndex: 'Name',
       key: 'Name',
       align: 'center',
+      fixed:'left',
       width: 100,
       render: (text, record, index) => {
         const obj = {
@@ -1693,7 +1736,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 150,
+          width: 170,
           render: (text, record) => {
             return <Row justify='center' align='middle'>
               <Form.Item name={[`${record.par}DataUniformity`]}>
@@ -1737,7 +1780,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 80,
+          width: 100,
           render: (text, record, index) => {
             const obj = {
               children: <div>
@@ -1764,7 +1807,8 @@ const Index = (props) => {
     {
       title: '序号',
       align: 'center',
-      width: 50,
+      fixed:'left',
+      width:80,
       render: (text, record, index) => {
         return index + 1;
       }
@@ -1774,6 +1818,7 @@ const Index = (props) => {
       dataIndex: 'Name',
       key: 'Name',
       align: 'center',
+      fixed:'left',
       render: (text, record, index) => {
         return <div style={{ textAlign: 'left' }}>{text}</div>
       }
@@ -1875,7 +1920,7 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'par',
       key: 'par',
-      width: 80,
+      width: 100,
       render: (text, record, index) => {
         return <div>
           <Form.Item name={`${record.par}ParFiles`} >
@@ -1915,7 +1960,7 @@ const Index = (props) => {
             name="advanced_search"
             onFinish={() => { onFinish(pageIndex, pageSize) }}
             initialValues={{
-              month: moment(moment().format('YYYY-MM'))
+              month: moment(moment().format('YYYY-MM-DD'))
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
@@ -1942,8 +1987,8 @@ const Index = (props) => {
             </Row>
 
             <Row >
-              <Form.Item label='核查月份' name='month'>
-                <DatePicker allowClear={false} picker="month" />
+              <Form.Item label='核查日期' name='month'>
+                <DatePicker allowClear={false} picker="day" />
               </Form.Item>
               <Form.Item label='核查结果' name='CheckStatus'>
                 <Select placeholder='请选择' allowClear>
@@ -2031,8 +2076,8 @@ const Index = (props) => {
               </Form.Item>
             </Spin>
 
-            <Form.Item label='核查月份' name='month' rules={[{ required: true, message: '请选择核查月份!' }]}>
-              <DatePicker allowClear={false} picker="month" style={{width:200}}/>
+            <Form.Item label='核查日期' name='month' rules={[{ required: true, message: '请选择核查月份!' }]}>
+              <DatePicker allowClear={false} picker="day" style={{width:200}}/>
             </Form.Item>
 
             <Form.Item label='点位运维负责人' name='UserName' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
@@ -2062,14 +2107,17 @@ const Index = (props) => {
                   dataSource={addDataConsistencyData}
                   pagination={false}
                   scroll={{  y: 'auto' }}
+                  className='compactTableSty'
+                  rowClassName={null}
                   // sticky
                 />
                 <SdlTable
-                  loading={parLoading}
-                  columns={columns3}
+                  loading={parLoading}                                         
+                  columns={columns3}                                         
                   dataSource={addRealTimeData}
                   pagination={false}
                   scroll={{ y: 'auto' }}
+                  className='compactTableSty'
                   // sticky
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>
@@ -2102,6 +2150,7 @@ const Index = (props) => {
                   dataSource={addParconsistencyData}
                   pagination={false}
                   scroll={{ y: 'auto' }}
+                  className='compactTableSty'
                   sticky
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>

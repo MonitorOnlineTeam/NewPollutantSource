@@ -136,10 +136,10 @@ const Index = (props) => {
       key: 'Status',
       align: 'center',
       render: (text, record) => {
-        if (text === 1) {
+        if (text == 1) {
           return <span onClick={()=>{statusChange(record)}}><Tag   style={{cursor:'pointer'}} color="blue">启用</Tag></span>;
         }
-        if (text === 0) {
+        if (text == 0) {
           return <span  onClick={()=>{statusChange(record)}}><Tag style={{cursor:'pointer'}} color="red">停用</Tag></span>;
         }
       },

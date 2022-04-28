@@ -452,14 +452,21 @@ const Index = (props,ref) => {
           align:'center',
         },
         {
-          title: '维护维修工单数',
+          title: '维修工单数',
           dataIndex: 'repairCompleteCount',
           key: 'repairCompleteCount',
           width: 100,
           align:'center',
         },
         {
-          title: '配合对比工单数',
+          title: '维护工单数',
+          dataIndex: 'maintainCompleteCount',
+          key: 'maintainCompleteCount',
+          width: 100,
+          align:'center',
+        },
+        {
+          title: '参数核对工单数',
           dataIndex: 'matchingComparisonCompleteCount',
           key: 'matchingComparisonCompleteCount',
           width: 100,
@@ -473,7 +480,7 @@ const Index = (props,ref) => {
           align:'center',
         },
         {
-          title: '校验监测工单数',
+          title: '校验测试工单数',
           dataIndex: 'calibrationTestCompleteCount',
           key: 'calibrationTestCompleteCount',
           width: 100,

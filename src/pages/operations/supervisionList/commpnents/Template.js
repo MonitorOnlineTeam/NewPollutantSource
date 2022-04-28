@@ -143,10 +143,10 @@ const Index = (props) => {
       key: 'Status',
       align: 'center',
       render: (text, record) => {
-        if (text === 1) {
+        if (text == 1) {
           return <span onClick={()=>{statusChange(record)}}><Tag   style={{cursor:'pointer'}} color="blue">启用</Tag></span>;
         }
-        if (text === 0) {
+        if (text == 0) {
           return <span  onClick={()=>{statusChange(record)}}><Tag style={{cursor:'pointer'}} color="red">停用</Tag></span>;
         }
       },
@@ -225,9 +225,12 @@ const Index = (props) => {
   }
  
   const [editInspectorNum,setEditInspectorNum ] = useState()
+  const [status,setStatus ] = useState(0)
+
   const edit = (row) => {
     setVisible(true)
     setEditInspectorNum(row.InspectorNum)
+    setStatus(row.Status)
     getInspectorTypeList(row.PollutantType,()=>{ //先获取描述内容列表
       props.getInspectorTemplateView({
         InspectorNum: row.InspectorNum,
@@ -343,7 +346,8 @@ const Index = (props) => {
         PollutantType:values.PollutantType,
         InspectorName:values.InspectorName,
         EffectiveDate:values.EffectiveDate? moment(values.EffectiveDate).startOf('days').format("YYYY-MM-DD HH:mm:ss") : null,
-        InspectorTemplateList:inspectorTemplateList
+        InspectorTemplateList:inspectorTemplateList,
+        Status:status,
       }
     
       props.addOrEditInspectorTemplate({

@@ -472,26 +472,32 @@ const Index = (props) => {
   
   const add = () => {
     setFromVisible(true)
-    setType('add')
-    form2.resetFields();
-    tableForm.resetFields();
-    form2.setFieldsValue({Inspector : userCookie&&JSON.parse(userCookie).UserId})
-    setGaschoiceData(null);//清空生产商的值 
-    setPmchoiceData(null);
-    setEvaluate(null); //评价
-    setFileList1([])
-    setFilesCuid1(cuid())
-    getEntList(2);
-  };
+    setTimeout(() => {
+      setType('add')
+      setPollutantType("2");
+      form2.resetFields();
+      tableForm.resetFields();
+      form2.setFieldsValue({Inspector : userCookie&&JSON.parse(userCookie).UserId})
+      setGaschoiceData(null);//清空生产商的值 
+      setPmchoiceData(null);
+      setEvaluate(null); //评价
+      setFileList1([])
+      setFilesCuid1(cuid())
+      setTimeout(()=>{
+      props.getInspectorOperationInfoList({ID:'',InspectorType:inspectorType,PollutantType:"2" },(data)=>{ })
+      getEntList(2); 
+    }, 100);
 
+    })
+  };
   const onFinish = async (pageIndexs, pageSizes) => {  //查询
     try {
       const values = await form.validateFields();
 
       props.getInspectorOperationManageList({
         ...values,
-        BTime: values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
-        ETime: values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
+        BTime: values.time&&moment(values.time[0].startOf("day")).format('YYYY-MM-DD HH:mm:ss'),
+        ETime: values.time&&moment(values.time[1].endOf("day")).format('YYYY-MM-DD HH:mm:ss'),
         time:undefined,
         InspectorType:inspectorType,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex,
@@ -508,8 +514,9 @@ const Index = (props) => {
       ...values,
       BTime: values.time&&moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
       ETime: values.time&&moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
-      InspectorType:inspectorType,
       time:undefined,
+      InspectorType:inspectorType,
+     
     })
   }
   const formatData = (data) =>{
@@ -592,7 +599,6 @@ const Index = (props) => {
   const [pointList2, setPointList2] = useState([])
   const [pointLoading2, setPointLoading2] = useState(false)
   const [pollutantType,setPollutantType] = useState("2")
-  const [contentLoading,setContentLoading] = useState(false)
 
   const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时的监测类型请求
     if (Object.keys(hangedValues).join() == 'EntCode') {
@@ -613,14 +619,13 @@ const Index = (props) => {
        getEntList(hangedValues.PollutantType)
        form2.resetFields();
        form2.setFieldsValue({PollutantType:hangedValues.PollutantType});
+       tableForm.resetFields();
        setPollutantType(hangedValues.PollutantType) 
        setGaschoiceData(null);//清空生产商的值 
        setPmchoiceData(null);
        setEvaluate(null); //评价
 
-       setContentLoading(true)
        props.getInspectorOperationInfoList({  ID:'',InspectorType:inspectorType,PollutantType:hangedValues.PollutantType,  },()=>{
-        setContentLoading(false)
       })
     }
     if (Object.keys(hangedValues).join() == 'DGIMN') {
@@ -631,6 +636,8 @@ const Index = (props) => {
           RegionCode:data.RegionCode?data.RegionCode.split(','):undefined,
           PollutantCode:data.PollutantCode?data.PollutantCode.split(','):undefined,
         })
+        setGaschoiceData(data.GasManufacturerName? data.GasManufacturerName : undefined)
+        setPmchoiceData(data.PMManufacturerName? data.PMManufacturerName : undefined)
        })
    }
   }
@@ -647,17 +654,17 @@ const Index = (props) => {
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
-        <Spin  size='small' spinning={props.regLoading} style={{ top: -8,left:20 }}>
+        <Spin  size='small' spinning={props.regLoading} style={{ top: -3,left:20 }}>
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
         </Spin>
-        <Spin spinning={entLoading} size='small' style={{ top: -8 }}>
+        <Spin spinning={entLoading} size='small' style={{ top: -3 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList  style={{ width: 300}} />
         </Form.Item>
         </Spin>
-        <Spin spinning={pointLoading} size='small' style={{ top: -8,left:20 }}>
+        <Spin spinning={pointLoading} size='small' style={{ top: -3,left:20 }}>
           <Form.Item label='站点名称' name='DGIMN' >
 
             <Select placeholder='请选择'  showSearch optionFilterProp="children" style={{ width: 150 }}>
@@ -672,7 +679,7 @@ const Index = (props) => {
       </Row>
 
       <Row>
-      <Spin  spinning={infoloading&&type!=='edit'} size='small' style={{top:-8,left:20}}>
+      <Spin  spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
         <Form.Item label="督查人员" name="Inspector"  >
          <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
@@ -683,7 +690,7 @@ const Index = (props) => {
               allowClear={false}
               format="YYYY-MM-DD"/>
         </Form.Item>
-        <Spin spinning={infoloading&&type!=='edit'} size='small' style={{top:-8,left:20}}>
+        <Spin spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
         <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
         <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
@@ -898,7 +905,9 @@ const Index = (props) => {
     return obj;
   };
   const supervisionCol1 = [ {
-    title: <span style={{fontWeight:'bold',fontSize:14}}>原则问题（否决项，出现1项此点位得0分）</span>,
+    title: <span style={{fontWeight:'bold',fontSize:14}}>
+      {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&operationInfoList.PrincipleProblemList[0].Title}
+      </span>,
     align: 'center',
     children:[
     {
@@ -948,7 +957,9 @@ const Index = (props) => {
 
   const [evaluate,setEvaluate]  = useState(null);
     const supervisionCol2 = [ {
-      title: <span style={{fontWeight:'bold',fontSize:14}}>重点问题（每项5分，共60分）</span>,
+      title: <span style={{fontWeight:'bold',fontSize:14}}>
+        {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&operationInfoList.importanProblemList[0].Title}
+      </span>,
       align: 'center',
       children:[
       {
@@ -996,7 +1007,9 @@ const Index = (props) => {
       }]
 
       const supervisionCol3 = [{
-        title: <span style={{fontWeight:'bold',fontSize:14}}>一般问题（每项2分，共40分）</span>,
+        title: <span style={{fontWeight:'bold',fontSize:14}}>
+          {operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&operationInfoList.CommonlyProblemList[0].Title}
+        </span>,
         align: 'center',
         children:[ 
           {
@@ -1167,7 +1180,7 @@ const Index = (props) => {
         onCancel={() => { setFromVisible(false) }}
         className={styles.fromModal}
         destroyOnClose
-        width='80%'
+        width='90%'
         footer={[
           <Button  onClick={() => { setFromVisible(false)}}>
             取消
@@ -1198,7 +1211,7 @@ const Index = (props) => {
            <Row>
             <Col span={12}>
               <Form.Item label="行业" name="PollutantType" >
-                <EntType placeholder='请选择' allowClear={false} />
+                <EntType disabled={type=='add'? false : true} placeholder='请选择' allowClear={false} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -1258,16 +1271,16 @@ const Index = (props) => {
             </Col>
 
             <Col span={12}>
-            <Spin spinning={type=='add'&&infoloading } size='small' style={{top:-8,left:0}} >
+            <Spin spinning={type=='add'&&infoloading } size='small' style={{top:-3,left:0}} >
               <Form.Item label="监测因子" name="PollutantCode" rules={[{ required: true, message: '请输入监测因子' }]} >
-              <Select placeholder='请选择' mode='multiple' maxTagPlaceholder="...">
+              <Select placeholder='请选择' mode='multiple' maxTagCount={4} maxTagPlaceholder='...'>
                 { pollutantList() }
                  </Select>
               </Form.Item>
               </Spin> 
             </Col>
             <Col span={12}>
-             <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}} >
+             <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
              <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
               <UserList    data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
@@ -1279,7 +1292,7 @@ const Index = (props) => {
               </Form.Item>
               </Col >
             <Col span={12}>
-              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}}>
+              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}>
                <Form.Item label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
                <UserList  data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
@@ -1295,7 +1308,7 @@ const Index = (props) => {
             <>
                <Row className={'waterDeviceInfo'}>
             <Col span={12}>
-            <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-8,left:0}} >
+            <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
             <Form.Item label='设备厂家' name='GasManufacturer' >
 
             <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" >
@@ -1366,7 +1379,7 @@ const Index = (props) => {
            </Form>
 
            <div className={'supervisionContentSty'}>
-             <Spin spinning={contentLoading}>
+             <Spin spinning={type=='add'&&infoloading}>
             <Form  name="tableForm"   form={tableForm}  >
            <TitleComponents text='督查内容'/>
             {!(operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0])&&!(operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0])&&!(operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0])?
@@ -1448,7 +1461,7 @@ const Index = (props) => {
         visible={detailVisible}
         title={'详情'}
         footer={null}
-        width={'80%'}
+        width={'90%'}
         className={styles.fromModal}
         onCancel={() => { setDetailVisible(false) }}
         destroyOnClose

@@ -5,29 +5,25 @@ export async function GetInspectorSummaryList(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetInspectorSummaryList',params, null);
   return result;
 }
-//获取单个督查表实体
-export async function GetInspectorOperationInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationInfoList?ID='+params.ID,params, null);
+
+//督查类型
+export async function GetInspectorCodeList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetInspectorCodeList',params, null);
   return result;
 }
 
-//获取单个排口默认值
-export async function GetPointParames(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetPointParames?DGIMN='+params.DGIMN,params, null);
+//列表 关键参数督查汇总
+export async function GetRemoteSummaryList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetRemoteSummaryList',params, null);
+  return result;
+}
+//列表 全系统督查汇总
+export async function GetOperationManageSummaryList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/GetOperationManageSummaryList',params, null);
   return result;
 }
 
-//添加或修改督查模板
-export async function AddOrEditInspectorOperation(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddOrEditInspectorOperation',params, null);
-  return result;
-}
-//督查管理详情
-export async function GetInspectorOperationView(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorOperationView/'+params.ID ,params, null);
-  return result;
-}
-
+ 
 //导出运维督查信息
 export async function ExportInspectorOperationManage(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportInspectorOperationManage',params, null);

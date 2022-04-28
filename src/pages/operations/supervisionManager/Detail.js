@@ -77,7 +77,9 @@ const Index = (props) => {
     }
   
  const supervisionCol1 = [ {
-    title: <span style={{fontWeight:'bold',fontSize:14}}>原则问题（否决项，出现1项此点位得0分）</span>,
+    title: <span style={{fontWeight:'bold',fontSize:14}}>
+      {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&operationInfoList.PrincipleProblemList[0].Title}
+    </span>,
     align: 'center',
     children:[
     {
@@ -120,7 +122,9 @@ const Index = (props) => {
   ]
 
     const supervisionCol2 = [ {
-      title: <span style={{fontWeight:'bold',fontSize:14}}>重点问题（每项5分，共60分）</span>,
+      title: <span style={{fontWeight:'bold',fontSize:14}}>
+        {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&operationInfoList.importanProblemList[0].Title}
+      </span>,
       align: 'center',
       children:[
       {
@@ -159,7 +163,7 @@ const Index = (props) => {
       }]
 
       const supervisionCol3 = [{
-        title: <span style={{fontWeight:'bold',fontSize:14}}>一般问题（每项2分，共40分）</span>,
+        title: <span style={{fontWeight:'bold',fontSize:14}}>{operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&operationInfoList.CommonlyProblemList[0].Title}</span>,
         align: 'center',
         children:[ 
         {
@@ -249,7 +253,7 @@ const Index = (props) => {
             },
       ]
   return (
-    <div>
+    <div  className={'detail'} >
        <div style={{fontSize:16,padding:6,textAlign:'center',fontWeight:'bold'}}>运维督查表</div>
 
        <Spin spinning={detailLoading}>
