@@ -290,12 +290,6 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '核查日期',
-      dataIndex: 'dateTime',
-      key: 'dateTime',
-      align: 'center',
-    },
-    {
       title: '核查结果',
       dataIndex: 'resultCheck',
       key: 'resultCheck',
@@ -350,9 +344,9 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '核查时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      title: '核查日期',
+      dataIndex: 'dateTime',
+      key: 'dateTime',
       align: 'center',
     },
     {
@@ -381,9 +375,10 @@ const Index = (props) => {
       align: 'center',
       width:150,
       render: (text, record) => {
-         const issue = record.issue;
+         const updateflag = record.updateflag;
          const flag = record.flag;
-
+         const issue = record.issue;
+         
       let detail =  <Tooltip title="详情">
       <a onClick={() => {
         router.push({ pathname: `/operations/remoteSupervision/detail/${record.id}` })
@@ -396,28 +391,28 @@ const Index = (props) => {
        }
         return (
           <>
-            {record.flag && <><Tooltip  title={issue==='已下发'? null : "编辑"}>
+            {record.flag && <><Tooltip  title={updateflag && flag? "编辑" : null  }>
               <a onClick={() => {
-               if(issue==='已下发' || !flag){
-                return;
+               if(updateflag && flag){
+                edit(record)
                } 
-               edit(record)
+               return;
               }}  >
-                <EditOutlined  style={{cursor:issue==='已下发'&&'not-allowed', color:issue==='已下发'&&'#00000040',  fontSize: 16 }} />
+                <EditOutlined  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag?  '#1890ff' : '#00000040',  fontSize: 16 }} />
               </a>
             </Tooltip>
               <Divider type="vertical" /></>}
             {detail}
              <Divider type="vertical" />
-              <Tooltip title={ issue==='已下发'|| !flag? null : "删除"} >
-                <Popconfirm   disabled={issue==='已下发'|| !flag} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a href="#"  style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed', color:(!issue||issue==='已下发'|| !flag)&&'#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
+              <Tooltip title={ flag? "删除": null  } >
+                <Popconfirm   disabled={!flag} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a href="#"  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
               </Tooltip>
             <Divider type="vertical" />
-            <Tooltip   title={!issue||issue==='已下发'|| !flag? null : "下发"} >
-              <Popconfirm disabled={!issue||issue==='已下发'|| !flag} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issue(record)} okText="是" cancelText="否">
-                <a href="#" style={{cursor:(!issue||issue==='已下发'|| !flag)&&'not-allowed', color:(!issue||issue==='已下发'|| !flag)&&'#00000040', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
+            <Tooltip   title={!issue||issue==='已下发'?  null : "下发"} >
+              <Popconfirm disabled={!issue||issue==='已下发'? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issue(record)} okText="是" cancelText="否">
+                <a href="#" style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'#00000040' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>
@@ -463,9 +458,9 @@ const Index = (props) => {
   const edit = (record) => { //编辑
     setTitle('编辑')
     setVisible(true)
-    resetData()
     setEditId(record.id)
     setEchoLoading(true)
+    resetData();
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
 
       //共同的字段
@@ -481,7 +476,7 @@ const Index = (props) => {
        commonForm.setFieldsValue({
         DGIMN: data.DGIMN,   
       })
-    
+      
       getPointConsistencyParam(data.DGIMN,()=>{
         let echoData = []
         data.consistencyCheckList.map(item=>{ //数据一致性核查表
@@ -584,7 +579,9 @@ const Index = (props) => {
           fileList = fileList.filter(item=>item!=undefined)
           setFileList2(fileList)
         }
+      
         setEchoLoading(false)
+
         // let uploadList = {}
         // data.consistentParametersCheckList.map(item=>{ //参数一致性核查表
         //   let code = item.CheckItem 
@@ -650,7 +647,6 @@ const Index = (props) => {
     }
   }
   const resetData = (flag) => {
-    !flag&&commonForm.resetFields();
     form2.resetFields();
     form3.resetFields();
     setDasChecked(false)
@@ -660,8 +656,12 @@ const Index = (props) => {
     setIsDisPlayCheck3(false)
     setIsDisPlayCheck4(false)
     setFileList1([]); setFileList2([]); //清除附件
-    !flag&&setAddId();
-    !flag&&props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
+    commonForm.resetFields();
+    setAddId();
+    props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
+    // !flag&&commonForm.resetFields();
+    // !flag&&setAddId();
+    // !flag&&props.updateState({ addDataConsistencyData: [], addRealTimeData: [], addParconsistencyData: [] })
   }
   const add =  () => {
 
@@ -872,7 +872,7 @@ const Index = (props) => {
 
   const getPointConsistencyParam = (mn,callback)=>{// 添加或编辑参数列表
     props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList,operationName) => {
-      resetData(true)
+      // resetData(true)//防止提交完之后 切换tab栏 提交下一个 数据清空的情况
       commonForm.setFieldsValue({OperationUserID:operationName})
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
@@ -882,11 +882,10 @@ const Index = (props) => {
          filesCuidObj[`${item.par}ParFiles`] = cuid();
          filesListObj[`${item.par}ParFiles`] = [];
        })
-
        setFilesCuidList(filesCuidObj)
        setFilesList3(filesListObj)
-       callback&&callback()
      }
+     callback&&callback()
    })
   }
  
@@ -1979,6 +1978,7 @@ const Index = (props) => {
   const [fileVisible, setFileVisible] = useState(false)
 
   const userlist = tableInfo&&tableInfo['View_UserOperation']&&tableInfo['View_UserOperation'].dataSource || [];
+  
   return (
     <div className={styles.remoteSupervisionSty}>
 
@@ -2060,7 +2060,7 @@ const Index = (props) => {
         visible={visible}
         onOk={save}
         destroyOnClose
-        onCancel={() => { setVisible(false); }}
+        onCancel={() => { setVisible(false);  }}
         width='98%'
         wrapClassName={styles.modalSty}
         okText='保存'

@@ -1191,10 +1191,10 @@ const Index = (props) => {
           <Button  onClick={() => { setFromVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1 || detailLoading || pointLoading2}>
+          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1 || detailLoading || pointLoading2 || false}>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading2 || detailLoading || pointLoading2 } >
+          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading2 || detailLoading || pointLoading2 || false} >
             提交
           </Button>,
         ]}

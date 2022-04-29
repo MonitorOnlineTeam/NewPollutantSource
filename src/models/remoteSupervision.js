@@ -70,8 +70,8 @@ export default Model.extend({
                         addParconsistencyData : paramList});
         callback(pollutantList,addRealTimeList,paramList,result.Datas&&result.Datas.operationName||null)
       } else {
-        yield update({  addDataConsistencyData: [], addParconsistencyData : [],addRealTimeData:[] });
-        callback([],[],[])
+        yield update({  addDataConsistencyData: [], addParconsistencyData : [],addRealTimeData:[], });
+        callback([],[],[],null)
         message.error(result.Message)
       }
     },
