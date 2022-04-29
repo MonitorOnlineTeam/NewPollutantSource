@@ -2069,10 +2069,10 @@ const Index = (props) => {
           <Button  onClick={() => { setVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 || echoLoading: saveLoading11 || echoLoading }>
+          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 || echoLoading || parLoading ||  false: saveLoading11 || echoLoading || parLoading ||false}>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading2 || echoLoading : saveLoading22 || echoLoading} >
+          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading2 || echoLoading || parLoading || false : saveLoading22 || echoLoading|| parLoading ||false} >
             提交
           </Button>,
         ]}
