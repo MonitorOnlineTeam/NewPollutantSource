@@ -49,20 +49,6 @@ const  dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-
-
-
-
-
-  
-  
-
-
-
-
-
-
-
   return (
     <div  className={styles.pollutantInfoSty}>
     <BreadcrumbWrapper>

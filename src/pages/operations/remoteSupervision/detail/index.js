@@ -551,6 +551,7 @@ const Index = (props) => {
         <Button onClick={() => {props.history.go(-1);   }} ><RollbackOutlined />返回</Button>
      </Row>
     }>
+        <Spin spinning={tableLoading}>
     <Form
       name="detail"
     >
@@ -590,7 +591,7 @@ const Index = (props) => {
       </Col>
       <Col span={6}>
       <Form.Item label="点位负责运维人"  >
-        {consistencyCheckDetail.userName  }
+        {consistencyCheckDetail.operationUserName  }
       </Form.Item>
       </Col>
       </Row>
@@ -598,14 +599,12 @@ const Index = (props) => {
     <Tabs>
     <TabPane tab="数据一致性核查表" key="1">
               <SdlTable
-                loading={tableLoading}
                 columns={columns1}
                 dataSource={tableData1}
                 pagination={false}
                 scroll={{ y: clientHeight - 480}}
               />
                <SdlTable
-                loading={tableLoading}
                 columns={columns2}
                 dataSource={tableData2}
                 pagination={false}
@@ -614,7 +613,6 @@ const Index = (props) => {
             </TabPane>
             <TabPane tab="参数一致性核查表" key="2">
               <SdlTable
-                loading={tableLoading}
                 columns={columns3}
                 dataSource={consistencyCheckDetail.consistentParametersCheckList}
                 pagination={false}
@@ -622,6 +620,7 @@ const Index = (props) => {
               />
             </TabPane>
           </Tabs>
+        </Spin>
    </Card>
    </BreadcrumbWrapper>
         </div>

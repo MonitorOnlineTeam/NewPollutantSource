@@ -103,28 +103,38 @@ const Index = (props) => {
       align:'center',
     },
     {
+      title: '监测点名称',
+      dataIndex: 'PointName',
+      key:'PointName',
+      align:'center',
+    },
+    {
       title: '气态污染物CEMS设备生产商',
       dataIndex: 'GasManufacturer',
       key:'GasManufacturer',
       align:'center',
+      width:200,
     },
     {
       title: '气态污染物CEMS设备规格型号',
       dataIndex: 'GasEquipment',
       key:'GasEquipment',
       align:'center',
+      width:200,
     },
     {
       title: '颗粒物CEMS设备生产商',
       dataIndex: 'PMManufacturer',
       key:'PMManufacturer',
       align:'center',
+      width:200,
     },  
     {
       title: '颗粒物CEMS设备规格型号',
       dataIndex: 'PMEquipment',
       key:'PMEquipment', 
       align:'center',
+      width:200,
     },
   ];
 

@@ -40,13 +40,11 @@ function getBase64(file) {
 }
 
 
-const dvaPropsData = ({ loading, remoteSupervision, global, common }) => ({
+const dvaPropsData = ({ loading, remoteSupervision, global, common,autoForm }) => ({
   tableDatas: remoteSupervision.tableData,
   tableLoading: loading.effects[`${namespace}/getRemoteInspectorList`],
   tableTotal: remoteSupervision.tableTotal,
   parLoading: loading.effects[`${namespace}/getPointConsistencyParam`],
-  saveLoading1: loading.effects[`${namespace}/addOrUpdConsistencyCheck`],
-  saveLoading2: loading.effects[`${namespace}/addOrUpdParamCheck`],
   editLoading: loading.effects[`${namespace}/getConsistencyCheckInfo`],
   pointListByEntCode: common.pointListByEntCode,
   clientHeight: global.clientHeight,
@@ -55,6 +53,7 @@ const dvaPropsData = ({ loading, remoteSupervision, global, common }) => ({
   addRealTimeData: remoteSupervision.addRealTimeData,
   addParconsistencyData: remoteSupervision.addParconsistencyData,
   consistencyCheckDetail: remoteSupervision.consistencyCheckDetail,
+  tableInfo:autoForm.tableInfo,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -157,7 +156,19 @@ const dvaDispatch = (dispatch) => {
         payload:payload,
         callback:callback,
       })
-    },
+    }, 
+    getUserList:(payload,callback)=>{  //运维人员 列表
+      dispatch({
+        type: `autoForm/getAutoFormData`,
+        payload:{
+           configId:'View_UserOperation',
+           otherParams: {
+            pageIndex: 1,
+            pageSize: 9999999
+           }
+          },
+      })
+    }, 
   }
 }
 const Index = (props) => {
@@ -169,7 +180,7 @@ const Index = (props) => {
 
   const [showType, setShowType] = useState('1')
   const [dates, setDates] = useState([]);
-  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading, saveLoading1, saveLoading2,editLoading } = props;
+  const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading,editLoading,tableInfo } = props;
 
  
 
@@ -185,7 +196,7 @@ const Index = (props) => {
   useEffect(() => {
 
     onFinish(pageIndex, pageSize)
-
+    props.getUserList()
 
 
   }, []);
@@ -346,8 +357,8 @@ const Index = (props) => {
     },
     {
       title: '点位运维负责人',
-      dataIndex: 'userName',
-      key: 'userName',
+      dataIndex: 'operationUserName',
+      key: 'operationUserName',
       align: 'center',
     },
     {
@@ -447,16 +458,19 @@ const Index = (props) => {
 
     })
   }
+
+  const [echoLoading, setEchoLoading ] = useState(false)
   const edit = (record) => { //编辑
     setTitle('编辑')
     setVisible(true)
     resetData()
     setEditId(record.id)
+    setEchoLoading(true)
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
 
       //共同的字段
      commonForm.setFieldsValue({
-       UserName:data.userName,
+       OperationUserID:data.operationUserID,
        EntCode: data.entCode,
        month:  moment(moment(data.dateTime).format("YYYY-MM")) 
      })
@@ -570,7 +584,7 @@ const Index = (props) => {
           fileList = fileList.filter(item=>item!=undefined)
           setFileList2(fileList)
         }
-
+        setEchoLoading(false)
         // let uploadList = {}
         // data.consistentParametersCheckList.map(item=>{ //参数一致性核查表
         //   let code = item.CheckItem 
@@ -625,7 +639,7 @@ const Index = (props) => {
       props.getRemoteInspectorList({
         ...values,
         month: undefined,
-        DateTime: values.month ? moment(values.month).format("YYYY-MM-01 00:00:00") : undefined,
+        DateTime: values.month ? moment(values.month).format("YYYY-MM-DD 00:00:00") : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
       })
@@ -656,10 +670,16 @@ const Index = (props) => {
     setFilesCuid1(cuid())
     setFilesCuid2(cuid())
     resetData()
-    
   }
+  const [saveLoading1,setSaveLoading1] = useState(false)
+  const [saveLoading2,setSaveLoading2] = useState(false)
+
+  const [saveLoading11,setSaveLoading11] = useState(false)
+  const [saveLoading22,setSaveLoading22] = useState(false)
+
   const [addId,setAddId] = useState();
   const save = (type) => {
+
     commonForm.validateFields().then(commonValues => {
       const commonData = {
         ...commonValues,
@@ -668,6 +688,9 @@ const Index = (props) => {
         DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-01 00:00:00") : undefined,
       }
       if (tabType == 1) {
+        
+         type==1? setSaveLoading1(true) : setSaveLoading2(true);
+        
         form2.validateFields().then((values) => {
           const dataList1 = addDataConsistencyData.map(item => {
             return {
@@ -735,10 +758,12 @@ const Index = (props) => {
           dataList =  dataList.filter(item=>item) //去除值为空的情况
 
           props.addOrUpdConsistencyCheck({
-            Data: { ...commonData, RangeUpload: values.files1, CouUpload: values.files2 },
+            AddType:type,
+            Data: { ...commonData, RangeUpload: values.files1, CouUpload: values.files2, },
             DataList: dataList,
           }, (id) => {
             title==='添加'&&setAddId(id)
+            type==1? setSaveLoading1(false) : setSaveLoading2(false)
             onFinish(pageIndex, pageSize)
           })
 
@@ -753,6 +778,8 @@ const Index = (props) => {
 
 
       } else {  //参数一致性核查表
+
+        type==1? saveLoading11(true) : setSaveLoading22(true)
         form3.validateFields().then(values => {
           const paramDataList = addParconsistencyData.map(item => {
             return {
@@ -772,6 +799,7 @@ const Index = (props) => {
           }, (id) => {
             title==='添加'&&setAddId(id)
             onFinish(pageIndex, pageSize)
+            type==1? saveLoading11(false) : setSaveLoading22(false)
           })
         }).catch((info) => {
           console.log('Validate Failed3:', info);
@@ -843,8 +871,9 @@ const Index = (props) => {
 
 
   const getPointConsistencyParam = (mn,callback)=>{// 添加或编辑参数列表
-    props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList) => {
+    props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList,operationName) => {
       resetData(true)
+      commonForm.setFieldsValue({OperationUserID:operationName})
       echoUnit(pollutantList) //默认显示单位默认值
       echoUnit(addRealTimeList)
      if (paramList && paramList[0]&&title==='添加') { //附件 cuid
@@ -1949,7 +1978,7 @@ const Index = (props) => {
 
   const [fileVisible, setFileVisible] = useState(false)
 
-
+  const userlist = tableInfo&&tableInfo['View_UserOperation']&&tableInfo['View_UserOperation'].dataSource || [];
   return (
     <div className={styles.remoteSupervisionSty}>
 
@@ -2033,7 +2062,6 @@ const Index = (props) => {
         destroyOnClose
         onCancel={() => { setVisible(false); }}
         width='98%'
-        confirmLoading={tabType == 1 ? saveLoading1 : saveLoading2}
         wrapClassName={styles.modalSty}
         okText='保存'
         getContainer={false}
@@ -2041,10 +2069,10 @@ const Index = (props) => {
           <Button  onClick={() => { setVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 : saveLoading2}>
+          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 || echoLoading: saveLoading11 || echoLoading }>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading1 : saveLoading2} >
+          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading2 || echoLoading : saveLoading22 || echoLoading} >
             提交
           </Button>,
         ]}
@@ -2064,7 +2092,7 @@ const Index = (props) => {
             <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
               <EntAtmoList pollutantType={2} allowClear={false} style={{width:200}}/>
             </Form.Item>
-            <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: 20 }}>
+            <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: '12.5%' }}>
               <Form.Item label='监测点名称' name='DGIMN'  style={{margin:'0 8px'}} rules={[{ required: true, message: '请选择监测点名称!' }]} >
                 <Select  placeholder='请选择' showSearch optionFilterProp="children" style={{width:200}}>
                   {
@@ -2076,13 +2104,22 @@ const Index = (props) => {
               </Form.Item>
             </Spin>
 
-            <Form.Item label='核查日期' name='month' rules={[{ required: true, message: '请选择核查月份!' }]}>
+            <Form.Item label='核查日期' name='month'  rules={[{ required: true, message: '请选择核查月份!' }]}>
               <DatePicker allowClear={false} picker="day" style={{width:200}}/>
             </Form.Item>
-
-            <Form.Item label='点位运维负责人' name='UserName' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
-              <Input  placeholder='请输入'/>
+             
+             <Spin size='small' spinning={title==='编辑'?  false : parLoading || false} style={{ top: -8, left: '15%' }}>
+            <Form.Item label='点位运维负责人' name='OperationUserID' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
+               <Select placeholder='请选择'>
+                {userlist.map(item=>{
+                 return  <Option key={item['dbo.View_User.User_ID']} value={item['dbo.View_User.User_ID']} >
+                               {item['dbo.View_User.User_Name']}
+                         </Option>
+                })
+              }
+              </Select>
             </Form.Item>
+            </Spin>
           </Row>
 
 
@@ -2109,7 +2146,7 @@ const Index = (props) => {
                   scroll={{  y: 'auto' }}
                   className='compactTableSty'
                   rowClassName={null}
-                  // sticky
+                  sticky
                 />
                 <SdlTable
                   loading={parLoading}                                         
@@ -2118,7 +2155,7 @@ const Index = (props) => {
                   pagination={false}
                   scroll={{ y: 'auto' }}
                   className='compactTableSty'
-                  // sticky
+                  sticky
                 />
                 <Row style={{ color: '#f5222d', marginTop: 10 }}>
                   <span style={{ paddingRight: 10 }}>注：</span>

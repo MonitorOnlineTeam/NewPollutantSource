@@ -115,6 +115,12 @@ const Index = (props) => {
             align: 'center',
         },
         {
+            title: '数据核查项',
+            dataIndex: 'ItemName',
+            key: 'ItemName',
+            align: 'center',
+        },
+        {
             title: '实时数据一致性核查因子',
             dataIndex: 'RealtimePollutantName',
             key: 'RealtimePollutantName',

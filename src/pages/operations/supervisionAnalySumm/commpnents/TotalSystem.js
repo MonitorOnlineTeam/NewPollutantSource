@@ -28,9 +28,7 @@ const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
     tableDatas: supervisionAnalySumm.operationManageSummaryList,
     tableTotal: supervisionAnalySumm.operationManageSummaryTotal,
     tableLoading: loading.effects[`${namespace}/getOperationManageSummaryList`],
-    saveLoading: loading.effects[`${namespace}/addOrEditInspectorTypeItem`],
-    inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
-    assessmentMethodList: supervisionAnalySumm.assessmentMethodList,
+    exportLoading: loading.effects[`${namespace}/exportOperationManageSummaryList`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -44,6 +42,12 @@ const dvaDispatch = (dispatch) => {
         getOperationManageSummaryList: (payload) => { // 列表
             dispatch({
                 type: `${namespace}/getOperationManageSummaryList`,
+                payload: payload,
+            })
+        },
+        exportOperationManageSummaryList: (payload) => { // 导出
+            dispatch({
+                type: `${namespace}/exportOperationManageSummaryList`,
                 payload: payload,
             })
         },
@@ -152,7 +156,7 @@ const Index = (props) => {
             const values = await form.validateFields();
             props.getOperationManageSummaryList({
                 ...values,
-                BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY') : values.time&&moment(values.time).format('YYYY-MM'),
+                BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
                 EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
                 time:undefined,
                 pageIndex: pageIndexs,
@@ -175,16 +179,22 @@ const Index = (props) => {
 
 
 
-    const exports = () => {
-
+    const exports = async () => {
+        const values = await form.validateFields();
+        props.exportOperationManageSummaryList({
+          ...values,
+          BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
+          EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+          time:undefined,
+      })
     }
 
 
     const [type, setType] = useState(1)
     const onValuesChange = (hangedValues, allValues) => {
-        if (Object.keys(hangedValues).join() == 'DataType') {
-            setType(hangedValues.DataType)
-            if(hangedValues.DataType==3){
+        if (Object.keys(hangedValues).join() == 'DateType') {
+            setType(hangedValues.DateType)
+            if(hangedValues.DateType==3){
                 form.setFieldsValue({ time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")] })
               }else{
                 form.setFieldsValue({ time:  moment() })
@@ -209,13 +219,13 @@ const Index = (props) => {
                         onFinish={() => { onFinish(pageIndex, pageSize) }}
                         layout='inline'
                         initialValues={{
-                            DataType: 1,
+                            DateType: 1,
                             time: moment(),
                         }}
                         className={styles.queryForm}
                         onValuesChange={onValuesChange}
                     >
-                        <Form.Item label='统计方式' name='DataType'>
+                        <Form.Item label='统计方式' name='DateType'>
                             <Select placeholder='请选择' style={{ width: 150 }}>
                                 <Option value={1}>按年统计</Option>
                                 <Option value={2}>按月统计</Option>

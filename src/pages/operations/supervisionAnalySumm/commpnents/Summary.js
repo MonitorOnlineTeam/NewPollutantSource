@@ -28,7 +28,7 @@ const dvaPropsData = ({ loading, supervisionAnalySumm, global, common }) => ({
   tableDatas: supervisionAnalySumm.inspectorSummaryList,
   tableLoading: loading.effects[`${namespace}/getInspectorSummaryList`],
   inspectorTypeloading: loading.effects[`${namespace}/getInspectorTypeCode`],
-  exportLoading: loading.effects[`${namespace}/exportLoading`],
+  exportLoading: loading.effects[`${namespace}/exportInspectorSummaryList`],
   inspectorCodeList:supervisionAnalySumm.inspectorCodeList,
 })
 
@@ -40,6 +40,13 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
+
+    getInspectorCodeList: (payload) => { // 督查类别
+      dispatch({
+        type: `${namespace}/getInspectorCodeList`,
+        payload: payload,
+      })
+    },
     getInspectorSummaryList: (payload,callback) => { // 列表
       dispatch({
         type: `${namespace}/getInspectorSummaryList`,
@@ -47,10 +54,11 @@ const dvaDispatch = (dispatch) => {
         callback:callback,
       })
     },
-    getInspectorCodeList: (payload) => { // 督查类别
+    exportInspectorSummaryList: (payload,callback) => { // 导出
       dispatch({
-        type: `${namespace}/getInspectorCodeList`,
+        type: `${namespace}/exportInspectorSummaryList`,
         payload: payload,
+        callback:callback,
       })
     },
   }
@@ -175,7 +183,7 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
       const values = await form.validateFields();
       props.getInspectorSummaryList({
         ...values,
-        BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY') : values.time&&moment(values.time).format('YYYY-MM'),
+        BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
         EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
         time:undefined,
       },()=>{
@@ -194,15 +202,21 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
   
 
 
-  const exports = () =>{
+  const exports = async  () => {
+    const values = await form.validateFields();
+      props.exportInspectorSummaryList({
+        ...values,
+        BeginTime: type==3?  values.time&&moment(values.time[0]).format('YYYY-MM-DD 00:00:00') :   type ==1? values.time&&moment(values.time).format('YYYY-01-01 00:00:00') : values.time&&moment(values.time).format('YYYY-MM-01 00:00:00'),
+        EndTime:  type==3? values.time&&moment(values.time[1]).format('YYYY-MM-DD 23:59:59') : undefined,
+        time:undefined,
+    })
 
-  }
- 
+ };
   const [type,setType] = useState(1)
   const onValuesChange = (hangedValues, allValues) => {
-    if (Object.keys(hangedValues).join() == 'DataType') {
-        setType(hangedValues.DataType)
-        if(hangedValues.DataType==3){
+    if (Object.keys(hangedValues).join() == 'DateType') {
+        setType(hangedValues.DateType)
+        if(hangedValues.DateType==3){
           form.setFieldsValue({ time: [moment(new Date()).add(-30, 'day').startOf("day"), moment().endOf("day")] })
         }else{
           form.setFieldsValue({ time:  moment() })
@@ -222,13 +236,13 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
             onFinish={() => { onFinish() }}
             layout='inline'
             initialValues={{
-              DataType:1,
+              DateType:1,
               time: moment(),
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
           >
-            <Form.Item label='统计方式' name='DataType'>
+            <Form.Item label='统计方式' name='DateType'>
               <Select placeholder='请选择' style={{ width: 150}}>
                 <Option value={1}>按年统计</Option>
                 <Option value={2}>按月统计</Option>

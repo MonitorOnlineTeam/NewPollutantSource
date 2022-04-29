@@ -68,7 +68,7 @@ export default Model.extend({
         }
         yield update({  addDataConsistencyData: pollutantList, addRealTimeData:addRealTimeList,
                         addParconsistencyData : paramList});
-        callback(pollutantList,addRealTimeList,paramList)
+        callback(pollutantList,addRealTimeList,paramList,result.Datas&&result.Datas.operationName||null)
       } else {
         yield update({  addDataConsistencyData: [], addParconsistencyData : [],addRealTimeData:[] });
         callback([],[],[])

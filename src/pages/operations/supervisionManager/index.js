@@ -51,7 +51,6 @@ const dvaPropsData = ({ loading, supervisionManager, global,common,point,autoFor
   loadingSystemModel: loading.effects[`point/getSystemModelList`]|| false,
   systemModelListTotal: point.systemModelListTotal,
   operationInfoList: supervisionManager.operationInfoList,
-  saveLoading1: loading.effects[`${namespace}/addOrEditInspectorOperation`],
   exportLoading: loading.effects[`${namespace}/exportInspectorOperationManage`],
 
   
@@ -151,9 +150,9 @@ const Index = (props) => {
 
   const {match:{ path }} = props;
 
-  const isRecord = path ===  '/operations/supervisionRecod' ? true : false; //是否为运维督查记录
-  const inspectorType = path ===  '/operations/siteInspector' ? 1 : 
-                        path ===  '/operations/supervisionManager'?  2 : ''; // 是否为现场督查 1 现场 2 远程  其他为运维督查记录
+  const isRecord = path ===  '/operations/supervisionRecod' || path ===  '/operations/siteSupervisionRecod' ? true : false; //是否为运维督查记录
+  const inspectorType = path ===  '/operations/siteInspector' || path === '/operations/siteSupervisionRecod' ? 1 : 
+                        path ===  '/operations/supervisionManager' || path === '/operations/supervisionRecod'?  2 : ''; // 是否为现场督查 1 现场 2 远程  其他为运维督查记录
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -167,13 +166,9 @@ const Index = (props) => {
 
   const [type, setType] = useState('add')
 
-
-
-
-
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
-  const { tableDatas, tableTotal, tableLoading, pointParamesLoading,infoloading,exportLoading, userLoading,entLoading,systemModelList,operationInfoList,saveLoading1,} = props;
+  const { tableDatas, tableTotal, tableLoading, pointParamesLoading,infoloading,exportLoading, userLoading,entLoading,systemModelList,operationInfoList,} = props;
 
 
   const userCookie = Cookie.get('currentUser');
@@ -229,7 +224,7 @@ const Index = (props) => {
       dataIndex: 'PollutantCodeName',
       key: 'PollutantCodeName',
       align: 'center',
-      width:300,
+      width:200,
     },
     {
       title: '督查人员',
@@ -275,18 +270,21 @@ const Index = (props) => {
       dataIndex: 'PrincipleProblem',
       key: 'PrincipleProblem',
       align: 'center',
+      width:200,
     },
     {
       title: '重点问题',
       dataIndex: 'importanProblem',
       key: 'importanProblem',
       align: 'center',
+      width:200,
     },
     {
       title: '一般问题',
       dataIndex: 'CommonlyProblem',
       key: 'CommonlyProblem',
       align: 'center',
+      width:200,
     },
 
     {
@@ -531,7 +529,14 @@ const Index = (props) => {
       }
     })
   }
+
+  const [saveLoading1,setSaveLoading1] = useState(false)
+  const [saveLoading2,setSaveLoading2] = useState(false)
+
   const save = async(type) =>{
+
+     type==1? setSaveLoading2(true) : setSaveLoading1(true);
+
     const values = await form2.validateFields();
     try {
       let principleProblemList = operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList || [];
@@ -566,6 +571,7 @@ const Index = (props) => {
     //  console.log(data)
       props.addOrEditInspectorOperation(data,()=>{
         setFromVisible(false)
+        type==1? setSaveLoading2(false) : setSaveLoading1(false);
         onFinish()
       })
    
@@ -1185,10 +1191,10 @@ const Index = (props) => {
           <Button  onClick={() => { setFromVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1 || detailLoading}>
+          <Button  type="primary" onClick={()=>{save()}}  loading={saveLoading1 || detailLoading || pointLoading2}>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading1 || detailLoading} >
+          <Button type="primary" onClick={()=>save(1)}  loading={saveLoading2 || detailLoading || pointLoading2 } >
             提交
           </Button>,
         ]}
@@ -1201,7 +1207,8 @@ const Index = (props) => {
           name="basic"
           form={form2}
           initialValues={{
-            PollutantType:'2'
+            PollutantType:'2',
+            InspectorDate:moment(),
           }}
           onValuesChange={onAddEditValuesChange}
         >
@@ -1282,19 +1289,19 @@ const Index = (props) => {
             <Col span={12}>
              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
              <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
-              <UserList    data={operationInfoList&&operationInfoList.UserList}/>
+              <UserList allowClear={false}   data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
             </Col >
             <Col span={12}>
               <Form.Item label="督查日期" name="InspectorDate" rules={[{ required: true, message: '请选择督查日期' }]} >
-                <DatePicker /> 
+                <DatePicker allowClear={false}/> 
               </Form.Item>
               </Col >
             <Col span={12}>
               <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}>
-               <Form.Item label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
-               <UserList  data={operationInfoList&&operationInfoList.UserList}/>
+               <Form.Item allowClear={false} label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
+               <UserList allowClear={false} data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
             </Col>

@@ -1031,8 +1031,13 @@ export default {
               }, 
               
               {
-                path: '/operations/supervisionRecod', //运维督查记录
+                path: '/operations/supervisionRecod', //运维督查记录 远程督查
                 name: 'supervisionRecod',
+                component: './operations/supervisionManager',
+              }, 
+              {
+                path: '/operations/siteSupervisionRecod', //运维督查记录 现场督查
+                name: 'siteSupervisionRecod',
                 component: './operations/supervisionManager',
               }, 
               {
