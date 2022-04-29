@@ -685,7 +685,7 @@ const Index = (props) => {
         ...commonValues,
         ID:title==='添加'?  addId : editId,
         month: undefined,
-        DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-01 00:00:00") : undefined,
+        DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
       }
       if (tabType == 1) {
         
