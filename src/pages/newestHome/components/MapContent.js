@@ -52,7 +52,7 @@ let labelsMarker = null;
 let pollutantType = {}
 
 let massPointTitleColor = 'rgb(23, 30, 70)'
-@connect(({ loading, newestHome }) => ({
+@connect(({ loading, newestHome,global }) => ({
   pollType: newestHome.pollType,
   subjectFontSize: newestHome.subjectFontSize,
   mapStatusData: newestHome.mapStatusData,
@@ -109,8 +109,9 @@ class Index extends PureComponent {
       clickable: true,
       click: (MapsOption, marker) => {
         const { showType, pointMarkers } = this.state;
+
+        const position = marker.De.extData.position;
         if (showType == 3) { //监测点弹窗
-          const position = marker.De.extData.position;
           this.setState({
             currentClickObj: { ...position, PollutantType: pollutantType },
             pointInfoWindowVisible: true,
@@ -120,7 +121,9 @@ class Index extends PureComponent {
           });
         }
         if (showType == 2) { //企业 点击进入监测点
-          this.loadPointMarkerData(pointMarkers)
+          const data = pointMarkers.filter(item=>item.position.ParentCode == position.entCode); 
+          this.setState({pointReg:position.regionCode&&position.regionCode.split(',')[0]})
+          this.loadPointMarkerData(data)
         }
       },
       mouseover: (MapsOption, marker) => { //鼠标移入地图容器内时触发
@@ -167,6 +170,9 @@ class Index extends PureComponent {
       entLists: [],
       mapBtnStatusIndex: -1,
       isMassive: false,
+      pointStatus:null,
+      pointReg:null,
+      smallResolution:false,
     }
   }
   componentWillMount() {
@@ -201,7 +207,16 @@ class Index extends PureComponent {
     this.getMapPointList(2)
     this.getMapPointList(1)
 
-
+    // 监听
+    window.addEventListener("resize", this.handleResize);
+  }
+  
+   handleResize = (e) =>{
+    if( e.target.innerWidth <= 1690){
+      this.setState({smallResolution:true,})
+    }else{
+      this.setState({smallResolution:false})
+    }
   }
   // 获取infoWindow数据
   getInfoWindowData = () => {
@@ -268,6 +283,8 @@ class Index extends PureComponent {
       showType: 2,
       pointTitleShow: false,
       markersList: data,
+      pointStatus:null,
+      pointReg:null,
     }, () => {
       const timer = setInterval(() => {
         if (aMap && !flag) {
@@ -285,7 +302,7 @@ class Index extends PureComponent {
       showType: 3,
       hoverEntTitleShow:false,
     })
-    if (pollutantType == 2 && data.length >= 1000) { //废气 监测点多的情况 海量加载
+    if (data.length >= 1000) { // 监测点多的情况 海量加载
 
       const warnData = data[0] && data.filter(item => item.position.alarmStatus) //报警点 常规加载
       this.setState({
@@ -512,13 +529,21 @@ class Index extends PureComponent {
     }
 
   }
-  pointNum = (type) =>{
-    console.log(this.state.pointMarkers)
-    if(type == 1){ //超标点位数
+  pointNum = (type,extData) =>{
+    const { pointMarkers } = this.state;
+    const data = pointMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode); 
+    
+    this.setState({pointStatus:type,pointReg:extData.position.regionCode})
+    if(type == 2){ //超标点位数
+      if(data){
+       const abnormalData =  data[0] && data.filter(item => item.position.alarmStatus==type)
+       this.loadPointMarkerData(abnormalData)
+      }
      
     }
-    if(type == 2){ //异常点位数
-
+    if(type == 1){ //异常点位数
+      const overData =  data[0] && data.filter(item => item.position.alarmStatus==type)
+      this.loadPointMarkerData(overData)
     }
   }
   //海量标注 监测点显示名称
@@ -561,8 +586,8 @@ class Index extends PureComponent {
   regPopovercontent = (extData) => {
     return <div className={styles.regPopoverSty} style={{position:'absolute',margin:'0 auto',top:'calc(35px + (65px - 54px)/2)',left:12}}>
       <div>企业总数 : {extData.position && extData.position.entCount}</div>
-      <div><span style={{ color: '#FF0000' }}>超标</span>点位数 : <span style={{cursor:'pointer'}} onClick={()=>{this.pointNum(1)}}>{extData.position && extData.position.overCount ? extData.position.overCount : 0}</span></div>
-      <div><span style={{ color: '#FFCC00' }}>异常</span>点位数 : <span style={{cursor:'pointer'}} onClick={()=>{this.pointNum(2)}}>{extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</span></div>
+      <div><span style={{ color: '#FF0000' }}>超标</span>点位数 : <span style={{cursor:'pointer'}} onClick={()=>{this.pointNum(2,extData)}}>{extData.position && extData.position.overCount ? extData.position.overCount : 0}</span></div>
+      <div><span style={{ color: '#FFCC00' }}>异常</span>点位数 : <span style={{cursor:'pointer'}} onClick={()=>{this.pointNum(1,extData)}}>{extData.position && extData.position.exceptionCount ? extData.position.exceptionCount : 0}</span></div>
     </div>
   }
 
@@ -822,14 +847,21 @@ class Index extends PureComponent {
     }
   }
   onBack = () => {
-    const { showType, regionMarkers, selectEnt, entMarkers } = this.state;
+    const { showType, regionMarkers, selectEnt, entMarkers,pointStatus,pointReg, } = this.state;
 
 
     if (showType == 2) {
       this.loadRegionMarkerData(regionMarkers)
     }
     if (showType == 3) {
-      this.loadEntMarkerData(entMarkers)
+      const data = entMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==pointReg); 
+
+      if(pointStatus){ // 异常  or  超标
+        const abnormalOverEntData =  data[0] && data.filter(item => item.position.alarmStatus== pointStatus)
+        this.loadEntMarkerData(abnormalOverEntData)
+        return;
+      }
+      this.loadEntMarkerData(data)
     }
 
     this.setState({ selectEnt: undefined, mapBtnStatusIndex: -1,pointInfoWindowVisible:false })
@@ -875,7 +907,7 @@ class Index extends PureComponent {
       "2": <><GasIcon /><span className={styles.iconText}>废气</span></>
     }
 
-    const { hoverTitleShow,hoverEntTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive, } = this.state;
+    const { hoverTitleShow,hoverEntTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive,smallResolution, } = this.state;
 
     // const searchEntInput = useRef(null);
 
@@ -934,16 +966,7 @@ class Index extends PureComponent {
           {this.infoWindowContent()}
           <span onClick={() => { this.setState({ pointInfoWindowVisible: false }) }} style={{ position: 'absolute', cursor: 'pointer', top: 0, right: 8, fontSize: 18 }}>×</span>
         </InfoWindow>
-        <div className={styles.mapBtn}> { /**按钮 */}
-          <Row align='middle'>
-            {typeBtnArr.map((item, index) => {
-              return <Row onClick={() => { this.mapBtnClick(index, item) }} className={index === mapBtnStatusIndex ? styles.typeBtnActiveSty : styles.typeBtnSty} align='middle' justify='center'>
-                <div className={styles.colorBlock} style={{ background: `${item.color}` }}></div>
-                <span style={{ fontSize: subjectFontSize }}>{item.text} {item.val}</span>
-              </Row>
-            })}
-          </Row>
-        </div>
+
         <RightIconMapComponent />
 
         <div className={styles.mapEnt}  > { /**右上角 图标 */}
@@ -955,11 +978,20 @@ class Index extends PureComponent {
             {iconType[pollutantType]}
           </Row>
         </div>
-
+        <div className={smallResolution? styles.smallMapBtn: styles.mapBtn}> { /**按钮 */}
+          <Row align='middle'>
+            {typeBtnArr.map((item, index) => {
+              return <Row onClick={() => { this.mapBtnClick(index, item) }} style={{ padding: smallResolution?'7px 10px' : ''}} className={index === mapBtnStatusIndex ? styles.typeBtnActiveSty : styles.typeBtnSty} align='middle' justify='center'>
+                <div className={smallResolution? styles.smallColorBlock : styles.colorBlock} style={{ background: `${item.color}` }}></div>
+                <span style={{ fontSize: subjectFontSize }}>{item.text} {item.val}</span>
+              </Row>
+            })}
+          </Row>
+        </div>
         {<div className={styles.searchSty} >  { /**搜索 */}
           <Select
             showSearch
-            style={{ width: 220 }}
+            style={{ width: smallResolution?110 : 220 }}
             placeholder="请输入企业名称"
             optionFilterProp="children"
             filterOption={(input, option) =>
@@ -985,7 +1017,7 @@ class Index extends PureComponent {
           </Select>
         </div>}
 
-        {showType != 1 && !pointIconGo && <div className={styles.backSty} onClick={this.onBack}>  { /**返回 */}
+        {showType != 1 && !pointIconGo && <div className={smallResolution? styles.smallBackSty : styles.backSty} onClick={this.onBack}>  { /**返回 */}
           <img src='/homeMapBack.png' />
           <div>返回</div>
         </div>}

@@ -21,6 +21,7 @@ import Cookie from 'js-cookie';
 import AttachmentView from '@/components/AttachmentView'
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
 import NumTips from '@/components/NumTips'
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -636,7 +637,7 @@ const Index = (props) => {
       props.getRemoteInspectorList({
         ...values,
         month: undefined,
-        DateTime: values.month ? moment(values.month).format("YYYY-MM-DD 00:00:00") : undefined,
+        DateTime: values.month ? moment(values.month[0]).format("YYYY-MM-DD 00:00:00") : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
       })
@@ -1989,22 +1990,22 @@ const Index = (props) => {
             name="advanced_search"
             onFinish={() => { onFinish(pageIndex, pageSize) }}
             initialValues={{
-              month: moment(moment().format('YYYY-MM-DD'))
+              month: [moment().add(-30, 'day'),moment()],
             }}
             className={styles.queryForm}
             onValuesChange={onValuesChange}
           >
             <Row align='middle'>
-              <Form.Item label='行政区' name='RegionCode' >
-                <RegionList levelNum={2} />
+              <Form.Item label='行政区' name='RegionCode' className='regSty'>
+                <RegionList levelNum={2} style={{ width: 150}}/>
               </Form.Item>
               <Form.Item label='企业' name='EntCode'>
-                <EntAtmoList pollutantType={2} />
+                <EntAtmoList pollutantType={2} style={{ width: 200}}/>
               </Form.Item>
               <Spin spinning={pointLoading} size='small' style={{ top: -8, left: 20 }}>
                 <Form.Item label='监测点名称' name='DGIMN' >
 
-                  <Select placeholder='请选择' allowClear showSearch optionFilterProp="children">
+                  <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 200}}>
                     {
                       pointList[0] && pointList.map(item => {
                         return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
@@ -2017,10 +2018,11 @@ const Index = (props) => {
 
             <Row >
               <Form.Item label='核查日期' name='month'>
-                <DatePicker allowClear={false} picker="day" />
+                {/* <DatePicker allowClear={false} picker="day" /> */}
+                <RangePicker_  format='YYYY-MM-DD'  allowClear={false} showTime={false}  style={{ marginLeft: 0,width: 407}}/>
               </Form.Item>
-              <Form.Item label='核查结果' name='CheckStatus'>
-                <Select placeholder='请选择' allowClear>
+              <Form.Item label='核查结果' name='CheckStatus' className='checkSty'>
+                <Select placeholder='请选择' allowClear style={{ marginLeft: 0,width: 200}}>
                   <Option key={1} value={1} >合格</Option>
                   <Option key={2} value={2} >不合格</Option>
                 </Select>

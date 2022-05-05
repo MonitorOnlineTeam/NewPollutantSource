@@ -277,8 +277,12 @@
   // transition: all 3s;
   .mapBtn{
     position: absolute;
-    top: 14px;
+    top: 16px;
     right: 94px;
+  }
+  .smallMapBtn{
+    .mapBtn;
+    right: 65px;
   }
   .typeBtnSty{
     background: url('/mapBtnBag.png');
@@ -293,7 +297,12 @@
       height: 16px;
       margin-right: 8px;
     }
-
+    .smallColorBlock{
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+    }
   }
   .typeBtnActiveSty{
     .typeBtnSty;
@@ -546,6 +555,10 @@
     right: 97px;
     top: 64px;
     cursor: pointer;
+  }
+  .smallBackSty{
+    .backSty;
+    right: 65px;
   }
    .searchSty{
     position: absolute;

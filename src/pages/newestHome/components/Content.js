@@ -66,7 +66,7 @@ const Index = (props) => {
     setMinWidth()
   }
   const setMinWidth=(e)=>{  
-    document.querySelector("body").setAttribute('style', 'min-width:1800px');
+    document.querySelector("body").setAttribute('style', 'min-width:1500px');
 }
   const cancelMinWidth=(e)=>{  
    document.querySelector("body").setAttribute('style', 'min-width:inherit');
@@ -113,14 +113,14 @@ const Index = (props) => {
 
       <div className={styles.homePage}>
         <Row style={{paddingTop:10,height:'100%'}}>   {/**地图部分 和 地图两侧*/}
-          <Col span={5} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
+          <Col style={{width:395}} className={`${fullScreen? `${styles.leftContent} ${styles.mapModalHide}`: `${styles.leftContent} ${styles.mapModalShow}` }` }>
              <LeftContent {...props}/>
            </Col>
-           <Col span={14} className={styles.mapContent}>
+           <Col  style={{width:'calc(100% - 790px)'}} className={styles.mapContent}>
              <MapContent {...props} fullScreenClick={fullScreenClick}/>
            </Col>
            
-           <Col span={5} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
+           <Col style={{width:395}} className={`${fullScreen? `${styles.rightContent} ${styles.mapModalHide}`: `${styles.rightContent} ${styles.mapModalShow}` }` }>
             <RightContent {...props}/>
             </Col>
         </Row>  

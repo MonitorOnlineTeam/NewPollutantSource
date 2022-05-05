@@ -528,10 +528,10 @@ const operationExpiraOption = { //点位到期统计
                 width:'calc(100% - 115px)'
                 }}>
          <Row align='middle'><div className={styles.realTimeNetworkLegend} style={{background:'#298CFB'}}></div>
-         <div style={{width:70}}>联网数：</div>{networking.networkingCount}<span>次</span>
+         <div style={{width:70}}>联网数：</div>{networking.networkingCount}<span>个</span>
          </Row>
          <Row align='middle' style={{paddingTop:8}}><div className={styles.realTimeNetworkLegend} style={{background:'#FCA522'}}></div>
-         <div style={{width:70}}>未联网数：</div>{networking.offLineCount}<span>次</span>
+         <div style={{width:70}}>未联网数：</div>{networking.offLineCount}<span>个</span>
          </Row>
        </div>
      </Row>

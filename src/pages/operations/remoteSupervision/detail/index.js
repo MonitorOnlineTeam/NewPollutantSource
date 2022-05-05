@@ -566,11 +566,7 @@ const Index = (props) => {
         {consistencyCheckDetail.pointName }
       </Form.Item>
       </Col>
-      <Col span={6}>
-        <Form.Item label="核查日期" >
-        {moment(consistencyCheckDetail.dateTime).format("YYYY-MM-DD")}
-      </Form.Item>
-      </Col>
+
       <Col span={6}>
         <Form.Item label="核查结果" >
         {consistencyCheckDetail.resultCheck === '不合格' ? <span style={{ color: '#f5222d' }}>{consistencyCheckDetail.resultCheck}</span> : <span>{consistencyCheckDetail.resultCheck}</span>}
@@ -585,12 +581,12 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={6}>
-      <Form.Item label="核查时间"  >
-        {consistencyCheckDetail.createTime  }
+        <Form.Item label="核查日期" >
+        {moment(consistencyCheckDetail.dateTime).format("YYYY-MM-DD")}
       </Form.Item>
       </Col>
       <Col span={6}>
-      <Form.Item label="点位负责运维人"  >
+      <Form.Item label="点位运维负责人"  >
         {consistencyCheckDetail.operationUserName  }
       </Form.Item>
       </Col>

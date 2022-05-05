@@ -44,7 +44,7 @@ const dvaPropsData = ({ loading, point }) => ({
   pointSystemInfoLoading:loading.effects[`${namespace}/getPointEquipmentInfo`],
   monitoringCategoryTypeLoading:loading.effects[`${namespace}/getMonitoringCategoryType`],
   systemModelListTotal: point.systemModelListTotal,
-  equipmentInfoListTotal:point.systemModelListTotal,
+  equipmentInfoListTotal:point.equipmentInfoListTotal,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -140,6 +140,12 @@ const Index = (props) => {
 
   const [defaultPollData, setDefaultPollData] = useState([]);
 
+  const [form] = Form.useForm();
+  const [form2] = Form.useForm();
+  const [form3] = Form.useForm(); 
+  const [formDevice] = Form.useForm();
+
+  const defaultParId = pollutantType == 1 ?  '1b27155c-5b8b-439a-987c-8100723c2866' : '31f8f6f9-5700-443b-8570-9229b36fa00c'
   useEffect(() => {
     initData()
 
@@ -165,28 +171,20 @@ const Index = (props) => {
       setGaschoiceData(res&&res.gasManufacturerName? res.gasManufacturerName : undefined)
       setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
     })
+    
 
-    //废水  默认加载监测参数
-      if( pollutantType==1){
-        props.getPollutantById2({ id:'1b27155c-5b8b-439a-987c-8100723c2866',type:1 },(data)=>{
+    //废水 废气   默认加载监测参数
+        props.getPollutantById2({ id:defaultParId,type:1 },(data)=>{
           setDefaultPollData(data)
+          props.updateState({ pollutantTypeList: data})
         })
-      }
-    //废气
-      if(pollutantType==2){
-        props.getPollutantById2({ id:'31f8f6f9-5700-443b-8570-9229b36fa00c',type:1 },(data)=>{
-          setDefaultPollData(data)
-        })
-      }
+    
     }
 
   
 
 
-  const [form] = Form.useForm();
-  const [form2] = Form.useForm();
-  const [form3] = Form.useForm(); 
-  const [formDevice] = Form.useForm();
+
   
   const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -638,11 +636,11 @@ const Index = (props) => {
   const onFinish3 = async (pageIndexs,pageSizes) => {  //查询 设备信息
     try {
       const values = await form3.validateFields();
-
       props.getEquipmentInfoList({
-        ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
         ...values,
-        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndex:pageIndex3,
+        ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+        PollutantType:defaultParId,
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndex3:pageIndex3,
         PageSize:pageSizes?pageSizes:pageSize3
       })
     } catch (errorInfo) {
@@ -937,6 +935,7 @@ const Index = (props) => {
         onValuesChange={onValuesChange3}
         initialValues={{
           ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+          PollutantType: defaultParId,
         }}
       >
         <Row>
@@ -955,7 +954,7 @@ const Index = (props) => {
             <Input allowClear placeholder="请输入设备型号" style={{ width: 150 }} />
           </Form.Item>
           <Form.Item style={{ marginRight: 8 }} name="PollutantType">
-            <Select allowClear placeholder="请选择监测类别" style={{ width: 150 }}>
+            <Select allowClear placeholder="请选择监测类别" disabled style={{ width: 150 }}>
               {
                 monitoringTypeList2[0] && monitoringTypeList2.map(item => {
                   return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -982,7 +981,7 @@ const Index = (props) => {
           </Form.Item>
         </Row>
         <SdlTable scroll={{ y: 'calc(100vh - 500px)' }}
-                 loading={props.loadingGetEquipmentInfoList}
+                  loading={props.loadingGetEquipmentInfoList}
                   bordered dataSource={equipmentInfoList} columns={deviceCol}
                   pagination={{
                     total:equipmentInfoListTotal,
