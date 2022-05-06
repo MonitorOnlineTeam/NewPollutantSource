@@ -64,7 +64,7 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    GetAlarmResponse : (payload) =>{ //数据报警响应统计
+    GetAlarmResponse : (payload) =>{ //异常数据总览
       dispatch({
         type: `${namespace}/GetAlarmResponse`,
         payload:payload,
@@ -138,7 +138,7 @@ const Index = (props) => {
     })
   }
 
-  const getAlarmResponse = (date) =>{//数据报警响应统计
+  const getAlarmResponse = (date) =>{//异常数据总览
     props.GetAlarmResponse({ 
       pollutantType: pollutantType,
       ...date
@@ -176,7 +176,7 @@ const Index = (props) => {
      })
     }
 
-  const  getOperationExpirePointList = () =>{ //运营到期点位统计
+  const  getOperationExpirePointList = () =>{ //运营到期点位
     props.GetOperationExpirePointList({ 
       PollutantType: pollutantType,
     },()=>{})
@@ -341,7 +341,7 @@ const Index = (props) => {
    return option;
   };
 
- const dataAlarmResOption = {  //数据报警响应统计
+ const dataAlarmResOption = {  //异常数据总览
   tooltip: { show:false },
   grid: { top:0,left: 124, right: 68, bottom: 0,},
   xAxis: { show:false,  type: 'value'},
@@ -555,15 +555,15 @@ const operationExpiraOption = { //点位到期统计
     </Spin>
 
     <Spin spinning={dataAlarmResLoading}>
-       <div className={styles.dataAlarmRes}>{/**数据报警响应统计 */}
-       <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='数据报警响应统计' />
+       <div className={styles.dataAlarmRes}>{/**异常数据总览 */}
+       <CardHeader btnClick={dataAlarmResClick} showBtn type='week' btnCheck={dataAlarmResBtnCheck} title='异常数据总览' />
               {dataAlarmEcharts}
               </div>
      </Spin>
   
      <Spin spinning={operationExpireLoading}>
-     <div className={styles.operationExpira}>{/**运营到期点位统计 */}
-    <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位统计' />
+     <div className={styles.operationExpira}>{/**运营到期点位 */}
+    <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位' />
      <div style={{height:'100%',padding:'30px 17px 30px 0' }}>
          <ReactEcharts
             option={operationExpiraOption}

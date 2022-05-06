@@ -296,3 +296,8 @@ export async function GetEquipmentInfoList(params) { //设备信息
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetMonitoringCategoryType',params,null);
     return result;
   }
+
+  export async function GetPBList(params) {   //设备信息  废气 配备
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPBList',params,null);
+    return result;
+  }

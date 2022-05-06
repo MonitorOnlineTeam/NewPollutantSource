@@ -300,10 +300,10 @@ const Index = (props) => {
       ...values,
       BegBeginTime:values.BegTime&&moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
       BegEndTime:values.BegTime&&moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-      EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-      EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+      // EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+      // EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
       BegTime:undefined,
-      EndTime:undefined,
+      // EndTime:undefined,
       
     })
  };
@@ -322,10 +322,10 @@ const Index = (props) => {
         ...values,
         BegBeginTime:values.BegTime&&moment(values.BegTime[0]).format('YYYY-MM-DD HH:mm:ss'),
         BegEndTime:values.BegTime&&moment(values.BegTime[1]).format('YYYY-MM-DD HH:mm:ss'),
-        EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
+        // EndBeginTime:values.EndTime&&moment(values.EndTime[0]).format('YYYY-MM-DD HH:mm:ss'),
+        // EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
         BegTime:undefined,
-        EndTime:undefined,
+        // EndTime:undefined,
         PageIndex:PageIndex,
         PageSize:PageSize,
       })
@@ -369,73 +369,134 @@ const Index = (props) => {
     setPageIndex2(PageIndex)
     props.getProjectPointList({ID:ID,ProjectCode:ProjectCode,PageIndex:PageIndex,PageSize:PageSize,})
   }
-  const searchComponents = () =>{
-     return  <Form
-    form={form}
-    name="advanced_search"
-    className={styles['ant-advanced-search-form']}
-    onFinish={()=>{onFinish(pageIndex,pageSize)}}
-  >  
-         <Row align='middle'> 
-         <Col span={8}>
-          <Form.Item   name='ProjectName' label='合同名称'>
-            <Input placeholder="请输入合同名称" allowClear/>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='ProjectCode' label='项目编号' >
-            <Input placeholder="请输入项目编号" allowClear/>
-          </Form.Item>
-        </Col>
-        {expand&& <><Col span={8}>
-          <Form.Item name='BegTime' label='运营起始日期' >
-          <RangePicker style={{width:'100%'}}
-            showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
-            />
-          </Form.Item>
-        </Col>  
-        <Col span={8}>
-          <Form.Item   name='EntName' label='卖方公司名称'>
-            <Input placeholder="请输入卖方公司名称" />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='RegionCode' label='客户所在地' >
-           {/* <RegionList style={{ width: '100%' }} /> */}
-           <Input  placeholder='请输入客户所在地'/>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name='EndTime' label='运营结束日期' format='YYYY-MM-DD 23:59:59'>
-          <RangePicker style={{width:'100%'}} 
-           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
-          </Form.Item>
-        </Col></>}   
-        <Col span={expand ? 24 : 8} style={{textAlign:expand ? 'right':'left'}}>
-        <Form.Item>
-        <Button type="primary" htmlType="submit">
-            查询
-          </Button>
-          <Button style={{  margin: '0 8px',}} onClick={() => {  form.resetFields(); }}  >
-            重置
-          </Button>
+  // const searchComponents = () =>{
+  //    return  <Form
+  //   form={form}
+  //   name="advanced_search"
+  //   className={styles['ant-advanced-search-form']}
+  //   onFinish={()=>{onFinish(pageIndex,pageSize)}}
+  // >  
+  //        <Row align='middle'> 
+  //        <Col span={8}>
+  //         <Form.Item   name='ProjectName' label='合同名称'>
+  //           <Input placeholder="请输入合同名称" allowClear/>
+  //         </Form.Item>
+  //       </Col>
+  //       <Col span={8}>
+  //         <Form.Item name='ProjectCode' label='项目编号' >
+  //           <Input placeholder="请输入项目编号" allowClear/>
+  //         </Form.Item>
+  //       </Col>
+  //       {expand&& <><Col span={8}>
+  //         <Form.Item name='BegTime' label='运营起始日期' >
+  //         <RangePicker style={{width:'100%'}}
+  //           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+  //           />
+  //         </Form.Item>
+  //       </Col>  
+  //       <Col span={8}>
+  //         <Form.Item   name='EntName' label='卖方公司名称'>
+  //           <Input placeholder="请输入卖方公司名称" />
+  //         </Form.Item>
+  //       </Col>
+  //       <Col span={8}>
+  //         <Form.Item name='RegionCode' label='客户所在地' >
+  //          {/* <RegionList style={{ width: '100%' }} /> */}
+  //          <Input  placeholder='请输入客户所在地'/>
+  //         </Form.Item>
+  //       </Col>
+  //       <Col span={8}>
+  //         <Form.Item name='EndTime' label='运营结束日期' format='YYYY-MM-DD 23:59:59'>
+  //         <RangePicker style={{width:'100%'}} 
+  //          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
+  //         </Form.Item>
+  //       </Col></>}   
+  //       <Col span={expand ? 24 : 8} style={{textAlign:expand ? 'right':'left'}}>
+  //       <Form.Item>
+  //       <Button type="primary" htmlType="submit">
+  //           查询
+  //         </Button>
+  //         <Button style={{  margin: '0 8px',}} onClick={() => {  form.resetFields(); }}  >
+  //           重置
+  //         </Button>
          
-      <a  onClick={() => {setExpand(!expand);  }} >
-       {expand ? <>收起 <UpOutlined /></>  : <>展开 <DownOutlined /></>} 
-      </a>
-      </Form.Item>
-      </Col>
-      </Row>   
-      <Row  align='middle'>
-     <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
-          添加
-     </Button>
-       <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
-            导出
-          </Button> 
-      </Row>   
-     </Form>
-  }
+  //     <a  onClick={() => {setExpand(!expand);  }} >
+  //      {expand ? <>收起 <UpOutlined /></>  : <>展开 <DownOutlined /></>} 
+  //     </a>
+  //     </Form.Item>
+  //     </Col>
+  //     </Row>   
+  //     <Row  align='middle'>
+  //    <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
+  //         添加
+  //    </Button>
+  //      <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+  //           导出
+  //         </Button> 
+  //     </Row>   
+  //    </Form>
+  // }
+
+  const searchComponents = () =>{
+    return  <Form
+   form={form}
+   name="advanced_search"
+   className={styles['ant-advanced-search-form']}
+   onFinish={()=>{onFinish(pageIndex,pageSize)}}
+ >  
+        <Row align='middle'> 
+        <Col span={8}>
+         <Form.Item   name='ProjectName' label='合同名称'>
+           <Input placeholder="请输入合同名称" allowClear/>
+         </Form.Item>
+       </Col>
+       <Col span={8}>
+         <Form.Item name='ProjectCode' label='项目编号' >
+           <Input placeholder="请输入项目编号" allowClear/>
+         </Form.Item>
+       </Col>
+       {expand&& <>  <Col span={8}>
+         <Form.Item name='BegTime' label='运营日期' >
+         <RangePicker style={{width:'100%'}}
+           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+           />
+         </Form.Item>
+       </Col>  
+        <Col span={8}>
+         <Form.Item   name='EntName' label='卖方公司名称'>
+           <Input placeholder="请输入卖方公司名称" />
+         </Form.Item>
+       </Col>
+       <Col span={8}>
+         <Form.Item name='RegionCode' label='客户所在地' >
+          <Input  placeholder='请输入客户所在地'/>
+         </Form.Item>
+       </Col></>}   
+       <Col span={8} >
+       <Form.Item style={{marginLeft:30}}>
+       <Button type="primary" htmlType="submit">
+           查询
+         </Button>
+         <Button style={{  margin: '0 8px',}} onClick={() => {  form.resetFields(); }}  >
+           重置
+         </Button>
+        
+     <a  onClick={() => {setExpand(!expand);  }} >
+      {expand ? <>收起 <UpOutlined /></>  : <>展开 <DownOutlined /></>} 
+     </a>
+     </Form.Item>
+     </Col>
+     </Row>   
+     <Row  align='middle'>
+    <Button  icon={<PlusOutlined />} type="primary" onClick={()=>{ add()}} >
+         添加
+    </Button>
+      <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+           导出
+         </Button> 
+     </Row>   
+    </Form>
+ }
   return (
     <div  className={styles.projectManagerSty}>
     <BreadcrumbWrapper>

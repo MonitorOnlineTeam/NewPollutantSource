@@ -392,7 +392,7 @@ const Index = (props) => {
        }
         return (
           <>
-            {record.flag && <><Tooltip  title={updateflag && flag? "编辑" : null  }>
+            <Tooltip  title={updateflag && flag? "编辑" : null  }>
               <a onClick={() => {
                if(updateflag && flag){
                 edit(record)
@@ -402,17 +402,17 @@ const Index = (props) => {
                 <EditOutlined  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag?  '#1890ff' : '#00000040',  fontSize: 16 }} />
               </a>
             </Tooltip>
-              <Divider type="vertical" /></>}
+              <Divider type="vertical" />
             {detail}
              <Divider type="vertical" />
               <Tooltip title={ flag? "删除": null  } >
                 <Popconfirm   disabled={!flag} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a href="#"  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
+                  <a href="#"  style={{cursor: flag? 'pointer':'not-allowed', color:flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
               </Tooltip>
             <Divider type="vertical" />
             <Tooltip   title={!issue||issue==='已下发'?  null : "下发"} >
-              <Popconfirm disabled={!issue||issue==='已下发'? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issue(record)} okText="是" cancelText="否">
+              <Popconfirm disabled={!issue||issue==='已下发'? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
                 <a href="#" style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'#00000040' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
@@ -625,7 +625,7 @@ const Index = (props) => {
       onFinish(1, 20)
     })
   }
-  const issue = (record) => { //下发
+  const issues = (record) => { //下发
     props.issueRemoteInspector({ ID: record.id }, () => {
       onFinish(pageIndex, pageSize)
     })
@@ -637,7 +637,8 @@ const Index = (props) => {
       props.getRemoteInspectorList({
         ...values,
         month: undefined,
-        DateTime: values.month ? moment(values.month[0]).format("YYYY-MM-DD 00:00:00") : undefined,
+        BeginTime: values.month ? moment(values.month[0]).format("YYYY-MM-DD 00:00:00") : undefined,
+        EndTime: values.month ? moment(values.month[1]).format("YYYY-MM-DD 23:59:59") : undefined,
         pageIndex: pageIndex,
         pageSize: pageSize,
       })

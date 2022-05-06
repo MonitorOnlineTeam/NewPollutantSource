@@ -54,7 +54,7 @@ const  dvaDispatch = (dispatch) => {
         payload:{...payload},
       }) 
     },
-    GetOperatePointList:(payload)=>{ //运营信息统计
+    GetOperatePointList:(payload)=>{ //运营信息总览
       dispatch({
         type: `${namespace}/GetOperatePointList`, 
         payload:{...payload},
@@ -66,7 +66,7 @@ const  dvaDispatch = (dispatch) => {
         payload:{...payload},
       }) 
     },
-    GetOperationPlanTaskRate:(payload)=>{ //近30日计划运维情况
+    GetOperationPlanTaskRate:(payload)=>{ //近30日运维情况
       dispatch({
         type: `${namespace}/GetOperationPlanTaskRate`, 
         payload:{...payload},
@@ -245,11 +245,30 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
                         
     ]
 };
-
+ 
+const planOperaText = (type) =>{
+switch(type){
+  case 1 :
+    if(planOperaList.inspectionRate=="-"){
+     return '-'
+    }else{
+      return `${planOperaList.inspectionRate}%`
+    }
+  break;
+  case 2 :
+    if(planOperaList.autoCalibrationRate=="-"){
+     return '-'
+    }else{
+      return `${planOperaList.autoCalibrationRate}%`
+    }
+  break;
+  
+}
+}
  const { planOperaList } = props;
 
  const planOperaOption = (type) => {  //计划运维图表
-  let color1 = ["#3DBDFF", "#3DBDFF"], color2 = ["#FFDD54", '#FFDD54'],color3 = ['#F66080', '#323A70']
+  let color1 = ["#3DBDFF", "#323A70"], color2 = ["#FFDD54", '#323A70'],color3 = ['#F66080', '#323A70']
   let option = {
     tooltip: {
       show: false,
@@ -258,7 +277,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
     },
     color: type == 1 ? color1 : type == 2 ? color2 : color3,
     title: {
-      text: type == 1 ? `${planOperaList.inspectionRate=="-"? '-': `${planOperaList.inspectionRate}%` }`: type == 2 ? `${planOperaList.autoCalibrationRate}%` : `${planOperaList.actualCalibrationRate}%`,
+      text: planOperaText(type),
       left: "center",
       top: "48%",
       textStyle: {
@@ -312,7 +331,7 @@ const actualCalibration = () =>{  //实际校准弹框
   setActualInspectionVisible(true)
 }
 
-const moreBtnClick = (type) =>{ //近30日运维工单统计
+const moreBtnClick = (type) =>{ //近30日运维工单
   switch(type){
     case "operaOrder" :
     setOrderModalVisible(true)
@@ -399,9 +418,9 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
       }
   })
-  const  { operationLoading,operationDataSource } = props; {/**运营信息统计 */}
+  const  { operationLoading,operationDataSource } = props; {/**运营信息总览 */}
   const  { operationTaskLoading } = props; {/**近30日运维工单 */}
-  const  { operationPlanTaskLoading } = props; {/**近30日计划运维情况 */}
+  const  { operationPlanTaskLoading } = props; {/**近30日运维情况 */}
   const  { planCompleteList,planCompleteListLoading } = props;{/**计划完成率 */}
   const  [planCalibrationVisible,setPlanCalibrationVisible ]  = useState(false)
   const  [planInspectionVisible,setPlanInspectionVisible] = useState(false)
@@ -412,14 +431,14 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
     <div>
       <Spin spinning={operationLoading}>
          <div className={styles.pointSty}> 
-           <CardHeader  title='运营信息统计'/>  
+           <CardHeader  title='运营信息总览'/>  
           <Table  style={{padding:'16px 15px 0 0'}}  columns={operationColumns} dataSource={operationDataSource} pagination={false}/>
          </div>
          </Spin>
 
          <Spin spinning={operationTaskLoading}>
          <div className={styles.operaOrder}>
-           <CardHeader  title='近30日运维工单统计'/>
+           <CardHeader  title='近30日运维工单'/>
            <div style={{height:'100%', padding:'20px 10px 0 0'}}>     
            <ReactEcharts 
               option={operaOrderOption}
@@ -430,16 +449,16 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
           </div>
           </Spin>
 
-          <Spin spinning={operationPlanTaskLoading}> {/**近30日计划运维情况 */}
+          <Spin spinning={operationPlanTaskLoading}> {/**近30日运维情况 */}
           <div className={styles.planOpera }>
-           <CardHeader  title='近30日计划运维情况'/>
+           <CardHeader  title='近30日运维情况'/>
             {planOperaEcharts}
           </div>
           </Spin>
 
           <Spin spinning={planCompleteListLoading}>
           <div className={styles.planComplete}>
-           <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日计划完成率'/>
+           <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
            <ScrollTable data={planCompleteList}  column={[]} />
            {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
@@ -468,7 +487,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         onCancel={()=>{setActualInspectionVisible(false)}}
         time={[moment(latelyDays30.beginTime),moment(latelyDays30.endTime)]}
       />  
-          <EntWorkOrderModal  //近30日运维工单统计
+          <EntWorkOrderModal  //近30日运维工单
             showModal={orderModalVisible}
             onCloseListener={ () => { 
                 setOrderModalVisible(false)
@@ -476,7 +495,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
               }}
             pollutantTypeCode={pollutantType}
           />
-         <OperatingInfo  //运营信息统计
+         <OperatingInfo  //运营信息总览
              visible={operatingInfoVisible}
              type={pollutantType}
              onCancel={()=>{setOperatingInfoVisible(false)}}

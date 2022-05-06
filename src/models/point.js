@@ -14,7 +14,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
-    GetMonitoringCategoryType,
+    GetMonitoringCategoryType,GetPBList,
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 import cuid from 'cuid';
@@ -46,7 +46,8 @@ export default Model.extend({
         pollutantTypeList2:[],//监测类型 
         tableDatas:[],//设备参数
         pointSystemInfo:[],//系统信息 回显
-        monitoringCategoryTypeList:[]
+        monitoringCategoryTypeList:[],
+        pbList:[], //废气 配备
     },
     effects: {
 
@@ -427,6 +428,14 @@ export default Model.extend({
               yield update({
                 pollutantTypeList2: result.Datas,
               })
+            } else {
+              message.error(result.Message)
+            }
+          },
+          *getPBList({ payload, callback }, { call, put, update }) { //废气 配备
+            const result = yield call(GetPBList, payload);
+            if (result.IsSuccess) {
+              yield update({  pbList: result.Datas, })
             } else {
               message.error(result.Message)
             }

@@ -45,6 +45,9 @@ const dvaPropsData = ({ loading, point }) => ({
   monitoringCategoryTypeLoading:loading.effects[`${namespace}/getMonitoringCategoryType`],
   systemModelListTotal: point.systemModelListTotal,
   equipmentInfoListTotal:point.equipmentInfoListTotal,
+  pbList:point.pbList,
+  pbListLoading:loading.effects[`${namespace}/getPBList`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -127,6 +130,12 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
+    getPBList: (payload) => { //废气 配备
+      dispatch({
+        type: `${namespace}/getPBList`,
+        payload: payload,
+      })
+    },
   }
 }
 
@@ -136,7 +145,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   const [dates, setDates] = useState([]);
-  const { DGIMN, pollutantType, manufacturerList, systemModelList,systemModelListTotal, pollutantTypeList,pollutantTypeList2,equipmentInfoList,pointSystemInfo,equipmentInfoListTotal } = props;
+  const { DGIMN, pollutantType, manufacturerList, systemModelList,systemModelListTotal, pollutantTypeList,pollutantTypeList2,equipmentInfoList,pointSystemInfo,equipmentInfoListTotal,pbList,pbListLoading, } = props;
 
   const [defaultPollData, setDefaultPollData] = useState([]);
 
@@ -179,6 +188,9 @@ const Index = (props) => {
           props.updateState({ pollutantTypeList: data})
         })
     
+
+    //废气 配备
+    props.getPBList({})
     }
 
   
@@ -193,14 +205,14 @@ const Index = (props) => {
   const edit = (record) => {
     formDevice.setFieldsValue({
       ...record,
-      Range1Min: record.Range1? record.Range1.split("~")[0] :'',
-      Range1Max: record.Range1? record.Range1.split("~")[1] :'',
-      Range2Min: record.Range2? record.Range2.split("~")[0] :'',
-      Range2Max: record.Range2? record.Range2.split("~")[1] :'',
+      Range1Min: record.Range1? record.Range1.split("~")[0] :undefined,
+      Range1Max: record.Range1? record.Range1.split("~")[1] :undefined,
+      Range2Min: record.Range2? record.Range2.split("~")[0] :undefined,
+      Range2Max: record.Range2? record.Range2.split("~")[1] :undefined,
       EquipmentManufacturer:record.EquipmentManufacturer,
       EquipmentModel: record.EquipmentModel,
       EquipmentNumber: record.EquipmentNumber,
-      Equipment: record.Equipment,
+      Equipment: record.Equipment|| undefined,
       PollutantCode:record.PollutantCode||undefined,
     });
     setDevicePollutantName(record.PollutantName) //设备参数
@@ -234,6 +246,8 @@ const Index = (props) => {
                        Range1:row.Range1Min||row.Range1Max? `${row.Range1Min}~${row.Range1Max}`: null,
                        Range2:row.Range2Min||row.Range2Max? `${row.Range2Min}~${row.Range2Max}`: null,
                        PollutantName:devicePollutantName,
+                       Equipment:pbName,
+                       EquipmentCode:row.Equipment,
                        PollutantCode:row.PollutantCode,
                        EquipmentManufacturerID: parchoiceDeViceID, //设备厂家
                       };
@@ -446,6 +460,9 @@ const Index = (props) => {
   }
 
   const [devicePollutantName,setDevicePollutantName] = useState() 
+  const [pbName,setPbName] = useState() 
+
+  
   const [isManual,setIsManual] = useState(false) //是否手填
 
   const deviceColChoice = (record) => { //设备参数选择
@@ -559,12 +576,12 @@ const Index = (props) => {
     </Popover>
   }
   const deviceCol = [
-    {
-      title: '编号',
-      dataIndex: 'EquipmentCode',
-      key: 'EquipmentCode',
-      align: 'center',
-    },
+    // {
+    //   title: '编号',
+    //   dataIndex: 'EquipmentCode',
+    //   key: 'EquipmentCode',
+    //   align: 'center',
+    // },
     {
       title: '设备厂家',
       dataIndex: 'ManufacturerName',
@@ -607,20 +624,20 @@ const Index = (props) => {
       key: 'PollutantTypeName',
       align: 'center',
     },
-    {
-      title: '状态',
-      dataIndex: 'Status',
-      key: 'Status',
-      align: 'center',
-      render: (text, record) => {
-        if (text === 1) {
-          return <span><Tag color="blue">启用</Tag></span>;
-        }
-        if (text === 2) {
-          return <span><Tag color="red">停用</Tag></span>;
-        }
-      },
-    },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'Status',
+    //   key: 'Status',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     if (text === 1) {
+    //       return <span><Tag color="blue">启用</Tag></span>;
+    //     }
+    //     if (text === 2) {
+    //       return <span><Tag color="red">停用</Tag></span>;
+    //     }
+    //   },
+    // },
     {
       title: '操作',
       dataIndex: 'x',
@@ -638,8 +655,6 @@ const Index = (props) => {
       const values = await form3.validateFields();
       props.getEquipmentInfoList({
         ...values,
-        ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
-        PollutantType:defaultParId,
         PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndex3:pageIndex3,
         PageSize:pageSizes?pageSizes:pageSize3
       })
@@ -792,13 +807,23 @@ const Index = (props) => {
     if (Object.keys(hangedValues).join() == 'PollutantCode') { //设备厂家
      const data =  pollutantTypeList2.filter((item)=>item.ID === hangedValues.PollutantCode)
       setDevicePollutantName(data[0]? data[0].Name : '')
-    } 
+    }
+    if (Object.keys(hangedValues).join() == 'Equipment') { //废气 配备
+      const data =  pbList.filter((item)=>item.code === hangedValues.Equipment)
+       setPbName(data[0]? data[0].name : '')
+     }  
   }
-  // const handleTableChange = (PageIndex, PageSize) => {
-  //   setPageIndex(PageIndex)
-  //   setPageSize(PageSize)
-  //   onFinish(PageIndex, PageSize)
-  // }
+ const popVisibleClick = () =>{
+  setParPopVisible(!parPopVisible);
+  form3.resetFields();
+  form3.setFieldsValue({
+    ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+    PollutantType: defaultParId,
+  })
+  setTimeout(()=>{
+    onFinish3()
+  })
+ }
  
   const EditableCell = ({
     editing,
@@ -812,7 +837,7 @@ const Index = (props) => {
   }) => {
     let inputNode = '';
     if (dataIndex ==='EquipmentManufacturer') {
-      inputNode = <Select onClick={()=>{setParPopVisible(!parPopVisible);form3.resetFields();onFinish3()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
+      inputNode = <Select onClick={()=>{popVisibleClick()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
     } else {
@@ -826,7 +851,6 @@ const Index = (props) => {
           inputType === 'range' ?
             <Form.Item style={{ margin: 0 }}>
               <Form.Item style={{ display: 'inline-block', margin: 0 }}
-                //  rules={[ {   required: dataIndex==="Range1"&&true,   message: ``  } ]}
                 name={`${dataIndex}Min`}
               >
                 <InputNumber placeholder={`最小值`} />
@@ -836,7 +860,6 @@ const Index = (props) => {
         </span>
               <Form.Item
                 name={`${dataIndex}Max`}
-                //  rules={[ {   required: dataIndex==="Range1"&&true,   message: `` } ]}
                 style={{ display: 'inline-block', margin: 0 }} 
               >
                 <InputNumber placeholder={`最大值`} />
@@ -853,6 +876,18 @@ const Index = (props) => {
            })
           }
       </Select></Form.Item>}</>
+        : dataIndex ==='Equipment'? //废气 配备
+            
+        <>{ pbListLoading? <Spin size='small' style={{ textAlign: 'left' }} />
+                 :
+                 <Form.Item  name={`Equipment`} style={{ margin: 0 }}>
+        <Select allowClear placeholder='请选择'   showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+        {
+         pbList[0] && pbList.map(item => {
+        return <Option key={item.code} value={item.code}>{item.name}</Option>
+       })
+      }
+  </Select></Form.Item>}</>
       :
             <Form.Item
               name={`${dataIndex}`}
@@ -876,7 +911,7 @@ const Index = (props) => {
       const values = await form.validateFields();
       const  parList =  data.map(itme=>{
         return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range2,EquipmentManufacturer:itme.EquipmentManufacturerID,
-                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.Equipment,
+                EquipmentInfoID:itme.EquipmentInfoID,EquipmentModel:itme.EquipmentModel,EquipmentNumber:itme.EquipmentNumber,Equipment :itme.EquipmentCode,
                 ManualEquipmentManufacturer: itme.ManualEquipmentManufacturer,
                 ManualEquipmentModel: itme.ManualEquipmentModel,
                 ManualEquipmentName: itme.ManualEquipmentName,
@@ -934,8 +969,7 @@ const Index = (props) => {
         onFinish={() => { onFinish3() }}
         onValuesChange={onValuesChange3}
         initialValues={{
-          ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
-          PollutantType: defaultParId,
+
         }}
       >
         <Row>

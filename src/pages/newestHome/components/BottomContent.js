@@ -56,7 +56,7 @@ const dvaDispatch = (dispatch) => {
         payload: { ...payload },
       })
     },
-    GetExceptionSignTaskRate:(payload)=>{ //现场打卡异常统计
+    GetExceptionSignTaskRate:(payload)=>{ //现场打卡异常
       dispatch({
         type: `${namespace}/GetExceptionSignTaskRate`, 
         payload:{...payload},
@@ -112,11 +112,11 @@ const Index = (props) => {
     getConsumablesList(latelyDays7)
     getOpertionExceptionList(latelyDays7)
 
-    const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常统计 计划内  点击事件
+    const planInsideClockAbnormalEchartsInstance = planInsideClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常 计划内  点击事件
      planInsideClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
     });
-    const planOutClockAbnormalEchartsInstance = planOutClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常统计 计划外  点击事件
+    const planOutClockAbnormalEchartsInstance = planOutClockAbnormalEchartsRef.current.getEchartsInstance(); //现场打卡异常 计划外  点击事件
     planOutClockAbnormalEchartsInstance.getZr().on('click', (params) => {
       setClockAbnormalVisible(true)
     });
@@ -142,7 +142,7 @@ const Index = (props) => {
       ...date
     })
   }
-  const getOpertionExceptionList = (date) =>{ //设备异常统计
+  const getOpertionExceptionList = (date) =>{ //设备异常总览
     props.GetOpertionExceptionList({ 
       pollutantType: pollutantType,
       ...date
@@ -431,7 +431,7 @@ const Index = (props) => {
   const { exceptionSignTaskRateLoading,exceptionSignTaskRateList } = props; //现场打卡
   const { consumablesLoading } = props; //耗材统计
   const [clockAbnormalVisible,setClockAbnormalVisible] = useState(false)  //现场打卡 弹框
-  const { exceptionListLoading } = props; //设备异常统计
+  const { exceptionListLoading } = props; //设备异常总览
   const [equipmentAbnormalRateVisible,setEquipmentAbnormalRateVisible ] = useState(false) //设备异常率 弹框
   const [equipmentFailureRateVisible,setEquipmentFailureRateVisible ] = useState(false) //设备故障率 弹框
   const [equipmentFailurerePairRateVisible,setEquipmentFailurerePairRateVisible ] = useState(false) //设备故障修复率 弹框
@@ -442,7 +442,7 @@ const Index = (props) => {
 
       <Spin spinning={exceptionSignTaskRateLoading}>
       <Col className={styles.clockAbnormal}>
-        <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常统计' />
+        <CardHeader btnClick={clockAbnormalClick} showBtn type='week' btnCheck={clockBtnCheck} title='现场打卡异常' />
         <div style={{ paddingTop: 11 }}>
           <Row>
             <div style={{ width: '50%' }}>
@@ -510,8 +510,8 @@ const Index = (props) => {
      </Spin>
 
      <Spin spinning={exceptionListLoading}>
-      <Col className={styles.deviceAbnormal}> {/**设备异常统计 */}
-        <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常统计' />
+      <Col className={styles.deviceAbnormal}> {/**设备异常总览 */}
+        <CardHeader btnClick={deviceAbnormalClick} showBtn type='week' btnCheck={deviceAbnormalCheck} title='设备异常总览' />
         <div style={{ height: '100%', padding: '41px 0 0' }}> 
            { deviceAbnormalEcharts }{/**当图表有点击事件时 更新更新页面时  图表抖动 */}
         </div>

@@ -121,10 +121,10 @@ const Index = (props,ref) => {
   }
   const workOrderTip = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>运营周期内:在监测点的实际运营周期内。</li>
-    <li>完成工单:当日存在完成的计划工单。</li>
-    <li>系统关闭工单:在运维周期内未完成计划工单，系统会关闭掉。</li>
-    <li>同时存在关闭和完成的工单:当日存在系统关闭的计划工单，也存在完成的工单。</li>
+    <li>运营周期内：在监测点的实际运营周期内。 </li>
+    <li>完成工单：当日系统派发的工单已被完成。</li>
+    <li>系统关闭工单：当日系统派发的工单被系统关闭。</li>
+    <li>同时存在关闭和完成的工单：当日存在系统关闭工单，也存在完成工单。</li>
 
   </ol>
   }
@@ -201,7 +201,7 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          title: <span>总数<Tooltip  title={'日期条件内，派发的计划校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'calibrationCount',
           key: 'calibrationCount',
           width: 50,
@@ -431,61 +431,63 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          title: <span>总数<Tooltip  title={'日期条件内完成的工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'allCompleteTaskCount',
           key: 'allCompleteTaskCount',
           width: 50,
           align:'center',
         },
         {
-          title:  <span>巡检工单数</span>,
+          title:  <span>巡检</span>,
           dataIndex: 'inspectionCompleteCount',
           key: 'inspectionCompleteCount',
           width: 100,
           align:'center',
         },
         {
-          title: '校准工单数',
-          dataIndex: 'calibrationCompleteCount',
-          key: 'calibrationCompleteCount',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '维修工单数',
-          dataIndex: 'repairCompleteCount',
-          key: 'repairCompleteCount',
-          width: 100,
-          align:'center',
-        },
-        {
-          title: '维护工单数',
+          title: '维护',
           dataIndex: 'maintainCompleteCount',
           key: 'maintainCompleteCount',
           width: 100,
           align:'center',
         },
         {
-          title: '参数核对工单数',
-          dataIndex: 'matchingComparisonCompleteCount',
-          key: 'matchingComparisonCompleteCount',
+          title: '校准',
+          dataIndex: 'calibrationCompleteCount',
+          key: 'calibrationCompleteCount',
           width: 100,
           align:'center',
         },
         {
-          title: '配合检查工单数',
+          title: '配合检查',
           dataIndex: 'cooperationInspectionCompleteCount',
           key: 'cooperationInspectionCompleteCount',
           width: 100,
           align:'center',
         },
         {
-          title: '校验测试工单数',
+          title: '校验测试',
           dataIndex: 'calibrationTestCompleteCount',
           key: 'calibrationTestCompleteCount',
           width: 100,
           align:'center',
         },
+        {
+          title: '维修',
+          dataIndex: 'repairCompleteCount',
+          key: 'repairCompleteCount',
+          width: 100,
+          align:'center',
+        },
+
+        {
+          title: '参数核对',
+          dataIndex: 'matchingComparisonCompleteCount',
+          key: 'matchingComparisonCompleteCount',
+          width: 100,
+          align:'center',
+        },
+
       ],
     },
    
@@ -629,7 +631,7 @@ const exports = () => { //导出
      if(dateCol&&dateCol[0]){ 
  
        col.push({
-         title: '工单分布(按工单完成日期分布)',
+         title: '工单分布(按工单创建日期分布)',
          width:200, 
          align:'center',
          children:dateCol.map((item,index)=>{
@@ -685,7 +687,7 @@ const exports = () => { //导出
      if(dateCol&&dateCol[0]){ 
  
        col.push({
-         title: '工单分布(按工单完成日期分布)',
+         title: '工单分布(按工单创建日期分布)',
          width:200, 
          align:'center',
          children:dateCol.map((item,index)=>{
@@ -759,12 +761,14 @@ const [dete, setDete] = useState({})
 // const [entName, setEntName] = useState({})
 const outTypeObj = {
   "inspectionCount"  : "巡检工单",
+  "maintainCompleteCount"  : "维护工单",
   "calibrationCount" :'校准工单',
-  "repairCount" :'维护维修工单',
-  "matchingComparisonCount" :'配合对比工单',
   "cooperationInspectionCount" :'配合检查工单',
-  "calibrationTestCount":'校验监测工单',
+  "calibrationTestCount":'校验测试工单',
+  "repairCount" :'维修工单',
+  "matchingComparisonCount" :'参数核对',
  }
+
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
   "calibrationCount" :'#52c41a',
@@ -774,20 +778,15 @@ const outTypeObj = {
   "calibrationTestCount":'#08979c',
  }
 const dateCellRender = (value)=>{//日期
-
-
-
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
     return  entOutsidePointListDatas.map((item,index)=>{
-      if(item.date){//年 月 返回的数据格式不一致 需判断
-      if(moment(value).format("MM/DD") == item.date.split('_')[0] ){
+      if(moment(value).format("D") == item.day){
          for(let key in item){ //完成
           if(item[key] && outTypeObj[key]){ 
            return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
         }
       }
       }
-    }
   })
   }
 
@@ -797,7 +796,6 @@ const monthCellRender = (value) =>{//月份
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
     entOutsidePointListDatas.map((item,index)=>{
       if(Number(value.month()) + 1 == item.month ){
-        console.log(Number(value.month()) + 1 , item.month,222222)
          for(let key in item){ //完成
           if(item[key] && outTypeObj[key]){ 
            return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
@@ -813,7 +811,7 @@ const  onPanelChange = (value, mode)=> { //日期面板变化回调
     DGIMN:DGIMN,
     beginTime:mode==='month'? moment(value).startOf('month').format('YYYY-MM-DD 00:00:00') :moment(value).startOf('year').format('YYYY-MM-DD 00:00:00'),
     endTime:mode==='month'?moment(value).endOf('month').format('YYYY-MM-DD 23:59:59'):moment(value).endOf('year').format('YYYY-MM-DD 23:59:59'),
-    staticType: mode==='month'? 3:4
+    calendarType: mode==='month'? 1:2,
   })
 }
 
@@ -833,7 +831,7 @@ const outPointClick = (record) =>{ //计划外 监测点名称
 
 const entOutsidePointGetTaskWorkOrderList = (par) =>{
   props.entOutsidePointGetTaskWorkOrderList({
-    staticType: 3,
+    staticType: 4,
     ...par,
   })
   setDete({
@@ -929,8 +927,7 @@ const entOutsidePointGetTaskWorkOrderList = (par) =>{
         width='80%'
         wrapClassName={styles.pointModalSty}
       >
-     <Card title={`统计${ dete.beginTime&&dete.beginTime} ~ ${dete.endTime&&dete.endTime}
-        内计划外工单情况`}
+     <Card title={`统计${ dete.beginTime&&dete.beginTime} ~ ${dete.endTime&&dete.endTime}内计划外工单情况`}
         style={{
           height:clientHeight - 250,
           overflowY:'auto'

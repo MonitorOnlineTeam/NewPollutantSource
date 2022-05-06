@@ -194,10 +194,10 @@ const Index = (props,ref ) => {
   }
   const workOrderTip = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>运营周期内:在监测点的实际运营周期内。</li>
-    <li>完成工单:当日存在完成的计划工单。</li>
-    <li>系统关闭工单:在运维周期内未完成计划工单，系统会关闭掉。</li>
-    <li>同时存在关闭和完成的工单:当日存在系统关闭的计划工单，也存在完成的工单。</li>
+    <li>运营周期内：在监测点的实际运营周期内。 </li>
+    <li>完成工单：当日系统派发的工单已被完成。</li>
+    <li>系统关闭工单：当日系统派发的工单被系统关闭。</li>
+    <li>同时存在关闭和完成的工单：当日存在系统关闭工单，也存在完成工单。</li>
 
   </ol>
   }
@@ -622,7 +622,7 @@ const Index = (props,ref ) => {
 
   const planOutRegCompleteCommon = [ //计划外 行政区 市级别 完成工单数
       {
-        title: '巡检工单数',
+        title: '巡检',
         dataIndex: 'inspectionCompleteCount',
         key: 'inspectionCompleteCount',
         width: 100,
@@ -632,7 +632,17 @@ const Index = (props,ref ) => {
         }
       },
       {
-        title: '校准工单数',
+        title: '维护',
+        dataIndex: 'maintainCompleteCount',
+        key: 'maintainCompleteCount',
+        width: 100,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'maintainCount')}}>{text}</Button>
+        }
+      },
+      {
+        title: '校准',
         dataIndex: 'calibrationCompleteCount',
         key: 'calibrationCompleteCount',
         width: 100,
@@ -642,7 +652,27 @@ const Index = (props,ref ) => {
         }
       },
       {
-        title: '维修工单数',
+        title: '配合检查',
+        dataIndex: 'cooperationInspectionCompleteCount',
+        key: 'cooperationInspectionCompleteCount',
+        width: 100,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'cooperationInspectionCount')}}>{text}</Button>
+        }
+      },
+      {
+        title: '校验测试',
+        dataIndex: 'calibrationTestCompleteCount',
+        key: 'calibrationTestCompleteCount',
+        width: 100,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'calibrationTestCount')}}>{text}</Button>
+        }
+      },
+      {
+        title: '维修',
         dataIndex: 'repairCompleteCount',
         key: 'repairCompleteCount',
         width: 100,
@@ -651,16 +681,7 @@ const Index = (props,ref ) => {
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'repairCount')}}>{text}</Button>
         }
       },
-      {
-        title: '维护工单数',
-        dataIndex: 'maintainCompleteCount',
-        key: 'maintainCompleteCount',
-        width: 100,
-        align:'center',
-        render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'maintainCount')}}>{text}</Button>
-        }
-      },
+
       {
         title: '参数核对',
         dataIndex: 'matchingComparisonCompleteCount',
@@ -671,26 +692,7 @@ const Index = (props,ref ) => {
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'matchingComparisonCount')}}>{text}</Button>
         }
       },
-      {
-        title: '配合检查工单数',
-        dataIndex: 'cooperationInspectionCompleteCount',
-        key: 'cooperationInspectionCompleteCount',
-        width: 100,
-        align:'center',
-        render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'cooperationInspectionCount')}}>{text}</Button>
-        }
-      },
-      {
-        title: '校验测试工单数',
-        dataIndex: 'calibrationTestCompleteCount',
-        key: 'calibrationTestCompleteCount',
-        width: 100,
-        align:'center',
-        render:(text,record,index)=>{
-          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'calibrationTestCount')}}>{text}</Button>
-        }
-      },
+
   ]
    const outsideColumns =  [ //计划外 首页面
     {
@@ -1406,7 +1408,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     if(dateCol&&dateCol[0]){ 
 
       col.push({
-        title: '工单分布(按工单完成日期分布)',
+        title: '工单分布(按工单创建日期分布)',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{
@@ -1462,7 +1464,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     if(dateCol&&dateCol[0]){ 
 
       col.push({
-        title: '工单分布(按工单完成日期分布)',
+        title: '工单分布(按工单创建日期分布)',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{

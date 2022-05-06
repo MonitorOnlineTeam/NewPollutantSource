@@ -232,22 +232,24 @@ class SdlForm extends PureComponent {
         }
       };
       let stationPlaceStr = '命名规则：空气站所在地级市名称+空气站、直辖市名+空气站，例如郑州市空气站、北京市空气站'
+       
       // 判断类型
+    
       switch (item.type) {
         case '文本框':
-          validator = `${inputPlaceholder}`;
-
+          validator = `${inputPlaceholder}`;   
           if( item.labelText==='大气站名称'){
             placeholder = stationPlaceStr
           }else if(item.labelText==='经度'){
             placeholder = `${inputPlaceholder} 例如：112.236514`
           }else if(item.labelText==='纬度'){
             placeholder = `${inputPlaceholder} 例如：85.236589`
+          }else if(item.labelText==='登录名'&& configId === 'UserInfoAdd'){ //用户管理 基本信息
+             placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`
           }else{
-            placeholder =  placeholder || inputPlaceholder
+            placeholder =  inputPlaceholder
           }
-          placeholder = item.labelText==='大气站名称'? stationPlaceStr : placeholder || inputPlaceholder;
-
+          placeholder = placeholder || inputPlaceholder;
           element = <Input disabled={item.labelText==='设备编号(MN)'&&isEdit? true : false} placeholder={placeholder} title={ item.labelText==='大气站名称'&&stationPlaceStr} allowClear />;
           break;
           case '数字':

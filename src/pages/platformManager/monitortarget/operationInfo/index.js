@@ -149,7 +149,6 @@ const Index = (props) => {
 
   const initData=()=>{
     onFinish();
-    projectNumQuery(); //项目编号列表
     props.operationList();//运维列表
     props.getEntPointList({EntID:props.location.query.p});//企业运维列表
     props.cycleList();//运维频次
@@ -358,8 +357,8 @@ const projectNumCol =[
     }
   }
 
-  const  projectNumQuery = ()=>{
-    props.projectNumList({ProjectCode:projectNum})
+  const  projectNumQuery = (code)=>{
+    props.projectNumList({ProjectCode:code})
  }
   
  const endDisabledDate=(current)=>{
@@ -370,6 +369,13 @@ const projectNumCol =[
   const time = form2.getFieldValue('EndTime')
   return time&&current && current > moment(time).startOf('day');
 }
+
+
+useEffect(()=>{
+ if(popVisible){
+    projectNumQuery(); //项目编号列表
+ }
+},[popVisible])
   const searchComponents = () =>{
      return  <Form
     name="advanced_search"
@@ -501,7 +507,7 @@ const projectNumCol =[
                   <Input allowClear placeholder="请输入项目编号"  onChange={(e)=>{ setProjectNum(e.target.value)}}/>
                 </Form.Item>
               <Form.Item>
-               <Button type="primary" onClick={projectNumQuery}>
+               <Button type="primary" onClick={()=>{projectNumQuery(projectNum)}}>
                查询
              </Button>
              </Form.Item>

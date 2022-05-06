@@ -149,6 +149,7 @@ class MonitoringStandard extends Component {
                 key: 'PollutantCode',
                 // width: '10%',
                 align: 'left',
+                fixed:'left',
                 render: (text, record) => text,
             },
             {
@@ -157,6 +158,7 @@ class MonitoringStandard extends Component {
                 key: 'PollutantName',
                 // width: '10%',
                 align: 'left',
+                fixed:'left',
                 render: (text, record) => text,
             },
 
