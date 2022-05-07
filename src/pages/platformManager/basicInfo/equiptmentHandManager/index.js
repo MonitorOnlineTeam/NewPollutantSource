@@ -30,7 +30,7 @@ const { TabPane } = Tabs;
 
 
 const dvaPropsData =  ({ loading,equiptmentHandManager }) => ({
-
+  saveLoading: loading.effects['autoForm/add'] || loading.effects['autoForm/saveEdit'],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -316,6 +316,8 @@ let userId = '';
 if (userCookie) {
   userId = JSON.parse(userCookie).User_ID;
 }
+
+const {saveLoading } = props;
   return (
     <div id="dataquery"  className={styles.equiptmentHandManagerSty}>
     <BreadcrumbWrapper>
@@ -402,6 +404,7 @@ if (userCookie) {
         wrapClassName={styles['equiptmentHandModalSty']}
         width={'40%'}
         centered
+        confirmLoading={saveLoading}
       >
         <Form
            form={form1}
@@ -448,6 +451,7 @@ if (userCookie) {
         wrapClassName={styles['equiptmentHandModalSty']}
         width={'40%'}
         centered
+        confirmLoading={saveLoading}
       >
         <Form
            form={form3}
@@ -492,6 +496,7 @@ if (userCookie) {
         wrapClassName={styles['equiptmentHandModalSty']}
         width={'40%'}
         centered
+        confirmLoading={saveLoading}
       >
         <Form
            form={form2}

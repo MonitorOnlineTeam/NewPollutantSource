@@ -487,7 +487,7 @@ const abnormalNum = (row,outOrInside) =>{  //企业监测点异常打卡
   props.getPointExceptionSignList({
     beginTime:queryPar.beginTime,
     endTime:queryPar.endTime,
-    // outOrInside:outOrInside,
+    outOrInside:outOrInside,
     DGIMN:row.DGIMN,
    })  
 

@@ -38,7 +38,7 @@ export default Model.extend({
     siteDetailsVisible:false,
     tabType:"wasteWater",
     entList:[],
-
+    smallResolution:false,
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计

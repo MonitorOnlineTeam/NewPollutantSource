@@ -46,6 +46,7 @@ const dvaPropsData = ({ loading, newestHome }) => ({
   subjectFontSize:newestHome.subjectFontSize,
   modalType:newestHome.pollType,
   opertionExceptionList:newestHome.opertionExceptionList,
+  smallResolution:newestHome.smallResolution,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -88,7 +89,7 @@ const Index = (props) => {
   const [tableDatas, setTableDatas] = useState([])
 
 
-  const {pollType,latelyDays7, latelyDays30,subjectFontSize} = props;
+  const {pollType,latelyDays7, latelyDays30,subjectFontSize,smallResolution,} = props;
 
   const consumablesEchartsRef = useRef(null);
   const planInsideClockAbnormalEchartsRef = useRef(null);
@@ -281,7 +282,7 @@ const Index = (props) => {
               fontSize: subjectFontSize,
               color: '#fff',
               align: "left",
-              padding: [5, 10, 18, 10]
+              padding: smallResolution? [5, 2, 18, 2] : [5, 5, 18, 5]  //上左下右 逆时针 
             },
             num: {
               fontSize: 20,

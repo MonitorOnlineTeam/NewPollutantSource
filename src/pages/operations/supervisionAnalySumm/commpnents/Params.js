@@ -69,7 +69,7 @@ const Index = (props) => {
 
 
 
-  const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}全系统督查汇总表</span>)
+  const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}关键参数督查汇总表</span>)
 
   const columns = [
    {
@@ -178,11 +178,11 @@ const Index = (props) => {
         pageSize: pageSizes,
       },()=>{
         if(type==1){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}关键参数督查汇总表</span>)
         }else if(type==2){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}关键参数督查汇总表</span>)
         }else{
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}关键参数督查汇总表</span>)
         }
       })
 

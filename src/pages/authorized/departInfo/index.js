@@ -469,7 +469,7 @@ class DepartIndex extends Component {
                 </a>
                 </Popover>
               </Tooltip>
-              <Divider type="vertical" />
+              {/* <Divider type="vertical" />
               <Tooltip title="设置审批流程">
                 <a
                   style={{ cursor: 'pointer' }}
@@ -479,7 +479,7 @@ class DepartIndex extends Component {
                 >
                   <AuditOutlined  style={{ fontSize: 16 }} />
                 </a>
-              </Tooltip>
+              </Tooltip> */}
             </span>
           ),
         },

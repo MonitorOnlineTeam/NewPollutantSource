@@ -604,12 +604,12 @@ const Index = (props) => {
       </Row>
 
       <Row align='middle'>
-        <Col span={12}>
+        {/* <Col span={12}>
 
       <Form.Item label="合同总金额(万)" name="Money"  >
         <Input placeholder='请输入合同总金额'/>
       </Form.Item>
-      </Col>
+      </Col> */}
         <Col span={12}>
         <Form.Item label="备注" name="Remark"  >
         <Input placeholder='请输入备注'/>

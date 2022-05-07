@@ -76,7 +76,6 @@ const Index = (props) => {
   
   },[]);
 
-
   
   const [parType,setParType] = useState([])
   const initData = () =>{

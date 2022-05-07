@@ -59,6 +59,7 @@ let massPointTitleColor = 'rgb(23, 30, 70)'
   infoWindowData: newestHome.infoWindowData,
   infoWindowDataLoading: newestHome.infoWindowDataLoading,
   entList: newestHome.entList,
+  smallResolution:newestHome.smallResolution,
 }))
 class Index extends PureComponent {
   constructor(props) {
@@ -172,7 +173,6 @@ class Index extends PureComponent {
       isMassive: false,
       pointStatus:null,
       pointReg:null,
-      smallResolution:false,
     }
   }
   componentWillMount() {
@@ -213,9 +213,15 @@ class Index extends PureComponent {
   
    handleResize = (e) =>{
     if( e.target.innerWidth <= 1690){
-      this.setState({smallResolution:true,})
+      this.props.dispatch({
+       type: 'newestHome/updateState',
+        payload: {smallResolution:true}
+      })
     }else{
-      this.setState({smallResolution:false})
+      this.props.dispatch({
+        type: 'newestHome/updateState',
+         payload: {smallResolution:false}
+       })
     }
   }
   // 获取infoWindow数据
@@ -255,11 +261,14 @@ class Index extends PureComponent {
   }
   
   clearMass = () =>{ //清除海量点(废气 监测点)和海量标签(废气 监测点标题)
+
+    this.setState({isMassive:false})
     massMarks&&massMarks.hide(aMap);
     if(labelsMarker&&labelsLayer){
       labelsLayer.remove(labelsMarker)
       aMap.remove(labelsLayer);
     }
+   
 
   }
   loadRegionMarkerData = (data, flag) => { //行政区
@@ -607,8 +616,7 @@ class Index extends PureComponent {
     } else if (showType == 2) {
 
       const entName = extData.position.entName;
-      return <div style={{ position: 'relative' }}>
-
+      return <div style={{ position: 'relative'}}>
         <EntIcon />
         <div className={alarmStatus == 1 ? styles.abnormalPaulse : alarmStatus == 2 ? styles.overPaulse : ''}></div>
         {entTitleShow && <div className={styles.titlePopSty}>
@@ -907,8 +915,8 @@ class Index extends PureComponent {
       "1": <><WaterIcon /><span className={styles.iconText}>废水</span></>,
     }
 
-    const { hoverTitleShow,hoverEntTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive,smallResolution, } = this.state;
-
+    const { hoverTitleShow,hoverEntTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive, } = this.state;
+    const { smallResolution } = this.props;
     // const searchEntInput = useRef(null);
 
     // function entSearchSelect(val){

@@ -92,6 +92,12 @@ const Index = (props) => {
                     align: 'center',
                   },
                   {
+                    title: '地级市',
+                    dataIndex: 'cityName',
+                    key: 'cityName',
+                    align: 'center',
+                  },
+                  {
                     title: '企业名称',
                     dataIndex: 'entName',
                     key: 'entName',

@@ -139,12 +139,12 @@ const Index = (props) => {
       </Row>
 
       <Row align='middle'>
-        <Col span={12}>
+        {/* <Col span={12}>
 
       <Form.Item label="合同总金额(万)"  >
       {data.Money}
       </Form.Item>
-      </Col>
+      </Col> */}
         <Col span={12}>
         <Form.Item label="备注"  >
         {data.Remark}
