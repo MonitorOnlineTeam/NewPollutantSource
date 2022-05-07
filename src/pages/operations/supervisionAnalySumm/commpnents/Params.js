@@ -39,10 +39,11 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    getRemoteSummaryList: (payload) => { // 列表
+    getRemoteSummaryList: (payload,callback) => { // 列表
       dispatch({
         type: `${namespace}/getRemoteSummaryList`,
         payload: payload,
+        callback:callback,
       })
     },
     exportRemoteSummaryList: (payload) => { // 导出
@@ -68,7 +69,7 @@ const Index = (props) => {
 
 
 
-  const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}督查总结</span>)
+  const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}全系统督查汇总表</span>)
 
   const columns = [
    {
@@ -97,7 +98,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '企业市',
+      title: '企业名称',
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
@@ -125,6 +126,15 @@ const Index = (props) => {
       dataIndex: 'operationName',
       key: 'operationName',
       align: 'center',
+    },
+    {
+      title: '督查日期',
+      dataIndex: 'dateTime',
+      key: 'dateTime',
+      align: 'center',
+      render:(text,record,index)=>{
+        return text? moment(text).format('YYYY-MM-DD') : null;
+      }
     },
     {
       title: '是否一致',
@@ -168,11 +178,11 @@ const Index = (props) => {
         pageSize: pageSizes,
       },()=>{
         if(type==1){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}督查总结</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
         }else if(type==2){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
         }else{
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
         }
       })
 
@@ -276,7 +286,6 @@ const Index = (props) => {
           bordered
           dataSource={tableDatas}
           columns={columns}
-          scroll={{ y: 'calc(100vh - 500px)' }}
           pagination={{
             total: tableTotal,
             pageSize: pageSize,

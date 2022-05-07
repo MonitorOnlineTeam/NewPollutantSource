@@ -205,9 +205,9 @@ const Index = (props) => {
           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
     </Form.Item> 
     <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
-        <Select placeholder='请选择' style={{width:150}}>
-           <Option value={1}>废水</Option>
+        <Select placeholder='请选择' style={{width:150}}>      
            <Option value={2}>废气</Option>
+           <Option value={1}>废水</Option>
            </Select>
        </Form.Item>
        <Form.Item>

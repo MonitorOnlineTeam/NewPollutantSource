@@ -455,8 +455,9 @@ export default class EntIndexModal extends Component {
                     value={this.state.PollutantType}
                     style={{ width: 200, marginLeft: 10 }}
                   >
-                    <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                    <Option value="1">废水</Option>
+                  
                   </Select>
                 </Form.Item>
                 <Form.Item>

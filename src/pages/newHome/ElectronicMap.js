@@ -1327,11 +1327,12 @@ class NewHome extends PureComponent {
                       <CustomIcon type="icon-ditu" style={{ fontSize: 28, marginLeft: -3, marginRight: 10 }} />{' '}
                       <span>师</span>
                     </li> */}
-                    <li>
-                      <WaterOffline style={{ marginRight: 10 }} /> <span>废水</span>
-                    </li>
+
                     <li>
                       <GasOffline style={{ marginRight: 10 }} /> <span>废气</span>
+                    </li>
+                    <li>
+                      <WaterOffline style={{ marginRight: 10 }} /> <span>废水</span>
                     </li>
                     <li>
                       <CustomIcon

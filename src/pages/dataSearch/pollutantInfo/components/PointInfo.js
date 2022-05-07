@@ -230,8 +230,9 @@ const Index = (props) => {
 
             <Form.Item label = '监测点类型' name='pollutantType' >
               <Select placeholder='请选择' style={{width:200}}>
+               <Option value={2}>废气</Option>
                 <Option value={1}>废水</Option>
-                <Option value={2}>废气</Option>
+               
                </Select>
              </Form.Item>
             </Row>

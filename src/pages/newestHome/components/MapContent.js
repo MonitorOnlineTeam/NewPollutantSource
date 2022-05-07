@@ -34,7 +34,7 @@ import config from '@/config';
 // import { Map, MouseTool, Marker, Markers, Polygon, Circle,InfoWindow  } from '@/components/ReactAmap';
 import styles from "../style.less"
 import SiteDetailsModal from './springModal/mapModal/SiteDetailsModal'
-import PollutantType from '@/pages/AutoFormManager/PollutantType';
+
 const { Option } = Select;
 
 const namespace = 'newestHome'
@@ -49,7 +49,7 @@ let massMarks = null;
 let labelsLayer = null;
 let labelsMarker = null;
 
-let pollutantType = {}
+let pollutantType = '';
 
 let massPointTitleColor = 'rgb(23, 30, 70)'
 @connect(({ loading, newestHome,global }) => ({
@@ -296,20 +296,20 @@ class Index extends PureComponent {
 
   }
   loadPointMarkerData = (data, flag) => { //监测点 
-  
-    this.clearMass();
     this.setState({
       showType: 3,
       hoverEntTitleShow:false,
     })
     if (data.length >= 1000) { // 监测点多的情况 海量加载
-
+       
       const warnData = data[0] && data.filter(item => item.position.alarmStatus) //报警点 常规加载
+       
       this.setState({
         markersList: warnData,
         isMassive: true,
       })
       const normalData = data[0] && data.filter(item => !item.position.alarmStatus) //正常点
+
       this.loadMassivePointMarkerData(normalData)
 
 
@@ -357,12 +357,12 @@ class Index extends PureComponent {
   loadMassivePointMarkerData = (data) => { //海量加载 监测点
     let _this = this;
     let pointData = data.map(item => {
-      return { lnglat: [item.position.Longitude, item.position.Latitude], ...item, style: item.position.alarmStatus - 1 }
+      return { lnglat: [item.position.Longitude, item.position.Latitude], ...item, style: item.position.Status }
     })
     let imgType = [0, 1, 2, 3, 4];
-    let styleObject = imgType.map(item => { //废气
+    let styleObject = imgType.map(item => { //废气 废水
       return {
-        url: `/gas${item}.png`,  // 图标地址
+        url: pollutantType==2?  `/gas${item}.png` : `/water${item}.png`,  // 图标地址
         size: new window.AMap.Size(32, 32),      // 图标大小
         anchor: new window.AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
       }
@@ -376,7 +376,7 @@ class Index extends PureComponent {
 
     massMarks.setMap(aMap);
     const timer = setInterval(() => {
-      // aMap.setFitView();
+      aMap.setFitView();
       // aMap.setZoom(aMap.getZoom()-1);
       clearInterval(timer);
     }, 0);
@@ -455,12 +455,11 @@ class Index extends PureComponent {
     const { entMarkers } = this.state;
      
     const data = entMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode);
-
     this.loadEntMarkerData(data)
   }
   operationChange = (text, mapProps) => {
     const map = mapProps.__map__;
-    const { showType, regionMarkers, pointMarkers, entMarkers, entTitleShow, pointTitleShow } = this.state;
+    const { showType, regionMarkers, pointMarkers, entMarkers, entTitleShow, pointTitleShow,markersList,allPointMarkers,mapBtnStatusIndex, } = this.state;
     if (!map) { console.log('组件必须作为 Map 的子组件使用'); return; }
     switch (text) {
       case '放大':
@@ -493,34 +492,36 @@ class Index extends PureComponent {
         break;
       case '展示监测点':
         this.setState({ pointTitleShow: false, entTitleShow: false, pointIconGo: true })
-        this.loadPointMarkerData(pointMarkers)
+        this.loadPointMarkerData(mapBtnStatusIndex==-1? allPointMarkers : pointMarkers)
         break;
       case '展示名称':
         if (showType == 2 && !entTitleShow) {
-          this.setState({ entTitleShow: true, markersList: [...entMarkers] })
+          this.setState({ entTitleShow: true, markersList:  [...markersList] })
         }
         if (showType == 3 && !pointTitleShow) {
+       
           if(this.state.isMassive){
-            const noramalData = pointMarkers.filter(item =>!item.alarmStatus)
+            const noramalData = pointMarkers.filter(item =>!item.alarmStatus) 
             this.renderPointTitleLabelMarker(noramalData);
-            const warinData = pointMarkers.filter(item =>item.alarmStatus)
+            const warinData = markersList.filter(item =>item.alarmStatus)
             this.setState({ pointTitleShow: true, markersList: [...warinData] })
             return;
           }
-          this.setState({ pointTitleShow: true, markersList: [...pointMarkers] })
+          this.setState({ pointTitleShow: true, markersList: [...markersList] })
         }
         break;
       case '隐藏名称':
         if (showType == 2 && entTitleShow) {
-          this.setState({ entTitleShow: false, markersList: [...entMarkers] })
+          this.setState({ entTitleShow: false, markersList: [...markersList] })
         }
         if (showType == 3 && pointTitleShow) {
-          this.setState({ pointTitleShow: false, markersList: [...pointMarkers] })
+         
+          this.setState({ pointTitleShow: false, markersList: [...markersList] })
 
           if(this.state.isMassive){
              labelsLayer.remove(labelsMarker)
              aMap.remove(labelsLayer)
-             const warinData = pointMarkers.filter(item =>item.alarmStatus)
+             const warinData = markersList.filter(item =>item.alarmStatus)
              this.setState({ pointTitleShow: false, markersList: [...warinData] })
             return;
           }
@@ -855,7 +856,6 @@ class Index extends PureComponent {
     }
     if (showType == 3) {
       const data = entMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==pointReg); 
-
       if(pointStatus){ // 异常  or  超标
         const abnormalOverEntData =  data[0] && data.filter(item => item.position.alarmStatus== pointStatus)
         this.loadEntMarkerData(abnormalOverEntData)
@@ -863,7 +863,7 @@ class Index extends PureComponent {
       }
       this.loadEntMarkerData(data)
     }
-
+    
     this.setState({ selectEnt: undefined, mapBtnStatusIndex: -1,pointInfoWindowVisible:false })
   }
 
@@ -876,9 +876,9 @@ class Index extends PureComponent {
       })
       this.setState({ pointMarkers: selectData })
       this.loadPointMarkerData(selectData)
-    } else {
+    } else { //取消
       this.setState({ mapBtnStatusIndex: -1 })
-      this.loadPointMarkerData(pointMarkers)
+      this.loadPointMarkerData(allPointMarkers)
     }
 
   }
@@ -903,8 +903,8 @@ class Index extends PureComponent {
 
     }
     const iconType = {
+      "2": <><GasIcon /><span className={styles.iconText}>废气</span></>,
       "1": <><WaterIcon /><span className={styles.iconText}>废水</span></>,
-      "2": <><GasIcon /><span className={styles.iconText}>废气</span></>
     }
 
     const { hoverTitleShow,hoverEntTitleShow, hoverTitleLngLat, hoverEntTitle, hoverPointTitle, pointInfoWindowVisible, infoWindowPos, selectEnt, mapBtnStatusIndex, isMassive,smallResolution, } = this.state;

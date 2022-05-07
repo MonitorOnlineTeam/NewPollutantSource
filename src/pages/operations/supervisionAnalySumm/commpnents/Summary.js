@@ -77,7 +77,7 @@ const Index = (props) => {
 
   const values = form.getFieldsValue();
  
-const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}督查总结</span>)
+const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',fontSize:16}}>{moment().format('YYYY年')}全系统督查汇总表</span>)
 
   const columns = [
     {
@@ -106,8 +106,8 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
     },
     {
       title: '督查类别',
-      dataIndex: 'InspectorTypeName',
-      key: 'InspectorTypeName',
+      dataIndex: 'dataType',
+      key: 'dataType',
       align: 'center',
     },
     {
@@ -188,11 +188,11 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
         time:undefined,
       },()=>{
         if(type==1){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}督查总结</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年')}全系统督查汇总表</span>)
         }else if(type==2){
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}督查总结</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time).format('YYYY年MM月')}全系统督查汇总表</span>)
         }else{
-          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}督查总结</span>)
+          setTableTitle(<span style={{fontWeight:'bold',fontSize:16}}>{moment(values.time[0]).format('YYYY年MM月DD日') } ~ {moment(values.time[1]).format('YYYY年MM月DD日')}全系统督查汇总表</span>)
         }
       })
     } catch (errorInfo) {
@@ -296,7 +296,6 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
           rowClassName={null}
           dataSource={tableDatas}
           columns={columns}
-          scroll={{ y: 'calc(100vh - 500px)' }}
           pagination={false}
         />
       </Card>

@@ -63,14 +63,14 @@ const Index = (props) => {
   
   },[]);
 
-  const [type,setType] = useState('wasteWater')
+  const [type,setType] = useState('wasteGas')
 
- const [selectkey,SetSelectkey] = useState('wasteWater')
+ const [selectkey,SetSelectkey] = useState('wasteGas')
 
 
  const tabList = [
-  {text:'废水',val:"wasteWater"},
   {text:'废气',val:"wasteGas"},
+  {text:'废水',val:"wasteWater"},
   // {text:'空气站',val:"air"},
   // {text:'地表水',val:"surfaceWater"},
   // {text:'厂界',val:"actoryBoundary"},

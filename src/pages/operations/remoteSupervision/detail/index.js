@@ -88,23 +88,21 @@ const Index = (props) => {
 
      }
 
-     setTimeout(()=>{
-       
-     })
-     //颗粒物和流速都未选择的状态
-     for(let k=0;k< data.consistencyCheckList.length;k++){
-      if(flag1&&data.consistencyCheckList[k].PollutantName==='颗粒物'){
-        data1.splice(k+1,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})
+
+      //颗粒物和流速都未选择的状态
+      for(let k=0;k< data.consistencyCheckList.length;k++){
+        if(flag1&&data.consistencyCheckList[k].PollutantName==='颗粒物'){
+          data1.splice(k+1,0,{PollutantName:'颗粒物',DataList:{ flag:3 }},{PollutantName:'颗粒物',DataList:{ flag:4 }})
+          break;
+        }
+      }
+      for(let l=0;l< data.consistencyCheckList.length;l++){
+      if(flag2&&data.consistencyCheckList[l].PollutantName==='流速'){
+        data1.splice(l+1,0,{PollutantName:'流速',DataList:{ flag:3 }},{PollutantName:'流速',DataList:{ flag:4 }})
         break;
       }
-    }
-   for(let l=0;l< data.consistencyCheckList.length;l++){
-    if(flag2&&data.consistencyCheckList[l].PollutantName==='流速'){
-      data1.splice(l+1,0,{PollutantName:'流速',DataList:{ flag:3 }},{PollutantName:'流速',DataList:{ flag:4 }})
-      break;
-    }
-   }
-
+      }
+    //  setTimeout(()=>{
       setTableData1(data1)
 
      // 实时数据一致性核查表 数据
@@ -113,7 +111,10 @@ const Index = (props) => {
      setTableData2(data2)
 
 
-    })
+      })    
+    //  })
+
+
   
   },[]);
   
@@ -211,7 +212,7 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
-              return record.DataList.AnalyzerMin? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMin}` : null;
+              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMin}` : null;
             }
           }
         },
@@ -224,7 +225,7 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
-               return record.DataList.DASMin? `${record.DataList.DASMin}-${record.DataList.DASMax}` : null;
+               return record.DataList.DASMin||record.DataList.DASMin==0? `${record.DataList.DASMin}-${record.DataList.DASMax}` : null;
             }
           }
         },
@@ -237,7 +238,7 @@ const Index = (props) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
             } else {
-              return record.DataList.DataMin? `${record.DataList.DataMin}-${record.DataList.DataMax}` : null;
+              return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}` : null;
 
             }
           }

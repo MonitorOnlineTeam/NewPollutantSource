@@ -169,10 +169,10 @@ const Index = (props) => {
            />
      </Form.Item>
       <Form.Item label = '监测点类型'  name='pollutantType' style={{padding:'0 8px'}} >
-         <Select placeholder='监测点类型' style={{width:120}} allowClear>
-            <Option value={1}>废水</Option>
+          <Select placeholder='监测点类型' style={{width:120}} allowClear>
             <Option value={2}>废气</Option>
-            </Select>
+            <Option value={1}>废水</Option> 
+      </Select>
         </Form.Item>
        {!isResponseModal&&!isClockAbnormalModal&&<Form.Item label='异常类型' name='exceptionType'  style={{paddingRight:'8px'}}>
             <Select style={{width:150}} placeholder='异常类型'>
@@ -219,8 +219,8 @@ const Index = (props) => {
        </Form.Item>
        <Form.Item label='监测点类型' name='pollutantType'  style={{paddingRight:'16px'}}>
         <Select placeholder='监测点类型' style={{width:150}} allowClear>
-           <Option value={1}>废水</Option>
            <Option value={2}>废气</Option>
+           <Option value={1}>废水</Option>
            </Select>
        </Form.Item>
 

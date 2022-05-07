@@ -269,8 +269,8 @@ const Index = (props) => {
          <Form.Item name='' label=''  style={{  marginRight: 8,}} >
              <Radio.Group onChange={onChange} defaultValue={props.pollutantTypes?props.pollutantTypes:''}>
                 <Radio.Button value="">全部</Radio.Button>
-                <Radio.Button value="1">废水</Radio.Button>
                 <Radio.Button value="2">废气</Radio.Button>
+                <Radio.Button value="1">废水</Radio.Button>
              </Radio.Group>
           </Form.Item>
           <Form.Item name=''  label='' >

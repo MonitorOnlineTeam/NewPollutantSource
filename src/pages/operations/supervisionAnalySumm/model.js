@@ -51,6 +51,7 @@ export default Model.extend({
       const result = yield call(services.GetRemoteSummaryList, payload);
       if (result.IsSuccess) {
         yield update({ remoteSummaryList: result.Datas,remoteSummaryTotal:result.Total })
+        callback();
       } else {
         message.error(result.Message)
       }
@@ -68,6 +69,7 @@ export default Model.extend({
       const result = yield call(services.GetOperationManageSummaryList, payload);
       if (result.IsSuccess) {
         yield update({ operationManageSummaryList: result.Datas,operationManageSummaryTotal:result.Total })
+        callback();
       } else {
         message.error(result.Message)
       }

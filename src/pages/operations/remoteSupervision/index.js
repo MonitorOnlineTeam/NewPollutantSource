@@ -405,9 +405,9 @@ const Index = (props) => {
               <Divider type="vertical" />
             {detail}
              <Divider type="vertical" />
-              <Tooltip title={ flag? "删除": null  } >
-                <Popconfirm   disabled={!flag} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a href="#"  style={{cursor: flag? 'pointer':'not-allowed', color:flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
+              <Tooltip title={ updateflag && flag? "删除": null  } >
+                <Popconfirm   disabled={!(updateflag && flag)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
+                  <a href="#"  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
               </Tooltip>
             <Divider type="vertical" />
@@ -781,7 +781,7 @@ const Index = (props) => {
 
       } else {  //参数一致性核查表
 
-        type==1? saveLoading11(true) : setSaveLoading22(true)
+        type==1? setSaveLoading11(true) : setSaveLoading22(true)
         form3.validateFields().then(values => {
           const paramDataList = addParconsistencyData.map(item => {
             return {
@@ -796,12 +796,13 @@ const Index = (props) => {
             }
           })
           props.addOrUpdParamCheck({
+            AddType:type,
             Data: commonData,
             ParamDataList: paramDataList,
           }, (id) => {
             title==='添加'&&setAddId(id)
             onFinish(pageIndex, pageSize)
-            type==1? saveLoading11(false) : setSaveLoading22(false)
+            type==1? setSaveLoading11(false) : setSaveLoading22(false)
           })
         }).catch((info) => {
           console.log('Validate Failed3:', info);

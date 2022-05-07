@@ -403,8 +403,8 @@ export default class EntTransmissionEfficiency extends Component {
                     style={{ width: 200, marginLeft: 10 }}
                     allowClear
                   >
-                    <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                    <Option value="1">废水</Option>           
                   </Select>
                 </Form.Item>
                 <Form.Item>

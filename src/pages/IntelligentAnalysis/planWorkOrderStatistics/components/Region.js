@@ -1328,7 +1328,8 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       regPointGetTaskWorkOrderList({
         regionCode:regionCode,
         pageIndex:PageIndex,
-        pageSize:PageSize
+        pageSize:PageSize,
+        operationStatus:operationStatus,
       })
     }
    const insideOperaPointClick=(record)=>{ //行政区 计划内 运营监测点弹框 
@@ -1345,10 +1346,11 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
   
    const [operaPointForm] = Form.useForm()
 
-   
+   const [operationStatus,setOperationStatus] = useState();
    const operaPointClick  = (e) =>{  //查询  运营监测点
     setRegPointPageIndex(1)
     setRegPointPageSize(10)
+    setOperationStatus(e.target.value)
     regPointGetTaskWorkOrderList({
       regionCode:regionCode,
       operationStatus:e.target.value

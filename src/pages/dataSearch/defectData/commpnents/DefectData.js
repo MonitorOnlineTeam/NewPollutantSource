@@ -449,8 +449,8 @@ export default class EntTransmissionEfficiency extends Component {
                     value={PollutantType?PollutantType:undefined}
                     style={{ width: 200 }}
                   >
-                    <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                    <Option value="1">废水</Option>
                   </Select>
                 </Form.Item>   
               <Form.Item label='企业列表'>

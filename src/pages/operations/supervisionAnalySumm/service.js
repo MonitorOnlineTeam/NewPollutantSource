@@ -25,7 +25,7 @@ export async function GetRemoteSummaryList(params) {
  
 //导出 关键参数督查汇总
 export async function ExportRemoteSummaryList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportRemoteSummaryList',params, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportRemoteSummaryList',params, null);
   return result;
 }
 
@@ -38,6 +38,6 @@ export async function GetOperationManageSummaryList(params) {
  
 //导出 全系统督查汇总
 export async function ExportOperationManageSummaryList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportOperationManageSummaryList',params, null);
+  const result = await post('/api/rest/PollutantSourceApi/TaskProcessingApi/ExportOperationManageSummaryList',params, null);
   return result;
 }

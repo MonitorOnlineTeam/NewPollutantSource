@@ -14,7 +14,7 @@ export default Model.extend({
     operationDataSource: [],
     latelyDays30:{beginTime:moment(moment().add(-30, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment()).format('YYYY-MM-DD 23:59:59')},
     latelyDays7:{beginTime:moment(moment().add(-7, 'day')).format('YYYY-MM-DD 00:00:00'),endTime: moment(moment()).format('YYYY-MM-DD 23:59:59')},
-    pollType : {'废水' : "1",'废气' : "2", },
+    pollType : {'废气' : "2", '废水' : "1",},
     // modalType:{'废水':'ent','废气' : "ent"},
     operaOrderData: [],
     planOperaList:{actualCalibrationCount: 0, actualCalibrationRate: "0.00",autoCalibrationAllCount: 0,

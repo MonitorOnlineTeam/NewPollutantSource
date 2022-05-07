@@ -334,8 +334,8 @@ class AlarmRecordList extends Component {
                           this.getPollutantByType(true)
                         })
                       }}>
-                        <Option value="1">废水</Option>
                         <Option value="2">废气</Option>
+                        <Option value="1">废水</Option>
                       </Select>
                     )}
                   </FormItem>

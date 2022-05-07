@@ -200,9 +200,9 @@ export default class Index extends Component {
           <CaretRightOutlined style={{fontSize:14,paddingLeft:3}} />
           </span>
         <Tabs defaultActiveKey="1" onChange={this.tabCallback2}>
-          <TabPane tab="废水" key="1">
-          </TabPane>
           <TabPane tab="废气" key="2">
+          </TabPane>
+          <TabPane tab="废水" key="1">
           </TabPane>
           <TabPane tab="空气站" key="5">
           </TabPane>

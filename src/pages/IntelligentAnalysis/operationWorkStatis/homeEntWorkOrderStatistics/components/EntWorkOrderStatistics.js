@@ -224,9 +224,9 @@ class EntWorkOrderStatistics extends PureComponent {
                     <Select style={{ width: 200 }} placeholder="请选择企业类型" onChange={value => {
                         this.setState({ pollutantType: value }, () => {
                         })
-                    }}>
-                        <Option value="1">废水</Option>
+                    }}>  
                         <Option value="2">废气</Option>
+                        <Option value="1">废水</Option>
                     </Select>,
                     )}
                 </FormItem>

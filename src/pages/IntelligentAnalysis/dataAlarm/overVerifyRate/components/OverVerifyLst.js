@@ -510,8 +510,8 @@ export default class OverVerifyLst extends Component {
                     value={PollutantType}
                     style={{ width: 100 }}
                   >
-                    <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                    <Option value="1">废水</Option>
                   </Select>
                 </Form.Item>
               </Col>

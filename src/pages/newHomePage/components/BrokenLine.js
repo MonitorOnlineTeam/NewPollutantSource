@@ -268,27 +268,28 @@ export default class Index extends Component {
   menu = (title) => {
     if(title=='有效传输率'){
       return <Menu>
-      <Menu.Item onClick={this.transmission.bind(this,'1') }>有效传输率(废水)</Menu.Item>
       <Menu.Item  onClick={this.transmission.bind(this,'2') }>有效传输率(废气)</Menu.Item>
+      <Menu.Item onClick={this.transmission.bind(this,'1') }>有效传输率(废水)</Menu.Item>
     </Menu>
     }
     if(title=='运转率'){
       return <Menu>
-      <Menu.Item onClick={this.work.bind(this,'1')} >运转率(废水)</Menu.Item>
       <Menu.Item  onClick={this.work.bind(this,'2')} >运转率(废气)</Menu.Item>
+      <Menu.Item onClick={this.work.bind(this,'1')} >运转率(废水)</Menu.Item>
       <Menu.Item  onClick={this.work.bind(this,'5')}>运转率(空气站)</Menu.Item>
     </Menu>
     }
     if(title=='超标率'){
       return <Menu>
-      <Menu.Item  onClick={this.over.bind(this,'1')}>超标率(废水)</Menu.Item>
       <Menu.Item onClick={this.over.bind(this,'2')}>超标率(废气)</Menu.Item>
+      <Menu.Item  onClick={this.over.bind(this,'1')}>超标率(废水)</Menu.Item>
+
     </Menu>
     }
     if(title=='故障率'){
       return <Menu>
-      <Menu.Item onClick={this.fault.bind(this,'1')}>故障率(废水)</Menu.Item>
       <Menu.Item onClick={this.fault.bind(this,'2')}>故障率(废气)</Menu.Item>
+      <Menu.Item onClick={this.fault.bind(this,'1')}>故障率(废水)</Menu.Item>
       <Menu.Item onClick={this.fault.bind(this,'5')}>故障率(空气站)</Menu.Item>
     </Menu>
     }
@@ -318,9 +319,9 @@ export default class Index extends Component {
             {title} <CaretRightOutlined style={{ color: '#cbcbcb' }} />
           </span>
         <Tabs defaultActiveKey="1" onChange={(value) => this.tabLWCallback(value, type)}>
-          <TabPane tab="废水" key="1">
-          </TabPane>
           <TabPane tab="废气" key="2">
+          </TabPane>
+          <TabPane tab="废水" key="1">
           </TabPane>
         </Tabs>
       </Row>

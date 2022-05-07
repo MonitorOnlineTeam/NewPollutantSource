@@ -360,8 +360,8 @@ export default class Index extends Component {
                   value={PollutantType}
                   style={{ width: 170 }}
                 >
-                  <Option value="1">废水</Option>
                   <Option value="2">废气</Option>
+                  <Option value="1">废水</Option>       
                 </Select>
               </Form.Item>
               <Form.Item>
