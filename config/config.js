@@ -579,7 +579,7 @@ export default {
               component: './platformManager/monitortarget',
             },
         ]
-      }
+      },
      ]
      },
 
