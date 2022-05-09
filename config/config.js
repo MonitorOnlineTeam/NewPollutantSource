@@ -518,45 +518,33 @@ export default {
 
      /*预测性维护*/
 
-    //  { 
-    //   path: '/forecastMaintain',
-    //   name: 'forecastMaintain',
-    //   routes: [
-    //     {
-    //       path: '/forecastMaintain',
-    //       redirect: '/forecastMaintain/nuclearEmission/monitoringData',
-    //     },
-    //     { //智慧运维
-    //       path: '/wholeProcessMonitoring/wisdomOperation',
-    //       name: 'wisdomOperation',
-    //       routes: [
-    //         { 
-    //           path: '/wholeProcessMonitoring/nuclearEmission', //运维日历
-    //           redirect: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
-    //         },
-    //         {
-    //           name: 'projectManager',   // 运维日历
-    //           path: '/platformconfig/basicInfo/projectManager',
-    //           component: './platformManager/basicInfo/projectManager',
-    //         },
-    //     ]
-    //   }
-    //  ]
-    //  },
-
-
-
-
-
-
-
-
-
-
-
+     { 
+      path: '/forecastMaintain',
+      name: 'forecastMaintain',
+      routes: [
+        {
+          path: '/forecastMaintain',
+          redirect: '/forecastMaintain/wisdomOperation/monitoringData',
+        },
+        { //智慧运维
+          path: '/forecastMaintain/wisdomOperation',
+          name: 'forecastMaintain',
+          routes: [
+            { 
+              path: '/forecastMaintain/wisdomOperation', 
+              redirect: '/forecastMaintain/wisdomOperation/OperationCalendar',
+            },
+            {
+              name: 'operationCalendar',   // 运维日历
+              path: '/forecastMaintain/wisdomOperation/OperationCalendar',
+              component: './operations/CalendarPage',
+            },
+        ]
+      }
+     ]
+     },
 
      /*资产管理*/
-
      { 
       path: '/assetManagement',
       name: 'assetManagement',
@@ -582,6 +570,53 @@ export default {
       },
      ]
      },
+
+
+  
+      
+     
+     
+     
+     
+     //异常追忆
+     { 
+      path: '/abnormaRecall',
+      name: 'abnormaRecall',
+      routes: [
+        {
+          path: '/abnormaRecall',
+          redirect: '/abnormaRecall/abnormalDataManage/monitoringData',
+        },
+        { //异常数据处置
+          path: '/abnormaRecall/abnormalDataManage',
+          name: 'forecastMaintain',
+          routes: [
+            { 
+              path: '/abnormaRecall/abnormalDataManage', 
+              redirect: '/abnormaRecall/abnormalDataManage/stopReport',
+            },
+            {
+              name: 'stopReport',   //停用上报
+              path: '/abnormaRecall/abnormalDataManage/stopReport/:configId',
+              component: './platformManager/outputstopManager',
+            },
+        ]
+      },
+     ]
+     },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
