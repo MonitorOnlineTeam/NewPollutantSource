@@ -562,8 +562,8 @@ export default {
       name: 'assetManagement',
       routes: [
         {
-          path: '/forecastMaintain',
-          redirect: '/forecastMaintain/nuclearEmission/monitoringData',
+          path: '/assetManagement',
+          redirect: '/assetManagement/equipmentAccount/AEnterpriseTest/1/1,2',
         },
         { //设备台账
           path: '/assetManagement/equipmentAccount',
