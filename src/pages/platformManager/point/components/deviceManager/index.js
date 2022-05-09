@@ -526,7 +526,7 @@ const Index = (props) => {
         <Form
           form={form2}
           name="advanced_search2"
-          onFinish={() => { onFinish2(pageIndex2,pageSize2) }}
+          onFinish={() => {setPageIndex2(1); onFinish2(1,pageSize2) }}
         >
           <Row>
             <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
@@ -655,7 +655,7 @@ const Index = (props) => {
       const values = await form3.validateFields();
       props.getEquipmentInfoList({
         ...values,
-        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndex3:pageIndex3,
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex3,
         PageSize:pageSizes?pageSizes:pageSize3
       })
     } catch (errorInfo) {
@@ -966,7 +966,7 @@ const Index = (props) => {
       <Form
         form={form3}
         name="advanced_search3"
-        onFinish={() => { onFinish3() }}
+        onFinish={() => {setPageIndex3(1); onFinish3(1,pageSize3) }}
         onValuesChange={onValuesChange3}
         initialValues={{
 

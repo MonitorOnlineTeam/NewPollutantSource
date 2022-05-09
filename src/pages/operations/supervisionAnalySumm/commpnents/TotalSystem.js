@@ -80,6 +80,7 @@ const Index = (props) => {
                     title: '序号',
                     dataIndex: 'TypeNum',
                     key: 'TypeNum',
+                    width:70,
                     align: 'center',
                     render: (text, record, index) => {
                         return index + 1
@@ -90,24 +91,28 @@ const Index = (props) => {
                     dataIndex: 'provinceName',
                     key: 'provinceName',
                     align: 'center',
+                    width:100,
                   },
                   {
                     title: '地级市',
                     dataIndex: 'cityName',
                     key: 'cityName',
                     align: 'center',
+                    width:100,
                   },
                   {
                     title: '企业名称',
                     dataIndex: 'entName',
                     key: 'entName',
                     align: 'center',
+                    width:150,
                   },
                   {
                     title: '排口名称',
                     dataIndex: 'pointName',
                     key: 'pointName',
                     align: 'center',
+                    width:100,
                   },
                   {
                     title: '监测因子',
@@ -115,42 +120,52 @@ const Index = (props) => {
                     key: 'pollutantName',
                     width:200,
                     align: 'center',
+                    width:150,
                   },
                   {
                     title: '督查人员',
                     dataIndex: 'createUserName',
                     key: 'createUserName',
                     align: 'center',
+                    width:100,
                   },
                   {
                     title: '运维人员',
                     dataIndex: 'operationName',
                     key: 'operationName',
                     align: 'center',
+                    width:100,
                   },
                 {
                     title: '督查日期',
                     dataIndex: 'dateTime',
                     key: 'dateTime',
                     align: 'center',
+                    width:100,
+                    render:(text,record,index)=>{
+                        return text? moment(text).format('YYYY-MM-DD') : null;
+                      }
                 },
                 {
                     title: '原则性问题',
                     dataIndex: 'principleProblem',
                     key: 'principleProblem',
                     align: 'center',
+                    width:120,
                 },
                 {
                     title: '严重问题',
                     dataIndex: 'importanProblem',
                     key: 'importanProblem',
                     align: 'center',
+                    width:120,
                 },
                 {
                     title: '一般问题',
                     dataIndex: 'commonlyProblem',
                     key: 'commonlyProblem',
                     align: 'center',
+                    width:120,
                 },
             ]
         }

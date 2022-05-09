@@ -26,7 +26,8 @@ export default Model.extend({
     secondTableDataSource: [],
     entWorkOrderTime: [moment().subtract(30, "days").startOf("day"), moment().endOf("day")],//企业工单默认时间
     entByRegionList: [],
-    param:{}
+    param:{},
+    cityRegionCode:'',
   },
   effects: {
     // 获取关注列表

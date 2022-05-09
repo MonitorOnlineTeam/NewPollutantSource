@@ -1,3 +1,7 @@
+
+/**
+ * 行政区详情 市级别 二级页面
+ */
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { Form } from '@ant-design/compatible';
@@ -23,6 +27,7 @@ const { Option } = Select;
   loading: loading.effects["entWorkOrderStatistics/getTableDataSource"],
   param:entWorkOrderStatistics.param,
   exportLoading:loading.effects["entWorkOrderStatistics/exportSecond"],
+  cityRegionCode:entWorkOrderStatistics.cityRegionCode,
 }))
 @Form.create()
 class EntWorkOrderStatistics extends PureComponent {
@@ -106,8 +111,7 @@ class EntWorkOrderStatistics extends PureComponent {
     // this.props.dispatch({
     //   type: 'entWorkOrderStatistics/getAttentionDegreeList',
     //   payload: { RegionCode: '' },
-    // });
-
+    // }); 
     this.getTableDataSource();
   }
 
@@ -129,7 +133,6 @@ class EntWorkOrderStatistics extends PureComponent {
   // 获取标题标题头及数据
   getTableDataSource = () => {
     // let values = this.props.form.getFieldsValue();
-
     const values = this.props.location.query;
 
     // console.log("values=", values)
@@ -140,14 +143,19 @@ class EntWorkOrderStatistics extends PureComponent {
       type: 'entWorkOrderStatistics/getTableTitleData',
       payload: { PollutantTypeCode: values&&values.PollutantTypeCode?values.PollutantTypeCode:param.PollutantTypeCode },
     });
-
+    values&&values.RegionCode&&this.props.dispatch({
+      type:'entWorkOrderStatistics/updateState',
+      payload:{cityRegionCode:values.RegionCode}
+    }) //记住从一级行政区传过来的行政区regionCode
+  
+   
     // 获取一级数据
     this.props.dispatch({
       type: 'entWorkOrderStatistics/getTableDataSource',
       payload: { 
         PollutantTypeCode: values&&values.PollutantTypeCode?values.PollutantTypeCode:param.PollutantTypeCode,
         AttentionCode: values&&values.AttentionCode?values.AttentionCode:param.AttentionCode?param.AttentionCode:'',
-        RegionCode: values&&values.RegionCode?values.RegionCode:param.RegionCode?param.RegionCode:'',
+        RegionCode: values&&values.RegionCode? values.RegionCode : this.props.cityRegionCode?  this.props.cityRegionCode : '',
         EntCode: "",
         BeginTime: values&&values.BeginTime?values.BeginTime:param.BeginTime,
         EndTime: values&&values.EndTime?values.EndTime:param.EndTime,
@@ -269,7 +277,13 @@ class EntWorkOrderStatistics extends PureComponent {
                       this.props.goBack();
                     else
                       history.go(-1)
+
+                      this.props.dispatch({
+                        type:'entWorkOrderStatistics/updateState',
+                        payload:{cityRegionCode:''}
+                      })
                   }}
+                 
                 >
                   返回
                 </Button>

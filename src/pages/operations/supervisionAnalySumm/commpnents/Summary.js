@@ -86,6 +86,7 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
     children:[
     {
       title: '序号',
+      width:70,
       align: 'center',
       render:(text,record,index)=>{
         return index + 1
@@ -96,6 +97,7 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
       dataIndex: 'userName',
       key: 'userName',
       align: 'center',
+      width:100,
       render: (value, record, index) => {
         let obj = {
           children: <div>{value}</div>,
@@ -108,6 +110,7 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
       title: '督查类别',
       dataIndex: 'dataType',
       key: 'dataType',
+      width:100,
       align: 'center',
     },
     {
@@ -115,6 +118,7 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
       dataIndex: 'dataTime',
       key: 'dataTime',
       align: 'center',
+      width:100,
       render: (value, record, index) => {
         let obj = {
           children: <div>{value}</div>,
@@ -128,24 +132,28 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
       dataIndex: 'pointCount',
       key: 'pointCount',
       align: 'center',
+      width:100,
     },
     {
       title: '原则性问题数量',
       dataIndex: 'principleProblemNum',
       key: 'principleProblemNum',
       align: 'center',
+      width:120,
     },
     {
       title: '严重问题数量',
       dataIndex: 'importanProblemNum',
       key: 'importanProblemNum',
       align: 'center',
+      width:100,
     },
     {
       title: '一般问题数量',
       dataIndex: 'commonlyProblemNum',
       key: 'commonlyProblemNum',
       align: 'center',
+      width:100,
     },
     {
       title: '原则及重点问题描述',
@@ -156,18 +164,21 @@ const [tableTitle,setTableTitle] = useState(<span style={{fontWeight:'bold',font
           dataIndex: 'rangeNum',
           key: 'rangeNum',
           align: 'center',
+          width:140,
         },
         {
           title: '数据一致性问题数量',
           dataIndex: 'dataNum',
           key: 'dataNum',
           align: 'center',
+          width:140,
         },
         {
           title: '参数一致性问题数量',
           dataIndex: 'paramNum',
           key: 'paramNum',
           align: 'center',
+          width:140,
         },
       ]
 

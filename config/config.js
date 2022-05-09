@@ -6,10 +6,11 @@ import webpackPlugin from './plugin.config';
 import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const apiHost = 'http://172.16.12.234:61002/';
+// const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.135:50210/';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
+const apiHost = 'http://172.16.12.134:8765/';
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
@@ -399,6 +400,192 @@ export default {
             //     }
             //   ]
             // },
+       
+            /*全过程监控*/
+            { 
+              path: '/wholeProcessMonitoring',
+              name: 'wholeProcessMonitoring',
+              routes: [
+                {
+                  path: '/wholeProcessMonitoring',
+                  redirect: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
+                },
+                { //核排放核算
+                  path: '/wholeProcessMonitoring/nuclearEmission',
+                  name: 'nuclearEmission',
+                  routes: [
+                    {
+                      path: '/wholeProcessMonitoring/nuclearEmission',
+                      redirect: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
+                    },
+                    {
+                      name: 'monitoringData', //监控数据
+                      path: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
+                      component: './monitoring/dataquery/index',
+                    },
+                 ]
+               },   
+               { //质控数据总览
+                path: '/wholeProcessMonitoring/qualitycontrolData',
+                name: 'qualitycontrolData',
+                routes: [
+                  {
+                    path: '/wholeProcessMonitoring/qualitycontrolData',
+                    redirect: '/wholeProcessMonitoring/qualitycontrolData/transmissionefficiency',
+                  },
+                   {
+                    name: 'transmissionefficiency', //有效传输率
+                    path: '/wholeProcessMonitoring/qualitycontrolData/transmissionefficiency',
+                    component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
+                    },
+                   
+                     {
+                      name: 'accessStatistics', //系统访问率
+                      path: '/wholeProcessMonitoring/qualitycontrolData/accessStatistics',
+                      component: './Intelligentanalysis/accessStatistics',
+                      },
+                  ]
+                },
+                               
+               { //站点数据总览
+                path: '/wholeProcessMonitoring/siteData',
+                name: 'siteData',
+                routes: [
+                  {
+                    path: '/wholeProcessMonitoring/siteData',
+                    redirect: '/wholeProcessMonitoring/siteData/siteReport',
+                  }, 
+                   {
+                    name: 'siteReport', //站点报表
+                    path: '/wholeProcessMonitoring/siteData/siteReport',
+                    component: './report/DateReportPage',
+                    },
+                    {
+                      name: 'summaryReport', //汇总报表
+                      path: '/wholeProcessMonitoring/siteData/summaryReport',
+                      component: './report/summaryReportPage',
+                  },
+                  ]
+                },
+                { //废气排放总览
+                  path: '/wholeProcessMonitoring/wasteGasOut',
+                  name: 'wasteGasOut',
+                  routes: [
+                    {
+                      path: '/wholeProcessMonitoring/wasteGasOut',
+                      redirect: '/wholeProcessMonitoring/wasteGasOut/day',
+                    }, 
+                    {
+                     name: 'wasteGasOut', //小时平均日报
+                     path: '/wholeProcessMonitoring/wasteGasOut/:reportType',
+                     component: './report/SmokeReportPage',
+                     },
+                   ]
+                },
+
+                { //废水 排放总览
+                  path: '/wholeProcessMonitoring/wasteWaterOut',
+                  name: 'wasteWaterOut',
+                  routes: [
+                    {
+                      path: '/wholeProcessMonitoring/wasteWaterOut',
+                      redirect: '/wholeProcessMonitoring/siteData/dailyReport',
+                    }, 
+                    {
+                     name: 'dailyReport', //小时平均日报
+                     path: '/wholeProcessMonitoring/wasteWaterOut/dailyReport',
+                     component: './report/SmokeReportPage',
+                     },
+                     {
+                       name: 'monthReport', //日平均值月报
+                       path: '/wholeProcessMonitoring/wasteWaterOut/MonthReport',
+                       component: './report/DailyReport/DailyReport',
+                     },
+                     {
+                      name: 'seasonReport', //月平均值季报
+                      path: '/wholeProcessMonitoring/wasteWaterOut/seasonReport',
+                      component: './report/SeasonReport/SeasonReport',
+                    },
+                    {
+                      name: 'yearReport', //月平均值年报
+                      path: '/wholeProcessMonitoring/wasteWaterOut/YearReport',
+                      component: './report/YearReport/YearReport',
+                    },
+                   ]
+                },
+              ]
+             },
+
+     /*预测性维护*/
+
+    //  { 
+    //   path: '/forecastMaintain',
+    //   name: 'forecastMaintain',
+    //   routes: [
+    //     {
+    //       path: '/forecastMaintain',
+    //       redirect: '/forecastMaintain/nuclearEmission/monitoringData',
+    //     },
+    //     { //智慧运维
+    //       path: '/wholeProcessMonitoring/wisdomOperation',
+    //       name: 'wisdomOperation',
+    //       routes: [
+    //         { 
+    //           path: '/wholeProcessMonitoring/nuclearEmission', //运维日历
+    //           redirect: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
+    //         },
+    //         {
+    //           name: 'projectManager',   // 运维日历
+    //           path: '/platformconfig/basicInfo/projectManager',
+    //           component: './platformManager/basicInfo/projectManager',
+    //         },
+    //     ]
+    //   }
+    //  ]
+    //  },
+
+
+
+
+
+
+
+
+
+
+
+
+     /*资产管理*/
+
+     { 
+      path: '/assetManagement',
+      name: 'assetManagement',
+      routes: [
+        {
+          path: '/forecastMaintain',
+          redirect: '/forecastMaintain/nuclearEmission/monitoringData',
+        },
+        { //设备台账
+          path: '/assetManagement/equipmentAccount',
+          name: 'equipmentAccount',
+          routes: [
+            { 
+              path: '/assetManagement/equipmentAccount',
+              redirect: '/assetManagement/equipmentAccount/AEnterpriseTest/1/1,2',
+            },
+            {
+              name: 'pollutantManagement',   // 污染源管理
+              path: '/assetManagement/equipmentAccount/:configId/:targetType/:pollutantTypes',
+              component: './platformManager/monitortarget',
+            },
+        ]
+      }
+     ]
+     },
+
+
+
+             /****************黄金分割线**************** */
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -1183,10 +1370,15 @@ export default {
               routes: [
                 {
                   path: '/monitoring',
-                  redirect: '/monitoring/mapview/realtimeDataView',
+                  redirect: '/monitoring/dataquery',
                 },
                 {
-                name: 'outputstopmanage',
+                  name: 'monitoringDataquery',//监控数据
+                  path: '/monitoring/dataquery',
+                  component: './monitoring/dataquery/index',
+                },
+                {
+                  name: 'outputstopmanage',
                   path: '/monitoring/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
                 },
@@ -1338,6 +1530,7 @@ export default {
                       path: '/monitoring/missingData/originaldata',
                       component: './monitoring/originaldata',
                     },
+
               ],
             },
             {
@@ -1947,11 +2140,6 @@ export default {
               path: '/dataSearch',
               name: 'dataSearch',
               routes: [
-                {
-                  name: 'dataquery',
-                  path: '/dataSearch/dataquery/ent',
-                  component: './monitoring/dataquery/index',
-                },
                 {
                   name: 'airDataquery',
                   path: '/dataSearch/dataquery/air',

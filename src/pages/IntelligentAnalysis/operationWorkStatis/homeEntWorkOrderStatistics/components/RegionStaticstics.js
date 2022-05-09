@@ -1,3 +1,6 @@
+/**
+ * 行政区详情 县区级别 三级页面
+ */
 import React, { PureComponent } from 'react'
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { LeftOutlined,RollbackOutlined,ExportOutlined} from '@ant-design/icons';
@@ -146,9 +149,21 @@ class RegionStaticstics extends PureComponent {
               </FormItem>
 
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
+
+                {
+                  
+                  <Button
+                  style={{ marginLeft: 10 }} 
+                  icon={<ExportOutlined />}
+                  loading={exportLoading}
+                  onClick={this.onExport}
+              >
+                  导出
+              </Button>
+                }
                 <Button 
                   icon={<RollbackOutlined />} 
-                  style={{ marginLeft: 10 }} 
+                  style={{ margin: '0 5px' }}
                   onClick={()=>{
                     if(this.props.goBack){
                       this.props.dispatch({
@@ -163,18 +178,6 @@ class RegionStaticstics extends PureComponent {
                 >
                   返回
                 </Button>
-                {
-                  
-                  <Button
-                  style={{ margin: '0 5px' }}
-                  icon={<ExportOutlined />}
-                  loading={exportLoading}
-                  onClick={this.onExport}
-              >
-                  导出
-              </Button>
-                }
-
               </div>
           </Row>
         </Form>

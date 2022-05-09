@@ -111,7 +111,7 @@ const Index = (props) => {
       align:'center'
     },
     {
-      title: '省份',
+      title: '客户所在地',
       dataIndex: 'regionName',
       key:'regionName',
       align:'center'

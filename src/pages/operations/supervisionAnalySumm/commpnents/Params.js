@@ -81,6 +81,7 @@ const Index = (props) => {
       dataIndex: 'TypeNum',
       key: 'TypeNum',
       align: 'center',
+      width:70,
       render:(text,record,index)=>{
         return index + 1
       }
@@ -90,48 +91,56 @@ const Index = (props) => {
       dataIndex: 'provinceName',
       key: 'provinceName',
       align: 'center',
+      width:100,
     },
     {
       title: '地级市',
       dataIndex: 'cityName',
       key: 'cityName',
       align: 'center',
+      width:100,
     },
     {
       title: '企业名称',
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
+      width:150,
     },
     {
       title: '排口名称',
       dataIndex: 'pointName',
       key: 'pointName',
       align: 'center',
+      width:100,
     },
     {
       title: '监测因子',
       dataIndex: 'pollutantName',
       key: 'pollutantName',
       align: 'center',
+      width:100,
     },
     {
       title: '督查人员',
       dataIndex: 'createUserName',
       key: 'createUserName',
       align: 'center',
+      width:100,
     },
     {
       title: '运维人员',
       dataIndex: 'operationName',
       key: 'operationName',
       align: 'center',
+      width:100,
     },
     {
       title: '督查日期',
       dataIndex: 'dateTime',
       key: 'dateTime',
       align: 'center',
+      width:100,
       render:(text,record,index)=>{
         return text? moment(text).format('YYYY-MM-DD') : null;
       }
@@ -145,18 +154,21 @@ const Index = (props) => {
           dataIndex: 'rangeStatus',
           key: 'rangeStatus',
           align: 'center',
+          width:80,
         },
         {
           title: '数据',
           dataIndex: 'couStatus',
           key: 'couStatus',
           align: 'center',
+          width:80,
         },
         {
           title: '参数',
           dataIndex: 'rangeStatus',
           key: 'Fraction',
           align: 'center',
+          width:80,
         },
       ]
     },

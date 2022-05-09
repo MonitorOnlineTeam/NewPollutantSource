@@ -48,6 +48,7 @@ const pageUrl = {
 }
 @connect(({ loading, autoForm, enterpriseMonitoringModel ,exceedDataAlarmModel,StopRecordModel}) => ({
     loading: loading.effects["StopRecordModel/GetStopList"],
+    exportLoading: loading.effects["StopRecordModel/ExportStopList"],
     regionList: autoForm.regionList,
     attention: enterpriseMonitoringModel.attention,
     total: StopRecordModel.total,
@@ -101,7 +102,7 @@ class index extends PureComponent {
     // 导出
     exportReport = () => {
         const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
-
+        const { isHomeModal,DGIMN, } = this.props;
         this.props.dispatch({
             type:pageUrl.ExportStopList,
             payload:{
@@ -111,7 +112,7 @@ class index extends PureComponent {
                 EndTimeEnd: Endtime[1]?moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'):null,
                 RegionCode: regionValue == undefined ?'':regionValue,
                 EntCode: entValue== undefined ?'':entValue,
-                DGIMN: pointValue== undefined ?'':pointValue,
+                DGIMN: isHomeModal? DGIMN : pointValue== undefined ?'':pointValue,
                 Status: voucher== undefined ?'':voucher,
             }
         })
@@ -119,8 +120,8 @@ class index extends PureComponent {
 
     //查询数据
     getChartAndTableData =()=>{
-        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
-
+        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue,} = this.state
+        const { isHomeModal,DGIMN, } = this.props;
         this.props.dispatch({
             type:pageUrl.GetStopList,
             payload:{
@@ -130,7 +131,7 @@ class index extends PureComponent {
                 EndTimeEnd:Endtime[1] ? moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss') :null,
                 RegionCode: regionValue == undefined ?'':regionValue,
                 EntCode: entValue== undefined ?'':entValue,
-                DGIMN: pointValue== undefined ?'':pointValue,
+                DGIMN:isHomeModal? DGIMN : pointValue== undefined ?'':pointValue,
                 Status: voucher== undefined ?'':voucher,
                 PageSize:20,
                 PageIndex:1
@@ -204,7 +205,7 @@ class index extends PureComponent {
       }
     cardTitle = () => {
         const { Begintime,Endtime} = this.state;
-        const { isHomeModal } = this.props;
+        const { isHomeModal,exportLoading } = this.props;
         return <>
             <label style={{fontSize:14}}>停运时间:</label><RangePicker_ onRef={this.onRef1} isVerification={true} dateValue={Begintime} style={{ width: 400, minWidth: '200px', marginRight: 10,marginLeft: 10 }} callback={
                 (dates, dataType) => {
@@ -232,7 +233,7 @@ class index extends PureComponent {
                 }} RegionCode={this.state.regionValue}/></>}
 
         {isHomeModal&&<><Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
-                <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><ExportOutlined />导出</Button></>}
+                <Button style={{ marginRight: 10,marginTop:10  }} loading={exportLoading} onClick={this.exportReport}><ExportOutlined />导出</Button></>}
 
         {!isHomeModal&&<div style={{ marginTop: 10,fontSize:14 }}>
                 
@@ -295,7 +296,7 @@ class index extends PureComponent {
                     <Option value='0'>缺失凭证</Option>
                 </Select>
                 <Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
-                <Button style={{ marginRight: 10,marginTop:10  }} onClick={this.exportReport}><ExportOutlined />导出</Button>
+                <Button style={{ marginRight: 10,marginTop:10  }}  loading={exportLoading} onClick={this.exportReport}><ExportOutlined />导出</Button>
             </div>}
         </>;
     }
@@ -303,7 +304,7 @@ class index extends PureComponent {
     loadData=(PageIndex, PageSize)=>{
         
         const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state;
-        const { isHomeModal,DGIMN } = this.props;
+        const { isHomeModal,DGIMN, } = this.props;
         this.props.dispatch({
             type:pageUrl.GetStopList,
             payload:{
@@ -325,25 +326,10 @@ class index extends PureComponent {
     onChange = (PageIndex, PageSize) => {
         this.loadData(PageIndex,PageSize);
     }
-    ShowSizeChange= (PageIndex, PageSize) => {
-        const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
-        this.loadData(PageIndex,PageSize);
-        // this.props.dispatch({
-        //     type:pageUrl.GetStopList,
-        //     payload:{
-        //         BeginTime: moment(Begintime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        //         BeginTimeEnd: moment(Begintime[1]).format('YYYY-MM-DD HH:mm:ss'),
-        //         EndTime: moment(Endtime[0]).format('YYYY-MM-DD HH:mm:ss'),
-        //         EndTimeEnd: moment(Endtime[1]).format('YYYY-MM-DD HH:mm:ss'),
-        //         RegionCode: regionValue == undefined ?'':regionValue,
-        //         EntCode: entValue== undefined ?'':entValue,
-        //         DGIMN: pointValue== undefined ?'':pointValue,
-        //         Status: voucher== undefined ?'':voucher,
-        //         PageSize:PageSize,
-        //         PageIndex:PageIndex
-        //     }
-        // })
-    }
+    // ShowSizeChange= (PageIndex, PageSize) => {
+    //     const {Begintime,Endtime,voucher,pointValue,entValue,regionValue} = this.state
+    //     this.loadData(PageIndex,PageSize);
+    // }
 
     lookChange=(fileList)=>{
         console.log(fileList)
@@ -497,7 +483,7 @@ class index extends PureComponent {
                     pageSize: this.props.PageSize,
                     current: this.props.PageIndex,
                     onChange: this.onChange,
-                    onShowSizeChange: this.ShowSizeChange,
+                    // onShowSizeChange: this.ShowSizeChange,
                     pageSizeOptions: ['20', '30', '40', '100'],
                     total: this.props.total,
                 }} 

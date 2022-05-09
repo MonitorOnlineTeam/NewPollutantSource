@@ -336,9 +336,9 @@ const moreBtnClick = (type) =>{ //近30日运维工单
     case "operaOrder" :
     setOrderModalVisible(true)
     break;
-    case "planComplete" : //计划完成率
+    // case "planComplete" : //计划完成率
     // setTVisible(true)
-    break;
+    // break;
   }
 }
  

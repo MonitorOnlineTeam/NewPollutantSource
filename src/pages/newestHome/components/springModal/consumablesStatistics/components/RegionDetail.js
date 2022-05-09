@@ -245,7 +245,7 @@ const Index = (props) => {
         <SpareParts />
         </Modal>
         <Modal
-        title={`${regionName} - 备品备件更换数量`}
+        title={`${regionName} - 易耗品更换数量`}
         visible={consumablesVisible}
         onCancel={()=>{setConsumablesVisible(false)}}
         footer={null}
