@@ -371,256 +371,36 @@ export default {
                 },
               ],
             }, //污水处理台
-            // {
-            //   path: '/SewagePlant',
-            //   name: 'SewagePlant',
-            //   routes: [
-            //     {
-            //       path: '/SewagePlant',
-            //       redirect: 'SewagePlant/DataReporting/DataReporting/1/1',
-            //     },
-            //     // 数据上报列表
-            //     {
-            //         name: 'DataReporting',
-            //         path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
-            //         ///:monitortime/:entcode
-            //         component: './platformManager/dataReport/',
-            //     },
-            //     // 数据上报添加或修改
-            //     {
-            //         name: 'DataReportingAdd',
-            //         path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
-            //         component: './platformManager/dataReport/components/addDataReport',
-            //     },
-            //     //统计报表
-            //     {
-            //       name:'statisticsReportDataList',
-            //       path:'/SewagePlant/dataReportList/statisticsReportDataList',
-            //       component: './report/StatisticsReportDataList',
-            //     }
-            //   ]
-            // },
-       
-            /*全过程监控*/
-            { 
-              path: '/wholeProcessMonitoring',
-              name: 'wholeProcessMonitoring',
+            {
+              path: '/SewagePlant',
+              name: 'SewagePlant',
               routes: [
                 {
-                  path: '/wholeProcessMonitoring',
-                  redirect: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
+                  path: '/SewagePlant',
+                  redirect: 'SewagePlant/DataReporting/DataReporting/1/1',
                 },
-                { //核排放核算
-                  path: '/wholeProcessMonitoring/nuclearEmission',
-                  name: 'nuclearEmission',
-                  routes: [
-                    {
-                      path: '/wholeProcessMonitoring/nuclearEmission',
-                      redirect: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
-                    },
-                    {
-                      name: 'monitoringData', //监控数据
-                      path: '/wholeProcessMonitoring/nuclearEmission/monitoringData',
-                      component: './monitoring/dataquery/index',
-                    },
-                 ]
-               },   
-               { //质控数据总览
-                path: '/wholeProcessMonitoring/qualitycontrolData',
-                name: 'qualitycontrolData',
-                routes: [
-                  {
-                    path: '/wholeProcessMonitoring/qualitycontrolData',
-                    redirect: '/wholeProcessMonitoring/qualitycontrolData/transmissionefficiency',
-                  },
-                   {
-                    name: 'transmissionefficiency', //有效传输率
-                    path: '/wholeProcessMonitoring/qualitycontrolData/transmissionefficiency',
-                    component: './Intelligentanalysis/newTransmissionefficiency/entIndex',
-                    },
-                   
-                     {
-                      name: 'accessStatistics', //系统访问率
-                      path: '/wholeProcessMonitoring/qualitycontrolData/accessStatistics',
-                      component: './Intelligentanalysis/accessStatistics',
-                      },
-                  ]
+                // 数据上报列表
+                {
+                    name: 'DataReporting',
+                    path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+                    ///:monitortime/:entcode
+                    component: './platformManager/dataReport/',
                 },
-                               
-               { //站点数据总览
-                path: '/wholeProcessMonitoring/siteData',
-                name: 'siteData',
-                routes: [
-                  {
-                    path: '/wholeProcessMonitoring/siteData',
-                    redirect: '/wholeProcessMonitoring/siteData/siteReport',
-                  }, 
-                   {
-                    name: 'siteReport', //站点报表
-                    path: '/wholeProcessMonitoring/siteData/siteReport',
-                    component: './report/DateReportPage',
-                    },
-                    {
-                      name: 'summaryReport', //汇总报表
-                      path: '/wholeProcessMonitoring/siteData/summaryReport',
-                      component: './report/summaryReportPage',
-                  },
-                  ]
+                // 数据上报添加或修改
+                {
+                    name: 'DataReportingAdd',
+                    path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+                    component: './platformManager/dataReport/components/addDataReport',
                 },
-                { //废气排放总览
-                  path: '/wholeProcessMonitoring/wasteGasOut',
-                  name: 'wasteGasOut',
-                  routes: [
-                    {
-                      path: '/wholeProcessMonitoring/wasteGasOut',
-                      redirect: '/wholeProcessMonitoring/wasteGasOut/day',
-                    }, 
-                    {
-                     name: 'wasteGasOut', //小时平均日报
-                     path: '/wholeProcessMonitoring/wasteGasOut/:reportType',
-                     component: './report/SmokeReportPage',
-                     },
-                   ]
-                },
-
-                { //废水 排放总览
-                  path: '/wholeProcessMonitoring/wasteWaterOut',
-                  name: 'wasteWaterOut',
-                  routes: [
-                    {
-                      path: '/wholeProcessMonitoring/wasteWaterOut',
-                      redirect: '/wholeProcessMonitoring/siteData/dailyReport',
-                    }, 
-                    {
-                     name: 'dailyReport', //小时平均日报
-                     path: '/wholeProcessMonitoring/wasteWaterOut/dailyReport',
-                     component: './report/SmokeReportPage',
-                     },
-                     {
-                       name: 'monthReport', //日平均值月报
-                       path: '/wholeProcessMonitoring/wasteWaterOut/MonthReport',
-                       component: './report/DailyReport/DailyReport',
-                     },
-                     {
-                      name: 'seasonReport', //月平均值季报
-                      path: '/wholeProcessMonitoring/wasteWaterOut/seasonReport',
-                      component: './report/SeasonReport/SeasonReport',
-                    },
-                    {
-                      name: 'yearReport', //月平均值年报
-                      path: '/wholeProcessMonitoring/wasteWaterOut/YearReport',
-                      component: './report/YearReport/YearReport',
-                    },
-                   ]
-                },
+                //统计报表
+                {
+                  name:'statisticsReportDataList',
+                  path:'/SewagePlant/dataReportList/statisticsReportDataList',
+                  component: './report/StatisticsReportDataList',
+                }
               ]
-             },
-
-     /*预测性维护*/
-
-     { 
-      path: '/forecastMaintain',
-      name: 'forecastMaintain',
-      routes: [
-        {
-          path: '/forecastMaintain',
-          redirect: '/forecastMaintain/wisdomOperation/monitoringData',
-        },
-        { //智慧运维
-          path: '/forecastMaintain/wisdomOperation',
-          name: 'forecastMaintain',
-          routes: [
-            { 
-              path: '/forecastMaintain/wisdomOperation', 
-              redirect: '/forecastMaintain/wisdomOperation/OperationCalendar',
             },
-            {
-              name: 'operationCalendar',   // 运维日历
-              path: '/forecastMaintain/wisdomOperation/OperationCalendar',
-              component: './operations/CalendarPage',
-            },
-        ]
-      }
-     ]
-     },
-
-     /*资产管理*/
-     { 
-      path: '/assetManagement',
-      name: 'assetManagement',
-      routes: [
-        {
-          path: '/assetManagement',
-          redirect: '/assetManagement/equipmentAccount/AEnterpriseTest/1/1,2',
-        },
-        { //设备台账
-          path: '/assetManagement/equipmentAccount',
-          name: 'equipmentAccount',
-          routes: [
-            { 
-              path: '/assetManagement/equipmentAccount',
-              redirect: '/assetManagement/equipmentAccount/AEnterpriseTest/1/1,2',
-            },
-            {
-              name: 'pollutantManagement',   // 污染源管理
-              path: '/assetManagement/equipmentAccount/:configId/:targetType/:pollutantTypes',
-              component: './platformManager/monitortarget',
-            },
-        ]
-      },
-     ]
-     },
-
-
-  
-      
-     
-     
-     
-     
-     //异常追忆
-     { 
-      path: '/abnormaRecall',
-      name: 'abnormaRecall',
-      routes: [
-        {
-          path: '/abnormaRecall',
-          redirect: '/abnormaRecall/abnormalDataManage/monitoringData',
-        },
-        { //异常数据处置
-          path: '/abnormaRecall/abnormalDataManage',
-          name: 'forecastMaintain',
-          routes: [
-            { 
-              path: '/abnormaRecall/abnormalDataManage', 
-              redirect: '/abnormaRecall/abnormalDataManage/stopReport',
-            },
-            {
-              name: 'stopReport',   //停用上报
-              path: '/abnormaRecall/abnormalDataManage/stopReport/:configId',
-              component: './platformManager/outputstopManager',
-            },
-        ]
-      },
-     ]
-     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-             /****************黄金分割线**************** */
+       
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -967,7 +747,8 @@ export default {
                   routes: [
                     {
                       path: '/report/wry',
-                      redirect: '/report/wry/siteDaily',
+                      // redirect: '/report/wry/siteDaily',
+                      redirect: '/report/wry/siteReport', //站点数据总览  重定向
                     },
                     {
                       name: 'dateReportPage',
@@ -1041,15 +822,15 @@ export default {
                   path: '/operations',
                   redirect: '/operations/log', // 重定向 默认为 运维日志页面
                 },
+                { //智慧运维 重定向
+                  path: '/operations/wisdomOperations',
+                  redirect: '/operations/calendar/index',
+                },
                 {
                   path: '/operations/calendar',
                   name: 'calendar',
                   // component: "./operations/CalendarPage",
                   routes: [
-                    {
-                      path: '/operations/calendar',
-                      redirect: '/operations/calendar/index',
-                    },
                     {
                       path: '/operations/calendar/index',
                       name: 'index',
@@ -1062,6 +843,7 @@ export default {
                     },
                   ],
                 },
+
                 {
                   path: '/operations/log',
                   //运维日志
@@ -1399,6 +1181,60 @@ export default {
                 },
               ],
             },
+
+
+            {//异常追忆 重定向
+              path: '/abnormaRecall', 
+              redirect: '/monitoring/outputstopmanage/OutputStopNew',
+            },
+            {
+              path: '/abnormaRecall/abnormalDataManage', ///异常数据处置 重定向
+              redirect: '/monitoring/outputstopmanage/OutputStopNew',
+            },  
+            {
+              path: '/abnormaRecall/abnormalDataAnalysis', ///异常数据分析 重定向
+              redirect: '/dataSearch/exceedData',
+            },  
+            {
+              path: '/abnormaRecall/exceptionRule', ///异常规则 重定向
+              redirect: '/platformconfig/monitoringstandard',
+            }, 
+
+           
+            { //监督核查 重定向 
+              path: '/supervisionCheck',
+              redirect: '/operations/remoteSupervision',  
+            },
+            {
+              path: '/supervisionCheck/noScene', //非现场监督核查 重定向
+              redirect: '/operations/remoteSupervision',
+            },        
+            {
+              path: '/supervisionCheck/scene', //现场监督核查 重定向
+              redirect: '/operations/siteInspector',
+            },   
+            
+            { //资产管理 重定向 
+              path: '/assetManagement',
+              redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',  
+            },
+            {
+              path: '/assetManagement/equipmentAccount', //设备台账 重定向
+              redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
+            },        
+            {
+              path: '/assetManagement/operationAccount', //运维台账 重定向
+              redirect: '/operations/maintenancedatabase/MaintenanceDatabase',
+            },        
+            {
+              path: '/assetManagement/consumables', //备件耗材 重定向
+              redirect: '/platformconfig/basicInfo/monitortarget/warehouse/Storehouse',
+            },     
+            {
+              path: '/assetManagement/authorityManage', //权限管理 重定向
+              redirect: '/rolesmanager/user/newUserInfo',
+            }, 
+
             {
               path: '/monitoring',
               name: 'monitoring',
@@ -1407,11 +1243,18 @@ export default {
                   path: '/monitoring',
                   redirect: '/monitoring/dataquery',
                 },
+                
+                {
+                  path: '/monitoring/nuclearEmission', //碳排放核酸 重定向
+                  redirect: '/monitoring/dataquery',
+                },
                 {
                   name: 'monitoringDataquery',//监控数据
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
+                
+
                 {
                   name: 'outputstopmanage',
                   path: '/monitoring/outputstopmanage/:configId',
@@ -1817,11 +1660,16 @@ export default {
                   path: '/Intelligentanalysis/chaoStatistics',
                   component: './IntelligentAnalysis/chaoStatistics',
                 },
-                //传输有效率 城市级别
+                //质控数据总览 重定向
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency/cityLevel',
                   component: './Intelligentanalysis/newTransmissionefficiency/CityLevel',
+                },
+                //传输有效率 城市级别
+                {
+                  path: '/wholeProcessMonitoring/qualitycontrolData',
+                  redirect: '/Intelligentanalysis/transmissionefficiency',
                 },
                 {
                   name: 'Intelligentanalysis',

@@ -87,15 +87,6 @@ class Index extends PureComponent {
       zoomchange: (value) => {
         const zoom = aMap.getZoom();
         const { showType } = this.state;
-        // if (zoom >= 9 && showType == 1) {
-        //   this.setState({ showType: 2, pointTitleShow: false })
-        //   const { entMarkers } = this.state;
-        //   this.setState({ markersList: [...entMarkers] })
-        // }
-        // if (zoom < 9 && showType == 2) {
-        //   const { regionMarkers } = this.state;
-        //   this.setState({ showType: 1, entTitleShow: false, pointTitleShow: false, markersList: [...regionMarkers] })
-        // }
 
       },
     };
@@ -109,7 +100,7 @@ class Index extends PureComponent {
       },
       clickable: true,
       click: (MapsOption, marker) => {
-        const { showType, pointMarkers } = this.state;
+        const { showType, pointMarkers,allPointMarkers } = this.state;
 
         const position = marker.De.extData.position;
         if (showType == 3) { //监测点弹窗
@@ -122,8 +113,8 @@ class Index extends PureComponent {
           });
         }
         if (showType == 2) { //企业 点击进入监测点
-          const data = pointMarkers.filter(item=>item.position.ParentCode == position.entCode); 
-          this.setState({pointReg:position.regionCode&&position.regionCode.split(',')[0]})
+          const data = allPointMarkers.filter(item=>item.position.ParentCode == position.entCode); 
+          this.setState({pointReg:position.regionCode&&position.regionCode.split(',')[0],pointMarkers:data,selectEnt:undefined})
           this.loadPointMarkerData(data)
         }
       },
@@ -153,7 +144,8 @@ class Index extends PureComponent {
       fullScreen: false,
       showType: 1,
       regionMarkers: [],
-      entMarkers: [],
+      selectEntMarkers: [],
+      allEntMarkers: [],
       pointMarkers: [],
       allPointMarkers: [],
       entTitleShow: false,
@@ -250,7 +242,7 @@ class Index extends PureComponent {
           this.setState({ regionMarkers: data });
           this.loadRegionMarkerData(data)
         } else if (type == 2) {
-          this.setState({ entMarkers: data })
+          this.setState({ selectEntMarkers: data,allEntMarkers:data, })
         } else {
           this.setState({ pointMarkers: data })
           this.setState({ allPointMarkers: data })
@@ -288,6 +280,7 @@ class Index extends PureComponent {
 
   }
   loadEntMarkerData = (data, flag) => { //企业
+    this.clearMass();
     this.setState({
       showType: 2,
       pointTitleShow: false,
@@ -305,6 +298,7 @@ class Index extends PureComponent {
 
   }
   loadPointMarkerData = (data, flag) => { //监测点 
+    this.clearMass();
     this.setState({
       showType: 3,
       hoverEntTitleShow:false,
@@ -376,7 +370,7 @@ class Index extends PureComponent {
         anchor: new window.AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
       }
     })
-
+   
     massMarks = new window.AMap.MassMarks(pointData, {
       zIndex: 999,  // 海量点图层叠加的顺序
       zooms: [3, 19],  // 在指定地图缩放级别范围内展示海量点图层
@@ -461,30 +455,21 @@ class Index extends PureComponent {
   }
 
   goEnt = (extData) => {
-    const { entMarkers } = this.state;
-     
-    const data = entMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode);
+    const { allEntMarkers } = this.state;
+    const data = allEntMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode);
+    this.setState({selectEntMarkers:data,})
     this.loadEntMarkerData(data)
   }
   operationChange = (text, mapProps) => {
     const map = mapProps.__map__;
-    const { showType, regionMarkers, pointMarkers, entMarkers, entTitleShow, pointTitleShow,markersList,allPointMarkers,mapBtnStatusIndex, } = this.state;
+    const { showType, regionMarkers, pointMarkers, entTitleShow, pointTitleShow,markersList,allPointMarkers,mapBtnStatusIndex, } = this.state;
     if (!map) { console.log('组件必须作为 Map 的子组件使用'); return; }
     switch (text) {
       case '放大':
         map.zoomIn()
-        // if (map.getZoom() >= 9 && showType == 1) {
-        //   this.setState({ showType: 2, pointTitleShow: false })
-        //   const { entMarkers } = this.state;
-        //   this.setState({ markersList: [...entMarkers] })
-        // }
         break;
       case '缩小':
         map.zoomOut()
-        // if (map.getZoom() < 9 && showType == 2) {
-        //   const { regionMarkers } = this.state;
-        //   this.setState({ showType: 1, entTitleShow: false, pointTitleShow: false, markersList: [...regionMarkers] })
-        // }
         break;
       case '全屏':
         this.setState({ fullScreen: true })
@@ -495,7 +480,7 @@ class Index extends PureComponent {
         this.props.fullScreenClick(false)
         break;
       case '展示企业': //行政区
-        this.setState({ pointIconGo: false })
+        this.setState({ pointIconGo: false,mapBtnStatusIndex:-1 })
         this.loadRegionMarkerData(regionMarkers)
         // this.setState({showType:1, markersList:[...this.state.regionMarkers]})
         break;
@@ -510,7 +495,7 @@ class Index extends PureComponent {
         if (showType == 3 && !pointTitleShow) {
        
           if(this.state.isMassive){
-            const noramalData = pointMarkers.filter(item =>!item.alarmStatus) 
+            const noramalData = markersList.filter(item =>!item.alarmStatus) 
             this.renderPointTitleLabelMarker(noramalData);
             const warinData = markersList.filter(item =>item.alarmStatus)
             this.setState({ pointTitleShow: true, markersList: [...warinData] })
@@ -540,20 +525,20 @@ class Index extends PureComponent {
 
   }
   pointNum = (type,extData) =>{
-    const { pointMarkers } = this.state;
-    const data = pointMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode); 
+    const { allPointMarkers } = this.state;
+    const data = allPointMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==extData.position.regionCode); 
     
     this.setState({pointStatus:type,pointReg:extData.position.regionCode})
     if(type == 2){ //超标点位数
       if(data){
        const abnormalData =  data[0] && data.filter(item => item.position.alarmStatus==type)
-       this.loadPointMarkerData(abnormalData)
+       abnormalData&&abnormalData[0]&&this.loadPointMarkerData(abnormalData)
       }
      
     }
     if(type == 1){ //异常点位数
       const overData =  data[0] && data.filter(item => item.position.alarmStatus==type)
-      this.loadPointMarkerData(overData)
+      overData&&overData[0]&&this.loadPointMarkerData(overData)
     }
   }
   //海量标注 监测点显示名称
@@ -816,11 +801,7 @@ class Index extends PureComponent {
     listEle.style.display = 'none';
     this.setState({ selectEnt: val }, () => {
       this.searchEntEle.blur()
-
     })
-
-
-
   }
 
   entFocus = () => {
@@ -828,42 +809,58 @@ class Index extends PureComponent {
     this.setState({ selectEnt: undefined })
 
   }
-  entBlur = () => {
-    const { entMarkers, selectEnt, showType, pointMarkers } = this.state;
+  entBlur = () => { //失去焦点
+    const { selectEntMarkers, selectEnt, showType, pointMarkers,markersList,allEntMarkers, } = this.state;
     this.setState({ entLists: [] })
     if (selectEnt) {
-      if (showType == 3) { //对应的监测点
+      if (showType == 3) { //对应的监测点 搜索企业下的监测点
+        let pointData = [];
         pointMarkers.map(item => {
-          let position = item.position;
+          let position = item.position; 
           if (position.ParentName === selectEnt) {
-            this.loadPointMarkerData([item])
-            aMap.setZoomAndCenter(14, [position.longitude, position.latitude]);
-            this.setState({ entLists: [] })
+             pointData.push(item)
           }
         })
-      } else { //对应的企业
-        entMarkers.map(item => {
+        if(pointData&&pointData[0]){
+          this.loadPointMarkerData(pointData)
+          aMap.setZoom(14);
+          this.setState({ entLists: [] })
+        }else{
+          return;
+          // message.warning('没有此企业的相关数据');
+        }
+       
+      } else { //对应的企业  搜索行政区下的企业
+
+        let entList = showType == 1 ? allEntMarkers : markersList;
+        let entData = [];
+        entList.map(item => {
           let position = item.position;
           if (position.entName === selectEnt) {
-            this.loadEntMarkerData([item]);
-            aMap.setZoomAndCenter(14, [position.longitude, position.latitude]);
-            this.setState({ entLists: [] })
+            entData.push(item)
           }
         })
+       
+        if(entData&&entData[0]){
+          this.loadEntMarkerData(entData);
+          aMap.setZoom(14);
+          this.setState({ entLists: [],selectEntMarkers:entData, })
+        }else{
+          return;
+          // message.warning('没有此企业的相关数据');
+        } 
       }
     } else {
-      showType == 3 ? this.loadPointMarkerData(pointMarkers) : this.loadEntMarkerData(entMarkers);
+      // showType == 3 ? this.loadPointMarkerData(pointMarkers) : this.loadEntMarkerData(selectEntMarkers);
     }
   }
   onBack = () => {
-    const { showType, regionMarkers, selectEnt, entMarkers,pointStatus,pointReg, } = this.state;
-
-
+    const { showType, regionMarkers, selectEnt, selectEntMarkers,pointStatus,pointReg, } = this.state;
     if (showType == 2) {
       this.loadRegionMarkerData(regionMarkers)
     }
     if (showType == 3) {
-      const data = entMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==pointReg); 
+      const data = selectEntMarkers.filter(item=>item.position.regionCode&&item.position.regionCode.split(',')[0]==pointReg); 
       if(pointStatus){ // 异常  or  超标
         const abnormalOverEntData =  data[0] && data.filter(item => item.position.alarmStatus== pointStatus)
         this.loadEntMarkerData(abnormalOverEntData)
@@ -877,12 +874,17 @@ class Index extends PureComponent {
 
   mapBtnClick = (index, item) => {
     const { mapBtnStatusIndex, pointMarkers, allPointMarkers } = this.state;
+
+    this.setState({
+      pointIconGo: true,
+      selectEnt:undefined,
+    })
     if (mapBtnStatusIndex !== index) {
       this.setState({ mapBtnStatusIndex: index })
       const selectData = allPointMarkers.filter(pointItem => {
         return item.status == pointItem.position.Status
       })
-      this.setState({ pointMarkers: selectData })
+      this.setState({ pointMarkers: selectData, })
       this.loadPointMarkerData(selectData)
     } else { //取消
       this.setState({ mapBtnStatusIndex: -1 })
@@ -891,7 +893,7 @@ class Index extends PureComponent {
 
   }
   mapContent = (props) => {
-    const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, entMarkers, pointMarkers, entTitleShow, pointTitleShow, pointIconGo } = this.state;
+    const { markersList, mapPointLoading, fullScreen, showType, regionMarkers, pointMarkers, entTitleShow, pointTitleShow, pointIconGo } = this.state;
     const { mapStatusData, subjectFontSize, pollType, entList } = this.props;
     const typeBtnArr = [{ text: '超标', color: '#FF0000', val: mapStatusData.overCount, status: 2 }, { text: '异常', color: '#FFCC00', val: mapStatusData.exceptionCount, status: 3 }, { text: '离线', color: '#67666A', val: mapStatusData.unLineCount, status: 0 },
     { text: '在线', color: '#5fc15d', val: mapStatusData.normalCount, status: 1 }, { text: '停运', color: '#836BFB', val: mapStatusData.stopCount, status: 4 }]
@@ -1000,7 +1002,7 @@ class Index extends PureComponent {
           <Select
             showSearch
             style={{ width: smallResolution?110 : 220 }}
-            placeholder="请输入企业名称"
+            placeholder= "请输入企业名称"
             optionFilterProp="children"
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -1025,7 +1027,7 @@ class Index extends PureComponent {
           </Select>
         </div>}
 
-        {showType != 1 && !pointIconGo && <div className={smallResolution? styles.smallBackSty : styles.backSty} onClick={this.onBack}>  { /**返回 */}
+        {showType != 1 && !pointIconGo && mapBtnStatusIndex < 0 && <div className={smallResolution? styles.smallBackSty : styles.backSty} onClick={this.onBack}>  { /**返回 */}
           <img src='/homeMapBack.png' />
           <div>返回</div>
         </div>}

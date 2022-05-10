@@ -578,7 +578,7 @@ class SmokeReportPage extends PureComponent {
               </Select>
               <label>关注程度:</label><Select
                 allowClear
-                style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+                style={{ width: 200, marginLeft: 10, marginRight: 14 }}
                 placeholder="关注度"
                 maxTagCount={2}
                 maxTagTextLength={5}
