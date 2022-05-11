@@ -68,5 +68,10 @@ export async function ExportUserActivity(params) {
   return result;
 }
 
+// 系统访问率  业务属性和行业属性
+export async function GetIndustryBusiness(params) {
+  const result = post('/api/rest/PollutantSourceApi/UserInfosApi/GetIndustryBusiness', params, null, );
+  return result;
+}
 
 

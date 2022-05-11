@@ -53,6 +53,7 @@ const pageUrl = {
   exportData: 'regionalAccountStatistics/exportDaQuUserActivity',
   getUserData: 'regionalAccountStatistics/getUserActivity',
   exportUserData: 'regionalAccountStatistics/exportUserActivity',
+  getIndustryBusiness:'regionalAccountStatistics/getIndustryBusiness',
 };
 @connect(({ loading, regionalAccountStatistics,autoForm,common,global }) => ({
   exloading:regionalAccountStatistics.exloading,
@@ -68,7 +69,9 @@ const pageUrl = {
   DaQuArr: regionalAccountStatistics.DaQuArr,
   DaviArr: regionalAccountStatistics.DaviArr,
   DaNoVisitArr: regionalAccountStatistics.DaNoVisitArr,
-  DaRate: regionalAccountStatistics.DaRate
+  DaRate: regionalAccountStatistics.DaRate,
+  industryBusinessList: regionalAccountStatistics.industryBusinessList,
+  industryBusinessLoading:loading.effects[pageUrl.getIndustryBusiness],
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -78,8 +81,6 @@ export default class EntTransmissionEfficiency extends Component {
     this.state = {
       day:7,
       accountTitle:'',
-      pollutantVal:'',
-      afterSaleVal:''
     };
     
     this.columns = [
@@ -230,7 +231,11 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch } = this.props;
-   this.dayChange();
+    this.dayChange();
+    dispatch({
+      type:pageUrl.getIndustryBusiness,
+      payload: {}
+    });
   };
  loadChart=()=>{
 
@@ -371,16 +376,14 @@ export default class EntTransmissionEfficiency extends Component {
     const { day } = this.state;
     dispatch({
       type: pageUrl.exportData,
-      payload: { 
-        beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
-        endTime: moment().format('YYYY-MM-DD 23:59:59'), },
-        callback: data => {
+      payload:queryPar,
+       callback: data => {
          downloadFile(data);
         },
     });
   };
   userTemplate = () => {  //弹框  用户列表导出
-    const { dispatch, queryPar } = this.props;
+    const { dispatch,  } = this.props;
     const { day,DaQuId } = this.state;
     dispatch({
       type: pageUrl.exportUserData,
@@ -395,23 +398,32 @@ export default class EntTransmissionEfficiency extends Component {
         },
     });
   }
-    dayChange=(e)=>{
-      const { dispatch, queryPar } = this.props;
-      this.setState({day:e?e.target.value : 7})
+
+    getDataList = (payload) =>{
+      const { dispatch, queryPar, } = this.props;
+      console.log(queryPar)
+      dispatch({
+        type: pageUrl.updateState,
+        payload: { queryPar:{ ...queryPar, ...payload,} }  
+      })
       dispatch({
         type: pageUrl.getData,
-        payload: { 
-          beginTime: moment().subtract(e?e.target.value : 7, 'day').format('YYYY-MM-DD 00:00:00'),
-          endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-        }
-      });
+        payload: { ...queryPar,  ...payload }
+      }); 
+    }
+    dayChange=(e)=>{
+      const { dispatch,queryPar, } = this.props;
+      this.setState({day:e?e.target.value : 7})
+      this.getDataList({
+         beginTime: moment().subtract(e?e.target.value : 7, 'day').format('YYYY-MM-DD 00:00:00'),
+         endTime: moment().format('YYYY-MM-DD 23:59:59')
+      })
     }
     pollChange=(val)=>{
-     this.setState({pollutantVal:val?val:undefined})
+      this.getDataList({Industry:val?val:undefined})
     }
     afterSaleChange=(val)=>{
-      this.setState({afterSaleVal:val?val:undefined})
-
+      this.getDataList({Business:val?val:undefined})
     }
     getUserDataFun = (row,type) =>{
       const { day } = this.state;
@@ -452,9 +464,12 @@ export default class EntTransmissionEfficiency extends Component {
       clientHeight,
       exUserLoading,
       userLoading,
-      userList
+      userList,
+      industryBusinessList,
+      industryBusinessLoading,
     } = this.props;
-
+     const industryList = industryBusinessList&&industryBusinessList.IndustryList? industryBusinessList.IndustryList : []
+     const businessList = industryBusinessList&&industryBusinessList.BusinessList? industryBusinessList.BusinessList : []
     return (
       <Card
         bordered={false}
@@ -472,24 +487,26 @@ export default class EntTransmissionEfficiency extends Component {
 
             </Form.Item>
             <Form.Item>
-            <Select placeholder='请选择行业属性' onChange={this.pollChange}>
-              {/* {
-                ss.map(item=>{
-                return <Option value={item.ss}>{item.ss}</Option>
+            <Spin spinning={industryBusinessLoading} size='small'>
+            <Select placeholder='请选择行业属性' allowClear onChange={this.pollChange} style={{width:180}}>
+               {
+                industryList.map(item=>{
+                return <Option value={item.code} key={item.code}>{item.name}</Option>
                 })
-              } */}
+              }
             </Select>
-
+            </Spin>
             </Form.Item>
             <Form.Item>
-            <Select placeholder='请选择售业务属性' onChange={this.afterSaleChange}>
-              {/* {
-                ss.map(item=>{
-                return <Option value={item.ss}>{item.ss}</Option>
+            <Spin spinning={industryBusinessLoading} size='small'>
+            <Select placeholder='请选择售业务属性' allowClear onChange={this.afterSaleChange} style={{width:180}}>
+              {
+                businessList.map(item=>{
+                return<Option value={item.code} key={item.code}>{item.name}</Option>
                 })
-              } */}
+              } 
             </Select>
-
+            </Spin>
             </Form.Item>
              <Form.Item>
                 <Button

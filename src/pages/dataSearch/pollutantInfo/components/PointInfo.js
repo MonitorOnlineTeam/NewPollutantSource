@@ -80,7 +80,6 @@ const Index = (props) => {
     useEffect(() => {
         onFinish(pageIndex, pageSize)
     }, []);
-    
     const [columns,setColumns]= useState([
         {
             title: '序号',
@@ -136,18 +135,27 @@ const Index = (props) => {
             dataIndex: 'operationStatus',
             key: 'operationStatus',
             align: 'center',
+            width:150,
+            filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
+            filterMultiple:false,
         },
         {
-            title: '是否判断缺失数据',
+            title: <span>是否判断缺失数据</span>,
             dataIndex: 'judgeMiss',
             key: 'judgeMiss',
             align: 'center',
+            width:170,
+            filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
+            filterMultiple:false,
         },
         {
             title: '运维负责人',
             dataIndex: 'PlatformNum',
             key: 'PlatformNum',
             align: 'center',
+            width:150,
+            filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
+            filterMultiple:false,
         },
     ])
 
@@ -192,12 +200,18 @@ const Index = (props) => {
 
 
 
-    const handleTableChange = (PageIndex, PageSize) => {
-        setPageIndex(PageIndex)
-        setPageSize(PageSize)
-        onFinish(PageIndex, PageSize)
+    // const handleTableChange = (PageIndex, PageSize,) => {
+    //     setPageIndex(PageIndex)
+    //     setPageSize(PageSize)
+    //     onFinish(PageIndex, PageSize)
+    // }
+    const tableChange = (pagination, filters, sorter) =>{
+        console.log(filters)
+         const  PageIndex = pagination.current,PageSize=pagination.pageSize;
+         setPageIndex(PageIndex)
+         setPageSize(PageSize)
+         onFinish(PageIndex, PageSize)
     }
-
     const exports = async () => {
         const values = await form.validateFields();
         props.exportData({
@@ -264,13 +278,15 @@ const Index = (props) => {
                     bordered
                     dataSource={tableDatas}
                     columns={columns}
+                    onChange={tableChange}
+                    className={styles.pointInfoSty}
                     pagination={{
                         total: tableTotal,
                         pageSize: pageSize,
                         current: pageIndex,
                         showSizeChanger: true,
                         showQuickJumper: true,
-                        onChange: handleTableChange,
+                        // onChange: handleTableChange,
                     }}
                 />
             </Card>

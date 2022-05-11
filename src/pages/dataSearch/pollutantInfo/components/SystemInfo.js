@@ -160,12 +160,17 @@ const Index = (props) => {
 
 
 
-  const handleTableChange = (PageIndex, PageSize) =>{
+  // const handleTableChange = (PageIndex, PageSize) =>{
+  //   setPageIndex(PageIndex)
+  //   setPageSize(PageSize)
+  //   onFinish(PageIndex,PageSize)
+  // }
+  const tableChange = (pagination, filters, sorter) =>{
+    const  PageIndex = pagination.current,PageSize=pagination.pageSize;
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex,PageSize)
-  }
-
+    onFinish(PageIndex, PageSize)
+}
   const exports =  async () => {
     const values = await form.validateFields();
     props.exportData({
@@ -216,13 +221,14 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
+        onChange={tableChange}
         pagination={{
           total:tableTotal,
           pageSize: pageSize,
           current: pageIndex,
           showSizeChanger: true,
           showQuickJumper: true,
-          onChange: handleTableChange,
+          // onChange: handleTableChange,
         }}
       />
    </Card>

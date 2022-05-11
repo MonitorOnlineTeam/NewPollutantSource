@@ -340,7 +340,7 @@ const Index = (props) => {
         ManufacturerId:manufacturerId
       },()=>{
         setFromVisible(false)
-        onFinish()
+        onFinish(pageIndex,pageSize)
       })
       
     } catch (errInfo) {

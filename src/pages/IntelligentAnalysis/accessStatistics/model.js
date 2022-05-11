@@ -11,7 +11,8 @@ import {
   GetUserActivity,
   ExportDaQuUserActivity,
   ExportFuWuQuUserActivity,
-  ExportUserActivity
+  ExportUserActivity,
+  GetIndustryBusiness,
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
@@ -30,7 +31,9 @@ export default Model.extend({
     FuWuArr:[],
     FuviArr:[],
     FuNoVisitArr:[],
-    FuRate:[]
+    FuRate:[],
+    industryBusinessList:[],
+    queryPar:null,
   },
   subscriptions: {},
   effects: {
@@ -97,6 +100,15 @@ export default Model.extend({
         yield update({
         userList: response.Datas,
         });
+      }
+    },
+    *getIndustryBusiness({ payload }, { call, put, update, select }) {
+      //行业属性 和 业务属性
+      const response = yield call(GetIndustryBusiness, { ...payload });
+      if (response.IsSuccess) {
+        yield update({ industryBusinessList: response.Datas,  });
+      }else{
+        message.error(response.Message)
       }
     },
     *exportDaQuUserActivity({callback, payload }, { call, put, update, select }) {

@@ -95,17 +95,17 @@ const Index = (props) => {
 
 
     useEffect(() => {
+          onFinish(pageIndex, pageSize);    
             props.getPollutantById({id:undefined},(res)=>{
                 if(res){
-                    form.setFieldsValue({PollutantType:res?res[1].ID:undefined})
-                    props.getPollutantById2({id:res?res[1].ID:'',type:1},()=>{
+                    form.setFieldsValue({PollutantType:res[1]?res[1].ID:undefined})
+                    props.getPollutantById2({id:res[1]?res[1].ID:'',type:1},()=>{
                         form.setFieldsValue({PollutantCode:undefined})
-                        onFinish(pageIndex, pageSize);
                       }) //监测类别
                 }
 
             })
-            
+           
 
       
     }, []);
