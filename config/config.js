@@ -7,9 +7,19 @@ import config from '@/config';
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 
+
+
+const apiHost = 'http://220.171.32.30:8180/';
+
+// const apiHost = 'http://172.16.12.135:50207/';
+
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
+
+const uploadHost = apiHost;
+
+
 const plugins = [
   [
     'umi-plugin-react',
@@ -1972,14 +1982,14 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/api': {
-      target: config.apiHost,
+      target: apiHost,
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',
       },
     },
     '/upload': {
-      target: config.uploadHost,
+      target: uploadHost,
       // 接口的域名
       changeOrigin: true,
       // 如果接口跨域，需要进行这个参数配置
@@ -1988,7 +1998,7 @@ export default {
       }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
     '/uploadplantform': {
-      target: config.uploadHost,
+      target: uploadHost,
       // 接口的域名
       changeOrigin: true,
       // 如果接口跨域，需要进行这个参数配置

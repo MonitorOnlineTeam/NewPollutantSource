@@ -875,9 +875,9 @@ class index extends PureComponent {
                             <Radio.Group style={{ marginRight: 20, marginLeft: 10 }} onChange={(e) => {
                                 this.setState({
                                     dataType: e.target.value,
-                                    time: e.target.value === 'Day' ? [moment().add(-1, "month")] : [moment().add(-24, "hour"), moment()]
+                                    time: e.target.value === 'Day' ? [moment().add(-1, "month").startOf('day')] : [moment().add(-24, "hour").startOf('day'), moment().endOf('day')]
                                 })
-                                e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month"), moment()]) : this.childrenHand.onPanelChange([moment().add(-24, "hour"), moment()]);
+                                e.target.value === "Day" ? this.childrenHand.onPanelChange([moment().add(-1, "month").startOf('day'), moment().endOf('day')]) : this.childrenHand.onPanelChange([moment().add(-24, "hour").startOf('day'), moment().endOf('day')]);
                             }}>
                                 <Radio.Button value="Hour">小时</Radio.Button>
                                 <Radio.Button value="Day">日均</Radio.Button>
@@ -911,7 +911,7 @@ class index extends PureComponent {
                             <RangePicker_ allowClear={false} onRef={this.onRef1} isVerification={true} dateValue={this.state.time} dataType={this.state.dataType} style={{ width: 400, minWidth: '200px', marginRight: '10px' }} callback={
                                 (dates, dataType) => {
                                     this.setState({
-                                        time: dates
+                                        time: [dates[0].startOf('day'),dates[1].endOf('day')],
                                     })
                                 }
                             } />
