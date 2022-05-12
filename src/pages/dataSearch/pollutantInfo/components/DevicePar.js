@@ -119,6 +119,9 @@ const Index = (props) => {
       dataIndex: 'ParamName',
       key:'ParamName',
       align:'center',
+      width:180,
+      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+      filterMultiple:false,
     },
   ];
 

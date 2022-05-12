@@ -290,6 +290,13 @@ const Index = (props) => {
                     导出
          </Button>
             </Form.Item>
+            <Form.Item name='ss' style={{ margin: '0 8px' }}>
+            <Radio.Group defaultValue="" buttonStyle="solid">
+                 <Radio.Button value="">全部</Radio.Button>
+                 <Radio.Button value="1">已维护设备</Radio.Button>
+                 <Radio.Button value="0">未维护设备</Radio.Button>
+              </Radio.Group>
+              </Form.Item>
             </Row>
         </Form>
         </>

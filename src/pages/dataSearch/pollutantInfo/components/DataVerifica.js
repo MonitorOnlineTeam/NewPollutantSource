@@ -125,18 +125,27 @@ const Index = (props) => {
             dataIndex: 'RealtimePollutantName',
             key: 'RealtimePollutantName',
             align: 'center',
+            width:220,
+            filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+            filterMultiple:false,
         },
         {
             title: '小时日数据一致性核查因子',
             dataIndex: 'HourPollutantName',
             key: 'HourPollutantName',
             align: 'center',
+            width:220,
+            filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+            filterMultiple:false,
         },
         {
             title: '接入监控平台数量',
             dataIndex: 'PlatformNum',
             key: 'PlatformNum',
             align: 'center',
+            width:200,
+            filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+            filterMultiple:false,
         },
     ];
 

@@ -248,13 +248,15 @@ const Index = (props) => {
 
 
 
-  const onFinish  = async () =>{  //查询
+  const onFinish  = async (pageIndexs) =>{  //查询
       
     try {
       const values = await form.validateFields();
+      
+      pageIndexs&& typeof  pageIndexs === "number"? setPageIndex(pageIndexs) : setPageIndex(1); //除编辑  每次查询页码重置为第一页
 
       props.getSystemModelList({
-        pageIndex: pageIndex,
+        pageIndex: pageIndexs&& typeof  pageIndexs === "number"? pageIndexs: 1,
         pageSize: pageSize,
         ...values,
       })
@@ -277,7 +279,7 @@ const Index = (props) => {
         ...values,
       },()=>{
         setFromVisible(false)
-        onFinish()
+        onFinish(pageIndex)
       })
       
     } catch (errInfo) {

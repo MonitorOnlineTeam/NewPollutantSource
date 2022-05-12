@@ -114,6 +114,8 @@ const Index = (props) => {
       key:'GasManufacturer',
       align:'center',
       width:200,
+      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+      filterMultiple:false,
     },
     {
       title: '气态污染物CEMS设备规格型号',
@@ -121,6 +123,8 @@ const Index = (props) => {
       key:'GasEquipment',
       align:'center',
       width:200,
+      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+      filterMultiple:false,
     },
     {
       title: '颗粒物CEMS设备生产商',
@@ -128,6 +132,8 @@ const Index = (props) => {
       key:'PMManufacturer',
       align:'center',
       width:200,
+      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+      filterMultiple:false,
     },  
     {
       title: '颗粒物CEMS设备规格型号',
@@ -135,6 +141,8 @@ const Index = (props) => {
       key:'PMEquipment', 
       align:'center',
       width:200,
+      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
+      filterMultiple:false,
     },
   ];
 

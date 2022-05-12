@@ -98,9 +98,9 @@ class index extends Component {
         // title={this.props.title} 
         title={null}
         className={!webConfig.isShowBreadcrumb || this.props.hideBreadcrumb ? "hideBreadcrumb" : ""}
-        pageHeaderRender={(PageHeaderWrapperProps) => {
-          return this.pageHeaderRender(PageHeaderWrapperProps);
-        }}
+        // pageHeaderRender={(PageHeaderWrapperProps) => {
+        //   return this.pageHeaderRender(PageHeaderWrapperProps);
+        // }}
         >
         {this.props.children}
       </PageHeaderWrapper>

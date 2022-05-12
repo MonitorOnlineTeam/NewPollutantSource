@@ -650,7 +650,7 @@ const Index = (props) => {
   ];
   const [pageSize3, setPageSize3] = useState(10)
   const [pageIndex3, setPageIndex3] = useState(1)
-  const onFinish3 = async (pageIndexs,pageSizes) => {  //查询 设备信息
+  const onFinish3 = async (pageIndexs,pageSizes) => {  //查询 设备信息 除分页 每次查询页码重置为1
     try {
       const values = await form3.validateFields();
       props.getEquipmentInfoList({

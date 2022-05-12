@@ -200,9 +200,10 @@ const Index = (props) => {
       
     try {
       const values = await form.validateFields();
+      pageIndexs&& typeof  pageIndexs === "number"? setPageIndex(pageIndexs) : setPageIndex(1); //除分页和编辑  每次查询页码重置为第一页
 
       props.getManufacturerList({
-        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
+        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         pageSize:pageSizes?pageSizes:pageSize,
         ...values,
       })
@@ -225,7 +226,7 @@ const Index = (props) => {
         ...values,
       },()=>{
         setFromVisible(false)
-        onFinish()
+        onFinish(pageIndex)
       })
       
     } catch (errInfo) {

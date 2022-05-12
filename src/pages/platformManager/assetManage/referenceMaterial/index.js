@@ -206,14 +206,16 @@ const Index = (props) => {
    
   };
 
-  const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
+  const onFinish  = async (pageIndexs,pageSizes) =>{  //查询 
     try {
       const values = await form.validateFields();
+      
+      pageIndexs&& typeof  pageIndexs === "number"? setPageIndex(pageIndexs) : setPageIndex(1); //除分页和编辑  每次查询页码重置为第一页
 
       props.getStandardGasList({
         ...values,
         ManufacturerId:manufacturerId,
-        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex,
+        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         pageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {
@@ -237,7 +239,7 @@ const Index = (props) => {
         ManufacturerId:manufacturerId
       },()=>{
         setFromVisible(false)
-        onFinish()
+        onFinish(pageIndex)
       })
       
     } catch (errInfo) {
