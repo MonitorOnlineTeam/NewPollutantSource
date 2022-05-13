@@ -39,6 +39,8 @@ export default Model.extend({
     tabType:"wasteWater",
     entList:[],
     smallResolution:false,
+    mapStatusRegData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
+    mapStatusEntData:{exceptionCount: 0,normalCount: 0,overCount: 0, stopCount: 0,unLineCount: 0},
   },
   effects: {
     *GetOperatePointList({ payload,callback }, { call, put, update }) { //运营信息统计
@@ -144,9 +146,15 @@ export default Model.extend({
                   longitude:item.Longitude? item.Longitude : item.longitude,
                }
              })): []
-             yield update({
-              mapStatusData:result.Datas.sum,
-             })
+             //监测点数据 图例  
+             if(payload.pointType==3 && payload.regionCode || payload.pointType==3 && payload.entCode&&payload.selectEnt){  // 或者后面 搜索企业 监测点图例单独处理
+              yield update({mapStatusRegData:result.Datas.sum,   })
+             }else if(payload.pointType==3 && payload.entCode){
+              yield update({mapStatusEntData:result.Datas.sum,   })
+             }else{
+              yield update({mapStatusData:result.Datas.sum,   })
+
+             }
              if(payload.pointType==2){
               yield update({
                 entList:result.Datas.list //企业列表
