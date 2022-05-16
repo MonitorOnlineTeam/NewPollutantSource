@@ -441,7 +441,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Row>
 
               <Form.Item label='企业列表'>
-               <EntAtmoList  style={{ width: 166  }} changeEnt={this.changeEnt} EntCode={EntCode} />
+               <EntAtmoList  style={{ width: 166  }} changeEnt={this.changeEnt} EntCode={EntCode} style={{width:185}}/>
               </Form.Item>  
               <Form.Item label='监测点' style={{paddingLeft:10}}>
                <Select
