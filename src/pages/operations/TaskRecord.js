@@ -414,11 +414,11 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
         dataIndex: 'PointName',
         key: 'PointName',
       },
-      {
-        title: '运维单位',
-        dataIndex: 'operationCompanyName',
-        key: 'operationCompanyName',
-      },
+      // {
+      //   title: '运维单位',
+      //   dataIndex: 'operationCompanyName',
+      //   key: 'operationCompanyName',
+      // },
       {
         title: '任务单号',
         dataIndex: 'TaskCode',
@@ -609,7 +609,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                       </FormItem>
                      
                   </Col>
-                  <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+                  {/* <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="运维单位" style={{ width: '100%' }}>
                           {getFieldDecorator('OperationEntID', {
                             initialValue: gettasklistqueryparams.OperationEntID ? gettasklistqueryparams.OperationEntID : undefined,
@@ -624,7 +624,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             </Select>,
                           )}
                       </FormItem>
-                  </Col> 
+                  </Col>  */}
                   <Col md={8} sm={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
                       <FormItem {...formLayout} label="运维状态" style={{ width: '100%' }}>
                           {getFieldDecorator('ExceptionType', {

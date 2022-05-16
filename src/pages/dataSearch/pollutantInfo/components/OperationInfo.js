@@ -85,7 +85,6 @@ const Index = (props) => {
         onFinish(pageIndex,pageSize);
     }
 
-
     const columns = [
         {
             title: '序号',
@@ -120,14 +119,14 @@ const Index = (props) => {
             align: 'center',
         },
         {
-            title: '运营起始日期',
+            title: '运营合同起始日期',
             dataIndex: 'operationBeginTime',
             key: 'operationBeginTime',
             align: 'center',
             width:150,
         },
         {
-            title: '运营结束日期',
+            title: '运营合同结束日期',
             dataIndex: 'operationEndTime',
             key: 'operationEndTime',
             align: 'center',
@@ -203,14 +202,14 @@ const Index = (props) => {
             align: 'center',
         },
         {
-            title: '运营起始日期',
+            title: '运营合同起始日期',
             dataIndex: 'operationBeginTime',
             key: 'operationBeginTime',
             align: 'center',
             sorter: (a, b) => moment(a.operationBeginTime).valueOf() - moment(b.operationBeginTime).valueOf()
         },
         {
-            title: '运营结束日期',
+            title: '运营合同结束日期',
             dataIndex: 'operationEndTime',
             key: 'operationEndTime',
             align: 'center',

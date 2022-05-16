@@ -148,14 +148,14 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '运营起始日期',
+      title: '运营合同起始日期',
       dataIndex: 'BeginTime',
       key:'BeginTime',
       align:'center',
       sorter: (a, b) => moment(a.BeginTime).valueOf() - moment(b.BeginTime).valueOf()
     },
     {
-      title: '运营结束日期',
+      title: '运营合同结束日期',
       dataIndex: 'EndTime',
       key:'EndTime',
       align:'center',
@@ -388,7 +388,7 @@ const Index = (props) => {
   //         </Form.Item>
   //       </Col>
   //       {expand&& <><Col span={8}>
-  //         <Form.Item name='BegTime' label='运营起始日期' >
+  //         <Form.Item name='BegTime' label='运营合同起始日期' >
   //         <RangePicker style={{width:'100%'}}
   //           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
   //           />
@@ -406,7 +406,7 @@ const Index = (props) => {
   //         </Form.Item>
   //       </Col>
   //       <Col span={8}>
-  //         <Form.Item name='EndTime' label='运营结束日期' format='YYYY-MM-DD 23:59:59'>
+  //         <Form.Item name='EndTime' label='运营合同结束日期' format='YYYY-MM-DD 23:59:59'>
   //         <RangePicker style={{width:'100%'}} 
   //          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
   //         </Form.Item>
@@ -578,12 +578,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营起始日期" name="BeginTime" rules={[  { required: true, message: '请输入运营起始日期!',  },]} >
+        <Form.Item label="运营合同起始日期" name="BeginTime" rules={[  { required: true, message: '请输入运营合同起始日期!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营结束日期" name="EndTime" rules={[  { required: true, message: '请输入运营结束日期!',  },]} >
+      <Form.Item label="运营合同结束日期" name="EndTime" rules={[  { required: true, message: '请输入运营合同结束日期!',  },]} >
         <DatePicker />
       </Form.Item>
       </Col>

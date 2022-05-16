@@ -524,7 +524,7 @@ export default class EntTransmissionEfficiency extends Component {
             columns={this.columns}
             dataSource={this.props.tableDatas}
             pagination={false}
-            scroll={{ y: clientHeight - 800}}
+            scroll={{ y: clientHeight - 680}}
           />
         </div>
 

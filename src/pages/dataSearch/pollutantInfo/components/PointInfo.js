@@ -80,6 +80,9 @@ const Index = (props) => {
     useEffect(() => {
         onFinish(pageIndex, pageSize)
     }, []);
+  
+    const [filteredInfo,setFilteredInfo] = useState(null) 
+
     const [columns,setColumns]= useState([
         {
             title: '序号',
@@ -136,8 +139,8 @@ const Index = (props) => {
             key: 'operationStatus',
             align: 'center',
             width:150,
-            filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
-            filterMultiple:false,
+            // filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
+            // filterMultiple:false,
         },
         {
             title: <span>是否判断缺失数据</span>,
@@ -145,17 +148,18 @@ const Index = (props) => {
             key: 'judgeMiss',
             align: 'center',
             width:170,
+            filteredValue: filteredInfo&&filteredInfo.judgeMiss || null, 
             filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
             filterMultiple:false,
         },
         {
             title: '运维负责人',
-            dataIndex: 'PlatformNum',
-            key: 'PlatformNum',
+            dataIndex: 'operationName',
+            key: 'operationName',
             align: 'center',
             width:150,
-            filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
-            filterMultiple:false,
+            // filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
+            // filterMultiple:false,
         },
     ])
 
@@ -205,12 +209,17 @@ const Index = (props) => {
     //     setPageSize(PageSize)
     //     onFinish(PageIndex, PageSize)
     // }
+
     const tableChange = (pagination, filters, sorter) =>{
         console.log(filters)
+         setFilteredInfo(filters)
          const  PageIndex = pagination.current,PageSize=pagination.pageSize;
+         
+        //  const  sort = {Sort: "HourPollutantName,0",}
+
          setPageIndex(PageIndex)
          setPageSize(PageSize)
-         onFinish(PageIndex, PageSize)
+        //  onFinish(PageIndex, PageSize,)
     }
     const exports = async () => {
         const values = await form.validateFields();

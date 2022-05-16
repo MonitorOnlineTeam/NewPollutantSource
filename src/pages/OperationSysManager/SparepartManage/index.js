@@ -466,13 +466,13 @@ export default class Index extends Component {
                 width: 100,
                 align: 'center',
             },
-            {
-                title: '库存数量',
-                dataIndex: 'Quantity',
-                key: 'Quantity',
-                width: 100,
-                align: 'center',
-            },
+            // {
+            //     title: '库存数量',
+            //     dataIndex: 'Quantity',
+            //     key: 'Quantity',
+            //     width: 100,
+            //     align: 'center',
+            // },
             {
                 title: '单位',
                 dataIndex: 'Unit',

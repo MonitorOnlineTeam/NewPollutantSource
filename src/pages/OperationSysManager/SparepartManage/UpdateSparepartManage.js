@@ -130,8 +130,8 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                    </Row>
-                    <Row gutter={24}>
+                    {/* </Row> */}
+                    {/* <Row gutter={24}> */}
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -150,7 +150,7 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                        <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
+                        {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
                                 label={'库存数量'}>
@@ -166,9 +166,9 @@ export default class UpdateSparepartManage extends Component {
                                     <InputNumber style={{width:'100%'}} min={0}  placeholder='请输入'/>
                                 )}
                             </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={24}>
+                        </Col> */}
+                    {/* </Row> */}
+                    {/* <Row gutter={24}> */}
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -201,8 +201,8 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                    </Row>
-                    <Row gutter={24}>
+                    {/* </Row>
+                    <Row gutter={24}> */}
                         {/* <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12}>
                             <FormItem
                                 {...formItemLayout}
@@ -281,8 +281,8 @@ export default class UpdateSparepartManage extends Component {
                                 )}
                             </FormItem>
                         </Col>
-                    </Row>
-                    <Row gutter={16} style={{ marginTop: 8 }}>
+                    {/* </Row> */}
+                    {/* <Row gutter={16} style={{ marginTop: 8 }}> */}
                         <Col xs={2} sm={6} md={12} lg={12} xl={12} xxl={12} style={{ display: 'none' }}>
                             <FormItem
                                 {...formItemLayout}

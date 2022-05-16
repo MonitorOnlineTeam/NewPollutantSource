@@ -4,7 +4,7 @@
  * 创建时间：2021.08.24
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Popover    } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select, message,Row,Col,Upload,Tooltip,Divider,Modal,DatePicker,Popover    } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,RollbackOutlined, CodeSandboxCircleFilled  } from '@ant-design/icons';
 import { connect } from "dva";
@@ -16,7 +16,10 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import styles from "./style.less";
 import moment from 'moment';
-
+import TextArea from 'antd/lib/input/TextArea';
+import AttachmentView from '@/components/AttachmentView'
+import { getBase64,getAttachmentArrDataSource } from '@/utils/utils'
+import cuid from 'cuid'
 const { Option } = Select;
 
 const namespace = 'operationInfo'
@@ -111,7 +114,16 @@ const  dvaDispatch = (dispatch) => {
         configId: 'OperationCycle',
       },
     });
-    }
+    },
+    deleteAttach: (file) => { //删除照片
+      dispatch({
+        type: "autoForm/deleteAttach",
+        payload: {
+          FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+        }
+      })
+    },
 
   }
 }
@@ -164,12 +176,12 @@ const Index = (props) => {
       key:'pointName',
       align:'center'
     },
-    {
-      title: '运维单位',
-      dataIndex: 'company',
-      key:'company',
-      align:'center'
-    },
+    // {
+    //   title: '运维单位',
+    //   dataIndex: 'company',
+    //   key:'company',
+    //   align:'center'
+    // },
     {
       title: '项目编号',
       dataIndex: 'projectCode',
@@ -202,17 +214,19 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '运营起始日期',
+      title: '运营合同起始日期',
       dataIndex: 'operationBeginTime',
       key:'operationBeginTime',
       align:'center',
+      width:180,
       sorter: (a, b) => moment(a.operationBeginTime).valueOf() - moment(b.operationBeginTime).valueOf()
     },
     {
-      title: '运营结束日期',
+      title: '运营合同结束日期',
       dataIndex: 'operationEndTime',
       key:'operationEndTime',
       align:'center',
+      width:180,
       sorter: (a, b) => moment(a.operationEndTime).valueOf() - moment(b.operationEndTime).valueOf()
       
     },
@@ -230,6 +244,24 @@ const Index = (props) => {
       align:'center',
       sorter: (a, b) => moment(a.actualEndTime).valueOf() - moment(b.actualEndTime).valueOf()
       
+    },
+    {
+      title: '附件',
+      align: 'center',
+      dataIndex: 'uploadInfo',
+      key: 'uploadInfo',
+      width: 150,
+      render: (text, record, index) => {
+        const attachmentDataSource = getAttachmentArrDataSource(text);
+        return <AttachmentView  dataSource={attachmentDataSource} /> ;
+  
+      }
+    },
+    {
+      title: '备注',
+      dataIndex: 'Remark',
+      key:'Remark',
+      align:'center',
     },
     {
       title: <span>操作</span>,
@@ -311,11 +343,29 @@ const projectNumCol =[
   const add = () => {
     setType("add")
     setChoiceData([])
+    setFileList1([])
     form2.resetFields();
     setFromVisible(true)
 
   };
   const edit = async (record) => {
+    setFileList1([])
+    if(record.rangeUpload&&record.uploadInfo[0]){  // 附件
+      form2.setFieldsValue({Enclosure:record.uploadInfo[0].FileUuid})
+      setFilesCuid1(record.uploadID)
+       const fileList = record.uploadInfo.map(item=>{
+        if(!item.IsDelete){
+          return  {
+            uid: item.GUID,
+            name: item.FileName,
+            status: 'done',
+            url: `\\upload\\${item.FileName}`,
+          }
+          
+        }
+      })
+      setFileList1(fileList)
+    }
     form2.setFieldsValue({ ...record,
       PorjectID:record.projectID,OperationCompany:record.companyID,
       InspectionCycel:record.inspectionCycel,CalibrationCycle:record.calibrationCycle,ParameterCheck:record.parameterCheck,
@@ -447,6 +497,48 @@ useEffect(()=>{
       })
     }
   })
+
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [previewTitle, setPreviewTitle] = useState()
+  const [previewImage, setPreviewImage] = useState()
+
+
+  const [filesCuid1, setFilesCuid1] = useState(cuid())
+  const [fileList1, setFileList1] = useState([])
+
+  const uploadProps = { //附件上传 
+    action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+    // accept:'image/*',
+    data: {
+      FileUuid: filesCuid1,
+      FileActualType: '0',
+    },
+    listType: "picture-card",
+    onChange(info) {
+        setFileList1(info.fileList)
+      if (info.file.status === 'done') {
+        form2.setFieldsValue({  Enclosure: filesCuid1 })
+      }
+      if (info.file.status === 'error') {
+        message.error('上传文件失败！')
+      }
+    },
+    onRemove: (file) => {
+      if (!file.error) {
+        props.deleteAttach(file)
+      }
+
+    },
+    onPreview: async file => { //预览
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      setPreviewImage(file.url || file.preview)
+      setPreviewVisible(true)
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+    },
+    fileList:  fileList1,
+  };
   return (
     <div  className={styles.entOperationInfo}>
     <BreadcrumbWrapper>
@@ -486,7 +578,7 @@ useEffect(()=>{
         </Select>
       </Form.Item>
       </Col>
-      <Col span={12}>
+      {/* <Col span={12}>
         <Form.Item label="运维单位" name="OperationCompany" rules={[  { required: true, message: '请选择运维单位!',  },]} >
           <Select placeholder="请选择运维单位">
            {operationDataSource[0]&&operationDataSource.map(item=>{
@@ -495,9 +587,9 @@ useEffect(()=>{
           }
         </Select> 
       </Form.Item>
-      </Col>
-      </Row>
-      <Row>
+      </Col> */}
+      {/* </Row> */}
+      {/* <Row> */}
         <Col span={12}>
         <Form.Item label="项目编号" name="PorjectID"  rules={[  { required: true, message: '请输入项目编号!',  },]} >
           <Popover
@@ -540,9 +632,9 @@ useEffect(()=>{
         </Select> 
       </Form.Item>
       </Col>
-      </Row>
+      {/* </Row> */}
 
-      <Row>
+      {/* <Row> */}
 
       <Col span={12}>
       <Form.Item label="校准频次"  name="CalibrationCycle" rules={[{ required: true, message: '请选择校准频次!',  },]} >
@@ -564,9 +656,9 @@ useEffect(()=>{
         </Select> 
       </Form.Item>
       </Col>
-      </Row>
+      {/* </Row> */}
 
-      <Row>
+      {/* <Row> */}
         <Col span={12}>
         <Form.Item label="实际起始日期" name="BeginTime" rules={[{ required: true, message: '请选择实际起始日期!',  },]} >
         <DatePicker  disabledDate={startDisabledDate} />
@@ -577,13 +669,23 @@ useEffect(()=>{
         <DatePicker  disabledDate={endDisabledDate} />
       </Form.Item>
       </Col>
-      </Row>
-      <Row>
+      {/* </Row> */}
+      {/* <Row> */}
 
       <Col span={12}>
-        <Form.Item label="备注" name='Remark' hidden={type==='add'}>
-        <Input placeholder='请输入备注信息'/>
+        <Form.Item label="备注" name='Remark'>
+        <TextArea rows={1} placeholder='请输入备注信息'/>
       </Form.Item>
+      </Col>
+      <Col span={12}>
+         <Form.Item label="附件" name='Enclosure'>
+           <Upload {...uploadProps} style={{ width: '100%' }} >
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>上传</div>
+          </div>
+        </Upload>
+        </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="ID"  name="ID" hidden>
@@ -594,6 +696,16 @@ useEffect(()=>{
 
 
     </Form>
+      </Modal>
+
+      <Modal //预览上传附件
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        onCancel={() => { setPreviewVisible(false) }}
+
+      >
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
         </div>
   );

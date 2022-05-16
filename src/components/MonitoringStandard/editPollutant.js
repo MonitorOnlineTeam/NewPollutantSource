@@ -241,7 +241,7 @@ class EditPollutant extends Component {
                       >
                         <Option value="1">零值异常</Option>
                         <Option value="2">超量程异常</Option>
-                        <Option value="3">连续值异常</Option>
+                        <Option value="3">恒定值异常</Option>
                       </Select>,
                     )}
                   </FormItem>

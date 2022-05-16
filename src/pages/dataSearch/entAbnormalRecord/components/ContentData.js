@@ -440,7 +440,7 @@ export default class EntTransmissionEfficiency extends Component {
              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
             </Form.Item>
               <Form.Item label='企业列表'>
-               <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} />
+               <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} style={{width:185}}/>
               </Form.Item>  
               <Form.Item label='监测点' style={{paddingLeft:10}}>
                <Select

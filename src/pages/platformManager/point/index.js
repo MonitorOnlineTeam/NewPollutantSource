@@ -444,9 +444,9 @@ export default class MonitorPoint extends Component {
          <Form.Item label="实时数据一致性核查因子" >
           <Checkbox.Group value={this.state.realtimePollutantCode}  options={this.props.pointRealTimeList} onChange={this.realtimePollutantChange} />
          </Form.Item>
-         <Form.Item label="小时日数据一致性核查因子" >
+         {/* <Form.Item label="小时日数据一致性核查因子" >
           <Checkbox.Group value={this.state.hourPollutantCode}  options={this.props.pointHourItemList} onChange={this.hourPollutantChange} />
-         </Form.Item>
+         </Form.Item> */}
          <Form.Item label="监控平台数量" className='platformNumSty' >
           <InputNumber style={{width:'50%',}} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange}/>
           <span style={{color:'#f5222d',paddingLeft:10}}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
