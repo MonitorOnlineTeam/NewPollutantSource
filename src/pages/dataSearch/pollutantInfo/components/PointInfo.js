@@ -6,9 +6,9 @@
  * 创建时间：2022.04.02
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag,Space, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Tree, Drawer, Empty, Spin } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,FilterFilled, CreditCardFilled, ProfileFilled, DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -22,6 +22,7 @@ import NumTips from '@/components/NumTips'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
+import { getConfirmLocale } from 'antd/lib/modal/locale';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -83,7 +84,70 @@ const Index = (props) => {
   
     const [filteredInfo,setFilteredInfo] = useState(null) 
 
-    const [columns,setColumns]= useState([
+    const [operationStatus,setOperationStatus] = useState(null) 
+    const [judgeMissStatus,setJudgeMissStatus] = useState(null) 
+    const [operationNameStatus,setOperationNameStatus] = useState(null) 
+  
+  
+    const selectedVal = {
+      operationStatus : operationStatus,
+      judgeMiss:judgeMissStatus,
+      operationName:operationNameStatus,
+    } 
+    const   getFilterProps = dataIndex => {
+      
+      const selectFlag =  `${dataIndex},${selectedVal[dataIndex]}` === filteredInfo;
+      console.log()
+    return {
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div>
+           <Radio.Group onChange={(e)=>{ 
+               console.log(dataIndex)
+             dataIndex=='operationStatus'?  setOperationStatus(e.target.value) : 
+             dataIndex=='judgeMiss'? setJudgeMissStatus(e.target.value) : 
+             dataIndex=='operationName'? setOperationNameStatus(e.target.value) : 
+             null ; 
+             }} value={selectedVal[dataIndex]}>
+           <Space direction="vertical">
+             <Radio value={'1'} style={{padding:'5px 12px 0 12px'}}>进行中</Radio>
+             <Radio value={'0'} style={{padding:'0  12px 5px 12px'}}>运维暂停</Radio>
+             </Space>
+           </Radio.Group>
+            
+            <div className='ant-table-filter-dropdown-btns'>
+            <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
+             dataIndex=='operationStatus'?  setOperationStatus(null) : 
+             dataIndex=='judgeMiss'? setJudgeMissStatus(null) : 
+             dataIndex=='operationName'? setOperationNameStatus(null) : 
+              null;
+              confirm({ closeDropdown: false })
+              setFilteredInfo(null)
+              onFinish(pageIndex,pageSize)
+              }}>
+              重置
+            </Button>
+            <Button type="primary" disabled={!selectFlag && !selectedVal[dataIndex]} onClick={() => {
+                confirm({ closeDropdown: false })
+                setFilteredInfo(`${dataIndex},${selectedVal[dataIndex]}`)
+                
+                dataIndex=='operationStatus'&&setJudgeMissStatus(null)&&setOperationNameStatus(null);  
+                dataIndex=='judgeMiss'&&setOperationStatus(null)&&setOperationNameStatus(null);
+                dataIndex=='operationName'&&setOperationStatus(null)&&setOperationNameStatus(null); 
+  
+                onFinish(pageIndex,pageSize,`${dataIndex},${selectedVal[dataIndex]}`)
+               }
+               }  size="small" >
+              确定
+            </Button>
+            </div>
+        </div>
+      ),
+      filterIcon: filtered => {     
+         return <FilterFilled style={{ color: selectFlag ? '#1890ff' : undefined }} />
+      },
+    }
+  }
+    const columns = [
         {
             title: '序号',
             align: 'center',
@@ -139,18 +203,15 @@ const Index = (props) => {
             key: 'operationStatus',
             align: 'center',
             width:150,
-            // filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
-            // filterMultiple:false,
+            ...getFilterProps('operationStatus'),
         },
         {
-            title: <span>是否判断缺失数据</span>,
+            title: '是否判断缺失数据',
             dataIndex: 'judgeMiss',
             key: 'judgeMiss',
             align: 'center',
             width:170,
-            filteredValue: filteredInfo&&filteredInfo.judgeMiss || null, 
-            filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
-            filterMultiple:false,
+            ...getFilterProps('judgeMiss'),
         },
         {
             title: '运维负责人',
@@ -158,42 +219,21 @@ const Index = (props) => {
             key: 'operationName',
             align: 'center',
             width:150,
-            // filters: [ { text: '进行中', value: '1' }, { text: '运维暂停', value: '0' }, ],
-            // filterMultiple:false,
+            ...getFilterProps('operationName'),
         },
-    ])
+    ]
 
 
 
-    const onFinish = async (pageIndexs, pageSizes) => {  //查询
+    const onFinish = async (pageIndexs, pageSizes,filters) => {  //查询
         try {
             const values = await form.validateFields();
             props.getTableData({
                 ...values,
                 pageIndex: pageIndexs,
-                pageSize: pageSizes
-            },()=>{
-                if( values.pollutantType==2){
-                    columns.splice(columns.length-3,0,{
-                        title: '排口类型',
-                        dataIndex: 'outPutType',
-                        key: 'outPutType',
-                        align: 'center',
-                    },{
-                        title: 'CEMS监测原理',
-                        dataIndex: 'CEMSPrinciple',
-                        key: 'CEMSPrinciple',
-                        align: 'center',
-                    },{
-                        title: 'CEMS类型',
-                        dataIndex: 'CEMSType',
-                        key: 'CEMSType',
-                        align: 'center',  
-                    })
-                }else{
-                   setColumns(columns.filter(item=>item.title!='排口类型'&&item.title!='CEMS监测原理'&&item.title!='CEMS类型'))
-                }
-            })
+                pageSize: pageSizes,
+                Sort : filters? filters : undefined,
+            },()=>{})
 
            
         } catch (errorInfo) {
@@ -201,7 +241,30 @@ const Index = (props) => {
         }
     }
 
-
+    const getCol =  () =>{
+        const values =  form.getFieldsValue();
+        if( values.pollutantType==2){ //废气
+            columns.splice(columns.length-3,0,{
+                title: '排口类型',
+                dataIndex: 'outPutType',
+                key: 'outPutType',
+                align: 'center',
+            },{
+                title: 'CEMS监测原理',
+                dataIndex: 'CEMSPrinciple',
+                key: 'CEMSPrinciple',
+                align: 'center',
+            },{
+                title: 'CEMS类型',
+                dataIndex: 'CEMSType',
+                key: 'CEMSType',
+                align: 'center',  
+            })
+        }else{
+          columns.filter(item=>item.title!='排口类型'&&item.title!='CEMS监测原理'&&item.title!='CEMS类型')
+        }
+        return columns;    
+    }
 
 
     // const handleTableChange = (PageIndex, PageSize,) => {
@@ -211,15 +274,11 @@ const Index = (props) => {
     // }
 
     const tableChange = (pagination, filters, sorter) =>{
-        console.log(filters)
-         setFilteredInfo(filters)
-         const  PageIndex = pagination.current,PageSize=pagination.pageSize;
-         
-        //  const  sort = {Sort: "HourPollutantName,0",}
 
+         const  PageIndex = pagination.current,PageSize=pagination.pageSize;
          setPageIndex(PageIndex)
          setPageSize(PageSize)
-        //  onFinish(PageIndex, PageSize,)
+         onFinish(PageIndex, PageSize,filteredInfo)
     }
     const exports = async () => {
         const values = await form.validateFields();
@@ -286,7 +345,7 @@ const Index = (props) => {
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
-                    columns={columns}
+                    columns={getCol()}
                     onChange={tableChange}
                     className={styles.pointInfoSty}
                     pagination={{

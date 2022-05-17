@@ -101,7 +101,7 @@ export default Model.extend({
                 yield update({
                     DepartInfoTree: result.Datas
                 });
-                callback(result.Datas)
+                callback&&callback(result.Datas)
             }
         },
         /*获取单个部门信息**/

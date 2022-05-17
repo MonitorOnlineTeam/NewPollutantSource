@@ -17,7 +17,7 @@ import Link from 'umi/link';
 import styles from "./style.less";
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
-import AttachmentView from '@/components/AttachmentView'
+import AttachmentView from '@/components/AttachmentArrView'
 import { getBase64,getAttachmentArrDataSource } from '@/utils/utils'
 import cuid from 'cuid'
 const { Option } = Select;
@@ -259,8 +259,8 @@ const Index = (props) => {
     },
     {
       title: '备注',
-      dataIndex: 'Remark',
-      key:'Remark',
+      dataIndex: 'remark',
+      key:'remark',
       align:'center',
     },
     {
@@ -270,10 +270,10 @@ const Index = (props) => {
       align: 'center',
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a ><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 
@@ -350,8 +350,8 @@ const projectNumCol =[
   };
   const edit = async (record) => {
     setFileList1([])
-    if(record.rangeUpload&&record.uploadInfo[0]){  // 附件
-      form2.setFieldsValue({Enclosure:record.uploadInfo[0].FileUuid})
+    if(record.uploadInfo&&record.uploadInfo[0]){  // 附件
+      form2.setFieldsValue({Enclosure:record.uploadID})
       setFilesCuid1(record.uploadID)
        const fileList = record.uploadInfo.map(item=>{
         if(!item.IsDelete){
@@ -367,6 +367,7 @@ const projectNumCol =[
       setFileList1(fileList)
     }
     form2.setFieldsValue({ ...record,
+      Remark:record.remark,
       PorjectID:record.projectID,OperationCompany:record.companyID,
       InspectionCycel:record.inspectionCycel,CalibrationCycle:record.calibrationCycle,ParameterCheck:record.parameterCheck,
       RegionCode:record.regionCode,BeginTime:record.actualBeginTime? moment(record.actualBeginTime) : undefined,EndTime:record.actualEndTime? moment(record.actualEndTime) : undefined});
@@ -677,7 +678,7 @@ useEffect(()=>{
         <TextArea rows={1} placeholder='请输入备注信息'/>
       </Form.Item>
       </Col>
-      <Col span={12}>
+      <Col span={24}>
          <Form.Item label="附件" name='Enclosure'>
            <Upload {...uploadProps} style={{ width: '100%' }} >
           <div>

@@ -1078,6 +1078,12 @@ class DepartIndex extends Component {
                 this.props.dispatch({
                   type: 'departinfo/getdepartinfobytree',
                   payload: {},
+                  callback:(res)=>{
+                    let data = this.handleData(res,0)
+                    this.setState({
+                      departInfoTree:data
+                    })
+                  }
                 });
               } else {
                 message.error(res.Message);

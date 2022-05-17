@@ -182,7 +182,7 @@ const Index = (props) => {
         
         try {
             const values = await form.validateFields();
-            
+             setPageIndex(pageIndexs)
             props.getTableData({
                 ...values,
                 ManufacturerId: manufacturerId,
@@ -235,6 +235,10 @@ const Index = (props) => {
 
           }) //监测类别
         }
+
+          if(Object.keys(hangedValues).join() == 'Sort'){ //设备类型
+             onFinish(1,pageSize)
+        }
       }
     
     const [pageSize, setPageSize] = useState(20)
@@ -244,7 +248,7 @@ const Index = (props) => {
         return <><Form
             form={form}
             name="advanced_search"
-            onFinish={() => { onFinish(pageIndex, pageSize) }}
+            onFinish={() => { onFinish(1, pageSize) }}
             onValuesChange={onValuesChange}
         >  
            <Row>
@@ -290,9 +294,9 @@ const Index = (props) => {
                     导出
          </Button>
             </Form.Item>
-            <Form.Item name='ss' style={{ margin: '0 8px' }}>
-            <Radio.Group defaultValue="" buttonStyle="solid">
-                 <Radio.Button value="">全部</Radio.Button>
+            <Form.Item name='Sort' style={{ margin: '0 8px' }}>
+            <Radio.Group defaultValue={undefined} buttonStyle="solid">
+                 <Radio.Button value={undefined}>全部</Radio.Button>
                  <Radio.Button value="1">已维护设备</Radio.Button>
                  <Radio.Button value="0">未维护设备</Radio.Button>
               </Radio.Group>

@@ -96,15 +96,15 @@ export default class EntImport extends Component {
         align: 'center',
         // fixed: 'left',
         width:50,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
+        render:(text,rocord)=>{
+          if(!rocord.warning&&!rocord.Error){
+            return text 
+          }else if(rocord.Error){
+          return <span style={{color:'#f5222d'}} >{text}</span>
+          }else{
+            return <span style={{color:'#faad14'}} >{text}</span>
+          }
+        }
       },
       {
         title: <span>省</span>,
@@ -113,15 +113,6 @@ export default class EntImport extends Component {
         align: 'center',
         // fixed: 'left',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>地级市</span>,
@@ -130,15 +121,6 @@ export default class EntImport extends Component {
         align: 'center',
         // fixed: 'left',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>县/区</span>,
@@ -147,15 +129,6 @@ export default class EntImport extends Component {
         align: 'center',
         // fixed: 'left',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>企业名称</span>,
@@ -164,13 +137,6 @@ export default class EntImport extends Component {
         align: 'center',
         // fixed: 'left',
         render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
         return <span  style={{textAlign:'left',display:'inline-block'}}  >{text}</span>
         }
       },
@@ -181,13 +147,6 @@ export default class EntImport extends Component {
         align: 'center',
         // fixed: 'left',
         render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
              return <span  style={{textAlign:'left',display:'inline-block'}}>{text}</span>
         }
       },
@@ -197,15 +156,6 @@ export default class EntImport extends Component {
         key: 'Longitude',
         align: 'center',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>企业纬度</span>,
@@ -213,15 +163,7 @@ export default class EntImport extends Component {
         key: 'Latitude',
         align: 'center',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
+
       },
       {
         title: <span>企业地址</span>,
@@ -230,78 +172,41 @@ export default class EntImport extends Component {
         align: 'center',
         width:200,
         render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
         return <span  style={{textAlign:'left',display:'inline-block'}}  >{text}</span>
         }
       },
-      {
-        title: <span>关注程度</span>,
-        dataIndex: 'AttentionCode',
-        key: 'AttentionCode',
-        align: 'center',
-        width:80,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
-      },
-      {
-        title: <span>污染源规模</span>,
-        dataIndex: 'PSScaleCode',
-        key: 'PSScaleCode',
-        align: 'center',
-        width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
-      },
+      // {
+      //   title: <span>关注程度</span>,
+      //   dataIndex: 'AttentionCode',
+      //   key: 'AttentionCode',
+      //   align: 'center',
+      //   width:80,
+      // },
+      // {
+      //   title: <span>污染源规模</span>,
+      //   dataIndex: 'PSScaleCode',
+      //   key: 'PSScaleCode',
+      //   align: 'center',
+      //   width:100,
+      // },
       {
         title: <span>环保负责人</span>,
         dataIndex: 'EnvironmentPrincipal',
         key: 'EnvironmentPrincipal',
         align: 'center',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
-        title: <span>移动电话</span>,
+        title: <span>办公电话</span>,
         dataIndex: 'MobilePhone',
         key: 'MobilePhone',
         align: 'center',
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
+      },
+      {
+        title: <span>移动电话</span>,
+        dataIndex: 'IPhone',
+        key: 'IPhone',
+        align: 'center',
       },
       {
         title: <span>监测点名称</span>,
@@ -309,30 +214,12 @@ export default class EntImport extends Component {
         key: 'PointName',
         align: 'center',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>监测点编号(MN)</span>,
         dataIndex: 'DGIMN',
         key: 'DGIMN',
         align: 'center',
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>监测点类型</span>,
@@ -340,15 +227,6 @@ export default class EntImport extends Component {
         key: 'OutputType',
         align: 'center',
         width:90,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>监测点经度</span>,
@@ -356,15 +234,6 @@ export default class EntImport extends Component {
         key: 'Longitude',
         align: 'center',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>监测点维度</span>,
@@ -372,30 +241,13 @@ export default class EntImport extends Component {
         key: 'Latitude',
         align: 'center',
         width:100,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>点位负责人</span>,
         dataIndex: 'UserName',
         key: 'UserName',
         align: 'center',
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
+        width:120,
       },
       {
         title: <span>工号</span>,
@@ -403,15 +255,6 @@ export default class EntImport extends Component {
         key: 'UserNum',
         align: 'center',
         width:70,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
       },
       {
         title: <span>监测因子</span>,
@@ -419,15 +262,62 @@ export default class EntImport extends Component {
         key: 'PollutantList',
         align: 'center',
         width:150,
-        // render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{
-        //     return <span style={{color:'#faad14'}} >{text}</span>
-        //   }
-        // }
+      },
+      {
+        title: <span>安装位置</span>,
+        dataIndex: 'Col1',
+        key: 'Col1',
+        align: 'center',
+        width:120,
+      },
+      {
+        title: <span>项目编号</span>,
+        dataIndex: 'ProjectNum',
+        key: 'ProjectNum',
+        align: 'center',
+        width:120,
+      },
+      {
+        title: <span>实际运营开始日期</span>,
+        dataIndex: 'Btime',
+        key: 'Btime',
+        align: 'center',
+        width:150,
+      },
+      {
+        title: <span>实际运营截止日期</span>,
+        dataIndex: 'Etime',
+        key: 'Etime',
+        align: 'center',
+        width:150,
+      },
+      {
+        title: <span>核查项</span>,
+        dataIndex: 'ItemCode',
+        key: 'ItemCode',
+        align: 'center',
+        width:120,
+      },
+      {
+        title: <span>实时数据一致性核查因子</span>,
+        dataIndex: 'RealtimePollutantCode',
+        key: 'RealtimePollutantCode',
+        align: 'center',
+        width:180,
+      },
+      {
+        title: <span>监控平台数量</span>,
+        dataIndex: 'PlatformNum',
+        key: 'PlatformNum',
+        align: 'center',
+        width:150,
+      },
+      {
+        title: <span>设备参数类别</span>,
+        dataIndex: 'ParamID',
+        key: 'ParamID',
+        align: 'center',
+        width:150,
       },
       {
         title: <span>数据警告提示</span>,
@@ -437,13 +327,6 @@ export default class EntImport extends Component {
         fixed: 'right',
         width:300,
         render:(text,rocord)=>{
-        //   if(!rocord.warning&&!rocord.Error){
-        //     return text 
-        //   }else if(rocord.Error){
-        //   return <span style={{color:'#f5222d'}} >{text}</span>
-        //   }else{ return <span style={{color:'#faad14'}} >{text
-        //    }</span>
-        //   }
         return <span  style={{textAlign:'left',display:'inline-block'}}  >{text}</span>
         }
         
@@ -538,17 +421,22 @@ export default class EntImport extends Component {
         }
       };
       
-    let  gasObj =  [{
+    let  gasObj =  [
+           {
             title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center', width:110,
            },
            {
-             title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center', width:80,
-           }]
+             title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center', width:100,
+           },
+           {
+            title: <span>CEMS类型</span>,dataIndex: 'Col4', key: 'Col4',align: 'center', width:100,
+          },       
+          ]
 
       const  arr = new Array(...this.columns)
  
       this.columns2 = arr;
-      this.columns2.splice(17,0,...gasObj);
+      this.columns2.splice(28,0,...gasObj);
     return (
         <BreadcrumbWrapper>
       <Card

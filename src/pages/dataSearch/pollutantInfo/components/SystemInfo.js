@@ -84,22 +84,27 @@ const Index = (props) => {
 
   const [gasEquipmentStatus,setGasEquipmentStatus] = useState(null) 
   const [gasManufacturerStatus,setGasManufacturerStatus] = useState(null) 
+  const [pMManufacturerStatus,setPMManufacturerStatus] = useState(null) 
+  const [pMEquipmentStatus,setPMEquipmentStatus] = useState(null) 
 
 
   const selectedVal = {
     GasEquipment : gasEquipmentStatus,
     GasManufacturer:gasManufacturerStatus,
+    PMManufacturer:pMManufacturerStatus,
+    PMEquipment:pMEquipmentStatus,
   } 
   const   getFilterProps = dataIndex => {
     
     const selectFlag =  `${dataIndex},${selectedVal[dataIndex]}` === filteredInfo;
-   
   return {
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div>
          <Radio.Group onChange={(e)=>{ 
            dataIndex=='GasEquipment'?  setGasEquipmentStatus(e.target.value) : 
            dataIndex=='GasManufacturer'? setGasManufacturerStatus(e.target.value) : 
+           dataIndex=='PMManufacturer'? setPMManufacturerStatus(e.target.value) : 
+           dataIndex=='PMEquipment'? setPMEquipmentStatus(e.target.value) : 
            null
            ; 
            }} value={selectedVal[dataIndex]}>
@@ -113,16 +118,37 @@ const Index = (props) => {
           <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
            dataIndex=='GasEquipment'?  setGasEquipmentStatus(null) : 
            dataIndex=='GasManufacturer'? setGasManufacturerStatus(null) : 
+           dataIndex=='PMManufacturer'? setPMManufacturerStatus(null) : 
+           dataIndex=='PMEquipment'? setPMEquipmentStatus(null) : 
             null;
+            confirm({ closeDropdown: false })
+            setFilteredInfo(null)
+            onFinish(pageIndex,pageSize)
             }}>
             重置
           </Button>
           <Button type="primary" onClick={() => {
               confirm({ closeDropdown: false })
               setFilteredInfo(`${dataIndex},${selectedVal[dataIndex]}`)
-              
-              dataIndex=='GasEquipment'&&setGasManufacturerStatus(null);  
-              dataIndex=='GasManufacturer'&&setGasEquipmentStatus(null);
+              if(dataIndex=='GasEquipment'){
+                setGasManufacturerStatus(null)
+                setPMManufacturerStatus(null)
+                setPMEquipmentStatus(null)
+              }
+              switch(dataIndex){
+                  case "GasEquipment":
+                     setGasManufacturerStatus(null); setPMManufacturerStatus(null); setPMEquipmentStatus(null);
+                  break;
+                  case "GasManufacturer":
+                    setGasEquipmentStatus(null);setPMManufacturerStatus(null);setPMEquipmentStatus(null);
+                  break;
+                  case "PMManufacturer":
+                    setGasEquipmentStatus(null);setGasManufacturerStatus(null);setPMEquipmentStatus(null);
+                  break;
+                  case "PMEquipment":
+                    setGasEquipmentStatus(null);setGasManufacturerStatus(null);setPMManufacturerStatus(null);
+                  break;
+              }
 
               onFinish(pageIndex,pageSize,`${dataIndex},${selectedVal[dataIndex]}`)
              }
@@ -187,9 +213,7 @@ const Index = (props) => {
       key:'PMManufacturer',
       align:'center',
       width:200,
-      filteredValue: filteredInfo&&filteredInfo.PMManufacturer || null, 
-      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
-      filterMultiple:false,
+      ...getFilterProps('PMManufacturer'),
     },  
     {
       title: '颗粒物CEMS设备规格型号',
@@ -197,9 +221,7 @@ const Index = (props) => {
       key:'PMEquipment', 
       align:'center',
       width:200,
-      filteredValue: filteredInfo&&filteredInfo.PMEquipment || null, 
-      filters: [ { text: '已维护', value: '1' }, { text: '未维护', value: '0' }, ],
-      filterMultiple:false,
+      ...getFilterProps('PMEquipment'),
     },
   ];
 
@@ -215,7 +237,7 @@ const Index = (props) => {
         ManufacturerId:manufacturerId,
         pageIndex:pageIndexs,
         pageSize:pageSizes,
-        Sort : filters? filters : filteredInfo ? filteredInfo : undefined,
+        Sort : filters? filters : undefined,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);

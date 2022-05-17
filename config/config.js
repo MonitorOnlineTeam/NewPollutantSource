@@ -400,7 +400,21 @@ export default {
                 }
               ]
             },
-       
+            {
+              path: '/operaAchiev', //运维绩效
+              name: 'operaAchiev',
+              routes: [
+                {
+                  path: '/operaAchiev',
+                  redirect: '/operaAchiev/personalAchiev', // 重定向 默认为 
+                },
+                { // 个人绩效
+                  name:'personalAchiev',
+                  path:'/operaAchiev/personalAchiev',
+                  component: './operations/personalAchiev',
+                },
+              ]
+            },
             {
               path: '/platformconfig',
               name: 'platformconfig',
