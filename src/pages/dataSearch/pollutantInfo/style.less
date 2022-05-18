@@ -1,8 +1,21 @@
 
-  .pollutantInfoSty  {
-    :global .ant-table.ant-table-middle .ant-table-thead .ant-table-filter-column-title{
-    padding: 12px 8px;
-  }
+  .pollutantInfoSty  :global {
+      .ant-table.ant-table-middle .ant-table-thead .ant-table-filter-column-title{
+         padding: 12px 8px;
+      }
+      .ant-card-bordered{
+        padding-top: 0 !important;
+      }
+      //给查询条件换行添加上下间距
+      .ant-card-head-title{
+        padding: 8px 0 16px 0;
+       }
+       .ant-form-item{
+         padding-top: 8px;  
+       }
+      }
+  
+
    /*监测点信息*/
   // .pointInfoSty{
     // :global thead>tr>th:nth-child(9){ //是否判断缺失数据
@@ -11,6 +24,4 @@
     //   }
     // }
   // }
-}
-
 

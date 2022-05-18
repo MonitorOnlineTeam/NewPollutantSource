@@ -249,6 +249,7 @@ const Index = (props) => {
     const onFinish = async (pageIndexs, pageSizes) => {  //查询
         try {
             const values = await form.validateFields();
+            setPageIndex(pageIndexs)
             const par = {
                 ...values,
                 pageIndex: pageIndexs,
@@ -282,7 +283,7 @@ const Index = (props) => {
         return <Form
             name="advanced_search"
             form={form}
-            onFinish={() => { onFinish(pageIndex, pageSize) }}
+            onFinish={() => { onFinish(1, pageSize) }}
         >
 
             <Row>

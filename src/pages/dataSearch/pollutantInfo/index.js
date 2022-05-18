@@ -22,7 +22,6 @@ import PageLoading from '@/components/PageLoading'
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
-import AutoFormTable from './components/AutoFormTable'
 import DataVerifica from './components/DataVerifica'
 import SystemInfo from './components/SystemInfo'
 import DevicePar from './components/DevicePar'
@@ -30,6 +29,9 @@ import DeviceInfo from './components/DeviceInfo'
 import PointInfo from './components/PointInfo'
 import OperationInfo  from './components/OperationInfo'
 import EntInfo  from './components/EntInfo'
+import PointCoefficient  from './components/PointCoefficient'
+import WorkCoefficient  from './components/WorkCoefficient'
+import InspectionCoefficient  from './components/InspectionCoefficient'
 
 const namespace = 'pollutantInfo'
 const dvaPropsData =  ({ loading,pollutantInfo,global }) => ({
@@ -44,9 +46,21 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    
+
   }
 }
+
+const filteredHandle = (filters)=>{
+    
+  let obj = {}
+  for(let key in filters){
+    if(filters&&filters[key]){
+      obj[key] =  filters[key].toString()
+    }
+   
+   }
+   return obj;
+} 
 const Index = (props) => {
 
   return (
@@ -58,22 +72,31 @@ const Index = (props) => {
           <EntInfo props/>
           </TabPane>
           <TabPane tab="监测点信息" key="2">
-          <PointInfo props/>
+          <PointInfo props filteredHandle={filteredHandle}/>
           </TabPane>
           <TabPane tab="运营信息" key="3">
           <OperationInfo props/>
           </TabPane>
           <TabPane tab="系统信息" key="4">
-            <SystemInfo props/>
+            <SystemInfo props filteredHandle={filteredHandle}/>
           </TabPane>
           <TabPane tab="设备信息" key="5">
-            <DeviceInfo props/>
+            <DeviceInfo props />
           </TabPane>
           <TabPane tab="数据核查项" key="6">
-            <DataVerifica props/>
+            <DataVerifica props filteredHandle={filteredHandle}/>
           </TabPane>
           <TabPane tab="设备参数项" key="7">
-            <DevicePar props/>
+            <DevicePar props filteredHandle={filteredHandle}/>
+          </TabPane>
+          <TabPane tab="监测点系数" key="8">
+            <PointCoefficient props />
+          </TabPane>
+          <TabPane tab="工单类型系数" key="9">
+            <WorkCoefficient props />
+          </TabPane>
+          <TabPane tab="巡检频次系数" key="10">
+            <InspectionCoefficient props />
           </TabPane>
         </Tabs>
    </Card>

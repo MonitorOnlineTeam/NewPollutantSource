@@ -1,9 +1,9 @@
 
 
 /**
- * 功  能：污染源信息 系统信息
+ * 功  能：污染源信息 监测点系数
  * 创建人：jab
- * 创建时间：2022.04.02
+ * 创建时间：2022.05.18
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Space, Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
@@ -32,12 +32,14 @@ const namespace = 'pollutantInfo'
 
 
 
-const dvaPropsData =  ({ loading,pollutantInfo,global }) => ({
+const dvaPropsData =  ({ loading,pollutantInfo,global,common, }) => ({
   tableDatas:pollutantInfo.systemModelTableDatas,
   tableTotal:pollutantInfo.systemModelTableTotal,
   tableLoading: loading.effects[`${namespace}/getSystemModelOfPoint`],
   exportLoading:loading.effects[`${namespace}/exportSystemModelOfPoint`],
   clientHeight: global.clientHeight,
+  regLoading: loading.effects[`autoForm/getRegions`],
+  entLoading:common.entLoading,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -62,6 +64,20 @@ const  dvaDispatch = (dispatch) => {
       })
       
     },
+    getEntByRegionCallBack: (payload, callback) => { //企业
+        dispatch({
+          type: `common/getEntByRegionCallBack`,
+          payload: payload,
+          callback: callback
+        })
+      },
+    getPointByEntCode: (payload, callback) => { //监测点
+        dispatch({
+          type: `remoteSupervision/getPointByEntCode`,
+          payload: payload,
+          callback: callback
+        })
+      },
 
     
   }
@@ -80,146 +96,39 @@ const Index = (props) => {
   useEffect(() => {
     onFinish(pageIndex,pageSize)
   },[]);
-  const [filteredInfo,setFilteredInfo] = useState(null) 
-
-//   const [gasEquipmentStatus,setGasEquipmentStatus] = useState(null) 
-//   const [gasManufacturerStatus,setGasManufacturerStatus] = useState(null) 
-//   const [pMManufacturerStatus,setPMManufacturerStatus] = useState(null) 
-//   const [pMEquipmentStatus,setPMEquipmentStatus] = useState(null) 
-
-
-//   const selectedVal = {
-//     GasEquipment : gasEquipmentStatus,
-//     GasManufacturer:gasManufacturerStatus,
-//     PMManufacturer:pMManufacturerStatus,
-//     PMEquipment:pMEquipmentStatus,
-//   } 
-//   const   getFilterProps = dataIndex => {
-    
-//     const selectFlag =  filteredInfo&& filteredInfo[dataIndex];
-    
-//   return {
-//     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-//       <div>
-//          <Radio.Group onChange={(e)=>{ 
-//            dataIndex=='GasEquipment'?  setGasEquipmentStatus(e.target.value) : 
-//            dataIndex=='GasManufacturer'? setGasManufacturerStatus(e.target.value) : 
-//            dataIndex=='PMManufacturer'? setPMManufacturerStatus(e.target.value) : 
-//            dataIndex=='PMEquipment'? setPMEquipmentStatus(e.target.value) : 
-//            null
-//            ; 
-//            }} value={selectedVal[dataIndex]}>
-//          <Space direction="vertical">
-//            <Radio value={'1'} style={{padding:'5px 12px 0 12px'}}>已维护</Radio>
-//            <Radio value={'0'} style={{padding:'0  12px 5px 12px'}}>未维护</Radio>
-//            </Space>
-//          </Radio.Group>
-          
-//           <div className='ant-table-filter-dropdown-btns'>
-//           <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
-//            dataIndex=='GasEquipment'?  setGasEquipmentStatus(null) : 
-//            dataIndex=='GasManufacturer'? setGasManufacturerStatus(null) : 
-//            dataIndex=='PMManufacturer'? setPMManufacturerStatus(null) : 
-//            dataIndex=='PMEquipment'? setPMEquipmentStatus(null) : 
-//             null;
-//             confirm({ closeDropdown: false })
-//               onFinish(pageIndex,pageSize,selectedVal)
-//             }}>
-//             重置
-//           </Button>
-//           <Button type="primary" onClick={() => {
-//               confirm({ closeDropdown: false })
-//               setFilteredInfo(selectedVal)
-//               onFinish(pageIndex,pageSize,selectedVal)
-//              }
-//              }  size="small" >
-//             确定
-//           </Button>
-//           </div>
-//       </div>
-//     ),
-//     filterIcon: filtered => {     
-//        return <FilterFilled style={{ color: selectFlag ? '#1890ff' : undefined }} />
-//     },
-//   }
-// }
   const columns = [
     {
         title: '序号',
         align: 'center',
-        width: 50,
-        render: (text, record, index) => {
-            return index + 1;
+        width:80,
+        render:(text,record,index)=>{
+          return index+1
         }
-    },
-    {
-      title: '行政区',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-    },
-
-    {
-      title: '企业名称',
-      dataIndex: 'EntName',
-      key:'EntName',
-      align:'center',
-    },
-    {
-      title: '监测点名称',
-      dataIndex: 'PointName',
-      key:'PointName',
-      align:'center',
-    },
-    {
-      title: '气态污染物CEMS设备生产商',
-      dataIndex: 'GasManufacturer',
-      key:'GasManufacturer',
-      align:'center',
-      width:200,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
-       // ...getFilterProps('GasManufacturer'),
-    },
-    {
-      title: '气态污染物CEMS设备规格型号',
-      dataIndex: 'GasEquipment',
-      key:'GasEquipment',
-      align:'center',
-      width:200,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
-    },
-    {
-      title: '颗粒物CEMS设备生产商',
-      dataIndex: 'PMManufacturer',
-      key:'PMManufacturer',
-      align:'center',
-      width:200,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
-    },  
-    {
-      title: '颗粒物CEMS设备规格型号',
-      dataIndex: 'PMEquipment',
-      key:'PMEquipment', 
-      align:'center',
-      width:200,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
-    },
+      },
+      {
+        title: '行政区',
+        dataIndex: 'RegionName',
+        key: 'RegionName',
+        align: 'center',
+      },
+      {
+        title: `企业名称`,
+        dataIndex: 'EntName',
+        key: 'EntName',
+        align: 'center',
+      },
+      {
+        title: '监测点名称',
+        dataIndex: 'PointName',
+        key: 'PointName',
+        align: 'center',
+      },
+      {
+        title: '监测点类别',
+        dataIndex: 'PollutantTypeName',
+        key: 'PollutantTypeName',
+        align: 'center',
+      },
   ];
 
  
@@ -273,6 +182,24 @@ const Index = (props) => {
   const [pageSize,setPageSize]=useState(20)
   const [pageIndex,setPageIndex]=useState(1)
 
+  const [pointList, setPointList] = useState([])
+  const [pointLoading, setPointLoading] = useState(false)
+  const onValuesChange = (hangedValues, allValues) => {
+    if (Object.keys(hangedValues).join() == 'EntCode') {
+      if (!hangedValues.EntCode) { //清空时 不走请求
+        form.setFieldsValue({ DGIMN: undefined })
+        setPointList([])
+        return;
+      }
+      setPointLoading(true)
+      props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
+        setPointList(res)
+        setPointLoading(false)
+        console.log(res[0].DGIMN)
+        form.setFieldsValue({ DGIMN: res[0].DGIMN })
+      })
+    }
+  }
   const searchComponents = () =>{
     return <Form
     form={form}
@@ -282,13 +209,31 @@ const Index = (props) => {
       month: moment(moment().format('YYYY-MM'))
     }}
     layout='inline'
+    onValuesChange={onValuesChange}
   >
-       <Form.Item label='企业名称' name='EntName'>
-       <Input allowClear placeholder='请输入'/>
-      </Form.Item>
-      <Form.Item label='行政区' name='RegionCode' >
-        <RegionList levelNum={2} />
-      </Form.Item>
+        <Spin  size='small' spinning={props.regLoading} style={{ left:20 }}>
+        <Form.Item label='行政区' name='RegionCode' >
+          <RegionList levelNum={3} style={{ width: 150 }}/>
+        </Form.Item>
+        </Spin>
+        <Spin spinning={props.entLoading} size='small'>
+        <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
+          <EntAtmoList  style={{ width: 200}} />
+        </Form.Item>
+        </Spin>
+        <Spin spinning={pointLoading} size='small' style={{left:20 }}>
+          <Form.Item label='监测点名称' name='DGIMN' >
+
+            <Select placeholder='请选择' allowClear  showSearch optionFilterProp="children" style={{ width: 150 }}>
+              {
+                pointList[0] && pointList.map(item => {
+                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                })
+              }
+            </Select>
+          </Form.Item>
+        </Spin>
+
       <Form.Item>
         <Button   loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
           查询

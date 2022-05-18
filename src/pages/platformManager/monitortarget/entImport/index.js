@@ -50,8 +50,7 @@ const pageUrl = {
   insertImportEnt: 'entImport/insertImportEnt',
 };
 @connect(({ loading, entImport,autoForm,common }) => ({
-  loading: loading.effects[pageUrl.getData],
-  saveLoading: loading.effects[pageUrl.getData],
+  saveLoading: loading.effects[pageUrl.insertImportEnt],
 }))
 @Form.create()
 export default class EntImport extends Component {
@@ -152,15 +151,15 @@ export default class EntImport extends Component {
       },
       {
         title: <span>企业经度</span>,
-        dataIndex: 'Longitude',
-        key: 'Longitude',
+        dataIndex: 'EntLatitude',
+        key: 'EntLatitude',
         align: 'center',
         width:100,
       },
       {
         title: <span>企业纬度</span>,
-        dataIndex: 'EntLatitude',
-        key: 'Latitude',
+        dataIndex: 'EntLongitude',
+        key: 'EntLongitude',
         align: 'center',
         width:100,
 
@@ -223,10 +222,11 @@ export default class EntImport extends Component {
       },
       {
         title: <span>监测点类型</span>,
-        dataIndex: 'OutputType',
-        key: 'OutputType',
+        dataIndex: 'PolltantType',
+        key: 'PolltantType',
         align: 'center',
         width:90,
+        render:(text)=>text==1?'废水':'废气'
       },
       {
         title: <span>监测点经度</span>,
@@ -236,7 +236,7 @@ export default class EntImport extends Component {
         width:100,
       },
       {
-        title: <span>监测点维度</span>,
+        title: <span>监测点纬度</span>,
         dataIndex: 'Latitude',
         key: 'Latitude',
         align: 'center',
@@ -426,7 +426,7 @@ export default class EntImport extends Component {
             title: <span>CEMS监测原理</span>,dataIndex: 'Col3', key: 'Col3',align: 'center', width:110,
            },
            {
-             title: <span>排口类型</span>,dataIndex: 'PSScaleCode', key: 'PSScaleCode',align: 'center', width:100,
+             title: <span>排口类型</span>,dataIndex: 'OutputType', key: 'OutputType',align: 'center', width:100,
            },
            {
             title: <span>CEMS类型</span>,dataIndex: 'Col4', key: 'Col4',align: 'center', width:100,

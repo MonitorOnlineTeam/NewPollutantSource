@@ -1,7 +1,7 @@
 /**
- * 功  能：运维绩效  个人绩效查询
+ * 功  能：运维绩效  绩效信息
  * 创建人：jab
- * 创建时间：2022.05.17
+ * 创建时间：2022.05.18
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag,Tabs, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
@@ -26,8 +26,8 @@ const { TabPane } = Tabs;
 import PersonalShare  from './components/PersonalShare'
 import PersonalWorkInfo  from './components/PersonalWorkInfo'
 
-const namespace = 'personalAchiev'
-const dvaPropsData =  ({ loading,personalAchiev,global }) => ({
+const namespace = 'achievInfo'
+const dvaPropsData =  ({ loading,achievInfo,global }) => ({
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -44,7 +44,7 @@ const  dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   return (
-    <div  className={styles.personalAchievSty}>
+    <div  className={styles.achievInfoSty}>
     <BreadcrumbWrapper>
   <Card>
     <Tabs tabPosition='left'>

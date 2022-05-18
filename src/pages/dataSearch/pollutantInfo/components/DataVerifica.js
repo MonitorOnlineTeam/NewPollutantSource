@@ -81,64 +81,64 @@ const Index = (props) => {
     }, []);
     const [filteredInfo,setFilteredInfo] = useState(null) 
 
-    const [realtimePollutantNameStatus,setRealtimePollutantNameStatus] = useState(null) 
-    const [platformNumStatus,setPlatformNumStatus] = useState(null) 
+//     const [realtimePollutantNameStatus,setRealtimePollutantNameStatus] = useState(null) 
+//     const [platformNumStatus,setPlatformNumStatus] = useState(null) 
   
   
-    const selectedVal = {
-      RealtimePollutantName : realtimePollutantNameStatus,
-      PlatformNum:platformNumStatus,
-    } 
-    const   getFilterProps = dataIndex => {
+//     const selectedVal = {
+//       RealtimePollutantName : realtimePollutantNameStatus,
+//       PlatformNum:platformNumStatus,
+//     } 
+//     const   getFilterProps = dataIndex => {
       
-      const selectFlag =  `${dataIndex},${selectedVal[dataIndex]}` === filteredInfo;
-      console.log()
-    return {
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div>
-           <Radio.Group onChange={(e)=>{ 
-               console.log(dataIndex)
-             dataIndex=='RealtimePollutantName'?  setRealtimePollutantNameStatus(e.target.value) : 
-             dataIndex=='PlatformNum'? setPlatformNumStatus(e.target.value) : 
-             null ; 
-             }} value={selectedVal[dataIndex]}>
-           <Space direction="vertical">
-             <Radio value={'1'} style={{padding:'5px 12px 0 12px'}}>已维护</Radio>
-             <Radio value={'0'} style={{padding:'0  12px 5px 12px'}}>未维护</Radio>
-             </Space>
-           </Radio.Group>
+//       const selectFlag =  `${dataIndex},${selectedVal[dataIndex]}` === filteredInfo;
+//       console.log()
+//     return {
+//       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+//         <div>
+//            <Radio.Group onChange={(e)=>{ 
+//                console.log(dataIndex)
+//              dataIndex=='RealtimePollutantName'?  setRealtimePollutantNameStatus(e.target.value) : 
+//              dataIndex=='PlatformNum'? setPlatformNumStatus(e.target.value) : 
+//              null ; 
+//              }} value={selectedVal[dataIndex]}>
+//            <Space direction="vertical">
+//              <Radio value={'1'} style={{padding:'5px 12px 0 12px'}}>已维护</Radio>
+//              <Radio value={'0'} style={{padding:'0  12px 5px 12px'}}>未维护</Radio>
+//              </Space>
+//            </Radio.Group>
             
-            <div className='ant-table-filter-dropdown-btns'>
-            <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
-             dataIndex=='RealtimePollutantName'?  setRealtimePollutantNameStatus(null) : 
-             dataIndex=='PlatformNum'? setPlatformNumStatus(null) : 
-              null;
-                confirm({ closeDropdown: false })
-                setFilteredInfo(null)
-                onFinish(pageIndex,pageSize)
-              }}>
-              重置
-            </Button>
-            <Button disabled={!selectFlag && !selectedVal[dataIndex]} type="primary" onClick={() => {
-                confirm({ closeDropdown: false })
-                setFilteredInfo(`${dataIndex},${selectedVal[dataIndex]}`)
+//             <div className='ant-table-filter-dropdown-btns'>
+//             <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
+//              dataIndex=='RealtimePollutantName'?  setRealtimePollutantNameStatus(null) : 
+//              dataIndex=='PlatformNum'? setPlatformNumStatus(null) : 
+//               null;
+//                 confirm({ closeDropdown: false })
+//                 setFilteredInfo(null)
+//                 onFinish(pageIndex,pageSize)
+//               }}>
+//               重置
+//             </Button>
+//             <Button disabled={!selectFlag && !selectedVal[dataIndex]} type="primary" onClick={() => {
+//                 confirm({ closeDropdown: false })
+//                 setFilteredInfo(`${dataIndex},${selectedVal[dataIndex]}`)
                 
-                dataIndex=='RealtimePollutantName'&&setPlatformNumStatus(null);  
-                dataIndex=='PlatformNum'&&setRealtimePollutantNameStatus(null);
+//                 dataIndex=='RealtimePollutantName'&&setPlatformNumStatus(null);  
+//                 dataIndex=='PlatformNum'&&setRealtimePollutantNameStatus(null);
   
-                onFinish(pageIndex,pageSize,`${dataIndex},${selectedVal[dataIndex]}`)
-               }
-               }  size="small" >
-              确定
-            </Button>
-            </div>
-        </div>
-      ),
-      filterIcon: filtered => {     
-         return <FilterFilled style={{ color: selectFlag ? '#1890ff' : undefined }} />
-      },
-    }
-  }
+//                 onFinish(pageIndex,pageSize,`${dataIndex},${selectedVal[dataIndex]}`)
+//                }
+//                }  size="small" >
+//               确定
+//             </Button>
+//             </div>
+//         </div>
+//       ),
+//       filterIcon: filtered => {     
+//          return <FilterFilled style={{ color: selectFlag ? '#1890ff' : undefined }} />
+//       },
+//     }
+//   }
     const columns = [
         {
             title: '序号',
@@ -185,7 +185,12 @@ const Index = (props) => {
             key: 'RealtimePollutantName',
             align: 'center',
             width:220,
-            ...getFilterProps('RealtimePollutantName'),
+            // ...getFilterProps('RealtimePollutantName'),
+            filters: [
+                { text: '已维护', value: '1' },
+                { text: '未维护', value: '0' },
+              ],
+            filterMultiple:false,
         },
         // {
         //     title: '小时日数据一致性核查因子',
@@ -202,7 +207,11 @@ const Index = (props) => {
             key: 'PlatformNum',
             align: 'center',
             width:200,
-            ...getFilterProps('PlatformNum'),
+            filters: [
+                { text: '已维护', value: '1' },
+                { text: '未维护', value: '0' },
+              ],
+            filterMultiple:false,
         },
     ];
 
@@ -219,7 +228,7 @@ const Index = (props) => {
                 ManufacturerId: manufacturerId,
                 pageIndex: pageIndexs,
                 pageSize: pageSizes,
-                Sort : filters? filters : undefined,
+                ...filters,
             })
         } catch (errorInfo) {
             console.log('Failed:', errorInfo);
@@ -235,7 +244,8 @@ const Index = (props) => {
         const  PageIndex = pagination.current,PageSize=pagination.pageSize;
         setPageIndex(PageIndex)
         setPageSize(PageSize)
-        onFinish(PageIndex, PageSize,filteredInfo)
+        setFilteredInfo(props.filteredHandle(filters))
+        onFinish(PageIndex, PageSize,props.filteredHandle(filters))
    }
     const exports = async () => {
         const values = await form.validateFields();
@@ -254,7 +264,7 @@ const Index = (props) => {
         return <><Form
             form={form}
             name="advanced_search"
-            onFinish={() => { onFinish(pageIndex, pageSize) }}
+            onFinish={() => { setPageIndex(1);  onFinish(1, pageSize,filteredInfo)}}
             initialValues={{
             }}
             layout='inline'

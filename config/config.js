@@ -413,6 +413,11 @@ export default {
                   path:'/operaAchiev/personalAchiev',
                   component: './operations/personalAchiev',
                 },
+                { // 绩效信息
+                  name:'achievInfo',
+                  path:'/operaAchiev/achievInfo',
+                  component: './operations/achievInfo',
+                },
               ]
             },
             {

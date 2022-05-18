@@ -150,7 +150,7 @@ const Index = (props) => {
     const onFinish = async (pageIndexs, pageSizes) => {  //查询
         try {
             const values = await form.validateFields();
-
+            setPageIndex(pageIndexs)
             props.getTableData({
                 ...values,
                 pageIndex: pageIndexs,
@@ -187,7 +187,7 @@ const Index = (props) => {
         return <><Form
             form={form}
             name="advanced_search"
-            onFinish={() => { onFinish(pageIndex, pageSize) }}
+            onFinish={() => { onFinish(1, pageSize) }}
             initialValues={{
             }}
             layout='inline'
