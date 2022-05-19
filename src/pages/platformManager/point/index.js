@@ -91,6 +91,7 @@ export default class MonitorPoint extends Component {
       itemCode:[],
       realtimePollutantCode:[],
       hourPollutantCode:[],
+      pointCoefficientVal:'',//监测点系数
     };
   }
 
@@ -284,6 +285,9 @@ export default class MonitorPoint extends Component {
 
         },
       }) 
+      }else if(this.state.tabKey==5){ //监测点系数
+        
+        console.log(this.state.pointCoefficientVal)
       }else{
       form.validateFields((err, values) => {
       if (!err) {
@@ -437,7 +441,7 @@ export default class MonitorPoint extends Component {
 
     return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
            <div className={styles.dataVerificationSty}>
-          <div style={{color:'#f5222d',paddingBottom:10,paddingLeft:126}}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
+          <div style={{color:'#f5222d',paddingBottom:10,paddingTop:5, paddingLeft:126}}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
           <Form.Item label="核查项" >
           <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
          </Form.Item>
@@ -468,15 +472,27 @@ export default class MonitorPoint extends Component {
   platformNumChange=(value)=>{//核查项 平台数量
     this.setState({platformNum:value})
   }
-
+  
+  pointCoefficientChange = (value) =>{ //监测点系数
+    this.setState({pointCoefficientVal:value})
+  }
   getEquipmentPar = () =>{ //设备参数项
     return <Spin spinning={this.props.getParamInfoListLoading}>
-           <div>
+          <div style={{padding:'5px 0 10px 0'}}>
            <div style={{color:'#f5222d',paddingBottom:5}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
           <Form.Item label="设备参数类别" >
           <Checkbox.Group value={this.state.equipmentPol}  options={this.props.paramCodeList} onChange={this.equipmentParChange} />
          </Form.Item>
-     </div>
+         </div>
+     </Spin>
+  }
+  getPointCoefficient = () =>{ //监测点系数
+    return <Spin spinning={this.props.getParamInfoListLoading}>
+          <div style={{padding:'10px 0'}}>
+          <Form.Item label='监测点系数' >
+          <InputNumber value={this.state.pointCoefficientVal} style={{width:200}} placeholder='请输入'  onChange={this.pointCoefficientChange} />
+         </Form.Item>
+         </div>
      </Spin>
   }
   equipmentParChange = (val) =>{
@@ -552,7 +568,11 @@ export default class MonitorPoint extends Component {
     if(tabKey==4){ //设备参数
       return  addPointParamInfoLoading
       
-    }   
+    } 
+    if(tabKey==5){ //监测点系数
+      // return  addPointParamInfoLoading
+      
+    }     
   }
   render() {
     const {
@@ -796,6 +816,9 @@ export default class MonitorPoint extends Component {
               </TabPane>
               <TabPane tab="设备参数项" key="4">
                 {this.getEquipmentPar()}
+              </TabPane>
+              <TabPane tab="监测点系数" key="5">
+                {this.getPointCoefficient()}
               </TabPane>
             </Tabs>
 

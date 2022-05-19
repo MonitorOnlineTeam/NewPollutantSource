@@ -411,12 +411,27 @@ export default {
                 { // 个人绩效
                   name:'personalAchiev',
                   path:'/operaAchiev/personalAchiev',
-                  component: './operations/personalAchiev',
+                  component: './operaAchiev/personalAchiev',
                 },
                 { // 绩效信息
                   name:'achievInfo',
                   path:'/operaAchiev/achievInfo',
-                  component: './operations/achievInfo',
+                  component: './operaAchiev/achievInfo',
+                },
+                { // 点位系数清单
+                  name:'pointCoefficientList',
+                  path:'/operaAchiev/pointCoefficientList',
+                  component: './operaAchiev/pointCoefficients',
+                },
+                { // 工单系数清单
+                  name:'workCoefficientList',
+                  path:'/operaAchiev/workCoefficientList',
+                  component: './operaAchiev/workCoefficients',
+                },
+                { // 绩效定时器
+                  name:'operaAchievTimer',
+                  path:'/operaAchiev/operaAchievTimer',
+                  component: './operaAchiev/operaAchievTimer',
                 },
               ]
             },

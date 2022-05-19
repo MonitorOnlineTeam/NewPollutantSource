@@ -14,22 +14,22 @@ import RegionList from '@/components/RegionList'
 import { DelIcon, DetailIcon, EditIcon } from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
-import styles from "../style.less";
+import styles from "../../style.less";
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const namespace = 'achievInfo'
+const namespace = 'personalAchiev'
 
 
 
 
-const dvaPropsData = ({ loading, achievInfo, autoForm }) => ({
-    tableTotal: achievInfo.operationInfoTableTotal,
-    tableDatas: achievInfo.operationInfoTableDatas,
-    tableLoading: achievInfo.projectRelationLoading,
-    historyOperationInfo:achievInfo.historyOperationInfo,
-    historyOperationInfoLoading: achievInfo.historyProjectRelationLoading,
+const dvaPropsData = ({ loading, personalAchiev, autoForm }) => ({
+    tableTotal: personalAchiev.operationInfoTableTotal,
+    tableDatas: personalAchiev.operationInfoTableDatas,
+    tableLoading: personalAchiev.projectRelationLoading,
+    historyOperationInfo:personalAchiev.historyOperationInfo,
+    historyOperationInfoLoading: personalAchiev.historyProjectRelationLoading,
     exportLoading: loading.effects[`${namespace}/exportEntProjectRelationList`],
 })
 
@@ -235,13 +235,7 @@ const Index = (props) => {
 
 
                 <Form.Item label='统计月份' name='month'>
-                 <DatePicker      picker="month"    allowClear />
-                </Form.Item>
-                <Form.Item label='员工编号' name='aa'>
-                 <Input placeholder='请输入'    allowClear />
-                </Form.Item>
-                <Form.Item label='姓名' name='bb'>
-                 <Input   placeholder='请输入'  allowClear />
+                    <DatePicker     picker="month"    allowClear />
                 </Form.Item>
                 <Form.Item style={{ marginBottom: 0 }}>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
@@ -259,7 +253,7 @@ const Index = (props) => {
 
 
     return (
-        <div>
+        <div className={styles.operaAchievSty}>
             <Card title={searchComponents()}>
 
                 <SdlTable

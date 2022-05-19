@@ -125,6 +125,7 @@ export default class AutoFormIndex extends Component {
                   key, row
                 })
               }}
+              isCenter
               {...this.props}
               // onAdd={()=>{
               //   console.log("点击了添加")

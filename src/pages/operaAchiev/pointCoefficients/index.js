@@ -1,7 +1,7 @@
 
 
 /**
- * 功  能：污染源信息 监测点系数
+ * 功  能： 点位系数 点位系数清单 
  * 创建人：jab
  * 创建时间：2022.05.18
  */
@@ -27,16 +27,17 @@ import tableList from '@/pages/list/table-list';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'pollutantInfo'
+const namespace = 'operaAchiev'
 
 
 
 
-const dvaPropsData =  ({ loading,pollutantInfo,global,common, }) => ({
-  tableDatas:pollutantInfo.systemModelTableDatas,
-  tableTotal:pollutantInfo.systemModelTableTotal,
-  tableLoading: loading.effects[`${namespace}/getSystemModelOfPoint`],
+const dvaPropsData =  ({ loading,operaAchiev,global,common, }) => ({
+  tableDatas:operaAchiev.pointCoefficientList,
+  tableTotal:operaAchiev.pointCoefficientTotal,
+  tableLoading: loading.effects[`${namespace}/getPointCoefficientList`],
   exportLoading:loading.effects[`${namespace}/exportSystemModelOfPoint`],
+  loadingEditConfirm:loading.effects[`${namespace}/loadingEditConfirm`],
   clientHeight: global.clientHeight,
   regLoading: loading.effects[`autoForm/getRegions`],
   entLoading:common.entLoading,
@@ -52,7 +53,7 @@ const  dvaDispatch = (dispatch) => {
     },
     getTableData:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getSystemModelOfPoint`,
+        type: `${namespace}/getPointCoefficientList`,
         payload:payload,
       })
     },
@@ -87,11 +88,13 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
   const  { tableDatas,tableTotal,tableLoading,exportLoading} = props;
   
+  const isList =  props.match&&props.match.path ==='/operaAchiev/pointCoefficientList'? true : false;
 
   useEffect(() => {
     onFinish(pageIndex,pageSize)
@@ -129,21 +132,65 @@ const Index = (props) => {
         key: 'PollutantTypeName',
         align: 'center',
       },
+      {
+        title: '监测点系数',
+        dataIndex: 'Coefficient',
+        key: 'Coefficient',
+        align: 'center',
+      },
   ];
 
+  isList&&columns.push({
+    title: <span>操作</span>,
+    dataIndex: 'x',
+    key: 'x',
+    align: 'center',
+    width:180,
+    render: (text, record) =>{
+      return  <span>
+             <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip></Fragment>
+
+           </span>
+    }
+  },)
+  
+  const [fromVisible,setFromVisible] = useState(false)
+  const [pointName,setPointName] = useState(null)
+  const edit =  (record) => {
+    setFromVisible(true);
+    setPointName(record.PointName)
+    form2.resetFields();
+    form2.setFieldsValue({
+      ...record,
+      SystemName:record.ChildID,
+      // MonitoringType:record.MonitoringTypeID.toString()
+    })
+  };
  
+  const onModalOk  = async () =>{ //添加 or 编辑弹框
+  
+    try {
+      const values = await form2.validateFields();//触发校验
+       props.addSystemModel({
+        ...values,
+      },()=>{
+        setFromVisible(false)
+        onFinish()
+      })
 
+      
+    } catch (errInfo) {
+      console.log('错误信息:', errInfo);
+    }
+  }
 
-
-  const onFinish  = async (pageIndexs,pageSizes,filters) =>{  //查询
+  const onFinish  = async (pageIndexs,pageSizes,) =>{  //查询
     try {
       const values = await form.validateFields();
       props.getTableData({
         ...values,
-        ManufacturerId:manufacturerId,
         pageIndex:pageIndexs,
         pageSize:pageSizes,
-       ...filters,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -164,8 +211,7 @@ const Index = (props) => {
     const  PageIndex = pagination.current,PageSize=pagination.pageSize;
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    setFilteredInfo(props.filteredHandle(filters))
-    onFinish(PageIndex, PageSize,props.filteredHandle(filters))
+    onFinish(PageIndex, PageSize,)
    
 
 }
@@ -204,24 +250,24 @@ const Index = (props) => {
     return <Form
     form={form}
     name="advanced_search"
-    onFinish={() => { setPageIndex(1);  onFinish(1, pageSize,filteredInfo) }}
+    onFinish={() => { setPageIndex(1);  onFinish(1, pageSize,) }}
     initialValues={{
       month: moment(moment().format('YYYY-MM'))
     }}
     layout='inline'
     onValuesChange={onValuesChange}
   >
-        <Spin  size='small' spinning={props.regLoading} style={{ left:20 }}>
+        <Spin  size='small' spinning={props.regLoading} style={{top:5, left:20 }}>
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
         </Spin>
-        <Spin spinning={props.entLoading} size='small'>
+        <Spin spinning={props.entLoading} size='small' style={{top:5, }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList  style={{ width: 200}} />
         </Form.Item>
         </Spin>
-        <Spin spinning={pointLoading} size='small' style={{left:20 }}>
+        <Spin spinning={pointLoading} size='small' style={{top:5,left:20 }}>
           <Form.Item label='监测点名称' name='DGIMN' >
 
             <Select placeholder='请选择' allowClear  showSearch optionFilterProp="children" style={{ width: 150 }}>
@@ -247,8 +293,9 @@ const Index = (props) => {
       </Form.Item>
   </Form>
   }
-  return (
-    <div  className={styles.pollutantInfoSty}>
+  return (   
+    <div  className={styles.operaAchievSty}>
+    <BreadcrumbWrapper hideBreadcrumb={!isList}>
     <Card title={searchComponents()}>
       <SdlTable
         loading = {tableLoading}
@@ -266,6 +313,30 @@ const Index = (props) => {
         }}
       />
    </Card>
+   </BreadcrumbWrapper>
+   <Modal
+        title={pointName}
+        visible={fromVisible}
+        onOk={onModalOk}
+        confirmLoading={props.loadingEditConfirm}
+        onCancel={()=>{setFromVisible(false)}}
+        className={styles.fromModal}
+        destroyOnClose
+        centered
+      >
+    <Form
+      name="basic"
+      form={form2}
+    >
+        <Form.Item   label="监测点系数" name="SystemCode" >
+        <InputNumber placeholder='请输入'  rules={[  { required: true, message: '请输入监测点系数'  }]}/>
+      </Form.Item>
+      <Form.Item   name="ID" hidden>
+          <Input />
+      </Form.Item> 
+     
+    </Form>
+      </Modal>
         </div>
   );
 };

@@ -29,8 +29,8 @@ import DeviceInfo from './components/DeviceInfo'
 import PointInfo from './components/PointInfo'
 import OperationInfo  from './components/OperationInfo'
 import EntInfo  from './components/EntInfo'
-import PointCoefficient  from './components/PointCoefficient'
-import WorkCoefficient  from './components/WorkCoefficient'
+import PointCoefficient  from '@/pages/operaAchiev/pointCoefficients'
+import WorkCoefficient  from '@/pages/operaAchiev/workCoefficients'
 import InspectionCoefficient  from './components/InspectionCoefficient'
 
 const namespace = 'pollutantInfo'
@@ -89,7 +89,7 @@ const Index = (props) => {
           <TabPane tab="设备参数项" key="7">
             <DevicePar props filteredHandle={filteredHandle}/>
           </TabPane>
-          <TabPane tab="监测点系数" key="8">
+           <TabPane tab="监测点系数" key="8">
             <PointCoefficient props />
           </TabPane>
           <TabPane tab="工单类型系数" key="9">
@@ -97,7 +97,7 @@ const Index = (props) => {
           </TabPane>
           <TabPane tab="巡检频次系数" key="10">
             <InspectionCoefficient props />
-          </TabPane>
+          </TabPane> 
         </Tabs>
    </Card>
    </BreadcrumbWrapper>

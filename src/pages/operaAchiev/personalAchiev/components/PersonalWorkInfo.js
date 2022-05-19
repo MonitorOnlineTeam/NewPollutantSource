@@ -19,7 +19,7 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import EntAtmoList from '@/components/EntAtmoList'
 import NumTips from '@/components/NumTips'
-import styles from "../style.less"
+import styles from "../../style.less";
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import tableList from '@/pages/list/table-list';
@@ -206,7 +206,7 @@ const Index = (props) => {
   </Form>
   }
   return (
-    <div  className={styles.personalAchievSty}>
+    <div className={styles.operaAchievSty}>
     <Card title={searchComponents()}>
       <SdlTable
         loading = {tableLoading}
