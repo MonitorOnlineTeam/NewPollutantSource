@@ -37,7 +37,7 @@ const dvaPropsData =  ({ loading,operaAchiev,global,common, }) => ({
   tableTotal:operaAchiev.pointCoefficientTotal,
   tableLoading: loading.effects[`${namespace}/getPointCoefficientList`],
   exportLoading:loading.effects[`${namespace}/exportSystemModelOfPoint`],
-  loadingEditConfirm:loading.effects[`${namespace}/loadingEditConfirm`],
+  loadingEditConfirm:loading.effects[`${namespace}/addOrEditPointCoefficient`],
   clientHeight: global.clientHeight,
   regLoading: loading.effects[`autoForm/getRegions`],
   entLoading:common.entLoading,
@@ -79,7 +79,13 @@ const  dvaDispatch = (dispatch) => {
           callback: callback
         })
       },
-
+    addOrEditPointCoefficient: (payload, callback) => { //修改
+        dispatch({
+          type: `${namespace}/addOrEditPointCoefficient`,
+          payload: payload,
+          callback: callback
+        })
+      },
     
   }
 }
@@ -155,27 +161,24 @@ const Index = (props) => {
   },)
   
   const [fromVisible,setFromVisible] = useState(false)
-  const [pointName,setPointName] = useState(null)
+  const [title,setTitle] = useState(null)
   const edit =  (record) => {
     setFromVisible(true);
-    setPointName(record.PointName)
+    setTitle(`${record.EntName} - ${record.PointName}` )
     form2.resetFields();
     form2.setFieldsValue({
-      ...record,
-      SystemName:record.ChildID,
-      // MonitoringType:record.MonitoringTypeID.toString()
+     ...record,
     })
   };
  
   const onModalOk  = async () =>{ //添加 or 编辑弹框
-  
     try {
       const values = await form2.validateFields();//触发校验
-       props.addSystemModel({
+       props.addOrEditPointCoefficient({
         ...values,
       },()=>{
         setFromVisible(false)
-        onFinish()
+        onFinish(pageIndex,pageSize)
       })
 
       
@@ -187,6 +190,8 @@ const Index = (props) => {
   const onFinish  = async (pageIndexs,pageSizes,) =>{  //查询
     try {
       const values = await form.validateFields();
+      setPageIndex(pageIndexs)
+      setPageSize(pageSizes)
       props.getTableData({
         ...values,
         pageIndex:pageIndexs,
@@ -315,26 +320,28 @@ const Index = (props) => {
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={pointName}
+        title={title}
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={props.loadingEditConfirm}
         onCancel={()=>{setFromVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
-        centered
+        // centered
       >
     <Form
       name="basic"
       form={form2}
     >
-        <Form.Item   label="监测点系数" name="SystemCode" >
-        <InputNumber placeholder='请输入'  rules={[  { required: true, message: '请输入监测点系数'  }]}/>
+        <Form.Item   label="监测点系数" name="Coefficient" >
+        <InputNumber style={{ width: 200}}  placeholder='请输入'  rules={[  { required: true, message: '请输入监测点系数'  }]}/>
       </Form.Item>
+      <Form.Item   name="DGIMN" hidden>
+          <Input />
+      </Form.Item> 
       <Form.Item   name="ID" hidden>
           <Input />
       </Form.Item> 
-     
     </Form>
       </Modal>
         </div>

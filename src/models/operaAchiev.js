@@ -24,16 +24,17 @@ export default Model.extend({
           pointCoefficientTotal:result.Total,
           pointCoefficientList:result.Datas,
         })
+        callback&&callback(result.Datas)
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})
       }
     },
     *addOrEditPointCoefficient({ payload,callback }, { call, put, update }) { //添加或修改监测点系数
-      const result = yield call(services.AddOrEditPointCoefficient, payload);
+      const result = yield call(services.AddOrEditPointCoefficient, {...payload,ID:payload.ID? payload.ID : ''});
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback&&callback()
       }else{
         message.error(result.Message)
       }

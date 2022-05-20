@@ -34,13 +34,12 @@ const namespace = 'operaAchiev'
 
 
 
-
 const dvaPropsData = ({ loading, operaAchiev, global, common, }) => ({
-  tableDatas: operaAchiev.systemModelTableDatas,
-  tableTotal: operaAchiev.systemModelTableTotal,
-  tableLoading: loading.effects[`${namespace}/getSystemModelOfPoint`],
-  loadingAddConfirm: loading.effects[`${namespace}/addSystemModel`],
-  loadingEditConfirm: loading.effects[`${namespace}/editSystemModel`],
+  tableDatas: operaAchiev.recordCoefficientList,
+  tableTotal: operaAchiev.recordCoefficientTotal,
+  tableLoading: loading.effects[`${namespace}/getRecordCoefficientList`],
+  loadingAddorEditConfirm: loading.effects[`${namespace}/addOrEditRecordCoefficient`],
+  recordTypesByPollutantTypeLoading: loading.effects[`${namespace}/getRecordTypesByPollutantType`] || false,
   clientHeight: global.clientHeight,
 })
 
@@ -54,11 +53,24 @@ const dvaDispatch = (dispatch) => {
     },
     getTableData: (payload) => { //列表
       dispatch({
-        type: `${namespace}/getSystemModelOfPoint`,
+        type: `${namespace}/getRecordCoefficientList`,
         payload: payload,
       })
     },
-
+    addOrEditRecordCoefficient: (payload,callback) => { //添加或编辑
+      dispatch({
+        type: `${namespace}/addOrEditRecordCoefficient`,
+        payload: payload,
+        callback:callback
+      })
+    },
+    getRecordTypesByPollutantType: (payload,callback) => { //获取工单类型
+      dispatch({
+        type: `${namespace}/getRecordTypesByPollutantType`,
+        payload: payload,
+        callback:callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -94,15 +106,15 @@ const Index = (props) => {
     },
     {
       title: `工单类型`,
-      dataIndex: 'EntName',
-      key: 'EntName',
+      dataIndex: 'RecordTypeName',
+      key: 'RecordTypeName',
       align: 'center',
       width: 180,
     },
     {
       title: '系数',
-      dataIndex: 'PointName',
-      key: 'PointName',
+      dataIndex: 'Coefficient',
+      key: 'Coefficient',
       align: 'center',
       width: 180,
     },
@@ -116,10 +128,10 @@ const Index = (props) => {
     width: 180,
     render: (text, record) => {
       return <span>
-        <Fragment><Tooltip title="编辑"> <a href="#" onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+        <Fragment><Tooltip title="编辑"> <a  onClick={() => { edit(record) }} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
         <Fragment> <Tooltip title="删除">
           <Popconfirm title="确定要删除此条信息吗？" style={{ paddingRight: 5 }} onConfirm={() => { del(record) }} okText="是" cancelText="否">
-            <a href="#" ><DelIcon /></a>
+            <a  ><DelIcon /></a>
           </Popconfirm>
         </Tooltip>
         </Fragment>
@@ -131,9 +143,7 @@ const Index = (props) => {
 
 
   const onFinish = () => {  //查询
-    props.getTableData({
-
-    })
+    props.getTableData({})
 
   }
   const [fromVisible, setFromVisible] = useState(false)
@@ -151,12 +161,12 @@ const Index = (props) => {
     setFromVisible(true)
     setType('edit')
     form.resetFields();
-    form.setFieldsValue({
-        ...record,
-        SystemName: record.ChildID,
-        MonitoringType: record.MonitoringTypeID.toString()
-      })
-
+    props.getRecordTypesByPollutantType({ pollutantType: record.PollutantType }, (res) => {
+        setRecordTypesByPollutantTypeList(res)
+        form.setFieldsValue({
+          ...record,
+        })
+    })
   };
 
 
@@ -164,19 +174,12 @@ const Index = (props) => {
 
     try {
       const values = await form.validateFields();//触发校验
-      type === 'add' ? props.addSystemModel({
+       props.addOrEditRecordCoefficient({
         ...values,
       }, () => {
         setFromVisible(false)
         onFinish()
       })
-        :
-        props.editSystemModel({
-          ...values,
-        }, () => {
-          setFromVisible(false)
-          onFinish(pageIndex)
-        })
 
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
@@ -213,14 +216,10 @@ const Index = (props) => {
 
   const [recordTypesByPollutantTypeList,setRecordTypesByPollutantTypeList] = useState([])
   const onValuesChange = (hangedValues, allValues) => {
-    if (Object.keys(hangedValues).join() == 'EntCode') {
-      if (!hangedValues.EntCode) { //清空时 不走请求
-        form.setFieldsValue({ DGIMN: undefined })
-        setRecordTypesByPollutantTypeList([])
-        return;
-      }
-      props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
+    if (Object.keys(hangedValues).join() == 'PollutantType') {
+      props.getRecordTypesByPollutantType({ pollutantType: hangedValues.PollutantType }, (res) => {
         setRecordTypesByPollutantTypeList(res)
+        form.setFieldsValue({RecordType:undefined})
       })
     }
   }
@@ -242,7 +241,7 @@ const Index = (props) => {
         title={type === 'add' ? '添加' : '编辑'}
         visible={fromVisible}
         onOk={onModalOk}
-        confirmLoading={type === 'add' ? props.loadingAddConfirm : props.loadingEditConfirm}
+        confirmLoading={props.loadingAddorEditConfirm}
         onCancel={() => { setFromVisible(false) }}
         className={style.fromModal}
         destroyOnClose
@@ -253,36 +252,28 @@ const Index = (props) => {
           form={form}
           onValuesChange={onValuesChange}
         >
-          <Row>
-            <Col span={24}>
-              <Form.Item name="ID" hidden>
-                <Input />
+
+            <Form.Item label="污染物类型" name="PollutantType" rules={[{ required: true, message: '请选择污染物类型' }]} >
+              <EntType style={{width:'100%'}} allowClear={false}/>
               </Form.Item>
-            </Col>
-          </Row>
+              <Spin spinning={props.recordTypesByPollutantTypeLoading} size='small' style={{top:-8, left:20 }}>
+               <Form.Item label='工单类型' name='RecordType' rules={[{ required: true, message: '请选择工单类型' }]}  >
 
-
-
- 
-            <Form.Item label="污染物类型" name="ManufacturerID" rules={[{ required: true, message: '请选择污染物类型' }]} >
-              <EntType style={{width:'100%'}}/>
-              </Form.Item>
-              <Spin spinning={false} size='small' style={{top:5,left:20 }}>
-               <Form.Item label='工单类型' name='WorkType' rules={[{ required: true, message: '请选择工单类型' }]}  >
-
-              <Select placeholder='请选择' allowClear  showSearch optionFilterProp="children" >
+              <Select placeholder='请选择'   showSearch optionFilterProp="children" >
                {
                  recordTypesByPollutantTypeList.map(item => {
-                  return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                  return <Option key={item.ID} value={item.ID} >{item.Name}</Option>
                 })
               } 
               </Select>
              </Form.Item>
             </Spin>
-              <Form.Item label="工单系数" name="SystemCode" rules={[{ required: true, message: '请输入监测点系数' }]}>
+              <Form.Item label="工单系数" name="Coefficient" rules={[{ required: true, message: '请输入监测点系数' }]}>
                 <InputNumber placeholder='请输入'  />
               </Form.Item>
-           
+              <Form.Item  name="ID" hidden>
+                <Input />
+              </Form.Item> 
         </Form>
       </Modal>
    

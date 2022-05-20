@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined,HighlightOutlined,DownOutlined,EllipsisOutlined,FileTextOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -23,7 +23,7 @@ import {
   Tabs,
   Checkbox,
 } from 'antd';
-import { EditIcon, DetailIcon, DelIcon  } from '@/utils/icon'
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import MonitorContent from '@/components/MonitorContent';
 import { routerRedux } from 'dva/router';
@@ -55,6 +55,8 @@ let pointConfigIdEdit = '';
   getMonitorPointVerificationItemLoading: loading.effects['point/getMonitorPointVerificationItem'] || false,
   addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
+  getPointCoefficientListLoading: loading.effects[`operaAchiev/getPointCoefficientList`],
+  addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
@@ -67,9 +69,9 @@ let pointConfigIdEdit = '';
   configInfo: global.configInfo,
   CorporationCode: point.CorporationCode,
   pointVerificationList: point.pointVerificationList,
-  pointRealTimeList:point.pointRealTimeList,
-  pointHourItemList:point.pointHourItemList,
-  paramCodeList:point.paramCodeList,
+  pointRealTimeList: point.pointRealTimeList,
+  pointHourItemList: point.pointHourItemList,
+  paramCodeList: point.paramCodeList,
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -86,12 +88,13 @@ export default class MonitorPoint extends Component {
       DGIMN: '',
       FormData: null,
       tabKey: "1",
-      MNVisible:false,
-      deviceManagerVisible:false,
-      itemCode:[],
-      realtimePollutantCode:[],
-      hourPollutantCode:[],
-      pointCoefficientVal:'',//监测点系数
+      MNVisible: false,
+      deviceManagerVisible: false,
+      itemCode: [],
+      realtimePollutantCode: [],
+      hourPollutantCode: [],
+      pointCoefficientVal: '',//监测点系数
+      pointCoefficientFlag: false,
     };
   }
 
@@ -149,12 +152,12 @@ export default class MonitorPoint extends Component {
       }
       dispatch({
         type: 'point/getParamCodeList', //设备参数项码表
-        payload: {pollutantType: type},
-        callback:()=>{}
+        payload: { pollutantType: type },
+        callback: () => { }
       });
       dispatch({
         type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表
-        payload: {pollutantType:type},
+        payload: { pollutantType: type },
       });
     } catch (e) {
       // sdlMessage('AutoForm配置发生错误，请联系系统管理员', 'warning');
@@ -239,101 +242,96 @@ export default class MonitorPoint extends Component {
         visible: true,
         isEdit: false,
         selectedPointCode: '',
-        FormData:null,
+        FormData: null,
         tabKey: "1"
       });
     }
   };
 
-  handleCancel = e => {
-    this.setState({
-      visible: false,
-      isEdit: false,
-      selectedPointCode: '',
-      isView: false,
-      itemCode:[],
-      realtimePollutantCode:[],
-      hourPollutantCode:[],
-      platformNum:'',
-    });
-  };
+
 
   onSubmitForm() {
     const { dispatch, match, pointDataWhere, form } = this.props;
     const { FormData } = this.state;
-     if(this.state.tabKey==2){ //污染物信息
-        this.modelClose()
-     }else if(this.state.tabKey==3){ //数据核查项
+    if (this.state.tabKey == 2) { //污染物信息
+      this.modelClose()
+    } else if (this.state.tabKey == 3) { //数据核查项
       dispatch({
         type: 'point/addMonitorPointVerificationItem',
         payload: {
-            ID:'',
-            DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
-            ItemCode: this.state.itemCode? this.state.itemCode.toString() : '',
-            RealtimePollutantCode: this.state.realtimePollutantCode? this.state.realtimePollutantCode.toString() : '',
-            HourPollutantCode: this.state.hourPollutantCode? this.state.hourPollutantCode.toString() : '',
-            PlatformNum: this.state.platformNum,
+          ID: '',
+          DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
+          ItemCode: this.state.itemCode ? this.state.itemCode.toString() : '',
+          RealtimePollutantCode: this.state.realtimePollutantCode ? this.state.realtimePollutantCode.toString() : '',
+          HourPollutantCode: this.state.hourPollutantCode ? this.state.hourPollutantCode.toString() : '',
+          PlatformNum: this.state.platformNum,
         },
       });
-     }else if(this.state.tabKey==4){ //设备参数项
+    } else if (this.state.tabKey == 4) { //设备参数项
       dispatch({
         type: 'point/addPointParamInfo',
         payload: {
-            pollutantType:this.state.pollutantType,
-            DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
-            pollutantList:this.state.equipmentPol? this.state.equipmentPol : '',
+          pollutantType: this.state.pollutantType,
+          DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
+          pollutantList: this.state.equipmentPol ? this.state.equipmentPol : '',
 
         },
-      }) 
-      }else if(this.state.tabKey==5){ //监测点系数
-        
-        console.log(this.state.pointCoefficientVal)
-      }else{
+      })
+    } else if (this.state.tabKey == 5) { //监测点系数
+      dispatch({
+        type: 'operaAchiev/addOrEditPointCoefficient',
+        payload: {
+          DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
+          Coefficient: this.state.pointCoefficientVal,
+        },
+      })
+
+    } else {
       form.validateFields((err, values) => {
-      if (!err) {
-        const FormData = handleFormData(values);
-        if (!Object.keys(FormData).length) {
-          sdlMessage('数据为空', 'error');
-          return false;
-        }
-        if (this.state.isEdit) {
-          FormData.PointCode = this.state.selectedPointCode;
-        }
+        if (!err) {
+          const FormData = handleFormData(values);
+          if (!Object.keys(FormData).length) {
+            sdlMessage('数据为空', 'error');
+            return false;
+          }
+          if (this.state.isEdit) {
+            FormData.PointCode = this.state.selectedPointCode;
+          }
 
-        const payload = {
-          BaseType: match.params.targetType,
-          TargetId: match.params.targetId,
-          Point: FormData,
-        };
+          const payload = {
+            BaseType: match.params.targetType,
+            TargetId: match.params.targetId,
+            Point: FormData,
+          };
 
-        // console.log("payload=", payload);
+          // console.log("payload=", payload);
 
-        dispatch({
-          type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
-          payload: {
-            FormData: { ...payload },
-            callback: result => {
-              if (result.IsSuccess) {
-                // this.setState({
-                //   visible: false,
-                // });
-                dispatch({
-                  type: 'autoForm/getAutoFormData',
-                  payload: {
-                    configId: pointConfigId,
-                    searchParams: pointDataWhere,
-                  },
-                });
-              }
+          dispatch({
+            type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
+            payload: {
+              FormData: { ...payload },
+              callback: result => {
+                if (result.IsSuccess) {
+                  // this.setState({
+                  //   visible: false,
+                  // });
+                  dispatch({
+                    type: 'autoForm/getAutoFormData',
+                    payload: {
+                      configId: pointConfigId,
+                      searchParams: pointDataWhere,
+                    },
+                  });
+                }
+              },
             },
-          },
-        });
-        this.setState({
-          FormData: FormData
-        })
-      }
-    });
-  }
+          });
+          this.setState({
+            FormData: FormData
+          })
+        }
+      });
+    }
   }
 
   delPoint(PointCode, DGIMN) {
@@ -392,12 +390,41 @@ export default class MonitorPoint extends Component {
     console.log('res=', re)
   }
 
-  modelClose=()=>{
+  cancal = () => {
     this.setState({
       visible: false,
-      FormData:null,
-      tabKey:"1"
-    })
+      isEdit: false,
+      selectedPointCode: '',
+      isView: false,
+      itemCode: [],
+      realtimePollutantCode: [],
+      hourPollutantCode: [],
+      platformNum: '',
+      FormData: null,
+      tabKey: "1"
+    });
+  }
+  handleCancel = e => { //右上角
+    // this.setState({
+    //   visible: false,
+    //   isEdit: false,
+    //   selectedPointCode: '',
+    //   isView: false,
+    //   itemCode:[],
+    //   realtimePollutantCode:[],
+    //   hourPollutantCode:[],
+    //   platformNum:'',
+    // });
+    this.cancal();
+  };
+
+  modelClose = () => {
+    // this.setState({
+    //   visible: false,
+    //   FormData:null,
+    //   tabKey:"1"
+    // })
+    this.cancal();
   }
 
 
@@ -405,23 +432,21 @@ export default class MonitorPoint extends Component {
    * 站点信息维护tabchange
    */
   onTabPaneChange = (key) => {
- 
+
     const { selectedPointCode, FormData } = this.state;
     if (key != "1") {
-   
-       if(this.state.selectedPointCode || FormData)
-       {
-          // this.props.dispatch({
-          //   type: 'autoForm/getPageConfig',
-          //   payload: {
-          //     configId: 'service_StandardLibrary',
-          //   },
-          //  });
-       }else
-       {
-         message.error("请先保存站点信息！")
-         return;
-       }
+
+      if (this.state.selectedPointCode || FormData) {
+        // this.props.dispatch({
+        //   type: 'autoForm/getPageConfig',
+        //   payload: {
+        //     configId: 'service_StandardLibrary',
+        //   },
+        //  });
+      } else {
+        message.error("请先保存站点信息！")
+        return;
+      }
 
     }
     this.setState({
@@ -430,111 +455,115 @@ export default class MonitorPoint extends Component {
   }
 
   getTabInfo = () => {
- 
+
     const { FormData } = this.state;
-    console.log("FormData=",FormData)
+    console.log("FormData=", FormData)
     if (FormData)
-      return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]} 
-      pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
+      return <MonitoringStandard noload DGIMN={FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"]}
+        pollutantType={FormData["dbo.T_Bas_CommonPoint.PollutantType"] || FormData["PollutantType"]} />
   }
-  getDataVerification = () =>{
+  getDataVerification = () => {
 
     return <Spin spinning={this.props.getMonitorPointVerificationItemLoading}>
-           <div className={styles.dataVerificationSty}>
-          <div style={{color:'#f5222d',paddingBottom:10,paddingTop:5, paddingLeft:126}}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
-          <Form.Item label="核查项" >
-          <Checkbox.Group value={this.state.itemCode}  options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
-         </Form.Item>
-         <Form.Item label="实时数据一致性核查因子" >
-          <Checkbox.Group value={this.state.realtimePollutantCode}  options={this.props.pointRealTimeList} onChange={this.realtimePollutantChange} />
-         </Form.Item>
-         {/* <Form.Item label="小时日数据一致性核查因子" >
+      <div className={styles.dataVerificationSty}>
+        <div style={{ color: '#f5222d', paddingBottom: 10, paddingTop: 5, paddingLeft: 126 }}>以下选项根据监测点现场真实情况进行填写，设置的选项作为数据一致性核查电子表单中的检查项字段，有则填写。</div>
+        <Form.Item label="核查项" >
+          <Checkbox.Group value={this.state.itemCode} options={this.props.pointVerificationList} onChange={this.dataVerificationChange} />
+        </Form.Item>
+        <Form.Item label="实时数据一致性核查因子" >
+          <Checkbox.Group value={this.state.realtimePollutantCode} options={this.props.pointRealTimeList} onChange={this.realtimePollutantChange} />
+        </Form.Item>
+        {/* <Form.Item label="小时日数据一致性核查因子" >
           <Checkbox.Group value={this.state.hourPollutantCode}  options={this.props.pointHourItemList} onChange={this.hourPollutantChange} />
          </Form.Item> */}
-         <Form.Item label="监控平台数量" className='platformNumSty' >
-          <InputNumber style={{width:'50%',}} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange}/>
-          <span style={{color:'#f5222d',paddingLeft:10}}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
-          </Form.Item>
-     </div>
-     </Spin>
+        <Form.Item label="监控平台数量" className='platformNumSty' >
+          <InputNumber style={{ width: '50%', }} value={this.state.platformNum} placeholder='请输入' onChange={this.platformNumChange} />
+          <span style={{ color: '#f5222d', paddingLeft: 10 }}>填写现场监测点数据转发到几个监控平台，请填写数量。</span>
+        </Form.Item>
+      </div>
+    </Spin>
   }
 
-  dataVerificationChange = (val) =>{ //核查项 多选
-    this.setState({itemCode:val})
+  dataVerificationChange = (val) => { //核查项 多选
+    this.setState({ itemCode: val })
   }
-  realtimePollutantChange= (val)=>{
-    this.setState({realtimePollutantCode:val})
+  realtimePollutantChange = (val) => {
+    this.setState({ realtimePollutantCode: val })
   }
-  hourPollutantChange =(val) =>{
-    this.setState({hourPollutantCode:val})
+  hourPollutantChange = (val) => {
+    this.setState({ hourPollutantCode: val })
   }
 
-  platformNumChange=(value)=>{//核查项 平台数量
-    this.setState({platformNum:value})
+  platformNumChange = (value) => {//核查项 平台数量
+    this.setState({ platformNum: value })
   }
-  
-  pointCoefficientChange = (value) =>{ //监测点系数
-    this.setState({pointCoefficientVal:value})
+
+  pointCoefficientChange = (value) => { //监测点系数
+    this.setState({ pointCoefficientVal: value })
   }
-  getEquipmentPar = () =>{ //设备参数项
+  getEquipmentPar = () => { //设备参数项
     return <Spin spinning={this.props.getParamInfoListLoading}>
-          <div style={{padding:'5px 0 10px 0'}}>
-           <div style={{color:'#f5222d',paddingBottom:5}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
-          <Form.Item label="设备参数类别" >
-          <Checkbox.Group value={this.state.equipmentPol}  options={this.props.paramCodeList} onChange={this.equipmentParChange} />
-         </Form.Item>
-         </div>
-     </Spin>
+      <div style={{ padding: '5px 0 10px 0' }}>
+        <div style={{ color: '#f5222d', paddingBottom: 5 }}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写。</div>
+        <Form.Item label="设备参数类别" >
+          <Checkbox.Group value={this.state.equipmentPol} options={this.props.paramCodeList} onChange={this.equipmentParChange} />
+        </Form.Item>
+      </div>
+    </Spin>
   }
-  getPointCoefficient = () =>{ //监测点系数
-    return <Spin spinning={this.props.getParamInfoListLoading}>
-          <div style={{padding:'10px 0'}}>
-          <Form.Item label='监测点系数' >
-          <InputNumber value={this.state.pointCoefficientVal} style={{width:200}} placeholder='请输入'  onChange={this.pointCoefficientChange} />
-         </Form.Item>
-         </div>
-     </Spin>
+  getPointCoefficient = () => { //监测点系数
+
+    const { pointCoefficientFlag } = this.state;
+
+    return <Spin spinning={this.props.getPointCoefficientListLoading}>
+      <div style={{ padding: '10px 0' }}>
+        <Form.Item label='监测点系数' >
+          <InputNumber disabled={pointCoefficientFlag} value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
+          {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>监测点系数已存在，请联系管理员修改</span>}
+        </Form.Item>
+      </div>
+    </Spin>
   }
-  equipmentParChange = (val) =>{
-    this.setState({equipmentPol:val})
+  equipmentParChange = (val) => {
+    this.setState({ equipmentPol: val })
   }
-  editMN=(MN)=>{
-    this.setState({ 
-      MNVisible:true,
-      MNEcho:MN
+  editMN = (MN) => {
+    this.setState({
+      MNVisible: true,
+      MNEcho: MN
     })
   }
-  deviceManager = (row) =>{
-    this.setState({ 
-      deviceManagerVisible:true,
-      deviceManagerMN:row["dbo.T_Bas_CommonPoint.DGIMN"]
-    }) 
+  deviceManager = (row) => {
+    this.setState({
+      deviceManagerVisible: true,
+      deviceManagerMN: row["dbo.T_Bas_CommonPoint.DGIMN"]
+    })
   }
-  onSubmitMN= e =>{
-    const { dispatch,pointDataWhere } = this.props;
-    
+  onSubmitMN = e => {
+    const { dispatch, pointDataWhere } = this.props;
+
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (values.newMN) {
-          dispatch({
-            type: 'point/updatePointDGIMN',
-            payload: {
-              oldDGIMN:this.state.MNEcho,
-              newDGIMN:values.newMN
-            },
-            callback:()=>{
-              this.setState({ MNVisible:false })
-              dispatch({
-                type: 'autoForm/getAutoFormData',
-                payload: {
-                  configId: pointConfigId,
-                  searchParams: pointDataWhere,
-                },
-              });
-            }
-          })
+        dispatch({
+          type: 'point/updatePointDGIMN',
+          payload: {
+            oldDGIMN: this.state.MNEcho,
+            newDGIMN: values.newMN
+          },
+          callback: () => {
+            this.setState({ MNVisible: false })
+            dispatch({
+              type: 'autoForm/getAutoFormData',
+              payload: {
+                configId: pointConfigId,
+                searchParams: pointDataWhere,
+              },
+            });
+          }
+        })
 
-      }else{
+      } else {
 
         message.error('新设备编号(MN)不能为空！')
       }
@@ -544,35 +573,35 @@ export default class MonitorPoint extends Component {
   onMenuClick = ({ key }) => {
     const { row } = this.state;
 
-    if(key==3){ //设置Cems参数
+    if (key == 3) { //设置Cems参数
       this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode'])
     }
-    if(key==4){ //修改mn号
+    if (key == 4) { //修改mn号
       this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
     }
-    if(key==5){ //设备管理
-     this.deviceManager(row)
+    if (key == 5) { //设备管理
+      this.deviceManager(row)
     }
   };
 
-  loadingStatus = () =>{
+  loadingStatus = () => {
     const { tabKey } = this.state;
-    const { saveLoadingAdd,  saveLoadingEdit,addMonitorPointVerificationLoading,addPointParamInfoLoading } = this.props;
-    if(tabKey==1){
-      return  !this.state.isEdit ? saveLoadingAdd : saveLoadingEdit
+    const { saveLoadingAdd, saveLoadingEdit, addMonitorPointVerificationLoading, addPointParamInfoLoading, addOrEditPointCoefficientLoading, } = this.props;
+    if (tabKey == 1) {
+      return !this.state.isEdit ? saveLoadingAdd : saveLoadingEdit
     }
-    if(tabKey==3){ //数据核查项
-      return  addMonitorPointVerificationLoading
-      
+    if (tabKey == 3) { //数据核查项
+      return addMonitorPointVerificationLoading
+
     }
-    if(tabKey==4){ //设备参数
-      return  addPointParamInfoLoading
-      
-    } 
-    if(tabKey==5){ //监测点系数
-      // return  addPointParamInfoLoading
-      
-    }     
+    if (tabKey == 4) { //设备参数
+      return addPointParamInfoLoading
+
+    }
+    if (tabKey == 5) { //监测点系数
+      return addOrEditPointCoefficientLoading
+
+    }
   }
   render() {
     const {
@@ -607,13 +636,14 @@ export default class MonitorPoint extends Component {
     }
     const menu = (
       <Menu onClick={this.onMenuClick} >
-          <Menu.Item key="3"> <Tooltip title="设置Cems参数"> <a><ToolOutlined style={{fontSize:16}}/></a> </Tooltip></Menu.Item>
-          <Menu.Item key="4"> <Tooltip title="修改设备编号(MN)">  <a><HighlightOutlined  style={{fontSize:16}}/></a></Tooltip></Menu.Item>
-          <Menu.Item key="5"><Tooltip title="设备管理"> <a><FileTextOutlined  style={{fontSize:16}}/></a>  </Tooltip></Menu.Item>
-    
+        <Menu.Item key="3"> <Tooltip title="设置Cems参数"> <a><ToolOutlined style={{ fontSize: 16 }} /></a> </Tooltip></Menu.Item>
+        <Menu.Item key="4"> <Tooltip title="修改设备编号(MN)">  <a><HighlightOutlined style={{ fontSize: 16 }} /></a></Tooltip></Menu.Item>
+        <Menu.Item key="5"><Tooltip title="设备管理"> <a><FileTextOutlined style={{ fontSize: 16 }} /></a>  </Tooltip></Menu.Item>
+
       </Menu>
     );
-    const { tabKey } = this.state;
+    const { tabKey, pointCoefficientFlag } = this.state;
+    const pointFlag = tabKey == 5 && pointCoefficientFlag;
     return (
       <BreadcrumbWrapper title="监测点维护">
         <div className={styles.cardTitle}>
@@ -667,7 +697,7 @@ export default class MonitorPoint extends Component {
                 }}
                 onAdd={() => {
                   this.showModal();
-                  
+
                   // this.setState({
                   //   cuid: getRowCuid(columns, row)
                   // })
@@ -676,7 +706,7 @@ export default class MonitorPoint extends Component {
                 appendHandleRows={row => (
                   <Fragment>
 
-                    
+
                     <Tooltip title="编辑">
                       <a
                         onClick={() => {
@@ -690,12 +720,12 @@ export default class MonitorPoint extends Component {
                             payload: {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
                             },
-                            callback:(res)=>{
+                            callback: (res) => {
                               this.setState({
-                                itemCode: res&&res.code ? res.code:undefined,
-                                realtimePollutantCode:res&&res.RealTimeItem ? res.RealTimeItem:undefined,
-                                hourPollutantCode:res&&res.HourItem ? res.HourItem:undefined,
-                                platformNum:res&&res.platformNum ? res.platformNum:undefined,
+                                itemCode: res && res.code ? res.code : undefined,
+                                realtimePollutantCode: res && res.RealTimeItem ? res.RealTimeItem : undefined,
+                                hourPollutantCode: res && res.HourItem ? res.HourItem : undefined,
+                                platformNum: res && res.platformNum ? res.platformNum : undefined,
                               })
                             }
                           })
@@ -704,21 +734,38 @@ export default class MonitorPoint extends Component {
                             type: 'point/getParamInfoList',
                             payload: {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                              pollutantType:this.state.pollutantType
+                              pollutantType: this.state.pollutantType
                             },
-                            callback:(res)=>{
+                            callback: (res) => {
                               this.setState({
-                                equipmentPol: res&&res.code ? res.code:undefined,
+                                equipmentPol: res && res.code ? res.code : undefined,
                               })
                             }
-                          })                         
+                          })
+
+                          this.props.dispatch({ //监测点系数 回显数据
+                            type: 'operaAchiev/getPointCoefficientList',
+                            payload: {
+                              DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
+                            },
+                            callback: (data) => {
+                              this.setState({
+                                pointCoefficientVal: data[0] ? data[0].Coefficient : undefined,
+                              })
+                              this.setState({
+                                pointCoefficientFlag: data[0] && data[0].Coefficient  ? true : false,
+                              })
+                            }
+                          })
+
+
                         }}
                       >
-                        <EditIcon />      
+                        <EditIcon />
                       </a>
                     </Tooltip>
                     <Divider type="vertical" />
-                   <Tooltip title="详情">
+                    <Tooltip title="详情">
                       <a
                         onClick={() => {
                           this.setState({
@@ -739,7 +786,7 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
-                     {/* {
+                    {/* {
                       row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
                         <Tooltip title="设置Cems参数">
                           <a onClick={() => {
@@ -747,20 +794,20 @@ export default class MonitorPoint extends Component {
                           }}><ToolOutlined style={{fontSize:16}}/></a>
                         </Tooltip></> : ''
                     } */}
-                   <> <Divider type="vertical" />
-                 <Tooltip title="修改设备编号(MN)">
-                          <a onClick={() => {
-                            this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
-                          }}><HighlightOutlined  style={{fontSize:16}}/></a>
-                        </Tooltip></>
-                        <Divider type="vertical" />
-                        <Tooltip title="设备管理">
-                          <a onClick={() => {
-                            this.deviceManager(row);
-                          }}><FileTextOutlined  style={{fontSize:16}}/></a>
-                        </Tooltip>
+                    <> <Divider type="vertical" />
+                      <Tooltip title="修改设备编号(MN)">
+                        <a onClick={() => {
+                          this.editMN(row['dbo.T_Bas_CommonPoint.DGIMN']);
+                        }}><HighlightOutlined style={{ fontSize: 16 }} /></a>
+                      </Tooltip></>
+                    <Divider type="vertical" />
+                    <Tooltip title="设备管理">
+                      <a onClick={() => {
+                        this.deviceManager(row);
+                      }}><FileTextOutlined style={{ fontSize: 16 }} /></a>
+                    </Tooltip>
 
-                     {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
+                    {/* {row['dbo.T_Bas_CommonPoint.PollutantType']==2&&<>  <Divider type="vertical" />  <Dropdown trigger={['click']} placement='bottomCenter' overlay={ menu }>
                          <a className="ant-dropdown-link" onClick={e => {e.preventDefault();this.setState({row:row})}}>
                          <Tooltip title="更多">  <EllipsisOutlined /></Tooltip>
                         </a>
@@ -779,56 +826,68 @@ export default class MonitorPoint extends Component {
             onCancel={this.handleCancel}
             width={'80%'}
             destroyOnClose
-            bodyStyle={{paddingBottom:0}}
+            bodyStyle={{ paddingBottom: 0 }}
             footer={[
-              !this.state.isView ? (<Button key="back" onClick={this.handleCancel}>
-                取消
-            </Button>,
-                <><Button key="submit" type="primary" loading={this.loadingStatus()} onClick={this.onSubmitForm.bind(this)}>
-                  确定
-            </Button><Button key="submit" onClick={this.modelClose}>
+              !this.state.isView ? (
+                <Button key="back" onClick={this.handleCancel}>
                   取消
-            </Button></>) : '',
+            </Button>,
+
+                <>
+                  {pointFlag ?
+                   <Button key="submit" onClick={this.modelClose}>
+                       取消
+                  </Button>
+                    :
+                    <>
+                      <Button key="submit" type="primary" loading={this.loadingStatus()} onClick={this.onSubmitForm.bind(this)}>
+                        确定
+              </Button>
+                      <Button key="submit" onClick={this.modelClose}>
+                        取消
+                     </Button></>
+
+                  }</>) : '',
             ]}
           >{
-            !this.state.isView?(
-              <Tabs activeKey={this.state.tabKey} onChange={this.onTabPaneChange}>
-              <TabPane tab={this.state.isView ? '详情' : this.state.isEdit ? '编辑监测点' : '添加监测点'} key="1">
-                  <SdlForm
-                    corporationCode={this.props.CorporationCode}
-                    configId={pointConfigIdEdit}
-                    onSubmitForm={this.onSubmitForm.bind(this)}
-                    form={this.props.form}
-                    noLoad
-                    hideBtns
-                    uid={this.state.cuid}
-                    isEdit={this.state.isEdit}
-                    keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-                    types='point'
-                    isModal
-                  />
-              </TabPane>
-              <TabPane tab="污染物信息" key="2">
-                {this.getTabInfo()}
-              </TabPane>
-              <TabPane tab="数据核查项" key="3">
-                {this.getDataVerification()}
-              </TabPane>
-              <TabPane tab="设备参数项" key="4">
-                {this.getEquipmentPar()}
-              </TabPane>
-              <TabPane tab="监测点系数" key="5">
-                {this.getPointCoefficient()}
-              </TabPane>
-            </Tabs>
+              !this.state.isView ? (
+                <Tabs activeKey={this.state.tabKey} onChange={this.onTabPaneChange}>
+                  <TabPane tab={this.state.isView ? '详情' : this.state.isEdit ? '编辑监测点' : '添加监测点'} key="1">
+                    <SdlForm
+                      corporationCode={this.props.CorporationCode}
+                      configId={pointConfigIdEdit}
+                      onSubmitForm={this.onSubmitForm.bind(this)}
+                      form={this.props.form}
+                      noLoad
+                      hideBtns
+                      uid={this.state.cuid}
+                      isEdit={this.state.isEdit}
+                      keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                      types='point'
+                      isModal
+                    />
+                  </TabPane>
+                  <TabPane tab="污染物信息" key="2">
+                    {this.getTabInfo()}
+                  </TabPane>
+                  <TabPane tab="数据核查项" key="3">
+                    {this.getDataVerification()}
+                  </TabPane>
+                  <TabPane tab="设备参数项" key="4">
+                    {this.getEquipmentPar()}
+                  </TabPane>
+                  <TabPane tab="监测点系数" key="5">
+                    {this.getPointCoefficient()}
+                  </TabPane>
+                </Tabs>
 
-            ):(
-              <AutoFormViewItems
-                configId={pointConfigIdEdit}
-                keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
-              />
-            )
-          }
+              ) : (
+                  <AutoFormViewItems
+                    configId={pointConfigIdEdit}
+                    keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
+                  />
+                )
+            }
 
           </Modal>
           <Modal
@@ -844,36 +903,36 @@ export default class MonitorPoint extends Component {
           <Modal
             title="修改设备编号(MN)"
             visible={this.state.MNVisible}
-            onCancel={()=>{this.setState({MNVisible:false})}}
-            onOk={(e)=>{this.onSubmitMN(e)}}
+            onCancel={() => { this.setState({ MNVisible: false }) }}
+            onOk={(e) => { this.onSubmitMN(e) }}
             destroyOnClose
             confirmLoading={this.props.saveLoadingMN}
             className={styles.MNmodal}
           >
-           <Form>
-           <Form.Item label="旧设备编号(MN)">
-             <Input value={this.state.MNEcho} disabled/>
-           </Form.Item>
-           <Form.Item label="新设备编号(MN)">
-               {getFieldDecorator('newMN', {
-                                rules: [{ required: this.state.MNVisible, message: '请输入新的设备编号(MN)' }], //设置成动态  以防影响autoform其他表单的提交
-                            })( 
-                                <Input  placeholder="请输入新的设备编号(MN)" />
-                            )} 
-           </Form.Item>
-      </Form>
+            <Form>
+              <Form.Item label="旧设备编号(MN)">
+                <Input value={this.state.MNEcho} disabled />
+              </Form.Item>
+              <Form.Item label="新设备编号(MN)">
+                {getFieldDecorator('newMN', {
+                  rules: [{ required: this.state.MNVisible, message: '请输入新的设备编号(MN)' }], //设置成动态  以防影响autoform其他表单的提交
+                })(
+                  <Input placeholder="请输入新的设备编号(MN)" />
+                )}
+              </Form.Item>
+            </Form>
           </Modal>
 
           <Modal  //设备管理
             title={"设备信息"}
             visible={this.state.deviceManagerVisible}
-            onCancel={()=>{this.setState({deviceManagerVisible:false})}}
+            onCancel={() => { this.setState({ deviceManagerVisible: false }) }}
             width="95%"
             destroyOnClose
             footer={false}
             wrapClassName={styles.deviceManagerSty}
           >
-            <DeviceManager onCancel={()=>{this.setState({deviceManagerVisible:false})}} DGIMN={this.state.deviceManagerMN} pollutantType={this.state.pollutantType}/>
+            <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} pollutantType={this.state.pollutantType} />
           </Modal>
         </div>
         {/* </MonitorContent> */}
