@@ -31,7 +31,7 @@ import OperationInfo  from './components/OperationInfo'
 import EntInfo  from './components/EntInfo'
 import PointCoefficient  from '@/pages/operaAchiev/pointCoefficients'
 import WorkCoefficient  from '@/pages/operaAchiev/workCoefficients'
-import InspectionCoefficient  from './components/InspectionCoefficient'
+import OperationCoefficient  from './components/AutoFormTable'
 
 const namespace = 'pollutantInfo'
 const dvaPropsData =  ({ loading,pollutantInfo,global }) => ({
@@ -96,7 +96,7 @@ const Index = (props) => {
             <WorkCoefficient props />
           </TabPane>
           <TabPane tab="巡检频次系数" key="10">
-            <InspectionCoefficient props />
+            <OperationCoefficient props  configId='OperationCycleForm'/>
           </TabPane> 
         </Tabs>
    </Card>

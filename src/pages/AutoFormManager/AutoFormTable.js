@@ -57,7 +57,7 @@ class AutoFormTable extends PureComponent {
     this.state = {
       selectedRowKeys: [],
       delPostData: {},
-      otherParams: {}
+      otherParams: null,
     };
     this._SELF_ = { btnEl: [], configId: props.configId, moreBtns: [] };
 
@@ -92,7 +92,7 @@ class AutoFormTable extends PureComponent {
       payload: {
         configId: this.props.configId,
         searchParams: this.props.searchParams,
-        otherParams: params || this.state.otherParams,
+        otherParams: params || this.state.otherParams||this.props.otherParams,
       },
     });
   }

@@ -217,7 +217,7 @@ const Index = (props) => {
             width:170,
             filters: [
                 { text: '是', value: '1' },
-                { text: '否', value: '2' },
+                { text: '否', value: '0' },
               ],
             filterMultiple:false,
         },

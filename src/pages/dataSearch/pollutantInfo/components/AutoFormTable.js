@@ -26,7 +26,6 @@ import { routerRedux } from 'dva/router';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import { connect } from 'dva';
 import SdlTable from '@/pages/AutoFormManager/AutoFormTable';
-import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 
 @connect(({ loading, autoForm }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
@@ -41,13 +40,14 @@ export default class AutoFormTable extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+    };
 
   }
 
   componentDidMount() {
-    const { match } = this.props;
-    this.reloadPage('sss');
+    const { configId } = this.props;
+    this.reloadPage(configId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,13 +68,13 @@ export default class AutoFormTable extends Component {
     dispatch({
       type: 'autoForm/getPageConfig',
       payload: {
-        configId: configId
+        configId: configId,
       }
     })
   }
 
   render() {
-    const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
+    const { searchConfigItems, searchForm, tableInfo, configId, dispatch } = this.props;
     const searchConditions = searchConfigItems[configId] || []
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     if (this.props.loading) {
@@ -91,7 +91,6 @@ export default class AutoFormTable extends Component {
     }
     return (
 
-      <BreadcrumbWrapper>
         <div className={styles.cardTitle}>
           <Card>
             <SdlTable
@@ -104,10 +103,14 @@ export default class AutoFormTable extends Component {
               }}
               isCenter
               {...this.props}
+              pagination={false}
+              otherParams={{
+                pageIndex: 1,
+                pageSize: 9999999
+               }}
             />
           </Card>
         </div>
-        </BreadcrumbWrapper>
     );
   }
 }
