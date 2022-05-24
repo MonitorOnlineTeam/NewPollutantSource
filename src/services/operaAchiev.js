@@ -35,3 +35,15 @@ export async function AddOrEditRecordCoefficient(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrEditRecordCoefficient',params, null);
   return result;
 }
+
+// 删除工单系数
+export async function DeleteRecordCoefficient(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteRecordCoefficient/'+params.ID,params, null);
+  return result;
+}
+
+// 导出所有排口监测点系数列表
+export async function ExportPointCoefficient(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPointCoefficient',params, null);
+  return result;
+}

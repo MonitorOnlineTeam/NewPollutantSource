@@ -374,7 +374,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
      <ReactEcharts
        option={planOperaOption(2)} 
        style={{ width: 105, height: 105 }}
-       onEvents={{click: planInspection }}
+       onEvents={{click: planCalibration }}
      />
      <img style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div className={styles.planOperaText} >

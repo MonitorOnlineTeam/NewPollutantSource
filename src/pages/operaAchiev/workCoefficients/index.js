@@ -71,6 +71,13 @@ const dvaDispatch = (dispatch) => {
         callback:callback
       })
     },
+    deleteRecordCoefficient: (payload,callback) => { //删除工单系数
+      dispatch({
+        type: `${namespace}/deleteRecordCoefficient`,
+        payload: payload,
+        callback:callback
+      })
+    },
   }
 }
 const Index = (props) => {
@@ -189,13 +196,8 @@ const Index = (props) => {
 
   const del = async (record) => {
     const values = await form.validateFields();
-    props.delSystemModel({ ID: record.ID }, () => {
-      setPageIndex(1)
-      props.getSystemModelList({
-        pageIndex: 1,
-        pageSize: pageSize,
-        ...values,
-      })
+    props.deleteRecordCoefficient({ ID: record.ID }, () => {
+       onFinish();
     })
   };
 

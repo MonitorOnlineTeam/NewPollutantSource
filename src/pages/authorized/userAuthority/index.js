@@ -776,6 +776,7 @@ export default class UserAuthority extends Component {
                         defaultPollutantCode={this.state.pollutantType}
                         mode="multiple"
                         onChange={this.handleSizeChange}
+                        onlyShowEnt
                       />
                       <TreeSelect
                         className={styles.placeHolderClass}

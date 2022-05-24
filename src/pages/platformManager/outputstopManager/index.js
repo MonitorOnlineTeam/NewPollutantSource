@@ -39,7 +39,7 @@ import OutputStopManage from './components/index'
                 <BreadcrumbWrapper>
                  {this.state.dgimn && <OutputStopManage DGIMN={this.state.dgimn} configId={configId} {...this.props} />}
                 </BreadcrumbWrapper>
-                <NavigationTree domId="#OutputStopManage" choice={false} onItemClick={value => {
+                <NavigationTree domId="#OutputStopManage"  polShow type='ent' choice={false} onItemClick={value => {
                             if (value.length > 0 && !value[0].IsEnt) {
                             this.changeDgimn(value[0].key)
                             }

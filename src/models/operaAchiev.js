@@ -69,5 +69,27 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-  },
+    *deleteRecordCoefficient({ payload,callback }, { call, put, update }) { //删除工单系数
+      const result = yield call(services.DeleteRecordCoefficient, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
+    *exportPointCoefficient({ payload,callback }, { call, put, update }) { //导出所有排口监测点系数列表
+      const result = yield call(services.ExportPointCoefficient, payload);
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+
+    },
+  
+  
+  } 
+
 })

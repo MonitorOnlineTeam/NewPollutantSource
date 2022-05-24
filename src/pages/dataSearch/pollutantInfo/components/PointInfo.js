@@ -22,7 +22,6 @@ import NumTips from '@/components/NumTips'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
-import { getConfirmLocale } from 'antd/lib/modal/locale';
 
 const { TextArea } = Input;
 const { Option } = Select;

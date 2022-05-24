@@ -578,7 +578,6 @@ class AutoFormTable extends PureComponent {
     } : false;
     const dataSource = tableInfo[configId] ? tableInfo[configId].dataSource : [];
     // const dataSource = _tabelInfo.dataSource
-
     const props = {
       name: 'file',
       multiple: true,

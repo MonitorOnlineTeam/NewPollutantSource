@@ -36,7 +36,7 @@ const dvaPropsData =  ({ loading,operaAchiev,global,common, }) => ({
   tableDatas:operaAchiev.pointCoefficientList,
   tableTotal:operaAchiev.pointCoefficientTotal,
   tableLoading: loading.effects[`${namespace}/getPointCoefficientList`],
-  exportLoading:loading.effects[`${namespace}/exportSystemModelOfPoint`],
+  exportLoading:loading.effects[`${namespace}/exportPointCoefficient`],
   loadingEditConfirm:loading.effects[`${namespace}/addOrEditPointCoefficient`],
   clientHeight: global.clientHeight,
   regLoading: loading.effects[`autoForm/getRegions`],
@@ -59,7 +59,7 @@ const  dvaDispatch = (dispatch) => {
     },
     exportData : (payload,callback) =>{ // 导出
       dispatch({
-        type: `${namespace}/exportSystemModelOfPoint`,
+        type: `${namespace}/exportPointCoefficient`,
         payload:payload,
         callback:callback
       })
@@ -292,9 +292,9 @@ const Index = (props) => {
         <Button style={{ margin: '0 8px' }} onClick={() => { form.resetFields(); }}  >
           重置
         </Button>
-        <Button icon={<ExportOutlined />}   loading={exportLoading}  onClick={()=>{ exports()} }>
+            {!isList&&<Button icon={<ExportOutlined />}   loading={exportLoading}  onClick={()=>{ exports()} }>
             导出
-         </Button> 
+         </Button>}
       </Form.Item>
   </Form>
   }
