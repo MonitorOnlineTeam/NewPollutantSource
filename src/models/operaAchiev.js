@@ -15,6 +15,12 @@ export default Model.extend({
     pointCoefficientTotal:0,
     recordCoefficientList:[],
     recordCoefficientTotal:0,
+    personalPerformanceRateList: [], //绩效查询
+    personalPerformanceRateTotal: 0,
+    individualApportionmentList: [], //个人分摊套数
+    individualApportionmentTotal: 0,
+    individualTaskInfo: [], //个人工单详情
+    individualTaskTotal: 0,
   },
   effects: {
     *getPointCoefficientList({ payload,callback }, { call, put, update }) { //获取所有排口监测点系数列表
@@ -89,7 +95,72 @@ export default Model.extend({
 
     },
   
-  
+    *getPersonalPerformanceRateList({ payload, callback }, { call, put, update }) { //绩效信息查询列表
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetPersonalPerformanceRateList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          personalPerformanceRateList: result.Datas,
+          personalPerformanceRateTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
+      }
+    },
+    *exportPersonalPerformanceRate({ payload }, { call, put, update, select }) { //导出 绩效信息
+      const result = yield call(services.ExportPersonalPerformanceRate, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+    },
+    *getIndividualApportionmentList({ payload, callback }, { call, put, update }) { //个人分摊套数列表
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetIndividualApportionmentList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          individualApportionmentList: result.Datas,
+          individualApportionmentTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
+      }
+    },
+    *exportIndividualApportionment({ payload }, { call, put, update, select }) { //导出 个人分摊套数
+      const result = yield call(services.ExportIndividualApportionment, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+    },
+    *getIndividualTaskInfo({ payload, callback }, { call, put, update }) { //获取个人工单详细
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetIndividualTaskInfo, payload);
+      if (result.IsSuccess) {
+        yield update({
+          individualTaskInfo: result.Datas,
+          individualTaskTotal: result.Total,
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
+      }
+    },
+    *exportIndividualTaskInfo({ payload }, { call, put, update, select }) { //导出 个人工单详细
+      const result = yield call(services.ExportIndividualTaskInfo, { ...payload });
+      if (result.IsSuccess) {
+        message.success('下载成功');
+        downloadFile(`${result.Datas}`);
+      }else{
+        message.warning(result.Message)
+      }
+    },
   } 
 
 })

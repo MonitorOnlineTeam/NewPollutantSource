@@ -27,16 +27,16 @@ import tableList from '@/pages/list/table-list';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'achievInfo'
+const namespace = 'operaAchiev'
 
 
 
 
-const dvaPropsData =  ({ loading,achievInfo,global }) => ({
-  tableDatas:achievInfo.systemModelTableDatas,
-  tableTotal:achievInfo.systemModelTableTotal,
-  tableLoading: loading.effects[`${namespace}/getSystemModelOfPoint`],
-  exportLoading:loading.effects[`${namespace}/exportSystemModelOfPoint`],
+const dvaPropsData =  ({ loading,operaAchiev,global }) => ({
+  tableDatas:operaAchiev.individualTaskInfo,
+  tableTotal:operaAchiev.individualTaskTotal,
+  tableLoading: loading.effects[`${namespace}/getIndividualTaskInfo`],
+  exportLoading:loading.effects[`${namespace}/exportIndividualTaskInfo`],
   clientHeight: global.clientHeight,
 })
 
@@ -50,13 +50,13 @@ const  dvaDispatch = (dispatch) => {
     },
     getTableData:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getSystemModelOfPoint`,
+        type: `${namespace}/getIndividualTaskInfo`,
         payload:payload,
       })
     },
     exportData : (payload,callback) =>{ // 导出
       dispatch({
-        type: `${namespace}/exportSystemModelOfPoint`,
+        type: `${namespace}/exportIndividualTaskInfo`,
         payload:payload,
         callback:callback
       })
@@ -71,14 +71,14 @@ const Index = (props) => {
 
 
   const [form] = Form.useForm();
-  
-  const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,exportLoading} = props;
+
+  const  { tableDatas,tableTotal,tableLoading,exportLoading,detailPar} = props;
   
 
   useEffect(() => {
-    onFinish(pageIndex,pageSize)
+    props.getTableData({...detailPar,pageIndex:pageIndex,pageSize:pageSize,})
+
   },[]);
 
   const columns = [
@@ -111,42 +111,42 @@ const Index = (props) => {
     },
     {
       title: '污染源类型',
-      dataIndex: 'GasManufacturer',
-      key:'GasManufacturer',
+      dataIndex: 'PollutantTypeName',
+      key:'PollutantTypeName',
       align:'center',
       width:120,
     },
     {
       title: '任务单号',
-      dataIndex: 'GasEquipment',
-      key:'GasEquipment',
+      dataIndex: 'TaskCode',
+      key:'TaskCode',
       align:'center',
       width:200,
     },
     {
       title: '任务来源',
-      dataIndex: 'PMManufacturer',
-      key:'PMManufacturer',
+      dataIndex: 'TaskFromText',
+      key:'TaskFromText',
       align:'center',
     },  
     {
       title: '任务类型',
-      dataIndex: 'PMEquipment',
-      key:'PMEquipment', 
+      dataIndex: 'TaskTypeText',
+      key:'TaskTypeText', 
       align:'center',
     },
     {
       title: '运维人',
-      dataIndex: 'PMEquipment',
-      key:'PMEquipment', 
+      dataIndex: 'OperationsUserName',
+      key:'OperationsUserName', 
       align:'center',
     },
     {
       title: '完成时间',
-      dataIndex: 'PMEquipment',
-      key:'PMEquipment', 
+      dataIndex: 'CompleteTime',
+      key:'CompleteTime', 
       align:'center',
-      sorter: (a, b) => moment(a.operationEndTime).valueOf() - moment(b.operationEndTime).valueOf()
+      sorter: (a, b) => moment(a.CompleteTime).valueOf() - moment(b.CompleteTime).valueOf()
 
     },
   ];
@@ -155,41 +155,23 @@ const Index = (props) => {
 
 
 
-  const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
-    try {
-      const values = await form.validateFields();
-      props.getTableData({
-        ...values,
-        ManufacturerId:manufacturerId,
-        pageIndex:pageIndexs,
-        pageSize:pageSizes,
-      })
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
 
 
-
-
+  const [pageIndex,setPageIndex]=useState(1)
+  const [pageSize,setPageSize]=useState(20)
   const handleTableChange = (PageIndex, PageSize) =>{
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    onFinish(PageIndex,PageSize)
+    props.getTableData({...detailPar,pageIndex:PageIndex,pageSize:PageSize,})
+
   }
 
   const exports =  async () => {
-    const values = await form.validateFields();
-    props.exportData({
-       ...values,
-       pageIndex:undefined,
-       pageSize:undefined,
-    })
+    props.exportData({...detailPar})
      
  };
 
-  const [pageSize,setPageSize]=useState(20)
-  const [pageIndex,setPageIndex]=useState(1)
+
 
   const searchComponents = () =>{
     return <Form

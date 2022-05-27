@@ -47,3 +47,39 @@ export async function ExportPointCoefficient(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPointCoefficient',params, null);
   return result;
 }
+
+
+
+//绩效信息查询列表
+export async function GetPersonalPerformanceRateList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPersonalPerformanceRateList',params, null);
+  return result;
+}
+//绩效信息查询 导出
+export async function ExportPersonalPerformanceRate(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPersonalPerformanceRate',params, null);
+  return result;
+}
+
+//个人分摊套数列表
+export async function GetIndividualApportionmentList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetIndividualApportionmentList',params, null);
+  return result;
+}
+//获取个人工单详细 
+export async function GetIndividualTaskInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetIndividualTaskInfo',params, null);
+  return result;
+}
+//个人分摊套数  导出
+export async function ExportIndividualApportionment(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportIndividualApportionment',params, null);
+  return result;
+}
+
+//个人任务详细 导出
+export async function ExportIndividualTaskInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportIndividualTaskInfo',params, null);
+  return result;
+}
+

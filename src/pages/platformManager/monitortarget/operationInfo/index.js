@@ -246,7 +246,7 @@ const Index = (props) => {
       
     },
     {
-      title: '附件',
+      title: '运维接收确认单附件',
       align: 'center',
       dataIndex: 'uploadInfo',
       key: 'uploadInfo',
@@ -350,7 +350,7 @@ const projectNumCol =[
   };
   const edit = async (record) => {
     setFileList1([])
-    if(record.uploadInfo&&record.uploadInfo[0]){  // 附件
+    if(record.uploadInfo&&record.uploadInfo[0]){  // 运维接收确认单附件
       form2.setFieldsValue({Enclosure:record.uploadID})
       setFilesCuid1(record.uploadID)
        const fileList = record.uploadInfo.map(item=>{
@@ -507,7 +507,7 @@ useEffect(()=>{
   const [filesCuid1, setFilesCuid1] = useState(cuid())
   const [fileList1, setFileList1] = useState([])
 
-  const uploadProps = { //附件上传 
+  const uploadProps = { //运维接收确认单附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     // accept:'image/*',
     data: {
@@ -679,7 +679,7 @@ useEffect(()=>{
       </Form.Item>
       </Col>
       <Col span={24}>
-         <Form.Item label="附件" name='Enclosure'>
+         <Form.Item label="运维接收确认单附件" name='Enclosure'>
            <Upload {...uploadProps} style={{ width: '100%' }} >
           <div>
             <PlusOutlined />
@@ -699,7 +699,7 @@ useEffect(()=>{
     </Form>
       </Modal>
 
-      <Modal //预览上传附件
+      <Modal //预览上传运维接收确认单附件
         visible={previewVisible}
         title={previewTitle}
         footer={null}

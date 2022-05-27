@@ -1114,7 +1114,7 @@ export default {
                       component: './authorized/user',
                     },
                     {
-                      name: 'newUserInfo',
+                      name: 'userAuthority',
                       path: '/rolesmanager/user/userAuthority',
                       component: './authorized/userAuthority',
                     },
@@ -1166,6 +1166,11 @@ export default {
                       component: './authorized/departInfo',
                     },
                   ],
+                },
+                {
+                  name: 'userRecovery', //用户恢复
+                  path: '/rolesmanager/userRecovery',
+                  component: './authorized/userRecovery',
                 },
               ],
             }, // {

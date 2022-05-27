@@ -123,3 +123,12 @@ export async function GetAndroidOrIosSettings(params) {
   const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/GetAndroidOrIosSettings', params);
   return result;
 }
+
+
+/**
+ * 用户恢复
+ */
+export async function RecoveryUser(params) {
+  const result = await post('/api/rest/PollutantSourceApi/AuthorApi/RecoveryUser', params);
+  return result;
+}

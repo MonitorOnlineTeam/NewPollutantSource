@@ -1,19 +1,19 @@
 import Model from '@/utils/model';
 import {
     getList, deleteuser, enableduser, isexistenceuser, adduser, getuser, edituser, editpersonaluser, getmypielist, mymessagelist,
-    setEnterpriseDataRole, getEnterpriseDataRoles, getdeparttree, getrolestree, insertroledep, getrolebyuserid, getdepbyuserid,deluserandroledep
-    ,resetpwd,
+    setEnterpriseDataRole, getEnterpriseDataRoles, getdeparttree, getrolestree, insertroledep, getrolebyuserid, getdepbyuserid, deluserandroledep
+    , resetpwd,
     GetDepInfoByTree,
     GetRolesTree,
     GetUserList,
     ExportUserList,
-    insertPointFilterByUser
+    insertPointFilterByUser,
 } from './service';
-import { getregioninfobytree,getentandpoint,getpointbydepid,} from '../departInfo/service';
+import { getregioninfobytree, getentandpoint, getpointbydepid, } from '../departInfo/service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
 import { message } from 'antd';
 import { sdlMessage } from '@/utils/utils';
-import { downloadFile,interceptTwo } from '@/utils/utils';
+import { downloadFile, interceptTwo } from '@/utils/utils';
 
 /*
 用户管理相关接口
@@ -41,21 +41,21 @@ export default Model.extend({
         RolesTree: [],
         UserRoles: [],
         UserDep: [],
-        UserRolesName:'',
-        UserDepName:'',
-        tableDatas:[],
-        depInfoList:[],
-        rolesList:[],
-        userPar:{
-            roleListID:'',
-            groupListID:'',
-            userName:'',	
-            userAccount:'',
+        UserRolesName: '',
+        UserDepName: '',
+        tableDatas: [],
+        depInfoList: [],
+        rolesList: [],
+        userPar: {
+            roleListID: '',
+            groupListID: '',
+            userName: '',
+            userAccount: '',
         },
         RegionByDepID: [],
-        RegionInfoTree:[],
+        RegionInfoTree: [],
         EntAndPoint: [],
-        CheckPoint:[]
+        CheckPoint: []
     },
     subscriptions: {
         setup({
@@ -68,48 +68,48 @@ export default Model.extend({
     },
 
     effects: {
-          *getDepInfoByTree({ payload,callback }, { call, put, update, select }) {
+        *getDepInfoByTree({ payload, callback }, { call, put, update, select }) {
             //部门列表
             const response = yield call(GetDepInfoByTree, { ...payload });
             if (response.IsSuccess) {
-              yield update({
-                depInfoList: response.Datas.children,
-              });
-              callback(response.Datas)
+                yield update({
+                    depInfoList: response.Datas.children,
+                });
+                callback(response.Datas)
             }
-          },
-          *getRolesTree({ payload }, { call, put, update, select }) {
+        },
+        *getRolesTree({ payload }, { call, put, update, select }) {
             //角色列表
             const response = yield call(GetRolesTree, { ...payload });
             if (response.IsSuccess) {
-              yield update({
-                rolesList: response.Datas.children,
-              });
+                yield update({
+                    rolesList: response.Datas.children,
+                });
             }
-          },
-          *getUserList({ payload }, { call, put, update, select }) {
+        },
+        *getUserList({ payload }, { call, put, update, select }) {
             //用户列表
-            yield update({ loading:true }); 
+            yield update({ loading: true });
             const response = yield call(GetUserList, { ...payload });
             if (response.IsSuccess) {
-              yield update({
-                tableDatas: response.Datas,
-                loading:false
-              });
+                yield update({
+                    tableDatas: response.Datas,
+                    loading: false
+                });
             }
-          },
-          *exportUserList({ callback,payload }, { call, put, update, select }) {
+        },
+        *exportUserList({ callback, payload }, { call, put, update, select }) {
             //用户列表 导出
             const response = yield call(ExportUserList, { ...payload });
             if (response.IsSuccess) {
-              message.success('下载成功');
-              downloadFile(`/upload${response.Datas}`);
+                message.success('下载成功');
+                downloadFile(`/upload${response.Datas}`);
             } else {
-              message.warning(response.Message);
+                message.warning(response.Message);
             }
-          },
+        },
         /*获取用户列表**/
-        * fetchuserlist({ payload }, {call,update,  }) {
+        * fetchuserlist({ payload }, { call, update, }) {
             const result = yield call(getList, { ...payload });
             if (result.requstresult === '1') {
                 yield update({
@@ -276,7 +276,7 @@ export default Model.extend({
             if (result.IsSuccess) {
                 yield update({
                     UserRoles: result.Datas.map(item => item.ID),
-                    UserRolesName:result.Datas.map(item => item.Name).toString()
+                    UserRolesName: result.Datas.map(item => item.Name).toString()
                 });
             }
 
@@ -317,7 +317,7 @@ export default Model.extend({
                     }
                 })
             } else {
-                sdlMessage(result.Message,'error')
+                sdlMessage(result.Message, 'error')
 
             }
         },
@@ -339,12 +339,12 @@ export default Model.extend({
                     }
                 })
             } else {
-                sdlMessage(result.Message,'error')
+                sdlMessage(result.Message, 'error')
 
             }
         },
-         /*添加角色和部门**/
-         * insertroledep({
+        /*添加角色和部门**/
+        * insertroledep({
             payload
         }, {
             call,
@@ -354,7 +354,7 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess == true) {
-                sdlMessage('操作成功','success')
+                sdlMessage('操作成功', 'success')
                 history.go(-1);
             }
             // yield update({
@@ -362,8 +362,8 @@ export default Model.extend({
             //     reason: result.reason
             // });
         },
-         /*重置密码**/
-         * resetpwd({
+        /*重置密码**/
+        * resetpwd({
             callback,
             payload
         }, {
@@ -375,7 +375,7 @@ export default Model.extend({
             });
             if (result.IsSuccess) {
 
-                sdlMessage('重置成功','success')
+                sdlMessage('重置成功', 'success')
                 callback()
             }
             // yield update({
@@ -390,13 +390,13 @@ export default Model.extend({
         }, {
             call,
             update,
-            put 
+            put
         }) {
             const result = yield call(deluserandroledep, {
                 ...payload
             });
             if (result.IsSuccess == true) {
-                sdlMessage('删除成功','success')
+                sdlMessage('删除成功', 'success')
                 callback()
             }
             // yield update({
@@ -420,104 +420,104 @@ export default Model.extend({
             });
             payload.callback();
         },
-     /*获取行政区详细信息及层级关系**/
-     * getregioninfobytree({
-              payload
-                }, {
-                    call,
-                    update,
-                }) {
-                    const result = yield call(getregioninfobytree, { ...payload });
-                    if (result.IsSuccess) {
-                        yield update({
-                            RegionInfoTree: result.Datas.list
-                        });
+        /*获取行政区详细信息及层级关系**/
+        * getregioninfobytree({
+            payload
+        }, {
+            call,
+            update,
+        }) {
+            const result = yield call(getregioninfobytree, { ...payload });
+            if (result.IsSuccess) {
+                yield update({
+                    RegionInfoTree: result.Datas.list
+                });
+            }
+        },
+        /*获取企业+排口**/
+        * getentandpoint({
+            payload
+        }, {
+            call,
+            update,
+            select,
+            take
+        }) {
+            // if(!payload.PollutantType)
+            // {
+            //     yield take('common/getPollutantTypeList/@@end');
+            //     const dd = yield select(state => state.common);
+            //     payload={
+            //         ...payload,
+            //         PollutantTypes:dd.defaultPollutantCode
+            //     }
+            // }
+            if (!payload.PollutantType) {
+                let global = yield select(state => state.common);
+                if (!global.defaultPollutantCode) {
+                    yield take('common/getPollutantTypeList/@@end');
+                    global = yield select(state => state.common);
+                    payload = {
+                        ...payload,
+                        PollutantType: global.defaultPollutantCode
                     }
-      },
-      /*获取企业+排口**/
-      * getentandpoint({
-        payload
-    }, {
-        call,
-        update,
-        select,
-        take
-    }) {
-        // if(!payload.PollutantType)
-        // {
-        //     yield take('common/getPollutantTypeList/@@end');
-        //     const dd = yield select(state => state.common);
-        //     payload={
-        //         ...payload,
-        //         PollutantTypes:dd.defaultPollutantCode
-        //     }
-        // }
-        if (!payload.PollutantType) {
-            let global = yield select(state => state.common);
-            if (!global.defaultPollutantCode) {
-                yield take('common/getPollutantTypeList/@@end');
-                global = yield select(state => state.common);
-                payload = {
-                    ...payload,
-                    PollutantType: global.defaultPollutantCode
+                } else {
+                    payload = {
+                        ...payload,
+                        PollutantType: global.defaultPollutantCode
+                    }
                 }
-            } else {
-                payload = {
-                    ...payload,
-                    PollutantType: global.defaultPollutantCode
-                }
+
+            }
+            const result = yield call(getentandpoint, {
+                ...payload
+            });
+            if (result.IsSuccess) {
+                // 过滤掉没有子节点的数据
+                let EntAndPoint = result.Datas.filter(item => item.children.length);
+                yield update({
+                    EntAndPoint: EntAndPoint
+                });
             }
 
-        }
-        const result = yield call(getentandpoint, {
-            ...payload
-        });
-        if (result.IsSuccess) {
-            // 过滤掉没有子节点的数据
-            let EntAndPoint = result.Datas.filter(item => item.children.length);
-            yield update({
-                EntAndPoint: EntAndPoint
-            });
-        }
-
-    },
-   /*获取当前部门的排口**/
-  * getpointbydepid({
-                payload
-            }, {
-                call,
-                update,
-                select,
-                take
-            }) {
-                if (!payload.PollutantType) {
-                    let global = yield select(state => state.common);
-                    if (!global.defaultPollutantCode) {
-                        yield take('common/getPollutantTypeList/@@end');
-                        global = yield select(state => state.common);
-                        payload = {
-                            ...payload,
-                            PollutantType: global.defaultPollutantCode
-                        }
-                    } else {
-                        payload = {
-                            ...payload,
-                            PollutantType: global.defaultPollutantCode
-                        }
+        },
+        /*获取当前部门的排口**/
+        * getpointbydepid({
+            payload
+        }, {
+            call,
+            update,
+            select,
+            take
+        }) {
+            if (!payload.PollutantType) {
+                let global = yield select(state => state.common);
+                if (!global.defaultPollutantCode) {
+                    yield take('common/getPollutantTypeList/@@end');
+                    global = yield select(state => state.common);
+                    payload = {
+                        ...payload,
+                        PollutantType: global.defaultPollutantCode
                     }
-    
+                } else {
+                    payload = {
+                        ...payload,
+                        PollutantType: global.defaultPollutantCode
+                    }
                 }
-                const result = yield call(getpointbydepid, {
-                    ...payload
+
+            }
+            const result = yield call(getpointbydepid, {
+                ...payload
+            });
+            if (result.IsSuccess) {
+                yield update({
+                    CheckPoint: result.Datas
                 });
-                if (result.IsSuccess) {
-                    yield update({
-                        CheckPoint: result.Datas
-                    });
-                }
-            },
-    /*给当前用户添加排口权限(可批量)**/
-      * insertPointFilterByUser({
+            }
+        },
+        /*给当前用户添加排口权限(可批量)**/
+        * insertPointFilterByUser({
             payload
         }, {
             call,
@@ -540,6 +540,15 @@ export default Model.extend({
                 ...payload
             });
             payload.callback(result)
+        },
+        *recoveryUser({ payload,callback }, { call, put, update, select }) {
+            //用户列表
+            yield update({ loading: true });
+            const response = yield call(RecoveryUser, { ...payload });
+            if (response.IsSuccess) {
+               message.success(response.Message)
+               callback();
+            }
         },
     },
 

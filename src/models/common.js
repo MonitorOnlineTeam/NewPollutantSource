@@ -22,6 +22,7 @@ export default Model.extend({
     pointListByEntCode: [],
     pollutantListByDgimn: [],
     userList: [],
+    userTotal:null,
     entLoading:true,
   },
 
@@ -241,6 +242,7 @@ export default Model.extend({
     if (result.IsSuccess) {
       yield update({
         userList: result.Datas,
+        userTotal:result.Total,
       });
     }
   },

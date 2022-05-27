@@ -9,6 +9,7 @@ import {
   vertifyOldPwd,
   changePwd,
   getAlarmPushAuthor, insertAlarmPushAuthor, getAlarmState, getEnterpriseList, GetAndroidOrIosSettings,
+  RecoveryUser,
 } from '@/services/user';
 import { postAutoFromDataUpdate } from '@/services/autoformapi'
 import Cookie from 'js-cookie';
@@ -265,6 +266,16 @@ export default Model.extend({
             settingList: result.Datas,
           })
         }
+      }
+    },
+    // 用户恢复
+    *recoveryUser({ payload ,callback}, { put, call, update, select }) {
+      const result = yield call(RecoveryUser, payload);
+      if (result.IsSuccess) {
+      message.success(result.Message)
+      callback()
+      } else {
+        message.error(result.Message)
       }
     },
   },

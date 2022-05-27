@@ -255,7 +255,7 @@ const Index = (props) => {
            <Form.Item label='企业名称' name='EntName'>
              <Input allowClear placeholder='请输入'/>
             </Form.Item>
-            <Form.Item label='行政区' name='RegionCode' style={{padding:'0 8px'}}>
+            <Form.Item label='行政区' name='RegionCode' style={{margin:'0 8px'}}>
                 <RegionList levelNum={2} />
             </Form.Item>
             <Spin spinning={pollutantByIdLoading} size='small' style={{ top: -5, left: 20 }}>

@@ -179,6 +179,7 @@ class Index extends PureComponent {
       selectAllPointMarkers:[], //进入首页面直接选择监测点图例
       entGoPointFlag:false,
       selectEntAllPointMarkers:[],//企业进入监测点的所有监测点
+      minWidth:1690,
     }
   }
   componentWillMount() {
@@ -213,12 +214,18 @@ class Index extends PureComponent {
     this.getMapPointList(2)
     this.getMapPointList(1)
 
+    if(document.body.clientWidth <= this.state.minWidth){
+      this.props.dispatch({
+        type: 'newestHome/updateState',
+         payload: {smallResolution:true}
+       })
+    }
     // 监听
     window.addEventListener("resize", this.handleResize);
   }
   
    handleResize = (e) =>{
-    if( e.target.innerWidth <= 1690){
+    if( e.target.innerWidth <= this.state.minWidth){
       this.props.dispatch({
        type: 'newestHome/updateState',
         payload: {smallResolution:true}
