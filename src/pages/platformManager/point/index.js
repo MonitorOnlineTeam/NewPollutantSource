@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined, UnlockFilled } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -284,6 +284,9 @@ export default class MonitorPoint extends Component {
           DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
           Coefficient: this.state.pointCoefficientVal,
         },
+        callback:()=>{
+          this.setState({pointCoefficientFlag:true})
+        }
       })
 
     } else {
@@ -697,7 +700,10 @@ export default class MonitorPoint extends Component {
                 }}
                 onAdd={() => {
                   this.showModal();
-
+                  this.setState({
+                    pointCoefficientVal:undefined,
+                    pointCoefficientFlag:false,
+                  })
                   // this.setState({
                   //   cuid: getRowCuid(columns, row)
                   // })

@@ -51,10 +51,11 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        recoveryUser: (payload) => { //用户恢复
+        recoveryUser: (payload,callback) => { //用户恢复
             dispatch({
                 type: `${namespace}/recoveryUser`,
                 payload: payload,
+                callback:callback,
             })
         },
     }
@@ -136,6 +137,8 @@ const Index = (props) => {
    const recoveryUser = (row) =>{
     props.recoveryUser({
         userID: row.ID,
+    },()=>{
+        onFinish(pageIndex,pageSize)
     })
    }
 
@@ -147,7 +150,7 @@ const Index = (props) => {
             setPageIndex(pageIndexs)
             props.getTableData({
                 ...values,
-                status:'1',
+                status:'0',
                 pageIndex: pageIndexs,
                 pageSize: pageSizes
             })
@@ -198,6 +201,7 @@ const Index = (props) => {
     }
     return (
         <div>
+            <BreadcrumbWrapper>
             <Card title={searchComponents()}>
                 <SdlTable
                     loading={tableLoading}
@@ -214,6 +218,7 @@ const Index = (props) => {
                     // }}
                 />
             </Card>
+            </BreadcrumbWrapper>
         </div>
     );
 };

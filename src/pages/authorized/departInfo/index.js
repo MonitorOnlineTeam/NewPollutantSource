@@ -260,6 +260,7 @@ const rightTableColumns = [
   addOrUpdateUserDepApproveLoading: loading.effects['departinfo/addOrUpdateUserDepApprove'],
   userList:departinfo.userList,
   deleteUserDepApproveLoading: loading.effects['departinfo/deleteUserDepApprove'],
+  insertdepartbyuserLoading :loading.effects['departinfo/insertdepartbyuser'] || false,
 }))
 @Form.create()
 class DepartIndex extends Component {
@@ -360,6 +361,12 @@ class DepartIndex extends Component {
                             this.props.dispatch({
                               type: 'departinfo/getdepartinfobytree',
                               payload: {},
+                              callback:(res)=>{
+                                let data = this.handleData(res,0)
+                                this.setState({
+                                  departInfoTree:data
+                                })
+                              }
                             });
                           } else {
                             message.error(res.Message);
@@ -1427,6 +1434,7 @@ class DepartIndex extends Component {
                     size="large"
                   />
                 ) : (
+                  <Spin spinning={this.props.insertdepartbyuserLoading}>
                   <TableTransfer
                     rowKey={record => record.User_ID}
                     titles={['待分配用户', '已分配用户']}
@@ -1444,7 +1452,9 @@ class DepartIndex extends Component {
                     rightColumns={rightTableColumns}
                     style={{ width: '100%', height: '600px' }}
                   />
+                    </Spin>
                 )}
+              
               </Modal>
               <Modal
                 title={`区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}

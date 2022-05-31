@@ -92,7 +92,13 @@ const Index = (props) => {
         align: 'center',
     },
     {
-        title: '污染源水绩效套餐',
+      title: '污染源气绩效套数',
+      dataIndex: 'GasPerformance',
+      key: 'GasPerformance',
+      align: 'center'
+    },
+    {
+        title: '污染源水绩效套数',
         dataIndex: 'WaterPerformance',
         key: 'WaterPerformance',
         align: 'center'

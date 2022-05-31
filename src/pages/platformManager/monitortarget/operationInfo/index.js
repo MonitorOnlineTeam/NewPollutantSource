@@ -97,7 +97,7 @@ const  dvaDispatch = (dispatch) => {
         payload:payload
       })
     },
-    cycleList:(payload)=>{ //频次
+    cycleList:(payload,callback)=>{ //频次 校准 参数核对
       dispatch({
         type: 'autoForm/getAutoFormData',
         payload: {
@@ -105,8 +105,31 @@ const  dvaDispatch = (dispatch) => {
             otherParams:{
                 pageSize:10000,
               },
-
         },
+        callback:callback,
+     });
+     dispatch({
+      type: 'autoForm/getPageConfig',
+      payload: {
+        configId: 'OperationCycle',
+      },
+    });
+    },
+    inspectionCycleList:(payload,callback)=>{ //频次 巡检
+      dispatch({
+        type: 'autoForm/getAutoFormData',
+        payload: {
+            configId: 'OperationCycle', 
+            otherParams:{
+                pageSize:10000,
+              },
+            searchParams:[{
+                Key: 'dbo.T_Cod_OperationCycle.OperationType',
+                Value: `1`,
+                Where: '$=',
+            }],
+        },
+        callback:callback,
      });
      dispatch({
       type: 'autoForm/getPageConfig',
@@ -158,12 +181,23 @@ const Index = (props) => {
 
   },[props.DGIMN]);
  
+  
+  const [cycleList,setCycleList] = useState([]);
+  const [inspectionCycleList,setInspectionCycleList] = useState([]);
 
   const initData=()=>{
     onFinish();
     props.operationList();//运维列表
     props.getEntPointList({EntID:props.location.query.p});//企业运维列表
-    props.cycleList();//运维频次
+    props.cycleList({},(data)=>{ //校准频次  参数核对频次
+      setCycleList(data)
+
+    });
+
+    props.inspectionCycleList({},(data)=>{ //巡检频次
+      setInspectionCycleList(data)
+
+    });
   }
 
   const projectNumList=()=>{
@@ -477,28 +511,48 @@ useEffect(()=>{
      </Form>
   }
   const operationDataSource = operationInfoList['OperationMaintenanceEnterprise']&&operationInfoList['OperationMaintenanceEnterprise'].dataSource ? operationInfoList['OperationMaintenanceEnterprise'].dataSource : [];
-  const operationCycleDataSource = operationInfoList['OperationCycle']&&operationInfoList['OperationCycle'].dataSource ? operationInfoList['OperationCycle'].dataSource : [];
+  // const operationCycleDataSource = operationInfoList['OperationCycle']&&operationInfoList['OperationCycle'].dataSource ? operationInfoList['OperationCycle'].dataSource : [];
  
-  operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+  // operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
    
-     const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
-    if( code==1){
-      form2.setFieldsValue({
-        InspectionCycel:code
-      })
-    }
-    if(code==2){
-      form2.setFieldsValue({
-        CalibrationCycle:code
-      })
-    }
-    if(code ==3){
-      form2.setFieldsValue({
-        ParameterCheck:code
-      })
-    }
-  })
-
+  //    const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
+  //   if( code==1){
+  //     form2.setFieldsValue({
+  //       InspectionCycel:code
+  //     })
+  //   }
+  //   if(code==2){
+  //     form2.setFieldsValue({
+  //       CalibrationCycle:code
+  //     })
+  //   }
+  //   if(code ==3){
+  //     form2.setFieldsValue({
+  //       ParameterCheck:code
+  //     })
+  //   }
+  // })
+  cycleList[0]&&cycleList.map(item=>{
+    const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
+   if(code==2){
+     form2.setFieldsValue({
+       CalibrationCycle:code
+     })
+   }
+   if(code ==3){
+     form2.setFieldsValue({
+       ParameterCheck:code
+     })
+   }
+ })
+ inspectionCycleList[0]&&inspectionCycleList.map(item=>{
+  const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
+ if( code==1){
+   form2.setFieldsValue({
+     InspectionCycel:code
+   })
+ }
+})
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewTitle, setPreviewTitle] = useState()
   const [previewImage, setPreviewImage] = useState()
@@ -626,7 +680,7 @@ useEffect(()=>{
        <Col span={12}>
         <Form.Item label="巡检频次" name="InspectionCycel" rules={[{ required: true, message: '请选择巡检频次!',  },]} >
         <Select placeholder="请选择巡检频次" >
-           {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+           {inspectionCycleList[0]&&inspectionCycleList.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.Code']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
            })
           }
@@ -640,7 +694,7 @@ useEffect(()=>{
       <Col span={12}>
       <Form.Item label="校准频次"  name="CalibrationCycle" rules={[{ required: true, message: '请选择校准频次!',  },]} >
       <Select placeholder="请选择校准频次" disabled>
-           {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+           {cycleList[0]&&cycleList.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.Code']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
            })
           }
@@ -650,7 +704,7 @@ useEffect(()=>{
       <Col span={12}>
       <Form.Item label="参数核对频次"  name="ParameterCheck" rules={[{ required: true, message: '请选择参数核对频次!',  },]} >
       <Select placeholder="请选择参数核对频次" disabled>
-           {operationCycleDataSource[0]&&operationCycleDataSource.map(item=>{
+           {cycleList[0]&&cycleList.map(item=>{
              return <Option value={item['dbo.T_Cod_OperationCycle.Code']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
            })
           }

@@ -235,6 +235,11 @@ export default Model.extend({
             const result = yield call(insertdepartbyuser, {
                 ...payload
             });
+            if (result.IsSuccess) {
+               message.success(result.Message)
+            }else{
+              message.error(result.Message)
+            }
         },
         /*获取行政区详细信息及层级关系**/
         * getregioninfobytree({

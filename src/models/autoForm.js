@@ -118,7 +118,7 @@ export default Model.extend({
   },
   effects: {
     // 获取数据
-    *getAutoFormData({ payload }, { call, put, update, select }) {
+    *getAutoFormData({ payload,callback }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       const { configId } = payload;
       // const searchForm = state.searchForm[payload.configId]
@@ -208,6 +208,7 @@ export default Model.extend({
             },
           },
         });
+        callback&&callback(result.Datas.DataSource)
       }
     },
     // 根据configId 获取数据
