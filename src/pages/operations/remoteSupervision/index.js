@@ -1171,9 +1171,9 @@ const Index = (props) => {
                   analyzerUnit =  isDisPlayCheck4? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
                }else if(row.Name=='NOx'){
-                analyzerRang1 =   form2.getFieldValue(`400AnalyzerRang1`)? form2.getFieldValue(`400AnalyzerRang1`) : undefined;
-                analyzerRang2 =   form2.getFieldValue(`400AnalyzerRang2`)? form2.getFieldValue(`400AnalyzerRang2`) : undefined;
-                analyzerUnit =  form2.getFieldValue(`400AnalyzerUnit`) ? form2.getFieldValue(`400AnalyzerUnit`) : undefined;
+                analyzerRang1 =    form2.getFieldValue(`400AnalyzerRang1`);
+                analyzerRang2 =   form2.getFieldValue(`400AnalyzerRang2`);
+                analyzerUnit =  form2.getFieldValue(`400AnalyzerUnit`) ;
                }else{
                 analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
                 analyzerRang2 =  form2.getFieldValue(`${row.ChildID}AnalyzerRang2`), 
