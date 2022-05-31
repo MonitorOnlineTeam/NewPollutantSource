@@ -1170,6 +1170,10 @@ const Index = (props) => {
                   analyzerRang2 =  isDisPlayCheck4?  form2.getFieldValue(`${row.ChildID}bAnalyzerRang2`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerRang2`) : undefined;
                   analyzerUnit =  isDisPlayCheck4? form2.getFieldValue(`${row.ChildID}bAnalyzerUnit`) :  isDisPlayCheck3? form2.getFieldValue(`${row.ChildID}AnalyzerUnit`) : undefined;
 
+               }else if(row.Name=='NOx'){
+                analyzerRang1 =   form2.getFieldValue(`400AnalyzerRang1`)? form2.getFieldValue(`400AnalyzerRang1`) : undefined;
+                analyzerRang2 =   form2.getFieldValue(`400AnalyzerRang2`)? form2.getFieldValue(`400AnalyzerRang2`) : undefined;
+                analyzerUnit =  form2.getFieldValue(`400AnalyzerUnit`) ? form2.getFieldValue(`400AnalyzerUnit`) : undefined;
                }else{
                 analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
                 analyzerRang2 =  form2.getFieldValue(`${row.ChildID}AnalyzerRang2`), 
@@ -1177,9 +1181,9 @@ const Index = (props) => {
                }
 
 
-         analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit  || row.Name =='流速' || row.Name=='标干流量' || row.Name=='NOx' ? true : false;
+         analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit  || row.Name =='流速' || row.Name=='标干流量'  || row.Name=='NO' || row.Name=='NO2' ? true : false;
 
-        const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
+        const indicaVal = (row.Name=='NO'&&!form2.getFieldValue(`${row.par}IndicaVal`)) || (row.Name=='NO2'&&!form2.getFieldValue(`${row.par}IndicaVal`)) ? '0'  : form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
         const scyData = form2.getFieldValue(`${row.par}ScyData`), scyDataUnit = form2.getFieldValue(`${row.par}ScyDataUnit`);
 
@@ -2047,7 +2051,7 @@ const Index = (props) => {
             bordered
             dataSource={tableDatas}
             columns={columns}
-            scroll={{x:false, y: clientHeight - 500 }}
+            // scroll={{x:false, y: clientHeight - 500 }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,
