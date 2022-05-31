@@ -651,6 +651,11 @@ class DepartIndex extends Component {
         User_ID: nextTargetKeys,
         UserGroup_ID: this.state.selectedRowKeys.key,
       },
+      callback:(isSuccess)=>{
+        if(!isSuccess){ //不成功
+          this.showUserModal()
+        }
+      }
     });
     this.setState({ targetKeys: nextTargetKeys });
   };
@@ -1422,7 +1427,7 @@ class DepartIndex extends Component {
                 onCancel={this.handleCancel}
                 width={'70%'}
               >
-                {this.props.GetUserByDepID ? (
+                {/* {this.props.GetUserByDepID ? (
                   <Spin
                     style={{
                       width: '100%',
@@ -1433,8 +1438,9 @@ class DepartIndex extends Component {
                     }}
                     size="large"
                   />
-                ) : (
-                  <Spin spinning={this.props.insertdepartbyuserLoading}>
+                ) : ( */}
+
+                  <Spin spinning={this.props.insertdepartbyuserLoading || this.props.GetUserByDepID}>
                   <TableTransfer
                     rowKey={record => record.User_ID}
                     titles={['待分配用户', '已分配用户']}
@@ -1453,7 +1459,7 @@ class DepartIndex extends Component {
                     style={{ width: '100%', height: '600px' }}
                   />
                     </Spin>
-                )}
+                {/* )} */}
               
               </Modal>
               <Modal

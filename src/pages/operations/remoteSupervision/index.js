@@ -463,12 +463,12 @@ const Index = (props) => {
     setEchoLoading(true)
     resetData();
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
-
+      console.log(data.dateTime)
       //共同的字段
      commonForm.setFieldsValue({
        OperationUserID:data.operationUserID,
        EntCode: data.entCode,
-       month:  moment(moment(data.dateTime).format("YYYY-MM")) 
+       month:  moment(moment(data.dateTime).format("YYYY-MM-DD")) 
      })
      setPointLoading2(true)
      props.getPointByEntCode({ EntCode:  data.entCode }, (res) => {
@@ -1177,7 +1177,7 @@ const Index = (props) => {
                }
 
 
-         analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit  || row.Name =='流速' || row.Name=='标干流量' ? true : false;
+         analyzerFlag = (analyzerRang1||analyzerRang1==0) && (analyzerRang2||analyzerRang2==0) && analyzerUnit  || row.Name =='流速' || row.Name=='标干流量' || row.Name=='NOx' ? true : false;
 
         const indicaVal = form2.getFieldValue(`${row.par}IndicaVal`), indicaUnit = form2.getFieldValue(`${row.par}IndicaUnit`);
         const dsData = form2.getFieldValue(`${row.par}DsData`), dsDataUnit = form2.getFieldValue(`${row.par}DsDataUnit`);
@@ -1360,7 +1360,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'isDisplay',
           key: 'isDisplay',
-          width: 130,
+          width: 145,
           render: (text, record) => {
             switch (text) {
               case 1:
@@ -1376,7 +1376,7 @@ const Index = (props) => {
                   </Form.Item> <NumTips style={{ top: 'auto', right: 12,zIndex:2 }} content={'1、颗粒物分析仪无显示屏时，分析仪量程填写铭牌量程'} /></Row>
                 break;
               case 3:
-                return <Row align='middle' style={{ paddingLeft: 12 }}>
+                return <Row align='middle' style={{ paddingLeft: 10 }}>
                   <Form.Item name='isDisplay3' rules={[{ required: false, message: '请选择' }]}>
                     <Checkbox checked={isDisPlayCheck3} onChange={(e) => { isDisplayChange2(e, 'isDisplay3') }}>差压法</Checkbox>
                   </Form.Item></Row>

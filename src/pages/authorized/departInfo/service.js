@@ -121,11 +121,12 @@ export async function insertdepartbyuser(params) {
     User_ID: params.User_ID,
   };
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/InsertDepartByUser', body, null);
-  return result === null
-    ? {
-        data: null,
-      }
-    : result;
+  // return result === null
+  //   ? {
+  //       data: null,
+  //     }
+  //   : result;
+   return result;
 }
 // 给部门添加行政区（可批量）
 export async function insertregionbyuser(params) {

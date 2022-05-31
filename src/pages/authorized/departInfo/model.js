@@ -227,7 +227,8 @@ export default Model.extend({
         },
         /*给部门添加用户（可批量）**/
         * insertdepartbyuser({
-            payload
+            payload,
+            callback,
         }, {
             call,
             update,
@@ -240,6 +241,7 @@ export default Model.extend({
             }else{
               message.error(result.Message)
             }
+            callback&&callback(result.IsSuccess)
         },
         /*获取行政区详细信息及层级关系**/
         * getregioninfobytree({
