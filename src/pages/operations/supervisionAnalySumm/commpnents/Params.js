@@ -165,8 +165,8 @@ const Index = (props) => {
         },
         {
           title: '参数',
-          dataIndex: 'rangeStatus',
-          key: 'Fraction',
+          dataIndex: 'paramStatus',
+          key: 'paramStatus',
           align: 'center',
           width:80,
         },

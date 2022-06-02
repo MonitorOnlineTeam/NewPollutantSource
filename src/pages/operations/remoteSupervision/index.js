@@ -319,8 +319,8 @@ const Index = (props) => {
     },
     {
       title: '量程一致性问题数量',
-      dataIndex: 'couErrCount',
-      key: 'couErrCount',
+      dataIndex: 'rangeErrCount',
+      key: 'rangeErrCount',
       align: 'center',
       width:180,
     },
@@ -1173,7 +1173,7 @@ const Index = (props) => {
                }else if(row.Name=='NOx'){
                 analyzerRang1 =    form2.getFieldValue(`400AnalyzerRang1`);
                 analyzerRang2 =   form2.getFieldValue(`400AnalyzerRang2`);
-                analyzerUnit =  form2.getFieldValue(`400AnalyzerUnit`) ;
+                analyzerUnit =  form2.getFieldValue(`400AnalyzerUnit`);
                }else{
                 analyzerRang1 = form2.getFieldValue(`${row.ChildID}AnalyzerRang1`),
                 analyzerRang2 =  form2.getFieldValue(`${row.ChildID}AnalyzerRang2`), 

@@ -13,7 +13,7 @@ class index extends Component {
 
   pageHeaderRender = (pageHeaderWrapperProps) => {
     const { selectTreeItem } = this.state;
-    if (pageHeaderWrapperProps.unfoldMenuList.length) {
+    if (pageHeaderWrapperProps&&pageHeaderWrapperProps.unfoldMenuList&&pageHeaderWrapperProps.unfoldMenuList.length) {
       let currentMenu = pageHeaderWrapperProps.unfoldMenuList.find(item => item.path.split('?')[0] === location.pathname.split('?')[0])
       // url和菜单能匹配到
       if (currentMenu) {
@@ -98,9 +98,9 @@ class index extends Component {
         // title={this.props.title} 
         title={null}
         className={!webConfig.isShowBreadcrumb || this.props.hideBreadcrumb ? "hideBreadcrumb" : ""}
-        // pageHeaderRender={(PageHeaderWrapperProps) => {
-        //   return this.pageHeaderRender(PageHeaderWrapperProps);
-        // }}
+        pageHeaderRender={(PageHeaderWrapperProps) => {
+          return this.pageHeaderRender(PageHeaderWrapperProps);
+        }}
         >
         {this.props.children}
       </PageHeaderWrapper>

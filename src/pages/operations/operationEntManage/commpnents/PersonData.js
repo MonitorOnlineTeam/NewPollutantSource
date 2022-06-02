@@ -109,15 +109,15 @@ export default class PersonData extends Component {
       editLoading:false
     };
     this.columns =  [
-      {
-        title: <span>运维单位</span>,
-        dataIndex: 'Personnellist',
-        key: 'Personnellist',
-        align: 'center',
-      //   render: (text, record) => {     
-      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      //  },
-      },
+      // {
+      //   title: <span>运维单位</span>,
+      //   dataIndex: 'Personnellist',
+      //   key: 'Personnellist',
+      //   align: 'center',
+      // //   render: (text, record) => {     
+      // //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+      // //  },
+      // },
       {
         title: <span>姓名</span>,
         dataIndex: 'PersonnelName',
@@ -635,7 +635,7 @@ export default class PersonData extends Component {
       ref={this.formRef}
     >
       <Row>
-        <Col span={12}>
+        {/* <Col span={12}>
         <Form.Item  label="运维单位">
            {getFieldDecorator('EnterpriseID', {   rules: [{required: true,  message: '请输入运维单位！'}],   })(
                                <Select
@@ -649,7 +649,7 @@ export default class PersonData extends Component {
                                    </Select>
                    )}
          </Form.Item>
-      </Col>
+      </Col> */}
       <Col span={12}>
       <Form.Item
         label="姓名"
@@ -659,8 +659,8 @@ export default class PersonData extends Component {
                    )}
       </Form.Item>
       </Col>
-      </Row>
-      <Row>
+      {/* </Row> */}
+      {/* <Row> */}
         <Col span={12}>
          <Form.Item label="性别" >
          {getFieldDecorator('Gender', {   rules: [{required: true,  message: '请选择性别！'}],   })(
@@ -676,9 +676,9 @@ export default class PersonData extends Component {
       {getFieldDecorator('Phone', {   rules: [{ pattern:/^1[3|4|5|7|8][0-9]\d{8}$/ , message: '请输入正确的手机号！'},{required: true, message: '请输入手机号！'}],   })( <Input placeholder="请输入手机号" />)}
       </Form.Item>
       </Col>
-      </Row>
+      {/* </Row> */}
 
-      <Row>
+      {/* <Row> */}
         <Col span={12}>
          <Form.Item label="身份证号">
          {getFieldDecorator('IdCertificates')( <Input placeholder="请输入身份证号"/>)}
@@ -698,9 +698,9 @@ export default class PersonData extends Component {
         </Select>)}
       </Form.Item>
       </Col>
-      </Row>
+      {/* </Row> */}
 
-      <Row>
+      {/* <Row> */}
         <Col span={12}>
          <Form.Item label="专业">
          {getFieldDecorator('Major')( <Input placeholder="请输入专业"/>)}
@@ -711,10 +711,10 @@ export default class PersonData extends Component {
       {getFieldDecorator('School')(<Input placeholder="请输入毕业学校"/>)}
       </Form.Item>
       </Col>
-      </Row>
+      {/* </Row> */}
 
 
-      <Row>
+      {/* <Row> */}
         <Col span={12}>
          <Form.Item label="参加工作时间">
          {getFieldDecorator('StartWorkTime')(<DatePicker />)}
@@ -725,10 +725,10 @@ export default class PersonData extends Component {
       {getFieldDecorator('Position')(<Input placeholder="请输入职位"/>)}
       </Form.Item>
       </Col>
-      </Row>
+      {/* </Row> */}
 
-      <Row align='middle'>
-        {/* <Col span={12}> */}
+      {/* <Row align='middle'> */}
+        <Col span={12}>
 
       <Form.Item label="照片" name="username" >
          {getFieldDecorator('AttachmentID',  
@@ -763,8 +763,8 @@ export default class PersonData extends Component {
        </Upload> )}
       </Form.Item>
 
-     <Tooltip title="1-2寸免冠正面照"><QuestionCircleOutlined /></Tooltip>
-      {/* </Col> */}
+     <Tooltip title="1-2寸免冠正面照"><QuestionCircleOutlined style={{position:'absolute',right:'calc(100% - 275px)',top:35,}}/></Tooltip>
+      </Col>
       </Row>
 
      <Row> 

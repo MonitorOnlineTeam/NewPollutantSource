@@ -765,44 +765,50 @@ const outTypeObj = {
   "calibrationCount" :'校准工单',
   "cooperationInspectionCount" :'配合检查工单',
   "calibrationTestCount":'校验测试工单',
-  "repairCount" :'维修工单',
+  "repairInfoCount" :'维修工单',
   "matchingComparisonCount" :'参数核对',
  }
-
+ 
  const outTypeColor = {
   "inspectionCount"  : '#1890ff',
+  "maintainCompleteCount"  : "#a0d911",
   "calibrationCount" :'#52c41a',
-  "repairCount" :'#f5222d',
-  "matchingComparisonCount" :'#13c2c2',
   "cooperationInspectionCount" :'#fa8c16',
   "calibrationTestCount":'#08979c',
+  "repairInfoCount" :'#f5222d',
+  "matchingComparisonCount" :'#13c2c2',
+
  }
 const dateCellRender = (value)=>{//日期
+  let ele=[];
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
-    return  entOutsidePointListDatas.map((item,index)=>{
+     entOutsidePointListDatas.map((item,index)=>{
       if(moment(value).format("D") == item.day){
          for(let key in item){ //完成
           if(item[key] && outTypeObj[key]){ 
-           return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
+            ele.push(<Tag style={{minWidth:110,}} color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>)
+          //  return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
         }
       }
       }
   })
+  return ele;
   }
 
 } 
 const monthCellRender = (value) =>{//月份
-
+  let ele=[];
   if(entOutsidePointListDatas&&entOutsidePointListDatas[0]){
     entOutsidePointListDatas.map((item,index)=>{
       if(Number(value.month()) + 1 == item.month ){
          for(let key in item){ //完成
           if(item[key] && outTypeObj[key]){ 
-           return  <Tag color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>;
+           ele.push(<Tag  style={{minWidth:110,}} color={outTypeColor[key]}>{`${outTypeObj[key]} ${ item[key]}个`}</Tag>);
         }
       }
       }
   })
+  return ele;
   }
 
 }

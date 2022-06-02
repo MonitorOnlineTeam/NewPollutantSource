@@ -398,12 +398,14 @@ export default class UserInfoEdit extends Component {
                                             <Tree
                                                 checkable
                                                 onExpand={this.onExpand}
-                                                expandedKeys={this.state.expandedKeys}
+                                                // expandedKeys={this.state.expandedKeys}
                                                 autoExpandParent={this.state.autoExpandParent}
                                                 onCheck={this.onChecks}
                                                 checkedKeys={this.state.checkedKeys}
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
+                                                defaultExpandAll
+                                                // checkStrictly
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

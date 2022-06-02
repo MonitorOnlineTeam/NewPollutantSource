@@ -135,14 +135,14 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '运营实际开始日期',
+      title: '运营合同起始日期',
       dataIndex: 'beginTime',
       key:'beginTime',
       align:'center',
       sorter: (a, b) => moment(a.beginTime).valueOf() - moment(b.beginTime).valueOf()
     },
     {
-      title: '运营实际结束日期',
+      title: '运营合同结束日期',
       dataIndex: 'endTime',
       key:'endTime',
       align:'center',
@@ -304,7 +304,7 @@ const Index = (props) => {
     <Card title={searchComponents()}>
      { tableLoading? <div style={{paddingBottom:100}}><PageLoading /></div>: echartsComponents}
         <div style={{color:'#f5222d',paddingBottom:8}}>
-        {titleList[checkName]}运维到期监测点列表
+        {titleList[checkName]}监测点列表
         </div>
         <SdlTable
         loading = {tableLoading}

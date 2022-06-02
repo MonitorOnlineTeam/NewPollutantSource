@@ -726,7 +726,9 @@ class RoleIndex extends Component {
                                         size="small"
                                         style={{ marginTop: '20px' }}
                                         //rowSelection={rowRadioSelection}
-                                        defaultExpandAllRows columns={this.state.columns} dataSource={this.props.RoleInfoTree} />
+                                        defaultExpandAllRows columns={this.state.columns} dataSource={this.props.RoleInfoTree} 
+                                        pagination={false}
+                                        />
                             }
                         </Card>
                         <div>

@@ -11,9 +11,11 @@ export default class AppSparePartReplaceRecord extends Component {
 
     render() {
         return (
-            <MapInteractionCSS>
+            // <MapInteractionCSS> 此组件在移动端不支持onClick事件 支持onTouchEnd onTouchStart
+                <div style={{overflowY:'auto',height:'100vh'}}>
                 <RemoteSupervisionDetail hideBreadcrumb {...this.props} type='mobile' appStyle={{overflowY:'hidden'}} scrolly="none" />
-            </MapInteractionCSS>
+                </div>
+            //  </MapInteractionCSS>
         );
     }
 }

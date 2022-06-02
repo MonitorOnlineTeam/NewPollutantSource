@@ -95,6 +95,7 @@ export default class UserInfoAdd extends Component {
     };
 
     onChecks = checkedKeys => {
+        // console.log(checkedKeys)
         this.setState({ checkedKeys });
         const leafTree = [];
         checkedKeys.map(item => {
@@ -363,6 +364,7 @@ export default class UserInfoAdd extends Component {
                                                 selectedKeys={this.state.selectedKeys}
                                                 autoExpandParent
                                                 defaultExpandAll
+                                                // checkStrictly
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

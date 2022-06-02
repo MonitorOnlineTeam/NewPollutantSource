@@ -208,6 +208,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:120,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -221,6 +222,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
+          width:120,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -234,6 +236,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:120,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -248,6 +251,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:180,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -261,6 +265,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:150,
           render: (text, record, index) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -275,7 +280,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
-          width: 100,
+          width: 150,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量') {
               return '—'
@@ -350,7 +355,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
-          width: 130,
+          width: 120,
           render: (text, record) => {
             return record.DataList.CouType == 1 ? '原始浓度' :  record.DataList.CouType == 2 ? '标杆浓度'  : '—'
 
@@ -361,6 +366,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:120,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
               return '—'
@@ -373,6 +379,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:120,
           render: (text, record) => {
             return record.DataList.DASCou
           }
@@ -382,6 +389,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:150,
           render: (text, record) => {
             if (record.Name === 'NO' || record.Name === 'NO2') {
               return '—'
@@ -395,6 +403,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:150,
           render: (text, record) => {
               return record.DataList.CouAutoStatus==1? '是' : record.DataList.CouAutoStatus==2 ? '否' : null
           }
@@ -405,6 +414,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:150,
           render: (text, record) => {
             let  couStatus = record.DataList.CouStatus;
             return couStatus==1? '是' : couStatus ==2 ? '否' : couStatus ==3 ?  '不适用': null
@@ -416,6 +426,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
+          width:150,
           render: (text, record) => {
               return record.DataList.CouRemrak
           }
@@ -543,9 +554,8 @@ const Index = (props) => {
 
 
 
-
   return (
-    <div className={styles.remoteSupervisionDetailSty}>
+    <div className={styles.remoteSupervisionDetailSty} >
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
     <Card  style={{paddingBottom:10}} title={ type!='mobile'&&<Row justify='space-between'>
         <span>详情</span>
@@ -557,18 +567,18 @@ const Index = (props) => {
       name="detail"
     >
       <Row>
-      <Col span={6}>
+      <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="企业名称">
         {consistencyCheckDetail.entName }
       </Form.Item>
       </Col>
-        <Col span={6}>
+        <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="监测点名称" >
         {consistencyCheckDetail.pointName }
       </Form.Item>
       </Col>
 
-      <Col span={6}>
+      <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查结果" >
         {consistencyCheckDetail.resultCheck === '不合格' ? <span style={{ color: '#f5222d' }}>{consistencyCheckDetail.resultCheck}</span> : <span>{consistencyCheckDetail.resultCheck}</span>}
       </Form.Item>
@@ -576,17 +586,17 @@ const Index = (props) => {
       </Row>
 
       <Row>
-        <Col span={6}>
+        <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查人">
         {consistencyCheckDetail.userName }
       </Form.Item>
       </Col>
-      <Col span={6}>
+      <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查日期" >
         {moment(consistencyCheckDetail.dateTime).format("YYYY-MM-DD")}
       </Form.Item>
       </Col>
-      <Col span={6}>
+      <Col span={8} style={{paddingRight:5}}>
       <Form.Item label="点位运维负责人"  >
         {consistencyCheckDetail.operationUserName  }
       </Form.Item>
@@ -594,7 +604,7 @@ const Index = (props) => {
       </Row>
     </Form>
     <Tabs>
-    <TabPane tab="数据一致性核查表" key="1">
+    <TabPane tab="数据一致性核查表" key="1" >
               <SdlTable
                 columns={columns1}
                 dataSource={tableData1}

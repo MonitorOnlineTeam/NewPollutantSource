@@ -420,10 +420,10 @@ export default class EntTransmissionEfficiency extends Component {
       })
     }
     pollChange=(val)=>{
-      this.getDataList({Industry:val?val:undefined})
+      this.getDataList({Industry:val? val : undefined})
     }
     afterSaleChange=(val)=>{
-      this.getDataList({Business:val?val:undefined})
+      this.getDataList({Business:val? val : undefined})
     }
     getUserDataFun = (row,type) =>{
       const { day } = this.state;
@@ -488,7 +488,7 @@ export default class EntTransmissionEfficiency extends Component {
             </Form.Item>
             <Form.Item>
             <Spin spinning={industryBusinessLoading} size='small'>
-            <Select placeholder='请选择行业属性' allowClear onChange={this.pollChange} style={{width:180}}>
+            <Select placeholder='请选择行业属性'  allowClear onChange={this.pollChange} style={{width:180}}>
                {
                 industryList.map(item=>{
                 return <Option value={item.code} key={item.code}>{item.name}</Option>
@@ -499,7 +499,7 @@ export default class EntTransmissionEfficiency extends Component {
             </Form.Item>
             <Form.Item>
             <Spin spinning={industryBusinessLoading} size='small'>
-            <Select placeholder='请选择售业务属性' allowClear onChange={this.afterSaleChange} style={{width:180}}>
+            <Select placeholder='请选择售业务属性'   allowClear onChange={this.afterSaleChange} style={{width:180}}>
               {
                 businessList.map(item=>{
                 return<Option value={item.code} key={item.code}>{item.name}</Option>

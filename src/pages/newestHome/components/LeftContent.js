@@ -365,7 +365,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
      <img  style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div  className={styles.planOperaText} >
        <div>计划内次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
-       <div>计划内完成次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div>计划内完成次数：<span style={{color:'#3DBDFF'}}>{planOperaList.inspectionCompleteCount}</span></div>
        <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.inspectionOutCompleteCount }</span> </div>
     </div>
    </Row>
@@ -378,8 +378,8 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
      />
      <img style={{padding:'0 24px'}} src='./homePlanSplitLine.png' />
      <div className={styles.planOperaText} >
-       <div>计划内次数：<span style={{color:'#FFDD54'}}>{planOperaList.inspectionAllCount}</span></div>
-       <div>计划内完成次数：<span style={{color:'#FFDD54'}}>{planOperaList.inspectionAllCount}</span></div>
+       <div>计划内次数：<span style={{color:'#FFDD54'}}>{planOperaList.autoCalibrationAllCount}</span></div>
+       <div>计划内完成次数：<span style={{color:'#FFDD54'}}>{planOperaList.autoCalibrationCompleteCount}</span></div>
        <div style={{color:'#4BF3F9'}}>计划外完成次数：<span style={{color:'#4BF3F9'}}>{planOperaList.autoCalibrationOutCompleteCount  }</span> </div>
     </div>
    </Row>
