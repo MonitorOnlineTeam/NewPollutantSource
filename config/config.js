@@ -474,6 +474,12 @@ export default {
                       component: './platformManager/monitortarget/operationInfo',
                     },
                     {
+                      name: 'entImport', //企业导入
+                      // path: '/platformconfig/monitortarget/entImport',
+                      path:'/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
+                      component: './platformManager/monitortarget/entImport',
+                    },
+                    {
                       name: 'dischargepermit',//排污许可证
                       path:
                         '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/:targetType/dischargepermit/:configId/:EntCode/:EntName',
@@ -725,12 +731,7 @@ export default {
                   path: '/platformconfig/emissionEnt',
                   component: './platformManager/emissionEnt/',
                 },
-                {
-                  name: 'entImport', //企业导入
-                  // path: '/platformconfig/monitortarget/entImport',
-                  path:'/platformconfig/monitortarget/AEnterpriseTest/1/1,2/entImport',
-                  component: './platformManager/monitortarget/entImport',
-                },
+
               ],
             },
             {

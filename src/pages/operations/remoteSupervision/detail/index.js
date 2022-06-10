@@ -472,6 +472,7 @@ const Index = (props) => {
       dataIndex: 'ItemName',
       key: 'ItemName',
       align: 'center',
+      width: 195,
       render: (text, record, index) => {
         return <div style={{ textAlign: 'left' }}>{text}</div>
       }
@@ -481,6 +482,7 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'Status',
       key: 'Status',
+      width: 70,
       render: (text, record) => {
         return   <Checkbox checked={text==1?true:false} ></Checkbox>
 
@@ -491,18 +493,21 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'SetValue',
       key: 'SetValue',
+      width: 70,
     },
     {
       title: '溯源值',
       align: 'center',
       dataIndex: 'TraceabilityValue',
       key: 'TraceabilityValue',
+      width: 70,
     },
     {
       title: '一致性(自动判断)',
       align: 'center',
       dataIndex: 'AutoUniformity',
       key: 'AutoUniformity',
+      width: 120,
       render: (text, record) => {
         return text==1? '是' : text==2 ? '否' : null
     }
@@ -512,6 +517,7 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'Uniformity',
       key: 'Uniformity', 
+      width: 100,
       render: (text, record) => {
          return text==1? '是' : text ==2 ? '否' : text ==3 ?  '不适用': null
       }
@@ -521,6 +527,7 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'Remrak',
       key: 'Remrak',
+      width: 100,
       width: 150,
     },
     {
@@ -528,8 +535,7 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'UploadFormat',
       key: 'UploadFormat',
-      width: 150,
-
+      width: 120,
       render: (text, record, index) => {
         const attachmentDataSource = getAttachmentDataSource(text);
 
@@ -544,6 +550,7 @@ const Index = (props) => {
       align: 'center',
       dataIndex: 'file',
       key: 'file',
+      width: 100,
       render: (text, record, index) => {
         return <div style={{ textAlign: 'left' }}>{text}</div>
       }

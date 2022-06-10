@@ -385,7 +385,7 @@ export default class PersonData extends Component {
                 WaterStartCertificatesTime:values.WaterStartCertificatesTime&&moment(values.WaterStartCertificatesTime).format('YYYY-MM-DD'),
                 GasEndCertificatesTime:values.GasEndCertificatesTime&&moment(values.GasEndCertificatesTime).format('YYYY-MM-DD'),
                 GasStartCertificatesTime:values.GasStartCertificatesTime&&moment(values.GasStartCertificatesTime).format('YYYY-MM-DD'),
-
+                EnterpriseID:"5a3c2e61-124b-4a32-a780-d430ebdfcc32",
               }
            },
           }).then(()=>{
@@ -547,9 +547,9 @@ export default class PersonData extends Component {
               <Form layout="inline">
             
               <Row>
-              <Form.Item label=''>
+              {/* <Form.Item label=''>
                   <Input placeholder='请输入运维单位' onChange={this.operationUnit}/>
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item label=''>
                   <Input placeholder='请输入姓名' onChange={this.operationName}/>
               </Form.Item>
@@ -628,6 +628,7 @@ export default class PersonData extends Component {
         onCancel={this.cancel}
         className={styles.operationModal}
         destroyOnClose
+
       >
         <Spin spinning={this.state.editLoading}>
         <Form

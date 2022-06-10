@@ -33,7 +33,7 @@ export default class Index extends Component {
       i++;
       return data.map(item => {
         // i > levelNum ? item.disabled = false : item.disabled = true;  //设置父级都为禁用模式
-        return <TreeNode key={item.value} value={item.value} title={item.label} key={item.value}>
+        return <TreeNode key={item.value} value={item.value} title={item.label}>
              {this.regchildren(item.children,i)}
            </TreeNode>
     });

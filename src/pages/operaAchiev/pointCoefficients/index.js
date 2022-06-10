@@ -298,27 +298,34 @@ const Index = (props) => {
       </Form.Item>
   </Form>
   }
+  const cardComponents = () =>{
+   return     <Card title={searchComponents()}>
+   <SdlTable
+     loading = {tableLoading}
+     bordered
+     dataSource={tableDatas}
+     columns={columns}
+     onChange={tableChange}
+     pagination={{
+       total:tableTotal,
+       pageSize: pageSize,
+       current: pageIndex,
+       showSizeChanger: true,
+       showQuickJumper: true,
+       // onChange: handleTableChange,
+     }}
+   />
+</Card>
+  }
   return (   
     <div  className={styles.operaAchievSty}>
-    <BreadcrumbWrapper hideBreadcrumb={!isList}>
-    <Card title={searchComponents()}>
-      <SdlTable
-        loading = {tableLoading}
-        bordered
-        dataSource={tableDatas}
-        columns={columns}
-        onChange={tableChange}
-        pagination={{
-          total:tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          // onChange: handleTableChange,
-        }}
-      />
-   </Card>
+      {!isList?
+    <div>{cardComponents()}</div>
+    :
+    <BreadcrumbWrapper>
+       {cardComponents()}
    </BreadcrumbWrapper>
+}
    <Modal
         title={title}
         visible={fromVisible}

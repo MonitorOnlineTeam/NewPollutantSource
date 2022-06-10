@@ -39,6 +39,8 @@ export default Model.extend({
           total: response.Total,
           duplicateList:response.Datas
         });
+      }else{
+        message.error(response.Message);
       }
     },
     *deleteOperationMaintenancePersonnel({ payload,callback }, { call, put, update, select }) {

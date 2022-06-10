@@ -124,7 +124,8 @@ export default class UserInfoEdit extends Component {
         this.setState({ selectedKey });
     };
 
-    onChecks = checkedKeys => {
+    onChecks = data => {
+        let checkedKeys = data.checked;
         var that=this;
         this.setState({ checkedKeys });
         const leafTree = [];
@@ -405,7 +406,7 @@ export default class UserInfoEdit extends Component {
                                                 onSelect={this.onSelects}
                                                 selectedKeys={this.state.selectedKeys}
                                                 defaultExpandAll
-                                                // checkStrictly
+                                                checkStrictly
                                             >
                                                 {this.renderTreeNodes(this.props.treeData)}
                                             </Tree>

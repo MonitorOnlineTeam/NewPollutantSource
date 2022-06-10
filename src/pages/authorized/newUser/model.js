@@ -7,7 +7,7 @@ import {
     GetRolesTree,
     GetUserList,
     ExportUserList,
-    insertPointFilterByUser,
+    ResetWechat,
 } from './service';
 import { getregioninfobytree, getentandpoint, getpointbydepid, } from '../departInfo/service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'
@@ -541,13 +541,13 @@ export default Model.extend({
             });
             payload.callback(result)
         },
-        *recoveryUser({ payload,callback }, { call, put, update, select }) {
-            //用户列表
-            yield update({ loading: true });
-            const response = yield call(RecoveryUser, { ...payload });
+        *resetWechat({ payload,callback }, { call, put, update, select }) {
+            //重置微信注册信息
+            const response = yield call(ResetWechat, { ...payload });
             if (response.IsSuccess) {
-               message.success(response.Message)
-               callback();
+                message.success(response.Message)
+            }else{
+                message.error(response.Message)
             }
         },
     },

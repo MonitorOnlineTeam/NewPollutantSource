@@ -130,7 +130,7 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
 );
 
 // Customize Table Transfer
-const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns,pagination, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -173,6 +173,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
               onItemSelect(key, !listSelectedKeys.includes(key));
             },
           })}
+          pagination={{...pagination}}
         />
       );
     }}
@@ -1457,6 +1458,15 @@ class DepartIndex extends Component {
                     leftColumns={leftTableColumns}
                     rightColumns={rightTableColumns}
                     style={{ width: '100%', height: '600px' }}
+                    // pagination={{
+                    //   showSizeChanger: true,
+                    //   showQuickJumper: true,
+                    //   // total: this.props.total,
+                    //   // pageSize: PageSize,
+                    //   // current: PageIndex,
+                    //   // onChange: this.handleTableChange,
+                    // }}
+                    pagination={false}
                   />
                     </Spin>
                 {/* )} */}

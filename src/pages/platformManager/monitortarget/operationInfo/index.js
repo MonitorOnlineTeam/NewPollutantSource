@@ -269,6 +269,7 @@ const Index = (props) => {
       dataIndex: 'actualBeginTime',
       key:'actualBeginTime',
       align:'center',
+      width:150,
       sorter: (a, b) => moment(a.actualBeginTime).valueOf() - moment(b.actualBeginTime).valueOf()
     },
     {
@@ -276,6 +277,7 @@ const Index = (props) => {
       dataIndex: 'actualEndTime',
       key:'actualEndTime',
       align:'center',
+      width:150,
       sorter: (a, b) => moment(a.actualEndTime).valueOf() - moment(b.actualEndTime).valueOf()
       
     },

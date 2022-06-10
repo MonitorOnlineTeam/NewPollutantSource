@@ -353,14 +353,14 @@ export default class UserInfoIndex extends Component {
     });
   }
 
-  showConfirm = (selectedRowKeys, selectedRows) => {
+  showConfirm = (selectedRowKeys, selectedRows,types) => {
     if (selectedRowKeys.length == 0) {
       sdlMessage('请至少选中一行','error')
       return;
     }
     const { dispatch } = this.props;
     confirm({
-      title: '是否确认重置密码?',
+      title: types==='wechat'? '是否确认重置微信注册信息' : '是否确认重置密码?',
       content: '',
       okText: '确认',
       cancelText: '取消',
@@ -368,7 +368,7 @@ export default class UserInfoIndex extends Component {
         let str = [];
         selectedRows.map(item => str.push(item['ID']));
         dispatch({
-          type: 'newuserinfo/resetpwd',
+          type:types==='wechat'? 'newuserinfo/resetWechat' : 'newuserinfo/resetpwd',
           payload: {
             User_ID: str,
           },
@@ -667,7 +667,15 @@ export default class UserInfoIndex extends Component {
                     重置密码
                   </Button>
                 </Form.Item>
-
+                 <Form.Item>
+                   <Button
+                    type="danger"
+                    onClick={this.showConfirm.bind(this,selectedRowKeys, selectedRows,'wechat')}
+                    style={{marginRight:8}}
+                  >
+                    重置微信注册信息
+                  </Button>
+                </Form.Item> 
                 <Form.Item>
                 <Dropdown overlay={() => <Menu>
 

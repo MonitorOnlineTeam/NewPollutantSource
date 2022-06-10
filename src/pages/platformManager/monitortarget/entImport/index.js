@@ -36,6 +36,8 @@ import ButtonGroup_ from '@/components/ButtonGroup'
 import { routerRedux } from 'dva/router';
 import RegionList from '@/components/RegionList'
 import { DownloadOutlined,CloudDownloadOutlined,ImportOutlined,RollbackOutlined } from '@ant-design/icons';
+import config from '@/config';
+import Cookie from 'js-cookie';
 import styles from '../style.less'
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -417,7 +419,7 @@ export default class EntImport extends Component {
         name: 'file',
         action: '/api/rest/PollutantSourceApi/BaseDataApi/ImportEnt',
         headers: {
-          // authorization: 'authorization-text',
+          Authorization: "Bearer " + Cookie.get(config.cookieName),
         }
       };
       
@@ -438,7 +440,7 @@ export default class EntImport extends Component {
       this.columns2 = arr;
       this.columns2.splice(28,0,...gasObj);
     return (
-        <BreadcrumbWrapper>
+     <BreadcrumbWrapper>
       <Card
         bordered={false}
         className={styles.entImport}

@@ -275,3 +275,8 @@ export async function insertPointFilterByUser(params) {
         }
       : result;
   }
+// 重置微信注册信息
+export async function ResetWechat(params) {
+    const result = post('/api/rest/PollutantSourceApi/AuthorApi/ResetWechat', params, null);
+    return result;
+}

@@ -918,11 +918,10 @@ const Index = (props) => {
     children:[
     {
       title: '序号',
+      dataIndex: 'Sort',
+      key: 'Sort',
       align: 'center',
       width:80,
-      render:(text,record,index)=>{
-        return index+1
-      }
     },
     {
       title: '督查内容',
@@ -970,11 +969,10 @@ const Index = (props) => {
       children:[
       {
         title: '序号',
+        dataIndex: 'Sort',
+        key: 'Sort',
         align: 'center',
         width:80,
-        render:(text,record,index)=>{
-          return index+1
-        }
       },
       {
         title: '督查内容',
@@ -1020,11 +1018,10 @@ const Index = (props) => {
         children:[ 
           {
             title: '序号',
+            dataIndex: 'Sort',
+            key: 'Sort',
             align: 'center',
             width:80,
-            render:(text,record,index)=>{
-              return index+1
-            }
           },
         {
           title: '督查内容',

@@ -225,20 +225,26 @@ const Index = (props) => {
       })
     }
   }
-
+  const cardComponents = () =>{
+   return  <Card title={isList ? searchComponents() : null}>
+    <SdlTable
+      loading={tableLoading}
+      bordered
+      dataSource={tableDatas}
+      columns={columns}
+      pagination={false}
+    />
+  </Card>
+  }
   return (
     <div className={styles.operaAchievSty}>
-      <BreadcrumbWrapper hideBreadcrumb={!isList}>
-      <Card title={isList ? searchComponents() : null}>
-        <SdlTable
-          loading={tableLoading}
-          bordered
-          dataSource={tableDatas}
-          columns={columns}
-          pagination={false}
-        />
-      </Card>
-      </BreadcrumbWrapper>
+     {!isList?
+    <div>{cardComponents()}</div>
+    :
+    <BreadcrumbWrapper>
+       {cardComponents()}
+   </BreadcrumbWrapper>
+ }
       <Modal
         title={type === 'add' ? '添加' : '编辑'}
         visible={fromVisible}
