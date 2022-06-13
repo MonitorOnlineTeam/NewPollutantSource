@@ -33,14 +33,15 @@ export default Model.extend({
     FuNoVisitArr:[],
     FuRate:[],
     industryBusinessList:[],
-    queryPar:null,
+    queryPar:{},
+    days:7,
   },
   subscriptions: {},
   effects: {
     *getDaQuUserActivity({ payload }, { call, put, update, select }) {
       //大区 列表
       const response = yield call(GetDaQuUserActivity, { ...payload });
-      if (response.IsSuccess&&response.Datas.length>0) {
+      if (response.IsSuccess) {
         let chartData = response.Datas.filter(item=>{
           return item.DaQuName !=='全部合计'
         })

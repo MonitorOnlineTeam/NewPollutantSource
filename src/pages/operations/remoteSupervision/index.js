@@ -2118,7 +2118,7 @@ const Index = (props) => {
              
              <Spin size='small' spinning={title==='编辑'?  false : parLoading || false} style={{ top: -8, left: '15%' }}>
             <Form.Item label='点位运维负责人' name='OperationUserID' rules={[{ required: true, message: '请设置点位的负责运维人!' }]}>
-               <Select placeholder='请选择'>
+               <Select placeholder='请选择' showSearch optionFilterProp="children">
                 {userlist.map(item=>{
                  return  <Option key={item['dbo.View_User.User_ID']} value={item['dbo.View_User.User_ID']} >
                                {item['dbo.View_User.User_Name']}

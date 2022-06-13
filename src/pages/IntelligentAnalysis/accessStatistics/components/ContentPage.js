@@ -40,6 +40,7 @@ import PageLoading from '@/components/PageLoading'
 
 // import { DualAxes } from '@ant-design/charts';
 import ReactEcharts from 'echarts-for-react';
+import ThirdPartyTestingContent from '@/pages/EmergencyTodoList/ThirdPartyTestingContent';
 
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
@@ -72,6 +73,7 @@ const pageUrl = {
   DaRate: regionalAccountStatistics.DaRate,
   industryBusinessList: regionalAccountStatistics.industryBusinessList,
   industryBusinessLoading:loading.effects[pageUrl.getIndustryBusiness],
+  days: regionalAccountStatistics.days, //详情返回 记住天数
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -82,8 +84,7 @@ export default class EntTransmissionEfficiency extends Component {
       day:7,
       accountTitle:'',
     };
-    
-    this.columns = [
+    this.columns = (queryPar) => [
       {
         title: <span>序号</span>,
         dataIndex: 'x',
@@ -100,7 +101,7 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'DaQuName',
         align: 'center',
         render: (text, record) => { 
-          return <Link to={{  pathname: '/Intelligentanalysis/accessStatistics/missDataSecond',query:  {p:record.DaQuId,day:this.state.day,n:text} }} >
+          return <Link to={{  pathname: '/Intelligentanalysis/accessStatistics/missDataSecond',query:  {p:record.DaQuId,day:this.state.day,n:text,industry: queryPar.Industry, business:queryPar.Business,} }} >
                    {text}
                </Link>      
        },
@@ -234,7 +235,7 @@ export default class EntTransmissionEfficiency extends Component {
     this.dayChange();
     dispatch({
       type:pageUrl.getIndustryBusiness,
-      payload: {}
+      payload: {...this.props.queryPar}
     });
   };
  loadChart=()=>{
@@ -249,7 +250,7 @@ export default class EntTransmissionEfficiency extends Component {
 
  getOption=()=>{
 
-  const { DaQuArr,DaviArr,DaNoVisitArr,DaRate} = this.props;
+  const { DaQuArr,DaviArr,DaNoVisitArr,DaRate,} = this.props;
   const {day} = this.state;
   var option;
   option = {
@@ -401,25 +402,30 @@ export default class EntTransmissionEfficiency extends Component {
 
     getDataList = (payload) =>{
       const { dispatch, queryPar, } = this.props;
-      console.log(queryPar)
-      dispatch({
-        type: pageUrl.updateState,
-        payload: { queryPar:{ ...queryPar, ...payload,} }  
-      })
       dispatch({
         type: pageUrl.getData,
         payload: { ...queryPar,  ...payload }
       }); 
+      dispatch({
+        type: pageUrl.updateState,
+        payload: { queryPar:{ ...queryPar, ...payload,}}  
+      })
     }
     dayChange=(e)=>{
       const { dispatch,queryPar, } = this.props;
-      this.setState({day:e?e.target.value : 7})
+      const { day } = this.state;
       this.getDataList({
-         beginTime: moment().subtract(e?e.target.value : 7, 'day').format('YYYY-MM-DD 00:00:00'),
+         beginTime: moment().subtract(e?e.target.value : day, 'day').format('YYYY-MM-DD 00:00:00'),
          endTime: moment().format('YYYY-MM-DD 23:59:59')
+      })
+      this.setState({day:e?e.target.value : day})
+      dispatch({
+        type: pageUrl.updateState,
+        payload: {  days : e?e.target.value : this.props.days}  
       })
     }
     pollChange=(val)=>{
+
       this.getDataList({Industry:val? val : undefined})
     }
     afterSaleChange=(val)=>{
@@ -427,6 +433,7 @@ export default class EntTransmissionEfficiency extends Component {
     }
     getUserDataFun = (row,type) =>{
       const { day } = this.state;
+      const { queryPar } = this.props;
       this.setState({activetyType:type})
       this.props.dispatch({
         type:pageUrl.getUserData,
@@ -434,7 +441,9 @@ export default class EntTransmissionEfficiency extends Component {
          beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
          endTime: moment().format('YYYY-MM-DD 23:59:59'),
          DaQuId: row.DaQuId,
-         ActivetyType:type
+         ActivetyType:type,
+         Industry: queryPar.Industry,
+         Business: queryPar.Business,
        }
       })
     }
@@ -467,6 +476,7 @@ export default class EntTransmissionEfficiency extends Component {
       userList,
       industryBusinessList,
       industryBusinessLoading,
+      queryPar,
     } = this.props;
      const industryList = industryBusinessList&&industryBusinessList.IndustryList? industryBusinessList.IndustryList : []
      const businessList = industryBusinessList&&industryBusinessList.BusinessList? industryBusinessList.BusinessList : []
@@ -479,7 +489,7 @@ export default class EntTransmissionEfficiency extends Component {
             <Form layout="inline">
             <Row>
             <Form.Item>
-            <Radio.Group onChange={this.dayChange} defaultValue={7}>
+            <Radio.Group onChange={this.dayChange} defaultValue={7} value={this.props.days}>
                <Radio.Button value={7}>近7日内</Radio.Button>
                <Radio.Button value={14}>近14日内</Radio.Button>
                <Radio.Button value={30}>近30日内</Radio.Button>
@@ -488,7 +498,7 @@ export default class EntTransmissionEfficiency extends Component {
             </Form.Item>
             <Form.Item>
             <Spin spinning={industryBusinessLoading} size='small'>
-            <Select placeholder='请选择行业属性'  allowClear onChange={this.pollChange} style={{width:180}}>
+            <Select placeholder='请选择行业属性'  value={queryPar.Industry} allowClear onChange={this.pollChange} style={{width:180}}>
                {
                 industryList.map(item=>{
                 return <Option value={item.code} key={item.code}>{item.name}</Option>
@@ -499,7 +509,7 @@ export default class EntTransmissionEfficiency extends Component {
             </Form.Item>
             <Form.Item>
             <Spin spinning={industryBusinessLoading} size='small'>
-            <Select placeholder='请选择售业务属性'   allowClear onChange={this.afterSaleChange} style={{width:180}}>
+            <Select placeholder='请选择售业务属性'  value={queryPar.Business}  allowClear onChange={this.afterSaleChange} style={{width:180}}>
               {
                 businessList.map(item=>{
                 return<Option value={item.code} key={item.code}>{item.name}</Option>
@@ -535,8 +545,8 @@ export default class EntTransmissionEfficiency extends Component {
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}
-            columns={this.columns}
-            dataSource={this.props.tableDatas}
+            columns={this.columns(queryPar)}
+            dataSource={tableDatas}
             pagination={false}
             scroll={{ y: clientHeight - 640}}
           />

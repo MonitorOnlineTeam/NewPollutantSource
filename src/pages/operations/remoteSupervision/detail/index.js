@@ -210,7 +210,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:120,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
               return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMin}` : null;
@@ -224,7 +224,7 @@ const Index = (props) => {
           key: 'par',
           width:120,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
                return record.DataList.DASMin||record.DataList.DASMin==0? `${record.DataList.DASMin}-${record.DataList.DASMax}` : null;
@@ -238,7 +238,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:120,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
               return record.DataList.DataMin||record.DataList.DataMin==0? `${record.DataList.DataMin}-${record.DataList.DataMax}` : null;
@@ -253,7 +253,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:180,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             }else{
               return record.DataList.RangeAutoStatus==1? '是' : record.DataList.RangeAutoStatus==2 ? '否' : null
@@ -267,7 +267,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:150,
           render: (text, record, index) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             }else{  
               let  rangeStatus = record.DataList.RangeStatus;
@@ -282,7 +282,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width: 150,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             }else{
               return record.DataList.RangeRemark
@@ -368,7 +368,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:120,
           render: (text, record) => {
-            if (record.Name === 'NOx' || record.Name === '标干流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
+            if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量' || record.PollutantName === '流速' || record.PollutantName === '颗粒物' && record.DataList.CouType  === 2) {
               return '—'
             }
             return record.DataList.AnalyzerCou
@@ -391,7 +391,7 @@ const Index = (props) => {
           key: 'PollutantName',
           width:150,
           render: (text, record) => {
-            if (record.Name === 'NO' || record.Name === 'NO2') {
+            if (record.PollutantName === 'NO' || record.PollutantName === 'NO2') {
               return '—'
             }else{
               return record.DataList.DataCou
@@ -474,7 +474,7 @@ const Index = (props) => {
       align: 'center',
       width: 195,
       render: (text, record, index) => {
-        return <div style={{ textAlign: 'left' }}>{text}</div>
+        return  <div style={{ textAlign: 'left' }}>{text}</div>
       }
     },
     {
@@ -494,6 +494,9 @@ const Index = (props) => {
       dataIndex: 'SetValue',
       key: 'SetValue',
       width: 70,
+      render: (text, record, index) => {
+         return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+      }
     },
     {
       title: '溯源值',
@@ -501,6 +504,9 @@ const Index = (props) => {
       dataIndex: 'TraceabilityValue',
       key: 'TraceabilityValue',
       width: 70,
+      render: (text, record, index) => {
+        return record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'? '—' : text;       
+     }
     },
     {
       title: '一致性(自动判断)',
@@ -509,7 +515,11 @@ const Index = (props) => {
       key: 'AutoUniformity',
       width: 120,
       render: (text, record) => {
-        return text==1? '是' : text==2 ? '否' : null
+        if(record.ItemName==='停炉信号接入有备案材料' ||  record.ItemName==='停炉信号激活时工况真实性'){
+           return '—'
+        }else{
+          return text==1? '是' : text==2 ? '否' : null
+        }
     }
     },
     {

@@ -448,7 +448,6 @@ export default class EntImport extends Component {
             <Form layout="inline">
                <Form.Item>
             <Button onClick={() => {
-
                  this.props.history.go(-1);
              }} ><RollbackOutlined />返回</Button>
              </Form.Item>

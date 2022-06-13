@@ -399,18 +399,20 @@ export default class EntTransmissionEfficiency extends Component {
     });
   }
     dayChange=(e)=>{
-      const { dispatch, queryPar,location:{query:{p,day}}} = this.props;
+      const { dispatch, queryPar,location:{query:{p,day,industry,business,}}} = this.props;
       dispatch({
         type: pageUrl.getData,
         payload: { 
           beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
           endTime: moment().format('YYYY-MM-DD 23:59:59'), 
-          DaQuId:p
+          DaQuId:p,
+          Industry: industry,
+          Business:business,
         }
       });
     }
     getUserDataFun = (row,type) =>{
-      const {location:{query:{p,day}} }= this.props;
+      const {location:{query:{p,day,industry,business,}} }= this.props;
       this.setState({FuWuQuId:row.FuWuQuId,activetyType:type})
       this.props.dispatch({
         type:pageUrl.getUserData,
@@ -419,7 +421,9 @@ export default class EntTransmissionEfficiency extends Component {
          endTime: moment().format('YYYY-MM-DD 23:59:59'),
          DaQuId: row.DaQuId,
          FuWuQuId:row.FuWuQuId,
-         ActivetyType:type
+         ActivetyType:type,
+         Industry: industry,
+         Business:business,
        }
       })
     }

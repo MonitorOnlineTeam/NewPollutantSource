@@ -75,8 +75,9 @@ const { SHOW_PARENT } = TreeSelect;
   getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],
   EntAndPoint: newuserinfo.EntAndPoint,
   RegionByDepID: newuserinfo.RegionByDepID,
-  CheckPoint:newuserinfo.CheckPoint
-
+  CheckPoint:newuserinfo.CheckPoint,
+  userManagePageIndex: newuserinfo.userManagePageIndex,
+  userManagePageSize: newuserinfo.userManagePageSize,
 }))
 export default class UserInfoIndex extends Component {
   constructor(props) {
@@ -577,6 +578,16 @@ export default class UserInfoIndex extends Component {
       },
     });
   };
+
+  onTableChange = (userManagePageIndex, userManagePageSize) => {
+    this.props.dispatch({
+        type: 'newuserinfo/updateState',
+        payload: {
+            userManagePageIndex,
+            userManagePageSize,
+        },
+    })
+  }
   render() {
     const {
       searchConfigItems,
@@ -771,11 +782,14 @@ export default class UserInfoIndex extends Component {
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
-              // pagination={{
-              //   showSizeChanger: true,
-              //   showQuickJumper: true,
-              //   //defaultPageSize:20
-              // }}
+              pagination={{
+                showSizeChanger: true,
+                showQuickJumper: true,
+                pageSize: this.props.userManagePageSize, 
+                current: this.props.userManagePageIndex,
+                onChange: this.onTableChange,
+                total: this.props.tableDatas.length,
+            }}
             />
 
             <Modal

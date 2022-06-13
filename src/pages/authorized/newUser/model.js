@@ -55,7 +55,9 @@ export default Model.extend({
         RegionByDepID: [],
         RegionInfoTree: [],
         EntAndPoint: [],
-        CheckPoint: []
+        CheckPoint: [],
+        userManagePageIndex: 1,
+        userManagePageSize: 20,
     },
     subscriptions: {
         setup({
