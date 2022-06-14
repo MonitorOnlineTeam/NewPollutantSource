@@ -8,6 +8,7 @@ import {
     GetUserList,
     ExportUserList,
     ResetWechat,
+    insertPointFilterByUser,
 } from './service';
 import { getregioninfobytree, getentandpoint, getpointbydepid, } from '../departInfo/service';
 import { postAutoFromDataAdd, postAutoFromDataUpdate } from '@/services/autoformapi'

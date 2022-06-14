@@ -145,7 +145,7 @@ const Index = (props) => {
             align: 'center',
             width: 50,
             render: (text, record, index) => {
-                return index + 1;
+                return  (index + 1) + (pageIndex-1)*pageSize;
             }
         },
         {

@@ -368,13 +368,15 @@ export default class EntTransmissionEfficiency extends Component {
  }
   //创建并获取模板   导出
   template = () => {
-    const { dispatch, queryPar,location:{query:{p,day}}}  = this.props;
+    const { dispatch, queryPar,location:{query:{p,day,industry,business,}}}  = this.props;
     dispatch({
       type: pageUrl.exportData,
       payload: { 
         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
         endTime: moment().format('YYYY-MM-DD 23:59:59'), 
         DaQuId:p,
+        Industry: industry,
+        Business:business,
       },
         callback: data => {
          downloadFile(data);
@@ -382,7 +384,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
   userTemplate = () => {  //弹框  用户列表导出
-    const { dispatch, queryPar,location:{query:{p,day}} } = this.props;
+    const { dispatch, queryPar,location:{query:{p,day,industry,business,}} } = this.props;
     const { FuWuQuId } = this.state;
     dispatch({
       type: pageUrl.exportUserData,
@@ -391,7 +393,9 @@ export default class EntTransmissionEfficiency extends Component {
         endTime: moment().format('YYYY-MM-DD 23:59:59'), 
         DaQuId:p,
         FuWuQuId:FuWuQuId,
-        ActivetyType:this.state.activetyType
+        ActivetyType:this.state.activetyType,
+        Industry: industry,
+        Business:business,
       },
       callback: data => {
          downloadFile(data);

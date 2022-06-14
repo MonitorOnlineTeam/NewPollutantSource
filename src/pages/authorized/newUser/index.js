@@ -78,6 +78,7 @@ const { SHOW_PARENT } = TreeSelect;
   CheckPoint:newuserinfo.CheckPoint,
   userManagePageIndex: newuserinfo.userManagePageIndex,
   userManagePageSize: newuserinfo.userManagePageSize,
+  
 }))
 export default class UserInfoIndex extends Component {
   constructor(props) {
@@ -89,7 +90,8 @@ export default class UserInfoIndex extends Component {
       selectedRow:[],
       DataTreeValue:[],
       leafTreeDatas: [],
-      newEntAndPoint:[]
+      newEntAndPoint:[],
+      okLoading:false,
     };
 
     this.columns = [
@@ -414,7 +416,7 @@ export default class UserInfoIndex extends Component {
       const {dispatch,userPar } = this.props;
       dispatch({
         type: 'newuserinfo/updateState',
-        payload: {userPar:{...userPar,groupListID:value&&value!=='0'?value.split():''}},
+        payload: {userPar:{...userPar,groupListID:value&&value!=='0'?value:''}},
      })
     }
       /** 选中角色加载树 */
@@ -556,10 +558,11 @@ export default class UserInfoIndex extends Component {
     }
   };
   handleDataOK = e => {
-    console.log('regioncode=', this.state.DataTreeValue.toString());
-    console.log('DGIMN=', this.state.checkedKeys);
-    console.log('selectedRowKeys=', this.state.selectedRow.ID);
+    // console.log('regioncode=', this.state.DataTreeValue.toString());
+    // console.log('DGIMN=', this.state.checkedKeys);
+    // console.log('selectedRowKeys=', this.state.selectedRow.ID);
     // return;
+    this.setState({okLoading:true,})
     this.props.dispatch({
       type: 'newuserinfo/insertPointFilterByUser',
       payload: {
@@ -574,6 +577,9 @@ export default class UserInfoIndex extends Component {
           } else {
             message.error(res.Message);
           }
+          setTimeout(()=>{
+            this.setState({okLoading:false,})
+          })
         },
       },
     });
@@ -799,6 +805,7 @@ export default class UserInfoIndex extends Component {
                 // destroyOnClose="true"
                 onCancel={()=>{this.setState({visibleData:false})}}
                 width={900}
+                confirmLoading={this.state.okLoading}
               >
                 {
 

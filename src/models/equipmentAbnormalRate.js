@@ -70,7 +70,7 @@ export default Model.extend({
               }
             },
             {
-              title: '数据故障',
+              title: '故障数据',
               dataIndex: 'faultDataRate',
               key: 'faultDataRate',
               width: 150,

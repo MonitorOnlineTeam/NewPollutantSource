@@ -91,7 +91,7 @@ const Index = (props) => {
             align: 'center',
             width: 50,
             render: (text, record, index) => {
-                return index + 1;
+                return  (index + 1) + (pageIndex-1)*pageSize;
             }
         },
         {
@@ -192,7 +192,7 @@ const Index = (props) => {
             align: 'center',
             width: 50,
             render: (text, record, index) => {
-                return index + 1;
+                return  (index + 1) + (pageIndex-1)*pageSize;
             }
         },
         {
@@ -309,7 +309,7 @@ const Index = (props) => {
                         allowClear />
                 </Form.Item>
             </Row>
-            <Row align='middle' style={{ paddingTop: 5 }}>
+            <Row align='middle'>
                 <Form.Item style={{ marginBottom: 0 }}>
                     <Button type="primary" htmlType="submit" loading={tableLoading}>
                         查询

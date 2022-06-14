@@ -75,7 +75,8 @@ const { SHOW_PARENT } = TreeSelect;
   getentandpointLoading: loading.effects['newuserinfo/getentandpoint'],
   EntAndPoint: newuserinfo.EntAndPoint,
   RegionByDepID: newuserinfo.RegionByDepID,
-  CheckPoint:newuserinfo.CheckPoint
+  CheckPoint:newuserinfo.CheckPoint,
+
 
 }))
 export default class UserAuthority extends Component {
@@ -88,7 +89,8 @@ export default class UserAuthority extends Component {
       selectedRow:[],
       DataTreeValue:[],
       leafTreeDatas: [],
-      newEntAndPoint:[]
+      newEntAndPoint:[],
+      okLoading:false,
     };
 
     this.columns = [
@@ -543,10 +545,11 @@ export default class UserAuthority extends Component {
     }
   };
   handleDataOK = e => {
-    console.log('regioncode=', this.state.DataTreeValue.toString());
-    console.log('DGIMN=', this.state.checkedKeys);
-    console.log('selectedRowKeys=', this.state.selectedRow.ID);
+    // console.log('regioncode=', this.state.DataTreeValue.toString());
+    // console.log('DGIMN=', this.state.checkedKeys);
+    // console.log('selectedRowKeys=', this.state.selectedRow.ID);
     // return;
+    this.setState({okLoading:true,})
     this.props.dispatch({
       type: 'newuserinfo/insertPointFilterByUser',
       payload: {
@@ -561,6 +564,9 @@ export default class UserAuthority extends Component {
           } else {
             message.error(res.Message);
           }
+          setTimeout(()=>{
+            this.setState({okLoading:false,})
+          })
         },
       },
     });
@@ -765,6 +771,7 @@ export default class UserAuthority extends Component {
                 // destroyOnClose="true"
                 onCancel={()=>{this.setState({visibleData:false})}}
                 width={900}
+                confirmLoading={this.state.okLoading}
               >
                 {
 

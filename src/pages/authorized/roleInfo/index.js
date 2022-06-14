@@ -173,6 +173,7 @@ const rightTableColumns = [
     CheckMenuLoading: loading.effects['roleinfo/getmenubyroleid'],
     btnloading: loading.effects['roleinfo/insertroleinfo'],
     btnloading1: loading.effects['roleinfo/updroleinfo'],
+    insertmenubyroleidLoading: loading.effects['roleinfo/insertmenubyroleid'],
 }))
 @Form.create()
 
@@ -853,6 +854,7 @@ class RoleIndex extends Component {
                                 onOk={this.addRight}
                                 destroyOnClose="true"
                                 onCancel={this.handleCancelMenu}
+                                confirmLoading={this.props.insertmenubyroleidLoading}
                                 width={1200}>
                                 <div style={{ width: '100%', maxHeight: '600px', overflow: 'auto' }}>
                                     {

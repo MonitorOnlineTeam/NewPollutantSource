@@ -151,7 +151,7 @@ const Index = (props) => {
             align: 'center',
             width: 50,
             render: (text, record, index) => {
-                return index + 1;
+                return  (index + 1) + (pageIndex-1)*pageSize;
             }
         },
         {
@@ -319,7 +319,7 @@ const Index = (props) => {
            <Form.Item label='企业名称' name='entName'>
             <Input allowClear placeholder='请输入'/>
            </Form.Item>
-            <Form.Item label='行政区' name='regionCode' style={{padding:'0 8px'}}>
+            <Form.Item label='行政区' name='regionCode' style={{padding:'8px 8px 0 8px'}}>
                 <RegionList levelNum={2} />
             </Form.Item>
 
@@ -331,7 +331,7 @@ const Index = (props) => {
                </Select>
              </Form.Item>
             </Row>
-            <Row  align='middle' style={{  paddingTop:5 }}>
+            <Row  align='middle'>
             <Form.Item style={{marginBottom:0}}>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
                     查询

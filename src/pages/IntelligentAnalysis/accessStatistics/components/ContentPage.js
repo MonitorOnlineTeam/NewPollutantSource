@@ -384,7 +384,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
   userTemplate = () => {  //弹框  用户列表导出
-    const { dispatch,  } = this.props;
+    const { dispatch,queryPar, } = this.props;
     const { day,DaQuId } = this.state;
     dispatch({
       type: pageUrl.exportUserData,
@@ -392,7 +392,9 @@ export default class EntTransmissionEfficiency extends Component {
         beginTime: moment().subtract(day, 'day').format('YYYY-MM-DD 00:00:00'),
         endTime: moment().format('YYYY-MM-DD 23:59:59'), 
         DaQuId:DaQuId,
-        ActivetyType:this.state.activetyType
+        ActivetyType:this.state.activetyType,
+        Industry: queryPar.Industry,
+        Business: queryPar.Business,
       },
       callback: data => {
          downloadFile(data);

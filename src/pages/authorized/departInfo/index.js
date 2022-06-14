@@ -631,10 +631,10 @@ class DepartIndex extends Component {
       },
       callback:()=>{
         this.setState({operatioVisible:false},()=>{
-          this.props.dispatch({
-            type: 'departinfo/getdepartinfobytree',
-            payload: {},
-          });
+          // this.props.dispatch({
+          //   type: 'departinfo/getdepartinfobytree',
+          //   payload: {},
+          // });
         })
       }
     });
@@ -1457,15 +1457,7 @@ class DepartIndex extends Component {
                     }
                     leftColumns={leftTableColumns}
                     rightColumns={rightTableColumns}
-                    style={{ width: '100%', height: '600px' }}
-                    // pagination={{
-                    //   showSizeChanger: true,
-                    //   showQuickJumper: true,
-                    //   // total: this.props.total,
-                    //   // pageSize: PageSize,
-                    //   // current: PageIndex,
-                    //   // onChange: this.handleTableChange,
-                    // }}
+                    // style={{ width: '100%', height: '600px' }}
                     pagination={false}
                   />
                     </Spin>
