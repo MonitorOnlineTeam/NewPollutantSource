@@ -424,7 +424,7 @@ export default class UserInfoIndex extends Component {
   const {dispatch,userPar } = this.props;
   dispatch({
     type: 'newuserinfo/updateState',
-    payload: {userPar:{...userPar,roleListID:value&&value!=='0'?value.split():''}},
+    payload: {userPar:{...userPar,roleListID:value&&value!=='0'? value:''}},
      })
  }
   //获取角色列表

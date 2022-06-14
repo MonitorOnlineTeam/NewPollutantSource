@@ -599,6 +599,7 @@ class DepartIndex extends Component {
        onChange={this.updateChange}
        value={this.state.updateOperationVal}
        style={{ width: '100%'}}
+       allowClear
      >
        <Option value="1">一级</Option>
        <Option value="2">二级</Option>
