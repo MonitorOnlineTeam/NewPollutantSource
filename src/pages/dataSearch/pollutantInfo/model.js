@@ -171,8 +171,11 @@ export default Model.extend({
     *getEquipmentParametersOfPont ({ payload, callback }, { call, put, update }) { //设备信息
       const result = yield call(services.GetEquipmentParametersOfPont, payload);
       if (result.IsSuccess) {
+        const data = result.Datas.map((item,index)=>{
+          return {...item,Sort:(index + 1) + (payload.pageIndex-1) * payload.pageSize }
+        })
         yield update({
-          deviceInfoTableDatas: result.Datas,
+          deviceInfoTableDatas: data,
           deviceInfoTableTotal: result.Total,
         })
         callback();

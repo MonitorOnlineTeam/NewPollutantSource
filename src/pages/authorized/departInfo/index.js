@@ -464,7 +464,6 @@ class DepartIndex extends Component {
               <Tooltip title="更新运维区域">
               <Popover   trigger="click" visible={this.state.operatioVisible && record.UserGroup_ID === this.state.updateOperationGroupId}  content={this.updateOperation} title="更新运维区域">
                 <a
-                  style={{ cursor: 'pointer' }}
                   onClick={() => {
                      this.setState({
                        updateOperationGroupId:record.UserGroup_ID,
@@ -622,7 +621,15 @@ class DepartIndex extends Component {
       updateOperationVal:value
     })
   }
+  handleUpdateOperationData=(data,id,i)=>{
+    if(data&&data.length>0){
+       i++;
+       return  data.map(item=>{
+         return {...item,leve:item.UserGroup_ID===id? this.state.updateOperationVal : item.leve ,children:item.children.length>0 ? this.handleUpdateOperationData(item.children,i) : []}
+      })
+    }
 
+  }
   updateOperationSubmit=()=>{
     this.props.dispatch({
       type: 'departinfo/updateOperationArea',
@@ -632,10 +639,10 @@ class DepartIndex extends Component {
       },
       callback:()=>{
         this.setState({operatioVisible:false},()=>{
-          // this.props.dispatch({
-          //   type: 'departinfo/getdepartinfobytree',
-          //   payload: {},
-          // });
+         const data =  this.handleUpdateOperationData(this.state.departInfoTree,this.state.updateOperationGroupId,0)
+             this.setState({
+             departInfoTree:data,
+            })
         })
       }
     });
