@@ -274,20 +274,6 @@ const Index = (props) => {
       editable: true,
     },
     {
-      title: '量程1',
-      dataIndex: 'Range1',
-      align: 'center',
-      width: 200,
-      editable: true,
-    },
-    {
-      title: '量程2',
-      dataIndex: 'Range2',
-      align: 'center',
-      width: 200,
-      editable: true,
-    },
-    {
       title: '设备厂家',
       dataIndex: 'EquipmentManufacturer',
       align: 'center',
@@ -306,7 +292,6 @@ const Index = (props) => {
       align: 'center',
       editable: true,
     },
-
     {
       title: '设备序列号',
       dataIndex: 'EquipmentNumber',
@@ -317,6 +302,20 @@ const Index = (props) => {
       title: '配备',
       dataIndex: 'Equipment',
       align: 'center',
+      editable: true,
+    },
+    {
+      title: '量程1',
+      dataIndex: 'Range1',
+      align: 'center',
+      width: 200,
+      editable: true,
+    },
+    {
+      title: '量程2',
+      dataIndex: 'Range2',
+      align: 'center',
+      width: 200,
       editable: true,
     },
     {
@@ -351,19 +350,19 @@ const Index = (props) => {
     },
   ];
   if(pollutantType==1){    
-    columns.splice(5,0,{
+    columns.splice(4,0,{
       title: '手填设备厂家',
       dataIndex: 'ManualEquipmentManufacturer',
       align: 'center',
       editable: true,
    })
-    columns.splice(7,0,{
+    columns.splice(5,0,{
         title: '手填设备名称',
         dataIndex: 'ManualEquipmentName',
         align: 'center',
         editable: true,
     })
-    columns.splice(9,0,{
+    columns.splice(6,0,{
         title: '手填设备型号',
         dataIndex: 'ManualEquipmentModel',
         align: 'center',

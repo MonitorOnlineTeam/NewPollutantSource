@@ -184,11 +184,11 @@ const Index = (props,ref) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -228,11 +228,11 @@ const Index = (props,ref) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -304,11 +304,11 @@ const Index = (props,ref) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -381,11 +381,11 @@ const Index = (props,ref) => {
             return (
               <div>
                 <Progress
-                  percent={text&&text}
+                  percent={text=='-'? 0 : text}
                   size="small"
                   style={{width:'85%'}}
                   status='normal'
-                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text + '%'}</span>}
+                  format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
               </div>
             );
@@ -647,20 +647,20 @@ const exports = () => { //导出
                  align:'center',
                  render:(text,row,index)=>{
                      return row.datePick.map(dateItem=>{
-                             if(dateItem.inspectionCompleteCount && dateItem.inspectionCloseCount&&dateItem.date == item.date){ //同时存在
-                               return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount + dateItem.inspectionCloseCount}</span>
-                              </Row>
-                             }
-                             if(dateItem.inspectionCloseCount&&dateItem.date == item.date){ //关闭
+                             if(dateItem.taskCloseCount && dateItem.taskCompleteCount&&dateItem.date == item.date){ //同时存在
+                                  return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
+                                  <span style={{color:'#fff'}}>{dateItem.taskCloseCount + dateItem.taskCompleteCount}</span>
+                                </Row>
+                             } 
+                             if(dateItem.taskCloseCount&&dateItem.date == item.date){ //关闭
                                return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.inspectionCloseCount}</span>
+                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
                              </Row>
                                }
  
-                             if(dateItem.inspectionCompleteCount&&dateItem.date == item.date){//完成
+                             if(dateItem.taskCompleteCount&&dateItem.date == item.date){//完成
                              return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                             <span style={{color:'#fff'}}>{dateItem.inspectionCompleteCount}</span>
+                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                            </Row>
                              }
                              if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
@@ -703,20 +703,20 @@ const exports = () => { //导出
                  align:'center',
                  render:(text,row,index)=>{
                      return row.datePick.map(dateItem=>{
-                             if(dateItem.calibrationCompleteCount && dateItem.calibrationCloseCount&&dateItem.date == item.date){ //同时存在
+                             if(dateItem.taskCloseCount && dateItem.taskCompleteCount&&dateItem.date == item.date){ //同时存在
                                return  <Row align='middle' justify='center' style={{ background:'#faad14',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount + dateItem.calibrationCloseCount}</span>
+                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount + dateItem.taskCompleteCount}</span>
                               </Row>
                              }
-                             if(dateItem.calibrationCloseCount&&dateItem.date == item.date){ //关闭
+                             if(dateItem.taskCloseCount&&dateItem.date == item.date){ //关闭
                                return  <Row align='middle' justify='center' style={{ background:'#f5222d',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                               <span style={{color:'#fff'}}>{dateItem.calibrationCloseCount}</span>
+                               <span style={{color:'#fff'}}>{dateItem.taskCloseCount}</span>
                              </Row>
                                }
  
-                             if(dateItem.calibrationCompleteCount&&dateItem.date == item.date){//完成
+                             if(dateItem.taskCompleteCount&&dateItem.date == item.date){//完成
                              return  <Row align='middle' justify='center' style={{ background:'#1890ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
-                             <span style={{color:'#fff'}}>{dateItem.calibrationCompleteCount}</span>
+                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                            </Row>
                              }
                              if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内

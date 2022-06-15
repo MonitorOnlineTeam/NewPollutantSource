@@ -378,7 +378,7 @@ const Index = (props) => {
       </Row>
       <Row>
         <Col span={12}>
-        <Form.Item label="存货编号" name="StandardGasCode" rules={[  { required: true, message: '请输入设备名称'  }]} >
+        <Form.Item label="存货编号" name="StandardGasCode" rules={[  { required: true, message: '请输入存货编号'  }]} >
           <Input placeholder="请输入"  allowClear/>
       </Form.Item>
        <NumTips content={codeContent}/>

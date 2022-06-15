@@ -113,9 +113,7 @@ export async function getmenubyroleid(params) {
         Roles_ID:params.Roles_ID
     }
     const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetMenuByRoleID', body, null);
-    return result === null ? {
-        data: null
-    } : result;
+    return result
 }
 // 给角色添加菜单（可批量）
 export async function insertmenubyroleid(params) {

@@ -415,7 +415,7 @@ const {saveLoading } = props;
             CreateTime:moment(),
           }}
         >  
-          <Form.Item   name='Name' label='移交资料名称'>
+          <Form.Item   name='Name' label='移交资料名称'  rules={[  { required: true, message: '请输入移交资料名称',  }]}>
             <Input placeholder="请输入移交资料名称" />
           </Form.Item>
           <Form.Item   name='Files' label='资料附件'>
@@ -462,7 +462,7 @@ const {saveLoading } = props;
             CreateTime:moment(),
           }}
         >  
-          <Form.Item   name='Name' label='标准物质种类'>
+          <Form.Item   name='Name' label='标准物质种类'  rules={[  { required: true, message: '请输入标准物质种类',  }]}>
             <Input placeholder="请输入标准物质种类" />
           </Form.Item>
           <Form.Item   name='DateTimeShort' label='最近更换日期'>
@@ -507,8 +507,8 @@ const {saveLoading } = props;
             CreateTime:moment(),
           }}
         >  
-          <Form.Item   name='Name' label='移交资料名称'>
-            <Input placeholder="请输入移交资料名称" />
+          <Form.Item   name='Name' label='移交资料名称'  rules={[  { required: true, message: '请输入移交资料名称',  }]}>
+            <Input placeholder="请输入移交资料名称"/>
           </Form.Item>
           <Form.Item   name='Files' label='资料附件'>
            <Upload {...uploadProps} style={{width:'100%'}}>

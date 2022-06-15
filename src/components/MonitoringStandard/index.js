@@ -188,7 +188,7 @@ class MonitoringStandard extends Component {
                         return (
                             <span>
                                 {' '}
-                                <Tag color="cyan"> 下线报警 </Tag>{' '}
+                                <Tag color="cyan"> 下限报警 </Tag>{' '}
                             </span>
                         );
                     }

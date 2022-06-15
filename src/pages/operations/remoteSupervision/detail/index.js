@@ -558,8 +558,8 @@ const Index = (props) => {
     {
       title: '判断依据',
       align: 'center',
-      dataIndex: 'file',
-      key: 'file',
+      dataIndex: 'Content',
+      key: 'Content',
       width: 100,
       render: (text, record, index) => {
         return <div style={{ textAlign: 'left' }}>{text}</div>

@@ -226,9 +226,12 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
+                message.success(result.Message)
                 yield update({
                     CheckMenu: result.Datas
                 });
+            }else{
+                message.error(result.Message)
             }
         },
         /*给角色添加菜单权限（可批量）**/

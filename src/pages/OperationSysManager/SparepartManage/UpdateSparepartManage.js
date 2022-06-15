@@ -141,7 +141,7 @@ export default class UpdateSparepartManage extends Component {
                                     rules: [
                                         {
                                             required: true,
-                                            message: '请输入设备型号!',
+                                            message: '请输入规格型号!',
                                         },
                                     ],
                                 })(
