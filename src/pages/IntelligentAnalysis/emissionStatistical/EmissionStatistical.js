@@ -557,6 +557,10 @@ class Gas extends PureComponent {
                     style={{ width: 200 }}
                     showDefaultValue
                     placeholder="请选择污染物类型"
+                    onChange={value => {
+                      this.props.form.setFieldsValue({ 'PollutantType': value })
+                      this.getAllPollutantCode();
+                    }}
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();

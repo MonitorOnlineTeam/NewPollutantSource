@@ -65,8 +65,8 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      // let fixed = (nextProps.realtimeColumns.length * 80 + 60 + 70 + 220 + 160) > $(".sdlTable").width();
-      const fixed = false;
+      let fixed = (nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160) > $(".sdlTable").width();
+      // const fixed = false;
       const width = 200;
 
       const realtimeColumns = nextProps.realtimeColumns.map((item, idx) => ({
@@ -465,7 +465,7 @@ class index extends Component {
                       日均
                     </Radio.Button>
                     {/*<Radio.Button key={1} value="RealTimeData">*/}
-                      {/*实时*/}
+                    {/*实时*/}
                     {/*</Radio.Button>*/}
                   </>}
               </Radio.Group>

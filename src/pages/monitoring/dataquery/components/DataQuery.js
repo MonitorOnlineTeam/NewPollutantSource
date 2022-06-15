@@ -449,7 +449,7 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue, displayType, searchDataType } = this.state;
-        const { pointName, entName, pollutantlist, Type } = this.props;
+        const { pointName, entName, pollutantlist, Type, isShowSearchDataType } = this.props;
         let flag = "", mode = [];
         if (pollutantlist && pollutantlist[0]) {
             flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
@@ -508,7 +508,7 @@ class DataQuery extends Component {
                                         }
                                     </Form.Item>
                                     {
-                                        Type === '5' && <Form.Item style={{ marginRight: 5 }}>
+                                        Type === '5' && isShowSearchDataType && <Form.Item style={{ marginRight: 5 }}>
                                             <Select style={{ width: 100 }} value={searchDataType} onChange={(value) => { this.setState({ searchDataType: value }) }}>
                                                 <Option value={1}>原始</Option>
                                                 <Option value={2}>审核</Option>
