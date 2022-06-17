@@ -345,7 +345,7 @@ class RoleIndex extends Component {
                             <Divider type="vertical" />
                             <Tooltip title="菜单权限">
                                 <a href="javascript:;" style={{ cursor: 'pointer' }} onClick={() => {
-                                    console.log(record.Roles_ID)
+                                    // console.log(record.Roles_ID)
                                     this.setState({
                                         selectedRowKeys: record,
                                     }, () => {
@@ -581,6 +581,8 @@ class RoleIndex extends Component {
                     if (res.IsSuccess) {
                         message.success('修改成功');
                         this.handleCancelMenu()
+                    }else{
+                        message.error(res.Message)
                     }
                 },
             },

@@ -831,6 +831,7 @@ const outPointClick = (record) =>{ //计划外 监测点名称
     DGIMN:record.DGIMN,
     beginTime:moment().startOf('month').format('YYYY-MM-DD 00:00:00'),
     endTime:moment().endOf('month').format('YYYY-MM-DD 23:59:59'),
+    calendarType:1,
   })
   
 }

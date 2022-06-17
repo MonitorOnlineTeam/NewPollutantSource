@@ -217,7 +217,7 @@ const Index = (props) => {
 
   const save = async () => {
     try {
-    const values = await form2.getFieldValue();
+    const values = await form2.validateFields();
     props.addOrEditInspectorTypeItem({
       ...values,
     }, () => {
@@ -320,6 +320,7 @@ const Index = (props) => {
           name="advanced_search2"
           initialValues={{
             PollutantType: 2,
+            Status:1,
           }}
           className={styles.addForm}
         >

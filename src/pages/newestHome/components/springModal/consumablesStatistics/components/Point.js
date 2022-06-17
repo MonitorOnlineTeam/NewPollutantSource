@@ -73,7 +73,6 @@ const Index = (props) => {
         ...queryPar,
          pointType:3,
     })
-  console.log(props.regionCode)
  };
 
 

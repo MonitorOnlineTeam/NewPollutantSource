@@ -225,6 +225,7 @@ const Index = (props) => {
       key: 'PollutantCodeName',
       align: 'center',
       width:200,
+      ellipsis: true,
     },
     {
       title: '督查人员',
@@ -278,6 +279,7 @@ const Index = (props) => {
       key: 'importanProblem',
       align: 'center',
       width:200,
+      ellipsis: true,
     },
     {
       title: '一般问题',

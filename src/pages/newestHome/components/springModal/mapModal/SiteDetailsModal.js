@@ -217,7 +217,7 @@ class SiteDetailsModal extends PureComponent {
          {
           currentKey === 8 && data.PollutantType != "5" && //缺失数据 企业
           <div style={{ overflow: 'auto' }}>
-            <DefectDataEnt  entCode={null} isHomeModal  hideBreadcrumb   tableHeight={"calc(100vh - 480px)"}/>
+            <DefectDataEnt  entCode={data.ParentCode} isHomeModal  hideBreadcrumb   tableHeight={"calc(100vh - 480px)"}/>
           </div>
         }
 

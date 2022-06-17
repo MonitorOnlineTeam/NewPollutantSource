@@ -6,7 +6,7 @@
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,CaretLeftFilled,CaretRightFilled, CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -19,6 +19,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import NumTips from '@/components/NumTips'
+import settingDrawer from '@/locales/en-US/settingDrawer';
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -155,7 +156,7 @@ const Index = (props) => {
 
   const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
   useEffect(() => {
-    props.getManufacturerList({},(data)=>{
+    props.getManufacturerList({pageIndex:1,pageSize:100000},(data)=>{
       if(data[0]){
         setManufacturerId(data[0].ID)
         setDeveiceName(data[0].ManufacturerName)
@@ -461,19 +462,21 @@ const Index = (props) => {
   const [pageSize,setPageSize]=useState(20)
   const [pageIndex,setPageIndex]=useState(1)
 
-  return (
-    <div  className={styles.deviceInfoSty}>
 
+  const [ drawerVisible, setDrawerVisible ] = useState(true)
+  return (
+    <div  className={styles.deviceInfoSty} style={{marginLeft:drawerVisible? 320 : 0}}>
     <Drawer
-          // title="导航菜单"
+         // title="导航菜单"
           placement={'left'}
           closable={false}
-          // onClose={this.onClose}
-          visible={true}
-          width={320}
+          onClose={()=>{setDrawerVisible(false)}}
+          visible={drawerVisible}
+          width={ 320}
           mask={false}
           keyboard={false}
           zIndex={1}
+          onClose={()=>{setDrawerVisible(false)}} 
           // getContainer={(Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body'}
           bodyStyle={{ padding: '18px 8px' }}
           style={{
@@ -493,6 +496,7 @@ const Index = (props) => {
         }
         
     </Drawer>
+      <div onClick={()=>{setDrawerVisible(!drawerVisible)}} style={{position:'absolute',zIndex:999,left:drawerVisible? 'calc(320px - 24px)' : -24,top:'50vh', background:"#1890ff",cursor:'pointer',padding:'5px 0',borderRadius:'0 2px 2px 0',transition:'all .2s'}}> { drawerVisible?<CaretLeftFilled style={{color:'#fff'}}/> : <CaretRightFilled style={{color:'#fff'}}/>}</div>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable

@@ -624,8 +624,9 @@ class DepartIndex extends Component {
   handleUpdateOperationData=(data,id,i)=>{
     if(data&&data.length>0){
        i++;
+
        return  data.map(item=>{
-         return {...item,leve:item.UserGroup_ID===id? this.state.updateOperationVal : item.leve ,children:item.children.length>0 ? this.handleUpdateOperationData(item.children,i) : []}
+         return {...item,leve:item.UserGroup_ID===id? this.state.updateOperationVal : item.leve ,children:item.children.length>0 ? this.handleUpdateOperationData(item.children,id,i) : []}
       })
     }
 
@@ -640,7 +641,8 @@ class DepartIndex extends Component {
       callback:()=>{
         this.setState({operatioVisible:false},()=>{
          const data =  this.handleUpdateOperationData(this.state.departInfoTree,this.state.updateOperationGroupId,0)
-             this.setState({
+         console.log(data)  
+         this.setState({
              departInfoTree:data,
             })
         })

@@ -204,7 +204,7 @@ class SdlTable extends PureComponent {
     // 处理表格长度，防止错位
     const _columns = (columns || []).map((col, index) => ({
       render: (text, record) =>
-        text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>,
+        text && <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} className={col.ellipsis&&'ant-table-cell-ellipsis'}>{text}</div>,
       align: align,
       ...col,
       width: this.getInitialColWidth(col),

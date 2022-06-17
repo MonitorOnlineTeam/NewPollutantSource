@@ -226,7 +226,6 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
-                message.success(result.Message)
                 yield update({
                     CheckMenu: result.Datas
                 });
