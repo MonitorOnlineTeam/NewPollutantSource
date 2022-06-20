@@ -774,7 +774,7 @@ const Index = (props) => {
   }
 
   const [count, setCount] = useState(513);
-  const handleAdd = () => { //新增成员
+  const handleAdd = () => { //添加设备
     if (editingKey) {
       message.warning('请先保存数据')
       return
@@ -956,7 +956,7 @@ const Index = (props) => {
         />
         </Form>
         <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleAdd()} >
-          新增成员
+          添加设备
        </Button>
         <Row justify='end'> <Button type="primary" loading={props.addOrUpdateEquipmentInfoLoading} onClick={submits} > 保存</Button></Row>
       </Form>

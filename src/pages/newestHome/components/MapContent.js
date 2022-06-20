@@ -325,6 +325,7 @@ class Index extends PureComponent {
     this.setState({
       showType: 3,
       hoverEntTitleShow:false,
+      entTitleShow:false,
     })
     if (data.length >= 1000) { // 监测点多的情况 海量加载
        

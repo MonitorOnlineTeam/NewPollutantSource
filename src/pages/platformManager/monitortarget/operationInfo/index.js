@@ -474,7 +474,7 @@ useEffect(()=>{
 
          <Row> 
          <Form.Item name='DGIMN' label='监测点' >
-          <Select placeholder="请选择监测点列表" style={{width:180}}>
+          <Select placeholder="请选择监测点列表" style={{width:180}} allowClear showSearch   optionFilterProp="children">
              {entPointList[0]&&entPointList.map(item=>{
               return <Option value={item.DGIMN}>{item.PointName}</Option>
           })

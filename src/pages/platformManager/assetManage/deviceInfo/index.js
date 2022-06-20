@@ -181,33 +181,9 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '设备厂家',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
-      align:'center',
-    },
-    {
-      title: '设备品牌',
-      dataIndex: 'EquipmentBrand',
-      key:'EquipmentBrand',
-      align:'center',
-    },
-    {
-      title: '设备名称',
-      dataIndex: 'EquipmentName',
-      key:'EquipmentName',
-      align:'center',
-    },
-    {
-      title: '分析方法',
-      dataIndex: 'AnalyticalMethod',
-      key:'AnalyticalMethod',
-      align:'center',
-    },
-    {
-      title: '设备型号',
-      dataIndex: 'EquipmentType',
-      key:'EquipmentType',
+      title: '监测类别',
+      dataIndex: 'PollutantTypeName',
+      key:'PollutantTypeName',
       align:'center',
     },
     {
@@ -217,9 +193,34 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '监测类别',
-      dataIndex: 'PollutantTypeName',
-      key:'PollutantTypeName',
+      title: '设备名称',
+      dataIndex: 'EquipmentName',
+      key:'EquipmentName',
+      align:'center',
+    },
+    {
+      title: '设备型号',
+      dataIndex: 'EquipmentType',
+      key:'EquipmentType',
+      align:'center',
+    },
+
+    {
+      title: '分析方法',
+      dataIndex: 'AnalyticalMethod',
+      key:'AnalyticalMethod',
+      align:'center',
+    },
+    {
+      title: '设备品牌',
+      dataIndex: 'EquipmentBrand',
+      key:'EquipmentBrand',
+      align:'center',
+    },
+    {
+      title: '设备厂家',
+      dataIndex: 'ManufacturerName',
+      key:'ManufacturerName',
       align:'center',
     },
     {

@@ -128,7 +128,7 @@ const Index = (props) => {
   const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading,maxNum,systemModelNameList,systemModelNameListLoading } = props; 
   useEffect(() => {
     onFinish();
-    props.getManufacturerList({})
+    props.getManufacturerList({pageIndex:1,pageSize:10000})
     props.getMonitoringTypeList({},()=>{})
     props.getSystemModelNameList({})
     
@@ -328,13 +328,10 @@ const Index = (props) => {
            </Select>
         }
       </Form.Item>
-      <Form.Item label="系统型号" name="SystemModel" >
-        <Input placeholder='请输入系统型号' style={{width:200}} allowClear/>
 
-      </Form.Item>
       </Row>
       <Row>
-      <Form.Item label="监测类别" name="MonitoringType"  >
+      {/* <Form.Item label="监测类别" name="MonitoringType"  >
              <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
@@ -342,6 +339,10 @@ const Index = (props) => {
                   })
                 }   
               </Select>
+      </Form.Item> */}
+       <Form.Item label="系统型号" name="SystemModel" >
+        <Input placeholder='请输入系统型号' style={{width:200}} allowClear/>
+
       </Form.Item>
       <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}} >
        <Select placeholder='请选择状态' allowClear style={{width:200}}>

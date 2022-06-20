@@ -522,7 +522,7 @@ export default class MonitorPoint extends Component {
       <div style={{ padding: '10px 0' }}>
         <Form.Item label='监测点系数' >
           <InputNumber disabled={pointCoefficientFlag} value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
-          {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>监测点系数已存在，请联系管理员修改</span>}
+          {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>如需修改系数，请联系管理员</span>}
         </Form.Item>
       </div>
     </Spin>

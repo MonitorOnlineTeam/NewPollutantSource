@@ -1164,6 +1164,7 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
+            resizable
             loading={tableLoading}
             bordered
             dataSource={tableDatas}
