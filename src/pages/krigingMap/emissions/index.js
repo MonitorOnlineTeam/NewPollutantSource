@@ -4,6 +4,7 @@ import { Row, Slider, Drawer, DatePicker, Button, Space, Divider, Spin, message,
 import { CaretRightOutlined, PauseOutlined, LoadingOutlined } from '@ant-design/icons'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import styles from '../index.less'
+import $script from 'scriptjs';
 import { connect } from 'dva';
 import moment from 'moment';
 import createThem from './draw.js'
@@ -81,66 +82,66 @@ class index extends PureComponent {
   handleMarker = (mapData) => {
     let markersList = [];
     let _mapData = [...mapData,
-    // {
-    //   "EntCode": "12624466-645d-4832-b992-9ed083d3ac67",
-    //   "EntName": "测试数据1",
-    //   "MonitorTime": "2022-04-01 00:00:00",
-    //   "Longitude": "114.971797",
-    //   "Latitude": "27.495262",
-    //   "01-EmissionsValue": "33.47",
-    //   "02-EmissionsValue": "105.95",
-    //   "03-EmissionsValue": "47.67",
-    //   "FlowValue": "6553099.45",
-    //   "01-EmissionsValue_color": "#f3dd22",
-    //   "01-EmissionsValue_level": 1,
-    //   "02-EmissionsValue_color": "#ff0000",
-    //   "02-EmissionsValue_level": 3,
-    //   "03-EmissionsValue_color": "#00e400",
-    //   "03-EmissionsValue_level": 0,
-    //   "011-EmissionsValue": "0.65",
-    //   "060-EmissionsValue": "0.43",
-    //   "101-EmissionsValue": "0.06",
-    //   "065-EmissionsValue": "0.36",
-    //   "FlowValue": "15960.55",
-    //   "011-EmissionsValue_color": "#00e400",
-    //   "011-EmissionsValue_level": 2,
-    //   "060-EmissionsValue_color": "#ff0000",
-    //   "060-EmissionsValue_level": 2,
-    //   "101-EmissionsValue_color": "#f3dd22",
-    //   "101-EmissionsValue_level": 1,
-    //   "065-EmissionsValue_color": "#00e400",
-    //   "065-EmissionsValue_level": 0
-    // },
-    // {
-    //   "EntCode": "12624466-645d-4832-b992-9ed083d3ac67",
-    //   "EntName": "测试数据2",
-    //   "MonitorTime": "2022-04-01 00:00:00",
-    //   "Longitude": "115.369221",
-    //   "Latitude": "27.076599",
-    //   "01-EmissionsValue": "33.47",
-    //   "02-EmissionsValue": "105.95",
-    //   "03-EmissionsValue": "47.67",
-    //   "FlowValue": "6553099.45",
-    //   "01-EmissionsValue_color": "#f3dd22",
-    //   "01-EmissionsValue_level": 1,
-    //   "02-EmissionsValue_color": "#ff0000",
-    //   "02-EmissionsValue_level": 3,
-    //   "03-EmissionsValue_color": "#00e400",
-    //   "03-EmissionsValue_level": 0,
-    //   "011-EmissionsValue": "0.65",
-    //   "060-EmissionsValue": "0.43",
-    //   "101-EmissionsValue": "0.06",
-    //   "065-EmissionsValue": "0.36",
-    //   "FlowValue": "15960.55",
-    //   "011-EmissionsValue_color": "#00e400",
-    //   "011-EmissionsValue_level": 1,
-    //   "060-EmissionsValue_color": "#ff0000",
-    //   "060-EmissionsValue_level": 2,
-    //   "101-EmissionsValue_color": "#f3dd22",
-    //   "101-EmissionsValue_level": 1,
-    //   "065-EmissionsValue_color": "#00e400",
-    //   "065-EmissionsValue_level": 0
-    // },
+      // {
+      //   "EntCode": "12624466-645d-4832-b992-9ed083d3ac67",
+      //   "EntName": "测试数据1",
+      //   "MonitorTime": "2022-04-01 00:00:00",
+      //   "Longitude": "114.971797",
+      //   "Latitude": "27.495262",
+      //   "01-EmissionsValue": "33.47",
+      //   "02-EmissionsValue": "105.95",
+      //   "03-EmissionsValue": "47.67",
+      //   "FlowValue": "6553099.45",
+      //   "01-EmissionsValue_color": "#f3dd22",
+      //   "01-EmissionsValue_level": 1,
+      //   "02-EmissionsValue_color": "#ff0000",
+      //   "02-EmissionsValue_level": 3,
+      //   "03-EmissionsValue_color": "#00e400",
+      //   "03-EmissionsValue_level": 0,
+      //   "011-EmissionsValue": "0.65",
+      //   "060-EmissionsValue": "0.43",
+      //   "101-EmissionsValue": "0.06",
+      //   "065-EmissionsValue": "0.36",
+      //   "FlowValue": "15960.55",
+      //   "011-EmissionsValue_color": "#00e400",
+      //   "011-EmissionsValue_level": 2,
+      //   "060-EmissionsValue_color": "#ff0000",
+      //   "060-EmissionsValue_level": 2,
+      //   "101-EmissionsValue_color": "#f3dd22",
+      //   "101-EmissionsValue_level": 1,
+      //   "065-EmissionsValue_color": "#00e400",
+      //   "065-EmissionsValue_level": 0
+      // },
+      // {
+      //   "EntCode": "12624466-645d-4832-b992-9ed083d3ac67",
+      //   "EntName": "测试数据2",
+      //   "MonitorTime": "2022-04-01 00:00:00",
+      //   "Longitude": "115.369221",
+      //   "Latitude": "27.076599",
+      //   "01-EmissionsValue": "33.47",
+      //   "02-EmissionsValue": "105.95",
+      //   "03-EmissionsValue": "47.67",
+      //   "FlowValue": "6553099.45",
+      //   "01-EmissionsValue_color": "#f3dd22",
+      //   "01-EmissionsValue_level": 1,
+      //   "02-EmissionsValue_color": "#ff0000",
+      //   "02-EmissionsValue_level": 3,
+      //   "03-EmissionsValue_color": "#00e400",
+      //   "03-EmissionsValue_level": 0,
+      //   "011-EmissionsValue": "0.65",
+      //   "060-EmissionsValue": "0.43",
+      //   "101-EmissionsValue": "0.06",
+      //   "065-EmissionsValue": "0.36",
+      //   "FlowValue": "15960.55",
+      //   "011-EmissionsValue_color": "#00e400",
+      //   "011-EmissionsValue_level": 1,
+      //   "060-EmissionsValue_color": "#ff0000",
+      //   "060-EmissionsValue_level": 2,
+      //   "101-EmissionsValue_color": "#f3dd22",
+      //   "101-EmissionsValue_level": 1,
+      //   "065-EmissionsValue_color": "#00e400",
+      //   "065-EmissionsValue_level": 0
+      // },
     ]
     let key = this.state.selectPollutant.value;
     this.map.remove(this.state.markersList)
@@ -179,21 +180,30 @@ class index extends PureComponent {
       version: "2.0",              // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
       plugins: [''],               // 需要使用的的插件列表，如比例尺'AMap.Scale'等
     }).then((AMap) => {
-      this.map = new AMap.Map("mapContainer", { //设置地图容器id
-        // viewMode: "3D",         //是否为3D地图模式
-        zoom: 11,                //初始化地图级别
-        center: [115.135963, 27.229697], //初始化地图中心点位置
-        WebGLParams: {
-          preserveDrawingBuffer: true
-        }
-      });
-      this.AMap = AMap;
-      this.getMapData();
+      if (AMap) {
+        this.getAMap(AMap);
+      } else {
+        $script('https://webapi.amap.com/maps?callback=___onAPILoaded&v=2.0&key=5e60171b820065e7e9a1d6ea45abaee9&plugin=', (a) => {
+          this.getAMap(window.AMap);
+        })
+      }
     }).catch(e => {
       console.log(e);
     })
   }
 
+  getAMap = (AMap) => {
+    this.map = new AMap.Map("mapContainer", { //设置地图容器id
+      // viewMode: "3D",         //是否为3D地图模式
+      zoom: 11,                //初始化地图级别
+      center: [115.135963, 27.229697], //初始化地图中心点位置
+      WebGLParams: {
+        preserveDrawingBuffer: true
+      }
+    });
+    this.AMap = AMap;
+    this.getMapData();
+  }
 
 
   // 根据时间范围获取地图数据
@@ -321,7 +331,7 @@ class index extends PureComponent {
       }
       console.log('count=', count);
       console.log('length=', emissionsDataListALL.length);
-    })
+    }, 1000)
   }
 
   onPollutantTypeClick = (e) => {
@@ -413,11 +423,11 @@ class index extends PureComponent {
             <Button onClick={() => this.renderGif()}>下载GIF</Button>
           </Space>
           <div class='airLegend' style={{ position: 'absolute', right: 0, top: 0, zIndex: 1, paddingTop: 0 }}>
-            <span style={{color: '#2196f3', fontSize: 15}}>单位：kg</span>
-            <ul style={{marginTop: -4}}>
+            <span style={{ color: '#2196f3', fontSize: 15 }}>单位：kg</span>
+            <ul style={{ marginTop: -4 }}>
               {
                 _legendList.map((item, index) => <li>
-                  <span style={{display: 'none'}}></span>
+                  <span style={{ display: 'none' }}></span>
                   <span style={{ backgroundColor: item.color }}></span>
                   <span>{_legendList.length === index + 1 ? `>${item.min}` : item.min}</span>
                 </li>)

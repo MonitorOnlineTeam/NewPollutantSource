@@ -12,7 +12,7 @@ import config from "@/config";
 import styles from './index.less';
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 import moment from 'moment';
-import { router } from "umi"
+import Cookie from 'js-cookie';
 import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import InfoWindowContent from './component/InfoWindowContent'
@@ -39,18 +39,25 @@ const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
 let ruler;
 
-@connect(({ loading, map }) => ({
+@connect(({ loading, map, user }) => ({
   allPoints: map.allPoints,
   curPointData: map.curPointData,
   tableList: map.tableList,
   chartData: map.chartData,
   pointDetailsModalVisible: map.pointDetailsModalVisible,
   pollutantTypeCountList: map.pollutantTypeCountList,
+  unfoldMenuList: user.unfoldMenuList,
 }))
 class ThematicMap extends PureComponent {
   constructor(props) {
+    let isReload = Cookie.get('isMapReload') == 1 && checkMapReload(props.unfoldMenuList);
+    if (isReload) {
+      window.location.reload();
+      Cookie.set('isMapReload', 0)
+    }
     super(props);
     this.state = {
+      isReload: isReload,
       pointsList: [],
       activePollutant: '0',
       searchInputVal: undefined,
@@ -104,6 +111,12 @@ class ThematicMap extends PureComponent {
     this.getPointList();
   }
 
+
+  componentWillUnmount() {
+    window.AMap = undefined;
+  }
+
+
   getPointList = () => {
     this.props.dispatch({
       type: "map/getAllPoint",
@@ -146,6 +159,7 @@ class ThematicMap extends PureComponent {
   componentWillUnmount() {
     _thismap = undefined;
     ruler = undefined;
+    Cookie.set('isMapReload', 1)
   }
 
   getPollutantIcon = (extData) => {
@@ -446,6 +460,10 @@ class ThematicMap extends PureComponent {
     console.log('activePollutant=', activePollutant)
     let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     let flag = this.props.match.params.pollutantCode;
+
+    if (this.state.isReload) {
+      return <PageLoading style={{ ...loadingStyle }} />;
+    }
     return (
       <div className={styles.pageWrapper}>
         <div className={styles.mapContent}>
