@@ -4,6 +4,7 @@ import { Map, Polygon, Markers, InfoWindow, MouseTool } from 'react-amap';
 import { Row, Slider, Drawer, DatePicker, Button, Space, Divider, Spin, message } from 'antd';
 import { CaretRightOutlined, PauseOutlined, LoadingOutlined } from '@ant-design/icons'
 import styles from './index.less'
+import $script from 'scriptjs';
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import ReactEcharts from 'echarts-for-react';
 import { connect } from 'dva';
@@ -11,6 +12,7 @@ import moment from 'moment';
 import createThem from './draw.js'
 import SdlTable from '@/components/SdlTable'
 import _ from 'lodash'
+
 
 const amapKey = '5e60171b820065e7e9a1d6ea45abaee9';
 const pollutantTypeList = [
@@ -60,7 +62,7 @@ const columns = [
   },
 ];
 
-@connect(({ loading, krigingMap }) => ({
+@connect(({ loading, krigingMap, }) => ({
   rankLoading: loading.effects['krigingMap/GetAirRankHour'],
   mapLoading: loading.effects['krigingMap/getMapData'],
   rankHourData: krigingMap.rankHourData,
@@ -70,8 +72,8 @@ const columns = [
 }))
 class index extends PureComponent {
   constructor(props) {
+    window.AMap = undefined;
     super(props);
-
     let beginTime = moment().subtract(6, 'days');
     let endTime = moment();
     let diff = endTime.diff(beginTime, 'day') + 1;
@@ -90,7 +92,7 @@ class index extends PureComponent {
       endTime: endTime,
       timeLineData: [],
     }
-    this.map = {};
+    this.AMap = {};
   }
 
 
@@ -181,7 +183,7 @@ class index extends PureComponent {
       // },
     ]
     console.log('_mapData=', _mapData)
-    this.map.remove(this.state.markersList)
+    this.state.markersList.length ? this.map.remove(this.state.markersList) : ''
     _mapData.map(item => {
       let marker = new this.AMap.Marker({
         content: `<div class="air-map-title">
@@ -189,7 +191,7 @@ class index extends PureComponent {
             <i style='border-top-color: ${item.AQI_Color}'></i>
             ${item.AQI}
           </div>
-          <div class="content" style="width: ${item.PointName.length * 18}px; left: ${(item.PointName.length * 18 - 60) / 2 * -1}px">
+          <div class="content" style="width: ${item.PointName.length * 19}px; left: ${(item.PointName.length * 18 - 60) / 2 * -1}px">
             ${item.PointName}
           </div>
         <div>`,
@@ -215,21 +217,34 @@ class index extends PureComponent {
     AMapLoader.load({
       key: "5e60171b820065e7e9a1d6ea45abaee9",                     // 申请好的Web端开发者Key，首次调用 load 时必填
       version: "2.0",              // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-      plugins: [''],               // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-    }).then((AMap) => {
-      this.map = new AMap.Map("mapContainer", { //设置地图容器id
-        // viewMode: "3D",         //是否为3D地图模式
-        zoom: 11,                //初始化地图级别
-        center: [115.135963, 27.229697], //初始化地图中心点位置
-        WebGLParams: {
-          preserveDrawingBuffer: true
-        }
-      });
-      this.AMap = AMap;
-      this.getMapData();
+      plugins: [''],               // 需要使用的的插件列表，如比例尺'AMap.thematicMapScale'等
+    }).then((AMap_) => {
+      if (AMap_) {
+        this.getAMap(AMap_);
+      } else {
+        $script('https://webapi.amap.com/maps?callback=___onAPILoaded&v=2.0&key=5e60171b820065e7e9a1d6ea45abaee9&plugin=', (a) => {
+          this.getAMap(window.AMap);
+        })
+      }
     }).catch(e => {
       console.log(e);
     })
+
+
+  }
+
+
+  getAMap = (AMap_) => {
+    this.map = new AMap_.Map("mapContainer", { //设置地图容器id
+      // viewMode: "3D",         //是否为3D地图模式
+      zoom: 11,                //初始化地图级别
+      center: [115.135963, 27.229697], //初始化地图中心点位置
+      WebGLParams: {
+        preserveDrawingBuffer: true
+      }
+    });
+    this.AMap = AMap_;
+    this.getMapData();
   }
 
   // 获取小时排名
@@ -373,7 +388,7 @@ class index extends PureComponent {
       grid: {
         left: '0%',
         right: '6%',
-        bottom: '3%',
+        bottom: '10%',
         containLabel: true
       },
       xAxis: [
@@ -459,7 +474,6 @@ class index extends PureComponent {
       if (count === dateTimeAllData.length) {
         clearInterval(timer);
         gif.on('finished', (blob) => {
-          debugger
           //下载动作
           var el = document.createElement('a');
           el.href = URL.createObjectURL(blob);
@@ -482,13 +496,12 @@ class index extends PureComponent {
       }
       console.log('count=', count);
       console.log('length=', dateTimeAllData.length);
-    })
+    }, 1000)
   }
 
   render() {
     const { mapData, dateTimeAllData, rankHourData, rankLoading, mapLoading } = this.props;
     const { start, count, gifLoading, selectPollutant, updateTime, beginTime, endTime, timeLineData } = this.state;
-    console.log('timeLineData=', timeLineData);
     return (
       <div className={styles.pageContaniner} >
         <div className={styles.rankWrapper}>

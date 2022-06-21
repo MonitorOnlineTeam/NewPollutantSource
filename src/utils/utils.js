@@ -85,7 +85,7 @@ export function formatPollutantPopover(value, additional) {
             <Badge status="error" text={`超标倍数：${additionalInfo[3]}`} />
           </li>
           {/*<li style={{ listStyle: 'none', marginBottom: 10 }}>*/}
-            {/*<Button style={{ width: '100%' }} type="primary" onClick={() => btnClickCallback(1)}>污染溯源</Button>*/}
+          {/*<Button style={{ width: '100%' }} type="primary" onClick={() => btnClickCallback(1)}>污染溯源</Button>*/}
           {/*</li>*/}
         </div>
       );
@@ -399,4 +399,14 @@ function getIpNum(ipAddress) { /* 获取IP数 */
 
 function isInner(userIp, begin, end) {
   return (userIp >= begin) && (userIp <= end);
+}
+
+
+// 地图
+export function checkMapReload(menuList) {
+  let isKrigingMap = menuList.filter(item => item.NavigateUrl === '/krigingMap');
+  if (isKrigingMap.length) {
+    return true;
+  }
+  return false;
 }

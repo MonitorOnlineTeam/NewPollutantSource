@@ -11,15 +11,25 @@ import { Map, Polygon, Markers, InfoWindow, MouseTool } from 'react-amap';
 import config from "@/config";
 import styles from './index_sc.less';
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
-import moment from 'moment';
-import { router } from "umi"
 import CustomIcon from '@/components/CustomIcon';
 import { airLevel } from '@/pages/monitoring/overView/tools'
 import InfoWindowContent from './component/InfoWindowContent'
 import PointDetailsModal from './component/PointDetailsModal'
 import { AppstoreOutlined } from '@ant-design/icons'
-// import webConfig from '../../../public/webConfig'
 import mapStyle from './map.less'
+import Cookie from 'js-cookie';
+import { checkMapReload } from '@/utils/utils'
+import PageLoading from '@/components/PageLoading'
+
+const loadingStyle = {
+  position: 'absolute',
+  top: -90,
+  width: '100vw',
+  zIndex: 9999,
+  background: '#fff',
+  height: "100vh",
+  left: -24
+}
 
 const statusList = [
   { text: "正常", checked: false, color: "#52c41a", value: 1, count: 33, className: "green" },
@@ -40,18 +50,26 @@ const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
 let _thismap;
 let ruler;
 
-@connect(({ loading, map }) => ({
+@connect(({ loading, map, user }) => ({
   allPoints: map.allPoints,
   curPointData: map.curPointData,
   tableList: map.tableList,
   chartData: map.chartData,
   pointDetailsModalVisible: map.pointDetailsModalVisible,
   pollutantTypeCountList: map.pollutantTypeCountList,
+  unfoldMenuList: user.unfoldMenuList,
 }))
 class ThematicMap extends PureComponent {
   constructor(props) {
+    let isReload = Cookie.get('isMapReload') == 1 && checkMapReload(props.unfoldMenuList);
+    if (isReload) {
+      window.location.reload();
+      Cookie.set('isMapReload', 0)
+    }
     super(props);
     this.state = {
+      isReload: isReload,
+      scriptLoading: true,
       pointsList: [],
       activePollutant: '0',
       searchInputVal: undefined,
@@ -147,6 +165,7 @@ class ThematicMap extends PureComponent {
   componentWillUnmount() {
     _thismap = undefined;
     ruler = undefined;
+    Cookie.set('isMapReload', 1)
   }
 
   getPollutantIcon = (extData) => {
@@ -443,10 +462,15 @@ class ThematicMap extends PureComponent {
 
   render() {
     const { pollutantTypeCountList, curPointData, tableList, chartData, pointDetailsModalVisible } = this.props;
-    const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
+    const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool, loadStatus } = this.state;
     console.log('activePollutant=', activePollutant)
     let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     let flag = this.props.match.params.pollutantCode;
+
+    if (this.state.isReload) {
+      return <PageLoading style={{...loadingStyle}} />;
+    }
+
     return (
       <div className={styles.pageWrapper}>
         <div className={styles.mapContent}>

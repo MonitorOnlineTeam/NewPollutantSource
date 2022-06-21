@@ -31,7 +31,7 @@ class Index extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('this.props.location.query.device=',this.props.location.query.device);
+        console.log('this.props.location.query.device=', this.props.location.query.device);
         if (this.props.location.query.device !== prevProps.location.query.device) {
             this.setState({
                 loading: true
@@ -43,6 +43,8 @@ class Index extends Component {
 
     render() {
         const { dgimn, pointName, entName, title, Type, loading } = this.state;
+        // 是否显示原始和审核
+        const isShowSearchDataType = this.props.location.query.isShowSearchDataType == 1 ? true : false;
         return (
             <div id="dataquery">
                 <BreadcrumbWrapper titles={`【${title}】`}>
@@ -50,7 +52,7 @@ class Index extends Component {
                         this.state.dgimn ?
                             (
                                 this.props.location.query.type == 1 ? <DataQuery2 DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
-                                    <DataQuery DGIMN={this.state.dgimn} Type={Type} pointName={pointName} entName={entName} initLoadData />
+                                    <DataQuery DGIMN={this.state.dgimn} Type={Type} pointName={pointName} entName={entName} initLoadData isShowSearchDataType={isShowSearchDataType} />
                             )
                             : <PageLoading />
                     }

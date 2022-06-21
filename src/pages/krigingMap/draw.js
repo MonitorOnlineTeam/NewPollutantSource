@@ -177,8 +177,8 @@ export default function createThem(AMap, data, map, gif) {
       })
       CanvasLayer.setMap(map);
 
-      let ele = document.querySelector(".amap-layer");
-      html2canvas(ele, { allowTaint: true }).then(function (_canvas) {
+      let ele = document.querySelector(".amap-layers");
+      ele && html2canvas(ele, { allowTaint: true }).then(function (_canvas) {
         // debugger
         // let a = _canvas.toDataURL(1);
         // let image = new Image();

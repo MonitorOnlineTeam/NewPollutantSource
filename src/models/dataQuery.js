@@ -280,6 +280,7 @@ export default Model.extend({
           key: 'MonitorTime',
           width: 160,
           // fixed: 'left',
+          fixed: payload.Type == 10 ? 'left' : false,
           align: 'center',
           render: (text, record) => {
             let showDetail = "";
