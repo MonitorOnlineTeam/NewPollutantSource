@@ -384,7 +384,7 @@ const Index = (props) => {
        <NumTips content={codeContent}/>
       </Col>
       <Col span={12}>
-        <Form.Item label={typeRemark==1?"标准气体名称" :"试剂名称"} name="StandardGasName" rules={[  { required: true, message: '请输入标准气体名称'  }]} >
+        <Form.Item label={typeRemark==1?"标准气体名称" :"试剂名称"} name="StandardGasName" rules={[  { required: true, message: `请输入${typeRemark ==1?"标准气体名称": "试剂名称"}`  }]} >
         <Input placeholder="请输入"  allowClear/>
       </Form.Item>
       </Col>

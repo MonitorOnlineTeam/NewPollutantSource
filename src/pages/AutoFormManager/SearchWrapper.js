@@ -299,7 +299,7 @@ class SearchWrapper extends Component {
               // changeOnSelect={true}
               placeholder={placeholder}
               data={ item.value}
-              selectType={labelText==='行政区'? item.DF_OtherOptions : '999,是'}
+              selectType={labelText==='行政区'&&!this.props.isCoustom?  item.DF_OtherOptions : this.props.isCoustom? this.props.selectType : '999,是'}
             />
           );
           break;

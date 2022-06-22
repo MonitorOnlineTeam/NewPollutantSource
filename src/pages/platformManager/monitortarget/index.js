@@ -232,6 +232,8 @@ export default class MonitorTarget extends Component {
                     <SearchWrapper
                         onSubmitForm={form => this.loadReportList(form)}
                         configId={configId}
+                        isCoustom
+                        selectType='3,是'
                     ></SearchWrapper>
                     <AutoFormTable
                         onRef={this.onRef1}

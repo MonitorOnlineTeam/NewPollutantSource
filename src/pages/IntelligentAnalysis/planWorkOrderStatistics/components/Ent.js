@@ -219,11 +219,11 @@ const Index = (props,ref) => {
         },
         {
           title: '完成率',
-          dataIndex: 'inspectionRate',
-          key: 'inspectionRate',
+          dataIndex: 'calibrationRate',
+          key: 'calibrationRate',
           width: 100,
           align:'center',
-          sorter: (a, b) => a.inspectionRate - b.inspectionRate,
+          sorter: (a, b) => a.calibrationRate - b.calibrationRate,
           render: (text, record) => {
             return (
               <div>
