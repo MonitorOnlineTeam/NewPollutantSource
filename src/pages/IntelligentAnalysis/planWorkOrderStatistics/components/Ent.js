@@ -434,28 +434,28 @@ const Index = (props,ref) => {
           title: <span>总数<Tooltip  title={'日期条件内完成的工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'allCompleteTaskCount',
           key: 'allCompleteTaskCount',
-          width: 50,
+          width: 80,
           align:'center',
         },
         {
           title:  <span>巡检</span>,
           dataIndex: 'inspectionCompleteCount',
           key: 'inspectionCompleteCount',
-          width: 100,
+          width: 80,
           align:'center',
         },
         {
           title: '维护',
           dataIndex: 'maintainCompleteCount',
           key: 'maintainCompleteCount',
-          width: 100,
+          width: 80,
           align:'center',
         },
         {
           title: '校准',
           dataIndex: 'calibrationCompleteCount',
           key: 'calibrationCompleteCount',
-          width: 100,
+          width: 80,
           align:'center',
         },
         {
@@ -476,7 +476,7 @@ const Index = (props,ref) => {
           title: '维修',
           dataIndex: 'repairCompleteCount',
           key: 'repairCompleteCount',
-          width: 100,
+          width: 80,
           align:'center',
         },
 
@@ -487,7 +487,13 @@ const Index = (props,ref) => {
           width: 100,
           align:'center',
         },
-
+        {
+          title: '配合比对工单数',
+          dataIndex: 'coordinationComparisonCompleteCount',
+          key: 'coordinationComparisonCompleteCount',
+          width: 120,
+          align:'center',
+        },
       ],
     },
    

@@ -6,6 +6,7 @@ import omit from 'omit.js';
 import ItemMap from './map';
 import LoginContext from './LoginContext';
 import styles from './index.less';
+import Captcha from "react-captcha-code";
 const FormItem = Form.Item;
 
 class WrapFormItem extends Component {
@@ -81,6 +82,7 @@ class WrapFormItem extends Component {
     }, 1000);
   };
 
+
   render() {
     const { count } = this.state; // 这么写是为了防止restProps中 带入 onChange, defaultValue, rules props tabUtil
 
@@ -134,8 +136,19 @@ class WrapFormItem extends Component {
         </FormItem>
       );
     }
-
     return (
+      name=='verificaCode'? //验证码
+      <Row gutter={8} className={styles.verificaCodeSty}>
+        <Col span={16}>
+           <FormItem>
+              {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)}
+              </FormItem>
+            </Col>
+            <Col span={8}>
+             <Captcha charNum={4}  onChange={this.props.verificaCodeChange}  />
+            </Col>
+    </Row>
+    :
       <FormItem>
         {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)}
       </FormItem>

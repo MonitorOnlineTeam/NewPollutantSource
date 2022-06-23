@@ -1,4 +1,4 @@
-import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined,AuditOutlined,} from '@ant-design/icons';
 import React from 'react';
 import styles from './index.less';
 export default {
@@ -60,5 +60,23 @@ export default {
         message: 'Please enter Captcha!',
       },
     ],
+  },
+  VerificaCode: {
+    props: {
+      size: 'large',
+      id: 'verificaCode',
+      prefix: <AuditOutlined className={styles.prefixIcon} />,
+      placeholder: '请输入验证码',
+    },
+    rules:[
+      {
+        required: true,
+        message: '请输入验证码',
+      },
+      {
+        pattern:  /^[A-Za-z0-9]{4}$/,
+        message: '请输入4位数的验证码!',
+      },
+    ]
   },
 };

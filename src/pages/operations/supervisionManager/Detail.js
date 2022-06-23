@@ -82,13 +82,14 @@ const Index = (props) => {
     </span>,
     align: 'center',
     children:[
-    {
-      title: '序号',
-      dataIndex: 'Sort',
-      key: 'Sort',
-      align: 'center',
-      width:100,
-    },
+      {
+        title: '序号',
+        align: 'center',
+        width:100,
+        render:(text,record,index)=>{
+         return index+1
+        }
+     },
     {
       title: '督查内容',
       dataIndex: 'ContentItem',
@@ -127,13 +128,14 @@ const Index = (props) => {
       </span>,
       align: 'center',
       children:[
-      {
-        title: '序号',
-        dataIndex: 'Sort',
-        key: 'Sort',
-        align: 'center',
-        width:100,
-      },
+        {
+          title: '序号',
+          align: 'center',
+          width:100,
+          render:(text,record,index)=>{
+           return index+1
+          }
+       },
       {
         title: '督查内容',
         dataIndex: 'ContentItem',
@@ -166,13 +168,14 @@ const Index = (props) => {
         title: <span style={{fontWeight:'bold',fontSize:14}}>{operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&operationInfoList.CommonlyProblemList[0].Title}</span>,
         align: 'center',
         children:[ 
-        {
-          title: '序号',
-          dataIndex: 'Sort',
-          key: 'Sort',
-          align: 'center',
-          width:100,
-        },
+          {
+            title: '序号',
+            align: 'center',
+            width:100,
+            render:(text,record,index)=>{
+             return index+1
+            }
+         },
         {
           title: '督查内容',
           dataIndex: 'ContentItem',

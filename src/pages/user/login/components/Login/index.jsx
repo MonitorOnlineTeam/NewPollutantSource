@@ -72,6 +72,7 @@ class Login extends Component {
           active,
         });
       },
+      verificaCodeChange:this.props.verificaCodeChange,
     };
   };
   handleSubmit = e => {
@@ -112,7 +113,7 @@ class Login extends Component {
       }
     });
     return (
-      <LoginContext.Provider value={this.getContext()}>
+      <LoginContext.Provider value={this.getContext()} >
         <div className={classNames(className, styles.login)}>
           <Form onSubmit={this.handleSubmit}>
             {tabs.length ? (
@@ -136,7 +137,6 @@ class Login extends Component {
     );
   }
 }
-
 Object.keys(LoginItem).forEach(item => {
   Login[item] = LoginItem[item];
 });

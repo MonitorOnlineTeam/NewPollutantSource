@@ -1,13 +1,13 @@
-import { Alert, Checkbox } from 'antd';
+import { Alert, Checkbox, message,Button,Modal, } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import LoginComponents from './components/Login';
 import styles from './style.less';
-
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
-
+import FileViewer from 'react-file-viewer';
+const { Tab, UserName, Password, Mobile, Captcha,VerificaCode, Submit } = LoginComponents;
+import Agreement from '../login/components/Agreement'
 @connect(({ userLogin, loading }) => ({
   userLogin,
   submitting: loading.effects['userLogin/login'],
@@ -18,6 +18,9 @@ class Login extends Component {
   state = {
     type: 'account',
     autoLogin: true,
+    verificaCode:undefined,
+    agreement:false,
+    agreementVisible:false,
   };
 
   changeAutoLogin = e => {
@@ -27,11 +30,15 @@ class Login extends Component {
   };
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
-    // ;
+    const { type,verificaCode, } = this.state;
     console.log('values=', values);
+
     if (!err) {
       const { dispatch } = this.props;
+      if( verificaCode != values.verificaCode){
+        message.warning('请输入正确的验证码')
+        return;
+      }
       dispatch({
         type: 'userLogin/login',
         payload: { ...values, type },
@@ -76,11 +83,14 @@ class Login extends Component {
       showIcon
     />
   );
-
+  verificaCodeChange=(code)=>{
+    console.log(code);
+    this.setState({verificaCode:code})
+  }
   render() {
     const { userLogin, submitting } = this.props;
     const { status, type: loginType, message } = userLogin;
-    const { type, autoLogin } = this.state;
+    const { type, autoLogin,agreement,agreementVisible, } = this.state;
     return (
       <div className={styles.main}>
         <LoginComponents
@@ -90,6 +100,7 @@ class Login extends Component {
           ref={form => {
             this.loginForm = form;
           }}
+          verificaCodeChange={this.verificaCodeChange}
         >
           <Tab
             key="account"
@@ -120,7 +131,10 @@ class Login extends Component {
               ]}
               onPressEnter={() =>
                 this.loginForm && this.loginForm.validateFields(this.handleSubmit)
-              }
+              } 
+            />
+             <VerificaCode  //验证码
+              name="verificaCode"
             />
           </Tab>
           {/* <Tab
@@ -205,7 +219,20 @@ class Login extends Component {
               <FormattedMessage id="user-login.login.signup" />
             </Link>
           </div> */}
+         <><Checkbox checked={agreement} onChange={(e)=>{
+           this.setState({ agreement:e.target.checked})
+          }}>
+               阅读并接受<Button type='link'  style={{padding:0}} onClick={()=>{this.setState({agreementVisible:true})}}>《用户监测数据许可协议》</Button>
+            </Checkbox></>
         </LoginComponents>
+        <Modal
+        footer={false}
+        visible={agreementVisible}
+        onCancel={()=>{ this.setState({agreementVisible:false})}}
+        wrapClassName='fullScreenModal'
+      >
+     <Agreement />
+      </Modal>
       </div>
     );
   }

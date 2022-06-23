@@ -625,7 +625,7 @@ const Index = (props,ref ) => {
         title: '巡检',
         dataIndex: 'inspectionCompleteCount',
         key: 'inspectionCompleteCount',
-        width: 100,
+        width: 80,
         align:'center',
         render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'inspectionCount')}}>{text}</Button>
@@ -635,7 +635,7 @@ const Index = (props,ref ) => {
         title: '维护',
         dataIndex: 'maintainCompleteCount',
         key: 'maintainCompleteCount',
-        width: 100,
+        width: 80,
         align:'center',
         render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'maintainCount')}}>{text}</Button>
@@ -645,7 +645,7 @@ const Index = (props,ref ) => {
         title: '校准',
         dataIndex: 'calibrationCompleteCount',
         key: 'calibrationCompleteCount',
-        width: 100,
+        width: 80,
         align:'center',
         render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'calibrationCount')}}>{text}</Button>
@@ -675,7 +675,7 @@ const Index = (props,ref ) => {
         title: '维修',
         dataIndex: 'repairCompleteCount',
         key: 'repairCompleteCount',
-        width: 100,
+        width: 80,
         align:'center',
         render:(text,record,index)=>{
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'repairCount')}}>{text}</Button>
@@ -692,7 +692,16 @@ const Index = (props,ref ) => {
           return  <Button type="link" onClick={()=>{workOrderNum(3,record,'matchingComparisonCount')}}>{text}</Button>
         }
       },
-
+      {
+        title: '配合比对工单数',
+        dataIndex: 'coordinationComparisonCompleteCount',
+        key: 'coordinationComparisonCompleteCount',
+        width: 120,
+        align:'center',
+        render:(text,record,index)=>{
+          return  <Button type="link" onClick={()=>{workOrderNum(3,record,'coordinationComparisonCount')}}>{text}</Button>
+        }
+      },
   ]
    const outsideColumns =  [ //计划外 首页面
     {
@@ -740,7 +749,7 @@ const Index = (props,ref ) => {
           title: <span>总数<Tooltip  title={'日期条件内完成的工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'allCompleteTaskCount',
           key: 'allCompleteTaskCount',
-          width: 50,
+          width: 100,
           align:'center',
         },
        ...planOutRegCompleteCommon,
@@ -1101,6 +1110,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     "matchingComparisonCount" :'5',
     "cooperationInspectionCount" :'6',
     "calibrationTestCount":'7',
+    "coordinationComparisonCount":'8',
    }
    const outTypeNames = {
     "inspectionCount"  : "巡检工单",
@@ -1110,6 +1120,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     "matchingComparisonCount" :'参数核对工单',
     "cooperationInspectionCount" :'配合检查工单',
     "calibrationTestCount":'校验测试工单',
+    "coordinationComparisonCount":'配合比对完成工单数',
    }
   const workOrderNum = (type,record,outType) =>{ //计划内  计划外  总数工单
     
