@@ -8,22 +8,25 @@ const Model = {
   namespace: 'userLogin',
   state: {
     status: undefined,
-    configInfo: null
+    configInfo: null,
+    isAgree:true,
   },
   effects: {
-    *login({ payload }, { call, put }) {
+    *login({ payload,callback }, { call, put, update, select }) {
       const response = yield call(systemLogin, payload);
-
+      
       yield put({
         type: 'changeLoginStatus',
         payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
       });
-      if (response.IsSuccess) {
-        response.Datas.User_ID = response.Datas.UserId;
-        let defaultNavigateUrl = '/user/login';
-        let systemNavigateUrl = '';
-        if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
-          if(response.Datas.MenuDatas[0].name === "首页"){
+
+     if (response.IsSuccess) {
+       if(payload.IsAgree){
+         response.Datas.User_ID = response.Datas.UserId;
+         let defaultNavigateUrl = '/user/login';
+         let systemNavigateUrl = '';
+         if (response.Datas.MenuDatas && response.Datas.MenuDatas.length > 1) {
+           if(response.Datas.MenuDatas[0].name === "首页"){
             systemNavigateUrl = response.Datas.MenuDatas[1].NavigateUrl;
           }else{
             if(response.Datas.MenuDatas[0].children.length){
@@ -52,10 +55,9 @@ const Model = {
         if (payload.redirctUrl) {
           router.push('/homepage');
           return;
-          //defaultNavigateUrl = payload.redirctUrl;
         }
-        // router.push('/');
         router.push(defaultNavigateUrl);
+      }
       }
     },
 
@@ -83,6 +85,7 @@ const Model = {
     setConfigInfo(state, { payload }) {
       return { ...state, configInfo: { ...payload } };
     }
+    
   },
 };
 export default Model;

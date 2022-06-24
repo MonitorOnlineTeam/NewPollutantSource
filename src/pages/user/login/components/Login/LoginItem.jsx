@@ -145,7 +145,7 @@ class WrapFormItem extends Component {
               </FormItem>
             </Col>
             <Col span={8}>
-             <Captcha charNum={4}  onChange={this.props.verificaCodeChange}  />
+             <Captcha charNum={4}  onChange={this.props.verificaCodeChange}  bgColor={'#c6d2e0'}/>
             </Col>
     </Row>
     :

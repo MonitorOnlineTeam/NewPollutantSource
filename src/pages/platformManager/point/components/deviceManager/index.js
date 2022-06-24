@@ -308,14 +308,14 @@ const Index = (props) => {
       title: '量程1',
       dataIndex: 'Range1',
       align: 'center',
-      width: 200,
+      width: 240,
       editable: true,
     },
     {
       title: '量程2',
       dataIndex: 'Range2',
       align: 'center',
-      width: 200,
+      width: 240,
       editable: true,
     },
     {

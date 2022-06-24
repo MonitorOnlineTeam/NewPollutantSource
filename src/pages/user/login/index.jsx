@@ -1,4 +1,4 @@
-import { Alert, Checkbox, message,Button,Modal, } from 'antd';
+import { Alert, Checkbox, message,Button,Modal,Row, } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import Link from 'umi/link';
@@ -11,6 +11,7 @@ import Agreement from '../login/components/Agreement'
 @connect(({ userLogin, loading }) => ({
   userLogin,
   submitting: loading.effects['userLogin/login'],
+  isAgree:userLogin.isAgree,
 }))
 class Login extends Component {
   loginForm = undefined;
@@ -19,7 +20,6 @@ class Login extends Component {
     type: 'account',
     autoLogin: true,
     verificaCode:undefined,
-    agreement:false,
     agreementVisible:false,
   };
 
@@ -31,17 +31,22 @@ class Login extends Component {
 
   handleSubmit = (err, values) => {
     const { type,verificaCode, } = this.state;
+    const { isAgree } = this.props;
     console.log('values=', values);
 
     if (!err) {
       const { dispatch } = this.props;
       if( verificaCode != values.verificaCode){
-        message.warning('请输入正确的验证码')
+        message.error('请输入正确的验证码')
+        return;
+      }
+      if(!isAgree){
+        message.error('请阅读并勾选用户监测数据许可协议');
         return;
       }
       dispatch({
         type: 'userLogin/login',
-        payload: { ...values, type },
+        payload: { ...values,IsAgree:isAgree, type },
       });
     }
   };
@@ -83,14 +88,13 @@ class Login extends Component {
       showIcon
     />
   );
-  verificaCodeChange=(code)=>{
-    console.log(code);
+  verificaCodeChange=(code)=>{  
     this.setState({verificaCode:code})
   }
   render() {
-    const { userLogin, submitting } = this.props;
+    const { userLogin, submitting,isAgree, } = this.props;
     const { status, type: loginType, message } = userLogin;
-    const { type, autoLogin,agreement,agreementVisible, } = this.state;
+    const { type, autoLogin,agreementVisible, } = this.state;
     return (
       <div className={styles.main}>
         <LoginComponents
@@ -195,9 +199,7 @@ class Login extends Component {
             />
           </Tab> */}
           <div>
-            <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              自动登录
-            </Checkbox>
+
             {/* <a
               style={{
                 float: 'right',
@@ -219,17 +221,23 @@ class Login extends Component {
               <FormattedMessage id="user-login.login.signup" />
             </Link>
           </div> */}
-         <><Checkbox checked={agreement} onChange={(e)=>{
-           this.setState({ agreement:e.target.checked})
-          }}>
+         <Row justify='space-between' align='middle'>
+
+           <Checkbox checked={isAgree} onChange={(e)=>{  this.props.dispatch({  type: 'userLogin/changeLoginStatus',payload: {  isAgree:e.target.checked   }});}}>
                阅读并接受<Button type='link'  style={{padding:0}} onClick={()=>{this.setState({agreementVisible:true})}}>《用户监测数据许可协议》</Button>
-            </Checkbox></>
+            </Checkbox>
+            
+             <Checkbox className={styles.autoLoginSty}  checked={autoLogin} onChange={this.changeAutoLogin}>
+              自动登录
+            </Checkbox> 
+            </Row> 
         </LoginComponents>
         <Modal
         footer={false}
         visible={agreementVisible}
         onCancel={()=>{ this.setState({agreementVisible:false})}}
-        wrapClassName='fullScreenModal'
+        width={'55%'}
+        wrapClassName={styles.userAgreementSty}
       >
      <Agreement />
       </Modal>

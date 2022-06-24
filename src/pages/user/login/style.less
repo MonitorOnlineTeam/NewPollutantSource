@@ -53,5 +53,20 @@
       margin-top: 24px;
     }
   }
-
+  .autoLoginSty{
+    :global {
+      .ant-checkbox + span {
+        padding-right: 0;
+      }
+    }
+  }
+}
+.userAgreementSty{
+  :global {
+    .ant-modal-body {
+      padding: 5% 10%;
+     height: calc(100vh - 150px);
+     overflow-y: auto;   
+  }
+ }
 }

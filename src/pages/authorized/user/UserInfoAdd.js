@@ -204,6 +204,7 @@ export default class UserInfoAdd extends Component {
         };
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
+            <div className='tabLayoutOverhiddenSty'>
             <BreadcrumbWrapper title={`添加 - ${  title}`}>
                 <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
@@ -384,6 +385,7 @@ export default class UserInfoAdd extends Component {
 
                 </div>
             </BreadcrumbWrapper>
+            </div>
         );
     }
 }

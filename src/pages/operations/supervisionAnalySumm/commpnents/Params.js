@@ -14,7 +14,7 @@ import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
+import MultipleHeadResizeTable from '@/components/MultipleHeadResizeTable';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -119,7 +119,8 @@ const Index = (props) => {
       dataIndex: 'pollutantName',
       key: 'pollutantName',
       align: 'center',
-      width:100,
+      width:150,
+      ellipsis: true,
     },
     {
       title: '督查人员',
@@ -293,7 +294,7 @@ const Index = (props) => {
             </Form.Item>
 
           </Form>}>
-        <SdlTable
+        <MultipleHeadResizeTable
           loading={tableLoading}
           bordered
           dataSource={tableDatas}
@@ -306,6 +307,7 @@ const Index = (props) => {
             showQuickJumper: true,
             onChange: handleTableChange,
         }}
+        scroll={{ x: '100%',y:'calc(100vh - 450px)' }}
         />
       </Card>
     </div>

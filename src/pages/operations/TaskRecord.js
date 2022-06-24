@@ -775,7 +775,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                       }
                   </div>
               </Row>
-              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              {/* <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                   <Col md={16} sm={24} style={{ margin: '10px 0' }}>
                     <Button icon={<PlusOutlined />} type="primary" onClick={() => {
                       this.setState({
@@ -783,7 +783,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                       })
                     }}>派单</Button>
                   </Col>
-              </Row>
+              </Row> */}
           </Form>
           <SdlTable
               loading={LoadingData}

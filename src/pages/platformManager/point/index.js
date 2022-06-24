@@ -72,6 +72,7 @@ let pointConfigIdEdit = '';
   pointRealTimeList: point.pointRealTimeList,
   pointHourItemList: point.pointHourItemList,
   paramCodeList: point.paramCodeList,
+  updatePointDGIMNLoading: loading.effects['point/updatePointDGIMN'],
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -914,6 +915,7 @@ export default class MonitorPoint extends Component {
             destroyOnClose
             confirmLoading={this.props.saveLoadingMN}
             className={styles.MNmodal}
+            confirmLoading={this.props.updatePointDGIMNLoading}
           >
             <Form>
               <Form.Item label="旧设备编号(MN)">

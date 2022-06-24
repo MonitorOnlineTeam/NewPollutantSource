@@ -253,8 +253,9 @@ export default class UserInfoEdit extends Component {
         };
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
+            <div className='tabLayoutOverhiddenSty'>
             <BreadcrumbWrapper title={`编辑 - ${title}`}>
-                <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
+                <div className="contentContainer" style={{ width: '100%', background: '#fff',}}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
                             <Sider width={270} style={{ background: '#fff' }}>
@@ -291,7 +292,7 @@ export default class UserInfoEdit extends Component {
                                     }}
                                 >返回
                                 </Button>
-                                <Card bordered={false} title="基本信息" style={{ height: 'calc(100vh - 160px)', display: this.state.baseState }}>
+                                <Card bordered={false} title="基本信息" style={{  display: this.state.baseState }}>
                                
                                     <SdlForm
                                         configId="UserInfoAdd"
@@ -341,7 +342,7 @@ export default class UserInfoEdit extends Component {
                                     </SdlForm>
 
                                 </Card>
-                                <Card bordered={false} title="角色设置" style={{ height: 'calc(100vh - 160px)', display: this.state.rolesState }}>
+                                <Card bordered={false} title="角色设置" style={{ display: this.state.rolesState }}>
                                     {
                                         this.props.UserRolesLoading ? <Spin
                                             style={{
@@ -383,7 +384,7 @@ export default class UserInfoEdit extends Component {
                                         </Button>
                                     </Divider>
                                 </Card>
-                                <Card bordered={false} title="部门设置" style={{ height: 'calc(100vh - 160px)', display: this.state.departState }}>
+                                <Card bordered={false} title="部门设置" style={{  display: this.state.departState }}>
                                     {
                                         this.props.UserDepLoading ? <Spin
                                             style={{
@@ -428,6 +429,7 @@ export default class UserInfoEdit extends Component {
 
                 </div>
             </BreadcrumbWrapper>
+            </div>
         );
     }
 }

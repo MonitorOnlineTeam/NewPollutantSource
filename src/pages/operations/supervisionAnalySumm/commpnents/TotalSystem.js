@@ -15,6 +15,7 @@ import styles from "../style.less"
 import Cookie from 'js-cookie';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 
+import MultipleHeadResizeTable from '@/components/MultipleHeadResizeTable';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -118,9 +119,10 @@ const Index = (props) => {
                     title: '监测因子',
                     dataIndex: 'pollutantName',
                     key: 'pollutantName',
-                    width:200,
-                    align: 'center',
                     width:150,
+                    align: 'center',
+                    ellipsis: true,
+                    
                   },
                   {
                     title: '督查人员',
@@ -151,21 +153,24 @@ const Index = (props) => {
                     dataIndex: 'principleProblem',
                     key: 'principleProblem',
                     align: 'center',
-                    width:120,
+                    width:150,
+                    ellipsis: true,
                 },
                 {
                     title: '严重问题',
                     dataIndex: 'importanProblem',
                     key: 'importanProblem',
                     align: 'center',
-                    width:120,
+                    width:150,
+                    ellipsis: true,
                 },
                 {
                     title: '一般问题',
                     dataIndex: 'commonlyProblem',
                     key: 'commonlyProblem',
                     align: 'center',
-                    width:120,
+                    width:150,
+                    ellipsis: true,
                 },
             ]
         }
@@ -284,7 +289,7 @@ const Index = (props) => {
                             </Button>
                         </Form.Item>
                     </Form>}>
-                <SdlTable
+                <MultipleHeadResizeTable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
@@ -297,6 +302,7 @@ const Index = (props) => {
                         showQuickJumper: true,
                         onChange: handleTableChange,
                     }}
+                    scroll={{ x: '100%',y:'calc(100vh - 405px)' }}
                 />
             </Card>
         </div>
