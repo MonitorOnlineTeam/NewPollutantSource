@@ -36,7 +36,7 @@ class Login extends Component {
 
     if (!err) {
       const { dispatch } = this.props;
-      if( verificaCode != values.verificaCode){
+      if( verificaCode != values.verificaCode.toLowerCase() && verificaCode != values.verificaCode.toUpperCase()){
         message.error('请输入正确的验证码')
         return;
       }
@@ -89,6 +89,7 @@ class Login extends Component {
     />
   );
   verificaCodeChange=(code)=>{  
+    console.log('验证码----------------------',code)
     this.setState({verificaCode:code})
   }
   render() {

@@ -344,7 +344,7 @@ class DrillDownTaskModal extends PureComponent {
                       <Option value="维修维护" key="4">维修维护</Option>
                       <Option value="检验测试" key="3">检验测试</Option>
                       <Option value="手工对比" key="2">手工对比</Option>
-                      <Option value="配合对比" key="1">配合对比</Option>
+                      <Option value="配合比对" key="1">配合比对</Option>
                       <Option value="配合检查" key="0">配合检查</Option>
                     </Select>
                   )}

@@ -6,7 +6,7 @@ import { connect } from 'dva';
 import DrillDownTaskModal from "./DrillDownTaskModal"
 import isEqual from 'lodash/isEqual';
 import TaskStatistics from './TaskStatistics'
-const TASK_TYPE = ["cooperationInspectionComplete,cooperationInspectionUnfinished,配合检查", "matchingComplete,matchingUnfinished,配合对比", "manualComparisonComplete,manualComparisonUnfinished,手工对比", "verificationTestComplete,verificationTestUnfinished,检验测试", "maintenanceRepairComplete,maintenanceRepairUnfinished,维修维护", "calibrationComplete,calibrationUnfinished,校准", "onSiteInspectionComplete,onSiteInspectionUnfinished,巡检"];
+const TASK_TYPE = ["cooperationInspectionComplete,cooperationInspectionUnfinished,配合检查", "matchingComplete,matchingUnfinished,配合比对", "manualComparisonComplete,manualComparisonUnfinished,手工对比", "verificationTestComplete,verificationTestUnfinished,检验测试", "maintenanceRepairComplete,maintenanceRepairUnfinished,维修维护", "calibrationComplete,calibrationUnfinished,校准", "onSiteInspectionComplete,onSiteInspectionUnfinished,巡检"];
 
 let dataIndex = undefined;
 
@@ -82,7 +82,7 @@ class Operations extends PureComponent {
           align: "left",
           margin: 86,
         },
-        data: ['配合检查', '配合对比', '手工对比', '校验测试', '维修维护', '校准', '巡检',]
+        data: ['配合检查', '配合比对', '手工对比', '校验测试', '维修维护', '校准', '巡检',]
       },
       series: [
         {

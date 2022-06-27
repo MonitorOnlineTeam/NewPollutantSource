@@ -96,6 +96,7 @@ export default class MonitorPoint extends Component {
       hourPollutantCode: [],
       pointCoefficientVal: '',//监测点系数
       pointCoefficientFlag: false,
+      deviceManagerGasType:1,
     };
   }
 
@@ -537,10 +538,13 @@ export default class MonitorPoint extends Component {
       MNEcho: MN
     })
   }
-  deviceManager = (row) => {
+  deviceManager = (row) => { 
+
+
     this.setState({
       deviceManagerVisible: true,
-      deviceManagerMN: row["dbo.T_Bas_CommonPoint.DGIMN"]
+      deviceManagerMN: row["dbo.T_Bas_CommonPoint.DGIMN"],
+      deviceManagerGasType: row["dbo.T_Bas_CommonPoint.Col4"]
     })
   }
   onSubmitMN = e => {
@@ -940,7 +944,7 @@ export default class MonitorPoint extends Component {
             footer={false}
             wrapClassName={styles.deviceManagerSty}
           >
-            <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} pollutantType={this.state.pollutantType} />
+            <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} gasType={this.state.deviceManagerGasType} pollutantType={this.state.pollutantType} />
           </Modal>
         </div>
         {/* </MonitorContent> */}

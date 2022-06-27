@@ -488,7 +488,7 @@ const Index = (props,ref) => {
           align:'center',
         },
         {
-          title: '配合比对工单数',
+          title: '配合比对',
           dataIndex: 'coordinationComparisonCompleteCount',
           key: 'coordinationComparisonCompleteCount',
           width: 120,

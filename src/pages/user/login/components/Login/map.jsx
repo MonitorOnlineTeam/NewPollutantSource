@@ -1,4 +1,4 @@
-import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined,AuditOutlined,} from '@ant-design/icons';
+import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined,AuditOutlined, SafetyOutlined, } from '@ant-design/icons';
 import React from 'react';
 import styles from './index.less';
 export default {
@@ -65,7 +65,7 @@ export default {
     props: {
       size: 'large',
       id: 'verificaCode',
-      prefix: <AuditOutlined className={styles.prefixIcon} />,
+      prefix: <SafetyOutlined className={styles.prefixIcon} />,
       placeholder: '请输入验证码',
     },
     rules:[
