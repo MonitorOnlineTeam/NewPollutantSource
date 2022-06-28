@@ -65,7 +65,7 @@ class index extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.realtimeColumns !== nextProps.realtimeColumns) {
-      let fixed = (nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160) > $(".sdlTable").width();
+      let fixed = (nextProps.realtimeColumns.length * 94 + 50 + 70 + 210 + 160) > $("#sdlTable").width();
       // const fixed = false;
       const width = 200;
 

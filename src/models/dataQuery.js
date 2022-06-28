@@ -79,8 +79,20 @@ export default Model.extend({
     * queryhistorydatalist({
       payload, from,
     }, { select, call, update }) {
-      const { pollutantlist, historyparams } = yield select(_ => _.dataquery);
+      const dataqueryData = yield select(_ => _.dataquery);
+      let historyparams = dataqueryData.historyparams;
+      let _pollutantlist = dataqueryData.pollutantlist;
       let _historyparams = { ...historyparams, ...payload };
+      let pollutantlist = _pollutantlist;
+      // 电力：实时类型不显示“有功总累计电能”，其他类型只显示“有功总累计电能”
+      if (payload.Type == 37) {
+        if (_historyparams.datatype === 'realtime') {
+          pollutantlist = _pollutantlist.filter(item => item.PollutantCode !== 'e0011');
+        } else {
+          pollutantlist = _pollutantlist.filter(item => item.PollutantCode === 'e0011');
+        }
+      }
+
       if (!from && (!pollutantlist[0] || !historyparams.pollutantCodes)) {
         yield update({ datalist: null, chartdata: null, columns: null, datatable: null, total: 0 });
         return;
@@ -193,11 +205,10 @@ export default Model.extend({
           dataIndex: 'MonitorTime',
           key: 'MonitorTime',
           width: 160,
-          // fixed: 'left',
+          fixed: payload.Type == 10 ? 'left' : false,
           align: 'center',
           render: (text, record) => {
             let showDetail = "";
-            debugger
             switch (historyparams.datatype) {
               case "month":
                 return moment(text).format("YYYY-MM");
@@ -382,7 +393,7 @@ export default Model.extend({
             },
           },
           yAxis: {
-            type: 'value',
+            type: 'log',
             name: `浓度值${unit}`,
             axisLabel: {
               formatter: '{value}',
