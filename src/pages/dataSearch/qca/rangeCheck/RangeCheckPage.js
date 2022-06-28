@@ -189,7 +189,7 @@ class RangeCheckPage extends PureComponent {
           // 废水
           this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
-          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026", 'a05001'])
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026", "a05001", 'a05002', 'a05003'])
           // 废气
           this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }

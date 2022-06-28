@@ -183,7 +183,7 @@ class ZeroCheckPage extends PureComponent {
           // 废水
           this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         } else {
-          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026" , 'a05001'])
+          let intersection = _.intersection(pollutantList, ["a21002", "a19001", "a21026", "a05001", 'a05002', 'a05003'])
           // 废气
           this.formRef.current.setFieldsValue({ PollutantCode: intersection })
         }
@@ -205,7 +205,7 @@ class ZeroCheckPage extends PureComponent {
     return recordWorkMode ? <Tooltip title={<div style={{ color: "#fff", fontWeight: 500 }}>
       <p>{workModeLabel}</p>
       <p>质控人：{PersonName}</p>
-    </div>}> 
+    </div>}>
       {text}
       <span style={{ marginLeft: 10, fontWeight: 600 }}>{WorkMode}</span>
     </Tooltip> : text
