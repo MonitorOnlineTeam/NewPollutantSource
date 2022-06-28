@@ -179,7 +179,7 @@ const Index = (props) => {
       // })
       // setGaschoiceData(res&&res.gasManufacturerName? res.gasManufacturerName : undefined)
       // setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
-      setGasSystemData(res? res :[])
+      // setGasSystemData(res? res :[])
     })
 
     //废水 废气   默认加载监测参数
@@ -1088,13 +1088,14 @@ const gasSyatemCancel = (record,type) =>{
     try {
       // const values = await form.validateFields();
       const gasSystemInfo = gasSystemData.map(item=>{ //废气 系统信息
-        if(gasType==1){
-         return{SystemName:item.GasSystemCode,GasManufacturer:item.CemsManufacturerID, GasEquipment:item.CemsEquipment,}
 
-        }else{
-         return{SystemName:item.GasSystemCode,PMManufacturer:item.CemsManufacturerID, PMEquipment:item.CemsEquipment,}
+         return{
+             SystemManufactor:item.GasSystemCode,
+             GasManufacturer:item.CemsManufacturerID,
+             GasEquipment:item.CemsEquipment,
+          }
 
-        }
+       
       })
       const  parList =  data.map(itme=>{
         return {ID:'',DGIMN:DGIMN, PollutantCode:itme.PollutantCode,Range1:itme.Range1,Range2:itme.Range2,EquipmentManufacturer:itme.EquipmentManufacturerID,

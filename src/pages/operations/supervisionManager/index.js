@@ -1113,6 +1113,27 @@ const Index = (props) => {
               }
             },
       ]
+
+      const deviceCol = [
+        {
+          title: '系统名称',
+          dataIndex: 'SystemName',
+          key: 'SystemName',
+          align: 'center',
+        },
+        {
+          title: 'CEMS设备生产商',
+          dataIndex: 'Manufacturer',
+          key: 'Manufacturer',
+          align: 'center',
+        },
+        {
+          title: 'CEMS设备规格型号',
+          dataIndex: 'Equipment',
+          key: 'Equipment',
+          align: 'center',
+        },
+      ]
   const pollutantList = () =>{
      const data = pollutantType == 1 ? operationInfoList.WaterPollutantList : operationInfoList.GasPollutantList;
      return  data&&data.map(item => {
@@ -1314,7 +1335,15 @@ const Index = (props) => {
 
           <div className={'deviceInfoSty'}>
            <TitleComponents text='设备信息'/>
-            {pollutantType==1?
+           {/* <Table 
+              bordered
+              dataSource={operationInfoList.MonitorPointEquipmentList&&operationInfoList.MonitorPointEquipmentList}
+              columns={deviceCol} 
+              rowClassName="editable-row"
+              pagination={false}
+              loading={false}
+             /> */}
+            {/* {pollutantType==1?
             <>
                <Row className={'waterDeviceInfo'}>
             <Col span={12}>
@@ -1378,7 +1407,7 @@ const Index = (props) => {
               </Form.Item>
             </Col>
           </Row>
-          </>}
+          </>} */}
 
           <Form.Item hidden name="ID" >
                 <Input />
