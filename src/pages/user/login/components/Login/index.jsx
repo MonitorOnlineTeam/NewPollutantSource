@@ -73,6 +73,7 @@ class Login extends Component {
         });
       },
       verificaCodeChange:this.props.verificaCodeChange,
+      handleRef:this.props.handleRef,
     };
   };
   handleSubmit = e => {

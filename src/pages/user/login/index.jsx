@@ -38,6 +38,7 @@ class Login extends Component {
       const { dispatch } = this.props;
       if( verificaCode != values.verificaCode.toLowerCase() && verificaCode != values.verificaCode.toUpperCase()){
         message.error('请输入正确的验证码')
+        this.child.current.click(); //刷新验证码
         return;
       }
       if(!isAgree){
@@ -106,6 +107,9 @@ class Login extends Component {
             this.loginForm = form;
           }}
           verificaCodeChange={this.verificaCodeChange}
+          handleRef={(ref) => {
+            this.child = ref;
+          }} 
         >
           <Tab
             key="account"
