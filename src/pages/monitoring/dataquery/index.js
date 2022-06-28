@@ -32,6 +32,8 @@ class Index extends Component {
 
     render() {
         const { dgimn, pointName, entName, title, Type } = this.state;
+        // 是否显示原始和审核
+        const isShowSearchDataType = this.props.location.query.isShowSearchDataType == 1 ? true : false;
         return (
             <div id="dataquery">
                 <BreadcrumbWrapper titles={`【${title}】`}>
@@ -39,7 +41,7 @@ class Index extends Component {
                         this.state.dgimn ?
                             (
                                 this.props.location.query.type == 1 ? <DataQuery2 DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
-                                    <DataQuery DGIMN={this.state.dgimn} Type={Type} pointName={pointName} entName={entName} initLoadData />
+                                    <DataQuery DGIMN={this.state.dgimn} Type={Type} pointName={pointName} entName={entName}  isShowSearchDataType={isShowSearchDataType} initLoadData />
                             )
                             : <PageLoading />
                     }

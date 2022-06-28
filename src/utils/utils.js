@@ -233,7 +233,7 @@ export const getDirLevel = dir => {
       168.75,
       191.25,
       213.75,
-      236.25, 
+      236.25,
       258.75,
       281.25,
       303.25,
@@ -303,7 +303,7 @@ export function timeDifference(beginDates, endDates) {
     return false;
   }
 }
-//截取小数点后两位  
+//截取小数点后两位
 export function interceptTwo(value) {
   const data = value.toString();
   // data.indexOf(".") ==-1 是整数时  补零
@@ -341,7 +341,7 @@ export function isInsidePolygon(lng, lat, poly) {
 
 // /* 判断是否是内网IP */
 export function isInnerIPFn() {
-  
+
   let isInnerIp = false;// 默认给定IP不是内网IP
   // var returnIP = '';
   // const innerIp = webSocketPushURL.split(',')[0];
@@ -361,7 +361,7 @@ export function isInnerIPFn() {
     curPageUrl = curPageUrl.split('.');// 通过一点来划分数组
 
 
-  
+
     const ipAddress = `${curPageUrl[0]}.${curPageUrl[1]}.${curPageUrl[2]}.${curPageUrl[3]}`;
 
     const ipNum = getIpNum(ipAddress);

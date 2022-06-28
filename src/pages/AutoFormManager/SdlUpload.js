@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-12-29 14:39:46
+ * @Last Modified time: 2022-05-30 16:24:01
  * @desc: 上传组件
  */
 
@@ -93,8 +93,8 @@ class SdlUpload extends Component {
           // setFieldsValue({ cuid: cuid })
           console.log(fileList)
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
-          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = "" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "" + fileList[fileList.length - 1].response.Datas
         } else if (info.file.status === 'error') {
           let msg = fileList[fileList.length - 1].response.Message;
           console.log("msg=", msg)

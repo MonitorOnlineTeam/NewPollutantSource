@@ -568,7 +568,7 @@ class DepartIndex extends Component {
             this.setState({
                 newEntAndPoint: [{
                     title: '全部',
-                    // key: '0-0',
+                    key: '0-0',
                     children: nextProps.EntAndPoint,
                 }],
             })

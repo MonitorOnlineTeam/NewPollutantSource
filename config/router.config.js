@@ -6,13 +6,13 @@ const routes = [
     routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
   },
   // {
-  //   path: '/screen',
-  //   component: '../layouts/ScreenLayout',
+  //   path: '/ControlCabin',
+  //   component: '../layouts/ControlCabinLayout',
   //   routes: [
   //     {
-  //       name: 'test',
-  //       path: '/screen/test',
-  //       component: './Test/Test',
+  //       name: 'ControlCabin',
+  //       path: '/ControlCabin/index',
+  //       component: './ControlCabin/index',
   //     },
   //   ]
   // },
@@ -1179,6 +1179,12 @@ const routes = [
                 path: '/monitoring/mapview/realtimeDataView',
                 component: './monitoring/overView/realtime',
               },
+              // 电力数据一览
+              {
+                name: 'ElectricDataView',
+                path: '/monitoring/ElectricDataView',
+                component: './monitoring/overView/ElectricDataView',
+              },
               // 数采仪在线情况统计
               {
                 name: 'onlineStatistics',
@@ -1763,6 +1769,12 @@ const routes = [
                 name: 'effluentFee',
                 path: '/Intelligentanalysis/effluentFee',
                 component: './Intelligentanalysis/effluentFee',
+              },
+              // 电力实时同比环比分析
+              {
+                name: 'ElectricYoYAndMoM',
+                path: '/Intelligentanalysis/ElectricYoYAndMoM',
+                component: './dataAnalyze/ElectricYoYAndMoM',
               },
               // 单站多参对比分析
               {

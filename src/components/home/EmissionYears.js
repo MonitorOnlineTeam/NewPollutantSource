@@ -15,17 +15,13 @@ class EmissionYears extends PureComponent {
 
   componentDidMount() {
     this.getOption();
-  }
+  } 
 
   componentWillReceiveProps(nextProps) {
     if (this.props.DGIMN !== nextProps.DGIMN || this.props.entCode !== nextProps.entCode) {
-      this.getData(nextProps.entCode, nextProps.DGIMN);
+      // this.getData(nextProps.entCode, nextProps.DGIMN);
     }
-    // if (this.props.theme !== nextProps.theme) {
-    //   this.getOption();
-    // }
     if (this.props.theme !== nextProps.theme) {
-      // debugger
       if (this.myChart) {
         // let echarts_instance = this.myChart.getEchartsInstance();
         // echarts_instance.dispose();

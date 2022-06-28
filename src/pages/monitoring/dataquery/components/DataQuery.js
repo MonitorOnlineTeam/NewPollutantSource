@@ -271,7 +271,8 @@ class DataQuery extends Component {
         dispatch({
             type: 'dataquery/queryhistorydatalist',
             payload: {
-                searchDataType: this.state.searchDataType
+                searchDataType: this.state.searchDataType,
+                Type: this.props.Type
             },
         });
     }
@@ -449,7 +450,7 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue, displayType, searchDataType } = this.state;
-        const { pointName, entName, pollutantlist, Type } = this.props;
+        const { pointName, entName, pollutantlist, Type, isShowSearchDataType } = this.props;
         let flag = "", mode = [];
         if (pollutantlist && pollutantlist[0]) {
             flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
@@ -508,7 +509,7 @@ class DataQuery extends Component {
                                         }
                                     </Form.Item>
                                     {
-                                        Type === '5' && <Form.Item style={{ marginRight: 5 }}>
+                                        Type === '5' && isShowSearchDataType && <Form.Item style={{ marginRight: 5 }}>
                                             <Select style={{ width: 100 }} value={searchDataType} onChange={(value) => { this.setState({ searchDataType: value }) }}>
                                                 <Option value={1}>原始</Option>
                                                 <Option value={2}>审核</Option>
@@ -520,13 +521,13 @@ class DataQuery extends Component {
                                         <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
                                     </Form.Item>
                                     <Form.Item style={{ marginRight: 5 }}>
-                                        <ButtonGroup_ style={{ width: '100%' }} checked="realtime" showOtherTypes={flag} onChange={this._handleDateTypeChange} />
+                                        <ButtonGroup_ style={{ width: '100%' }} pollutantType={Type} checked={Type == 10 ? 'hour' : "realtime"} showOtherTypes={flag} onChange={this._handleDateTypeChange} />
                                     </Form.Item>
                                     <Form.Item style={{ marginRight: 5 }}>
                                         <Radio.Group style={{ width: '100%' }} defaultValue={displayType} buttonStyle="solid" onChange={e => {
                                             this.displayChange(e.target.value)
                                         }}>
-                                            <Radio.Button value="chart">图表</Radio.Button>
+                                            <Radio.Button value="chart">图表1</Radio.Button>
                                             <Radio.Button value="data">数据</Radio.Button>
                                         </Radio.Group>
                                     </Form.Item>

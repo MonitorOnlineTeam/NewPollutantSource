@@ -22,7 +22,6 @@ class Index extends Component {
                     value={item.PollutantCode}
                 >{item.PollutantName}</Option>);
             })
-            console.log(res)
             return res;
         }
     }
@@ -41,7 +40,6 @@ class Index extends Component {
           maxTagPlaceholder,
           optionDatas,
         } = this.props;
-        console.log('------------------默认选中的污染物---------------------------', defaultValue);
         return (
              <Select
                 mode={mode}
