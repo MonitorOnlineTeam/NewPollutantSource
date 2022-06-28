@@ -179,7 +179,10 @@ const Index = (props) => {
       // })
       // setGaschoiceData(res&&res.gasManufacturerName? res.gasManufacturerName : undefined)
       // setPmchoiceData(res&&res.pMManufacturerName? res.pMManufacturerName : undefined)
-      // setGasSystemData(res? res :[])
+      const data = res? res.map(item=>{
+        return {...item,key:cuid()}
+      }) : null;
+      setGasSystemData(data? data :[])
     })
 
     //废水 废气   默认加载监测参数
@@ -225,14 +228,15 @@ const Index = (props) => {
 
   };
   const gasSyatemEdit = (record) =>{
-     console.log(record)
      form.setFieldsValue({
-      ...record,
+      systemName:record.systemName,
+      gasManufacturerName:record.gasManufacturerName,
+      gasEquipment:record.gasEquipment,
     });
-    setDevicePollutantName(record.PollutantName) //设备参数
+
     if(record.type!="add"){
-      setGasSystemEquipmentId(record.CemsManufacturerID) //CEMS设备生产商
-      setCemsVal(record.GasSystemCode)//系统名称
+      setGasSystemEquipmentId(record.gasEquipment) //CEMS设备生产商
+      setCemsVal(Number(record.systemID))//系统名称
     }
     setGasSystemEditingKey(record.key);
   }
@@ -296,9 +300,9 @@ const gasSyatemCancel = (record,type) =>{
     const index = newData.findIndex((item) => key === item.key);
     if (index > -1) {
       const editRow = { 
-                   GasSystemName:cemsVal==465? '气态污染物CEMS' : '颗粒物污染物CEMS',
-                   CemsManufacturerID:gasSystemEquipmentId,
-                   GasSystemCode:cemsVal,
+                   systemName:cemsVal==465? '气态污染物CEMS' : '颗粒物污染物CEMS',
+                   gasManufacturer:gasSystemEquipmentId,
+                   systemID:cemsVal,
                   };
       
       const item = record.type==='add'? {...newData[index],key:cuid() } : {...newData[index]} 
@@ -430,20 +434,20 @@ const gasSyatemCancel = (record,type) =>{
   if(pollutantType==2){
      gasSystemCol= [{
       title: '系统名称',
-      dataIndex: 'GasSystemName',
+      dataIndex: 'systemName',
       align: 'center',
       width: 100,
       editable: true,
     },
     {
       title: 'CEMS设备生产商',
-      dataIndex: 'CemsManufacturer',
+      dataIndex: 'gasManufacturerName',
       align: 'center',
       editable: true,
     },
     {
       title: 'CEMS设备规格型号',
-      dataIndex: 'CemsEquipment',
+      dataIndex: 'gasEquipment',
       align: 'center',
       editable: true,
     },{
@@ -568,7 +572,7 @@ const gasSyatemCancel = (record,type) =>{
     // }else if(pollutantType==2&&gasType){ //废气-常规CEMS 废气-Vocs
      
     // }
-    form.setFieldsValue({ CemsManufacturer: record.ManufacturerName,CemsEquipment: record.SystemModel, });
+    form.setFieldsValue({ gasManufacturerName: record.ManufacturerName,gasEquipment: record.SystemModel, });
     setGasSystemEquipmentId(record.ID)
     setManufacturerPopVisible(false)
     setChoiceGasManufacturer(true)
@@ -612,7 +616,7 @@ const gasSyatemCancel = (record,type) =>{
     setIsManual(false)
   }
   const onManufacturerClearChoice = (value) =>{ //CEMS 设备生产商清除功能
-    form.setFieldsValue({ CemsManufacturer: value,CemsEquipment:value });
+    form.setFieldsValue({ gasManufacturerName: value,gasEquipment:value });
     setGasSystemEquipmentId('')
     setChoiceGasManufacturer(false)
  }
@@ -942,12 +946,12 @@ const gasSyatemCancel = (record,type) =>{
       return
     }else{
     form.resetFields();
-    // form.setFieldsValue({ GasSystemName:cemsVal  })
+    form.setFieldsValue({ systemName:cemsVal  }) 
     setGasSystemEditingKey(gasSystemEditingKey + 1)
     const newData = {
-      GasSystemName:'',
-      CemsManufacturer:'',
-      CemsEquipment:'',
+      systemName:'',
+      gasManufacturerName:'',
+      gasEquipment:'',
       type: 'add',
       key: gasSystemEditingKey+1,
     }
@@ -980,7 +984,7 @@ const gasSyatemCancel = (record,type) =>{
  const [manufacturerPopVisible,setManufacturerPopVisible] = useState(false)
  const manufacturerPopVisibleClick = () =>{ //cems设备生产商
   setManufacturerPopVisible(true)
-  formDevice.setFieldsValue({'GasSystemName': cemsVal})
+  form.setFieldsValue({'systemName': cemsVal})
   onFinish2(1,10,cemsVal)
  }
 
@@ -1003,7 +1007,7 @@ const gasSyatemCancel = (record,type) =>{
     let inputNode = '';
     if (dataIndex ==='EquipmentManufacturer') {
       inputNode = <Select onClick={()=>{popVisibleClick()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
-    }else if(dataIndex ==='GasSystemName'){
+    }else if(dataIndex ==='systemName'){
       inputNode = <Select placeholder='请选择' onChange={cemsChange} disabled={choiceGasManufacturer}>
          <Option value={465}>气态污染物CEMS</Option>
          <Option value={466}>颗粒物污染物CEMS</Option>
@@ -1058,8 +1062,8 @@ const gasSyatemCancel = (record,type) =>{
        })
       }
   </Select></Form.Item>}</>
- :   dataIndex ==='CemsManufacturer'?  //废气-常规CEMS  废气-Vocs
- <Form.Item  name={`CemsManufacturer`} style={{ margin: 0 }}>
+ :   dataIndex ==='gasManufacturerName'?  //废气-常规CEMS  废气-Vocs
+ <Form.Item  name={`gasManufacturerName`} style={{ margin: 0 }}>
  <Select  onClick={()=>{manufacturerPopVisibleClick()}} onChange={onManufacturerClearChoice}   allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>
  </Form.Item>
      
@@ -1081,18 +1085,17 @@ const gasSyatemCancel = (record,type) =>{
 
 
   const submits = async() =>{
-    if(editingKey){
+    if(editingKey || gasSystemEditingKey){
       message.warning('请先保存未保存的数据')
       return;
     }
     try {
       // const values = await form.validateFields();
       const gasSystemInfo = gasSystemData.map(item=>{ //废气 系统信息
-
          return{
-             SystemManufactor:item.GasSystemCode,
-             GasManufacturer:item.CemsManufacturerID,
-             GasEquipment:item.CemsEquipment,
+             SystemManufactor:item.systemID,
+             GasManufacturer:item.gasManufacturer,
+             GasEquipment:item.gasEquipment,
           }
 
        
@@ -1138,7 +1141,7 @@ const gasSyatemCancel = (record,type) =>{
           columns={gasSystemCols}
           rowClassName="editable-row"
           scroll={{ y: 'calc(100vh - 380px)' }}
-          // loading={props.tableDatasLoading}
+          loading={props.pointSystemInfoLoading}
           pagination={false}
         />
         </div>

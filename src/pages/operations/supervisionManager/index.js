@@ -607,7 +607,7 @@ const Index = (props) => {
   const [pointList2, setPointList2] = useState([])
   const [pointLoading2, setPointLoading2] = useState(false)
   const [pollutantType,setPollutantType] = useState("2")
-
+  const [deviceInfoList,setDeviceInfoList] = useState([]) //设备信息
   const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时的监测类型请求
     if (Object.keys(hangedValues).join() == 'EntCode') {
       if (!hangedValues.EntCode) { //清空时 不走请求
@@ -644,8 +644,9 @@ const Index = (props) => {
           RegionCode:data.RegionCode?data.RegionCode.split(','):undefined,
           PollutantCode:data.PollutantCode?data.PollutantCode.split(','):undefined,
         })
-        setGaschoiceData(data.GasManufacturerName? data.GasManufacturerName : undefined)
-        setPmchoiceData(data.PMManufacturerName? data.PMManufacturerName : undefined)
+        setDeviceInfoList(data.MonitorPointEquipmentList)
+        // setGaschoiceData(data.GasManufacturerName? data.GasManufacturerName : undefined)
+        // setPmchoiceData(data.PMManufacturerName? data.PMManufacturerName : undefined)
        })
    }
   }
@@ -1335,14 +1336,15 @@ const Index = (props) => {
 
           <div className={'deviceInfoSty'}>
            <TitleComponents text='设备信息'/>
-           {/* <Table 
+            <Table 
               bordered
-              dataSource={operationInfoList.MonitorPointEquipmentList&&operationInfoList.MonitorPointEquipmentList}
+              dataSource={deviceInfoList}
               columns={deviceCol} 
               rowClassName="editable-row"
               pagination={false}
-              loading={false}
-             /> */}
+              loading={pointParamesLoading}
+              size="small"
+             />
             {/* {pollutantType==1?
             <>
                <Row className={'waterDeviceInfo'}>
