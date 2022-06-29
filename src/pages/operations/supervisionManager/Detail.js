@@ -255,6 +255,26 @@ const Index = (props) => {
               }
             },
       ]
+      const deviceCol = [
+        {
+          title: '系统名称',
+          dataIndex: 'SystemName',
+          key: 'SystemName',
+          align: 'center',
+        },
+        {
+          title: 'CEMS设备生产商',
+          dataIndex: 'Manufacturer',
+          key: 'Manufacturer',
+          align: 'center',
+        },
+        {
+          title: 'CEMS设备规格型号',
+          dataIndex: 'Equipment',
+          key: 'Equipment',
+          align: 'center',
+        },
+      ]
   return (
     <div  className={'detail'} >
        <div style={{fontSize:16,padding:6,textAlign:'center',fontWeight:'bold'}}>运维督查表</div>
@@ -353,7 +373,7 @@ const Index = (props) => {
             </>
             :
             <>
-           <Row>
+           {/* <Row>
             <Col span={12}>
             <Form.Item label='气态CEMS设备生产商' >
             {infoList&&infoList.GasManufacturer}
@@ -384,7 +404,15 @@ const Index = (props) => {
           {infoList&&infoList.EquipmentRemark}
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
+            <Table 
+              bordered
+              dataSource={infoList&&infoList.MonitorPointEquipmentList}
+              columns={deviceCol} 
+              rowClassName="editable-row"
+              pagination={false}
+              size="small"
+             />
           </>}
            </div>
            </Form>
