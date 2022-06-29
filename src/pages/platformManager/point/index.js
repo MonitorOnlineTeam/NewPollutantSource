@@ -650,7 +650,7 @@ export default class MonitorPoint extends Component {
 
       </Menu>
     );
-    const { tabKey, pointCoefficientFlag } = this.state;
+    const { tabKey, pointCoefficientFlag,pollutantType,deviceManagerGasType,} = this.state;
     const pointFlag = tabKey == 5 && pointCoefficientFlag;
     return (
       <BreadcrumbWrapper title="监测点维护">
@@ -936,7 +936,7 @@ export default class MonitorPoint extends Component {
           </Modal>
 
           <Modal  //设备管理
-            title={"设备信息"}
+            title={pollutantType==1? '废水': deviceManagerGasType==1? '废气-常规CEMS' : '废气-VOCS' }
             visible={this.state.deviceManagerVisible}
             onCancel={() => { this.setState({ deviceManagerVisible: false }) }}
             width="95%"
@@ -944,7 +944,7 @@ export default class MonitorPoint extends Component {
             footer={false}
             wrapClassName={styles.deviceManagerSty}
           >
-            <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} gasType={this.state.deviceManagerGasType} pollutantType={this.state.pollutantType} />
+            <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN} gasType={deviceManagerGasType} pollutantType={pollutantType} />
           </Modal>
         </div>
         {/* </MonitorContent> */}

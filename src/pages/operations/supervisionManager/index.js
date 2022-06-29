@@ -361,7 +361,8 @@ const Index = (props) => {
       setDefaultEvaluate(echoData&&echoData.Evaluate? echoData.Evaluate : undefined)//评价默认值
 
       setDetailLoading(false)
-
+   
+      setDeviceInfoList(echoData.MonitorPointEquipmentList)
 
       form2.setFieldsValue({
         ...echoData,
@@ -1336,16 +1337,8 @@ const Index = (props) => {
 
           <div className={'deviceInfoSty'}>
            <TitleComponents text='设备信息'/>
-            <Table 
-              bordered
-              dataSource={deviceInfoList}
-              columns={deviceCol} 
-              rowClassName="editable-row"
-              pagination={false}
-              loading={pointParamesLoading}
-              size="small"
-             />
-            {/* {pollutantType==1?
+
+             {pollutantType==1?
             <>
                <Row className={'waterDeviceInfo'}>
             <Col span={12}>
@@ -1377,7 +1370,7 @@ const Index = (props) => {
             </>
             :
             <>
-           <Row>
+           {/* <Row>
             <Col span={12}>
             <Form.Item label='气态CEMS设备生产商' name='GasManufacturer' rules={[{ required: false, message: '请选择气态CEMS设备生产商' }]}>
              {selectPopover()}
@@ -1408,8 +1401,17 @@ const Index = (props) => {
                   <TextArea rows={1} placeholder='请输入' allowClear/>
               </Form.Item>
             </Col>
-          </Row>
-          </>} */}
+          </Row> */}
+           <Table 
+              bordered
+              dataSource={deviceInfoList}
+              columns={deviceCol} 
+              rowClassName="editable-row"
+              pagination={false}
+              loading={pointParamesLoading}
+              size="small"
+             />
+          </>} 
 
           <Form.Item hidden name="ID" >
                 <Input />
