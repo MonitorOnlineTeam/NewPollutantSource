@@ -1410,9 +1410,10 @@ const Index = (props) => {
               pagination={false}
               loading={pointParamesLoading}
               size="small"
+              style={{paddingBottom:10}}
              />
           </>} 
-
+  
           <Form.Item hidden name="ID" >
                 <Input />
               </Form.Item>

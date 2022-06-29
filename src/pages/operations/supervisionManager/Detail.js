@@ -412,6 +412,7 @@ const Index = (props) => {
               rowClassName="editable-row"
               pagination={false}
               size="small"
+              style={{paddingBottom:10}}
              />
           </>}
            </div>

@@ -435,6 +435,21 @@ export default {
                 },
               ]
             },
+
+            {
+              path: '/assetManage/customOrder', //客户订单
+              routes: [
+                {
+                  path: '/assetManage/customOrder',
+                  redirect: '/assetManage/customOrder/custopmRenew', // 重定向 默认为 
+                },
+                { // 客户续费
+                  name:'custopmRenew',
+                  path:'/assetManage/customOrder/custopmRenew',
+                  component: './platformManager/assetManage/custopmRenew',
+                },
+              ]
+            },
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -576,8 +591,8 @@ export default {
                       path: '/platformconfig/assetManage/reagentInfo',
                       component: './platformManager/assetManage/referenceMaterial',
                     },
-                    
-                  ]
+                  ],
+    
                 },
                 
                 {

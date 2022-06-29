@@ -42,7 +42,7 @@ class Login extends Component {
         return;
       }
       if(!isAgree){
-        message.error('请阅读并勾选用户监测数据许可协议');
+        message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
       dispatch({

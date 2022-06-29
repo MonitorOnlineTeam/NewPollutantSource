@@ -1,7 +1,7 @@
 /**
- * 功  能：设备信息
+ * 功  能：客户续费
  * 创建人：贾安波
- * 创建时间：2021.11.11
+ * 创建时间：2022.06.29
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
@@ -19,35 +19,36 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import NumTips from '@/components/NumTips'
-import settingDrawer from '@/locales/en-US/settingDrawer';
+import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'deviceInfo'
+const namespace = 'custopmRenew'
 
 
 
 
-const dvaPropsData =  ({ loading,deviceInfo,global }) => ({
-  tableDatas:deviceInfo.tableDatas,
-  pointDatas:deviceInfo.pointDatas,
-  tableLoading:deviceInfo.tableLoading,
-  tableTotal:deviceInfo.tableTotal,
+const dvaPropsData =  ({ loading,custopmRenew,global }) => ({
+  tableDatas:custopmRenew.tableDatas,
+  pointDatas:custopmRenew.pointDatas,
+  tableLoading:custopmRenew.tableLoading,
+  tableTotal:custopmRenew.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/addEquipmentInfo`],
   loadingEditConfirm: loading.effects[`${namespace}/editEquipmentInfo`],
-  monitoringTypeList:deviceInfo.monitoringTypeList,
-  manufacturerList:deviceInfo.manufacturerList,
-  pollutantTypeList:deviceInfo.pollutantTypeList,
+  monitoringTypeList:custopmRenew.monitoringTypeList,
+  manufacturerList:custopmRenew.manufacturerList,
+  pollutantTypeList:custopmRenew.pollutantTypeList,
   clientHeight: global.clientHeight,
   loadingManufacturer: loading.effects[`${namespace}/getManufacturerList`],
   loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
   loadingAddEditPollutantById :loading.effects[`${namespace}/addEditPollutantById`] || false,
   // loadingEquipmentName:loading.effects[`${namespace}/getEquipmentName`] || false,
   loadingAddEditEquipmentName:loading.effects[`${namespace}/addEditGetEquipmentName`] || false,
-  addEditPollutantTypeList:deviceInfo.addEditPollutantTypeList,
-  maxNum:deviceInfo.maxNum,
-  // equipmentNameList:deviceInfo.equipmentNameList,
-  addEditEquipmentNameList:deviceInfo.addEditEquipmentNameList,
+  addEditPollutantTypeList:custopmRenew.addEditPollutantTypeList,
+  maxNum:custopmRenew.maxNum,
+  // equipmentNameList:custopmRenew.equipmentNameList,
+  addEditEquipmentNameList:custopmRenew.addEditEquipmentNameList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -175,56 +176,59 @@ const Index = (props) => {
   },[manufacturerId])
   const columns = [
     {
-      title: '编号',
+      title: '账号',
       dataIndex: 'EquipmentCode',
       key:'EquipmentCode',
       align:'center',
     },
     {
-      title: '监测类别',
+      title: '姓名',
       dataIndex: 'PollutantTypeName',
       key:'PollutantTypeName',
       align:'center',
     },
     {
-      title: '监测类型',
+      title: '企业名称',
       dataIndex: 'PollutantName',
       key:'PollutantName',
       align:'center',
     },
     {
-      title: '设备名称',
+      title: '监测点名称',
       dataIndex: 'EquipmentName',
       key:'EquipmentName',
       align:'center',
     },
     {
-      title: '设备型号',
+      title: '服务器开始时间',
       dataIndex: 'EquipmentType',
       key:'EquipmentType',
       align:'center',
+      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
 
     {
-      title: '分析方法',
+      title: '服务器截止时间',
       dataIndex: 'AnalyticalMethod',
       key:'AnalyticalMethod',
       align:'center',
+      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
     },
     {
-      title: '设备品牌',
+      title: '状态',
       dataIndex: 'EquipmentBrand',
       key:'EquipmentBrand',
       align:'center',
+      
     },
     {
-      title: '设备厂家',
+      title: '创建人',
       dataIndex: 'ManufacturerName',
       key:'ManufacturerName',
       align:'center',
     },
     {
-      title: '状态',
+      title: '创建时间',
       dataIndex: 'Status',
       key:'Status', 
       align:'center',
@@ -236,12 +240,6 @@ const Index = (props) => {
           return <span><Tag color="red">停用</Tag></span>;
         }
       },
-    },
-    {
-      title: 'CIS同步编码',
-      dataIndex: 'CISCode',
-      key:'CISCode',
-      align:'center',
     },
     {
       title: <span>操作</span>,
@@ -382,70 +380,42 @@ const Index = (props) => {
     onValuesChange={onValuesChange}
   >  
       <Row>
-      <Form.Item label="设备名称" name="EquipmentName"  >
-            <Input placeholder="请输入设备名称" style={{width:200}} allowClear/>
+      <Form.Item label="账号" name="EquipmentName"  >
+            <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="监测类别" name="PollutantType"  style={{marginLeft:16,marginRight:16}}>
-      <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
-                 {
-                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-                  })
-                }   
+      <Form.Item label="企业名称" name="PollutantType"  style={{marginLeft:16,marginRight:-10}}>
+         <Input placeholder="请输入" style={{width:200}} allowClear/>
+      </Form.Item>
+      <Form.Item label="状态" name="Status"  >
+ 
+              <Select placeholder='请选择' allowClear style={{width:200}}>
+                  <Option>进行中</Option>
+                  <Option>已过期</Option>
               </Select>
-      </Form.Item>
-      <Form.Item label="监测类型" name="PollutantCode"  >
-              {loadingGetPollutantById? <Spin size='small' style={{width:200,textAlign:'left'}}/> 
-                :
-              <Select placeholder='请选择监测类型' allowClear style={{width:200}}>
-                 
-                 {
-                  pollutantTypeList[0]&&pollutantTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-                  })
-                }  
-              </Select>}
       </Form.Item>
       </Row>
       <Row>
-      <Form.Item label="状态" name="Status"  style={{marginRight:16}} >
-       <Select placeholder='请选择状态' allowClear style={{width:200}}>
-           <Option key={1} value={1}>启用</Option>
-           <Option key={2} value={2}>停用</Option>
-        </Select>
+      <Form.Item label="服务时间" name="Status"  style={{marginRight:16}} >
+      <RangePicker_   format="YYYY-MM-DD HH:mm:ss"  showTime="YYYY-MM-DD HH:mm:ss"style={{minWidth:450}}   allowClear />
       </Form.Item>
       <Form.Item>
       <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
           查询
      </Button>
-     <Button   onClick={()=>{ add()}} >
+     <Button    style={{marginRight:8}} onClick={()=>{form.resetFields()}}>
+          重置
+     </Button>
+     <Button   onClick={()=>{ add()}} style={{marginRight:8}} >
           添加
+     </Button>
+     <Button   type="primary" >
+          续费
      </Button>
      </Form.Item>
      </Row>
      </Form>
   }
-  const treeDatas = ()=> {
-    const list = [{
-      title: '设备厂家',
-      key:'1',
-      icon:<CreditCardFilled style={{color:'#1890ff'}}/>,
-      children:[],
-      selectable:false
-    }];
-    for (let i = 0; i < manufacturerList.length; i += 1) {
-      const key = manufacturerList[i].ID;
-      const treeNode = {
-        title:<div style={{display:'inline-block'}}> {manufacturerList[i].ManufacturerName }</div>,
-        key,
-        icon: <ProfileFilled  style={{color:'#1890ff'}}/>,
-        titles:manufacturerList[i].ManufacturerName
-      };
-  
-      list[0].children.push(treeNode);
-    }
-    return list;
-  }
+
   const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时的监测类型请求
     if(Object.keys(hangedValues).join() == 'PollutantType'){
       props.addEditPollutantById({id:hangedValues.PollutantType,type:1}) //监测类型
@@ -464,43 +434,22 @@ const Index = (props) => {
   const [pageIndex,setPageIndex]=useState(1)
 
 
-  const [ drawerVisible, setDrawerVisible ] = useState(true)
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
   return (
-    <div  className={styles.deviceInfoSty} style={{marginLeft:drawerVisible? 320 : 0}}>
-    <Drawer
-         // title="导航菜单"
-          placement={'left'}
-          closable={false}
-          onClose={()=>{setDrawerVisible(false)}}
-          visible={drawerVisible}
-          width={ 320}
-          mask={false}
-          keyboard={false}
-          zIndex={1}
-          onClose={()=>{setDrawerVisible(false)}} 
-          // getContainer={(Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body'}
-          bodyStyle={{ padding: '18px 8px' }}
-          style={{
-            marginTop: 64,
-          }}
-        >
-         
-         {loadingManufacturer?
-        <PageLoading />
-         :
-         <>
-        {manufacturerList.length? 
-          <Tree selectedKeys={[manufacturerId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
-          :
-        <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-        </>
-        }
-        
-    </Drawer>
-      <div onClick={()=>{setDrawerVisible(!drawerVisible)}} style={{position:'absolute',zIndex:999,left:drawerVisible? 'calc(320px - 24px)' : -24,top:'50vh', background:"#1890ff",cursor:'pointer',padding:'5px 0',borderRadius:'0 2px 2px 0',transition:'all .2s'}}> { drawerVisible?<CaretLeftFilled style={{color:'#fff'}}/> : <CaretRightFilled style={{color:'#fff'}}/>}</div>
+    <div  className={styles.custopmRenewSty} >
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
+        rowSelection={rowSelection} 
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
@@ -541,7 +490,7 @@ const Index = (props) => {
       </Row>
       <Row>
       <Col span={12}>
-        <Form.Item label="编号" name="EquipmentCode" rules={[  { required: true, message: '请输入编号'  }]} >
+        <Form.Item label="编号" name="EquipmentCode" rules={[  { required: true, message: '请输入设备名称'  }]} >
           <InputNumber placeholder="请输入编号"  allowClear/>
       </Form.Item>
        <NumTips />
