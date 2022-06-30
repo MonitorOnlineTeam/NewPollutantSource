@@ -49,11 +49,11 @@ class JzRecordContent extends Component {
                                 </tr>
                                 <tr>
                                     <td style={{ width: '16%', height: '30px', minWidth: 150 }}>分析仪原理</td>
-                                    <td style={{ width: '14%', height: '30px', minWidth: 150 }} colSpan="2">{rd[0].FxyYl}</td>
+                                    <td style={{ width: '14%', height: '30px', minWidth: 150 }} colSpan="2">{rd&&rd[0]&&rd[0].FxyYl}</td>
                                     <td style={{ width: '14%', height: '30px', minWidth: 150 }}>分析仪量程</td>
-                                    <td style={{ width: '14%', height: '30px', minWidth: 150 }}>{rd[0].FxyLc}</td>
+                                    <td style={{ width: '14%', height: '30px', minWidth: 150 }}>{rd&&rd[0]&&rd[0].FxyLc}</td>
                                     <td style={{ width: '14%', height: '30px', minWidth: 150 }}>计量单位</td>
-                                    <td style={{ width: '14%', height: '30px', minWidth: 150 }}>{rd[0].JlUnit}</td>
+                                    <td style={{ width: '14%', height: '30px', minWidth: 150 }}>{rd&&rd[0]&&rd[0].JlUnit}</td>
                                 </tr>
                                 <tr>
                                     <td rowSpan="2" style={{ width: '16%', height: '30px' }}>零点漂移校准</td>
@@ -65,12 +65,12 @@ class JzRecordContent extends Component {
                                     <td style={{ width: '14%', height: '30px' }}>校准后测试值</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LqNdz}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LdLastCalibrationValue}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LdCalibrationPreValue}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LdPy}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LdCalibrationIsOk}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LdCalibrationSufValue}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LqNdz}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdLastCalibrationValue}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdCalibrationPreValue}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdPy}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdCalibrationIsOk}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LdCalibrationSufValue}</td>
                                 </tr>
                                 <tr>
                                     <td rowSpan="2" style={{ width: '16%' }}>量程漂移校准</td>
@@ -82,12 +82,12 @@ class JzRecordContent extends Component {
                                     <td style={{ width: '14%', height: '30px' }}>校准后测试值</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].BqNdz}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LcLastCalibrationValue}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LcCalibrationPreValue}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LcPy}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LcCalibrationIsOk}</td>
-                                    <td style={{ width: '14%', height: '30px' }}>{rd[0].LcCalibrationSufValue}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].BqNdz}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcLastCalibrationValue}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcCalibrationPreValue}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcPy}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcCalibrationIsOk}</td>
+                                    <td style={{ width: '14%', height: '30px' }}>{rd&&rd[0]&&rd[0].LcCalibrationSufValue}</td>
                                 </tr>
                             </tbody>
                         </table>);
@@ -202,7 +202,7 @@ class JzRecordContent extends Component {
                                         校准日期
                             </td>
                             <td style={{ width: '16%', height: '30px', minWidth: 150 }}>
-                                {Content!==null?moment(Content.AdjustStartTime).format("YYYY-MM-DD"):null}
+                                {Content&&Content.AdjustStartTime? moment(Content.AdjustStartTime).format("YYYY-MM-DD"):null}
                             </td>
                         </tr>
                         <tr>

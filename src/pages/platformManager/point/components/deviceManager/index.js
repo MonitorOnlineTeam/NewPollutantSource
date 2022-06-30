@@ -85,10 +85,11 @@ const dvaDispatch = (dispatch) => {
         callback:callback
       })
     },
-    getManufacturerList: (payload) => { //厂商列表
+    getManufacturerList: (payload,callback) => { //厂商列表
       dispatch({
         type: `${namespace}/getManufacturerList`,
         payload: payload,
+        callback:callback,
       })
     },
     getSystemModelList: (payload) => { //列表 系统型号
@@ -162,7 +163,9 @@ const Index = (props) => {
 
   const initData = () => {
     // props.getMonitoringTypeList({})
-    props.getManufacturerList({})
+    props.getManufacturerList({},(data)=>{
+      // console.log(data)
+    })
     //设备信息
     props.getMonitoringTypeList2({})
 
@@ -623,6 +626,8 @@ const gasSyatemCancel = (record,type) =>{
   const [pageIndex2,setPageIndex2] = useState(1)
   const [pageSize2,setPageSize2] = useState(10)
   const onFinish2 = async (pageIndex2,pageSize2,cemsVal) => { //生成商弹出框 查询
+
+    setPageIndex2(pageIndex2)
     try {
       const values = await form2.validateFields();
       props.getSystemModelList({
@@ -654,13 +659,17 @@ const gasSyatemCancel = (record,type) =>{
 
   const popContent = <Form
   form={form2}
-  name="advanced_search2"
+  name="advanced_search3"
   onFinish={() => {setPageIndex2(1); onFinish2(1,pageSize2,cemsVal) }}
-  initialValues={{MonitoringType:266}}
+  initialValues={{
+    MonitoringType:266,
+    ManufacturerID: manufacturerList[0] && manufacturerList[0].ID,
+  }}
+
 >
   <Row>
     <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
-      <Select placeholder='请选择设备厂家' showSearch allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
+      <Select placeholder='请选择设备厂家' showSearch  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
         {
           manufacturerList[0] && manufacturerList.map(item => {
             return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
@@ -817,36 +826,36 @@ const gasSyatemCancel = (record,type) =>{
   const { monitoringTypeList2 } = props;
   const [parPopVisible, setParPopVisible] = useState(false) //监测设备参数弹出框
 
-  const systemInfo = () => {
-    return <Spin spinning={props.pointSystemInfoLoading}> 
-         <div style={{ paddingBottom: 10 }}>
-      <Row gutter={[16, 8]}>
-        <Col span={6}>
-          <Form.Item label="气态污染物CEMS设备生产商" name="GasManufacturer">
-            {selectPopover()}
-          </Form.Item>
-        </Col>
-        <Col span={6} >
-          <Form.Item label="气态污染物CEMS设备规格型号" name="GasEquipment">
-            <Input placeholder="请输入" />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={[16, 16]}>
-        <Col span={6}>
-          <Form.Item label="颗粒物CEMS设备生产商" name="PMManufacturer">
-            {selectPopover('pm')}
-          </Form.Item>
-        </Col>
-        <Col span={6} >
-          <Form.Item label="颗粒物CEMS设备规格型号" className={"specificationSty"} name='PMEquipment'>
-            <Input placeholder="请输入" />
-          </Form.Item>
-        </Col>
-      </Row>
-    </div>
-    </Spin>
-  }
+  // const systemInfo = () => {
+  //   return <Spin spinning={props.pointSystemInfoLoading}> 
+  //        <div style={{ paddingBottom: 10 }}>
+  //     <Row gutter={[16, 8]}>
+  //       <Col span={6}>
+  //         <Form.Item label="气态污染物CEMS设备生产商" name="GasManufacturer">
+  //           {selectPopover()}
+  //         </Form.Item>
+  //       </Col>
+  //       <Col span={6} >
+  //         <Form.Item label="气态污染物CEMS设备规格型号" name="GasEquipment">
+  //           <Input placeholder="请输入" />
+  //         </Form.Item>
+  //       </Col>
+  //     </Row>
+  //     <Row gutter={[16, 16]}>
+  //       <Col span={6}>
+  //         <Form.Item label="颗粒物CEMS设备生产商" name="PMManufacturer">
+  //           {selectPopover('pm')}
+  //         </Form.Item>
+  //       </Col>
+  //       <Col span={6} >
+  //         <Form.Item label="颗粒物CEMS设备规格型号" className={"specificationSty"} name='PMEquipment'>
+  //           <Input placeholder="请输入" />
+  //         </Form.Item>
+  //       </Col>
+  //     </Row>
+  //   </div>
+  //   </Spin>
+  // }
 
   const [count, setCount] = useState(513);
   const handleAdd = () => { //添加设备
@@ -911,20 +920,25 @@ const gasSyatemCancel = (record,type) =>{
   }
  const popVisibleClick = () =>{
   setParPopVisible(!parPopVisible);
-  form3.resetFields();
+  // form3.resetFields();
   form3.setFieldsValue({
-    ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
+    // ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,
     PollutantType: defaultParId,
   })
   setTimeout(()=>{
-    onFinish3()
+    setPageIndex3(1); onFinish3(1,pageSize3)
   })
  }
  const [manufacturerPopVisible,setManufacturerPopVisible] = useState(false)
  const manufacturerPopVisibleClick = () =>{ //cems设备生产商
   setManufacturerPopVisible(true)
+  // form2.resetFields();
   form.setFieldsValue({'systemName': cemsVal})
-  onFinish2(1,10,cemsVal)
+  // form2.setFieldsValue({ ManufacturerId:manufacturerList[0] && manufacturerList[0].ID,})
+  setTimeout(()=>{
+    onFinish2(1,10,cemsVal)
+  })
+  
  }
 
 
@@ -1117,7 +1131,7 @@ const gasSyatemCancel = (record,type) =>{
         onFinish={() => {setPageIndex3(1); onFinish3(1,pageSize3) }}
         onValuesChange={onValuesChange3}
         initialValues={{
-
+          ManufacturerId: manufacturerList[0] && manufacturerList[0].ID,
         }}
       >
         <Row>

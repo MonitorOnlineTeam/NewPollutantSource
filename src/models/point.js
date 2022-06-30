@@ -360,6 +360,7 @@ export default Model.extend({
             const result = yield call(GetManufacturerList, payload);
             if (result.IsSuccess) {
               yield update({ manufacturerList: result.Datas? result.Datas.mlist : []})
+              callback(result.Datas? result.Datas.mlist : [])
             }else{
               message.error(result.Message)
             }
