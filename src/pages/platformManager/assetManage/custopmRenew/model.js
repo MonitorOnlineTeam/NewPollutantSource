@@ -21,6 +21,8 @@ export default Model.extend({
     maxNum:null,
     equipmentNameList:[],
     addEditEquipmentNameList:[],
+    tableDetailDatas: [],
+    tableDetailTotal: 0,
   },
   effects: {
     *getEquipmentInfoList({ payload, callback }, { call, put, update }) { //列表

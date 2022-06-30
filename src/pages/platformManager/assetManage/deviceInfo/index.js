@@ -547,7 +547,7 @@ const Index = (props) => {
        <NumTips />
       </Col>
       <Col span={12}>
-        <Form.Item label="监测类别" name="PollutantType" rules={[  { required: true, message: '请输入监测类别'  }]} >
+        <Form.Item label="监测类别" name="PollutantType" rules={[  { required: true, message: '请选择监测类别'  }]} >
             <Select placeholder='请选择监测类别' allowClear >
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
@@ -574,7 +574,7 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请输入监测类型'  }]}>
+        <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请选择监测类型'  }]}>
               {loadingAddEditPollutantById? <Spin size='small' /> 
                 :
               <Select placeholder='请选择监测类型' allowClear>

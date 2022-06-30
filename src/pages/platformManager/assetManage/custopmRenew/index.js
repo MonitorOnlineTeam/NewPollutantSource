@@ -43,12 +43,12 @@ const dvaPropsData =  ({ loading,custopmRenew,global }) => ({
   loadingManufacturer: loading.effects[`${namespace}/getManufacturerList`],
   loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
   loadingAddEditPollutantById :loading.effects[`${namespace}/addEditPollutantById`] || false,
-  // loadingEquipmentName:loading.effects[`${namespace}/getEquipmentName`] || false,
   loadingAddEditEquipmentName:loading.effects[`${namespace}/addEditGetEquipmentName`] || false,
   addEditPollutantTypeList:custopmRenew.addEditPollutantTypeList,
   maxNum:custopmRenew.maxNum,
-  // equipmentNameList:custopmRenew.equipmentNameList,
   addEditEquipmentNameList:custopmRenew.addEditEquipmentNameList,
+  tableDetailDatas:custopmRenew.tableDetailDatas,
+  tableDetailTotal:custopmRenew.tableDetailTotal,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -155,7 +155,7 @@ const Index = (props) => {
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal, monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
   useEffect(() => {
     props.getManufacturerList({pageIndex:1,pageSize:100000},(data)=>{
       if(data[0]){
@@ -260,7 +260,55 @@ const Index = (props) => {
       }
     },
   ];
-
+const detailCol = [{
+  title: '编号',
+  dataIndex: 'EquipmentCode',
+  key:'EquipmentCode',
+  align:'center',
+},
+{
+  title: '费用类型',
+  dataIndex: 'PollutantName',
+  key:'PollutantName',
+  align:'center',
+},
+{
+  title: '续费时长',
+  dataIndex: 'EquipmentBrand',
+  key:'EquipmentBrand',
+  align:'center',
+  
+},
+{
+  title: '创建人',
+  dataIndex: 'ManufacturerName',
+  key:'ManufacturerName',
+  align:'center',
+},
+{
+  title: '创建时间',
+  dataIndex: 'Status',
+  key:'Status', 
+  align:'center',
+  sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+},
+{
+  title: <span>操作</span>,
+  dataIndex: 'x',
+  key: 'x',
+  align: 'center',
+  width:180,
+  render: (text, record) =>{
+    return  <span>
+           <Fragment> <Tooltip title="删除">
+              <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
+              <a href="#" ><DelIcon/></a>
+           </Popconfirm>
+           </Tooltip>
+           </Fragment> 
+         </span>
+  }
+},]
  
   const edit = async (record) => {
     setFromVisible(true)
@@ -408,7 +456,7 @@ const Index = (props) => {
      <Button   onClick={()=>{ add()}} style={{marginRight:8}} >
           添加
      </Button>
-     <Button   type="primary" >
+     <Button   type="primary"  onClick={()=>{setRenewVisible(true)}}>
           续费
      </Button>
      </Form.Item>
@@ -444,7 +492,8 @@ const Index = (props) => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  return (
+  const [renewVisible,setRenewVisible ] = useState(false)
+   return (
     <div  className={styles.custopmRenewSty} >
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
@@ -464,7 +513,7 @@ const Index = (props) => {
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={`${type==='add'? '添加':'编辑'} - ${deveiceName}` }
+        title={'添加'}
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
@@ -481,23 +530,15 @@ const Index = (props) => {
       }}
       onValuesChange={onAddEditValuesChange}
     > 
-      <Row>
-        <Col span={24}>
       <Form.Item   name="ID" hidden>
           <Input />
       </Form.Item> 
-      </Col>
-      </Row>
-      <Row>
-      <Col span={12}>
-        <Form.Item label="编号" name="EquipmentCode" rules={[  { required: true, message: '请输入设备名称'  }]} >
-          <InputNumber placeholder="请输入编号"  allowClear/>
+        <Form.Item label="账号" name="EquipmentCode" rules={[  { required: true, }]} >
+          <InputNumber placeholder="请输入账号"  allowClear/>
       </Form.Item>
        <NumTips />
-      </Col>
-      <Col span={12}>
-        <Form.Item label="监测类别" name="PollutantType" rules={[  { required: true, message: '请输入监测类别'  }]} >
-            <Select placeholder='请选择监测类别' allowClear >
+        <Form.Item label="企业" name="PollutantType" rules={[  { required: true, }]} >
+            <Select placeholder='请选择企业' allowClear >
                  {
                   monitoringTypeList[0]&&monitoringTypeList.map(item => {
                     return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -505,15 +546,11 @@ const Index = (props) => {
                 }   
               </Select>
       </Form.Item>
-      </Col>
-      </Row>
 
-      <Row>
-      <Col span={12}>
-        <Form.Item label="设备名称" name="EquipmentName" rules={[  { required: true, message: '请选择设备名称'  }]} >
+        <Form.Item label="监测点" name="EquipmentName" rules={[  { required: true,  }]} >
           {loadingAddEditEquipmentName? <Spin size='small' /> 
                 :
-              <Select placeholder='请选择设备名称' allowClear>
+              <Select placeholder='请选择' allowClear>
                           {
                    addEditEquipmentNameList[0]&&addEditEquipmentNameList.map(item => {
                     return <Option key={item.ID} value={item.Name}>{item.Name}</Option>
@@ -521,12 +558,10 @@ const Index = (props) => {
                 }   
               </Select>}
       </Form.Item>
-      </Col>
-      <Col span={12}>
-        <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请输入监测类型'  }]}>
+        <Form.Item label="监测点" name="PollutantCode"  rules={[  { required: true, }]}>
               {loadingAddEditPollutantById? <Spin size='small' /> 
                 :
-              <Select placeholder='请选择监测类型' allowClear>
+              <Select placeholder='请选择' allowClear>
                           {
                    addEditPollutantTypeList[0]&&addEditPollutantTypeList.map(item => {
                     return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -534,50 +569,63 @@ const Index = (props) => {
                 }   
               </Select>}
       </Form.Item>
-      </Col>
-      </Row>
 
-      <Row>
-      <Col span={12}>
-        <Form.Item label="设备品牌" name="EquipmentBrand" rules={[  { required: true, message: '请选择监测类型'  }]} >
-             <Input placeholder='请输入设备品牌' allowClear/>
+        <Form.Item label="续费时长" name="EquipmentBrand" rules={[  { required: true, }]} >
+             <Input placeholder='请输入' allowClear/>
       </Form.Item>
-      
-      </Col>
-       <Col span={12}>
-        <Form.Item label="设备型号" name="EquipmentType" rules={[  { required: true, message: '请输入设备型号'  }]} >
-             <Input placeholder='请输入设备型号' allowClear/>
-      </Form.Item>
-      
-      </Col>
-      </Row>
 
-      <Row>
-      <Col span={12}>
-        <Form.Item label="分析方法" name="AnalyticalMethod" rules={[  { required: true, message: '请输入分析方法'  }]} >
-             <Input placeholder='请输入分析方法' allowClear/>
-      </Form.Item>
-      
-      </Col>
-      <Col span={12}>
-        <Form.Item label="CIS同步编码" name="CISCode">
-        <Input placeholder='请输入CIS同步编码' allowClear/>
-      </Form.Item>
-      </Col>
-      </Row>
-
-      <Row>
-      <Col span={12}>
-        <Form.Item label="状态" name="Status" >
-           <Radio.Group>
-             <Radio value={1}>启用</Radio>
-             <Radio value={2}>停用</Radio>
-         </Radio.Group>
-      </Form.Item>
-      </Col>
-      </Row>
     </Form>
       </Modal>
+      <Modal
+        title={'续费'}
+        visible={renewVisible}
+        onOk={onModalOk}
+        confirmLoading={loadingEditConfirm}
+        onCancel={()=>{setRenewVisible(false)}}
+        className={styles.fromModal}
+        destroyOnClose
+        
+      >
+    <div>续费时长:</div>
+    <Radio.Group size="small" style={{ marginTop: 16 }}>
+      {
+        [1,2,3,4,5,6,7,8,9,].map(item=> <Radio.Button value={item}>{item}</Radio.Button>)
+      }
+    </Radio.Group><span style={{paddingLeft:5}}>个月</span>
+    <div>
+    <Radio.Group size="small" style={{ marginTop: 5 }}>
+      {
+        [1,2,3,4,5,].map(item=> <Radio.Button value={item}>{item}</Radio.Button>)
+      }
+    </Radio.Group><span style={{paddingLeft:5}}>年</span>
+
+    <Row style={{ marginTop: 24 }}>续费后的时间为：<span>{}</span></Row>
+    </div>
+      </Modal>
+
+      <Modal
+        title={'续费'}
+        visible={renewVisible}
+        onOk={onModalOk}
+        confirmLoading={loadingEditConfirm}
+        onCancel={()=>{setRenewVisible(false)}}
+        className={styles.fromModal}
+        destroyOnClose
+        
+      >
+      <SdlTable
+        loading = {tableLoading}
+        bordered
+        dataSource={tableDetailDatas}
+        columns={detailCol}
+        pagination={{
+          // total:tableDetailTotal,
+          // pageSize: pageSize,
+          // current: pageIndex,
+          // onChange: handleTableChange2,
+        }}
+      />
+        </Modal>
         </div>
   );
 };

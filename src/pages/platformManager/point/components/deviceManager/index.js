@@ -161,7 +161,7 @@ const Index = (props) => {
   }, []);
 
   const initData = () => {
-    props.getMonitoringTypeList({})
+    // props.getMonitoringTypeList({})
     props.getManufacturerList({})
     //设备信息
     props.getMonitoringTypeList2({})
@@ -188,7 +188,7 @@ const Index = (props) => {
     //废水 废气   默认加载监测参数
         props.getPollutantById2({ id:defaultParId,type:1 },(data)=>{
           setDefaultPollData(data)
-          props.updateState({ pollutantTypeList: data})
+          props.updateState({ pollutantTypeList: data}) 
         })
     
 
@@ -628,7 +628,7 @@ const gasSyatemCancel = (record,type) =>{
       props.getSystemModelList({
         pageIndex: pageIndex2,
         pageSize: pageSize2,
-        SystemName:popVisible || cemsVal===465? 465 : 466,
+        SystemName:cemsVal,
         ...values,
       })
     } catch (errorInfo) {
@@ -639,23 +639,24 @@ const gasSyatemCancel = (record,type) =>{
     const values = await form2.validateFields();
     setPageSize2(PageSize)
     setPageIndex2(PageIndex)
-    props.getSystemModelList({...values,SystemName:popVisible || cemsVal===465? 465 : 466, PageIndex,PageSize})
+    props.getSystemModelList({...values,SystemName: cemsVal, PageIndex,PageSize})
   }
   const [popVisible, setPopVisible] = useState(false)
   const [pmPopVisible, setPmPopVisible] = useState(false) //颗粒物弹出框
   
-   useEffect(()=>{
-     if(pmPopVisible || popVisible){
-       form2.resetFields()
-       onFinish2(1,10)
-     }
-   },[pmPopVisible,popVisible])
+  //  useEffect(()=>{
+  //    if(pmPopVisible || popVisible){
+  //      form2.resetFields()
+  //      onFinish2(1,10)
+  //    }
+  //  },[pmPopVisible,popVisible])
   const { monitoringTypeList } = props;
 
   const popContent = <Form
   form={form2}
   name="advanced_search2"
-  onFinish={() => {setPageIndex2(1); onFinish2(1,pageSize2) }}
+  onFinish={() => {setPageIndex2(1); onFinish2(1,pageSize2,cemsVal) }}
+  initialValues={{MonitoringType:266}}
 >
   <Row>
     <Form.Item style={{ marginRight: 8 }} name='ManufacturerID' >
@@ -670,14 +671,14 @@ const gasSyatemCancel = (record,type) =>{
     <Form.Item style={{ marginRight: 8 }} name="SystemModel">
       <Input allowClear placeholder="请输入系统型号" />
     </Form.Item>
-    <Form.Item style={{ marginRight: 8 }} name="MonitoringType">
-      <Select allowClear placeholder="请选择监测类别" style={{ width: 150 }}>
+    <Form.Item style={{ marginRight: 8 }} name="MonitoringType" hidden>
+      {/* <Select allowClear placeholder="请选择监测类别" style={{ width: 150 }}>
         {
           monitoringTypeList[0] && monitoringTypeList.map(item => {
             return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
           })
         }
-      </Select>
+      </Select> */}
 
     </Form.Item>
     <Form.Item>
@@ -698,20 +699,20 @@ const gasSyatemCancel = (record,type) =>{
             }}
   />
 </Form>
-  const selectPopover = (type) => {
-    return <Popover
-      title=""
-      trigger="click"
-      visible={type === 'pm' ? pmPopVisible : popVisible}
-      onVisibleChange={(visible) => { type === 'pm' ? setPmPopVisible(visible) : setPopVisible(visible) }}
-      placement={"bottom"}
-      getPopupContainer={trigger => trigger.parentNode}
-      content={popContent }
-    >
-      <Select onChange={type === 'pm' ? onPmClearChoice : onClearChoice} allowClear showSearch={false} value={type === 'pm' ? pmchoiceData : gaschoiceData} dropdownClassName={styles.popSelectSty} placeholder="请选择">
-      </Select>
-    </Popover>
-  }
+  // const selectPopover = (type) => {
+  //   return <Popover
+  //     title=""
+  //     trigger="click"
+  //     visible={type === 'pm' ? pmPopVisible : popVisible}
+  //     onVisibleChange={(visible) => { type === 'pm' ? setPmPopVisible(visible) : setPopVisible(visible) }}
+  //     placement={"bottom"}
+  //     getPopupContainer={trigger => trigger.parentNode}
+  //     content={popContent }
+  //   >
+  //     <Select onChange={type === 'pm' ? onPmClearChoice : onClearChoice} allowClear showSearch={false} value={type === 'pm' ? pmchoiceData : gaschoiceData} dropdownClassName={styles.popSelectSty} placeholder="请选择">
+  //     </Select>
+  //   </Popover>
+  // }
   const deviceCol = [
     // {
     //   title: '编号',
@@ -725,12 +726,12 @@ const gasSyatemCancel = (record,type) =>{
       key: 'ManufacturerName',
       align: 'center',
     },
-    {
-      title: '设备品牌',
-      dataIndex: 'EquipmentBrand',
-      key: 'EquipmentBrand',
-      align: 'center',
-    },
+    // {
+    //   title: '设备品牌',
+    //   dataIndex: 'EquipmentBrand',
+    //   key: 'EquipmentBrand',
+    //   align: 'center',
+    // },
     {
       title: '设备名称',
       dataIndex: 'EquipmentName',
@@ -749,18 +750,18 @@ const gasSyatemCancel = (record,type) =>{
       key: 'EquipmentType',
       align: 'center',
     },
-    {
-      title: '监测类型',
-      dataIndex: 'PollutantName',
-      key: 'PollutantName',
-      align: 'center',
-    },
-    {
-      title: '监测类别',
-      dataIndex: 'PollutantTypeName',
-      key: 'PollutantTypeName',
-      align: 'center',
-    },
+    // {
+    //   title: '监测类型',
+    //   dataIndex: 'PollutantName',
+    //   key: 'PollutantName',
+    //   align: 'center',
+    // },
+    // {
+    //   title: '监测类别',
+    //   dataIndex: 'PollutantTypeName',
+    //   key: 'PollutantTypeName',
+    //   align: 'center',
+    // },
     // {
     //   title: '状态',
     //   dataIndex: 'Status',
@@ -790,8 +791,10 @@ const gasSyatemCancel = (record,type) =>{
   const onFinish3 = async (pageIndexs,pageSizes) => {  //查询 设备信息 除分页 每次查询页码重置为1
     try {
       const values = await form3.validateFields();
+      const pollutantCode = formDevice.getFieldValue('PollutantCode');
       props.getEquipmentInfoList({
         ...values,
+        PollutantCode:pollutantCode,
         PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:pageIndex3,
         PageSize:pageSizes?pageSizes:pageSize3
       })
@@ -813,72 +816,6 @@ const gasSyatemCancel = (record,type) =>{
   }
   const { monitoringTypeList2 } = props;
   const [parPopVisible, setParPopVisible] = useState(false) //监测设备参数弹出框
-  // const selectPopover2 = () => { //设备信息
-  //   return <Tooltip 
-  //   // title=""
-  //   trigger="click"
-  //   visible={parPopVisible}
-  //   onVisibleChange={(visible) => { setParPopVisible(visible) }}
-  //   placement={"right"}
-  //   // getPopupContainer={trigger => trigger.parentNode}
-  //   destroyTooltipOnHide={true}
-  //   title={
-  //     <Form
-  //       form={form3}
-  //       name="advanced_search3"
-  //       onFinish={() => { onFinish3() }}
-  //       onValuesChange={onValuesChange3}
-  //     >
-  //       <Row>
-  //         <span>
-  //         <Form.Item style={{ marginRight: 8 }} name='ManufacturerId' >
-  //           <Select placeholder='请选择设备厂家' showSearch allowClear filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
-  //             {
-  //               manufacturerList[0] && manufacturerList.map(item => {
-  //                 return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
-  //               })
-  //             }
-  //           </Select>
-  //         </Form.Item>
-  //         </span>
-  //         <Form.Item style={{ marginRight: 8 }} name="EquipmentType">
-  //           <Input allowClear placeholder="请输入设备型号" style={{ width: 150 }} />
-  //         </Form.Item>
-  //         <Form.Item style={{ marginRight: 8 }} name="MonitoringType">
-  //           <Select allowClear placeholder="请选择监测类别" style={{ width: 150 }}>
-  //             {
-  //               monitoringTypeList2[0] && monitoringTypeList2.map(item => {
-  //                 return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-  //               })
-  //             }
-  //           </Select>
-  //         </Form.Item>
-  //         <Form.Item style={{ marginRight: 8 }} name="PollutantCode"  >
-  //           {props.loadingGetPollutantById ? <Spin size='small' style={{ width: 150, textAlign: 'left' }} />
-  //             :
-  //             <Select placeholder='请选择监测类型' allowClear style={{ width: 150 }}>
-
-  //               {
-  //                 pollutantTypeList[0] && pollutantTypeList.map(item => {
-  //                   return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-  //                 })
-  //               }
-  //             </Select>}
-  //         </Form.Item>
-  //         <Form.Item>
-  //           <Button type="primary" htmlType='submit'>
-  //             查询
-  //          </Button>
-  //         </Form.Item>
-  //       </Row>
-  //       <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 900 }} loading={props.loadingGetEquipmentInfoList} bordered dataSource={equipmentInfoList} columns={deviceCol} />
-  //     </Form>}
-  // >
-  //   <Select onChange={onParClearChoice} allowClear showSearch={false} value={parchoiceData} dropdownClassName={styles.popSelectSty} placeholder="请选择">
-  //   </Select>
-  // </Tooltip >
-
-  // }
 
   const systemInfo = () => {
     return <Spin spinning={props.pointSystemInfoLoading}> 
@@ -918,6 +855,8 @@ const gasSyatemCancel = (record,type) =>{
       return
     }else{
     formDevice.resetFields();
+    formDevice.setFieldsValue({PollutantCode:defaultPollData&&defaultPollData[0]? defaultPollData[0].ID : null})
+    setDevicePollutantName(defaultPollData&&defaultPollData[0]? defaultPollData[0].Name : null)
     setEditingKey(editingKey + 1)
     const newData = {
       PollutantCode: "",
@@ -992,7 +931,6 @@ const gasSyatemCancel = (record,type) =>{
  const [cemsVal,setCemsVal] = useState(465)
  const cemsChange = (val) =>{
   setCemsVal(val)
-  onFinish2(1,10,val)
  }
   const EditableCell = ({
     editing,
@@ -1043,7 +981,7 @@ const gasSyatemCancel = (record,type) =>{
             <>{ parLoading? <Spin size='small' style={{ textAlign: 'left' }} />
                      :
                      <Form.Item  name={`PollutantCode`} style={{ margin: 0 }}>
-            <Select placeholder='请选择' disabled={isManual? true : false} allowClear={isManual?false:true} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
+            <Select placeholder='请选择' disabled={isManual? true : false} allowClear={false} showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} >
             {
              pollutantTypeList2[0] && pollutantTypeList2.map(item => {
             return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
@@ -1206,7 +1144,7 @@ const gasSyatemCancel = (record,type) =>{
               }
             </Select>
           </Form.Item>
-          <Form.Item style={{ marginRight: 8 }} name="PollutantCode"  >
+          {/* <Form.Item style={{ marginRight: 8 }} name="PollutantCode"  >
             {props.loadingGetPollutantById ? <Spin size='small' style={{ width: 150, textAlign: 'left' }} />
               :
               <Select placeholder='请选择监测类型' allowClear showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
@@ -1217,7 +1155,7 @@ const gasSyatemCancel = (record,type) =>{
                   })
                 }
               </Select>}
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType='submit'>
               查询

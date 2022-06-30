@@ -34,7 +34,6 @@ export default Model.extend({
         pointRealTimeList:[],
         pointHourItemList:[],
         paramCodeList:[],
-        monitoringTypeList:[],
         manufacturerList:[],//设备厂家
         monitoringTypeList:[],//监测类别
         systemModelList:[],//系统型号
