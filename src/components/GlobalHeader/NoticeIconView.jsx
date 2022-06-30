@@ -85,6 +85,11 @@ export default class GlobalHeaderRight extends PureComponent {
               <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png">
               </Avatar>
             );
+          }else{
+            newNotice.avatar = (
+              <Avatar style={{ verticalAlign: 'middle' }} src="/02Warr.png">
+              </Avatar>
+            );
           }
         }
         return newNotice;
@@ -136,8 +141,8 @@ export default class GlobalHeaderRight extends PureComponent {
           // count={currentUserNoticeCnt.unreadCount}
           count={notices.length}
           onItemClick={(item, tabProps) => {
-            // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警 - 不弹窗
-            if (item.AlarmType == 6 || item.AlarmType == 7 || item.AlarmType == 8 || item.AlarmType == 9) {
+            // 6 过期时间报警 7 余量不足报警  8工作状态异常报警  9压力异常报警 - 不弹窗 16消耗配额预警   17疑似数据造假
+            if (item.AlarmType == 6 || item.AlarmType == 7 || item.AlarmType == 8 || item.AlarmType == 9 || item.AlarmType == 16 || item.AlarmType == 17) {
               return;
             }
             this.setState({

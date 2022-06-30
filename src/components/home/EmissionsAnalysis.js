@@ -3,8 +3,10 @@ import { connect } from 'dva';
 import styles from '@/pages/home/index.less';
 import Marquee from '@/components/Marquee';
 import ReactEcharts from 'echarts-for-react';
+import { Empty } from 'antd'
 @connect(({ loading, home }) => ({
   AllMonthEmissionsByPollutant: home.AllMonthEmissionsByPollutant,
+  isOnlyCO2: home.isOnlyCO2,
 }))
 class MonitoringStatus extends Component {
   constructor(props) {
@@ -46,6 +48,9 @@ class MonitoringStatus extends Component {
       dyhwdate,
       dyhwdata,
       dyhwAnalData,
+      eyhtdata,
+      eyhtdate,
+      eyhtAnalData,
     } = this.props.AllMonthEmissionsByPollutant;
     let currentMonth = this.props.currentMonth;
     let color = [];
@@ -101,7 +106,7 @@ class MonitoringStatus extends Component {
       xAxisData = dyhwdate;
       color = ['#03b3ff'];
 
-    } else {
+    } else if (type === 3) {
       // SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder.toFixed(2) : 0;
       SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder : 0;
       let outed = 0;
@@ -121,6 +126,28 @@ class MonitoringStatus extends Component {
         i++;
       });
       xAxisData = eyhldate;
+
+      color = ['#40ccdd'];
+    } else if (type === 4) {
+      // SurplusDisplacement = (dyhwAnalData.length !== 0 && dyhwAnalData.Remainder) ? dyhwAnalData.Remainder.toFixed(2) : 0;
+      SurplusDisplacement = (eyhtAnalData.length !== 0 && eyhtAnalData.Remainder) ? eyhtAnalData.Remainder : 0;
+      let outed = 0;
+      if (SurplusDisplacement > 0) {
+        outed = SurplusDisplacement / (12 - Number.parseInt(currentMonth));
+        title = `余${SurplusDisplacement}(t)`;
+      } else {
+        title = `超${Math.abs(SurplusDisplacement)}(t)`;
+      }
+      eyhtdata.map((ele) => {
+        if (Number.parseInt(currentMonth) < i) {
+          // seriesData.push({ value: outed.toFixed(2), itemStyle: { normal: { color: '#051732', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+          seriesData.push({ value: outed, itemStyle: { normal: { color: 'transparent', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } });
+        } else {
+          seriesData.push(ele == 0 ? { value: ele, itemStyle: { normal: { color: '#eb5c45', barBorderColor: 'tomato', barBorderWidth: 1, barBorderRadius: 0, borderType: "dotted" } } } : ele);
+        }
+        i++;
+      });
+      xAxisData = eyhtdate;
 
       color = ['#40ccdd'];
     }
@@ -143,7 +170,7 @@ class MonitoringStatus extends Component {
         }
       },
       grid: {
-        left: '-10%',
+        left: '-16%',
         right: '4%',
         bottom: '-10%',
         containLabel: true
@@ -242,7 +269,7 @@ class MonitoringStatus extends Component {
   }
 
   render() {
-    const { AllMonthEmissionsByPollutant, DGIMN } = this.props;
+    const { AllMonthEmissionsByPollutant, DGIMN, isOnlyCO2 } = this.props;
     const {
       ycAnalData,
       eyhlAnalData,
@@ -252,22 +279,28 @@ class MonitoringStatus extends Component {
     // 计算排污许可情况
     let ycLink;
     if (ycAnalData && ycAnalData.linkFlag !== undefined && ycAnalData.length !== 0) {
-      ycLink = `${ Math.abs(ycAnalData.linkFlag.toFixed(2))
-  }% (${ ycAnalData.monthSum.toFixed(2) } /${ycAnalData.flag.toFixed(2)})`;
+      ycLink = `${Math.abs(ycAnalData.linkFlag.toFixed(2))
+        }% (${ycAnalData.monthSum.toFixed(2)} /${ycAnalData.flag.toFixed(2)})`;
     }
     let dyhwLink;
     if (dyhwAnalData && dyhwAnalData.linkFlag !== undefined && dyhwAnalData.length !== 0) {
       dyhwLink = `${Math.abs(dyhwAnalData.linkFlag.toFixed(2))}%(${dyhwAnalData.monthSum.toFixed(2)}/${dyhwAnalData.flag.toFixed(2)})`;
     }
     let eyhlLink;
-    if (eyhlAnalData && dyhwAnalData.linkFlag !== undefined && eyhlAnalData.length !== 0) {
+    if (eyhlAnalData && eyhlAnalData.linkFlag !== undefined && eyhlAnalData.length !== 0) {
       eyhlLink = `${Math.abs(eyhlAnalData.linkFlag.toFixed(2))}%(${eyhlAnalData.monthSum.toFixed(2)}/${eyhlAnalData.flag.toFixed(2)})`;
+    }
+
+    let eyhtLink;
+    if (eyhtAnalData && eyhtAnalData.linkFlag !== undefined && eyhtAnalData.length !== 0) {
+      eyhtLink = `${Math.abs(eyhtAnalData.linkFlag.toFixed(2))}%(${eyhtAnalData.monthSum.toFixed(2)}/${eyhtAnalData.flag.toFixed(2)})`;
     }
 
     if (DGIMN) {
       ycLink = ycAnalData.monthSum;
       dyhwLink = dyhwAnalData.monthSum;
       eyhlLink = eyhlAnalData.monthSum;
+      eyhtLink = eyhtAnalData.monthSum;
     }
     return (
       <>
@@ -276,7 +309,7 @@ class MonitoringStatus extends Component {
         </div>
         {
           (dyhwAnalData.monthList || ycAnalData.monthList || eyhlAnalData.monthList || eyhtAnalData.monthList) ?
-            <div style={{ height: 'calc(100% - 30px)', overflowY: 'auto', display: 'flex', flexDirection: 'column'}}>
+            <div style={{ height: 'calc(100% - 30px)', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
               {/* 氮氧化物排污许可情况 */}
               {
                 dyhwAnalData.monthList && <div className={`${styles.NOx} ${styles.content}`}>
@@ -353,14 +386,48 @@ class MonitoringStatus extends Component {
                   <div className={styles.contentTitle}>
                     <p>{!DGIMN ? '二氧化碳排污许可情况' : '二氧化碳排污情况'}</p>
                   </div>
-                  <div className={styles.pointcontent} style={{ paddingBottom: 0 }}>
-                    <div className={styles.echartBox} style={{ width: '100%' }}>
+                  <div className={styles.pointcontent}>
+                    <div className={styles.echartBox}>
                       <ReactEcharts
-                        option={this.getEyhtOptions()}
+                        // option={this.getEyhtOptions()}
+                        option={this.getlicense(4)}
                         style={{ height: '100%' }}
                         className="echarts-for-echarts"
                         theme="my_theme"
                       />
+                    </div>
+                    <div className={styles.desc}>
+                      {!DGIMN ? '本年度累计排放量占比' : '本年度累计排放量'}
+                      <br />
+                      {eyhtLink}
+                    </div>
+                  </div>
+                </div>
+              }
+              {
+                !isOnlyCO2 && <div className={`${styles.smoke} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>甲烷排放量统计情况</p>
+                  </div>
+                  <div className={styles.pointcontent} style={{ paddingBottom: 0 }}>
+                    {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> */}
+                    <div className={styles.notData} style={{ width: '100%' }}>
+                      <img src="/nodata1.png" style={{ width: '70px', dispatch: 'block' }} />
+                      <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                    </div>
+                  </div>
+                </div>
+              }
+              {
+                !isOnlyCO2 && <div className={`${styles.SO2} ${styles.content}`}>
+                  <div className={styles.contentTitle}>
+                    <p>氧化亚氮排放量统计情况</p>
+                  </div>
+                  <div className={styles.pointcontent} style={{ paddingBottom: 0 }}>
+                    {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> */}
+                    <div className={styles.notData} style={{ width: '100%' }}>
+                      <img src="/nodata1.png" style={{ width: '70px', dispatch: 'block' }} />
+                      <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
                     </div>
                   </div>
                 </div>
