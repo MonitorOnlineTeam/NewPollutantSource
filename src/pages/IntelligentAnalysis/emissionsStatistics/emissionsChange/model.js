@@ -14,6 +14,8 @@ import {
 } from './service';
 import moment from 'moment';
 import { message } from 'antd';
+import webConfig from '@public/webConfig';
+
 export default Model.extend({
   namespace: 'emissionsChange',
   state: {
@@ -23,7 +25,7 @@ export default Model.extend({
       EntCode:'',
       DGIMN:'',
       PollutantList:[],
-      PollutantType: "1",
+      PollutantType: webConfig.defaultSelectPollutantCode,
       AttentionCode: "",
       beginTime: moment().subtract(1, 'day') .format('YYYY-MM-DD HH:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:59:59'),

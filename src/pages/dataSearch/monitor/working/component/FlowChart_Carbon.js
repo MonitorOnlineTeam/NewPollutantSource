@@ -12,7 +12,7 @@ import { green, red, blue, yellow, grey, gold } from '@ant-design/colors';
   loading: loading.effects["working/getVisualizationChartList"],
   visLoading: working.visLoading
 }))
-class FlowChart extends PureComponent {
+class FlowChart_Carbon extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -751,4 +751,4 @@ class FlowChart extends PureComponent {
   }
 }
 
-export default FlowChart;
+export default FlowChart_Carbon;

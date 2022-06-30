@@ -196,9 +196,10 @@ export default Model.extend({
       }
     },
     // 根据mn号获取站点下的所有污染物因子
-    *getPollutantListByDgimn({ payload }, { call, update }) {
+    *getPollutantListByDgimn({ payload, callback }, { call, update }) {
       const result = yield call(services.getPollutantListByDgimn, payload);
       if (result.IsSuccess) {
+        callback && callback(result.Datas)
         yield update({
           pollutantListByDgimn: result.Datas,
         });

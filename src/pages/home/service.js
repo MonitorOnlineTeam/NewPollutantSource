@@ -41,10 +41,8 @@ export async function getRateStatisticsByEnt(params) {
 
 // 智能监控
 export async function getStatisticsPointStatus(params) {
-  const result = post('/api/rest/PollutantSourceApi/PWorkbench/GetStatisticsPointStatus?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', params, null);
-  return result === null ? {
-    data: null
-  } : result;
+  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetStatisticsPointStatus', params, null);
+  return result;
 }
 
 // 报警信息
@@ -75,7 +73,7 @@ export async function getExceptionProcessing(params) {
 export async function getAlarmAnalysis(params) {
   const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetAlarmAnalysisInfo', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
@@ -83,7 +81,7 @@ export async function getAlarmAnalysis(params) {
 export async function getMounthOverData(params) {
   const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetMounthOverData', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
@@ -102,5 +100,11 @@ export async function getEntTax(params) {
 // 排污税 - 单个排口
 export async function getPointTax(params) {
   const result = get('/api/rest/PollutantSourceApi/EffluentFeeApi/GetEffluentFeeForSinglePointTotal', params, null);
+  return result;
+}
+
+// 年度排放量对比分析 - 碳排放
+export async function getGHGandEmissionContrast(params) {
+  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetGHGandEmissionContrast', params, null);
   return result;
 }

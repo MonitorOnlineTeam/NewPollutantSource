@@ -19,6 +19,7 @@ export default Model.extend({
     currentEntInfo: {},
     currentMarkersList: [],
     pollutantTypeList: [],
+    isOnlyCO2: false,
     AllMonthEmissionsByPollutant: {
       beginTime: moment().format('YYYY-01-01 00:00:00'),
       endTime: moment().add(1, 'years').format('YYYY-MM-01 HH:mm:ss'),
@@ -85,7 +86,8 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
-    homePage: "1"
+    homePage: "1",
+    GHGandEmissionContrastData: { allSumDis: 0, disSum: 0 },
   },
   effects: {
     *getHomePage({ payload }, { call, update, take }) {
@@ -151,12 +153,11 @@ export default Model.extend({
     },
 
     // 智能监控数据
-    // TODO: 接口更换
     *getStatisticsPointStatus({ payload }, { call, update }) {
       const result = yield call(services.getStatisticsPointStatus, payload);
-      if (result.requstresult) {
+      if (result.IsSuccess) {
         yield update({
-          pointData: result.data
+          pointData: result.Datas
         })
       }
     },
@@ -171,7 +172,51 @@ export default Model.extend({
       const result = yield call(services.getWarningInfo, postData);
       if (result.IsSuccess) {
         let data = result.Datas ? result.Datas[0].map(item => {
-          return { "desc": `${item.PointName}：<span style="color: #ffcb5b">${item.PollutantName}</span> 从 <span style="color: #3ccafc">${item.FirstTime}</span> 发生了 <span style="color: #f30201; font-size: 16px">${item.AlarmCount}</span> 次报警。`, url: "" }
+          // return { "desc": `${item.PointName}：<span style="color: #ffcb5b">${item.PollutantName}</span> 从 <span style="color: #3ccafc">${item.FirstTime}</span> 发生了 <span style="color: #f30201; font-size: 16px">${item.AlarmCount}</span> 次报警。`, url: "" }
+          if (item.AlarmType == 16) {
+            // 配额超标报警
+            let paramsData = item.PollutantName.split('|');
+            return {
+              "desc": <div>
+                <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
+                <br />
+                <span style={{ color: '#3ccafc' }}>{paramsData[0]}月</span> 核算法温室气体排放量为
+                <span style={{ color: '#f30201' }}>{paramsData[1]}</span>
+                <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span> ，
+                <br />
+                <span style={{ color: '#f30201' }}>超出平均每月排放总额90%。</span>
+              </div>
+              , url: ""
+            }
+          }
+          if (item.AlarmType == 17) {
+            // 数据造假报警
+            let paramsData = item.PollutantName.split('|');
+            return {
+              "desc": <div>
+                <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
+                <br />
+                <span style={{ color: '#3ccafc' }}>{paramsData[0]}点</span>
+                <span style={{ color: '#ffcb5b' }}>{paramsData[1]}</span>
+                分钟数据相似度超过80% ，
+                {/* <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span>, */}
+                <br />
+                <span style={{ color: '#f30201' }}>疑似为造假数据。</span>
+              </div>
+              , url: ""
+            }
+          }
+          return {
+            "desc": <div>
+              <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
+              <br />
+              <span style={{ color: '#ffcb5b' }}>{item.PollutantName}</span> 从
+              <span style={{ color: '#3ccafc' }}>{item.FirstTime}</span>
+              发生了
+              <span style={{ color: '#f30201', fontSize: 16 }}>{item.AlarmCount}</span> 次报警。
+            </div>
+            , url: ""
+          }
         }) : [];
         yield update({
           warningInfoList: data
@@ -243,6 +288,13 @@ export default Model.extend({
       };
       const response = yield call(services.GetAllMonthEmissionsByPollutant, body);
       if (response.IsSuccess && response.Datas) {
+        // 判断是否只有二氧化碳
+        let isOnlyCO2 = false;
+        if (!response.Datas['01'] && !response.Datas['02'] && !response.Datas['03'] && response.Datas['a05001']) {
+          isOnlyCO2 = true;
+        }
+
+
         let ycdate = [];
         let ycdata = [];
         // 烟尘
@@ -273,13 +325,14 @@ export default Model.extend({
         let eyhtdate = [];
         let eyhtdata = [];
         // 二氧化碳
-        if (response.Datas['30']) {
-          response.Datas['30'].monthList.map((ele) => {
+        if (response.Datas['a05001']) {
+          response.Datas['a05001'].monthList.map((ele) => {
             eyhtdate.push(`${ele.DataDate.split('-')[1]}月`);
             eyhtdata.push(ele.Emissions);
           });
         }
         yield update({
+          isOnlyCO2: isOnlyCO2,
           AllMonthEmissionsByPollutant: {
             ...AllMonthEmissionsByPollutant,
             ycdate: ycdate,
@@ -293,7 +346,7 @@ export default Model.extend({
             dyhwAnalData: response.Datas['03'] || {},
             eyhtdate: eyhtdate,
             eyhtdata: eyhtdata,
-            eyhtAnalData: response.Datas['30'] || {},
+            eyhtAnalData: response.Datas['a05001'] || {},
           }
         });
       }
@@ -365,5 +418,15 @@ export default Model.extend({
         })
       }
     },
+    // 年度排放量对比分析 - 碳排放
+    *getGHGandEmissionContrast({ payload }, { call, update, select }) {
+      const result = yield call(services.getGHGandEmissionContrast, payload);
+      if (result.IsSuccess) {
+        yield update({
+          GHGandEmissionContrastData: result.Datas
+        })
+      }
+    },
+
   }
 })

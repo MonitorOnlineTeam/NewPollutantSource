@@ -16,6 +16,7 @@ import {
   Modal,
 } from 'antd';
 import { connect } from 'dva'
+import webConfig from '@public/webConfig';
 import SdlTable from '@/components/SdlTable'
 import moment from 'moment'
 import { router } from 'umi'
@@ -359,7 +360,7 @@ class index extends PureComponent {
               </FormItem>
               <FormItem label="企业类型">
                 {getFieldDecorator('PollutantType', {
-                  initialValue: '1',
+                  initialValue: webConfig.defaultSelectPollutantCode,
                 })(
                   <Select style={{ width: 200 }} placeholder="请选择企业类型" onChange={(value) => {
                     this.setState({ pollutantType: value }, () => {

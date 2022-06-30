@@ -397,7 +397,7 @@ export default class EntTransmissionEfficiency extends Component {
                   <Select
                     placeholder="请选择企业类型"
                     onChange={this.typeChange}
-                    value={this.props.pollutantType}
+                    value={this.props.pollutantType || undefined}
                     style={{ width: 200, marginLeft: 10 }}
                   >
                     <Option value="">全部</Option>

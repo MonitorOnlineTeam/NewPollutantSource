@@ -30,7 +30,7 @@ import {
 import moment from 'moment';
 import { connect } from 'dva';
 import Link from 'umi/link';
-
+import webConfig from '@public/webConfig';
 import SdlTable from '@/components/SdlTable';
 import DatePickerTool from '@/components/RangePicker/DatePickerTool';
 import { router } from 'umi';
@@ -52,6 +52,7 @@ const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+const defaultSelectPollutantCode = webConfig.defaultSelectPollutantCode;
 const monthFormat = 'YYYY-MM';
 
 const pageUrl = {
@@ -101,7 +102,7 @@ export default class EntTransmissionEfficiency extends Component {
       // DGIMN:'',
       // RegionCode: "",
       // EntCode: "",
-      PollutantType: "1",
+      PollutantType: defaultSelectPollutantCode,
       // AttentionCode: "",
       beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:00:00'),
       endTime: moment().format('YYYY-MM-DD HH:59:59'),
@@ -128,32 +129,32 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'emissionsChange/getEmissionsEntPointPollutant',
       payload: {
         RegionCode: '',
-        PollutantType: '1',
+        PollutantType: defaultSelectPollutantCode,
         AttentionCode: ''
       },
       callback: (res) => {
-        if(res){
-        dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
-        dispatch({
-          type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
-          payload: { EntCode: res },
-          callback: (data) => {
-            dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
-            dispatch({
-              type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
-              payload: { DGIMN: data },
-              callback: (res) => {
-                setTimeout(() => {
+        if (res) {
+          dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
+          dispatch({
+            type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
+            payload: { EntCode: res },
+            callback: (data) => {
+              dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
+              dispatch({
+                type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
+                payload: { DGIMN: data },
+                callback: (res) => {
+                  setTimeout(() => {
 
-                  this.getTableData();
-                });
-              }
-            })
+                    this.getTableData();
+                  });
+                }
+              })
 
-          }
-        })
+            }
+          })
+        }
       }
-    }
     });
 
   };
@@ -235,24 +236,24 @@ export default class EntTransmissionEfficiency extends Component {
         AttentionCode: AttentionCode ? AttentionCode : ''
       },
       callback: (res) => {
-        if(res){
-        dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
-        dispatch({
-          type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
-          payload: { EntCode: res},
-          callback: (data) => {
-            dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
-            dispatch({
-              type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
-              payload: { DGIMN: data },
-              callback: (res) => {
-              }
-            })
+        if (res) {
+          dispatch({ type: pageUrl.updateState, payload: { parmarType: 'EntCode' }, });
+          dispatch({
+            type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
+            payload: { EntCode: res },
+            callback: (data) => {
+              dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
+              dispatch({
+                type: 'emissionsChange/getEmissionsEntPointPollutant', //根据监测点获取监测因子
+                payload: { DGIMN: data },
+                callback: (res) => {
+                }
+              })
 
-          }
-        })
+            }
+          })
+        }
       }
-    }
     });
   }
   changeRegion = (value) => { //行政区事件
@@ -305,7 +306,7 @@ export default class EntTransmissionEfficiency extends Component {
     });
     dispatch({
       type: 'emissionsChange/getEmissionsEntPointPollutant', //根据企业获取监测点
-      payload: { EntCode: value,PollutantType:this.props.PollutantType },
+      payload: { EntCode: value, PollutantType: this.props.PollutantType },
       callback: (data) => {
         dispatch({ type: pageUrl.updateState, payload: { parmarType: 'DGIMN' } });
         dispatch({
@@ -467,12 +468,12 @@ export default class EntTransmissionEfficiency extends Component {
         containLabel: true
       },
       toolbox: {
-        right:20,
+        right: 20,
         feature: {
-                saveAsImage: {
-                   show:true,
-                  //  emphasis:{iconStyle:{textPadding: [0, 10, 0, 0]}}
-                  }
+          saveAsImage: {
+            show: true,
+            //  emphasis:{iconStyle:{textPadding: [0, 10, 0, 0]}}
+          }
         },
       },
       xAxis: {
@@ -547,7 +548,7 @@ export default class EntTransmissionEfficiency extends Component {
                   <AttentList changeAttent={this.changeAttent} AttentionCode={AttentionCode} />
                 </Form.Item>
                 <Form.Item label='企业类型'>
-                  <EntType typeChange={this.typeChange} PollutantType={PollutantType} PollutantType="1" />
+                  <EntType typeChange={this.typeChange} PollutantType={defaultSelectPollutantCode} />
                 </Form.Item>
 
                 {/* <Form.Item label='重点类型'>
