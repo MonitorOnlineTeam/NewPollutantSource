@@ -405,7 +405,7 @@ class MonitoringStatus extends Component {
                 </div>
               }
               {
-                !isOnlyCO2 && <div className={`${styles.smoke} ${styles.content}`}>
+                isOnlyCO2 && <div className={`${styles.smoke} ${styles.content}`}>
                   <div className={styles.contentTitle}>
                     <p>甲烷排放量统计情况</p>
                   </div>
@@ -419,7 +419,7 @@ class MonitoringStatus extends Component {
                 </div>
               }
               {
-                !isOnlyCO2 && <div className={`${styles.SO2} ${styles.content}`}>
+                isOnlyCO2 && <div className={`${styles.SO2} ${styles.content}`}>
                   <div className={styles.contentTitle}>
                     <p>氧化亚氮排放量统计情况</p>
                   </div>

@@ -11,6 +11,7 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import Debounce from 'lodash.debounce';
+import ImportFile from '../../components/ImportFile'
 
 const industry = INDUSTRYS.electricity;
 const SumType = SUMTYPE.electricity["电力"]
@@ -148,7 +149,7 @@ class index extends PureComponent {
 
   getTableList = () => {
     this.props.dispatch({
-      type: 'autoform/getAutoFormData',
+      type: 'autoForm/getAutoFormData',
       payload: {
         configId: CONFIG_ID,
       }
@@ -237,7 +238,15 @@ class index extends PureComponent {
             onDeleteCallback={() => {
               this.getCO2TableSum();
             }}
-            footer={() => <div className="">排放量合计（tCO₂）：{count}</div>}
+            appendHandleButtons={() => {
+              return <ImportFile
+                onSuccess={() => {
+                  this.getTableList();
+                }}
+                industry={industry}
+              />
+            }}
+            footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
         <Modal destroyOnClose width={900} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>

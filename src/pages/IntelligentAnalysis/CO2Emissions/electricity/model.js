@@ -132,5 +132,14 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
+    // 获取模板下载地址
+    *GetGHGUploadTempletUrl({ payload, callback }, { call }) {
+      const result = yield call(services.GetGHGUploadTempletUrl, payload);
+      if (result.IsSuccess) {
+        window.open('/api/' + result.Datas)
+      } else {
+        message.error(response.Message)
+      }
+    },
   },
 });

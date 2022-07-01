@@ -6,9 +6,9 @@ export async function getAllEnterprise(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntList', params, null);
   return result;
 }
-// 
+//
 
-// 
+//
 export async function getGHGEchartsData(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetCO2QuotaAlarm', params, null);
   return result;
@@ -57,3 +57,10 @@ export async function JudgeIsRepeat(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/JudgeIsRepeat', params, null);
   return result;
 }
+
+//  获取模板下载地址
+export async function GetGHGUploadTempletUrl(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetGHGUploadTempletUrl?IndustryCode='+ params.IndustryCode, {});
+  return result;
+}
+

@@ -11,6 +11,7 @@ import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import Debounce from 'lodash.debounce';
+import ImportFile from '../../components/ImportFile'
 
 const industry = INDUSTRYS.electricity;
 const SumType = SUMTYPE.electricity["化石燃料燃烧"]
@@ -274,7 +275,6 @@ class index extends PureComponent {
           isModalVisible: false,
         })
         this.getTableList();
-        this.getCO2TableSum();
       })
     })
   }
@@ -282,11 +282,12 @@ class index extends PureComponent {
 
   getTableList = () => {
     this.props.dispatch({
-      type: 'autoform/getAutoFormData',
+      type: 'autoForm/getAutoFormData',
       payload: {
         configId: CONFIG_ID,
       }
     })
+    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -376,6 +377,14 @@ class index extends PureComponent {
             }}
             onDeleteCallback={() => {
               this.getCO2TableSum();
+            }}
+            appendHandleButtons={() => {
+              return <ImportFile
+                onSuccess={() => {
+                  this.getTableList();
+                }}
+                industry={industry}
+              />
             }}
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
