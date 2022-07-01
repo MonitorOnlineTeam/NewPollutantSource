@@ -549,6 +549,7 @@ export default Model.extend({
             const response = yield call(ResetWechat, { ...payload });
             if (response.IsSuccess) {
                 message.success(response.Message)
+                callback&&callback()
             }else{
                 message.error(response.Message)
             }

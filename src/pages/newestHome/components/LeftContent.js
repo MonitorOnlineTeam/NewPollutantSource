@@ -460,7 +460,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
           <div className={styles.planComplete}>
            <CardHeader  btnClick={btnClick} datatype='planComplete' showBtn type='plan' btnCheck={planBtnCheck} title='近30日运维排名'/>
            <div style={{height:'100%', padding:'21px 18px 0 0'}}>
-           <ScrollTable data={planCompleteList}  column={[]} />
+            {!planCompleteListLoading&&<ScrollTable data={[...planCompleteList,]}  column={[]} />}
            {/* <MoreBtn style={{paddingTop:10}} type='planComplete' moreBtnClick={moreBtnClick}/> */}
            </div>
           </div>

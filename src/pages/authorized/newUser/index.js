@@ -362,6 +362,7 @@ export default class UserInfoIndex extends Component {
       return;
     }
     const { dispatch } = this.props;
+    const _this = this;
     confirm({
       title: types==='wechat'? '是否确认重置微信注册信息' : '是否确认重置密码?',
       content: '',
@@ -376,7 +377,8 @@ export default class UserInfoIndex extends Component {
             User_ID: str,
           },
           callback:()=>{
-            // this.setState({selectedRowKeys:[],selectedRows:[]})
+            _this.queryClick();
+            _this.setState({selectedRowKeys:[],selectedRows:[]})
           }
         });
       },

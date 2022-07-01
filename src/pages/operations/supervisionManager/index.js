@@ -303,11 +303,11 @@ const Index = (props) => {
       width: 180,
       render: (text, record) => {
         if(isRecord){
-          return  <Tooltip title='详情'> <a href="#" onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
+          return  <Tooltip title='详情'> <a  onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>
         }
         const flag = record.IsFlag;
         return <span>
-          <Fragment><Tooltip  title={!flag?"运维督查记录已超过30天，不可编辑": "编辑"}> <a href="#" onClick={() => { 
+          <Fragment><Tooltip  title={!flag?"运维督查记录已超过30天，不可编辑": "编辑"}> <a  onClick={() => { 
             if(!flag){
               return;
             }
@@ -315,14 +315,14 @@ const Index = (props) => {
             
             }} ><EditOutlined style={{cursor:!flag&&'not-allowed', color:!flag&&'#00000040',  fontSize: 16 }}/></a> </Tooltip><Divider type="vertical" /> </Fragment>
           <Fragment>
-            <Tooltip title='详情'> <a href="#" onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" /> </Fragment>
+            <Tooltip title='详情'> <a  onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip> <Divider type="vertical" /> </Fragment>
             <Fragment>
             <Tooltip placement="left" title="删除" title={!flag?"运维督查记录已超过30天，不可删除": "删除"}>
               <Popconfirm disabled={!flag} placement="left" title="确定要删除这条数据吗？" 
               onConfirm={() =>{
                 if(!flag){ return;  }del(record) } 
               } okText="是" cancelText="否">
-                <a href="#"  style={{cursor:!flag&&'not-allowed', color:!flag&&'#00000040'}} > <DelIcon  style={{fontSize: 16 }}/> </a>
+                <a   style={{cursor:!flag&&'not-allowed', color:!flag&&'#00000040'}} > <DelIcon  style={{fontSize: 16 }}/> </a>
               </Popconfirm>
             </Tooltip>
             </Fragment>
@@ -476,6 +476,7 @@ const Index = (props) => {
     setTimeout(() => {
       setType('add')
       setPollutantType("2");
+      setDeviceInfoList([])
       form2.resetFields();
       tableForm.resetFields();
       form2.setFieldsValue({Inspector : userCookie&&JSON.parse(userCookie).UserId})
@@ -538,10 +539,11 @@ const Index = (props) => {
 
   const save = async(type) =>{
 
-     type==1? setSaveLoading2(true) : setSaveLoading1(true);
-
+     
     const values = await form2.validateFields();
     try {
+      type==1? setSaveLoading2(true) : setSaveLoading1(true);
+
       let principleProblemList = operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList || [];
       let importanProblemList = operationInfoList.importanProblemList&&operationInfoList.importanProblemList || [];
       let commonlyProblemList = operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList || [];
@@ -555,9 +557,21 @@ const Index = (props) => {
       if(commonlyProblemList){
         commonlyProblemList = formatData(commonlyProblemList)
       }
+      
+      let devicePar = {} //设备信息参数
 
+   const gas =   deviceInfoList.filter(item=>item.SystemName==="气态污染物CEMS")
+   const pm =   deviceInfoList.filter(item=>item.SystemName==="颗粒物CEMS")
+  
+   if(gas&&gas[0]){
+    devicePar.GasManufacturer =   gas.map(item=>item.Manufacturer).join(',')
+    devicePar.GasEquipment =   gas.map(item=>item.Equipment).join(',')
+   }
+   if(pm&&pm[0]){
+    devicePar.PMManufacturer =   pm.map(item=>item.Manufacturer).join(',')
+    devicePar.PMEquipment =   pm.map(item=>item.Equipment).join(',')
+   }
 
-    
      const data = {
       ...values,
       RegionCode:values.RegionCode.join(","),
@@ -568,10 +582,9 @@ const Index = (props) => {
       Files:  tableForm.getFieldValue([`Files`]),
       Evaluate: tableForm.getFieldValue([`Evaluate`]),
       InspectorOperationInfoList:[...principleProblemList,...importanProblemList,...commonlyProblemList],
-      
+      ...devicePar,
      }
-
-    //  console.log(data)
+     console.log(data)
       props.addOrEditInspectorOperation(data,()=>{
         setFromVisible(false)
         type==1? setSaveLoading2(false) : setSaveLoading1(false);
@@ -580,6 +593,8 @@ const Index = (props) => {
    
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
+      type==1? setSaveLoading2(false) : setSaveLoading1(false);
+
     }
   }
 
@@ -641,7 +656,7 @@ const Index = (props) => {
        props.getPointParames({DGIMN:hangedValues.DGIMN},(data)=>{
          form2.setFieldsValue({
           ...data,
-          OutType:data.OutType ? data.OutType : '1',
+          OutType:data.OutputType ? data.OutputType : '1',
           RegionCode:data.RegionCode?data.RegionCode.split(','):undefined,
           PollutantCode:data.PollutantCode?data.PollutantCode.split(','):undefined,
         })

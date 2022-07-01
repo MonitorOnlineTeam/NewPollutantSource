@@ -34,19 +34,9 @@ const dvaPropsData =  ({ loading,custopmRenew,global }) => ({
   pointDatas:custopmRenew.pointDatas,
   tableLoading:custopmRenew.tableLoading,
   tableTotal:custopmRenew.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addEquipmentInfo`],
-  loadingEditConfirm: loading.effects[`${namespace}/editEquipmentInfo`],
-  monitoringTypeList:custopmRenew.monitoringTypeList,
-  manufacturerList:custopmRenew.manufacturerList,
-  pollutantTypeList:custopmRenew.pollutantTypeList,
-  clientHeight: global.clientHeight,
-  loadingManufacturer: loading.effects[`${namespace}/getManufacturerList`],
-  loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
-  loadingAddEditPollutantById :loading.effects[`${namespace}/addEditPollutantById`] || false,
-  loadingAddEditEquipmentName:loading.effects[`${namespace}/addEditGetEquipmentName`] || false,
-  addEditPollutantTypeList:custopmRenew.addEditPollutantTypeList,
-  maxNum:custopmRenew.maxNum,
-  addEditEquipmentNameList:custopmRenew.addEditEquipmentNameList,
+  customerOrderUserList:custopmRenew.customerOrderUserList,
+  customerOrderPointEntList:custopmRenew.customerOrderUserList,
+  loadingAddConfirm: loading.effects[`${namespace}/addCustomerOrder`],
   tableDetailDatas:custopmRenew.tableDetailDatas,
   tableDetailTotal:custopmRenew.tableDetailTotal,
 })
@@ -59,75 +49,32 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getEquipmentInfoList:(payload)=>{ //列表
+    getCustomerOrderList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getEquipmentInfoList`,
+        type: `${namespace}/getCustomerOrderList`,
         payload:payload,
       })
     },
-    addEquipmentInfo : (payload,callback) =>{ // 添加
+
+    getCustomerOrderUserList : (payload,) =>{//客户订单用户列表
       dispatch({
-        type: `${namespace}/addEquipmentInfo`,
+        type: `${namespace}/getCustomerOrderUserList`,
         payload:payload,
-        callback:callback
-      })
-      
-    },
-    editEquipmentInfo : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editEquipmentInfo`,
-        payload:payload,
-        callback:callback
       })
       
     },
-    delEquipmentInfo:(payload,callback)=>{ //删除
+    getCustomerOrderPointEntList : (payload,) =>{ // 获取客户订单企业与排口列表
       dispatch({
-        type: `${namespace}/delEquipmentInfo`, 
+        type: `${namespace}/getCustomerOrderPointEntList`,
+        payload:payload,
+      })
+      
+    },
+    addCustomerOrder:(payload,callback)=>{ //添加
+      dispatch({
+        type: `${namespace}/addCustomerOrder`, 
         payload:payload,
         callback:callback
-      }) 
-    },
-    getManufacturerList:(payload,callback)=>{ //厂商列表
-      dispatch({
-        type: `${namespace}/getManufacturerList`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getMonitoringTypeList:(payload,callback)=>{ //监测类别
-      dispatch({
-        type: `${namespace}/getMonitoringTypeList`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getPollutantById:(payload)=>{ //监测类型
-      dispatch({
-        type: `${namespace}/getPollutantById`, 
-        payload:payload,
-
-      }) 
-    },
-    addEditPollutantById:(payload)=>{ //监测类型 添加 or 编辑
-      dispatch({
-        type: `${namespace}/addEditPollutantById`, 
-        payload:payload,
-
-      }) 
-    },
-    // getEquipmentName:(payload)=>{ //设备名称
-    //   dispatch({
-    //     type: `${namespace}/getEquipmentName`, 
-    //     payload:payload,
-
-    //   }) 
-    // },
-    addEditGetEquipmentName:(payload)=>{ //设备名称 添加 or 编辑
-      dispatch({
-        type: `${namespace}/addEditGetEquipmentName`, 
-        payload:payload,
-
       }) 
     },
   }
@@ -155,25 +102,15 @@ const Index = (props) => {
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal, monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
-  useEffect(() => {
-    props.getManufacturerList({pageIndex:1,pageSize:100000},(data)=>{
-      if(data[0]){
-        setManufacturerId(data[0].ID)
-        setDeveiceName(data[0].ManufacturerName)
-      }
-    })
-    props.getMonitoringTypeList({})//监测类别
-  },[]);
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal, customerOrderUserList,customerOrderPointEntList,loadingAddConfirm,customerOrderPointEntListLoading,} = props; 
 
-  
-  useEffect(()=>{
-   
-    if(manufacturerId){
+
+ const userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId
+  useEffect(()=>{  
       onFinish();
-    }
-
-  },[manufacturerId])
+      props.getCustomerOrderPointEntList({userId:userId})
+     
+  },[])
   const columns = [
     {
       title: '账号',
@@ -249,10 +186,10 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
-                  <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
+                  <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 
@@ -302,29 +239,17 @@ const detailCol = [{
     return  <span>
            <Fragment> <Tooltip title="删除">
               <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-              <a href="#" ><DelIcon/></a>
+              <a><DelIcon/></a>
            </Popconfirm>
            </Tooltip>
            </Fragment> 
          </span>
   }
 },]
- 
-  const edit = async (record) => {
-    setFromVisible(true)
-    setType('edit')
-    props.addEditPollutantById({id:record.PollutantType,type:1})
-    props.addEditGetEquipmentName({id:record.PollutantType,type:2})
-    form2.resetFields();
-    try {
-      form2.setFieldsValue({
-        ...record,
-        MonitoringType:record.MonitoringTypeID
-      })
+ const [ detailVisible, setDetailVisible,] = useState(false)
+  const detail = async (record) => {
+    setDetailVisible(true)
 
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
   };
 
   const del =  async (record) => {
@@ -346,10 +271,8 @@ const detailCol = [{
   
   const add = () => {
     setFromVisible(true)
-    setType('add')
-    props.updateState({addEditPollutantTypeList:[]})
     form2.resetFields();
-    form2.setFieldsValue({EquipmentCode:maxNum})
+
   };
 
   const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
@@ -361,9 +284,10 @@ const detailCol = [{
         setPageIndex(1)
       }
 
-      props.getEquipmentInfoList({
+      props.getCustomerOrderList({
         ...values,
-        ManufacturerId:manufacturerId,
+        BTime: values.time&&moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        ETime: values.time&&moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
         PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         PageSize:pageSizes?pageSizes:pageSize
       })
@@ -428,10 +352,10 @@ const detailCol = [{
     onValuesChange={onValuesChange}
   >  
       <Row>
-      <Form.Item label="账号" name="EquipmentName"  >
+      <Form.Item label="账号" name="UserAccount"  >
             <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="企业名称" name="PollutantType"  style={{marginLeft:16,marginRight:-10}}>
+      <Form.Item label="企业名称" name="EntName"  style={{marginLeft:16,marginRight:-10}}>
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
       <Form.Item label="状态" name="Status"  >
@@ -443,11 +367,11 @@ const detailCol = [{
       </Form.Item>
       </Row>
       <Row>
-      <Form.Item label="服务时间" name="Status"  style={{marginRight:16}} >
+      <Form.Item label="服务时间" name="Time"  style={{marginRight:16}} >
       <RangePicker_   format="YYYY-MM-DD HH:mm:ss"  showTime="YYYY-MM-DD HH:mm:ss"style={{minWidth:450}}   allowClear />
       </Form.Item>
       <Form.Item>
-      <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
+      <Button loading={tableLoading}  type="primary" htmlType='submit' style={{marginRight:8}}>
           查询
      </Button>
      <Button    style={{marginRight:8}} onClick={()=>{form.resetFields()}}>
@@ -492,6 +416,10 @@ const detailCol = [{
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
+  const durationList =[{name:'1个月',value:1},{name:'2个月',value:3},{name:'3个月',value:3},{name:'4个月',value:4},{name:'5个月',value:5},{name:'6个月',value:6},
+  {name:'7个月',value:7},{name:'8个月',value:8},{name:'9个月',value:9},{name:'1年',value:12},{name:'2年',value:24},{name:'3年',value:36},{name:'4年',value:48},
+  {name:'5年',value:60},]
   const [renewVisible,setRenewVisible ] = useState(false)
    return (
     <div  className={styles.custopmRenewSty} >
@@ -539,48 +467,40 @@ const detailCol = [{
        <NumTips />
         <Form.Item label="企业" name="PollutantType" rules={[  { required: true, }]} >
             <Select placeholder='请选择企业' allowClear >
-                 {
-                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
+                 {/* {
+                  customerOrderPointEntList[0]&&customerOrderPointEntList.map(item => {
                     return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+                  })
+                }    */}
+              </Select>
+      </Form.Item>
+        <Form.Item label="监测点" name="EquipmentName" rules={[  { required: true,  }]} >
+              <Select placeholder='请选择' allowClear>
+                          {
+                   customerOrderPointEntList[0]&&customerOrderPointEntList.map(item => {
+                    return <Option key={item.ID} value={item.Name}>{item.Name}</Option>
                   })
                 }   
               </Select>
       </Form.Item>
 
-        <Form.Item label="监测点" name="EquipmentName" rules={[  { required: true,  }]} >
-          {loadingAddEditEquipmentName? <Spin size='small' /> 
-                :
-              <Select placeholder='请选择' allowClear>
-                          {
-                   addEditEquipmentNameList[0]&&addEditEquipmentNameList.map(item => {
-                    return <Option key={item.ID} value={item.Name}>{item.Name}</Option>
-                  })
-                }   
-              </Select>}
-      </Form.Item>
-        <Form.Item label="监测点" name="PollutantCode"  rules={[  { required: true, }]}>
-              {loadingAddEditPollutantById? <Spin size='small' /> 
-                :
-              <Select placeholder='请选择' allowClear>
-                          {
-                   addEditPollutantTypeList[0]&&addEditPollutantTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-                  })
-                }   
-              </Select>}
-      </Form.Item>
-
         <Form.Item label="续费时长" name="EquipmentBrand" rules={[  { required: true, }]} >
-             <Input placeholder='请输入' allowClear/>
+        <Select placeholder='请选择' allowClear>
+                  {
+                   durationList.map(item => {
+                    return <Option key={item.value} value={item.value}>{item.name}</Option>
+                  })
+                }   
+              </Select>
       </Form.Item>
 
     </Form>
       </Modal>
       <Modal
-        title={'续费'}
+        title={'续费时长'}
         visible={renewVisible}
         onOk={onModalOk}
-        confirmLoading={loadingEditConfirm}
+        confirmLoading={loadingAddConfirm}
         onCancel={()=>{setRenewVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
@@ -604,14 +524,12 @@ const detailCol = [{
       </Modal>
 
       <Modal
-        title={'续费'}
-        visible={renewVisible}
-        onOk={onModalOk}
-        confirmLoading={loadingEditConfirm}
-        onCancel={()=>{setRenewVisible(false)}}
-        className={styles.fromModal}
+        title={'详情'}
+        visible={detailVisible}
+        onCancel={()=>{setDetailVisible(false)}}
         destroyOnClose
-        
+        footer={null}
+        wrapClassName='spreadOverModal'
       >
       <SdlTable
         loading = {tableLoading}

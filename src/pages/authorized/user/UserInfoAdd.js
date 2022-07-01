@@ -97,13 +97,14 @@ export default class UserInfoAdd extends Component {
     onChecks = data => {
         let checkedKeys = data.checked;
         this.setState({ checkedKeys });
-        const leafTree = [];
-        checkedKeys.map(item => {
-            if (this.state.leafTreeDatas.indexOf(item) != -1) {
-                leafTree.push(item);
-            }
-        });
-        this.setState({ checkedKeysSel: leafTree });
+        // const leafTree = [];
+        // checkedKeys.map(item => {
+        //     if (this.state.leafTreeDatas.indexOf(item) != -1) {
+        //         leafTree.push(item);
+        //     }
+        // });
+        // this.setState({ checkedKeysSel: leafTree });
+        this.setState({checkedKeysSel: checkedKeys })
     };
 
     onSelects = (selectedKeys, info) => {
