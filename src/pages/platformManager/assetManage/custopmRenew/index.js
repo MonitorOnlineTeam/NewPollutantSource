@@ -20,7 +20,7 @@ import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import NumTips from '@/components/NumTips'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-
+import UserList from '@/components/UserList'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -31,14 +31,15 @@ const namespace = 'custopmRenew'
 
 const dvaPropsData =  ({ loading,custopmRenew,global }) => ({
   tableDatas:custopmRenew.tableDatas,
-  pointDatas:custopmRenew.pointDatas,
   tableLoading:custopmRenew.tableLoading,
   tableTotal:custopmRenew.tableTotal,
   customerOrderUserList:custopmRenew.customerOrderUserList,
-  customerOrderPointEntList:custopmRenew.customerOrderUserList,
   loadingAddConfirm: loading.effects[`${namespace}/addCustomerOrder`],
   tableDetailDatas:custopmRenew.tableDetailDatas,
   tableDetailTotal:custopmRenew.tableDetailTotal,
+  userListLoading: loading.effects[`${namespace}/getCustomerOrderUserList`],
+  customerOrderPointEntListLoading: loading.effects[`${namespace}/getCustomerOrderPointEntList`] || false,
+  
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -63,10 +64,11 @@ const  dvaDispatch = (dispatch) => {
       })
       
     },
-    getCustomerOrderPointEntList : (payload,) =>{ // 获取客户订单企业与排口列表
+    getCustomerOrderPointEntList : (payload,callback) =>{ // 获取客户订单企业与排口列表
       dispatch({
         type: `${namespace}/getCustomerOrderPointEntList`,
         payload:payload,
+        callback:callback,
       })
       
     },
@@ -102,81 +104,73 @@ const Index = (props) => {
   
   const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal, customerOrderUserList,customerOrderPointEntList,loadingAddConfirm,customerOrderPointEntListLoading,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal, customerOrderUserList,loadingAddConfirm,customerOrderPointEntListLoading,userListLoading,} = props; 
 
 
- const userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId
-  useEffect(()=>{  
+//  const userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId
+ 
+ useEffect(()=>{  
       onFinish();
-      props.getCustomerOrderPointEntList({userId:userId})
-     
+      props.getCustomerOrderUserList({})
   },[])
   const columns = [
     {
       title: '账号',
-      dataIndex: 'EquipmentCode',
-      key:'EquipmentCode',
+      dataIndex: 'UserAccount',
+      key:'UserAccount',
       align:'center',
     },
     {
       title: '姓名',
-      dataIndex: 'PollutantTypeName',
-      key:'PollutantTypeName',
+      dataIndex: 'UserName',
+      key:'UserName',
       align:'center',
     },
     {
       title: '企业名称',
-      dataIndex: 'PollutantName',
-      key:'PollutantName',
+      dataIndex: 'EntName',
+      key:'EntName',
       align:'center',
     },
     {
       title: '监测点名称',
-      dataIndex: 'EquipmentName',
-      key:'EquipmentName',
+      dataIndex: 'PointName',
+      key:'PointName',
       align:'center',
     },
     {
       title: '服务器开始时间',
-      dataIndex: 'EquipmentType',
-      key:'EquipmentType',
+      dataIndex: 'BTime',
+      key:'BTime',
       align:'center',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.BTime).valueOf() - moment(b.BTime).valueOf()
     },
 
     {
       title: '服务器截止时间',
-      dataIndex: 'AnalyticalMethod',
-      key:'AnalyticalMethod',
+      dataIndex: 'ETime',
+      key:'ETime',
       align:'center',
-      sorter: (a, b) => moment(a.firstTime).valueOf() - moment(b.firstTime).valueOf()
+      sorter: (a, b) => moment(a.ETime).valueOf() - moment(b.ETime).valueOf()
     },
     {
       title: '状态',
-      dataIndex: 'EquipmentBrand',
-      key:'EquipmentBrand',
+      dataIndex: 'StatusName',
+      key:'StatusName',
       align:'center',
       
     },
     {
       title: '创建人',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'CreateUserName',
+      key:'CreateUserName',
       align:'center',
     },
     {
       title: '创建时间',
-      dataIndex: 'Status',
-      key:'Status', 
+      dataIndex: 'CreateTime',
+      key:'CreateTime', 
       align:'center',
-      render: (text, record) => {
-        if (text === 1) {
-          return <span><Tag color="blue">启用</Tag></span>;
-        }
-        if (text === 2) {
-          return <span><Tag color="red">停用</Tag></span>;
-        }
-      },
     },
     {
       title: <span>操作</span>,
@@ -186,7 +180,7 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="详情"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
                   <a><DelIcon/></a>
@@ -258,8 +252,8 @@ const detailCol = [{
       setPageIndex(1)
       props.getEquipmentInfoList({
         ManufacturerId:manufacturerId,
-        PageIndex:1,
-        PageSize:pageSize,
+        pageIndex:1,
+        pageSize:pageSize,
         ...values,
       })
     })
@@ -283,36 +277,29 @@ const detailCol = [{
       if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
         setPageIndex(1)
       }
-
       props.getCustomerOrderList({
         ...values,
-        BTime: values.time&&moment(values.time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        ETime: values.time&&moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
-        PageSize:pageSizes?pageSizes:pageSize
+        BTime: values.Time&&moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        ETime: values.Time&&moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"),
+        Time:undefined,
+        Status:values.Status? values.Status : '',
+        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
+        pageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
-  const onModalOk  = async () =>{ //添加 or 编辑弹框
+  const onModalOk  = async () =>{ //添加
   
     try {
       const values = await form2.validateFields();//触发校验
-      type==='add'? props.addEquipmentInfo({
+       props.addCustomerOrder({
         ...values,
-        ManufacturerId:manufacturerId
+        EntCode:undefined,
       },()=>{
         setFromVisible(false)
         onFinish()
-      })
-      :
-     props.editEquipmentInfo({
-        ...values,
-        ManufacturerId:manufacturerId
-      },()=>{
-        setFromVisible(false)
-        onFinish(pageIndex,pageSize)
       })
       
     } catch (errInfo) {
@@ -323,13 +310,10 @@ const detailCol = [{
     setManufacturerId(selectedKeys.toString())
     setDeveiceName(e.node.titles)
   }
+const renewOk = ()  =>{   //续费
 
-  // const handleTableChange =   async (PageIndex, )=>{ //分页
-  //   const values = await form.validateFields();
-  //   setPageSize(PageSize)
-  //   setPageIndex(PageIndex)
-  //   props.getProjectInfoList({...values,PageIndex,PageSize})
-  // }
+  setSelectedRowKeys()
+}
 
   const onValuesChange = (hangedValues, allValues)=>{
     if(Object.keys(hangedValues).join() == 'PollutantType'){
@@ -340,6 +324,14 @@ const detailCol = [{
       // form.setFieldsValue({EquipmentName:undefined})
     }
   }
+    const [pageIndex2,setPageIndex2 ] = useState(1)
+    const [pageSize2,setPageSize2 ] = useState(20)
+    const handleTableChange2 =    (PageIndex, PageSize)=>{ //分页 详情
+    setPageSize2(PageSize)
+    setPageIndex2(PageIndex)
+    props.getProjectInfoList({PageIndex,PageSize})
+  }
+
   const searchComponents = () =>{
     return  <Form
     form={form}
@@ -361,8 +353,8 @@ const detailCol = [{
       <Form.Item label="状态" name="Status"  >
  
               <Select placeholder='请选择' allowClear style={{width:200}}>
-                  <Option>进行中</Option>
-                  <Option>已过期</Option>
+                  <Option value={1}>进行中</Option>
+                  <Option value={2}>已过期</Option>
               </Select>
       </Form.Item>
       </Row>
@@ -387,14 +379,21 @@ const detailCol = [{
      </Row>
      </Form>
   }
+  const [entList,setEntList ] = useState([])
+  const [pointList,setPointList ] = useState([])
 
-  const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时的监测类型请求
-    if(Object.keys(hangedValues).join() == 'PollutantType'){
-      props.addEditPollutantById({id:hangedValues.PollutantType,type:1}) //监测类型
-      form2.setFieldsValue({PollutantCode:undefined})
+  const onAddEditValuesChange= (hangedValues, allValues)=>{
+    if(Object.keys(hangedValues).join() == 'UserId'){
+      form2.setFieldsValue({DGIMN:undefined})
+      props.getCustomerOrderPointEntList({userId:hangedValues.UserId},(data)=>{// 企业 
+        setEntList(data)
 
-      props.addEditGetEquipmentName({id:hangedValues.PollutantType,type:2}) //设备名称
-      form2.setFieldsValue({EquipmentName:undefined})
+      })
+    }
+    if(Object.keys(hangedValues).join() == 'EntCode'){
+      form2.setFieldsValue({DGIMN:undefined})
+      const pointData = entList.filter(item=>item.EntCode === hangedValues.EntCode) 
+      setPointList(pointData[0]?pointData[0].PointList : [])
     }
   }
   const handleTableChange = (PageIndex, PageSize) =>{
@@ -407,20 +406,51 @@ const detailCol = [{
 
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]);
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
+  const onSelectChange = (newSelectedRowKeys,newSelectedRow) => {
+
+    if(selectedRowKeys.length<1 || newSelectedRowKeys.length==0){ //newSelectedRowKeys.length==0 选中取消时
+      setSelectedRowKeys(newSelectedRowKeys);
+      setSelectedRow(newSelectedRow)
+    }else{
+      message.warning('每次最多选择一行')
+    }
+
   };
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+  
+  const [ renewETime,setRenewETime ] = useState()
 
-  const durationList =[{name:'1个月',value:1},{name:'2个月',value:3},{name:'3个月',value:3},{name:'4个月',value:4},{name:'5个月',value:5},{name:'6个月',value:6},
+  const [renewDay,setRenewDay] = useState()
+  const renewMonthChang = (e) =>{
+    let val = e.target.value;
+    setRenewETime(moment().add(val.replace('个月',''), "month").format('YYYY-MM-DD 23:59:59'))
+    console.log(val,renewDay)
+    setRenewDay(val)
+  }
+
+
+  const renewYearChang = (e) =>{
+    let val = e.target.value;
+    setRenewETime(moment().add(val.replace('年',''), "year").format('YYYY-MM-DD 23:59:59'))
+    setRenewDay(val)
+  }
+
+  const renewClick = (val) =>{ //双击取消
+    if(val==renewDay){
+      setRenewDay(undefined)
+    }
+  }
+
+  const durationList =[{name:'1个月',value:1},{name:'2个月',value:2},{name:'3个月',value:3},{name:'4个月',value:4},{name:'5个月',value:5},{name:'6个月',value:6},
   {name:'7个月',value:7},{name:'8个月',value:8},{name:'9个月',value:9},{name:'1年',value:12},{name:'2年',value:24},{name:'3年',value:36},{name:'4年',value:48},
   {name:'5年',value:60},]
   const [renewVisible,setRenewVisible ] = useState(false)
+
    return (
     <div  className={styles.custopmRenewSty} >
     <BreadcrumbWrapper>
@@ -454,41 +484,47 @@ const detailCol = [{
       name="basic"
       form={form2}
       initialValues={{
-        Status:1
       }}
       onValuesChange={onAddEditValuesChange}
     > 
-      <Form.Item   name="ID" hidden>
-          <Input />
-      </Form.Item> 
-        <Form.Item label="账号" name="EquipmentCode" rules={[  { required: true, }]} >
-          <InputNumber placeholder="请输入账号"  allowClear/>
-      </Form.Item>
-       <NumTips />
-        <Form.Item label="企业" name="PollutantType" rules={[  { required: true, }]} >
-            <Select placeholder='请选择企业' allowClear >
-                 {/* {
-                  customerOrderPointEntList[0]&&customerOrderPointEntList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+      <Spin spinning={userListLoading}  size='small' style={{marginTop:-9}}>
+        <Form.Item label="账号" name="UserId" rules={[  { required: true, }]} >
+        
+        <Select placeholder='请选择' allowClear >
+                  {
+                  customerOrderUserList[0]&&customerOrderUserList.map(item => {
+                    return <Option key={item.UserId} value={item.UserId}>{item.UserName}</Option>
                   })
-                }    */}
+                }   
               </Select>
       </Form.Item>
-        <Form.Item label="监测点" name="EquipmentName" rules={[  { required: true,  }]} >
+        </Spin>
+       <Spin spinning={customerOrderPointEntListLoading} size='small' style={{marginTop:-9}}>
+        <Form.Item label="企业" name="EntCode" rules={[  { required: true, }]} >
+            <Select placeholder='请选择企业' allowClear >
+                  {
+                  entList[0]&&entList.map(item => {
+                    return <Option key={item.EntCode} value={item.EntCode}>{item.EntName}</Option>
+                  })
+                }   
+              </Select>
+      </Form.Item>
+      </Spin>
+        <Form.Item label="监测点" name="DGIMN" rules={[  { required: true,  }]} >
               <Select placeholder='请选择' allowClear>
-                          {
-                   customerOrderPointEntList[0]&&customerOrderPointEntList.map(item => {
-                    return <Option key={item.ID} value={item.Name}>{item.Name}</Option>
+                   {
+                   pointList[0]&&pointList.map(item => {
+                    return <Option key={item.DGIMN} value={item.DGIMN}>{item.PointName}</Option>
                   })
                 }   
               </Select>
       </Form.Item>
 
-        <Form.Item label="续费时长" name="EquipmentBrand" rules={[  { required: true, }]} >
+        <Form.Item label="续费时长" name="Month" rules={[  { required: true, }]} >
         <Select placeholder='请选择' allowClear>
                   {
                    durationList.map(item => {
-                    return <Option key={item.value} value={item.value}>{item.name}</Option>
+                    return <Option key={item.name} value={item.name}>{item.name}</Option>
                   })
                 }   
               </Select>
@@ -507,19 +543,19 @@ const detailCol = [{
         
       >
     <div>续费时长:</div>
-    <Radio.Group size="small" style={{ marginTop: 16 }}>
+    <Radio.Group size="small" value={renewDay}  onChange={renewMonthChang} style={{ marginTop: 16 }}>
       {
-        [1,2,3,4,5,6,7,8,9,].map(item=> <Radio.Button value={item}>{item}</Radio.Button>)
+        [1,2,3,4,5,6,7,8,9,].map(item=> <Radio.Button onClick={()=>{renewClick(`${item}个月`)}} value={`${item}个月`}>{item}</Radio.Button>)
       }
     </Radio.Group><span style={{paddingLeft:5}}>个月</span>
     <div>
-    <Radio.Group size="small" style={{ marginTop: 5 }}>
+    <Radio.Group value={renewDay}  onChange={renewYearChang} size="small" style={{ marginTop: 5 }}>
       {
-        [1,2,3,4,5,].map(item=> <Radio.Button value={item}>{item}</Radio.Button>)
+        [1,2,3,4,5,].map(item=> <Radio.Button onClick={()=>{renewClick(`${item}年`)}} value={`${item}年`}>{item}</Radio.Button>)
       }
     </Radio.Group><span style={{paddingLeft:5}}>年</span>
 
-    <Row style={{ marginTop: 24 }}>续费后的时间为：<span>{}</span></Row>
+    <Row style={{ marginTop: 24 }}>续费后的时间为：<span  className='red'>{renewETime}</span></Row>
     </div>
       </Modal>
 

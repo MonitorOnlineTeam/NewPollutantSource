@@ -16,17 +16,15 @@ export default Model.extend({
     customerOrderUserList:[],
     tableDetailDatas: [],
     tableDetailTotal: 0,
-    customerOrderPointEntList:[],
   },
   effects: {
     *getCustomerOrderList({ payload, callback }, { call, put, update }) { //客户订单列表
       yield update({ tableLoading: true })
       const result = yield call(services.GetCustomerOrderList, payload);
-      if (result.IsSuccess) {
+      if (result.IsSuccess) { 
         yield update({
           tableTotal: result.Total,
-          tableDatas:result.Datas? result.Datas.mlist:[],
-          maxNum:result.Datas?result.Datas.MaxNum:null,
+          tableDatas:result.Datas? result.Datas:[],
           tableLoading: false
         })
       } else {
@@ -48,9 +46,7 @@ export default Model.extend({
     *getCustomerOrderPointEntList({ payload, callback }, { call, put, update }) { //获取客户订单企业与排口列表
       const result = yield call(services.GetCustomerOrderPointEntList, payload);
         if (result.IsSuccess) {
-          yield update({
-            customerOrderPointEntList:result.Datas,
-          })
+           callback(result.Datas)
         } else {
           message.error(result.Message)
         }

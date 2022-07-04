@@ -29,8 +29,9 @@ export default class Index extends Component {
   };
   componentDidMount() {
       const {dispatch,userList, data} = this.props;
-
-      userList.length<=0 || !data&&dispatch({ type: 'common/getUserList', payload: {},  })   
+      if(userList.length<=0 || !data){
+        dispatch({ type: 'common/getUserList', payload: {},  })  
+      }
 
 
    }
