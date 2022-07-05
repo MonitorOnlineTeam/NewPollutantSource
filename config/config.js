@@ -450,6 +450,13 @@ export default {
                 },
               ]
             },
+            
+             { //设备管理权限
+                  name:'projectManageAuthor',
+                  path:'/assetManagement/equipmentAccount/projectManageAuthor',
+                  component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',
+             },
+            
             {
               path: '/platformconfig',
               name: 'platformconfig',

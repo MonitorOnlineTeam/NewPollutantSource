@@ -478,7 +478,6 @@ const Index = (props) => {
           keyboard={false}
           zIndex={1}
           onClose={()=>{setDrawerVisible(false)}} 
-          // getContainer={(Setting.layout === 'sidemenu' && config.isShowTabs) ? false : 'body'}
           bodyStyle={{ padding: '18px 8px' }}
           style={{
             marginTop: 64,

@@ -623,3 +623,13 @@ a:hover {
   margin-bottom: 0;
   color: #000;
 }
+.drawerNoVirtualSty{
+  height: calc(100vh - 64px);
+  .ant-drawer-body :global{
+    overflow: hidden;
+  }
+  .ant-tree-list-holder:global{
+    max-height: 100% !important;
+    overflow-y: hidden !important;
+  }
+}
