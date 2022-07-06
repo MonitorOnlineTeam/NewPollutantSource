@@ -135,6 +135,7 @@ const Index = (props) => {
         title: '序号',
         align: 'center',
         width: 50,
+        ellipsis:true,
         render: (text, record, index) => {
           return  (index + 1) + (pageIndex-1)*pageSize;
       }
@@ -144,6 +145,7 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key:'RegionName',
       align:'center',
+      ellipsis:true,
     },
 
     {
@@ -151,18 +153,21 @@ const Index = (props) => {
       dataIndex: 'EntName',
       key:'EntName',
       align:'center',
+      ellipsis:true,
     },
     {
         title: '监测点名称',
         dataIndex: 'PointName',
         key:'PointName',
         align:'center',
+        ellipsis:true,
       },
       {
         title: '监测点类型',
         dataIndex: 'PollutantTypeName',
         key:'PollutantTypeName',
         align:'center',
+        ellipsis:true,
       },
     {
       title: '设备参数类别',
@@ -170,6 +175,7 @@ const Index = (props) => {
       key:'ParamName',
       align:'center',
       width:180,
+      ellipsis:true,
       // ...getFilterProps('ParamName'),
       filters: [
         { text: '已维护', value: '1' },
@@ -261,6 +267,7 @@ const Index = (props) => {
     <div  className={styles.pollutantInfoSty}>
     <Card title={searchComponents()}>
       <SdlTable
+        resizable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}

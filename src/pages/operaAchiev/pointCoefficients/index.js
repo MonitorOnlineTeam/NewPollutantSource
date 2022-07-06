@@ -119,31 +119,57 @@ const Index = (props) => {
         dataIndex: 'RegionName',
         key: 'RegionName',
         align: 'center',
+        ellipsis:true,
       },
       {
         title: `企业名称`,
         dataIndex: 'EntName',
         key: 'EntName',
         align: 'center',
+        ellipsis:true,
       },
       {
         title: '监测点名称',
         dataIndex: 'PointName',
         key: 'PointName',
         align: 'center',
+        ellipsis:true,
       },
       {
         title: '监测点类别',
         dataIndex: 'PollutantTypeName',
         key: 'PollutantTypeName',
         align: 'center',
+        ellipsis:true,
       },
       {
         title: '监测点系数',
         dataIndex: 'Coefficient',
         key: 'Coefficient',
         align: 'center',
+        ellipsis:true,
       },
+      // {
+      //   title: '合同起止时间',
+      //   dataIndex: 'Coefficient',
+      //   key: 'Coefficient',
+      //   align: 'center',
+      //   ellipsis:true,
+      // },
+      // {
+      //   title: '设备类型',
+      //   dataIndex: 'Coefficient',
+      //   key: 'Coefficient',
+      //   align: 'center',
+      //   ellipsis:true,
+      // },
+      // {
+      //   title: '监测因子',
+      //   dataIndex: 'Coefficient',
+      //   key: 'Coefficient',
+      //   align: 'center',
+      //   ellipsis:true,
+      // },
   ];
 
   isList&&columns.push({
@@ -301,6 +327,7 @@ const Index = (props) => {
   const cardComponents = () =>{
    return     <Card title={searchComponents()}>
    <SdlTable
+     resizable
      loading = {tableLoading}
      bordered
      dataSource={tableDatas}

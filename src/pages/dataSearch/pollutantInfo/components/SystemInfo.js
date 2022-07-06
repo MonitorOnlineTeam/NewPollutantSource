@@ -148,6 +148,7 @@ const Index = (props) => {
         title: '序号',
         align: 'center',
         width: 50,
+        ellipsis:true,
         render: (text, record, index) => {
           return  (index + 1) + (pageIndex-1)*pageSize;
       }
@@ -157,6 +158,7 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key:'RegionName',
       align:'center',
+      ellipsis:true,
     },
 
     {
@@ -164,12 +166,14 @@ const Index = (props) => {
       dataIndex: 'EntName',
       key:'EntName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '监测点名称',
       dataIndex: 'PointName',
       key:'PointName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '气态污染物CEMS设备生产商',
@@ -177,6 +181,7 @@ const Index = (props) => {
       key:'GasManufacturer',
       align:'center',
       width:200,
+      ellipsis:true,
       filters: [
         { text: '已维护', value: '1' },
         { text: '未维护', value: '0' },
@@ -190,6 +195,7 @@ const Index = (props) => {
       key:'GasEquipment',
       align:'center',
       width:200,
+      ellipsis:true,
       filters: [
         { text: '已维护', value: '1' },
         { text: '未维护', value: '0' },
@@ -202,6 +208,7 @@ const Index = (props) => {
       key:'PMManufacturer',
       align:'center',
       width:200,
+      ellipsis:true,
       filters: [
         { text: '已维护', value: '1' },
         { text: '未维护', value: '0' },
@@ -214,6 +221,7 @@ const Index = (props) => {
       key:'PMEquipment', 
       align:'center',
       width:200,
+      ellipsis:true,
       filters: [
         { text: '已维护', value: '1' },
         { text: '未维护', value: '0' },
@@ -306,6 +314,7 @@ const Index = (props) => {
     <div  className={styles.pollutantInfoSty}>
     <Card title={searchComponents()}>
       <SdlTable
+        resizable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}

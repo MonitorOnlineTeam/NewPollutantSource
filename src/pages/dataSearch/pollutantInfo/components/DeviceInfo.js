@@ -117,12 +117,14 @@ const Index = (props) => {
             key: 'Sort',
             align: 'center',
             width: 50,
+            ellipsis:true,
         },
         {
             title: '行政区',
             dataIndex: 'RegionName',
             key: 'RegionName',
             align: 'center',
+            ellipsis:true,
         },
 
         {
@@ -130,48 +132,56 @@ const Index = (props) => {
             dataIndex: 'EntName',
             key: 'EntName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '监测点名称',
             dataIndex: 'PointName',
             key: 'PointName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '监测参数',
             dataIndex: 'PollutantName',
             key: 'PollutantName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '设备名称',
             dataIndex: 'EquipmentName',
             key: 'EquipmentName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '设备型号',
             dataIndex: 'EquipmentType',
             key: 'EquipmentType',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '设备序列号',
             dataIndex: 'EquipmentNumber',
             key: 'EquipmentNumber',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '设备厂家',
             dataIndex: 'ManufacturerName',
             key: 'ManufacturerName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '量程',
             dataIndex: 'Range',
             key: 'Range',
             align: 'center',
+            ellipsis:true,
         },
     ])
 
@@ -308,6 +318,7 @@ const Index = (props) => {
         <div className={styles.pollutantInfoSty}>
             <Card title={searchComponents()}>
                 <SdlTable
+                    resizable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}

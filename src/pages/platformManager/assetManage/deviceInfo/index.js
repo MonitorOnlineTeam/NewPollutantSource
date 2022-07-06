@@ -408,6 +408,9 @@ const Index = (props) => {
       </Form.Item>
       </Row>
       <Row>
+      <Form.Item label="设备型号" name="EquipmentType"  style={{marginRight:16}} >
+         <Input placeholder="请输入设备型号" style={{width:200}} allowClear/>
+      </Form.Item>
       <Form.Item label="状态" name="Status"  style={{marginRight:16}} >
        <Select placeholder='请选择状态' allowClear style={{width:200}}>
            <Option key={1} value={1}>启用</Option>

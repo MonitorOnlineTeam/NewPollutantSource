@@ -90,6 +90,7 @@ const Index = (props) => {
             title: '序号',
             align: 'center',
             width: 50,
+            ellipsis:true,
             render: (text, record, index) => {
                 return  (index + 1) + (pageIndex-1)*pageSize;
             }
@@ -99,24 +100,28 @@ const Index = (props) => {
             dataIndex: 'regionName',
             key: 'regionName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '企业名称',
             dataIndex: 'parentName',
             key: 'parentName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '监测点',
             dataIndex: 'pointName',
             key: 'pointName',
-            align: 'center'
+            align: 'center',
+            ellipsis:true,
         },
         {
             title: '项目编号',
             dataIndex: 'projectCode',
             key: 'projectCode',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '运营合同起始日期',
@@ -124,6 +129,7 @@ const Index = (props) => {
             key: 'operationBeginTime',
             align: 'center',
             width:150,
+            ellipsis:true,
         },
         {
             title: '运营合同结束日期',
@@ -131,6 +137,7 @@ const Index = (props) => {
             key: 'operationEndTime',
             align: 'center',
             width:150,
+            ellipsis:true,
 
         },
         {
@@ -139,6 +146,7 @@ const Index = (props) => {
             key: 'actualBeginTime',
             align: 'center',
             width:150,
+            ellipsis:true,
         },
         {
             title: '实际结束日期',
@@ -146,6 +154,7 @@ const Index = (props) => {
             key: 'actualEndTime',
             align: 'center',
             width:150,
+            ellipsis:true,
 
         },
         {
@@ -153,6 +162,7 @@ const Index = (props) => {
             dataIndex: 'inspectionCycelName',
             key: 'inspectionCycelName',
             align: 'center',
+            ellipsis:true,
         },
 
         {
@@ -160,12 +170,14 @@ const Index = (props) => {
             dataIndex: 'calibrationCycleName',
             key: 'calibrationCycleName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '参数核对频次',
             dataIndex: 'parameterCheckName',
             key: 'parameterCheckName',
             align: 'center',
+            ellipsis:true,
         },
 
         {
@@ -173,6 +185,7 @@ const Index = (props) => {
             dataIndex: 'x',
             key: 'x',
             align: 'center',
+            ellipsis:true,
             render: (text, record) => {
                 return <span>
                     <Fragment>
@@ -191,6 +204,7 @@ const Index = (props) => {
             title: '序号',
             align: 'center',
             width: 50,
+            ellipsis:true,
             render: (text, record, index) => {
                 return  (index + 1) + (pageIndex-1)*pageSize;
             }
@@ -200,12 +214,14 @@ const Index = (props) => {
             dataIndex: 'projectCode',
             key: 'projectCode',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '运营合同起始日期',
             dataIndex: 'operationBeginTime',
             key: 'operationBeginTime',
             align: 'center',
+            ellipsis:true,
             sorter: (a, b) => moment(a.operationBeginTime).valueOf() - moment(b.operationBeginTime).valueOf()
         },
         {
@@ -221,6 +237,7 @@ const Index = (props) => {
             dataIndex: 'actualBeginTime',
             key: 'actualBeginTime',
             align: 'center',
+            ellipsis:true,
             sorter: (a, b) => moment(a.actualBeginTime).valueOf() - moment(b.actualBeginTime).valueOf()
         },
         {
@@ -228,6 +245,7 @@ const Index = (props) => {
             dataIndex: 'actualEndTime',
             key: 'actualEndTime',
             align: 'center',
+            ellipsis:true,
             sorter: (a, b) => moment(a.actualEndTime).valueOf() - moment(b.actualEndTime).valueOf()
 
         },
@@ -334,6 +352,7 @@ const Index = (props) => {
             <Card title={searchComponents()}>
 
                 <SdlTable
+                    resizable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
@@ -359,6 +378,7 @@ const Index = (props) => {
             // centered
             >
                 <SdlTable
+                    resizable
                     loading={props.historyOperationInfoLoading}
                     bordered
                     dataSource={props.historyOperationInfo}

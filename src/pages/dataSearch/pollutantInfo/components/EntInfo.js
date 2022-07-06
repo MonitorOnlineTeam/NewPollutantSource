@@ -85,6 +85,7 @@ const Index = (props) => {
             title: '序号',
             align: 'center',
             width: 50,
+            ellipsis:true,
             render: (text, record, index) => {
                 return  (index + 1) + (pageIndex-1)*pageSize;
             }
@@ -94,6 +95,7 @@ const Index = (props) => {
             dataIndex: 'regionName',
             key: 'regionName',
             align: 'center',
+            ellipsis:true,
         },
 
         {
@@ -101,24 +103,28 @@ const Index = (props) => {
             dataIndex: 'entName',
             key: 'entName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '企业简称',
             dataIndex: 'abbreviation',
             key: 'abbreviation',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '企业地址',
             dataIndex: 'address',
             key: 'address',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '经纬度',
             dataIndex: 'longitude',
             key: 'longitude',
             align: 'center',
+            ellipsis:true,
             render: (text, record, index) => {
                 return `${text},${record.latitude}`
             }
@@ -128,18 +134,21 @@ const Index = (props) => {
             dataIndex: 'environmentPrincipal',
             key: 'environmentPrincipal',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '办公电话',
             dataIndex: 'officePhone',
             key: 'officePhone',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '移动电话',
             dataIndex: 'mobilePhone',
             key: 'mobilePhone',
             align: 'center',
+            ellipsis:true,
         },
     ];
 
@@ -219,6 +228,7 @@ const Index = (props) => {
         <div className={styles.pollutantInfoSty}>
             <Card title={searchComponents()}>
                 <SdlTable
+                    resizable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}

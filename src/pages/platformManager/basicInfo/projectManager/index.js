@@ -127,39 +127,45 @@ const Index = (props) => {
       title: '合同名称',
       dataIndex: 'ProjectName',
       key:'ProjectName',
-      align:'center'
+      align:'center',
+      ellipsis:true,
     },
     {
       title: '项目编号',
       dataIndex: 'ProjectCode',
       key:'ProjectCode',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '客户所在地',
       dataIndex: 'RegionName',
       key:'RegionName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '卖方公司名称',
       dataIndex: 'SellCompanyName',
       key:'SellCompanyName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '运营合同起始日期',
       dataIndex: 'BeginTime',
       key:'BeginTime',
       align:'center',
-      sorter: (a, b) => moment(a.BeginTime).valueOf() - moment(b.BeginTime).valueOf()
+      sorter: (a, b) => moment(a.BeginTime).valueOf() - moment(b.BeginTime).valueOf(),
+      ellipsis:true,
     },
     {
       title: '运营合同结束日期',
       dataIndex: 'EndTime',
       key:'EndTime',
       align:'center',
-      sorter: (a, b) => moment(a.EndTime).valueOf() - moment(b.EndTime).valueOf()
+      sorter: (a, b) => moment(a.EndTime).valueOf() - moment(b.EndTime).valueOf(),
+      ellipsis:true,
       
     },
     {
@@ -167,12 +173,14 @@ const Index = (props) => {
       dataIndex: 'OperationCount',
       key:'OperationCount',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '创建人',
       dataIndex: 'UserName',
       key:'UserName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '创建时间',
@@ -180,7 +188,8 @@ const Index = (props) => {
       key:'CreateTime',
       align:'center',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf()
+      sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf(),
+      ellipsis:true,
     },
     {
       title: <span>操作</span>,
@@ -188,6 +197,7 @@ const Index = (props) => {
       key: 'x',
       align: 'center',
       width:180,
+      ellipsis:true,
       render: (text, record) =>{
         return  <span>
                <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
@@ -222,25 +232,29 @@ const Index = (props) => {
       title: '监控目标',
       dataIndex: 'entName',
       key:'entName',
-      align:'center'
+      align:'center',
+      ellipsis:true,
     },
     {
       title: '监测点',
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '实际运营开始日期',
       dataIndex: 'beginTime',
       key:'beginTime',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '实际运营结束日期',
       dataIndex: 'endTime',
       key:'endTime',
       align:'center',
+      ellipsis:true,
     },
   ]
 
@@ -502,6 +516,7 @@ const Index = (props) => {
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
+        resizable
         loading = {tableLoading}
         bordered
         scroll={{ y:expand? 'calc(100vh - 470px)' : 'calc(100vh - 370px)'}}
@@ -638,6 +653,7 @@ const Index = (props) => {
             导出
           </Button> 
        <SdlTable
+        resizable
         loading = {pointLoading}
         bordered
         dataSource={pointDatas}

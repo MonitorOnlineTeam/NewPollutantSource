@@ -150,6 +150,7 @@ const Index = (props) => {
             title: '序号',
             align: 'center',
             width: 50,
+            ellipsis:true,
             render: (text, record, index) => {
                 return  (index + 1) + (pageIndex-1)*pageSize;
             }
@@ -159,6 +160,7 @@ const Index = (props) => {
             dataIndex: 'regionName',
             key: 'regionName',
             align: 'center',
+            ellipsis:true,
         },
 
         {
@@ -166,24 +168,28 @@ const Index = (props) => {
             dataIndex: 'entName',
             key: 'entName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '监测点名称',
             dataIndex: 'pointName',
             key: 'pointName',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '设备编号(MN)',
             dataIndex: 'DGIMN',
             key: 'DGIMN',
             align: 'center',
+            ellipsis:true,
         },
         {
             title: '经纬度',
             dataIndex: 'longitude',
             key: 'longitude',
             align: 'center',
+            ellipsis:true,
             render: (text, record, index) => {
                 return `${text},${record.latitude}`
             }
@@ -194,6 +200,7 @@ const Index = (props) => {
             key: 'pollutantTypeName',
             align: 'center',
             width:130,
+            ellipsis:true,
         },
         {
             title: '运维状态',
@@ -201,6 +208,7 @@ const Index = (props) => {
             key: 'operationStatus',
             align: 'center',
             width:150,
+            ellipsis:true,
             // ...getFilterProps('operationStatus'),
             filters: [
                 { text: '进行中', value: '0' },
@@ -213,6 +221,7 @@ const Index = (props) => {
             dataIndex: 'judgeMiss',
             key: 'missData',
             align: 'center',
+            ellipsis:true,
             width:170,
             filters: [
                 { text: '是', value: '1' },
@@ -226,6 +235,7 @@ const Index = (props) => {
             key: 'operationUser',
             align: 'center',
             width:150,
+            ellipsis:true,
             filters: [
                 { text: '设置', value: '1' },
                 { text: '未设置', value: '2' },
@@ -261,16 +271,19 @@ const Index = (props) => {
                 dataIndex: 'outPutType',
                 key: 'outPutType',
                 align: 'center',
+                ellipsis:true,
             },{
                 title: 'CEMS监测原理',
                 dataIndex: 'CEMSPrinciple',
                 key: 'CEMSPrinciple',
                 align: 'center',
+                ellipsis:true,
             },{
                 title: 'CEMS类型',
                 dataIndex: 'CEMSType',
                 key: 'CEMSType',
                 align: 'center',  
+                ellipsis:true,
             })
         }else{
           columns.filter(item=>item.title!='排口类型'&&item.title!='CEMS监测原理'&&item.title!='CEMS类型')
@@ -355,6 +368,7 @@ const Index = (props) => {
         <div className={styles.pollutantInfoSty}>
             <Card title={searchComponents()}>
                 <SdlTable
+                    resizable
                     loading={tableLoading}
                     bordered
                     dataSource={tableDatas}
