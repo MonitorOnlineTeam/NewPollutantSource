@@ -396,7 +396,7 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable, } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
@@ -407,6 +407,7 @@ class AutoFormTable extends PureComponent {
         return {
           ...col,
           width: 200,
+          ellipsis:resizable?true:false,
           align:isCenter?'center':'',
           render: (text, record) => {
             const attachmentDataSource = getAttachmentDataSource(text);
@@ -419,6 +420,7 @@ class AutoFormTable extends PureComponent {
       return {
         ...col,
         width: col.width,
+        ellipsis:resizable?true:false,
         align:isCenter&&col.dataIndex!=='dbo.T_Bas_EquipmentHandoverData.Remark'&&col.dataIndex!=='dbo.T_Bas_Storehouse.StorehouseRemark'?'center':'',
         render: (text, record) => {
           text = text ? text + "" : text;
@@ -478,6 +480,7 @@ class AutoFormTable extends PureComponent {
         title: '操作',
         width: 200,
         fixed: isFixed,
+        ellipsis:resizable?true:false,
         render: (text, record) => {
           const returnKey = keys[configId] && record[keys[configId][0]];
           return <div>

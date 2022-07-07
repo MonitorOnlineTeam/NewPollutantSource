@@ -236,6 +236,7 @@ export default class MonitorTarget extends Component {
                         selectType='3,是'
                     ></SearchWrapper>
                     <AutoFormTable
+                        // resizable
                         onRef={this.onRef1}
                         style={{ marginTop: 10 }}
                         // columns={columns}

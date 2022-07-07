@@ -325,31 +325,35 @@ const projectNumCol =[
     dataIndex: 'ProjectCode',
     key:'ProjectCode',
     align:'center',
+    ellipsis:true,
   },
   {
     title: '卖方公司名称',
     dataIndex: 'SellCompanyName',
     key:'SellCompanyName',
     align:'center',
+    ellipsis:true,
   },
   {
     title: '运营起始日期',
     dataIndex: 'BeginTime',
     key:'BeginTime',
     align:'center',
+    ellipsis:true,
   },
   {
     title: '运营结束日期',
     dataIndex: 'EndTime',
     key:'EndTime',
     align:'center',
-    
+    ellipsis:true,
   },
   {
     title: <span>操作</span>,
     dataIndex: 'x',
     key: 'x',
     align: 'center',
+    ellipsis:true,
     render: (text, record) =>{
       return<Button size='small' type="primary" onClick={()=>{ choice(record)}} >选择</Button>
     }
@@ -661,7 +665,7 @@ useEffect(()=>{
              </Button>
              </Form.Item>
              </Row>
-               <SdlTable  scroll={{ y: 'calc(100vh - 500px)' }} style={{width:800}} loading = {projectNumListLoading} bordered    dataSource={projectTableDatas}   columns={projectNumCol}  />
+               <SdlTable resizable  scroll={{ y: 'calc(100vh - 500px)' }} style={{width:800}} loading = {projectNumListLoading} bordered    dataSource={projectTableDatas}   columns={projectNumCol}  />
                </>}
             title=""
             trigger="click"

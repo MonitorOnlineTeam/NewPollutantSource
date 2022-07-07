@@ -25,3 +25,15 @@ export async function AddCustomerOrder(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddCustomerOrder',params, null);
   return result;
 }
+
+// 删除客户订单
+export async function DeleteCustomerOrder(params){
+  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/DeleteCustomerOrder/${params.ID}`,params, null);
+  return result;
+}
+
+// 客户订单续费
+export async function RenewOrder(params){
+  const result = await post(`/api/rest/PollutantSourceApi/TaskFormApi/RenewOrder`,params, null);
+  return result;
+}

@@ -128,31 +128,36 @@ const Index = (props) => {
       title: '合同名称',
       dataIndex: 'ProjectName',
       key:'ProjectName',
-      align:'center'
+      align:'center',
+      ellipsis:true,
     },
     {
       title: '项目编号',
       dataIndex: 'ProjectCode',
       key:'ProjectCode',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '客户所在地',
       dataIndex: 'RegionName',
       key:'RegionName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '卖方公司名称',
       dataIndex: 'SellCompanyName',
       key:'SellCompanyName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '运营起始日期',
       dataIndex: 'BeginTime',
       key:'BeginTime',
       align:'center',
+      ellipsis:true,
       sorter: (a, b) => moment(a.BeginTime).valueOf() - moment(b.BeginTime).valueOf()
     },
     {
@@ -160,6 +165,7 @@ const Index = (props) => {
       dataIndex: 'EndTime',
       key:'EndTime',
       align:'center',
+      ellipsis:true,
       sorter: (a, b) => moment(a.EndTime).valueOf() - moment(b.EndTime).valueOf()
       
     },
@@ -168,12 +174,14 @@ const Index = (props) => {
       dataIndex: 'OperationCount',
       key:'OperationCount',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '创建人',
       dataIndex: 'UserName',
       key:'UserName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '创建时间',
@@ -181,6 +189,7 @@ const Index = (props) => {
       key:'CreateTime',
       align:'center',
       defaultSortOrder: 'descend',
+      ellipsis:true,
       sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf()
     },
     {
@@ -189,6 +198,7 @@ const Index = (props) => {
       key: 'x',
       align: 'center',
       width:180,
+      ellipsis:true,
       render: (text, record) =>{
         return  <span>
                <Fragment> <Tooltip title="运维监测点信息">  <a href="javasctipt:;" onClick={()=>{operaInfo(record)}} ><PointIcon /></a></Tooltip></Fragment>
@@ -202,25 +212,29 @@ const Index = (props) => {
       title: '监控目标',
       dataIndex: 'entName',
       key:'entName',
-      align:'center'
+      align:'center',
+      ellipsis:true,
     },
     {
       title: '监测点',
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '实际运营开始日期',
       dataIndex: 'beginTime',
       key:'beginTime',
       align:'center',
+      ellipsis:true,
     },
     {
       title: '实际运营结束日期',
       dataIndex: 'endTime',
       key:'endTime',
       align:'center',
+      ellipsis:true,
     },
   ]
 
@@ -382,6 +396,7 @@ const Index = (props) => {
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
+        resizable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
@@ -518,6 +533,7 @@ const Index = (props) => {
             导出
           </Button> 
        <SdlTable
+        resizable
         loading = {pointLoading}
         bordered
         dataSource={pointDatas}

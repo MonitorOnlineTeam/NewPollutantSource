@@ -21,7 +21,6 @@ const Model = {
       });
 
      if (response.IsSuccess) {
-       if(payload.IsAgree){
          response.Datas.User_ID = response.Datas.UserId;
          let defaultNavigateUrl = '/user/login';
          let systemNavigateUrl = '';
@@ -53,11 +52,11 @@ const Model = {
         }
         //大屏
         if (payload.redirctUrl) {
-          router.push('/homepage');
+          router.push('/newestHome');
           return;
         }
         router.push(defaultNavigateUrl);
-      }
+    
       }
     },
 

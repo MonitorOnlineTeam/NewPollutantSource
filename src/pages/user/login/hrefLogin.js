@@ -22,9 +22,9 @@ export default class hrefLogin extends Component {
     begin !== "61" ? this.props.dispatch({
       type: "userLogin/login",
       payload: {
-        userName: "system",
-        password: "111111",
-        redirctUrl:'/homepage'
+        userName: "datays",
+        password: "Password@123",
+        redirctUrl:'/newestHome'
       }
     }) : router.push("/user/login")
   }

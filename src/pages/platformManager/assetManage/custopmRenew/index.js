@@ -39,6 +39,7 @@ const dvaPropsData =  ({ loading,custopmRenew,global }) => ({
   tableDetailTotal:custopmRenew.tableDetailTotal,
   userListLoading: loading.effects[`${namespace}/getCustomerOrderUserList`],
   customerOrderPointEntListLoading: loading.effects[`${namespace}/getCustomerOrderPointEntList`] || false,
+  renewOrderLoading: loading.effects[`${namespace}/renewOrder`] || false,
   
 })
 
@@ -75,6 +76,20 @@ const  dvaDispatch = (dispatch) => {
     addCustomerOrder:(payload,callback)=>{ //添加
       dispatch({
         type: `${namespace}/addCustomerOrder`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    deleteCustomerOrder:(payload,callback)=>{ //删除
+      dispatch({
+        type: `${namespace}/deleteCustomerOrder`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    renewOrder:(payload,callback)=>{ //续费
+      dispatch({
+        type: `${namespace}/renewOrder`, 
         payload:payload,
         callback:callback
       }) 
@@ -247,15 +262,8 @@ const detailCol = [{
   };
 
   const del =  async (record) => {
-    const values = await form.validateFields();
-    props.delEquipmentInfo({ID:record.ID},()=>{
-      setPageIndex(1)
-      props.getEquipmentInfoList({
-        ManufacturerId:manufacturerId,
-        pageIndex:1,
-        pageSize:pageSize,
-        ...values,
-      })
+    props.deleteCustomerOrder({ID:record.ID},()=>{
+      onFinish()
     })
   };
 
@@ -263,11 +271,7 @@ const detailCol = [{
 
   
   
-  const add = () => {
-    setFromVisible(true)
-    form2.resetFields();
 
-  };
 
   const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
 
@@ -291,7 +295,6 @@ const detailCol = [{
     }
   }
   const onModalOk  = async () =>{ //添加
-  
     try {
       const values = await form2.validateFields();//触发校验
        props.addCustomerOrder({
@@ -305,24 +308,31 @@ const detailCol = [{
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
     }
-  }
-  const onSelect = async (selectedKeys,e) =>{
-    setManufacturerId(selectedKeys.toString())
-    setDeveiceName(e.node.titles)
-  }
-const renewOk = ()  =>{   //续费
 
-  setSelectedRowKeys()
-}
+ }
+  
+  const renewOk = ()  =>{   //续费
+
+    if(selectedRowKeys.length<=0){
+      message.warning('请先选择一行数据')
+      return;
+   }
+   if(!renewDay){
+      message.warning('续费时长不能为空')
+      return;
+   }
+   props.renewOrder({
+    ListID:selectedRowKeys,
+    MonthTime:renewDay,
+  },()=>{
+    setRenewVisible(false)
+    setSelectedRowKeys(undefined);
+    onFinish()
+  })
+  }
 
   const onValuesChange = (hangedValues, allValues)=>{
-    if(Object.keys(hangedValues).join() == 'PollutantType'){
-      props.getPollutantById({id:hangedValues.PollutantType,type:1}) //监测类别
-      form.setFieldsValue({PollutantCode:undefined})
 
-      // props.getEquipmentName({id:hangedValues.PollutantType,type:2}) //设备名称
-      // form.setFieldsValue({EquipmentName:undefined})
-    }
   }
     const [pageIndex2,setPageIndex2 ] = useState(1)
     const [pageSize2,setPageSize2 ] = useState(20)
@@ -369,10 +379,10 @@ const renewOk = ()  =>{   //续费
      <Button    style={{marginRight:8}} onClick={()=>{form.resetFields()}}>
           重置
      </Button>
-     <Button   onClick={()=>{ add()}} style={{marginRight:8}} >
+     <Button   onClick={()=>{setFromVisible(true);form2.resetFields()}} style={{marginRight:8}} >
           添加
      </Button>
-     <Button   type="primary"  onClick={()=>{setRenewVisible(true)}}>
+     <Button   type="primary"  onClick={()=>{setRenewVisible(true);setRenewDay(undefined);setRenewETime(undefined)}}>
           续费
      </Button>
      </Form.Item>
@@ -406,16 +416,10 @@ const renewOk = ()  =>{   //续费
 
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRow, setSelectedRow] = useState([]);
 
   const onSelectChange = (newSelectedRowKeys,newSelectedRow) => {
 
-    if(selectedRowKeys.length<1 || newSelectedRowKeys.length==0){ //newSelectedRowKeys.length==0 选中取消时
       setSelectedRowKeys(newSelectedRowKeys);
-      setSelectedRow(newSelectedRow)
-    }else{
-      message.warning('每次最多选择一行')
-    }
 
   };
   const rowSelection = {
@@ -443,6 +447,7 @@ const renewOk = ()  =>{   //续费
   const renewClick = (val) =>{ //双击取消
     if(val==renewDay){
       setRenewDay(undefined)
+      setRenewETime(undefined)
     }
   }
 
@@ -474,7 +479,7 @@ const renewOk = ()  =>{   //续费
         title={'添加'}
         visible={fromVisible}
         onOk={onModalOk}
-        confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
+        confirmLoading={loadingAddConfirm}
         onCancel={()=>{setFromVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
@@ -535,11 +540,12 @@ const renewOk = ()  =>{   //续费
       <Modal
         title={'续费时长'}
         visible={renewVisible}
-        onOk={onModalOk}
-        confirmLoading={loadingAddConfirm}
+        onOk={renewOk}
+        confirmLoading={props.renewOrderLoading}
         onCancel={()=>{setRenewVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
+        confirmLoading={props.renewOrderLoading}
         
       >
     <div>续费时长:</div>
@@ -555,7 +561,7 @@ const renewOk = ()  =>{   //续费
       }
     </Radio.Group><span style={{paddingLeft:5}}>年</span>
 
-    <Row style={{ marginTop: 24 }}>续费后的时间为：<span  className='red'>{renewETime}</span></Row>
+    {/* <Row style={{ marginTop: 24 }}>续费后的时间为：<span  className='red'>{renewETime}</span></Row> */}
     </div>
       </Modal>
 

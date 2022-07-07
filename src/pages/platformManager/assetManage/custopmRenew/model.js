@@ -61,7 +61,23 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
-
+    *deleteCustomerOrder({ payload, callback }, { call, put, update }) { //删除客户订单
+      const result = yield call(services.DeleteCustomerOrder, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *renewOrder({ payload, callback }, { call, put, update }) { //客户订单 续费
+      const result = yield call(services.RenewOrder, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
   },
 })
