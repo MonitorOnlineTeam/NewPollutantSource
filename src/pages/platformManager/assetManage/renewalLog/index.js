@@ -1,7 +1,7 @@
 /**
- * 功  能：客户续费
- * 创建人：贾安波
- * 创建时间：2022.06.29
+ * 功  能：续费日志
+ * 创建人：jab
+ * 创建时间：2022.07.08
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
@@ -24,19 +24,19 @@ import UserList from '@/components/UserList'
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'custopmRenew'
+const namespace = 'renewalLog'
 
 
 
 
-const dvaPropsData =  ({ loading,custopmRenew,global }) => ({
-  tableDatas:custopmRenew.tableDatas,
-  tableLoading:custopmRenew.tableLoading,
-  tableTotal:custopmRenew.tableTotal,
-  customerOrderUserList:custopmRenew.customerOrderUserList,
+const dvaPropsData =  ({ loading,renewalLog,global }) => ({
+  tableDatas:renewalLog.tableDatas,
+  tableLoading:renewalLog.tableLoading,
+  tableTotal:renewalLog.tableTotal,
+  customerOrderUserList:renewalLog.customerOrderUserList,
   loadingAddConfirm: loading.effects[`${namespace}/addCustomerOrder`],
-  tableDetailDatas:custopmRenew.tableDetailDatas,
-  tableDetailTotal:custopmRenew.tableDetailTotal,
+  tableDetailDatas:renewalLog.tableDetailDatas,
+  tableDetailTotal:renewalLog.tableDetailTotal,
   userListLoading: loading.effects[`${namespace}/getCustomerOrderUserList`],
   customerOrderPointEntListLoading: loading.effects[`${namespace}/getCustomerOrderPointEntList`] || false,
   renewOrderLoading: loading.effects[`${namespace}/renewOrder`] || false,
@@ -484,7 +484,7 @@ const detailCol = [{
   const [renewVisible,setRenewVisible ] = useState(false)
 
    return (
-    <div  className={styles.custopmRenewSty} >
+    <div  className={styles.renewalLogSty} >
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable

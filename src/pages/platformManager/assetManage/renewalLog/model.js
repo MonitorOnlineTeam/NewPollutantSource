@@ -8,7 +8,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'custopmRenew',
+  namespace: 'renewalLog',
   state: {
     tableDatas: [],
     tableLoading: false,

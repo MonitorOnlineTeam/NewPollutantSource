@@ -407,7 +407,6 @@ class AutoFormTable extends PureComponent {
         return {
           ...col,
           width: 200,
-          ellipsis:resizable?true:false,
           align:isCenter?'center':'',
           render: (text, record) => {
             const attachmentDataSource = getAttachmentDataSource(text);
@@ -441,13 +440,13 @@ class AutoFormTable extends PureComponent {
               }
             }
             // return <TableText content={text} {...porps} />
-            return <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
+            return <a   title={text} className={styles.ellipsisText} style={{ wordWrap: 'break-word', wordBreak: 'break-all' }} {...porps}>{text}</a>
           }
           // 格式化日期
           if (col.dateFormat) {
             text = moment(text).format(col.dateFormat)
           }
-          return text && <div className={styles.ellipsisText} style={{display:isCenter?'inline-block':""}}>
+          return text && <div title={!type && text}  className={styles.ellipsisText} style={{display:isCenter?'inline-block':""}}>
             {/* {type === '超链接' &&
               <a style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</a>
             } */}
@@ -478,9 +477,8 @@ class AutoFormTable extends PureComponent {
       _columns.length && _columns.push({
         align: 'center',
         title: '操作',
-        width: 200,
+        width: 220,
         fixed: isFixed,
-        ellipsis:resizable?true:false,
         render: (text, record) => {
           const returnKey = keys[configId] && record[keys[configId][0]];
           return <div>
@@ -524,7 +522,7 @@ class AutoFormTable extends PureComponent {
                           }
                         })
                         this.props.onView ? this.props.onView(record, returnKey) : dispatch(routerRedux.push(`/${parentCode}/AutoFormManager/${configId}/AutoFormView/${JSON.stringify(postData)}`))
-                      }}><DetailIcon /></a>
+                      }} ><DetailIcon /></a>
 
                     </Tooltip>
                     {

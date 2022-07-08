@@ -448,6 +448,11 @@ export default {
                   path:'/assetManage/customOrder/custopmRenew',
                   component: './platformManager/assetManage/custopmRenew',
                 },
+                { // 续费日志
+                  name:'custopmRenew',
+                  path:'/assetManage/customOrder/renewalLog',
+                  component: './platformManager/assetManage/renewalLog',
+                },
               ]
             },
             
