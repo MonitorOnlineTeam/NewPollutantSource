@@ -200,9 +200,7 @@ const Index = (props) => {
     });
   }
 
-  const projectNumList=()=>{
-    props.projectNumList()
-  }
+
   const columns = [
     {
       title: '监测点',
@@ -449,17 +447,18 @@ const projectNumCol =[
   }
 
   const  projectNumQuery = (code)=>{
-    props.projectNumList({ProjectCode:code})
+    props.projectNumList({ProjectCode:code,Author:1,})
  }
   
- const endDisabledDate=(current)=>{
-  const time = form2.getFieldValue('BeginTime')
-  return time&&current && current < moment(time).endOf('day');
-}
  const startDisabledDate=(current)=>{
   const time = form2.getFieldValue('EndTime')
   return time&&current && current > moment(time).startOf('day');
 }
+ const endDisabledDate=(current)=>{
+  const time = form2.getFieldValue('BeginTime')
+  return time&&current && current < moment(time).endOf('day');
+}
+
 
 
 useEffect(()=>{

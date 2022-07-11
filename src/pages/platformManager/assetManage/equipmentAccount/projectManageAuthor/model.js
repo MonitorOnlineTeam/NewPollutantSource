@@ -12,24 +12,24 @@ export default Model.extend({
   state: {
     tableDatas: [],
     tableTotal: 0,
-    tableDetailDatas:[],
-    tableDetailTotal:0,
+    projectAuthorList:[],
+    projectAuthorListTotal: 0,
     userList:[],
   },
   effects: {
-    *getEquipmentInfoList({ payload, callback }, { call, put, update }) { //列表
-      const result = yield call(services.GetEquipmentInfoList, payload);
+    *getProjectAuthorList({ payload, callback }, { call, put, update }) { //项目权限列表
+      const result = yield call(services.GetProjectAuthorList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal: result.Total,
-          // tableDatas:result.Datas? result.Datas:[],
+          tableDatas:result.Datas? result.Datas:[],
         })
       } else {
         message.error(result.Message)
       }
     },
-    *addEquipmentInfo({ payload, callback }, { call, put, update }) { //添加
-      const result = yield call(services.AddEquipmentInfo, payload);
+    *addProjectAuthor({ payload, callback }, { call, put, update }) { //分配项目权限
+      const result = yield call(services.AddProjectAuthor, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -37,8 +37,19 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *editEquipmentInfo({ payload, callback }, { call, put, update }) { //修改
-      const result = yield call(services.EditEquipmentInfo, payload);
+    *getAddProjectAuthorList({ payload, callback }, { call, put, update }) { //获取当前人员未分配的项目权限
+      const result = yield call(services.GetAddProjectAuthorList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          projectAuthorListTotal: result.Total,
+          projectAuthorList:result.Datas? result.Datas.map(item=>{return {...item,}}):[],
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteProjectAuthor({ payload, callback }, { call, put, update }) { //删除项目权限
+      const result = yield call(services.DeleteProjectAuthor, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -46,84 +57,16 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *delEquipmentInfo({ payload, callback }, { call, put, update }) { //删除
-      const result = yield call(services.DelEquipmentInfo, payload);
+    *getUserList({ payload, callback }, { call, put, update }) { //角色列表
+      const result = yield call(services.GetUserList, payload);
       if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
+        yield update({ userList: result.Datas? result.Datas : []})
+        callback&&callback( result.Datas? result.Datas[0] : null)
       } else {
         message.error(result.Message)
       }
     },
-    *getMonitoringTypeList({ payload, callback }, { call, put, update }) { //获取监测类别
-      const result = yield call(services.GetMonitoringTypeList, payload);
-      if (result.IsSuccess) {
-        yield update({ monitoringTypeList: result.Datas? result.Datas.mlist : []})
-      } else {
-        message.error(result.Message)
-      }
-    },
-    *getPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型 查询时
-
-      if (payload.id) {
-        const result = yield call(services.GetPollutantById, payload);
-        if (result.IsSuccess) {
-          yield update({ pollutantTypeList: result.Datas? result.Datas.plist : []})
-        } else {
-          message.error(result.Message)
-        }
-      } else {
-        yield update({ pollutantTypeList: [] })
-      }
-      
-    },
-
-    *addEditPollutantById({ payload, callback }, { call, put, update }) { //获取监测类型 添加编辑时
-      if (payload.id) {
-       const result = yield call(services.GetPollutantById, payload);
-        if (result.IsSuccess) {
-          yield update({ addEditPollutantTypeList: result.Datas? result.Datas.plist : []})
-        } else {
-          message.error(result.Message)
-        }
-      } else {
-        yield update({ addEditPollutantTypeList: [] })
-      }
-    },
-    // *getEquipmentName({ payload, callback }, { call, put, update }) { //获取设备名称 查询时
-
-    //   if (payload.id) {
-    //     const result = yield call(services.GetEquipmentName, payload);
-    //     if (result.IsSuccess) {
-    //       yield update({ equipmentNameList: result.Datas? result.Datas.plist : []})
-    //     } else {
-    //       message.error(result.Message)
-    //     }
-    //   } else {
-    //     yield update({ pollutantTypeList: [] })
-    //   }
-    // },
-    *addEditGetEquipmentName({ payload, callback }, { call, put, update }) { //获取设备名称 添加编辑
-      if (payload.id) {
-       const result = yield call(services.GetEquipmentName, payload);
-        if (result.IsSuccess) {
-          yield update({ addEditEquipmentNameList: result.Datas? result.Datas.plist : []})
-        } else {
-          message.error(result.Message)
-        }
-      } else {
-        yield update({ addEditPollutantTypeList: [] })
-      }
-    },
-    *getManufacturerList({ payload, callback }, { call, put, update }) { //获取厂商列表
-      const result = yield call(services.GetManufacturerList, payload);
-      if (result.IsSuccess) {
-        yield update({ manufacturerList: result.Datas? result.Datas.mlist:[] })
-        callback(result.Datas? result.Datas.mlist:[])
-      } else {
-        message.error(result.Message)
-      }
-    },
+   
 
   },
 })

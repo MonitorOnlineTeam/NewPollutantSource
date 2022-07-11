@@ -450,7 +450,15 @@ const Index = (props) => {
   //     </Row>   
   //    </Form>
   // }
-
+  const startDisabledDate=(current)=>{
+    const time = form2.getFieldValue('EndTime')
+    return time&&current && current > moment(time).startOf('day');
+  }
+   const endDisabledDate=(current)=>{
+    const time = form2.getFieldValue('BeginTime')
+    return time&&current && current < moment(time).endOf('day');
+  }
+  
   const searchComponents = () =>{
     return  <Form
    form={form}
@@ -594,12 +602,12 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="运营合同起始日期" name="BeginTime" rules={[  { required: true, message: '请输入运营合同起始日期!',  },]} >
-        <DatePicker />
+        <DatePicker  disabledDate={startDisabledDate} />
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="运营合同结束日期" name="EndTime" rules={[  { required: true, message: '请输入运营合同结束日期!',  },]} >
-        <DatePicker />
+        <DatePicker disabledDate={endDisabledDate}/>
       </Form.Item>
       </Col>
       </Row>

@@ -30,15 +30,14 @@ const namespace = 'projectManageAuthor'
 
 const dvaPropsData =  ({ loading,projectManageAuthor,global }) => ({
   tableDatas:projectManageAuthor.tableDatas,
-  tableLoading:loading.effects[`${namespace}/addEquipmentInfo`],
+  tableLoading:loading.effects[`${namespace}/getProjectAuthorList`],
   tableTotal:projectManageAuthor.tableTotal,
-  tableDetailDatas:projectManageAuthor.tableDetailDatas,
-  tableDetailLoading:loading.effects[`${namespace}/addEquipmentInfo`],
-  tableDetailTotal:projectManageAuthor.tableDetailTotal,
+  projectAuthorList:projectManageAuthor.projectAuthorList,
+  addProjectAuthorListLoading:loading.effects[`${namespace}/getAddProjectAuthorList`],
+  projectAuthorListTotal:projectManageAuthor.projectAuthorListTotal,
   userList:projectManageAuthor.userList,
-  loadingAddConfirm: loading.effects[`${namespace}/addEquipmentInfo`],
-  loadingUser: loading.effects[`${namespace}/addEquipmentInfo`],
-  loadingAssignPermissions: loading.effects[`${namespace}/addEquipmentInfo`],
+  loadingUser: loading.effects[`${namespace}/getUserList`],
+  loadingAssignPermissions: loading.effects[`${namespace}/addProjectAuthor`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -49,71 +48,43 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getEquipmentInfoList:(payload)=>{ //列表
+    getProjectAuthorList:(payload)=>{ //项目权限列表
       dispatch({
-        type: `${namespace}/getEquipmentInfoList`,
+        type: `${namespace}/getProjectAuthorList`,
         payload:payload,
       })
     },
-    addEquipmentInfo : (payload,callback) =>{ // 添加
+    addProjectAuthor : (payload,callback) =>{ //分配项目权限
       dispatch({
-        type: `${namespace}/addEquipmentInfo`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editEquipmentInfo : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editEquipmentInfo`,
+        type: `${namespace}/addProjectAuthor`,
         payload:payload,
         callback:callback
       })
       
     },
-    delEquipmentInfo:(payload,callback)=>{ //删除
+    getAddProjectAuthorList : (payload,callback) =>{ // 获取当前人员未分配的项目权限
       dispatch({
-        type: `${namespace}/delEquipmentInfo`, 
+        type: `${namespace}/getAddProjectAuthorList`,
+        payload:payload,
+        callback:callback
+      })
+      
+    },
+    deleteProjectAuthor:(payload,callback)=>{ //删除项目权限
+      dispatch({
+        type: `${namespace}/deleteProjectAuthor`, 
         payload:payload,
         callback:callback
       }) 
     },
-    getManufacturerList:(payload,callback)=>{ //厂商列表
+    getUserList:(payload,callback)=>{ //角色列表
       dispatch({
-        type: `${namespace}/getManufacturerList`, 
+        type: `${namespace}/getUserList`, 
         payload:payload,
         callback:callback
       }) 
     },
-    getMonitoringTypeList:(payload,callback)=>{ //监测类别
-      dispatch({
-        type: `${namespace}/getMonitoringTypeList`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getPollutantById:(payload)=>{ //监测类型
-      dispatch({
-        type: `${namespace}/getPollutantById`, 
-        payload:payload,
-
-      }) 
-    },
-    addEditPollutantById:(payload)=>{ //监测类型 添加 or 编辑
-      dispatch({
-        type: `${namespace}/addEditPollutantById`, 
-        payload:payload,
-
-      }) 
-    },
-
-    addEditGetEquipmentName:(payload)=>{ //设备名称 添加 or 编辑
-      dispatch({
-        type: `${namespace}/addEditGetEquipmentName`, 
-        payload:payload,
-
-      }) 
-    },
+   
   }
 }
 const Index = (props) => {
@@ -128,81 +99,67 @@ const Index = (props) => {
   
   
   
-  const [ manufacturerId, setManufacturerId] = useState(undefined)
+  const [ userId, setUserId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailLoading,tableDetailTotal,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,projectAuthorList,addProjectAuthorListLoading,projectAuthorListTotal,loadingAssignPermissions,} = props; 
   const { loadingUser,userList, } = props;
   useEffect(() => {
-    props.getManufacturerList({pageIndex:1,pageSize:100000},(data)=>{
-      if(data[0]){
-        setManufacturerId(data[0].ID)
+    getUserListFun({},(data)=>{
+      if(data){
+        setUserId(data.ID)
+        setUserName(data.userName)
+        form.setFieldsValue({UserId:data.ID})
+        onFinish();
       }
+
     })
-    props.getMonitoringTypeList({})//监测类别
+   
   },[]);
 
-  
-  useEffect(()=>{
-   
-    if(manufacturerId){
-      onFinish();
-    }
-
-  },[manufacturerId])
+   const getUserListFun= (par,callback) =>{
+    props.getUserList({roleListID: "9bcb50c4-9b55-41d6-9f46-c257d58774d8",...par},callback)
+   }
   const columns = [
     {
       title: '合同名称',
-      dataIndex: 'EquipmentCode',
-      key:'EquipmentCode',
+      dataIndex: 'projectName',
+      key:'projectName',
       align:'center',
     },
     {
       title: '项目编号',
-      dataIndex: 'PollutantTypeName',
-      key:'PollutantTypeName',
-      align:'center',
-    },
-    {
-      title: '监测类型',
-      dataIndex: 'PollutantName',
-      key:'PollutantName',
+      dataIndex: 'projectCode',
+      key:'projectCode',
       align:'center',
     },
     {
       title: '客户所在地',
-      dataIndex: 'EquipmentName',
-      key:'EquipmentName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
     },
-    {
-      title: '设备型号',
-      dataIndex: 'EquipmentType',
-      key:'EquipmentType',
-      align:'center',
-    },
-
     {
       title: '运营起始日期',
-      dataIndex: 'AnalyticalMethod',
-      key:'AnalyticalMethod',
+      dataIndex: 'beginTime',
+      key:'beginTime',
       align:'center',
     },
     {
       title: '运营结束日期',
-      dataIndex: 'EquipmentBrand',
-      key:'EquipmentBrand',
+      dataIndex: 'endTime',
+      key:'endTime',
       align:'center',
     },
     {
       title: '创建人',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'createName',
+      key:'createName',
       align:'center',
     },
     {
       title: '创建时间',
-      dataIndex: 'CISCode',
-      key:'CISCode',
+      dataIndex: 'createTime',
+      key:'createTime',
       align:'center',
     },
     {
@@ -228,50 +185,71 @@ const Index = (props) => {
   const columns2 = [
     {
       title: '合同名称',
-      dataIndex: 'EquipmentCode',
-      key:'EquipmentCode',
+      dataIndex: 'projectName',
+      key:'projectName',
       align:'center',
     },
     {
       title: '项目编号',
-      dataIndex: 'PollutantTypeName',
-      key:'PollutantTypeName',
+      dataIndex: 'projectCode',
+      key:'projectCode',
       align:'center',
     },
     {
       title: '创建人',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'createName',
+      key:'createName',
       align:'center',
     },
     {
       title: '创建时间',
-      dataIndex: 'CISCode',
-      key:'CISCode',
+      dataIndex: 'createTime',
+      key:'createTime',
       align:'center',
     },
   ];
 
   const del =  async (record) => {
     const values = await form.validateFields();
-    props.delEquipmentInfo({ID:record.ID},()=>{
+    props.deleteProjectAuthor({ID:record.ID},()=>{
       setPageIndex(1)
-      props.getEquipmentInfoList({
-        ManufacturerId:manufacturerId,
+      props.getProjectAuthorList({
+        ...values,
         PageIndex:1,
         PageSize:pageSize,
-        ...values,
+        
       })
     })
   };
 
 
+   const onFinish2 = async (pageIndexs,pageSizes) =>{
+    try {
+      const values = await form2.validateFields();
+      console.log(values)
+      if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
+        setPageIndex(1)
+      }
+      
+      props.getAddProjectAuthorList({
+        ...values,
+        PageIndex:!(pageIndexs&& typeof  pageIndexs === "number") ? 1 : pageIndexs,
+        PageSize:pageSizes?pageSizes:pageSize
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+   }
 
-  
   const [assignPermissionsVisible,setAssignPermissionsVisible ] = useState(false)
   const assignPermissions = () => {
     setAssignPermissionsVisible(true)
     form2.resetFields();
+    form2.setFieldsValue({UserId:userId})
+    setTimeout(()=>{
+      onFinish2();
+    })
+    
   };
 
   const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
@@ -283,9 +261,8 @@ const Index = (props) => {
         setPageIndex(1)
       }
 
-      props.getEquipmentInfoList({
+      props.getProjectAuthorList({
         ...values,
-        ManufacturerId:manufacturerId,
         PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         PageSize:pageSizes?pageSizes:pageSize
       })
@@ -293,25 +270,49 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
-  const onModalOk  = async () =>{ //添加 or 编辑弹框
-  
-    try {
-      const values = await form2.validateFields();//触发校验
-      props.addEquipmentInfo({
-        ...values,
-        ManufacturerId:manufacturerId
-      },()=>{
-        setFromVisible(false)
-        onFinish()
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]);
+ 
+  const onSelectChange = (newSelectedRowKeys,newSelectedRow) => {
+  //   if(selectedRowKeys.length<1 || newSelectedRowKeys.length==0){ //newSelectedRowKeys.length==0 选中取消时
+  //      message.warning('每次最多选择一行')
+  //      return;
+  // }
+
+
+      setSelectedRowKeys(newSelectedRowKeys);
+
+     const selectData =   newSelectedRowKeys.map(item=>{
+        return {
+          ID: "",
+          UserID: userId,
+          ProjectID: item.ProjectID
+        }
+      })
+      setSelectedRow(selectData)
+
+ 
+  };
+  const onModalOk  =  () =>{ //分配权限 保存
+    if(selectedRow.length<=0){
+      message.warning('请先选择一行数据')
+      return;
+    }
+      props.addProjectAuthor(selectedRow,()=>{
+        // setAssignPermissionsVisible(false)
+        setSelectedRowKeys([])
+        onFinish2()
       })
       
-    } catch (errInfo) {
-      console.log('错误信息:', errInfo);
-    }
   }
-  const onSelect = async (selectedKeys,e) =>{
-    setManufacturerId(selectedKeys.toString())
-    setDeveiceName(e.node.titles)
+  const [ userName,setUserName ] = useState() 
+  const onSelect =  (selectedKeys,e) =>{
+    setUserId(selectedKeys.toString())
+    form.setFieldsValue({UserId:selectedKeys.toString()})
+    onFinish()
+    setUserName(e.node.title);
+   
   }
 
   // const handleTableChange =   async (PageIndex, )=>{ //分页
@@ -339,14 +340,17 @@ const Index = (props) => {
     onFinish={onFinish}
     onValuesChange={onValuesChange}
   >  
-      <Form.Item label="项目编号" name="EquipmentName"  >
+      <Form.Item label="项目编号" name="ProjectCode"  >
             <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="创建人" name="EquipmentName"  >
+      <Form.Item label="创建人" name="CreateUserName"  >
             <Input placeholder="请输入" style={{width:200}} allowClear/>
+      </Form.Item>
+      <Form.Item  name="UserId"  hidden>
+            <Input />
       </Form.Item>
       <Form.Item>
-      <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
+      <Button   type="primary" htmlType='submit' loading={tableLoading} style={{marginRight:8}}>
           查询
      </Button>
      <Button   onClick={()=>{ assignPermissions()}} >
@@ -361,10 +365,9 @@ const Index = (props) => {
     for (let i = 0; i < userList.length; i += 1) {
       const key = userList[i].ID;
       const treeNode = {
-        title:<div style={{display:'inline-block'}}> {userList[i].ManufacturerName }</div>,
+        title:userList[i].userName ,
         key,
         icon: <UserOutlined  style={{color:'#1890ff'}}/>,
-        titles:userList[i].ManufacturerName
       };
   
       list.push(treeNode);
@@ -389,23 +392,11 @@ const Index = (props) => {
   const [pageIndex,setPageIndex]=useState(1)
 
  const onSearch = (value) =>{
-  console.log(value)
+   getUserListFun({userName:value})
  }
 
  
- const [selectedRowKeys, setSelectedRowKeys] = useState([]);
- const [selectedRow, setSelectedRow] = useState([]);
 
- const onSelectChange = (newSelectedRowKeys,newSelectedRow) => {
-
-   if(selectedRowKeys.length<1 || newSelectedRowKeys.length==0){ //newSelectedRowKeys.length==0 选中取消时
-     setSelectedRowKeys(newSelectedRowKeys);
-     setSelectedRow(newSelectedRow)
-   }else{
-     message.warning('每次最多选择一行')
-   }
-
- };
  const rowSelection = {
   selectedRowKeys,
   onChange: onSelectChange,
@@ -416,14 +407,16 @@ const [pageSize2,setPageSize2 ] = useState(20)
 const handleTableChange2 =    (PageIndex, PageSize)=>{ //弹框 分页 详情
 setPageSize2(PageSize)
 setPageIndex2(PageIndex)
-props.getProjectInfoList({PageIndex,PageSize})
+onFinish2(PageIndex,PageSize);
 }
+
   const [ drawerVisible, setDrawerVisible ] = useState(true)
+
   return (
     <div  className={styles.projectManageAuthorSty} style={{marginLeft:drawerVisible? 320 : 0}}>
     <Drawer
           title={ <Search
-            placeholder="请输入人员姓名" allowClear    enterButton    onSearch={onSearch} />}
+            placeholder="请输入角色姓名" allowClear    enterButton    onSearch={onSearch} loading={loadingUser} />}
           placement={'left'}
           closable={false}
           onClose={()=>{setDrawerVisible(false)}}
@@ -450,7 +443,7 @@ props.getProjectInfoList({PageIndex,PageSize})
           <Tree   
              virtual={false}
              style={{  maxHeight: 'calc(100vh - 164px)',  overflowY: 'auto', width: '100%' }}  
-             selectedKeys={[manufacturerId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
+             selectedKeys={[userId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
           :
         <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </>
@@ -475,7 +468,7 @@ props.getProjectInfoList({PageIndex,PageSize})
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={`分配权限` }
+        title={`分配权限 - ${userName}` }
         visible={assignPermissionsVisible}
         onOk={onModalOk}
         confirmLoading={props.loadingAssignPermissions}
@@ -484,27 +477,31 @@ props.getProjectInfoList({PageIndex,PageSize})
         destroyOnClose
         centered
         width='90%'
+        confirmLoading={loadingAssignPermissions}
       >
         <Card 
-        title={ <Form  name="basic" form={form2}  layout='inline'  onValuesChange={onAddEditValuesChange}  >    <Form.Item label="项目编号" name="EquipmentName"  >
+        title={ <Form  name="basic" form={form2}  layout='inline'  onValuesChange={onAddEditValuesChange} onFinish={onFinish2}  > 
+           <Form.Item label="项目编号" name="ProjectCode"  >
              <Input placeholder="请输入" style={{width:200}} allowClear/>
             </Form.Item>
-            <Form.Item label="创建人" name="EquipmentName"  >
+            <Form.Item label="创建人" name="CreateUserName"  >
            <Input placeholder="请输入" style={{width:200}} allowClear/>
            </Form.Item>
+           <Form.Item name="UserId"  hidden>
+           <Input />
+           </Form.Item>
                <Form.Item>
-           <Button   type="primary" htmlType='submit' style={{marginRight:8}}> 查询</Button> </Form.Item> </Form>}
-        >
+           <Button   type="primary" htmlType='submit' style={{marginRight:8}} loading={addProjectAuthorListLoading}> 查询</Button> </Form.Item> </Form>}  >
 
    <SdlTable
         rowSelection={rowSelection} 
-        loading = {tableDetailLoading}
+        loading = {addProjectAuthorListLoading}
         bordered
-        dataSource={tableDetailDatas}
+        dataSource={projectAuthorList}
         columns={columns2}
         scroll={{y:props.clientHeight - 550}}
         pagination={{
-          total:tableDetailTotal,
+          total:projectAuthorListTotal,
           pageSize: pageSize2,
           current: pageIndex2,
           onChange: handleTableChange2,
