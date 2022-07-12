@@ -226,7 +226,6 @@ const Index = (props) => {
    const onFinish2 = async (pageIndexs,pageSizes) =>{
     try {
       const values = await form2.validateFields();
-      console.log(values)
       if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
         setPageIndex(1)
       }
@@ -300,7 +299,7 @@ const Index = (props) => {
       return;
     }
       props.addProjectAuthor(selectedRow,()=>{
-        // setAssignPermissionsVisible(false)
+        setAssignPermissionsVisible(false)
         setSelectedRowKeys([])
         onFinish2()
       })

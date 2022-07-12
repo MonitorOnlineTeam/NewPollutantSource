@@ -149,27 +149,29 @@ const Index = (props) => {
         align: 'center',
         ellipsis:true,
       },
-      // {
-      //   title: '合同起止时间',
-      //   dataIndex: 'Coefficient',
-      //   key: 'Coefficient',
-      //   align: 'center',
-      //   ellipsis:true,
-      // },
-      // {
-      //   title: '设备类型',
-      //   dataIndex: 'Coefficient',
-      //   key: 'Coefficient',
-      //   align: 'center',
-      //   ellipsis:true,
-      // },
-      // {
-      //   title: '监测因子',
-      //   dataIndex: 'Coefficient',
-      //   key: 'Coefficient',
-      //   align: 'center',
-      //   ellipsis:true,
-      // },
+      {
+        title: '合同起止时间',
+        dataIndex: 'AgreementTime',
+        key: 'AgreementTime',
+        align: 'center',
+        ellipsis:true,
+      },
+      {
+        title: '设备类型',
+        dataIndex: 'EquipmentType',
+        key: 'EquipmentType',
+        align: 'center',
+        ellipsis:true,
+        width:150,
+      },
+      {
+        title: '监测因子',
+        dataIndex: 'PollutantNames',
+        key: 'PollutantNames',
+        align: 'center',
+        ellipsis:true,
+        width:150,
+      },
   ];
 
   isList&&columns.push({
@@ -177,7 +179,7 @@ const Index = (props) => {
     dataIndex: 'x',
     key: 'x',
     align: 'center',
-    width:180,
+    width:80,
     render: (text, record) =>{
       return  <span>
              <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip></Fragment>

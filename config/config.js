@@ -456,7 +456,7 @@ export default {
               ]
             },
             
-             { //设备管理权限
+             { //项目权限管理
                   name:'projectManageAuthor',
                   path:'/assetManagement/equipmentAccount/projectManageAuthor',
                   component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',

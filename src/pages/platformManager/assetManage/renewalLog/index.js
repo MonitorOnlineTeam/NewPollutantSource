@@ -4,7 +4,7 @@
  * 创建时间：2022.07.08
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Tag,Tabs, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,CaretLeftFilled,CaretRightFilled, CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
@@ -23,7 +23,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import UserList from '@/components/UserList'
 const { TextArea } = Input;
 const { Option } = Select;
-
+const { TabPane }  = Tabs;
 const namespace = 'renewalLog'
 
 
@@ -31,16 +31,12 @@ const namespace = 'renewalLog'
 
 const dvaPropsData =  ({ loading,renewalLog,global }) => ({
   tableDatas:renewalLog.tableDatas,
-  tableLoading:renewalLog.tableLoading,
   tableTotal:renewalLog.tableTotal,
   customerOrderUserList:renewalLog.customerOrderUserList,
-  loadingAddConfirm: loading.effects[`${namespace}/addCustomerOrder`],
+  tableLoading: loading.effects[`${namespace}/getCustomerOrderLogs`],
   tableDetailDatas:renewalLog.tableDetailDatas,
   tableDetailTotal:renewalLog.tableDetailTotal,
-  userListLoading: loading.effects[`${namespace}/getCustomerOrderUserList`],
-  customerOrderPointEntListLoading: loading.effects[`${namespace}/getCustomerOrderPointEntList`] || false,
-  renewOrderLoading: loading.effects[`${namespace}/renewOrder`] || false,
-  tableDetailLoading: loading.effects[`${namespace}/getCustomerOrderInfoList`],
+  tableDetailLoading: loading.effects[`${namespace}/getCustomerOrderLogsDetail`],
   
 })
 
@@ -52,62 +48,21 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getCustomerOrderList:(payload)=>{ //列表
+    getCustomerOrderLogs:(payload)=>{ //列表  客户订单日志  客户订单详细日志
       dispatch({
-        type: `${namespace}/getCustomerOrderList`,
+        type: `${namespace}/getCustomerOrderLogs`,
         payload:payload,
       })
     },
 
-    getCustomerOrderUserList : (payload,) =>{//客户订单用户列表
+    getCustomerOrderLogsDetail : (payload,) =>{//详情
       dispatch({
-        type: `${namespace}/getCustomerOrderUserList`,
+        type: `${namespace}/getCustomerOrderLogsDetail`,
         payload:payload,
       })
       
     },
-    getCustomerOrderPointEntList : (payload,callback) =>{ // 获取客户订单企业与排口列表
-      dispatch({
-        type: `${namespace}/getCustomerOrderPointEntList`,
-        payload:payload,
-        callback:callback,
-      })
-      
-    },
-    addCustomerOrder:(payload,callback)=>{ //添加
-      dispatch({
-        type: `${namespace}/addCustomerOrder`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    deleteCustomerOrder:(payload,callback)=>{ //删除
-      dispatch({
-        type: `${namespace}/deleteCustomerOrder`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    renewOrder:(payload,callback)=>{ //续费
-      dispatch({
-        type: `${namespace}/renewOrder`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getCustomerOrderInfoList:(payload)=>{ //客户订单详情
-      dispatch({
-        type: `${namespace}/getCustomerOrderInfoList`, 
-        payload:payload,
-      }) 
-    },
-    deleteCustomerOrderInfo:(payload,callback)=>{ //删除 客户订单详情
-      dispatch({
-        type: `${namespace}/deleteCustomerOrderInfo`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
+   
   }
 }
 const Index = (props) => {
@@ -119,184 +74,116 @@ const Index = (props) => {
 
   const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN,setDGIMN] =  useState('')
-  const [expand,setExpand] = useState(false)
-  const [fromVisible,setFromVisible] = useState(false)
+
   const [tableVisible,setTableVisible] = useState(false)
 
-  const [type,setType] = useState('add')
-  
-  
-  const [deveiceName,setDeveiceName] = useState('')
-  
-  const [ manufacturerId, setManufacturerId] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading, customerOrderUserList,loadingAddConfirm,customerOrderPointEntListLoading,userListLoading,} = props; 
+
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading,} = props; 
+  const [logType, setLogType ] = useState('1')
 
 
 //  const userId = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserId
  
  useEffect(()=>{  
       onFinish();
-      props.getCustomerOrderUserList({})
-  },[])
+  },[logType])
+
+
   const columns = [
     {
-      title: '账号',
-      dataIndex: 'UserAccount',
-      key:'UserAccount',
+      title: '操作类型',
+      dataIndex: 'OprationType',
+      key:'OprationType',
       align:'center',
     },
     {
-      title: '姓名',
-      dataIndex: 'UserName',
-      key:'UserName',
-      align:'center',
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'EntName',
-      key:'EntName',
-      align:'center',
-    },
-    {
-      title: '监测点名称',
-      dataIndex: 'PointName',
-      key:'PointName',
-      align:'center',
-    },
-    {
-      title: '服务器开始时间',
-      dataIndex: 'BTime',
-      key:'BTime',
-      align:'center',
-      sorter: (a, b) => moment(a.BTime).valueOf() - moment(b.BTime).valueOf()
-    },
-
-    {
-      title: '服务器截止时间',
-      dataIndex: 'ETime',
-      key:'ETime',
-      align:'center',
-      sorter: (a, b) => moment(a.ETime).valueOf() - moment(b.ETime).valueOf()
-    },
-    {
-      title: '状态',
-      dataIndex: 'StatusName',
-      key:'StatusName',
-      align:'center',
-      
-    },
-    {
-      title: '创建人',
+      title: '操作人',
       dataIndex: 'CreateUserName',
       key:'CreateUserName',
       align:'center',
     },
     {
-      title: '创建时间',
+      title: '操作时间',
       dataIndex: 'CreateTime',
-      key:'CreateTime', 
+      key:'CreateTime',
       align:'center',
     },
     {
-      title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
-      align: 'center',
-      width:180,
-      render: (text, record) =>{
-        return  <span>
-               <Fragment><Tooltip title="详情"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
-               <Fragment> <Tooltip title="删除">
-                  <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a><DelIcon/></a>
-               </Popconfirm>
-               </Tooltip>
-               </Fragment> 
-             </span>
-      }
+      title: '操作内容',
+      dataIndex: 'OprationContent',
+      key:'OprationContent',
+      align:'center',
+      width:200,
+      render:(text)=><div style={{textAlign:'left'}}>{text}</div>
+    },
+    // {
+    //   title: <span>操作</span>,
+    //   dataIndex: 'x',
+    //   key: 'x',
+    //   align: 'center',
+    //   width:80,
+    //   render: (text, record) =>{
+    //     return  <span>
+    //            <Fragment><Tooltip title="详情"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip>
+    //            </Fragment> 
+    //          </span>
+    //   }
+    // },
+  ];
+ 
+  const columns2 = [
+    {
+      title: '操作类型',
+      dataIndex: 'OprationType',
+      key:'OprationType',
+      align:'center',
+    },
+    {
+      title: '操作人',
+      dataIndex: 'CreateUserName',
+      key:'CreateUserName',
+      align:'center',
+    },
+    {
+      title: '操作时间',
+      dataIndex: 'CreateTime',
+      key:'CreateTime',
+      align:'center',
+    },
+    {
+      title: '操作内容',
+      dataIndex: 'OprationContent',
+      key:'OprationContent',
+      align:'center',
+      width:200,
+      render:(text)=><div style={{textAlign:'left'}}>{text}</div>
     },
   ];
-const detailCol = [{
-  title: '编号',
-  dataIndex: 'RenewalCode',
-  key:'RenewalCode',
-  align:'center',
-},
-{
-  title: '费用类型',
-  dataIndex: 'RenewalTypeName',
-  key:'RenewalTypeName',
-  align:'center',
-},
-{
-  title: '续费时长',
-  dataIndex: 'RenewalTime',
-  key:'RenewalTime',
-  align:'center',
-  
-},
-{
-  title: '创建人',
-  dataIndex: 'CreateUserName',
-  key:'CreateUserName',
-  align:'center',
-},
-{
-  title: '创建时间',
-  dataIndex: 'CreateTime',
-  key:'CreateTime', 
-  align:'center',
-  sorter: (a, b) => moment(a.CreateTime).valueOf() - moment(b.CreateTime).valueOf()
-},
-{
-  title: <span>操作</span>,
-  dataIndex: 'x',
-  key: 'x',
-  align: 'center',
-  width:180,
-  render: (text, record) =>{
-    return  <span>
-           <Fragment> <Tooltip title="删除">
-              <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del2(record)}} okText="是" cancelText="否">
-              <a><DelIcon/></a>
-           </Popconfirm>
-           </Tooltip>
-           </Fragment> 
-         </span>
-  }
-},]
-
-  const  getCustomerOrderInfoListFun = (id,pageIndex,pageSize) =>{
+  const  getCustomerOrderLogsDetailFun = (id,pageIndex,pageSize) =>{
     setPageIndex2(pageIndex)
-    props.getCustomerOrderInfoList({ ID:id, pageIndex: pageIndex? pageIndex : 1,  pageSize: pageSize? pageSize : pageSize2})
+    props.getCustomerOrderLogsDetail({ ID:id, LogType:logType, pageIndex: pageIndex? pageIndex : 1,  pageSize: pageSize? pageSize : pageSize2})
 
    }
   const [id,setId] = useState() 
+  const [ detailTitle,setDetailTitle ] = useState()
   const [ detailVisible, setDetailVisible,] = useState(false)
   const detail = async (record) => {
     setDetailVisible(true)
     setId(record.ID)
-    getCustomerOrderInfoListFun(record.ID)
-  };
-
-  const del =  (record) => {
-    props.deleteCustomerOrder({ID:record.ID},()=>{
-      onFinish()
-    })
+    setDetailTitle(record.CreateUserName)
+    getCustomerOrderLogsDetailFun(record.ID)
   };
 
 
-  const del2 = (record) => {
-    props.deleteCustomerOrderInfo({ID:record.ID},()=>{
-      getCustomerOrderInfoListFun(id)
-    })
-  };
+  const [pageIndex2,setPageIndex2 ] = useState(1)
+  const [pageSize2,setPageSize2 ] = useState(20)
+  const handleTableChange2 =    (PageIndex, PageSize)=>{ //分页 详情
+  setPageSize2(PageSize)
+  setPageIndex2(PageIndex)
+  props.getCustomerOrderLogsDetailFun(id,PageIndex,PageSize)
+}
 
-  
   
 
 
@@ -308,96 +195,42 @@ const detailCol = [{
       if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
         setPageIndex(1)
       }
-      props.getCustomerOrderList({
+      props.getCustomerOrderLogs({
         ...values,
         BTime: values.Time&&moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss"),
         ETime: values.Time&&moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"),
         Time:undefined,
-        Status:values.Status? values.Status : '',
+        LogType:logType,                          // 客户订单日志 2客户订单详细日志
         pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
-        pageSize:pageSizes?pageSizes:pageSize
+        pageSize:pageSizes?pageSizes:pageSize,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
-  const onModalOk  = async () =>{ //添加
-    try {
-      const values = await form2.validateFields();//触发校验
-       props.addCustomerOrder({
-        ...values,
-        EntCode:undefined,
-      },()=>{
-        setFromVisible(false)
-        onFinish()
-      })
-      
-    } catch (errInfo) {
-      console.log('错误信息:', errInfo);
-    }
 
- }
   
-  const renewOk = ()  =>{   //续费
 
-    if(selectedRowKeys.length<=0){
-      message.warning('请先选择一行数据')
-      return;
-   }
-   if(!renewDay){
-      message.warning('续费时长不能为空')
-      return;
-   }
-   props.renewOrder({
-    ListID:selectedRowKeys,
-    MonthTime:renewDay,
-  },()=>{
-    setRenewVisible(false)
-    setSelectedRowKeys(undefined);
-    onFinish()
-  })
-  }
 
-  const onValuesChange = (hangedValues, allValues)=>{
-
-  }
-    const [pageIndex2,setPageIndex2 ] = useState(1)
-    const [pageSize2,setPageSize2 ] = useState(20)
-    const handleTableChange2 =    (PageIndex, PageSize)=>{ //分页 详情
-    setPageSize2(PageSize)
-    setPageIndex2(PageIndex)
-    props.getCustomerOrderInfoListFun(id,PageIndex,PageSize)
-  }
 
   const searchComponents = () =>{
     return  <Form
     form={form}
     name="advanced_search"
-    initialValues={{
-      // Status:1
-    }}
+    layout='inline'
     className={styles["ant-advanced-search-form"]}
     onFinish={onFinish}
-    onValuesChange={onValuesChange}
   >  
-      <Row>
-      <Form.Item label="账号" name="UserAccount"  >
-            <Input placeholder="请输入" style={{width:200}} allowClear/>
-      </Form.Item>
-      <Form.Item label="企业名称" name="EntName"  style={{marginLeft:16,marginRight:-10}}>
-         <Input placeholder="请输入" style={{width:200}} allowClear/>
-      </Form.Item>
-      <Form.Item label="状态" name="Status"  >
+      <Form.Item label="操作类型" name="OprationType"  >
  
               <Select placeholder='请选择' allowClear style={{width:200}}>
-                  <Option value={1}>进行中</Option>
-                  <Option value={2}>已过期</Option>
+                  <Option value={'新增'}>新增</Option>
+                  <Option value={'删除'}>删除</Option>
+                  <Option value={'续费'}>续费</Option>
               </Select>
       </Form.Item>
-      </Row>
-      <Row>
-      <Form.Item label="服务时间" name="Time"  style={{marginRight:16}} >
-      <RangePicker_   format="YYYY-MM-DD HH:mm:ss"  showTime="YYYY-MM-DD HH:mm:ss"style={{minWidth:450}}   allowClear />
+      <Form.Item label="操作时间" name="Time" >
+      <RangePicker_   style={{width:350}}  format="YYYY-MM-DD HH:mm:ss"  showTime="YYYY-MM-DD HH:mm:ss" allowClear />
       </Form.Item>
       <Form.Item>
       <Button loading={tableLoading}  type="primary" htmlType='submit' style={{marginRight:8}}>
@@ -406,33 +239,10 @@ const detailCol = [{
      <Button    style={{marginRight:8}} onClick={()=>{form.resetFields()}}>
           重置
      </Button>
-     <Button   onClick={()=>{setFromVisible(true);form2.resetFields()}} style={{marginRight:8}} >
-          添加
-     </Button>
-     <Button   type="primary"  onClick={()=>{setRenewVisible(true);setRenewDay(undefined);setRenewETime(undefined)}}>
-          续费
-     </Button>
      </Form.Item>
-     </Row>
      </Form>
   }
-  const [entList,setEntList ] = useState([])
-  const [pointList,setPointList ] = useState([])
 
-  const onAddEditValuesChange= (hangedValues, allValues)=>{
-    if(Object.keys(hangedValues).join() == 'UserId'){
-      form2.setFieldsValue({DGIMN:undefined})
-      props.getCustomerOrderPointEntList({userId:hangedValues.UserId},(data)=>{// 企业 
-        setEntList(data)
-
-      })
-    }
-    if(Object.keys(hangedValues).join() == 'EntCode'){
-      form2.setFieldsValue({DGIMN:undefined})
-      const pointData = entList.filter(item=>item.EntCode === hangedValues.EntCode) 
-      setPointList(pointData[0]?pointData[0].PointList : [])
-    }
-  }
   const handleTableChange = (PageIndex, PageSize) =>{
     setPageIndex(PageIndex)
     setPageSize(PageSize)
@@ -442,169 +252,70 @@ const detailCol = [{
   const [pageIndex,setPageIndex]=useState(1)
 
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const onSelectChange = (newSelectedRowKeys,newSelectedRow) => {
+  // const onSelectChange = (newSelectedRowKeys,newSelectedRow) => {
 
-      setSelectedRowKeys(newSelectedRowKeys);
+  //     setSelectedRowKeys(newSelectedRowKeys);
 
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+  // };
+  // const rowSelection = {
+  //   selectedRowKeys,
+  //   onChange: onSelectChange,
+  // };
   
-  const [ renewETime,setRenewETime ] = useState()
-
-  const [renewDay,setRenewDay] = useState()
-  const renewMonthChang = (e) =>{
-    let val = e.target.value;
-    setRenewETime(moment().add(val.replace('个月',''), "month").format('YYYY-MM-DD 23:59:59'))
-    console.log(val,renewDay)
-    setRenewDay(val)
-  }
 
 
-  const renewYearChang = (e) =>{
-    let val = e.target.value;
-    setRenewETime(moment().add(val.replace('年',''), "year").format('YYYY-MM-DD 23:59:59'))
-    setRenewDay(val)
-  }
 
-  const renewClick = (val) =>{ //双击取消
-    if(val==renewDay){
-      setRenewDay(undefined)
-      setRenewETime(undefined)
-    }
-  }
 
-  const durationList =[{name:'1个月',value:1},{name:'2个月',value:2},{name:'3个月',value:3},{name:'4个月',value:4},{name:'5个月',value:5},{name:'6个月',value:6},
-  {name:'7个月',value:7},{name:'8个月',value:8},{name:'9个月',value:9},{name:'1年',value:12},{name:'2年',value:24},{name:'3年',value:36},{name:'4年',value:48},
-  {name:'5年',value:60},]
-  const [renewVisible,setRenewVisible ] = useState(false)
-
+ 
+  //  rowSelection={rowSelection} 
+  const tabContent =  <Card title={searchComponents()}>
+    <SdlTable
+   loading = {tableLoading}
+   bordered
+   dataSource={tableDatas}
+   columns={columns}
+   pagination={{
+     total:tableTotal,
+     pageSize: pageSize,
+     current: pageIndex,
+     onChange: handleTableChange,
+   }}
+ />
+</Card>
+    const onTabChange = (key) => {
+      setLogType(key)
+     
+    };
    return (
     <div  className={styles.renewalLogSty} >
     <BreadcrumbWrapper>
-    <Card title={searchComponents()}>
-      <SdlTable
-        rowSelection={rowSelection} 
-        loading = {tableLoading}
-        bordered
-        dataSource={tableDatas}
-        columns={columns}
-        pagination={{
-          total:tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          onChange: handleTableChange,
-        }}
-      />
-   </Card>
+    <Tabs activeKey={logType } tabPosition='left'   style={{paddingTop:16}} onChange={onTabChange}>
+    <TabPane tab="客户订单日志" key="1">
+        { tabContent}
+      </TabPane>
+      <TabPane tab="客户订单明细日志" key="2" >
+      { tabContent}
+      </TabPane>
+      </Tabs>
+
    </BreadcrumbWrapper>
-   <Modal
-        title={'添加'}
-        visible={fromVisible}
-        onOk={onModalOk}
-        confirmLoading={loadingAddConfirm}
-        onCancel={()=>{setFromVisible(false)}}
-        className={styles.fromModal}
-        destroyOnClose
-        centered
-      >
-        <Form
-      name="basic"
-      form={form2}
-      initialValues={{
-      }}
-      onValuesChange={onAddEditValuesChange}
-    > 
-      <Spin spinning={userListLoading}  size='small' style={{marginTop:-9}}>
-        <Form.Item label="账号" name="UserId" rules={[  { required: true, }]} >
-        
-        <Select placeholder='请选择' allowClear >
-                  {
-                  customerOrderUserList[0]&&customerOrderUserList.map(item => {
-                    return <Option key={item.UserId} value={item.UserId}>{item.UserName}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item>
-        </Spin>
-       <Spin spinning={customerOrderPointEntListLoading} size='small' style={{marginTop:-9}}>
-        <Form.Item label="企业" name="EntCode" rules={[  { required: true, }]} >
-            <Select placeholder='请选择企业' allowClear >
-                  {
-                  entList[0]&&entList.map(item => {
-                    return <Option key={item.EntCode} value={item.EntCode}>{item.EntName}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item>
-      </Spin>
-        <Form.Item label="监测点" name="DGIMN" rules={[  { required: true,  }]} >
-              <Select placeholder='请选择' allowClear>
-                   {
-                   pointList[0]&&pointList.map(item => {
-                    return <Option key={item.DGIMN} value={item.DGIMN}>{item.PointName}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item>
-
-        <Form.Item label="续费时长" name="Month" rules={[  { required: true, }]} >
-        <Select placeholder='请选择' allowClear>
-                  {
-                   durationList.map(item => {
-                    return <Option key={item.name} value={item.name}>{item.name}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item>
-
-    </Form>
-      </Modal>
-      <Modal
-        title={'续费时长'}
-        visible={renewVisible}
-        onOk={renewOk}
-        confirmLoading={props.renewOrderLoading}
-        onCancel={()=>{setRenewVisible(false)}}
-        className={styles.fromModal}
-        destroyOnClose
-        confirmLoading={props.renewOrderLoading}
-        
-      >
-    <div>续费时长:</div>
-    <Radio.Group size="small" value={renewDay}  onChange={renewMonthChang} style={{ marginTop: 16 }}>
-      {
-        [1,2,3,4,5,6,7,8,9,].map(item=> <Radio.Button onClick={()=>{renewClick(`${item}个月`)}} value={`${item}个月`}>{item}</Radio.Button>)
-      }
-    </Radio.Group><span style={{paddingLeft:5}}>个月</span>
-    <div>
-    <Radio.Group value={renewDay}  onChange={renewYearChang} size="small" style={{ marginTop: 5 }}>
-      {
-        [1,2,3,4,5,].map(item=> <Radio.Button onClick={()=>{renewClick(`${item}年`)}} value={`${item}年`}>{item}</Radio.Button>)
-      }
-    </Radio.Group><span style={{paddingLeft:5}}>年</span>
-
-    {/* <Row style={{ marginTop: 24 }}>续费后的时间为：<span  className='red'>{renewETime}</span></Row> */}
-    </div>
-      </Modal>
 
       <Modal
-        title={'详情'}
+        title={`${detailTitle} - 详情`}
         visible={detailVisible}
         onCancel={()=>{setDetailVisible(false)}}
         destroyOnClose
         footer={null}
         wrapClassName='spreadOverModal'
+        // width={'90%'}
       >
       <SdlTable
         loading = {tableDetailLoading}
         bordered
         dataSource={tableDetailDatas}
-        columns={detailCol}
+        columns={columns2}
         pagination={{
           total:tableDetailTotal,
           pageSize: pageSize2,
