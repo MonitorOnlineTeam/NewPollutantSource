@@ -168,7 +168,7 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '服务器开始时间',
+      title: '服务开始时间',
       dataIndex: 'BTime',
       key:'BTime',
       align:'center',
@@ -176,7 +176,7 @@ const Index = (props) => {
     },
 
     {
-      title: '服务器截止时间',
+      title: '服务截止时间',
       dataIndex: 'ETime',
       key:'ETime',
       align:'center',
@@ -293,6 +293,7 @@ const detailCol = [{
   const del2 = (record) => {
     props.deleteCustomerOrderInfo({ID:record.ID},()=>{
       getCustomerOrderInfoListFun(id)
+      onFinish(pageIndex,pageSize);
     })
   };
 
@@ -353,7 +354,7 @@ const detailCol = [{
     MonthTime:renewDay,
   },()=>{
     setRenewVisible(false)
-    setSelectedRowKeys(undefined);
+    setSelectedRowKeys([]);
     onFinish()
   })
   }
@@ -498,6 +499,8 @@ const detailCol = [{
           pageSize: pageSize,
           current: pageIndex,
           onChange: handleTableChange,
+          showSizeChanger: true,
+          showQuickJumper: true,
         }}
       />
    </Card>

@@ -97,6 +97,8 @@ export default class MonitorPoint extends Component {
       pointCoefficientVal: '',//监测点系数
       pointCoefficientFlag: false,
       deviceManagerGasType:1,
+      dragDatas:[],
+      sortTitle:'开启排序',
     };
   }
 
@@ -532,6 +534,26 @@ export default class MonitorPoint extends Component {
   equipmentParChange = (val) => {
     this.setState({ equipmentPol: val })
   }
+  dragData=(data)=>{
+    this.setState({
+      dragDatas:data
+    })
+   }
+  updateSort=()=>{ //更新排序
+    const { dragDatas,sortTitle } = this.state;
+    if(sortTitle==='开启排序'){ 
+     this.setState({  sortTitle:'关闭排序'   })
+    }else{
+     this.setState({  sortTitle:'开启排序'   })
+    }
+
+ }
+ saveSort=()=>{
+   //  this.props.dispatch({
+     //    type: 'autoForm/getPageConfig',
+     //    payload: {  configId: 'service_StandardLibrary',   },
+     // });
+ }
   editMN = (MN) => {
     this.setState({
       MNVisible: true,
@@ -650,7 +672,7 @@ export default class MonitorPoint extends Component {
 
       </Menu>
     );
-    const { tabKey, pointCoefficientFlag,pollutantType,deviceManagerGasType,} = this.state;
+    const { tabKey, pointCoefficientFlag,pollutantType,deviceManagerGasType,sortTitle,} = this.state;
     const pointFlag = tabKey == 5 && pointCoefficientFlag;
     return (
       <BreadcrumbWrapper title="监测点维护">
@@ -694,6 +716,8 @@ export default class MonitorPoint extends Component {
 
 
               pointConfigId && (<AutoFormTable
+                dragable ={sortTitle==='关闭排序'? true :false }
+                dragData={(data)=>{this.dragData(data)}}
                 style={{ marginTop: 10 }}
                 // columns={columns}
                 configId={pointConfigId}
@@ -714,6 +738,29 @@ export default class MonitorPoint extends Component {
                   // })
                 }}
                 searchParams={pointDataWhere}
+                appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                  <Fragment>
+                     <Button
+                      type="primary"
+                      onClick={() => {
+                        this.updateSort()
+                      }}
+                      style={{marginRight:8}}
+                    >
+                      {sortTitle}
+                    </Button> 
+                    {sortTitle==='关闭排序'?
+                    <Button
+                      onClick={() => {
+                        this.saveSort()
+                      }}
+                      style={{marginRight:8}}
+                      loading={this.props.dragLoading}
+                    >
+                     保存排序
+                    </Button>:null}
+                  </Fragment>
+                )}
                 appendHandleRows={row => (
                   <Fragment>
 

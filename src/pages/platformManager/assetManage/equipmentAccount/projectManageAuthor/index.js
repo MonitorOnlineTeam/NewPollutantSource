@@ -462,6 +462,8 @@ onFinish2(PageIndex,PageSize);
           pageSize: pageSize,
           current: pageIndex,
           onChange: handleTableChange,
+          showSizeChanger: true,
+          showQuickJumper: true,
         }}
       />
    </Card>
@@ -504,6 +506,8 @@ onFinish2(PageIndex,PageSize);
           pageSize: pageSize2,
           current: pageIndex2,
           onChange: handleTableChange2,
+          showSizeChanger: true,
+          showQuickJumper: true,
         }}
       />
    

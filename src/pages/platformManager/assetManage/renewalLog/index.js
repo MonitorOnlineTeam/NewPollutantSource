@@ -281,6 +281,8 @@ const Index = (props) => {
      pageSize: pageSize,
      current: pageIndex,
      onChange: handleTableChange,
+     showSizeChanger: true,
+     showQuickJumper: true,
    }}
  />
 </Card>
@@ -321,6 +323,8 @@ const Index = (props) => {
           pageSize: pageSize2,
           current: pageIndex2,
           onChange: handleTableChange2,
+          showSizeChanger: true,
+          showQuickJumper: true,
         }}
       />
         </Modal>

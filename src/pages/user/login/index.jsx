@@ -28,7 +28,15 @@ class Login extends Component {
       autoLogin: e.target.checked,
     });
   };
-
+ componentDidMount(){
+  this.timer = setInterval(() => {
+    this.child.current.click(); // 3分钟刷新一次
+  }, 1000 * 6 * 3  );
+ }
+  
+ componentWillUnmount(){
+  clearInterval(this.timer)
+ }
   handleSubmit = (err, values) => {
     const { type,verificaCode, } = this.state;
     const { isAgree } = this.props;
