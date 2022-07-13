@@ -228,8 +228,9 @@ const Index = (props) => {
       const values = await form2.validateFields();
       if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
         setPageIndex(1)
+        setSelectedRowKeys([])
       }
-      
+     
       props.getAddProjectAuthorList({
         ...values,
         PageIndex:!(pageIndexs&& typeof  pageIndexs === "number") ? 1 : pageIndexs,
@@ -282,11 +283,11 @@ const Index = (props) => {
 
       setSelectedRowKeys(newSelectedRowKeys);
 
-     const selectData =   newSelectedRowKeys.map(item=>{
+     const selectData = newSelectedRow.map(item=>{
         return {
           ID: "",
           UserID: userId,
-          ProjectID: item.ProjectID
+          ProjectID: item.projectID,
         }
       })
       setSelectedRow(selectData)
@@ -300,8 +301,8 @@ const Index = (props) => {
     }
       props.addProjectAuthor(selectedRow,()=>{
         setAssignPermissionsVisible(false)
-        setSelectedRowKeys([])
-        onFinish2()
+        // onFinish2();
+        onFinish(pageIndex,pageSize)
       })
       
   }

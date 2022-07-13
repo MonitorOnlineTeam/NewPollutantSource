@@ -716,7 +716,7 @@ export default class MonitorPoint extends Component {
 
 
               pointConfigId && (<AutoFormTable
-                dragable ={sortTitle==='关闭排序'? true :false }
+                // dragable ={sortTitle==='关闭排序'? true :false }
                 dragData={(data)=>{this.dragData(data)}}
                 style={{ marginTop: 10 }}
                 // columns={columns}
@@ -738,29 +738,29 @@ export default class MonitorPoint extends Component {
                   // })
                 }}
                 searchParams={pointDataWhere}
-                appendHandleButtons={(selectedRowKeys, selectedRows) => (
-                  <Fragment>
-                     <Button
-                      type="primary"
-                      onClick={() => {
-                        this.updateSort()
-                      }}
-                      style={{marginRight:8}}
-                    >
-                      {sortTitle}
-                    </Button> 
-                    {sortTitle==='关闭排序'?
-                    <Button
-                      onClick={() => {
-                        this.saveSort()
-                      }}
-                      style={{marginRight:8}}
-                      loading={this.props.dragLoading}
-                    >
-                     保存排序
-                    </Button>:null}
-                  </Fragment>
-                )}
+                // appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                //   <Fragment>
+                //      <Button
+                //       type="primary"
+                //       onClick={() => {
+                //         this.updateSort()
+                //       }}
+                //       style={{marginRight:8}}
+                //     >
+                //       {sortTitle}
+                //     </Button> 
+                //     {sortTitle==='关闭排序'?
+                //     <Button
+                //       onClick={() => {
+                //         this.saveSort()
+                //       }}
+                //       style={{marginRight:8}}
+                //       loading={this.props.dragLoading}
+                //     >
+                //      保存排序
+                //     </Button>:null}
+                //   </Fragment>
+                // )}
                 appendHandleRows={row => (
                   <Fragment>
 

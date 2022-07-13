@@ -31,7 +31,7 @@ class Login extends Component {
  componentDidMount(){
   this.timer = setInterval(() => {
     this.child.current.click(); // 3分钟刷新一次
-  }, 1000 * 6 * 3  );
+  }, 1000 * 60 * 3  );
  }
   
  componentWillUnmount(){
@@ -98,7 +98,7 @@ class Login extends Component {
     />
   );
   verificaCodeChange=(code)=>{  
-    console.log('验证码----------------------',code)
+    // console.log('验证码----------------------',code)
     this.setState({verificaCode:code})
   }
   render() {
