@@ -340,6 +340,7 @@ const Index = (props) => {
         // EndEndTime:values.EndTime&&moment(values.EndTime[1]).format('YYYY-MM-DD HH:mm:ss'),
         BegTime:undefined,
         // EndTime:undefined,
+        Author:1,
         PageIndex:PageIndex,
         PageSize:PageSize,
       })

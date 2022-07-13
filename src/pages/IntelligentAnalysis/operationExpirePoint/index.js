@@ -163,7 +163,7 @@ const Index = (props) => {
     grid: {
         left: 45,
         right: 0,
-        bottom: 50,
+        bottom: 35,
         // containLabel: true
     },
 
@@ -290,7 +290,7 @@ const Index = (props) => {
   const echartsComponents = useMemo(()=>{ //监听变量，第一个参数是函数，第二个参数是依赖，只有依赖变化时才会重新计算函数
     return <ReactEcharts
     option={getOption()}
-    style={{  width: '100%' }}
+    style={{  width: '100%',height:280, }}
     theme="my_theme "
     onEvents={{
       'click': onChartClick,
@@ -311,7 +311,7 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        scroll={{ y:props.hideBreadcrumb?'calc(100vh - 805px)' : 'calc(100vh - 670px)' }}
+        scroll={{ y:props.hideBreadcrumb?'calc(100vh - 670px)' : 'calc(100vh - 645px)' }}
       />  
    </Card>
    </BreadcrumbWrapper>

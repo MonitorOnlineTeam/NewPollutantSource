@@ -75,7 +75,7 @@ export default {
       },
       {
         pattern:  /^[A-Za-z0-9]{4}$/,
-        message: '请输入4位数的验证码!',
+        message: '请输入4位数的验证码',
       },
     ]
   },

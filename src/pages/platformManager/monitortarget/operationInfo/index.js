@@ -447,7 +447,7 @@ const projectNumCol =[
   }
 
   const  projectNumQuery = (code)=>{
-    props.projectNumList({ProjectCode:code,Author:1,})
+    props.projectNumList({ProjectCode:code,})
  }
   
  const startDisabledDate=(current)=>{
