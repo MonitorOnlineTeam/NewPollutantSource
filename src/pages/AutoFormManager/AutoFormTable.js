@@ -396,7 +396,7 @@ class AutoFormTable extends PureComponent {
 
   render() {
     const { loading, selectedRowKeys } = this.state;
-    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable, } = this.props;
+    const { tableInfo, searchForm, keys, dispatch, configId, btnsAuthority, match, parentcode,isCenter,resizable,noPaging, } = this.props;
     const columns = tableInfo[configId] ? tableInfo[configId]["columns"] : [];
     const checkboxOrRadio = tableInfo[configId] ? tableInfo[configId]["checkboxOrRadio"] * 1 : 1;
     const { pageSize = 20, current = 1, total = 0 } = searchForm[configId] || {}
@@ -659,7 +659,7 @@ class AutoFormTable extends PureComponent {
             }
           }}
           // size="small"
-          loading={this.props.loading}
+          loading={this.props.loading || this.props.saveSortLoading}
           // className={styles.dataTable}
           dataSource={dataSource}
           // rowClassName={
@@ -697,7 +697,7 @@ class AutoFormTable extends PureComponent {
               })
             },
           })}
-          pagination={{
+          pagination={noPaging? false : {
             showSizeChanger: true,
             showQuickJumper: true,
             pageSize,

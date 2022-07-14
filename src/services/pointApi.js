@@ -301,3 +301,8 @@ export async function GetEquipmentInfoList(params) { //设备信息
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPBList',params,null);
     return result;
   }
+
+  export async function PointSort(params) {   //监测点排序
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/PointSort',params,null);
+    return result;
+  }

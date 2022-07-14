@@ -188,7 +188,6 @@ export default Model.extend({
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
-
         yield update({
           // configIdList: {
           //   [payload.configId]: result.data

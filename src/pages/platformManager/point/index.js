@@ -73,6 +73,8 @@ let pointConfigIdEdit = '';
   pointHourItemList: point.pointHourItemList,
   paramCodeList: point.paramCodeList,
   updatePointDGIMNLoading: loading.effects['point/updatePointDGIMN'],
+  saveSortLoading: loading.effects['point/pointSort'],
+ 
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -99,6 +101,8 @@ export default class MonitorPoint extends Component {
       deviceManagerGasType:1,
       dragDatas:[],
       sortTitle:'开启排序',
+      noPaging:false,
+      sortLoading:false,
     };
   }
 
@@ -535,24 +539,53 @@ export default class MonitorPoint extends Component {
     this.setState({ equipmentPol: val })
   }
   dragData=(data)=>{
+    console.log(data)
     this.setState({
       dragDatas:data
     })
    }
+
   updateSort=()=>{ //更新排序
     const { dragDatas,sortTitle } = this.state;
     if(sortTitle==='开启排序'){ 
-     this.setState({  sortTitle:'关闭排序'   })
+
+      this.setState({ noPaging:true,sortLoading:true,})
+      this.props.dispatch({
+        type: `autoForm/getAutoFormData`,
+        payload:{
+           configId:pointConfigId,
+           searchParams:this.props.pointDataWhere,
+           otherParams: {
+            SortFileds:'Sort',
+            IsAsc:true,
+            pageIndex: 1,
+            pageSize: 100000,
+           }
+          },
+          callback:()=>{
+            this.setState({ sortTitle:'关闭排序',sortLoading:false,})
+          }
+      })
+
+     
+
     }else{
-     this.setState({  sortTitle:'开启排序'   })
+     this.setState({  sortTitle:'开启排序', noPaging:false,   })
     }
 
  }
- saveSort=()=>{
-   //  this.props.dispatch({
-     //    type: 'autoForm/getPageConfig',
-     //    payload: {  configId: 'service_StandardLibrary',   },
-     // });
+ saveSort=()=>{ //保存排序
+    const  { dragDatas } = this.state;
+    const mnList = dragDatas.map(item=>item['dbo.T_Bas_CommonPoint.DGIMN'])
+     this.props.dispatch({
+      type: `point/pointSort`,
+      payload:{
+        mnList:mnList,
+      },
+      callback:()=>{
+          this.setState({  sortTitle:'开启排序', noPaging:false,   })
+      }
+    })
  }
   editMN = (MN) => {
     this.setState({
@@ -646,6 +679,7 @@ export default class MonitorPoint extends Component {
       isEdit,
       saveLoadingAdd,
       saveLoadingEdit,
+      saveSortLoading,
     } = this.props;
     const { getFieldDecorator } = this.props.form;
     const searchConditions = searchConfigItems[pointConfigId] || [];
@@ -710,14 +744,17 @@ export default class MonitorPoint extends Component {
                 searchParams={pointDataWhere}
                 configId={pointConfigIdEdit}
                 resultConfigId={pointConfigId}
+                otherParams={{SortFileds:'Sort',IsAsc:true,}}
               ></SearchWrapper>
             }
             {
 
 
               pointConfigId && (<AutoFormTable
-                // dragable ={sortTitle==='关闭排序'? true :false }
+                dragable ={sortTitle==='关闭排序'? true :false }
                 dragData={(data)=>{this.dragData(data)}}
+                noPaging={this.state.noPaging}
+                saveSortLoading={saveSortLoading}
                 style={{ marginTop: 10 }}
                 // columns={columns}
                 configId={pointConfigId}
@@ -727,6 +764,7 @@ export default class MonitorPoint extends Component {
                     row,
                   });
                 }}
+                otherParams={{SortFileds:'Sort',IsAsc:true,}}
                 onAdd={() => {
                   this.showModal();
                   this.setState({
@@ -738,29 +776,31 @@ export default class MonitorPoint extends Component {
                   // })
                 }}
                 searchParams={pointDataWhere}
-                // appendHandleButtons={(selectedRowKeys, selectedRows) => (
-                //   <Fragment>
-                //      <Button
-                //       type="primary"
-                //       onClick={() => {
-                //         this.updateSort()
-                //       }}
-                //       style={{marginRight:8}}
-                //     >
-                //       {sortTitle}
-                //     </Button> 
-                //     {sortTitle==='关闭排序'?
-                //     <Button
-                //       onClick={() => {
-                //         this.saveSort()
-                //       }}
-                //       style={{marginRight:8}}
-                //       loading={this.props.dragLoading}
-                //     >
-                //      保存排序
-                //     </Button>:null}
-                //   </Fragment>
-                // )}
+                appendHandleButtons={(selectedRowKeys, selectedRows) => (
+                  <Fragment>
+                     <Button
+                      type="primary"
+                      onClick={() => {
+                        this.updateSort()
+                      }}
+                      style={{marginRight:8}}
+                      loading={this.state.sortLoading}
+                      disabled={ tableInfo[pointConfigId]&& tableInfo[pointConfigId].dataSource && tableInfo[pointConfigId].dataSource.length>=2 ? false : true}
+                    >
+                      {sortTitle}
+                    </Button> 
+                    {sortTitle==='关闭排序'?
+                    <Button
+                      onClick={() => {
+                        this.saveSort()
+                      }}
+                      style={{marginRight:8}}
+                      loading={saveSortLoading}
+                    >
+                     保存排序
+                    </Button>:null}
+                  </Fragment>
+                )}
                 appendHandleRows={row => (
                   <Fragment>
 
