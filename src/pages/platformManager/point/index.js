@@ -544,29 +544,32 @@ export default class MonitorPoint extends Component {
       dragDatas:data
     })
    }
-
+   getAutoFormDataNoPage = (callback) =>{
+    this.props.dispatch({
+      type: `autoForm/getAutoFormData`,
+      payload:{
+         configId:pointConfigId,
+         searchParams:this.props.pointDataWhere,
+         otherParams: {
+          SortFileds:'Sort',
+          IsAsc:true,
+          pageIndex: 1,
+          pageSize: 100000,
+         }
+        },
+        callback:()=>{
+          callback&&callback()
+        }
+    })
+   }
   updateSort=()=>{ //更新排序
-    const { dragDatas,sortTitle } = this.state;
+    const { sortTitle } = this.state;
     if(sortTitle==='开启排序'){ 
 
       this.setState({ noPaging:true,sortLoading:true,})
-      this.props.dispatch({
-        type: `autoForm/getAutoFormData`,
-        payload:{
-           configId:pointConfigId,
-           searchParams:this.props.pointDataWhere,
-           otherParams: {
-            SortFileds:'Sort',
-            IsAsc:true,
-            pageIndex: 1,
-            pageSize: 100000,
-           }
-          },
-          callback:()=>{
-            this.setState({ sortTitle:'关闭排序',sortLoading:false,})
-          }
+      this.getAutoFormDataNoPage(()=>{
+        this.setState({ sortTitle:'关闭排序',sortLoading:false,})
       })
-
      
 
     }else{
@@ -577,15 +580,34 @@ export default class MonitorPoint extends Component {
  saveSort=()=>{ //保存排序
     const  { dragDatas } = this.state;
     const mnList = dragDatas.map(item=>item['dbo.T_Bas_CommonPoint.DGIMN'])
-     this.props.dispatch({
-      type: `point/pointSort`,
-      payload:{
-        mnList:mnList,
-      },
-      callback:()=>{
-          this.setState({  sortTitle:'开启排序', noPaging:false,   })
-      }
-    })
+    if(mnList&&mnList[0]){
+      this.props.dispatch({
+        type: `point/pointSort`,
+        payload:{
+          mnList:mnList,
+        },
+        callback:(isSuccess)=>{  
+          if(isSuccess){
+            this.setState({  sortTitle:'开启排序', noPaging:false,}) 
+            
+             if(this.props.tableInfo&&this.props.tableInfo[pointConfigId]){
+              this.props.dispatch({
+                type: `autoForm/updateState`,
+                payload:{
+                   tableInfo:{...this.props.tableInfo,[pointConfigId]:{...this.props.tableInfo[pointConfigId],dataSource:dragDatas}}
+                  },
+              })  
+            }
+
+          }else{
+            this.getAutoFormDataNoPage();
+          }
+        }
+      })
+    }else{
+      message.warning('请先排序')
+    }
+
  }
   editMN = (MN) => {
     this.setState({

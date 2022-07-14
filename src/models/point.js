@@ -444,9 +444,10 @@ export default Model.extend({
             const result = yield call(PointSort, payload);
             if (result.IsSuccess) {
                 message.success(result.Message)
-                callback()
+                callback(result.IsSuccess)
             } else {
               message.error(result.Message)
+              callback(result.IsSuccess)
             }
           },
           
