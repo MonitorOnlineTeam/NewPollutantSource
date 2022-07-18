@@ -435,7 +435,49 @@ export default {
                 },
               ]
             },
-
+            {
+              path: '/commissionTest', //调试检测
+              name: 'commissionTest',
+              routes: [
+                {
+                  path: '/commissionTest',
+                  redirect: '/commissionTest/equipmentAccount', 
+                },
+                {
+                  name:'equipmentAccount',
+                  path: '/commissionTest/equipmentAccount', //设备台账
+                  routes: [
+                    {
+                      path: '/commissionTest/equipmentAccount',
+                      redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2', 
+                    }, 
+                    {
+                      name:'cemsEquipmentList', //cems设备清单
+                      path: '/commissionTest/equipmentAccount/cemsEquipmentList',
+                      component: './commissionTest/equipmentAccount/cemsEquipmentList', 
+                    }, 
+                    {
+                      name:'cemsModelList', //cems型号清单
+                      path: '/commissionTest/equipmentAccount/cemsModelList',
+                      component: './commissionTest/equipmentAccount/cemsModelList', 
+                    }, 
+                    {
+                      name:'referenceInstruList', //参比仪器清单
+                      path: '/commissionTest/equipmentAccount/referenceInstruList',
+                      component: './commissionTest/equipmentAccount/referenceInstruList', 
+                    },   
+                  ]
+                },
+                {
+                  name:'72HourCommissionTest',
+                  path: '/commissionTest/72HourCommissionTest',
+                },   
+                {
+                  name:'72HourCommissionTestQuery',
+                  path: '/commissionTest/72HourCommissionTestQuery',
+                },              
+              ]
+            },
             {
               path: '/assetManage/customOrder', //客户订单
               routes: [

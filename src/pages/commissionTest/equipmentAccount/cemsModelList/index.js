@@ -1,7 +1,7 @@
 /**
- * 功  能：系统型号
- * 创建人：贾安波
- * 创建时间：2021.11
+ * 功  能：CEMS型号清单
+ * 创建人：jab
+ * 创建时间：2022.07.18
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin,   } from 'antd';
@@ -21,23 +21,23 @@ import NumTips from '@/components/NumTips'
 const { TextArea } = Input;
 const { Option } = Select;
 
-const namespace = 'systemMarker'
+const namespace = 'cemsModelList'
 
 
 
 
-const dvaPropsData =  ({ loading,systemMarker }) => ({
-  tableDatas:systemMarker.tableDatas,
-  pointDatas:systemMarker.pointDatas,
-  tableLoading:systemMarker.tableLoading,
-  tableTotal:systemMarker.tableTotal,
+const dvaPropsData =  ({ loading,cemsModelList }) => ({
+  tableDatas:cemsModelList.tableDatas,
+  pointDatas:cemsModelList.pointDatas,
+  tableLoading:cemsModelList.tableLoading,
+  tableTotal:cemsModelList.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/addSystemModel`],
   loadingEditConfirm: loading.effects[`${namespace}/editSystemModel`],
-  monitoringTypeList:systemMarker.monitoringTypeList,
-  manufacturerList:systemMarker.manufacturerList,
+  monitoringTypeList:cemsModelList.monitoringTypeList,
+  manufacturerList:cemsModelList.manufacturerList,
   // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
-  maxNum:systemMarker.maxNum,
-  systemModelNameList:systemMarker.systemModelNameList,
+  maxNum:cemsModelList.maxNum,
+  systemModelNameList:cemsModelList.systemModelNameList,
   systemModelNameListLoading: loading.effects[`${namespace}/getSystemModelNameList`],
 
 })
@@ -157,12 +157,6 @@ const Index = (props) => {
       title: '系统型号',
       dataIndex: 'SystemModel',
       key:'SystemModel',
-      align:'center',
-    },
-    {
-      title: '监测类别',
-      dataIndex: 'MonitoringType',
-      key:'MonitoringType',
       align:'center',
     },
     {
@@ -331,20 +325,11 @@ const Index = (props) => {
 
       </Row>
       <Row>
-      {/* <Form.Item label="监测类别" name="MonitoringType"  >
-             <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
-                 {
-                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
-                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item> */}
-       <Form.Item label="系统型号" name="SystemModel" >
+       <Form.Item label="型号" name="SystemModel" >
         <Input placeholder='请输入系统型号' style={{width:200}} allowClear/>
 
       </Form.Item>
-      <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}} >
+      <Form.Item label="状态" name="Status"   style={{margin:'0 16px'}}  >
        <Select placeholder='请选择状态' allowClear style={{width:200}}>
            <Option key={1} value={1}>启用</Option>
            <Option key={2} value={2}>停用</Option>
@@ -353,6 +338,9 @@ const Index = (props) => {
       <Form.Item>
       <Button   type="primary" htmlType='submit' style={{marginRight:8}}>
           查询
+     </Button>
+     <Button   onClick={()=>{ form.resetFields()}} style={{marginRight:8}}>
+          重置
      </Button>
      <Button   onClick={()=>{ add()}} >
           添加
@@ -363,7 +351,7 @@ const Index = (props) => {
   }
 
   return (
-    <div  className={styles.systemMarkerSty}>
+    <div  className={styles.cemsModelListSty}>
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
@@ -397,7 +385,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        Status:1
+        // Status:1
       }}
     >
       <Row>
@@ -417,7 +405,7 @@ const Index = (props) => {
       </Col>
         <Col span={12}>
         <Form.Item label="设备厂家" name="ManufacturerID" rules={[  { required: true, message: '请选择设备厂家'  }]} >
-             <Select placeholder='请选择设备厂家' allowClear showSearch
+             <Select placeholder='请选择' allowClear showSearch
              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
              
              >
@@ -433,21 +421,10 @@ const Index = (props) => {
 
       <Row>
       <Col span={12}>
-        <Form.Item label="监测类别" name="MonitoringType" rules={[  { required: true, message: '请选择监测类别'  }]} >
-             <Select placeholder='请选择监测类别' allowClear disabled>
-                 {
-                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
-                    return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item>
-      </Col>
-      <Col span={12}>
         <Form.Item label="系统名称" name="SystemName" rules={[  { required: true, message: '请选择系统名称'  }]} >
               {systemModelNameListLoading?<Spin size='small'/>
               :
-              <Select placeholder='请选择系统名称' allowClear>
+              <Select placeholder='请选择' allowClear>
               {
                systemModelNameList[0]&&systemModelNameList.map(item => {
                  return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
@@ -457,16 +434,17 @@ const Index = (props) => {
         }
       </Form.Item>
       </Col>
+      <Col span={12}>
+        <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true,  }]}>
+        <Input placeholder='请输入' allowClear/>
+      </Form.Item>
+      </Col>
       </Row>
 
       <Row>
-      <Col span={12}>
-        <Form.Item label="系统型号" name="SystemModel"  rules={[  { required: true, message: '请输入系统型号'  }]}>
-        <Input placeholder='请输入系统型号' allowClear/>
-      </Form.Item>
-      </Col>
+ 
         <Col span={12}>
-        <Form.Item label="状态" name="Status" >
+        <Form.Item label="状态" name="Status" rules={[  { required: true, message: '请选择状态'  }]} >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
              <Radio value={2}>停用</Radio>
