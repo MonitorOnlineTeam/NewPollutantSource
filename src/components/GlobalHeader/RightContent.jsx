@@ -41,7 +41,6 @@ const GlobalHeaderRight = props => {
             <a target="_blank" rel="noopener noreferrer" onClick={() => {
               let url = item.Url ? new URL(item.Url) : item.Url;
               if (item.ID !== sessionStorage.getItem('sysMenuId')) {
-                debugger
                 if (url && (url.protocol === 'http:' || url.protocol === 'https:')) {
                   if (webConfig.middlePageOpenMode === 'single') {
                     window.location.href = url.href;

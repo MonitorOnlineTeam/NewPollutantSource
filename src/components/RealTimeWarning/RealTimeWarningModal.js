@@ -368,7 +368,7 @@ class RealTimeWarningModal extends Component {
                 dataIndex: `${selectedPollutantCode}_StandardValue`,
                 width: '20%',
                 align: 'center',
-                render: (text, record) => selectPllutantInfo.standardValueStr,
+                render: (text, record) => selectPllutantInfo.StandardValueStr,
             },
             {
                 key: `${selectedPollutantCode}_SuggestValue`,

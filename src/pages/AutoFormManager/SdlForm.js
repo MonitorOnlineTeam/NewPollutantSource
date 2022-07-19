@@ -246,7 +246,7 @@ class SdlForm extends PureComponent {
         case '多选下拉列表':
           validator = `${selectPlaceholder}`;
           // initialValue = formData[configDataItemValue || fieldName] !== undefined ? (`${formData[configDataItemValue || fieldName]}`) : undefined;
-          initialValue = formData[configDataItemValue || fieldName]? (`${formData[configDataItemValue || fieldName]}`) : undefined;
+          initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`) : undefined;
           placeholder = placeholder || selectPlaceholder;
           let mode = '';
           if (item.type === '多选下拉列表') {
@@ -411,7 +411,7 @@ class SdlForm extends PureComponent {
                 FileActualType: '0',
               },
             };
-            element = <SdlUpload {...this.props} fileList={this.props.fileList} cuid={uid} uploadSuccess={(cuid) => {
+            element = <SdlUpload {...this.props} fileList={_fileList} cuid={uid} uploadSuccess={(cuid) => {
               setFieldsValue({ cuid: cuid })
               setFieldsValue({ [fieldName]: uid })
             }} />

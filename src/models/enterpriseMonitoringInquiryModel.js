@@ -25,7 +25,7 @@ export default Model.extend({
         priseList:[]
     },
     subscriptions: {},
-    effects: { 
+    effects: {
         //关注度
         *GetAttentionDegreeList({ payload }, { call, put, update, select }) {
             const result = yield call(GetAttentionDegreeList, null, null)
@@ -37,18 +37,18 @@ export default Model.extend({
         },
         //行政区信息
         *GetEntSummary({ payload }, { call, put, update, select }) {
-
             const body = {
                 AttentionCode: payload.AttentionCode,
                 RegionCode: payload.RegionCode,
                 PollutantType: payload.PollutantType,
+                OperationPersonnel: payload.operationpersonnel,
                 //PageSize: payload.PageSize,
                 //PageIndex: payload.PageIndex
             }
             const result = yield call(GetEntSummary,body,null)
             if(result.IsSuccess)
             {
-                
+
                 let entCount = 0;
                 let pointCount= 0;
                 let entWasteGasCount= 0;
@@ -90,7 +90,7 @@ export default Model.extend({
                     nodataEntWasteWaterCount += item.nodataEntWasteWaterCount;
                     nodataWasteWaterCount += item.nodataWasteWaterCount;
                 })
-               
+
                 const obj = {
                     reginName:'全部合计',
                     regionCode:'0',
@@ -234,7 +234,7 @@ export default Model.extend({
             }
             //获取企业列表
             const response = yield call(GetEntByRegion, body);
-      
+
             if (response.IsSuccess) {
               yield update({
                 priseList: response.Datas,

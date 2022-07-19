@@ -12,7 +12,7 @@ class ElectricYoYAndMoM extends PureComponent {
   getOption = () => {
     let lineColor = ['#abaeb6', '#394f8e'];
     let option = {
-      color: ['#a43db', '#cc6e7a'],
+      color: ['#abaeb6', '#cc6e7a'],
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -76,13 +76,13 @@ class ElectricYoYAndMoM extends PureComponent {
       },
       series: [
         {
-          name: 'Email',
+          name: '今日',
           type: 'line',
           stack: 'Total',
           data: [0, 15, 1, 1, 3, 18, 4, 5, 4, 3, 2, 17, 2, 3, 4, 5, 2, 4, 17]
         },
         {
-          name: 'Union Ads',
+          name: '昨日',
           type: 'line',
           stack: 'Total',
           data: [2, 2, 3, 1, 2, 1, 1.4, 2.1, 1.5, 1, 3, 2, 13, 3, 4, 1, 2, 4, 15, 5, 1, 2, 3, 4, 5, 15, 4, 4, 3, 2, 1, 20]
@@ -95,7 +95,7 @@ class ElectricYoYAndMoM extends PureComponent {
   getBarOption = () => {
     let lineColor = ['#abaeb6', '#394f8e'];
     let option = {
-      color: ['#599be7'],
+      color: ['#599be7', '#ffc107'],
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -163,9 +163,15 @@ class ElectricYoYAndMoM extends PureComponent {
         {
           name: 'Direct',
           type: 'bar',
-          barWidth: '40%',
+          barWidth: '30%',
           data: [3, 3.4, 4, 3, 3.9, 4.4, 5, 5.1, 5.5, 6, 6.1]
-        }
+        },
+        // {
+        //   name: 'Direct1',
+        //   type: 'bar',
+        //   barWidth: '30%',
+        //   data: [3, 3.4, 4, 3, 3.9, 4.4, 5, 5.1, 5.5, 6, 6.1]
+        // }
       ]
     };
     return option;

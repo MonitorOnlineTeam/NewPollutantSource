@@ -32,6 +32,7 @@ class Index extends Component {
 
     render() {
         const { dgimn, pointName, entName, title, Type } = this.state;
+        const { location: { query: { pollutantCode } } } = this.props;
         // 是否显示原始和审核
         const isShowSearchDataType = this.props.location.query.isShowSearchDataType == 1 ? true : false;
         return (
@@ -41,12 +42,12 @@ class Index extends Component {
                         this.state.dgimn ?
                             (
                                 this.props.location.query.type == 1 ? <DataQuery2 DGIMN={this.state.dgimn} pointName={pointName} entName={entName} initLoadData /> :
-                                    <DataQuery DGIMN={this.state.dgimn} Type={Type} pointName={pointName} entName={entName}  isShowSearchDataType={isShowSearchDataType} initLoadData />
+                                    <DataQuery DGIMN={this.state.dgimn} Type={Type} pointName={pointName} entName={entName} isShowSearchDataType={isShowSearchDataType} initLoadData />
                             )
                             : <PageLoading />
                     }
                 </BreadcrumbWrapper>
-                <NavigationTree runState='1' domId="#dataquery" choice={false} onItemClick={value => {
+                <NavigationTree checkpPol={pollutantCode} runState='1' domId="#dataquery" choice={false} onItemClick={value => {
                     if (value.length > 0 && !value[0].IsEnt) {
                         console.log('value=', value)
                         this.changeDgimn(value)

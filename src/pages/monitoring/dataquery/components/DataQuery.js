@@ -527,7 +527,7 @@ class DataQuery extends Component {
                                         <Radio.Group style={{ width: '100%' }} defaultValue={displayType} buttonStyle="solid" onChange={e => {
                                             this.displayChange(e.target.value)
                                         }}>
-                                            <Radio.Button value="chart">图表1</Radio.Button>
+                                            <Radio.Button value="chart">图表</Radio.Button>
                                             <Radio.Button value="data">数据</Radio.Button>
                                         </Radio.Group>
                                     </Form.Item>

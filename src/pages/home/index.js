@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-07-05 10:06:31
+ * @Last Modified time: 2022-07-14 15:39:56
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -666,10 +666,11 @@ class index extends Component {
                     <p>视频监控</p>
                   </div>
                   <div className={styles.videoContainer}>
-                    <div className={styles.notData}>
+                    <LiveVideo channelNo={'D96390808'} HD={1} template="simple" id="video2" />
+                    {/* <div className={styles.notData}>
                       <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
                       <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </Col>

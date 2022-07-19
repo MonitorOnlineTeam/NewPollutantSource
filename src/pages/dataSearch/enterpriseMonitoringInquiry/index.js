@@ -95,6 +95,7 @@ class index extends PureComponent {
                 RegionCode: '',
                 AttentionCode: '',
                 PollutantType: '',
+                operationpersonnel:this.state.operationpersonnel,
                 //PageSize: 25,
                 //PageIndex: 1
             }

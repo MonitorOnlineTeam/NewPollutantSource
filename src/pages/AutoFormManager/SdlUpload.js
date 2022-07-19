@@ -29,7 +29,7 @@ class SdlUpload extends Component {
     }
     this.state = {
       previewVisible: false,
-      fileList: []
+      fileList: props.fileList
     };
   }
 
@@ -93,8 +93,8 @@ class SdlUpload extends Component {
           // setFieldsValue({ cuid: cuid })
           console.log(fileList)
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
-          fileList[fileList.length - 1].url = "" + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = "" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
         } else if (info.file.status === 'error') {
           let msg = fileList[fileList.length - 1].response.Message;
           console.log("msg=", msg)

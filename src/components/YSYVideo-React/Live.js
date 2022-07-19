@@ -55,11 +55,11 @@ class Video extends PureComponent {
   }
 
   onPlayClick = async (accessToken) => {
-    const { channelNo, HD, template } = this.props;
+    const { channelNo, HD, template, id } = this.props;
     if (channelNo && HD) {
       let url = `ezopen://open.ys7.com/${channelNo}/${HD}.live` // 高清地址
       this.playr = new EZUIKit.EZUIKitPlayer({
-        id: 'ysyLivePlayWrapper', // 准备的dom元素的id，画面就在这里面播放
+        id: id, // 准备的dom元素的id，画面就在这里面播放
         autoplay: true, // 开启自动播放
         accessToken: accessToken || sessionStorage.getItem('YSYAccessToken'),
         url: url,
@@ -69,12 +69,12 @@ class Video extends PureComponent {
   }
 
   render() {
-    const { channelNo, HD } = this.props;
+    const { channelNo, HD, id } = this.props;
     return (
       <>
         {
           channelNo && HD ?
-            <div id="ysyLivePlayWrapper" style={{ height: '100%', backgroundColor: '#000' }}>
+            <div id={id} style={{ height: '100%', backgroundColor: '#000' }}>
             </div>
             :
             <div className="notData">
@@ -87,5 +87,8 @@ class Video extends PureComponent {
   }
 }
 
+Video.defaultProps = {
+  id: 'ysyLivePlayWrapper'
+}
 
 export default Video;

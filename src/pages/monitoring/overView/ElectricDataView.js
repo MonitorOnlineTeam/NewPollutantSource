@@ -32,7 +32,7 @@ const dataSource = [
     SummaryNum: 0,
     runningNum: 1,
     stopNum: 1,
-    lossNum: 1
+    offLineNum: 1
   },
   {
     region: '北京市',
@@ -44,7 +44,7 @@ const dataSource = [
     SummaryNum: 1,
     runningNum: 10,
     stopNum: 0,
-    lossNum: 1
+    offLineNum: 1
   },
   {
     region: '北京市',
@@ -56,7 +56,7 @@ const dataSource = [
     SummaryNum: 0,
     runningNum: 0,
     stopNum: 4,
-    lossNum: 0
+    offLineNum: 0
   },
   {
     region: '北京市',
@@ -68,7 +68,7 @@ const dataSource = [
     SummaryNum: 0,
     runningNum: 10,
     stopNum: 1,
-    lossNum: 4
+    offLineNum: 4
   },
   {
     region: '北京市',
@@ -80,7 +80,7 @@ const dataSource = [
     SummaryNum: 0,
     runningNum: 1,
     stopNum: 1,
-    lossNum: 1
+    offLineNum: 1
   },
   {
     region: '北京市',
@@ -92,7 +92,7 @@ const dataSource = [
     SummaryNum: 0,
     runningNum: 1,
     stopNum: 1,
-    lossNum: 1
+    offLineNum: 1
   },
 ]
 

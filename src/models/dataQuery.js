@@ -133,7 +133,7 @@ export default Model.extend({
         _historyparams.pollutantCodes = "IQI," + _historyparams.pollutantCodes;
         _historyparams.pollutantNames = "IQI," + _historyparams.pollutantNames;
       }
-      const arrname = _historyparams.pollutantNames.split(',');
+      const arrname = pollutantlist.map(item => item.PollutantName);
       _historyparams.pollutantCodes.split(',').map((item, key) => {
         let seriesdata = [];
         let series = {
@@ -393,7 +393,7 @@ export default Model.extend({
             },
           },
           yAxis: {
-            type: 'log',
+            type: 'value',
             name: `浓度值${unit}`,
             axisLabel: {
               formatter: '{value}',
