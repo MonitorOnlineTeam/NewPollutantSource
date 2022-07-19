@@ -272,6 +272,7 @@ const Index = (props) => {
                 ...values,
                 pageIndex: pageIndexs,
                 pageSize: pageSizes,
+                display:1,
                 OperatTime:undefined,
                 ActualTime:undefined,
                 OperationBeginTime: values.OperatTime&&moment(values.OperatTime[0]).format("YYYY-MM-DD HH:ss:mm"),

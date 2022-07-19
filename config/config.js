@@ -445,12 +445,27 @@ export default {
                 },
                 {
                   name:'equipmentAccount',
-                  path: '/commissionTest/equipmentAccount', //设备台账
+                  path: '/commissionTest/equipmentAccount', //调试检测 设备台账
                   routes: [
                     {
                       path: '/commissionTest/equipmentAccount',
                       redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2', 
-                    }, 
+                    },
+                    {
+                      name:'pollutantManager', //调试检测 污染源管理
+                      path: '/commissionTest/equipmentAccount/pollutantManager',
+                      // component: './commissionTest/equipmentAccount/pollutantManager', 
+                    },  
+                    {
+                      name:'pollutantManager', //调试检测 污染源查询
+                      path: '/commissionTest/equipmentAccount/pollutantQuery',
+                      component: './dataSearch/pollutantInfo', 
+                    },
+                    {
+                      name:'pollutantManager', //调试检测 设备厂家名录
+                      path: '/commissionTest/equipmentAccount/equipmentManufacturList',
+                      // component: './platformManager/configurationInfo/equipmentFacturer', 
+                    },
                     {
                       name:'cemsEquipmentList', //cems设备清单
                       path: '/commissionTest/equipmentAccount/cemsEquipmentList',
@@ -591,7 +606,7 @@ export default {
                       component: './platformManager/configurationInfo/timerManage',
                     },
                     {
-                      name: 'equipmentFacturer',//设备厂家
+                      name: 'equipmentFacturer',//设备厂家名录
                       path: '/platformconfig/configurationInfo/deveice/equipmentFacturer',
                       component: './platformManager/configurationInfo/equipmentFacturer',
                     },

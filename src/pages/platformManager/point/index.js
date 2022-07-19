@@ -74,7 +74,7 @@ let pointConfigIdEdit = '';
   paramCodeList: point.paramCodeList,
   updatePointDGIMNLoading: loading.effects['point/updatePointDGIMN'],
   saveSortLoading: loading.effects['point/pointSort'],
- 
+
 }))
 @Form.create()
 export default class MonitorPoint extends Component {
@@ -98,11 +98,11 @@ export default class MonitorPoint extends Component {
       hourPollutantCode: [],
       pointCoefficientVal: '',//监测点系数
       pointCoefficientFlag: false,
-      deviceManagerGasType:1,
-      dragDatas:[],
-      sortTitle:'开启排序',
-      noPaging:false,
-      sortLoading:false,
+      deviceManagerGasType: 1,
+      dragDatas: [],
+      sortTitle: '开启排序',
+      noPaging: false,
+      sortLoading: false,
     };
   }
 
@@ -292,8 +292,8 @@ export default class MonitorPoint extends Component {
           DGIMN: FormData["dbo.T_Cod_MonitorPointBase.DGIMN"] || FormData["DGIMN"],
           Coefficient: this.state.pointCoefficientVal,
         },
-        callback:()=>{
-          this.setState({pointCoefficientFlag:true})
+        callback: () => {
+          this.setState({ pointCoefficientFlag: true })
         }
       })
 
@@ -538,84 +538,97 @@ export default class MonitorPoint extends Component {
   equipmentParChange = (val) => {
     this.setState({ equipmentPol: val })
   }
-  dragData=(data)=>{
+  dragData = (data) => {
     console.log(data)
     this.setState({
-      dragDatas:data
+      dragDatas: data
     })
-   }
-   getAutoFormDataNoPage = (callback) =>{
+  }
+  getAutoFormDataNoPage = (callback) => {
     this.props.dispatch({
       type: `autoForm/getAutoFormData`,
-      payload:{
-         configId:pointConfigId,
-         searchParams:this.props.pointDataWhere,
-         otherParams: {
-          SortFileds:'Sort',
-          IsAsc:true,
+      payload: {
+        configId: pointConfigId,
+        searchParams: this.props.pointDataWhere,
+        otherParams: {
+          SortFileds: 'Sort',
+          IsAsc: true,
           pageIndex: 1,
           pageSize: 100000,
-         }
-        },
-        callback:()=>{
-          callback&&callback()
         }
+      },
+      callback: () => {
+        callback && callback()
+      }
     })
-   }
-  updateSort=()=>{ //更新排序
+  }
+  updateSort = () => { //更新排序
     const { sortTitle } = this.state;
-    if(sortTitle==='开启排序'){ 
+    if (sortTitle === '开启排序') {
 
-      this.setState({ noPaging:true,sortLoading:true,})
-      this.getAutoFormDataNoPage(()=>{
-        this.setState({ sortTitle:'关闭排序',sortLoading:false,})
+      this.setState({ noPaging: true, sortLoading: true, })
+      this.getAutoFormDataNoPage(() => {
+        this.setState({ sortTitle: '关闭排序', sortLoading: false, })
       })
-     
 
-    }else{
-     this.setState({  sortTitle:'开启排序', noPaging:false,   })
+
+    } else {
+      this.setState({ sortTitle: '开启排序', noPaging: false, })
     }
 
- }
- saveSort=()=>{ //保存排序
-    const  { dragDatas } = this.state;
-    const mnList = dragDatas.map(item=>item['dbo.T_Bas_CommonPoint.DGIMN'])
-    if(mnList&&mnList[0]){
+  }
+  saveSort = () => { //保存排序
+    const { dragDatas } = this.state;
+    const mnList = dragDatas.map(item => item['dbo.T_Bas_CommonPoint.DGIMN'])
+    if (mnList && mnList[0]) {
       this.props.dispatch({
         type: `point/pointSort`,
-        payload:{
-          mnList:mnList,
+        payload: {
+          mnList: mnList,
         },
-        callback:(isSuccess)=>{  
-          if(isSuccess){
-            this.setState({  sortTitle:'开启排序', noPaging:false,}) 
-            
-             if(this.props.tableInfo&&this.props.tableInfo[pointConfigId]){
-              this.props.dispatch({
-                type: `autoForm/updateState`,
-                payload:{
-                   tableInfo:{...this.props.tableInfo,[pointConfigId]:{...this.props.tableInfo[pointConfigId],dataSource:dragDatas}}
-                  },
-              })  
-            }
+        callback: (isSuccess) => {
+          if (isSuccess) {
 
-          }else{
+
+            //  if(this.props.tableInfo&&this.props.tableInfo[pointConfigId]){
+            //   this.props.dispatch({
+            //     type: `autoForm/updateState`,
+            //     payload:{
+            //        tableInfo:{...this.props.tableInfo,[pointConfigId]:{...this.props.tableInfo[pointConfigId],dataSource:dragDatas}}
+            //       },
+            //   })  
+            // }
+            this.props.dispatch({
+              type: `autoForm/getAutoFormData`,
+              payload: {
+                configId: pointConfigId,
+                searchParams: this.props.pointDataWhere,
+                otherParams: {
+                  SortFileds: 'Sort',
+                  IsAsc: true,
+                }
+              },
+              callback: () => {
+                this.setState({ sortTitle: '开启排序', noPaging: false, })
+              }
+            })
+          } else {
             this.getAutoFormDataNoPage();
           }
         }
       })
-    }else{
+    } else {
       message.warning('请先排序')
     }
 
- }
+  }
   editMN = (MN) => {
     this.setState({
       MNVisible: true,
       MNEcho: MN
     })
   }
-  deviceManager = (row) => { 
+  deviceManager = (row) => {
 
 
     this.setState({
@@ -728,7 +741,7 @@ export default class MonitorPoint extends Component {
 
       </Menu>
     );
-    const { tabKey, pointCoefficientFlag,pollutantType,deviceManagerGasType,sortTitle,} = this.state;
+    const { tabKey, pointCoefficientFlag, pollutantType, deviceManagerGasType, sortTitle, } = this.state;
     const pointFlag = tabKey == 5 && pointCoefficientFlag;
     return (
       <BreadcrumbWrapper title="监测点维护">
@@ -766,15 +779,15 @@ export default class MonitorPoint extends Component {
                 searchParams={pointDataWhere}
                 configId={pointConfigIdEdit}
                 resultConfigId={pointConfigId}
-                otherParams={{SortFileds:'Sort',IsAsc:true,}}
+                otherParams={{ SortFileds: 'Sort', IsAsc: true, }}
               ></SearchWrapper>
             }
             {
 
 
               pointConfigId && (<AutoFormTable
-                dragable ={sortTitle==='关闭排序'? true :false }
-                dragData={(data)=>{this.dragData(data)}}
+                dragable={sortTitle === '关闭排序' ? true : false}
+                dragData={(data) => { this.dragData(data) }}
                 noPaging={this.state.noPaging}
                 saveSortLoading={saveSortLoading}
                 style={{ marginTop: 10 }}
@@ -786,12 +799,12 @@ export default class MonitorPoint extends Component {
                     row,
                   });
                 }}
-                otherParams={{SortFileds:'Sort',IsAsc:true,}}
+                otherParams={{ SortFileds: 'Sort', IsAsc: true, }}
                 onAdd={() => {
                   this.showModal();
                   this.setState({
-                    pointCoefficientVal:undefined,
-                    pointCoefficientFlag:false,
+                    pointCoefficientVal: undefined,
+                    pointCoefficientFlag: false,
                   })
                   // this.setState({
                   //   cuid: getRowCuid(columns, row)
@@ -800,27 +813,27 @@ export default class MonitorPoint extends Component {
                 searchParams={pointDataWhere}
                 appendHandleButtons={(selectedRowKeys, selectedRows) => (
                   <Fragment>
-                     <Button
+                    <Button
                       type="primary"
                       onClick={() => {
                         this.updateSort()
                       }}
-                      style={{marginRight:8}}
+                      style={{ marginRight: 8 }}
                       loading={this.state.sortLoading}
-                      disabled={ tableInfo[pointConfigId]&& tableInfo[pointConfigId].dataSource && tableInfo[pointConfigId].dataSource.length>=2 ? false : true}
+                      disabled={tableInfo[pointConfigId] && tableInfo[pointConfigId].dataSource && tableInfo[pointConfigId].dataSource.length >= 2 ? false : true}
                     >
                       {sortTitle}
-                    </Button> 
-                    {sortTitle==='关闭排序'?
-                    <Button
-                      onClick={() => {
-                        this.saveSort()
-                      }}
-                      style={{marginRight:8}}
-                      loading={saveSortLoading}
-                    >
-                     保存排序
-                    </Button>:null}
+                    </Button>
+                    {sortTitle === '关闭排序' ?
+                      <Button
+                        onClick={() => {
+                          this.saveSort()
+                        }}
+                        style={{ marginRight: 8 }}
+                        loading={saveSortLoading}
+                      >
+                        保存排序
+                    </Button> : null}
                   </Fragment>
                 )}
                 appendHandleRows={row => (
@@ -873,7 +886,7 @@ export default class MonitorPoint extends Component {
                                 pointCoefficientVal: data[0] ? data[0].Coefficient : undefined,
                               })
                               this.setState({
-                                pointCoefficientFlag: data[0] && data[0].Coefficient  ? true : false,
+                                pointCoefficientFlag: data[0] && data[0].Coefficient ? true : false,
                               })
                             }
                           })
@@ -955,8 +968,8 @@ export default class MonitorPoint extends Component {
 
                 <>
                   {pointFlag ?
-                   <Button key="submit" onClick={this.modelClose}>
-                       取消
+                    <Button key="submit" onClick={this.modelClose}>
+                      取消
                   </Button>
                     :
                     <>
@@ -1045,7 +1058,7 @@ export default class MonitorPoint extends Component {
           </Modal>
 
           <Modal  //设备管理
-            title={pollutantType==1? '废水': deviceManagerGasType==1? '废气-常规CEMS' : '废气-VOCS' }
+            title={pollutantType == 1 ? '废水' : deviceManagerGasType == 1 ? '废气-常规CEMS' : '废气-VOCS'}
             visible={this.state.deviceManagerVisible}
             onCancel={() => { this.setState({ deviceManagerVisible: false }) }}
             width="95%"
