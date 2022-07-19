@@ -60,6 +60,7 @@ export default class GlobalHeaderRight extends PureComponent {
             warn: 'blue',
             over: 'red',
             exception: 'gold',
+            quota: 'orange',
           }[newNotice.sontype];
           newNotice.extra = exceptiontypes.map(item => (
             <Tag key={`${newNotice.key}${item}`} color={color} style={{ marginRight: 0 }}>
@@ -85,7 +86,7 @@ export default class GlobalHeaderRight extends PureComponent {
               <Avatar style={{ verticalAlign: 'middle' }} src="/exception.png">
               </Avatar>
             );
-          }else{
+          } else {
             newNotice.avatar = (
               <Avatar style={{ verticalAlign: 'middle' }} src="/02Warr.png">
               </Avatar>
@@ -96,9 +97,9 @@ export default class GlobalHeaderRight extends PureComponent {
       });
       return groupBy(newNotices, 'type');
     }
-    
-      return {};
-    
+
+    return {};
+
   }
 
   // 报警总次数
@@ -123,7 +124,7 @@ export default class GlobalHeaderRight extends PureComponent {
 
   // 取消Model
   onCancel = () => {
-   
+
     this.setState({
       visible: false,
     });
@@ -157,19 +158,19 @@ export default class GlobalHeaderRight extends PureComponent {
               switch (item.sontype) {
                 case 'warn':
                   this.setState({
-                    title: `实时预警-${  item.PointName}`,
+                    title: `实时预警-${item.PointName}`,
                     flag: 'warn',
                   });
                   break;
                 case 'over':
                   this.setState({
-                    title: `超标记录-${  item.PointName}`,
+                    title: `超标记录-${item.PointName}`,
                     flag: 'over',
                   });
                   break;
                 case 'exception':
                   this.setState({
-                    title: `异常报警-${  item.PointName}`,
+                    title: `异常报警-${item.PointName}`,
                     flag: 'exception',
                   });
                   break;
@@ -201,22 +202,22 @@ export default class GlobalHeaderRight extends PureComponent {
                 // initLoadData
                 style={{ maxHeight: '70vh' }}
                 DGIMN={this.state.DGIMN}
-               //按理来说时间段按照之前定好的逻辑应该是当天一点到第二天零点，但是联网判断逻辑是将当天零点数据计算到当天次数中了，为了不动联网将此处时间段改成当天零点到当天23:59:59
-               firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
-               lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
+                //按理来说时间段按照之前定好的逻辑应该是当天一点到第二天零点，但是联网判断逻辑是将当天零点数据计算到当天次数中了，为了不动联网将此处时间段改成当天零点到当天23:59:59
+                firsttime={moment(moment().format('YYYY-MM-DD 00:00:00'))}
+                lasttime={moment(moment().format('YYYY-MM-DD 23:59:59'))}
                 noticeState={1}
                 noticeState={0}
                 maxHeight={200}
               />
               : this.state.flag === 'exception' ?
                 <ExceptionAlarm
-                  initLoadData DGIMN={this.state.DGIMN} Types=""/>
+                  initLoadData DGIMN={this.state.DGIMN} Types="" />
                 :
                 <RealTimeWarningModal
                   style={{ maxHeight: '70vh' }}
                   DGIMN={this.state.DGIMN}
                   firsttime={moment(moment().format('YYYY-MM-DD 00:00:01'))}
-                  lasttime={moment(moment().add('day',1).format('YYYY-MM-DD 00:00:00'))}
+                  lasttime={moment(moment().add('day', 1).format('YYYY-MM-DD 00:00:00'))}
                 />
           }
         </Modal>

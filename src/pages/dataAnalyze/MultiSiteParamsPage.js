@@ -1,8 +1,8 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2020-01-10 10:44:31 
+ * @Author: Jiaqi
+ * @Date: 2020-01-10 10:44:31
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-15 18:10:11
+ * @Last Modified time: 2022-07-14 16:27:30
  * @Description: 多站多参对比分析
  */
 import React, { PureComponent } from 'react';
@@ -78,7 +78,7 @@ class MultiSiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "1",
-        PollutantType: this.state.defalutPollutantType,
+        PollutantType: 5,
       }
     })
   }

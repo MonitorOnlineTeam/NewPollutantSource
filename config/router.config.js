@@ -5,17 +5,22 @@ const routes = [
     component: '../layouts/BlankLayout',
     routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
   },
-  // {
-  //   path: '/ControlCabin',
-  //   component: '../layouts/ControlCabinLayout',
-  //   routes: [
-  //     {
-  //       name: 'ControlCabin',
-  //       path: '/ControlCabin/index',
-  //       component: './ControlCabin/index',
-  //     },
-  //   ]
-  // },
+  {
+    path: '/ControlCabin',
+    component: '../layouts/ControlCabinLayout',
+    routes: [
+      {
+        name: 'ControlCabin',
+        path: '/ControlCabin/Monitoring',
+        component: './ControlCabin/Monitoring',
+      },
+      {
+        name: 'ControlCabin',
+        path: '/ControlCabin/QualityControl',
+        component: './ControlCabin/QualityControl',
+      },
+    ]
+  },
   {
     path: '/',
     component: '../layouts/BlankLayout',
@@ -162,11 +167,11 @@ const routes = [
             path: '/realtimeLive',
             component: './SC/realtimeLive/M3U8Video',
           },
-          // {
-          //   name: 'test',
-          //   path: '/test',
-          //   component: './AutoFormManager/Test.js',
-          // },
+          {
+            name: 'test',
+            path: '/test',
+            component: './Test/Test',
+          },
           {
             name: 'home',
             path: '/home',
@@ -1215,9 +1220,16 @@ const routes = [
                 path: '/monitoring/realtimedata',
                 component: './monitoring/realtimedata',
               },
+              // 历史数据
               {
                 name: 'dataquery',
                 path: '/monitoring/dataquery',
+                component: './monitoring/dataquery/index',
+              },
+               // 历史用电量查询
+               {
+                name: 'electricDataquery',
+                path: '/monitoring/electric/dataquery',
                 component: './monitoring/dataquery/index',
               },
               // 企业异常上报
@@ -2063,11 +2075,6 @@ const routes = [
               {
                 path: '/dataquery',
                 redirect: '/monitoring/dataquery',
-              },
-              {
-                name: 'dataquery',
-                path: '/monitoring/dataquery',
-                component: './monitoring/dataquery/index',
               },
               {
                 name: 'alarmrecord',
