@@ -1,8 +1,8 @@
 
 /*
- * @desc: 监控目标公共页面【企业、监测站、河段、工地】
- * @Author: JianWei
- * @Date: 2019年7月29日15:11:59
+ * @desc: 调试检测 污染源管理
+ * @Author: jab
+ * @Date: 2022.07.20
  */
 import React, { Component, Fragment } from 'react';
 import { CalendarTwoTone, QrcodeOutlined,FundOutlined } from '@ant-design/icons';

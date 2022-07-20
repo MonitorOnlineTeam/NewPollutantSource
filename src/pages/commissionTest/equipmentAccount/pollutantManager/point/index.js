@@ -36,7 +36,7 @@ import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
   routerConfig: autoForm.routerConfig,
 }))
 
-export default class AutoFormTable extends Component {
+export default class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -118,6 +118,13 @@ export default class AutoFormTable extends Component {
             isCenter
             {...this.props}
             pagination={false}
+          //   appendHandleRows={row => <Fragment>
+          //     <Tooltip title="删除">
+          //         <a onClick={() => {
+          //             this.showDeleteConfirm(row);
+          //         }}><DelIcon />    </a>
+          //     </Tooltip>
+          // </Fragment>}
           />
         </Card>
       </div>

@@ -453,18 +453,23 @@ export default {
                     },
                     {
                       name:'pollutantManager', //调试检测 污染源管理
-                      path: '/commissionTest/equipmentAccount/pollutantManager',
-                      // component: './commissionTest/equipmentAccount/pollutantManager', 
+                      path: '/commissionTest/equipmentAccount/pollutantManager/:configId',
+                      component: './commissionTest/equipmentAccount/pollutantManager', 
                     },  
+                    {
+                      name:'point', //调试检测 污染源管理 监测点
+                      path: '/commissionTest/equipmentAccount/point',
+                      component: './commissionTest/equipmentAccount/pollutantManager/point', 
+                    },   
                     {
                       name:'pollutantManager', //调试检测 污染源查询
                       path: '/commissionTest/equipmentAccount/pollutantQuery',
-                      component: './dataSearch/pollutantInfo', 
+                      component: './commissionTest/equipmentAccount/pollutantQuery', 
                     },
                     {
                       name:'pollutantManager', //调试检测 设备厂家名录
                       path: '/commissionTest/equipmentAccount/equipmentManufacturList',
-                      // component: './platformManager/configurationInfo/equipmentFacturer', 
+                      component: './platformManager/configurationInfo/equipmentFacturer', 
                     },
                     {
                       name:'cemsEquipmentList', //cems设备清单

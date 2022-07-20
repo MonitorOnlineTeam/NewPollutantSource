@@ -1,7 +1,7 @@
 /**
- * 功  能：污染源信息 运营信息
- * 创建人：贾安波
- * 创建时间：2022.04.02
+ * 功  能：调试检测 - 污染源查询 运营信息
+ * 创建人：jab
+ * 创建时间：2022.07.20
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Popover } from 'antd';
@@ -19,17 +19,17 @@ import moment from 'moment';
 
 const { Option } = Select;
 
-const namespace = 'pollutantInfo'
+const namespace = 'pollutantQuery'
 
 
 
 
-const dvaPropsData = ({ loading, pollutantInfo, autoForm }) => ({
-    tableTotal: pollutantInfo.operationInfoTableTotal,
-    tableDatas: pollutantInfo.operationInfoTableDatas,
-    tableLoading: pollutantInfo.projectRelationLoading,
-    historyOperationInfo:pollutantInfo.historyOperationInfo,
-    historyOperationInfoLoading: pollutantInfo.historyProjectRelationLoading,
+const dvaPropsData = ({ loading, pollutantQuery, autoForm }) => ({
+    tableTotal: pollutantQuery.operationInfoTableTotal,
+    tableDatas: pollutantQuery.operationInfoTableDatas,
+    tableLoading: pollutantQuery.projectRelationLoading,
+    historyOperationInfo:pollutantQuery.historyOperationInfo,
+    historyOperationInfoLoading: pollutantQuery.historyProjectRelationLoading,
     exportLoading: loading.effects[`${namespace}/exportEntProjectRelationList`],
 })
 
