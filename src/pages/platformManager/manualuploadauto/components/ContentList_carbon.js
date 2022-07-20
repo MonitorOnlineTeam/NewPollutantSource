@@ -466,7 +466,7 @@ export default class ContentList_carbon extends Component {
                         </svg>
                         </i>
                         <span class="ant-modal-confirm-title">提示</span>
-                        <div class="ant-modal-confirm-content"> 确认导入模板文件中的时间点的<span style={{ color: 'red' }}>{dataType}</span>数据吗?</div></div>
+                        <div class="ant-modal-confirm-content"> 确认导入模板文件中的时间点是<span style={{ color: 'red' }}>{dataType}</span>数据吗?</div></div>
 
                 </Modal>
             </Card>
