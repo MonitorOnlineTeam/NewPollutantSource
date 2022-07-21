@@ -103,9 +103,10 @@ export default class Index extends Component {
         const { targetId } = target;
         const { targetName } = target;
         router.push({
-            pathname: `/platformconfig/basicInfo/monitortarget/${configId}/${targetType}/${pollutantTypes}/monitorpoint/${targetId}/${targetName}`,
+            pathname: `/commissionTest/equipmentAccount/point`,
             query: {
-                tabName: '维护点信息',
+                targetId :row['dbo.T_Bas_Enterprise.EntCode'],
+                targetName : row['dbo.T_Bas_Enterprise.EntName'],
             },
         });
     }
@@ -246,17 +247,6 @@ export default class Index extends Component {
                                     this.editMonitorInfo(row);
                                 }}><PointIcon />    </a>
                             </Tooltip>
-
-                           
-                            <Divider type="vertical" />
-                           <Tooltip title="运维信息">
-                             <a onClick={() => {
-                                 router.push({
-                                   pathname:"/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/operationInfo",
-                                   query:{p:row['dbo.T_Bas_Enterprise.EntCode'],entName:row['dbo.T_Bas_Enterprise.EntName']}
-                               })
-                             }}><FundOutlined style={{fontSize:16}}/>  </a>
-                    </Tooltip> 
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"
                         {...this.props}
