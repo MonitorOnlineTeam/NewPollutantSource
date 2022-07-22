@@ -449,7 +449,7 @@ export default {
                   routes: [
                     {
                       path: '/commissionTest/equipmentAccount',
-                      redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2', 
+                      redirect: '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise', 
                     },
                     {
                       name:'pollutantManager', //调试检测 污染源管理

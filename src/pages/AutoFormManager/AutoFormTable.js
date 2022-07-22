@@ -76,7 +76,7 @@ class AutoFormTable extends PureComponent {
   };
 
   componentDidMount() {
-    this.loadDataSource();
+    this.loadDataSource(); 
     if (this.props.getPageConfig) {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',

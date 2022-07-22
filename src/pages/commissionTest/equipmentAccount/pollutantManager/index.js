@@ -96,99 +96,16 @@ export default class Index extends Component {
         // });
     }
 
-    editMonitorInfo = (row) => {
-        const { match: { params: { targetType, configId, pollutantTypes } } } = this.props;
-
-        const target = this.getTargetIds(row);
-        const { targetId } = target;
-        const { targetName } = target;
+    goPointInfo = (row) => {
         router.push({
             pathname: `/commissionTest/equipmentAccount/point`,
             query: {
-                targetId :row['dbo.T_Bas_Enterprise.EntCode'],
-                targetName : row['dbo.T_Bas_Enterprise.EntName'],
+                targetId :row['dbo.T_Bas_TestEnterprise.ID'],
+                targetName : row['dbo.T_Bas_TestEnterprise.EntName'],
             },
         });
     }
 
-    adddischargepermit = (key, row) => {
-        const { match: { params: { targetType } } } = this.props;
-        const target = this.getTargetIds(row);
-        const { targetId } = target;
-        const { targetName } = target;
-        const configId = 'PDPermit';
-        router.push({
-            pathname: `/platformconfig/basicInfo/monitortarget/AEnterpriseTest/${targetType}/dischargepermit/${configId}/${targetId}/${targetName}`,
-            query: {
-                tabName: '排污许可证',
-            },
-        });
-    }
-
-    getTargetIds = row => {
-        const { match: { params: { targetType } } } = this.props;
-        let targetId = '';
-        let targetName = '';
-
-        switch ((+targetType)) {
-            case 1:// 企业
-                targetId = row['dbo.T_Bas_Enterprise.EntCode'];
-                targetName = row['dbo.T_Bas_Enterprise.EntName'];
-                // targetType = 1;
-                break;
-            case 2:// 监测站
-                targetId = row['dbo.T_Bas_Station.StationCode'];
-                targetName = row['dbo.T_Bas_Station.StationName'];
-                // targetType = 2;
-                break;
-            case 3:// 河段
-                targetId = row['dbo.T_Bas_Reach.ReachCode'];
-                targetName = row['dbo.T_Bas_Reach.ReachName'];
-                // targetType = 3;
-                break;
-            case 4:// 工地
-                targetId = row['dbo.T_Bas_BuildingSite.BuildingSiteCode'];
-                targetName = row['dbo.T_Bas_BuildingSite.BuildingSiteName'];
-                // targetType = 4;
-                break;
-            default: break;
-        }
-
-        return { targetId, targetName };
-    }
-
-    showDeleteConfirm = row => {
-        const that = this;
-        const { dispatch } = this.props;
-        // console.log("row=", row);
-        confirm({
-            title: '确定要删除该条数据吗？',
-            content: '删除后不可恢复',
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {
-                const target = that.getTargetIds(row);
-                const where = [];
-                where.push(target.targetId);
-
-                dispatch({
-                    type: 'monitorTarget/queryPointForTarget',
-                    payload: {
-                        where,
-                        callback: res => {
-                            if (res.IsSuccess) {
-                                that.child.delRowData(row);
-                            }
-                        },
-                    },
-                })
-            },
-            onCancel() {
-
-            },
-        });
-    }
 
 
 
@@ -236,15 +153,9 @@ export default class Index extends Component {
                         }}
                         appendHandleRows={row => <Fragment>
                             <Divider type="vertical" />
-                            <Tooltip title="删除">
-                                <a onClick={() => {
-                                    this.showDeleteConfirm(row);
-                                }}><DelIcon />    </a>
-                            </Tooltip>
-                            <Divider type="vertical" />
                             <Tooltip title="维护点信息">
                                 <a onClick={() => {
-                                    this.editMonitorInfo(row);
+                                    this.goPointInfo(row);
                                 }}><PointIcon />    </a>
                             </Tooltip>
                         </Fragment>}

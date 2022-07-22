@@ -30,7 +30,9 @@ import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
 import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, EllipsisOutlined, FileTextOutlined, UnlockFilled } from '@ant-design/icons';
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
-let pointConfigId = 'WaterOutputNew'
+import SdlForm from '@/pages/AutoFormManager/SdlForm';
+import { handleFormData } from '@/utils/utils';
+const pointConfigId = 'TestPoint'
 @connect(({ loading, autoForm,commissionTestPoint, }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm: autoForm,
@@ -39,16 +41,21 @@ let pointConfigId = 'WaterOutputNew'
   searchForm: autoForm.searchForm,
   routerConfig: autoForm.routerConfig,
   pointDataWhere:commissionTestPoint.pointDataWhere,
+  loadingAddConfirm: loading.effects['autoForm/add'],
+  loadingEditConfirm: loading.effects['autoForm/edit'],
 }))
-
+@Form.create()
 export default class Index extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      visible:false,
+      isEdit:false,
       deviceManagerVisible: false,
       deviceManagerMN: '',
       deviceManagerGasType: '',
+      selectedPointCode:'',
     };
 
   }
@@ -79,7 +86,7 @@ export default class Index extends Component {
       payload: {
         pointDataWhere: [
           {
-            Key: 'dbo__T_Cod_MonitorPointBase__BaseCode',
+            Key: 'dbo__T_Bas_TestCommonPoint__EntID',
             Value: targetId,
             Where: '$=',
           },
@@ -96,9 +103,49 @@ export default class Index extends Component {
       deviceManagerGasType: row["dbo.T_Bas_CommonPoint.Col4"]
     })
   }
-  render() {
-    const { searchConfigItems, searchForm, tableInfo, dispatch,pointDataWhere, } = this.props;
+  addPoint = () =>{ //添加监测点 弹框
+    this.setState({visible:true,isEdit:false,})
+  }
+  editPoint = (row) =>{
+    const {dispatch, } = this.props;
+    this.setState({visible:true,isEdit:true,})
+    const pointCode = row['dbo.T_Bas_TestCommonPoint.ID']
+    this.setState({
+      visible: true,
+      isEdit: true,
+      selectedPointCode: pointCode,
+    });
+  }
+  addPointSubmitForm = () =>{  //添加监测点 确认
+    const { form,dispatch,pointDataWhere,} = this.props;
     const { location: { query: { targetName, targetId} }  } = this.props;
+
+    form.validateFields((err, values) => {
+      if (!err) { 
+        values.EntID = targetId;
+
+        dispatch({
+          type: 'autoForm/add',
+          payload: {
+            configId:pointConfigId,
+            FormData: values,
+            searchParams: pointDataWhere,
+            callback: result => {
+              if (result.IsSuccess) {
+                this.setState({
+                  visible: false,
+                })
+              }
+            },
+          },
+        });
+      }
+    })
+  }
+  render() {
+    const { searchConfigItems, searchForm, tableInfo, dispatch,pointDataWhere, loadingEditConfirm , loadingAddConfirm ,} = this.props;
+    const { location: { query: { targetName, targetId} }  } = this.props;
+    const { isEdit } = this.state;
     if (this.props.loading) {
       return (<Spin
         style={{
@@ -143,93 +190,26 @@ export default class Index extends Component {
             configId={pointConfigId}
             isCenter
             {...this.props}
+            type='company'
             searchParams={pointDataWhere}
             onAdd={() => { //添加
-              this.showModal();
+              this.addPoint();
             }}
             appendHandleRows={row => (
               <Fragment>
 
-
+               <Divider type="vertical" />
                 <Tooltip title="编辑">
                   <a
                     onClick={() => {
-                      this.showModal(row['dbo.T_Bas_CommonPoint.PointCode']);
-                      this.setState({
-                        cuid: getRowCuid(row, 'dbo.T_Bas_CommonPoint.Photo'),
-                        FormData: row
-                      })
-                      this.props.dispatch({ //数据核查 回显数据
-                        type: 'point/getMonitorPointVerificationItem',
-                        payload: {
-                          DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        },
-                        callback: (res) => {
-                          this.setState({
-                            itemCode: res && res.code ? res.code : undefined,
-                            realtimePollutantCode: res && res.RealTimeItem ? res.RealTimeItem : undefined,
-                            hourPollutantCode: res && res.HourItem ? res.HourItem : undefined,
-                            platformNum: res && res.platformNum ? res.platformNum : undefined,
-                          })
-                        }
-                      })
-
-                      this.props.dispatch({ //设备参数 回显数据
-                        type: 'point/getParamInfoList',
-                        payload: {
-                          DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                          pollutantType: this.state.pollutantType
-                        },
-                        callback: (res) => {
-                          this.setState({
-                            equipmentPol: res && res.code ? res.code : undefined,
-                          })
-                        }
-                      })
-
-                      this.props.dispatch({ //监测点系数 回显数据
-                        type: 'operaAchiev/getPointCoefficientList',
-                        payload: {
-                          DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
-                        },
-                        callback: (data) => {
-                          this.setState({
-                            pointCoefficientVal: data[0] ? data[0].Coefficient : undefined,
-                          })
-                          this.setState({
-                            pointCoefficientFlag: data[0] && data[0].Coefficient ? true : false,
-                          })
-                        }
-                      })
-
-
+                      this.editPoint(row)
                     }}
                   >
                     <EditIcon />
                   </a>
                 </Tooltip>
-                <Divider type="vertical" />
-                <Tooltip title="详情">
-                  <a
-                    onClick={() => {
-                      this.setState({
-                        visible: true,
-                        isEdit: false,
-                        isView: true,
-                        selectedPointCode: row['dbo.T_Bas_CommonPoint.PointCode'],
-                      });
-                    }}
-                  >
-                    <DetailIcon />
-                  </a>
-                </Tooltip>
-                <Divider type="vertical" />
-                <Tooltip title="删除">
-                  <a onClick={() => {
-                    this.showDeleteConfirm(row['dbo.T_Bas_CommonPoint.PointCode'],
-                      row['dbo.T_Bas_CommonPoint.DGIMN']);
-                  }}><DelIcon />    </a>
-                </Tooltip>
+
+          
                 <Divider type="vertical" />
                 <Tooltip title="设备管理">
                   <a onClick={() => {
@@ -242,6 +222,26 @@ export default class Index extends Component {
           />
         </Card>
       </div>
+      <Modal
+            title={isEdit? '编辑监测点' : '添加监测点'}
+            visible={this.state.visible}
+            onOk={this.addPointSubmitForm.bind(this)}
+            onCancel={()=>{this.setState({visible:false})}}
+            width={'80%'}
+            confirmLoading={isEdit? loadingEditConfirm : loadingAddConfirm}
+            destroyOnClose
+            bodyStyle={{ paddingBottom: 0 }}>
+         <SdlForm
+                      configId={pointConfigId}
+                      form={this.props.form}
+                      noLoad
+                      hideBtns
+                      isEdit={this.state.isEdit}
+                      keysParams={{ 'dbo.T_Bas_TestCommonPoint.ID': this.state.selectedPointCode }}
+                      types='point'
+                      isModal
+                    />              
+        </Modal>
       </BreadcrumbWrapper>
     );
   }
