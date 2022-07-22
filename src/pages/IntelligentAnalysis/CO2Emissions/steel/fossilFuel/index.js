@@ -313,7 +313,7 @@ class index extends Component {
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1000} title={KEY ? "编辑" : "添加"} visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             {...layout}
             style={{ marginTop: 24 }}

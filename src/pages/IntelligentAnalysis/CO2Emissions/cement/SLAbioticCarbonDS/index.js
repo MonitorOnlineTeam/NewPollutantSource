@@ -210,7 +210,7 @@ class index extends PureComponent {
   }
 
   render() {
-    const { isModalVisible, editData, FileUuid, FileUuid2, } = this.state;
+    const { isModalVisible, editData, FileUuid, FileUuid2, KEY } = this.state;
     const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
     const { EntView = [] } = this.props.configIdList;
     console.log('props=', this.props)
@@ -240,7 +240,8 @@ class index extends PureComponent {
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementNonFuel.AttachmentID')
               const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CementNonFuel.DevAttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2,
+              this.setState({
+                KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2,
                 rowTime: record['dbo.T_Bas_CementNonFuel.MonitorTime'],
               }, () => {
                 this.getFormData();
@@ -252,7 +253,7 @@ class index extends PureComponent {
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
+        <Modal destroyOnClose width={1000} title={KEY ? "编辑" : "添加"} visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             style={{ marginTop: 24 }}
             {...layout}

@@ -383,7 +383,7 @@ class index extends PureComponent {
   }
 
   render() {
-    const { isModalVisible, editData, FileUuid, WhetherT } = this.state;
+    const { isModalVisible, editData, FileUuid, WhetherT, KEY } = this.state;
     const { tableInfo, cementTableCO2Sum } = this.props;
     const { EntView = [] } = this.props.configIdList;
     const dataSource = tableInfo[CONFIG_ID] ? tableInfo[CONFIG_ID].dataSource : [];
@@ -416,7 +416,7 @@ class index extends PureComponent {
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
-        <Modal maskClosable={false} destroyOnClose width={1000} title="添加" visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
+        <Modal maskClosable={false} destroyOnClose width={1000} title={KEY ? "编辑" : "添加"} visible={isModalVisible} onOk={this.checkIsAdd} onCancel={this.handleCancel}>
           <Form
             {...layout}
             ref={this.formRef}
