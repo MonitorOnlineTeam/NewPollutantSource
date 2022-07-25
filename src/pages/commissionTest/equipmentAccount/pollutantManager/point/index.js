@@ -32,6 +32,7 @@ import { RollbackOutlined, ToolOutlined, HighlightOutlined, DownOutlined, Ellips
 import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import { handleFormData } from '@/utils/utils';
+import DeviceManager from './DeviceManager'
 const pointConfigId = 'TestPoint'
 @connect(({ loading, autoForm,commissionTestPoint, }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
@@ -42,7 +43,7 @@ const pointConfigId = 'TestPoint'
   routerConfig: autoForm.routerConfig,
   pointDataWhere:commissionTestPoint.pointDataWhere,
   loadingAddConfirm: loading.effects['autoForm/add'],
-  loadingEditConfirm: loading.effects['autoForm/edit'],
+  loadingEditConfirm: loading.effects['autoForm/saveEdit'],
 }))
 @Form.create()
 export default class Index extends Component {
@@ -56,6 +57,7 @@ export default class Index extends Component {
       deviceManagerMN: '',
       deviceManagerGasType: '',
       selectedPointCode:'',
+      deviceMangerVisible:false,
     };
 
   }
@@ -100,7 +102,6 @@ export default class Index extends Component {
     this.setState({
       deviceManagerVisible: true,
       deviceManagerMN: row["dbo.T_Bas_CommonPoint.DGIMN"],
-      deviceManagerGasType: row["dbo.T_Bas_CommonPoint.Col4"]
     })
   }
   addPoint = () =>{ //添加监测点 弹框
@@ -116,29 +117,47 @@ export default class Index extends Component {
       selectedPointCode: pointCode,
     });
   }
-  addPointSubmitForm = () =>{  //添加监测点 确认
+  savePointSubmitForm = () =>{  //保存监测点 确认
     const { form,dispatch,pointDataWhere,} = this.props;
     const { location: { query: { targetName, targetId} }  } = this.props;
-
+    const { isEdit,selectedPointCode, } = this.state;
     form.validateFields((err, values) => {
       if (!err) { 
         values.EntID = targetId;
-
+        if(isEdit){ //编辑
+          dispatch({
+            type:'autoForm/saveEdit',
+            payload: {
+              configId:pointConfigId,
+              FormData: {...values,ID:selectedPointCode},
+              searchParams: pointDataWhere,
+              callback: result => {
+                if (result.IsSuccess) {
+                  this.setState({  visible: false, })  }
+                  dispatch({
+                  type: 'autoForm/getAutoFormData',
+                  payload: {
+                    configId:pointConfigId,
+                    searchParams:  pointDataWhere
+                  },
+              });
+              },
+            },
+          });
+        }else{ //添加
         dispatch({
-          type: 'autoForm/add',
+          type:  'autoForm/add',
           payload: {
             configId:pointConfigId,
-            FormData: values,
+            FormData: {...values,},
             searchParams: pointDataWhere,
             callback: result => {
               if (result.IsSuccess) {
-                this.setState({
-                  visible: false,
-                })
-              }
+                this.setState({ visible: false, }) }
             },
           },
         });
+      }
       }
     })
   }
@@ -225,7 +244,7 @@ export default class Index extends Component {
       <Modal
             title={isEdit? '编辑监测点' : '添加监测点'}
             visible={this.state.visible}
-            onOk={this.addPointSubmitForm.bind(this)}
+            onOk={this.savePointSubmitForm.bind(this)}
             onCancel={()=>{this.setState({visible:false})}}
             width={'80%'}
             confirmLoading={isEdit? loadingEditConfirm : loadingAddConfirm}
@@ -241,6 +260,16 @@ export default class Index extends Component {
                       types='point'
                       isModal
                     />              
+        </Modal>
+        <Modal
+            title={'设备管理'}
+            visible={this.state.deviceManagerVisible}
+            onCancel={()=>{this.setState({deviceManagerVisible:false})}}
+            width={'80%'}
+            destroyOnClose
+            footer={null}
+          >  
+          <DeviceManager DGIMN={this.state.deviceManagerMN}/>         
         </Modal>
       </BreadcrumbWrapper>
     );

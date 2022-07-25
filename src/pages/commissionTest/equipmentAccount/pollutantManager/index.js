@@ -81,19 +81,6 @@ export default class Index extends Component {
                 configId,
             },
         })
-        // dispatch({
-        //     type: 'autoForm/getAutoFormData',
-        //     payload: {
-        //       configId:configId,
-        //       searchParams:  [
-        //         {
-        //           Key: 'dbo__T_Cod_MonitorPointBase__BaseCode',
-        //           Value: match.params.targetId,
-        //           Where: '$=',
-        //         },
-        //       ],
-        //     },
-        // });
     }
 
     goPointInfo = (row) => {
