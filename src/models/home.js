@@ -2,17 +2,17 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-07-12 11:08:46
+ * @Last Modified time: 2022-07-15 13:55:55
  * @desc: 主页model
  */
 import moment from 'moment';
-import * as services from './service';
+import * as services from '@/services/homeApi';
 import * as commonApi from '@/services/commonApi'
 import Model from '@/utils/model';
 import { message } from 'antd';
 
 export default Model.extend({
-  namespace: 'home1',
+  namespace: 'home',
   state: {
     theme: 'dark',
     allEntAndPointList: [],
@@ -180,11 +180,13 @@ export default Model.extend({
               "desc": <div>
                 <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
                 <br />
-                <span style={{ color: '#3ccafc' }}>{paramsData[0]}月</span> 核算法温室气体排放量为
-                <span style={{ color: '#f30201' }}>{paramsData[1]}</span>
-                <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span> ，
-                <br />
-                <span style={{ color: '#f30201' }}>超出平均每月排放总额90%。</span>
+                <div style={{ marginLeft: 10 }}>
+                  <span style={{ color: '#3ccafc' }}>{paramsData[0]}月</span> 核算法温室气体排放量为
+                  <span style={{ color: '#f30201' }}>{paramsData[1]}</span>
+                  <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span> ，
+                  <br />
+                  <span style={{ color: '#f30201' }}>超出平均每月排放总额90%。</span>
+                </div>
               </div>
               , url: ""
             }
@@ -196,12 +198,14 @@ export default Model.extend({
               "desc": <div>
                 <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
                 <br />
-                <span style={{ color: '#3ccafc' }}>{paramsData[0]}点</span>
-                <span style={{ color: '#ffcb5b' }}>{paramsData[1]}</span>
-                分钟数据相似度超过80% ，
-                {/* <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span>, */}
-                <br />
-                <span style={{ color: '#f30201' }}>疑似为造假数据。</span>
+                <div style={{ marginLeft: 10 }}>
+                  <span style={{ color: '#3ccafc' }}>{paramsData[0]}点</span>
+                  <span style={{ color: '#ffcb5b' }}>{paramsData[1]}</span>
+                  分钟数据相似度超过80% ，
+                  {/* <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span>, */}
+                  <br />
+                  <span style={{ color: '#f30201' }}>疑似为造假数据。</span>
+                </div>
               </div>
               , url: ""
             }
@@ -210,16 +214,87 @@ export default Model.extend({
             "desc": <div>
               <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
               <br />
-              <span style={{ color: '#ffcb5b' }}>{item.PollutantName}</span> 从
-              <span style={{ color: '#3ccafc' }}>{item.FirstTime}</span>
-              发生了
-              <span style={{ color: '#f30201', fontSize: 16 }}>{item.AlarmCount}</span> 次报警。
+              <div style={{ marginLeft: 10 }}>
+                <span style={{ color: '#ffcb5b' }}>{item.PollutantName}</span> 从
+                <span style={{ color: '#3ccafc' }}>{item.FirstTime}</span>
+                发生了
+                <span style={{ color: '#f30201', fontSize: 16 }}>{item.AlarmCount}</span> 次报警。
+              </div>
             </div>
             , url: ""
           }
         }) : [];
+        // "AlarmMsg": "[XX热力-电力电位1]实时功率为71.236KW，启停阈值为50KW，属于正常生产状态，关联的治污设施低温燃烧总电电源的实时功率为0KW，启停阈值为10KW，未正常运行,治污设施异常,首次异常时间：2022/7/15 1:00:00。",
         yield update({
-          warningInfoList: data
+          warningInfoList: [
+            // {
+            //   "desc": <div>
+            //     <span style={{ fontWeight: 'bold' }}>XX热力-电力电位1：</span>
+            //     <br />
+            //     <div style={{ marginLeft: 10 }}>
+            //       实时功率为
+            //       <span style={{ color: '#ffcb5b' }}>71.236KW</span>,
+            //       启停阈值为
+            //       <span style={{ color: '#3ccafc' }}>50KW</span>,
+            //       <br />
+            //       属于正常生产状态，
+            //       关联的治污设施低温燃烧总电电源的实时功率为0KW，
+            //       <br />
+            //       启停阈值为10KW，
+            //       <span style={{ color: '#f30201' }}>未正常运行,治污设施异常</span>,
+            //       <br />
+            //       首次异常时间：
+            //       <span style={{ color: '#3ccafc' }}>2022/7/15 1:00:00</span>。
+            //     </div>
+            //   </div>
+            //   , url: ""
+            // },
+            // {
+            //   "desc": <div>
+            //     <span style={{ fontWeight: 'bold' }}>XX热力-电力电位1：</span>
+            //     <br />
+            //     <div style={{ marginLeft: 10 }}>
+            //       实时功率为
+            //       <span style={{ color: '#ffcb5b' }}>699.2KW</span>,
+            //       启停阈值为
+            //       <span style={{ color: '#3ccafc' }}>400KW</span>,
+            //       <br />
+            //       属于正常生产状态，
+            //       关联的治污设施低温燃烧总电电源的实时功率为0KW，
+            //       <br />
+            //       启停阈值为1KW，
+            //       <span style={{ color: '#f30201' }}>未正常运行,治污设施异常</span>,
+            //       <br />
+            //       首次异常时间：
+            //       <span style={{ color: '#3ccafc' }}>2022/7/15 1:00:00</span>。
+            //     </div>
+            //   </div>
+            //   , url: ""
+            // },
+            // {
+            //   "desc": <div>
+            //     <span style={{ fontWeight: 'bold' }}>XX热力-电力电位1：</span>
+            //     <br />
+            //     <div style={{ marginLeft: 10 }}>
+            //       实时功率为
+            //       <span style={{ color: '#ffcb5b' }}>58.99KW</span>,
+            //       启停阈值为
+            //       <span style={{ color: '#3ccafc' }}>50KW</span>,
+            //       <br />
+            //       属于正常生产状态，
+            //       关联的治污设施低温燃烧总电电源的实时功率为0.069KW，
+            //       <br />
+            //       启停阈值为10KW，
+            //       <span style={{ color: '#f30201' }}>未正常运行,治污设施异常</span>,
+            //       <br />
+            //       首次异常时间：
+            //       <span style={{ color: '#3ccafc' }}>2022-07-14 23:00:00</span>。
+            //     </div>
+            //   </div>
+            //   , url: ""
+            // },
+            ...data,
+          ]
         })
       }
     },

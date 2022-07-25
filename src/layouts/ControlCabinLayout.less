@@ -1,0 +1,179 @@
+@normal : rgb(14, 218, 173); // 正常
+@abnormal : rgb(255, 204, 68); // 异常
+@offline : rgb(204, 204, 204); // 离线
+@overproof : rgb(253, 108, 108); // 超标
+@NOx : #40ccdd;
+@smoke : #0edaad;
+@SO2 : #03b3ff;
+@titleColor: #d5d9e2;
+
+/*滚动条轨道颜色*/
+@scrollbar-track-color: #021e39;
+/*滚动条颜色*/
+@scrollbar-thumb-color: #305090;
+/*滚动条大小*/
+@scrollbar-width: 9px;
+
+.homeWrapper {
+  background-color: #001529 !important;
+  font-size: 14px;
+  position: relative;
+
+  :global {
+    .amap-container {
+      background-color: #001529 !important;
+    }
+  }
+
+  .homeContainer {
+    // padding: 10px;
+    margin: 0 !important;
+    width: 100vw;
+    height: calc(100vh - 64px)
+  }
+
+
+  .normal {
+    color: @normal;
+  }
+
+  .abnormal {
+    color: @abnormal;
+  }
+
+  .offline {
+    color: @offline;
+  }
+
+  .overproof {
+    color: @overproof;
+  }
+
+  ::-webkit-scrollbar-track-piece {
+    -webkit-border-radius: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 9px;
+  }
+
+  ::-webkit-scrollbar-track {
+
+    border-radius: 10px;
+    background-color: @scrollbar-track-color;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+    outline-offset: -2px;
+    border: 2px solid @scrollbar-thumb-color;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    height: 50px;
+    background-color: @scrollbar-thumb-color;
+    -webkit-border-radius: 4px;
+  }
+
+  .homeHeader {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    height: 64px;
+    // line-height: 64px;
+    padding: 10px 0;
+    font-weight: 700;
+    // background: #00152A;
+    background: #000001;
+    //background: url(/ProjectSummary/homeheader.png);
+
+    .headerImg {
+      width: 100%;
+      height: 60px;
+      position: absolute;
+      left: 0;
+    }
+
+    &>div {
+      p {
+        line-height: 52px;
+      }
+
+      .left-button,
+      .right-button {
+        position: absolute;
+        width: 30%;
+
+        span {
+          font-size: 16px;
+          background: url(/ProjectSummary/left.png) no-repeat;
+          background-size: contain !important;
+          width: 142px;
+          line-height: 39px;
+          display: inline-block;
+          text-align: center;
+          font-weight: bold;
+          text-align: left;
+          padding-left: 34px;
+          cursor: pointer;
+
+          &.active {
+            background: url(/ProjectSummary/left-hover.png) no-repeat;
+          }
+
+          &:hover {
+            background: url(/ProjectSummary/left-hover.png) no-repeat;
+          }
+        }
+
+        // display: flex;
+        // justify-content: space-between;
+      }
+
+      .left-button {
+        left: 10%;
+      }
+
+      .right-button {
+        right: 10%;
+
+        span {
+          background: url(/ProjectSummary/right.png) no-repeat;
+
+          &:hover {
+            background: url(/ProjectSummary/right-hover.png) no-repeat;
+          }
+        }
+      }
+    }
+
+    .backMenu {
+      position: absolute;
+      top: 11px;
+      right: 28px;
+      font-size: 14px;
+    }
+  }
+
+  :global {
+
+    // 单选按钮样式
+    .ant-radio-button-wrapper {
+      background: #163666;
+      border-color: #3b6aaa;
+      color: #fff;
+    }
+
+    .ant-radio-button-wrapper:not(:first-child)::before {
+      background-color: #3b6aaa;
+    }
+
+    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+      background: #2b5288;
+    }
+  }
+}
