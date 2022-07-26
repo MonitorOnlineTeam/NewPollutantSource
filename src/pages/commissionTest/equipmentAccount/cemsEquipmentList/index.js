@@ -1,5 +1,5 @@
 /**
- * 功  能：参比仪器设备清单
+ * 功  能：cems设备清单
  * 创建人：jab
  * 创建时间：2022.07.18
  */
@@ -28,26 +28,19 @@ const namespace = 'cemsEquipmentList'
 
 
 
-const dvaPropsData =  ({ loading,cemsEquipmentList,global }) => ({
+const dvaPropsData =  ({ loading,cemsEquipmentList,global,commissionTest, }) => ({
   tableDatas:cemsEquipmentList.tableDatas,
   pointDatas:cemsEquipmentList.pointDatas,
   tableLoading:cemsEquipmentList.tableLoading,
   tableTotal:cemsEquipmentList.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/addEquipmentInfo`],
   loadingEditConfirm: loading.effects[`${namespace}/editEquipmentInfo`],
-  monitoringTypeList:cemsEquipmentList.monitoringTypeList,
-  manufacturerList:cemsEquipmentList.manufacturerList,
-  pollutantTypeList:cemsEquipmentList.pollutantTypeList,
+  manufacturerList:commissionTest.manufacturerList,
+  pollutantTypeList:commissionTest.pollutantTypeList,
   clientHeight: global.clientHeight,
-  loadingManufacturer: loading.effects[`${namespace}/getManufacturerList`],
-  loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
-  loadingAddEditPollutantById :loading.effects[`${namespace}/addEditPollutantById`] || false,
-  // loadingEquipmentName:loading.effects[`${namespace}/getEquipmentName`] || false,
-  loadingAddEditEquipmentName:loading.effects[`${namespace}/addEditGetEquipmentName`] || false,
-  addEditPollutantTypeList:cemsEquipmentList.addEditPollutantTypeList,
+  loadingManufacturer: loading.effects[`commissionTest/getManufacturerList`],
+  loadingGetPollutantById: loading.effects[`commissionTest/getPollutantById`] || false,
   maxNum:cemsEquipmentList.maxNum,
-  // equipmentNameList:cemsEquipmentList.equipmentNameList,
-  addEditEquipmentNameList:cemsEquipmentList.addEditEquipmentNameList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -87,44 +80,16 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       }) 
     },
-    getManufacturerList:(payload,callback)=>{ //厂商列表
+    getManufacturerList:(payload,callback)=>{ //厂家列表
       dispatch({
-        type: `${namespace}/getManufacturerList`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getMonitoringTypeList:(payload,callback)=>{ //监测类别
-      dispatch({
-        type: `${namespace}/getMonitoringTypeList`, 
+        type: `commissionTest/getManufacturerList`, 
         payload:payload,
         callback:callback
       }) 
     },
     getPollutantById:(payload)=>{ //监测类型
       dispatch({
-        type: `${namespace}/getPollutantById`, 
-        payload:payload,
-
-      }) 
-    },
-    addEditPollutantById:(payload)=>{ //监测类型 添加 or 编辑
-      dispatch({
-        type: `${namespace}/addEditPollutantById`, 
-        payload:payload,
-
-      }) 
-    },
-    // getEquipmentName:(payload)=>{ //设备名称
-    //   dispatch({
-    //     type: `${namespace}/getEquipmentName`, 
-    //     payload:payload,
-
-    //   }) 
-    // },
-    addEditGetEquipmentName:(payload)=>{ //设备名称 添加 or 编辑
-      dispatch({
-        type: `${namespace}/addEditGetEquipmentName`, 
+        type: `commissionTest/getPollutantById`, 
         payload:payload,
 
       }) 
@@ -152,32 +117,32 @@ const Index = (props) => {
   
   const [deveiceName,setDeveiceName] = useState('')
   
-  const [ manufacturerId, setManufacturerId] = useState(undefined)
+  const [ manufactorID, setManufactorID] = useState(undefined)
 
-  const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
   useEffect(() => {
-    props.getManufacturerList({pageIndex:1,pageSize:100000},(data)=>{
+    props.getManufacturerList({},(data)=>{
       if(data[0]){
-        setManufacturerId(data[0].ID)
-        setDeveiceName(data[0].ManufacturerName)
+        setManufactorID(data[0].ID)
+        setDeveiceName(data[0].ManufactorName)
       }
     })
-    props.getMonitoringTypeList({})//监测类别
+    props.getPollutantById({}) //监测类别
   },[]);
 
   
   useEffect(()=>{
    
-    if(manufacturerId){
+    if(manufactorID){
       onFinish();
     }
 
-  },[manufacturerId])
+  },[manufactorID])
   const columns = [
     {
       title: '编号',
-      dataIndex: 'EquipmentCode',
-      key:'EquipmentCode',
+      dataIndex: 'Num',
+      key:'Num',
       align:'center',
     },
     {
@@ -189,20 +154,20 @@ const Index = (props) => {
 
     {
       title: '设备型号',
-      dataIndex: 'EquipmentType',
-      key:'EquipmentType',
+      dataIndex: 'EquipmentModel',
+      key:'EquipmentModel',
       align:'center',
     },
     {
       title: '测试原理',
-      dataIndex: 'EquipmentType',
-      key:'EquipmentType',
+      dataIndex: 'TestPrinciple',
+      key:'TestPrinciple',
       align:'center',
     },
     {
       title: '设备厂家',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'ManufactorName',
+      key:'ManufactorName',
       align:'center',
     },
     {
@@ -227,10 +192,10 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a  ><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 
@@ -243,13 +208,10 @@ const Index = (props) => {
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
-    props.addEditPollutantById({id:record.PollutantType,type:1})
-    props.addEditGetEquipmentName({id:record.PollutantType,type:2})
     form2.resetFields();
     try {
       form2.setFieldsValue({
         ...record,
-        MonitoringType:record.MonitoringTypeID
       })
 
     } catch (errInfo) {
@@ -262,7 +224,7 @@ const Index = (props) => {
     props.delEquipmentInfo({ID:record.ID},()=>{
       setPageIndex(1)
       props.getEquipmentInfoList({
-        ManufacturerId:manufacturerId,
+        ManufactorID:manufactorID,
         PageIndex:1,
         PageSize:pageSize,
         ...values,
@@ -277,9 +239,9 @@ const Index = (props) => {
   const add = () => {
     setFromVisible(true)
     setType('add')
-    props.updateState({addEditPollutantTypeList:[]})
     form2.resetFields();
-    form2.setFieldsValue({EquipmentCode:maxNum})
+    form2.setFieldsValue({Num:maxNum})
+    
   };
 
   const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
@@ -293,7 +255,7 @@ const Index = (props) => {
 
       props.getEquipmentInfoList({
         ...values,
-        ManufacturerId:manufacturerId,
+        ManufactorID:manufactorID,
         PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         PageSize:pageSizes?pageSizes:pageSize
       })
@@ -307,7 +269,7 @@ const Index = (props) => {
       const values = await form2.validateFields();//触发校验
       type==='add'? props.addEquipmentInfo({
         ...values,
-        ManufacturerId:manufacturerId
+        ManufactorID:manufactorID
       },()=>{
         setFromVisible(false)
         onFinish()
@@ -315,7 +277,7 @@ const Index = (props) => {
       :
      props.editEquipmentInfo({
         ...values,
-        ManufacturerId:manufacturerId
+        ManufactorID:manufactorID
       },()=>{
         setFromVisible(false)
         onFinish(pageIndex,pageSize)
@@ -326,24 +288,16 @@ const Index = (props) => {
     }
   }
   const onSelect = async (selectedKeys,e) =>{
-    setManufacturerId(selectedKeys.toString())
+    setManufactorID(selectedKeys.toString())
     setDeveiceName(e.node.titles)
   }
 
-  // const handleTableChange =   async (PageIndex, )=>{ //分页
-  //   const values = await form.validateFields();
-  //   setPageSize(PageSize)
-  //   setPageIndex(PageIndex)
-  //   props.getProjectInfoList({...values,PageIndex,PageSize})
-  // }
 
   const onValuesChange = (hangedValues, allValues)=>{
     if(Object.keys(hangedValues).join() == 'PollutantType'){
-      props.getPollutantById({id:hangedValues.PollutantType,type:1}) //监测类别
+  
       form.setFieldsValue({PollutantCode:undefined})
 
-      // props.getEquipmentName({id:hangedValues.PollutantType,type:2}) //设备名称
-      // form.setFieldsValue({EquipmentName:undefined})
     }
   }
   const searchComponents = () =>{
@@ -351,22 +305,13 @@ const Index = (props) => {
     form={form}
     name="advanced_search"
     initialValues={{
-      // Status:1
+      // Status:1,
     }}
     className={styles["ant-advanced-search-form"]}
     onFinish={onFinish}
     onValuesChange={onValuesChange}
     layout='inline'
   >  
-      {/* <Form.Item label="监测类别" name="PollutantType"  style={{marginLeft:16,marginRight:16}}>
-      <Select placeholder='请选择监测类别' allowClear style={{width:200}}>
-                 {
-                  monitoringTypeList[0]&&monitoringTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-                  })
-                }   
-              </Select>
-      </Form.Item> */}
       <Form.Item label="监测类型" name="PollutantCode"  >
               {loadingGetPollutantById? <Spin size='small' style={{width:200,textAlign:'left'}}/> 
                 :
@@ -374,12 +319,12 @@ const Index = (props) => {
                  
                  {
                   pollutantTypeList[0]&&pollutantTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+                    return <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>
                   })
                 }  
               </Select>}
       </Form.Item>
-      <Form.Item label="设备型号" name="EquipmentType" >
+      <Form.Item label="设备型号" name="EquipmentModel" >
          <Input placeholder="请输入设备型号" style={{width:200}} allowClear/>
       </Form.Item>
       <Form.Item label="状态" name="Status"  >
@@ -412,10 +357,10 @@ const Index = (props) => {
     for (let i = 0; i < manufacturerList.length; i += 1) {
       const key = manufacturerList[i].ID;
       const treeNode = {
-        title:<div style={{display:'inline-block'}}> {manufacturerList[i].ManufacturerName }</div>,
+        title:<div style={{display:'inline-block'}}> {manufacturerList[i].ManufactorName }</div>,
         key,
         icon: <ProfileFilled  style={{color:'#1890ff'}}/>,
-        titles:manufacturerList[i].ManufacturerName
+        titles:manufacturerList[i].ManufactorName
       };
   
       list[0].children.push(treeNode);
@@ -423,13 +368,6 @@ const Index = (props) => {
     return list;
   }
   const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时的监测类型请求
-    if(Object.keys(hangedValues).join() == 'PollutantType'){
-      props.addEditPollutantById({id:hangedValues.PollutantType,type:1}) //监测类型
-      form2.setFieldsValue({PollutantCode:undefined})
-
-      props.addEditGetEquipmentName({id:hangedValues.PollutantType,type:2}) //设备名称
-      form2.setFieldsValue({EquipmentName:undefined})
-    }
   }
   const handleTableChange = (PageIndex, PageSize) =>{
     setPageIndex(PageIndex)
@@ -465,7 +403,7 @@ const Index = (props) => {
          :
          <>
         {manufacturerList.length? 
-          <Tree selectedKeys={[manufacturerId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
+          <Tree selectedKeys={[manufactorID]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
           :
         <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </>
@@ -490,7 +428,7 @@ const Index = (props) => {
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={`${type==='add'? '添加':'编辑'} - ${deveiceName}` }
+        title={`${type==='add'? '添加':'编辑-' + deveiceName }` }
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
@@ -503,7 +441,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        // Status:1
+        Status:1
       }}
       onValuesChange={onAddEditValuesChange}
     > 
@@ -516,20 +454,21 @@ const Index = (props) => {
       </Row>
       <Row>
       <Col span={12}>
-        <Form.Item label="编号" name="EquipmentCode" rules={[  { required: true, message: '请输入编号'  }]} >
+        <Form.Item label="编号" name="Num" rules={[  { required: true, message: '请输入编号'  }]} >
           <InputNumber placeholder="编号从1开始，自动填写，请勿修改"  allowClear/>
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请选择监测类型'  }]}>
-              {loadingAddEditPollutantById? <Spin size='small' /> 
+              {loadingGetPollutantById? <Spin size='small' style={{textAlign:'left'}}/> 
                 :
-              <Select placeholder='请选择' allowClear>
-                          {
-                   addEditPollutantTypeList[0]&&addEditPollutantTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
+              <Select placeholder='请选择监测类型' allowClear>
+                 
+                 {
+                  pollutantTypeList[0]&&pollutantTypeList.map(item => {
+                    return <Option key={item.ChildID} value={item.ChildID}>{item.Name}</Option>
                   })
-                }   
+                }  
               </Select>}
       </Form.Item>
       </Col>
@@ -538,13 +477,13 @@ const Index = (props) => {
 
       <Row>
       <Col span={12}>
-        <Form.Item label="设备型号" name="EquipmentType" rules={[  { required: true, }]} >
+        <Form.Item label="设备型号" name="EquipmentModel" rules={[  { required: true, }]} >
              <Input placeholder='请输入' allowClear/>
       </Form.Item>
       
       </Col>
        <Col span={12}>
-        <Form.Item label="监测原理" name="EquipmentType" rules={[  { required: true,   }]} >
+        <Form.Item label="监测原理" name="TestPrinciple" rules={[  { required: true,   }]} >
              <Input placeholder='请输入' allowClear/>
       </Form.Item>
       

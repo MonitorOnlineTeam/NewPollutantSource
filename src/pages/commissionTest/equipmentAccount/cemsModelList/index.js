@@ -26,18 +26,16 @@ const namespace = 'cemsModelList'
 
 
 
-const dvaPropsData =  ({ loading,cemsModelList }) => ({
+const dvaPropsData =  ({ loading,cemsModelList,commissionTest, }) => ({
   tableDatas:cemsModelList.tableDatas,
   pointDatas:cemsModelList.pointDatas,
   tableLoading:cemsModelList.tableLoading,
   tableTotal:cemsModelList.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/addSystemModel`],
   loadingEditConfirm: loading.effects[`${namespace}/editSystemModel`],
-  monitoringTypeList:cemsModelList.monitoringTypeList,
-  manufacturerList:cemsModelList.manufacturerList,
-  // exportLoading: loading.effects[`${namespace}/exportProjectInfoList`],
+  manufacturerList:commissionTest.manufacturerList,
   maxNum:cemsModelList.maxNum,
-  systemModelNameList:cemsModelList.systemModelNameList,
+  systemModelNameList:commissionTest.systemModelNameList,
   systemModelNameListLoading: loading.effects[`${namespace}/getSystemModelNameList`],
 
 })
@@ -81,21 +79,14 @@ const  dvaDispatch = (dispatch) => {
     },
     getManufacturerList:(payload,callback)=>{ //厂商列表
       dispatch({
-        type: `${namespace}/getManufacturerList`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getMonitoringTypeList:(payload,callback)=>{ //监测类别
-      dispatch({
-        type: `${namespace}/getMonitoringTypeList`, 
+        type: `commissionTest/getManufacturerList`, 
         payload:payload,
         callback:callback
       }) 
     },
     getSystemModelNameList:(payload,callback)=>{ //系统名称
       dispatch({
-        type: `${namespace}/getSystemModelNameList`, 
+        type: `commissionTest/getSystemModelNameList`, 
         payload:payload,
         callback:callback
       }) 
@@ -109,18 +100,13 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN,setDGIMN] =  useState('')
-  const [expand,setExpand] = useState(false)
+
   const [fromVisible,setFromVisible] = useState(false)
-  const [tableVisible,setTableVisible] = useState(false)
+
 
   const [type,setType] = useState('add')
-  // const [pageSize,setPageSize] = useState(20)
-  // const [pageIndex,setPageIndex] = useState(1)
+
   
   
   const isEditing = (record) => record.key === editingKey;
@@ -128,8 +114,7 @@ const Index = (props) => {
   const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingAddConfirm,loadingEditConfirm,exportLoading,maxNum,systemModelNameList,systemModelNameListLoading } = props; 
   useEffect(() => {
     onFinish();
-    props.getManufacturerList({pageIndex:1,pageSize:10000})
-    props.getMonitoringTypeList({},()=>{})
+    props.getManufacturerList({})
     props.getSystemModelNameList({})
     
   },[]);
@@ -137,14 +122,14 @@ const Index = (props) => {
   const columns = [
     {
       title: '编号',
-      dataIndex: 'SystemCode',
-      key:'SystemCode',
+      dataIndex: 'Num',
+      key:'Num',
       align:'center',
     },
     {
       title: '设备厂家',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'ManufactorName',
+      key:'ManufactorName',
       align:'center',
     },
     {
@@ -181,10 +166,10 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 
@@ -202,7 +187,6 @@ const Index = (props) => {
       form2.setFieldsValue({
         ...record,
         SystemName:record.ChildID,
-        MonitoringType:record.MonitoringTypeID.toString()
       })
 
     } catch (errInfo) {
@@ -230,7 +214,7 @@ const Index = (props) => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
-    form2.setFieldsValue({SystemCode:maxNum})
+    form2.setFieldsValue({Num:maxNum})
     if(monitoringTypeList&&monitoringTypeList[0]){ //监测类别默认值
       monitoringTypeList.map(item=>{
       if(item.Code==266){
@@ -299,13 +283,13 @@ const Index = (props) => {
     onFinish={onFinish}
   >   
       <Row>
-        <Form.Item label="设备厂家" name="ManufacturerID" >
+        <Form.Item label="设备厂家" name="ManufactorID" >
              <Select placeholder='请选择设备厂家' allowClear showSearch
              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
              style={{width:200}}>
                 {
                manufacturerList[0]&&manufacturerList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+                    return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
                   })
                 } 
               </Select>
@@ -385,7 +369,7 @@ const Index = (props) => {
       name="basic"
       form={form2}
       initialValues={{
-        // Status:1
+        Status:1,
       }}
     >
       <Row>
@@ -398,20 +382,20 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item   label="编号" name="SystemCode" >
+        <Form.Item   label="编号" name="Num" >
         <InputNumber placeholder='请输入编号' />
       </Form.Item>
       <NumTips />
       </Col>
         <Col span={12}>
-        <Form.Item label="设备厂家" name="ManufacturerID" rules={[  { required: true, message: '请选择设备厂家'  }]} >
+        <Form.Item label="设备厂家" name="ManufactorID" rules={[  { required: true, message: '请选择设备厂家'  }]} >
              <Select placeholder='请选择' allowClear showSearch
              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
              
              >
                 {
                manufacturerList[0]&&manufacturerList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.ManufacturerName}</Option>
+                    return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
                   })
                 } 
               </Select>

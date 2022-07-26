@@ -1,7 +1,7 @@
 /**
- * 功  能：设备厂家
+ * 功  能：设备厂家名录 调试检测
  * 创建人：贾安波
- * 创建时间：2021.11
+ * 创建时间：2022.07
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
@@ -103,17 +103,17 @@ const Index = (props) => {
   
   },[]);
 
-  const columns = [
+  const columns = [ 
     {
       title: '编号',
-      dataIndex: 'ManufacturerCode',
-      key:'ManufacturerCode',
+      dataIndex: 'Num',
+      key:'Num',
       align:'center',
     },
     {
       title: '设备厂家',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'ManufactorName',
+      key:'ManufactorName',
       align:'center',
     },
     {
@@ -191,7 +191,7 @@ const Index = (props) => {
     setFromVisible(true)
     setType('add')
     form2.resetFields();
-    form2.setFieldsValue({ManufacturerCode:maxNum});
+    form2.setFieldsValue({Num:maxNum});
   };
 
   const [pageIndex,setPageIndex] = useState(1)
@@ -247,9 +247,8 @@ const Index = (props) => {
     initialValues={{
       // Status:1
     }}
-    onFinish={onFinish}
-  >  
-      <Form.Item label="设备厂家" name="ManufacturerName"  >
+    onFinish={onFinish}>
+      <Form.Item label="设备厂家" name="ManufactorName"  >
         <Input placeholder='请输入设备厂家' allowClear style={{width:200}}/>
       </Form.Item>
       <Form.Item label="状态" name="Status" >
@@ -315,7 +314,7 @@ const Index = (props) => {
       </Row>
       <Row>  
         <Col span={24}>
-        <Form.Item   label="编号" name="ManufacturerCode" >
+        <Form.Item   label="编号" name="Num" >
         <InputNumber placeholder='请输入编号'/>
       </Form.Item>
         <NumTips />
@@ -323,7 +322,7 @@ const Index = (props) => {
       </Row>
       <Row>
         <Col span={24}>
-        <Form.Item label="设备厂家" name="ManufacturerName" rules={[  { required: true, message: '请输入设备厂家'  }]} >
+        <Form.Item label="设备厂家" name="ManufactorName" rules={[  { required: true, message: '请输入设备厂家'  }]} >
         <Input placeholder='请输入设备厂家'/>
       </Form.Item>
       </Col>

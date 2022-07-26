@@ -7,7 +7,8 @@ export default Model.extend({
   state: {
     pointDataWhere:null,
     commissionTestPointTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")],
-    cemsManufacturerList:[],
+    systemModelList:[],
+    systemModelListTotal:null,
     equipmentInfoList:[],
   },
   effects: {
@@ -16,7 +17,8 @@ export default Model.extend({
       const response = yield call(services.GetCEMSSystemList, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          CEMSSystemList: response.Datas,
+          systemModelList: response.Datas,
+          systemModelListTotal:result.Total,
         });
       } else {
         message.error(response.Message)

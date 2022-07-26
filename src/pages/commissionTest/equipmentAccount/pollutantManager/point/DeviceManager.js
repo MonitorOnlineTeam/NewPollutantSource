@@ -30,12 +30,11 @@ const namespace = 'commissionTestPoint'
 const dvaPropsData = ({ loading, commissionTestPoint }) => ({
   cemsManufacturerList: commissionTestPoint.cemsManufacturerList,
   systemModelList: commissionTestPoint.systemModelList,
-  loadingSystemModel: loading.effects[`${namespace}/getSystemModelList`] || false,
+  loadingSystemModel: loading.effects[`${namespace}/testGetSystemModelList`] || false,
   pollutantTypeList: commissionTestPoint.pollutantTypeList,
   equipmentInfoList: commissionTestPoint.equipmentInfoList,
   loadingGetEquipmentInfoList: loading.effects[`${namespace}/getEquipmentInfoList`],
   loadingGetPollutantById: loading.effects[`${namespace}/getPollutantById`] || false,
-  pollutantTypeList2: commissionTestPoint.pollutantTypeList2,
   loadingGetPollutantById2: loading.effects[`${namespace}/getPollutantById2`] || false,
   addOrUpdateEquipmentInfoLoading: loading.effects[`${namespace}/addOrUpdateEquipmentInfo`],
   tableDatasLoading: loading.effects[`${namespace}/getPointEquipmentParameters`],
@@ -56,14 +55,14 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    testGetSystemModelList: (payload, callback) => { //cems生产厂家列表
+    testGetSystemModelList: (payload, callback) => { //cems生产厂家列表 系统型号
       dispatch({
         type: `${namespace}/testGetSystemModelList`,
         payload: payload,
         callback: callback,
       })
     },
-    getPointEquipmentInfo: (payload, callback) => { //回显 获取站点设备信息
+    getPointEquipmentInfo: (payload, callback) => { //监测设备 生产厂家
       dispatch({
         type: `${namespace}/TestEquipmentInfoList`,
         payload: payload,
@@ -85,12 +84,6 @@ const dvaDispatch = (dispatch) => {
       })
     },
 
-    getSystemModelList: (payload) => { //列表 系统型号
-      dispatch({
-        type: `${namespace}/getSystemModelList`,
-        payload: payload,
-      })
-    },
     getPollutantById: (payload) => { //监测类型
       dispatch({
         type: `${namespace}/getPollutantById`,
@@ -126,7 +119,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
   const [dates, setDates] = useState([]);
-  const { DGIMN, pollutantType, cemsManufacturerList, systemModelList, systemModelListTotal, pollutantTypeList, pollutantTypeList2, equipmentInfoList, pointSystemInfo, equipmentInfoListTotal, pbList, pbListLoading, gasType, } = props;
+  const { DGIMN, pollutantType, cemsManufacturerList, systemModelList, systemModelListTotal, equipmentInfoList, pointSystemInfo, equipmentInfoListTotal, pbList, pbListLoading, gasType, } = props;
 
   const [defaultPollData, setDefaultPollData] = useState([]);
 
@@ -143,7 +136,6 @@ const Index = (props) => {
 
   const initData = () => {
 
-    props.testGetSystemModelList({}) //cems生产厂家列表 弹框
 
 
     //回显数据
@@ -166,8 +158,8 @@ const Index = (props) => {
 
 
 
-    //CEMS设备生产商
-    props.getSystemModelList({})
+    // //CEMS设备生产商
+    // props.testGetSystemModelList({})
   }
 
 
@@ -666,7 +658,7 @@ const Index = (props) => {
     setPageIndex2(pageIndex2)
     try {
       const values = await form2.validateFields();
-      props.getSystemModelList({
+      props.testGetSystemModelList({
         pageIndex: pageIndex2,
         pageSize: pageSize2,
         SystemName: cemsVal,
@@ -680,7 +672,7 @@ const Index = (props) => {
     const values = await form2.validateFields();
     setPageSize2(PageSize)
     setPageIndex2(PageIndex)
-    props.getSystemModelList({ ...values, SystemName: cemsVal, PageIndex, PageSize })
+    props.testGetSystemModelList({ ...values, SystemName: cemsVal, PageIndex, PageSize })
   }
 
 
@@ -1012,7 +1004,7 @@ const Index = (props) => {
   }
   return (
     <div>
-      <Tabs>
+      <Tabs type="card">
         <TabPane tab="CEMS参数信息" key="1">
           <Form form={form} name="advanced_search" >
             <><div>

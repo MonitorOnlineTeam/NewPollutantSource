@@ -62,23 +62,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *getMonitoringTypeList({ payload,callback }, { call, put, update }) { //获取监测类别
-      const result = yield call(services.GetMonitoringTypeList, payload);
-      if (result.IsSuccess) {
-        yield update({ monitoringTypeList:result.Datas})
-      }else{
-        message.error(result.Message)
-      }
-    },
-    *getManufacturerList({ payload,callback }, { call, put, update }) { //获取厂商列表
-      const result = yield call(services.GetManufacturerList, payload);
-      if (result.IsSuccess) {
-        yield update({ manufacturerList:result.Datas&&result.Datas.mlist? result.Datas.mlist : []})
-      }else{
-        message.error(result.Message)
-      }
-    },
-    *getSystemModelNameList({ payload,callback }, { call, put, update }) { //获取系统名称列表
+    *getSystemModelNameList({ payload,callback }, { call, put, update }) { //获取系统名称下拉列表
       const result = yield call(services.GetSystemModelNameList, payload);
       if (result.IsSuccess) {
         yield update({ systemModelNameList:result.Datas})
