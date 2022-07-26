@@ -359,7 +359,7 @@ class DataQuery extends Component {
                 loading={dataloading}
                 resizable
                 defaultWidth={80}
-                scroll={{ y: "calc(100vh - 380px)" || undefined }}
+                scroll={{ y: "calc(100vh - 400px)" || undefined }}
                 // pagination={{ pageSize: 20 }}
                 pagination={{
                     showSizeChanger: true,
