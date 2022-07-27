@@ -1,7 +1,7 @@
 
 
 /**
- * 功  能：调试检测 - 污染源查询 设备信息
+ * 功  能：调试检测 - 污染源查询 CEMS设备信息
  * 创建人：jab
  * 创建时间：2022.07.20
  */
@@ -37,10 +37,6 @@ const dvaPropsData = ({ loading, pollutantQuery, global,point }) => ({
     tableLoading: loading.effects[`${namespace}/getEquipmentParametersOfPont`],
     exportLoading: loading.effects[`${namespace}/exportEquipmentParametersOfPont`],
     clientHeight: global.clientHeight,
-    pollutantTypeList:pollutantQuery.pollutantTypeList,
-    pollutantByIdLoading: loading.effects[`${namespace}/getPollutantById`] || false,
-    pollutantTypeList2: point.pollutantTypeList2,
-    loadingGetPollutantById2: loading.effects[`point/getPollutantById2`] || false,
 })
 
 const dvaDispatch = (dispatch) => {
@@ -66,20 +62,7 @@ const dvaDispatch = (dispatch) => {
             })
 
         },
-        getPollutantById: (payload,callback) => { //监测类型
-            dispatch({
-              type: `${namespace}/getPollutantById`,
-              payload: payload,
-              callback:callback,
-            })
-          },
-          getPollutantById2: (payload,callback) => { //监测类别
-            dispatch({
-              type: `point/getPollutantById2`,
-              payload: payload,
-              callback:callback
-            })
-          },
+
 
     }
 }
@@ -96,16 +79,7 @@ const Index = (props) => {
 
     useEffect(() => {
           onFinish(pageIndex, pageSize);    
-            props.getPollutantById({id:undefined},(res)=>{
-                if(res){
-                    form.setFieldsValue({PollutantType:res[1]?res[1].ID:undefined})
-                    props.getPollutantById2({id:res[1]?res[1].ID:'',type:1},()=>{
-                        form.setFieldsValue({PollutantCode:undefined})
-                      }) //监测类别
-                }
 
-            })
-           
 
       
     }, []);
@@ -117,13 +91,6 @@ const Index = (props) => {
             key: 'Sort',
             align: 'center',
             width: 50,
-            ellipsis:true,
-        },
-        {
-            title: '行政区',
-            dataIndex: 'RegionName',
-            key: 'RegionName',
-            align: 'center',
             ellipsis:true,
         },
 
@@ -149,7 +116,7 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '设备名称',
+            title: '生产厂家',
             dataIndex: 'EquipmentName',
             key: 'EquipmentName',
             align: 'center',
@@ -163,16 +130,16 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '设备序列号',
+            title: 'CEMS测试原理',
             dataIndex: 'EquipmentNumber',
             key: 'EquipmentNumber',
             align: 'center',
             ellipsis:true,
         },
         {
-            title: '设备厂家',
-            dataIndex: 'ManufacturerName',
-            key: 'ManufacturerName',
+            title: '出厂编号',
+            dataIndex: 'EquipmentNumber',
+            key: 'EquipmentNumber',
             align: 'center',
             ellipsis:true,
         },
@@ -180,6 +147,28 @@ const Index = (props) => {
             title: '量程',
             dataIndex: 'Range',
             key: 'Range',
+            align: 'center',
+            ellipsis:true,
+        },
+        {
+            title: '量程校准标准气体/标准装置值',
+            dataIndex: 'EquipmentNumber',
+            key: 'EquipmentNumber',
+            align: 'center',
+            width:200,
+            ellipsis:true,
+        },
+        {
+            title: '计量单位',
+            dataIndex: 'EquipmentNumber',
+            key: 'EquipmentNumber',
+            align: 'center',
+            ellipsis:true,
+        },
+        {
+            title: '评价依据',
+            dataIndex: 'EquipmentNumber',
+            key: 'EquipmentNumber',
             align: 'center',
             ellipsis:true,
         },
@@ -198,19 +187,6 @@ const Index = (props) => {
                 pageIndex: pageIndexs,
                 pageSize: pageSizes
             },()=>{
-                if( values.PollutantType=='31f8f6f9-5700-443b-8570-9229b36fa00c'){ //废气
-                    if(!columns.filter(item=>item.title=='配备')[0]){
-                        columns.splice(columns.length-1,0,{
-                            title: '配备',
-                            dataIndex: 'Equipment',
-                            key: 'Equipment',
-                            align: 'center',
-                        })
-                    }
-
-                }else{
-                   setColumns(columns.filter(item=>item.title!='配备'))
-                }
             })
 
            
@@ -238,16 +214,6 @@ const Index = (props) => {
 
     };
     const onValuesChange = (hangedValues, allValues)=>{
-        if(Object.keys(hangedValues).join() == 'PollutantType'){
-          props.getPollutantById2({id:hangedValues.PollutantType,type:1},()=>{
-            form.setFieldsValue({PollutantCode:undefined})
-
-          }) //监测类别
-        }
-
-          if(Object.keys(hangedValues).join() == 'Sort'){ //设备类型
-             onFinish(1,pageSize)
-        }
       }
     
     const [pageSize, setPageSize] = useState(20)
@@ -259,39 +225,12 @@ const Index = (props) => {
             name="advanced_search"
             onFinish={() => { onFinish(1, pageSize) }}
             onValuesChange={onValuesChange}
+            layout='inline'
         >  
-           <Row>
            <Form.Item label='企业名称' name='EntName'>
              <Input allowClear placeholder='请输入'/>
             </Form.Item>
-            <Form.Item label='行政区' name='RegionCode' style={{margin:'0 8px'}}>
-                <RegionList levelNum={2} />
-            </Form.Item>
-            <Spin spinning={pollutantByIdLoading} size='small' style={{ top: 0, left: 20 }}>
-            <Form.Item label = '监测点类型' name='PollutantType' >
-              <Select placeholder='请选择' style={{width:200}}>
-              {
-                  pollutantTypeList[0] && pollutantTypeList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-                  })
-                }
-               </Select>
-             </Form.Item>
-             </Spin> 
-             <Spin spinning={loadingGetPollutantById2} size='small' style={{ top: 0, left: 20 }}>
-              <Form.Item label='监测参数' name='PollutantCode' style={{marginLeft:8}}>
-                <Select placeholder='请选择' showSearch optionFilterProp="children"  style={{width:200}}>
-
-                {
-                  pollutantTypeList2[0] && pollutantTypeList2.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.Name}</Option>
-                  })
-                }
-                </Select>
-              </Form.Item>
-            </Spin> 
-            </Row>
-            <Row style={{marginBottom:0,  paddingTop:5 }}>
+        
             <Form.Item>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
                     查询
@@ -303,14 +242,6 @@ const Index = (props) => {
                     导出
          </Button>
             </Form.Item>
-            <Form.Item name='Sort' style={{ margin: '0 8px' }}>
-            <Radio.Group defaultValue={undefined} buttonStyle="solid">
-                 <Radio.Button value={undefined}>全部</Radio.Button>
-                 <Radio.Button value="1">已维护设备</Radio.Button>
-                 <Radio.Button value="0">未维护设备</Radio.Button>
-              </Radio.Group>
-              </Form.Item>
-            </Row>
         </Form>
         </>
     }

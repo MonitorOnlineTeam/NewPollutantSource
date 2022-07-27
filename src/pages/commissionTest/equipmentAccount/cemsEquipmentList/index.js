@@ -428,7 +428,7 @@ const Index = (props) => {
    </Card>
    </BreadcrumbWrapper>
    <Modal
-        title={`${type==='add'? '添加':'编辑-' + deveiceName }` }
+        title={`${type==='add'? '添加':'编辑'} - ${deveiceName}` }
         visible={fromVisible}
         onOk={onModalOk}
         confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}

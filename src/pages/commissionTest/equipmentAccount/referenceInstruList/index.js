@@ -34,7 +34,7 @@ const dvaPropsData =  ({ loading,referenceInstruList,global,commissionTest, }) =
   tableLoading:referenceInstruList.tableLoading,
   tableTotal:referenceInstruList.tableTotal,
   loadingAddConfirm: loading.effects[`${namespace}/testAddParamInfo`],
-  loadingEditConfirm: loading.effects[`${namespace}/testEditParamInfo `],
+  loadingEditConfirm: loading.effects[`${namespace}/testEditParamInfo`],
   monitoringTypeList:referenceInstruList.monitoringTypeList,
   manufacturerList:commissionTest.manufacturerList,
   pollutantTypeList:commissionTest.pollutantTypeList,
@@ -68,7 +68,7 @@ const  dvaDispatch = (dispatch) => {
     },
     testEditParamInfo  : (payload,callback) =>{ // 修改
       dispatch({
-        type: `${namespace}/testEditParamInfo `,
+        type: `${namespace}/testEditParamInfo`,
         payload:payload,
         callback:callback
       })
@@ -190,10 +190,10 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a  ><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 

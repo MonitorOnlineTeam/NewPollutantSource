@@ -465,7 +465,6 @@ export default {
                       name:'pollutantManager', //调试检测 污染源查询
                       path: '/commissionTest/equipmentAccount/pollutantQuery',
                       component: './commissionTest/equipmentAccount/pollutantQuery', 
-                      // component: './dataSearch/pollutantInfo',
                     },
                     {
                       name:'pollutantManager', //调试检测 设备厂家名录

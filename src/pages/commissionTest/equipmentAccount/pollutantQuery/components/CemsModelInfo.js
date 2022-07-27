@@ -1,7 +1,7 @@
 
 
 /**
- * 功  能：调试检测 - 污染源查询 系统信息
+ * 功  能：调试检测 - 污染源查询  CEMS型号信息
  * 创建人：jab
  * 创建时间：2022.07.20
  */
@@ -80,69 +80,8 @@ const Index = (props) => {
   useEffect(() => {
     onFinish(pageIndex,pageSize)
   },[]);
-  const [filteredInfo,setFilteredInfo] = useState(null) 
-
-//   const [gasEquipmentStatus,setGasEquipmentStatus] = useState(null) 
-//   const [gasManufacturerStatus,setGasManufacturerStatus] = useState(null) 
-//   const [pMManufacturerStatus,setPMManufacturerStatus] = useState(null) 
-//   const [pMEquipmentStatus,setPMEquipmentStatus] = useState(null) 
 
 
-//   const selectedVal = {
-//     GasEquipment : gasEquipmentStatus,
-//     GasManufacturer:gasManufacturerStatus,
-//     PMManufacturer:pMManufacturerStatus,
-//     PMEquipment:pMEquipmentStatus,
-//   } 
-//   const   getFilterProps = dataIndex => {
-    
-//     const selectFlag =  filteredInfo&& filteredInfo[dataIndex];
-    
-//   return {
-//     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-//       <div>
-//          <Radio.Group onChange={(e)=>{ 
-//            dataIndex=='GasEquipment'?  setGasEquipmentStatus(e.target.value) : 
-//            dataIndex=='GasManufacturer'? setGasManufacturerStatus(e.target.value) : 
-//            dataIndex=='PMManufacturer'? setPMManufacturerStatus(e.target.value) : 
-//            dataIndex=='PMEquipment'? setPMEquipmentStatus(e.target.value) : 
-//            null
-//            ; 
-//            }} value={selectedVal[dataIndex]}>
-//          <Space direction="vertical">
-//            <Radio value={'1'} style={{padding:'5px 12px 0 12px'}}>已维护</Radio>
-//            <Radio value={'0'} style={{padding:'0  12px 5px 12px'}}>未维护</Radio>
-//            </Space>
-//          </Radio.Group>
-          
-//           <div className='ant-table-filter-dropdown-btns'>
-//           <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
-//            dataIndex=='GasEquipment'?  setGasEquipmentStatus(null) : 
-//            dataIndex=='GasManufacturer'? setGasManufacturerStatus(null) : 
-//            dataIndex=='PMManufacturer'? setPMManufacturerStatus(null) : 
-//            dataIndex=='PMEquipment'? setPMEquipmentStatus(null) : 
-//             null;
-//             confirm({ closeDropdown: false })
-//               onFinish(pageIndex,pageSize,selectedVal)
-//             }}>
-//             重置
-//           </Button>
-//           <Button type="primary" onClick={() => {
-//               confirm({ closeDropdown: false })
-//               setFilteredInfo(selectedVal)
-//               onFinish(pageIndex,pageSize,selectedVal)
-//              }
-//              }  size="small" >
-//             确定
-//           </Button>
-//           </div>
-//       </div>
-//     ),
-//     filterIcon: filtered => {     
-//        return <FilterFilled style={{ color: selectFlag ? '#1890ff' : undefined }} />
-//     },
-//   }
-// }
   const columns = [
     {
         title: '序号',
@@ -153,14 +92,6 @@ const Index = (props) => {
           return  (index + 1) + (pageIndex-1)*pageSize;
       }
     },
-    {
-      title: '行政区',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-      ellipsis:true,
-    },
-
     {
       title: '企业名称',
       dataIndex: 'EntName',
@@ -176,65 +107,42 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: '气态污染物CEMS设备生产商',
+      title: 'CEMS系统名称',
       dataIndex: 'GasManufacturer',
       key:'GasManufacturer',
       align:'center',
-      width:200,
       ellipsis:true,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
-       // ...getFilterProps('GasManufacturer'),
     },
     {
-      title: '气态污染物CEMS设备规格型号',
+      title: 'CEMS生产厂家',
+      dataIndex: 'GasManufacturer',
+      key:'GasManufacturer',
+      align:'center',
+      ellipsis:true,
+    },
+    {
+      title: 'CEMS型号',
       dataIndex: 'GasEquipment',
       key:'GasEquipment',
       align:'center',
-      width:200,
       ellipsis:true,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
     },
     {
-      title: '颗粒物CEMS设备生产商',
+      title: 'CEMS编号',
       dataIndex: 'PMManufacturer',
       key:'PMManufacturer',
       align:'center',
       width:200,
       ellipsis:true,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
     },  
-    {
-      title: '颗粒物CEMS设备规格型号',
-      dataIndex: 'PMEquipment',
-      key:'PMEquipment', 
-      align:'center',
-      width:200,
-      ellipsis:true,
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
-    },
+
   ];
 
  
 
 
 
-  const onFinish  = async (pageIndexs,pageSizes,filters) =>{  //查询
+  const onFinish  = async (pageIndexs,pageSizes,) =>{  //查询
     try {
       const values = await form.validateFields();
       props.getTableData({
@@ -242,7 +150,6 @@ const Index = (props) => {
         ManufacturerId:manufacturerId,
         pageIndex:pageIndexs,
         pageSize:pageSizes,
-       ...filters,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -252,22 +159,13 @@ const Index = (props) => {
 
 
 
-  // const handleTableChange = (PageIndex, PageSize) =>{
-  //   setPageIndex(PageIndex)
-  //   setPageSize(PageSize)
-  //   onFinish(PageIndex,PageSize)
-  // }
-
-  const tableChange = (pagination, filters, sorter) =>{
-    
-    const  PageIndex = pagination.current,PageSize=pagination.pageSize;
+  const handleTableChange = (PageIndex, PageSize) =>{
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    setFilteredInfo(props.filteredHandle(filters))
-    onFinish(PageIndex, PageSize,props.filteredHandle(filters))
-   
+    onFinish(PageIndex,PageSize)
+  }
 
-}
+
   const exports =  async () => {
     const values = await form.validateFields();
     props.exportData({
@@ -294,9 +192,6 @@ const Index = (props) => {
        <Form.Item label='企业名称' name='EntName'>
        <Input allowClear placeholder='请输入'/>
       </Form.Item>
-      <Form.Item label='行政区' name='RegionCode' >
-        <RegionList levelNum={2} />
-      </Form.Item>
       <Form.Item>
         <Button   loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
           查询
@@ -319,14 +214,13 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        onChange={tableChange}
         pagination={{
           total:tableTotal,
           pageSize: pageSize,
           current: pageIndex,
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          onChange: handleTableChange,
         }}
       />
    </Card>

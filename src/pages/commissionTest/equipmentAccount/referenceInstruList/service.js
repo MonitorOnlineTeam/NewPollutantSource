@@ -13,7 +13,7 @@ export async function TestAddParamInfo(params) {
 
 // 参比仪器设备清单 修改
 export async function TestEditParamInfo (params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/TestEditParamInfo ',params, null);
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/TestEditParamInfo',params, null);
   return result;
 }
  

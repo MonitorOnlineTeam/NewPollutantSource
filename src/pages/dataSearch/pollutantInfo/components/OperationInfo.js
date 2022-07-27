@@ -260,7 +260,7 @@ const Index = (props) => {
 
     const exports = async () => {
         const values = await form.validateFields();
-        props.exportEntProjectRelationList({ ...values })
+        props.exportEntProjectRelationList({ ...values, display:1, })
     };
 
 
@@ -313,7 +313,7 @@ const Index = (props) => {
                     <RegionList levelNum={2} />
                 </Form.Item>
 
-                <Form.Item label='运营日期' name='OperatTime'>
+                <Form.Item label='合同运营日期' name='OperatTime'>
                     <RangePicker_
                         format="YYYY-MM-DD HH:mm:ss"
                         showTime="YYYY-MM-DD HH:mm:ss"

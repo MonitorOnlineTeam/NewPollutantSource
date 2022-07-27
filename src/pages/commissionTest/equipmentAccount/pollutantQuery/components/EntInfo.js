@@ -106,28 +106,11 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '企业简称',
-            dataIndex: 'abbreviation',
-            key: 'abbreviation',
-            align: 'center',
-            ellipsis:true,
-        },
-        {
             title: '企业地址',
             dataIndex: 'address',
             key: 'address',
             align: 'center',
             ellipsis:true,
-        },
-        {
-            title: '经纬度',
-            dataIndex: 'longitude',
-            key: 'longitude',
-            align: 'center',
-            ellipsis:true,
-            render: (text, record, index) => {
-                return `${text},${record.latitude}`
-            }
         },
         {
             title: '环保负责人',
@@ -136,15 +119,16 @@ const Index = (props) => {
             align: 'center',
             ellipsis:true,
         },
+
         {
-            title: '办公电话',
-            dataIndex: 'officePhone',
-            key: 'officePhone',
+            title: '联系电话',
+            dataIndex: 'mobilePhone',
+            key: 'mobilePhone',
             align: 'center',
             ellipsis:true,
         },
         {
-            title: '移动电话',
+            title: '备注',
             dataIndex: 'mobilePhone',
             key: 'mobilePhone',
             align: 'center',
@@ -219,9 +203,6 @@ const Index = (props) => {
          </Button>
             </Form.Item>
         </Form>
-            <div style={{ color: '#f5222d', paddingTop: 12, fontSize: 14 }}>
-            下面列表只展示当前在运营的企业，运营到期的企业将不显示。
-</div>
         </>
     }
     return (

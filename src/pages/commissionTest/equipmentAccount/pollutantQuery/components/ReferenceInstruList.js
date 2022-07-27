@@ -1,9 +1,9 @@
 
 
 /**
- * 功  能：污染源信息 设备参数
+ * 功  能：污染源信息 参比仪器设备信息
  * 创建人：jab
- * 创建时间：2022.04.02
+ * 创建时间：2022.07.20
  */
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Space,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
@@ -81,55 +81,6 @@ const Index = (props) => {
   },[]);
   const [filteredInfo,setFilteredInfo] = useState(null) 
 
-//   const [paramNameStatus,setParamNameStatus] = useState(null) 
-
-
-//   const selectedVal = {
-//     ParamName : paramNameStatus,
-//   } 
-//   const   getFilterProps = dataIndex => {
-    
-//     const selectFlag =  `${dataIndex},${selectedVal[dataIndex]}` === filteredInfo;
-//   return {
-//     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-//       <div>
-//          <Radio.Group onChange={(e)=>{ 
-//            dataIndex=='ParamName'?  setParamNameStatus(e.target.value) : 
-//            null ; 
-//            }} value={selectedVal[dataIndex]}>
-//          <Space direction="vertical">
-//            <Radio value={'1'} style={{padding:'5px 12px 0 12px'}}>已维护</Radio>
-//            <Radio value={'0'} style={{padding:'0  12px 5px 12px'}}>未维护</Radio>
-//            </Space>
-//          </Radio.Group>
-          
-//           <div className='ant-table-filter-dropdown-btns'>
-//           <Button  disabled={!selectFlag && !selectedVal[dataIndex]} size="small" type="link" onClick={()=>{
-//            dataIndex=='ParamName'?  setParamNameStatus(null) :  
-//             null;
-//               confirm({ closeDropdown: false })
-//               setFilteredInfo(null)
-//               onFinish(pageIndex,pageSize)
-//             }}>
-//             重置
-//           </Button>
-//           <Button disabled={!selectFlag && !selectedVal[dataIndex]} type="primary" onClick={() => {
-//               confirm({ closeDropdown: false })
-//               setFilteredInfo(`${dataIndex},${selectedVal[dataIndex]}`)
-
-//               onFinish(pageIndex,pageSize,`${dataIndex},${selectedVal[dataIndex]}`)
-//              }
-//              }  size="small" >
-//             确定
-//           </Button>
-//           </div>
-//       </div>
-//     ),
-//     filterIcon: filtered => {     
-//        return <FilterFilled style={{ color: selectFlag ? '#1890ff' : undefined }} />
-//     },
-//   }
-// }
   const columns = [
     {
         title: '序号',
@@ -139,13 +90,6 @@ const Index = (props) => {
         render: (text, record, index) => {
           return  (index + 1) + (pageIndex-1)*pageSize;
       }
-    },
-    {
-      title: '行政区',
-      dataIndex: 'RegionName',
-      key:'RegionName',
-      align:'center',
-      ellipsis:true,
     },
 
     {
@@ -163,25 +107,40 @@ const Index = (props) => {
         ellipsis:true,
       },
       {
-        title: '监测点类型',
+        title: '监测类型',
         dataIndex: 'PollutantTypeName',
         key:'PollutantTypeName',
         align:'center',
         ellipsis:true,
       },
     {
-      title: '设备参数类别',
+      title: '生产厂家',
+      dataIndex: 'ParamName',
+      key:'ParamName',
+      align:'center',
+      ellipsis:true,
+    },
+    {
+      title: '参比方法仪器名称型号',
       dataIndex: 'ParamName',
       key:'ParamName',
       align:'center',
       width:180,
       ellipsis:true,
-      // ...getFilterProps('ParamName'),
-      filters: [
-        { text: '已维护', value: '1' },
-        { text: '未维护', value: '0' },
-      ],
-      filterMultiple:false,
+    },
+    {
+      title: '检测依据',
+      dataIndex: 'ParamName',
+      key:'ParamName',
+      align:'center',
+      ellipsis:true,
+    },
+    {
+      title: '设备编号',
+      dataIndex: 'ParamName',
+      key:'ParamName',
+      align:'center',
+      ellipsis:true,
     },
   ];
 
@@ -189,7 +148,7 @@ const Index = (props) => {
 
 
 
-  const onFinish  = async (pageIndexs,pageSizes,filters) =>{  //查询
+  const onFinish  = async (pageIndexs,pageSizes,) =>{  //查询
     try {
       const values = await form.validateFields();
 
@@ -197,7 +156,6 @@ const Index = (props) => {
         ...values,
         pageIndex:pageIndexs,
         pageSize:pageSizes,
-        ...filters,
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -207,18 +165,12 @@ const Index = (props) => {
 
 
 
-  // const handleTableChange = (PageIndex, PageSize) =>{
-  //   setPageIndex(PageIndex)
-  //   setPageSize(PageSize)
-  //   onFinish(PageIndex,PageSize)
-  // }
-  const tableChange = (pagination, filters, sorter) =>{
-    const  PageIndex = pagination.current,PageSize=pagination.pageSize;
+  const handleTableChange = (PageIndex, PageSize) =>{
     setPageIndex(PageIndex)
     setPageSize(PageSize)
-    setFilteredInfo(props.filteredHandle(filters))
-    onFinish(PageIndex, PageSize,props.filteredHandle(filters))
-}
+    onFinish(PageIndex,PageSize)
+  }
+
   const exports =  async () => {
     const values = await form.validateFields();
     props.exportData({
@@ -244,9 +196,6 @@ const Index = (props) => {
         <Form.Item label='企业名称' name='EntName'>
        <Input allowClear placeholder='请输入'/>
       </Form.Item>
-      <Form.Item label='行政区' name='RegionCode' >
-        <RegionList levelNum={2} />
-      </Form.Item>
       <Form.Item>
         <Button   loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">
           查询
@@ -259,8 +208,6 @@ const Index = (props) => {
          </Button> 
       </Form.Item>
   </Form>
-  <div style={{color:'#f5222d',paddingTop:12,fontSize:14}}> 设备参数类别是异常小时数记录电子表单的一个字段，设置后，运维工程师才能在APP上填写异常小时数记录电子表单。
-</div>
   </>
   }
   return (
@@ -272,14 +219,13 @@ const Index = (props) => {
         bordered
         dataSource={tableDatas}
         columns={columns}
-        onChange={tableChange}
         pagination={{
           total:tableTotal,
           pageSize: pageSize,
           current: pageIndex,
           showSizeChanger: true,
           showQuickJumper: true,
-          // onChange: handleTableChange,
+          onChange: handleTableChange,
         }}
       />
    </Card>

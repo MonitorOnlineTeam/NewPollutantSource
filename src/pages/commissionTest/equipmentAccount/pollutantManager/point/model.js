@@ -5,27 +5,40 @@ import { message } from 'antd';
 export default Model.extend({
   namespace: 'commissionTestPoint',
   state: {
-    pointDataWhere:null,
+    pointDataWhere: null,
     commissionTestPointTime: [moment().subtract(1, "days").startOf("day"), moment().endOf("day")],
-    systemModelList:[],
-    systemModelListTotal:null,
-    equipmentInfoList:[],
+    systemModelList: [],
+    systemModelListTotal: null,
+    equipmentInfoList: [],
+    equipmentInfoListTotal:null,
   },
   effects: {
-    // 获取站点CEMS参数信息 
-    *GetCEMSSystemList({ payload }, { call, put, update, select }) {
-      const response = yield call(services.GetCEMSSystemList, { ...payload });
+    // cems 系统信息 - CEMS生产厂家(弹框) 
+    *testGetSystemModelList({ payload }, { call, put, update, select }) {
+      const result = yield call(services.TestGetSystemModelList, { ...payload });
+      if (result.IsSuccess) {
+        yield update({
+          systemModelList: result.Datas ? result.Datas.rtnlist : [],
+          systemModelListTotal: result.Total,
+        });
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //cems 监测设备 - 生产厂家(弹框) 
+    *getTestEquipmentInfoList({ payload }, { call, put, update, select }) {
+      const response = yield call(services.GetTestEquipmentInfoList, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          systemModelList: response.Datas,
-          systemModelListTotal:result.Total,
+          equipmentInfoList: result.Datas ? result.Datas.mlist : [],
+          equipmentInfoListTotal:result.Total,
         });
       } else {
         message.error(response.Message)
       }
     },
     //操作站点CEMS参数信息 
-    *operationCEMSSystem ({ payload }, { call, put, update, select }) {
+    *operationCEMSSystem({ payload }, { call, put, update, select }) {
       const response = yield call(services.OperationCEMSSystem, { ...payload });
       if (response.IsSuccess) {
         // yield update({
@@ -35,28 +48,7 @@ export default Model.extend({
         message.error(response.Message)
       }
     },
-    //获取系统信息列表  cems生产厂家
-    *testGetSystemModelList({ payload }, { call, put, update, select }) {
-      const response = yield call(services.TestGetSystemModelList, { ...payload });
-      if (response.IsSuccess) {
-        // yield update({
-        //   cemsManufacturerList: response.Datas,
-        // });
-      } else {
-        message.error(response.Message)
-      }
-    },
-    //获取设备信息列表 监测设备生产厂家
-    *getTestEquipmentInfoList({ payload }, { call, put, update, select }) {
-      const response = yield call(services.GetTestEquipmentInfoList, { ...payload });
-      if (response.IsSuccess) {
-        yield update({
-          equipmentInfoList: response.Datas,
-        });
-      } else {
-        message.error(response.Message)
-      }
-    },
+
 
   },
 });
