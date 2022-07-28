@@ -14,6 +14,11 @@ export async function GetTestEquipmentInfoList(params) {
   return result;
 }
 
+//参比仪器设备清单 列表
+export async function GetTestParamInfoList (params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestParamInfoList',params, null);
+  return result;
+}
 // 获取站点CEMS参数信息
 export async function GetCEMSSystemList(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetCEMSSystemList', params);

@@ -11,18 +11,21 @@ export default Model.extend({
     systemModelListTotal: null,
     equipmentInfoList: [],
     equipmentInfoListTotal:null,
+    paramInfoList:[],
+    paramInfoListTotal: null,
+
   },
   effects: {
     // cems 系统信息 - CEMS生产厂家(弹框) 
     *testGetSystemModelList({ payload }, { call, put, update, select }) {
-      const result = yield call(services.TestGetSystemModelList, { ...payload });
-      if (result.IsSuccess) {
+      const response = yield call(services.TestGetSystemModelList, { ...payload });
+      if (response.IsSuccess) {
         yield update({
-          systemModelList: result.Datas ? result.Datas.rtnlist : [],
-          systemModelListTotal: result.Total,
+          systemModelList: response.Datas ? response.Datas.rtnlist : [],
+          systemModelListTotal: response.Total,
         });
       } else {
-        message.error(result.Message)
+        message.error(response.Message)
       }
     },
     //cems 监测设备 - 生产厂家(弹框) 
@@ -30,11 +33,25 @@ export default Model.extend({
       const response = yield call(services.GetTestEquipmentInfoList, { ...payload });
       if (response.IsSuccess) {
         yield update({
-          equipmentInfoList: result.Datas ? result.Datas.mlist : [],
-          equipmentInfoListTotal:result.Total,
+          equipmentInfoList: response.Datas ? response.Datas.mlist : [],
+          equipmentInfoListTotal:response.Total,
         });
       } else {
         message.error(response.Message)
+      }
+    },
+    //参比仪器 - 生产厂家(弹框) 
+    *getTestParamInfoList({ payload, callback }, { call, put, update }) { 
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetTestParamInfoList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          paramInfoListTotal: result.Total,
+          paramInfoList:result.Datas? result.Datas.mlist:[],
+        })
+      } else {
+        message.error(result.Message)
+        yield update({ tableLoading: false })
       }
     },
     //操作站点CEMS参数信息 
