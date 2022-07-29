@@ -13,31 +13,30 @@ export default Model.extend({
     equipmentInfoListTotal:null,
     paramInfoList:[],
     paramInfoListTotal: null,
-
   },
   effects: {
     // cems 系统信息 - CEMS生产厂家(弹框) 
     *testGetSystemModelList({ payload }, { call, put, update, select }) {
-      const response = yield call(services.TestGetSystemModelList, { ...payload });
-      if (response.IsSuccess) {
+      const result = yield call(services.TestGetSystemModelList, { ...payload });
+      if (result.IsSuccess) {
         yield update({
-          systemModelList: response.Datas ? response.Datas.rtnlist : [],
-          systemModelListTotal: response.Total,
+          systemModelList: result.Datas ? result.Datas.rtnlist : [],
+          systemModelListTotal: result.Total,
         });
       } else {
-        message.error(response.Message)
+        message.error(result.Message)
       }
     },
     //cems 监测设备 - 生产厂家(弹框) 
     *getTestEquipmentInfoList({ payload }, { call, put, update, select }) {
-      const response = yield call(services.GetTestEquipmentInfoList, { ...payload });
-      if (response.IsSuccess) {
+      const result = yield call(services.GetTestEquipmentInfoList, { ...payload });
+      if (result.IsSuccess) {
         yield update({
-          equipmentInfoList: response.Datas ? response.Datas.mlist : [],
-          equipmentInfoListTotal:response.Total,
+          equipmentInfoList: result.Datas ? result.Datas.mlist : [],
+          equipmentInfoListTotal:result.Total,
         });
       } else {
-        message.error(response.Message)
+        message.error(result.Message)
       }
     },
     //参比仪器 - 生产厂家(弹框) 
@@ -54,15 +53,40 @@ export default Model.extend({
         yield update({ tableLoading: false })
       }
     },
-    //操作站点CEMS参数信息 
-    *operationCEMSSystem({ payload }, { call, put, update, select }) {
-      const response = yield call(services.OperationCEMSSystem, { ...payload });
-      if (response.IsSuccess) {
-        // yield update({
-        //   testGetSystemModelList: response.Datas,
-        // });
+    //获取站点CEMS参数信息
+    *getCEMSSystemList({ payload,callback }, { call, put, update, select }) {
+      const result = yield call(services.GetCEMSSystemList, { ...payload });
+      if (result.IsSuccess) {
+          callback(result.Datas)
       } else {
-        message.error(response.Message)
+        message.error(result.Message)
+      }
+    },
+    //操作站点CEMS参数信息 
+    *operationCEMSSystem({ payload,callback }, { call, put, update, select }) {
+      const result = yield call(services.OperationCEMSSystem, { ...payload });
+      if (result.IsSuccess) {
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //获取参比仪器信息
+    *getParamList({ payload,callback }, { call, put, update, select }) {
+      const result = yield call(services.GetParamList, { ...payload });
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    //操作站点参比仪器信息 
+    *operationParam({ payload,callback }, { call, put, update, select }) {
+      const result = yield call(services.OperationParam, { ...payload });
+      if (result.IsSuccess) {
+        callback()
+      } else {
+        message.error(result.Message)
       }
     },
 

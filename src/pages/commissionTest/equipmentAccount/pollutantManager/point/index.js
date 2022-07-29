@@ -101,7 +101,7 @@ export default class Index extends Component {
 
     this.setState({
       deviceManagerVisible: true,
-      deviceManagerMN: row["dbo.T_Bas_CommonPoint.DGIMN"],
+      deviceManagerMN: row["dbo.T_Bas_TestCommonPoint.ID"],
     })
   }
   addPoint = () =>{ //添加监测点 弹框
@@ -269,7 +269,7 @@ export default class Index extends Component {
             destroyOnClose
             footer={null}
           >  
-          <DeviceManager DGIMN={this.state.deviceManagerMN}/>         
+          <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN}/>         
         </Modal>
       </BreadcrumbWrapper>
     );

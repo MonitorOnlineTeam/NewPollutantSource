@@ -18,8 +18,8 @@ export async function GetTestEquipmentInfoList(params) {
 export async function GetTestParamInfoList (params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetTestParamInfoList',params, null);
   return result;
-}
-// 获取站点CEMS参数信息
+} 
+// 获取站点CEMS参数信息 
 export async function GetCEMSSystemList(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetCEMSSystemList', params);
   return result;
@@ -28,5 +28,17 @@ export async function GetCEMSSystemList(params) {
 // 操作站点CEMS参数信息
 export async function OperationCEMSSystem(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/OperationCEMSSystem', params);
+  return result;
+}
+
+// 获取参比仪器信息
+export async function GetParamList(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetParamList', params);
+  return result;
+}
+
+// 操作站点参比仪器信息
+export async function OperationParam(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/OperationParam', params);
   return result;
 }

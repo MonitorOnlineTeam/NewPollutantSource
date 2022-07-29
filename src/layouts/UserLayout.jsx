@@ -103,15 +103,15 @@ const UserLayout = props => {
           <Popover
             content={
               <Row gutter={48}>
-                {/* <Col span={12} style={{ textAlign: 'center' }}>
+                 <Col span={12} style={{ textAlign: 'center' }}>
                   <div style={{ marginBottom: '10px' }}>
-                    <Button type="danger" icon={<DownloadOutlined />} size="small">监管APP下载</Button>
+                    <Button type="danger" icon={<DownloadOutlined />} size="small">污染源监控下载</Button>
                   </div>
                   <div>
                     <QRCode value={getIp} size={200} />
                   </div>
-                </Col> */}
-                <Col span={24} style={{ textAlign: 'center' }}>
+                </Col> 
+                <Col span={12} style={{ textAlign: 'center' }}>
                 <div style={{ marginBottom: '10px' }}>
                     <Button type="danger" icon={<DownloadOutlined />} size="small">运维APP下载</Button>
                   </div>
