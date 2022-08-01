@@ -152,11 +152,11 @@ const Index = (props) => {
 
     props.getPollutantById({})  //cems 监测设备  默认加载监测参数
 
-    props.getCEMSSystemList({ID:DGIMN},(data)=>{ //cems 系统信息 监测设备 表格数据
+    props.getCEMSSystemList({DGIMN:DGIMN},(data)=>{ //cems 系统信息 监测设备 表格数据
       setSystemData(data.systemModelList?data.systemModelList :[] )
       setDeviceData(data.eqModelList?data.eqModelList :[])
     })
-    props.getParamList({ ID:DGIMN},(data)=>{ //参比仪器表格数据
+    props.getParamList({ DGIMN:DGIMN},(data)=>{ //参比仪器表格数据
        setReferInstruData(data)
     })
   }
@@ -737,7 +737,7 @@ const Index = (props) => {
   const systemColChoice = (record) => {
 
     form.setFieldsValue({ ManufactorName: record.ManufactorName, SystemModel: record.SystemModel, });
-    setSystemManufactorID(record.ID)
+    setSystemManufactorID(record.ManufactorID)
     setManufacturerPopVisible(false)
     setChoiceManufacturer(true)
   }
@@ -881,6 +881,7 @@ const Index = (props) => {
     name="advanced_search3"
     onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2, cemsVal) }}
     initialValues={{
+      ManufactorID: manufacturerList[0] && manufacturerList[0].ManufactorID,
     }}
 
   >
@@ -889,7 +890,7 @@ const Index = (props) => {
         <Select placeholder='请选择生产厂家' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
           {
             manufacturerList[0] && manufacturerList.map(item => {
-              return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
+              return <Option key={item.ManufactorID} value={item.ManufactorID}>{item.ManufactorName}</Option>
             })
           }
         </Select>
@@ -924,7 +925,7 @@ const Index = (props) => {
     onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize3) }}
     onValuesChange={onValuesChange3}
     initialValues={{
-      ManufactorID: manufacturerList[0] && manufacturerList[0].ID,
+      ManufactorID: manufacturerList[0] && manufacturerList[0].ManufactorID,
     }}
   >
 
@@ -934,7 +935,7 @@ const Index = (props) => {
           <Select placeholder='请选择设备厂家' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
             {
               manufacturerList[0] && manufacturerList.map(item => {
-                return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
+                return <Option key={item.ManufactorID} value={item.ManufactorID}>{item.ManufactorName}</Option>
               })
             }
           </Select>
@@ -971,7 +972,7 @@ const Index = (props) => {
     onFinish={() => { setPageIndex4(1); onFinish4(1, pageSize4) }}
     onValuesChange={onValuesChange4}
     initialValues={{
-      ManufactorID: manufacturerList[0] && manufacturerList[0].ID,
+      ManufactorID: manufacturerList[0] && manufacturerList[0].ManufactorID,
     }}
   >
 
@@ -981,7 +982,7 @@ const Index = (props) => {
           <Select placeholder='请选择设备厂家' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
             {
               manufacturerList[0] && manufacturerList.map(item => {
-                return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
+                return <Option key={item.ManufactorID} value={item.ManufactorID}>{item.ManufactorName}</Option>
               })
             }
           </Select>
@@ -992,7 +993,7 @@ const Index = (props) => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType='submit'>
+        <Button  type="primary" htmlType='submit'>
           查询
     </Button>
       </Form.Item>
@@ -1205,7 +1206,6 @@ const Index = (props) => {
           SystemNameID: item.SystemNameID,
           ManufactorID: item.ManufactorID,
           CEMSNum: item.CEMSNum,
-          DGIMN:DGIMN,
         }
 
 
@@ -1224,14 +1224,13 @@ const Index = (props) => {
           RangeCalibration: item.RangeCalibration,
           Unit: item.Unit,
           EvaluationBasis: item.EvaluationBasis,
-          DGIMN: DGIMN,
         }
       })
       const par = {
+        DGIMN: DGIMN,
         systemList: systemList,
         equipmentList:deviceList ,
       }
-      console.log(systemData,deviceData,)
 
       props.operationCEMSSystem({...par}, () => {
         props.onCancel()
@@ -1248,7 +1247,7 @@ const Index = (props) => {
           DGIMN: DGIMN,
         }
       })
-      props.operationParam({paramList:referInstruList}, () => {
+      props.operationParam({ DGIMN: DGIMN, paramList:referInstruList}, () => {
         props.onCancel()
       })
 
@@ -1258,7 +1257,7 @@ const Index = (props) => {
 
   const [tabKey, setTabKey] = useState("1")
   return (
-    <div className={styles.deviceManagerSty}>
+    <div className={styles.deviceManagerSty} draggable="true">
        <Tabs type="card" onChange={(key) => { setTabKey(key) }}>
         <TabPane tab="CEMS参数信息" key="1">
           <Form form={form} name="advanced_search" >
