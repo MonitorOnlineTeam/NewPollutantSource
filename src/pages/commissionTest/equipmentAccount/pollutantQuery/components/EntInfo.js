@@ -32,11 +32,11 @@ const namespace = 'pollutantQuery'
 
 
 const dvaPropsData = ({ loading, pollutantQuery, global }) => ({
-    tableDatas: pollutantQuery.entListTableDatas,
-    tableTotal: pollutantQuery.entListTableTotal,
-    projectTableDatas: pollutantQuery.entListTableTotal,
-    tableLoading: loading.effects[`${namespace}/getEntInfoList`],
-    exportLoading: loading.effects[`${namespace}/exportEntInfoList`],
+    tableDatas: pollutantQuery.TestEntTableDatas,
+    tableTotal: pollutantQuery.TestEntTableTotal,
+    projectTableDatas: pollutantQuery.TestEntTableTotal,
+    tableLoading: loading.effects[`${namespace}/getTestEntList`],
+    exportLoading: loading.effects[`${namespace}/exportTestEntList`],
     clientHeight: global.clientHeight,
 })
 
@@ -50,13 +50,13 @@ const dvaDispatch = (dispatch) => {
         },
         getTableData: (payload) => { //列表
             dispatch({
-                type: `${namespace}/getEntInfoList`,
+                type: `${namespace}/getTestEntList`,
                 payload: payload,
             })
         },
         exportData: (payload, callback) => { // 导出
             dispatch({
-                type: `${namespace}/exportEntInfoList`,
+                type: `${namespace}/exportTestEntList`,
                 payload: payload,
                 callback: callback
             })
@@ -107,30 +107,30 @@ const Index = (props) => {
         },
         {
             title: '企业地址',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'entAdress',
+            key: 'entAdress',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '环保负责人',
-            dataIndex: 'environmentPrincipal',
-            key: 'environmentPrincipal',
+            dataIndex: 'director',
+            key: 'director',
             align: 'center',
             ellipsis:true,
         },
 
         {
             title: '联系电话',
-            dataIndex: 'mobilePhone',
-            key: 'mobilePhone',
+            dataIndex: 'phone',
+            key: 'phone',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '备注',
-            dataIndex: 'mobilePhone',
-            key: 'mobilePhone',
+            dataIndex: 'remark',
+            key: 'remark',
             align: 'center',
             ellipsis:true,
         },
@@ -185,11 +185,11 @@ const Index = (props) => {
             }}
             layout='inline'
         >
-            <Form.Item label='企业名称' name='EntName'>
+            <Form.Item label='企业名称' name='entName'>
                 <Input allowClear placeholder='请输入' />
             </Form.Item>
-            <Form.Item label='行政区' name='RegionCode' >
-                <RegionList levelNum={2} />
+            <Form.Item label='行政区' name='regionCode' >
+                <RegionList levelNum={3} />
             </Form.Item>
             <Form.Item>
                 <Button loading={tableLoading} type="primary" loading={tableLoading} htmlType="submit">

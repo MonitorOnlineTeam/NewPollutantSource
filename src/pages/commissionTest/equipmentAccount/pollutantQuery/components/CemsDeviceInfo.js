@@ -32,10 +32,10 @@ const namespace = 'pollutantQuery'
 
 
 const dvaPropsData = ({ loading, pollutantQuery, global,point }) => ({
-    tableDatas: pollutantQuery.deviceInfoTableDatas,
-    tableTotal: pollutantQuery.deviceInfoTableTotal,
-    tableLoading: loading.effects[`${namespace}/getEquipmentParametersOfPont`],
-    exportLoading: loading.effects[`${namespace}/exportEquipmentParametersOfPont`],
+    tableDatas: pollutantQuery.testPointEquipmentTableDatas,
+    tableTotal: pollutantQuery.testPointEquipmentTableTotal,
+    tableLoading: loading.effects[`${namespace}/getTestPointEquipmentList`],
+    exportLoading: loading.effects[`${namespace}/exportTestPointEquipmentList`],
     clientHeight: global.clientHeight,
 })
 
@@ -49,14 +49,14 @@ const dvaDispatch = (dispatch) => {
         },
         getTableData: (payload,callback) => { //列表
             dispatch({
-                type: `${namespace}/getEquipmentParametersOfPont`,
+                type: `${namespace}/getTestPointEquipmentList`,
                 payload: payload,
                 callback:callback
             })
         },
         exportData: (payload, callback) => { // 导出
             dispatch({
-                type: `${namespace}/exportEquipmentParametersOfPont`,
+                type: `${namespace}/exportTestPointEquipmentList`,
                 payload: payload,
                 callback: callback
             })

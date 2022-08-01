@@ -33,10 +33,10 @@ const namespace = 'pollutantQuery'
 
 
 const dvaPropsData =  ({ loading,pollutantQuery,global }) => ({
-  tableDatas:pollutantQuery.systemModelTableDatas,
-  tableTotal:pollutantQuery.systemModelTableTotal,
-  tableLoading: loading.effects[`${namespace}/getSystemModelOfPoint`],
-  exportLoading:loading.effects[`${namespace}/exportSystemModelOfPoint`],
+  tableDatas:pollutantQuery.testPointSystemTableDatas,
+  tableTotal:pollutantQuery.testPointSystemTableTotal,
+  tableLoading: loading.effects[`${namespace}/getTestPointSystemList`],
+  exportLoading:loading.effects[`${namespace}/exportTestPointSystemList`],
   clientHeight: global.clientHeight,
 })
 
@@ -50,13 +50,13 @@ const  dvaDispatch = (dispatch) => {
     },
     getTableData:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getSystemModelOfPoint`,
+        type: `${namespace}/getTestPointSystemList`,
         payload:payload,
       })
     },
     exportData : (payload,callback) =>{ // 导出
       dispatch({
-        type: `${namespace}/exportSystemModelOfPoint`,
+        type: `${namespace}/exportTestPointSystemList`,
         payload:payload,
         callback:callback
       })

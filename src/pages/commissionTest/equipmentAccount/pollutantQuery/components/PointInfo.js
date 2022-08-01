@@ -32,10 +32,10 @@ const namespace = 'pollutantQuery'
 
 
 const dvaPropsData = ({ loading, pollutantQuery, global }) => ({
-    tableDatas: pollutantQuery.pointListTableDatas,
-    tableTotal: pollutantQuery.pointListTableTotal,
-    tableLoading: loading.effects[`${namespace}/getPointInfoList`],
-    exportLoading: loading.effects[`${namespace}/exportPointInfoList`],
+    tableDatas: pollutantQuery.testPointTableDatas,
+    tableTotal: pollutantQuery.testPointTableTotal,
+    tableLoading: loading.effects[`${namespace}/getTestPointList`],
+    exportLoading: loading.effects[`${namespace}/exportTestPointList`],
     clientHeight: global.clientHeight,
 })
 
@@ -49,14 +49,14 @@ const dvaDispatch = (dispatch) => {
         },
         getTableData: (payload,callback) => { //列表
             dispatch({
-                type: `${namespace}/getPointInfoList`,
+                type: `${namespace}/getTestPointList`,
                 payload: payload,
                 callback:callback
             })
         },
         exportData: (payload, callback) => { // 导出
             dispatch({
-                type: `${namespace}/exportPointInfoList`,
+                type: `${namespace}/exportTestPointList`,
                 payload: payload,
                 callback: callback
             })
@@ -109,98 +109,93 @@ const Index = (props) => {
         },
         {
             title: '调试次数',
-            dataIndex: 'DGIMN',
-            key: 'DGIMN',
+            dataIndex: 'testCount',
+            key: 'testCount',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '测试人员',
-            dataIndex: 'longitude',
-            key: 'longitude',
+            dataIndex: 'testUser',
+            key: 'testUser',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '编制人',
-            dataIndex: 'pollutantTypeName',
-            key: 'pollutantTypeName',
+            dataIndex: 'organizationUser',
+            key: 'organizationUser',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '校核人',
-            dataIndex: 'operationStatus',
-            key: 'operationStatus',
+            dataIndex: 'calibrationUser',
+            key: 'calibrationUser',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '批准人',
-            dataIndex: 'judgeMiss',
-            key: 'missData',
+            dataIndex: 'approvalUser',
+            key: 'approvalUser',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '检测开始日期',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            dataIndex: 'beginTime',
+            key: 'beginTime',
             align: 'center',
             width:150,
             ellipsis:true,
         },
         {
             title: '检测结束日期',
-            dataIndex: 'operationName',
-            key: 'operationUser',
-            align: 'center',
-            width:150,
-            ellipsis:true,
-        },
-        {
-            title: '检测结束日期',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            dataIndex: 'endTime',
+            key: 'endTime',
             align: 'center',
             width:150,
             ellipsis:true,
         },
         {
             title: '校准颗粒物方法',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            dataIndex: 'calibrationCEMS',
+            key: 'calibrationCEMS',
             align: 'center',
             width:150,
             ellipsis:true,
         },
         {
-            title: '流速CMS调试检测',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            title: '流速CEMS调试检测',
+            dataIndex: 'flowCEMS',
+            key: 'flowCEMS',
             align: 'center',
             width:150,
             ellipsis:true,
         },
         {
             title: '检测完成状态',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            dataIndex: 'status',
+            key: 'status',
             align: 'center',
             width:150,
             ellipsis:true,
+            render:(text,record)=>{
+                return text==1 ? '已完成' : '未完成'
+            }
         },
         {
             title: '创建人',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            dataIndex: 'createUser',
+            key: 'createUser',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '创建时间',
-            dataIndex: 'operationName',
-            key: 'operationUser',
+            dataIndex: 'createTime',
+            key: 'createTime',
             align: 'center',
             ellipsis:true,
         },
@@ -261,10 +256,10 @@ const Index = (props) => {
             <Input allowClear placeholder='请输入'/>
            </Form.Item>
 
-            <Form.Item label = '点位完成状态' name='pollutantType' >
+            <Form.Item label = '点位完成状态' name='status' >
               <Select placeholder='请选择' style={{width:200}}>
-               <Option value={2}>废气</Option>
-                <Option value={1}>废水</Option>
+               <Option value={1}>已完成</Option>
+                <Option value={2}>未完成</Option>
                
                </Select>
              </Form.Item>

@@ -143,10 +143,9 @@ const Index = (props) => {
   useEffect(() => {
     initData()
 
-  }, []);
+  }, [DGIMN]);
 
   const initData = () => {
-
 
     props.getManufacturerList({})  // 弹框 厂家列表
 
@@ -162,11 +161,6 @@ const Index = (props) => {
   }
 
 
-
-
-
-
-
   const systemEdit = (record) => {
     form.setFieldsValue({
       ...record,
@@ -177,46 +171,44 @@ const Index = (props) => {
       setCemsVal(Number(record.SystemNameID))//系统名称 
     }
 
-    setSystemEditingKey(record.key);
-
+    setSystemEditingKey(record.ID);
   }
 
   const [deviceData, setDeviceData] = useState([]);
   const [deviceEditingKey, setDeviceEditingKey] = useState('');
-  const isDeviceEditing = (record) => record.key === deviceEditingKey;
+  const isDeviceEditing = (record) => record.ID === deviceEditingKey;
 
   const deviceEdit = (record) => {
     formDevice.setFieldsValue({
       ...record,
-      MinRange: record.Range ? record.Range.split("~")[0] : undefined,
-      MaxRange: record.Range ? record.Range.split("~")[1] : undefined,
+      EquipmentManufacturer:record.ManufactorName,
     });
     setDevicePollutantName(record.PollutantName) //监测设备
 
     if(record.type != "add"){
       setDeviceManufactorID(record.ManufactorID)//设备厂家
     }
-    setDeviceEditingKey(record.key)
+    setDeviceEditingKey(record.ID)
 
   };
 
 
   const referInstruEdit = (record) => {
     formReferInstru.setFieldsValue({
-      SystemName: record.SystemName,
-      ManufactorName: record.ManufactorName,
+      ...record,
+      ReferInstruManufacturer: record.ManufactorName,
     });
 
     if (record.type != "add") {
       setRefManufactorID(record.ManufactorID) //CEMS设备生产商
     }
-    setReferInstruEditingKey(record.key);
+    setReferInstruEditingKey(record.ID);
   }
 
   const deviceCancel = (record, type) => {
     if (record.type === 'add' || type) { //新添加一行 删除 || 原有数据编辑的删除  不用走接口
       const dataSource = [...deviceData];
-      let newData = dataSource.filter((item) => item.key !== record.key)
+      let newData = dataSource.filter((item) => item.ID !== record.ID)
       setDeviceData(newData)
       setDeviceEditingKey('');
     } else { //编辑状态
@@ -226,7 +218,7 @@ const Index = (props) => {
   const systemCancel = (record, type) => {
     if (record.type === 'add' || type) { //新添加一行 删除 || 原有数据编辑的删除  不用走接口
       const dataSource = [...systemData];
-      let newData = dataSource.filter((item) => item.key !== record.key)
+      let newData = dataSource.filter((item) => item.ID !== record.ID)
       setSystemData(newData)
       setSystemEditingKey('');
     } else { //编辑状态
@@ -236,7 +228,7 @@ const Index = (props) => {
   const referInstruCancel = (record, type) => {
     if (record.type === 'add' || type) { //新添加一行 删除 || 原有数据编辑的删除  不用走接口
       const dataSource = [...referInstruData];
-      let newData = dataSource.filter((item) => item.key !== record.key)
+      let newData = dataSource.filter((item) => item.ID !== record.ID)
       setReferInstruData(newData)
       setReferInstruEditingKey('');
     } else { //编辑状态
@@ -249,8 +241,8 @@ const Index = (props) => {
     try {
       const row = await formDevice.validateFields();
       const newData = [...deviceData];
-      const key = record.key;
-      const index = newData.findIndex((item) => key === item.key);
+      const key = record.ID;
+      const index = newData.findIndex((item) => key === item.ID);
       if (index > -1) {
         const editRow = {
           Range: row.MinRange || row.MaxRange ? `${row.MinRange}~${row.MaxRange}` : null,
@@ -276,8 +268,8 @@ const Index = (props) => {
     try {
       const row = await form.validateFields();
       const newData = [...systemData];
-      const key = record.key;
-      const index = newData.findIndex((item) => key === item.key);
+      const key = record.ID;
+      const index = newData.findIndex((item) => key === item.ID);
       if (index > -1) {
         const editRow = {
           SystemName: cemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
@@ -303,8 +295,8 @@ const Index = (props) => {
     try {
       const row = await formReferInstru.validateFields();
       const newData = [...referInstruData];
-      const key = record.key;
-      const index = newData.findIndex((item) => key === item.key);
+      const key = record.ID;
+      const index = newData.findIndex((item) => key === item.ID);
       if (index > -1) {
         const editRow = {
           PollutantName: refPollutantName,
@@ -384,6 +376,11 @@ const Index = (props) => {
       align: 'center',
       width: 240,
       editable: true,
+      render: (text, row) => {
+        if(row.MinRange ||  row.MaxRange){
+          return  `${row.MinRange}~${row.MaxRange}`
+        }
+      },
     },
     {
       title: '量程校准气体/标准装置值',
@@ -440,7 +437,7 @@ const Index = (props) => {
 
   const [systemData, setSystemData] = useState([]);
   const [systemEditingKey, setSystemEditingKey] = useState('');
-  const isSystemEditing = (record) => record.key === systemEditingKey;
+  const isSystemEditing = (record) => record.ID === systemEditingKey;
 
   const systemCol = [{
     title: 'CEMS系统名称',
@@ -537,7 +534,7 @@ const Index = (props) => {
   });
   const [referInstruData, setReferInstruData] = useState([]);
   const [referInstruEditingKey, setReferInstruEditingKey] = useState('');
-  const isReferInstruEditing = (record) => record.key === referInstruEditingKey;
+  const isReferInstruEditing = (record) => record.ID === referInstruEditingKey;
   const referInstruInfoCol = [ //参比仪器信息
     {
       title: '监测参数',
@@ -737,7 +734,7 @@ const Index = (props) => {
   const systemColChoice = (record) => {
 
     form.setFieldsValue({ ManufactorName: record.ManufactorName, SystemModel: record.SystemModel, });
-    setSystemManufactorID(record.ManufactorID)
+    setSystemManufactorID(record.ID)
     setManufacturerPopVisible(false)
     setChoiceManufacturer(true)
   }
@@ -760,7 +757,7 @@ const Index = (props) => {
       Unit:defaultPollUnit[0]? defaultPollUnit[0].Col1 : undefined,
     });
     setDevicePollutantName(record.PollutantName)
-    setDeviceManufactorID(record.ManufactorID)
+    setDeviceManufactorID(record.ID)
     setDevicePopVisible(false)
     setIsManual(true)
   }
@@ -775,7 +772,7 @@ const Index = (props) => {
       ReferInstruManufacturer: record.ManufactorName,
     });
     setRefPollutantName(record.PollutantName)
-    setRefManufactorID(record.ManufactorID)
+    setRefManufactorID(record.ID)
     setRefPopVisible(false)
     setIsRefManual(true)
   }
@@ -881,7 +878,7 @@ const Index = (props) => {
     name="advanced_search3"
     onFinish={() => { setPageIndex2(1); onFinish2(1, pageSize2, cemsVal) }}
     initialValues={{
-      ManufactorID: manufacturerList[0] && manufacturerList[0].ManufactorID,
+       ManufactorID: manufacturerList[0] && manufacturerList[0].ID,
     }}
 
   >
@@ -890,7 +887,7 @@ const Index = (props) => {
         <Select placeholder='请选择生产厂家' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 200 }}>
           {
             manufacturerList[0] && manufacturerList.map(item => {
-              return <Option key={item.ManufactorID} value={item.ManufactorID}>{item.ManufactorName}</Option>
+              return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
             })
           }
         </Select>
@@ -925,7 +922,7 @@ const Index = (props) => {
     onFinish={() => { setPageIndex3(1); onFinish3(1, pageSize3) }}
     onValuesChange={onValuesChange3}
     initialValues={{
-      ManufactorID: manufacturerList[0] && manufacturerList[0].ManufactorID,
+      ManufactorID: manufacturerList[0] && manufacturerList[0].ID,
     }}
   >
 
@@ -935,7 +932,7 @@ const Index = (props) => {
           <Select placeholder='请选择设备厂家' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
             {
               manufacturerList[0] && manufacturerList.map(item => {
-                return <Option key={item.ManufactorID} value={item.ManufactorID}>{item.ManufactorName}</Option>
+                return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
               })
             }
           </Select>
@@ -972,7 +969,7 @@ const Index = (props) => {
     onFinish={() => { setPageIndex4(1); onFinish4(1, pageSize4) }}
     onValuesChange={onValuesChange4}
     initialValues={{
-      ManufactorID: manufacturerList[0] && manufacturerList[0].ManufactorID,
+      ManufactorID: manufacturerList[0] && manufacturerList[0].ID,
     }}
   >
 
@@ -982,7 +979,7 @@ const Index = (props) => {
           <Select placeholder='请选择设备厂家' showSearch filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0} style={{ width: 150 }}>
             {
               manufacturerList[0] && manufacturerList.map(item => {
-                return <Option key={item.ManufactorID} value={item.ManufactorID}>{item.ManufactorName}</Option>
+                return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
               })
             }
           </Select>
@@ -993,7 +990,7 @@ const Index = (props) => {
       </Form.Item>
 
       <Form.Item>
-        <Button  type="primary" htmlType='submit'>
+        <Button type="primary" htmlType='submit'>
           查询
     </Button>
       </Form.Item>
@@ -1013,10 +1010,24 @@ const Index = (props) => {
     />
   </Form>
 
+
+const handleSystemAdd = () => { //添加系统信息
+  if (systemEditingKey) {
+    message.warning('请先保存数据')
+    return
+  } else {
+    form.resetFields();
+    form.setFieldsValue({ SystemName: cemsVal })
+    setSystemEditingKey(systemEditingKey + 1)
+    const newData = {
+      type: 'add',
+      ID: systemEditingKey + 1,
+    }
+    setSystemData([...systemData, newData])
+    setChoiceManufacturer(false)
+  }
+}
   const [devicePopVisible, setDevicePopVisible] = useState(false) //监测设备参数弹出框
-
-
-
   const handleDeviceAdd = () => { //添加设备
     if (deviceEditingKey) {
       message.warning('请先保存数据')
@@ -1025,7 +1036,7 @@ const Index = (props) => {
       formDevice.resetFields();
       setDeviceEditingKey(deviceEditingKey + 1)
       const newData = {
-        key: deviceEditingKey + 1,
+        ID: deviceEditingKey + 1,
         type: 'add',
       }
       setDeviceData([...deviceData, newData])
@@ -1035,22 +1046,7 @@ const Index = (props) => {
   };
 
 
-  const handleSystemAdd = () => { //添加系统信息
-    if (systemEditingKey) {
-      message.warning('请先保存数据')
-      return
-    } else {
-      form.resetFields();
-      form.setFieldsValue({ SystemName: cemsVal })
-      setSystemEditingKey(systemEditingKey + 1)
-      const newData = {
-        type: 'add',
-        key: systemEditingKey + 1,
-      }
-      setSystemData([...systemData, newData])
-      setChoiceManufacturer(false)
-    }
-  }
+
 
   const handleReferInstruAdd  = () => { //添加参比仪器信息
     if (referInstruEditingKey) {
@@ -1058,13 +1054,12 @@ const Index = (props) => {
       return
     } else {
       formReferInstru.resetFields();
-      formReferInstru.setFieldsValue({ SystemName: cemsVal })
       setReferInstruEditingKey(referInstruEditingKey + 1)
       const newData = {
         type: 'add',
-        key: referInstruEditingKey + 1,
+        ID: referInstruEditingKey + 1,
       }
-      setReferInstruData([...systemData, newData])
+      setReferInstruData([...referInstruData, newData])
       setIsRefManual(false)
       setChoiceManufacturer(false)
     }
@@ -1139,7 +1134,7 @@ const Index = (props) => {
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
     } else {
-      inputNode = <Input title={formDevice.getFieldValue([dataIndex])} disabled={title === '设备型号' || title === '参比方法仪器名称型号' ? true : (title === '手填生产厂家'&&!name) || title === '手填CEMS测试原理' || title === '手填设备型号' ? isManual : name === '参比仪器信息手填生产厂家' || title === '手填参比方法仪器名称型号' || title === '手填检测依据' ? isRefManual :  title === 'CEMS系统名称'  || title === 'CEMS型号' ? choiceManufacturer : false} placeholder={ `请输入`} />
+      inputNode = <Input title={formDevice.getFieldValue([dataIndex])} disabled={title === '设备型号' || title === '参比方法仪器名称型号' || title === 'CEMS测试原理' || title === '检测依据' ? true : (title === '手填生产厂家'&&!name) || title === '手填CEMS测试原理' || title === '手填设备型号' ? isManual : name === '参比仪器信息手填生产厂家' || title === '手填参比方法仪器名称型号' || title === '手填检测依据' ? isRefManual :  title === 'CEMS系统名称'  || title === 'CEMS型号' ? choiceManufacturer : false} placeholder={ `请输入`} />
     }
     const parLoading = record && record.type && record.type === 'add' ? props.loadingGetPollutantById : props.monitoringCategoryTypeLoading; //监测参数提示loading
     return (
@@ -1202,7 +1197,6 @@ const Index = (props) => {
       }
       const systemList = systemData.map(item => { // 系统信息
         return {
-          ID:item.ID,
           SystemNameID: item.SystemNameID,
           ManufactorID: item.ManufactorID,
           CEMSNum: item.CEMSNum,
@@ -1212,15 +1206,15 @@ const Index = (props) => {
       })
       const deviceList = deviceData.map(item => {
         return {
-          ID:item.ID,
           PollutantCode: item.PollutantCode,
+          ManufactorName:item.ManufactorName,
           ManufactorID: item.ManufactorID,
           ManualManufacturer: item.ManualManufacturer,
           ManualEquipment: item.ManualEquipment,
           ManualPrinciple: item.ManualPrinciple,
           FactoryNumber:item.FactoryNumber,
-          MinRange: item.Range&&item.Range.split('~')[0],
-          MaxRange: item.Range&&item.Range.split('~')[1],
+          MinRange: item.MinRange,
+          MaxRange: item.MaxRange,
           RangeCalibration: item.RangeCalibration,
           Unit: item.Unit,
           EvaluationBasis: item.EvaluationBasis,
@@ -1238,7 +1232,6 @@ const Index = (props) => {
     } else { //参比仪器
       const referInstruList = referInstruData.map(item => {
         return {
-          ID:item.ID,
           PollutantCode: item.PollutantCode,
           ManufactorID: item.ManufactorID,
           ManualManufactor: item.ManualManufactor,
@@ -1257,7 +1250,7 @@ const Index = (props) => {
 
   const [tabKey, setTabKey] = useState("1")
   return (
-    <div className={styles.deviceManagerSty} draggable="true">
+    <div className={styles.deviceManagerSty}>
        <Tabs type="card" onChange={(key) => { setTabKey(key) }}>
         <TabPane tab="CEMS参数信息" key="1">
           <Form form={form} name="advanced_search" >
@@ -1300,7 +1293,7 @@ const Index = (props) => {
             />
           </Form>
           <Button style={{ margin: '10px 0' }} type="dashed" block icon={<PlusOutlined />} onClick={() => handleDeviceAdd()} >
-            添加设备
+            添加监测设备
        </Button>
         </TabPane>
 
