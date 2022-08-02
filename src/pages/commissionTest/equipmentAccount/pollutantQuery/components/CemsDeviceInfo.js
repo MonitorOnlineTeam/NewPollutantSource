@@ -96,50 +96,50 @@ const Index = (props) => {
 
         {
             title: '企业名称',
-            dataIndex: 'EntName',
-            key: 'EntName',
+            dataIndex: 'entName',
+            key: 'entName',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '监测点名称',
-            dataIndex: 'PointName',
-            key: 'PointName',
+            dataIndex: 'pointName',
+            key: 'pointName',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '监测参数',
-            dataIndex: 'PollutantName',
-            key: 'PollutantName',
+            dataIndex: 'pollutantName',
+            key: 'pollutantName',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '生产厂家',
-            dataIndex: 'EquipmentName',
-            key: 'EquipmentName',
+            dataIndex: 'manufactorName',
+            key: 'manufactorName',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '设备型号',
-            dataIndex: 'EquipmentType',
-            key: 'EquipmentType',
+            dataIndex: 'equipmentModel',
+            key: 'equipmentModel',
             align: 'center',
             ellipsis:true,
         },
         {
             title: 'CEMS测试原理',
-            dataIndex: 'EquipmentNumber',
-            key: 'EquipmentNumber',
+            dataIndex: 'equipmentModel',
+            key: 'equipmentModel',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '出厂编号',
-            dataIndex: 'EquipmentNumber',
-            key: 'EquipmentNumber',
+            dataIndex: 'factoryNumber',
+            key: 'factoryNumber',
             align: 'center',
             ellipsis:true,
         },
@@ -149,26 +149,31 @@ const Index = (props) => {
             key: 'Range',
             align: 'center',
             ellipsis:true,
+            render:(text,record)=>{
+               if(record.minRange || record.maxRange){
+                return `${record.minRange}~${record.maxRange}`
+               }
+            }
         },
         {
             title: '量程校准标准气体/标准装置值',
-            dataIndex: 'EquipmentNumber',
-            key: 'EquipmentNumber',
+            dataIndex: 'rangeCalibration',
+            key: 'rangeCalibration',
             align: 'center',
             width:200,
             ellipsis:true,
         },
         {
             title: '计量单位',
-            dataIndex: 'EquipmentNumber',
-            key: 'EquipmentNumber',
+            dataIndex: 'unit',
+            key: 'unit',
             align: 'center',
             ellipsis:true,
         },
         {
             title: '评价依据',
-            dataIndex: 'EquipmentNumber',
-            key: 'EquipmentNumber',
+            dataIndex: 'evaluationBasis',
+            key: 'evaluationBasis',
             align: 'center',
             ellipsis:true,
         },
@@ -227,7 +232,7 @@ const Index = (props) => {
             onValuesChange={onValuesChange}
             layout='inline'
         >  
-           <Form.Item label='企业名称' name='EntName'>
+           <Form.Item label='企业名称' name='entName'>
              <Input allowClear placeholder='请输入'/>
             </Form.Item>
         

@@ -14,7 +14,7 @@ import { deletePoints, addPoint, updatePoint, GetComponent, GetMainInstrumentNam
     AddPointParamInfo,GetParamInfoList,GetParamCodeList,
     GetPointEquipmentInfo,AddOrUpdateEquipmentInfo,GetPointEquipmentParameters,GetMonitoringTypeList,
     GetManufacturerList,GetSystemModelList,GetPollutantById,GetPollutantById2,GetEquipmentInfoList,GetMonitoringTypeList2,
-    GetMonitoringCategoryType,GetPBList,PointSort,
+    GetMonitoringCategoryType,GetPBList,PointSort,GetPointCoefficientByDGIMN,
 } from '@/services/pointApi'; 
 import { sdlMessage } from '@/utils/utils';
 import cuid from 'cuid';
@@ -450,7 +450,14 @@ export default Model.extend({
               callback(result.IsSuccess)
             }
           },
-          
+          *getPointCoefficientByDGIMN({ payload, callback }, { call, put, update }) { //监测点排序
+            const result = yield call(GetPointCoefficientByDGIMN, payload);
+            if (result.IsSuccess) {
+                callback&&callback(result.Datas)
+            } else {
+              message.error(result.Message)
+            }
+          },
     },
     reducers: {
         // 保存搜索框数据

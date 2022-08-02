@@ -469,7 +469,7 @@ export default {
                     {
                       name:'pollutantManager', //调试检测 设备厂家名录
                       path: '/commissionTest/equipmentAccount/equipmentManufacturList',
-                      component: './platformManager/configurationInfo/equipmentFacturer', 
+                      component: './commissionTest/equipmentAccount/equipmentManufacturList', 
                     },
                     {
                       name:'cemsEquipmentList', //cems设备清单

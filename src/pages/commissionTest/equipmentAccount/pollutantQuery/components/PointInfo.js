@@ -257,7 +257,7 @@ const Index = (props) => {
            </Form.Item>
 
             <Form.Item label = '点位完成状态' name='status' >
-              <Select placeholder='请选择' style={{width:200}}>
+              <Select placeholder='请选择' style={{width:200}} allowClear>
                <Option value={1}>已完成</Option>
                 <Option value={2}>未完成</Option>
                

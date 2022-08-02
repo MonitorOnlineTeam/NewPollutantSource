@@ -55,7 +55,7 @@ let pointConfigIdEdit = '';
   getMonitorPointVerificationItemLoading: loading.effects['point/getMonitorPointVerificationItem'] || false,
   addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
-  getPointCoefficientListLoading: loading.effects[`operaAchiev/getPointCoefficientList`],
+  getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`],
   addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -877,16 +877,16 @@ export default class MonitorPoint extends Component {
                           })
 
                           this.props.dispatch({ //监测点系数 回显数据
-                            type: 'operaAchiev/getPointCoefficientList',
+                            type: 'point/getPointCoefficientByDGIMN',
                             payload: {
                               DGIMN: row['dbo.T_Bas_CommonPoint.DGIMN'],
                             },
                             callback: (data) => {
                               this.setState({
-                                pointCoefficientVal: data[0] ? data[0].Coefficient : undefined,
+                                pointCoefficientVal: data ? data.PointCoefficient : undefined,
                               })
                               this.setState({
-                                pointCoefficientFlag: data[0] && data[0].Coefficient ? true : false,
+                                pointCoefficientFlag: data&&data.PointCoefficient  ? true : false,
                               })
                             }
                           })

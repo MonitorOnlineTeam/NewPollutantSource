@@ -94,43 +94,43 @@ const Index = (props) => {
     },
     {
       title: '企业名称',
-      dataIndex: 'EntName',
-      key:'EntName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
       ellipsis:true,
     },
     {
       title: '监测点名称',
-      dataIndex: 'PointName',
-      key:'PointName',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
       ellipsis:true,
     },
     {
       title: 'CEMS系统名称',
-      dataIndex: 'GasManufacturer',
-      key:'GasManufacturer',
+      dataIndex: 'systemName',
+      key:'systemName',
       align:'center',
       ellipsis:true,
     },
     {
       title: 'CEMS生产厂家',
-      dataIndex: 'GasManufacturer',
-      key:'GasManufacturer',
+      dataIndex: 'manufactorName',
+      key:'manufactorName',
       align:'center',
       ellipsis:true,
     },
     {
       title: 'CEMS型号',
-      dataIndex: 'GasEquipment',
-      key:'GasEquipment',
+      dataIndex: 'systemModel',
+      key:'systemModel',
       align:'center',
       ellipsis:true,
     },
     {
       title: 'CEMS编号',
-      dataIndex: 'PMManufacturer',
-      key:'PMManufacturer',
+      dataIndex: 'CEMSNum',
+      key:'CEMSNum',
       align:'center',
       width:200,
       ellipsis:true,
@@ -142,7 +142,7 @@ const Index = (props) => {
 
 
 
-  const onFinish  = async (pageIndexs,pageSizes,) =>{  //查询
+  const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
     try {
       const values = await form.validateFields();
       props.getTableData({
@@ -183,7 +183,7 @@ const Index = (props) => {
     return <Form
     form={form}
     name="advanced_search"
-    onFinish={() => { setPageIndex(1);  onFinish(1, pageSize,filteredInfo) }}
+    onFinish={() => { setPageIndex(1);  onFinish(1, pageSize) }}
     initialValues={{
       month: moment(moment().format('YYYY-MM'))
     }}

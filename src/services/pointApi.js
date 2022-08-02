@@ -306,3 +306,8 @@ export async function GetEquipmentInfoList(params) { //设备信息
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/PointSort',params,null);
     return result;
   }
+
+  export async function GetPointCoefficientByDGIMN(params) {   //获取监测点系数
+    const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointCoefficientByDGIMN?DGIMN='+params.DGIMN,null,null);
+    return result;
+  }

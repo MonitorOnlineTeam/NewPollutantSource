@@ -98,7 +98,6 @@ export default Model.extend({
           testPointSystemTableDatas: result.Datas,
           testPointSystemTableTotal: result.Total,
         })
-        callback();
       } else {
         message.error(result.Message)
       }

@@ -198,7 +198,7 @@ const Index = (props) => {
       ...record,
       ReferInstruManufacturer: record.ManufactorName,
     });
-
+    setRefPollutantName(record.PollutantName)//监测设备
     if (record.type != "add") {
       setRefManufactorID(record.ManufactorID) //CEMS设备生产商
     }
@@ -236,6 +236,33 @@ const Index = (props) => {
     }
   };
 
+  const systemSave = async (record) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...systemData];
+      const key = record.ID;
+      const index = newData.findIndex((item) => key === item.ID);
+      if (index > -1) {
+        const editRow = {
+          SystemName: cemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
+          ManufactorID: systemManufactorID,
+          SystemNameID: cemsVal,
+        };
+
+        const item = record.type === 'add' ? { ...newData[index], key: cuid() } : { ...newData[index] }
+        newData.splice(index, 1, { ...item, ...row, ...editRow });
+        setSystemData(newData);
+        setSystemEditingKey('');
+      } else {
+        newData.push(row);
+        setSystemData(newData);
+        setSystemEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  }
+
   const deviceSave = async (record) => { //监测设备 保存添加
 
     try {
@@ -264,33 +291,6 @@ const Index = (props) => {
       console.log('Validate Failed:', errInfo);
     }
   };
-  const systemSave = async (record) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...systemData];
-      const key = record.ID;
-      const index = newData.findIndex((item) => key === item.ID);
-      if (index > -1) {
-        const editRow = {
-          SystemName: cemsVal == 465 ? '气态污染物CEMS' : '颗粒物污染物CEMS',
-          ManufactorID: systemManufactorID,
-          SystemNameID: cemsVal,
-        };
-
-        const item = record.type === 'add' ? { ...newData[index], key: cuid() } : { ...newData[index] }
-        newData.splice(index, 1, { ...item, ...row, ...editRow });
-        setSystemData(newData);
-        setSystemEditingKey('');
-      } else {
-        newData.push(row);
-        setSystemData(newData);
-        setSystemEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  }
-
    const referInstruSave = async (record) =>{
     try {
       const row = await formReferInstru.validateFields();
@@ -576,11 +576,18 @@ const Index = (props) => {
       title: '手填参比方法仪器名称型号',
       dataIndex: 'ManualInstrument',
       align: 'center',
+      width:200,
       editable: true,
     },
     {
       title: '手填检测依据',
       dataIndex: 'ManualBasis',
+      align: 'center',
+      editable: true,
+    },
+    {
+      title: '设备编号',
+      dataIndex: 'Number',
       align: 'center',
       editable: true,
     },
@@ -1237,7 +1244,7 @@ const handleSystemAdd = () => { //添加系统信息
           ManualManufactor: item.ManualManufactor,
           ManualInstrument: item.ManualInstrument,
           ManualBasis: item.ManualBasis,
-          DGIMN: DGIMN,
+          Number: item.Number,
         }
       })
       props.operationParam({ DGIMN: DGIMN, paramList:referInstruList}, () => {

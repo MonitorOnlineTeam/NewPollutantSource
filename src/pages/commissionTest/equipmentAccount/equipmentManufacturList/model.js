@@ -8,7 +8,7 @@ import config from '@/config'
 import { downloadFile } from '@/utils/utils';
 
 export default Model.extend({
-  namespace: 'equipmentFacturer',
+  namespace: 'equipmentManufacturList',
   state: {
     tableDatas:[],
     parametersList:[],
