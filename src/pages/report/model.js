@@ -303,7 +303,6 @@ export default Model.extend({
     // 获取报表数据
     *getSmokeReportData({ payload }, { call, update, select }) {
       const SmokeForm = yield select(a => a.report.SmokeForm);
-      console.log(12312312312)
       const result = yield call(services.getSmokeReportData,
         { ...payload, BeginTime: SmokeForm.beginTime, EndTime: SmokeForm.endTime });
       if (result.IsSuccess) {

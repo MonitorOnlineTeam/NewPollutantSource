@@ -49,7 +49,6 @@ const Index = (props) => {
 
  
  let data = JSON.parse(detailData) || [];
- console.log(data)
   return (
     <div className={styles.equipmentFeedbackDetailSty}>
     <BreadcrumbWrapper>
