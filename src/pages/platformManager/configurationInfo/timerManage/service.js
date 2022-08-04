@@ -22,7 +22,3 @@ export async function DelOnlineTimerManage(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelOnlineTimerManage',params, null);
   return result;
 }
-
-
-
-// AddOnlineTimerManage，EditOnlineTimerManage，DelOnlineTimerManage

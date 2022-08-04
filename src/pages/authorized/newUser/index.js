@@ -1,7 +1,7 @@
 /*
- * @Author: 贾安波
+ * @Author: jab
  * @Date: 2020-12-1
- * @LastEditors: 贾安波
+ * @LastEditors: jab
  * @LastEditTime: 2020-12-1
  * @Description: 用户管理 新页面
  */
@@ -244,11 +244,12 @@ export default class UserInfoIndex extends Component {
   }
 
   componentDidMount() {
-    const { match,userPar } = this.props;
+    const { match,userPar,dispatch, } = this.props;
 
     this.getDepInfoByTree()
     this.getRolesTree();
-    this.getUserList(userPar);
+    this.restClick();
+    this.getUserList();
   }
 
   componentWillReceiveProps(nextProps) {

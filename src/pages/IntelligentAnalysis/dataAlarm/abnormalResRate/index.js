@@ -70,7 +70,7 @@ const { RangePicker } = DatePicker;
 //     })
 //   },
 // })
-class index extends PureComponent {
+class Index extends PureComponent {
   state = {
     showTime: true,
     format: 'YYYY-MM-DD HH',
@@ -486,4 +486,4 @@ class index extends PureComponent {
   }
 }
 
-export default index;
+export default Index;

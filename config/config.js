@@ -656,7 +656,7 @@ export default {
                     //   component: './OperationSysManager/StandardGasManage',
                     // },
                     {
-                      name: '标准物质',//标准物质
+                      name: 'referenceMaterial',//标准物质
                       path: '/platformconfig/assetManage/referenceMaterial',
                       component: './platformManager/assetManage/referenceMaterial',
                     },

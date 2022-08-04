@@ -3,7 +3,7 @@
  * @Date: 2021-05-11
  * @LastEditors: 贾安波
  * @LastEditTime:  2021-05-11
- * @Description: 用户管理 新页面
+ * @Description: 用户管理 新页面 用户权限
  */
 import React, { Component, Fragment } from 'react';
 
@@ -235,7 +235,8 @@ export default class UserAuthority extends Component {
 
     this.getDepInfoByTree()
     this.getRolesTree();
-    this.getUserList(userPar);
+    this.restClick();
+    this.getUserList();
   }
 
   componentWillReceiveProps(nextProps) {

@@ -318,7 +318,7 @@ class Index extends Component {
                 <div>
                     <Row>
                         <Col>
-                                <Row>
+                                <Row align='middle'>
                                     <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                                     <div style={{display:'inline-block', padding: '0 10px' }}>
                                     {!alarmPushParLoading?  <>{alarmPushFlag?  <Checkbox.Group

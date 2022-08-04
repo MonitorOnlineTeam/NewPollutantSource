@@ -32,7 +32,7 @@ export async function GetPollutantById(params) {
   const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
   return result;
 }
-//  获取设备名称
+//获取设备名称 
 export async function  GetEquipmentName(params) {
   const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantById/${params.id}?type=${params.type}`, null);
   return result;

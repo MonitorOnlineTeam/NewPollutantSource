@@ -302,10 +302,12 @@ export async function GetEquipmentInfoList(params) { //设备信息
     return result;
   }
 
+  /*******监测点新增功能******* */
   export async function PointSort(params) {   //监测点排序
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/PointSort',params,null);
     return result;
   }
+
 
   export async function GetPointCoefficientByDGIMN(params) {   //获取监测点系数
     const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPointCoefficientByDGIMN?DGIMN='+params.DGIMN,null,null);
