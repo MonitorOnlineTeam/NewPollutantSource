@@ -181,6 +181,10 @@ const Index = (props) => {
 
     try {
       const values = await form.validateFields();//触发校验
+      if(values.Coefficient<=0){
+        message.warning('请输入大于0的监测点系数')
+        return;
+      }
        props.addOrEditRecordCoefficient({
         ...values,
       }, () => {

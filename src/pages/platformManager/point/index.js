@@ -286,6 +286,15 @@ export default class MonitorPoint extends Component {
         },
       })
     } else if (this.state.tabKey == 5) { //监测点系数
+      const  { pointCoefficientVal } = this.state;
+      if(!pointCoefficientVal&&pointCoefficientVal!==0){
+        message.warning('请输入监测点系数')
+        return;
+      }
+      if(pointCoefficientVal<=0){
+        message.warning('请输入大于0的监测点系数')
+        return;
+      }
       dispatch({
         type: 'operaAchiev/addOrEditPointCoefficient',
         payload: {
@@ -529,7 +538,7 @@ export default class MonitorPoint extends Component {
     return <Spin spinning={this.props.getPointCoefficientListLoading}>
       <div style={{ padding: '10px 0' }}>
         <Form.Item label='监测点系数' >
-          <InputNumber disabled={pointCoefficientFlag} value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
+          <InputNumber disabled={pointCoefficientFlag}  value={this.state.pointCoefficientVal} style={{ width: 200 }} placeholder='请输入' onChange={this.pointCoefficientChange} />
           {pointCoefficientFlag && <span style={{ paddingLeft: 10 }} className='red'>如需修改系数，请联系管理员</span>}
         </Form.Item>
       </div>

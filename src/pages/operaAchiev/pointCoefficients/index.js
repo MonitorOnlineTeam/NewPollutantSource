@@ -238,6 +238,10 @@ const Index = (props) => {
   const onModalOk  = async () =>{ //添加 or 编辑弹框
     try {
       const values = await form2.validateFields();//触发校验
+      if(values.Coefficient<=0){
+        message.warning('请输入大于0的监测点系数')
+        return;
+      }
        props.addOrEditPointCoefficient({
         ...values,
       },()=>{
@@ -405,8 +409,8 @@ const Index = (props) => {
       name="basic"
       form={form2}
     >
-        <Form.Item   label="监测点系数" name="Coefficient" >
-        <InputNumber style={{ width: 200}}  placeholder='请输入'  rules={[  { required: true, message: '请输入监测点系数'  }]}/>
+        <Form.Item   label="监测点系数" name="Coefficient"  rules={[  { required: true, message: '请输入监测点系数'  }]}>
+        <InputNumber style={{ width: 200}}  placeholder='请输入' />
       </Form.Item>
       <Form.Item   name="DGIMN" hidden>
           <Input />
