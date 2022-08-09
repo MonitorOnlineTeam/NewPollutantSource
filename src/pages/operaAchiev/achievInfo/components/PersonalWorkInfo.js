@@ -136,16 +136,23 @@ const Index = (props) => {
       align:'center',
     },
     {
+      title: '任务状态',
+      dataIndex: 'TaskStatus',
+      key:'TaskStatus', 
+      align:'center',
+    },
+    {
       title: '运维人',
       dataIndex: 'OperationsUserName',
       key:'OperationsUserName', 
       align:'center',
     },
     {
-      title: '完成时间',
+      title: '完成时间/系统关闭时间',
       dataIndex: 'CompleteTime',
       key:'CompleteTime', 
       align:'center',
+      width:200,
       sorter: (a, b) => moment(a.CompleteTime).valueOf() - moment(b.CompleteTime).valueOf()
 
     },

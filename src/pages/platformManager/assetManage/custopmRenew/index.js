@@ -327,9 +327,10 @@ const detailCol = [{
       const values = await form2.validateFields();//触发校验
        props.addCustomerOrder({
         ...values,
+        DGIMN:values.DGIMN? values.DGIMN.toString() : '',
         EntCode:undefined,
       },()=>{
-        setFromVisible(false)
+        // setFromVisible(false)
         onFinish()
       })
       
@@ -341,10 +342,7 @@ const detailCol = [{
   
   const renewOk = ()  =>{   //续费
 
-    if(selectedRowKeys.length<=0){
-      message.warning('请先选择一行数据')
-      return;
-   }
+
    if(!renewDay){
       message.warning('续费时长不能为空')
       return;
@@ -358,7 +356,15 @@ const detailCol = [{
     onFinish()
   })
   }
-
+  const renewClick = () =>{
+    if(selectedRowKeys.length<=0){
+       message.warning('请先选择一行数据')
+       return;
+     }
+     setRenewVisible(true);
+     setRenewDay(undefined);
+     setRenewETime(undefined);
+   }
   const onValuesChange = (hangedValues, allValues)=>{
 
   }
@@ -410,7 +416,7 @@ const detailCol = [{
      <Button   onClick={()=>{setFromVisible(true);form2.resetFields()}} style={{marginRight:8}} >
           添加
      </Button>
-     <Button   type="primary"  onClick={()=>{setRenewVisible(true);setRenewDay(undefined);setRenewETime(undefined)}}>
+     <Button   type="primary"  onClick={()=>{renewClick()}}>
           续费
      </Button>
      </Form.Item>
@@ -434,13 +440,15 @@ const detailCol = [{
       setPointList(pointData[0]?pointData[0].PointList : [])
     }
   }
+
+  const [pageIndex,setPageIndex]=useState(1)
+  const [pageSize,setPageSize]=useState(20)
   const handleTableChange = (PageIndex, PageSize) =>{
     setPageIndex(PageIndex)
     setPageSize(PageSize)
     onFinish(PageIndex,PageSize)
   }
-  const [pageSize,setPageSize]=useState(20)
-  const [pageIndex,setPageIndex]=useState(1)
+
 
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -472,12 +480,13 @@ const detailCol = [{
     setRenewDay(val)
   }
 
-  const renewClick = (val) =>{ //双击取消
+  const renewDoubleClick = (val) =>{ //双击取消
     if(val==renewDay){
       setRenewDay(undefined)
       setRenewETime(undefined)
     }
   }
+
 
   const durationList =[{name:'1个月',value:1},{name:'2个月',value:2},{name:'3个月',value:3},{name:'4个月',value:4},{name:'5个月',value:5},{name:'6个月',value:6},
   {name:'7个月',value:7},{name:'8个月',value:8},{name:'9个月',value:9},{name:'1年',value:12},{name:'2年',value:24},{name:'3年',value:36},{name:'4年',value:48},
@@ -546,7 +555,7 @@ const detailCol = [{
       </Form.Item>
       </Spin>
         <Form.Item label="监测点" name="DGIMN" rules={[  { required: true,  }]} >
-              <Select placeholder='请选择' allowClear>
+              <Select placeholder='请选择' allowClear mode='multiple'>
                    {
                    pointList[0]&&pointList.map(item => {
                     return <Option key={item.DGIMN} value={item.DGIMN}>{item.PointName}</Option>
@@ -581,13 +590,13 @@ const detailCol = [{
     <div>续费时长:</div>
     <Radio.Group size="small" value={renewDay}  onChange={renewMonthChang} style={{ marginTop: 16 }}>
       {
-        [1,2,3,4,5,6,7,8,9,].map(item=> <Radio.Button onClick={()=>{renewClick(`${item}个月`)}} value={`${item}个月`}>{item}</Radio.Button>)
+        [1,2,3,4,5,6,7,8,9,].map(item=> <Radio.Button onClick={()=>{renewDoubleClick(`${item}个月`)}} value={`${item}个月`}>{item}</Radio.Button>)
       }
     </Radio.Group><span style={{paddingLeft:5}}>个月</span>
     <div>
     <Radio.Group value={renewDay}  onChange={renewYearChang} size="small" style={{ marginTop: 5 }}>
       {
-        [1,2,3,4,5,].map(item=> <Radio.Button onClick={()=>{renewClick(`${item}年`)}} value={`${item}年`}>{item}</Radio.Button>)
+        [1,2,3,4,5,].map(item=> <Radio.Button onClick={()=>{renewDoubleClick(`${item}年`)}} value={`${item}年`}>{item}</Radio.Button>)
       }
     </Radio.Group><span style={{paddingLeft:5}}>年</span>
 

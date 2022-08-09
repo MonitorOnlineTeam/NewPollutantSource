@@ -495,7 +495,13 @@ export default {
                 {
                   name:'72HourCommissionTestQuery',
                   path: '/commissionTest/72HourCommissionTestQuery',
-                },              
+                },  
+                {
+                  name:'areaPermissManage', //区域权限管理
+                  path: '/commissionTest/areaPermissManage',
+                  component: './commissionTest/areaPermissManage', 
+                },    
+                
               ]
             },
             {
@@ -629,6 +635,11 @@ export default {
                       name: 'checkInfo',//核查信息
                       path: '/platformconfig/configurationInfo/check/checkInfo',
                       component: './platformManager/configurationInfo/checkInfo',
+                    },
+                    {
+                      name: 'pointMatchingSet',//点位匹配设置
+                      path: '/platformconfig/configurationInfo/pointMatching/pointMatchingSet',
+                      component: './platformManager/configurationInfo/pointMatchingSet',
                     },
                   ]
                 },
