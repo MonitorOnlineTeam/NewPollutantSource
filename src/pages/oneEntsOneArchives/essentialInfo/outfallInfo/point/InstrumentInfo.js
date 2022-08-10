@@ -163,14 +163,14 @@ class InstrumentInfo extends Component {
 
     let columns = [
       {
-        title: '仪器名称',
+        title: '设备名称',
         dataIndex: 'Name',
         key: 'Name',
         render: (text, record, index) => {
           if (record.handleType === "add") {
             return <Select
               style={{ width: '80%' }}
-              placeholder="请选择仪器"
+              placeholder="请选择设备"
               onChange={(value) => {
                 this.setState({
                   Name: value,
@@ -192,14 +192,14 @@ class InstrumentInfo extends Component {
         }
       },
       {
-        title: '生产厂家',
+        title: '厂商信息',
         dataIndex: 'Factory',
         key: 'Factory',
         render: (text, record, index) => {
           if (record.handleType === "add") {
             return <Select
               style={{ width: '80%' }}
-              placeholder="请选择生产厂家"
+              placeholder="请选择厂商"
               value={this.state.Factory}
               onChange={(value) => {
                 this.setState({

@@ -36,3 +36,9 @@ export async function hkvideourl(params) {
     data: null,
   } : result;
 }
+
+//
+export async function GetVideoTypeByDGIMN(params) {
+  const result = post('/api/rest/PollutantSourceApi/VideoApi/GetVideoTypeByDGIMN', params, null);
+  return result;
+}

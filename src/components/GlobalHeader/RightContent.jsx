@@ -1,5 +1,5 @@
 import { QrcodeOutlined } from '@ant-design/icons';
-import { Tooltip, Popover, Dropdown, Menu } from 'antd';
+import { Tooltip, Popover, Dropdown, Menu, Button } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -9,7 +9,7 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
 import NoticeIconView from './NoticeIconView'
-import { UnorderedListOutlined } from '@ant-design/icons';
+import { UnorderedListOutlined, RollbackOutlined } from '@ant-design/icons';
 import webConfig from '../../../public/webConfig'
 import { router } from 'umi'
 
@@ -68,16 +68,25 @@ const GlobalHeaderRight = props => {
   return (
     <div className={className}>
       {
-        configInfo.IsShowSysPage === '1' && <Dropdown overlay={menu} trigger={['click']}>
-          <Tooltip title="切换系统">
-            <a
-              rel="noopener noreferrer"
-              className={styles.action}
-            >
-              <UnorderedListOutlined />
-            </a>
-          </Tooltip>
-        </Dropdown>
+        configInfo.IsShowSysPage === '1' &&
+        <>
+          <Button type="text"
+            icon={<RollbackOutlined />} style={{ color: 'rgba(255, 255, 255, 0.8)' }}
+            onClick={() => router.push('/sysTypeMiddlePage')}
+          >
+            返回首页
+          </Button>
+          <Dropdown overlay={menu} trigger={['click']}>
+            <Tooltip title="切换系统">
+              <a
+                rel="noopener noreferrer"
+                className={styles.action}
+              >
+                <UnorderedListOutlined />
+              </a>
+            </Tooltip>
+          </Dropdown>
+        </>
       }
       {
         configInfo && configInfo.IsShowQRcode === 'true' &&

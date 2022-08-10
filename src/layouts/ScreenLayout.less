@@ -1,0 +1,230 @@
+@normal : rgb(14, 218, 173); // 正常
+@abnormal : rgb(255, 204, 68); // 异常
+@offline : rgb(204, 204, 204); // 离线
+@overproof : rgb(253, 108, 108); // 超标
+@NOx : #40ccdd;
+@smoke : #0edaad;
+@SO2 : #03b3ff;
+@titleColor: #d5d9e2;
+
+/*滚动条轨道颜色*/
+@scrollbar-track-color: #021e39;
+/*滚动条颜色*/
+@scrollbar-thumb-color: #305090;
+/*滚动条大小*/
+@scrollbar-width: 9px;
+
+.homeWrapper {
+  background-color: #001529 !important;
+  font-size: 14px;
+  position: relative;
+
+  :global {
+    .amap-container {
+      background-color: #001529 !important;
+    }
+  }
+
+  .homeContainer {
+    min-height: calc(100vh - 64px);
+    overflow-y: auto;
+    position: relative;
+
+    &>div:first-child {
+      position: absolute !important;
+    }
+  }
+
+
+  .normal {
+    color: @normal;
+  }
+
+  .abnormal {
+    color: @abnormal;
+  }
+
+  .offline {
+    color: @offline;
+  }
+
+  .overproof {
+    color: @overproof;
+  }
+
+  .homeHeader {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    height: 72px;
+    // line-height: 64px;
+    padding: 10px 0;
+    font-weight: 700;
+    // background: #00152A;
+    background: #000001;
+    //background: url(/ProjectSummary/homeheader.png);
+
+    .headerImg {
+      width: 100%;
+      height: 60px;
+      position: absolute;
+      left: 0;
+    }
+
+    // background-position: 3px 6px;
+    &>div {
+
+      // background-image: url(/ProjectSummary/homeheader.png);
+      // background-repeat: no-repeat;
+      // background-size: cover;
+      p {
+        line-height: 52px;
+      }
+
+      .left-button,
+      .right-button {
+        position: absolute;
+        width: 24%;
+        z-index: 999;
+        margin-top: 3px;
+
+        .menuClass {
+          background: transparent !important;
+          border: 0 !important;
+
+          &>li {
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+
+          span.menuTitle {
+            font-size: 16px;
+            background: url(/ProjectSummary/left.png) no-repeat;
+            background-size: contain !important;
+            width: 155px;
+            line-height: 46px;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+
+            // &:hover {
+            //   background: url(/ProjectSummary/left-hover.png) no-repeat;
+            // }
+          }
+
+
+
+          :global {
+
+
+            .ant-menu-submenu-title:hover,
+            .ant-menu-submenu-active {
+              color: #fff !important;
+            }
+
+            .ant-menu-submenu-active,
+            .ant-menu-submenu-open {
+              .antd-pro-layouts-screen-layout-menuTitle {
+                background: url(/ProjectSummary/left-hover.png) no-repeat;
+              }
+            }
+
+          }
+        }
+
+        // &>li {
+        //   float: left;
+        //   position: relative;
+
+        //   .menuItemList {
+        //     position: absolute;
+        //     right: 0;
+
+        //     li {
+        //       background-color: #003570;
+        //       font-size: 15px;
+        //       line-height: 40px;
+        //       // float: right;
+        //       width: 126px;
+
+        //       &:hover {
+        //         background-color: #1868c4;
+        //       }
+        //     }
+        //   }
+        // }
+
+        // li.active {
+        //   span {
+        //     background: url(/ProjectSummary/left-hover.png) no-repeat;
+        //   }
+        // }
+
+
+
+        // display: flex;
+        // justify-content: space-between;
+      }
+
+      .left-button {
+        left: 10%;
+      }
+
+      .right-button {
+        right: 10%;
+
+        .menuClass {
+          &>li {
+            float: right;
+          }
+
+          span.menuTitle {
+            background: url(/ProjectSummary/right.png) no-repeat;
+          }
+
+          :global {
+
+            .ant-menu-submenu-active,
+            .ant-menu-submenu-open {
+              .antd-pro-layouts-screen-layout-menuTitle {
+                background: url(/ProjectSummary/right-hover.png) no-repeat;
+              }
+            }
+
+          }
+        }
+      }
+    }
+
+    .backMenu {
+      position: absolute;
+      top: 11px;
+      right: 28px;
+      font-size: 14px;
+    }
+  }
+}
+
+:global {
+  .ant-menu-submenu-popup {
+    left: 158px;
+    top: 67px;
+    width: 124px !important;
+    margin-left: 30px;
+    // left: 188px;
+    // top: 69px;
+
+    .ant-menu {
+      min-width: 124px !important;
+      background-color: #003570 !important;
+    }
+  }
+
+  .ant-menu-item:hover {
+    background-color: #1868c4;
+    color: #fff !important;
+  }
+}

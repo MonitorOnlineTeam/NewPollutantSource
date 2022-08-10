@@ -22,6 +22,13 @@ class YsyRealVideoData extends Component {
     this.getRealTime();
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.dgimn !== prevProps.dgimn) {
+      this.getPollutantTitle();
+      this.getRealTime();
+    }
+  }
+
   getPollutantTitle = () => {
     const { match, dispatch, dgimn } = this.props;
     dispatch({
@@ -60,13 +67,18 @@ class YsyRealVideoData extends Component {
         columns.map((item, key) => {
           const i = key;
           const code = item.key;
+          let standard = '';
+          if(item.StandardValue) {
+            standard = ` (${item.StandardValue}) `
+          }
           res.push(
             <Fragment>
               <div className={styles.cardDiv}>
                 <div className={styles.cardtopspan}>
                   <span className={styles.pointName}>{item.title}</span>
                   <span className={styles.pollutantType}>
-                    {realdata[0][code] === undefined ? '-' : realdata[0][code]}
+                    {realdata[0][code] === undefined ? '-' : realdata[0][code] + standard}
+                    {/* {realdata[0][code] === undefined ? '-' : realdata[0][code]} */}
                   </span>
                 </div>
               </div>

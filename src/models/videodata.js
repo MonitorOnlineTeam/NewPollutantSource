@@ -4,6 +4,7 @@ import {
   getysyList,
   getvideolist,
   hkvideourl, getqcaysyList,
+  GetVideoTypeByDGIMN,
 } from '../services/videodata';
 import {
   querypollutantlist,
@@ -133,7 +134,7 @@ export default Model.extend({
         DGIMNs: payload.dgimn,
       };
       const res = yield call(querypollutantlist, body);
-      console.log('res=',res)
+      console.log('res=', res)
       let pollutants = [];
       // pollutants.push({ title: "监测时间", dataIndex: "MonitorTime", key: "MonitorTime", align: 'center', width: '200px' });
       if (res.length > 0) {
@@ -239,6 +240,7 @@ export default Model.extend({
     /** 海康云视频链接 */
     * hkvideourl({
       payload,
+      callback
     }, {
       call,
       update,
@@ -248,14 +250,25 @@ export default Model.extend({
       }
       const result = yield call(hkvideourl, body);
       if (result.IsSuccess && result.Datas.length > 0) {
+        callback && callback(result.Datas)
         yield update({
           hkvideoListParameters: result.Datas,
         });
       } else {
+        callback && callback([])
         yield update({
           hkvideoListParameters: [],
         });
       }
     },
+
+    *GetVideoTypeByDGIMN({ payload, callback }, { call }) {
+      const result = yield call(GetVideoTypeByDGIMN, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas);
+      } else {
+
+      }
+    }
   },
 });

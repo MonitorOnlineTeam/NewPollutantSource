@@ -142,7 +142,7 @@ class MonitoringStandard extends Component {
     render() {
         const columns = [
             {
-                title: '污染物编号',
+                title: '监测因子编号',
                 dataIndex: 'PollutantCode',
                 key: 'PollutantCode',
                 // width: '10%',
@@ -152,7 +152,7 @@ class MonitoringStandard extends Component {
                 
             },
             {
-                title: '污染物名称',
+                title: '因子名称',
                 dataIndex: 'PollutantName',
                 key: 'PollutantName',
                 // width: '10%',
@@ -162,7 +162,7 @@ class MonitoringStandard extends Component {
             },
 
             {
-                title: '报警类型',
+                title: '监测类型',
                 dataIndex: 'AlarmType',
                 key: 'AlarmType',
                 // width: 200,
@@ -261,7 +261,7 @@ class MonitoringStandard extends Component {
                 },
             },
             {
-                title: '监测状态',
+                title: '是否为污染物因子',
                 dataIndex: 'IsUse',
                 key: 'IsUse',
                 // width: '10%',

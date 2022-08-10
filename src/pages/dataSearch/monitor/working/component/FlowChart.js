@@ -369,7 +369,7 @@ class FlowChart extends PureComponent {
           }
 
           if (item.PollutantCode === "cems") {
-            if (item.Code === "a01016") { //烟道截面积  
+            if (item.Code === "a01016") { //烟道截面积
               this.setState({ yan: `${item.Value == null ? "-" : item.Value}${item.Unit}` })
             }
             if (item.Code === "a01030") { //皮托管

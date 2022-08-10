@@ -4,6 +4,7 @@ import { Card, Row, Col } from 'antd'
 import styles from './index.less'
 import Cookie from 'js-cookie'
 import webConfig from '../../../public/webConfig'
+import PageLoading from '@/components/PageLoading'
 import { router } from 'umi'
 
 @connect(({ global }) => ({
@@ -13,7 +14,9 @@ import { router } from 'umi'
 class index extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: true
+    };
   }
 
   componentDidMount() {
@@ -24,6 +27,13 @@ class index extends PureComponent {
   getSysPollutantTypeList = () => {
     this.props.dispatch({
       type: 'global/getSysPollutantTypeList',
+    }).then(() => {
+      // 如果中间页只有一个菜单，直接进入该菜单
+      if (this.props.sysPollutantTypeList.length === 1) {
+        this.onSysItemClick(this.props.sysPollutantTypeList[0])
+      } else {
+        this.setState({ loading: false });
+      }
     })
   }
 
@@ -56,6 +66,11 @@ class index extends PureComponent {
     const { sysPollutantTypeList, configInfo } = this.props;
     let currentUser = Cookie.get('currentUser');
     let userName = JSON.parse(currentUser).UserName;
+
+    if (this.state.loading) {
+      return <PageLoading />;
+    }
+
     return (
       <div className={styles.middleContainer}>
         <header className={styles.header}>
@@ -70,33 +85,37 @@ class index extends PureComponent {
           </div>
         </header>
         <div className={styles.pageContainer}>
-          <div className={styles.cardListContainer}>
-            {/* <Row gutter={[32, 32]} style={{ width: '100%' }}> */}
-            <Row gutter={[16, 16]} style={{ width: '100%' }}>
-              {
-                sysPollutantTypeList.map((item, index) => {
-                  return (
-                    <Col className="gutter-row" span={6} onClick={() => this.onSysItemClick(item)}>
-                      <div className={styles.itemContent} >
-                        <img src={`/middlePage/${item.MenuImg}.png`} alt="" />
-                        <span className={styles.sysName}>
-                          {item.Name}
-                        </span>
-                      </div>
-                    </Col>
-                  )
-                  // return <div className={styles.cardItem} onClick={() => this.onSysItemClick(item)} bordered={false}>
-                  //   <div className={styles.itemContent}>
-                  //     <img src={`/middlePage/${index + 1}.png`} alt="" />
-                  //     <span className={styles.sysName}>
-                  //       {item.Name}
-                  //     </span>
-                  //   </div>
-                  // </div>
-                })
-              }
-            </Row>
-          </div>
+          {
+            <div className={styles.cardListContainer}>
+              {/* <Row gutter={[32, 32]} style={{ width: '100%' }}> */}
+              <Row gutter={[16, 16]} style={{ width: '100%' }}>
+                {
+                  sysPollutantTypeList.map((item, index) => {
+                    return (
+                      <Col className="gutter-row" span={6} onClick={() => this.onSysItemClick(item)}>
+                        <div className={styles.itemContent} >
+                          <img src={`/middlePage/${item.MenuImg}.png`} alt="" />
+                          <span className={styles.sysName}>
+                            {item.Name}
+                          </span>
+                        </div>
+                      </Col>
+                    )
+                    // return <div className={styles.cardItem} onClick={() => this.onSysItemClick(item)} bordered={false}>
+                    //   <div className={styles.itemContent}>
+                    //     <img src={`/middlePage/${index + 1}.png`} alt="" />
+                    //     <span className={styles.sysName}>
+                    //       {item.Name}
+                    //     </span>
+                    //   </div>
+                    // </div>
+                  })
+                }
+              </Row>
+            </div>
+          }
+
+
         </div >
       </div >
     );

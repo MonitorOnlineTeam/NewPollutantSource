@@ -20,7 +20,7 @@ const Model = {
       });
       yield put({
         type: 'changeLoginStatus',
-        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
+        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', mobileMessage: response.Message  ,message: response.Message },
       });
 
       if (response.IsSuccess) {
@@ -64,8 +64,13 @@ const Model = {
         }
       }
     },
-    *getCaptcha({ payload }, { call }) {
-      yield call(getFakeCaptcha, payload);
+    *getCaptcha({ payload }, { call, put }) {
+      console.log('payload=', payload);
+      let response = yield call(getFakeCaptcha, payload);
+      yield put({
+        type: 'changeLoginStatus',
+        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', mobileMessage: response.Message },
+      });
     },
   },
   reducers: {

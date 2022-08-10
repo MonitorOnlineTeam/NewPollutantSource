@@ -17,7 +17,7 @@ class Login extends Component {
   loginForm = undefined;
 
   state = {
-    type: 'account',
+    type: 'web',
     autoLogin: true,
   };
 
@@ -27,15 +27,26 @@ class Login extends Component {
     });
   };
 
+  // 登录
   handleSubmit = (err, values) => {
     const { type } = this.state;
     // ;
-    console.log('values=', values);
+    console.log('handleSubmit-values=', values);
     if (!err) {
       const { dispatch } = this.props;
+
+      let payload = {
+        ...values,
+        LoginType: type
+      };
+      if (type === 'phone') {
+        payload.userName = values.mobile;
+        payload.password = values.captcha;
+      }
+
       dispatch({
         type: 'userLogin/login',
-        payload: { ...values, type },
+        payload: payload,
       });
     }
   };
@@ -46,6 +57,7 @@ class Login extends Component {
     });
   };
 
+  // 发送验证码
   onGetCaptcha = () =>
     new Promise((resolve, reject) => {
       if (!this.loginForm) {
@@ -56,12 +68,20 @@ class Login extends Component {
         if (err) {
           reject(err);
         } else {
+          console.log('values=', values);
           const { dispatch } = this.props;
           dispatch({
             type: 'userLogin/getCaptcha',
-            payload: values.mobile,
+            payload: {
+              UserAccount: values.mobile
+            },
           })
-            .then(resolve)
+            // .then(resolve)
+            .then(() => {
+              if (this.props.userLogin.status !== 'error') {
+                resolve()
+              }
+            })
             .catch(reject);
         }
       });
@@ -80,7 +100,8 @@ class Login extends Component {
 
   render() {
     const { userLogin, submitting } = this.props;
-    const { status, type: loginType, message } = userLogin;
+    const { status, type: loginType, message, mobileMessage } = userLogin;
+    console.log('userLogin=', userLogin);
     const { type, autoLogin } = this.state;
     return (
       <div className={styles.main}>
@@ -93,11 +114,12 @@ class Login extends Component {
           }}
         >
           <Tab
-            key="account"
+            key="web"
             tab="账户密码登录"
           >
             {status === 'error' &&
               loginType === 'account' &&
+              message &&
               !submitting &&
               this.renderMessage(message)}
             <UserName
@@ -124,20 +146,17 @@ class Login extends Component {
               }
             />
           </Tab>
-          {/* <Tab
-            key="mobile"
+          <Tab
+            key="phone"
             tab={formatMessage({
               id: 'user-login.login.tab-login-mobile',
             })}
           >
             {status === 'error' &&
-              loginType === 'mobile' &&
+              loginType === 'account' &&
+              mobileMessage &&
               !submitting &&
-              this.renderMessage(
-                formatMessage({
-                  id: 'user-login.login.message-invalid-verification-code',
-                }),
-              )}
+              this.renderMessage(mobileMessage)}
             <Mobile
               name="mobile"
               placeholder={formatMessage({
@@ -165,9 +184,7 @@ class Login extends Component {
               })}
               countDown={120}
               onGetCaptcha={this.onGetCaptcha}
-              getCaptchaButtonText={formatMessage({
-                id: 'user-login.form.get-captcha',
-              })}
+              getCaptchaButtonText={"获取验证码"}
               getCaptchaSecondText={formatMessage({
                 id: 'user-login.captcha.second',
               })}
@@ -180,12 +197,13 @@ class Login extends Component {
                 },
               ]}
             />
-          </Tab> */}
-          <div>
-            <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              自动登录
-            </Checkbox>
-            {/* <a
+          </Tab>
+          {
+            type === 'web' && <div>
+              <Checkbox checked={autoLogin} style={{ color: '#fff' }} onChange={this.changeAutoLogin}>
+                自动登录
+              </Checkbox>
+              {/* <a
               style={{
                 float: 'right',
               }}
@@ -193,7 +211,8 @@ class Login extends Component {
             >
               <FormattedMessage id="user-login.login.forgot-password" />
             </a> */}
-          </div>
+            </div>
+          }
           <Submit loading={submitting}>
             登录
           </Submit>

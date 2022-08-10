@@ -576,7 +576,7 @@ export default class MonitorPoint extends Component {
                       keysParams={{ 'dbo.T_Bas_CommonPoint.PointCode': this.state.selectedPointCode }}
                     />
                   </TabPane>
-                  <TabPane tab="仪器信息" key="3">
+                  <TabPane tab="在线设备信息管理" key="3">
                     {this.getInstrumentInfo()}
                   </TabPane>
                   <TabPane tab="污染物信息" key="2">

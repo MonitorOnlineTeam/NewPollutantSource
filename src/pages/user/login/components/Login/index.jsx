@@ -118,10 +118,11 @@ class Login extends Component {
             {tabs.length ? (
               <React.Fragment>
                 <Tabs
-                  animated={false}
+                  // animated={false}
                   className={styles.tabs}
                   activeKey={type}
                   onChange={this.onSwitch}
+                  centered
                 >
                   {TabChildren}
                 </Tabs>

@@ -54,12 +54,12 @@ class AddLibrary extends Component {
       fileList: [],
       columns: [
         {
-          title: '污染物编号',
+          title: '监测因子编号',
           dataIndex: 'PollutantCode',
           width: 120
         },
         {
-          title: '污染物名称',
+          title: '因子名称',
           dataIndex: 'PollutantName',
           render: (text, record, index) => {
             return (
@@ -348,28 +348,28 @@ class AddLibrary extends Component {
           <Form {...formItemLayout}>
             <Row>
               <Col span={12}>
-                <Form.Item label="标准库名称">
+                <Form.Item label="标准名称及标准编号">
                   {getFieldDecorator('Name', {
                     rules: [{
                       required: true,
-                      message: '请填写标准库名称!',
+                      message: '请填写标准名称及标准编号!',
                     },],
                     initialValue: libraryEditData.Name
                   })(
-                    <Input placeholder="请填写标准库名称" />
+                    <Input placeholder="请填写标准名称及标准编号" />
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="标准库类型">
+                <Form.Item label="排放标准类型">
                   {getFieldDecorator('Type', {
                     rules: [{
                       required: true,
-                      message: '请选择标准库类型',
+                      message: '请选择排放标准类型',
                     }],
                     initialValue: libraryEditData.Type ? libraryEditData.Type + "" : undefined
                   })(
-                    <Select placeholder="请选择标准库类型">
+                    <Select placeholder="请选择排放标准类型">
                       <Option value="1">国标</Option>
                       <Option value="2">地标</Option>
                       <Option value="3">行标</Option>

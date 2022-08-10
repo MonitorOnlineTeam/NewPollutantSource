@@ -14,13 +14,14 @@ var CryptoJS = require("crypto-js");
  */
 export async function systemLogin(params) {
   const defaults = {
+    LoginType: params.LoginType,
     RememberMe: true,
     UserAccount: params.userName,
     UserPwd: params.password,
     MenuId: params.MenuId,
     LoginFlag: true
   };
-  let body = Object.assign(defaults);  
+  let body = Object.assign(defaults);
   const result = await post('/api/rest/PollutantSourceApi/LoginApi/Login', body);
   if (result.IsSuccess && result.Datas) {
     Cookie.set(configToken.cookieName, result.Datas.Ticket);
@@ -36,6 +37,7 @@ export async function systemLogin(params) {
 //     data: params,
 //   });
 // }
-// export async function getFakeCaptcha(mobile) {
-//   return request(`/api/login/captcha?mobile=${mobile}`);
-// }
+export async function getFakeCaptcha(params) {
+  const result = await post('/api/rest/PollutantSourceApi/LoginApi/GetVerificationCode', params);
+  return result;
+}

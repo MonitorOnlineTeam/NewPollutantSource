@@ -26,6 +26,11 @@ const routes = [
         component: './home',
       },
       {
+        name: 'test',
+        path: '/test',
+        component: './Test/Test',
+      },
+      {
         name: 'sysTypeMiddlePage',
         path: '/sysTypeMiddlePage',
         component: './sysTypeMiddlePage',
@@ -1140,7 +1145,7 @@ const routes = [
                 //   ? './monitoring/videopreview/hkvideo/index'
                 //   : './monitoring/videopreview/ysyvideo/VideoReact'
                 //   }`,
-                component: './monitoring/videopreview',
+                component: './monitoring/videoView',
               },
               {
                 name: 'realtimedata',

@@ -1,14 +1,19 @@
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
 import Cookie from 'js-cookie';
-import slash from 'slash2';
+// import slash from 'slash2';
 import webpackPlugin from './plugin.config';
 import routes from './router.config.js'
 
-// const API_HOST = 'http://172.16.12.165:7070/';
 // const API_HOST = 'http://172.16.12.165:5001/';
+// const API_HOST = 'http://172.16.12.165:7070/';
+// const API_HOST = 'http://172.16.9.22:52198/';
+// const API_HOST = 'http://172.16.12.183:50079/';  // 演示
 // const API_HOST = 'http://172.16.12.183:50059/';
+// const API_HOST = 'http://172.16.12.152:7070/';  // 通用
+// const API_HOST = 'http://172.16.12.39:5001/';
 const API_HOST = 'http://223.84.203.227:50060/';
-
+// const API_HOST = 'http://223.84.203.227:50055/';
+// http://223.84.203.227:50055/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsListForPoint
 const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
@@ -43,10 +48,10 @@ const plugins = [
         }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
-      dll: {
-        include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-        exclude: ['@babel/runtime', 'netlify-lambda'],
-      },
+      // dll: {
+      //   include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+      //   exclude: ['@babel/runtime', 'netlify-lambda'],
+      // },
     },
   ],
   [
@@ -117,7 +122,8 @@ export default {
 
       if (match && match[1]) {
         const antdProPath = match[1].replace('.less', '');
-        const arr = slash(antdProPath)
+        // const arr = slash(antdProPath)
+        const arr = antdProPath
           .split('/')
           .map(a => a.replace(/([A-Z])/g, '-$1'))
           .map(a => a.toLowerCase());
