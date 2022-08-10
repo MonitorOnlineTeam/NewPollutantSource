@@ -106,7 +106,7 @@ export default Model.extend({
                 sdlMessage('操作成功！', 'success');
                 payload.callback(result);
             } else {
-                sdlMessage('操作失败！', 'error');
+                sdlMessage(result.Message, 'error');
             }
 
             // let pointParam = {

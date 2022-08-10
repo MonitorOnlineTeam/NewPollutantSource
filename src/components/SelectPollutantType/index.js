@@ -35,7 +35,7 @@ class SelectPollutantType extends PureComponent {
         if (onlyShowAir) {
           pollutantTypelist = data.filter(item => item.pollutantTypeCode == 5);
         }
-        let defaultPollutantCode = pollutantTypelist[0] && pollutantTypelist[0]['pollutantTypeCode'];
+        let defaultPollutantCode = pollutantTypelist[1] && pollutantTypelist[1]['pollutantTypeCode'];
         this.props.initCallback && this.props.initCallback(defaultPollutantCode)
         this.setState({
           pollutantTypelist: pollutantTypelist,
@@ -59,7 +59,7 @@ class SelectPollutantType extends PureComponent {
                 {...this.props}
               >
                 {
-                  pollutantTypelist.map(item => {
+                  pollutantTypelist.reverse().map(item => {
                     return <Radio.Button key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</Radio.Button>
                   })
                 }
@@ -70,7 +70,7 @@ class SelectPollutantType extends PureComponent {
                 {...this.props}
               >
                 {
-                  pollutantTypelist.map(item => {
+                  pollutantTypelist.reverse().map(item => {
                     return <Option key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>
                   })
                 }

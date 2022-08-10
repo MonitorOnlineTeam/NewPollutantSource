@@ -42,12 +42,10 @@ class DateReportPage extends PureComponent {
     super(props);
     this.state = {
       columns: [],
-      currentDate: moment().add(-1, 'day'),
+      currentDate: moment(),
       defaultRegionCode: [],
-      beginTime: moment()
-        .add(-1, 'day')
-        .format('YYYY-MM-DD 01:00:00'),
-      endTime: moment().format('YYYY-MM-DD 00:00:00'),
+      beginTime: moment().format('YYYY-MM-DD 00:00:00'),
+      endTime: moment().format('YYYY-MM-DD 23:59:59'),
     };
     this.SELF = {
       formLayout: {
@@ -57,8 +55,8 @@ class DateReportPage extends PureComponent {
       defaultSearchForm: {
         PollutantSourceType: 1,
         EntCode: '',
-        ReportTime: moment().add(-1, 'day'),
-        airReportTime: [moment().add(-1, 'day'), moment()],
+        ReportTime: moment(),
+        airReportTime: [moment(), moment()],
       },
     };
     this.statisticsReport = this.statisticsReport.bind(this);
@@ -67,7 +65,7 @@ class DateReportPage extends PureComponent {
 
   componentDidMount() {
     if (this.props.match.params.reportType === 'siteDaily') {
-      this.props.form.setFieldsValue({ ReportTime: moment().add(-1, 'day') });
+      this.props.form.setFieldsValue({ ReportTime: moment() });
     }
     const { defaultSearchForm } = this.SELF;
     // 获取污染物 - 查询条件
@@ -115,6 +113,7 @@ class DateReportPage extends PureComponent {
   statisticsReport() {
     const { form, match, dateReportForm } = this.props;
     form.validateFields((err, values) => {
+      console.log(values)
       if (!err) {
         // 获取污染物类型 = 表头
         this.props.dispatch({
@@ -128,8 +127,8 @@ class DateReportPage extends PureComponent {
                 payload: {
                   PollutantSourceType: values.PollutantSourceType,
                   DGIMN: values.DGIMN,
-                  BeginTime: this.state.beginTime,
-                  EndTime: this.state.endTime,
+                  BeginTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 00:00:00'):this.state.beginTime,
+                  EndTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 23:59:59'):this.state.endTime ,
                 },
                 reportType: values.reportType,
               });
@@ -227,10 +226,8 @@ class DateReportPage extends PureComponent {
     const time = pollutantType != 5 ? reportTime : moment();
     switch (reportType) {
       case 'siteDaily':
-        beginTime = moment(time).format('YYYY-MM-DD 01:00:00');
-        endTime = moment(time)
-          .add(1, 'day')
-          .format('YYYY-MM-DD 00:00:00');
+        beginTime = moment(time).format('YYYY-MM-DD 00:00:00');
+        endTime = moment(time).format('YYYY-MM-DD 23:59:59');
         break;
       case 'monthly':
         beginTime = moment(time).format('YYYY-MM-01 00:00:00');
@@ -277,8 +274,8 @@ class DateReportPage extends PureComponent {
               ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
               PollutantSourceType: values.PollutantSourceType,
               DGIMN: values.DGIMN,
-              BeginTime: this.state.beginTime,
-              EndTime: this.state.endTime,
+              BeginTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 00:00:00'):this.state.beginTime,
+              EndTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 23:59:59'):this.state.endTime ,
               Type: values.reportType,
             },
           });
@@ -318,8 +315,8 @@ class DateReportPage extends PureComponent {
   rangeOnchange = dates => {
     this.props.form.setFieldsValue({ airReportTime: dates });
     this.setState({
-      beginTime: dates[0].format('YYYY-MM-DD HH:mm:ss'),
-      endTime: dates[1].format('YYYY-MM-DD HH:mm:ss'),
+      beginTime: dates[0].format('YYYY-MM-DD 00:00:00'),
+      endTime: dates[1].format('YYYY-MM-DD 23:59:59'),
     });
   };
 

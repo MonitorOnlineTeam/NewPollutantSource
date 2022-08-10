@@ -494,10 +494,10 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
         key: 'OperationsUserName',
       },
       {
-        title: '完成时间',
+        title: '完成时间/系统关闭时间',
         dataIndex: 'CompleteTime',
         key: 'CompleteTime',
-
+        width:170,
       },
       {
         title: '创建人',

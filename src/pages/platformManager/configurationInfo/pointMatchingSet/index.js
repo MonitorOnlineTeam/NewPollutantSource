@@ -176,6 +176,9 @@ const Index = (props) => {
       key:'BTime',
       align:'center',
       ellipsis:true,
+      render: (text, record) => {
+        return  text=='正常'? <Tag color="green"> 正常 </Tag> : <Tag color="red"> 已删除 </Tag>
+     },
     },
 
     {

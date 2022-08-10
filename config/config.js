@@ -489,7 +489,7 @@ export default {
                   ]
                 },
                 {
-                  name:'72HourCommissionTest',
+                  name:'72HourCommissionTest', //72小时调试检测
                   path: '/commissionTest/72HourCommissionTest',
                 },   
                 {
@@ -1381,20 +1381,18 @@ export default {
               routes: [
                 {
                   path: '/monitoring',
-                  redirect: '/monitoring/dataquery',
+                  redirect: '/monitoring/realtimedata/ent',
                 },
                 
                 {
                   path: '/monitoring/nuclearEmission', //碳排放核酸 重定向
-                  redirect: '/monitoring/dataquery',
+                  redirect: '/monitoring/realtimedata/ent',
                 },
                 {
                   name: 'monitoringDataquery',//监控数据
                   path: '/monitoring/dataquery',
                   component: './monitoring/dataquery/index',
                 },
-                
-
                 {
                   name: 'outputstopmanage',
                   path: '/monitoring/outputstopmanage/:configId',

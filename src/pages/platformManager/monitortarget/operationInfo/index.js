@@ -550,14 +550,14 @@ useEffect(()=>{
      })
    }
  })
- inspectionCycleList[0]&&inspectionCycleList.map(item=>{
-  const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
- if( code==1){
-   form2.setFieldsValue({
-     InspectionCycel:code
-   })
- }
-})
+//  inspectionCycleList[0]&&inspectionCycleList.map(item=>{
+//   const  code = item["dbo.T_Cod_OperationCycle.Code"],id=item['dbo.T_Cod_OperationCycle.ID'];
+//  if( code==1){
+//    form2.setFieldsValue({
+//      InspectionCycel:code
+//    })
+//  }
+// })
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewTitle, setPreviewTitle] = useState()
   const [previewImage, setPreviewImage] = useState()
@@ -686,7 +686,7 @@ useEffect(()=>{
         <Form.Item label="巡检频次" name="InspectionCycel" rules={[{ required: true, message: '请选择巡检频次!',  },]} >
         <Select placeholder="请选择巡检频次" >
            {inspectionCycleList[0]&&inspectionCycleList.map(item=>{
-             return <Option value={item['dbo.T_Cod_OperationCycle.Code']}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
+             return <Option value={item['dbo.T_Cod_OperationCycle.Code']&&item['dbo.T_Cod_OperationCycle.Code'].toString()}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>
            })
           }
         </Select> 
