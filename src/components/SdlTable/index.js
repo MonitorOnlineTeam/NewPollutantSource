@@ -81,8 +81,6 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
 
 
 
-/****拖拽功能**** */
-
 const ResizeableTitle = props => {
   const { onResize, width, ...restProps } = props;
 
@@ -115,7 +113,7 @@ class SdlTable extends PureComponent {
       computeHeight: null,
       headAndFooterHeight: 110,
       pageSize: 20,
-      dataSource:[]
+      dataSource:[],
     };
 
     this.components = {
@@ -124,22 +122,22 @@ class SdlTable extends PureComponent {
       },
     };
 
-    this.dragableComponents = {
+    this.dragableComponents = {//拖拽功能
       body: {
-        row: DragableBodyRow, //拖拽功能
+        row: DragableBodyRow, 
       },
     };
-    this.totalComponents = {
+    this.totalComponents = { //拖拽功能&&表头伸缩
       header: {
         cell: ResizeableTitle,
       },
       body: {
-        row: DragableBodyRow, //拖拽功能
+        row: DragableBodyRow, 
       },
     };
   }
   
-  totalComponents
+  // totalComponents
   getOffsetTop = obj => {
     let offsetCountTop = obj.offsetTop;
     let parent = obj.offsetParent;
@@ -289,7 +287,7 @@ class SdlTable extends PureComponent {
     this.props.dragData(this.state.dataSource)
   };
   render() {
-    const { defaultWidth, resizable, clientHeight, pagination, align,dragable } = this.props;
+    const { defaultWidth, resizable, clientHeight, pagination, align,dragable, } = this.props;
     const { _props, columns, headAndFooterHeight } = this.state;
 
     const fixedHeight = this.state.computeHeight;

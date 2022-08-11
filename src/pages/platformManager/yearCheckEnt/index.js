@@ -495,7 +495,7 @@ class yearCheckEnt extends Component {
                             okText="是"
                             cancelText="否"
                         >
-                            <a><DeleteOutlined /></a>
+                            <a><DeleteOutlined style={{fontSize:16}}/></a>
                         </Popconfirm>
                         </Tooltip>
                     );
@@ -548,7 +548,7 @@ class yearCheckEnt extends Component {
                                 </FormItem>
 
                         </Row>
-                        <Row style={{ marginTop: 10, marginBottom: 10 }}>
+                        <Row style={{ marginTop: 10, marginBottom: 10 }} align='middle'>
                             <FormItem label="企业列表" >
                                 <Select
                                     showSearch
@@ -562,7 +562,7 @@ class yearCheckEnt extends Component {
                                     {this.entChildren()}
                                 </Select>
                             </FormItem>
-                            <Button type="primary" style={{ marginLeft: 46 }} onClick={() => {
+                            <Button type="primary" style={{ marginLeft: 28 }} onClick={() => {
                                 this.getEntData()
                             }}>查询</Button>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {
@@ -595,7 +595,7 @@ class yearCheckEnt extends Component {
                                     }
                                 })
                             }}><ExportOutlined />导出</Button>
-                             <span style={{color:'red',marginLeft:20,fontSize:12}}>设置年度参与国家有效传输率考核的企业监测点名单</span>
+                             <span style={{color:'red',marginLeft:20,}}>设置年度参与国家有效传输率考核的企业监测点名单</span>
                         </Row>
                     </Form>
                     <SdlTable

@@ -129,8 +129,8 @@ class DateReportPage extends PureComponent {
                 payload: {
                   PollutantSourceType: values.PollutantSourceType,
                   DGIMN: values.DGIMN,
-                  BeginTime: this.state.beginTime,
-                  EndTime: this.state.endTime,
+                  BeginTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 00:00:00'):this.state.beginTime,
+                  EndTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 23:59:59'):this.state.endTime ,
                 },
                 reportType: values.reportType,
               });
@@ -280,8 +280,8 @@ class DateReportPage extends PureComponent {
               ReportTime: values.ReportTime && moment(values.ReportTime).format('YYYY-MM-DD'),
               PollutantSourceType: values.PollutantSourceType,
               DGIMN: values.DGIMN,
-              BeginTime: this.state.beginTime,
-              EndTime: this.state.endTime,
+              BeginTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 00:00:00'):this.state.beginTime,
+              EndTime: values.reportType ==='siteDaily'? moment(this.state.beginTime).format('YYYY-MM-DD 23:59:59'):this.state.endTime ,
               Type: values.reportType,
             },
           });

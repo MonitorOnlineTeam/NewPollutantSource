@@ -523,7 +523,7 @@ class emissionEnt extends Component {
                             okText="是"
                             cancelText="否"
                         >
-                            <a><DeleteOutlined /></a>
+                            <a><DeleteOutlined style={{fontSize:16}}/></a>
                         </Popconfirm>
                         </Tooltip>
                     );
