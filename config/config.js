@@ -491,6 +491,8 @@ export default {
                 {
                   name:'72HourCommissionTest', //72小时调试检测
                   path: '/commissionTest/72HourCommissionTest',
+                  component: './commissionTest/72HourCommissionTest', 
+
                 },   
                 {
                   name:'72HourCommissionTestQuery',

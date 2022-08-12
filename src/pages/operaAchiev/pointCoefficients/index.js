@@ -188,16 +188,16 @@ const Index = (props) => {
       },
       {
         title: '合同起止时间',
-        dataIndex: 'AgreementTime',
-        key: 'AgreementTime',
+        dataIndex: 'ProjectTime' ,
+        key: 'ProjectTime',
         align: 'center',
         ellipsis:true,
       },
       
       {
         title: '实际起止时间',
-        dataIndex: 'ProjectTime',
-        key: 'ProjectTime',
+        dataIndex: 'AgreementTime',
+        key: 'AgreementTime',
         align: 'center',
         ellipsis:true,
       },
