@@ -52,10 +52,11 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getCustomerOrderList:(payload)=>{ //列表
+    getCustomerOrderList:(payload,callback)=>{ //列表
       dispatch({
         type: `${namespace}/getCustomerOrderList`,
         payload:payload,
+        callback:callback,
       })
     },
 
@@ -285,6 +286,7 @@ const detailCol = [{
 
   const del =  (record) => {
     props.deleteCustomerOrder({ID:record.ID},()=>{
+      setSelectedRowKeys([])
       onFinish()
     })
   };

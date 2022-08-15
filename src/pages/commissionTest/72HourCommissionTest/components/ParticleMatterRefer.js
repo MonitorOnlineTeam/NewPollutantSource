@@ -57,6 +57,7 @@ const Index = (props) => {
 
 
     const { tableDatas, tableTotal, tableLoading, } = props;
+    const footData = [{evaluateTitle:'评价依据',evaluateData:'1111'}]
     useEffect(() => {
 
     }, []);
@@ -149,7 +150,90 @@ const Index = (props) => {
         },
     ];
 
+ const columns2  = [
+    {
+        title: '一元线性方程',
+        align: 'center',
+        children:[ 
+            {
+                title: '置信区间半宽',
+                align: 'center',
+                render:()=>{
+                  return '评价依据'
+                }
+            },
+            
+        ]
+    },
+    {
+        title: 'Y=Kx+b',
+        align: 'center',
+        children:[ 
+            {
+                title:  <span>{11111}</span>,
+                align: 'center',
+                render:(text,record,index)=>{
+                    const obj = {
+                    children: <span>{'评价内容'}</span>,
+                        props: {colSpan:3},
+                      };
+                      return obj;
+                    }
+            },
 
+            
+        ]
+    },
+    {
+        title: '相关系数',
+        align: 'center',
+        children:[ 
+            {
+                title:  '允许区间半宽',
+                align: 'center',
+                render:(text,record,index)=>{
+                    const obj = {
+                        props: {colSpan:0},
+                      };
+                      return obj;
+                    }
+            },    
+        ]
+    },
+    {
+        title: <span>{11111}</span>,
+        align: 'center',
+        children:[ 
+            {
+                title:  <span>{2222}</span>,
+                align: 'center',
+                render:(text,record,index)=>{
+                    const obj = {
+                        props: {colSpan:0},
+                      };
+                      return obj;
+                    }
+            },
+            
+        ]
+    },
+ ]
+ const columns3  = [
+    {
+        title: 'K系数',
+        align: 'center',
+        render:(text,record,index)=>{
+             return '评价'
+        }
+    },
+    {
+        title: 'Y=Kx+b',
+        align: 'center',
+        render:(text,record,index)=>{
+            return '评价内容'
+           }
+    },
+ ]
 
     const imports = () => {
         console.log('导入事件')
@@ -167,6 +251,13 @@ const Index = (props) => {
         console.log('删除事件')
     }
 
+    const [importVisible,setImportVisible] = useState(false)
+    const importVisibleChange = (newVisible) => {
+        setImportVisible(newVisible);
+      };
+     const  importOk = (rowVal,colVal)=>{
+       console.log(rowVal,colVal)
+     }
     // const onFinish  = async (pageIndexs) =>{  //查询
       
     //     try {
@@ -208,9 +299,8 @@ const Index = (props) => {
             <Row gutter={36}>
                 <Col span={8}>
                 <Form.Item label="当前大气压" name="ManufactorID">
-                  <Input placeholder='请输入' allowClear />
+                  <Input placeholder='请输入' allowClear suffix="Pa" />
                 </Form.Item>
-                 <span style={{position:'absolute',top:5,right:0}}>Pa</span>
                 </Col>
                 <Col span={8}>
                 <Form.Item label="空气过剩系数" name="SystemModel" >
@@ -220,9 +310,8 @@ const Index = (props) => {
                 </Col>
                 <Col span={8}>
                 <Form.Item label="排放限值" name="Status"  >
-                     <Input placeholder='请输入'  allowClear />
+                     <Input placeholder='请输入'  allowClear suffix="mg/m3" />
                 </Form.Item>
-                <span style={{position:'absolute',top:5,right:0}}>mg/m3</span>
                 </Col>
             </Row>
             <Row justify='center' style={{fontSize:16,fontWeight:'bold',paddingBottom:16}}>参比方法校准颗粒物CEMS(一元线性方程法)</Row>
@@ -276,15 +365,25 @@ const Index = (props) => {
     }
 
     return (
-        <div className={styles.hourCommissionTestSty}>
-            <BtnComponents isImport imports={imports} temporarySave={temporarySave} submits={submits} clears={clears} del={del}/>
+        <div className={styles.particleMatterReferSty}>
+            <BtnComponents isImport importOk={importOk}  importVisible={importVisible} imports={imports} temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
             <SearchComponents />
-            <SdlTable
+            <Table
+                size="small"
                 loading={tableLoading}
                 bordered
                 dataSource={tableDatas}
                 columns={columns}
                 pagination={false}
+            />
+            <Table
+                size="small"
+                loading={tableLoading}
+                bordered
+                dataSource={footData}
+                columns={columns2}
+                pagination={false}
+                className={'particleMatterReferTable2'}
             />
         </div>
     );
