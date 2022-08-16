@@ -10,7 +10,7 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'hourCommissionTest',
   state: {
-    particleMatterReferTableDatas:[],
+    particleMatterReferTableDatas:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
     tableTotal:0,
   },
   effects: {

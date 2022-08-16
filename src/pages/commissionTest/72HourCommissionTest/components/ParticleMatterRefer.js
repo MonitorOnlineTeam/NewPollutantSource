@@ -4,7 +4,7 @@
  * 创建时间：2022.08.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography,TimePicker, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -26,7 +26,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-    tableDatas: hourCommissionTest.tableDatas,
+    tableDatas: hourCommissionTest.particleMatterReferTableDatas,
     tableLoading: loading.effects[`${namespace}/addSystemModel`],
     tableTotal: hourCommissionTest.tableTotal,
 
@@ -61,17 +61,21 @@ const Index = (props) => {
     useEffect(() => {
 
     }, []);
-
+    const disabledDate = (current) => {
+        return current && current > moment().endOf('year') || current < moment().startOf('year');
+      };
     const columns = [
         {
             title: '日期',
             dataIndex: 'Num',
             key: 'Num',
             align: 'center',
+            width:140,
             render: (text, record, index) => {
-                const obj = {
-                  children: text,
-                  props: {rowSpan:index % 2 === 1? 5 : 0},
+                 const number = index + 1 + 4; 
+                 const obj = {
+                  children: <Form.Item name={`date${index}`}> <DatePicker disabledDate={disabledDate} format="MM-DD" /></Form.Item>,
+                  props: {rowSpan: number % 5 == 0 ? 5 : 0},
                 };
                 return obj;
               }
@@ -82,15 +86,19 @@ const Index = (props) => {
             children:[
                 {
                     title: '开始',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    width:140,
+                    render: (text, record, index) => {
+                       return <Form.Item name={`timeStart${index}`}><TimePicker  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                     }
                 },
                 {
                     title: '结束',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    width:140,
+                    render: (text, record, index) => {
+                        return <Form.Item name={`timeEnd${index}`}><TimePicker  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                      }
                 },   
             ]
         },
@@ -375,6 +383,7 @@ const Index = (props) => {
                 dataSource={tableDatas}
                 columns={columns}
                 pagination={false}
+                className={'particleMatterReferTable1'}
             />
             <Table
                 size="small"
