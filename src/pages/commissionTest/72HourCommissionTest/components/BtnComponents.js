@@ -58,7 +58,7 @@ const Index = (props) => {
       <Row align='middle'>行：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几行读取' /></Row>
     </Form.Item>
     <Form.Item name='colVal'>
-      <Row align='middle'>列：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几行读取' /></Row>
+      <Row align='middle'>列：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几列读取' /></Row>
     </Form.Item>
     <Form.Item>
       <Row justify='end' ><Button type="primary" onClick={()=>props.importOk(imortForm.getFieldValue('rowVal'),imortForm.getFieldValue('colVal'))}>确定</Button></Row>
