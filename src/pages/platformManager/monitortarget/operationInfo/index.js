@@ -630,7 +630,7 @@ useEffect(()=>{
       <Row>
         <Col span={12}>
         <Form.Item label="监测点列表" name="DGIMN" rules={[  { required: true, message: '请选择监测点列表!',  },]} >
-        <Select mode={type==='edit'? null: 'tags'} maxTagPlaceholder='...' maxTagTextLength={4} maxTagCount={2} placeholder="请选择监测点列表">
+        <Select mode={type==='edit'? null: 'multiple'}  optionFilterProp="children" showArrow maxTagPlaceholder='...' maxTagTextLength={4} maxTagCount={2} placeholder="请选择监测点列表">
           {entPointList[0]&&entPointList.map(item=>{
             return <Option value={item.DGIMN}>{item.PointName}</Option>
           })

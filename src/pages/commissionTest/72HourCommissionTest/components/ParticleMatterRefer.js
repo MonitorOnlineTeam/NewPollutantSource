@@ -64,6 +64,31 @@ const Index = (props) => {
     const disabledDate = (current) => {
         return current && current > moment().endOf('year') || current < moment().startOf('year');
       };
+    const onTimeChange = async (time, timeString) =>{
+        // try {
+        //     const values = await form.validateFields();
+    
+        // } catch (errorInfo) {
+        //     console.log('Failed:', errorInfo); 
+        // }
+          const values = await form.getFieldsValue();
+          let i = 0;
+          Object.keys(values).map(item=>{
+            //  console.log(item)
+            if(/^time/g.test(item) ){
+                 console.log(form.getFieldValue(item))
+              if(form.getFieldValue(item)){
+                i++
+              }
+              if(i==3*5*2){
+                  
+              }
+            }
+           
+        })
+    }
+
+
     const columns = [
         {
             title: '日期',
@@ -89,7 +114,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                       return <Form.Item name={`timeStart${index}`}><TimePicker  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker onChange={onTimeChange}  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
                      }
                 },
                 {
@@ -97,7 +122,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                        return <Form.Item name={`timeEnd${index}`}><TimePicker  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  onChange={onTimeChange} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
                       }
                 },   
             ]
@@ -108,39 +133,49 @@ const Index = (props) => {
             children:[
                 {
                     title: '序号',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                         return record;
+                      }
                 },
                 {
                     title: '滤筒/滤膜编号',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`num${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                      }
                 },   
                 {
                     title: '颗粒物重(mg)',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`weight${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                      }
                 },
                 {
                     title: '标况体积(NL)',
                     dataIndex: 'SystemName',
                     key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`volume${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                      }
                 },
                 {
                     title: '标杆浓度(mg/m3)',
                     dataIndex: 'SystemName',
                     key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`benchmarkConcentra${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                      }
                 },
                 {
                     title: '工况浓度(mg/m3)',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`workConcentra${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                      }
                 },       
             ]
         },
@@ -150,9 +185,10 @@ const Index = (props) => {
             children:[
                 {
                     title: '测量值(无量纲)',
-                    dataIndex: 'SystemName',
-                    key: 'SystemName',
                     align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`testVal${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                      }
                 },
             ]
         },
@@ -298,12 +334,7 @@ const Index = (props) => {
 
 
     const SearchComponents = () => {
-        return <Form
-            form={form}
-            name="advanced_search"
-            initialValues={{}}
-            className={styles["ant-advanced-search-form"]}
-        >
+        return <div>
             <Row gutter={36}>
                 <Col span={8}>
                 <Form.Item label="当前大气压" name="ManufactorID">
@@ -369,12 +400,18 @@ const Index = (props) => {
                 </Form.Item>
                 </Col>
             </Row>
-        </Form>
+        </div>
     }
 
     return (
         <div className={styles.particleMatterReferSty}>
             <BtnComponents isImport importOk={importOk}  importVisible={importVisible} imports={imports} temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
+            <Form
+            form={form}
+            name="advanced_search"
+            initialValues={{}}
+            className={styles["ant-advanced-search-form"]}
+        >
             <SearchComponents />
             <Table
                 size="small"
@@ -394,6 +431,7 @@ const Index = (props) => {
                 pagination={false}
                 className={'particleMatterReferTable2'}
             />
+            </Form>
         </div>
     );
 };

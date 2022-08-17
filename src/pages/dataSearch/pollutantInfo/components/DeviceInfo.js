@@ -95,10 +95,10 @@ const Index = (props) => {
 
 
     useEffect(() => {
-          onFinish(pageIndex, pageSize);    
             props.getPollutantById({id:undefined},(res)=>{
                 if(res){
                     form.setFieldsValue({PollutantType:res[1]?res[1].ID:undefined})
+                    onFinish(pageIndex, pageSize);    
                     props.getPollutantById2({id:res[1]?res[1].ID:'',type:1},()=>{
                         form.setFieldsValue({PollutantCode:undefined})
                       }) //监测类别

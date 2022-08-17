@@ -32,13 +32,13 @@ const namespace = 'pointMatchingSet'
 
 const dvaPropsData =  ({ loading,pointMatchingSet,global }) => ({
   tableDatas:pointMatchingSet.tableDatas,
-  tableLoading:pointMatchingSet.tableLoading,
+  tableLoading:loading.effects[`${namespace}/getPointStateRelationList`],
   tableTotal:pointMatchingSet.tableTotal,
   tableDetailDatas:pointMatchingSet.tableDetailDatas,
   tableDetailTotal:pointMatchingSet.tableDetailTotal,
-  exportLoading: loading.effects[`${namespace}/getCustomerOrderUserList`],
+  exportLoading: loading.effects[`${namespace}/exportPointStateRelationList`],
   renewOrderLoading: loading.effects[`${namespace}/renewOrder`] || false,
-  tableDetailLoading: loading.effects[`${namespace}/getCustomerOrderInfoList`],
+  tableDetailLoading: loading.effects[`${namespace}/getStatePointList`],
   
 })
 
@@ -57,58 +57,38 @@ const  dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getCustomerOrderList:(payload)=>{ //列表
+    getPointStateRelationList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getCustomerOrderList`,
+        type: `${namespace}/getPointStateRelationList`,
         payload:payload,
       })
     },
 
-    getCustomerOrderUserList : (payload,) =>{//客户订单用户列表
+    getStatePointList : (payload,) =>{//弹框
       dispatch({
-        type: `${namespace}/getCustomerOrderUserList`,
+        type: `${namespace}/getStatePointList`,
         payload:payload,
       })
       
     },
-    getCustomerOrderPointEntList : (payload,callback) =>{ // 获取客户订单企业与排口列表
+    operationStatePoint : (payload,callback) =>{ // 操作
       dispatch({
-        type: `${namespace}/getCustomerOrderPointEntList`,
+        type: `${namespace}/operationStatePoint`,
         payload:payload,
         callback:callback,
       })
       
     },
-    addCustomerOrder:(payload,callback)=>{ //添加
+    deleteStatePoint:(payload,callback)=>{ //删除
       dispatch({
-        type: `${namespace}/addCustomerOrder`, 
+        type: `${namespace}/deleteStatePoint`, 
         payload:payload,
         callback:callback
       }) 
     },
-    deleteCustomerOrder:(payload,callback)=>{ //删除
+    exportPointStateRelationList:(payload,callback)=>{ //导出
       dispatch({
-        type: `${namespace}/deleteCustomerOrder`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    renewOrder:(payload,callback)=>{ //续费
-      dispatch({
-        type: `${namespace}/renewOrder`, 
-        payload:payload,
-        callback:callback
-      }) 
-    },
-    getCustomerOrderInfoList:(payload)=>{ //客户订单详情
-      dispatch({
-        type: `${namespace}/getCustomerOrderInfoList`, 
-        payload:payload,
-      }) 
-    },
-    deleteCustomerOrderInfo:(payload,callback)=>{ //删除 客户订单详情
-      dispatch({
-        type: `${namespace}/deleteCustomerOrderInfo`, 
+        type: `${namespace}/exportPointStateRelationList`, 
         payload:payload,
         callback:callback
       }) 
@@ -122,21 +102,11 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN,setDGIMN] =  useState('')
-  const [expand,setExpand] = useState(false)
-  const [fromVisible,setFromVisible] = useState(false)
-  const [tableVisible,setTableVisible] = useState(false)
 
-  const [type,setType] = useState('add')
   
   
-  const [deveiceName,setDeveiceName] = useState('')
-  
-  const [ manufacturerId, setManufacturerId] = useState(undefined)
+
 
   const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading,exportLoading,} = props; 
 
@@ -146,60 +116,59 @@ const Index = (props) => {
  
  useEffect(()=>{  
       onFinish();
-      props.getCustomerOrderUserList({})
   },[])
   const columns = [
     {
       title: '行政区',
-      dataIndex: 'UserName',
-      key:'UserName',
+      dataIndex: 'regionName',
+      key:'regionName',
       align:'center',
       ellipsis:true,
     },
     {
       title: '企业',
-      dataIndex: 'EntName',
-      key:'EntName',
+      dataIndex: 'entName',
+      key:'entName',
       align:'center',
       ellipsis:true,
     },
     {
       title: '监测点',
-      dataIndex: 'PointName',
-      key:'PointName',
+      dataIndex: 'pointName',
+      key:'pointName',
       align:'center',
       ellipsis:true,
     },
     {
       title: '状态',
-      dataIndex: 'BTime',
-      key:'BTime',
+      dataIndex: 'status',
+      key:'status',
       align:'center',
       ellipsis:true,
       render: (text, record) => {
-        return  text=='正常'? <Tag color="green"> 正常 </Tag> : <Tag color="red"> 已删除 </Tag>
+        return  text=='离线'? <Tag color="red"> 离线 </Tag> : <Tag color="green"> 在线 </Tag>
      },
     },
 
     {
       title: '企业（重点）',
-      dataIndex: 'ETime',
-      key:'ETime',
+      dataIndex: 'stateEntName',
+      key:'stateEntName',
       align:'center',
       ellipsis:true,
     },
     {
       title: '监测点（重点）',
-      dataIndex: 'StatusName',
-      key:'StatusName',
+      dataIndex: 'statePointName',
+      key:'statePointName',
       align:'center',
       ellipsis:true,
       
     },
     {
-      title: '监测点编号（重点',
-      dataIndex: 'CreateUserName',
-      key:'CreateUserName',
+      title: '监测点编号（重点）',
+      dataIndex: 'stateID',
+      key:'stateID',
       align:'center',
       ellipsis:true,
     },
@@ -214,7 +183,7 @@ const Index = (props) => {
         return  <span>
                <Fragment><Tooltip title="详情"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
-                  <Popconfirm  title="确定删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
+                  <Popconfirm  title="删除匹配信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
                   <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
@@ -232,22 +201,22 @@ const detailCol = [{
 },
 {
   title: '企业（重点）',
-  dataIndex: 'RenewalTypeName',
-  key:'RenewalTypeName',
+  dataIndex: 'stateEntName',
+  key:'stateEntName',
   align:'center',
   ellipsis:true,
 },
 {
   title: '监测点（重点）',
-  dataIndex: 'RenewalTime',
-  key:'RenewalTime',
+  dataIndex: 'statePointName',
+  key:'statePointName',
   align:'center',
   ellipsis:true,
 },
 {
   title: '排口编号（重点）',
-  dataIndex: 'CreateUserName',
-  key:'CreateUserName',
+  dataIndex: 'pointCode',
+  key:'pointCode',
   align:'center',
   ellipsis:true,
 },
@@ -262,38 +231,41 @@ const detailCol = [{
   render: (text, record) =>{
     return  <span>
            <Fragment> <Tooltip title="选择">
-              <a  onClick={()=>{ choice(record)}}><CheckCircleOutlined /></a>
+              <a  onClick={()=>{ choice(record)}}><CheckCircleOutlined  style={{fontSize:16}}/></a>
            </Tooltip>
            </Fragment> 
          </span>
   }
 },]
 
-  const  getCustomerOrderInfoListFun = (id,pageIndexs,pageSizes) =>{
-    setPageIndex2(pageIndex)
-    props.getCustomerOrderInfoList({ ID:id, pageIndexs: pageIndexs? pageIndex : 1,  pageSize: pageSize? pageSizes : pageSize2})
 
-   }
-  const [id,setId] = useState() 
+  const [DGIMN,setDGIMN] = useState() 
   const [entName,setEntName] = useState()
+  const [pollutantType,setPollutantType] = useState()
   const [ detailVisible, setDetailVisible,] = useState(false)
   const detail = async (record) => {
     setDetailVisible(true)
-    setId(record.ID)
-    setEntName(record.EntName)
-    getCustomerOrderInfoListFun(record.ID)
+    setDGIMN(record.DGIMN)
+    setPollutantType(record.pollutantType)
+    setEntName(record.entName)
+    setPageIndex2(1)
+    onFinish2(1,pageSize2,record.DGIMN)
   };
 
   const del =  (record) => {
-    props.deleteCustomerOrder({ID:record.ID},()=>{
+    if(!record.stateID){
+        message.warning('请先选择匹配信息')
+        return;
+    }
+    props.deleteStatePoint({DGIMN:record.DGIMN},()=>{
       onFinish()
     })
   };
 
 
   const choice = (record) => {
-    props.deleteCustomerOrderInfo({ID:record.ID},()=>{
-      getCustomerOrderInfoListFun(id)
+    props.operationStatePoint({DGIMN:DGIMN,StateID:record.pointCode,PollutantType:pollutantType},()=>{
+      onFinish2(pageIndex2,pageSize2)
       onFinish(pageIndex,pageSize);
     })
   };
@@ -309,19 +281,30 @@ const detailCol = [{
       if(!(pageIndexs&& typeof  pageIndexs === "number")){ //不是分页的情况
         setPageIndex(1)
       }
-      props.getCustomerOrderList({
+      props.getPointStateRelationList({
         ...values,
-        BTime: values.Time&&moment(values.Time[0]).format("YYYY-MM-DD HH:mm:ss"),
-        ETime: values.Time&&moment(values.Time[1]).format("YYYY-MM-DD HH:mm:ss"),
-        Time:undefined,
-        Status:values.Status? values.Status : '',
-        pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
-        pageSize:pageSizes?pageSizes:pageSize
+        PageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
+        PageSize:pageSizes?pageSizes:pageSize
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
   }
+
+  const onFinish2 = async (pageIndexs,pageSizes,mn) =>{
+    try {
+      const values = await form2.validateFields();
+      props.getStatePointList({
+        ...values,
+        DGIMN:mn?mn:DGIMN,
+        PageIndex:pageIndexs,
+        PageSize:pageSizes,
+      })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  } 
+
 
   const exports = async () => {
     const values = await form.getFieldsValue();
@@ -329,7 +312,7 @@ const detailCol = [{
       ...values,
       Month: values.Month && moment(values.Month).format("YYYY-MM-01 00:00:00"),
     }
-    props.exportPersonalPerformanceRate({...par})
+    props.exportPointStateRelationList({...par})
 };
 
   
@@ -405,7 +388,7 @@ const onDetailValuesChange = () =>{
     </Row>
 
     <Row >
-      <Form.Item label='匹配状态' name='CheckStatus' className='checkSty'>
+      <Form.Item label='匹配状态' name='Status' className='checkSty'>
         <Select placeholder='请选择' allowClear style={{ marginLeft: 0,width: 200}}>
           <Option key={1} value={1} >已匹配</Option>
           <Option key={2} value={2} >待匹配</Option>
@@ -431,7 +414,7 @@ const modalSearchComponents = () =>{
    return <Form
     form={form2}
     name="advanced_search"
-    onFinish={() => { onFinish2(pageIndex2, pageSize2) }}
+    onFinish={() => {setPageIndex2(1); onFinish2(1, pageSize2) }}
     layout='inline'
     initialValues={{
     }}
@@ -453,7 +436,7 @@ const modalSearchComponents = () =>{
           </Select>
         </Form.Item>
       </Spin>
-        <Button type="primary" loading={tableLoading} htmlType="submit">
+        <Button type="primary" loading={tableDetailLoading} htmlType="submit">
           查询
        </Button>
 
@@ -471,6 +454,7 @@ const modalSearchComponents = () =>{
     setPageSize(PageSize)
     onFinish(PageIndex,PageSize)
   }
+
 
   const [pageIndex2,setPageIndex2]=useState(1)
   const [pageSize2,setPageSize2]=useState(20)
