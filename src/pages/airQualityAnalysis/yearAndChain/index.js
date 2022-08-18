@@ -47,7 +47,7 @@ class index extends PureComponent {
       type: 'airQualityAnalysis/getYearAndChain',
       payload: {
         MonitorTime: moment(MonitorTime).format('YYYY-MM-01 00:00:00'),
-        PollutantCode: pollutantValue,
+        PollutantCode: pollutantValue.toString(),
         PollutantType: 5
       }
     })
@@ -162,7 +162,7 @@ class index extends PureComponent {
     const { pollutantValue, MonitorTime } = this.state;
     return <Space>
       <Select
-        mode="multiple"
+        // mode="multiple"
         style={{ width: '200px' }}
         value={pollutantValue}
         placeholder="请选择污染物"

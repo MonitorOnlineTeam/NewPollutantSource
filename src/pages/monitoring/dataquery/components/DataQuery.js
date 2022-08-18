@@ -60,6 +60,11 @@ class DataQuery extends Component {
         if (nextProps.DGIMN !== this.props.DGIMN) {
             this.changeDgimn(nextProps.DGIMN);
         }
+        if (nextProps.Type !== this.props.Type) {
+            this.setState({
+                dataType: nextProps.Type == 10 ? 'hour' : 'realtime'
+            })
+        }
     }
 
     /** 根据排口dgimn获取它下面的所有污染物 */
@@ -375,7 +380,7 @@ class DataQuery extends Component {
                 loading={dataloading}
                 resizable
                 defaultWidth={90}
-                scroll={{ y: "calc(100vh - 400px)"}}
+                scroll={{ y: "calc(100vh - 400px)" }}
                 // pagination={{ pageSize: 20 }}
                 pagination={{
                     showSizeChanger: true,
@@ -466,7 +471,7 @@ class DataQuery extends Component {
 
     render() {
         const { dataType, dateValue, displayType, searchDataType, traceModalData } = this.state;
-        const { pointName, entName, pollutantlist, Type, traceModalVisible, isShowSearchDataType } = this.props;
+        const { pointName, entName, pollutantlist, Type, traceModalVisible, isShowSearchDataType, dataloading } = this.props;
         let flag = "", mode = [];
         if (pollutantlist && pollutantlist[0]) {
             flag = pollutantlist[0].PollutantType === "5" ? "" : "none";
@@ -537,7 +542,10 @@ class DataQuery extends Component {
                                         <Button type="primary" loading={this.props.exportLoading} onClick={() => { this.exportReport(); }}>导出</Button>
                                     </Form.Item>
                                     <Form.Item style={{ marginRight: 5 }}>
-                                        <ButtonGroup_ style={{ width: '100%' }} checked="realtime" showOtherTypes={flag} onChange={this._handleDateTypeChange} />
+                                        {
+                                            this.props.isloading ? <Spin></Spin> :
+                                                <ButtonGroup_ style={{ width: '100%' }} pollutantType={Type} checked={Type == 10 ? 'hour' : "realtime"} showOtherTypes={flag} onChange={this._handleDateTypeChange} />
+                                        }
                                     </Form.Item>
                                     <Form.Item style={{ marginRight: 5 }}>
                                         <Radio.Group style={{ width: '100%' }} defaultValue={displayType} buttonStyle="solid" onChange={e => {
@@ -557,7 +565,7 @@ class DataQuery extends Component {
 
 
                 </Card>
-                <Modal width="90vw" bodyStyle={{height: '80vh'}} destroyOnClose title="污染溯源" footer={[]} visible={traceModalVisible} onCancel={() => {
+                <Modal width="90vw" bodyStyle={{ height: '80vh' }} destroyOnClose title="污染溯源" footer={[]} visible={traceModalVisible} onCancel={() => {
                     this.props.dispatch({ type: 'dataquery/updateState', payload: { traceModalVisible: false } })
                 }}>
                     <iframe frameborder="no" allowtransparency="yes" style={{ height: '100%', width: '100%' }} src={`http://172.16.12.39:9021/#/charts/traceTheSource/traceTheSource?dgimnId=${traceModalData.dgimn}&pollutant=${traceModalData.code}`}></iframe>

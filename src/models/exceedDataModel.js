@@ -4,7 +4,7 @@
  * 创建时间：2020.10.14
  */
 import Model from '@/utils/model';
-import { GetPollutantByType, GetExceedDataList,GetEntByRegion,GetExceedNum,ExportExceedDataList,ExportExceedNum } from '../services/exceedDataApi'
+import { GetPollutantByType, GetExceedDataList,GetEntByRegion,GetExceedNum,ExportExceedDataList,ExportExceedNum, GetPollutantByTypeNew } from '../services/exceedDataApi'
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
@@ -42,7 +42,7 @@ export default Model.extend({
       const body = {
         type: payload.type
       }
-      const result = yield call(GetPollutantByType, body, null)
+      const result = yield call(GetPollutantByTypeNew, body, null)
       if (result.IsSuccess) {
         yield update({
           PollutantByType: result.Datas

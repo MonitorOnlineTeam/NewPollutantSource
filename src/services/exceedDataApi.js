@@ -10,6 +10,12 @@ export async function GetPollutantByType(params){
     const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceedPollutantByType?type=${params.type}`,{})
     return result 
 }
+
+//获取超标数据污染物列表
+export async function GetPollutantByTypeNew(params){
+    const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`,{})
+    return result 
+}
 //查询超标数据
 export async function GetExceedDataList(params)
 {

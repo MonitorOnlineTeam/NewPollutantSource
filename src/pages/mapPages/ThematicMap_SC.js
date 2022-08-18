@@ -210,6 +210,9 @@ class ThematicMap extends PureComponent {
     if (pollutantType == 10) {
       icon = <VocIcon style={style} />
     }
+    if (pollutantType == 9) {
+      icon = <CustomIcon type="icon-echoujiance" style={{ ...style }} />
+    }
     if (pollutantType == 12) {
       icon = <CustomIcon type="icon-yangchen1" style={{ ...style }} />
     }
@@ -428,6 +431,18 @@ class ThematicMap extends PureComponent {
             }}
           />
         </>
+      case 9:
+        return <>
+          <CustomIcon
+            type="icon-echoujiance"
+            style={{
+              color: '#999',
+              marginRight: 8,
+              ...mapIconStyle,
+              fontSize: 17,
+            }}
+          />
+        </>
       case 10:
         return <>
           <VocIcon style={{
@@ -468,7 +483,7 @@ class ThematicMap extends PureComponent {
     let flag = this.props.match.params.pollutantCode;
 
     if (this.state.isReload) {
-      return <PageLoading style={{...loadingStyle}} />;
+      return <PageLoading style={{ ...loadingStyle }} />;
     }
 
     return (

@@ -178,9 +178,10 @@ class Single extends PureComponent {
       console.log("calendar=", calendar)
       let option = {
         tooltip: {
-          // formatter: function (params) {
-          //   return '降雨量: ' + params.value[1].toFixed(2);
-          // }
+          formatter: function (params) {
+            let format = `${params.marker}${params.seriesName}: ${params.value[1]}`
+            return format;
+          }
         },
         toolbox: {
           feature: {

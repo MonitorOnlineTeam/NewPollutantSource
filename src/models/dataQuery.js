@@ -178,6 +178,7 @@ export default Model.extend({
       // }
       const resultlist = yield call(queryhistorydatalist, {
         ..._historyparams,
+        datatype: payload.Type == 10 ? 'hour' : _historyparams.datatype,
         DGIMNs: payload.searchDataType === 1 ? _historyparams.DGIMNs : _historyparams.DGIMNs + '_check',
         DGIMN: payload.searchDataType === 1 ? _historyparams.DGIMNs : _historyparams.DGIMNs + '_check'
       });
