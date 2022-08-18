@@ -542,7 +542,7 @@ class index extends Component {
                   label={
                     <span>
                       排放量（tCO₂）
-                      <QuestionTooltip content="排放量 = 消耗量 × 低位发热量 × (单位热值含碳量 × 碳氧化率 × 44 ÷ 12) " />
+                      <QuestionTooltip content="排放量 = 溶剂消耗产生的排放量 + 电极消耗产生的排放量 + 原料消耗产生的排放量 " />
                     </span>
                   }
                   rules={[{ required: true, message: '请填写排放量!' }]}

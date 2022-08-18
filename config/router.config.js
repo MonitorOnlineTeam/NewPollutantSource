@@ -1184,7 +1184,7 @@ const routes = [
                 path: '/monitoring/mapview/realtimeDataView',
                 component: './monitoring/overView/realtime',
               },
-              // 电力数据一览
+              // 电能数据一览
               {
                 name: 'ElectricDataView',
                 path: '/monitoring/ElectricDataView',

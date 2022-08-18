@@ -162,7 +162,7 @@ class index extends PureComponent {
     const { pollutantValue, MonitorTime } = this.state;
     return <Space>
       <Select
-        mode="multiple"
+        // mode="multiple"
         style={{ width: '200px' }}
         value={pollutantValue}
         placeholder="请选择污染物"

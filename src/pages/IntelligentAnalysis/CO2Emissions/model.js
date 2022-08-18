@@ -71,7 +71,7 @@ export default Model.extend({
       const response = yield call(services.getCO2TableSum, payload);
       if (response.IsSuccess) {
         yield update({
-          cementTableCO2Sum: response.Datas
+          cementTableCO2Sum: response.Datas || 0
         })
       } else {
         message.error(response.Message)

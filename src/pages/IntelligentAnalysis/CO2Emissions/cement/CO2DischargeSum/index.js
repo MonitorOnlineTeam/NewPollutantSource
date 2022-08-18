@@ -56,15 +56,19 @@ class index extends PureComponent {
           formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
-          orient: 'vertical',
-          left: 'left',
+          top: '5%',
+          left: 'center',
+          type: 'scroll',
+          // orient: 'vertical',
+          // orient: 'vertical',
+          // left: 'left',
           data: legendData
         },
         series: [
           {
             name: '排放量来源',
             type: 'pie',
-            radius: '70%',
+            radius: '50%',
             center: ['50%', '50%'],
             data: _cementCO2Sum,
             emphasis: {
@@ -99,6 +103,7 @@ class index extends PureComponent {
         formatter: '{a} <br/>{b} : {c} ({d}%)'
       },
       legend: {
+        padding: [40, 0, 10, 0],
         left: 'left',
         type: 'scroll',
         orient: 'vertical',
@@ -145,17 +150,17 @@ class index extends PureComponent {
           <Card title={<div style={{ textAlign: 'center', marginTop: '-8px' }}>排放量汇总</div>} bodyStyle={{ padding: '10px 20px' }}>
             <Row justify='center'>
               <Col span={12} style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', }}>
-                <div className={styles.echartBox} style={{ width: '100%', }}>
+                <div className={styles.echartBox} style={{ width: '100%', height: '100%' }}>
                   <ReactEcharts
                     option={this.getoption()}
                     className="echarts-for-echarts"
                     theme="my_theme"
-                  // style={{
-                  //   width: '100%',
-                  //   height: 'calc(100vh - 460px)',
-                  //   maxHeight: 330,
-                  //   // height:130
-                  // }}
+                    style={{
+                      height: '100%',
+                      // height: 'calc(100vh - 460px)',
+                      // maxHeight: 330,
+                      // height:130
+                    }}
                   />
                 </div>
               </Col>
@@ -167,7 +172,7 @@ class index extends PureComponent {
           <Row style={{ marginTop: 8, }} gutter={[8, 8]}>
             {
               itemsData.map(item => {
-                return <Col className="gutter-row" span={itemsData.length % 3 === 0 ? 8 : (itemsData.length % 4 === 0 ? 6 : 8)}>
+                return <Col className="gutter-row" span={itemsData.length % 3 === 0 ? 8 : (itemsData.length % 4 === 0 ? 8 : 8)}>
                   <Card>
                     <ReactEcharts
                       option={this.getKindOption(item)}

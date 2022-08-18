@@ -53,10 +53,10 @@ const plugins = [
         }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
-      dll: {
-        include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-        exclude: ['@babel/runtime', 'netlify-lambda'],
-      },
+      // dll: {
+      //   include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+      //   exclude: ['@babel/runtime', 'netlify-lambda'],
+      // },
     },
   ],
   [

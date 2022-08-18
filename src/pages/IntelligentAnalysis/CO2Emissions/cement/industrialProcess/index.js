@@ -413,6 +413,9 @@ class index extends PureComponent {
                 this.getFormData(FileUuid);
               })
             }}
+            onDeleteCallback={() => {
+              this.getCO2TableSum();
+            }}
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />
         </Card>
