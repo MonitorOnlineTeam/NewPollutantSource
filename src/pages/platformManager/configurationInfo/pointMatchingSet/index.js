@@ -340,7 +340,7 @@ const onValuesChange = (hangedValues, allValues) => {
 
 const [pointList2,setPointList2] = useState([])
 const [pointLoading2,setPointLoading2] = useState(false)
-const onDetailValuesChange = () =>{
+const onDetailValuesChange = (hangedValues, allValues) =>{
   if (Object.keys(hangedValues).join() == 'EntCode') {
     if (!hangedValues.EntCode) { //清空时 不走请求
       form2.setFieldsValue({ DGIMN: undefined })

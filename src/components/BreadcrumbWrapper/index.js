@@ -26,6 +26,7 @@ class index extends Component {
           <Breadcrumb>
             {
               breadcrumbNames.split('/').map((item, index) => {
+                index = breadcrumbNames.split('/').length - 1 ; //都默认最后一个
                 if (item.breadcrumbName !== "首页") {
                   return <Breadcrumb.Item key={breadcrumbPaths[index]}>
                     <a href={breadcrumbPaths[index]}>{item}</a>
@@ -47,7 +48,6 @@ class index extends Component {
             (selectTreeItem && selectTreeItem.entName && selectTreeItem.pointName) ? `【${selectTreeItem.entName} - ${selectTreeItem.pointName}】` : ""}
         </div>
       } else if (pageHeaderWrapperProps.breadcrumb.routes) {
-        console.log(pageHeaderWrapperProps.breadcrumb)
         return <div className="ant-page-header">
           当前位置：
           <Breadcrumb>

@@ -35,8 +35,14 @@ const Model = {
             }
           }
         }
-        defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
-
+        // defaultNavigateUrl = response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length ?  response.Datas.MenuDatas[0].children[0].NavigateUrl :response.Datas.MenuDatas[0].NavigateUrl;
+         if(response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length&&  response.Datas.MenuDatas[0].children[0].children.length){ //三级菜单
+          defaultNavigateUrl = response.Datas.MenuDatas[0].children[0].children[0].NavigateUrl
+         }else if( response.Datas.MenuDatas[0].children && response.Datas.MenuDatas[0].children.length){//二级菜单
+          defaultNavigateUrl = response.Datas.MenuDatas[0].children[0].NavigateUrl
+         }else{
+          defaultNavigateUrl =  response.Datas.MenuDatas[0].NavigateUrl
+         }
 
         delete response.Datas.MenuDatas;
         delete response.Datas.Ticket;

@@ -23,11 +23,6 @@ export default Model.extend({
 
   },
 
-  //   GetTestEntList  调试企业信息
-// GetTestPointList  调试站点信息
-// GetTestPointEquipmentList  调试站点CEMS设备信息
-//  GetTestPointSystemList  调试站点CEMS型号信息
-// GetTestPointParamList 调试站点参比仪器设备信息
   effects: {
     *getTestEntList({ payload, callback }, { call, put, update }) { //调试企业信息
       yield update({ tableLoading: true })
@@ -46,7 +41,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestEntList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`${result.Datas}`);
+        downloadFile(`/upload${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -66,7 +61,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestPointList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`${result.Datas}`);
+        downloadFile(`/upload${result.Datas}`);
       }else{
         message.warning(result.Message)
       }
@@ -86,7 +81,7 @@ export default Model.extend({
       const result = yield call(services.ExportTestPointEquipmentList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');
-        downloadFile(`${result.Datas}`);
+        downloadFile(`/upload${result.Datas}`);
       }else{
         message.warning(result.Message)
       }

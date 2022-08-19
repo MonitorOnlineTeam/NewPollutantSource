@@ -64,28 +64,39 @@ const Index = (props) => {
     const disabledDate = (current) => {
         return current && current > moment().endOf('year') || current < moment().startOf('year');
       };
-    const onTimeChange = async (time, timeString) =>{
-        // try {
-        //     const values = await form.validateFields();
+
+    const onDateChange = async (date) =>{
+        try {
+            const values = await form.validateFields();
+            console.log(date)
     
-        // } catch (errorInfo) {
-        //     console.log('Failed:', errorInfo); 
-        // }
-          const values = await form.getFieldsValue();
-          let i = 0;
-          Object.keys(values).map(item=>{
-            //  console.log(item)
-            if(/^time/g.test(item) ){
-                 console.log(form.getFieldValue(item))
-              if(form.getFieldValue(item)){
-                i++
-              }
-              if(i==3*5*2){
+        } catch (errorInfo) {
+            console.log('Failed:', errorInfo); 
+        } 
+    }
+    const onTimeChange = async (time, timeString) =>{
+        try {
+            const values = await form.validateFields();
+            console.log(222)
+    
+        } catch (errorInfo) {
+            console.log('Failed:', errorInfo); 
+        }
+        //   const values = await form.getFieldsValue();
+        //   let i = 0;
+        //   Object.keys(values).map(item=>{
+        //     //  console.log(item)
+        //     if(/^time/g.test(item) ){
+        //          console.log(form.getFieldValue(item))
+        //       if(form.getFieldValue(item)){
+        //         i++
+        //       }
+        //       if(i==3*5*2){//时间全部填完时
                   
-              }
-            }
+        //       }
+        //     }
            
-        })
+        // })
     }
 
 
@@ -99,7 +110,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                  const number = index + 1 + 4; 
                  const obj = {
-                  children: <Form.Item name={`date${index}`}> <DatePicker disabledDate={disabledDate} format="MM-DD" /></Form.Item>,
+                  children: <Form.Item name={`date${index}`}   rules={[{ required: true, message:''}]}><DatePicker disabledDate={disabledDate} format="MM-DD"/></Form.Item>,
                   props: {rowSpan: number % 5 == 0 ? 5 : 0},
                 };
                 return obj;

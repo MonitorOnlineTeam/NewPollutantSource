@@ -45,7 +45,8 @@ const plugins = [
               importWorkboxFrom: 'local',
             },
           }
-        : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
+        : false, 
+      // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
       //   include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
@@ -531,7 +532,6 @@ export default {
                   path:'/assetManagement/equipmentAccount/projectManageAuthor',
                   component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',
              },
-            
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -1748,6 +1748,10 @@ export default {
 
             // },
             {
+              path: '/wholeProcessMonitoring/qualitycontrolData',
+              redirect: '/Intelligentanalysis/transmissionefficiency',
+            },
+            {
               path: '/Intelligentanalysis',
               name: 'Intelligentanalysis',
               routes: [
@@ -1807,10 +1811,7 @@ export default {
                   component: './Intelligentanalysis/newTransmissionefficiency/CityLevel',
                 },
                 //传输有效率 城市级别
-                {
-                  path: '/wholeProcessMonitoring/qualitycontrolData',
-                  redirect: '/Intelligentanalysis/transmissionefficiency',
-                },
+     
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
