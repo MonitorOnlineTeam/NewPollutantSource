@@ -1,7 +1,10 @@
 import { post, get, getNew } from '@/utils/request';
 
 
-
+/**
+ * 
+ * 点位匹配
+ */
 
 //列表
 export async function GetPointStateRelationList(params) {
@@ -27,6 +30,18 @@ export async function DeleteStatePoint(params){
   return result;
 }
 
+// 匹配企业
+export async function GetEntStateList(params){
+  const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetEntStateList`,params, null);
+  return result;
+}
+
+
+// 匹配监测点
+export async function GetPointStateList(params){
+  const result = await post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPointStateList`,params, null);
+  return result;
+}
 // 导出
 export async function ExportPointStateRelationList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportPointStateRelationList',params, null);

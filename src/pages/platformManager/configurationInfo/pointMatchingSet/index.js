@@ -39,7 +39,7 @@ const dvaPropsData =  ({ loading,pointMatchingSet,global }) => ({
   exportLoading: loading.effects[`${namespace}/exportPointStateRelationList`],
   renewOrderLoading: loading.effects[`${namespace}/renewOrder`] || false,
   tableDetailLoading: loading.effects[`${namespace}/getStatePointList`],
-  
+  entStateList:pointMatchingSet.entStateList,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -93,6 +93,21 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       }) 
     },
+    getEntStateList : (payload,callback) =>{ // 匹配企业
+      dispatch({
+        type: `${namespace}/getEntStateList`,
+        payload:payload,
+        callback:callback,
+      })
+      
+    },
+    getPointStateList : (payload,callback) =>{ // 匹配监测点
+      dispatch({
+        type: `${namespace}/getPointStateList`,
+        payload:payload,
+        callback:callback,
+      })  
+    },
   }
 }
 const Index = (props) => {
@@ -108,16 +123,17 @@ const Index = (props) => {
   
 
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading,exportLoading,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading,exportLoading,entStateList,} = props; 
+  
 
-
-  const isRecord =  props.match.path ==='/operations/remoteSupervisionRecord'? true : false;
+  const isRecord =  props.match&&props.match.path ? false : true;
 
  
  useEffect(()=>{  
       onFinish();
+      props.getEntStateList({})
   },[])
-  const columns = [
+  let columns = [
     {
       title: '行政区',
       dataIndex: 'regionName',
@@ -173,7 +189,7 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: <span>操作</span>,
+      title: '操作',
       dataIndex: 'x',
       key: 'x',
       align: 'center',
@@ -192,6 +208,9 @@ const Index = (props) => {
       }
     },
   ];
+  if(isRecord){
+    columns = columns.filter(item=>item.title!='操作')
+  }
 const detailCol = [{
   title: '行政区',
   dataIndex: 'regionName',
@@ -245,6 +264,7 @@ const detailCol = [{
   const [ detailVisible, setDetailVisible,] = useState(false)
   const detail = async (record) => {
     setDetailVisible(true)
+    form2.resetFields();
     setDGIMN(record.DGIMN)
     setPollutantType(record.pollutantType)
     setEntName(record.entName)
@@ -265,7 +285,7 @@ const detailCol = [{
 
   const choice = (record) => {
     props.operationStatePoint({DGIMN:DGIMN,StateID:record.pointCode,PollutantType:pollutantType},()=>{
-      onFinish2(pageIndex2,pageSize2)
+      setDetailVisible(false)
       onFinish(pageIndex,pageSize);
     })
   };
@@ -341,18 +361,18 @@ const onValuesChange = (hangedValues, allValues) => {
 const [pointList2,setPointList2] = useState([])
 const [pointLoading2,setPointLoading2] = useState(false)
 const onDetailValuesChange = (hangedValues, allValues) =>{
-  if (Object.keys(hangedValues).join() == 'EntCode') {
-    if (!hangedValues.EntCode) { //清空时 不走请求
-      form2.setFieldsValue({ DGIMN: undefined })
+  if (Object.keys(hangedValues).join() == 'StateEntID') {
+    if (!hangedValues.StateEntID) { //清空时 不走请求
+      form2.setFieldsValue({ StateID: undefined })
       setPointList2([])
       return;
     }
     setPointLoading2(true)
-    props.getPointByEntCode({ EntCode: hangedValues.EntCode }, (res) => {
+    props.getPointStateList({ StateEntID: hangedValues.StateEntID }, (res) => {
       setPointList2(res)
       setPointLoading2(false)
     })
-    form2.setFieldsValue({ DGIMN: undefined })
+    form2.setFieldsValue({ StateID: undefined })
   }
 }
 
@@ -421,16 +441,22 @@ const modalSearchComponents = () =>{
     className={styles.queryForm}
     onValuesChange={onDetailValuesChange}
   >
-      <Form.Item label='企业' name='EntCode'>
-        <EntAtmoList pollutantType={2} style={{ width: 200}}/>
+      <Form.Item label='企业' name='StateEntID'>      
+        <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 200}}>
+            {
+              entStateList[0] && entStateList.map(item => {
+                return <Option key={item.EntCode} value={item.EntCode} >{item.EntName}</Option>
+              })
+            }
+          </Select>
       </Form.Item>
-      <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: 20 }}>
-        <Form.Item label='监测点名称' name='DGIMN' >
+      <Spin spinning={pointLoading2} size='small' style={{ top: 0, left: 20 }}>
+        <Form.Item label='监测点名称' name='StateID' >
 
           <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 200}}>
             {
               pointList2[0] && pointList2.map(item => {
-                return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                return <Option key={item.PointCode} value={item.PointCode} >{item.PointName}</Option>
               })
             }
           </Select>
@@ -464,30 +490,34 @@ const modalSearchComponents = () =>{
     onFinish2(PageIndex,PageSize)
   }
 
-
+  const cardComponents = () =>{
+    return  <Card title={searchComponents()}>
+    <SdlTable
+      loading = {tableLoading}
+      bordered
+      resizable
+      dataSource={tableDatas}
+      columns={columns}
+      pagination={{
+        total:tableTotal,
+        pageSize: pageSize,
+        current: pageIndex,
+        onChange: handleTableChange,
+        showSizeChanger: true,
+        showQuickJumper: true,
+      }}
+    />
+ </Card>
+   }
    return (
     <div  className={styles.pointMatchingSetSty} >
+     {isRecord?
+    <div>{cardComponents()}</div>
+    :
     <BreadcrumbWrapper>
-    <Card title={searchComponents()}>
-      <SdlTable
-        loading = {tableLoading}
-        bordered
-        resizable
-        dataSource={tableDatas}
-        columns={columns}
-        pagination={{
-          total:tableTotal,
-          pageSize: pageSize,
-          current: pageIndex,
-          onChange: handleTableChange,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
-      />
-   </Card>
+       {cardComponents()}
    </BreadcrumbWrapper>
-
-
+ }
       <Modal
         title={`匹配：${entName}`}
         visible={detailVisible}

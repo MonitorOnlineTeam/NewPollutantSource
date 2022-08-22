@@ -32,6 +32,7 @@ import EntInfo  from './components/EntInfo'
 import PointCoefficient  from '@/pages/operaAchiev/pointCoefficients'
 import WorkCoefficient  from '@/pages/operaAchiev/workCoefficients'
 import OperationCoefficient  from './components/AutoFormTable'
+import PointMatchingSet  from '@/pages/platformManager/configurationInfo/pointMatchingSet'
 
 const namespace = 'pollutantInfo'
 const dvaPropsData =  ({ loading,pollutantInfo,global }) => ({
@@ -98,6 +99,9 @@ const Index = (props) => {
           <TabPane tab="巡检频次系数" key="10">
             <OperationCoefficient props  configId='OperationCycleForm'/>
           </TabPane> 
+          <TabPane tab="点位匹配信息" key="11">
+            <PointMatchingSet props />
+          </TabPane>
         </Tabs>
    </Card>
    </BreadcrumbWrapper>

@@ -55,7 +55,7 @@ let pointConfigIdEdit = '';
   getMonitorPointVerificationItemLoading: loading.effects['point/getMonitorPointVerificationItem'] || false,
   addPointParamInfoLoading: loading.effects['point/addPointParamInfo'],
   getParamInfoListLoading: loading.effects['point/getParamInfoList'] || false,
-  getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`],
+  getPointCoefficientListLoading: loading.effects[`point/getPointCoefficientByDGIMN`]  || false ,
   addOrEditPointCoefficientLoading: loading.effects['operaAchiev/addOrEditPointCoefficient'],
   autoForm,
   searchConfigItems: autoForm.searchConfigItems,
@@ -317,14 +317,12 @@ export default class MonitorPoint extends Component {
           if (this.state.isEdit) {
             FormData.PointCode = this.state.selectedPointCode;
           }
-
+          FormData['DGIMN'] = FormData['DGIMN'].toLowerCase();
           const payload = {
             BaseType: match.params.targetType,
             TargetId: match.params.targetId,
-            Point: FormData,
+            Point: {...FormData,},
           };
-
-          // console.log("payload=", payload);
 
           dispatch({
             type: !this.state.isEdit ? 'point/addPoint' : 'point/editPoint',
@@ -347,7 +345,7 @@ export default class MonitorPoint extends Component {
             },
           });
           this.setState({
-            FormData: FormData
+            FormData: {...FormData,},
           })
         }
       });

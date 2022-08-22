@@ -64,39 +64,17 @@ const Index = (props) => {
     const disabledDate = (current) => {
         return current && current > moment().endOf('year') || current < moment().startOf('year');
       };
-
-    const onDateChange = async (date) =>{
-        try {
-            const values = await form.validateFields();
-            console.log(date)
-    
-        } catch (errorInfo) {
-            console.log('Failed:', errorInfo); 
-        } 
-    }
-    const onTimeChange = async (time, timeString) =>{
-        try {
-            const values = await form.validateFields();
-            console.log(222)
-    
-        } catch (errorInfo) {
-            console.log('Failed:', errorInfo); 
+     
+    const [ autoDateFlag,setAutoDateFlag ] = useState(true)
+    const onDateChange =  (type) =>{
+        const values = form.getFieldValue('date0')
+        if(type=='date0'&&autoDateFlag){
+          form.setFieldsValue({
+            date5: moment(moment(values).add('day',1)),
+            date10:moment(moment(values).add('day',2)),
+          })
+          setAutoDateFlag(false)
         }
-        //   const values = await form.getFieldsValue();
-        //   let i = 0;
-        //   Object.keys(values).map(item=>{
-        //     //  console.log(item)
-        //     if(/^time/g.test(item) ){
-        //          console.log(form.getFieldValue(item))
-        //       if(form.getFieldValue(item)){
-        //         i++
-        //       }
-        //       if(i==3*5*2){//时间全部填完时
-                  
-        //       }
-        //     }
-           
-        // })
     }
 
 
@@ -110,7 +88,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                  const number = index + 1 + 4; 
                  const obj = {
-                  children: <Form.Item name={`date${index}`}   rules={[{ required: true, message:''}]}><DatePicker disabledDate={disabledDate} format="MM-DD"/></Form.Item>,
+                  children: <Form.Item name={`date${index}`}   rules={[{ required: true, message:''}]}><DatePicker disabledDate={disabledDate} onChange={()=>onDateChange(`date${index}`)}  format="MM-DD"/></Form.Item>,
                   props: {rowSpan: number % 5 == 0 ? 5 : 0},
                 };
                 return obj;
@@ -125,7 +103,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker onChange={onTimeChange}  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker   defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
                      }
                 },
                 {
@@ -133,7 +111,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  onChange={onTimeChange} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
                       }
                 },   
             ]
@@ -290,8 +268,9 @@ const Index = (props) => {
     },
  ]
 
-    const imports = () => {
-        console.log('导入事件')
+    const imports = async () => {
+
+
     }
     const temporarySave = () => {
         console.log('暂存事件')
@@ -310,38 +289,29 @@ const Index = (props) => {
     const importVisibleChange = (newVisible) => {
         setImportVisible(newVisible);
       };
-     const  importOk = (rowVal,colVal)=>{
-       console.log(rowVal,colVal)
+     const  importOk = async(rowVal,colVal)=>{
+        try {
+            const values = await form.validateFields();
+            const timeData = []
+            let i = 0;
+             Object.keys(values).map((item,index)=>{
+             if(/^time/g.test(item)){
+                 i++;
+                 if(i<=10){
+                    values['date0']&&form.getFieldValue(item)&&timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(item)).format('HH:mm:ss')}`)
+                 }else if(i>10&&i<=15){
+                    values['date5']&&form.getFieldValue(item)&&timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(item)).format('HH:mm:ss')}`)
+                 }else{
+                    values['date10']&&form.getFieldValue(item)&&timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(item)).format('HH:mm:ss')}`)
+
+                 }
+               }   
+             })
+             console.log(timeData)
+        } catch (errorInfo) {
+            console.log('Failed:', errorInfo); 
+        }
      }
-    // const onFinish  = async (pageIndexs) =>{  //查询
-      
-    //     try {
-    //       const values = await form.validateFields();
-          
-    //       pageIndexs&& typeof  pageIndexs === "number"? setPageIndex(pageIndexs) : setPageIndex(1); //除编辑  每次查询页码重置为第一页
-    
-    //       props.getSystemModelList({
-    //         pageIndex: pageIndexs&& typeof  pageIndexs === "number"? pageIndexs: 1,
-    //         pageSize: pageSize,
-    //         ...values,
-    //       })
-    //     } catch (errorInfo) {
-    //       console.log('Failed:', errorInfo);
-    //     }
-    //   }
-
-
-
-              {/* <Select placeholder='请选择设备厂家' allowClear showSearch
-             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-             style={{width:200}}>
-                {
-               manufacturerList[0]&&manufacturerList.map(item => {
-                    return <Option key={item.ID} value={item.ID}>{item.ManufactorName}</Option>
-                  })
-                } 
-                 
-              </Select> */}
 
 
     const SearchComponents = () => {
@@ -416,7 +386,7 @@ const Index = (props) => {
 
     return (
         <div className={styles.particleMatterReferSty}>
-            <BtnComponents isImport importOk={importOk}  importVisible={importVisible} imports={imports} temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
+            <BtnComponents isImport importOk={importOk}  importVisible={importVisible}  temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
             <Form
             form={form}
             name="advanced_search"
