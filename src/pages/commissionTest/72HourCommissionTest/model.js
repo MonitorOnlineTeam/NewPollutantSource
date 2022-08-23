@@ -11,19 +11,15 @@ export default Model.extend({
   namespace: 'hourCommissionTest',
   state: {
     particleMatterReferTableDatas:[1,2,3,4,5,1,2,3,4,5,1,2,3,4,5],
-    tableTotal:0,
+    treeList:[],
   },
   effects: {
-    *getSystemModelList({ payload,callback }, { call, put, update }) { //列表
+    *importData({ payload,callback }, { call, put, update }) { //列表
       yield update({ tableLoading:true})
-      const result = yield call(services.GetSystemModelList, payload);
+      const result = yield call(services.ImportData, payload);
       if (result.IsSuccess) {
-        yield update({
-          tableTotal:result.Total,
-          tableDatas:result.Datas? result.Datas.rtnlist : [],
-          tableLoading:false,
-          maxNum:result.Datas.MaxNum,
-        })
+        message.success(result.Message)
+        callback()
       }else{
         message.error(result.Message)
         yield update({ tableLoading:false})

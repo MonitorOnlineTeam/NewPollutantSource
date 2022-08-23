@@ -23,7 +23,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 import  ParticleDrift from './components/ParticleDrift'
 import  ParticleMatterRefer from './components/ParticleMatterRefer'
-
+import  PointTree  from './components/PointTree'
 const namespace = 'hourCommissionTest'
 
 
@@ -50,18 +50,24 @@ const importClick = () =>{
 }
 
 
+const onSelect = () =>{
+
+}
+
 const Index = (props) => {
 
 
 
+  const [ drawerVisible, setDrawerVisible ] = useState(true)
 
   return (
-    <div  className={styles.hourCommissionTestSty}>
+    <div  className={styles.hourCommissionTestSty} style={{marginLeft:drawerVisible? 320 : 0}}>         
+      <PointTree onSelect={onSelect}  arrowClick={()=>{setDrawerVisible(!drawerVisible)}} drawerVisible={drawerVisible}  onClose={()=>{setDrawerVisible(false)}} />
     <BreadcrumbWrapper>
     <Card>
     <Tabs defaultActiveKey="1" tabPosition="bottom" >
         <TabPane tab="颗粒物漂移" key="1">
-         <ParticleDrift importClick={importClick}/>
+         <ParticleDrift importClick={importClick} onSelect={onSelect}/>
         </TabPane>
         <TabPane tab="颗粒物参比" key="2">
           <ParticleMatterRefer />

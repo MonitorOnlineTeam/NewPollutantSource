@@ -4,9 +4,9 @@
  * 创建时间：2022.08.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag,Upload , Popover, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined ,UploadOutlined} from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -21,13 +21,14 @@ import NumTips from '@/components/NumTips'
 import FormItem from 'antd/lib/form/FormItem';
 const { TextArea } = Input;
 const { Option } = Select;
-
+import config from '@/config'
 const namespace = 'hourCommissionTest'
 
 
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
+  importLoading: loading.effects[`${namespace}/importData`],
 
 })
 
@@ -53,7 +54,7 @@ const Index = (props) => {
 
   const [imortForm] = Form.useForm();
 
-  const ImportContent = () => <Form form={imortForm} name="imprts_advanced_search">
+  const importContent = () => <Form form={imortForm} name="imprts_advanced_search">
     <Form.Item name='rowVal'>
       <Row align='middle'>行：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几行读取' /></Row>
     </Form.Item>
@@ -61,10 +62,16 @@ const Index = (props) => {
       <Row align='middle'>列：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几列读取' /></Row>
     </Form.Item>
     <Form.Item>
-      <Row justify='end' ><Button type="primary" onClick={()=>props.importOk(imortForm.getFieldValue('rowVal'),imortForm.getFieldValue('colVal'))}>确定</Button></Row>
+      <Row>
+        <Upload {...props.uploadProps}  >
+        <Button  style={{width:'206px'}} icon={<UploadOutlined />}>导入</Button>
+        </Upload>
+      </Row>
+      <Button type="primary"  style={{width:'206px',marginTop:10}}  loading={props.importLoading}  onClick={()=>{props.importOK(imortForm.getFieldsValue())}} >确定</Button>
+      <Row>
+      </Row>
     </Form.Item>
   </Form>
-
 
 
 
@@ -74,11 +81,12 @@ const Index = (props) => {
     <div style={{ paddingBottom: 16 }}>
       {props.isImport && <Popover
         placement="right"
-        content={<ImportContent />}
+        content={importContent()}
         trigger="click"
         visible={props.importVisible}
-        onVisibleChange={props.importVisibleChange}
-      > <Button type="primary" style={{ marginRight: 10 }}>导入</Button></Popover>}
+        imortForm = {imortForm} 
+        onVisibleChange={(newVisible)=>{imortForm.resetFields(); props.importVisibleChange(newVisible)}}
+      >  <Button type="primary" style={{ marginRight: 10 }}>导入</Button></Popover>}
       <Button type="primary" style={{ marginRight: 10 }} onClick={props.temporarySave}>暂存</Button>
       <Button type="primary" style={{ marginRight: 10 }} onClick={props.submits}>提交</Button>
       <Button type="primary" style={{ marginRight: 10 }} onClick={props.clears}>清除</Button>

@@ -20,6 +20,7 @@ import Cookie from 'js-cookie';
 import BtnComponents from './BtnComponents'
 const { TextArea } = Input;
 const { Option } = Select;
+import config from '@/config'
 const namespace = 'hourCommissionTest'
 
 
@@ -40,10 +41,11 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        getSystemModelList: (payload) => { //列表
+        importData: (payload,callback) => { //导入
             dispatch({
-                type: `${namespace}/getSystemModelList`,
+                type: `${namespace}/importData`,
                 payload: payload,
+                callback:callback
             })
         },
     }
@@ -58,6 +60,8 @@ const Index = (props) => {
 
     const { tableDatas, tableTotal, tableLoading, } = props;
     const footData = [{evaluateTitle:'评价依据',evaluateData:'1111'}]
+
+    console.log(tableDatas)
     useEffect(() => {
 
     }, []);
@@ -123,6 +127,7 @@ const Index = (props) => {
                 {
                     title: '序号',
                     align: 'center',
+                    width:50,
                     render: (text, record, index) => {
                          return record;
                       }
@@ -279,39 +284,11 @@ const Index = (props) => {
         console.log('提交事件')
     }
     const clears = () => {
-        console.log('清除事件')
+    form.resetFields();
     }
     const del = () => {
         console.log('删除事件')
     }
-
-    const [importVisible,setImportVisible] = useState(false)
-    const importVisibleChange = (newVisible) => {
-        setImportVisible(newVisible);
-      };
-     const  importOk = async(rowVal,colVal)=>{
-        try {
-            const values = await form.validateFields();
-            const timeData = []
-            let i = 0;
-             Object.keys(values).map((item,index)=>{
-             if(/^time/g.test(item)){
-                 i++;
-                 if(i<=10){
-                    values['date0']&&form.getFieldValue(item)&&timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(item)).format('HH:mm:ss')}`)
-                 }else if(i>10&&i<=15){
-                    values['date5']&&form.getFieldValue(item)&&timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(item)).format('HH:mm:ss')}`)
-                 }else{
-                    values['date10']&&form.getFieldValue(item)&&timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(item)).format('HH:mm:ss')}`)
-
-                 }
-               }   
-             })
-             console.log(timeData)
-        } catch (errorInfo) {
-            console.log('Failed:', errorInfo); 
-        }
-     }
 
 
     const SearchComponents = () => {
@@ -383,10 +360,75 @@ const Index = (props) => {
             </Row>
         </div>
     }
+    const [fileList, setFileList] = useState([]);
+    const uploadProps = {
+        headers: {
+          Authorization: "Bearer " + Cookie.get(config.cookieName),
+        },
+        
+        beforeUpload: (file) => {
+            setFileList([...fileList, file]);
+            return false;
+          },
+        onRemove: (file) => {
+            const index = fileList.indexOf(file);
+            const newFileList = fileList.slice();
+            newFileList.splice(index, 1);
+            setFileList(newFileList);
+          },
+          fileList,
+      };
+      
+    const [importVisible,setImportVisible] = useState(false)
+    const importVisibleChange = (newVisible) => {
+        setImportVisible(newVisible);
+      };
+    const [timeArr ,setTimeArr] = useState(false)
+    const [rowColVal ,setRowColVal] = useState({})
+
+    const importOK = async(values)=>{
+        if(!values.rowVal || !values.colVal){
+            message.warning('请输入行数和列数')
+            setRowColVal(values) 
+            return;  
+         }
+         if(fileList.length<=0){
+            message.warning('请上传文件')
+            return;  
+         }
+         try {
+                const values = await form.validateFields();
+                const timeData = []
+                let i = 0;
+                 Object.keys(values).map((item,index)=>{
+                 if(/^time/g.test(item)){
+                     i++;
+                     if(i<=10){
+                         if(values['date0']&&form.getFieldValue(`timeStart${index}`)&&form.getFieldValue(`timeEnd${index}`)){
+                          timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${index}`)).format('HH:mm:ss') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${index}`)).format('HH:mm:ss')}`)     
+                         }
+                     }else if(i>10&&i<=15){
+                        if(values['date5']&&form.getFieldValue(`timeStart${index}`)&&form.getFieldValue(`timeEnd${index}`)){
+                            timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${index}`)).format('HH:mm:ss') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${index}`)).format('HH:mm:ss')}`)     
+                           }
+                     }else{
+                        if(values['date10']&&form.getFieldValue(`timeStart${index}`)&&form.getFieldValue(`timeEnd${index}`)){
+                            timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${index}`)).format('HH:mm:ss') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${index}`)).format('HH:mm:ss')}`)     
+                           }
+                     }
+                   }   
+                 })
+               setTimeArr(timeData)
+            } catch (errorInfo) {
+                console.log('Failed:', errorInfo);
+                message.warning('请输入完整的时间')  
+                return;  
+            }
+    }
 
     return (
         <div className={styles.particleMatterReferSty}>
-            <BtnComponents isImport importOk={importOk}  importVisible={importVisible}  temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
+            <BtnComponents isImport  importOK={importOK}  uploadProps={uploadProps}   importVisible={importVisible}  temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
             <Form
             form={form}
             name="advanced_search"
