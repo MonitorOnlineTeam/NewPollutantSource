@@ -437,6 +437,7 @@ const Index = (props) => {
                  formData.append('firstColumn', values.colVal);
                  formData.append('PollutantCode', '');
                  formData.append('TimeList', JSON.stringify(timeData));
+                 setUploading(true);
                  fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
                     method: 'POST',
                     body: formData,
@@ -445,11 +446,14 @@ const Index = (props) => {
          
                    },
                    
-                  })
-                    .then((res) =>res.json()).then((data) => {
-                      console.log(data)
-                      setFileList([]);
-                      message.success('导入成功');
+                  }).then((res) =>res.json()).then((data) => {
+                      setUploading(false);
+                       if(data.IsSuccess){
+                         setFileList([]);
+                         message.success('导入成功');
+                      }else{
+                        message.error(data.Message)
+                      }
                     }).catch(() => {
                       setUploading(false);
                       message.error('导入失败');
@@ -463,7 +467,7 @@ const Index = (props) => {
 
     return (
         <div className={styles.particleMatterReferSty}>
-            <BtnComponents isImport  importOK={importOK}  uploadProps={uploadProps}   importVisible={importVisible}  temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
+            <BtnComponents isImport importLoading={uploading}  importOK={importOK}  uploadProps={uploadProps}   importVisible={importVisible}  temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
             <Form
             form={form}
             name="advanced_search"
