@@ -107,7 +107,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker   defaultOpenValue={moment('00:00', 'HH:mm')} /></Form.Item>;
+                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker   defaultOpenValue={moment('00:00', 'HH:mm')} format = 'HH:mm'/></Form.Item>;
                      }
                 },
                 {
@@ -115,7 +115,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  defaultOpenValue={moment('00:00', 'HH:mm')} /></Form.Item>;
+                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  defaultOpenValue={moment('00:00', 'HH:mm')} format = 'HH:mm'/></Form.Item>;
                       }
                 },   
             ]
