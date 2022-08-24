@@ -25,6 +25,17 @@ export default Model.extend({
         yield update({ tableLoading:false})
       }
     },
-    
+    *getTestEntTree({ payload,callback }, { call, put, update }) { //企业树
+      yield update({ tableLoading:true})
+      const result = yield call(services.GetTestEntTree, payload);
+      if (result.IsSuccess) {
+        yield update({
+          treeList: result.Datas,
+        })
+        callback(result.Datas)
+      }else{
+        message.error(result.Message)
+      }
+    },  
   },
 })

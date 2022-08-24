@@ -63,11 +63,11 @@ const Index = (props) => {
     </Form.Item>
     <Form.Item>
       <Row>
-        <Upload {...props.uploadProps}  >
-        <Button  style={{width:'206px'}} icon={<UploadOutlined />}>导入</Button>
+        <Upload maxCount={1} {...props.uploadProps}  >
+        <Button  style={{width:'206px',marginTop:15}} icon={<UploadOutlined />}>导入</Button>
         </Upload>
       </Row>
-      <Button type="primary"  style={{width:'206px',marginTop:10}}  loading={props.importLoading}  onClick={()=>{props.importOK(imortForm.getFieldsValue())}} >确定</Button>
+      <Button type="primary"  style={{width:'206px',marginTop:8}}  loading={props.importLoading}  onClick={()=>{props.importOK(imortForm.getFieldsValue())}} >确定</Button>
       <Row>
       </Row>
     </Form.Item>
@@ -85,6 +85,7 @@ const Index = (props) => {
         trigger="click"
         visible={props.importVisible}
         imortForm = {imortForm} 
+        overlayClassName={styles.popSty}
         onVisibleChange={(newVisible)=>{imortForm.resetFields(); props.importVisibleChange(newVisible)}}
       >  <Button type="primary" style={{ marginRight: 10 }}>导入</Button></Popover>}
       <Button type="primary" style={{ marginRight: 10 }} onClick={props.temporarySave}>暂存</Button>

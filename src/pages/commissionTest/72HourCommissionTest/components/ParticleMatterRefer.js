@@ -58,13 +58,13 @@ const Index = (props) => {
 
 
 
-    const { tableDatas, tableTotal, tableLoading, } = props;
+    const { pointId,tableDatas, tableTotal, tableLoading, } = props;
     const footData = [{evaluateTitle:'评价依据',evaluateData:'1111'}]
 
-    console.log(tableDatas)
+    
     useEffect(() => {
-
-    }, []);
+        console.log(pointId)
+    }, [pointId]);
     const disabledDate = (current) => {
         return current && current > moment().endOf('year') || current < moment().startOf('year');
       };
@@ -107,7 +107,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker   defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                       return <Form.Item name={`timeStart${index}`}   rules={[{ required: true, message:''}]}><TimePicker   defaultOpenValue={moment('00:00', 'HH:mm')} /></Form.Item>;
                      }
                 },
                 {
@@ -115,7 +115,7 @@ const Index = (props) => {
                     align: 'center',
                     width:140,
                     render: (text, record, index) => {
-                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /></Form.Item>;
+                        return <Form.Item name={`timeEnd${index}`} rules={[{ required: true,message:'' }]}><TimePicker  defaultOpenValue={moment('00:00', 'HH:mm')} /></Form.Item>;
                       }
                 },   
             ]
@@ -362,12 +362,12 @@ const Index = (props) => {
     }
     const [fileList, setFileList] = useState([]);
     const uploadProps = {
-        headers: {
-          Authorization: "Bearer " + Cookie.get(config.cookieName),
-        },
         
         beforeUpload: (file) => {
-            setFileList([...fileList, file]);
+            setFileList([]); 
+            setTimeout(()=>{
+                setFileList([file]);
+            })
             return false;
           },
         onRemove: (file) => {
@@ -383,13 +383,24 @@ const Index = (props) => {
     const importVisibleChange = (newVisible) => {
         setImportVisible(newVisible);
       };
-    const [timeArr ,setTimeArr] = useState(false)
-    const [rowColVal ,setRowColVal] = useState({})
 
+    const [ uploading, setUploading] = useState(false)
     const importOK = async(values)=>{
+        
+        fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
+            method: 'POST',
+            body: [],
+            headers: {
+             Authorization: "Bearer " + Cookie.get(config.cookieName),
+ 
+           },
+           
+          }).then(res=>res.json()).then(json=>{
+            console.log(json)
+          })
+    
         if(!values.rowVal || !values.colVal){
             message.warning('请输入行数和列数')
-            setRowColVal(values) 
             return;  
          }
          if(fileList.length<=0){
@@ -404,21 +415,45 @@ const Index = (props) => {
                  if(/^time/g.test(item)){
                      i++;
                      if(i<=10){
-                         if(values['date0']&&form.getFieldValue(`timeStart${index}`)&&form.getFieldValue(`timeEnd${index}`)){
-                          timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${index}`)).format('HH:mm:ss') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${index}`)).format('HH:mm:ss')}`)     
+                         if(values['date0']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
+                          timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`)     
                          }
                      }else if(i>10&&i<=15){
-                        if(values['date5']&&form.getFieldValue(`timeStart${index}`)&&form.getFieldValue(`timeEnd${index}`)){
-                            timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${index}`)).format('HH:mm:ss') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${index}`)).format('HH:mm:ss')}`)     
+                        if(values['date5']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
+                            timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`)     
                            }
                      }else{
-                        if(values['date10']&&form.getFieldValue(`timeStart${index}`)&&form.getFieldValue(`timeEnd${index}`)){
-                            timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${index}`)).format('HH:mm:ss') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${index}`)).format('HH:mm:ss')}`)     
+                        if(values['date10']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
+                            timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`)     
                            }
                      }
                    }   
                  })
-               setTimeArr(timeData)
+                 const formData = new FormData();
+                 fileList.forEach((file) => {
+                   formData.append('files', file);
+                 });
+                 formData.append('firstRow', values.rowVal);
+                 formData.append('firstColumn', values.colVal);
+                 formData.append('PollutantCode', '');
+                 formData.append('TimeList', JSON.stringify(timeData));
+                 fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                     Authorization: "Bearer " + Cookie.get(config.cookieName),
+         
+                   },
+                   
+                  })
+                    .then((res) =>res.json()).then((data) => {
+                      console.log(data)
+                      setFileList([]);
+                      message.success('导入成功');
+                    }).catch(() => {
+                      setUploading(false);
+                      message.error('导入失败');
+                    })
             } catch (errorInfo) {
                 console.log('Failed:', errorInfo);
                 message.warning('请输入完整的时间')  

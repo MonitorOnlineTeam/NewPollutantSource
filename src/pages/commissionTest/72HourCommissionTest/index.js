@@ -21,9 +21,10 @@ import NumTips from '@/components/NumTips'
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
+import PageLoading from '@/components/PageLoading'
 import  ParticleDrift from './components/ParticleDrift'
 import  ParticleMatterRefer from './components/ParticleMatterRefer'
-import  PointTree  from './components/PointTree'
+import  EntTree  from './components/EntTree'
 const namespace = 'hourCommissionTest'
 
 
@@ -45,14 +46,7 @@ const  dvaDispatch = (dispatch) => {
     },
   }
 }
-const importClick = () =>{
 
-}
-
-
-const onSelect = () =>{
-
-}
 
 const Index = (props) => {
 
@@ -60,17 +54,24 @@ const Index = (props) => {
 
   const [ drawerVisible, setDrawerVisible ] = useState(true)
 
+   
+  const [pointId,setPointId] = useState()
+  const selectedPoint = (key) =>{
+    console.log(key)
+    setPointId(key)
+  }
+
   return (
     <div  className={styles.hourCommissionTestSty} style={{marginLeft:drawerVisible? 320 : 0}}>         
-      <PointTree onSelect={onSelect}  arrowClick={()=>{setDrawerVisible(!drawerVisible)}} drawerVisible={drawerVisible}  onClose={()=>{setDrawerVisible(false)}} />
+      <EntTree selectedPoint={selectedPoint}   arrowClick={()=>{setDrawerVisible(!drawerVisible)}} drawerVisible={drawerVisible}  onClose={()=>{setDrawerVisible(false)}} />
     <BreadcrumbWrapper>
     <Card>
     <Tabs defaultActiveKey="1" tabPosition="bottom" >
         <TabPane tab="颗粒物漂移" key="1">
-         <ParticleDrift importClick={importClick} onSelect={onSelect}/>
+          {pointId?  <ParticleDrift   pointId={pointId}/> : <PageLoading/>}
         </TabPane>
         <TabPane tab="颗粒物参比" key="2">
-          <ParticleMatterRefer />
+          {pointId?  <ParticleMatterRefer   pointId={pointId}/> : <PageLoading/>}
         </TabPane>
         <TabPane tab="气态污染物漂移" key="3">
           Content of tab 3

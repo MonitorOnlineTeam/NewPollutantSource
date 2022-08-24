@@ -10,7 +10,7 @@ import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,CaretLeftFilled,Car
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
-import { DelIcon, DetailIcon, EditIcon,PointIcon } from '@/utils/icon'
+import { DelIcon, DetailIcon, EditIcon,PointIcon,EntIcon,BellIcon, GasIcon,WaterIcon,} from '@/utils/icon'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -30,7 +30,7 @@ const namespace = 'hourCommissionTest'
 
 const dvaPropsData =  ({ loading,hourCommissionTest,global }) => ({
   treeList:hourCommissionTest.treeList,
-  treeLoading:loading.effects[`${namespace}/addSystemModel`],
+  treeLoading:loading.effects[`${namespace}/getTestEntTree`],
 
 })
 
@@ -42,10 +42,11 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getEquipmentInfoList:(payload)=>{ //列表
+    getTestEntTree:(payload,callback)=>{ //企业树
       dispatch({
-        type: `${namespace}/getEquipmentInfoList`,
+        type: `${namespace}/getTestEntTree`,
         payload:payload,
+        callback:callback,
       })
     },
   }
@@ -57,33 +58,58 @@ const Index = (props) => {
 
 
   const  { treeList,treeLoading,} = props; 
+ 
+  const [defaultPointId,setDefaultPointId] = useState();
   useEffect(() => {
-
+   props.getTestEntTree({},(res)=>{
+     const dafaultPoint =  res[0]&&res[0].ChildList&&res[0].ChildList[0].PointId;
+      setDefaultPointId(dafaultPoint)
+      props.selectedPoint(dafaultPoint)
+   })
   },[]);
-
+  // 根绝污染物类型获取icon
+  const getPollutantIcon = (type, size) => {
+    switch (type) {
+      case '1':
+        return <a><WaterIcon style={{ fontSize: size }} /></a>
+      case '2':
+        return <a><GasIcon style={{ fontSize: size }} /></a>
+  }
+}
   
  const  treeLoop =(list,level = 1,)=>{
-    for (let i = 0; i < list.length; i ++) {
-        const key = list[i].ID;
+
+    if(list&&list[0]){
+
+     return list.map(item=>{
+        const key = level==1? undefined : item.PointId;
+
         return {
-          title:<div style={{display:'inline-block'}}> {list[i].ManufacturerName }</div>,
+          title:<div style={{display:'inline-block'}}> { level==1? item.EntName : item.PointName }</div>,
           key,
-          icon: level==1? <EntIcon  style={{color:'#1890ff'}}/> :  <PointIcon  style={{color:'#1890ff'}}/>,
-          children:treeLoop(list[i].children,level + 1 ,)
+          icon: level==1? <EntIcon  style={{color:'#1890ff',fontSize:16,}}/> : getPollutantIcon('2',16),
+          children:treeLoop(item.ChildList,level + 1 ,),
+          selectable:  level==1? false : true,
         };
-      }
+      })
+    }
  }
-  
   const treeDatas = treeLoop(treeList);
   const onValuesChange = (hangedValues, allValues) => {
       const values = form.getFieldsValue();
-
-    // if (Object.keys(hangedValues).join() == 'RegionCode') {
-    // }
+      props.getTestEntTree({...values})
   }
 
+
+  const onSelect = (selectedKeys) =>{
+   if(selectedKeys&&selectedKeys[0]){
+     props.selectedPoint(selectedKeys[0])
+   }
+  }
+ 
+
   return (
-    <div>
+    <div className={styles.hourCommissionTestSty} >
     <Drawer
           placement={'left'}
           closable={false}
@@ -97,7 +123,6 @@ const Index = (props) => {
           style={{
             marginTop: 64,
           }}
-          
         >
                 <Form
             form={form}
@@ -112,7 +137,8 @@ const Index = (props) => {
          </Form.Item>
          <Form.Item  name="Status">
          <Select placeholder='完成状态' allowClear>
-          <Option> </Option>
+            <Option value={1}>已完成</Option>
+            <Option value={2}>进行中</Option>
          </Select>
          </Form.Item>
          <Form.Item  name="EntName">
@@ -123,8 +149,8 @@ const Index = (props) => {
         <PageLoading />
          :
          <>
-        {treeList.length? 
-          <Tree selectedKeys={[]}  blockNode  showIcon  onSelect={props.onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
+        {treeList.length ? 
+          <Tree  defaultSelectedKeys={[defaultPointId]}   blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas} height={props.clientHeight - 64 - 20}  defaultExpandAll />
           :
         <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </>
