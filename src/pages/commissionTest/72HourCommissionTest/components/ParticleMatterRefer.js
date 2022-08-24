@@ -385,21 +385,10 @@ const Index = (props) => {
       };
 
     const [ uploading, setUploading] = useState(false)
-    const importOK = async(values)=>{
+    const importOK = async(value)=>{
         
-        fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
-            method: 'POST',
-            body: [],
-            headers: {
-             Authorization: "Bearer " + Cookie.get(config.cookieName),
- 
-           },
-           
-          }).then(res=>res.json()).then(json=>{
-            console.log(json)
-          })
     
-        if(!values.rowVal || !values.colVal){
+        if(!value.rowVal || !value.colVal){
             message.warning('请输入行数和列数')
             return;  
          }
@@ -433,8 +422,8 @@ const Index = (props) => {
                  fileList.forEach((file) => {
                    formData.append('files', file);
                  });
-                 formData.append('firstRow', values.rowVal);
-                 formData.append('firstColumn', values.colVal);
+                 formData.append('firstRow', value.rowVal);
+                 formData.append('firstColumn', value.colVal);
                  formData.append('PollutantCode', '');
                  formData.append('TimeList', JSON.stringify(timeData));
                  setUploading(true);
