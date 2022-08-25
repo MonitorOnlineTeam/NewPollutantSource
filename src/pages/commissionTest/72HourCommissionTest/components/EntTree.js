@@ -146,7 +146,7 @@ const Index = (props) => {
          </Form.Item>
          </Form>
          {treeLoading?
-        <PageLoading />
+        <PageLoading size='middle'/>
          :
          <>
         {treeList.length ? 

@@ -249,7 +249,7 @@ const Index = (props) => {
           SystemNameID: cemsVal,
         };
 
-        const item = record.type === 'add' ? { ...newData[index], key: cuid() } : { ...newData[index] }
+        const item = record.type === 'add' ? { ...newData[index], ID: cuid() } : { ...newData[index] }
         newData.splice(index, 1, { ...item, ...row, ...editRow });
         setSystemData(newData);
         setSystemEditingKey('');
@@ -277,7 +277,7 @@ const Index = (props) => {
           ManufactorName:row.EquipmentManufacturer,
           ManufactorID: deviceManufactorID, //设备厂家
         };
-        const item = record.type === 'add' ? { ...newData[index], key: cuid() } : { ...newData[index] }
+        const item = record.type === 'add' ? { ...newData[index], ID: cuid() } : { ...newData[index] }
         newData.splice(index, 1, { ...item, ...row, ...editRow });
       
         setDeviceData(newData);
@@ -304,7 +304,7 @@ const Index = (props) => {
           ManufactorID: refManufactorID,
         };
 
-        const item = record.type === 'add' ? { ...newData[index], key: cuid() } : { ...newData[index] }
+        const item = record.type === 'add' ? { ...newData[index], ID: cuid() } : { ...newData[index] }
         newData.splice(index, 1, { ...item, ...row, ...editRow });
         setReferInstruData(newData);
         setReferInstruEditingKey('');
@@ -830,10 +830,10 @@ const Index = (props) => {
   const onFinish3 = async (pageIndexs, pageSizes) => {  //查询 设备信息 除分页 每次查询页码重置为1
     try {
       const values = await form3.validateFields();
-      // const pollutantCode = formDevice.getFieldValue('PollutantCode');
+      const pollutantCode = formDevice.getFieldValue('PollutantCode');
       props.getTestEquipmentInfoList({
         ...values,
-        // PollutantCode: pollutantCode,
+        PollutantCode: pollutantCode,
         PageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex3,
         PageSize: pageSizes ? pageSizes : pageSize3
       })

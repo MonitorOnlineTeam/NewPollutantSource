@@ -4,7 +4,7 @@
  * 创建时间：2022.07.18
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Tag,Tabs, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin,   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form,Tag,Tabs,Empty, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin,   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -25,14 +25,15 @@ import PageLoading from '@/components/PageLoading'
 import  ParticleDrift from './components/ParticleDrift'
 import  ParticleMatterRefer from './components/ParticleMatterRefer'
 import  EntTree  from './components/EntTree'
+import Item from 'antd/lib/list/Item';
 const namespace = 'hourCommissionTest'
 
 
 
 
 const dvaPropsData =  ({ loading,hourCommissionTest,commissionTest, }) => ({
-  tableDatas:hourCommissionTest.tableDatas,
-  tableLoading:loading.effects[`${namespace}/addSystemModel`],
+  testRecordType:hourCommissionTest.testRecordType,
+  tabLoading:loading.effects[`${namespace}/get72TestRecordType`],
 
 })
 
@@ -44,13 +45,20 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    get72TestRecordType:(payload)=>{ 
+      dispatch({
+        type: `${namespace}/get72TestRecordType`,
+        payload:payload,
+      })
+    },
   }
 }
 
 
 const Index = (props) => {
 
-
+  useEffect(()=>{
+  },[])
 
   const [ drawerVisible, setDrawerVisible ] = useState(true)
 
@@ -59,42 +67,44 @@ const Index = (props) => {
   const selectedPoint = (key) =>{
     console.log(key)
     setPointId(key)
+    props.get72TestRecordType({
+      PointCode: key,
+      PollutantCode: 502,
+      RecordDate: "",
+      Flag: ""
+  })
   }
-
+  const tabContet = (key) =>{
+     switch(key){
+      case "1":
+      return <ParticleDrift   pointId={pointId}/>
+      case "2":
+      return <ParticleMatterRefer   pointId={pointId}/>
+      default:
+      return <ParticleDrift   pointId={pointId}/>
+     }
+  }
+  const {tabLoading,testRecordType,} = props;
+  console.log(testRecordType)
   return (
     <div  className={styles.hourCommissionTestSty} style={{marginLeft:drawerVisible? 320 : 0}}>         
       <EntTree selectedPoint={selectedPoint}   arrowClick={()=>{setDrawerVisible(!drawerVisible)}} drawerVisible={drawerVisible}  onClose={()=>{setDrawerVisible(false)}} />
     <BreadcrumbWrapper>
     <Card>
-    <Tabs defaultActiveKey="1" tabPosition="bottom" >
-        <TabPane tab="颗粒物漂移" key="1">
-          {pointId?  <ParticleDrift   pointId={pointId}/> : <PageLoading/>}
-        </TabPane>
-        <TabPane tab="颗粒物参比" key="2">
-          {pointId?  <ParticleMatterRefer   pointId={pointId}/> : <PageLoading/>}
-        </TabPane>
-        <TabPane tab="气态污染物漂移" key="3">
-          Content of tab 3
-        </TabPane>
-        <TabPane tab="气态准确度" key="4">
-          Content of tab 4
-        </TabPane>
-        <TabPane tab="响应时间及示值误差" key="5">
-          Content of tab 5
-        </TabPane>
-        <TabPane tab="流速" key="6">
-          Content of tab 6
-        </TabPane>
-        <TabPane tab="温度" key="7">
-          Content of tab 7
-        </TabPane>
-        <TabPane tab="湿度" key="8">
-          Content of tab 8
-        </TabPane>
-        <TabPane tab="监测报告" key="9">
-          Content of tab 9
-        </TabPane>
-      </Tabs>
+
+  {tabLoading?<PageLoading/> : <>{!testRecordType.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <Tabs defaultActiveKey="1" tabPosition="bottom" >
+      {testRecordType.map(item=>{
+      return <TabPane tab={item.RecordName} key={item.ID} >
+              {tabContet(item.ID)}
+             </TabPane>
+      })}
+   
+    
+     
+       </Tabs>}</>
+      
+      }
+
    </Card>
    </BreadcrumbWrapper>
    

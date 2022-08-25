@@ -29,8 +29,7 @@ const namespace = 'hourCommissionTest'
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     tableDatas: hourCommissionTest.particleMatterReferTableDatas,
     tableLoading: loading.effects[`${namespace}/addSystemModel`],
-    tableTotal: hourCommissionTest.tableTotal,
-
+    formLoading: loading.effects[`${namespace}/getPMReferenceCalibrationRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -48,6 +47,13 @@ const dvaDispatch = (dispatch) => {
                 callback:callback
             })
         },
+        getPMReferenceCalibrationRecord: (payload,callback) => { //参数回填
+            dispatch({
+                type: `${namespace}/getPMReferenceCalibrationRecord`,
+                payload: payload,
+                callback:callback
+            })
+        },
     }
 }
 const Index = (props) => {
@@ -58,12 +64,19 @@ const Index = (props) => {
 
 
 
-    const { pointId,tableDatas, tableTotal, tableLoading, } = props;
+    const { pointId,tableDatas, tableLoading,formLoading, } = props;
     const footData = [{evaluateTitle:'评价依据',evaluateData:'1111'}]
 
     
     useEffect(() => {
-        console.log(pointId)
+        props.getPMReferenceCalibrationRecord({
+            PointCode: pointId,
+            PollutantCode: 502,
+            RecordDate: "",
+            Flag: ""
+        },(res)=>{
+            
+        })
     }, [pointId]);
     const disabledDate = (current) => {
         return current && current > moment().endOf('year') || current < moment().startOf('year');
@@ -143,7 +156,7 @@ const Index = (props) => {
                     title: '颗粒物重(mg)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`weight${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`weight${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
                       }
                 },
                 {
@@ -152,7 +165,7 @@ const Index = (props) => {
                     key: 'SystemName',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`volume${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`volume${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
                       }
                 },
                 {
@@ -161,14 +174,14 @@ const Index = (props) => {
                     key: 'SystemName',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`benchmarkConcentra${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`BenchmarkDensity${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
                       }
                 },
                 {
                     title: '工况浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`workConcentra${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`workConcentra${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
                       }
                 },       
             ]
@@ -181,7 +194,7 @@ const Index = (props) => {
                     title: '测量值(无量纲)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`testVal${index}`}><Input  placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`testVal${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
                       }
                 },
             ]
@@ -400,7 +413,6 @@ const Index = (props) => {
                 let i = -1;
                 Object.keys(values).map((item,index)=>{
                     if(/^time/g.test(item)){
-                        debugger;
                         i++;
                         if(i<5){
                             if(values['date0']&&form.getFieldValue(`timeStart${i}`)&&form.getFieldValue(`timeEnd${i}`)){
@@ -438,13 +450,18 @@ const Index = (props) => {
                       setUploading(false);
                        if(data.IsSuccess){
                          setFileList([]);
+                         setImportVisible(false)
                          message.success('导入成功');
+                         console.log(data.Datas)
+                            data.Datas.map((item,index)=>{
+                                console.log(item,index)
+                                form.setFieldsValue({[`BenchmarkDensity${index}`]: item.value})
+                            })
                       }else{
                         message.error(data.Message)
                       }
                     }).catch(() => {
                       setUploading(false);
-                      message.error('导入失败');
                     })
             } catch (errorInfo) {
                 console.log('Failed:', errorInfo);

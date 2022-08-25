@@ -59,7 +59,7 @@ const Index = (props) => {
       <Row align='middle'>行：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几行读取' /></Row>
     </Form.Item>
     <Form.Item name='colVal'>
-      <Row align='middle'>列：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几列读取' /></Row>
+      <Row align='middle'>列：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='读取到第几列' /></Row>
     </Form.Item>
     <Form.Item>
       <Row>

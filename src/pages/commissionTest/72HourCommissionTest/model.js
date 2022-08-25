@@ -10,21 +10,11 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'hourCommissionTest',
   state: {
-    particleMatterReferTableDatas:[1,2,3,4,5,1,2,3,4,5,1,2,3,4,5],
     treeList:[],
+    testRecordType:[],
+    particleMatterReferTableDatas:[1,2,3,4,5,1,2,3,4,5,1,2,3,4,5],
   },
   effects: {
-    *importData({ payload,callback }, { call, put, update }) { //列表
-      yield update({ tableLoading:true})
-      const result = yield call(services.ImportData, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
-      }else{
-        message.error(result.Message)
-        yield update({ tableLoading:false})
-      }
-    },
     *getTestEntTree({ payload,callback }, { call, put, update }) { //企业树
       yield update({ tableLoading:true})
       const result = yield call(services.GetTestEntTree, payload);
@@ -36,6 +26,38 @@ export default Model.extend({
       }else{
         message.error(result.Message)
       }
-    },  
+    }, 
+    *get72TestRecordType({ payload,callback }, { call, put, update }) { //右侧tab栏
+      yield update({ tableLoading:true})
+      const result = yield call(services.Get72TestRecordType, payload);
+      if (result.IsSuccess) {
+        yield update({ testRecordType: result.Datas, })
+      }else{
+        message.error(result.Message)
+        yield update({  testRecordType:result.Datas?result.Datas:[],  })
+      }
+    },
+    /**颗粒物参比 */
+    *importData({ payload,callback }, { call, put, update }) { //导入
+      yield update({ tableLoading:true})
+      const result = yield call(services.ImportData, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+        yield update({ tableLoading:false})
+      }
+    },
+    *getPMReferenceCalibrationRecord({ payload,callback }, { call, put, update }) { //获取表单参数
+      yield update({ tableLoading:true})
+      const result = yield call(services.GetPMReferenceCalibrationRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
   },
 })
