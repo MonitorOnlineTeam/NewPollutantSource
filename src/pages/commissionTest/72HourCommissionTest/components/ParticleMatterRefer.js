@@ -386,8 +386,6 @@ const Index = (props) => {
 
     const [ uploading, setUploading] = useState(false)
     const importOK = async(value)=>{
-        
-    
         if(!value.rowVal || !value.colVal){
             message.warning('请输入行数和列数')
             return;  
@@ -399,26 +397,26 @@ const Index = (props) => {
          try {
                 const values = await form.validateFields();
                 const timeData = []
-                let i = 0;
-                 Object.keys(values).map((item,index)=>{
-                 if(/^time/g.test(item)){
-                     i++;
-                     if(i<=10){
-                         if(values['date0']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
-                          timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}|`)     
-                         }
-                     }else if(i>10&&i<=15){
-                        if(values['date5']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
-                            timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}|`)     
-                           }
-                     }else{
-                        if(values['date10']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
-                            i==15? timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`) : timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}|`)     
-                           }
-                     }
-                   }   
-                 })
-
+                let i = -1;
+                Object.keys(values).map((item,index)=>{
+                    if(/^time/g.test(item)){
+                        debugger;
+                        i++;
+                        if(i<5){
+                            if(values['date0']&&form.getFieldValue(`timeStart${i}`)&&form.getFieldValue(`timeEnd${i}`)){
+                             timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i}`)).format('HH:mm')}|`)     
+                            }
+                        }else if(i>5&&i<10){
+                           if(values['date5']&&form.getFieldValue(`timeStart${i}`)&&form.getFieldValue(`timeEnd${i}`)){
+                               timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i}`)).format('HH:mm') },${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i}`)).format('HH:mm')}|`)     
+                              }
+                        }else{
+                           if(values['date10']&&form.getFieldValue(`timeStart${i}`)&&form.getFieldValue(`timeEnd${i}`)){
+                               i==14? timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i}`)).format('HH:mm') },${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i}`)).format('HH:mm')}`) : timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i}`)).format('HH:mm') },${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i}`)).format('HH:mm')}|`)     
+                              }
+                        }
+                      }   
+                    })
                  const formData = new FormData();
                  fileList.forEach((file) => {
                    formData.append('files', file);

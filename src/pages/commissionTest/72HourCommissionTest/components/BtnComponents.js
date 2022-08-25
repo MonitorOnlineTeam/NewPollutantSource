@@ -28,7 +28,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-  importLoading: loading.effects[`${namespace}/importData`],
+
 
 })
 
