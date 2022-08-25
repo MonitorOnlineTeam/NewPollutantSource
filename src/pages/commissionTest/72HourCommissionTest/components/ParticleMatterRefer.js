@@ -405,19 +405,20 @@ const Index = (props) => {
                      i++;
                      if(i<=10){
                          if(values['date0']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
-                          timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`)     
+                          timeData.push(`${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}|`)     
                          }
                      }else if(i>10&&i<=15){
                         if(values['date5']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
-                            timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`)     
+                            timeData.push(`${moment(values['date5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}|`)     
                            }
                      }else{
                         if(values['date10']&&form.getFieldValue(`timeStart${i-1}`)&&form.getFieldValue(`timeEnd${i-1}`)){
-                            timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`)     
+                            i==15? timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}`) : timeData.push(`${moment(values['date10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeStart${i-1}`)).format('HH:mm') },${moment(values['date0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`timeEnd${i-1}`)).format('HH:mm')}|`)     
                            }
                      }
                    }   
                  })
+
                  const formData = new FormData();
                  fileList.forEach((file) => {
                    formData.append('files', file);
@@ -425,7 +426,7 @@ const Index = (props) => {
                  formData.append('firstRow', value.rowVal);
                  formData.append('firstColumn', value.colVal);
                  formData.append('PollutantCode', '');
-                 formData.append('TimeList', JSON.stringify(timeData));
+                 formData.append('TimeList', timeData.toString().replaceAll('|,','|'));
                  setUploading(true);
                  fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
                     method: 'POST',
