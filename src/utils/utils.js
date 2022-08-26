@@ -343,3 +343,10 @@ export  function getAttachmentArrDataSource (fileInfo) {
 
  
 }
+
+export function getSum(arr) { //求和
+  return arr&&arr.length? eval(arr.join("+")) : 0;
+}
+export function getAve(arr) { //求平均值
+  return arr&&arr.length? eval(arr.join("+")/arr.length) : 0;
+}

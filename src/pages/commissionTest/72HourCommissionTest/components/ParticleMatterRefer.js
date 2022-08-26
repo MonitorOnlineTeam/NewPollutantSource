@@ -11,6 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
+import { getSum,getAve } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -65,9 +66,11 @@ const Index = (props) => {
 
 
     const { pointId,tableDatas, tableLoading,formLoading, } = props;
-    const footData = [{evaluateTitle:'评价依据',evaluateData:'1111'}]
 
-    
+    const [footData,setFootData ] = useState([{evaluateTitle:'评价依据',evaluateData:''}])
+
+    const [recordName,setRecordName ] = useState()
+    const [recordType,setRecordType ] = useState()
     useEffect(() => {
         props.getPMReferenceCalibrationRecord({
             PointCode: pointId,
@@ -75,7 +78,18 @@ const Index = (props) => {
             RecordDate: "",
             Flag: ""
         },(res)=>{
-            
+            if(res){
+                setRecordName(res.RecordName)
+                setRecordType(res.RecordType)    
+            }
+            if(res&&res.MainTable){
+                form.setFieldsValue({
+                    ...res.MainTable 
+                })
+                setFootData([{...footData[0],evaluateData:res.MainTable.EvaluationBasis}])
+            }
+             
+
         })
     }, [pointId]);
     const disabledDate = (current) => {
@@ -194,14 +208,14 @@ const Index = (props) => {
                     title: '测量值(无量纲)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`testVal${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`MeasuredValue${index}`}><InputNumber  placeholder='请输入' /></Form.Item>;
                       }
                 },
             ]
         },
     ];
 
- const columns2  = [
+ const columns2  = ()=> [
     {
         title: '一元线性方程',
         align: 'center',
@@ -225,7 +239,7 @@ const Index = (props) => {
                 align: 'center',
                 render:(text,record,index)=>{
                     const obj = {
-                    children: <span>{'评价内容'}</span>,
+                    children: <span>{footData[0].evaluateData}</span>,
                         props: {colSpan:3},
                       };
                       return obj;
@@ -269,7 +283,7 @@ const Index = (props) => {
         ]
     },
  ]
- const columns3  = [
+ const columns3  = ()=> [
     {
         title: 'K系数',
         align: 'center',
@@ -281,7 +295,7 @@ const Index = (props) => {
         title: 'Y=Kx+b',
         align: 'center',
         render:(text,record,index)=>{
-            return '评价内容'
+            return <span>{footData[0].evaluateData}</span>
            }
     },
  ]
@@ -308,65 +322,65 @@ const Index = (props) => {
         return <div>
             <Row gutter={36}>
                 <Col span={8}>
-                <Form.Item label="当前大气压" name="ManufactorID">
+                <Form.Item label="当前大气压" name="Atmos">
                   <Input placeholder='请输入' allowClear suffix="Pa" />
                 </Form.Item>
                 </Col>
                 <Col span={8}>
-                <Form.Item label="空气过剩系数" name="SystemModel" >
-                    <Input placeholder='请输入'  allowClear />
+                <Form.Item label="空气过剩系数" name="AirCoefficient" >
+                    <InputNumber placeholder='请输入'  allowClear />
 
                 </Form.Item>
                 </Col>
                 <Col span={8}>
-                <Form.Item label="排放限值" name="Status"  >
+                <Form.Item label="排放限值" name="EmissionLimits"  >
                      <Input placeholder='请输入'  allowClear suffix="mg/m3" />
                 </Form.Item>
                 </Col>
             </Row>
-            <Row justify='center' style={{fontSize:16,fontWeight:'bold',paddingBottom:16}}>参比方法校准颗粒物CEMS(一元线性方程法)</Row>
+    <Row justify='center' style={{fontSize:16,fontWeight:'bold',paddingBottom:16}}>{recordName}</Row>
             <Row justify='center' className={styles['advanced_search_sty']}>
               <Col span={8}>
-                <Form.Item label="测试人员" name="ManufactorID">
+                <Form.Item label="测试人员" name="Tester">
                   <Input placeholder='请输入' allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                <Form.Item label="CEMS生产厂" name="SystemModel" >
+                <Form.Item label="CEMS生产厂" name="SysManufactorName" >
                     <Input placeholder='请输入'  allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={8}>
-                <Form.Item label="测试地点" name="ManufactorID">
+                <Form.Item label="测试地点" name="TestSite">
                   <Input placeholder='请输入' allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                <Form.Item label="CEMS型号、编号" name="SystemModel" >
+                <Form.Item label="CEMS型号、编号" name="SystemModelCEMSNum" >
                     <Input placeholder='请输入'  allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={8}>
-                <Form.Item label="测试位置" name="ManufactorID">
+                <Form.Item label="测试位置" name="TestLocation">
                   <Input placeholder='请输入' allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                <Form.Item label="参比仪器原理" name="SystemModel" >
+                <Form.Item label="参比仪器原理" name="Basis" >
                     <Input placeholder='请输入'  allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={8}>
-                <Form.Item label="参比仪器生产厂" name="ManufactorID">
+                <Form.Item label="参比仪器生产厂" name="ReferenceManufactorName">
                   <Input placeholder='请输入' allowClear />
                 </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                <Form.Item label="型号、编号" name="SystemModel" >
+                <Form.Item label="型号、编号" name="ParamModelNum" >
                     <Input placeholder='请输入'  allowClear />
                 </Form.Item>
                 </Col>
@@ -452,10 +466,9 @@ const Index = (props) => {
                          setFileList([]);
                          setImportVisible(false)
                          message.success('导入成功');
-                         console.log(data.Datas)
                             data.Datas.map((item,index)=>{
                                 console.log(item,index)
-                                form.setFieldsValue({[`BenchmarkDensity${index}`]: item.value})
+                                form.setFieldsValue({[`MeasuredValue${index}`]: item.value})
                             })
                       }else{
                         message.error(data.Message)
@@ -472,6 +485,7 @@ const Index = (props) => {
 
     return (
         <div className={styles.particleMatterReferSty}>
+             <Spin spinning={formLoading}>
             <BtnComponents isImport importLoading={uploading}  importOK={importOK}  uploadProps={uploadProps}   importVisible={importVisible}  temporarySave={temporarySave} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange}/>
             <Form
             form={form}
@@ -494,11 +508,12 @@ const Index = (props) => {
                 loading={tableLoading}
                 bordered
                 dataSource={footData}
-                columns={columns2}
+                columns={recordType==1? columns2() : columns3()}
                 pagination={false}
                 className={'particleMatterReferTable2'}
             />
             </Form>
+            </Spin>
         </div>
     );
 };

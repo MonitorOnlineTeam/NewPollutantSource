@@ -6,7 +6,7 @@
 import React, { useState,useEffect,Fragment  } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form,Tag, Typography,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Tree,Drawer,Empty,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,CheckCircleOutlined,CaretLeftFilled,CaretRightFilled, CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
+import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,SnippetsOutlined,CheckCircleOutlined,CaretLeftFilled,CaretRightFilled, CreditCardFilled,ProfileFilled,DatabaseFilled } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -40,6 +40,7 @@ const dvaPropsData =  ({ loading,pointMatchingSet,global }) => ({
   renewOrderLoading: loading.effects[`${namespace}/renewOrder`] || false,
   tableDetailLoading: loading.effects[`${namespace}/getStatePointList`],
   entStateList:pointMatchingSet.entStateList,
+  StateEntID:pointMatchingSet.StateEntID,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -123,7 +124,7 @@ const Index = (props) => {
   
 
 
-  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,tableDetailTotal,tableDetailLoading,exportLoading,entStateList,} = props; 
+  const  { tableDatas,tableTotal,tableLoading,tableDetailDatas,StateEntID,tableDetailTotal,tableDetailLoading,exportLoading,entStateList,} = props; 
   
 
   const isRecord =  props.match&&props.match.path ? false : true;
@@ -132,6 +133,7 @@ const Index = (props) => {
  useEffect(()=>{  
       onFinish();
       props.getEntStateList({})
+      props.updateState({StateEntID:undefined})
   },[])
   let columns = [
     {
@@ -197,7 +199,7 @@ const Index = (props) => {
       ellipsis:true,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="详情"> <a onClick={()=>{detail(record)}} ><DetailIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="匹配"> <a onClick={()=>{detail(record)}} ><SnippetsOutlined style={{fontSize:16}}/></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="删除匹配信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
                   <a><DelIcon/></a>
@@ -260,14 +262,17 @@ const detailCol = [{
 
   const [DGIMN,setDGIMN] = useState() 
   const [entName,setEntName] = useState()
+  const [pointName,setPointName] = useState()
   const [pollutantType,setPollutantType] = useState()
   const [ detailVisible, setDetailVisible,] = useState(false)
   const detail = async (record) => {
     setDetailVisible(true)
     form2.resetFields();
+    form2.setFieldsValue({ StateEntID: StateEntID })
     setDGIMN(record.DGIMN)
     setPollutantType(record.pollutantType)
     setEntName(record.entName)
+    setPointName(record.pointName)
     setPageIndex2(1)
     onFinish2(1,pageSize2,record.DGIMN)
   };
@@ -365,6 +370,7 @@ const onDetailValuesChange = (hangedValues, allValues) =>{
     if (!hangedValues.StateEntID) { //清空时 不走请求
       form2.setFieldsValue({ StateID: undefined })
       setPointList2([])
+      props.updateState({StateEntID:undefined})
       return;
     }
     setPointLoading2(true)
@@ -372,6 +378,7 @@ const onDetailValuesChange = (hangedValues, allValues) =>{
       setPointList2(res)
       setPointLoading2(false)
     })
+    props.updateState({StateEntID:hangedValues.StateEntID})
     form2.setFieldsValue({ StateID: undefined })
   }
 }
@@ -519,7 +526,7 @@ const modalSearchComponents = () =>{
    </BreadcrumbWrapper>
  }
       <Modal
-        title={`匹配：${entName}`}
+        title={`匹配：${entName} - ${pointName}`}
         visible={detailVisible}
         onCancel={()=>{setDetailVisible(false)}}
         destroyOnClose

@@ -21,6 +21,7 @@ export default Model.extend({
     tableDetailDatas: [],
     tableDetailTotal: 0,
     entStateList:[],
+    StateEntID:undefined,
   },
   effects: {
     *getPointStateRelationList({ payload, callback }, { call, put, update }) { //列表
