@@ -47,6 +47,7 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
+    
   }
 }
 const Index = (props) => {

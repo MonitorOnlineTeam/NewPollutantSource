@@ -274,7 +274,7 @@ const detailCol = [{
     setEntName(record.entName)
     setPointName(record.pointName)
     setPageIndex2(1)
-    onFinish2(1,pageSize2,record.DGIMN)
+    onFinish2(1,pageSize2,record.DGIMN,StateEntID)
   };
 
   const del =  (record) => {
@@ -316,11 +316,12 @@ const detailCol = [{
     }
   }
 
-  const onFinish2 = async (pageIndexs,pageSizes,mn) =>{
+  const onFinish2 = async (pageIndexs,pageSizes,mn,StateEntID) =>{
     try {
       const values = await form2.validateFields();
       props.getStatePointList({
         ...values,
+        StateEntID:StateEntID?StateEntID:values.StateEntID,
         DGIMN:mn?mn:DGIMN,
         PageIndex:pageIndexs,
         PageSize:pageSizes,

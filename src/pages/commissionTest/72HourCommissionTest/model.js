@@ -58,6 +58,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    *addPMReferenceCalibrationRecord({ payload,callback }, { call, put, update }) { //提交 暂存
+      yield update({ tableLoading:true})
+      const result = yield call(services.AddPMReferenceCalibrationRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      }else{
+        message.error(result.Message)
+      }
+    },
     
   },
 })

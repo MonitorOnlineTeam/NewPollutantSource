@@ -350,3 +350,27 @@ export function getSum(arr) { //求和
 export function getAve(arr) { //求平均值
   return arr&&arr.length? eval(arr.join("+")/arr.length) : 0;
 }
+
+export function numVerify (val,callback)  { //允许输入数字 负数 小数
+  const t = val.charAt(0)
+
+  if (!(/^([-])?\d+(\.[0-9]{1,2})?$/.test(val))) {
+      // 先把非数字的都替换掉，除了数字和.
+      val = val.replace(/[^\d.]/g, '')
+      // 必须保证第一个为数字而不是.
+      val = val.replace(/^\./g, '')
+      // 保证只有出现一个.-而没有多个.
+      val = val.replace(/\.{2,}/g, '.')
+      // 保证.只出现一次，-而不能出现两次以上
+      val = val.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.')
+
+      // val = val.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+      // 如果第一位是负号，则允许添加
+      if (t === '-') {
+          val = '-' + val
+      }
+      callback(val)
+  }
+
+
+}

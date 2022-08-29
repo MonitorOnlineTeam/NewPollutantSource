@@ -65,7 +65,6 @@ const Index = (props) => {
    
   const [pointId,setPointId] = useState()
   const selectedPoint = (key) =>{
-    console.log(key)
     setPointId(key)
     props.get72TestRecordType({
       PointCode: key,
@@ -85,7 +84,6 @@ const Index = (props) => {
      }
   }
   const {tabLoading,testRecordType,} = props;
-  console.log(testRecordType)
   return (
     <div  className={styles.hourCommissionTestSty} style={{marginLeft:drawerVisible? 320 : 0}}>         
       <EntTree selectedPoint={selectedPoint}   arrowClick={()=>{setDrawerVisible(!drawerVisible)}} drawerVisible={drawerVisible}  onClose={()=>{setDrawerVisible(false)}} />
