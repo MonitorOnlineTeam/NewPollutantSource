@@ -43,7 +43,16 @@
          min-width: 119px;
        }
      }
-
+     .ant-advanced-search-form2 :global{
+      .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
+       display: none;
+         }
+       .ant-form-item-explain{
+        text-align: left;
+        font-size: 12px;
+        position: absolute;
+      }
+       }
    }
    .particleMatterReferSty  :global{
     .particleMatterReferTable2{
@@ -54,16 +63,17 @@
         background-color: #fff;
       }
     }
-    .particleMatterReferTable1{
+     .particleMatterReferTable1{
+      .ant-form-item-explain{
+        text-align: left;
+        font-size: 12px;
+        position: absolute;
+      }
       .ant-form-item{
         margin-bottom: 0;
        }
-       .ant-form-item-explain{
-         text-align: left;
-         font-size: 12px;
-         position: absolute;
-       }
     }
+
    }
 
     .fromModal  :global {

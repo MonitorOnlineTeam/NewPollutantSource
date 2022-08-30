@@ -12,7 +12,7 @@ export default Model.extend({
   state: {
     treeList:[],
     testRecordType:[],
-    particleMatterReferTableDatas:[1,2,3,4,5,1,2,3,4,5,1,2,3,4,5],
+    particleMatterReferTableDatas:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
   },
   effects: {
     *getTestEntTree({ payload,callback }, { call, put, update }) { //企业树
@@ -62,7 +62,7 @@ export default Model.extend({
       yield update({ tableLoading:true})
       const result = yield call(services.AddPMReferenceCalibrationRecord, payload);
       if (result.IsSuccess) {
-        callback(result.Datas)
+        callback()
       }else{
         message.error(result.Message)
       }

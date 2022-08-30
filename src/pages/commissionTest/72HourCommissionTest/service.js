@@ -29,7 +29,7 @@ export async function GetPMReferenceCalibrationRecord(params) {
 }
 
 //提交 暂存
-export async function addPMReferenceCalibrationRecord(params) {
+export async function AddPMReferenceCalibrationRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddPMReferenceCalibrationRecord',params, null);
   return result;
 }

@@ -88,8 +88,8 @@ const Index = (props) => {
         overlayClassName={styles.popSty}
         onVisibleChange={(newVisible)=>{imortForm.resetFields(); props.importVisibleChange(newVisible)}}
       >  <Button type="primary" style={{ marginRight: 10 }}>导入</Button></Popover>}
-      <Button type="primary" style={{ marginRight: 10 }} onClick={()=>{props.submits(1)}}>暂存</Button>
-      <Button type="primary" style={{ marginRight: 10 }} onClick={()=>{props.submits(2)}}>提交</Button>
+      <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading1} onClick={()=>{props.submits(1)}}>暂存</Button>
+      <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading2} onClick={()=>{props.submits(2)}}>提交</Button>
       <Button type="primary" style={{ marginRight: 10 }} onClick={props.clears}>清除</Button>
       <Button type="primary" onClick={props.del}>删除</Button>
     </div>
