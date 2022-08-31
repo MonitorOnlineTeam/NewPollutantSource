@@ -371,6 +371,9 @@ export function numVerify (val,callback)  { //允许输入数字 负数 小数
       }
       callback(val)
   }
-
-
+}
+export function arrDistinctByProp(arr,prop){  //对象数组去重
+  return arr.filter(function(item,index,self){
+      return self.findIndex(el=>el[prop]==item[prop])===index
+  })
 }

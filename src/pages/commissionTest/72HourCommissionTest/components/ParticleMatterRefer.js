@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify, } from '@/utils/utils'
+import { getSum, getAve, interceptTwo, numVerify,arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -22,6 +22,7 @@ import BtnComponents from './BtnComponents'
 const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config'
+import { func } from 'prop-types';
 const namespace = 'hourCommissionTest'
 
 
@@ -248,10 +249,12 @@ const Index = (props) => {
         {
             title: 'CEMS法',
             align: 'center',
+            width:150,
             children: [
                 {
                     title: '测量值(无量纲)',
                     align: 'center',
+                    width:150,
                     render: (text, record, index) => {
                         return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
@@ -385,6 +388,10 @@ const Index = (props) => {
                             BenchmarkDensity: values[`BenchmarkDensity${index}`],
                             OperatingModeDensity: values[`OperatingModeDensity${index}`],
                             MeasuredValue: values[`MeasuredValue${index}`],
+                            O2values: values[`O2values${index}`],
+                            WDvalues: values[`WDvalues${index}`],
+                            SDvalues: values[`SDvalues${index}`],
+                            YLvalues: values[`YLvalues${index}`],
                         }
 
                     })
@@ -422,23 +429,16 @@ const Index = (props) => {
             const benchmarkDensity = interceptTwo(weight / volume * 1000)
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
             const atmos = form2.getFieldValue('Atmos')
-            if(importReturnData&&importReturnData[0]){
-              importReturnData.map((item, indexs) => {
-                 if(item.times){
-                   let i = item.times.split(",")[2]
-                   if(i == indexs){
-                    if (atmos && importReturnData && importReturnData[indexs]) {
-                        const operatingModeDensity = benchmarkDensity * (273 / 273 + importReturnData[indexs].WDvalues) * (form.getFieldValue('') + importReturnData[indexs].YLvalues / 101325) * (1 - importReturnData[index].values)
+ 
+                   const   MeasuredValue  = form.getFieldValue(`MeasuredValue${index}`),
+                           WDvalues  = form.getFieldValue(`WDvalues${index}`),
+                           YLvalues  = form.getFieldValue(`YLvalues${index}`);
+                    if (atmos && MeasuredValue && WDvalues&& YLvalues) {
+                        const operatingModeDensity = benchmarkDensity * (273 / 273 + mergeData[indexs].WDvalues) * (atmos + YLvalues / 101325) * (1 - MeasuredValue)
                         form.setFieldsValue({ [`OperatingModeDensity${indexs}`]: interceptTwo(operatingModeDensity) }) //工况浓度
                     }
-                  } 
-                }
-            })
-          }
-            // if (atmos && importReturnData && importReturnData[index]) {
-            //     const operatingModeDensity = benchmarkDensity * (273 / 273 + importReturnData[index].WDvalues) * (form.getFieldValue('') + importReturnData[index].YLvalues / 101325) * (1 - importReturnData[index].values)
-            //     form.setFieldsValue({ [`OperatingModeDensity${index}`]: interceptTwo(operatingModeDensity) }) //工况浓度
-            // }
+                  
+                
         }
     }
     const numCheck = (e, name) => {
@@ -520,6 +520,9 @@ const Index = (props) => {
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
+                <Form.Item  name="ID" hidden>
+                        <Input  />
+                    </Form.Item>
             </Row>
         </Form>
     }
@@ -547,7 +550,9 @@ const Index = (props) => {
         setImportVisible(newVisible);
     };
     const [uploading, setUploading] = useState(false)
-    const [importReturnData, setImportReturnData] = useState()
+    const [importReturnData, setImportReturnData] = useState([])
+    const [mergeData, setMergeData] = useState([])
+
     const importOK = (value) => {
         if (!value.rowVal || !value.colVal) {
             message.warning('请输入行数和列数')
@@ -569,7 +574,7 @@ const Index = (props) => {
                             if (values['CreateDate0'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
                                 timeData.push(`${moment(values['CreateDate0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
-                        } else if (i > 5 && i < 10) {
+                        } else if (i >= 5 && i < 10) {
                             if (values['CreateDate5'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
                                 timeData.push(`${moment(values['CreateDate5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
@@ -588,7 +593,6 @@ const Index = (props) => {
                 formData.append('firstColumn', value.colVal);
                 formData.append('PollutantCode', '');
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
-
                 setUploading(true);
                 fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
                     method: 'POST',
@@ -602,13 +606,46 @@ const Index = (props) => {
                     setUploading(false);
                     if (data.IsSuccess) {
                         setFileList([]);
-                        setImportVisible(false)
+                        // setImportVisible(false)
                         message.success('导入成功');
-                        setImportReturnData(data.Datas)
-                        data.Datas.map((item, index) => {
+                        let mergeData3=[];
+                        let resData = data.Datas? data.Datas :[];
+                        if(!importReturnData || !importReturnData[0]){//首次导入
+                            setImportReturnData(resData) 
+                            setMergeData(resData);
+                            mergeData3 = resData;
+                            return;
+                        }
+                        if(resData&&resData[0]){
+                            let mergeData = [],mergeData2=[];
+                               mergeData = importReturnData.map((item1) => {
+                                  return {...item1, ...resData.find((item2) => { // 合并key相同的对象
+                                    return item1['key'] === item2['key'] 
+                                  })}
+                                })
+                                mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
+                                    let list = resData.map(item2 => item2.key)
+
+                                    return list.indexOf(item1.key) == -1
+                                  })
+                                 mergeData3= mergeData.map((item1) => {
+                                    return {...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                      return item1['key'] === item2['key'] 
+                                    })}
+                                })
+    
+                        }  
+
+                        setImportReturnData(mergeData3) 
+                        setMergeData(mergeData3) 
+                        mergeData3.map((item, index) => {
                             if(item.times){
                               let i = item.times.split(",")[2]
                               form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
+                              form.setFieldsValue({ [`O2values${i}`]: item.O2values })
+                              form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
+                              form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
+                              form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
                             }
                         })
                     } else {
