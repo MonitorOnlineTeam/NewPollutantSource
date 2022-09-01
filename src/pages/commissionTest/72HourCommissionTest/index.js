@@ -22,10 +22,12 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 import PageLoading from '@/components/PageLoading'
+import  EntTree  from './components/EntTree'
 import  ParticleDrift from './components/ParticleDrift'
 import  ParticleMatterRefer from './components/ParticleMatterRefer'
-import  EntTree  from './components/EntTree'
-import Item from 'antd/lib/list/Item';
+import  CemsOxygenZero from './components/CemsOxygenZero'
+import  ReferenceOxygenZero from './components/ReferenceOxygenZero'
+
 const namespace = 'hourCommissionTest'
 
 
@@ -76,11 +78,15 @@ const Index = (props) => {
   const tabContet = (key) =>{
      switch(key){
       case "1":
-      return <ParticleDrift   pointId={pointId}/>
+        return <ParticleDrift   pointId={pointId}/>
       case "2":
-      return <ParticleMatterRefer   pointId={pointId}/>
+        return <ParticleMatterRefer   pointId={pointId}/>
+      case "3":
+        return <CemsOxygenZero   pointId={pointId}/>  
+      case "5":
+          return <ReferenceOxygenZero   pointId={pointId}/>  
       default:
-      return <ParticleDrift   pointId={pointId}/>
+        return <ParticleDrift   pointId={pointId}/>
      }
   }
   const {tabLoading,testRecordType,} = props;

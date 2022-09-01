@@ -55,11 +55,11 @@ const Index = (props) => {
   const [imortForm] = Form.useForm();
 
   const importContent = () => <Form form={imortForm} name="imprts_advanced_search">
-    <Form.Item name='rowVal'>
-      <Row align='middle'>行：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='从第几行读取' /></Row>
+    <Form.Item name='rowVal' label='行'>
+      <InputNumber mix={1}  style={{ width: '100%' }} placeholder='从第几行读取' />
     </Form.Item>
-    <Form.Item name='colVal'>
-      <Row align='middle'>列：<InputNumber mix={1}  style={{ width: 'calc(100% - 28px)' }} placeholder='读取到第几列' /></Row>
+    <Form.Item name='colVal' label='列'>
+      <InputNumber mix={1}  style={{width: '100%'  }} placeholder='读取到第几列' />
     </Form.Item>
     <Form.Item>
       <Row>
@@ -67,7 +67,7 @@ const Index = (props) => {
         <Button  style={{width:'206px',marginTop:15}} icon={<UploadOutlined />}>导入</Button>
         </Upload>
       </Row>
-      <Button type="primary"  style={{width:'206px',marginTop:8}}  loading={props.importLoading}  onClick={()=>{props.importOK(imortForm.getFieldsValue())}} >确定</Button>
+      <Button type="primary"  style={{width:'100%',marginTop:8}}  loading={props.importLoading}  onClick={()=>{props.importOK(imortForm.getFieldsValue())}} >确定</Button>
       <Row>
       </Row>
     </Form.Item>

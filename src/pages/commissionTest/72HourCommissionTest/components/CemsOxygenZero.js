@@ -168,7 +168,7 @@ const Index = (props) => {
             }
         },
         {
-            title: '时间(时、分)',
+            title: '时间',
             align: 'center',
             children: [
                 {
@@ -189,10 +189,6 @@ const Index = (props) => {
                 },
             ]
         },
-        {
-            title: <span>计量单位(mg/m3、mA、mV、不透明度%......)</span>,
-            align: 'center',
-            children: [
                 {
                     title: '零点读数',
                     align: 'center',
@@ -214,7 +210,7 @@ const Index = (props) => {
                     ]
                 },
                 {
-                    title: '零点漂移绝对误差',
+                    title: '零点读数变化',
                     align: 'center',
                     children: [
                         {
@@ -227,7 +223,7 @@ const Index = (props) => {
                     ]
                 },
                 {
-                    title: '调节零点否',
+                    title: '校准零点否',
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
@@ -239,7 +235,7 @@ const Index = (props) => {
                     }
                 },
                 {
-                    title: '上标校准读数',
+                    title: '量程读数',
                     align: 'center',
                     children: [
                         {
@@ -259,7 +255,7 @@ const Index = (props) => {
                     ]
                 },
                 {
-                    title: '量程漂移绝对误差',
+                    title: '量程读数变化',
                     align: 'center',
                     children: [
                         {
@@ -272,7 +268,7 @@ const Index = (props) => {
                     ]
                 },
                 {
-                    title: '调节跨度否',
+                    title: '校准量程否',
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
@@ -283,36 +279,11 @@ const Index = (props) => {
                         </Form.Item>;
                     }
                 },
-                {
-                    title: '清洁镜头否',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
-                                <Radio value="1">是</Radio>
-                                <Radio value="2">否</Radio>
-                            </Radio.Group>
-                        </Form.Item>;
-                    }
-                },
-            ]
-        },
-        {
-            title: '备注',
-            align: 'center',
-            width: 150,
-            render: (text, record, index) => {
-                return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <TextArea rows={1} placeholder="请输入"  />
-                    </Form.Item>;
-            }
-
-        },
     ];
 
     const columns2 = () => [
         {
-            title: '零点漂移绝对误差最大值',
+            title: '零点读数变化最大值',
             align: 'center',
             children: [
                 {
@@ -346,7 +317,7 @@ const Index = (props) => {
             ]
         },
         {
-            title: '跨度漂移绝对误差最大值',
+            title: '量程读数变化最大值',
             align: 'center',
             children: [
                 {
@@ -528,8 +499,8 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="量程校准值" name="Basis" >
-                        <Input placeholder='请输入' allowClear />
+                    <Form.Item label="量程校准气体浓度" name="Basis" >
+                        <InputNumber placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -549,7 +520,18 @@ const Index = (props) => {
                         </Form.Item>
                     </Row>
                 </Col>
-
+              
+                <Col span={8}>
+                    <Form.Item label="污染物名称" name="Basis" >
+                        <Input  disabled  />
+                    </Form.Item>
+                </Col>
+                <Col span={4}></Col>
+                <Col span={8}>
+                    <Form.Item label="计量单位" name="ReferenceManufactorName">
+                        <Input placeholder='请输入' allowClear />
+                    </Form.Item>
+                </Col>
                 <Form.Item name="ID" hidden>
                     <Input />
                 </Form.Item>
@@ -557,6 +539,28 @@ const Index = (props) => {
         </Form>
     
     };
+    const [ pollOptions ,setPollOptions ]= useState([
+        {
+          label: 'Apple',
+          value: 'Apple',
+        },
+        {
+          label: 'Pear',
+          value: 'Pear',
+        },
+        {
+          label: 'Orange',
+          value: 'Orange',
+        },
+      ]);
+      const [pollutantCode,setPollutantCode] = useState()
+      const onPollChange = ({ target: { value } }) => {
+        console.log('radio1 checked', value);
+        setPollutantCode(value)
+      };
+   const PollutantComponents = () =>{
+       return  <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange}/>
+   }
 
 
     const onValuesChange = (hangedValues, allValues) => {
@@ -565,6 +569,7 @@ const Index = (props) => {
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
                 <BtnComponents   saveLoading1={saveLoading1} saveLoading2={saveLoading2}   submits={submits} clears={clears} del={del} />
+                <PollutantComponents />
                 <Form
                     form={form}
                     name="advanced_search"

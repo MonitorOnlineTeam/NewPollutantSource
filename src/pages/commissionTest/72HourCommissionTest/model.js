@@ -67,6 +67,15 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    
+    *deletePMReferenceCalibrationRecord({ payload,callback }, { call, put, update }) { //删除
+      yield update({ tableLoading:true})
+      const result = yield call(services.DeletePMReferenceCalibrationRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      }else{
+        message.error(result.Message)
+      }
+    },
   },
 })

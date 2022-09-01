@@ -1,17 +1,17 @@
 /**
- * 功  能：颗粒物参比
+ * 功  能：参比方法评估气态污染物CEMS（含氧量）准确度
  * 创建人：jab
  * 创建时间：2022.08.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, TimePicker, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, TimePicker, Card, Popover, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify,arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -73,7 +73,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
@@ -103,34 +103,34 @@ const Index = (props) => {
                 form2.setFieldsValue({
                     ...res.MainTable
                 })
-                
-                if(res.ChildTable){
-                    const data  =[];
-                    res.ChildTable.map(item=>{
-                        if(item.ChildList){
-                            item.ChildList.map(item2=>{
+
+                if (res.ChildTable) {
+                    const data = [];
+                    res.ChildTable.map(item => {
+                        if (item.ChildList) {
+                            item.ChildList.map(item2 => {
                                 data.push(item2)
                             })
-                        }  
-                   })
-                   data.map(item=>{
-                    const index = item.Sort -1 ;
-                      form.setFieldsValue({
-                        [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
-                        [`BTime${index}`]: item.BTime&&moment(item.BTime),
-                        [`ETime${index}`]: item.ETime&&moment(item.ETime),
-                        [`MembraneNum${index}`]: item.MembraneNum,    
-                        [`PMWeight${index}`]: item.PMWeight,
-                        [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                        [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                        [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                        [`MeasuredValue${index}`]: item.MeasuredValue,
-                        [`O2values${index}`]: item.O2values,
-                        [`WDvalues${index}`]: item.WDvalues,
-                        [`SDvalues${index}`]: item.SDvalues,
-                        [`YLvalues${index}`]: item.YLvalues,
-                      })
-                   })
+                        }
+                    })
+                    data.map(item => {
+                        const index = item.Sort - 1;
+                        form.setFieldsValue({
+                            [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
+                            [`BTime${index}`]: item.BTime && moment(item.BTime),
+                            [`ETime${index}`]: item.ETime && moment(item.ETime),
+                            [`MembraneNum${index}`]: item.MembraneNum,
+                            [`PMWeight${index}`]: item.PMWeight,
+                            [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
+                            [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
+                            [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
+                            [`MeasuredValue${index}`]: item.MeasuredValue,
+                            [`O2values${index}`]: item.O2values,
+                            [`WDvalues${index}`]: item.WDvalues,
+                            [`SDvalues${index}`]: item.SDvalues,
+                            [`YLvalues${index}`]: item.YLvalues,
+                        })
+                    })
                 }
             }
 
@@ -205,147 +205,124 @@ const Index = (props) => {
                 },
             ]
         },
+
         {
-            title: '参比方法',
+            title: '参比方法测量值A',
             align: 'center',
-            children: [
-                {
-                    title: '序号',
-                    align: 'center',
-                    width: 50,
-                    render: (text, record, index) => {
-                        return record;
-                    }
-                },
-                {
-                    title: '滤筒/滤膜编号',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                    }
-                },
-                {
-                    title: '颗粒物重(mg)',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
-                    }
-                },
-                {
-                    title: '标况体积(NL)',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`BenchmarkVolume${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
-                    }
-                },
-                {
-                    title: '标杆浓度(mg/m3)',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
-                    }
-                },
-                {
-                    title: '工况浓度(mg/m3)',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`OperatingModeDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.001'  disabled placeholder='请输入' /></Form.Item>;
-                    }
-                },
-            ]
+            width: 50,
+            render: (text, record, index) => {
+                return record;
+            }
         },
         {
-            title: 'CEMS法',
+            title: 'CEMS测量值B',
             align: 'center',
-            width:150,
-            children: [
-                {
-                    title: '测量值(无量纲)',
-                    align: 'center',
-                    width:150,
-                    render: (text, record, index) => {
-                        return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled step='0.001' placeholder='请输入' /></Form.Item>;
-                    }
-                },
-            ]
+            render: (text, record, index) => {
+                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+            }
+        },
+        {
+            title: '相对误差=B-A',
+            align: 'center',
+            render: (text, record, index) => {
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
+            }
         },
     ];
 
     const columns2 = () => [
+
         {
-            title: '一元线性方程',
+            title: '标准气体',
+            align: 'center',
+        },
+        {
+            title: '名称',
+            align: 'center',
+            children: [{
+            title: <span>{111111111}</span>,
+                align: 'center',
+            }]
+
+        },
+        {
+            title: '保证值',
+            align: 'center',
+            children: [{
+            title: <span>{222222}</span>,
+            align: 'center',
+            }]
+
+        },
+
+        {
+
+            title: '参比方法测定结果',
             align: 'center',
             children: [
                 {
-                    title: '置信区间半宽',
+                    title: '采样前',
                     align: 'center',
-                    width:300,
-                    render: () => {
-                        return '评价依据'
-                    }
+                    children: [{
+                        title: <span>{3333}</span>,
+                        align: 'center',
+                        }]
+                },
+                {
+                    title: '采样后',
+                    align: 'center',
+                    children: [{
+                        title: <span>{4444}</span>,
+                        align: 'center',
+                        }]
+
                 },
 
             ]
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: '采样前后相对误差(%)',
             align: 'center',
-            children: [
-                {
-                    title: <span>{form.getFieldValue('ConfidenceHalfWidth')}</span>,
-                    align: 'center',
-                    render: (text, record, index) => {
-                        const obj = {
-                            children: <span>{form.getFieldValue('EvaluationBasis')}</span>,
-                            props: { colSpan: 3 },
-                        };
-                        return obj;
-                    }
-                },
+            children: [{
+                title: <span>{55555}</span>,
+                align: 'center',
+                }]
+
+        }
 
 
-            ]
-        },
-        {
-            title: '相关系数',
-            align: 'center',
-            children: [
-                {
-                    title: '允许区间半宽',
-                    width:300,
-                    align: 'center',
-                    render: (text, record, index) => {
-                        const obj = {
-                            props: { colSpan: 0 },
-                        };
-                        return obj;
-                    }
-                },
-            ]
-        },
-        {
-            title: <span>{form.getFieldValue('CorrelationCoefficient') }</span>,
-            align: 'center', 
-            children: [
-                {
-                    title: <span>{form.getFieldValue('AllowHalfWidth') }</span>,
-                    align: 'center',
-                    render: (text, record, index) => {
-                        const obj = {
-                            props: { colSpan: 0 },
-                        };
-                        return obj;
-                    }
-                },
 
-            ]
-        },
+
+
+
+
+        // {
+        //     title: <span>{form.getFieldValue('Equation')}</span>,
+        //     align: 'center',
+        //     children: [
+        //         {
+        //             title: <span>{form.getFieldValue('ConfidenceHalfWidth')}</span>,
+        //             align: 'center',
+        //             render: (text, record, index) => {
+        //                 const obj = {
+        //                     children: <span>{form.getFieldValue('EvaluationBasis')}</span>,
+        //                     props: { colSpan: 3 },
+        //                 };
+        //                 return obj;
+        //             }
+        //         },
+
+
+        //     ]
+        // },
+
+
     ]
     const columns3 = () => [
         {
             title: 'K系数',
             align: 'center',
-            width:300,
+            width: 300,
             render: (text, record, index) => {
                 return '评价'
             }
@@ -406,8 +383,8 @@ const Index = (props) => {
                         }
 
                     })
-                    props.addPMReferenceCalibrationRecord(data,()=>{
-                        type == 1? setSaveLoading1(false) : setSaveLoading2(false)
+                    props.addPMReferenceCalibrationRecord(data, () => {
+                        type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
                         initData(pointId)
                     })
                 }).catch((errorInfo) => {
@@ -432,8 +409,8 @@ const Index = (props) => {
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
-            ID:form.getFieldValue('ID'),
-        },()=>{
+            ID: form.getFieldValue('ID'),
+        }, () => {
             initData(pointId)
         })
     }
@@ -443,19 +420,20 @@ const Index = (props) => {
         const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
         if (weight && volume) {
 
-            const benchmarkDensity =  Number(interceptTwo(weight / volume * 1000))
+            const benchmarkDensity = Number(interceptTwo(weight / volume * 1000))
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
             const atmos = Number(form2.getFieldValue('Atmos'))
-                 
-                   const   SDvalues  = Number(form.getFieldValue(`SDvalues${index}`)),
-                           WDvalues  = Number( form.getFieldValue(`WDvalues${index}`)),
-                           YLvalues  = Number(form.getFieldValue(`YLvalues${index}`));
-                    if (atmos &&  SDvalues && WDvalues && YLvalues && benchmarkDensity) {
-                        const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
-                        form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
-                    }
-                  
-                
+
+            const SDvalues = Number(form.getFieldValue(`SDvalues${index}`)),
+                WDvalues = Number(form.getFieldValue(`WDvalues${index}`)),
+                YLvalues = Number(form.getFieldValue(`YLvalues${index}`));
+            console.log(atmos, SDvalues, WDvalues, YLvalues, benchmarkDensity)
+            if (atmos && SDvalues && WDvalues && YLvalues && benchmarkDensity) {
+                const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
+                form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
+            }
+
+
         }
     }
     const numCheck = (e, name) => {
@@ -486,7 +464,7 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="排放限值" name="EmissionLimits"  rules={[{ required: isReg, message: '' }]}>
+                    <Form.Item label="排放限值" name="EmissionLimits" rules={[{ required: isReg, message: '' }]}>
                         <Input placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
                     </Form.Item>
                 </Col>
@@ -522,7 +500,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="参比仪器原理" name="Basis" >
+                    <Form.Item label="CEMS原理" name="Basis" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -532,14 +510,32 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
+
                 <Col span={8}>
-                    <Form.Item label="型号、编号" name="ParamModelNum" >
+                    <Form.Item label="CEMS原理" name="ReferenceManufactorName">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
-                <Form.Item  name="ID" hidden>
-                        <Input  />
+
+                <Col span={8}>
+                    <Row justify='space-between'>
+                        <Form.Item label="测试日期" name="ParamModelNum" style={{ width: '50%' }} >
+                            <Input disabled placeholder='最小值' allowClear />
+                        </Form.Item>
+                        <Form.Item label="污染物名称" name="ParamModelNum" style={{ width: '50%' }} >
+                            <Input disabled placeholder='最大值' allowClear />
+                        </Form.Item>
+                    </Row>
+                </Col>
+                <Col span={4}></Col>
+                <Col span={8}>
+                    <Form.Item label="计量单位" name="ParamModelNum" >
+                        <Input placeholder='请输入' allowClear />
                     </Form.Item>
+                </Col>
+                <Form.Item name="ID" hidden>
+                    <Input />
+                </Form.Item>
             </Row>
         </Form>
     }
@@ -625,44 +621,48 @@ const Index = (props) => {
                         setFileList([]);
                         // setImportVisible(false)
                         message.success('导入成功');
-                        let mergeData3=[];
-                        let resData = data.Datas? data.Datas :[];
-                        if(!importReturnData || !importReturnData[0]){//首次导入
-                            setImportReturnData(resData) 
+                        let mergeData3 = [];
+                        let resData = data.Datas ? data.Datas : [];
+                        if (!importReturnData || !importReturnData[0]) {//首次导入
+                            setImportReturnData(resData)
                             setMergeData(resData);
                             mergeData3 = resData;
                         }
-                        if(resData&&resData[0]&&importReturnData&&importReturnData[0]){
-                            let mergeData = [],mergeData2=[];
-                               mergeData = importReturnData.map((item1) => {
-                                  return {...item1, ...resData.find((item2) => { // 合并key相同的对象
-                                    return item1['key'] === item2['key'] 
-                                  })}
-                                })
-                                mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
-                                    let list = resData.map(item2 => item2.key)
+                        if (resData && resData[0] && importReturnData && importReturnData[0]) {
+                            let mergeData = [], mergeData2 = [];
+                            mergeData = importReturnData.map((item1) => {
+                                return {
+                                    ...item1, ...resData.find((item2) => { // 合并key相同的对象
+                                        return item1['key'] === item2['key']
+                                    })
+                                }
+                            })
+                            mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
+                                let list = resData.map(item2 => item2.key)
 
-                                    return list.indexOf(item1.key) == -1
-                                  })
-                                 mergeData3= mergeData.map((item1) => {
-                                    return {...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
-                                      return item1['key'] === item2['key'] 
-                                    })}
-                                })
-    
-                        }  
+                                return list.indexOf(item1.key) == -1
+                            })
+                            mergeData3 = mergeData.map((item1) => {
+                                return {
+                                    ...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                        return item1['key'] === item2['key']
+                                    })
+                                }
+                            })
 
-                        setImportReturnData(mergeData3) 
-                        setMergeData(mergeData3) 
+                        }
+
+                        setImportReturnData(mergeData3)
+                        setMergeData(mergeData3)
                         console.log(mergeData3)
                         mergeData3.map((item, index) => {
-                            if(item.times){
-                              let i = item.times.split(",")[2]
-                              form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
-                              form.setFieldsValue({ [`O2values${i}`]: item.O2values })
-                              form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
-                              form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
-                              form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
+                            if (item.times) {
+                                let i = item.times.split(",")[2]
+                                form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
+                                form.setFieldsValue({ [`O2values${i}`]: item.O2values })
+                                form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
+                                form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
+                                form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
                             }
                         })
                     } else {
@@ -680,12 +680,68 @@ const Index = (props) => {
         })
 
     }
+    const [pollOptions, setPollOptions] = useState([
+        {
+            label: 'Apple',
+            value: 'Apple',
+        },
+        {
+            label: 'Pear',
+            value: 'Pear',
+        },
+        {
+            label: 'Orange',
+            value: 'Orange',
+        },
+    ]);
+    const [pollutantCode, setPollutantCode] = useState()
+    const onPollChange = ({ target: { value } }) => {
+        console.log('radio1 checked', value);
+        setPollutantCode(value)
+    };
+    const PollutantComponents = () => {
+        return <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange} />
+    }
+
+
+    const [addForm] = Form.useForm();
+    const [addVisible, setAddVisible] = useState(false)
+    const addContent = () => <Form form={addForm} name="imprts_advanced_search">
+        <Form.Item name='rowVal' label='测试日期'>
+            <DatePicker style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item name='colVal' label='开始时间'>
+            <TimePicker style={{ width: '100%' }} defaultOpenValue={moment('00:00', 'HH:mm')} format='HH:mm' />
+        </Form.Item>
+        <Form.Item name='colVal' label='数组组数'>
+            <InputNumber mix={1} style={{ width: '100%' }} placeholder='请输入' />
+        </Form.Item>
+        <Form.Item name='colVal' label='数组对时长'>
+            <InputNumber mix={1} style={{ width: '100%' }} placeholder='请输入' />
+        </Form.Item>
+        <Form.Item>
+            <Button type="primary" style={{ width: '100%', marginTop: 8 }} loading={props.importLoading} onClick={addSubmits} >确定</Button>
+        </Form.Item>
+    </Form>
+    const addSubmits = () => {
+
+    }
     const onValuesChange = (hangedValues, allValues) => {
     }
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
                 <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
+                <PollutantComponents />
+                <Popover
+                    placement="bottom"
+                    content={addContent()}
+                    trigger="click"
+                    visible={addVisible}
+                    overlayClassName={styles.popSty2}
+                    onVisibleChange={(newVisible) => { addForm.resetFields(); setAddVisible(newVisible) }}
+                >  <Button style={{ margin: '0 0 10px 10px' }} onClick={() => { }}>添加</Button></Popover>
+
                 <Form
                     form={form}
                     name="advanced_search"
@@ -707,10 +763,10 @@ const Index = (props) => {
                         size="small"
                         loading={tableLoading}
                         bordered
-                        dataSource={['评价依据']}
-                        columns={recordType == 1 ? columns2() : columns3()}
+                        dataSource={[]}
+                        columns={ columns2()}
                         pagination={false}
-                        className={'white-table-thead'}
+                        className={'white-table-thead hidden-tbody'}
                     />
                 </Form>
             </Spin>

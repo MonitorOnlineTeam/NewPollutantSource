@@ -33,4 +33,9 @@ export async function AddPMReferenceCalibrationRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddPMReferenceCalibrationRecord',params, null);
   return result;
 }
- 
+
+//删除
+export async function DeletePMReferenceCalibrationRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeletePMReferenceCalibrationRecord',params, null);
+  return result;
+}

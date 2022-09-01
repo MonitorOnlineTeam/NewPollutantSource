@@ -305,7 +305,7 @@ export function timeDifference(beginDates, endDates) {
 export  function interceptTwo(value){
   const data = value.toString();
   // data.indexOf(".") ==-1 是整数时  补零
-  const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.split(".")[1].length<=1? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
+  const result = data.indexOf(".") ==-1 ? `${value.toFixed(2)}` : data.split(".")[1].length<=2? `${value.toFixed(2)}` : data.substring(0,data.indexOf(".")+3)
   return result;
 }
 

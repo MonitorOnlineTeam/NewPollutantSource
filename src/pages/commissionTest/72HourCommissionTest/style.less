@@ -15,6 +15,25 @@
      .ant-tree .ant-tree-node-content-wrapper{
       padding: 0;
      }
+     .white-table-thead{
+      .ant-table.ant-table-bordered > .ant-table-container{
+        border-top: 0;
+      }
+      .ant-table-small .ant-table-thead > tr > th{
+        background-color: #fff;
+      }
+    }
+    .tableSty1{
+      .ant-form-item-explain{
+        text-align: left;
+        font-size: 12px;
+        position: absolute;
+      }
+      .ant-form-item{
+        margin-bottom: 0 !important;
+       }
+    }
+    
     }
     .popSty :global{
       .ant-upload-list{
@@ -25,8 +44,13 @@
       max-width: 207px;
     }
     }
-     //颗粒物漂移
-    .particleMatterReferSty {
+    .popSty2 :global{
+      .ant-form-item-label{
+        min-width: 84px;
+      }
+    }
+     
+    .totalContentSty {
 
      .ant-advanced-search-form  :global{
       .ant-form-item{
@@ -36,65 +60,24 @@
         width: 100%;
       }
      }
-   }
-   .particleMatterReferSty{
-      .advanced_search_sty :global{
-        .ant-form-item-label{
-         min-width: 119px;
-       }
+     .advanced_search_sty :global{
+      .ant-form-item-label{
+       min-width: 119px;
      }
-     .ant-advanced-search-form2 :global{
-      .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
-       display: none;
-         }
-       .ant-form-item-explain{
-        text-align: left;
-        font-size: 12px;
-        position: absolute;
-      }
-       }
    }
-   .particleMatterReferSty  :global{
-    .particleMatterReferTable2{
-      .ant-table.ant-table-bordered > .ant-table-container{
-        border-top: 0;
-      }
-      .ant-table-small .ant-table-thead > tr > th{
-        background-color: #fff;
-      }
-    }
-     .particleMatterReferTable1{
-      .ant-form-item-explain{
-        text-align: left;
-        font-size: 12px;
-        position: absolute;
-      }
-      .ant-form-item{
-        margin-bottom: 0;
+   .ant-advanced-search-form2 :global{
+    .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before{
+     display: none;
        }
+     .ant-form-item-explain{
+      text-align: left;
+      font-size: 12px;
+      position: absolute;
     }
-
+     }
    }
 
-    .fromModal  :global {
-      width:950px !important;
+
+
+   
      
-        .ant-form-item{
-          padding-left: 70px;
-        }
-        .ant-modal-body{
-          padding-right: calc(24px + 70px);
-        }
-        .ant-form-item{
-          margin-bottom: 20px;
-        }
-        .ant-input,.ant-select,.ant-picker,.ant-input-number{
-          width:100%;
-        }
-        .ant-form-item-label{
-          width:80px;
-        }
-        .ant-form-hidden{
-          display: none;
-        }
-    } 
