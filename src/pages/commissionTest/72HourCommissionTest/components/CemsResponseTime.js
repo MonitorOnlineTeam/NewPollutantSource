@@ -1,7 +1,7 @@
 /**
- * 功  能：气态污染物CEMS（含氧量）零点和量程漂移检测
+ * 功  能：气态污染物CEMS示值误差和系统响应时间检测
  * 创建人：jab
- * 创建时间：2022.09.01
+ * 创建时间：2022.09.02
  */
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, TimePicker, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
@@ -64,7 +64,7 @@ const Index = (props) => {
     const [form2] = Form.useForm();
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4]);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, 6, 7,]);
 
     const { pointId, tableLoading, formLoading, } = props;
 
@@ -160,195 +160,215 @@ const Index = (props) => {
 
     const columns = [
         {
-            title: '日期',
+            title: '检测日期',
             align: 'center',
             width: 140,
             render: (text, record, index) => {
-                return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="MM-DD" /></Form.Item>;
+                if (index == 0) {
+                    return {
+                        children: <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="MM-DD" /></Form.Item>,
+                        props: { rowSpan: 6 },
+                    };
+                } else if (index >= 1 && index < 6) {
+                    return {
+                        props: { rowSpan: 0 },
+                    };
+                } else {
+                    return '评价依据'
+                }
+
+            }
+
+        },
+        {
+            title: '标气名称',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 0) {
+                    return {
+                        children: <span>{pollutantName}</span>,
+                        props: { rowSpan: 6 },
+                    };
+                } else if (index >= 1 && index < 6) {
+                    return {
+                        props: { rowSpan: 0 },
+                    };
+                } else {
+                    return {
+                        children: <div>{6666666}</div>,
+                        props: { colSpan: 7 },
+                    };
+                }
+
+            }
+
+        },
+        {
+            title: '标准气体',
+            align: 'center',
+            colSpan: 2,
+            render: (text, record, index) => {
+                if (index == 6) {
+                    return { props: { colSpan: 0 }, };
+                } else if (index == 0) {
+                    return { children: '标称值', props: { colSpan: 2 }, };
+                } else if (index == 5) {
+                    return { children: '示值误差(%)', props: { colSpan: 2 }, };
+                } else if (index == 1) {
+                    return {
+                        children: '实测值', props: { rowSpan: 4, },
+                    }
+                } else if (index > 1 && index < 5) {
+                    return {
+                        children: '实测值', props: { rowSpan: 0, },
+                    }
+                }
+
+            }
+
+        },
+        {
+            title: '标准气体2',
+            align: 'center',
+            colSpan: 0,
+            render: (text, record, index) => {
+                if (index == 6 || index == 0 || index == 5) {
+                    return { props: { colSpan: 0 }, };
+                } else {
+                    return index == 4 ? '平均值' : index
+                }
+
+            }
+
+        },
+        {
+            title: '80-100%满量程标准气体',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 6) {
+                    return { props: { colSpan: 0 }, };
+                }
+                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+            }
+
+
+        },
+        {
+            title: '50-100%满量程标准气体',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 6) {
+                    return { props: { colSpan: 0 }, };
+                }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>;
             }
         },
         {
-            title: '时间',
+            title: '20-30%满量程标准气体',
             align: 'center',
-            children: [
-                {
-                    title: '开始',
-                    align: 'center',
-                    width: 140,
-                    render: (text, record, index) => {
-                        return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
-                    }
-                },
-                {
-                    title: '结束',
-                    align: 'center',
-                    width: 140,
-                    render: (text, record, index) => {
-                        return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
-                    }
-                },
-            ]
+            render: (text, record, index) => {
+                if (index == 6) {
+                    return { props: { colSpan: 0 }, };
+                }
+                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+            }
+
+
+
         },
-                {
-                    title: '零点读数',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '起始(Z0)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                        {
-                            title: '最终(Zi)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '零点读数变化',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '∆Z=Zi-Z0',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '校准零点否',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
-                                <Radio value="1">是</Radio>
-                                <Radio value="2">否</Radio>
-                            </Radio.Group>
-                        </Form.Item>;
-                    }
-                },
-                {
-                    title: '量程读数',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '起始(S0)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                        {
-                            title: '最终(Si)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '量程读数变化',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '∆S=Si-S0',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '校准量程否',
-                    align: 'center',
-                    render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
-                                <Radio value="1">是</Radio>
-                                <Radio value="2">否</Radio>
-                            </Radio.Group>
-                        </Form.Item>;
-                    }
-                },
+        {
+            title: '备注',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 6) {
+                    return { props: { colSpan: 0 }, };
+                }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <TextArea rows={1} />
+                </Form.Item>;
+            }
+        },
     ];
 
     const columns2 = () => [
         {
-            title: '零点读数变化最大值',
+            title: '检测日期',
             align: 'center',
-            children: [
-                {
-                    title: '零点漂移',
-                    align: 'center',
-                    width: 300,
-                    render: () => {
-                        return '评价依据'
-                    }
-                },
-
-            ]
+            render: (text, record, index) => {
+                return index == 3 ? '评价依据' : <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <DatePicker />
+                </Form.Item>
+            }
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: '标气名称',
             align: 'center',
-            children: [
-                {
-                    title: <span>{form.getFieldValue('ConfidenceHalfWidth')}</span>,
-                    align: 'center',
-                    render: (text, record, index) => {
-                        const obj = {
-                            children: <span>{form.getFieldValue('EvaluationBasis')}</span>,
-                            props: { colSpan: 3 },
-                        };
-                        return obj;
-                    }
-                },
-
-
-            ]
+            render: (text, record, index) => {
+                if (index == 3) { return { children: <span>{2332323}</span>, props: { colSpan: 6 }, }; }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>
+            }
         },
         {
-            title: '量程读数变化最大值',
+            title: '标称值',
             align: 'center',
-            children: [
-                {
-                    title: '跨度漂移',
-                    align: 'center',
-                    width: 300,
-                    render: (text, record, index) => {
-                        const obj = {
-                            props: { colSpan: 0 },
-                        };
-                        return obj;
-                    }
-                },
-            ]
+            render: (text, record, index) => {
+                if (index == 3) { return { props: { colSpan: 0 }, }; }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>
+            }
         },
         {
-            title: <span>{form.getFieldValue('CorrelationCoefficient')}</span>,
+            title: '管路传输时间(T1)',
             align: 'center',
-            children: [
-                {
-                    title: <span>{form.getFieldValue('AllowHalfWidth')}</span>,
-                    align: 'center',
-                    render: (text, record, index) => {
-                        const obj = {
-                            props: { colSpan: 0 },
-                        };
-                        return obj;
-                    }
-                },
-
-            ]
+            render: (text, record, index) => {
+                if (index == 3) { return { props: { colSpan: 0 }, }; }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>
+            }
+        },
+        {
+            title: 'CEMS显示值达到90%时的时间(T2)',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 3) { return { props: { colSpan: 0 }, }; }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>
+            }
+        },
+        {
+            title: '响应时间(T1+T2)',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 3) { return { props: { colSpan: 0 }, }; }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>
+            }
+        },
+        {
+            title: '平均值',
+            align: 'center',
+            render: (text, record, index) => {
+                if (index == 0) {
+                    return {
+                        children: <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                            <Input placeholder='请输入' disabled/>
+                        </Form.Item>, props: { rowSpan: 3 },
+                    };
+                }
+                if (index > 0 && index < 3) { return { props: { rowSpan: 0 }, }; }
+                if (index == 3) { return { props: { colSpan: 0 }, }; }
+                return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Input placeholder='请输入' />
+                </Form.Item>
+            }
         },
     ]
 
@@ -499,12 +519,12 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="量程校准气体浓度" name="Basis" >
+                    <Form.Item label="CEMS原理" name="Basis" >
                         <InputNumber placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="ReferenceManufactorName">
+                    <Form.Item label="计量单位" name="ReferenceManufactorName">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -520,47 +540,46 @@ const Index = (props) => {
                         </Form.Item>
                     </Row>
                 </Col>
-              
+
                 <Col span={8}>
                     <Form.Item label="污染物名称" name="Basis" >
-                        <Input  disabled  />
+                        <Input disabled />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
-                <Col span={8}>
-                    <Form.Item label="计量单位" name="ReferenceManufactorName">
-                        <Input placeholder='请输入' allowClear />
-                    </Form.Item>
-                </Col>
+                <Col span={8}></Col>
                 <Form.Item name="ID" hidden>
                     <Input />
                 </Form.Item>
             </Row>
         </Form>
-    
+
     };
-    const [ pollOptions ,setPollOptions ]= useState([
+    const [pollOptions, setPollOptions] = useState([
         {
-          label: 'Apple',
-          value: 'Apple',
+            label: 'Apple',
+            value: 'Apple',
         },
         {
-          label: 'Pear',
-          value: 'Pear',
+            label: 'Pear',
+            value: 'Pear',
         },
         {
-          label: 'Orange',
-          value: 'Orange',
+            label: 'Orange',
+            value: 'Orange',
         },
-      ]);
-      const [pollutantCode,setPollutantCode] = useState()
-      const onPollChange = ({ target: { value } }) => {
+    ]);
+    const [pollutantCode, setPollutantCode] = useState()
+    const [pollutantName, setPollutantName] = useState()
+
+    const onPollChange = ({ target: { value }, option }) => {
         console.log('radio1 checked', value);
         setPollutantCode(value)
-      };
-   const PollutantComponents = () =>{
-       return  <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange}/>
-   }
+        // setPollutantName
+    };
+    const PollutantComponents = () => {
+        return <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange} />
+    }
 
 
     const onValuesChange = (hangedValues, allValues) => {
@@ -568,7 +587,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents   saveLoading1={saveLoading1} saveLoading2={saveLoading2}   submits={submits} clears={clears} del={del} />
+                <BtnComponents saveLoading1={saveLoading1} saveLoading2={saveLoading2} submits={submits} clears={clears} del={del} />
                 <PollutantComponents />
                 <Form
                     form={form}
@@ -591,10 +610,10 @@ const Index = (props) => {
                         size="small"
                         loading={tableLoading}
                         bordered
-                        dataSource={['评价依据']}
+                        dataSource={[1, 2, 3, 4]}
                         columns={columns2()}
                         pagination={false}
-                        className={'white-table-thead'}
+                        className={'tableSty1'}
                     />
                 </Form>
             </Spin>
