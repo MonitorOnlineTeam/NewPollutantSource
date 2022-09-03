@@ -15,6 +15,11 @@ export async function Get72TestRecordType(params) {
   return result;
 }
 
+export async function Get72TestRecordPollutant(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/Get72TestRecordPollutant',params, null);
+  return result;
+}
+
 /****颗粒物参比****/
 
 //导入
@@ -37,5 +42,38 @@ export async function AddPMReferenceCalibrationRecord(params) {
 //删除
 export async function DeletePMReferenceCalibrationRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeletePMReferenceCalibrationRecord',params, null);
+  return result;
+}
+
+
+/*** 参比方法评估气态污染物CEMS（含氧量）准确度 ***/
+
+
+//根据污染物获取时间
+export async function GetTimesListByPollutant(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTimesListByPollutant',params, null);
+  return result;
+}
+//获取
+export async function GetGasReferenceMethodAccuracyRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasReferenceMethodAccuracyRecord',params, null);
+  return result;
+}
+
+//初始添加
+export async function AddGasReferenceMethodAccuracyInfo(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasReferenceMethodAccuracyInfo',params, null);
+  return result;
+}
+
+//添加或修改
+export async function AddGasReferenceMethodAccuracyRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasReferenceMethodAccuracyRecord',params, null);
+  return result;
+}
+
+//删除
+export async function DeleteGasReferenceMethodAccuracyRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasReferenceMethodAccuracyRecord',params, null);
   return result;
 }

@@ -4,7 +4,7 @@
  * 创建时间：2022.08.11
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, TimePicker, Card, Popover, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, TimePicker, Empty, Card, Popover, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -29,7 +29,10 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-    formLoading: loading.effects[`${namespace}/getPMReferenceCalibrationRecord`],
+    pollutantLoading: loading.effects[`${namespace}/get72TestRecordPollutant`],
+    timeLoading: loading.effects[`${namespace}/getTimesListByPollutant`],
+    formLoading: loading.effects[`${namespace}/getGasReferenceMethodAccuracyRecord`],
+
 })
 
 const dvaDispatch = (dispatch) => {
@@ -40,34 +43,49 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        importData: (payload, callback) => { //导入
+        get72TestRecordPollutant: (payload, callback) => { //获取污染物
             dispatch({
-                type: `${namespace}/importData`,
+                type: `${namespace}/get72TestRecordPollutant`,
                 payload: payload,
                 callback: callback
             })
         },
-        getPMReferenceCalibrationRecord: (payload, callback) => { //参数回填
+        getTimesListByPollutant: (payload, callback) => { //根据污染物获取时间
             dispatch({
-                type: `${namespace}/getPMReferenceCalibrationRecord`,
+                type: `${namespace}/getTimesListByPollutant`,
                 payload: payload,
                 callback: callback
             })
         },
-        addPMReferenceCalibrationRecord: (payload, callback) => { //保存 暂存
+        getGasReferenceMethodAccuracyRecord: (payload, callback) => { //获取
             dispatch({
-                type: `${namespace}/addPMReferenceCalibrationRecord`,
+                type: `${namespace}/getGasReferenceMethodAccuracyRecord`,
                 payload: payload,
                 callback: callback
             })
         },
-        deletePMReferenceCalibrationRecord: (payload, callback) => { //删除
+        addGasReferenceMethodAccuracyInfo: (payload, callback) => { //初始添加
             dispatch({
-                type: `${namespace}/deletePMReferenceCalibrationRecord`,
+                type: `${namespace}/addGasReferenceMethodAccuracyInfo`,
                 payload: payload,
                 callback: callback
             })
         },
+        addGasReferenceMethodAccuracyRecord: (payload, callback) => { //添加或修改 保存、暂存
+            dispatch({
+                type: `${namespace}/addGasReferenceMethodAccuracyRecord`,
+                payload: payload,
+                callback: callback
+            })
+        },
+        deleteGasReferenceMethodAccuracyRecord: (payload, callback) => { //删除
+            dispatch({
+                type: `${namespace}/deleteGasReferenceMethodAccuracyRecord`,
+                payload: payload,
+                callback: callback
+            })
+        },
+
     }
 }
 const Index = (props) => {
@@ -80,18 +98,49 @@ const Index = (props) => {
 
 
 
-    const { pointId, tableLoading, formLoading, } = props;
+    const { pointId, pollutantLoading,timeLoading,formLoading, } = props;
 
 
     const [recordName, setRecordName] = useState()
     const [recordType, setRecordType] = useState()
+
+
+    const [pollOptions, setPollOptions] = useState([]);
+    const [pollutantCode, setPollutantCode] = useState()
+
+
+    const [dateOptions, setDateOptions] = useState([]);
+    const [selectDate, setSelectDate] = useState()
+
     useEffect(() => {
-        initData(pointId)
-    }, [pointId]);
-    const initData = (pointId) => {
-        props.getPMReferenceCalibrationRecord({
+        props.get72TestRecordPollutant({
             PointCode: pointId,
-            PollutantCode: 502,
+            Flag: 1,
+        }, (pollData, defaultPollCode) => {
+            if (pollData[0]) {
+                setPollOptions(pollData)
+                setPollutantCode(defaultPollCode)
+                getTimeFormData(defaultPollCode);
+            }
+
+        })
+    }, [pointId]);
+
+    const getTimeFormData = (pollCode) =>{
+        props.getTimesListByPollutant({
+            PointCode: pointId,
+            PollutantCode: pollCode,
+        }, (dateData, defaultDateCode) => {
+            if (dateData[0]) {
+                setDateOptions(dateData)
+                selectDate(defaultDateCode)
+            }
+        })
+    }
+    const getFormData = (pointId) => {
+        props.getGasReferenceMethodAccuracyRecord({
+            PointCode: pointId,
+            PollutantCode: pollutantCode,
             RecordDate: "",
             Flag: ""
         }, (res) => {
@@ -168,25 +217,25 @@ const Index = (props) => {
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
-    const renderContent = (value,index) => {
+    const renderContent = (value, index) => {
         const obj = {
-          children: value,
-          props: {},
+            children: value,
+            props: {},
         };
         if (index >= 10) {
-          obj.props.colSpan = 0;
+            obj.props.colSpan = 0;
         }
         return obj;
-      };
+    };
     const columns = [
         {
             title: '日期',
             align: 'center',
             width: 150,
             render: (text, record, index) => {
-                if(index < 10){
+                if (index < 10) {
                     return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="MM-DD" /></Form.Item>;
-                }else{
+                } else {
                     let text = '';
                     switch (index) {
                         case 10:
@@ -202,7 +251,7 @@ const Index = (props) => {
                             text = '相对准确值'
                             break;
                         case 14:
-                            text =  '评价依据'
+                            text = '评价依据'
                             break;
                     }
                     return {
@@ -222,16 +271,16 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        return  renderContent(<Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>,index)
-                        }  
+                        return renderContent(<Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>, index)
+                    }
                 },
                 {
                     title: '结束',
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        return  renderContent(<Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>,index)
-     
+                        return renderContent(<Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>, index)
+
                     }
                 },
             ]
@@ -241,51 +290,51 @@ const Index = (props) => {
             title: '参比方法测量值A',
             align: 'center',
             render: (text, record, index) => {
-                  if(index<10){
-                   return  <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
-                  }else if(index==10){
-                     return <span> 2222 </span>
-                  } else if (index >= 11) {
-                    return   {
-                        children:<span> 11111 </span>,
-                        props: {colSpan:3},
-                      };
-                  }
+                if (index < 10) {
+                    return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                } else if (index == 10) {
+                    return <span> 2222 </span>
+                } else if (index >= 11) {
+                    return {
+                        children: <span> 11111 </span>,
+                        props: { colSpan: 3 },
+                    };
+                }
 
-            }  
-         },
+            }
+        },
         {
             title: 'CEMS测量值B',
             align: 'center',
             render: (text, record, index) => {
-                if(index<10){
-                    return  <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
-                   }else if(index==10){
+                if (index < 10) {
+                    return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                } else if (index == 10) {
                     return <span> 3333 </span>
-                   } else if (index >= 11) {
-                     return   {
-                         props: {colSpan:0},
-                       };
-                   }
+                } else if (index >= 11) {
+                    return {
+                        props: { colSpan: 0 },
+                    };
+                }
 
-            }  
+            }
         },
-        
+
         {
             title: '相对误差=B-A',
             align: 'center',
             render: (text, record, index) => {
-                if(index<10){
-                    return  <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
-                   }else if(index==10){
+                if (index < 10) {
+                    return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                } else if (index == 10) {
                     return <span> 4444 </span>
-                 } else if (index >= 11) {
-                     return   {
-                         props: {colSpan:0},
-                       };
-                   }
+                } else if (index >= 11) {
+                    return {
+                        props: { colSpan: 0 },
+                    };
+                }
 
-            } 
+            }
         },
     ];
 
@@ -299,7 +348,7 @@ const Index = (props) => {
             title: '名称',
             align: 'center',
             children: [{
-            title: <span>{111111111}</span>,
+                title: <span>{111111111}</span>,
                 align: 'center',
             }]
 
@@ -308,8 +357,8 @@ const Index = (props) => {
             title: '保证值',
             align: 'center',
             children: [{
-            title: <span>{222222}</span>,
-            align: 'center',
+                title: <span>{222222}</span>,
+                align: 'center',
             }]
 
         },
@@ -325,7 +374,7 @@ const Index = (props) => {
                     children: [{
                         title: <span>{3333}</span>,
                         align: 'center',
-                        }]
+                    }]
                 },
                 {
                     title: '采样后',
@@ -333,7 +382,7 @@ const Index = (props) => {
                     children: [{
                         title: <span>{4444}</span>,
                         align: 'center',
-                        }]
+                    }]
 
                 },
 
@@ -345,7 +394,7 @@ const Index = (props) => {
             children: [{
                 title: <span>{55555}</span>,
                 align: 'center',
-                }]
+            }]
 
         }
 
@@ -355,7 +404,7 @@ const Index = (props) => {
 
 
 
- 
+
 
 
     ]
@@ -721,21 +770,7 @@ const Index = (props) => {
         })
 
     }
-    const [pollOptions, setPollOptions] = useState([
-        {
-            label: 'Apple',
-            value: 'Apple',
-        },
-        {
-            label: 'Pear',
-            value: 'Pear',
-        },
-        {
-            label: 'Orange',
-            value: 'Orange',
-        },
-    ]);
-    const [pollutantCode, setPollutantCode] = useState()
+
     const onPollChange = ({ target: { value } }) => {
         console.log('radio1 checked', value);
         setPollutantCode(value)
@@ -745,96 +780,116 @@ const Index = (props) => {
     }
 
 
-    const [dateOptions, setDateOptions] = useState([
-        {
-            label: 'Apple',
-            value: 'Apple',
-        },
-        {
-            label: 'Pear',
-            value: 'Pear',
-        },
-        {
-            label: 'Orange',
-            value: 'Orange',
-        },
-    ]);
-    const [selectDate, setSelectDate] = useState()
     const onSelectDateChange = ({ target: { value } }) => {
         console.log('radio1 checked', value);
         setSelectDate(value)
     };
     const DateComponents = () => {
-        return <Radio.Group style={{marginLeft:10}} options={dateOptions} value={selectDate} optionType="button" buttonStyle="solid" onChange={onSelectDateChange} />
+        return <Radio.Group style={{ marginLeft: 10 }} options={dateOptions} value={selectDate} optionType="button" buttonStyle="solid" onChange={onSelectDateChange} />
     }
 
     const [addForm] = Form.useForm();
     const [addVisible, setAddVisible] = useState(false)
-    const addContent = () => <Form form={addForm} name="imprts_advanced_search">
-        <Form.Item name='rowVal' label='测试日期'>
+    const addContent = () => <Form form={addForm} name="add_advanced_search">
+        <Form.Item name='RecordDate' label='测试日期'>
             <DatePicker style={{ width: '100%' }} />
         </Form.Item>
-        <Form.Item name='colVal' label='开始时间'>
+        <Form.Item name='BeginTime' label='开始时间'>
             <TimePicker style={{ width: '100%' }} defaultOpenValue={moment('00:00', 'HH:mm')} format='HH:mm' />
         </Form.Item>
-        <Form.Item name='colVal' label='数组组数'>
-            <InputNumber mix={1} style={{ width: '100%' }} placeholder='请输入' />
+        <Form.Item name='DataGroups' label='数组组数'>
+            <InputNumber  min={5} max={16}  style={{ width: '100%' }} placeholder='请输入' />
         </Form.Item>
-        <Form.Item name='colVal' label='数组对时长'>
-            <InputNumber mix={1} style={{ width: '100%' }} placeholder='请输入' />
+        <Form.Item name='DataTimes' label='数组对时长'>
+            <InputNumber   style={{ width: '100%' }} placeholder='请输入' />
         </Form.Item>
         <Form.Item>
-            <Button type="primary" style={{ width: '100%', marginTop: 8 }} loading={props.importLoading} onClick={addSubmits} >确定</Button>
+            <Button type="primary" style={{ width: '100%', marginTop: 8 }} loading={addLoading} onClick={addSubmits} >确定</Button>
         </Form.Item>
     </Form>
+    
+    const [addLoading,setAddLoading] = useState(false)
     const addSubmits = () => {
+        if(dateOptions&&dateOptions.length>=3){
+            message.warning('最多添加三个日期')
+            setAddVisible(false)
+            return;
+        }
+        addForm.validateFields().then((values) => {
+            setAddLoading(true)
+            props.addGasReferenceMethodAccuracyInfo({  
+                ...values,  
+                RecordDate: values.RecordDate && values.RecordDate.format('YYYY-MM-DD 00:00:00'),
+                BeginTime: values.BeginTime && values.RecordDate&& `${values.RecordDate.format('YYYY-MM-DD')} ${values.BeginTime.format('HH:mm:ss')}`,
+                PointId: pointId,
+                PollutantCode: pollutantCode,
+            }, (data) => {
+                if(data){
+                props.addGasReferenceMethodAccuracyRecord({
+                    AddType: 1,
+                    MainTable: data.MainTable,
+                    ChildTable:data.ChildTable,
+                },()=>{
+                    console.log()
+                    setAddLoading(false)
+                    setAddVisible(false)
+                    getTimeFormData(pollutantCode)
+                  
+                })
+             }
+            })
+        }).catch((errorInfo) => {
+            console.log('Failed:', errorInfo);
+        });
 
     }
     const onValuesChange = (hangedValues, allValues) => {
     }
     return (
         <div className={styles.totalContentSty}>
-            <Spin spinning={formLoading}>
-                <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
-                <PollutantComponents />
+            <Spin spinning={pollutantLoading}>
+                {pollOptions[0] ? <>
+                    {dateOptions[0] && <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />}
+                    <PollutantComponents />
+                    {dateOptions[0] &&  <DateComponents />}
+                    <Popover
+                        placement="bottom"
+                        content={addContent()}
+                        trigger="click"
+                        visible={addVisible}
+                        overlayClassName={styles.popSty2}
+                        onVisibleChange={(newVisible) => { addForm.resetFields(); setAddVisible(newVisible) }}
+                    >  <Button style={{ margin: '0 0 10px 10px' }}>添加</Button></Popover>
+                    <Spin spinning={timeLoading&&formLoading}>
+                    {dateOptions[0] ? <Form
+                        form={form}
+                        name="advanced_search"
+                        initialValues={{}}
+                        className={styles["ant-advanced-search-form"]}
+                        onValuesChange={onValuesChange}
+                    >
+                        <SearchComponents />
+                        <Table
+                            size="small"
+                            loading={tableLoading}
+                            bordered
+                            dataSource={tableDatas}
+                            columns={columns}
+                            pagination={false}
+                            className={'tableSty1'}
+                        />
+                        <Table
+                            size="small"
+                            loading={tableLoading}
+                            bordered
+                            dataSource={[]}
+                            columns={columns2()}
+                            pagination={false}
+                            className={'white-table-thead hidden-tbody'}
+                        />
+                    </Form> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}</Spin>   </> :
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
 
-                <DateComponents />
-                <Popover
-                    placement="bottom"
-                    content={addContent()}
-                    trigger="click"
-                    visible={addVisible}
-                    overlayClassName={styles.popSty2}
-                    onVisibleChange={(newVisible) => { addForm.resetFields(); setAddVisible(newVisible) }}
-                >  <Button style={{ margin: '0 0 10px 10px' }}>添加</Button></Popover>
-
-                <Form
-                    form={form}
-                    name="advanced_search"
-                    initialValues={{}}
-                    className={styles["ant-advanced-search-form"]}
-                    onValuesChange={onValuesChange}
-                >
-                    <SearchComponents />
-                    <Table
-                        size="small"
-                        loading={tableLoading}
-                        bordered
-                        dataSource={tableDatas}
-                        columns={columns}
-                        pagination={false}
-                        className={'tableSty1'}
-                    />
-                    <Table
-                        size="small"
-                        loading={tableLoading}
-                        bordered
-                        dataSource={[]}
-                        columns={ columns2()}
-                        pagination={false}
-                        className={'white-table-thead hidden-tbody'}
-                    />
-                </Form>
             </Spin>
         </div>
     );
