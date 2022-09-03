@@ -105,9 +105,9 @@ export default Model.extend({
         let data = [],defaultDateCode;
         if(result.Datas && result.Datas[0]){
             data = result.Datas.map(item=>{
-            return  { label: item.Name, value: item.ChildID} 
+            return  { label: moment(item).format('YYYY-MM-DD'), value: item} 
           })
-          defaultDateCode = result.Datas[0].ChildID
+          defaultDateCode = result.Datas[0]
         }
  
         callback(data,defaultDateCode)

@@ -102,7 +102,6 @@ const Index = (props) => {
 
 
     const [recordName, setRecordName] = useState()
-    const [recordType, setRecordType] = useState()
 
 
     const [pollOptions, setPollOptions] = useState([]);
@@ -113,6 +112,13 @@ const Index = (props) => {
     const [selectDate, setSelectDate] = useState()
 
     useEffect(() => {
+        if(!pointId){
+          return;
+        }
+        initData()
+    }, [pointId]);
+   
+    const initData = () =>{
         props.get72TestRecordPollutant({
             PointCode: pointId,
             Flag: 1,
@@ -124,8 +130,7 @@ const Index = (props) => {
             }
 
         })
-    }, [pointId]);
-
+    }
     const getTimeFormData = (pollCode) =>{
         props.getTimesListByPollutant({
             PointCode: pointId,
@@ -133,54 +138,56 @@ const Index = (props) => {
         }, (dateData, defaultDateCode) => {
             if (dateData[0]) {
                 setDateOptions(dateData)
-                selectDate(defaultDateCode)
+                setSelectDate(defaultDateCode)
+                getFormData(pollCode,defaultDateCode)
             }
         })
     }
-    const getFormData = (pointId) => {
+    const getFormData = (pollCode,date) => {
         props.getGasReferenceMethodAccuracyRecord({
             PointCode: pointId,
-            PollutantCode: pollutantCode,
-            RecordDate: "",
-            Flag: ""
+            PollutantCode: pollCode,
+            RecordDate: date,
+            Flag: "",
+            ID: form2.getFieldValue('ID'),
         }, (res) => {
+            console.log(res)
             if (res) {
                 setRecordName(res.RecordName)
-                setRecordType(res.RecordType)
             }
             if (res && res.MainTable) {
                 form2.setFieldsValue({
                     ...res.MainTable
                 })
 
-                if (res.ChildTable) {
-                    const data = [];
-                    res.ChildTable.map(item => {
-                        if (item.ChildList) {
-                            item.ChildList.map(item2 => {
-                                data.push(item2)
-                            })
-                        }
-                    })
-                    data.map(item => {
-                        const index = item.Sort - 1;
-                        form.setFieldsValue({
-                            [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
-                            [`BTime${index}`]: item.BTime && moment(item.BTime),
-                            [`ETime${index}`]: item.ETime && moment(item.ETime),
-                            [`MembraneNum${index}`]: item.MembraneNum,
-                            [`PMWeight${index}`]: item.PMWeight,
-                            [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                            [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                            [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                            [`MeasuredValue${index}`]: item.MeasuredValue,
-                            [`O2values${index}`]: item.O2values,
-                            [`WDvalues${index}`]: item.WDvalues,
-                            [`SDvalues${index}`]: item.SDvalues,
-                            [`YLvalues${index}`]: item.YLvalues,
-                        })
-                    })
-                }
+                // if (res.ChildTable) {
+                //     const data = [];
+                //     res.ChildTable.map(item => {
+                //         if (item.ChildList) {
+                //             item.ChildList.map(item2 => {
+                //                 data.push(item2)
+                //             })
+                //         }
+                //     })
+                //     data.map(item => {
+                //         const index = item.Sort - 1;
+                //         form.setFieldsValue({
+                //             [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
+                //             [`BTime${index}`]: item.BTime && moment(item.BTime),
+                //             [`ETime${index}`]: item.ETime && moment(item.ETime),
+                //             [`MembraneNum${index}`]: item.MembraneNum,
+                //             [`PMWeight${index}`]: item.PMWeight,
+                //             [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
+                //             [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
+                //             [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
+                //             [`MeasuredValue${index}`]: item.MeasuredValue,
+                //             [`O2values${index}`]: item.O2values,
+                //             [`WDvalues${index}`]: item.WDvalues,
+                //             [`SDvalues${index}`]: item.SDvalues,
+                //             [`YLvalues${index}`]: item.YLvalues,
+                //         })
+                //     })
+                // }
             }
 
 
@@ -291,7 +298,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < 10) {
-                    return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`ReferenceAvg${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == 10) {
                     return <span> 2222 </span>
                 } else if (index >= 11) {
@@ -308,7 +315,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < 10) {
-                    return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`MeasuredAvg${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == 10) {
                     return <span> 3333 </span>
                 } else if (index >= 11) {
@@ -325,7 +332,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < 10) {
-                    return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`AlignmentAvg${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == 10) {
                     return <span> 4444 </span>
                 } else if (index >= 11) {
@@ -348,7 +355,7 @@ const Index = (props) => {
             title: '名称',
             align: 'center',
             children: [{
-                title: <span>{111111111}</span>,
+                title: <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input  placeholder='请输入' /></Form.Item>,
                 align: 'center',
             }]
 
@@ -357,7 +364,7 @@ const Index = (props) => {
             title: '保证值',
             align: 'center',
             children: [{
-                title: <span>{222222}</span>,
+                title: <Form.Item name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>,
                 align: 'center',
             }]
 
@@ -372,7 +379,7 @@ const Index = (props) => {
                     title: '采样前',
                     align: 'center',
                     children: [{
-                        title: <span>{3333}</span>,
+                        title: <Form.Item name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>,
                         align: 'center',
                     }]
                 },
@@ -380,7 +387,7 @@ const Index = (props) => {
                     title: '采样后',
                     align: 'center',
                     children: [{
-                        title: <span>{4444}</span>,
+                        title: <Form.Item name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>,
                         align: 'center',
                     }]
 
@@ -443,6 +450,7 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
+            form.validateFields();form2.validateFields();
             form2.validateFields().then((values2) => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
@@ -499,7 +507,7 @@ const Index = (props) => {
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
-            ID: form.getFieldValue('ID'),
+            ID: form2.getFieldValue('ID'),
         }, () => {
             initData(pointId)
         })
@@ -541,24 +549,6 @@ const Index = (props) => {
             name="advanced_search2"
             className={styles["ant-advanced-search-form2"]}
         >
-            <Row gutter={36}>
-                <Col span={8}>
-                    <Form.Item label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
-                        <Input placeholder='请输入' allowClear suffix="Pa" onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber placeholder='请输入' allowClear />
-
-                    </Form.Item>
-                </Col>
-                <Col span={8}>
-                    <Form.Item label="排放限值" name="EmissionLimits" rules={[{ required: isReg, message: '' }]}>
-                        <Input placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
-                    </Form.Item>
-                </Col>
-            </Row>
             <Row justify='center' style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 16 }}>{recordName}</Row>
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
@@ -590,7 +580,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="Basis" >
+                    <Form.Item label="CEMS原理" name="TestPrinciple" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -602,24 +592,24 @@ const Index = (props) => {
                 <Col span={4}></Col>
 
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="ReferenceManufactorName">
+                    <Form.Item label="型号、编号" name="ParamModelNum">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
 
                 <Col span={8}>
                     <Row justify='space-between'>
-                        <Form.Item label="测试日期" name="ParamModelNum" style={{ width: '50%' }} >
+                        <Form.Item label="测试日期" name="RecordDate" style={{ width: '50%' }} >
                             <Input disabled placeholder='请选择' allowClear />
                         </Form.Item>
-                        <Form.Item label="污染物名称" name="ParamModelNum" style={{ width: '50%' }} >
+                        <Form.Item label="污染物名称" name="PollutantName" style={{ width: '50%' }} >
                             <Input disabled placeholder='请选择' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="计量单位" name="ParamModelNum" >
+                    <Form.Item label="计量单位" name="Unit" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -709,7 +699,7 @@ const Index = (props) => {
                     setUploading(false);
                     if (data.IsSuccess) {
                         setFileList([]);
-                        // setImportVisible(false)
+                        setImportVisible(false)
                         message.success('导入成功');
                         let mergeData3 = [];
                         let resData = data.Datas ? data.Datas : [];
@@ -801,7 +791,7 @@ const Index = (props) => {
             <InputNumber  min={5} max={16}  style={{ width: '100%' }} placeholder='请输入' />
         </Form.Item>
         <Form.Item name='DataTimes' label='数组对时长'>
-            <InputNumber   style={{ width: '100%' }} placeholder='请输入' />
+            <Input   style={{ width: '100%' }} placeholder='请输入' suffix="min" onKeyUp={(e) => {e.target.value&& numVerify(e.target.value, (data) => {  addForm.setFieldsValue({ 'DataTimes': data }) })}}/>
         </Form.Item>
         <Form.Item>
             <Button type="primary" style={{ width: '100%', marginTop: 8 }} loading={addLoading} onClick={addSubmits} >确定</Button>
@@ -824,11 +814,11 @@ const Index = (props) => {
                 PointId: pointId,
                 PollutantCode: pollutantCode,
             }, (data) => {
-                if(data){
+                if(data && data.ChildTable && data.ChildTable){
                 props.addGasReferenceMethodAccuracyRecord({
                     AddType: 1,
-                    MainTable: data.MainTable,
-                    ChildTable:data.ChildTable,
+                    MainTable: {...data.MainTable,PointId:pointId},
+                    ChildTable: data.ChildTable,
                 },()=>{
                     console.log()
                     setAddLoading(false)
@@ -871,7 +861,6 @@ const Index = (props) => {
                         <SearchComponents />
                         <Table
                             size="small"
-                            loading={tableLoading}
                             bordered
                             dataSource={tableDatas}
                             columns={columns}
@@ -880,7 +869,6 @@ const Index = (props) => {
                         />
                         <Table
                             size="small"
-                            loading={tableLoading}
                             bordered
                             dataSource={[]}
                             columns={columns2()}

@@ -424,6 +424,7 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
+            form.validateFields();form2.validateFields();
             form2.validateFields().then((values2) => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
@@ -480,7 +481,7 @@ const Index = (props) => {
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
-            ID:form.getFieldValue('ID'),
+            ID:form2.getFieldValue('ID'),
         },()=>{
             initData(pointId)
         })
