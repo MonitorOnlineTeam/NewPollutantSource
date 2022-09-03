@@ -86,6 +86,7 @@ const Index = (props) => {
     const [recordName, setRecordName] = useState()
     const [recordType, setRecordType] = useState()
     useEffect(() => {
+        if(!pointId){ return }
         initData(pointId)
     }, [pointId]);
     const initData = (pointId) => {

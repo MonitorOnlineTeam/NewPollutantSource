@@ -112,9 +112,7 @@ const Index = (props) => {
     const [selectDate, setSelectDate] = useState()
 
     useEffect(() => {
-        if(!pointId){
-          return;
-        }
+        if(!pointId){ return }
         initData()
     }, [pointId]);
    

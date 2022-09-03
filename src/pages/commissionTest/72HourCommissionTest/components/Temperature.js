@@ -86,6 +86,7 @@ const Index = (props) => {
     const [recordName, setRecordName] = useState()
     const [recordType, setRecordType] = useState()
     useEffect(() => {
+        if(!pointId){ return }
         initData(pointId)
     }, [pointId]);
     const initData = (pointId) => {
@@ -283,6 +284,7 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
+            form.validateFields();form2.validateFields();
             form2.validateFields().then((values2) => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
