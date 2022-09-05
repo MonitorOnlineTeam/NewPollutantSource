@@ -94,7 +94,6 @@ const Index = (props) => {
     const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 
     const [form] = Form.useForm();
-    const [form2] = Form.useForm();
 
 
 
@@ -147,14 +146,14 @@ const Index = (props) => {
             PollutantCode: pollCode,
             RecordDate: date,
             Flag: "",
-            ID: form2.getFieldValue('ID'),
+            ID: form.getFieldValue('ID'),
         }, (res) => {
             console.log(res)
             if (res) {
                 setRecordName(res.RecordName)
             }
             if (res && res.MainTable) {
-                form2.setFieldsValue({
+                form.setFieldsValue({
                     ...res.MainTable
                 })
 
@@ -296,9 +295,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < 10) {
-                    return <Form.Item name={`ReferenceAvg${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == 10) {
-                    return <span> 2222 </span>
+                    return <span> {form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= 11) {
                     return {
                         children: <span> 11111 </span>,
@@ -313,9 +312,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < 10) {
-                    return <Form.Item name={`MeasuredAvg${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == 10) {
-                    return <span> 3333 </span>
+                    return <span> {form.getFieldValue('MeasuredAvg')} </span>
                 } else if (index >= 11) {
                     return {
                         props: { colSpan: 0 },
@@ -330,9 +329,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < 10) {
-                    return <Form.Item name={`AlignmentAvg${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == 10) {
-                    return <span> 4444 </span>
+                    return <span> {form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= 11) {
                     return {
                         props: { colSpan: 0 },
@@ -448,14 +447,12 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
-            form.validateFields();form2.validateFields();
-            form2.validateFields().then((values2) => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
                     let data = {
                         AddType: type,
                         MainTable: {
-                            ...values2,
+                            ...values,
                             PointId: pointId
                         },
                         ChildTable: [],
@@ -488,12 +485,6 @@ const Index = (props) => {
                     message.warning('请输入完整的数据')
                     return;
                 });
-
-            }).catch((errorInfo) => {
-                console.log('Failed:', errorInfo);
-                message.warning('请输入完整的数据')
-                return;
-            });
         })
 
 
@@ -501,11 +492,10 @@ const Index = (props) => {
 
     const clears = () => {
         form.resetFields();
-        form2.resetFields();
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
-            ID: form2.getFieldValue('ID'),
+            ID: form.getFieldValue('ID'),
         }, () => {
             initData(pointId)
         })
@@ -518,7 +508,7 @@ const Index = (props) => {
 
             const benchmarkDensity = Number(interceptTwo(weight / volume * 1000))
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
-            const atmos = Number(form2.getFieldValue('Atmos'))
+            const atmos = Number(form.getFieldValue('Atmos'))
 
             const SDvalues = Number(form.getFieldValue(`SDvalues${index}`)),
                 WDvalues = Number(form.getFieldValue(`WDvalues${index}`)),
@@ -536,17 +526,13 @@ const Index = (props) => {
         const value = e.target.value
         if (value) {
             numVerify(value, (data) => {
-                form2.setFieldsValue({ [name]: data })
+                form.setFieldsValue({ [name]: data })
             })
         }
 
     }
     const SearchComponents = () => {
-        return <Form
-            form={form2}
-            name="advanced_search2"
-            className={styles["ant-advanced-search-form2"]}
-        >
+        return <>
             <Row justify='center' style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 16 }}>{recordName}</Row>
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
@@ -615,7 +601,7 @@ const Index = (props) => {
                     <Input />
                 </Form.Item>
             </Row>
-        </Form>
+        </>
     }
     const [fileList, setFileList] = useState([]);
     const uploadProps = {

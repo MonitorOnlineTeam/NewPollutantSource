@@ -77,7 +77,7 @@ const Index = (props) => {
     const [tableDatas2,setTableDatas2] = useState([1,2,3,4,5,'平均值','相对误差',6,7,8,9,10,'平均值','相对误差',11,12,13,14,15,'平均值','相对误差']);
 
     const [form] = Form.useForm();
-    const [form2] = Form.useForm();
+
 
 
 
@@ -102,7 +102,7 @@ const Index = (props) => {
                 setRecordType(res.RecordType)
             }
             if (res && res.MainTable) {
-                form2.setFieldsValue({
+                form.setFieldsValue({
                     ...res.MainTable
                 })
                 
@@ -425,8 +425,6 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
-            form.validateFields();form2.validateFields();
-            form2.validateFields().then((values2) => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
                     let data = {
@@ -466,11 +464,6 @@ const Index = (props) => {
                     return;
                 });
 
-            }).catch((errorInfo) => {
-                console.log('Failed:', errorInfo);
-                message.warning('请输入完整的数据')
-                return;
-            });
         })
 
 
@@ -478,11 +471,10 @@ const Index = (props) => {
 
     const clears = () => {
         form.resetFields();
-        form2.resetFields();
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
-            ID:form2.getFieldValue('ID'),
+            ID:form.getFieldValue('ID'),
         },()=>{
             initData(pointId)
         })
@@ -495,7 +487,7 @@ const Index = (props) => {
 
             const benchmarkDensity =  Number(interceptTwo(weight / volume * 1000))
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
-            const atmos = Number(form2.getFieldValue('Atmos'))
+            const atmos = Number(form.getFieldValue('Atmos'))
                  
                    const   SDvalues  = Number(form.getFieldValue(`SDvalues${index}`)),
                            WDvalues  = Number( form.getFieldValue(`WDvalues${index}`)),
@@ -512,17 +504,13 @@ const Index = (props) => {
         const value = e.target.value
         if (value) {
             numVerify(value, (data) => {
-                form2.setFieldsValue({ [name]: data })
+                form.setFieldsValue({ [name]: data })
             })
         }
 
     }
     const SearchComponents = () => {
-        return <Form
-            form={form2}
-            name="advanced_search2"
-            className={styles["ant-advanced-search-form2"]}
-        >
+        return <>
             <Row justify='center' style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 16 }}>{recordName}</Row>
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
@@ -589,7 +577,7 @@ const Index = (props) => {
                         <Input  />
                     </Form.Item>
             </Row>
-        </Form>
+        </>
     }
     const [fileList, setFileList] = useState([]);
     const uploadProps = {
