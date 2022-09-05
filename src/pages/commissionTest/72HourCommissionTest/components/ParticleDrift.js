@@ -463,7 +463,6 @@ const Index = (props) => {
             const SDvalues = Number(form.getFieldValue(`SDvalues${index}`)),
                 WDvalues = Number(form.getFieldValue(`WDvalues${index}`)),
                 YLvalues = Number(form.getFieldValue(`YLvalues${index}`));
-            console.log(atmos, SDvalues, WDvalues, YLvalues, benchmarkDensity)
             if (atmos && SDvalues && WDvalues && YLvalues && benchmarkDensity) {
                 const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
                 form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
@@ -566,7 +565,7 @@ const Index = (props) => {
                         dataSource={tableDatas}
                         columns={columns}
                         pagination={false}
-                        className={'tableSty1'}
+                        className={'tableSty'}
                     />
                     <Table
                         size="small"

@@ -263,7 +263,7 @@ const Index = (props) => {
                     align: 'center',
                     width:150,
                     render: (text, record, index) => {
-                        return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled step='0.001' placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled step='0.001' placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]
@@ -378,10 +378,18 @@ const Index = (props) => {
         setTimeout(() => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
+
+                    let mainValue = {...values}
+                    Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
+                        if(/Time/g.test(item) || /ReferenceValue/g.test(item) || /MeasuredValue/g.test(item) || /AlignmentValue/g.test(item)){
+                           delete mainValue[item];
+                        }
+                    })
+
                     let data = {
                         AddType: type,
                         MainTable: {
-                            ...values,
+                            ...mainValue,
                             PointId: pointId
                         },
                         ChildTable: [],
@@ -567,7 +575,7 @@ const Index = (props) => {
             message.warning('请上传文件')
             return;
         }
-        setIsTimeReg(true)
+        // setIsTimeReg(true)
         setTimeout(() => {
             form.validateFields().then((values) => {
                 const timeData = []
@@ -585,7 +593,7 @@ const Index = (props) => {
                             }
                         } else {
                             if (values['CreateDate10'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
-                                i == 14 ? timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}`) : timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
+                                i == tableDatas.length-1 ? timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}`) : timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
                         }
                     }
@@ -689,7 +697,7 @@ const Index = (props) => {
                         dataSource={tableDatas}
                         columns={columns}
                         pagination={false}
-                        className={'tableSty1'}
+                        className={'tableSty'}
                     />
                     <Table
                         size="small"
@@ -698,7 +706,7 @@ const Index = (props) => {
                         dataSource={['评价依据']}
                         columns={recordType == 1 ? columns2() : columns3()}
                         pagination={false}
-                        className={'white-table-thead'}
+                        className={'white-table-thead tableSty'}
                     />
                 </Form>
             </Spin>

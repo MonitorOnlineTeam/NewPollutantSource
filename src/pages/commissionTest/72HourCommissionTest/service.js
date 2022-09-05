@@ -77,3 +77,8 @@ export async function DeleteGasReferenceMethodAccuracyRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasReferenceMethodAccuracyRecord',params, null);
   return result;
 }
+//导入
+export async function importDataNew(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew',params, null);
+  return result;
+}

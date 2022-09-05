@@ -590,7 +590,7 @@ const Index = (props) => {
                         dataSource={tableDatas}
                         columns={columns}
                         pagination={false}
-                        className={'tableSty1'}
+                        className={'tableSty'}
                     />
                     <Table
                         size="small"
@@ -599,7 +599,7 @@ const Index = (props) => {
                         dataSource={[1, 2, 3, 4]}
                         columns={columns2()}
                         pagination={false}
-                        className={'tableSty1'}
+                        className={'tableSty'}
                     />
                 </Form>
             </Spin>

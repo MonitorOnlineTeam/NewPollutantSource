@@ -62,7 +62,7 @@ export default Model.extend({
       const result = yield call(services.ImportData, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.Datas)
       } else {
         message.error(result.Message)
         yield update({ tableLoading: false })
@@ -149,6 +149,16 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *importDataNew({ payload, callback }, { call, put, update }) { //导入
+      yield update({ tableLoading: true })
+      const result = yield call(services.ImportDataNew, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback(result.Datas)
       } else {
         message.error(result.Message)
       }

@@ -602,7 +602,7 @@ const Index = (props) => {
                         dataSource={tableDatas}
                         columns={columns}
                         pagination={false}
-                        className={'tableSty1'}
+                        className={'tableSty'}
                     />
                     <Table
                         size="small"
