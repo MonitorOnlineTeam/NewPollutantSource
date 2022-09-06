@@ -78,7 +78,44 @@ export async function DeleteGasReferenceMethodAccuracyRecord(params) {
   return result;
 }
 //导入
-export async function importDataNew(params) {
+export async function ImportDataNew(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew',params, null);
+  return result;
+}
+
+/*** 气态污染物CEMS示值误差和系统响应时间检测表单 ***/
+
+//获取
+export async function GetGasIndicationErrorSystemResponseRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasIndicationErrorSystemResponseRecord',params, null);
+  return result;
+}
+
+//添加修改
+export async function AddGasIndicationErrorSystemResponseRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasIndicationErrorSystemResponseRecord',params, null);
+  return result;
+}
+//删除
+export async function DeleteGasIndicationErrorSystemResponseRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasIndicationErrorSystemResponseRecord',params, null);
+  return result;
+}
+
+/*** 速度场系数检测表单 ***/
+
+export async function GetVelocityFieldCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetVelocityFieldCheckingRecord',params, null);
+  return result;
+}
+
+//添加修改
+export async function AddVelocityFieldCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddVelocityFieldCheckingRecord',params, null);
+  return result;
+}
+//删除
+export async function DeleteVelocityFieldCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteVelocityFieldCheckingRecord',params, null);
   return result;
 }

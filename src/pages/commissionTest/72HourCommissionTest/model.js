@@ -41,15 +41,15 @@ export default Model.extend({
       yield update({ tableLoading: true })
       const result = yield call(services.Get72TestRecordPollutant, payload);
       if (result.IsSuccess) {
-        let data = [],defaultPollCode;
-        if(result.Datas && result.Datas[0]){
-            data = result.Datas.map(item=>{
-            return  { label: item.Name, value: item.ChildID} 
+        let data = [], defaultPollCode;
+        if (result.Datas && result.Datas[0]) {
+          data = result.Datas.map(item => {
+            return { label: item.Name, value: item.ChildID }
           })
           defaultPollCode = result.Datas[0].ChildID
         }
- 
-        callback(data,defaultPollCode)
+
+        callback(data, defaultPollCode)
       } else {
         message.error(result.Message)
       }
@@ -102,15 +102,15 @@ export default Model.extend({
     *getTimesListByPollutant({ payload, callback }, { call, put, update }) { //根据污染物获取时间
       const result = yield call(services.GetTimesListByPollutant, payload);
       if (result.IsSuccess) {
-        let data = [],defaultDateCode;
-        if(result.Datas && result.Datas[0]){
-            data = result.Datas.map(item=>{
-            return  { label: moment(item).format('YYYY-MM-DD'), value: item} 
+        let data = [], defaultDateCode;
+        if (result.Datas && result.Datas[0]) {
+          data = result.Datas.map(item => {
+            return { label: moment(item).format('YYYY-MM-DD'), value: item }
           })
           defaultDateCode = result.Datas[0]
         }
- 
-        callback(data,defaultDateCode)
+
+        callback(data, defaultDateCode)
       } else {
         message.error(result.Message)
       }
@@ -159,6 +159,66 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success(result.Message)
         callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    /*** 气态污染物CEMS示值误差和系统响应时间检测表单 ***/
+    *getGasIndicationErrorSystemResponseRecord({ payload, callback }, { call, put, update }) { //获取
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetGasIndicationErrorSystemResponseRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addGasIndicationErrorSystemResponseRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
+      yield update({ tableLoading: true })
+      const result = yield call(services.AddGasIndicationErrorSystemResponseRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteGasIndicationErrorSystemResponseRecord({ payload, callback }, { call, put, update }) { //删除
+      yield update({ tableLoading: true })
+      const result = yield call(services.DeleteGasIndicationErrorSystemResponseRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    /*** 速度场系数表单 ***/
+    *getVelocityFieldCheckingRecord({ payload, callback }, { call, put, update }) { //获取
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetVelocityFieldCheckingRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addVelocityFieldCheckingRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
+      yield update({ tableLoading: true })
+      const result = yield call(services.AddVelocityFieldCheckingRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteVelocityFieldCheckingRecord({ payload, callback }, { call, put, update }) { //删除
+      yield update({ tableLoading: true })
+      const result = yield call(services.DeleteVelocityFieldCheckingRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
       } else {
         message.error(result.Message)
       }

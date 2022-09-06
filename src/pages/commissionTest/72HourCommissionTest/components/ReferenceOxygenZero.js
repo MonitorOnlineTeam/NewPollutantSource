@@ -161,32 +161,34 @@ const Index = (props) => {
             if (res) {
                 form.resetFields();
                 setRecordName(res.RecordName)
-            }
-            if (res && res.MainTable) {
+       
+            if (res.MainTable) {
                 form.setFieldsValue({
                     ...res.MainTable,
                     PollutantCode: pollCode,
+                    StandardGasName:res.MainTable.PollutantName,
                 })
 
-                if (res.ChildTable) {
-                    const data = res.ChildTable;
-                    const tableData = res.ChildTable.map(item=>item.Sort)
-                    setTableDatas(tableData)
-                 
-                    data.map(item => {
-                        const index = item.Sort - 1;
-                        form.setFieldsValue({
-                            [`BTime${index}`]: item.BTime && moment(item.BTime),
-                            [`ETime${index}`]: item.ETime && moment(item.ETime),
-                            [`ReferenceValue${index}`]: item.ReferenceValue,
-                            [`MeasuredValue${index}`]: item. MeasuredValue,
-                            [`AlignmentValue${index}`]: item.AlignmentValue,
-                        })
+  
+            }
+            if (res.ChildTable) {
+                const data = res.ChildTable;
+                const tableData = res.ChildTable.map(item=>item.Sort)
+                setTableDatas(tableData)
+             
+                data.map(item => {
+                    const index = item.Sort - 1;
+                    form.setFieldsValue({
+                        [`BTime${index}`]: item.BTime && moment(item.BTime),
+                        [`ETime${index}`]: item.ETime && moment(item.ETime),
+                        [`ReferenceValue${index}`]: item.ReferenceValue,
+                        [`MeasuredValue${index}`]: item. MeasuredValue,
+                        [`AlignmentValue${index}`]: item.AlignmentValue,
                     })
-                }
+                })
             }
             setFormLoading(false)
-
+        }
         })
     }
     const disabledDate = (current) => {
@@ -348,8 +350,8 @@ const Index = (props) => {
             title: '名称',
             align: 'center',
             children: [{
-                title: <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input  placeholder='请输入' /></Form.Item>,
-                align: 'center',
+            title:<Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled placeholder='请输入' title={form.getFieldValue('StandardGasName')}/></Form.Item>,
+            align: 'center',
             }]
 
         },
@@ -496,9 +498,9 @@ const Index = (props) => {
 
     const measuredValBlur = (index) => {
         const valueA = form.getFieldValue(`ReferenceValue${index}`), valueB = form.getFieldValue(`MeasuredValue${index}`);
-        if (valueA && valueB) {
+        if ((valueA || valueA==0)  && (valueB|| valueB==0) ) {
             const relativeError = valueB - valueA
-            form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError }) //相对误差=B-A
+            form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(3) }) //相对误差=B-A
         }
     }
     const numCheck = (e, name) => {
@@ -759,11 +761,12 @@ const Index = (props) => {
             setAddLoading(true)
             props.addGasReferenceMethodAccuracyInfo({  
                 ...values,  
+                PollutantCode:pollutantCode,
                 RecordDate: values.RecordDate && values.RecordDate.format('YYYY-MM-DD 00:00:00'),
                 BeginTime: values.BeginTime && values.RecordDate&& `${values.RecordDate.format('YYYY-MM-DD')} ${values.BeginTime.format('HH:mm:ss')}`,
                 PointId: pointId,
             }, (data) => {
-                if(data && data.ChildTable && data.ChildTable){
+                if(data && data.ChildTable){
                 props.addGasReferenceMethodAccuracyRecord({
                     AddType: 1,
                     MainTable: {...data.MainTable,PointId:pointId},
@@ -821,7 +824,7 @@ const Index = (props) => {
                             dataSource={[]}
                             columns={columns2()}
                             pagination={false}
-                            className={'white-table-thead hidden-tbody'}
+                            className={'white-table-thead hidden-tbody tableSty'}
                         />
                     </Form> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}</Spin>   </> :
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

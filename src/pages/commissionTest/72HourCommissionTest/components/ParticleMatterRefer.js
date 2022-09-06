@@ -86,9 +86,9 @@ const Index = (props) => {
     const [recordType, setRecordType] = useState()
     useEffect(() => {
         if(!pointId){ return }
-        initData(pointId)
+        initData()
     }, [pointId]);
-    const initData = (pointId) => {
+    const initData = () => {
         props.getPMReferenceCalibrationRecord({
             PointCode: pointId,
             PollutantCode: 502,
@@ -415,7 +415,7 @@ const Index = (props) => {
                     })
                     props.addPMReferenceCalibrationRecord(data,()=>{
                         type == 1? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData(pointId)
+                        initData()
                     })
                 }).catch((errorInfo) => {
                     console.log('Failed:', errorInfo);
@@ -434,7 +434,7 @@ const Index = (props) => {
         props.deletePMReferenceCalibrationRecord({
             ID:form.getFieldValue('ID'),
         },()=>{
-            initData(pointId)
+            initData()
         })
     }
 
@@ -450,7 +450,7 @@ const Index = (props) => {
                    const   SDvalues  = Number(form.getFieldValue(`SDvalues${index}`)),
                            WDvalues  = Number( form.getFieldValue(`WDvalues${index}`)),
                            YLvalues  = Number(form.getFieldValue(`YLvalues${index}`));
-                    if (atmos &&  SDvalues && WDvalues && YLvalues && benchmarkDensity) {
+                    if ((atmos||atmos==0) &&  (SDvalues ||SDvalues==0) && (WDvalues||WDvalues==0) && (YLvalues||YLvalues==0) && (benchmarkDensity||benchmarkDensity==0) ) {
                         const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
                         form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
                     }

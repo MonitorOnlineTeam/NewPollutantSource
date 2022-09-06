@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify,arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -29,7 +29,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-    formLoading: loading.effects[`${namespace}/getPMReferenceCalibrationRecord`],
+    formLoading: loading.effects[`${namespace}/getVelocityFieldCheckingRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -40,30 +40,30 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        importData: (payload, callback) => { //导入
+        importDataNew: (payload, callback) => { //导入
             dispatch({
-                type: `${namespace}/importData`,
+                type: `${namespace}/importDataNew`,
                 payload: payload,
                 callback: callback
             })
         },
-        getPMReferenceCalibrationRecord: (payload, callback) => { //参数回填
+        getVelocityFieldCheckingRecord: (payload, callback) => { //参数回填
             dispatch({
-                type: `${namespace}/getPMReferenceCalibrationRecord`,
+                type: `${namespace}/getVelocityFieldCheckingRecord`,
                 payload: payload,
                 callback: callback
             })
         },
-        addPMReferenceCalibrationRecord: (payload, callback) => { //保存 暂存
+        addVelocityFieldCheckingRecord: (payload, callback) => { //保存 暂存
             dispatch({
-                type: `${namespace}/addPMReferenceCalibrationRecord`,
+                type: `${namespace}/addVelocityFieldCheckingRecord`,
                 payload: payload,
                 callback: callback
             })
         },
-        deletePMReferenceCalibrationRecord: (payload, callback) => { //删除
+        deleteVelocityFieldCheckingRecord: (payload, callback) => { //删除
             dispatch({
-                type: `${namespace}/deletePMReferenceCalibrationRecord`,
+                type: `${namespace}/deleteVelocityFieldCheckingRecord`,
                 payload: payload,
                 callback: callback
             })
@@ -73,8 +73,8 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,'平均值',6,7,8,9,10,'平均值',,11,12,13,14,15,'平均值',]);
-    const [tableDatas2,setTableDatas2] = useState([1,2,3,4,5,'平均值','相对误差',6,7,8,9,10,'平均值','相对误差',11,12,13,14,15,'平均值','相对误差']);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, '平均值', 6, 7, 8, 9, 10, '平均值', , 11, 12, 13, 14, 15, '平均值',]);
+    const [tableDatas2, setTableDatas2] = useState([1, 2, 3, 4, 5, '平均值', '相对误差', 6, 7, 8, 9, 10, '平均值', '相对误差', 11, 12, 13, 14, 15, '平均值', '相对误差']);
 
     const [form] = Form.useForm();
 
@@ -82,60 +82,59 @@ const Index = (props) => {
 
 
     const { pointId, tableLoading, formLoading, } = props;
-
-
+    const [pollutantCode, setPollutantCode] = useState(508)
     const [recordName, setRecordName] = useState()
-    const [recordType, setRecordType] = useState()
+    const [flowCEMS, setFlowCEMS] = useState()
     useEffect(() => {
-        if(!pointId){ return }
-        initData(pointId)
+        if (!pointId) { return }
+        initData()
     }, [pointId]);
-    const initData = (pointId) => {
-        props.getPMReferenceCalibrationRecord({
+    const initData = () => {
+        props.getVelocityFieldCheckingRecord({
             PointCode: pointId,
-            PollutantCode: 502,
+            PollutantCode: pollutantCode,
             RecordDate: "",
             Flag: ""
         }, (res) => {
             if (res) {
                 setRecordName(res.RecordName)
-                setRecordType(res.RecordType)
-            }
-            if (res && res.MainTable) {
-                form.setFieldsValue({
-                    ...res.MainTable
-                })
-                
-                if(res.ChildTable){
-                    const data  =[];
-                    res.ChildTable.map(item=>{
-                        if(item.ChildList){
-                            item.ChildList.map(item2=>{
-                                data.push(item2)
-                            })
-                        }  
-                   })
-                   data.map(item=>{
-                    const index = item.Sort -1 ;
-                    //   form.setFieldsValue({
-                    //     [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
-                    //     [`BTime${index}`]: item.BTime&&moment(item.BTime),
-                    //     [`ETime${index}`]: item.ETime&&moment(item.ETime),
-                    //     [`MembraneNum${index}`]: item.MembraneNum,    
-                    //     [`PMWeight${index}`]: item.PMWeight,
-                    //     [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                    //     [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                    //     [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                    //     [`MeasuredValue${index}`]: item.MeasuredValue,
-                    //     [`O2values${index}`]: item.O2values,
-                    //     [`WDvalues${index}`]: item.WDvalues,
-                    //     [`SDvalues${index}`]: item.SDvalues,
-                    //     [`YLvalues${index}`]: item.YLvalues,
-                    //   })
-                   })
+                setFlowCEMS(res.RecordType)
+
+                if (res.MainTable) {
+                    form.setFieldsValue({
+                        ...res.MainTable
+                    })
+
+                    if (res.ChildTable) {
+                        const data = [];
+                        res.ChildTable.map(item => {
+                            if (item.ChildList) {
+                                item.ChildList.map(item2 => {
+                                    data.push(item2)
+                                })
+                            }
+                        })
+                        data.map(item => {
+                            const index = item.Sort;
+                            //   form.setFieldsValue({
+                            //     [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
+                            //     [`BTime${index}`]: item.BTime&&moment(item.BTime),
+                            //     [`ETime${index}`]: item.ETime&&moment(item.ETime),
+                            //     [`MembraneNum${index}`]: item.MembraneNum,    
+                            //     [`PMWeight${index}`]: item.PMWeight,
+                            //     [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
+                            //     [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
+                            //     [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
+                            //     [`MeasuredValue${index}`]: item.MeasuredValue,
+                            //     [`O2values${index}`]: item.O2values,
+                            //     [`WDvalues${index}`]: item.WDvalues,
+                            //     [`SDvalues${index}`]: item.SDvalues,
+                            //     [`YLvalues${index}`]: item.YLvalues,
+                            //   })
+                        })
+                    }
                 }
             }
-
 
         })
     }
@@ -194,12 +193,12 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        if((index + 1 ) % 6 == 0 ){
+                        if ((index + 1) % 6 == 0) {
                             return {
                                 children: '平均值',
                                 props: { colSpan: 3 },
-                            }; 
-                        }  
+                            };
+                        }
                         return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
@@ -208,7 +207,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        if( (index + 1 )  % 6 == 0 ){  return {  props: { colSpan: 0 },}   }
+                        if ((index + 1) % 6 == 0) { return { props: { colSpan: 0 }, } }
                         return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
@@ -219,7 +218,7 @@ const Index = (props) => {
             align: 'center',
             width: 100,
             render: (text, record, index) => {
-                if((index + 1 ) % 6 == 0 ){  return {  props: { colSpan: 0 },}   }
+                if ((index + 1) % 6 == 0) { return { props: { colSpan: 0 }, } }
                 return text;
             }
         },
@@ -231,21 +230,32 @@ const Index = (props) => {
                     title: '手工',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        if ((index + 1) % 6 == 0) { //平均值
+                            return <Form.Item name={`AVG1`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+
+                        }
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: 'CEMS',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        if ((index + 1) % 6 == 0) { //平均值
+                            return <Form.Item name={`AVG2`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+
+                        }
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: '场系数',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
+                        if ((index + 1) % 6 == 0) { //平均值
+                            return <Form.Item name={`AVG3`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                        }
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]
@@ -274,18 +284,18 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        if((index + 2 ) % 7 == 0 ){
+                        if ((index + 2) % 7 == 0) {
                             return {
                                 children: '平均值',
                                 props: { colSpan: 3 },
-                            }; 
+                            };
                         }
-                        if((index + 1 ) % 7 == 0 ){
+                        if ((index + 1) % 7 == 0) {
                             return {
                                 children: '相对误差',
                                 props: { colSpan: 3 },
-                            }; 
-                        } 
+                            };
+                        }
                         return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
                 },
@@ -294,7 +304,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 140,
                     render: (text, record, index) => {
-                        if( (index + 1 )  % 7 == 0 || (index + 2 )  % 7 == 0  ){  return {  props: { colSpan: 0 },}   }
+                        if ((index + 1) % 7 == 0 || (index + 2) % 7 == 0) { return { props: { colSpan: 0 }, } }
                         return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
@@ -305,7 +315,7 @@ const Index = (props) => {
             align: 'center',
             width: 100,
             render: (text, record, index) => {
-                if((index + 1 ) % 7 == 0 || (index + 2 )  % 7 == 0){  return {  props: { colSpan: 0 },}   }
+                if ((index + 1) % 7 == 0 || (index + 2) % 7 == 0) { return { props: { colSpan: 0 }, } }
                 return text;
             }
         },
@@ -317,29 +327,40 @@ const Index = (props) => {
                     title: '手工',
                     align: 'center',
                     render: (text, record, index) => {
-                        if( (index + 1 )  % 7 == 0){ 
-                            return {  
-                                children: <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>,
+
+                        if ((index + 1) % 7 == 0) { //相对误差
+                            return {
+                                children: <Form.Item name={`RelativeError${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 3 },
-                               } 
-                             }
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                            }
+                        }
+                        if ((index + 1) % 6 == 0) { //平均值
+                            return <Form.Item name={`AVG1`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+
+                        }
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: 'CEMS',
                     align: 'center',
                     render: (text, record, index) => {
-                        if((index + 1 ) % 7 == 0){  return {  props: { colSpan: 0 },}   }
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        if ((index + 1) % 7 == 0) { return { props: { colSpan: 0 }, } }
+                        if ((index + 1) % 6 == 0) { //平均值
+                            return <Form.Item name={`AVG2`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                        }
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: '场系数',
                     align: 'center',
                     render: (text, record, index) => {
-                        if((index + 1 ) % 7 == 0 ){  return {  props: { colSpan: 0 },}   }
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
+                        if ((index + 1) % 7 == 0) { return { props: { colSpan: 0 }, } }
+                        if ((index + 1) % 6 == 0) { //平均值
+                            return <Form.Item name={`AVG3`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                        }
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]
@@ -349,28 +370,28 @@ const Index = (props) => {
         {
             title: '速度场系数均值',
             align: 'center',
-            width:200,
+            width: 200,
             render: () => {
                 return '评价依据'
             }
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: <span>{form.getFieldValue('VelocityCoefficientAVG')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
-                    children: <span>{form.getFieldValue('EvaluationBasis')}</span>,
+                    children: <span>{form.getFieldValue('Evaluation')}</span>,
                     props: { colSpan: 5 },
                 };
                 return obj;
             }
 
-    
+
         },
         {
             title: '标准偏差',
             align: 'center',
-            width:150,
+            width: 150,
             render: (text, record, index) => {
                 const obj = {
                     props: { colSpan: 0 },
@@ -379,8 +400,8 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{form.getFieldValue('CorrelationCoefficient') }</span>,
-            align: 'center', 
+            title: <span>{form.getFieldValue('StandardDeviation')}</span>,
+            align: 'center',
             render: (text, record, index) => {
                 const obj = {
                     props: { colSpan: 0 },
@@ -391,7 +412,7 @@ const Index = (props) => {
         {
             title: '相对标准偏差(%)',
             align: 'center',
-            width:200,
+            width: 200,
             render: (text, record, index) => {
                 const obj = {
                     props: { colSpan: 0 },
@@ -400,8 +421,8 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{form.getFieldValue('CorrelationCoefficient') }</span>,
-            align: 'center', 
+            title: <span>{form.getFieldValue('RelativeDeviation')}</span>,
+            align: 'center',
             render: (text, record, index) => {
                 const obj = {
                     props: { colSpan: 0 },
@@ -425,44 +446,54 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
-                form.validateFields().then((values) => {
-                    type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
-                    let data = {
-                        AddType: type,
-                        MainTable: {
-                            ...values2,
-                            PointId: pointId
-                        },
-                        ChildTable: [],
-                    }
-                    data.ChildTable = tableDatas.map((item, index) => {
-                        return {
-                            Sort: item,
-                            CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
-                            BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
-                            ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
-                            MembraneNum: values[`MembraneNum${index}`],
-                            PMWeight: values[`PMWeight${index}`],
-                            BenchmarkVolume: values[`BenchmarkVolume${index}`],
-                            BenchmarkDensity: values[`BenchmarkDensity${index}`],
-                            OperatingModeDensity: values[`OperatingModeDensity${index}`],
-                            MeasuredValue: values[`MeasuredValue${index}`],
-                            O2values: form.getFieldValue([`O2values${index}`]),
-                            WDvalues: form.getFieldValue([`WDvalues${index}`]),
-                            SDvalues: form.getFieldValue([`SDvalues${index}`]),
-                            YLvalues: form.getFieldValue([`YLvalues${index}`]),
-                        }
+            form.validateFields().then((values) => {
+                type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
 
-                    })
-                    props.addPMReferenceCalibrationRecord(data,()=>{
-                        type == 1? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData(pointId)
-                    })
-                }).catch((errorInfo) => {
-                    console.log('Failed:', errorInfo);
-                    message.warning('请输入完整的数据')
-                    return;
-                });
+                let mainValue = {...values}
+                Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
+                    if(/Time/g.test(item) || /ReferenceValue/g.test(item) || /MeasuredValue/g.test(item) || /AlignmentValue/g.test(item)){
+                       delete mainValue[item];
+                    }
+                })
+                let data = {
+                    AddType: type,
+                    MainTable: {
+                        ...mainValue,
+                        PMUnit:mainValue.Unit,
+                        PointId: pointId,
+                        PollutantCode: pollutantCode,
+                       
+                    },
+                    ChildTable: [],
+                }
+                data.ChildTable = tableDatas.map((item, index) => {
+                    return {
+                        Sort: item,
+                        CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
+                        BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                        ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                        MembraneNum: values[`MembraneNum${index}`],
+                        PMWeight: values[`PMWeight${index}`],
+                        BenchmarkVolume: values[`BenchmarkVolume${index}`],
+                        BenchmarkDensity: values[`BenchmarkDensity${index}`],
+                        OperatingModeDensity: values[`OperatingModeDensity${index}`],
+                        MeasuredValue: values[`MeasuredValue${index}`],
+                        O2values: form.getFieldValue([`O2values${index}`]),
+                        WDvalues: form.getFieldValue([`WDvalues${index}`]),
+                        SDvalues: form.getFieldValue([`SDvalues${index}`]),
+                        YLvalues: form.getFieldValue([`YLvalues${index}`]),
+                    }
+
+                })
+                // props.addVelocityFieldCheckingRecord(data, () => {
+                //     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+                //     initData()
+                // })
+            }).catch((errorInfo) => {
+                console.log('Failed:', errorInfo);
+                message.warning('请输入完整的数据')
+                return;
+            });
 
         })
 
@@ -473,33 +504,16 @@ const Index = (props) => {
         form.resetFields();
     }
     const del = () => {
-        props.deletePMReferenceCalibrationRecord({
-            ID:form.getFieldValue('ID'),
-        },()=>{
-            initData(pointId)
+        props.deleteVelocityFieldCheckingRecord({
+            ID: form.getFieldValue('ID'),
+        }, () => {
+            initData()
         })
     }
 
 
-    const weightVolumeBlur = (index) => {
-        const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
-        if (weight && volume) {
 
-            const benchmarkDensity =  Number(interceptTwo(weight / volume * 1000))
-            form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
-            const atmos = Number(form.getFieldValue('Atmos'))
-                 
-                   const   SDvalues  = Number(form.getFieldValue(`SDvalues${index}`)),
-                           WDvalues  = Number( form.getFieldValue(`WDvalues${index}`)),
-                           YLvalues  = Number(form.getFieldValue(`YLvalues${index}`));
-                    if (atmos &&  SDvalues && WDvalues && YLvalues && benchmarkDensity) {
-                        const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
-                        form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
-                    }
-                  
-                
-        }
-    }
+
     const numCheck = (e, name) => {
         const value = e.target.value
         if (value) {
@@ -542,7 +556,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="Basis" >
+                    <Form.Item label="CEMS原理" name="TestPrinciple" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -558,24 +572,24 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="参比方法计量单位" name="ReferenceManufactorName">
+                    <Form.Item label="参比方法计量单位" name="PMUnit">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS计量单位" name="ParamModelNum" >
+                    <Form.Item label="CEMS计量单位" name="Unit" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={20}>
-                    <Form.Item label="参比方法原理" name="ParamModelNum" >
+                    <Form.Item label="参比方法原理" name="Basis" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
-                <Form.Item  name="ID" hidden>
-                        <Input  />
-                    </Form.Item>
+                <Form.Item name="ID" hidden>
+                    <Input />
+                </Form.Item>
             </Row>
         </>
     }
@@ -644,10 +658,10 @@ const Index = (props) => {
                 });
                 formData.append('firstRow', value.rowVal);
                 formData.append('firstColumn', value.colVal);
-                formData.append('PollutantCode', '');
+                formData.append('PollutantCode',pollutantCode );
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
                 setUploading(true);
-                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
+                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -661,44 +675,48 @@ const Index = (props) => {
                         setFileList([]);
                         // setImportVisible(false)
                         message.success('导入成功');
-                        let mergeData3=[];
-                        let resData = data.Datas? data.Datas :[];
-                        if(!importReturnData || !importReturnData[0]){//首次导入
-                            setImportReturnData(resData) 
+                        let mergeData3 = [];
+                        let resData = data.Datas ? data.Datas : [];
+                        if (!importReturnData || !importReturnData[0]) {//首次导入
+                            setImportReturnData(resData)
                             setMergeData(resData);
                             mergeData3 = resData;
                         }
-                        if(resData&&resData[0]&&importReturnData&&importReturnData[0]){
-                            let mergeData = [],mergeData2=[];
-                               mergeData = importReturnData.map((item1) => {
-                                  return {...item1, ...resData.find((item2) => { // 合并key相同的对象
-                                    return item1['key'] === item2['key'] 
-                                  })}
-                                })
-                                mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
-                                    let list = resData.map(item2 => item2.key)
+                        if (resData && resData[0] && importReturnData && importReturnData[0]) {
+                            let mergeData = [], mergeData2 = [];
+                            mergeData = importReturnData.map((item1) => {
+                                return {
+                                    ...item1, ...resData.find((item2) => { // 合并key相同的对象
+                                        return item1['key'] === item2['key']
+                                    })
+                                }
+                            })
+                            mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
+                                let list = resData.map(item2 => item2.key)
 
-                                    return list.indexOf(item1.key) == -1
-                                  })
-                                 mergeData3= mergeData.map((item1) => {
-                                    return {...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
-                                      return item1['key'] === item2['key'] 
-                                    })}
-                                })
-    
-                        }  
+                                return list.indexOf(item1.key) == -1
+                            })
+                            mergeData3 = mergeData.map((item1) => {
+                                return {
+                                    ...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                        return item1['key'] === item2['key']
+                                    })
+                                }
+                            })
 
-                        setImportReturnData(mergeData3) 
-                        setMergeData(mergeData3) 
+                        }
+
+                        setImportReturnData(mergeData3)
+                        setMergeData(mergeData3)
                         console.log(mergeData3)
                         mergeData3.map((item, index) => {
-                            if(item.times){
-                              let i = item.times.split(",")[2]
-                              form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
-                              form.setFieldsValue({ [`O2values${i}`]: item.O2values })
-                              form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
-                              form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
-                              form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
+                            if (item.times) {
+                                let i = item.times.split(",")[2]
+                                form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
+                                form.setFieldsValue({ [`O2values${i}`]: item.O2values })
+                                form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
+                                form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
+                                form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
                             }
                         })
                     } else {
@@ -739,7 +757,7 @@ const Index = (props) => {
                         pagination={false}
                         className={'tableSty'}
                     /> */}
-                      <Table
+                    <Table
                         size="small"
                         loading={tableLoading}
                         bordered
