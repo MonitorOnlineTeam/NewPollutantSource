@@ -111,23 +111,17 @@ const Index = (props) => {
                     
                       form.resetFields()
                    if (res.MainTable) {
-                
 
                     form.setFieldsValue({
                         ...res.MainTable,
-                        AVG1:avg1, AVG4:avg4, AVG7:avg7,
-                        AVG2:avg2,AVG5:avg5, AVG8:avg8,
-                        AVG3:avg3,AVG6:avg6, AVG9:avg9,
+                        AVG1:avg1, AVG4:avg4, AVG7:avg7,  AVG2:avg2,AVG5:avg5, AVG8:avg8,  AVG3:avg3,AVG6:avg6, AVG9:avg9,
                     })
                   
                     if (res.ChildTable) {
                         const data = [];
                         res.ChildTable.map(item => {
                             if (item.ChildList) {
-                                item.ChildList.map(item2 => {
-                                    data.push(item2)
-                                })
-                            }
+                                item.ChildList.map(item2 => {  data.push(item2) })   }
                         })
                         data.map(item => {
                             const index = item.Sort;
@@ -274,7 +268,7 @@ const Index = (props) => {
                             let i = (index + 1) / 6
                             return <Form.Item name={`AVG${i+6}`} rules={[{ required: false, message: '' }]}><InputNumber disabled  placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -495,7 +489,6 @@ const Index = (props) => {
                     AddType: type,
                     MainTable: {
                         ...mainValue,
-                        FlowCEMS:'1',
                         PMUnit:mainValue.Unit,
                         PointId: pointId,
                         PollutantCode: pollutantCode,
@@ -695,14 +688,15 @@ const Index = (props) => {
         setTimeout(() => {
             form.validateFields().then((values) => {
                 const timeData = []
-                let i = -1;
+               
 
                 let index1,index2,dateNum;
                 if(recordType==1){
                     index1=6,index2=12,dateNum =  tableDatas.length - 2;
                 }else{
-                    index1=7,index2= tableDatas.length - 3;
+                    index1=7,index2 = tableDatas2.length - 3;
                 }
+                let i = -1;
                 Object.keys(values).map((item, index) => {
                   
 
@@ -723,7 +717,6 @@ const Index = (props) => {
                         }
                     }
                 })
-  
                 const formData = new FormData();
                 fileList.forEach((file) => {
                     formData.append('files', file);
@@ -785,10 +778,6 @@ const Index = (props) => {
                             if (item.times) {
                                 let i = item.times.split(",")[2]
                                 form.setFieldsValue({ [`CEMSValue${i}`]: item.values })
-                                form.setFieldsValue({ [`O2values${i}`]: item.O2values })
-                                form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
-                                form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
-                                form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
                             }
                         })
                     } else {

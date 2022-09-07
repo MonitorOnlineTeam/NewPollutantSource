@@ -223,7 +223,66 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-  },
 
-
+    /*** 温度CMS准确度检测表单 ***/
+    *getTemperatureCheckingRecord({ payload, callback }, { call, put, update }) { //获取
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetTemperatureCheckingRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addTemperatureCheckingRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
+      yield update({ tableLoading: true })
+      const result = yield call(services.AddTemperatureCheckingRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteTemperatureCheckingRecord({ payload, callback }, { call, put, update }) { //删除
+      yield update({ tableLoading: true })
+      const result = yield call(services.DeleteTemperatureCheckingRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    /*** 湿度CMS准确度检测表单 ***/
+    *getHumidityCheckingRecord({ payload, callback }, { call, put, update }) { //获取
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetHumidityCheckingRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addHumidityCheckingRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
+      yield update({ tableLoading: true })
+      const result = yield call(services.AddHumidityCheckingRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteHumidityCheckingRecord({ payload, callback }, { call, put, update }) { //删除
+      yield update({ tableLoading: true })
+      const result = yield call(services.DeleteHumidityCheckingRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+  }
 })

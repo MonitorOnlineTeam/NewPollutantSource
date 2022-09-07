@@ -119,3 +119,41 @@ export async function DeleteVelocityFieldCheckingRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteVelocityFieldCheckingRecord',params, null);
   return result;
 }
+
+/*** 温度CMS准确度检测表单 ***/
+
+//获取
+export async function GetTemperatureCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetTemperatureCheckingRecord',params, null);
+  return result;
+}
+
+//添加修改
+export async function AddTemperatureCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddTemperatureCheckingRecord',params, null);
+  return result;
+}
+//删除
+export async function DeleteTemperatureCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteTemperatureCheckingRecord',params, null);
+  return result;
+}
+
+/*** 湿度CMS准确度检测表单 ***/
+
+//获取
+export async function GetHumidityCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetHumidityCheckingRecord',params, null);
+  return result;
+}
+
+//添加修改
+export async function AddHumidityCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddHumidityCheckingRecord',params, null);
+  return result;
+}
+//删除
+export async function DeleteHumidityCheckingRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteHumidityCheckingRecord',params, null);
+  return result;
+}

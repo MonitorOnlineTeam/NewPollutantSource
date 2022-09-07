@@ -29,7 +29,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-    formLoading: loading.effects[`${namespace}/getPMReferenceCalibrationRecord`],
+    formLoading: loading.effects[`${namespace}/getTemperatureCheckingRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -40,30 +40,23 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        importData: (payload, callback) => { //导入
+        getTemperatureCheckingRecord: (payload, callback) => { //参数回填
             dispatch({
-                type: `${namespace}/importData`,
+                type: `${namespace}/getTemperatureCheckingRecord`,
                 payload: payload,
                 callback: callback
             })
         },
-        getPMReferenceCalibrationRecord: (payload, callback) => { //参数回填
+        addTemperatureCheckingRecord: (payload, callback) => { //保存 暂存
             dispatch({
-                type: `${namespace}/getPMReferenceCalibrationRecord`,
+                type: `${namespace}/addTemperatureCheckingRecord`,
                 payload: payload,
                 callback: callback
             })
         },
-        addPMReferenceCalibrationRecord: (payload, callback) => { //保存 暂存
+        deleteTemperatureCheckingRecord: (payload, callback) => { //删除
             dispatch({
-                type: `${namespace}/addPMReferenceCalibrationRecord`,
-                payload: payload,
-                callback: callback
-            })
-        },
-        deletePMReferenceCalibrationRecord: (payload, callback) => { //删除
-            dispatch({
-                type: `${namespace}/deletePMReferenceCalibrationRecord`,
+                type: `${namespace}/deleteTemperatureCheckingRecord`,
                 payload: payload,
                 callback: callback
             })
@@ -83,54 +76,52 @@ const Index = (props) => {
 
 
     const [recordName, setRecordName] = useState()
-    const [recordType, setRecordType] = useState()
+    const [pollutantCode, setPollutantCode] = useState(509)
     useEffect(() => {
         if(!pointId){ return }
-        initData(pointId)
+        initData()
     }, [pointId]);
     const initData = (pointId) => {
-        props.getPMReferenceCalibrationRecord({
+        props.getTemperatureCheckingRecord({
             PointCode: pointId,
-            PollutantCode: 502,
+            PollutantCode: pollutantCode,
             RecordDate: "",
             Flag: ""
         }, (res) => {
             if (res) {
                 setRecordName(res.RecordName)
-                setRecordType(res.RecordType)
-            }
-            if (res && res.MainTable) {
-                form.setFieldsValue({
-                    ...res.MainTable
-                })
-                
-                if(res.ChildTable){
-                    const data  =[];
-                    res.ChildTable.map(item=>{
-                        if(item.ChildList){
-                            item.ChildList.map(item2=>{
-                                data.push(item2)
-                            })
-                        }  
-                   })
-                   data.map(item=>{
-                    const index = item.Sort -1 ;
-                    //   form.setFieldsValue({
-                    //     [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
-                    //     [`BTime${index}`]: item.BTime&&moment(item.BTime),
-                    //     [`ETime${index}`]: item.ETime&&moment(item.ETime),
-                    //     [`MembraneNum${index}`]: item.MembraneNum,    
-                    //     [`PMWeight${index}`]: item.PMWeight,
-                    //     [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                    //     [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                    //     [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                    //     [`MeasuredValue${index}`]: item.MeasuredValue,
-                    //     [`O2values${index}`]: item.O2values,
-                    //     [`WDvalues${index}`]: item.WDvalues,
-                    //     [`SDvalues${index}`]: item.SDvalues,
-                    //     [`YLvalues${index}`]: item.YLvalues,
-                    //   })
-                   })
+                const avg1 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[0],
+                      avg4 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[1], 
+                      avg2 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[0], 
+                      avg5 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[1], 
+                      avg3 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[0], 
+                      avg6 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[1];  
+                    
+                      form.resetFields()
+                   if (res.MainTable) {
+            
+                    form.setFieldsValue({
+                        ...res.MainTable,
+                        AVG1:avg1, AVG4:avg4, AVG2:avg2,AVG5:avg5, AVG3:avg3,AVG6:avg6,
+                    })
+                  
+                    if (res.ChildTable) {
+                        const data = [];
+                        res.ChildTable.map(item => {
+                            if (item.ChildList) {
+                                item.ChildList.map(item2 => {  data.push(item2) })   }
+                        })
+                        data.map(item => {
+                            const index = item.Sort;
+                              form.setFieldsValue({
+                                [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
+                                [`BTime${index}`]: item.BTime&&moment(item.BTime),
+                                [`ETime${index}`]: item.ETime&&moment(item.ETime),
+                                [`Manual${index}`]: item.Manual,    
+                                [`CEMSValue${index}`]: item.CEMSValue,
+                              })
+                        })
+                    }
                 }
             }
 
@@ -146,8 +137,8 @@ const Index = (props) => {
         const values = form.getFieldValue('CreateDate0')
         if (type == 'CreateDate0' && autoDateFlag) {
             form.setFieldsValue({
-                CreateDate5: moment(moment(values).add('day', 1)),
-                CreateDate10: moment(moment(values).add('day', 2)),
+                [`CreateDate7`]: moment(moment(values).add('day', 1)),
+                [`CreateDate14`]: moment(moment(values).add('day', 2)),
             })
             setAutoDateFlag(false)
         }
@@ -236,22 +227,33 @@ const Index = (props) => {
                     title: '手工',
                     align: 'center',
                     render: (text, record, index) => {
-                       if( (index + 1 )  % 7 == 0 ){
-                           return {  
-                               children: <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>,
-                               props: { colSpan: 2 },
-                              } 
+                        
+                        if ((index + 1) % 7 == 0) { //相对误差
+                            let i = (index + 1) / 7 
+                            return {
+                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
+                                props: { colSpan: 3 },
                             }
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        }
+                        if ((index + 2) % 7 == 0) { //平均值
+                            let i = (index + 2) / 7 
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+
+                        }
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: 'CEMS',
                     align: 'center',
                     render: (text, record, index) => {
-                        if( (index + 1 )  % 7 == 0 ){ 
-                            return {  props: { colSpan: 0 }, }   }
-                        return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        if ((index + 1) % 7 == 0) { return { props: { colSpan: 0 }, } }
+
+                        let i = (index + 2) / 7 
+                        if ((index + 2) % 7 == 0) { //平均值
+                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                        }
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -264,7 +266,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{form.getFieldValue('Equation')}{22222222222222}</span>,
+            title: <span>{form.getFieldValue('Equation')}</span>,
             align: 'center',
         },
     ]
@@ -282,39 +284,59 @@ const Index = (props) => {
             setIsTimeReg(true)
             setIsReg(true)
         }
+
         setTimeout(() => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
+
+                    let mainValue = {...values}
+                    Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
+                        if(/Time/g.test(item) || /CreateDate/g.test(item) || /Manual/g.test(item) || /CEMSValue/g.test(item) || /AVG/g.test(item) || /RelativeError/g.test(item) ){
+                           delete mainValue[item];
+                        }
+                    })
+                    const avg1 = mainValue.AVG1? mainValue.AVG1 : '',
+                    avg2 = mainValue.AVG2? mainValue.AVG2 : '',
+                    avg3 = mainValue.AVG3? mainValue.AVG3 : '',
+                    avg4 = mainValue.AVG4? mainValue.AVG4 : '',
+                    avg5 = mainValue.AVG5? mainValue.AVG5 : '', 
+                    avg6 = mainValue.AVG6? mainValue.AVG6 : '';
                     let data = {
                         AddType: type,
                         MainTable: {
-                            ...values2,
-                            PointId: pointId
+                            ...mainValue,
+                            PointId: pointId,
+                            PollutantCode: pollutantCode,
+                            AVG1: `${avg1},${avg4}`,
+                            AVG2: `${avg2},${avg5},`,
+                            AVG3: `${avg3},${avg6},`,
+                            RelativeError1: `${avg1},${avg4}`,
+                            RelativeError2: `${avg2},${avg5}`,
+                            RelativeError3: `${avg3},${avg6}`,
+                            Evaluation:mainValue.Evaluation,
                         },
                         ChildTable: [],
                     }
-                    data.ChildTable = tableDatas.map((item, index) => {
-                        return {
-                            Sort: item,
-                            CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
-                            BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
-                            ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
-                            MembraneNum: values[`MembraneNum${index}`],
-                            PMWeight: values[`PMWeight${index}`],
-                            BenchmarkVolume: values[`BenchmarkVolume${index}`],
-                            BenchmarkDensity: values[`BenchmarkDensity${index}`],
-                            OperatingModeDensity: values[`OperatingModeDensity${index}`],
-                            MeasuredValue: values[`MeasuredValue${index}`],
-                            O2values: form.getFieldValue([`O2values${index}`]),
-                            WDvalues: form.getFieldValue([`WDvalues${index}`]),
-                            SDvalues: form.getFieldValue([`SDvalues${index}`]),
-                            YLvalues: form.getFieldValue([`YLvalues${index}`]),
-                        }
+                    let dateArr = [];
+                    tableDatas.map((item, index) => {
+                        if((index + 1) % 7 != 0 && (index + 2) % 7 != 0){ 
+                          dateArr.push({
+                            Sort: index,
+                            CreateDate: index <= 6 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 6 && index <= 12 ? values[`CreateDate7`] && values[`CreateDate7`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate14`] && values[`CreateDate14`].format('YYYY-MM-DD 00:00:00'),
+                            BTime: index <= 6 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 6 && index <= 12? values[`CreateDate7`] && values[`BTime${index}`] && `${values[`CreateDate7`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate14`] && values[`BTime${index}`] && `${values[`CreateDate14`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                            ETime: index <= 6 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 6 && index <= 12? values[`CreateDate7`] && values[`BTime${index}`] && `${values[`CreateDate7`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate14`] && values[`ETime${index}`] && `${values[`CreateDate14`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                            Manual: values[`Manual${index}`],
+                            CEMSValue: values[`CEMSValue${index}`],
+                            FactoryCoefficient: values[`FactoryCoefficient${index}`],
+                        })
+                    
+                    }
+                })
+                    data.ChildTable = dateArr; 
 
-                    })
-                    props.addPMReferenceCalibrationRecord(data,()=>{
+                    props.addTemperatureCheckingRecord(data,()=>{
                         type == 1? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData(pointId)
+                        initData()
                     })
                 }).catch((errorInfo) => {
                     console.log('Failed:', errorInfo);
@@ -331,33 +353,15 @@ const Index = (props) => {
         form.resetFields();
     }
     const del = () => {
-        props.deletePMReferenceCalibrationRecord({
+        props.deleteTemperatureCheckingRecord({
             ID:form.getFieldValue('ID'),
+            PollutantCode:pollutantCode,
         },()=>{
-            initData(pointId)
+            initData()
         })
     }
 
 
-    const weightVolumeBlur = (index) => {
-        const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
-        if (weight && volume) {
-
-            const benchmarkDensity =  Number(interceptTwo(weight / volume * 1000))
-            form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
-            const atmos = Number(form.getFieldValue('Atmos'))
-                 
-                   const   SDvalues  = Number(form.getFieldValue(`SDvalues${index}`)),
-                           WDvalues  = Number( form.getFieldValue(`WDvalues${index}`)),
-                           YLvalues  = Number(form.getFieldValue(`YLvalues${index}`));
-                    if (atmos &&  SDvalues && WDvalues && YLvalues && benchmarkDensity) {
-                        const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
-                        form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
-                    }
-                  
-                
-        }
-    }
     const numCheck = (e, name) => {
         const value = e.target.value
         if (value) {
@@ -400,7 +404,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="Basis" >
+                    <Form.Item label="CEMS原理" name="TestPrinciple" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -416,18 +420,18 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="参比方法计量单位" name="ReferenceManufactorName">
+                    <Form.Item label="参比方法计量单位" name="PMUnit">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS计量单位" name="ParamModelNum" >
+                    <Form.Item label="CEMS计量单位" name="Unit" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={20}>
-                    <Form.Item label="参比方法原理" name="ParamModelNum" >
+                    <Form.Item label="参比方法原理" name="Basis" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -477,21 +481,22 @@ const Index = (props) => {
         setTimeout(() => {
             form.validateFields().then((values) => {
                 const timeData = []
+                let index1=6,index2=12,dateNum =  tableDatas.length - 2;
                 let i = -1;
                 Object.keys(values).map((item, index) => {
                     if (/Time/g.test(item)) {
                         i++;
-                        if (i < 5) {
+                        if (i < index1) {
                             if (values['CreateDate0'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
                                 timeData.push(`${moment(values['CreateDate0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
-                        } else if (i >= 5 && i < 10) {
-                            if (values['CreateDate5'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
-                                timeData.push(`${moment(values['CreateDate5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
+                        } else if (i >= index1 && i < index2) {
+                            if (values[`CreateDate${index1}`] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
+                                timeData.push(`${moment(values[`CreateDate${index1}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values[`CreateDate${index1}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
-                        } else {
-                            if (values['CreateDate10'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
-                                i == 14 ? timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}`) : timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
+                        } else {              
+                            if (values[`CreateDate${index2}`] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
+                                i == dateNum? timeData.push(`${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}`) : timeData.push(`${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
                         }
                     }
@@ -502,10 +507,10 @@ const Index = (props) => {
                 });
                 formData.append('firstRow', value.rowVal);
                 formData.append('firstColumn', value.colVal);
-                formData.append('PollutantCode', '');
+                formData.append('PollutantCode',pollutantCode );
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
                 setUploading(true);
-                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
+                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -517,46 +522,46 @@ const Index = (props) => {
                     setUploading(false);
                     if (data.IsSuccess) {
                         setFileList([]);
-                        // setImportVisible(false)
+                        setImportVisible(false)
                         message.success('导入成功');
-                        let mergeData3=[];
-                        let resData = data.Datas? data.Datas :[];
-                        if(!importReturnData || !importReturnData[0]){//首次导入
-                            setImportReturnData(resData) 
+                        let mergeData3 = [];
+                        let resData = data.Datas ? data.Datas : [];
+                        if (!importReturnData || !importReturnData[0]) {//首次导入
+                            setImportReturnData(resData)
                             setMergeData(resData);
                             mergeData3 = resData;
                         }
-                        if(resData&&resData[0]&&importReturnData&&importReturnData[0]){
-                            let mergeData = [],mergeData2=[];
-                               mergeData = importReturnData.map((item1) => {
-                                  return {...item1, ...resData.find((item2) => { // 合并key相同的对象
-                                    return item1['key'] === item2['key'] 
-                                  })}
-                                })
-                                mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
-                                    let list = resData.map(item2 => item2.key)
+                        if (resData && resData[0] && importReturnData && importReturnData[0]) {
+                            let mergeData = [], mergeData2 = [];
+                            mergeData = importReturnData.map((item1) => {
+                                return {
+                                    ...item1, ...resData.find((item2) => { // 合并key相同的对象
+                                        return item1['key'] === item2['key']
+                                    })
+                                }
+                            })
+                            mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
+                                let list = resData.map(item2 => item2.key)
 
-                                    return list.indexOf(item1.key) == -1
-                                  })
-                                 mergeData3= mergeData.map((item1) => {
-                                    return {...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
-                                      return item1['key'] === item2['key'] 
-                                    })}
-                                })
-    
-                        }  
+                                return list.indexOf(item1.key) == -1
+                            })
+                            mergeData3 = mergeData.map((item1) => {
+                                return {
+                                    ...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                        return item1['key'] === item2['key']
+                                    })
+                                }
+                            })
 
-                        setImportReturnData(mergeData3) 
-                        setMergeData(mergeData3) 
+                        }
+
+                        setImportReturnData(mergeData3)
+                        setMergeData(mergeData3)
                         console.log(mergeData3)
                         mergeData3.map((item, index) => {
-                            if(item.times){
-                              let i = item.times.split(",")[2]
-                              form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
-                              form.setFieldsValue({ [`O2values${i}`]: item.O2values })
-                              form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
-                              form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
-                              form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
+                            if (item.times) {
+                                let i = item.times.split(",")[2]
+                                form.setFieldsValue({ [`CEMSValue${i}`]: item.values })
                             }
                         })
                     } else {
