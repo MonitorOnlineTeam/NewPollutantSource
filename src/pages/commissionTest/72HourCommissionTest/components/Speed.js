@@ -14,7 +14,7 @@ import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
 import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
-import moment from 'moment';
+import moment, { RFC_2822 } from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "../style.less"
 import Cookie from 'js-cookie';
@@ -73,7 +73,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, '平均值', 6, 7, 8, 9, 10, '平均值', , 11, 12, 13, 14, 15, '平均值',]);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, '平均值', 6, 7, 8, 9, 10, '平均值',  11, 12, 13, 14, 15, '平均值',]);
     const [tableDatas2, setTableDatas2] = useState([1, 2, 3, 4, 5, '平均值', '相对误差', 6, 7, 8, 9, 10, '平均值', '相对误差', 11, 12, 13, 14, 15, '平均值', '相对误差']);
 
     const [form] = Form.useForm();
@@ -84,7 +84,7 @@ const Index = (props) => {
     const { pointId, tableLoading, formLoading, } = props;
     const [pollutantCode, setPollutantCode] = useState(508)
     const [recordName, setRecordName] = useState()
-    const [flowCEMS, setFlowCEMS] = useState()
+    const [recordType, setRecordType] = useState(1)
     useEffect(() => {
         if (!pointId) { return }
         initData()
@@ -98,13 +98,28 @@ const Index = (props) => {
         }, (res) => {
             if (res) {
                 setRecordName(res.RecordName)
-                setFlowCEMS(res.RecordType)
+                setRecordType(res.RecordType)
+                const avg1 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[0],
+                      avg4 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[1], 
+                      avg7 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[2], 
+                      avg2 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[0], 
+                      avg5 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[1], 
+                      avg8 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[2], 
+                      avg3 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[0], 
+                      avg6 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[1], 
+                      avg9 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[2];  
+                    
+                      form.resetFields()
+                   if (res.MainTable) {
+                
 
-                if (res.MainTable) {
                     form.setFieldsValue({
-                        ...res.MainTable
+                        ...res.MainTable,
+                        AVG1:avg1, AVG4:avg4, AVG7:avg7,
+                        AVG2:avg2,AVG5:avg5, AVG8:avg8,
+                        AVG3:avg3,AVG6:avg6, AVG9:avg9,
                     })
-
+                  
                     if (res.ChildTable) {
                         const data = [];
                         res.ChildTable.map(item => {
@@ -116,21 +131,14 @@ const Index = (props) => {
                         })
                         data.map(item => {
                             const index = item.Sort;
-                            //   form.setFieldsValue({
-                            //     [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
-                            //     [`BTime${index}`]: item.BTime&&moment(item.BTime),
-                            //     [`ETime${index}`]: item.ETime&&moment(item.ETime),
-                            //     [`MembraneNum${index}`]: item.MembraneNum,    
-                            //     [`PMWeight${index}`]: item.PMWeight,
-                            //     [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                            //     [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                            //     [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                            //     [`MeasuredValue${index}`]: item.MeasuredValue,
-                            //     [`O2values${index}`]: item.O2values,
-                            //     [`WDvalues${index}`]: item.WDvalues,
-                            //     [`SDvalues${index}`]: item.SDvalues,
-                            //     [`YLvalues${index}`]: item.YLvalues,
-                            //   })
+                              form.setFieldsValue({
+                                [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
+                                [`BTime${index}`]: item.BTime&&moment(item.BTime),
+                                [`ETime${index}`]: item.ETime&&moment(item.ETime),
+                                [`Manual${index}`]: item.Manual,    
+                                [`CEMSValue${index}`]: item.CEMSValue,
+                                [`FactoryCoefficient${index}`]: item.FactoryCoefficient,
+                              })
                         })
                     }
                 }
@@ -145,10 +153,11 @@ const Index = (props) => {
     const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (type) => {
         const values = form.getFieldValue('CreateDate0')
+        const index1 = recordType == 1 ? 0 : 1 ;
         if (type == 'CreateDate0' && autoDateFlag) {
             form.setFieldsValue({
-                CreateDate5: moment(moment(values).add('day', 1)),
-                CreateDate10: moment(moment(values).add('day', 2)),
+                [`CreateDate${index1+6}`]: moment(moment(values).add('day', 1)),
+                [`CreateDate${index1+12}`]: moment(moment(values).add('day', 2)),
             })
             setAutoDateFlag(false)
         }
@@ -165,6 +174,13 @@ const Index = (props) => {
             }
 
         }
+
+    }
+    const manualBlur = (index)=>{
+      const value1 = form.getFieldValue(`Manual${index}`),value2 = form.getFieldValue(`CEMSValue${index}`);
+      if((value1 || value1==0) && (value2 || value2==0)){
+        form.setFieldsValue({[`FactoryCoefficient${index}`] : interceptTwo( value1 / value2) })
+      }
 
     }
     const [isReg, setIsReg] = useState(false)
@@ -231,10 +247,11 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
-                            return <Form.Item name={`AVG1`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                            let i = (index + 1) / 6
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: isReg, message: '' }]}><InputNumber  disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -242,10 +259,11 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
-                            return <Form.Item name={`AVG2`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                            let i = (index + 1) / 6
+                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
                 {
@@ -253,9 +271,10 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
-                            return <Form.Item name={`AVG3`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                            let i = (index + 1) / 6
+                            return <Form.Item name={`AVG${i+6}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled  placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -327,18 +346,20 @@ const Index = (props) => {
                     title: '手工',
                     align: 'center',
                     render: (text, record, index) => {
-
+                        
                         if ((index + 1) % 7 == 0) { //相对误差
+                            let i = (index + 1) / 7 
                             return {
-                                children: <Form.Item name={`RelativeError${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 3 },
                             }
                         }
-                        if ((index + 1) % 6 == 0) { //平均值
-                            return <Form.Item name={`AVG1`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                        if ((index + 2) % 7 == 0) { //平均值
+                            let i = (index + 2) / 7 
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -346,8 +367,10 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if ((index + 1) % 7 == 0) { return { props: { colSpan: 0 }, } }
-                        if ((index + 1) % 6 == 0) { //平均值
-                            return <Form.Item name={`AVG2`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+
+                        let i = (index + 2) / 7 
+                        if ((index + 2) % 7 == 0) { //平均值
+                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                         }
                         return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
@@ -357,8 +380,10 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if ((index + 1) % 7 == 0) { return { props: { colSpan: 0 }, } }
-                        if ((index + 1) % 6 == 0) { //平均值
-                            return <Form.Item name={`AVG3`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>;
+
+                        let i = (index + 2) / 7 
+                        if ((index + 2) % 7 == 0) { //平均值
+                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                         }
                         return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
                     }
@@ -451,44 +476,80 @@ const Index = (props) => {
 
                 let mainValue = {...values}
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if(/Time/g.test(item) || /ReferenceValue/g.test(item) || /MeasuredValue/g.test(item) || /AlignmentValue/g.test(item)){
+                    if(/Time/g.test(item) || /CreateDate/g.test(item) || /Manual/g.test(item) || /CEMSValue/g.test(item)|| /FactoryCoefficient/g.test(item) || /AVG/g.test(item) || /RelativeError/g.test(item) ){
                        delete mainValue[item];
                     }
                 })
+
+                 
+               const avg1 = mainValue.AVG1? mainValue.AVG1 : '',
+                     avg2 = mainValue.AVG2? mainValue.AVG2 : '',
+                     avg3 = mainValue.AVG3? mainValue.AVG3 : '',
+                     avg4 = mainValue.AVG4? mainValue.AVG4 : '',
+                     avg5 = mainValue.AVG5? mainValue.AVG5 : '', 
+                     avg6 = mainValue.AVG6? mainValue.AVG6 : '',
+                     avg7 = mainValue.AVG7? mainValue.AVG7 : '',
+                     avg8 = mainValue.AVG8? mainValue.AVG8 : '',
+                     avg9 = mainValue.AVG9? mainValue.AVG9 : '';
                 let data = {
                     AddType: type,
                     MainTable: {
                         ...mainValue,
+                        FlowCEMS:'1',
                         PMUnit:mainValue.Unit,
                         PointId: pointId,
                         PollutantCode: pollutantCode,
-                       
+                        AVG1: `${avg1},${avg4},${avg7}`,
+                        AVG2: `${avg2},${avg5},${avg8}`,
+                        AVG3: `${avg3},${avg6},${avg9}`,
+                        RelativeError1: recordType==2&&`${avg1},${avg4}`,
+                        RelativeError2: recordType==2&&`${avg2},${avg5}`,
+                        RelativeError3: recordType==2&&`${avg3},${avg6}`,
+                        VelocityCoefficientAVG:mainValue.VelocityCoefficientAVG,
+                        Evaluation:mainValue.Evaluation,
+                        StandardDeviation:mainValue.StandardDeviation,
+                        RelativeDeviation:mainValue.RelativeDeviation,
                     },
                     ChildTable: [],
                 }
-                data.ChildTable = tableDatas.map((item, index) => {
-                    return {
-                        Sort: item,
-                        CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
-                        BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
-                        ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
-                        MembraneNum: values[`MembraneNum${index}`],
-                        PMWeight: values[`PMWeight${index}`],
-                        BenchmarkVolume: values[`BenchmarkVolume${index}`],
-                        BenchmarkDensity: values[`BenchmarkDensity${index}`],
-                        OperatingModeDensity: values[`OperatingModeDensity${index}`],
-                        MeasuredValue: values[`MeasuredValue${index}`],
-                        O2values: form.getFieldValue([`O2values${index}`]),
-                        WDvalues: form.getFieldValue([`WDvalues${index}`]),
-                        SDvalues: form.getFieldValue([`SDvalues${index}`]),
-                        YLvalues: form.getFieldValue([`YLvalues${index}`]),
+                let dateArr = [];
+                if(recordType==1){
+                     tableDatas.map((item, index) => {
+                            if((index + 1) % 6 != 0){ 
+                              dateArr.push( {
+                                Sort: index,
+                                CreateDate: index <= 5 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 5 && index <= 11 ? values[`CreateDate6`] && values[`CreateDate6`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate12`] && values[`CreateDate12`].format('YYYY-MM-DD 00:00:00'),
+                                BTime: index <= 5 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 5 && index <= 11 ? values[`CreateDate6`] && values[`BTime${index}`] && `${values[`CreateDate6`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate12`] && values[`BTime${index}`] && `${values[`CreateDate12`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                                ETime: index <= 5 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 5 && index <= 11 ? values[`CreateDate6`] && values[`BTime${index}`] && `${values[`CreateDate6`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate12`] && values[`ETime${index}`] && `${values[`CreateDate12`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                                Manual: values[`Manual${index}`],
+                                CEMSValue: values[`CEMSValue${index}`],
+                                FactoryCoefficient: values[`FactoryCoefficient${index}`],
+                            })
+                        
+                        }
+                    })     
+                        
+                }else{//带准确度
+                  tableDatas2.map((item, index) => {
+                        if((index + 1) % 7 != 0 && (index + 2) % 7 != 0){ 
+                          dateArr.push({
+                            Sort: index,
+                            CreateDate: index <= 6 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 6 && index <= 12 ? values[`CreateDate7`] && values[`CreateDate7`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate14`] && values[`CreateDate14`].format('YYYY-MM-DD 00:00:00'),
+                            BTime: index <= 6 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 6 && index <= 12? values[`CreateDate7`] && values[`BTime${index}`] && `${values[`CreateDate7`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate14`] && values[`BTime${index}`] && `${values[`CreateDate14`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                            ETime: index <= 6 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 6 && index <= 12? values[`CreateDate7`] && values[`BTime${index}`] && `${values[`CreateDate7`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate14`] && values[`ETime${index}`] && `${values[`CreateDate14`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                            Manual: values[`Manual${index}`],
+                            CEMSValue: values[`CEMSValue${index}`],
+                            FactoryCoefficient: values[`FactoryCoefficient${index}`],
+                        })
+                    
                     }
-
+                })   
+                }     
+                data.ChildTable = dateArr;     
+                props.addVelocityFieldCheckingRecord(data, () => {
+                    type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+                    initData()
                 })
-                // props.addVelocityFieldCheckingRecord(data, () => {
-                //     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                //     initData()
-                // })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
                 message.warning('请输入完整的数据')
@@ -506,6 +567,7 @@ const Index = (props) => {
     const del = () => {
         props.deleteVelocityFieldCheckingRecord({
             ID: form.getFieldValue('ID'),
+            PollutantCode:pollutantCode,
         }, () => {
             initData()
         })
@@ -634,24 +696,36 @@ const Index = (props) => {
             form.validateFields().then((values) => {
                 const timeData = []
                 let i = -1;
+
+                let index1,index2,dateNum;
+                if(recordType==1){
+                    index1=6,index2=12,dataNum =  tableDatas.length - 2;
+                }else{
+                    index1=7,index2=14;
+                }
                 Object.keys(values).map((item, index) => {
+                  
+
                     if (/Time/g.test(item)) {
                         i++;
-                        if (i < 5) {
+                        if (i < index1) {
                             if (values['CreateDate0'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
                                 timeData.push(`${moment(values['CreateDate0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate0']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
-                        } else if (i >= 5 && i < 10) {
-                            if (values['CreateDate5'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
-                                timeData.push(`${moment(values['CreateDate5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate5']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
+                        } else if (i >= index1 && i < index2) {
+                            if (values[`CreateDate${index1}`] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
+                                timeData.push(`${moment(values[`CreateDate${index1}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values[`CreateDate${index1}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
-                        } else {
-                            if (values['CreateDate10'] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
-                                i == 14 ? timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}`) : timeData.push(`${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values['CreateDate10']).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
+                        } else {              
+                            if (values[`CreateDate${index2}`] && form.getFieldValue(`BTime${i}`) && form.getFieldValue(`ETime${i}`)) {
+                                i == dateNum? timeData.push(`${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}`) : timeData.push(`${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`BTime${i}`)).format('HH:mm')},${moment(values[`CreateDate${index2}`]).format('YYYY-MM-DD')} ${moment(form.getFieldValue(`ETime${i}`)).format('HH:mm')},${i}|`)
                             }
                         }
                     }
                 })
+                console.log(timeData)
+                return;
+
                 const formData = new FormData();
                 fileList.forEach((file) => {
                     formData.append('files', file);
@@ -673,7 +747,7 @@ const Index = (props) => {
                     setUploading(false);
                     if (data.IsSuccess) {
                         setFileList([]);
-                        // setImportVisible(false)
+                        setImportVisible(false)
                         message.success('导入成功');
                         let mergeData3 = [];
                         let resData = data.Datas ? data.Datas : [];
@@ -709,16 +783,16 @@ const Index = (props) => {
                         setImportReturnData(mergeData3)
                         setMergeData(mergeData3)
                         console.log(mergeData3)
-                        mergeData3.map((item, index) => {
-                            if (item.times) {
-                                let i = item.times.split(",")[2]
-                                form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
-                                form.setFieldsValue({ [`O2values${i}`]: item.O2values })
-                                form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
-                                form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
-                                form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
-                            }
-                        })
+                        // mergeData3.map((item, index) => {
+                        //     if (item.times) {
+                        //         let i = item.times.split(",")[2]
+                        //         form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
+                        //         form.setFieldsValue({ [`O2values${i}`]: item.O2values })
+                        //         form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
+                        //         form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
+                        //         form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
+                        //     }
+                        // })
                     } else {
                         message.error(data.Message)
                     }
@@ -736,6 +810,7 @@ const Index = (props) => {
     }
     const onValuesChange = (hangedValues, allValues) => {
     }
+
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
@@ -748,7 +823,7 @@ const Index = (props) => {
                     onValuesChange={onValuesChange}
                 >
                     <SearchComponents />
-                    {/* <Table
+                    {recordType ==1? <Table
                         size="small"
                         loading={tableLoading}
                         bordered
@@ -756,7 +831,7 @@ const Index = (props) => {
                         columns={columns}
                         pagination={false}
                         className={'tableSty'}
-                    /> */}
+                    /> :
                     <Table
                         size="small"
                         loading={tableLoading}
@@ -765,7 +840,7 @@ const Index = (props) => {
                         columns={accuracyColumns}
                         pagination={false}
                         className={'tableSty'}
-                    />
+                    />}
                     <Table
                         size="small"
                         loading={tableLoading}
