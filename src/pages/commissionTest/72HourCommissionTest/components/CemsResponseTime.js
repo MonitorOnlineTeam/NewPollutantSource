@@ -296,7 +296,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                    return   <Form.Item  name={`LabelGas80${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(80,100,`LabelGas80${index}`)}} placeholder='请输入' /></Form.Item>;
+                    return   <Form.Item  name={`LabelGas80${index}`} rules={[{ required: index==4||index==5?false: isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(80,100,`LabelGas80${index}`)}} placeholder='请输入' /></Form.Item>;
             }
 
 
@@ -308,7 +308,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return   <Form.Item  name={`LabelGas50${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(50,60,`LabelGas50${index}`)}} placeholder='请输入' /></Form.Item>;
+                return   <Form.Item  name={`LabelGas50${index}`} rules={[{ required: index==4||index==5? false : isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(50,60,`LabelGas50${index}`)}} placeholder='请输入' /></Form.Item>;
 
             }
         },
@@ -319,7 +319,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return   <Form.Item  name={`LabelGas20${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>{labelGasBlur(20,30,`LabelGas20${index}`)}}  disabled={index==4||index==5}  placeholder='请输入' /></Form.Item>;
+                return   <Form.Item  name={`LabelGas20${index}`} rules={[{ required:  index==4||index==5? false : isReg, message: '' }]}><InputNumber onBlur={()=>{labelGasBlur(20,30,`LabelGas20${index}`)}}  disabled={index==4||index==5}  placeholder='请输入' /></Form.Item>;
 
             }
 
@@ -333,7 +333,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`Remark${index}`} rules={[{ required: isReg, message: '' }]}>
+                return <Form.Item name={`Remark${index}`} rules={[{ required: false, message: '' }]}>
                     <TextArea rows={1} placeholder='请输入'/>
                 </Form.Item>;
             }
@@ -365,7 +365,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
-                return <Form.Item name={`RangeCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
+                return <Form.Item name={`RangeCalibration`} rules={[{ required: false, message: '' }]}>
                     <InputNumber disabled placeholder='请输入' />
                 </Form.Item>
             }

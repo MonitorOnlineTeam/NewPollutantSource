@@ -248,7 +248,7 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: isReg, message: '' }]}><InputNumber  disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber  disabled placeholder='请输入' /></Form.Item>;
 
                         }
                         return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
@@ -260,7 +260,7 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
 
                         }
                         return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
@@ -272,7 +272,7 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i+6}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled  placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i+6}`} rules={[{ required: false, message: '' }]}><InputNumber disabled  placeholder='请输入' /></Form.Item>;
                         }
                         return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
@@ -350,13 +350,13 @@ const Index = (props) => {
                         if ((index + 1) % 7 == 0) { //相对误差
                             let i = (index + 1) / 7 
                             return {
-                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 3 },
                             }
                         }
                         if ((index + 2) % 7 == 0) { //平均值
                             let i = (index + 2) / 7 
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
 
                         }
                         return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
@@ -370,7 +370,7 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                         }
                         return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                     }
@@ -383,7 +383,7 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                         }
                         return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
                     }
@@ -699,9 +699,9 @@ const Index = (props) => {
 
                 let index1,index2,dateNum;
                 if(recordType==1){
-                    index1=6,index2=12,dataNum =  tableDatas.length - 2;
+                    index1=6,index2=12,dateNum =  tableDatas.length - 2;
                 }else{
-                    index1=7,index2=14;
+                    index1=7,index2= tableDatas.length - 3;
                 }
                 Object.keys(values).map((item, index) => {
                   
@@ -723,9 +723,7 @@ const Index = (props) => {
                         }
                     }
                 })
-                console.log(timeData)
-                return;
-
+  
                 const formData = new FormData();
                 fileList.forEach((file) => {
                     formData.append('files', file);
@@ -783,16 +781,16 @@ const Index = (props) => {
                         setImportReturnData(mergeData3)
                         setMergeData(mergeData3)
                         console.log(mergeData3)
-                        // mergeData3.map((item, index) => {
-                        //     if (item.times) {
-                        //         let i = item.times.split(",")[2]
-                        //         form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
-                        //         form.setFieldsValue({ [`O2values${i}`]: item.O2values })
-                        //         form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
-                        //         form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
-                        //         form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
-                        //     }
-                        // })
+                        mergeData3.map((item, index) => {
+                            if (item.times) {
+                                let i = item.times.split(",")[2]
+                                form.setFieldsValue({ [`CEMSValue${i}`]: item.values })
+                                form.setFieldsValue({ [`O2values${i}`]: item.O2values })
+                                form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
+                                form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
+                                form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
+                            }
+                        })
                     } else {
                         message.error(data.Message)
                     }
