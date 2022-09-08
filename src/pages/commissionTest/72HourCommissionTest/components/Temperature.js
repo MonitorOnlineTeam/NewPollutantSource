@@ -131,7 +131,7 @@ const Index = (props) => {
         })
     }
     const disabledDate = (current) => {
-        return current && current > moment().endOf('year') || current < moment().startOf('year');
+        //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
@@ -171,7 +171,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 const number = index + 1 + 6;
                 const obj = {
-                    children: <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="MM-DD" /></Form.Item>,
+                    children: <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>,
                     props: { rowSpan: number % 7 == 0 ? 7 : 0 },
                 };
                 return obj;

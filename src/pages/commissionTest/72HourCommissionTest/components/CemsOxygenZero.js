@@ -170,7 +170,7 @@ const Index = (props) => {
         })
     }
     const disabledDate = (current) => {
-        return current && current > moment().endOf('year') || current < moment().startOf('year');
+        //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
     const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (type) => {
@@ -223,7 +223,7 @@ const Index = (props) => {
             align: 'center',
             width: 140,
             render: (text, record, index) => {
-                return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="MM-DD" /></Form.Item>;
+                return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
             }
         },
         {

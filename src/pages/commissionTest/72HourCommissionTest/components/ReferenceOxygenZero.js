@@ -193,7 +193,7 @@ const Index = (props) => {
         })
     }
     const disabledDate = (current) => {
-        return current && current > moment().endOf('year') || current < moment().startOf('year');
+        //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)

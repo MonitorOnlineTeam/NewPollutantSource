@@ -170,7 +170,7 @@ const Index = (props) => {
         })
     }
     const disabledDate = (current) => {
-        return current && current > moment().endOf('year') || current < moment().startOf('year');
+        //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
@@ -222,7 +222,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 0) {
                     return {
-                        children: <Form.Item name={`CreateTime`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate}  format="MM-DD" /></Form.Item>,
+                        children: <Form.Item name={`CreateTime`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate}  format="YYYY-MM-DD" /></Form.Item>,
                         props: { rowSpan: 6 },
                     };
                 } else if (index >= 1 && index < 6) {
@@ -354,7 +354,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 return index == 3 ? '评价依据' : <Form.Item name={`CreateTime${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <DatePicker disabledDate={disabledDate}  format="MM-DD" onChange={() => onDateChange(`CreateTime${index}`)}/>
+                    <DatePicker disabledDate={disabledDate}  format="YYYY-MM-DD" onChange={() => onDateChange(`CreateTime${index}`)}/>
                 </Form.Item>
             }
         },
