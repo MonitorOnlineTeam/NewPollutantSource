@@ -28,8 +28,9 @@ const namespace = 'hourCommissionTest'
 
 
 
-const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
+const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({  
     formLoading: loading.effects[`${namespace}/getPMZeroRangeRecord`],
+    delLoading: loading.effects[`${namespace}/deletePMZeroRangeRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -485,6 +486,8 @@ const Index = (props) => {
     const clears = () => {
         form.resetFields();
     }
+
+
     const del = () => {
         props.deletePMZeroRangeRecord({
             ID: form.getFieldValue('ID'),
@@ -591,7 +594,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents   saveLoading1={saveLoading1} saveLoading2={saveLoading2}   submits={submits} clears={clears} del={del} />
+                <BtnComponents   saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}        submits={submits} clears={clears} del={del} />
                 <Form
                     form={form}
                     name="advanced_search"

@@ -13,6 +13,7 @@ export default Model.extend({
     treeList: [],
     testRecordType: [],
     particleMatterReferTableDatas: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    delVisible:false,
   },
   effects: {
     *getTestEntTree({ payload, callback }, { call, put, update }) { //企业树

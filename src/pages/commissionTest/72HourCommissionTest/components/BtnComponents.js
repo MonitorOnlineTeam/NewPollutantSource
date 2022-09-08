@@ -28,7 +28,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-
+  delVisible:hourCommissionTest.delVisible,
 
 })
 
@@ -48,8 +48,10 @@ const Index = (props) => {
 
 
   useEffect(() => {
-
   }, []);
+
+
+
 
 
   const [imortForm] = Form.useForm();
@@ -76,7 +78,6 @@ const Index = (props) => {
 
 
 
-
   return (
     <div style={{ paddingBottom: 16 }}>
       {props.isImport && <Popover
@@ -90,8 +91,21 @@ const Index = (props) => {
       >  <Button type="primary" style={{ marginRight: 10 }}>导入</Button></Popover>}
       <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading1} onClick={()=>{props.submits(1)}}>暂存</Button>
       <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading2} onClick={()=>{props.submits(2)}}>提交</Button>
-      <Button type="primary" style={{ marginRight: 10 }} onClick={props.clears}>清除</Button>
-      <Button type="primary" onClick={props.del}>删除</Button>
+      
+      <Popconfirm
+      title="确定要清除吗？"
+      placement="bottom"
+      onConfirm={props.clears}
+    >  
+      <Button type="primary" style={{ marginRight: 10 }}>清除</Button>
+      </Popconfirm>
+
+      <Popconfirm
+      title="确定要删除吗？"
+      placement="bottom"
+      onConfirm={props.del}
+      okButtonProps={{ loading: props.delLoading }}
+    >  <Button type="primary" >删除</Button></Popconfirm>
     </div>
   );
 };

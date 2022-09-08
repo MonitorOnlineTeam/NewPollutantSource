@@ -31,6 +31,8 @@ const namespace = 'hourCommissionTest'
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     pollutantLoading: loading.effects[`${namespace}/get72TestRecordPollutant`],
     timeLoading: loading.effects[`${namespace}/getTimesListByPollutant`],
+    delLoading: loading.effects[`${namespace}/deleteGasReferenceMethodAccuracyRecord`],
+
 
 })
 
@@ -791,7 +793,7 @@ const Index = (props) => {
         <div className={styles.totalContentSty}>
             <Spin spinning={pollutantLoading}>
                 {pollOptions[0] ? <>
-                    {dateOptions[0] && <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />}
+                    {dateOptions[0] && <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />}
                     <PollutantComponents />
                     {dateOptions[0] &&  <DateComponents />}
                     <Popover

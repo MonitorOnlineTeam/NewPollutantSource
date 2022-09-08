@@ -31,6 +31,7 @@ const namespace = 'hourCommissionTest'
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     formLoading:loading.effects[`${namespace}/getGasIndicationErrorSystemResponseRecord`],
     pollutantLoading: loading.effects[`${namespace}/get72TestRecordPollutant`],
+    delLoading: loading.effects[`${namespace}/deleteGasIndicationErrorSystemResponseRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -613,7 +614,7 @@ const Index = (props) => {
         <div className={styles.totalContentSty}>
             <Spin spinning={pollutantLoading}>
                {pollOptions[0] ? <>
-                <BtnComponents saveLoading1={saveLoading1} saveLoading2={saveLoading2} submits={submits} clears={clears} del={del} />
+                <BtnComponents saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} submits={submits} clears={clears} del={del} />
                 <PollutantComponents />
                 <Spin spinning={formLoading}>
                 <Form
