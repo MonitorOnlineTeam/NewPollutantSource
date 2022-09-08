@@ -442,7 +442,7 @@ const Index = (props) => {
                     
                     let mainValue = {...values}
                     Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item)  || /Time/g.test(item)){
+                        if(/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item) || /Time/g.test(item)){
                            delete mainValue[item];
                         }
                     })
@@ -476,6 +476,7 @@ const Index = (props) => {
                          Sort: index,
                          PollutantCode: pollutantCode,
                          CreateTime: values[`CreateTime${index}`]&&values[`CreateTime${index}`].format('YYYY-MM-DD 00:00:00'),
+                         RangeCalibration:values[`RangeCalibration`],
                          TimeT1: values[`TimeT1${index}`],
                          TimeT2: values[`TimeT2${index}`],
                          ResponseTime: values[`ResponseTime${index}`],
