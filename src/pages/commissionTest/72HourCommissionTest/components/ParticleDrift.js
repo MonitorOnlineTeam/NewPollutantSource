@@ -29,7 +29,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-    formLoading: loading.effects[`${namespace}/getPMReferenceCalibrationRecord`],
+    formLoading: loading.effects[`${namespace}/getGasZeroRangeRecord`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -40,16 +40,23 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
-        getPMReferenceCalibrationRecord: (payload, callback) => { //参数回填
+        getGasZeroRangeRecord: (payload, callback) => { //参数回填
             dispatch({
-                type: `${namespace}/getPMReferenceCalibrationRecord`,
+                type: `${namespace}/getGasZeroRangeRecord`,
                 payload: payload,
                 callback: callback
             })
         },
-        addPMReferenceCalibrationRecord: (payload, callback) => { //保存 暂存
+        addGasZeroRangeInfoRecord: (payload, callback) => { //保存 暂存
             dispatch({
-                type: `${namespace}/addPMReferenceCalibrationRecord`,
+                type: `${namespace}/addGasZeroRangeInfoRecord`,
+                payload: payload,
+                callback: callback
+            })
+        },
+        deleteGasZeroRangeRecord: (payload, callback) => { //保存 暂存
+            dispatch({
+                type: `${namespace}/deleteGasZeroRangeRecord`,
                 payload: payload,
                 callback: callback
             })
@@ -72,10 +79,10 @@ const Index = (props) => {
     const [recordType, setRecordType] = useState()
     useEffect(() => {
         if(!pointId){ return }
-        initData(pointId)
+        initData()
     }, [pointId]);
-    const initData = (pointId) => {
-        props.getPMReferenceCalibrationRecord({
+    const initData = () => {
+        props.getGasZeroRangeRecord({
             PointCode: pointId,
             PollutantCode: 502,
             RecordDate: "",
@@ -216,6 +223,7 @@ const Index = (props) => {
                     children: [
                         {
                             title: '∆Z=Zi-Z0',
+                            width:130,
                             align: 'center',
                             render: (text, record, index) => {
                                 return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
@@ -257,10 +265,11 @@ const Index = (props) => {
                 },
                 {
                     title: '量程漂移绝对误差',
-                    align: 'center',
+                    align: 'center',        
                     children: [
                         {
                             title: '∆S=Si-S0',
+                            width:130,
                             align: 'center',
                             render: (text, record, index) => {
                                 return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
@@ -425,9 +434,9 @@ const Index = (props) => {
                         }
 
                     })
-                    props.addPMReferenceCalibrationRecord(data, () => {
+                    props.addGasZeroRangeInfoRecord(data, () => {
                         type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData(pointId)
+                        initData()
                     })
                 }).catch((errorInfo) => {
                     console.log('Failed:', errorInfo);
@@ -444,10 +453,10 @@ const Index = (props) => {
         form.resetFields();
     }
     const del = () => {
-        props.deletePMReferenceCalibrationRecord({
+        props.deleteGasZeroRangeRecord({
             ID: form.getFieldValue('ID'),
         }, () => {
-            initData(pointId)
+            initData()
         })
     }
 
@@ -513,23 +522,23 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="量程校准值" name="Basis" >
+                    <Form.Item label="量程校准值" name="RangeCalibration" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="ReferenceManufactorName">
+                    <Form.Item label="CEMS原理" name="Basis">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row justify='space-between'>
-                        <Form.Item label="量程" name="ParamModelNum" >
+                        <Form.Item label="量程" name="MinRange" >
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>
                     -
-                    <Form.Item name="ParamModelNum">
+                    <Form.Item name="MaxRange">
                             <InputNumber placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>

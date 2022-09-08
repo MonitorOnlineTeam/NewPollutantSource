@@ -81,7 +81,7 @@ const Index = (props) => {
         if(!pointId){ return }
         initData()
     }, [pointId]);
-    const initData = (pointId) => {
+    const initData = () => {
         props.getTemperatureCheckingRecord({
             PointCode: pointId,
             PollutantCode: pollutantCode,
@@ -240,7 +240,7 @@ const Index = (props) => {
                             return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -253,7 +253,7 @@ const Index = (props) => {
                         if ((index + 2) % 7 == 0) { //平均值
                             return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]
@@ -308,8 +308,8 @@ const Index = (props) => {
                             PointId: pointId,
                             PollutantCode: pollutantCode,
                             AVG1: `${avg1},${avg4}`,
-                            AVG2: `${avg2},${avg5},`,
-                            AVG3: `${avg3},${avg6},`,
+                            AVG2: `${avg2},${avg5}`,
+                            AVG3: `${avg3},${avg6}`,
                             Evaluation:mainValue.Evaluation,
                         },
                         ChildTable: [],

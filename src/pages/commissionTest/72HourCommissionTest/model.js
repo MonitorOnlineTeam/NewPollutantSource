@@ -284,5 +284,46 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
+    /*** 气态污染物CEMS（含氧量）零点和量程漂移检测 ***/
+    *getGasZeroRangeRecord({ payload, callback }, { call, put, update }) { //获取
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetGasZeroRangeRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addGasZeroRangeInfoRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
+      yield update({ tableLoading: true })
+      const result = yield call(services.AddGasZeroRangeInfoRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deleteGasZeroRangeRecord({ payload, callback }, { call, put, update }) { //删除
+      yield update({ tableLoading: true })
+      const result = yield call(services.DeleteGasZeroRangeRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+
+
+
+
+
+
+
+
+
+
   }
 })

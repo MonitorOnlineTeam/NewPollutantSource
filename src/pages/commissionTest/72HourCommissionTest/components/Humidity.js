@@ -79,9 +79,9 @@ const Index = (props) => {
     const [pollutantCode, setPollutantCode] = useState(510)
     useEffect(() => {
         if(!pointId){ return }
-        initData(pointId)
+        initData()
     }, [pointId]);
-    const initData = (pointId) => {
+    const initData = () => {
         props.getHumidityCheckingRecord({
             PointCode: pointId,
             PollutantCode: pollutantCode,
@@ -255,7 +255,7 @@ const Index = (props) => {
                              if ((index + 3 ) % 8 == 0) { //平均值
                                  return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
                              }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><Input disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]

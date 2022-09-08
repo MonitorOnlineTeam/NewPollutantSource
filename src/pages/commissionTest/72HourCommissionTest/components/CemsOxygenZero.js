@@ -491,25 +491,25 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="ReferenceManufactorName">
+                    <Form.Item label="CEMS原理" name="Basis">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row justify='space-between'>
-                        <Form.Item label="量程" name="ParamModelNum" >
+                        <Form.Item label="量程" name="MinRange" >
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>
                     -
-                    <Form.Item name="ParamModelNum">
+                    <Form.Item name="MaxRange">
                             <InputNumber placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>
               
                 <Col span={8}>
-                    <Form.Item label="污染物名称" name="Basis" >
+                    <Form.Item label="污染物名称" name="PollutantName" >
                         <Input  disabled  />
                     </Form.Item>
                 </Col>
