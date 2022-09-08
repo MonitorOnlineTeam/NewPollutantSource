@@ -642,6 +642,11 @@ class MonitoringStandard extends Component {
                                     Value: `${pollutantType}`,
                                     Where: '$=',
                                 },
+                                {
+                                    Key: 'dbo__T_Base_StandardLibrary__IsUsed',
+                                    Value: 1,
+                                    Where: '$=',
+                                },
                             ]}
                             appendHandleRows={row => {
                                 return (

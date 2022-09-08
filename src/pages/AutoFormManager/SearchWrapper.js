@@ -128,7 +128,7 @@ class SearchWrapper extends Component {
   }
 
   onSubmitForm() {
-    const { resultConfigId, configId, searchForm, whereList, dispatch, searchParams } = this.props;
+    const { resultConfigId, configId, searchForm, whereList, dispatch, searchParams, successCallback } = this.props;
     // TODO 主要用于 关联表业务  查询条件configId 与 列表configId不一样的问题  参考 维护监测点页面需求
     if (resultConfigId) {
       dispatch({
@@ -155,6 +155,9 @@ class SearchWrapper extends Component {
         payload: {
           configId: resultConfigId || configId,
           searchParams: searchParams
+        },
+        callback: () => {
+          successCallback && successCallback(searchForm);
         }
       });
     }, 0)

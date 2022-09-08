@@ -39,6 +39,7 @@ class index extends PureComponent {
     super(props);
     this.formRef = React.createRef();
     this.state = {
+      searchForm: {},
       isModalVisible: false,
       editData: {},
       KEY: undefined,
@@ -85,10 +86,16 @@ class index extends PureComponent {
   }
 
   getCO2TableSum = () => {
+    const { searchForm } = this.state;
+    let entCode = searchForm[CONFIG_ID] ? (
+      searchForm[CONFIG_ID].dbo__T_Bas_CO2Desulphurization__EntCode ? searchForm[CONFIG_ID].dbo__T_Bas_CO2Desulphurization__EntCode.value : undefined
+    )
+      : undefined;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
         SumType: SumType,
+        EntCode: entCode
       }
     });
   }
@@ -155,7 +162,7 @@ class index extends PureComponent {
     this.formRef.current.setFieldsValue({
       'CarbonateEmission': Dictionaries.one[value]["排放因子"],
     });
-    // this.countEmissions();
+    this.countEmissions();
   }
 
   handleCancel = () => {
@@ -238,6 +245,16 @@ class index extends PureComponent {
     })
   }
 
+  // 查询成功回调
+  searchSuccessCallback = (searchForm) => {
+    console.log("searchForm=", searchForm)
+    this.setState(
+      { searchForm },
+      () => {
+        this.getCO2TableSum();
+      })
+  }
+
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, currentTypeData, totalVisible, typeUnit, editTotalData, KEY } = this.state;
     const { tableInfo, Dictionaries, cementTableCO2Sum, unitInfoList } = this.props;
@@ -250,7 +267,7 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <SearchWrapper configId={CONFIG_ID} />
+          <SearchWrapper configId={CONFIG_ID} successCallback={(searchForm) => this.searchSuccessCallback(searchForm)} />
           <AutoFormTable
             getPageConfig
             configId={CONFIG_ID}

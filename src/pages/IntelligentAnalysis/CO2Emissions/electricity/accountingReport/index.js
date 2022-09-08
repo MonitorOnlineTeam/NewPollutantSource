@@ -74,12 +74,12 @@ class index extends PureComponent {
         <Row style={{ background: '#f0f2f5' }}>
           <Button type='primary' onClick={() => this.setState({ isModalVisible: true })}>生成排放报告</Button>
         </Row>
-        <div style={{ background: '#f0f2f5', height: 'calc(100vh - 204px)', paddingTop: 20 }}>
+        <div style={{ background: '#f0f2f5', height: 'calc(100vh - 162px)', paddingTop: 20 }}>
           <Spin spinning={loading}>
-            <Row gutter={16}>
+            <Row gutter={16} style={{ width: '100%' }}>
               {
                 CO2ReportList.map(item => {
-                  return <Col span={8}> 
+                  return <Col span={8}>
                     <Card
                       style={{ border: '1px solid #f0f0f0' }}
                       actions={[

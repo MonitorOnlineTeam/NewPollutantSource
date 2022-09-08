@@ -43,6 +43,7 @@ class index extends PureComponent {
     super(props);
     this.formRef = React.createRef();
     this.state = {
+      searchForm: {},
       isModalVisible: false,
       editData: {},
       KEY: undefined,
@@ -53,7 +54,7 @@ class index extends PureComponent {
   componentDidMount() {
     this.getCO2TableSum();
   }
-  
+
 
   // 判断是否可添加
   checkIsAdd = () => {
@@ -88,13 +89,20 @@ class index extends PureComponent {
   }
 
   getCO2TableSum = () => {
+    const { searchForm } = this.state;
+    let entCode = searchForm[CONFIG_ID] ? (
+      searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`] ? searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`].value : undefined
+    )
+      : undefined;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
         SumType: SumType,
+        EntCode: entCode
       }
     });
   }
+
 
   // 计算排放量
   countEmissions = () => {
@@ -147,7 +155,6 @@ class index extends PureComponent {
           isModalVisible: false,
         })
         this.getTableList();
-        this.getCO2TableSum();
       })
     })
   }
@@ -160,6 +167,7 @@ class index extends PureComponent {
         configId: CONFIG_ID,
       }
     })
+    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -179,6 +187,15 @@ class index extends PureComponent {
     })
   }
 
+  // 查询成功回调
+  searchSuccessCallback = (searchForm) => {
+    this.setState(
+      { searchForm },
+      () => {
+        this.getCO2TableSum();
+      })
+  }
+
   render() {
     const { isModalVisible, editData, FileUuid, KEY } = this.state;
     const { tableInfo, cementTableCO2Sum } = this.props;
@@ -188,7 +205,7 @@ class index extends PureComponent {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <SearchWrapper configId={CONFIG_ID} />
+          <SearchWrapper configId={CONFIG_ID} successCallback={this.searchSuccessCallback} />
           <AutoFormTable
             getPageConfig
             configId={CONFIG_ID}

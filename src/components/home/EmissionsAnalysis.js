@@ -384,7 +384,7 @@ class MonitoringStatus extends Component {
               {
                 eyhtAnalData.monthList && <div className={`${styles.CO2} ${styles.content}`}>
                   <div className={styles.contentTitle}>
-                    <p>{!DGIMN ? '二氧化碳排污许可情况' : '二氧化碳排污情况'}</p>
+                    <p>{!DGIMN ? '二氧化碳碳配额消耗情况' : '二氧化碳碳配额消耗情况'}</p>
                   </div>
                   <div className={styles.pointcontent}>
                     <div className={styles.echartBox}>

@@ -153,12 +153,13 @@ class SdlTable extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.columns !== prevState.columns) {
+    // if (this.state.columns !== prevState.columns) {
+    if (this.state.columns !== prevState.columns || this.props.dataSource !== prevProps.dataSource) {
       const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
       const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;
       const tableFooter = this.sdlTableFrame.getElementsByClassName('ant-table-footer');
       const tableFooterHeight = tableFooter.length ? tableFooter[0].offsetHeight : 0;
-      const count = tableTheadHeight + 65 + tableFooterHeight;
+      const count = tableTheadHeight + 85 + tableFooterHeight;
       this.setState({
         headAndFooterHeight: count > 110 ? count : 110,
       })

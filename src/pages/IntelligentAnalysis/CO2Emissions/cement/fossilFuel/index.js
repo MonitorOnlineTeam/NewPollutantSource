@@ -38,6 +38,7 @@ class index extends Component {
     super(props);
     this.formRef = React.createRef();
     this.state = {
+      searchForm: {},
       isModalVisible: false,
       TYPES: [],
       editData: {},
@@ -93,22 +94,28 @@ class index extends Component {
   }
 
   getCO2TableSum = () => {
+    const { searchForm } = this.state;
+    let entCode = searchForm[CONFIG_ID] ? (
+      searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`] ? searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`].value : undefined
+    )
+      : undefined;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
         SumType: SumType,
+        EntCode: entCode
       }
     });
   }
 
-  getTableDataSource = () => {
-    this.props.dispatch({
-      type: 'autoForm/getAutoFormData',
-      payload: {
-        configId: CONFIG_ID,
-      }
-    });
-  }
+  // getTableDataSource = () => {
+  //   this.props.dispatch({
+  //     type: 'autoForm/getAutoFormData',
+  //     payload: {
+  //       configId: CONFIG_ID,
+  //     }
+  //   });
+  // }
 
   // 种类change，填写缺省值
   onTypesChange = (value, option) => {
@@ -214,7 +221,6 @@ class index extends Component {
           isModalVisible: false,
         })
         this.getTableList();
-        this.getCO2TableSum();
       })
     })
   }
@@ -227,6 +233,7 @@ class index extends Component {
         configId: CONFIG_ID,
       }
     })
+    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -268,6 +275,15 @@ class index extends Component {
     this.setState({ [key]: !this.state[key] })
   }
 
+  // 查询成功回调
+  searchSuccessCallback = (searchForm) => {
+    this.setState(
+      { searchForm },
+      () => {
+        this.getCO2TableSum();
+      })
+  }
+
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, totalVisible, editTotalData, KEY, importVisible, currentTypeData } = this.state;
     const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
@@ -286,7 +302,7 @@ class index extends Component {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <SearchWrapper configId={CONFIG_ID} />
+          <SearchWrapper configId={CONFIG_ID} successCallback={this.searchSuccessCallback} />
           <AutoFormTable
             getPageConfig
             configId={CONFIG_ID}
@@ -302,7 +318,8 @@ class index extends Component {
             onEdit={(record, key) => {
               const FileUuid = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.AttachmentID')
               const FileUuid2 = getRowCuid(record, 'dbo.T_Bas_CementFossilFuel.DevAttachmentID')
-              this.setState({ KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2, 
+              this.setState({
+                KEY: key, FileUuid: FileUuid, FileUuid2: FileUuid2,
                 rowTime: record['dbo.T_Bas_CementFossilFuel.MonitorTime'],
                 rowType: record['dbo.T_Bas_CementFossilFuel.FossilType']
               }, () => {
@@ -313,7 +330,7 @@ class index extends Component {
               this.getCO2TableSum();
             }}
             appendHandleButtons={(keys, rows) => {
-              return <ImportData onSuccess={() => { this.getTableDataSource() }} />;
+              return <ImportData onSuccess={() => { this.getTableList() }} />;
             }}
             footer={() => <div className="">排放量合计（tCO₂）：{cementTableCO2Sum}</div>}
           />

@@ -35,6 +35,7 @@ class index extends Component {
     super(props);
     this.formRef = React.createRef();
     this.state = {
+      searchForm: {},
       isModalVisible: false,
       TYPES: [],
       editData: {},
@@ -90,10 +91,16 @@ class index extends Component {
   }
 
   getCO2TableSum = () => {
+    const { searchForm } = this.state;
+    let entCode = searchForm[CONFIG_ID] ? (
+      searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`] ? searchForm[CONFIG_ID][`dbo__T_Bas_${CONFIG_ID}__EntCode`].value : undefined
+    )
+      : undefined;
     this.props.dispatch({
       type: 'CO2Emissions/getCO2TableSum',
       payload: {
         SumType: 's-foss',
+        EntCode: entCode
       }
     });
   }
@@ -211,7 +218,6 @@ class index extends Component {
           isModalVisible: false,
         })
         this.getTableList();
-        this.getCO2TableSum();
       })
     })
   }
@@ -224,6 +230,7 @@ class index extends Component {
         configId: CONFIG_ID,
       }
     })
+    this.getCO2TableSum();
   }
 
   // 点击编辑获取数据
@@ -265,6 +272,15 @@ class index extends Component {
     this.setState({ [key]: !this.state[key] })
   }
 
+  // 查询成功回调
+  searchSuccessCallback = (searchForm) => {
+    this.setState(
+      { searchForm },
+      () => {
+        this.getCO2TableSum();
+      })
+  }
+
   render() {
     const { isModalVisible, editData, FileUuid, FileUuid2, typeUnit, totalVisible, editTotalData, KEY, importVisible, currentTypeData } = this.state;
     const { tableInfo, Dictionaries, cementTableCO2Sum } = this.props;
@@ -283,7 +299,7 @@ class index extends Component {
     return (
       <BreadcrumbWrapper>
         <Card>
-          <SearchWrapper configId={CONFIG_ID} />
+          <SearchWrapper configId={CONFIG_ID} successCallback={this.searchSuccessCallback} />
           <AutoFormTable
             getPageConfig
             configId={CONFIG_ID}

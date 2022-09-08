@@ -135,7 +135,7 @@ export default Model.extend({
   },
   effects: {
     // 获取数据
-    * getAutoFormData({ payload }, { call, put, update, select }) {
+    * getAutoFormData({ payload, callback }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       const { configId } = payload;
       // const searchForm = state.searchForm[payload.configId]
@@ -207,7 +207,7 @@ export default Model.extend({
       const result = yield call(services.getListPager, { ...postData });
       if (result.IsSuccess) {
         state = yield select(state => state.autoForm);
-
+        callback && callback();
         yield update({
           // configIdList: {
           //   [payload.configId]: result.data
@@ -408,17 +408,28 @@ export default Model.extend({
         });
       }
     },
-
+    // autoForm列表删除
     * del({ payload, callback }, { call, update, put, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
-      // let postData = {
-      //   params: { ...payload, searchParams: undefined },
-      //   sysConfig
-      // };
       let postData = payload;
       const result = yield call(services.postAutoFromDataDelete, postData);
       if (result.IsSuccess) {
         message.success('删除成功！');
+        // 如果当前页只有一条数据，删除后跳转到第一页
+        let state = yield select(state => state.autoForm);
+        let searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
+        const { current = 1, pageSize = 20, total } = searchForm;
+        if (total % pageSize === 1) {
+          yield update({
+            searchForm: {
+              ...state.searchForm,
+              [configId]: {
+                ...state.searchForm[configId],
+                current: 1
+              },
+            },
+          })
+        }
         yield put({
           type: 'getAutoFormData',
           payload: {
@@ -431,7 +442,7 @@ export default Model.extend({
     },
 
     * add({ payload }, { call, update, put, select }) {
-      const sysConfig = yield select(state => state.global.configInfo);
+      const sysConfig = yield  select(state => state.global.configInfo);
       // let postData = {
       //   params: { ...payload, FormData: JSON.stringify(payload.FormData) },
       //   sysConfig

@@ -194,12 +194,18 @@ export default Model.extend({
           if (item.AlarmType == 17) {
             // 数据造假报警
             let paramsData = item.PollutantName.split('|');
+            let time = '';
+            if (paramsData.length && paramsData[0]) {
+              let times = paramsData[0].split('至');
+              time = moment(times[0]).format('YYYY-MM-DD HH') + '时 至 ' +  moment(times[1]).format('YYYY-MM-DD HH') + '时'
+            }
             return {
               "desc": <div>
                 <span style={{ fontWeight: 'bold' }}>{item.PointName}：</span>
                 <br />
                 <div style={{ marginLeft: 10 }}>
-                  <span style={{ color: '#3ccafc' }}>{paramsData[0]}点</span>
+                  <span style={{ color: '#3ccafc', width: '100%', display: 'inline-block', }}>{time}，</span>
+                  <br />
                   <span style={{ color: '#ffcb5b' }}>{paramsData[1]}</span>
                   分钟数据相似度超过80% ，
                   {/* <span style={{ color: '#ffcb5b' }}>[{paramsData[2]}平均每月排放总额]</span>, */}

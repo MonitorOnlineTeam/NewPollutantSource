@@ -58,7 +58,7 @@ class ImportFile extends PureComponent {
       onChange: (info) => {
         if (info.file.status === 'done') {
           console.log("info-err=", info)
-          message.success(info.file.response.Datas, 10);
+          message.success(info.file.response.Message, 10);
           this.props.onSuccess();
           this.setState({
             visible: false,
