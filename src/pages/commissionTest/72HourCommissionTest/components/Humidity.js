@@ -292,7 +292,7 @@ const Index = (props) => {
 
                     let mainValue = {...values}
                     Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/Time/g.test(item) || /CreateDate/g.test(item) || /Manual/g.test(item) || /CEMSValue/g.test(item) || /AVG/g.test(item) || /RelativeError/g.test(item) ){
+                        if(/Time/g.test(item) || /CreateDate/g.test(item) || /Manual/g.test(item) || /CEMSValue/g.test(item) || /AVG/g.test(item) ){
                            delete mainValue[item];
                         }
                     })
@@ -311,12 +311,6 @@ const Index = (props) => {
                             AVG1: `${avg1},${avg4}`,
                             AVG2: `${avg2},${avg5},`,
                             AVG3: `${avg3},${avg6},`,
-                            RelativeError1: `${avg1},${avg4}`,
-                            RelativeError2: `${avg2},${avg5}`,
-                            RelativeError3: `${avg3},${avg6}`,
-                            AbsolutelyError1:`${avg1},${avg4}`,
-                            AbsolutelyError2:`${avg2},${avg5}`,
-                            AbsolutelyError3:`${avg3},${avg6}`,
                             Evaluation:mainValue.Evaluation,
                         },
                         ChildTable: [],
