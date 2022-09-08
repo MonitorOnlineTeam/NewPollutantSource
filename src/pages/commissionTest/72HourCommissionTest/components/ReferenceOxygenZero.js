@@ -163,6 +163,7 @@ const Index = (props) => {
                 setRecordName(res.RecordName)
        
             if (res.MainTable) {
+                form.resetFields();
                 form.setFieldsValue({
                     ...res.MainTable,
                     PollutantCode: pollCode,

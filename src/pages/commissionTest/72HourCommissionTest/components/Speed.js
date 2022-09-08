@@ -109,9 +109,10 @@ const Index = (props) => {
                       avg6 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[1], 
                       avg9 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[2];  
                     
-                      form.resetFields()
+                     
                    if (res.MainTable) {
-
+                    form.resetFields()
+                    
                     form.setFieldsValue({
                         ...res.MainTable,
                         AVG1:avg1, AVG4:avg4, AVG7:avg7,  AVG2:avg2,AVG5:avg5, AVG8:avg8,  AVG3:avg3,AVG6:avg6, AVG9:avg9,

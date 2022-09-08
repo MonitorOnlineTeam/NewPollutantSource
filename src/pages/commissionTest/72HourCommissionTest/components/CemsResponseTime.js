@@ -119,10 +119,11 @@ const Index = (props) => {
             ID: form.getFieldValue('ID'),
         }, (res) => {
             if (res) {
-                form.resetFields();
                 setRecordName(res.RecordName)
    
             if (res.MainTable) {
+                form.resetFields();
+
                 form.setFieldsValue({
                     ...res.MainTable,
                     PollutantCode: pollCode,
@@ -551,7 +552,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS原理" name="TestPrinciple" >
-                        <InputNumber placeholder='请输入' allowClear />
+                        <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -565,7 +566,7 @@ const Index = (props) => {
                         <Form.Item label="量程" name="MinRange" >
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>
-                    -
+                        <div style={{paddingTop:4}}>-</div>
                     <Form.Item name="MaxRange">
                             <InputNumber placeholder='最大值' allowClear />
                         </Form.Item>

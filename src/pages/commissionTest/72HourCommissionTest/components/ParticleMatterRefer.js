@@ -98,8 +98,10 @@ const Index = (props) => {
             if (res) {
                 setRecordName(res.RecordName)
                 setRecordType(res.RecordType)
-            }
-            if (res && res.MainTable) {
+            
+            if (res.MainTable) {
+                form.resetFields()
+
                 form.setFieldsValue({
                     ...res.MainTable
                 })
@@ -133,7 +135,7 @@ const Index = (props) => {
                 }
             }
 
-
+        }
         })
     }
     const disabledDate = (current) => {
