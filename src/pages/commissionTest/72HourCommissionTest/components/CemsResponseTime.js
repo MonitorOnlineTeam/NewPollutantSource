@@ -123,7 +123,11 @@ const Index = (props) => {
    
             if (res.MainTable) {
                 form.resetFields();
+                 
 
+                if(res.MainTable.RangeCalibration){ //首次获取标称值
+                    form.setFieldsValue({ NominalValue:res.MainTable.RangeCalibration,  })
+                }
                 form.setFieldsValue({
                     ...res.MainTable,
                     PollutantCode: pollCode,
@@ -151,9 +155,11 @@ const Index = (props) => {
 
                 data2.map(item => {
                     const index = item.Sort;
+                    if(item.NominalValue){
+                        form.setFieldsValue({[`NominalValue`]: item.NominalValue,  })
+                    }
                     form.setFieldsValue({
                         [`CreateTime${index}`]: item.CreateTime && moment(item.CreateTime),
-                        [`RangeCalibration${index}`]: item.RangeCalibration,
                         [`TimeT1${index}`]: item.TimeT1,
                         [`TimeT2${index}`]: item.TimeT2,
                         [`ResponseTime${index}`]: item.ResponseTime,
@@ -367,7 +373,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
-                return <Form.Item name={`RangeCalibration`} rules={[{ required: false, message: '' }]}>
+                return <Form.Item name={`NominalValue`} rules={[{ required: false, message: '' }]}>
                     <InputNumber disabled placeholder='请输入' />
                 </Form.Item>
             }
@@ -442,7 +448,7 @@ const Index = (props) => {
                     
                     let mainValue = {...values}
                     Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item) || /Time/g.test(item)){
+                        if(/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item) || /RangeCalibration/g.test(item) || /Time/g.test(item)){
                            delete mainValue[item];
                         }
                     })
@@ -476,7 +482,7 @@ const Index = (props) => {
                          Sort: index,
                          PollutantCode: pollutantCode,
                          CreateTime: values[`CreateTime${index}`]&&values[`CreateTime${index}`].format('YYYY-MM-DD 00:00:00'),
-                         RangeCalibration:values[`RangeCalibration`],
+                         NominalValue:values[`NominalValue`],
                          TimeT1: values[`TimeT1${index}`],
                          TimeT2: values[`TimeT2${index}`],
                          ResponseTime: values[`ResponseTime${index}`],
@@ -505,7 +511,7 @@ const Index = (props) => {
         props.deleteGasIndicationErrorSystemResponseRecord({
             ID: form.getFieldValue('ID'),
         }, () => {
-            initData(pointId)
+            getFormData(pollutantCode)
         })
     }
 
