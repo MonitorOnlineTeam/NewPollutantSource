@@ -99,9 +99,10 @@ const Index = (props) => {
                    
                    if (res.MainTable) {
                     form.resetFields()  
-                    
+
                     form.setFieldsValue({
                         ...res.MainTable,
+                        PMUnit:res.MainTable.Unit,
                         AVG1:avg1, AVG4:avg4, AVG2:avg2,AVG5:avg5, AVG3:avg3,AVG6:avg6,
                     })
                   
@@ -420,18 +421,18 @@ const Index = (props) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="参比方法计量单位" name="ReferenceManufactorName">
+                    <Form.Item label="参比方法计量单位" name="PMUnit">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS计量单位" name="ParamModelNum" >
+                    <Form.Item label="CEMS计量单位" name="Unit" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={20}>
-                    <Form.Item label="参比方法原理" name="ParamModelNum" >
+                    <Form.Item label="参比方法原理" name="Basis" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>

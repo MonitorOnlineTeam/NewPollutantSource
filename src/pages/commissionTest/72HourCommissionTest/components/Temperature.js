@@ -103,6 +103,7 @@ const Index = (props) => {
 
                     form.setFieldsValue({
                         ...res.MainTable,
+                        PMUnit:res.MainTable.Unit,
                         AVG1:avg1, AVG4:avg4, AVG2:avg2,AVG5:avg5, AVG3:avg3,AVG6:avg6,
                     })
                   

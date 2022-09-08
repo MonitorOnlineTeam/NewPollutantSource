@@ -92,9 +92,11 @@ const Index = (props) => {
 
             if ( res.MainTable) {
                 form.resetFields();
-
+                
                 form.setFieldsValue({
-                    ...res.MainTable
+                    ...res.MainTable,
+                    MinRange: res.MainTable.Range? res.MainTable.Range.split('-')[0] : null,
+                    MaxRange: res.MainTable.Range? res.MainTable.Range.split('-')[1] : null,
                 })
 
                 if (res.ChildTable) {
@@ -434,12 +436,14 @@ const Index = (props) => {
                         AddType: type,
                         MainTable: {
                             ...mainValue,
+                            Range: `${form.getFieldValue('MinRange')? form.getFieldValue('MinRange') : '' }-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : '' }`,
                             PointId: pointId,
                             ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
                             SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
                             ZeroValue: form.getFieldValue('ZeroValue'),
                             SpanValue: form.getFieldValue('SpanValue'),
                             EvaluationBasis: form.getFieldValue('EvaluationBasis'),
+                           
                         },
                         ChildTable: [],
                     }
@@ -529,7 +533,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS生产厂" name="SysManufactorName" >
+                    <Form.Item label="CEMS生产厂" name="CEMSPlant" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -540,7 +544,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS型号、编号" name="SystemModelCEMSNum" >
+                    <Form.Item label="CEMS型号、编号" name="CEMSModel" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -551,7 +555,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="量程校准值" name="AdjustSpan" >
+                    <Form.Item label="量程校准值" name="RangeCalibrationValue" >
                         <InputNumber placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>

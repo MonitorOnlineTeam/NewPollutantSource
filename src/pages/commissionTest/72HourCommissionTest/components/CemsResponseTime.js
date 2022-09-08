@@ -140,8 +140,8 @@ const Index = (props) => {
                     form.setFieldsValue({
                         [`CreateTime`]: item.CreateTime && moment(item.CreateTime),
                         [`LabelGas80${index}`]: item.LabelGas80,
-                        [`LabelGas50${index}`]: item.LabelGas80,
-                        [`LabelGas20${index}`]: item.LabelGas80,
+                        [`LabelGas50${index}`]: item.LabelGas50,
+                        [`LabelGas20${index}`]: item.LabelGas20,
                         [`Remark${index}`]: item.Remark,
                     })
                 })
@@ -180,11 +180,12 @@ const Index = (props) => {
     }
 
 
-   const labelGasBlur = (value1,value2,name) =>{
+   const labelGasBlur = (value1,value2,name,index) =>{
+
+    if(index>0){ return; }
     const data = form.getFieldValue(name);
     const rangData =  form.getFieldValue('MaxRange') - form.getFieldValue('MinRange');
      const minVal = Number((rangData * (value1/100)).toFixed(3)), maxVal = Number((rangData *  (value2/100)).toFixed(3));
-     console.log(minVal,maxVal)
     if( data<minVal || data> maxVal ){
        message.warning(`标称值需要在${value1}和${value2}%之间`)
     }
@@ -297,7 +298,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                    return   <Form.Item  name={`LabelGas80${index}`} rules={[{ required: index==4||index==5?false: isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(80,100,`LabelGas80${index}`)}} placeholder='请输入' /></Form.Item>;
+                    return   <Form.Item  name={`LabelGas80${index}`} rules={[{ required: index==4||index==5?false: isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(80,100,`LabelGas80${index}`,index)}} placeholder='请输入' /></Form.Item>;
             }
 
 
@@ -309,7 +310,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return   <Form.Item  name={`LabelGas50${index}`} rules={[{ required: index==4||index==5? false : isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(50,60,`LabelGas50${index}`)}} placeholder='请输入' /></Form.Item>;
+                return   <Form.Item  name={`LabelGas50${index}`} rules={[{ required: index==4||index==5? false : isReg, message: '' }]}><InputNumber disabled={index==4||index==5}  onBlur={()=>{labelGasBlur(50,60,`LabelGas50${index}`,index)}} placeholder='请输入' /></Form.Item>;
 
             }
         },
@@ -320,7 +321,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return   <Form.Item  name={`LabelGas20${index}`} rules={[{ required:  index==4||index==5? false : isReg, message: '' }]}><InputNumber onBlur={()=>{labelGasBlur(20,30,`LabelGas20${index}`)}}  disabled={index==4||index==5}  placeholder='请输入' /></Form.Item>;
+                return   <Form.Item  name={`LabelGas20${index}`} rules={[{ required:  index==4||index==5? false : isReg, message: '' }]}><InputNumber onBlur={()=>{labelGasBlur(20,30,`LabelGas20${index}`,index)}}  disabled={index==4||index==5}  placeholder='请输入' /></Form.Item>;
 
             }
 
@@ -441,7 +442,7 @@ const Index = (props) => {
                     
                     let mainValue = {...values}
                     Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item) || /RangeCalibration/g.test(item) || /Time/g.test(item)){
+                        if(/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item)  || /Time/g.test(item)){
                            delete mainValue[item];
                         }
                     })
