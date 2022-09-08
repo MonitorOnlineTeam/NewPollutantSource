@@ -526,7 +526,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS生产厂" name="SysManufactorName" >
+                    <Form.Item label="CEMS生产厂" name="CEMSPlant" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -537,7 +537,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS型号、编号" name="SystemModelCEMSNum" >
+                    <Form.Item label="CEMS型号、编号" name="CEMSModel" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -548,19 +548,19 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="TestPrinciple" >
+                    <Form.Item label="CEMS原理" name="CEMSPrinciple" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item label="参比仪器生产厂" name="ReferenceManufactorName">
+                    <Form.Item label="参比仪器生产厂" name="InstrumentPlant">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
 
                 <Col span={8}>
-                    <Form.Item label="型号、编号" name="ParamModelNum">
+                    <Form.Item label="型号、编号" name="InstrumentModel">
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>

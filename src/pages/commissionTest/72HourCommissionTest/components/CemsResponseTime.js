@@ -457,6 +457,7 @@ const Index = (props) => {
                         AddType: type,
                         MainTable: {
                             ...mainValue,
+                            Range: `${form.getFieldValue('MinRange')? form.getFieldValue('MinRange') : '' },${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : '' }`,
                             ID:form.getFieldValue('ID'),
                             PointId: pointId,
                             PollutantCode:pollutantCode,
@@ -538,7 +539,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS生产厂" name="SysManufactorName" >
+                    <Form.Item label="CEMS生产厂" name="CEMSPlant" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -549,7 +550,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS型号、编号" name="SystemModelCEMSNum" >
+                    <Form.Item label="CEMS型号、编号" name="CEMSModel" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -560,7 +561,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="CEMS原理" name="TestPrinciple" >
+                    <Form.Item label="CEMS原理" name="CEMSPrinciple" >
                         <Input placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>

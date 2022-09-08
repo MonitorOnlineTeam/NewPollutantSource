@@ -104,15 +104,14 @@ const Index = (props) => {
             if (pollData[0]) {
                 setPollOptions(pollData)
                 setPollutantCode(defaultPollCode)
-                getPollutantName(pollData,defaultPollCode) //获取污染物名称
-                getFormData(defaultPollCode);
+                getFormData(defaultPollCode,pollData,);
             }
 
         })
 
     }
 
-    const getFormData = (pollCode) => {
+    const getFormData = (pollCode,pollList) => {
         props.getGasZeroRangeRecord({
             PointCode: pointId,
             PollutantCode: pollCode,
@@ -124,13 +123,13 @@ const Index = (props) => {
 
             if ( res.MainTable) {
                 form.resetFields();
-                
-                pollOptions&&pollOptions[0]&&getPollutantName(pollOptions,res.MainTable.PollutantCode) //获取污染物名称
+
                 form.setFieldsValue({
                     ...res.MainTable,
                     MinRange: res.MainTable.Range? res.MainTable.Range.split('-')[0] : null,
                     MaxRange: res.MainTable.Range? res.MainTable.Range.split('-')[1] : null,
                 })
+                getPollutantName(pollOptions&&pollOptions[0]? pollOptions : pollList,pollCode) //获取污染物名称
 
                 if (res.ChildTable) {
                     const data = [];
@@ -164,9 +163,10 @@ const Index = (props) => {
     }
 
     const getPollutantName = (list,value) =>{
+        debugger
         list.map(item=>{
             if(item.value == value){
-              form.setFieldsValue({   PollutantName : item.label  })
+              form.setFieldsValue({ PollutantName : item.label  })
             }
         })
     }
