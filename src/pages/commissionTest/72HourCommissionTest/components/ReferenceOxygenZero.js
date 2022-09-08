@@ -196,7 +196,7 @@ const Index = (props) => {
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
-5
+
     const onTimeChange = (index, type) => {
         const startTime = form.getFieldValue(`BTime${index}`)
         const endTime = form.getFieldValue(`ETime${index}`)

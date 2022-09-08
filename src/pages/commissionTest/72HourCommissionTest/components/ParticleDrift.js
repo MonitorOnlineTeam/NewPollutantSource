@@ -54,7 +54,7 @@ const dvaDispatch = (dispatch) => {
                 callback: callback
             })
         },
-        deleteGasZeroRangeRecord: (payload, callback) => { //保存 暂存
+        deleteGasZeroRangeRecord: (payload, callback) => { //删除
             dispatch({
                 type: `${namespace}/deleteGasZeroRangeRecord`,
                 payload: payload,
@@ -76,7 +76,6 @@ const Index = (props) => {
 
 
     const [recordName, setRecordName] = useState()
-    const [recordType, setRecordType] = useState()
     useEffect(() => {
         if(!pointId){ return }
         initData()
@@ -90,9 +89,8 @@ const Index = (props) => {
         }, (res) => {
             if (res) {
                 setRecordName(res.RecordName)
-                setRecordType(res.RecordType)
-            }
-            if (res && res.MainTable) {
+
+            if ( res.MainTable) {
                 form.setFieldsValue({
                     ...res.MainTable
                 })
@@ -108,25 +106,25 @@ const Index = (props) => {
                     })
                     data.map(item => {
                         const index = item.Sort - 1;
-                        // form.setFieldsValue({
-                        //     [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
-                        //     [`BTime${index}`]: item.BTime && moment(item.BTime),
-                        //     [`ETime${index}`]: item.ETime && moment(item.ETime),
-                        //     [`MembraneNum${index}`]: item.MembraneNum,
-                        //     [`PMWeight${index}`]: item.PMWeight,
-                        //     [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                        //     [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                        //     [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                        //     [`MeasuredValue${index}`]: item.MeasuredValue,
-                        //     [`O2values${index}`]: item.O2values,
-                        //     [`WDvalues${index}`]: item.WDvalues,
-                        //     [`SDvalues${index}`]: item.SDvalues,
-                        //     [`YLvalues${index}`]: item.YLvalues,
-                        // })
+                        form.setFieldsValue({
+                            [`CreateTime${index}`]: item.CreateTime && moment(item.CreateTime),
+                            [`BTime${index}`]: item.BTime && moment(item.BTime),
+                            [`ETime${index}`]: item.ETime && moment(item.ETime),
+                            [`ZeroBegin${index}`]: item.ZeroBegin,
+                            [`ZeroEnd${index}`]: item.ZeroEnd,
+                            [`ZeroChange${index}`]: item.ZeroChange,
+                            [`ZeroCalibration${index}`]: item.ZeroCalibration,
+                            [`RangeBegin${index}`]: item.RangeBegin,
+                            [`RangeEnd${index}`]: item.RangeEnd,
+                            [`RangeChange${index}`]: item.RangeChange,
+                            [`RangeCalibration${index}`]: item.RangeCalibration,
+                            [`Col1${index}`]: item.Col1,
+                            [`Col2${index}`]: item. Col2,
+                        })
                     })
                 }
             }
-
+        }
 
         })
     }
@@ -159,6 +157,21 @@ const Index = (props) => {
         }
 
     }
+
+    const errorBlur = (index,type)=>{
+        let value1, value2;
+        if(type==1){ //零点漂移绝对误差	
+          value1 = form.getFieldValue(`ZeroBegin${index}`),value2 = form.getFieldValue(`ZeroEnd${index}`)
+          if((value1 || value1 ==0) && (value2 || value2 ==0)){
+            form.setFieldsValue({[`ZeroChange${index}`]: interceptTwo(value2 - value1)})
+          }
+        }else{
+            value1 = form.getFieldValue(`RangeBegin${index}`),value2 = form.getFieldValue(`RangeEnd${index}`)
+            if((value1 || value1 ==0) && (value2 || value2 ==0)){
+              form.setFieldsValue({[`RangeChange${index}`]: interceptTwo(value2 - value1)})
+            }
+        }
+    }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
 
@@ -168,7 +181,7 @@ const Index = (props) => {
             align: 'center',
             width: 140,
             render: (text, record, index) => {
-                return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="MM-DD" /></Form.Item>;
+                return <Form.Item name={`CreateTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateTime${index}`)} format="MM-DD" /></Form.Item>;
             }
         },
         {
@@ -205,14 +218,14 @@ const Index = (props) => {
                             title: '起始(Z0)',
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
                             title: '最终(Zi)',
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -226,7 +239,7 @@ const Index = (props) => {
                             width:130,
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' disabled/></Form.Item>;
                             }
                         },
                     ]
@@ -235,7 +248,7 @@ const Index = (props) => {
                     title: '调节零点否',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                        return <Form.Item name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
                             <Radio.Group>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
@@ -251,14 +264,14 @@ const Index = (props) => {
                             title: '起始(S0)',
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
                             title: '最终(Si)',
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -272,7 +285,7 @@ const Index = (props) => {
                             width:130,
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`MembraneNum${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' disabled/></Form.Item>;
                             }
                         },
                     ]
@@ -281,7 +294,7 @@ const Index = (props) => {
                     title: '调节跨度否',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                        return <Form.Item name={`RangeCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
                             <Radio.Group>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
@@ -293,7 +306,7 @@ const Index = (props) => {
                     title: '清洁镜头否',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}>
+                        return <Form.Item name={`Col1${index}`} rules={[{ required: isReg, message: '' }]}>
                             <Radio.Group>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
@@ -308,7 +321,7 @@ const Index = (props) => {
             align: 'center',
             width: 150,
             render: (text, record, index) => {
-                return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}>
+                return <Form.Item name={`Col2${index}`} rules={[{ required: isReg, message: '' }]}>
                     <TextArea rows={1} placeholder="请输入"  />
                     </Form.Item>;
             }
@@ -333,11 +346,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: <span>{form.getFieldValue('ZeroErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('ConfidenceHalfWidth')}</span>,
+                    title: <span>{form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -369,11 +382,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('CorrelationCoefficient')}</span>,
+            title: <span>{form.getFieldValue('SpanErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('AllowHalfWidth')}</span>,
+                    title: <span>{form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -407,30 +420,42 @@ const Index = (props) => {
         setTimeout(() => {
                 form.validateFields().then((values) => {
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
+
+                    let mainValue = {...values}
+                    Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
+                        if(/\d/g.test(item)){
+                           delete mainValue[item];
+                        }
+                    })
                     let data = {
                         AddType: type,
                         MainTable: {
-                            ...values2,
-                            PointId: pointId
+                            ...mainValue,
+                            PointId: pointId,
+                            ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
+                            SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
+                            ZeroValue: form.getFieldValue('ZeroValue'),
+                            SpanValue: form.getFieldValue('SpanValue'),
+                            EvaluationBasis: form.getFieldValue('EvaluationBasis'),
                         },
                         ChildTable: [],
                     }
                     data.ChildTable = tableDatas.map((item, index) => {
                         return {
-                            Sort: item,
-                            CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
-                            BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
-                            ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
-                            MembraneNum: values[`MembraneNum${index}`],
-                            PMWeight: values[`PMWeight${index}`],
-                            BenchmarkVolume: values[`BenchmarkVolume${index}`],
-                            BenchmarkDensity: values[`BenchmarkDensity${index}`],
-                            OperatingModeDensity: values[`OperatingModeDensity${index}`],
-                            MeasuredValue: values[`MeasuredValue${index}`],
-                            O2values: form.getFieldValue([`O2values${index}`]),
-                            WDvalues: form.getFieldValue([`WDvalues${index}`]),
-                            SDvalues: form.getFieldValue([`SDvalues${index}`]),
-                            YLvalues: form.getFieldValue([`YLvalues${index}`]),
+                            CreateTime:  values[`CreateDate${index}`] && values[`CreateDate${index}`].format('YYYY-MM-DD 00:00:00'),
+                            BTime: values[`CreateDate${index}`] && values[`BTime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                            ETime: values[`CreateDate${index}`] && values[`ETime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                            ZeroBegin: values[`ZeroBegin${index}`],
+                            ZeroEnd: values[`ZeroEnd${index}`],
+                            ZeroChange: values[`ZeroChange${index}`],
+                            ZeroCalibration: values[`ZeroCalibration${index}`],
+                            RangeBegin: values[`RangeBegin${index}`],
+                            RangeEnd: values[`RangeEnd${index}`], 
+                            RangeChange: values[`RangeChange${index}`],
+                            RangeCalibration: values[`RangeCalibration${index}`],
+                            Col1: values[`Col1${index}`],
+                            Col2: values[`Col2${index}`],
+                            MainId: form.getFieldValue('ID'),
                         }
 
                     })
@@ -523,7 +548,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="量程校准值" name="RangeCalibration" >
-                        <Input placeholder='请输入' allowClear />
+                        <InputNumber placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>

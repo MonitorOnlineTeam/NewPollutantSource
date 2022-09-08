@@ -311,7 +311,7 @@ const Index = (props) => {
                             AVG1: `${avg1},${avg4}`,
                             AVG2: `${avg2},${avg5},`,
                             AVG3: `${avg3},${avg6},`,
-                            Evaluation:mainValue.Evaluation,
+                            Evaluation:form.getFieldValue('Evaluation'),
                         },
                         ChildTable: [],
                     }

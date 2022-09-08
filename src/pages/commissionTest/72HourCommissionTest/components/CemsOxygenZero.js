@@ -40,6 +40,13 @@ const dvaDispatch = (dispatch) => {
                 payload: payload,
             })
         },
+        get72TestRecordPollutant: (payload, callback) => { //污染物列表
+            dispatch({
+                type: `${namespace}/get72TestRecordPollutant`,
+                payload: payload,
+                callback: callback
+            })
+        },
         getPMReferenceCalibrationRecord: (payload, callback) => { //参数回填
             dispatch({
                 type: `${namespace}/getPMReferenceCalibrationRecord`,
@@ -70,58 +77,80 @@ const Index = (props) => {
 
 
     const [recordName, setRecordName] = useState()
-    const [recordType, setRecordType] = useState()
+
+    const [pollOptions, setPollOptions] = useState([]);
+    const [pollutantCode, setPollutantCode] = useState()
+
+
     useEffect(() => {
-        if(!pointId){ return }  
-        initData(pointId)
+        if(!pointId){ return }
+        initData()
     }, [pointId]);
-    const initData = (pointId) => {
-        props.getPMReferenceCalibrationRecord({
+    const initData = () => {
+
+        props.get72TestRecordPollutant({
             PointCode: pointId,
-            PollutantCode: 502,
-            RecordDate: "",
-            Flag: ""
+            Flag: '',
+        }, (pollData, defaultPollCode) => {
+            if (pollData[0]) {
+                setPollOptions(pollData)
+                setPollutantCode(defaultPollCode)
+                getFormData(defaultPollCode);
+            }
+
+        })
+
+    }
+
+    const getFormData = (pollCode) => {
+        props.getGasIndicationErrorSystemResponseRecord({
+            PointCode: pointId,
+            PollutantCode: pollCode,
+            Flag: "",
+            ID: form.getFieldValue('ID'),
         }, (res) => {
             if (res) {
+                form.resetFields();
                 setRecordName(res.RecordName)
-                setRecordType(res.RecordType)
-            }
-            if (res && res.MainTable) {
+   
+            if (res.MainTable) {
                 form.setFieldsValue({
-                    ...res.MainTable
+                    ...res.MainTable,
+                    PollutantCode: pollCode,
+                    PollutantName:res.MainTable.PollutantName,
                 })
 
-                if (res.ChildTable) {
-                    const data = [];
-                    res.ChildTable.map(item => {
-                        if (item.ChildList) {
-                            item.ChildList.map(item2 => {
-                                data.push(item2)
-                            })
-                        }
-                    })
-                    data.map(item => {
-                        const index = item.Sort - 1;
-                        // form.setFieldsValue({
-                        //     [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
-                        //     [`BTime${index}`]: item.BTime && moment(item.BTime),
-                        //     [`ETime${index}`]: item.ETime && moment(item.ETime),
-                        //     [`MembraneNum${index}`]: item.MembraneNum,
-                        //     [`PMWeight${index}`]: item.PMWeight,
-                        //     [`BenchmarkVolume${index}`]: item.BenchmarkVolume,
-                        //     [`BenchmarkDensity${index}`]: item.BenchmarkDensity,
-                        //     [`OperatingModeDensity${index}`]: item.OperatingModeDensity,
-                        //     [`MeasuredValue${index}`]: item.MeasuredValue,
-                        //     [`O2values${index}`]: item.O2values,
-                        //     [`WDvalues${index}`]: item.WDvalues,
-                        //     [`SDvalues${index}`]: item.SDvalues,
-                        //     [`YLvalues${index}`]: item.YLvalues,
-                        // })
-                    })
-                }
+
             }
+            if (res.ChildTable1&&res.ChildTable1[0]) {
+                const data1 = res.ChildTable1;
+                
+                data1.map(item => {
+                    const index = item.Sort;
+                    form.setFieldsValue({
+                        [`CreateTime`]: item.CreateTime && moment(item.CreateTime),
+                        [`LabelGas80${index}`]: item.LabelGas80,
+                        [`LabelGas50${index}`]: item.LabelGas80,
+                        [`LabelGas20${index}`]: item.LabelGas80,
+                        [`Remark${index}`]: item.Remark,
+                    })
+                })
+            }
+            if (res.ChildTable2&&res.ChildTable2[0]) {
+                const data2 = res.ChildTable2;
 
-
+                data2.map(item => {
+                    const index = item.Sort;
+                    form.setFieldsValue({
+                        [`CreateTime${index}`]: item.CreateTime && moment(item.CreateTime),
+                        [`RangeCalibration${index}`]: item.RangeCalibration,
+                        [`TimeT1${index}`]: item.TimeT1,
+                        [`TimeT2${index}`]: item.TimeT2,
+                        [`ResponseTime${index}`]: item.ResponseTime,
+                    })
+                })
+            }
+        }
         })
     }
     const disabledDate = (current) => {
@@ -486,7 +515,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Form.Item label="量程校准气体浓度" name="Basis" >
+                    <Form.Item label="量程校准气体浓度" name="RangeCalibration" >
                         <InputNumber placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
@@ -526,21 +555,6 @@ const Index = (props) => {
         </>
     
     };
-    const [ pollOptions ,setPollOptions ]= useState([
-        {
-          label: 'Apple',
-          value: 'Apple',
-        },
-        {
-          label: 'Pear',
-          value: 'Pear',
-        },
-        {
-          label: 'Orange',
-          value: 'Orange',
-        },
-      ]);
-      const [pollutantCode,setPollutantCode] = useState()
       const onPollChange = ({ target: { value } }) => {
         console.log('radio1 checked', value);
         setPollutantCode(value)

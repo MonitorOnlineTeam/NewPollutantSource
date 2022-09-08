@@ -314,7 +314,36 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    /*** 颗粒物CEMS零点和量程漂移检测  ***/
+    *getPMZeroRangeRecord({ payload, callback }, { call, put, update }) { //获取
+      yield update({ tableLoading: true })
+      const result = yield call(services.GetPMZeroRangeRecord, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *addPMZeroRangeRecord({ payload, callback }, { call, put, update }) { //添加或修改 暂存、保存
+      yield update({ tableLoading: true })
+      const result = yield call(services.AddPMZeroRangeRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    *deletePMZeroRangeRecord({ payload, callback }, { call, put, update }) { //删除
+      yield update({ tableLoading: true })
+      const result = yield call(services.DeletePMZeroRangeRecord, payload);
+      if (result.IsSuccess) {
+        message.success(result.Message)
+        callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
 
 
 

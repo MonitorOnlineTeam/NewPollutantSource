@@ -157,3 +157,41 @@ export async function DeleteHumidityCheckingRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteHumidityCheckingRecord',params, null);
   return result;
 }
+
+/*** 气态污染物CEMS（含氧量）零点和量程漂移检测 ***/
+
+//获取
+export async function GetGasZeroRangeRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetGasZeroRangeRecord',params, null);
+  return result;
+}
+
+//添加修改
+export async function AddGasZeroRangeInfoRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddGasZeroRangeInfoRecord',params, null);
+  return result;
+}
+//删除
+export async function DeleteGasZeroRangeRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeleteGasZeroRangeRecord',params, null);
+  return result;
+}
+
+/*** 颗粒物CEMS零点和量程漂移检测  ***/
+
+//获取
+export async function GetPMZeroRangeRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/GetPMZeroRangeRecord',params, null);
+  return result;
+}
+
+//添加修改
+export async function AddPMZeroRangeRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/AddPMZeroRangeRecord',params, null);
+  return result;
+}
+//删除
+export async function DeletePMZeroRangeRecord(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeletePMZeroRangeRecord',params, null);
+  return result;
+}
