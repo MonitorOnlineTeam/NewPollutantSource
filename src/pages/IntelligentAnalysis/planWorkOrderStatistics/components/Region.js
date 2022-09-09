@@ -495,8 +495,8 @@ const Index = (props,ref ) => {
     },
     {
       title: '巡检周期',
-      dataIndex: 'calibrationCycle',
-      key:'calibrationCycle',
+      dataIndex: 'inspectionCycle',
+      key:'inspectionCycle',
       align:'center',
     },
     {
@@ -572,7 +572,7 @@ const Index = (props,ref ) => {
     },
     {
       title: '校准周期',
-      dataIndex: 'calibrationCycle',
+      dataIndex: 'calibrationCycle', 
       key:'calibrationCycle',
       align:'center',
     },
@@ -958,15 +958,15 @@ const Index = (props,ref ) => {
     },
     {
       title: <span>计划巡检工单数<Tooltip title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-      dataIndex: 'inspectionCount',
-      key:'inspectionCount',
+      dataIndex: 'inspectionCompleteCount',
+      key:'inspectionCompleteCount',
       align:'center',
       width: 100,
     },
     {
       title: <span>计划校准工单数<Tooltip title={'日期条件内，派发的计划校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
-      dataIndex: 'calibrationCount',
-      key:'calibrationCount',
+      dataIndex: 'calibrationCompleteCount',
+      key:'calibrationCompleteCount',
       align:'center',
       width: 100,
     },

@@ -101,15 +101,15 @@ const Index = (props) => {
             if (res) {
                 setRecordName(res.RecordName)
                 setRecordType(res.RecordType)
-                const avg1 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[0],
-                      avg4 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[1], 
-                      avg7 = res.MainTableAVG1&&res.MainTable.AVG1.split(',')[2], 
-                      avg2 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[0], 
-                      avg5 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[1], 
-                      avg8 = res.MainTableAVG2&&res.MainTable.AVG2.split(',')[2], 
-                      avg3 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[0], 
-                      avg6 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[1], 
-                      avg9 = res.MainTableAVG3&&res.MainTable.AVG3.split(',')[2];  
+                const avg1 =  res.MainTable.AVG1&&res.MainTable.AVG1.split(',')[0],
+                      avg4 =  res.MainTable.AVG1&&res.MainTable.AVG1.split(',')[1], 
+                      avg7 =  res.MainTable.AVG1&&res.MainTable.AVG1.split(',')[2], 
+                      avg2 =  res.MainTable.AVG2&&res.MainTable.AVG2.split(',')[0], 
+                      avg5 =  res.MainTable.AVG2&&res.MainTable.AVG2.split(',')[1], 
+                      avg8 =  res.MainTable.AVG2&&res.MainTable.AVG2.split(',')[2], 
+                      avg3 =  res.MainTable.AVG3&&res.MainTable.AVG3.split(',')[0], 
+                      avg6 =  res.MainTable.AVG3&&res.MainTable.AVG3.split(',')[1], 
+                      avg9 =  res.MainTable.AVG3&&res.MainTable.AVG3.split(',')[2];  
                     
                      
                    if (res.MainTable) {
@@ -687,6 +687,7 @@ const Index = (props) => {
             message.warning('请上传文件')
             return;
         }
+        setIsReg(false)
         setIsTimeReg(true)
         setTimeout(() => {
             form.validateFields().then((values) => {

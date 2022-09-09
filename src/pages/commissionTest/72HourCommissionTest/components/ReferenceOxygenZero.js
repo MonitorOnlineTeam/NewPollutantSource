@@ -93,6 +93,7 @@ const Index = (props) => {
 
 
     const [tableDatas, setTableDatas] = useState([]);
+    const [tableDatas2, setTableDatas2] = useState(['标准气体']);
 
     const [form] = Form.useForm();
 
@@ -111,6 +112,7 @@ const Index = (props) => {
 
     const [dateOptions, setDateOptions] = useState([]);
     const [selectDate, setSelectDate] = useState()
+
 
     useEffect(() => {
         if(!pointId){ return }
@@ -213,6 +215,17 @@ const Index = (props) => {
 
         }
 
+    }
+
+
+    const collectionBlur = () =>{
+
+        const beforeVal = form.getFieldValue('BeforeCollection'),afterVal = form.getFieldValue('AfterCollection')
+
+        if((beforeVal|| beforeVal==0) && (afterVal || afterVal ==0)){
+            const val = ((afterVal -  beforeVal) * 100 / afterVal).toFixed(3);
+             form.setFieldsValue({ RelativeCollection: val })
+        }
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
@@ -345,26 +358,26 @@ const Index = (props) => {
     const columns2 = () => [
 
         {
-            title: '标准气体',
             align: 'center',
             width:135,
+            render:(text,record,index)=>{
+                return text;
+            }
         },
         {
             title: '名称',
             align: 'center',
-            children: [{
-            title:<Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled placeholder='请输入' title={form.getFieldValue('StandardGasName')}/></Form.Item>,
-            align: 'center',
-            }]
+            render:()=>{
+                return <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled placeholder='请输入' title={form.getFieldValue('StandardGasName')}/></Form.Item>
+            }
 
         },
         {
             title: '保证值',
             align: 'center',
-            children: [{
-                title: <Form.Item name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>,
-                align: 'center',
-            }]
+            render:()=>{
+                return <Form.Item name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>
+            }
 
         },
 
@@ -376,19 +389,16 @@ const Index = (props) => {
                 {
                     title: '采样前',
                     align: 'center',
-                    children: [{
-                        title: <Form.Item name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>,
-                        align: 'center',
-                    }]
+                    render:()=>{
+                        return <Form.Item name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>{collectionBlur()}}  placeholder='请输入' /></Form.Item>
+                    }
                 },
                 {
                     title: '采样后',
                     align: 'center',
-                    children: [{
-                        title: <Form.Item name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber  placeholder='请输入' /></Form.Item>,
-                        align: 'center',
-                    }]
-
+                    render:()=>{
+                        return <Form.Item name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>{collectionBlur()}} placeholder='请输入' /></Form.Item>
+                    }
                 },
 
             ]
@@ -396,11 +406,9 @@ const Index = (props) => {
         {
             title: '采样前后相对误差(%)',
             align: 'center', 
-            children: [{
-                title: <span>{form.getFieldValue('RelativeCollection')}</span>,
-                align: 'center',
-            }]
-
+            render:()=>{
+                return <Form.Item name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled  placeholder='请输入' /></Form.Item>
+            }
         }
 
 
@@ -629,6 +637,7 @@ const Index = (props) => {
             message.warning('请上传文件')
             return;
         }
+        setIsReg(false)
         setIsTimeReg(true)
         setTimeout(() => {
             form.validateFields().then((values) => {
@@ -831,10 +840,10 @@ const Index = (props) => {
                         <Table
                             size="small"
                             bordered
-                            dataSource={[]}
+                            dataSource={tableDatas2}
                             columns={columns2()}
                             pagination={false}
-                            className={'white-table-thead hidden-tbody tableSty'}
+                            className={'white-table-thead  tableSty'}
                         />
                     </Form> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}</Spin>   </> :
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

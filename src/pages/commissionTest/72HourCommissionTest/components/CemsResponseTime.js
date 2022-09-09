@@ -176,11 +176,11 @@ const Index = (props) => {
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (type) => {
-        const values = form.getFieldValue('CreateDate0')
-        if (type == 'CreateDate0' && autoDateFlag) {
+        const values = form.getFieldValue('CreateTime0')
+        if (type == 'CreateTime0' && autoDateFlag) {
             form.setFieldsValue({
-                CreateDate1: moment(moment(values).add('day', 1)),
-                CreateDate2: moment(moment(values).add('day', 2)),
+                CreateTime1: moment(moment(values).add('day', 1)),
+                CreateTime2: moment(moment(values).add('day', 2)),
             })
             setAutoDateFlag(false)
         }
@@ -643,7 +643,7 @@ const Index = (props) => {
                         columns={columns2()}
                         pagination={false}
                         className={'tableSty'}
-                        style={{marginTop:5}}
+                        // style={{marginTop:5}}
                     />
                 </Form>
                 </Spin>

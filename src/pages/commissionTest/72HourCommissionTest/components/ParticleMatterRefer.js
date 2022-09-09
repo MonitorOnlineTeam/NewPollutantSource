@@ -592,7 +592,8 @@ const Index = (props) => {
             message.warning('请上传文件')
             return;
         }
-        // setIsTimeReg(true)
+        setIsReg(false)
+        setIsTimeReg(true)
         setTimeout(() => {
             form.validateFields().then((values) => {
                 const timeData = []
