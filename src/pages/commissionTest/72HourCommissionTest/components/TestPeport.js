@@ -6,7 +6,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Tag, Tabs, Empty, Typography, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
-import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined,DownloadOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
@@ -72,7 +72,7 @@ const Index = (props) => {
   return (
     <div className={styles.totalContentSty}>
 
-      <Button type="primary" loading={testReportLoading} style={{ marginRight: 10 }} onClick={testReportClick}>生成检测报告</Button>
+      <Button type="primary" icon={<DownloadOutlined/>}  loading={testReportLoading} style={{ marginRight: 10 }} onClick={testReportClick}>生成检测报告</Button>
 
     </div>
   );

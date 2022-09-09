@@ -28,7 +28,7 @@ const namespace = 'hourCommissionTest'
 
 
 
-const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({  
+const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     formLoading: loading.effects[`${namespace}/getPMZeroRangeRecord`],
     delLoading: loading.effects[`${namespace}/deletePMZeroRangeRecord`],
 })
@@ -71,14 +71,14 @@ const Index = (props) => {
     const [form] = Form.useForm();
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4]);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4]);
 
     const { pointId, tableLoading, formLoading, } = props;
 
 
     const [recordName, setRecordName] = useState()
     useEffect(() => {
-        if(!pointId){ return }
+        if (!pointId) { return }
         initData()
     }, [pointId]);
     const initData = () => {
@@ -91,45 +91,45 @@ const Index = (props) => {
             if (res) {
                 setRecordName(res.RecordName)
 
-            if ( res.MainTable) {
-                form.resetFields();
-                
-                form.setFieldsValue({
-                    ...res.MainTable,
-                    MinRange: res.MainTable.Range? res.MainTable.Range.split('-')[0] : null,
-                    MaxRange: res.MainTable.Range? res.MainTable.Range.split('-')[1] : null,
-                })
+                if (res.MainTable) {
+                    form.resetFields();
 
-                if (res.ChildTable) {
-                    const data = [];
-                    res.ChildTable.map(item => {
-                        if (item.ChildList) {
-                            item.ChildList.map(item2 => {
-                                data.push(item2)
-                            })
-                        }
+                    form.setFieldsValue({
+                        ...res.MainTable,
+                        MinRange: res.MainTable.Range ? res.MainTable.Range.split('-')[0] : null,
+                        MaxRange: res.MainTable.Range ? res.MainTable.Range.split('-')[1] : null,
                     })
-                    data.map(item => {
-                        const index = item.Col1;
-                        form.setFieldsValue({
-                            [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
-                            [`BTime${index}`]: item.BTime && moment(item.BTime),
-                            [`ETime${index}`]: item.ETime && moment(item.ETime),
-                            [`ZeroBegin${index}`]: item.ZeroBegin,
-                            [`ZeroEnd${index}`]: item.ZeroEnd,
-                            [`ZeroChange${index}`]: item.ZeroChange,
-                            [`ZeroCalibration${index}`]: item.ZeroCalibration,
-                            [`CalibrationBegin${index}`]: item.CalibrationBegin,
-                            [`CalibrationEnd${index}`]: item.CalibrationEnd,
-                            [`CalibrationEnd${index}`]: item.CalibrationEnd,
-                            [`AdjustSpan${index}`]: item.AdjustSpan,
-                            [`CleanLens${index}`]: item.CleanLens,
-                            [`Remark${index}`]: item. Remark,
+
+                    if (res.ChildTable) {
+                        const data = [];
+                        res.ChildTable.map(item => {
+                            if (item.ChildList) {
+                                item.ChildList.map(item2 => {
+                                    data.push(item2)
+                                })
+                            }
                         })
-                    })
+                        data.map(item => {
+                            const index = item.Col1;
+                            form.setFieldsValue({
+                                [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
+                                [`BTime${index}`]: item.BTime && moment(item.BTime),
+                                [`ETime${index}`]: item.ETime && moment(item.ETime),
+                                [`ZeroBegin${index}`]: item.ZeroBegin,
+                                [`ZeroEnd${index}`]: item.ZeroEnd,
+                                [`ZeroChange${index}`]: item.ZeroChange,
+                                [`ZeroCalibration${index}`]: item.ZeroCalibration,
+                                [`CalibrationBegin${index}`]: item.CalibrationBegin,
+                                [`CalibrationEnd${index}`]: item.CalibrationEnd,
+                                [`CalibrationEnd${index}`]: item.CalibrationEnd,
+                                [`AdjustSpan${index}`]: item.AdjustSpan,
+                                [`CleanLens${index}`]: item.CleanLens,
+                                [`Remark${index}`]: item.Remark,
+                            })
+                        })
+                    }
                 }
             }
-        }
 
         })
     }
@@ -164,17 +164,17 @@ const Index = (props) => {
 
     }
 
-    const errorBlur = (index,type)=>{
+    const errorBlur = (index, type) => {
         let value1, value2;
-        if(type==1){ //零点漂移绝对误差	
-          value1 = form.getFieldValue(`ZeroBegin${index}`),value2 = form.getFieldValue(`ZeroEnd${index}`)
-          if((value1 || value1 ==0) && (value2 || value2 ==0)){
-            form.setFieldsValue({[`ZeroChange${index}`]: interceptTwo(value2 - value1)})
-          }
-        }else{
-            value1 = form.getFieldValue(`CalibrationBegin${index}`),value2 = form.getFieldValue(`CalibrationEnd${index}`)
-            if((value1 || value1 ==0) && (value2 || value2 ==0)){
-              form.setFieldsValue({[`DriftAbsolute${index}`]: interceptTwo(value2 - value1)})
+        if (type == 1) { //零点漂移绝对误差	
+            value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
+            if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
+                form.setFieldsValue({ [`ZeroChange${index}`]: interceptTwo(value2 - value1) })
+            }
+        } else {
+            value1 = form.getFieldValue(`CalibrationBegin${index}`), value2 = form.getFieldValue(`CalibrationEnd${index}`)
+            if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
+                form.setFieldsValue({ [`DriftAbsolute${index}`]: interceptTwo(value2 - value1) })
             }
         }
     }
@@ -185,7 +185,7 @@ const Index = (props) => {
         {
             title: '日期',
             align: 'center',
-            width: 140,
+            width: 130,
             render: (text, record, index) => {
                 return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
             }
@@ -197,7 +197,7 @@ const Index = (props) => {
                 {
                     title: '开始',
                     align: 'center',
-                    width: 140,
+                    width: 120,
                     render: (text, record, index) => {
                         return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
@@ -205,7 +205,7 @@ const Index = (props) => {
                 {
                     title: '结束',
                     align: 'center',
-                    width: 140,
+                    width: 120,
                     render: (text, record, index) => {
                         return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
@@ -223,15 +223,17 @@ const Index = (props) => {
                         {
                             title: '起始(Z0)',
                             align: 'center',
+                            width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,1)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
                             title: '最终(Zi)',
                             align: 'center',
+                            width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,1)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -242,10 +244,10 @@ const Index = (props) => {
                     children: [
                         {
                             title: '∆Z=Zi-Z0',
-                            width:130,
+                            width: 130,
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' disabled/></Form.Item>;
+                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -269,29 +271,31 @@ const Index = (props) => {
                         {
                             title: '起始(S0)',
                             align: 'center',
+                            width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,2)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
                             title: '最终(Si)',
                             align: 'center',
+                            width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,2)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
                 },
                 {
                     title: '量程漂移绝对误差',
-                    align: 'center',        
+                    align: 'center',
                     children: [
                         {
                             title: '∆S=Si-S0',
-                            width:130,
+                            width: 130,
                             align: 'center',
                             render: (text, record, index) => {
-                                return <Form.Item name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' disabled/></Form.Item>;
+                                return <Form.Item name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' placeholder='请输入' disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -325,11 +329,11 @@ const Index = (props) => {
         {
             title: '备注',
             align: 'center',
-            width: 150,
+            width: 120,
             render: (text, record, index) => {
                 return <Form.Item name={`Remark${index}`} rules={[{ required: false, message: '' }]}>
-                    <TextArea rows={1} placeholder="请输入"  />
-                    </Form.Item>;
+                    <TextArea rows={1} placeholder="请输入" />
+                </Form.Item>;
             }
 
         },
@@ -424,59 +428,59 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
-                form.validateFields().then((values) => {
-                    type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
+            form.validateFields().then((values) => {
+                type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
 
-                    let mainValue = {...values}
-                    Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/\d/g.test(item)){
-                           delete mainValue[item];
-                        }
-                    })
-                    let data = {
-                        AddType: type,
-                        MainTable: {
-                            ...mainValue,
-                            Range: `${form.getFieldValue('MinRange')? form.getFieldValue('MinRange') : '' }-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : '' }`,
-                            PointId: pointId,
-                            ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
-                            SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
-                            ZeroValue: form.getFieldValue('ZeroValue'),
-                            SpanValue: form.getFieldValue('SpanValue'),
-                            EvaluationBasis: form.getFieldValue('EvaluationBasis'),
-                           
-                        },
-                        ChildTable: [],
+                let mainValue = { ...values }
+                Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
+                    if (/\d/g.test(item)) {
+                        delete mainValue[item];
                     }
-                    data.ChildTable = tableDatas.map((item, index) => {
-                        return {
-                            Col1:index,
-                            CreateDate:  values[`CreateDate${index}`] && values[`CreateDate${index}`].format('YYYY-MM-DD 00:00:00'),
-                            BTime: values[`CreateDate${index}`] && values[`BTime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
-                            ETime: values[`CreateDate${index}`] && values[`ETime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
-                            ZeroBegin: values[`ZeroBegin${index}`],
-                            ZeroEnd: values[`ZeroEnd${index}`],
-                            ZeroChange: values[`ZeroChange${index}`],
-                            ZeroCalibration: values[`ZeroCalibration${index}`],
-                            CalibrationBegin: values[`CalibrationBegin${index}`],
-                            CalibrationEnd: values[`CalibrationEnd${index}`], 
-                            CalibrationEnd: values[`CalibrationEnd${index}`],
-                            AdjustSpan: values[`AdjustSpan${index}`],
-                            CleanLens: values[`CleanLens${index}`],
-                            Remark: values[`Remark${index}`],
-                            MainId: form.getFieldValue('ID'),
-                        }
+                })
+                let data = {
+                    AddType: type,
+                    MainTable: {
+                        ...mainValue,
+                        Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''}-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
+                        PointId: pointId,
+                        ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
+                        SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
+                        ZeroValue: form.getFieldValue('ZeroValue'),
+                        SpanValue: form.getFieldValue('SpanValue'),
+                        EvaluationBasis: form.getFieldValue('EvaluationBasis'),
 
-                    })
-                    props.addPMZeroRangeRecord(data, () => {
-                        type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData()
-                    })
-                }).catch((errorInfo) => {
-                    console.log('Failed:', errorInfo);
-                    message.warning('请输入完整的数据')
-                    return;
-                });
+                    },
+                    ChildTable: [],
+                }
+                data.ChildTable = tableDatas.map((item, index) => {
+                    return {
+                        Col1: index,
+                        CreateDate: values[`CreateDate${index}`] && values[`CreateDate${index}`].format('YYYY-MM-DD 00:00:00'),
+                        BTime: values[`CreateDate${index}`] && values[`BTime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                        ETime: values[`CreateDate${index}`] && values[`ETime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                        ZeroBegin: values[`ZeroBegin${index}`],
+                        ZeroEnd: values[`ZeroEnd${index}`],
+                        ZeroChange: values[`ZeroChange${index}`],
+                        ZeroCalibration: values[`ZeroCalibration${index}`],
+                        CalibrationBegin: values[`CalibrationBegin${index}`],
+                        CalibrationEnd: values[`CalibrationEnd${index}`],
+                        CalibrationEnd: values[`CalibrationEnd${index}`],
+                        AdjustSpan: values[`AdjustSpan${index}`],
+                        CleanLens: values[`CleanLens${index}`],
+                        Remark: values[`Remark${index}`],
+                        MainId: form.getFieldValue('ID'),
+                    }
+
+                })
+                props.addPMZeroRangeRecord(data, () => {
+                    type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+                    initData()
+                })
+            }).catch((errorInfo) => {
+                console.log('Failed:', errorInfo);
+                message.warning('请输入完整的数据')
+                return;
+            });
 
         })
 
@@ -569,23 +573,23 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Row justify='space-between' >
-                        <Form.Item label="量程" name="MinRange" >
+                    <Row>
+                        <label style={{ width: 125, textAlign: 'right' }}>量程：</label>
+                        <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>
-                    <div style={{paddingTop:4}}>-</div>
-                    <Form.Item name="MaxRange">
+                        <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
+                        <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>
-
                 <Form.Item name="ID" hidden>
                     <Input />
                 </Form.Item>
             </Row>
         </>
-    
+
     };
 
 
@@ -594,7 +598,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents {...props}  saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}        submits={submits} clears={clears} del={del} />
+                <BtnComponents {...props} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} submits={submits} clears={clears} del={del} />
                 <Form
                     form={form}
                     name="advanced_search"

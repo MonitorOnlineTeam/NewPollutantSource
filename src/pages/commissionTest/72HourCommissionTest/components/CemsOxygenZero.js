@@ -4,7 +4,7 @@
  * 创建时间：2022.09.01
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography,Empty, TimePicker, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Tag, Typography, Empty, TimePicker, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -80,7 +80,7 @@ const Index = (props) => {
 
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4]);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4]);
 
     const { pointId, pollutantLoading, formLoading, } = props;
 
@@ -92,7 +92,7 @@ const Index = (props) => {
 
 
     useEffect(() => {
-        if(!pointId){ return }
+        if (!pointId) { return }
         initData()
     }, [pointId]);
     const initData = () => {
@@ -104,14 +104,14 @@ const Index = (props) => {
             if (pollData[0]) {
                 setPollOptions(pollData)
                 setPollutantCode(defaultPollCode)
-                getFormData(defaultPollCode,pollData,);
+                getFormData(defaultPollCode, pollData);
             }
 
         })
 
     }
 
-    const getFormData = (pollCode,pollList) => {
+    const getFormData = (pollCode, pollList) => {
         props.getGasZeroRangeRecord({
             PointCode: pointId,
             PollutantCode: pollCode,
@@ -121,51 +121,51 @@ const Index = (props) => {
             if (res) {
                 setRecordName(res.RecordName)
 
-            if ( res.MainTable) {
-                form.resetFields();
+                if (res.MainTable) {
+                    form.resetFields();
 
-                form.setFieldsValue({
-                    ...res.MainTable,
-                    MinRange: res.MainTable.Range? res.MainTable.Range.split('-')[0] : null,
-                    MaxRange: res.MainTable.Range? res.MainTable.Range.split('-')[1] : null,
-                })
-                getPollutantName(pollOptions&&pollOptions[0]? pollOptions : pollList,pollCode) //获取污染物名称
-
-                if (res.ChildTable) {
-                    const data = [];
-                    res.ChildTable.map(item => {
-                        if (item.ChildList) {
-                            item.ChildList.map(item2 => {
-                                data.push(item2)
-                            })
-                        }
+                    form.setFieldsValue({
+                        ...res.MainTable,
+                        MinRange: res.MainTable.Range ? res.MainTable.Range.split('-')[0] : null,
+                        MaxRange: res.MainTable.Range ? res.MainTable.Range.split('-')[1] : null,
                     })
-                    data.map(item => {
-                        const index = item.Col1;
-                        form.setFieldsValue({
-                            [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
-                            [`BTime${index}`]: item.BTime && moment(item.BTime),
-                            [`ETime${index}`]: item.ETime && moment(item.ETime),
-                            [`ZeroBegin${index}`]: item.ZeroBegin,
-                            [`ZeroEnd${index}`]: item.ZeroEnd,
-                            [`ZeroChange${index}`]: item.ZeroChange,
-                            [`ZeroCalibration${index}`]: item.ZeroCalibration,
-                            [`RangeBegin${index}`]: item.RangeBegin,
-                            [`RangeEnd${index}`]: item.RangeEnd,
-                            [`RangeChange${index}`]: item.RangeChange,
-                            [`RangeCalibration${index}`]: item.RangeCalibration,
+                    getPollutantName(pollOptions && pollOptions[0] ? pollOptions : pollList, pollCode) //获取污染物名称
+
+                    if (res.ChildTable) {
+                        const data = [];
+                        res.ChildTable.map(item => {
+                            if (item.ChildList) {
+                                item.ChildList.map(item2 => {
+                                    data.push(item2)
+                                })
+                            }
                         })
-                    })
+                        data.map(item => {
+                            const index = item.Col1;
+                            form.setFieldsValue({
+                                [`CreateDate${index}`]: item.CreateDate && moment(item.CreateDate),
+                                [`BTime${index}`]: item.BTime && moment(item.BTime),
+                                [`ETime${index}`]: item.ETime && moment(item.ETime),
+                                [`ZeroBegin${index}`]: item.ZeroBegin,
+                                [`ZeroEnd${index}`]: item.ZeroEnd,
+                                [`ZeroChange${index}`]: item.ZeroChange,
+                                [`ZeroCalibration${index}`]: item.ZeroCalibration,
+                                [`RangeBegin${index}`]: item.RangeBegin,
+                                [`RangeEnd${index}`]: item.RangeEnd,
+                                [`RangeChange${index}`]: item.RangeChange,
+                                [`RangeCalibration${index}`]: item.RangeCalibration,
+                            })
+                        })
+                    }
                 }
             }
-        }
         })
     }
 
-    const getPollutantName = (list,value) =>{
-        list.map(item=>{
-            if(item.value == value){
-              form.setFieldsValue({ PollutantName : item.label  })
+    const getPollutantName = (list, value) => {
+        list.map(item => {
+            if (item.value == value) {
+                form.setFieldsValue({ PollutantName: item.label })
             }
         })
     }
@@ -198,21 +198,21 @@ const Index = (props) => {
         }
     }
 
-    const errorBlur = (index,type)=>{
+    const errorBlur = (index, type) => {
         let value1, value2;
-        if(type==1){ //零点漂移绝对误差	
-          value1 = form.getFieldValue(`ZeroBegin${index}`),value2 = form.getFieldValue(`ZeroEnd${index}`)
-          if((value1 || value1 ==0) && (value2 || value2 ==0)){
-            form.setFieldsValue({[`ZeroChange${index}`]: interceptTwo(value2 - value1)})
-          }
-        }else{
-            value1 = form.getFieldValue(`RangeBegin${index}`),value2 = form.getFieldValue(`RangeEnd${index}`)
-            if((value1 || value1 ==0) && (value2 || value2 ==0)){
-              form.setFieldsValue({[`RangeChange${index}`]: interceptTwo(value2 - value1)})
+        if (type == 1) { //零点漂移绝对误差	
+            value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
+            if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
+                form.setFieldsValue({ [`ZeroChange${index}`]: interceptTwo(value2 - value1) })
+            }
+        } else {
+            value1 = form.getFieldValue(`RangeBegin${index}`), value2 = form.getFieldValue(`RangeEnd${index}`)
+            if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
+                form.setFieldsValue({ [`RangeChange${index}`]: interceptTwo(value2 - value1) })
             }
         }
     }
-    
+
 
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
@@ -233,7 +233,7 @@ const Index = (props) => {
                 {
                     title: '开始',
                     align: 'center',
-                    width: 140,
+                    width: 120,
                     render: (text, record, index) => {
                         return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
@@ -241,103 +241,105 @@ const Index = (props) => {
                 {
                     title: '结束',
                     align: 'center',
-                    width: 140,
+                    width: 120,
                     render: (text, record, index) => {
                         return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
                 },
             ]
         },
+        {
+            title: '零点读数',
+            align: 'center',
+            children: [
                 {
-                    title: '零点读数',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '起始(Z0)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={()=>errorBlur(index,1)}  placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                        {
-                            title: '最终(Zi)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={()=>errorBlur(index,1)} placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '零点读数变化',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '∆Z=Zi-Z0',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01' disabled  placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '校准零点否',
+                    title: '起始(Z0)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
-                                <Radio value="1">是</Radio>
-                                <Radio value="2">否</Radio>
-                            </Radio.Group>
-                        </Form.Item>;
+                        return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
-                    title: '量程读数',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '起始(S0)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>errorBlur(index,2)} placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                        {
-                            title: '最终(Si)',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  onBlur={()=>errorBlur(index,2)} placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '量程读数变化',
-                    align: 'center',
-                    children: [
-                        {
-                            title: '∆S=Si-S0',
-                            align: 'center',
-                            render: (text, record, index) => {
-                                return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
-                            }
-                        },
-                    ]
-                },
-                {
-                    title: '校准量程否',
+                    title: '最终(Zi)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`RangeCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
-                                <Radio value="1">是</Radio>
-                                <Radio value="2">否</Radio>
-                            </Radio.Group>
-                        </Form.Item>;
+                        return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                     }
                 },
+            ]
+        },
+        {
+            title: '零点读数变化',
+            align: 'center',
+            children: [
+                {
+                    title: '∆Z=Zi-Z0',
+                    align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                    }
+                },
+            ]
+        },
+        {
+            title: '校准零点否',
+            align: 'center',
+            render: (text, record, index) => {
+                return <Form.Item name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Radio.Group>
+                        <Radio value="1">是</Radio>
+                        <Radio value="2">否</Radio>
+                    </Radio.Group>
+                </Form.Item>;
+            }
+        },
+        {
+            title: '量程读数',
+            align: 'center',
+            children: [
+                {
+                    title: '起始(S0)',
+                    align: 'center',
+                    width: 100,
+                    render: (text, record, index) => {
+                        return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                    }
+                },
+                {
+                    title: '最终(Si)',
+                    align: 'center',
+                    width: 100,
+                    render: (text, record, index) => {
+                        return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                    }
+                },
+            ]
+        },
+        {
+            title: '量程读数变化',
+            align: 'center',
+            children: [
+                {
+                    title: '∆S=Si-S0',
+                    align: 'center',
+                    render: (text, record, index) => {
+                        return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                    }
+                },
+            ]
+        },
+        {
+            title: '校准量程否',
+            align: 'center',
+            render: (text, record, index) => {
+                return <Form.Item name={`RangeCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
+                    <Radio.Group>
+                        <Radio value="1">是</Radio>
+                        <Radio value="2">否</Radio>
+                    </Radio.Group>
+                </Form.Item>;
+            }
+        },
     ];
 
     const columns2 = () => [
@@ -426,57 +428,57 @@ const Index = (props) => {
             setIsReg(true)
         }
         setTimeout(() => {
-                form.validateFields().then((values) => {
-                    type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
+            form.validateFields().then((values) => {
+                type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
 
-                    let mainValue = {...values}
-                    Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/\d/g.test(item)){
-                           delete mainValue[item];
-                        }
-                    })
-                    let data = {
-                        AddType: type,
-                        MainTable: {
-                            ...mainValue,
-                            Range: `${form.getFieldValue('MinRange')? form.getFieldValue('MinRange') : '' }-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : '' }`,
-                            PointId: pointId,
-                            ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
-                            SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
-                            ZeroValue: form.getFieldValue('ZeroValue'),
-                            SpanValue: form.getFieldValue('SpanValue'),
-                            EvaluationBasis: form.getFieldValue('EvaluationBasis'),
-                            
-                        },
-                        ChildTable: [],
+                let mainValue = { ...values }
+                Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
+                    if (/\d/g.test(item)) {
+                        delete mainValue[item];
                     }
-                    data.ChildTable = tableDatas.map((item, index) => {
-                        return {
-                            Col1:index,
-                            CreateDate:  values[`CreateDate${index}`] && values[`CreateDate${index}`].format('YYYY-MM-DD 00:00:00'),
-                            BTime: values[`CreateDate${index}`] && values[`BTime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
-                            ETime: values[`CreateDate${index}`] && values[`ETime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
-                            ZeroBegin: values[`ZeroBegin${index}`],
-                            ZeroEnd: values[`ZeroEnd${index}`],
-                            ZeroChange: values[`ZeroChange${index}`],
-                            ZeroCalibration: values[`ZeroCalibration${index}`],
-                            RangeBegin: values[`RangeBegin${index}`],
-                            RangeEnd: values[`RangeEnd${index}`], 
-                            RangeChange: values[`RangeChange${index}`],
-                            RangeCalibration: values[`RangeCalibration${index}`],
-                            MainId: form.getFieldValue('ID'),
-                        }
+                })
+                let data = {
+                    AddType: type,
+                    MainTable: {
+                        ...mainValue,
+                        Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''}-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
+                        PointId: pointId,
+                        ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
+                        SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
+                        ZeroValue: form.getFieldValue('ZeroValue'),
+                        SpanValue: form.getFieldValue('SpanValue'),
+                        EvaluationBasis: form.getFieldValue('EvaluationBasis'),
 
-                    })
-                    props.addGasZeroRangeInfoRecord(data, () => {
-                        type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                        getFormData(pollutantCode)
-                    })
-                }).catch((errorInfo) => {
-                    console.log('Failed:', errorInfo);
-                    message.warning('请输入完整的数据')
-                    return;
-                });
+                    },
+                    ChildTable: [],
+                }
+                data.ChildTable = tableDatas.map((item, index) => {
+                    return {
+                        Col1: index,
+                        CreateDate: values[`CreateDate${index}`] && values[`CreateDate${index}`].format('YYYY-MM-DD 00:00:00'),
+                        BTime: values[`CreateDate${index}`] && values[`BTime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
+                        ETime: values[`CreateDate${index}`] && values[`ETime${index}`] && `${values[`CreateDate${index}`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,
+                        ZeroBegin: values[`ZeroBegin${index}`],
+                        ZeroEnd: values[`ZeroEnd${index}`],
+                        ZeroChange: values[`ZeroChange${index}`],
+                        ZeroCalibration: values[`ZeroCalibration${index}`],
+                        RangeBegin: values[`RangeBegin${index}`],
+                        RangeEnd: values[`RangeEnd${index}`],
+                        RangeChange: values[`RangeChange${index}`],
+                        RangeCalibration: values[`RangeCalibration${index}`],
+                        MainId: form.getFieldValue('ID'),
+                    }
+
+                })
+                props.addGasZeroRangeInfoRecord(data, () => {
+                    type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
+                    getFormData(pollutantCode)
+                })
+            }).catch((errorInfo) => {
+                console.log('Failed:', errorInfo);
+                message.warning('请输入完整的数据')
+                return;
+            });
 
         })
 
@@ -568,20 +570,21 @@ const Index = (props) => {
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
-                    <Row justify='space-between'>
-                        <Form.Item label="量程" name="MinRange" >
+                    <Row>
+                        <label style={{ width: 125, textAlign: 'right' }}>量程：</label>
+                        <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>
-                        <div style={{paddingTop:4}}>-</div>
-                    <Form.Item name="MaxRange">
+                        <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
+                        <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>
-              
+
                 <Col span={8}>
                     <Form.Item label="污染物名称" name="PollutantName" >
-                        <Input  disabled  placeholder='请输入' />
+                        <Input disabled placeholder='请输入' />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
@@ -595,16 +598,16 @@ const Index = (props) => {
                 </Form.Item>
             </Row>
         </>
-    
+
     };
-      const onPollChange = ({ target: { value } },) => {
+    const onPollChange = ({ target: { value } }, ) => {
         console.log('radio1 checked', value);
         setPollutantCode(value)
         getFormData(value)
-      };
-   const PollutantComponents = () =>{
-       return  <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange}/>
-   }
+    };
+    const PollutantComponents = () => {
+        return <Radio.Group options={pollOptions} value={pollutantCode} optionType="button" buttonStyle="solid" onChange={onPollChange} />
+    }
 
 
     const onValuesChange = (hangedValues, allValues) => {
@@ -612,38 +615,38 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={pollutantLoading}>
-            {pollOptions[0] ? <>
-                <BtnComponents {...props}   saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}  delLoading={props.delLoading}  submits={submits} clears={clears} del={del} />
-                <PollutantComponents />
-                <Spin spinning={formLoading}>
-                <Form
-                    form={form}
-                    name="advanced_search"
-                    initialValues={{}}
-                    className={styles["ant-advanced-search-form"]}
-                    onValuesChange={onValuesChange}
-                >
-                    <SearchComponents />
-                    <Table
-                        size="small"
-                        bordered
-                        dataSource={tableDatas}
-                        columns={columns}
-                        pagination={false}
-                        className={'tableSty'}
-                    />
-                    <Table
-                        size="small"
-                        bordered
-                        dataSource={['评价依据']}
-                        columns={columns2()}
-                        pagination={false}
-                        className={'white-table-thead'}
-                    />
-                </Form>
-                </Spin>
+                {pollOptions[0] ? <>
+                    <BtnComponents {...props} saveLoading1={saveLoading1} saveLoading2={saveLoading2} delLoading={props.delLoading} delLoading={props.delLoading} submits={submits} clears={clears} del={del} />
+                    <PollutantComponents />
+                    <Spin spinning={formLoading}>
+                        <Form
+                            form={form}
+                            name="advanced_search"
+                            initialValues={{}}
+                            className={styles["ant-advanced-search-form"]}
+                            onValuesChange={onValuesChange}
+                        >
+                            <SearchComponents />
+                            <Table
+                                size="small"
+                                bordered
+                                dataSource={tableDatas}
+                                columns={columns}
+                                pagination={false}
+                                className={'tableSty'}
+                            />
+                            <Table
+                                size="small"
+                                bordered
+                                dataSource={['评价依据']}
+                                columns={columns2()}
+                                pagination={false}
+                                className={'white-table-thead'}
+                            />
+                        </Form>
+                    </Spin>
                 </> :
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
             </Spin>
         </div>
     );
