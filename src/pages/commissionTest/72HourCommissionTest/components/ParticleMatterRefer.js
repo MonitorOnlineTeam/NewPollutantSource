@@ -245,7 +245,7 @@ const Index = (props) => {
                     title: '标杆浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onChange={()=>{weightVolumeBlur(index)}} disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -432,7 +432,8 @@ const Index = (props) => {
     }
 
     const clears = () => {
-        form.resetFields();
+        // form.resetFields();
+        form.setFieldsValue({'BenchmarkDensity0':10})
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
@@ -444,6 +445,7 @@ const Index = (props) => {
 
 
     const weightVolumeBlur = (index) => {
+        console.log(index)
         const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
         if (weight && volume) {
 

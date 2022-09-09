@@ -127,6 +127,13 @@ export default class UserInfoIndex extends Component {
        },
       },
       {
+        title: '运维单位',
+        dataIndex: 'companyName',
+        key:'companyName',
+        align:'center',
+        ellipsis:true,
+      },
+      {
         title: <span>手机号</span>,
         dataIndex: 'userPhone',
         key: 'userPhone',
@@ -430,6 +437,14 @@ export default class UserInfoIndex extends Component {
     payload: {userPar:{...userPar,roleListID:value&&value!=='0'? value:''}},
      })
  }
+ //运维单位列表
+ onOperationChange = e =>{
+  const {dispatch,userPar } = this.props;
+  dispatch({
+    type: 'newuserinfo/updateState',
+    payload: {userPar:{...userPar,companyName:e.target.value? e.target.value:''}},
+     })
+ }
   //获取角色列表
   getUserList=(params)=>{
     this.props.dispatch({
@@ -664,6 +679,9 @@ export default class UserInfoIndex extends Component {
                     value={roleListID?roleListID:undefined}
                     style={{ width: 200, marginLeft: 10 }}
                   />
+                </Form.Item>
+                <Form.Item label='运维单位' >
+                 <Input onChange={this.onOperationChange}  placeholder='请输入运维单位' allowClear/>
                 </Form.Item>
                 <Form.Item>
                 <Button type='primary' onClick={this.queryClick} style={{ marginLeft: 8 }}> 查询</Button>

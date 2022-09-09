@@ -19,6 +19,8 @@ import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
+import OperationCompanyList from '@/components/OperationCompanyList'
+
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -135,6 +137,13 @@ const Index = (props) => {
       align:'center',
     },  
     {
+      title: '运维单位',
+      dataIndex: 'OperationCompany',
+      key:'OperationCompany',
+      align:'center',
+      ellipsis:true,
+    },
+    {
       title: '使用状态',
       dataIndex: 'IsUsed',
       key:'IsUsed', 
@@ -156,10 +165,10 @@ const Index = (props) => {
       width:180,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 
@@ -176,6 +185,7 @@ const Index = (props) => {
     try {
       form2.setFieldsValue({
         ...record,
+        OperationCompany:record.OperationCompanyID,
       })
 
     } catch (errInfo) {
@@ -279,7 +289,10 @@ const Index = (props) => {
       <Form.Item label="供应商" name="Manufacturer">
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} className={typeRemark ==1? styles.status : ''} >
+      <Form.Item label="运维单位" name="OperationCompany" style={{marginLeft:16,}} className={typeRemark ==1? styles.companySty : ''}  >
+         <Input placeholder="请输入" style={{width:200}} allowClear/>
+      </Form.Item>
+      <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} >
       <Select placeholder='请选择状态' allowClear style={{width:200}}>
            <Option key={1} value={1}>启用</Option>
            <Option key={2} value={2}>停用</Option>
@@ -375,8 +388,8 @@ const Index = (props) => {
           <Input />
       </Form.Item> 
       </Col>
-      </Row>
-      <Row>
+
+
         <Col span={12}>
         <Form.Item label="存货编号" name="StandardGasCode" rules={[  { required: true, message: '请输入存货编号'  }]} >
           <Input placeholder="请输入"  allowClear/>
@@ -388,10 +401,6 @@ const Index = (props) => {
         <Input placeholder="请输入"  allowClear/>
       </Form.Item>
       </Col>
-      </Row>
-
-
-      <Row>
       <Col span={12}>
         <Form.Item label="规格型号" name="Component"  rules={[  { required: true, message: '请输入规格型号'  }]}>
         <Input placeholder="请输入"  allowClear/>
@@ -402,15 +411,17 @@ const Index = (props) => {
              <Input placeholder='请输入' allowClear/>
       </Form.Item>     
       </Col>
-      </Row>
-
-       <Row>
       <Col span={12}>
          <Form.Item label="供应商" name="Manufacturer" rules={[  { required: true, message: '请输入供应商'  }]} >
              <Input placeholder='请输入' allowClear/>
       </Form.Item>
       </Col>
       <Col span={12}>
+        <Form.Item label="运维单位" name="OperationCompany"  rules={[  { required: true, message: '请选择运维单位!',  },]}>
+         <OperationCompanyList />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
       <Form.Item label="使用状态" name="IsUsed" >
            <Radio.Group>
              <Radio value={1}>启用</Radio>
@@ -418,7 +429,7 @@ const Index = (props) => {
          </Radio.Group>
          </Form.Item>
       </Col>
-        </Row>
+      </Row>
         <Form.Item hidden label="类型"  name="Remark" >
         <Radio.Group style={{width:200}}>
             <Radio value={1}>标准气体</Radio>

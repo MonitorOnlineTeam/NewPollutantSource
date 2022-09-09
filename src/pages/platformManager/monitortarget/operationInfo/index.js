@@ -208,12 +208,12 @@ const Index = (props) => {
       key:'pointName',
       align:'center'
     },
-    // {
-    //   title: '运维单位',
-    //   dataIndex: 'company',
-    //   key:'company',
-    //   align:'center'
-    // },
+    {
+      title: '运维单位',
+      dataIndex: 'company',
+      key:'company',
+      align:'center'
+    },
     {
       title: '项目编号',
       dataIndex: 'projectCode',
@@ -485,10 +485,12 @@ useEffect(()=>{
         </Select>
           </Form.Item>
           <Form.Item name='ProjectID' style={{margin:'20px 12px'}}  label='项目编号' >
-            <Input placeholder="请输入项目编号" />
+            <Input placeholder="请输入项目编号" allowClear/>
           </Form.Item>
-     
-      <Form.Item label="" style={{margin:'20px 12px'}} name="EntID" hidden>
+          <Form.Item name='OperationCompany' style={{margin:'20px 12px 20px 0'}}   label='运维单位' >
+            <Input placeholder="请输入运维单位" allowClear/>
+          </Form.Item>
+      <Form.Item label=""  name="EntID" hidden>
           <Input />
       </Form.Item> 
       <Form.Item>
@@ -638,7 +640,7 @@ useEffect(()=>{
         </Select>
       </Form.Item>
       </Col>
-      {/* <Col span={12}>
+    <Col span={12}>
         <Form.Item label="运维单位" name="OperationCompany" rules={[  { required: true, message: '请选择运维单位!',  },]} >
           <Select placeholder="请选择运维单位">
            {operationDataSource[0]&&operationDataSource.map(item=>{
@@ -647,9 +649,9 @@ useEffect(()=>{
           }
         </Select> 
       </Form.Item>
-      </Col> */}
-      {/* </Row> */}
-      {/* <Row> */}
+      </Col>
+      </Row>
+      <Row>
         <Col span={12}>
         <Form.Item label="项目编号" name="PorjectID"  rules={[  { required: true, message: '请输入项目编号!',  },]} >
           <Popover

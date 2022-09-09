@@ -17,7 +17,7 @@ import moment from 'moment';
 import RegionList from '@/components/RegionList'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
-
+import OperationCompanyList from '@/components/OperationCompanyList'
 const { Option } = Select;
 
 const namespace = 'projectManager'
@@ -152,6 +152,13 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
+      title: '运维单位',
+      dataIndex: 'operationCompanyName',
+      key:'operationCompanyName',
+      align:'center',
+      ellipsis:true,
+    },
+    {
       title: '运营合同起始日期',
       dataIndex: 'BeginTime',
       key:'BeginTime',
@@ -267,7 +274,8 @@ const Index = (props) => {
         ...record,
         BeginTime:moment(record.BeginTime),
         EndTime:moment(record.EndTime),
-        SignName:record.SingName
+        SignName:record.SingName,
+        OperationCompany:record.operationCompanyID,
       })
 
    
@@ -487,12 +495,17 @@ const Index = (props) => {
        </Col>  
         <Col span={8}>
          <Form.Item   name='EntName' label='卖方公司名称'>
-           <Input placeholder="请输入卖方公司名称" />
+           <Input placeholder="请输入卖方公司名称" allowClear/>
          </Form.Item>
        </Col>
        <Col span={8}>
          <Form.Item name='RegionCode' label='客户所在地' >
-          <Input  placeholder='请输入客户所在地'/>
+          <Input  placeholder='请输入客户所在地' allowClear/>
+         </Form.Item>
+       </Col>
+       <Col span={8}>
+         <Form.Item name='OperationCompany' label='运维单位' >
+          <Input  placeholder='请输入运维单位' allowClear/>
          </Form.Item>
        </Col></>}   
        <Col span={8} >
@@ -634,6 +647,11 @@ const Index = (props) => {
         <Input placeholder='请输入合同总金额'/>
       </Form.Item>
       </Col> */}
+        <Col span={12}>
+        <Form.Item label="运维单位" name="OperationCompany"  rules={[  { required: true, message: '请选择运维单位!',  },]}>
+         <OperationCompanyList />
+          </Form.Item>
+        </Col>
         <Col span={12}>
         <Form.Item label="备注" name="Remark"  >
         <Input placeholder='请输入备注'/>
