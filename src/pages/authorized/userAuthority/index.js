@@ -156,6 +156,13 @@ export default class UserAuthority extends Component {
         align: 'center',
       },
       {
+        title: '运维单位',
+        dataIndex: 'companyName',
+        key:'companyName',
+        align:'center',
+        ellipsis:true,
+      },
+      {
         title: <span>操作</span>,
         dataIndex: '',
         key: '',
@@ -422,6 +429,14 @@ export default class UserAuthority extends Component {
       payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
     });
   }
+   //运维单位列表
+ onOperationChange = e =>{
+  const {dispatch,userPar } = this.props;
+  dispatch({
+    type: 'newuserinfo/updateState',
+    payload: {userPar:{...userPar,companyName:e.target.value? e.target.value:''}},
+     })
+ }
   //获取部门列表
   getDepInfoByTree =(params)=> {
     this.props.dispatch({
@@ -639,6 +654,9 @@ export default class UserAuthority extends Component {
                     value={roleListID?roleListID:undefined}
                     style={{ width: 200, marginLeft: 10 }}
                   />
+                </Form.Item>
+                <Form.Item label='运维单位' >
+                 <Input onChange={this.onOperationChange}  placeholder='请输入运维单位' allowClear/>
                 </Form.Item>
                 <Form.Item>
                 <Button type='primary' onClick={this.queryClick} style={{ marginLeft: 8 }}> 查询</Button>

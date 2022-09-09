@@ -640,7 +640,7 @@ useEffect(()=>{
         </Select>
       </Form.Item>
       </Col>
-    <Col span={12}>
+    {/* <Col span={12}>
         <Form.Item label="运维单位" name="OperationCompany" rules={[  { required: true, message: '请选择运维单位!',  },]} >
           <Select placeholder="请选择运维单位">
            {operationDataSource[0]&&operationDataSource.map(item=>{
@@ -649,9 +649,7 @@ useEffect(()=>{
           }
         </Select> 
       </Form.Item>
-      </Col>
-      </Row>
-      <Row>
+      </Col> */}
         <Col span={12}>
         <Form.Item label="项目编号" name="PorjectID"  rules={[  { required: true, message: '请输入项目编号!',  },]} >
           <Popover

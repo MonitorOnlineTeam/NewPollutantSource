@@ -152,13 +152,6 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: '运维单位',
-      dataIndex: 'operationCompanyName',
-      key:'operationCompanyName',
-      align:'center',
-      ellipsis:true,
-    },
-    {
       title: '运营合同起始日期',
       dataIndex: 'BeginTime',
       key:'BeginTime',
@@ -179,6 +172,13 @@ const Index = (props) => {
       title: '运营套数',
       dataIndex: 'OperationCount',
       key:'OperationCount',
+      align:'center',
+      ellipsis:true,
+    },
+    {
+      title: '所属运维单位',
+      dataIndex: 'operationCompanyName',
+      key:'operationCompanyName',
       align:'center',
       ellipsis:true,
     },
@@ -504,8 +504,8 @@ const Index = (props) => {
          </Form.Item>
        </Col>
        <Col span={8}>
-         <Form.Item name='OperationCompany' label='运维单位' >
-          <Input  placeholder='请输入运维单位' allowClear/>
+         <Form.Item name='OperationCompany' label='所属运维单位' >
+          <Input  placeholder='请输入所属运维单位' allowClear/>
          </Form.Item>
        </Col></>}   
        <Col span={8} >
@@ -648,8 +648,8 @@ const Index = (props) => {
       </Form.Item>
       </Col> */}
         <Col span={12}>
-        <Form.Item label="运维单位" name="OperationCompany"  rules={[  { required: true, message: '请选择运维单位!',  },]}>
-         <OperationCompanyList />
+        <Form.Item label="所属运维单位" name="OperationCompany"  rules={[  { required: true, message: '请选择所属运维单位!',  },]}>
+         <OperationCompanyList getDefaultOpration={(defaultId)=>{ type==='add'&&form2.setFieldsValue({OperationCompany:defaultId})}} />
           </Form.Item>
         </Col>
         <Col span={12}>

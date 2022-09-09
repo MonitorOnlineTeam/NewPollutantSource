@@ -137,7 +137,7 @@ const Index = (props) => {
       align:'center',
     },  
     {
-      title: '运维单位',
+      title: '所属运维单位',
       dataIndex: 'OperationCompany',
       key:'OperationCompany',
       align:'center',
@@ -289,7 +289,7 @@ const Index = (props) => {
       <Form.Item label="供应商" name="Manufacturer">
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
-      <Form.Item label="运维单位" name="OperationCompany" style={{marginLeft:16,}} className={typeRemark ==1? styles.companySty : ''}  >
+      <Form.Item label="所属运维单位" name="OperationCompany" style={{marginLeft:16,}}  >
          <Input placeholder="请输入" style={{width:200}} allowClear/>
       </Form.Item>
       <Form.Item label="使用状态" name="IsUsed" style={{marginLeft:16,marginRight:16}} >
@@ -417,8 +417,8 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-        <Form.Item label="运维单位" name="OperationCompany"  rules={[  { required: true, message: '请选择运维单位!',  },]}>
-         <OperationCompanyList />
+        <Form.Item label="所属运维单位" name="OperationCompany"  rules={[  { required: true, message: '请选择所属运维单位!',  },]}>
+         <OperationCompanyList getDefaultOpration={(defaultId)=>{ type==='add'&&form2.setFieldsValue({OperationCompany:defaultId})}}/>
           </Form.Item>
         </Col>
         <Col span={12}>

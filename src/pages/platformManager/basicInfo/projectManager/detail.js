@@ -53,9 +53,6 @@ const Index = (props) => {
     setData(JSON.parse(props.location.query.data))
   },[props]);
  
-  const getEquipmentParametersInfo=()=>{
-    props.getEquipmentParametersInfo({PolltantType:1})
-  }
 
 
  
@@ -145,6 +142,12 @@ const Index = (props) => {
       {data.Money}
       </Form.Item>
       </Col> */}
+      <Col span={12}>
+
+      <Form.Item label="所属运维单位"  >
+      {data.operationCompanyName}
+      </Form.Item>
+      </Col> 
         <Col span={12}>
         <Form.Item label="备注"  >
         {data.Remark}

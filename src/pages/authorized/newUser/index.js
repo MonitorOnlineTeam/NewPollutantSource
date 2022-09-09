@@ -16,6 +16,7 @@ import {
   ProfileOutlined,
   DatabaseOutlined
 } from '@ant-design/icons';
+import Cookie from 'js-cookie';
 
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -127,13 +128,6 @@ export default class UserInfoIndex extends Component {
        },
       },
       {
-        title: '运维单位',
-        dataIndex: 'companyName',
-        key:'companyName',
-        align:'center',
-        ellipsis:true,
-      },
-      {
         title: <span>手机号</span>,
         dataIndex: 'userPhone',
         key: 'userPhone',
@@ -174,6 +168,13 @@ export default class UserInfoIndex extends Component {
         dataIndex: 'nameCode',
         key: 'nameCode',
         align: 'center',
+      },
+      {
+        title: '运维单位',
+        dataIndex: 'companyName',
+        key:'companyName',
+        align:'center',
+        ellipsis:true,
       },
       {
         title: <span>操作</span>,

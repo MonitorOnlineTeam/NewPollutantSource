@@ -1,33 +1,50 @@
 // 运维单位列表组件
 
 import React, { Component } from 'react';
-import { Select } from 'antd';
+import { Select, Spin, } from 'antd';
+import { Form } from '@ant-design/compatible';
+import Cookie from 'js-cookie';
 
 const { Option } = Select;
 import { connect } from "dva";
+
 @connect(({ operations, loading }) => ({
   operationCompanyList: operations.operationCompanyList,
+  operationCompanyLoading: loading.effects['operations/getOperationCompanyList'],
+
 }))
+
+@Form.create()
 class Index extends Component {
 
 
   componentDidMount() {
 
-    this.props.dispatch({ type: 'operations/getOperationCompanyList', payload: { PointMark: '2', RegionCode: '' }, });  //获取行政区列表
+    this.props.dispatch({
+      type: 'operations/getOperationCompanyList',//获取运维单位列表
+      payload: { PointMark: '2', RegionCode: '' },
+      callback: (data) => {
+        // const userAccount = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserAccount;
+        this.props.getDefaultOpration(data && data[0] && data[0].id) //默认选中第一个
+      }
+
+      });  
 
   }
 
 
   render() {
-    const {style, operationCompanyList,placeholder, } = this.props;
+    const { operationCompanyLoading, operationCompanyList, style, placeholder, } = this.props;
 
-    return (
+    return (<Spin spinning={operationCompanyLoading} size='small'>
       <Select style={{ width: '100%', ...style }} placeholder={placeholder ? placeholder : '请选择'}  {...this.props} >
         {operationCompanyList.map(item => {
           return <Option key={item.id} value={item.id}>{item.name}</Option>
         })
         }
       </Select>
+    </Spin>
+
     );
   }
 }
