@@ -163,7 +163,6 @@ const Index = (props) => {
     }
 
     const getPollutantName = (list,value) =>{
-        debugger
         list.map(item=>{
             if(item.value == value){
               form.setFieldsValue({ PollutantName : item.label  })
@@ -614,7 +613,7 @@ const Index = (props) => {
         <div className={styles.totalContentSty}>
             <Spin spinning={pollutantLoading}>
             {pollOptions[0] ? <>
-                <BtnComponents   saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}  delLoading={props.delLoading}  submits={submits} clears={clears} del={del} />
+                <BtnComponents {...props}   saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}  delLoading={props.delLoading}  submits={submits} clears={clears} del={del} />
                 <PollutantComponents />
                 <Spin spinning={formLoading}>
                 <Form

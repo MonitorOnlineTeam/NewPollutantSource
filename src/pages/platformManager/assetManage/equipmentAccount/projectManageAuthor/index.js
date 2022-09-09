@@ -172,7 +172,7 @@ const Index = (props) => {
         return  <span>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 

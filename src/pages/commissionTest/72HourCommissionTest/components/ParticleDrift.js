@@ -594,7 +594,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents   saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}        submits={submits} clears={clears} del={del} />
+                <BtnComponents {...props}  saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading}        submits={submits} clears={clears} del={del} />
                 <Form
                     form={form}
                     name="advanced_search"

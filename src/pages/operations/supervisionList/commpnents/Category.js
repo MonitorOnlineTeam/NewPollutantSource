@@ -164,7 +164,7 @@ const Index = (props) => {
             <Divider type="vertical" />
             <Tooltip title="删除">
               <Popconfirm placement="top" title="确定要删除这条数据吗？" onConfirm={() => del(record)} okText="是" cancelText="否">
-                <a href="#" > <DelIcon /> </a>
+                <a> <DelIcon /> </a>
               </Popconfirm>
             </Tooltip>
           </>

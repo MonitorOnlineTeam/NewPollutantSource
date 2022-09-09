@@ -61,7 +61,7 @@ class index extends PureComponent {
                     }}
                     okText="是"
                     cancelText="否">
-                    <a href="#"><DelIcon /></a>
+                    <a ><DelIcon /></a>
                   </Popconfirm>
                 </Tooltip>
               </div>

@@ -233,7 +233,7 @@ export default class UserInfoIndex extends Component {
                         okText="是"
                         cancelText="否"
                       >
-                        <a href="#"><DeleteOutlined style={{ fontSize: 16 }} /></a>
+                        <a ><DeleteOutlined style={{ fontSize: 16 }} /></a>
                       </Popconfirm>
                     </Tooltip>
                   </Fragment>

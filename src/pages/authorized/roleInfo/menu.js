@@ -115,7 +115,7 @@ export default class UserInfoAdd extends Component {
                                 okText="是"
                                 cancelText="否"
                             >
-                                <a href="#">删除</a>
+                                <a >删除</a>
                             </Popconfirm>
                         </span>
                 },

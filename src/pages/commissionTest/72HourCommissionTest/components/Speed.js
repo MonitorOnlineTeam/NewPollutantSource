@@ -174,11 +174,14 @@ const Index = (props) => {
 
     }
     const manualBlur = (index)=>{
-      const value1 = form.getFieldValue(`Manual${index}`),value2 = form.getFieldValue(`CEMSValue${index}`);
-      if((value1 || value1==0) && (value2 || value2==0)){
-        form.setFieldsValue({[`FactoryCoefficient${index}`] : interceptTwo( value1 / value2) })
-      }
+        fieldcoefficientCalcula(index)
 
+    }
+    const fieldcoefficientCalcula = (index) =>{ //场系数计算
+        const value1 = form.getFieldValue(`Manual${index}`),value2 = form.getFieldValue(`CEMSValue${index}`);
+        if((value1 || value1==0) && (value2 || value2==0)){
+          form.setFieldsValue({[`FactoryCoefficient${index}`] : interceptTwo( value1 / value2) })
+        }   
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
@@ -773,11 +776,11 @@ const Index = (props) => {
 
                         setImportReturnData(mergeData3)
                         setMergeData(mergeData3)
-                        console.log(mergeData3)
                         mergeData3.map((item, index) => {
                             if (item.times) {
                                 let i = item.times.split(",")[2]
                                 form.setFieldsValue({ [`CEMSValue${i}`]: item.values })
+                                fieldcoefficientCalcula(i)
                             }
                         })
                     } else {
@@ -801,7 +804,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
+                <BtnComponents {...props} isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
                 <Form
                     form={form}
                     name="advanced_search"

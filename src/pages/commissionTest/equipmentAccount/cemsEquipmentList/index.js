@@ -195,7 +195,7 @@ const Index = (props) => {
                <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a  ><DelIcon/></a>
+                  <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                </Fragment> 

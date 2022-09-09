@@ -496,8 +496,9 @@ export default {
 
                 },   
                 {
-                  name:'72HourCommissionTestQuery',
+                  name:'72HourCommissionTestQuery', //72小时调试检测查询
                   path: '/commissionTest/72HourCommissionTestQuery',
+                  component: './commissionTest/72HourCommissionTest', 
                 },  
                 {
                   name:'areaPermissManage', //区域权限管理

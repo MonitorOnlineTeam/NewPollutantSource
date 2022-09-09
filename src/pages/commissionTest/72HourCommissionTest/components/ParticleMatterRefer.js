@@ -445,7 +445,11 @@ const Index = (props) => {
 
 
     const weightVolumeBlur = (index) => {
-        console.log(index)
+        operatingCalcula(index)
+
+    }
+ 
+     const operatingCalcula = (index) =>{
         const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
         if (weight && volume) {
 
@@ -463,6 +467,12 @@ const Index = (props) => {
                   
                 
         }
+       }
+
+    const operatingCalculaTotal =  () =>{ 
+        tableDatas.map((item,index)=>{ //统一计算工况浓度
+            operatingCalcula(index)
+        })
     }
     const numCheck = (e, name) => {
         const value = e.target.value
@@ -473,12 +483,13 @@ const Index = (props) => {
         }
 
     }
+
     const SearchComponents = () => {
         return <>
             <Row gutter={36}>
                 <Col span={8}>
                     <Form.Item label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
-                        <Input placeholder='请输入' allowClear suffix="Pa" onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
+                        <Input placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -656,7 +667,6 @@ const Index = (props) => {
 
                         setImportReturnData(mergeData3) 
                         setMergeData(mergeData3) 
-                        console.log(mergeData3)
                         mergeData3.map((item, index) => {
                             if(item.times){
                               let i = item.times.split(",")[2]
@@ -665,8 +675,10 @@ const Index = (props) => {
                               form.setFieldsValue({ [`WDvalues${i}`]: item.WDvalues })
                               form.setFieldsValue({ [`SDvalues${i}`]: item.SDvalues })
                               form.setFieldsValue({ [`YLvalues${i}`]: item.YLvalues })
+                              operatingCalcula(i); 
                             }
                         })
+                       
                     } else {
                         message.error(data.Message)
                     }
@@ -687,7 +699,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
+                <BtnComponents {...props} {...props} isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
                 <Form
                     form={form}
                     name="advanced_search"

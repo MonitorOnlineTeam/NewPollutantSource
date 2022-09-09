@@ -206,12 +206,12 @@ export default class EntTransmissionEfficiency extends Component {
                         appendHandleRows={row =><> <Fragment>
                             {/* <Tooltip title="删除">
                             <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(row)} okText="是" cancelText="否">
-                                <a href="#" style={{paddingLeft:5}} > <DelIcon/> </a>
+                                <a  style={{paddingLeft:5}} > <DelIcon/> </a>
                             </Popconfirm>
                         </Tooltip> */}
                         <Divider type="vertical" />
                         <Tooltip title="运维人员">
-                                <a href="#" onClick={()=>{this.operationPerson(row)}}> <UserOutlined style={{fontSize:18}}/> </a>
+                                <a  onClick={()=>{this.operationPerson(row)}}> <UserOutlined style={{fontSize:18}}/> </a>
                         </Tooltip>
                         </Fragment></>}
                     />

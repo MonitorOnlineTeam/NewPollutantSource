@@ -164,13 +164,13 @@ export default class PersonData extends Component {
         align: 'center',
         render: (text, record) =>{
           return  <span>
-                 <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{this.edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+                 <Fragment><Tooltip title="编辑"> <a  onClick={()=>{this.edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                  
                  <Fragment> <Tooltip title="详情">  <a href="javasctipt:;"  style={{padding:'0 5px'}} onClick={()=>{this.see(record)}} ><DetailIcon /></a></Tooltip><Divider type="vertical" /></Fragment>
 
                  <Fragment> <Tooltip title="删除">
                     <Popconfirm  title="确定要删除此条信息吗？" onConfirm={() => this.del(record)} okText="是" cancelText="否">
-                    <a href="#" ><DelIcon/></a>
+                    <a><DelIcon/></a>
                  </Popconfirm>
                  </Tooltip></Fragment> 
                </span>

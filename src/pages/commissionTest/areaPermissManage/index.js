@@ -351,7 +351,7 @@ class Index extends Component {
                   okText="是"
                   cancelText="否"
                 >
-                  <a href="#">
+                  <a >
                     <DeleteOutlined style={{ fontSize: 16 }} />
                   </a>
                 </Popconfirm>
@@ -471,7 +471,7 @@ class Index extends Component {
                 okText="是"
                 cancelText="否"
               >
-                <a href="#">
+                <a >
                   <DeleteOutlined style={{ fontSize: 16 }} />
                 </a>
               </Popconfirm>

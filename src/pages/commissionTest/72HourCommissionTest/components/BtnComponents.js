@@ -45,11 +45,11 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
+  const isQuery = props&&props.match&&props.match.path === '/commissionTest/72HourCommissionTestQuery'
 
 
   useEffect(() => {
   }, []);
-
 
 
 
@@ -78,8 +78,7 @@ const Index = (props) => {
 
 
 
-  return (
-    <div style={{ paddingBottom: 16 }}>
+  return ( <>{!isQuery&&<div style={{ paddingBottom: 16 }}>
       {props.isImport && <Popover
         placement="right"
         content={importContent()}
@@ -106,7 +105,7 @@ const Index = (props) => {
       onConfirm={props.del}
       okButtonProps={{ loading: props.delLoading }}
     >  <Button type="primary" >删除</Button></Popconfirm>
-    </div>
+    </div>}</>
   );
 };
 export default connect(dvaPropsData, dvaDispatch)(Index);

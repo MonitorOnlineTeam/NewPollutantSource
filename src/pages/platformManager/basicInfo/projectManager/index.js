@@ -207,7 +207,7 @@ const Index = (props) => {
       ellipsis:true,
       render: (text, record) =>{
         return  <span>
-               <Fragment><Tooltip title="编辑"> <a href="#" onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
+               <Fragment><Tooltip title="编辑"> <a  onClick={()=>{edit(record)}} ><EditIcon /></a> </Tooltip><Divider type="vertical" /> </Fragment>
                
                <Fragment> <Tooltip title="详情">
                  <Link  style={{padding:'0 5px'}} to={{  pathname: '/platformconfig/basicInfo/projectManager/detail',
@@ -222,7 +222,7 @@ const Index = (props) => {
 
                <Fragment> <Tooltip title="删除">
                   <Popconfirm  title="确定要删除此条信息吗？"   style={{paddingRight:5}}  onConfirm={()=>{ del(record)}} okText="是" cancelText="否">
-                  <a href="#" ><DelIcon/></a>
+                  <a><DelIcon/></a>
                </Popconfirm>
                </Tooltip>
                <Divider type="vertical" />

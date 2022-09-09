@@ -82,23 +82,23 @@ const Index = (props) => {
   const tabContet = (key) => {
     switch (key) {
       case "1":
-        return <ParticleDrift pointId={pointId} /> //颗粒物CEMS零点和量程漂移检测
+        return <ParticleDrift {...props} pointId={pointId} /> //颗粒物CEMS零点和量程漂移检测
       case "2":
-        return <ParticleMatterRefer pointId={pointId} /> //参比方法校准颗粒物CEMS
+        return <ParticleMatterRefer {...props} pointId={pointId} /> //参比方法校准颗粒物CEMS
       case "3":
-        return <CemsOxygenZero pointId={pointId} /> //气态污染物CEMS（含氧量）零点和量程漂移检测
+        return <CemsOxygenZero {...props} pointId={pointId} /> //气态污染物CEMS（含氧量）零点和量程漂移检测
       case "4":
-        return <CemsResponseTime pointId={pointId} /> // 气态污染物CEMS示值误差和系统响应时间检测
+        return <CemsResponseTime {...props} pointId={pointId} /> // 气态污染物CEMS示值误差和系统响应时间检测
       case "5":
-        return <ReferenceOxygenZero pointId={pointId} /> //参比方法评估气态污染物CEMS（含氧量）准确度
+        return <ReferenceOxygenZero {...props} pointId={pointId} /> //参比方法评估气态污染物CEMS（含氧量）准确度
       case "6":
-        return <Speed pointId={pointId} /> //速度场系数检测
+        return <Speed {...props} pointId={pointId} /> //速度场系数检测
       case "7":
-       return <Temperature pointId={pointId} /> //温度CMS准确度检测
+       return <Temperature {...props} pointId={pointId} /> //温度CMS准确度检测
       case "8":
-        return <Humidity pointId={pointId} /> //湿度CMS准确度检测
+        return <Humidity {...props} pointId={pointId} /> //湿度CMS准确度检测
       case "9":
-          return <TestPeport pointId={pointId} /> //检测报告
+          return <TestPeport  pointId={pointId} /> //检测报告
       default:
         return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }

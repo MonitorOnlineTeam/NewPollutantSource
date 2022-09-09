@@ -398,7 +398,7 @@ class UseStandardLibrary extends Component {
                         okText="是"
                         cancelText="否"
                       >
-                        <a href="#">应用标准</a>
+                        <a >应用标准</a>
                       </Popconfirm>
                     </Fragment>
                   );

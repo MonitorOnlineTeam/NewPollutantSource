@@ -190,7 +190,7 @@ const Index = (props) => {
                 return <span>
                     <Fragment>
                         <Tooltip title="历史运营详情">
-                            <a href="#" onClick={()=>{historyDetail(record)}}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
+                            <a  onClick={()=>{historyDetail(record)}}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
                         </Tooltip>
                     </Fragment>
                 </span>

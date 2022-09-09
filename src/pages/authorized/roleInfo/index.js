@@ -328,7 +328,7 @@ class RoleIndex extends Component {
                                     okText="是"
                                     cancelText="否"
                                 >
-                                    <a href="#" style={{ cursor: 'pointer' }} ><DeleteOutlined style={{ fontSize: 16 }} /></a>
+                                    <a  style={{ cursor: 'pointer' }} ><DeleteOutlined style={{ fontSize: 16 }} /></a>
                                 </Popconfirm>
                             </Tooltip>
                             <Divider type="vertical" />

@@ -175,7 +175,7 @@ export default class MonitorTarget extends Component {
                     </Tooltip>
                     <Divider type="vertical" />
                     <Tooltip title="删除">
-                        <a href="#" onClick={ this.showDeleteConfirm.bind(this,row, row['ID'])}><DeleteOutlined style={{ fontSize: 16 }} /></a>
+                        <a  onClick={ this.showDeleteConfirm.bind(this,row, row['ID'])}><DeleteOutlined style={{ fontSize: 16 }} /></a>
                     </Tooltip>
                   </Fragment>
                 );

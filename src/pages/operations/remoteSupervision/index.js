@@ -407,13 +407,13 @@ const Index = (props) => {
              <Divider type="vertical" />
               <Tooltip title={ updateflag && flag? "删除": null  } >
                 <Popconfirm   disabled={!(updateflag && flag)} title="确定要删除此条信息吗？" placement="left" onConfirm={() => del(record)} okText="是" cancelText="否">
-                  <a href="#"  style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
+                  <a   style={{cursor: updateflag && flag? 'pointer':'not-allowed', color:updateflag && flag ? '#1890ff' : '#00000040', }}><DelIcon style={{ fontSize: 16 }}/></a>
                 </Popconfirm>
               </Tooltip>
             <Divider type="vertical" />
             <Tooltip   title={!issue||issue==='已下发'?  null : "下发"} >
               <Popconfirm disabled={!issue||issue==='已下发'? true : false} title="确定要下发督查结果给点位的运维负责人吗？" placement="left" onConfirm={() => issues(record)} okText="是" cancelText="否">
-                <a href="#" style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'#00000040' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
+                <a  style={{cursor:!issue||issue==='已下发'? 'not-allowed' : 'pointer', color:!issue||issue==='已下发'?'#00000040' : '#1890ff', }}><IssuesCloseOutlined  style={{ fontSize: 16 }} /></a>
               </Popconfirm>
             </Tooltip>
           </>

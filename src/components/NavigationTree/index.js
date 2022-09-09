@@ -1030,7 +1030,7 @@ class NavigationTree extends Component {
             background: '#1890FF',
             borderRadius: floats == 'topmenu' ? '0 4px 4px 0' : '4px 0 0 4px',
             cursor: 'pointer',
-          }} onClick={this.changeState}><a href="#"><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
+          }} onClick={this.changeState}><a ><LegacyIcon style={{ marginTop: '110%', color: '#FFFFFF', marginLeft: '15%' }} type={this.state.right} /></a></div>
           {this.state.treeVis ? <div >
             {
               this.props.EntAndPointLoading ? <Spin

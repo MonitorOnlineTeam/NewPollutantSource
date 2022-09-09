@@ -500,12 +500,18 @@ const Index = (props) => {
 
 
     const measuredValBlur = (index) => {
+        errorCalculation(index)
+    }
+    const errorCalculation = (index) =>{//误差计算
         const valueA = form.getFieldValue(`ReferenceValue${index}`), valueB = form.getFieldValue(`MeasuredValue${index}`);
         if ((valueA || valueA==0)  && (valueB|| valueB==0) ) {
             const relativeError = valueB - valueA
             form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(3) }) //相对误差=B-A
         }
     }
+
+
+
     const numCheck = (e, name) => {
         const value = e.target.value
         if (value) {
@@ -696,6 +702,7 @@ const Index = (props) => {
                             if (item.times) {
                                 let i = item.times.split(",")[2]
                                 form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
+                                errorCalculation(i)
                             }
                         })
                     } else {
@@ -793,7 +800,7 @@ const Index = (props) => {
         <div className={styles.totalContentSty}>
             <Spin spinning={pollutantLoading}>
                 {pollOptions[0] ? <>
-                    {dateOptions[0] && <BtnComponents isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />}
+                    {dateOptions[0] && <BtnComponents {...props} isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />}
                     <PollutantComponents />
                     {dateOptions[0] &&  <DateComponents />}
                     <Popover
