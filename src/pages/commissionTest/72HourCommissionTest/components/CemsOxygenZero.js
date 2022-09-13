@@ -448,6 +448,7 @@ const Index = (props) => {
                         ZeroValue: form.getFieldValue('ZeroValue'),
                         SpanValue: form.getFieldValue('SpanValue'),
                         EvaluationBasis: form.getFieldValue('EvaluationBasis'),
+                        PollutantCode:pollutantCode,
 
                     },
                     ChildTable: [],
