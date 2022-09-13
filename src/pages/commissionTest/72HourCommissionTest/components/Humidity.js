@@ -228,17 +228,17 @@ const Index = (props) => {
                     title: '手工',
                     align: 'center',
                     render: (text, record, index) => {
-                        if( (index + 1 )  % 8 == 0){ //绝对误差
+                        if( (index + 1 )  % 8 == 0){ //相对误差
                        let i = (index + 1) / 8;
                              return {  
-                                 children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
+                                 children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
                                  props: { colSpan: 2 },
                                 } 
                               }
-                        if( (index + 2 )  % 8 == 0 ){//相对误差
+                        if( (index + 2 )  % 8 == 0 ){//绝对误差
                             let i = (index + 2) / 8
                             return {  
-                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 2 },
                                } 
                              }
