@@ -229,14 +229,16 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if( (index + 1 )  % 8 == 0){ //绝对误差
+                       let i = (index + 1) / 8;
                              return {  
-                                 children: <Form.Item name={`AbsolutelyError${index}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
+                                 children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
                                  props: { colSpan: 2 },
                                 } 
                               }
                         if( (index + 2 )  % 8 == 0 ){//相对误差
+                            let i = (index + 2) / 8
                             return {  
-                                children: <Form.Item name={`RelativeError${index}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 2 },
                                } 
                              }
@@ -273,7 +275,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: <span>{form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]
@@ -515,7 +517,7 @@ const Index = (props) => {
                 formData.append('PollutantCode', '');
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
                 setUploading(true);
-                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportData', {
+                fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -543,13 +545,23 @@ const Index = (props) => {
                                     return item1['key'] === item2['key'] 
                                   })}
                                 })
-                                mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
-                                    let list = resData.map(item2 => item2.key)
 
-                                    return list.indexOf(item1.key) == -1
-                                  })
-                                 mergeData3= mergeData.map((item1) => {
-                                    return {...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                let list =  resData.map(item => item.key)
+                                let list2 = importReturnData.map(item => item.key)
+                                const differentKey =  list.concat(list2).filter(function(v, i, arr) {
+                                    return arr.indexOf(v) === arr.lastIndexOf(v);   
+                                });
+                                resData.filter((item) =>{ //取key不同的对象
+                                     differentKey.map(itemKey=>{
+                                        if(item.key === itemKey){
+                                          mergeData2.push(item)
+                                        }
+                                    })
+                                })
+                                mergeData2 = [...mergeData,...mergeData2]
+
+                                mergeData3= mergeData2.map((item1) => {
+                                    return {...item1, ...mergeData.find((item2) => { // 合并key相同的对象
                                       return item1['key'] === item2['key'] 
                                     })}
                                 })
@@ -562,11 +574,12 @@ const Index = (props) => {
                         mergeData3.map((item, index) => {
                             if(item.times){
                               let i = item.times.split(",")[2]
-                              form.setFieldsValue({ [`MeasuredValue${i}`]: item.values })
+                              form.setFieldsValue({ [`CEMSValue${i}`]: item.values })
                             }
                         })
                     } else {
-                        message.error(data.Message)
+                        setUploading(false);
+                        message.error(data.Message);
                     }
                 }).catch(() => {
                     setUploading(false);

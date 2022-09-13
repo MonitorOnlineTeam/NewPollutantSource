@@ -760,14 +760,24 @@ const Index = (props) => {
                                     })
                                 }
                             })
-                            mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
-                                let list = resData.map(item2 => item2.key)
-
-                                return list.indexOf(item1.key) == -1
+                            
+                            let list =  resData.map(item => item.key)
+                            let list2 = importReturnData.map(item => item.key)
+                            const differentKey =  list.concat(list2).filter(function(v, i, arr) {
+                                return arr.indexOf(v) === arr.lastIndexOf(v);   
+                            });
+                            resData.filter((item) =>{ //取key不同的对象
+                                 differentKey.map(itemKey=>{
+                                    if(item.key === itemKey){
+                                      mergeData2.push(item)
+                                    }
+                                })
                             })
-                            mergeData3 = mergeData.map((item1) => {
+                            mergeData2 = [...mergeData,...mergeData2]
+
+                            mergeData3 = mergeData2.map((item1) => {
                                 return {
-                                    ...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                    ...item1, ...mergeData.find((item2) => { // 合并key相同的对象
                                         return item1['key'] === item2['key']
                                     })
                                 }
@@ -785,7 +795,8 @@ const Index = (props) => {
                             }
                         })
                     } else {
-                        message.error(data.Message)
+                        setUploading(false);
+                        message.error(data.Message);
                     }
                 }).catch(() => {
                     setUploading(false);

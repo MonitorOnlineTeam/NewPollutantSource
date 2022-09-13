@@ -68,7 +68,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,'平均值','相对误差',6,7,8,9,10,'平均值','相对误差',11,12,13,14,15,'平均值','相对误差']);
+    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,'平均值','绝对误差',6,7,8,9,10,'平均值','绝对误差',11,12,13,14,15,'平均值','绝对误差']);
 
     const [form] = Form.useForm();
 
@@ -196,7 +196,7 @@ const Index = (props) => {
                         }
                         if((index + 1 ) % 7 == 0 ){
                             return {
-                                children: '相对误差',
+                                children: '绝对误差',
                                 props: { colSpan: 3 },
                             }; 
                         } 
@@ -232,10 +232,10 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         
-                        if ((index + 1) % 7 == 0) { //相对误差
+                        if ((index + 1) % 7 == 0) { //绝对误差
                             let i = (index + 1) / 7 
                             return {
-                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 3 },
                             }
                         }
@@ -270,7 +270,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: <span>{form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]
@@ -483,7 +483,7 @@ const Index = (props) => {
         setTimeout(() => {
             form.validateFields().then((values) => {
                 const timeData = []
-                let index1=6,index2=12,dateNum =  tableDatas.length - 2;
+                let index1=7,index2=14,dateNum =  tableDatas.length - 3;
                 let i = -1;
                 Object.keys(values).map((item, index) => {
                     if (/Time/g.test(item)) {
@@ -535,6 +535,7 @@ const Index = (props) => {
                         }
                         if (resData && resData[0] && importReturnData && importReturnData[0]) {
                             let mergeData = [], mergeData2 = [];
+
                             mergeData = importReturnData.map((item1) => {
                                 return {
                                     ...item1, ...resData.find((item2) => { // 合并key相同的对象
@@ -542,14 +543,25 @@ const Index = (props) => {
                                     })
                                 }
                             })
-                            mergeData2 = importReturnData.filter((item1, index, arr) => { //取key不同的对象
-                                let list = resData.map(item2 => item2.key)
 
-                                return list.indexOf(item1.key) == -1
+                            let list =  resData.map(item => item.key)
+                            let list2 = importReturnData.map(item => item.key)
+                            const differentKey =  list.concat(list2).filter(function(v, i, arr) {
+                                return arr.indexOf(v) === arr.lastIndexOf(v);   
+                            });
+                            resData.filter((item) =>{ //取key不同的对象
+                                 differentKey.map(itemKey=>{
+                                    if(item.key === itemKey){
+                                      mergeData2.push(item)
+                                    }
+                                })
                             })
-                            mergeData3 = mergeData.map((item1) => {
+                            mergeData2 = [...mergeData,...mergeData2]
+                           
+                        
+                            mergeData3 = mergeData2.map((item1) => {
                                 return {
-                                    ...item1, ...mergeData2.find((item2) => { // 合并key相同的对象
+                                    ...item1, ...mergeData.find((item2) => { // 合并key相同的对象
                                         return item1['key'] === item2['key']
                                     })
                                 }
@@ -559,7 +571,8 @@ const Index = (props) => {
 
                         setImportReturnData(mergeData3)
                         setMergeData(mergeData3)
-                        console.log(mergeData3)
+                        
+                        console.log( mergeData3)
                         mergeData3.map((item, index) => {
                             if (item.times) {
                                 let i = item.times.split(",")[2]
@@ -567,7 +580,8 @@ const Index = (props) => {
                             }
                         })
                     } else {
-                        message.error(data.Message)
+                        setUploading(false);
+                        message.error(data.Message);
                     }
                 }).catch(() => {
                     setUploading(false);
