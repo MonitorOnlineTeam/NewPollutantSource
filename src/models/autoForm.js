@@ -417,6 +417,7 @@ export default Model.extend({
         message.success('删除成功！');
         // 如果当前页只有一条数据，删除后跳转到第一页
         let state = yield select(state => state.autoForm);
+        const configId = payload.configId;
         let searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
         const { current = 1, pageSize = 20, total } = searchForm;
         if (total % pageSize === 1) {

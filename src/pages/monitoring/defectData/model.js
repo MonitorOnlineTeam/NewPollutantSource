@@ -27,7 +27,7 @@ export default Model.extend({
       EntCode: '',
       RegionCode: '',
       Atmosphere:'',
-      PollutantType:'5',
+      PollutantType:'',
       PageSize:20,
       PageIndex:1,
       dataType:'HourData'

@@ -393,7 +393,7 @@ export default Model.extend({
             },
           },
           yAxis: {
-            type: 'value',
+            type: 'log',
             name: `浓度值${unit}`,
             axisLabel: {
               formatter: '{value}',
