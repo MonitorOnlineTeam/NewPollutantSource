@@ -179,7 +179,13 @@ const Index = (props) => {
             align: 'center',
             ellipsis:true,
         },
-
+        {
+            title: '运维单位',
+            dataIndex: 'company',
+            key: 'company',
+            align: 'center',
+            ellipsis:true,
+        },
         {
             title: <span>操作</span>,
             dataIndex: 'x',

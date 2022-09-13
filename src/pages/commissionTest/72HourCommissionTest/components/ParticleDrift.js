@@ -96,8 +96,8 @@ const Index = (props) => {
 
                     form.setFieldsValue({
                         ...res.MainTable,
-                        MinRange: res.MainTable.Range ? res.MainTable.Range.split('-')[0] : null,
-                        MaxRange: res.MainTable.Range ? res.MainTable.Range.split('-')[1] : null,
+                        // MinRange: res.MainTable.Range ? res.MainTable.Range.split('-')[0] : null,
+                        // MaxRange: res.MainTable.Range ? res.MainTable.Range.split('-')[1] : null,
                     })
 
                     if (res.ChildTable) {
@@ -441,7 +441,7 @@ const Index = (props) => {
                     AddType: type,
                     MainTable: {
                         ...mainValue,
-                        Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''}-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
+                        // Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''}-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
                         PointId: pointId,
                         ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
                         SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),

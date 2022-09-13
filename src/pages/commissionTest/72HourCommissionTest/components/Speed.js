@@ -698,7 +698,7 @@ const Index = (props) => {
                 if(recordType==1){
                     index1=6,index2=12,dateNum =  tableDatas.length - 2;
                 }else{
-                    index1=7,index2 = tableDatas2.length - 3;
+                    index1=7,index2=14,dateNum= tableDatas2.length - 3;
                 }
                 let i = -1;
                 Object.keys(values).map((item, index) => {
