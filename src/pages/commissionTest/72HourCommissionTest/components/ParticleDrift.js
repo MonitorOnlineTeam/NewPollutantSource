@@ -121,7 +121,7 @@ const Index = (props) => {
                                 [`ZeroCalibration${index}`]: item.ZeroCalibration,
                                 [`CalibrationBegin${index}`]: item.CalibrationBegin,
                                 [`CalibrationEnd${index}`]: item.CalibrationEnd,
-                                [`CalibrationEnd${index}`]: item.CalibrationEnd,
+                                [`DriftAbsolute${index}`]: item.DriftAbsolute,
                                 [`AdjustSpan${index}`]: item.AdjustSpan,
                                 [`CleanLens${index}`]: item.CleanLens,
                                 [`Remark${index}`]: item.Remark,
@@ -138,9 +138,9 @@ const Index = (props) => {
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
-    const onDateChange = (type) => {
+    const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
-        if (type == 'CreateDate0' && autoDateFlag) {
+        if (name == 'CreateDate0' && autoDateFlag) {
             form.setFieldsValue({
                 CreateDate1: moment(moment(values).add('day', 1)),
                 CreateDate2: moment(moment(values).add('day', 2)),
@@ -185,7 +185,7 @@ const Index = (props) => {
         {
             title: '日期',
             align: 'center',
-            width: 130,
+            width: 140,
             render: (text, record, index) => {
                 return <Form.Item name={`CreateDate${index}`} rules={[{ required: isTimeReg, message: '' }]}><DatePicker disabledDate={disabledDate} onChange={() => onDateChange(`CreateDate${index}`)} format="YYYY-MM-DD" /></Form.Item>;
             }
@@ -197,7 +197,7 @@ const Index = (props) => {
                 {
                     title: '开始',
                     align: 'center',
-                    width: 120,
+                    width: 115,
                     render: (text, record, index) => {
                         return <Form.Item name={`BTime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'start')} format='HH:mm' /></Form.Item>;
                     }
@@ -205,7 +205,7 @@ const Index = (props) => {
                 {
                     title: '结束',
                     align: 'center',
-                    width: 120,
+                    width: 115,
                     render: (text, record, index) => {
                         return <Form.Item name={`ETime${index}`} rules={[{ required: isTimeReg, message: '' }]}><TimePicker defaultOpenValue={moment('00:00', 'HH:mm')} onChange={() => onTimeChange(index, 'end')} format='HH:mm' /></Form.Item>;
                     }
@@ -464,7 +464,7 @@ const Index = (props) => {
                         ZeroCalibration: values[`ZeroCalibration${index}`],
                         CalibrationBegin: values[`CalibrationBegin${index}`],
                         CalibrationEnd: values[`CalibrationEnd${index}`],
-                        CalibrationEnd: values[`CalibrationEnd${index}`],
+                        DriftAbsolute: values[`DriftAbsolute${index}`],
                         AdjustSpan: values[`AdjustSpan${index}`],
                         CleanLens: values[`CleanLens${index}`],
                         Remark: values[`Remark${index}`],
@@ -574,7 +574,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row>
-                        <label style={{ width: 125, textAlign: 'right' }}>量程：</label>
+                        <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程：</label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>

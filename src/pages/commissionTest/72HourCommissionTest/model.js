@@ -346,9 +346,17 @@ export default Model.extend({
       }
     },
 
+   /*** 生成检测报告 ***/
 
-
-
+   *exportTestPeport({ payload,callback }, { call, put, update }) { //检测报告 导出
+    const result = yield call(services.exportTestPeport, payload);
+     if (result.IsSuccess) {
+       message.success('下载成功');
+         downloadFile(`/upload${result.Datas}`);
+        } else {
+       message.warning(result.Message);
+     }
+  },
 
 
 

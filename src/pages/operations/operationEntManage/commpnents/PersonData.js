@@ -109,15 +109,15 @@ export default class PersonData extends Component {
       editLoading:false
     };
     this.columns =  [
-      // {
-      //   title: <span>运维单位</span>,
-      //   dataIndex: 'Personnellist',
-      //   key: 'Personnellist',
-      //   align: 'center',
-      // //   render: (text, record) => {     
-      // //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-      // //  },
-      // },
+      {
+        title: <span>运维单位</span>,
+        dataIndex: 'Personnellist',
+        key: 'Personnellist',
+        align: 'center',
+      //   render: (text, record) => {     
+      //     return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
+      //  },
+      },
       {
         title: <span>姓名</span>,
         dataIndex: 'PersonnelName',
@@ -547,9 +547,9 @@ export default class PersonData extends Component {
               <Form layout="inline">
             
               <Row>
-              {/* <Form.Item label=''>
+               <Form.Item label=''>
                   <Input placeholder='请输入运维单位' onChange={this.operationUnit}/>
-              </Form.Item> */}
+              </Form.Item> 
               <Form.Item label=''>
                   <Input placeholder='请输入姓名' onChange={this.operationName}/>
               </Form.Item>
@@ -580,6 +580,7 @@ export default class PersonData extends Component {
                   </Select>
               </Form.Item>
               <Form.Item>
+                
              <Button style={{ marginLeft: '6px' }} type="primary" onClick={this.queryClick}> 查询 </Button>
        <Button
          style={{ margin: '0 5px' }}
@@ -636,7 +637,7 @@ export default class PersonData extends Component {
       ref={this.formRef}
     >
       <Row>
-        {/* <Col span={12}>
+       <Col span={12}>
         <Form.Item  label="运维单位">
            {getFieldDecorator('EnterpriseID', {   rules: [{required: true,  message: '请输入运维单位！'}],   })(
                                <Select
@@ -650,7 +651,7 @@ export default class PersonData extends Component {
                                    </Select>
                    )}
          </Form.Item>
-      </Col> */}
+      </Col> 
       <Col span={12}>
       <Form.Item
         label="姓名"

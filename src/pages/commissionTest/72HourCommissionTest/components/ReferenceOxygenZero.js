@@ -243,7 +243,7 @@ const Index = (props) => {
         {
             title: '编号',
             align: 'center',
-            width: 150,
+            width: 120,
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
                     return text;
@@ -359,7 +359,7 @@ const Index = (props) => {
 
         {
             align: 'center',
-            width: 135,
+            width: 120,
             render: (text, record, index) => {
                 const obj = {
                     children: '标准气体',
@@ -370,6 +370,7 @@ const Index = (props) => {
         },
         {
             align: 'center',
+            width:280,
             render: (text, record, index) => {
                 const obj = {
                     children: null,
@@ -923,7 +924,7 @@ const Index = (props) => {
                                 dataSource={[1, 2, 3]}
                                 columns={columns2()}
                                 pagination={false}
-                                className={'hidden-thead  tableSty'}
+                                className={'hidden-thead  tableSty2'}
                             />
                         </Form> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}</Spin>   </> :
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

@@ -195,3 +195,9 @@ export async function DeletePMZeroRangeRecord(params) {
   const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/DeletePMZeroRangeRecord',params, null);
   return result;
 }
+
+/*** 生成检测报告  ***/
+export async function exportTestPeport(params) {
+  const result = await post('/api/rest/PollutantSourceApi/TaskFormApi/ExportTestPeport',params, null);
+  return result;
+}

@@ -175,9 +175,11 @@ const Index = (props) => {
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
-    const onDateChange = (type) => {
+    const onDateChange = (name) => {
         const values = form.getFieldValue('CreateTime0')
-        if (type == 'CreateTime0' && autoDateFlag) {
+        const date1 = form.getFieldValue('CreateTime1'),date2=form.getFieldValue('CreateTime2');
+
+         if (name == 'CreateTime0' && !date1 && !date2) {
             form.setFieldsValue({
                 CreateTime1: moment(moment(values).add('day', 1)),
                 CreateTime2: moment(moment(values).add('day', 2)),
@@ -573,7 +575,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row>
-                        <label style={{ width: 125, textAlign: 'right' }}>量程：</label>
+                        <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程：</label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>

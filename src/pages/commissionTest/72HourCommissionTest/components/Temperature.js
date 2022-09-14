@@ -137,9 +137,9 @@ const Index = (props) => {
     };
 
     const [autoDateFlag, setAutoDateFlag] = useState(true)
-    const onDateChange = (type) => {
+    const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
-        if (type == 'CreateDate0' && autoDateFlag) {
+        if (name == 'CreateDate0' && autoDateFlag) {
             form.setFieldsValue({
                 [`CreateDate7`]: moment(moment(values).add('day', 1)),
                 [`CreateDate14`]: moment(moment(values).add('day', 2)),

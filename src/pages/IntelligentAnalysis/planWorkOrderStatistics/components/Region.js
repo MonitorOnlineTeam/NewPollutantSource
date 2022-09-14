@@ -487,6 +487,13 @@ const Index = (props,ref ) => {
       // }
     },
     {
+      title: '运维负责人',
+      dataIndex: 'operationUser',
+      key:'operationUser',
+      align:'center',
+      fixed: 'left',
+    },
+    {
       title: '监测点名称',
       dataIndex: 'pointName',
       key:'pointName',
@@ -567,6 +574,13 @@ const Index = (props,ref ) => {
       title: '监测点名称',
       dataIndex: 'pointName',
       key:'pointName',
+      align:'center',
+      fixed: 'left',
+    },
+    {
+      title: '运维负责人',
+      dataIndex: 'operationUser',
+      key:'operationUser',
       align:'center',
       fixed: 'left',
     },

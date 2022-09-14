@@ -28,7 +28,7 @@ const namespace = 'hourCommissionTest'
 
 
 const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
-  testReportLoading: loading.effects[`${namespace}/get72TestRecordType`],
+  testReportLoading: loading.effects[`${namespace}/exportTestPeport`],
 
 })
 
@@ -40,9 +40,9 @@ const dvaDispatch = (dispatch) => {
         payload: payload,
       })
     },
-    get72TestRecordType: (payload) => {
+    exportTestPeport: (payload) => {
       dispatch({
-        type: `${namespace}/get72TestRecordType`,
+        type: `${namespace}/exportTestPeport`,
         payload: payload,
       })
     },
@@ -52,23 +52,21 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
+
+  const { pointId,  testReportLoading ,} = props;
+
   useEffect(() => {
   }, [])
 
 
 
-
-  const [pointId, setPointId] = useState()
   const testReportClick = () => {
-    props.get72TestRecordType({
-      PointCode: key,
-      PollutantCode: 502,
-      RecordDate: "",
-      Flag: ""
+    props.exportTestPeport({
+      PointCode: pointId,
+      // PollutantCode: 502,
     })
   }
 
-  const { testReportLoading } = props;
   return (
     <div className={styles.totalContentSty}>
 
