@@ -217,7 +217,10 @@ const Index = (props) => {
 
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
-
+     
+     const smallFont = (text) =>{
+        return <span style={{fontSize:12}}>{text}</span>
+      }
     const columns = [
         {
             title: '日期',
@@ -254,14 +257,15 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '起始(Z0)',
+                    title: <span>起始(Z{smallFont('0')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
+                        if(index==0){ return '/'  }
                         return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
-                    title: '最终(Zi)',
+                    title: <span>最终(Z{smallFont('i')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
@@ -274,9 +278,10 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '∆Z=Zi-Z0',
+                    title: <span>∆Z=Z{smallFont('i')}-Z{smallFont('0')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
+                        if(index==0){ return '/'  }
                         return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
@@ -299,18 +304,20 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '起始(S0)',
+                    title:<span>起始(S{smallFont('0')})</span>,
                     align: 'center',
                     width: 100,
                     render: (text, record, index) => {
+                        if(index==0){ return '/'  }
                         return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
-                    title: '最终(Si)',
+                    title: <span>最终(S{smallFont('i')})</span>,
                     align: 'center',
                     width: 100,
                     render: (text, record, index) => {
+                        if(index==0){ return '/'  }
                         return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
@@ -321,7 +328,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '∆S=Si-S0',
+                    title: <span>∆S=S{smallFont('i')}-S{smallFont('0')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
@@ -573,7 +580,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row>
-                        <label style={{ width: 125, textAlign: 'right',lineHeight:'32px', }}>量程：</label>
+                    <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>

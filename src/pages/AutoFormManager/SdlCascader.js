@@ -45,7 +45,7 @@ class SdlCascader extends Component {
     //     PointMark: "2"
     //   }
     // })
-    if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId ||  itemName === 'dbo.View_Region.RegionName' ){
+    if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId ||  itemName === 'dbo.View_TestRegion.RegionName' ){
     //   !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
     //   // payload: {
     //   //   ConfigId: configId,

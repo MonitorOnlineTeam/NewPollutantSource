@@ -75,8 +75,8 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, '平均值', 6, 7, 8, 9, 10, '平均值',  11, 12, 13, 14, 15, '平均值',]);
-    const [tableDatas2, setTableDatas2] = useState([1, 2, 3, 4, 5, '平均值', '相对误差', 6, 7, 8, 9, 10, '平均值', '相对误差', 11, 12, 13, 14, 15, '平均值', '相对误差']);
+    const [tableDatas, setTableDatas] = useState([1, 2, 3, 4, 5, '平均值', 1, 2, 3, 4, 5, '平均值',  1, 2, 3, 4, 5, '平均值',]);
+    const [tableDatas2, setTableDatas2] = useState([1, 2, 3, 4, 5, '平均值', '相对误差', 1, 2, 3, 4, 5, '平均值', '相对误差', 1, 2, 3, 4, 5, '平均值', '相对误差']);
 
     const [form] = Form.useForm();
 

@@ -119,7 +119,7 @@ const Index = (props) => {
         initData()
     }, [pointId]);
 
-    const initData = (isDel) => {
+    const initData = () => {
         props.get72TestRecordPollutant({
             PointCode: pointId,
             Flag: 1,
@@ -127,12 +127,12 @@ const Index = (props) => {
             if (pollData[0]) {
                 setPollOptions(pollData)
                 setPollutantCode(defaultPollCode)
-                getTimeFormData(defaultPollCode, isDel);
+                getTimeFormData(defaultPollCode);
             }
 
         })
     }
-    const getTimeFormData = (pollCode, isDel) => {
+    const getTimeFormData = (pollCode) => {
         setFormLoading(true)
         props.getTimesListByPollutant({
             PointCode: pointId,
@@ -140,11 +140,6 @@ const Index = (props) => {
         }, (dateData, defaultDateCode) => {
             if (dateData[0]) {
                 setDateOptions(dateData)
-                if (selectDate && !isDel) { //已选中的情况
-                    setSelectDate(selectDate)
-                    setFormLoading(false)
-                    return;
-                }
                 setSelectDate(defaultDateCode)
                 getFormData(pollCode, defaultDateCode)
             } else {
@@ -165,7 +160,7 @@ const Index = (props) => {
             if (res) {
                 form.resetFields();
                 setRecordName(res.RecordName)
-
+                
                 if (res.MainTable) {
                     form.resetFields();
                     form.setFieldsValue({
@@ -338,7 +333,7 @@ const Index = (props) => {
         },
 
         {
-            title: '相对误差=B-A',
+            title: '数据对差=B-A',
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
@@ -572,7 +567,7 @@ const Index = (props) => {
             ID: form.getFieldValue('ID'),
             RecordDate: form.getFieldValue('RecordDate'),
         }, () => {
-            initData('del')
+            initData()
         })
     }
 
@@ -584,7 +579,7 @@ const Index = (props) => {
         const valueA = form.getFieldValue(`ReferenceValue${index}`), valueB = form.getFieldValue(`MeasuredValue${index}`);
         if ((valueA || valueA == 0) && (valueB || valueB == 0)) {
             const relativeError = valueB - valueA
-            form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(3) }) //相对误差=B-A
+            form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(3) }) //数据对差=B-A
         }
     }
 
@@ -843,7 +838,7 @@ const Index = (props) => {
             <InputNumber min={5} max={16} style={{ width: '100%' }} placeholder='请输入' />
         </Form.Item>
         <Form.Item name='DataTimes' label='数组对时长'>
-            <Input style={{ width: '100%' }} placeholder='请输入' suffix="min" onKeyUp={(e) => { e.target.value && numVerify(e.target.value, (data) => { addForm.setFieldsValue({ 'DataTimes': data }) }) }} />
+            <Input style={{ width: '100%' }} placeholder='请输入' suffix="分钟" onKeyUp={(e) => { e.target.value && numVerify(e.target.value, (data) => {  addForm.setFieldsValue({ 'DataTimes': data<=0? '' : data}) }) }} />
         </Form.Item>
         <Form.Item>
             <Button type="primary" style={{ width: '100%', marginTop: 8 }} loading={addLoading} onClick={addSubmits} >确定</Button>

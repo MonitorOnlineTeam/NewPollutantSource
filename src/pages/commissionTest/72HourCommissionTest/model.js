@@ -23,7 +23,7 @@ export default Model.extend({
         yield update({
           treeList: result.Datas,
         })
-        callback(result.Datas)
+        callback&&callback(result.Datas)
       } else {
         message.error(result.Message)
       }

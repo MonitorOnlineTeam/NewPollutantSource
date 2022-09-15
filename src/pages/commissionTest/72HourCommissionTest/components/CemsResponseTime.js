@@ -392,7 +392,7 @@ const Index = (props) => {
             }
         },
         {
-            title: 'CEMS显示值达到90%时的时间(T2)',
+            title: 'CEMS显示值达到标称值90%时的时间(T2)',
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
@@ -575,7 +575,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Row>
-                        <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程：</label>
+                        <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
                             <InputNumber placeholder='最小值' allowClear />
                         </Form.Item>

@@ -75,7 +75,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
+    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,1,2,3,4,5,2,2,3,4,5]);
 
     const [form] = Form.useForm();
 
@@ -117,7 +117,7 @@ const Index = (props) => {
                         }  
                    })
                    data.map(item=>{
-                    const index = item.Sort -1 ;
+                    const index = item.Sort - 1;
                       form.setFieldsValue({
                         [`CreateDate${index}`]: item.CreateDate&&moment(item.CreateDate),
                         [`BTime${index}`]: item.BTime&&moment(item.BTime),
@@ -242,7 +242,7 @@ const Index = (props) => {
                     }
                 },
                 {
-                    title: '标杆浓度(mg/m3)',
+                    title: '标干浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onChange={()=>{weightVolumeBlur(index)}} disabled placeholder='请输入' /></Form.Item>;
@@ -263,7 +263,7 @@ const Index = (props) => {
             width:150,
             children: [
                 {
-                    title: '测量值(无量纲)',
+                    title: '测定值(无量纲)',
                     align: 'center',
                     width:150,
                     render: (text, record, index) => {
@@ -400,7 +400,7 @@ const Index = (props) => {
                     }
                     data.ChildTable = tableDatas.map((item, index) => {
                         return {
-                            Sort: item,
+                            Sort: index + 1,
                             CreateDate: index <= 4 ? values[`CreateDate0`] && values[`CreateDate0`].format('YYYY-MM-DD 00:00:00') : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`CreateDate5`].format('YYYY-MM-DD 00:00:00') : values[`CreateDate10`] && values[`CreateDate10`].format('YYYY-MM-DD 00:00:00'),
                             BTime: index <= 4 ? values[`CreateDate0`] && values[`BTime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}` : values[`CreateDate10`] && values[`BTime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`BTime${index}`].format('HH:mm:00')}`,
                             ETime: index <= 4 ? values[`CreateDate0`] && values[`ETime${index}`] && `${values[`CreateDate0`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : index > 4 && index <= 9 ? values[`CreateDate5`] && values[`BTime${index}`] && `${values[`CreateDate5`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}` : values[`CreateDate10`] && values[`ETime${index}`] && `${values[`CreateDate10`].format('YYYY-MM-DD')} ${values[`ETime${index}`].format('HH:mm:00')}`,

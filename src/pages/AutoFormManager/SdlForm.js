@@ -158,6 +158,10 @@ class SdlForm extends PureComponent {
 
   // 处理时间控件
   _rtnDateEl = item => {
+
+    const isStart = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.BeginTime";
+    const isEnd = item.fullFieldName == "dbo.T_Bas_TestCommonPoint.EndTime";
+
     const { dateFormat = 'YYYY-MM-DD HH:mm:ss' } = item;
     const format = dateFormat.toUpperCase();
     if (format === 'YYYY-MM' || format === 'MM') {
@@ -177,7 +181,7 @@ class SdlForm extends PureComponent {
       return <DatePicker format={format} style={{ width: '100%' }} />
     }
     // 年-月-日 时:分:秒
-    return <DatePicker showTime format={format} style={{ width: '100%' }} />
+    return <DatePicker showTime={{ defaultValue:isStart?  moment('00:00:00', 'HH:mm:ss') : isEnd ?  moment('23:59:59', 'HH:mm:ss') :  moment()}}  format={'YYYY-MM-DD HH:mm:ss'} style={{ width: '100%' }} />
   }
 
   // 检验重复
