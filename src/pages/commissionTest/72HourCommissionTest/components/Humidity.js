@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify,arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify,arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -231,23 +231,23 @@ const Index = (props) => {
                         if( (index + 1 )  % 8 == 0){ //相对误差
                        let i = (index + 1) / 8;
                              return {  
-                                 children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
+                                 children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>,
                                  props: { colSpan: 2 },
                                 } 
                               }
                         if( (index + 2 )  % 8 == 0 ){//绝对误差
                             let i = (index + 2) / 8
                             return {  
-                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><Input disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 2 },
                                } 
                              }
                          if ((index + 3) % 8 == 0) { //平均值
                                 let i = (index + 3) / 8
-                                return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
     
                             }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><Input placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01'  placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -260,9 +260,9 @@ const Index = (props) => {
 
                              let i = (index + 3 ) / 8;
                              if ((index + 3 ) % 8 == 0) { //平均值
-                                 return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                                 return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
                              }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><Input disabled placeholder='请导入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]

@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -218,7 +218,7 @@ const Index = (props) => {
         const beforeVal = form.getFieldValue('BeforeCollection'), afterVal = form.getFieldValue('AfterCollection')
 
         if ((beforeVal || beforeVal == 0) && (afterVal || afterVal == 0)) {
-            const val = ((afterVal - beforeVal) * 100 / afterVal).toFixed(3);
+            const val = ((afterVal - beforeVal) * 100 / afterVal).toFixed(2);
             form.setFieldsValue({ RelativeCollection: val })
         }
     }
@@ -298,7 +298,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
                     return <span> {form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
@@ -320,7 +320,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>
+                    return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>
                 } else if (index == tableDatas.length) {
                     return <span> {form.getFieldValue('MeasuredAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
@@ -337,7 +337,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
                     return <span> {form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= tableDatas.length + 1) {
@@ -400,7 +400,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item name={`GuaranteedValue`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -422,7 +422,7 @@ const Index = (props) => {
                     obj.children = '采样前'
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item name={`BeforeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -445,7 +445,7 @@ const Index = (props) => {
 
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item name={`AfterCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => { collectionBlur() }} placeholder='请输入' /></Form.Item>
 
                 }
                 return obj;
@@ -470,7 +470,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>
                 }
                 return obj;
             }
@@ -579,7 +579,7 @@ const Index = (props) => {
         const valueA = form.getFieldValue(`ReferenceValue${index}`), valueB = form.getFieldValue(`MeasuredValue${index}`);
         if ((valueA || valueA == 0) && (valueB || valueB == 0)) {
             const relativeError = valueB - valueA
-            form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(3) }) //数据对差=B-A
+            form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(2) }) //数据对差=B-A
         }
     }
 
@@ -835,7 +835,7 @@ const Index = (props) => {
             <TimePicker style={{ width: '100%' }} defaultOpenValue={moment('00:00', 'HH:mm')} format='HH:mm' />
         </Form.Item>
         <Form.Item name='DataGroups' label='数组组数'>
-            <InputNumber min={5} max={16} style={{ width: '100%' }} placeholder='请输入' />
+            <InputNumber   min={5} max={16} style={{ width: '100%' }} placeholder='请输入' />
         </Form.Item>
         <Form.Item name='DataTimes' label='数组对时长'>
             <Input style={{ width: '100%' }} placeholder='请输入' suffix="分钟" onKeyUp={(e) => { e.target.value && numVerify(e.target.value, (data) => {  addForm.setFieldsValue({ 'DataTimes': data<=0? '' : data}) }) }} />

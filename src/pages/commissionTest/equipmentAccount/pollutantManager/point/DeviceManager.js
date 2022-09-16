@@ -133,6 +133,8 @@ const Index = (props) => {
 
   const [defaultPollData, setDefaultPollData] = useState([]);
 
+  const evaluationBasisList = [{name: 'HJ 75-2017《固定污染源烟气（SO2、NOX、颗粒物）排放连续监测技术规范',value:'1'},{name:'环办执法【2019】64号',value:'2'}]
+
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
@@ -179,12 +181,17 @@ const Index = (props) => {
   const isDeviceEditing = (record) => record.ID === deviceEditingKey;
 
   const deviceEdit = (record) => {
+
+
     formDevice.setFieldsValue({
       ...record,
       EquipmentManufacturer:record.ManufactorName,
     });
     setDevicePollutantName(record.PollutantName) //监测设备
+    
 
+    
+    
     if(record.type != "add"){
       setDeviceManufactorID(record.ManufactorID)//设备厂家
     }
@@ -317,6 +324,8 @@ const Index = (props) => {
       console.log('Validate Failed:', errInfo);
     }
   }
+
+
   const equipmentCol = [
     {
       title: '监测参数',
@@ -387,6 +396,7 @@ const Index = (props) => {
       dataIndex: 'RangeCalibration',
       align: 'center',
       width: 240,
+      inputType:'number',
       editable: true,
     },
     {
@@ -402,6 +412,10 @@ const Index = (props) => {
       align: 'center',
       width: 240,
       editable: true,
+      render: (text, row) => {
+        const data = evaluationBasisList.filter((item) => item.value === text)
+        return data[0] ? data[0].name : ''
+      },
     },
     {
       title: '操作',
@@ -525,7 +539,7 @@ const Index = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === 'Range' ? 'range' : 'text',
+        inputType: col.dataIndex === 'Range' ? 'range' : col.inputType==='number'? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isDeviceEditing(record),
@@ -567,7 +581,7 @@ const Index = (props) => {
     },
     {
       title: '手填生产厂家',
-      dataIndex: 'ManualManufactor',
+      dataIndex: 'ManualManufacturer',
       name:'参比仪器信息手填生产厂家',
       align: 'center',
       editable: true,
@@ -774,6 +788,7 @@ const Index = (props) => {
   const [isRefManual, setIsRefManual] = useState(false) //是否手填
 
   const refColChoice = (record) => { //参比仪器选择
+
     formReferInstru.setFieldsValue({
       ...record,
       ReferInstruManufacturer: record.ManufactorName,
@@ -854,18 +869,19 @@ const Index = (props) => {
 
   const [pageSize4, setPageSize4] = useState(10)
   const [pageIndex4, setPageIndex4] = useState(1)
-  const onFinish4 = async (pageIndexs, pageSizes) => {  //查询 设备信息 除分页 每次查询页码重置为1
+  const onFinish4 = async (pageIndexs, pageSizes) => {  //查询 参比仪器信息 除分页 每次查询页码重置为1
     try {
       const values = await form4.validateFields();
-      const pollutantCode = formDevice.getFieldValue('PollutantCode');
+      const pollutantCode = formReferInstru.getFieldValue('PollutantCode');
       props.getTestParamInfoList({
         ...values,
-        // PollutantCode: pollutantCode,
+        PollutantCode: pollutantCode,
         PageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : pageIndex3,
         PageSize: pageSizes ? pageSizes : pageSize3
       })
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
+    [`Recursion${item.deptId}`]
     }
   }
 
@@ -910,7 +926,7 @@ const Index = (props) => {
      </Button>
       </Form.Item>
     </Row>
-    <SdlTable scroll={{ y: 'calc(100vh - 500px)' }} style={{ width: 800 }}
+    <SdlTable scroll={{ y: 'calc(100vh - 500px)' }}
       loading={props.loadingSystemModel} bordered dataSource={systemModelList} columns={generatorCol}
       pagination={{
         total: systemModelListTotal,
@@ -1077,7 +1093,8 @@ const handleSystemAdd = () => { //添加系统信息
       const data = pollutantTypeList.filter((item) => item.ChildID === hangedValues.PollutantCode)
       setDevicePollutantName(data[0] ? data[0].Name : '')
       formDevice.setFieldsValue({Unit:data[0]? data[0].Col1 : undefined})
-    }
+    }  
+
   }
   const onRefValuesChange = async (hangedValues, allValues) => { //参比仪器清单
 
@@ -1085,6 +1102,7 @@ const handleSystemAdd = () => { //添加系统信息
       const data = pollutantTypeList.filter((item) => item.ChildID === hangedValues.PollutantCode)
       setRefPollutantName(data[0] ? data[0].Name : '')
     }
+
   }
   const devicePopVisibleClick = () => {  //CEMS 设备类型弹框
       setDevicePopVisible(!devicePopVisible);
@@ -1138,8 +1156,12 @@ const handleSystemAdd = () => { //添加系统信息
         <Option value={465}>气态污染物CEMS</Option>
         <Option value={466}>颗粒物污染物CEMS</Option>
       </Select>
+    }else if(dataIndex === 'EvaluationBasis'){
+      inputNode = <Select placeholder='请选择' onChange={cemsChange}  allowClear>
+        {evaluationBasisList.map(item=> <Option key={item.value} value={item.value}>{item.name}</Option>)}
+      </Select>
     } else if (inputType === 'number') {
-      inputNode = <InputNumber placeholder={`请输入`} />
+      inputNode = <InputNumber style={{width:'100%'}} placeholder={`请输入`} />
     } else {
       inputNode = <Input title={formDevice.getFieldValue([dataIndex])} disabled={title === '设备型号' || title === '参比方法仪器名称型号' || title === 'CEMS测试原理' || title === '检测依据' ? true : (title === '手填生产厂家'&&!name) || title === '手填CEMS测试原理' || title === '手填设备型号' ? isManual : name === '参比仪器信息手填生产厂家' || title === '手填参比方法仪器名称型号' || title === '手填检测依据' ? isRefManual :  title === 'CEMS系统名称'  || title === 'CEMS型号' ? choiceManufacturer : false} placeholder={ `请输入`} />
     }
@@ -1241,7 +1263,7 @@ const handleSystemAdd = () => { //添加系统信息
         return {
           PollutantCode: item.PollutantCode,
           ManufactorID: item.ManufactorID,
-          ManualManufactor: item.ManualManufactor,
+          ManualManufactor: item.ManualManufacturer,
           ManualInstrument: item.ManualInstrument,
           ManualBasis: item.ManualBasis,
           Number: item.Number,
@@ -1334,15 +1356,15 @@ const handleSystemAdd = () => { //添加系统信息
 
 
       {/**cems 系统信息  cems生产厂家弹框 */}
-      <Modal visible={manufacturerPopVisible} getContainer={false} onCancel={() => { setManufacturerPopVisible(false) }} width={800} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
+      <Modal visible={manufacturerPopVisible} getContainer={false} onCancel={() => { setManufacturerPopVisible(false) }} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}  wrapClassName='noSpreadOverModal'>
         {systemPopContent}
       </Modal>
       {/**cems 系统信息   监测设备生产厂家弹框 */}
-      <Modal visible={devicePopVisible} getContainer={false} onCancel={() => { setDevicePopVisible(false) }} width={"70%"} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
+      <Modal visible={devicePopVisible}  getContainer={false} onCancel={() => { setDevicePopVisible(false) }}  destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }} wrapClassName='noSpreadOverModal'>
         {devicePopContent}
       </Modal>
       {/** 参比仪器信息 生产厂家弹框 */}
-      <Modal visible={refPopVisible} getContainer={false} onCancel={() => { setRefPopVisible(false) }} width={"70%"} destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }}>
+      <Modal visible={refPopVisible}  getContainer={false} onCancel={() => { setRefPopVisible(false) }}  destroyOnClose footer={null} closable={false} maskStyle={{ display: 'none' }} wrapClassName='noSpreadOverModal'>
         {referInstruPopContent}
       </Modal>
     </div>

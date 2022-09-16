@@ -156,7 +156,7 @@ const Index = (props) => {
             }
         },
         {
-            title: '量程校准标准气体/标准装置值',
+            title: '量程校准标气/标准装置值',
             dataIndex: 'rangeCalibration',
             key: 'rangeCalibration',
             align: 'center',

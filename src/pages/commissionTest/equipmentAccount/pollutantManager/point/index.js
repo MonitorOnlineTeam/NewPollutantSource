@@ -207,6 +207,7 @@ export default class Index extends Component {
           <AutoFormTable
             style={{ marginTop: 10 }}
             configId={pointConfigId}
+            resizable
             isCenter
             {...this.props}
             type='company'
@@ -265,9 +266,9 @@ export default class Index extends Component {
             title={'设备管理'}
             visible={this.state.deviceManagerVisible}
             onCancel={()=>{this.setState({deviceManagerVisible:false})}}
-            width={'80%'}
             destroyOnClose
             footer={null}
+            wrapClassName='spreadOverModal'
           >  
           <DeviceManager onCancel={() => { this.setState({ deviceManagerVisible: false }) }} DGIMN={this.state.deviceManagerMN}/>         
         </Modal>

@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify,arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify,arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -231,28 +231,28 @@ const Index = (props) => {
                     title: '颗粒物重(mg)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`PMWeight${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: '标况体积(NL)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`BenchmarkVolume${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`BenchmarkVolume${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    onBlur={() => weightVolumeBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: '标干浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onChange={()=>{weightVolumeBlur(index)}} disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    onChange={()=>{weightVolumeBlur(index)}} disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: '工况浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`OperatingModeDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.001'  disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`OperatingModeDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -267,7 +267,7 @@ const Index = (props) => {
                     align: 'center',
                     width:150,
                     render: (text, record, index) => {
-                        return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled step='0.001' placeholder='请导入' /></Form.Item>;
+                        return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]
@@ -453,7 +453,7 @@ const Index = (props) => {
         const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
         if (weight && volume) {
 
-            const benchmarkDensity =  Number(interceptTwo(weight / volume * 1000))
+            const benchmarkDensity =  Number((weight / volume * 1000).toFixed(2))
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
             const atmos = Number(form.getFieldValue('Atmos'))
                  
@@ -462,7 +462,7 @@ const Index = (props) => {
                            YLvalues  = Number(form.getFieldValue(`YLvalues${index}`));
                     if ((atmos||atmos==0) &&  (SDvalues ||SDvalues==0) && (WDvalues||WDvalues==0) && (YLvalues||YLvalues==0) && (benchmarkDensity||benchmarkDensity==0) ) {
                         const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
-                        form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
+                        form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(2) }) //工况浓度
                     }
                   
                 
@@ -494,7 +494,7 @@ const Index = (props) => {
                 </Col>
                 <Col span={8}>
                     <Form.Item label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber placeholder='请输入' allowClear />
+                        <InputNumber step='0.01'   placeholder='请输入' allowClear />
 
                     </Form.Item>
                 </Col>

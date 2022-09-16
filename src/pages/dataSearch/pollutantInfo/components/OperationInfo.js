@@ -158,22 +158,28 @@ const Index = (props) => {
 
         },
         {
-            title: '巡检频次',
+            title: '巡检类型',
+            dataIndex: 'inspectionTypeName',
+            key: 'inspectionTypeName',
+            align: 'center',
+            ellipsis:true,
+        },
+        {
+            title: '巡检派单频次',
             dataIndex: 'inspectionCycelName',
             key: 'inspectionCycelName',
             align: 'center',
             ellipsis:true,
         },
-
         {
-            title: '校准频次',
+            title: '校准派单频次',
             dataIndex: 'calibrationCycleName',
             key: 'calibrationCycleName',
             align: 'center',
             ellipsis:true,
         },
         {
-            title: '参数核对频次',
+            title: '参数核对派单频次',
             dataIndex: 'parameterCheckName',
             key: 'parameterCheckName',
             align: 'center',

@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -204,12 +204,12 @@ const Index = (props) => {
         if (type == 1) { //零点漂移绝对误差	
             value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
-                form.setFieldsValue({ [`ZeroChange${index}`]: interceptTwo(value2 - value1) })
+                form.setFieldsValue({ [`ZeroChange${index}`]: (value2 - value1).toFixed(2) })
             }
         } else {
             value1 = form.getFieldValue(`RangeBegin${index}`), value2 = form.getFieldValue(`RangeEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
-                form.setFieldsValue({ [`RangeChange${index}`]: interceptTwo(value2 - value1) })
+                form.setFieldsValue({ [`RangeChange${index}`]: (value2 - value1).toFixed(2) })
             }
         }
     }
@@ -282,7 +282,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01' disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -309,7 +309,7 @@ const Index = (props) => {
                     width: 100,
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -318,7 +318,7 @@ const Index = (props) => {
                     width: 100,
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -331,7 +331,7 @@ const Index = (props) => {
                     title: <span>∆S=S{smallFont('i')}-S{smallFont('0')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'  disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -510,7 +510,7 @@ const Index = (props) => {
         const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
         if (weight && volume) {
 
-            const benchmarkDensity = Number(interceptTwo(weight / volume * 1000))
+            const benchmarkDensity = Number((weight / volume * 1000).toFixed(2))
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
             const atmos = Number(form.getFieldValue('Atmos'))
 
@@ -520,7 +520,7 @@ const Index = (props) => {
             console.log(atmos, SDvalues, WDvalues, YLvalues, benchmarkDensity)
             if (atmos && SDvalues && WDvalues && YLvalues && benchmarkDensity) {
                 const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
-                form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(3) }) //工况浓度
+                form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(2) }) //工况浓度
             }
 
 
@@ -569,7 +569,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="量程校准气体浓度" name="RangeCalibrationValue" >
-                        <InputNumber placeholder='请输入' allowClear />
+                        <InputNumber step='0.01' placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -582,11 +582,11 @@ const Index = (props) => {
                     <Row>
                     <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber placeholder='最小值' allowClear />
+                            <InputNumber step='0.01' placeholder='最小值' allowClear />
                         </Form.Item>
                         <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
                         <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber placeholder='最大值' allowClear />
+                            <InputNumber step='0.01' placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>

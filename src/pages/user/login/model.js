@@ -19,8 +19,8 @@ const Model = {
         type: 'changeLoginStatus',
         payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', message: response.Message },
       });
-
-     if (response.IsSuccess) {
+     
+     if (response.IsSuccess) { 
          response.Datas.User_ID = response.Datas.UserId;
          let defaultNavigateUrl = '/user/login';
          let systemNavigateUrl = '';
@@ -55,6 +55,13 @@ const Model = {
           ws.send(response.Datas.UserAccount);
         } catch (error) {
 
+        }
+        if(!response.Datas.Complexity){ //判断密码复杂程度  
+          message.warning('密码过于简单，请修改密码！')
+          setTimeout(()=>{
+            router.push('/account/settings');
+          },1000)
+          return;
         }
         //大屏
         if (payload.redirctUrl) {

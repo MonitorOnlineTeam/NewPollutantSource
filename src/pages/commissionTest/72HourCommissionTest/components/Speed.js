@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment, { RFC_2822 } from 'moment';
@@ -180,7 +180,7 @@ const Index = (props) => {
     const fieldcoefficientCalcula = (index) =>{ //场系数计算
         const value1 = form.getFieldValue(`Manual${index}`),value2 = form.getFieldValue(`CEMSValue${index}`);
         if((value1 || value1==0) && (value2 || value2==0)){
-          form.setFieldsValue({[`FactoryCoefficient${index}`] : interceptTwo( value1 / value2) })
+          form.setFieldsValue({[`FactoryCoefficient${index}`] : ( value1 / value2).toFixed(2) })
         }   
     }
     const [isReg, setIsReg] = useState(false)
@@ -248,10 +248,10 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber  disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -260,10 +260,10 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
                 {
@@ -272,9 +272,9 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i+6}`} rules={[{ required: false, message: '' }]}><InputNumber disabled  placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i+6}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   step='0.01' disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -350,16 +350,16 @@ const Index = (props) => {
                         if ((index + 1) % 7 == 0) { //相对误差
                             let i = (index + 1) / 7 
                             return {
-                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>,
                                 props: { colSpan: 3 },
                             }
                         }
                         if ((index + 2) % 7 == 0) { //平均值
                             let i = (index + 2) / 7 
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
 
                         }
-                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -370,9 +370,9 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -383,9 +383,9 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: false, message: '' }]}><InputNumber disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber disabled placeholder='请导入' /></Form.Item>;
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
             ]

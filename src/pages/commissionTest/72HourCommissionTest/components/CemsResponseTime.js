@@ -11,7 +11,7 @@ import { connect } from "dva";
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 const { RangePicker } = DatePicker;
 import { DelIcon, DetailIcon, EditIcon, PointIcon } from '@/utils/icon'
-import { getSum, getAve, interceptTwo, numVerify, arrDistinctByProp, } from '@/utils/utils'
+import { getSum, getAve, numVerify, arrDistinctByProp, } from '@/utils/utils'
 import router from 'umi/router';
 import Link from 'umi/link';
 import moment from 'moment';
@@ -194,7 +194,7 @@ const Index = (props) => {
         if (index > 0) { return; }
         const data = form.getFieldValue(name);
         const rangData = form.getFieldValue('MaxRange') - form.getFieldValue('MinRange');
-        const minVal = Number((rangData * (value1 / 100)).toFixed(3)), maxVal = Number((rangData * (value2 / 100)).toFixed(3));
+        const minVal = Number((rangData * (value1 / 100)).toFixed(2)), maxVal = Number((rangData * (value2 / 100)).toFixed(2));
         if (data < minVal || data > maxVal) {
             message.warning(`标称值需要在${value1}和${value2}%之间`)
         }
@@ -204,13 +204,13 @@ const Index = (props) => {
         const timeT1 = form.getFieldValue(`TimeT1${index}`), timeT2 = form.getFieldValue(`TimeT2${index}`)
         if ((timeT1 || timeT1 == 0) && (timeT2 || timeT2 == 0)) {
             form.setFieldsValue({
-                [`ResponseTime${index}`]: Number(timeT1) + Number(timeT2)
+                [`ResponseTime${index}`]: (Number(timeT1) + Number(timeT2)).toFixed(2)
             })
         }
         const resTime1 = form.getFieldValue(`ResponseTime0`), resTime2 = form.getFieldValue(`ResponseTime1`), resTime3 = form.getFieldValue(`ResponseTime2`);
 
         if ((resTime1 || resTime1 == 0) && (resTime2 || resTime2 == 0) && (resTime3 || resTime3 == 0)) {
-            const resAvg = ((resTime1 + resTime2 + resTime3) / 3).toFixed(3)
+            const resAvg = ((resTime1 + resTime2 + resTime3) / 3).toFixed(2)
             form.setFieldsValue({ AVG: resAvg })
         }
     }
@@ -307,7 +307,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`LabelGas80${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber disabled={index == 4 || index == 5} onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入' /></Form.Item>;
+                return <Form.Item name={`LabelGas80${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber step='0.01'  disabled={index == 4 || index == 5} onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入' /></Form.Item>;
             }
 
 
@@ -319,7 +319,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`LabelGas50${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber disabled={index == 4 || index == 5} onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }} placeholder='请输入' /></Form.Item>;
+                return <Form.Item name={`LabelGas50${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber step='0.01' disabled={index == 4 || index == 5} onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }} placeholder='请输入' /></Form.Item>;
 
             }
         },
@@ -330,7 +330,7 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`LabelGas20${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} disabled={index == 4 || index == 5} placeholder='请输入' /></Form.Item>;
+                return <Form.Item name={`LabelGas20${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} disabled={index == 4 || index == 5} placeholder='请输入' /></Form.Item>;
 
             }
 
@@ -377,7 +377,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item name={`NominalValue`} rules={[{ required: false, message: '' }]}>
-                    <InputNumber disabled placeholder='请输入' />
+                    <InputNumber step='0.01' disabled placeholder='请输入' />
                 </Form.Item>
             }
         },
@@ -387,7 +387,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item name={`TimeT1${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <InputNumber placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
+                    <InputNumber step='0.01' placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
                 </Form.Item>
             }
         },
@@ -397,7 +397,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item name={`TimeT2${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <InputNumber placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
+                    <InputNumber step='0.01' placeholder='请输入' onBlur={() => { responseTimeBlur(index) }} />
                 </Form.Item>
             }
         },
@@ -577,11 +577,11 @@ const Index = (props) => {
                     <Row>
                         <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber placeholder='最小值' allowClear />
+                            <InputNumber step='0.01' placeholder='最小值' allowClear />
                         </Form.Item>
                         <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
                         <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber placeholder='最大值' allowClear />
+                            <InputNumber step='0.01' placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>

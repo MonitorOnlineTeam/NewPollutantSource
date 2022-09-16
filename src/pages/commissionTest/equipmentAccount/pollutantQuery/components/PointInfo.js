@@ -182,7 +182,7 @@ const Index = (props) => {
             width:150,
             ellipsis:true,
             render:(text,record)=>{
-                return text==1 ? '已完成' : '未完成'
+                return text==1 ? '已完成' : '检测中'
             }
         },
         {
@@ -256,11 +256,10 @@ const Index = (props) => {
             <Input allowClear placeholder='请输入'/>
            </Form.Item>
 
-            <Form.Item label = '点位完成状态' name='status' >
+            <Form.Item label = '检测完成状态' name='status' >
               <Select placeholder='请选择' style={{width:200}} allowClear>
-               <Option value={1}>已完成</Option>
-                <Option value={2}>未完成</Option>
-               
+                <Option value={1}>已完成</Option>
+                <Option value={2}>检测中</Option>
                </Select>
              </Form.Item>
             <Form.Item style={{marginBottom:0}}>
