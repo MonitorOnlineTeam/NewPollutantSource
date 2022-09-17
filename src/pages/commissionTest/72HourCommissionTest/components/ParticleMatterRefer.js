@@ -75,7 +75,7 @@ const dvaDispatch = (dispatch) => {
 const Index = (props) => {
 
 
-    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,1,2,3,4,5,2,2,3,4,5]);
+    const [tableDatas,setTableDatas] = useState([1,2,3,4,5,1,2,3,4,5,1,2,3,4,5]);
 
     const [form] = Form.useForm();
 
@@ -452,16 +452,15 @@ const Index = (props) => {
      const operatingCalcula = (index) =>{
         const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
         if (weight && volume) {
-
-            const benchmarkDensity =  Number((weight / volume * 1000).toFixed(2))
+            const benchmarkDensity =( weight / volume * 1000).toFixed(2) && Number((weight / volume * 1000).toFixed(2))
             form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
-            const atmos = Number(form.getFieldValue('Atmos'))
-                 
-                   const   SDvalues  = Number(form.getFieldValue(`SDvalues${index}`)),
-                           WDvalues  = Number( form.getFieldValue(`WDvalues${index}`)),
-                           YLvalues  = Number(form.getFieldValue(`YLvalues${index}`));
+            const atmos = form.getFieldValue('Atmos')
+                   const   SDvalues  =  form.getFieldValue(`SDvalues${index}`)&&Number(form.getFieldValue(`SDvalues${index}`)),
+                           WDvalues  =  form.getFieldValue(`WDvalues${index}`)&& Number(form.getFieldValue(`WDvalues${index}`)),
+                           YLvalues  =  form.getFieldValue(`YLvalues${index}`)&&Number(form.getFieldValue(`YLvalues${index}`));
+                   
                     if ((atmos||atmos==0) &&  (SDvalues ||SDvalues==0) && (WDvalues||WDvalues==0) && (YLvalues||YLvalues==0) && (benchmarkDensity||benchmarkDensity==0) ) {
-                        const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
+                        const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - ((SDvalues/100).toFixed(4)))
                         form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(2) }) //工况浓度
                     }
                   
@@ -489,7 +488,7 @@ const Index = (props) => {
             <Row gutter={36}>
                 <Col span={8}>
                     <Form.Item label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
-                        <Input placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
+                        <InputNumber placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
                     </Form.Item>
                 </Col>
                 <Col span={8}>

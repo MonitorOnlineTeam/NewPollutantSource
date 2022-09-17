@@ -317,7 +317,6 @@ const Index = (props) => {
                     align: 'center',
                     width: 100,
                     render: (text, record, index) => {
-                        if(index==0){ return '/'  }
                         return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
@@ -331,6 +330,7 @@ const Index = (props) => {
                     title: <span>∆S=S{smallFont('i')}-S{smallFont('0')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
+                        if(index==0){ return '/'  }
                         return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'  disabled placeholder='请输入' /></Form.Item>;
                     }
                 },
@@ -505,27 +505,6 @@ const Index = (props) => {
         })
     }
 
-
-    const weightVolumeBlur = (index) => {
-        const weight = form.getFieldValue(`PMWeight${index}`), volume = form.getFieldValue(`BenchmarkVolume${index}`);
-        if (weight && volume) {
-
-            const benchmarkDensity = Number((weight / volume * 1000).toFixed(2))
-            form.setFieldsValue({ [`BenchmarkDensity${index}`]: benchmarkDensity }) //标杆浓度
-            const atmos = Number(form.getFieldValue('Atmos'))
-
-            const SDvalues = Number(form.getFieldValue(`SDvalues${index}`)),
-                WDvalues = Number(form.getFieldValue(`WDvalues${index}`)),
-                YLvalues = Number(form.getFieldValue(`YLvalues${index}`));
-            console.log(atmos, SDvalues, WDvalues, YLvalues, benchmarkDensity)
-            if (atmos && SDvalues && WDvalues && YLvalues && benchmarkDensity) {
-                const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - SDvalues)
-                form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(2) }) //工况浓度
-            }
-
-
-        }
-    }
     const numCheck = (e, name) => {
         const value = e.target.value
         if (value) {

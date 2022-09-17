@@ -457,6 +457,7 @@ const Index = (props) => {
         <Form.Item label="编号" name="Num" rules={[  { required: true, message: '请输入编号'  }]} >
           <InputNumber placeholder="编号从1开始，自动填写，请勿修改"  allowClear/>
       </Form.Item>
+      <NumTips />
       </Col>
       <Col span={12}>
       <Form.Item label="监测类型" name="PollutantCode"  rules={[  { required: true, message: '请选择监测类型'  }]}>
