@@ -124,7 +124,7 @@ const Index = (props) => {
 
                 if (res.MainTable) {
                     form.resetFields();
-
+                    setIsClears(false);
 
                     if (res.MainTable.RangeCalibration) { //首次获取标称值
                         form.setFieldsValue({ NominalValue: res.MainTable.RangeCalibration, })
@@ -174,17 +174,21 @@ const Index = (props) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
-    const [autoDateFlag, setAutoDateFlag] = useState(true)
+    // const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateTime0')
-        const date1 = form.getFieldValue('CreateTime1'),date2=form.getFieldValue('CreateTime2');
-
-         if (name == 'CreateTime0' && !date1 && !date2) {
+        // const date1 = form.getFieldValue('CreateTime1'),date2=form.getFieldValue('CreateTime2');
+        //  if (name == 'CreateTime0' && !date1 && !date2) {
+         if (name == 'CreateTime0') {
+            if(!values){
+                form.setFieldsValue({ CreateTime1: undefined, CreateTime1: undefined, })
+                return;
+            }
             form.setFieldsValue({
                 CreateTime1: moment(moment(values).add('day', 1)),
                 CreateTime2: moment(moment(values).add('day', 2)),
             })
-            setAutoDateFlag(false)
+            // setAutoDateFlag(false)
         }
     }
 
@@ -196,22 +200,29 @@ const Index = (props) => {
         const rangData = form.getFieldValue('MaxRange') - form.getFieldValue('MinRange');
         const minVal = Number((rangData * (value1 / 100)).toFixed(2)), maxVal = Number((rangData * (value2 / 100)).toFixed(2));
         if (data < minVal || data > maxVal) {
-            message.warning(`标称值需要在${value1}和${value2}%之间`)
+            message.warning(`标称值需要在${minVal}和${maxVal}之间`)
         }
     }
 
     const responseTimeBlur = (index) => {
         const timeT1 = form.getFieldValue(`TimeT1${index}`), timeT2 = form.getFieldValue(`TimeT2${index}`)
         if ((timeT1 || timeT1 == 0) && (timeT2 || timeT2 == 0)) {
+            console.log(timeT1,timeT2)
             form.setFieldsValue({
                 [`ResponseTime${index}`]: (Number(timeT1) + Number(timeT2)).toFixed(2)
             })
+        }else{
+            form.setFieldsValue({
+                [`ResponseTime${index}`]: undefined
+            })  
         }
         const resTime1 = form.getFieldValue(`ResponseTime0`), resTime2 = form.getFieldValue(`ResponseTime1`), resTime3 = form.getFieldValue(`ResponseTime2`);
 
         if ((resTime1 || resTime1 == 0) && (resTime2 || resTime2 == 0) && (resTime3 || resTime3 == 0)) {
-            const resAvg = ((resTime1 + resTime2 + resTime3) / 3).toFixed(2)
+            const resAvg = ((Number(resTime1) + Number(resTime2) + Number(resTime3) ) / 3).toFixed(2)
             form.setFieldsValue({ AVG: resAvg })
+        }else{
+            form.setFieldsValue({ AVG: undefined })
         }
     }
     const [isReg, setIsReg] = useState(false)
@@ -365,10 +376,11 @@ const Index = (props) => {
             title: '标气名称',
             align: 'center',
             render: (text, record, index) => {
-                if (index == 3) { return { children: <span>{form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
-                return <Form.Item name="PollutantName" >
-                    <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
-                </Form.Item>
+                if (index == 3) { return { children: <span>{!isClears&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
+                // return <Form.Item name="PollutantName" >
+                //     <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
+                // </Form.Item>
+                return <span>{!isClears&&form.getFieldValue('PollutantName')}</span>
             }
         },
         {
@@ -377,7 +389,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item name={`NominalValue`} rules={[{ required: false, message: '' }]}>
-                    <InputNumber step='0.01' disabled placeholder='请输入' />
+                    <InputNumber step='0.01' disabled  />
                 </Form.Item>
             }
         },
@@ -407,7 +419,7 @@ const Index = (props) => {
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
                 return <Form.Item name={`ResponseTime${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <Input placeholder='请输入' disabled />
+                    <Input  disabled  />
                 </Form.Item>
             }
         },
@@ -418,7 +430,7 @@ const Index = (props) => {
                 if (index == 0) {
                     return {
                         children: <Form.Item name={`AVG`} rules={[{ required: isReg, message: '' }]}>
-                            <Input placeholder='请输入' disabled />
+                            <InputNumber  disabled  />
                         </Form.Item>, props: { rowSpan: 3 },
                     };
                 }
@@ -451,7 +463,7 @@ const Index = (props) => {
 
                 let mainValue = { ...values }
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if (/CreateTime/g.test(item) || /LabelGas/g.test(item) || /Remark/g.test(item) || /RangeCalibration/g.test(item) || /Time/g.test(item)) {
+                    if (/\d/g.test(item) || /NominalValue/g.test(item) || /AVG/g.test(item)) {
                         delete mainValue[item];
                     }
                 })
@@ -493,9 +505,10 @@ const Index = (props) => {
                     }
                 })
                 data.ChildTable = [...data1, ...data2]
-                props.addGasIndicationErrorSystemResponseRecord(data, () => {
+                props.addGasIndicationErrorSystemResponseRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    getFormData(pollutantCode)
+                    isSuccess&&getFormData(pollutantCode)
+                    
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -507,9 +520,15 @@ const Index = (props) => {
 
 
     }
-
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        form.resetFields();
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item) || /NominalValue/g.test(item) || /AVG/g.test(item)){
+               form.setFieldsValue({[item]:undefined})
+            }
+        })
+        setIsClears(true)//清除算法结果数据
     }
     const del = () => {
         props.deleteGasIndicationErrorSystemResponseRecord({

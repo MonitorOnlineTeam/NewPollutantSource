@@ -132,7 +132,7 @@ const Index = (props) => {
 
         })
     }
-    const getTimeFormData = (pollCode) => {
+    const getTimeFormData = (pollCode,selectDateCode) => {
         setFormLoading(true)
         props.getTimesListByPollutant({
             PointCode: pointId,
@@ -140,8 +140,8 @@ const Index = (props) => {
         }, (dateData, defaultDateCode) => {
             if (dateData[0]) {
                 setDateOptions(dateData)
-                setSelectDate(defaultDateCode)
-                getFormData(pollCode, defaultDateCode)
+                setSelectDate( selectDateCode? selectDateCode : defaultDateCode)
+                getFormData(pollCode, selectDateCode? selectDateCode : defaultDateCode)
             } else {
                 setFormLoading(false)
                 setDateOptions([])
@@ -158,7 +158,8 @@ const Index = (props) => {
             ID: form.getFieldValue('ID'),
         }, (res) => {
             if (res) {
-                form.resetFields();
+                form.resetFields()  
+                setIsClears(false);
                 setRecordName(res.RecordName)
                 
                 if (res.MainTable) {
@@ -220,6 +221,8 @@ const Index = (props) => {
         if ((beforeVal || beforeVal == 0) && (afterVal || afterVal == 0)) {
             const val = ((afterVal - beforeVal) * 100 / afterVal).toFixed(2);
             form.setFieldsValue({ RelativeCollection: val })
+        }else{
+            form.setFieldsValue({ RelativeCollection: undefined })
         }
     }
     const [isReg, setIsReg] = useState(false)
@@ -300,7 +303,7 @@ const Index = (props) => {
                 if (index < tableDatas.length) {
                     return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {form.getFieldValue('ReferenceAvg')} </span>
+                    return <span> {!isClears&&form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
                     let value;
                     if (index == tableDatas.length + 1) { value = form.getFieldValue('AbsoluteError') }
@@ -308,7 +311,7 @@ const Index = (props) => {
                     if (index == tableDatas.length + 3) { value = form.getFieldValue('RelativeAccuracy') }
                     if (index == tableDatas.length + 4) { value = form.getFieldValue('Evaluation') }
                     return {
-                        children: <span> {value} </span>,
+                        children: <span> {!isClears&&value} </span>,
                         props: { colSpan: 3 },
                     };
                 }
@@ -322,7 +325,7 @@ const Index = (props) => {
                 if (index < tableDatas.length) {
                     return <Form.Item name={`MeasuredValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {form.getFieldValue('MeasuredAvg')} </span>
+                    return <span> {!isClears&&form.getFieldValue('MeasuredAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
                     return {
                         props: { colSpan: 0 },
@@ -337,9 +340,9 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index < tableDatas.length) {
-                    return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>
+                    return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {form.getFieldValue('AlignmentAvg')}  </span>
+                    return <span> {!isClears&&form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= tableDatas.length + 1) {
                     return {
                         props: { colSpan: 0 },
@@ -379,7 +382,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled placeholder='请输入' title={form.getFieldValue('StandardGasName')} /></Form.Item>
+                    obj.children = <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled  title={form.getFieldValue('StandardGasName')} /></Form.Item>
                 }
                 return obj;
             }
@@ -470,7 +473,7 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>
+                    obj.children = <Form.Item name={`RelativeCollection`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 }
                 return obj;
             }
@@ -510,7 +513,7 @@ const Index = (props) => {
 
                 let mainValue = { ...values }
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if (/Time/g.test(item) || /ReferenceValue/g.test(item) || /MeasuredValue/g.test(item) || /AlignmentValue/g.test(item)) {
+                    if (/\d/g.test(item) || /GuaranteedValue/g.test(item) ||/Collection/g.test(item)) {
                         delete mainValue[item];
                     }
                 })
@@ -544,10 +547,13 @@ const Index = (props) => {
                     }
 
                 })
-                props.addGasReferenceMethodAccuracyRecord(data, () => {
+                props.addGasReferenceMethodAccuracyRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    setFormLoading(true)
-                    getFormData(pollutantCode, selectDate)
+                    if(isSuccess){
+                        setFormLoading(true)
+                        getFormData(pollutantCode, selectDate)
+                    }
+
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -559,8 +565,15 @@ const Index = (props) => {
 
     }
 
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        form.resetFields();
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item) || /GuaranteedValue/g.test(item) ||/Collection/g.test(item)){
+                form.setFieldsValue({[item]:undefined})
+             }
+        })
+        setIsClears(true)//清除算法结果数据
     }
     const del = () => {
         props.deleteGasReferenceMethodAccuracyRecord({
@@ -580,6 +593,8 @@ const Index = (props) => {
         if ((valueA || valueA == 0) && (valueB || valueB == 0)) {
             const relativeError = valueB - valueA
             form.setFieldsValue({ [`AlignmentValue${index}`]: relativeError.toFixed(2) }) //数据对差=B-A
+        }else{
+            form.setFieldsValue({ [`AlignmentValue${index}`]: undefined })
         }
     }
 
@@ -869,7 +884,7 @@ const Index = (props) => {
                     }, () => {
                         setAddLoading(false)
                         setAddVisible(false)
-                        getTimeFormData(pollutantCode)
+                        getTimeFormData(pollutantCode,values.RecordDate && values.RecordDate.format('YYYY-MM-DD 00:00:00'))
 
                     })
                 }

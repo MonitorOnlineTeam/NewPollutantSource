@@ -93,6 +93,7 @@ const Index = (props) => {
 
                 if (res.MainTable) {
                     form.resetFields();
+                    setIsClears(false);
 
                     form.setFieldsValue({
                         ...res.MainTable,
@@ -137,16 +138,21 @@ const Index = (props) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
-    const [autoDateFlag, setAutoDateFlag] = useState(true)
+    // const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
-        if (name == 'CreateDate0' && autoDateFlag) {
+        // if (name == 'CreateDate0'  && autoDateFlag ) {
+        if (name == 'CreateDate0') {
+            if(!values){
+                form.setFieldsValue({ CreateDate1: undefined, CreateDate2: undefined, CreateDate3: undefined,})
+                return;
+            }
             form.setFieldsValue({
                 CreateDate1: moment(moment(values).add('day', 1)),
                 CreateDate2: moment(moment(values).add('day', 2)),
                 CreateDate3: moment(moment(values).add('day', 3)),
             })
-            setAutoDateFlag(false)
+            // setAutoDateFlag(false)
         }
     }
     const onTimeChange = (index, type) => {
@@ -164,19 +170,32 @@ const Index = (props) => {
 
     }
 
-    const errorBlur = (index, type) => {
+    const zeroReadBlur = (index, type) => {
         let value1, value2;
         if (type == 1) { //零点漂移绝对误差	
             value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`ZeroChange${index}`]: (value2 - value1).toFixed(2) })
+            }else{
+                form.setFieldsValue({ [`ZeroChange${index}`]: undefined })
             }
         } else {
             value1 = form.getFieldValue(`CalibrationBegin${index}`), value2 = form.getFieldValue(`CalibrationEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`DriftAbsolute${index}`]: (value2 - value1).toFixed(2) })
+            }else{
+                form.setFieldsValue({ [`DriftAbsolute${index}`]: undefined })
             }
         }
+    }
+
+    const adjustChang = (name,name2,index) =>{
+      const value = form.getFieldValue(`${name}${index}`)
+      const value2 = form.getFieldValue(`${name2}${index}`)
+       if(value==2){
+           form.setFieldsValue({[`${name2}${index+1}`] : value2})
+       }
+        
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
@@ -230,7 +249,7 @@ const Index = (props) => {
                             width: 100,
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
@@ -238,7 +257,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -253,7 +272,7 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    placeholder='请输入' disabled /></Form.Item>;
+                                return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -263,7 +282,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
+                            <Radio.Group onChange={()=>{adjustChang(`ZeroCalibration`,'ZeroEnd',index)}}>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
                             </Radio.Group>
@@ -280,7 +299,7 @@ const Index = (props) => {
                             width: 100,
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`CalibrationBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                         {
@@ -288,7 +307,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -303,7 +322,7 @@ const Index = (props) => {
                             align: 'center',
                             render: (text, record, index) => {
                                 if(index==0){ return '/'  }
-                                return <Form.Item name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    placeholder='请输入' disabled /></Form.Item>;
+                                return <Form.Item name={`DriftAbsolute${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     disabled /></Form.Item>;
                             }
                         },
                     ]
@@ -313,7 +332,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         return <Form.Item name={`AdjustSpan${index}`} rules={[{ required: isReg, message: '' }]}>
-                            <Radio.Group>
+                            <Radio.Group onChange={()=>{adjustChang(`AdjustSpan`,'CalibrationEnd',index)}}>
                                 <Radio value="1">是</Radio>
                                 <Radio value="2">否</Radio>
                             </Radio.Group>
@@ -353,7 +372,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '零点漂移',
+                    title: '零点漂移（%）',
                     align: 'center',
                     width: 300,
                     render: () => {
@@ -364,15 +383,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('ZeroErrorMaximum')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('ZeroErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('ZeroValue')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{form.getFieldValue('EvaluationBasis')}</span>,
+                            children: <span>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -387,7 +406,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '跨度漂移',
+                    title: '跨度漂移（%）',
                     align: 'center',
                     width: 300,
                     render: (text, record, index) => {
@@ -400,11 +419,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('SpanErrorMaximum')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('SpanErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('SpanValue')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -480,9 +499,9 @@ const Index = (props) => {
                     }
 
                 })
-                props.addPMZeroRangeRecord(data, () => {
+                props.addPMZeroRangeRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    initData()
+                    isSuccess&&initData()
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -495,8 +514,15 @@ const Index = (props) => {
 
     }
 
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        form.resetFields();
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item)){
+               form.setFieldsValue({[item]:undefined})
+            }
+        })
+        setIsClears(true)//清除算法结果数据
     }
 
 

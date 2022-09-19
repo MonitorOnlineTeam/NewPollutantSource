@@ -113,7 +113,8 @@ const Index = (props) => {
                     
                      
                    if (res.MainTable) {
-                    form.resetFields()
+                    form.resetFields();
+                    setIsClears(false);
                     
                     form.setFieldsValue({
                         ...res.MainTable,
@@ -147,16 +148,20 @@ const Index = (props) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
-    const [autoDateFlag, setAutoDateFlag] = useState(true)
+    // const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
         const index1 = recordType == 1 ? 0 : 1 ;
-        if (name == 'CreateDate0' && autoDateFlag) {
+        if (name == 'CreateDate0') {
+            if(!values){
+                form.setFieldsValue({ [`CreateDate${index1+6}`]: undefined,  [`CreateDate${index1+13}`]: undefined, })
+                return;
+            }
             form.setFieldsValue({
                 [`CreateDate${index1+6}`]: moment(moment(values).add('day', 1)),
-                [`CreateDate${index1+12}`]: moment(moment(values).add('day', 2)),
+                [`CreateDate${index1+13}`]: moment(moment(values).add('day', 2)),
             })
-            setAutoDateFlag(false)
+            // setAutoDateFlag(false)
         }
     }
     const onTimeChange = (index, type) => {
@@ -181,7 +186,9 @@ const Index = (props) => {
         const value1 = form.getFieldValue(`Manual${index}`),value2 = form.getFieldValue(`CEMSValue${index}`);
         if((value1 || value1==0) && (value2 || value2==0)){
           form.setFieldsValue({[`FactoryCoefficient${index}`] : ( value1 / value2).toFixed(2) })
-        }   
+        }else{
+            form.setFieldsValue({[`FactoryCoefficient${index}`] : undefined }) 
+        }  
     }
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
@@ -248,7 +255,7 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    disabled  /></Form.Item>;
 
                         }
                         return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
@@ -260,7 +267,7 @@ const Index = (props) => {
                     render: (text, record, index) => {
                         if ((index + 1) % 6 == 0) { //平均值
                             let i = (index + 1) / 6
-                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i+3}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
 
                         }
                         return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>;
@@ -274,7 +281,7 @@ const Index = (props) => {
                             let i = (index + 1) / 6
                             return <Form.Item name={`AVG${i+6}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  placeholder='请输入' /></Form.Item>;
                         }
-                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   step='0.01' disabled  /></Form.Item>;
                     }
                 },
             ]
@@ -350,13 +357,13 @@ const Index = (props) => {
                         if ((index + 1) % 7 == 0) { //相对误差
                             let i = (index + 1) / 7 
                             return {
-                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>,
                                 props: { colSpan: 3 },
                             }
                         }
                         if ((index + 2) % 7 == 0) { //平均值
                             let i = (index + 2) / 7 
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
 
                         }
                         return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={()=>manualBlur(index)} placeholder='请输入' /></Form.Item>;
@@ -370,9 +377,9 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                         }
-                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                     }
                 },
                 {
@@ -383,7 +390,7 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 6}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                         }
                         return <Form.Item name={`FactoryCoefficient${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>;
                     }
@@ -401,11 +408,11 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{form.getFieldValue('VelocityCoefficientAVG')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('VelocityCoefficientAVG')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
-                    children: <span>{form.getFieldValue('Evaluation')}</span>,
+                    children: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
                     props: { colSpan: 5 },
                 };
                 return obj;
@@ -425,7 +432,7 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{form.getFieldValue('StandardDeviation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('StandardDeviation')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
@@ -446,7 +453,7 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{form.getFieldValue('RelativeDeviation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('RelativeDeviation')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
@@ -476,7 +483,7 @@ const Index = (props) => {
 
                 let mainValue = {...values}
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if(/Time/g.test(item) || /CreateDate/g.test(item) || /Manual/g.test(item) || /CEMSValue/g.test(item)|| /FactoryCoefficient/g.test(item) || /AVG/g.test(item) ){
+                    if(/\d/g.test(item)){
                        delete mainValue[item];
                     }
                 })
@@ -542,9 +549,9 @@ const Index = (props) => {
                 })   
                 }     
                 data.ChildTable = dateArr;     
-                props.addVelocityFieldCheckingRecord(data, () => {
+                props.addVelocityFieldCheckingRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    initData()
+                    isSuccess&&initData()  
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -557,8 +564,15 @@ const Index = (props) => {
 
     }
 
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        form.resetFields();
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item)){
+                form.setFieldsValue({[item]:undefined})
+             }
+        })
+        setIsClears(true)//清除算法结果数据
     }
     const del = () => {
         props.deleteVelocityFieldCheckingRecord({

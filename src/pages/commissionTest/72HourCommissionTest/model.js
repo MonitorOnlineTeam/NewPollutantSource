@@ -82,9 +82,10 @@ export default Model.extend({
       yield update({ tableLoading: true })
       const result = yield call(services.AddPMReferenceCalibrationRecord, payload);
       if (result.IsSuccess) {
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deletePMReferenceCalibrationRecord({ payload, callback }, { call, put, update }) { //删除
@@ -139,9 +140,10 @@ export default Model.extend({
       const result = yield call(services.AddGasReferenceMethodAccuracyRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deleteGasReferenceMethodAccuracyRecord({ payload, callback }, { call, put, update }) { //删除
@@ -179,9 +181,10 @@ export default Model.extend({
       const result = yield call(services.AddGasIndicationErrorSystemResponseRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deleteGasIndicationErrorSystemResponseRecord({ payload, callback }, { call, put, update }) { //删除
@@ -209,9 +212,10 @@ export default Model.extend({
       const result = yield call(services.AddVelocityFieldCheckingRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deleteVelocityFieldCheckingRecord({ payload, callback }, { call, put, update }) { //删除
@@ -240,9 +244,10 @@ export default Model.extend({
       const result = yield call(services.AddTemperatureCheckingRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deleteTemperatureCheckingRecord({ payload, callback }, { call, put, update }) { //删除
@@ -270,9 +275,10 @@ export default Model.extend({
       const result = yield call(services.AddHumidityCheckingRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deleteHumidityCheckingRecord({ payload, callback }, { call, put, update }) { //删除
@@ -300,9 +306,10 @@ export default Model.extend({
       const result = yield call(services.AddGasZeroRangeInfoRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deleteGasZeroRangeRecord({ payload, callback }, { call, put, update }) { //删除
@@ -330,9 +337,10 @@ export default Model.extend({
       const result = yield call(services.AddPMZeroRangeRecord, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback()
+        callback(result.IsSuccess)
       } else {
         message.error(result.Message)
+        callback(result.IsSuccess)
       }
     },
     *deletePMZeroRangeRecord({ payload, callback }, { call, put, update }) { //删除

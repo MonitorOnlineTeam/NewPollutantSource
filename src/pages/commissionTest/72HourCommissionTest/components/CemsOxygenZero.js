@@ -122,6 +122,7 @@ const Index = (props) => {
                 setRecordName(res.RecordName)
                 if (res.MainTable) {
                     form.resetFields();
+                    setIsClears(false);
 
                     form.setFieldsValue({
                         ...res.MainTable,
@@ -171,18 +172,22 @@ const Index = (props) => {
     const disabledDate = (current) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
-    const [autoDateFlag, setAutoDateFlag] = useState(true)
+    // const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
-        const date1 = form.getFieldValue('CreateDate1'),date2=form.getFieldValue('CreateDate2'),date3=form.getFieldValue('CreateDate3');
-
-        if (name == 'CreateDate0' &&  !date1 && !date2 && !date3) {
+        // const date1 = form.getFieldValue('CreateDate1'),date2=form.getFieldValue('CreateDate2'),date3=form.getFieldValue('CreateDate3');
+        // if (name == 'CreateDate0' &&  !date1 && !date2 && !date3) {
+        if (name == 'CreateDate0') {
+            if(!values){
+                form.setFieldsValue({ CreateDate1: undefined, CreateDate2: undefined,CreateDate3:undefined, })
+                return;
+            }
             form.setFieldsValue({
                 CreateDate1: moment(moment(values).add('day', 1)),
                 CreateDate2: moment(moment(values).add('day', 2)),
                 CreateDate3: moment(moment(values).add('day', 3)),
             })
-            setAutoDateFlag(false)
+            // setAutoDateFlag(false)
         }
     }
     const onTimeChange = (index, type) => {
@@ -199,18 +204,22 @@ const Index = (props) => {
         }
     }
 
-    const errorBlur = (index, type) => {
+    const zeroReadBlur = (index, type) => {
         let value1, value2;
         if (type == 1) { //零点漂移绝对误差	
             value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`ZeroChange${index}`]: (value2 - value1).toFixed(2) })
+            }else{
+                form.setFieldsValue({ [`ZeroChange${index}`]: undefined })
             }
         } else {
             value1 = form.getFieldValue(`RangeBegin${index}`), value2 = form.getFieldValue(`RangeEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
                 form.setFieldsValue({ [`RangeChange${index}`]: (value2 - value1).toFixed(2) })
-            }
+            }else{
+
+            }  form.setFieldsValue({ [`RangeChange${index}`]: undefined })
         }
     }
 
@@ -261,14 +270,14 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`ZeroBegin${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
                     title: <span>最终(Z{smallFont('i')})</span>,
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => errorBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><Input onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -282,7 +291,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01' disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`ZeroChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01' disabled  /></Form.Item>;
                     }
                 },
             ]
@@ -309,7 +318,7 @@ const Index = (props) => {
                     width: 100,
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`RangeBegin${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
                 {
@@ -317,7 +326,7 @@ const Index = (props) => {
                     align: 'center',
                     width: 100,
                     render: (text, record, index) => {
-                        return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => errorBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`RangeEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
                     }
                 },
             ]
@@ -331,7 +340,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         if(index==0){ return '/'  }
-                        return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'  disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`RangeChange${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'  disabled  /></Form.Item>;
                     }
                 },
             ]
@@ -479,9 +488,10 @@ const Index = (props) => {
                     }
 
                 })
-                props.addGasZeroRangeInfoRecord(data, () => {
+                props.addGasZeroRangeInfoRecord(data, (isSuccess) => {
                     type == 1 ? setSaveLoading1(false) : setSaveLoading2(false)
-                    getFormData(pollutantCode)
+                    isSuccess&&getFormData(pollutantCode)
+                   
                 })
             }).catch((errorInfo) => {
                 console.log('Failed:', errorInfo);
@@ -494,8 +504,15 @@ const Index = (props) => {
 
     }
 
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        form.resetFields();
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item)){
+               form.setFieldsValue({[item]:undefined})
+            }
+        })
+        setIsClears(true)//清除算法结果数据
     }
     const del = () => {
         props.deleteGasZeroRangeRecord({
@@ -572,7 +589,7 @@ const Index = (props) => {
 
                 <Col span={8}>
                     <Form.Item label="污染物名称" name="PollutantName" >
-                        <Input disabled placeholder='请输入' />
+                        <Input disabled  />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>

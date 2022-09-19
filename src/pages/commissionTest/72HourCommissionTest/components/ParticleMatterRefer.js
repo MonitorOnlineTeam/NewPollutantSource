@@ -102,7 +102,8 @@ const Index = (props) => {
                 setRecordType(res.RecordType)
             
             if (res.MainTable) {
-                form.resetFields()
+                form.resetFields();
+                setIsClears(false);
 
                 form.setFieldsValue({
                     ...res.MainTable
@@ -144,15 +145,19 @@ const Index = (props) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
-    const [autoDateFlag, setAutoDateFlag] = useState(true)
+    // const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
-        if (name == 'CreateDate0' && autoDateFlag) {
+        if (name == 'CreateDate0') {
+            if(!values){
+                form.setFieldsValue({ CreateDate5: undefined, CreateDate10: undefined,})
+                return;
+            }
             form.setFieldsValue({
                 CreateDate5: moment(moment(values).add('day', 1)),
                 CreateDate10: moment(moment(values).add('day', 2)),
             })
-            setAutoDateFlag(false)
+            // setAutoDateFlag(false)
         }
     }
     const onTimeChange = (index, type) => {
@@ -245,14 +250,14 @@ const Index = (props) => {
                     title: '标干浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    onChange={()=>{weightVolumeBlur(index)}} disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`BenchmarkDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    onChange={()=>{weightVolumeBlur(index)}} disabled  /></Form.Item>;
                     }
                 },
                 {
                     title: '工况浓度(mg/m3)',
                     align: 'center',
                     render: (text, record, index) => {
-                        return <Form.Item name={`OperatingModeDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    disabled placeholder='请输入' /></Form.Item>;
+                        return <Form.Item name={`OperatingModeDensity${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'    disabled  /></Form.Item>;
                     }
                 },
             ]
@@ -291,15 +296,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('Equation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('Equation')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('ConfidenceHalfWidth')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('ConfidenceHalfWidth')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{form.getFieldValue('Evaluation')}</span>,
+                            children: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -327,11 +332,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('CorrelationCoefficient') }</span>,
+            title: <span>{!isClears&&form.getFieldValue('CorrelationCoefficient') }</span>,
             align: 'center', 
             children: [
                 {
-                    title: <span>{form.getFieldValue('AllowHalfWidth') }</span>,
+                    title: <span>{!isClears&&form.getFieldValue('AllowHalfWidth') }</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -354,10 +359,10 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{form.getFieldValue('KCoefficient')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('KCoefficient')}</span>,
             align: 'center',
             render: (text, record, index) => {
-                return <span>{form.getFieldValue('EvaluationBasis')}</span>
+                return <span>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>
             }
         },
     ]
@@ -385,7 +390,7 @@ const Index = (props) => {
 
                     let mainValue = {...values}
                     Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/Time/g.test(item) || /ReferenceValue/g.test(item) || /MeasuredValue/g.test(item) || /AlignmentValue/g.test(item)){
+                        if(/\d/g.test(item)){
                            delete mainValue[item];
                         }
                     })
@@ -417,9 +422,9 @@ const Index = (props) => {
                         }
 
                     })
-                    props.addPMReferenceCalibrationRecord(data,()=>{
+                    props.addPMReferenceCalibrationRecord(data,(isSuccess)=>{
                         type == 1? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData()
+                        isSuccess&&initData()
                     })
                 }).catch((errorInfo) => {
                     console.log('Failed:', errorInfo);
@@ -430,10 +435,16 @@ const Index = (props) => {
 
 
     }
-
+    
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        // form.resetFields();
-        form.setFieldsValue({'BenchmarkDensity0':10})
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item)){
+                form.setFieldsValue({[item]:undefined})
+             }
+        })
+        setIsClears(true)//清除算法结果数据
     }
     const del = () => {
         props.deletePMReferenceCalibrationRecord({
@@ -460,11 +471,16 @@ const Index = (props) => {
                            YLvalues  =  form.getFieldValue(`YLvalues${index}`)&&Number(form.getFieldValue(`YLvalues${index}`));
                    
                     if ((atmos||atmos==0) &&  (SDvalues ||SDvalues==0) && (WDvalues||WDvalues==0) && (YLvalues||YLvalues==0) && (benchmarkDensity||benchmarkDensity==0) ) {
-                        const operatingModeDensity = benchmarkDensity * (273 / (273 + WDvalues)) * ((atmos + YLvalues) / 101325) * (1 - ((SDvalues/100).toFixed(4)))
+                        const operatingModeDensity = benchmarkDensity * (273 / (273 + Number(WDvalues))) * ((Number(atmos) + Number(YLvalues)) / 101325) * (1 - ((SDvalues/100).toFixed(4)))
                         form.setFieldsValue({ [`OperatingModeDensity${index}`]: operatingModeDensity.toFixed(2) }) //工况浓度
+                    }else{
+                        form.setFieldsValue({ [`OperatingModeDensity${index}`]: undefined })  
                     }
                   
                 
+        }else{
+            form.setFieldsValue({ [`BenchmarkDensity${index}`]: undefined }) 
+            form.setFieldsValue({ [`OperatingModeDensity${index}`]: undefined }) 
         }
        }
 

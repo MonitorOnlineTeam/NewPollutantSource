@@ -326,7 +326,7 @@ const Index = (props) => {
         >
           <Col span={24}>
             <Form.Item label="编号" name="TypeNum" rules={[{ required: true, message: '请输入' }]}>
-              <InputNumber placeholder='请输入' />
+              <InputNumber placeholder='请输入' disabled/>
             </Form.Item>
             <NumTips />
           </Col>
@@ -382,6 +382,7 @@ const Index = (props) => {
               </Radio.Group>
             </Form.Item>
           </Col>
+          <Form.Item  name="ID"  hidden>  <Input />   </Form.Item>
         </Form>
       </Modal>
     </div>

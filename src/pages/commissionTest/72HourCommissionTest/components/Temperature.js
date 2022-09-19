@@ -102,6 +102,7 @@ const Index = (props) => {
                     
                    if (res.MainTable) {
                     form.resetFields();
+                    setIsClears(false);
 
                     form.setFieldsValue({
                         ...res.MainTable,
@@ -136,15 +137,19 @@ const Index = (props) => {
         //return current && current > moment().endOf('year') || current < moment().startOf('year');
     };
 
-    const [autoDateFlag, setAutoDateFlag] = useState(true)
+    // const [autoDateFlag, setAutoDateFlag] = useState(true)
     const onDateChange = (name) => {
         const values = form.getFieldValue('CreateDate0')
-        if (name == 'CreateDate0' && autoDateFlag) {
+        if (name == 'CreateDate0') {
+            if(!values){
+                form.setFieldsValue({ CreateDate7: undefined, CreateDate14: undefined,})
+                return;
+            }
             form.setFieldsValue({
-                [`CreateDate7`]: moment(moment(values).add('day', 1)),
-                [`CreateDate14`]: moment(moment(values).add('day', 2)),
+                CreateDate7: moment(moment(values).add('day', 1)),
+                CreateDate14: moment(moment(values).add('day', 2)),
             })
-            setAutoDateFlag(false)
+            // setAutoDateFlag(false)
         }
     }
     const onTimeChange = (index, type) => {
@@ -235,13 +240,13 @@ const Index = (props) => {
                         if ((index + 1) % 7 == 0) { //绝对误差
                             let i = (index + 1) / 7 
                             return {
-                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>,
+                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>,
                                 props: { colSpan: 3 },
                             }
                         }
                         if ((index + 2) % 7 == 0) { //平均值
                             let i = (index + 2) / 7 
-                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
 
                         }
                         return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   placeholder='请输入' /></Form.Item>;
@@ -255,7 +260,7 @@ const Index = (props) => {
 
                         let i = (index + 2) / 7 
                         if ((index + 2) % 7 == 0) { //平均值
-                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请输入' /></Form.Item>;
+                            return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
                         }
                         return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled placeholder='请导入' /></Form.Item>;
                     }
@@ -270,7 +275,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{form.getFieldValue('Evaluation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]
@@ -295,7 +300,7 @@ const Index = (props) => {
 
                     let mainValue = {...values}
                     Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                        if(/Time/g.test(item) || /CreateDate/g.test(item) || /Manual/g.test(item) || /CEMSValue/g.test(item) || /AVG/g.test(item) ){
+                        if(/\d/g.test(item) ){
                            delete mainValue[item];
                         }
                     })
@@ -335,9 +340,9 @@ const Index = (props) => {
                 })
                     data.ChildTable = dateArr; 
 
-                    props.addTemperatureCheckingRecord(data,()=>{
+                    props.addTemperatureCheckingRecord(data,(isSuccess)=>{
                         type == 1? setSaveLoading1(false) : setSaveLoading2(false)
-                        initData()
+                        isSuccess&&initData()
                     })
                 }).catch((errorInfo) => {
                     console.log('Failed:', errorInfo);
@@ -350,8 +355,15 @@ const Index = (props) => {
 
     }
 
+    const [isClears,setIsClears] = useState(false)
     const clears = () => {
-        form.resetFields();
+        const value = form.getFieldsValue()
+        Object.keys(value).map((item, index) => { //清除表格表单数据
+            if(/\d/g.test(item)){
+                form.setFieldsValue({[item]:undefined})
+             }
+        })
+        setIsClears(true)//清除算法结果数据
     }
     const del = () => {
         props.deleteTemperatureCheckingRecord({
