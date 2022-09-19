@@ -376,11 +376,11 @@ const Index = (props) => {
             title: '标气名称',
             align: 'center',
             render: (text, record, index) => {
-                if (index == 3) { return { children: <span>{!isClears&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
+                if (index == 3) { return { children: <span>{!isClears&&form.getFieldValue('EvaluationBasis1')!=0&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
                 // return <Form.Item name="PollutantName" >
                 //     <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
                 // </Form.Item>
-                return <span>{!isClears&&form.getFieldValue('PollutantName')}</span>
+                return <span>{form.getFieldValue('PollutantName')}</span>
             }
         },
         {
@@ -463,7 +463,7 @@ const Index = (props) => {
 
                 let mainValue = { ...values }
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if (/\d/g.test(item) || /NominalValue/g.test(item) || /AVG/g.test(item)) {
+                    if (/\d/g.test(item)) {
                         delete mainValue[item];
                     }
                 })

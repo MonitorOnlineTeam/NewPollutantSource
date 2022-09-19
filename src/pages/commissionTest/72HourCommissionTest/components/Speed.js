@@ -408,11 +408,11 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('VelocityCoefficientAVG')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('VelocityCoefficientAVG')!=0&&form.getFieldValue('VelocityCoefficientAVG')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
-                    children: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
+                    children: <span>{!isClears&&form.getFieldValue('Evaluation')!=0&&form.getFieldValue('Evaluation')}</span>,
                     props: { colSpan: 5 },
                 };
                 return obj;
@@ -432,7 +432,7 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('StandardDeviation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('StandardDeviation')!=0&&form.getFieldValue('StandardDeviation')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {
@@ -453,7 +453,7 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('RelativeDeviation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('RelativeDeviation')!=0&&form.getFieldValue('RelativeDeviation')}</span>,
             align: 'center',
             render: (text, record, index) => {
                 const obj = {

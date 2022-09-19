@@ -280,7 +280,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('Evaluation')!=0&&form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]
@@ -526,7 +526,7 @@ const Index = (props) => {
                 });
                 formData.append('firstRow', value.rowVal);
                 formData.append('firstColumn', value.colVal);
-                formData.append('PollutantCode', '');
+                formData.append('PollutantCode', pollutantCode);
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
                 setUploading(true);
                 fetch('/api/rest/PollutantSourceApi/TaskFormApi/ImportDataNew', {

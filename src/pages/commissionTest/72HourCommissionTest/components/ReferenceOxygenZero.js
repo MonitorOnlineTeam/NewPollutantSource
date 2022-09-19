@@ -303,7 +303,7 @@ const Index = (props) => {
                 if (index < tableDatas.length) {
                     return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('ReferenceAvg')} </span>
+                    return <span> {!isClears&&form.getFieldValue('ReferenceAvg')!=0&&form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
                     let value;
                     if (index == tableDatas.length + 1) { value = form.getFieldValue('AbsoluteError') }
@@ -311,7 +311,7 @@ const Index = (props) => {
                     if (index == tableDatas.length + 3) { value = form.getFieldValue('RelativeAccuracy') }
                     if (index == tableDatas.length + 4) { value = form.getFieldValue('Evaluation') }
                     return {
-                        children: <span> {!isClears&&value} </span>,
+                        children: <span> {!isClears&&value!=0&&value} </span>,
                         props: { colSpan: 3 },
                     };
                 }
@@ -342,7 +342,7 @@ const Index = (props) => {
                 if (index < tableDatas.length) {
                     return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('AlignmentAvg')}  </span>
+                    return <span> {!isClears&&form.getFieldValue('AlignmentAvg')!=0&&form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= tableDatas.length + 1) {
                     return {
                         props: { colSpan: 0 },
@@ -382,7 +382,9 @@ const Index = (props) => {
                     obj.props.rowSpan = 0;
                 }
                 if (index == 2) {
-                    obj.children = <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled  title={form.getFieldValue('StandardGasName')} /></Form.Item>
+                    obj.children = <span> {form.getFieldValue('StandardGasName')}  </span>
+                    
+                    // <Form.Item name={`StandardGasName`} rules={[{ required: isReg, message: '' }]}><Input disabled  title={form.getFieldValue('StandardGasName')} /></Form.Item>
                 }
                 return obj;
             }
@@ -513,7 +515,7 @@ const Index = (props) => {
 
                 let mainValue = { ...values }
                 Object.keys(mainValue).map((item, index) => { //去除主表 多余字段
-                    if (/\d/g.test(item) || /GuaranteedValue/g.test(item) ||/Collection/g.test(item)) {
+                    if (/\d/g.test(item)) {
                         delete mainValue[item];
                     }
                 })

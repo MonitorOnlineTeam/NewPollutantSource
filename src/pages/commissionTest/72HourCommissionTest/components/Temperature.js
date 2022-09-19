@@ -275,7 +275,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('Evaluation')!=0&&form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]

@@ -223,6 +223,14 @@ const Index = (props) => {
         }
     }
 
+    const adjustChang = (name,name2,name3,index) =>{
+        const value = form.getFieldValue(`${name}${index}`)
+        const value2 = form.getFieldValue(`${name2}${index}`)
+         if(value==2){
+            value2&&form.setFieldsValue({[`${name3}${index+1}`] : value2})
+         }
+          
+      }
 
     const [isReg, setIsReg] = useState(false)
     const [isTimeReg, setIsTimeReg] = useState(false)
@@ -301,7 +309,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 return <Form.Item name={`ZeroCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <Radio.Group>
+                    <Radio.Group  onChange={()=>{adjustChang(`ZeroCalibration`,'ZeroEnd','ZeroBegin',index)}}>
                         <Radio value="1">是</Radio>
                         <Radio value="2">否</Radio>
                     </Radio.Group>
@@ -350,7 +358,7 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 return <Form.Item name={`RangeCalibration${index}`} rules={[{ required: isReg, message: '' }]}>
-                    <Radio.Group>
+                    <Radio.Group onChange={()=>{adjustChang(`RangeCalibration`,'RangeEnd','RangeBegin',index)}}>
                         <Radio value="1">是</Radio>
                         <Radio value="2">否</Radio>
                     </Radio.Group>
@@ -376,15 +384,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('ZeroErrorMaximum')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('ZeroErrorMaximum')!=0&&form.getFieldValue('ZeroErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('ZeroValue')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('ZeroValue')!=0&&form.getFieldValue('ZeroValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{form.getFieldValue('EvaluationBasis')}</span>,
+                            children: <span>{!isClears&&form.getFieldValue('EvaluationBasis')!=0&&form.getFieldValue('EvaluationBasis')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -412,11 +420,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{form.getFieldValue('SpanErrorMaximum')}</span>,
+            title: <span>{ !isClears&&form.getFieldValue('SpanErrorMaximum')!=0&& form.getFieldValue('SpanErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{form.getFieldValue('SpanValue')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('SpanValue')!=0&& form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {

@@ -11,7 +11,7 @@ const { Option } = Select;
 @connect(({ loading, common,autoForm }) => ({  enterpriseAndPointList: common.enterpriseAndPointList,
   industryTreeList: common.industryTreeList,
   level: common.level,
-  regionList:autoForm.regionList
+  regionList:autoForm.regionList,
 }))
 class SdlCascader extends Component {
   constructor(props) {
@@ -46,18 +46,18 @@ class SdlCascader extends Component {
     //   }
     // })
     if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId ||  itemName === 'dbo.View_TestRegion.RegionName' ){
-    //   !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
-    //   // payload: {
-    //   //   ConfigId: configId,
-    //   //   ValueField: itemValue,
-    //   //   TextField: itemName
-    //   // },
-    //   payload: { PointMark: '2'},
-    //   callback: (res) => {
-    //     this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
-    //   }
-    // })
-     this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) })
+      !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
+      // payload: {
+      //   ConfigId: configId,
+      //   ValueField: itemValue,
+      //   TextField: itemName
+      // },
+      payload: { PointMark: '2'},
+      callback: (res) => {
+        this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
+      }
+    })
+      // setTimeout(()=>{this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }),300})
     }else{
       !data.length && this.props.dispatch({type: "common/getIndustryTree",
       payload: {

@@ -296,15 +296,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('Equation')}</span>,
+            title: <span>{!isClears&& form.getFieldValue('Equation')!=0&& form.getFieldValue('Equation')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('ConfidenceHalfWidth')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('ConfidenceHalfWidth')!=0&& form.getFieldValue('ConfidenceHalfWidth')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
+                            children: <span>{!isClears&&form.getFieldValue('Evaluation')!=0&&form.getFieldValue('Evaluation')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -332,11 +332,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('CorrelationCoefficient') }</span>,
+            title: <span>{!isClears&&form.getFieldValue('CorrelationCoefficient')!=0&&form.getFieldValue('CorrelationCoefficient') }</span>,
             align: 'center', 
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('AllowHalfWidth') }</span>,
+                    title: <span>{!isClears&&form.getFieldValue('AllowHalfWidth')!=0&&form.getFieldValue('AllowHalfWidth') }</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -359,10 +359,10 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('KCoefficient')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('KCoefficient')!=0&&form.getFieldValue('KCoefficient')}</span>,
             align: 'center',
             render: (text, record, index) => {
-                return <span>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>
+                return <span>{!isClears&&form.getFieldValue('EvaluationBasis')!=0&&form.getFieldValue('EvaluationBasis')}</span>
             }
         },
     ]
@@ -599,8 +599,8 @@ const Index = (props) => {
     const [mergeData, setMergeData] = useState([])
 
     const importOK = (value) => {
-        if (!value.rowVal || !value.colVal) {
-            message.warning('请输入行数和列数')
+        if (!value.rowVal) {
+            message.warning('请输入行数')
             return;
         }
         if (fileList.length <= 0) {
@@ -636,7 +636,7 @@ const Index = (props) => {
                     formData.append('files', file);
                 });
                 formData.append('firstRow', value.rowVal);
-                formData.append('firstColumn', value.colVal);
+                formData.append('firstColumn', 100);
                 formData.append('PollutantCode', '');
                 formData.append('TimeList', timeData.toString().replaceAll('|,', '|'));
                 setUploading(true);
@@ -730,7 +730,7 @@ const Index = (props) => {
     return (
         <div className={styles.totalContentSty}>
             <Spin spinning={formLoading}>
-                <BtnComponents {...props} {...props} isImport importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
+                <BtnComponents {...props} {...props} isImport isPm importLoading={uploading} saveLoading1={saveLoading1} saveLoading2={saveLoading2}  delLoading={props.delLoading} importOK={importOK} uploadProps={uploadProps} importVisible={importVisible} submits={submits} clears={clears} del={del} importVisibleChange={importVisibleChange} />
                 <Form
                     form={form}
                     name="advanced_search"

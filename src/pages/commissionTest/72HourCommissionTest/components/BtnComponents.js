@@ -57,12 +57,12 @@ const Index = (props) => {
   const [imortForm] = Form.useForm();
 
   const importContent = () => <Form form={imortForm} name="imprts_advanced_search">
-    <Form.Item name='rowVal' label='行'>
+    <Form.Item name='rowVal' label='行' style={props.isPm&&{marginTop:8}}>
       <InputNumber mix={1}  style={{ width: '100%' }} placeholder='从第几行读取' />
     </Form.Item>
-    <Form.Item name='colVal' label='列'>
+     {!props.isPm&&<Form.Item name='colVal' label='列'>
       <InputNumber mix={1}  style={{width: '100%'  }} placeholder='读取到第几列' />
-    </Form.Item>
+    </Form.Item>}
     <Form.Item>
       <Row>
         <Upload maxCount={1} {...props.uploadProps}  >

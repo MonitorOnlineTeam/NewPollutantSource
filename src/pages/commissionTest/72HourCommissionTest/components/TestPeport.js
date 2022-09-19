@@ -63,7 +63,6 @@ const Index = (props) => {
   const testReportClick = () => {
     props.exportTestPeport({
       PointCode: pointId,
-      // PollutantCode: 502,
     })
   }
 
