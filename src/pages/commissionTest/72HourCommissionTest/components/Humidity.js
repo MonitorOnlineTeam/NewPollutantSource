@@ -236,21 +236,23 @@ const Index = (props) => {
                         if( (index + 1 )  % 8 == 0){ //相对误差
                        let i = (index + 1) / 8;
                              return {  
-                                 children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled  /></Form.Item>,
-                                 props: { colSpan: 2 },
+                                //  children: <Form.Item name={`RelativeError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled  /></Form.Item>,
+                                children: <span>{!isClears&&form.getFieldValue(`RelativeError${i}`)}</span>,
+                                props: { colSpan: 2 },
                                 } 
                               }
                         if( (index + 2 )  % 8 == 0 ){//绝对误差
                             let i = (index + 2) / 8
                             return {  
-                                children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled  /></Form.Item>,
+                                // children: <Form.Item name={`AbsolutelyError${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01' disabled  /></Form.Item>,
+                                children: <span>{!isClears&&form.getFieldValue(`AbsolutelyError${i}`)}</span>,
                                 props: { colSpan: 2 },
                                } 
                              }
                          if ((index + 3) % 8 == 0) { //平均值
                                 let i = (index + 3) / 8
-                                return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
-    
+                                // return <Form.Item name={`AVG${i}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
+                                  return <span>{!isClears&&form.getFieldValue(`AVG${i}`)}</span>
                             }
                         return <Form.Item name={`Manual${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber  step='0.01'  placeholder='请输入' /></Form.Item>;
                     }
@@ -265,8 +267,9 @@ const Index = (props) => {
 
                              let i = (index + 3 ) / 8;
                              if ((index + 3 ) % 8 == 0) { //平均值
-                                 return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
-                             }
+                                //  return <Form.Item name={`AVG${i + 3 }`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>;
+                                return <span>{!isClears&&form.getFieldValue(`AVG${i + 3 }`)}</span>
+                            }
                         return <Form.Item name={`CEMSValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01' disabled placeholder='请导入' /></Form.Item>;
                     }
                 },
@@ -280,7 +283,7 @@ const Index = (props) => {
             width:150,
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('Evaluation')!=0&&form.getFieldValue('Evaluation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
             align: 'center',
         },
     ]

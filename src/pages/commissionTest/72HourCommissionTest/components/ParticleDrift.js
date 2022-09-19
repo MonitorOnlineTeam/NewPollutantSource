@@ -384,7 +384,7 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('ZeroErrorMaximum')!=0&&form.getFieldValue('ZeroErrorMaximum')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('ZeroErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
@@ -392,7 +392,7 @@ const Index = (props) => {
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{!isClears&&form.getFieldValue('EvaluationBasis')!=0&&form.getFieldValue('EvaluationBasis')}</span>,
+                            children: <span>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -420,11 +420,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('SpanErrorMaximum')!=0&&form.getFieldValue('SpanErrorMaximum')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('SpanErrorMaximum')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('SpanValue')!=0&&form.getFieldValue('SpanValue')}</span>,
+                    title: <span>{!isClears&&form.getFieldValue('SpanValue')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {

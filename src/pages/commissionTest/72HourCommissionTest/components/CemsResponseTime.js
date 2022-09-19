@@ -318,7 +318,12 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`LabelGas80${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber step='0.01'  disabled={index == 4 || index == 5} onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入' /></Form.Item>;
+                if(index == 4 || index == 5){
+                    //   return <Form.Item name={`LabelGas80${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
+                      return <span>{!isClears&&form.getFieldValue(`LabelGas80${index}`)}</span>
+                    }else{
+                        return <Form.Item name={`LabelGas80${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} /></Form.Item>;   
+                 }
             }
 
 
@@ -330,7 +335,12 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`LabelGas50${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber step='0.01' disabled={index == 4 || index == 5} onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }} placeholder='请输入' /></Form.Item>;
+                if(index == 4 || index == 5){
+                //   return <Form.Item name={`LabelGas50${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
+                  return <span>{!isClears&&form.getFieldValue(`LabelGas50${index}`)}</span>
+                }else{
+                    return <Form.Item name={`LabelGas50${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }} /></Form.Item>;   
+                }
 
             }
         },
@@ -341,7 +351,12 @@ const Index = (props) => {
                 if (index == 6) {
                     return { props: { colSpan: 0 }, };
                 }
-                return <Form.Item name={`LabelGas20${index}`} rules={[{ required: index == 4 || index == 5 ? false : isReg, message: '' }]}><InputNumber step='0.01' onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} disabled={index == 4 || index == 5} placeholder='请输入' /></Form.Item>;
+                if(index == 4 || index == 5){
+                    //   return <Form.Item name={`LabelGas20${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
+                      return <span>{!isClears&&form.getFieldValue(`LabelGas20${index}`)}</span>
+                    }else{
+                        return <Form.Item name={`LabelGas20${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} /></Form.Item>;   
+                    }
 
             }
 
@@ -376,7 +391,7 @@ const Index = (props) => {
             title: '标气名称',
             align: 'center',
             render: (text, record, index) => {
-                if (index == 3) { return { children: <span>{!isClears&&form.getFieldValue('EvaluationBasis1')!=0&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
+                if (index == 3) { return { children: <span>{!isClears&&form.getFieldValue('EvaluationBasis1')}</span>, props: { colSpan: 6 }, }; }
                 // return <Form.Item name="PollutantName" >
                 //     <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
                 // </Form.Item>
@@ -388,9 +403,10 @@ const Index = (props) => {
             align: 'center',
             render: (text, record, index) => {
                 if (index == 3) { return { props: { colSpan: 0 }, }; }
-                return <Form.Item name={`NominalValue`} rules={[{ required: false, message: '' }]}>
-                    <InputNumber step='0.01' disabled  />
-                </Form.Item>
+                // return <Form.Item name={`NominalValue`} rules={[{ required: false, message: '' }]}>
+                //     <InputNumber step='0.01' disabled  />
+                // </Form.Item>
+                return <span>{!isClears&&form.getFieldValue(`NominalValue`)}</span>
             }
         },
         {
@@ -430,8 +446,9 @@ const Index = (props) => {
                 if (index == 0) {
                     return {
                         children: <Form.Item name={`AVG`} rules={[{ required: isReg, message: '' }]}>
-                            <InputNumber  disabled  />
-                        </Form.Item>, props: { rowSpan: 3 },
+                                  <InputNumber  disabled  />
+                                  </Form.Item>, 
+                        props: { rowSpan: 3 },
                     };
                 }
                 if (index > 0 && index < 3) { return { props: { rowSpan: 0 }, }; }

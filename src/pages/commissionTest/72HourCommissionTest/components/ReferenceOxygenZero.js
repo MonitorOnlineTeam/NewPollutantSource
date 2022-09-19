@@ -303,7 +303,7 @@ const Index = (props) => {
                 if (index < tableDatas.length) {
                     return <Form.Item name={`ReferenceValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => measuredValBlur(index)} placeholder='请输入' /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('ReferenceAvg')!=0&&form.getFieldValue('ReferenceAvg')} </span>
+                    return <span> {!isClears&&form.getFieldValue('ReferenceAvg')} </span>
                 } else if (index >= tableDatas.length + 1) {
                     let value;
                     if (index == tableDatas.length + 1) { value = form.getFieldValue('AbsoluteError') }
@@ -311,7 +311,7 @@ const Index = (props) => {
                     if (index == tableDatas.length + 3) { value = form.getFieldValue('RelativeAccuracy') }
                     if (index == tableDatas.length + 4) { value = form.getFieldValue('Evaluation') }
                     return {
-                        children: <span> {!isClears&&value!=0&&value} </span>,
+                        children: <span> {!isClears&&value} </span>,
                         props: { colSpan: 3 },
                     };
                 }
@@ -342,7 +342,7 @@ const Index = (props) => {
                 if (index < tableDatas.length) {
                     return <Form.Item name={`AlignmentValue${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   disabled  /></Form.Item>
                 } else if (index == tableDatas.length) {
-                    return <span> {!isClears&&form.getFieldValue('AlignmentAvg')!=0&&form.getFieldValue('AlignmentAvg')}  </span>
+                    return <span> {!isClears&&form.getFieldValue('AlignmentAvg')}  </span>
                 } else if (index >= tableDatas.length + 1) {
                     return {
                         props: { colSpan: 0 },

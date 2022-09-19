@@ -296,15 +296,15 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&& form.getFieldValue('Equation')!=0&& form.getFieldValue('Equation')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('Equation')!=0&& form.getFieldValue('Equation')}</span>,
             align: 'center',
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('ConfidenceHalfWidth')!=0&& form.getFieldValue('ConfidenceHalfWidth')}</span>,
+                    title: <span>{!isClears&& form.getFieldValue('ConfidenceHalfWidth')}</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
-                            children: <span>{!isClears&&form.getFieldValue('Evaluation')!=0&&form.getFieldValue('Evaluation')}</span>,
+                            children: <span>{!isClears&&form.getFieldValue('Evaluation')}</span>,
                             props: { colSpan: 3 },
                         };
                         return obj;
@@ -332,11 +332,11 @@ const Index = (props) => {
             ]
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('CorrelationCoefficient')!=0&&form.getFieldValue('CorrelationCoefficient') }</span>,
+            title: <span>{!isClears&&form.getFieldValue('CorrelationCoefficient') }</span>,
             align: 'center', 
             children: [
                 {
-                    title: <span>{!isClears&&form.getFieldValue('AllowHalfWidth')!=0&&form.getFieldValue('AllowHalfWidth') }</span>,
+                    title: <span>{!isClears&&form.getFieldValue('AllowHalfWidth') }</span>,
                     align: 'center',
                     render: (text, record, index) => {
                         const obj = {
@@ -359,10 +359,10 @@ const Index = (props) => {
             }
         },
         {
-            title: <span>{!isClears&&form.getFieldValue('KCoefficient')!=0&&form.getFieldValue('KCoefficient')}</span>,
+            title: <span>{!isClears&&form.getFieldValue('KCoefficient')}</span>,
             align: 'center',
             render: (text, record, index) => {
-                return <span>{!isClears&&form.getFieldValue('EvaluationBasis')!=0&&form.getFieldValue('EvaluationBasis')}</span>
+                return <span>{!isClears&&form.getFieldValue('EvaluationBasis')}</span>
             }
         },
     ]
