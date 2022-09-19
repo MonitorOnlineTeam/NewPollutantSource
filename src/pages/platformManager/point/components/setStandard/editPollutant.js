@@ -52,7 +52,7 @@ class EditPollutant extends Component {
           DGIMN: DGIMN,
           PollutantCode: Id,
           callback: () => {
-            this.props.form.setFieldsValue({
+            this.props.editpollutant && this.props.form.setFieldsValue({
               UpperLimit: this.props.editpollutant.UpperLimit,
               LowerLimit: this.props.editpollutant.LowerLimit,
               AlarmContinuityCount: this.props.editpollutant.AlarmContinuityCount,

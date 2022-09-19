@@ -55,7 +55,7 @@ class EditPollutant extends Component {
           PollutantCode: Id,
           callback: () => {
             console.log('this.props.editpollutant====', this.props.editpollutant);
-            this.props.form.setFieldsValue({
+            this.props.editpollutant && this.props.form.setFieldsValue({
               UpperLimit: this.props.editpollutant.UpperLimit,
               LowerLimit: this.props.editpollutant.LowerLimit,
               AlarmContinuityCount: this.props.editpollutant.AlarmContinuityCount,
@@ -67,7 +67,7 @@ class EditPollutant extends Component {
               AlarmDescription: this.props.editpollutant.AlarmDescription,
               AbnormalUpperLimit: this.props.editpollutant.AbnormalUpperLimit,
               AbnormalLowerLimit: this.props.editpollutant.AbnormalLowerLimit,
-              ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType.split(','),
+              ExceptionType: !this.props.editpollutant.ExceptionType ? [] : this.props.editpollutant.ExceptionType&&this.props.editpollutant.ExceptionType.split(','),
             
             });
           },
