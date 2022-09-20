@@ -87,17 +87,17 @@ const Index = (props) => {
         imortForm = {imortForm} 
         overlayClassName={styles.popSty}
         onVisibleChange={(newVisible)=>{imortForm.resetFields(); props.importVisibleChange(newVisible)}}
-      >  <Button type="primary" style={{ marginRight: 10 }} disabled={pointStatus==1}>导入</Button></Popover>}
-      <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading1} onClick={()=>{props.submits(1)}} disabled={pointStatus==1}>暂存</Button>
-      <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading2} onClick={()=>{props.submits(2)}} disabled={pointStatus==1}>提交</Button>
+      >  <Button type="primary" style={{ marginRight: 10 }} disabled={pointStatus==2}>导入</Button></Popover>}
+      <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading1} onClick={()=>{props.submits(1)}} disabled={pointStatus==2}>暂存</Button>
+      <Button type="primary" style={{ marginRight: 10 }}  loading={props.saveLoading2} onClick={()=>{props.submits(2)}} disabled={pointStatus==2}>提交</Button>
       
       <Popconfirm
       title="确定要清除吗？"
       placement="bottom"
       onConfirm={props.clears}
-      disabled={pointStatus==1}
+      disabled={pointStatus==2}
     >  
-      <Button type="primary" style={{ marginRight: 10 }} disabled={pointStatus==1}>清除</Button>
+      <Button type="primary" style={{ marginRight: 10 }} disabled={pointStatus==2}>清除</Button>
       </Popconfirm>
 
       <Popconfirm
@@ -105,8 +105,8 @@ const Index = (props) => {
       placement="bottom"
       onConfirm={props.del}
       okButtonProps={{ loading: props.delLoading }}
-      disabled={pointStatus==1}
-    >  <Button type="primary" disabled={pointStatus==1}>删除</Button></Popconfirm>
+      disabled={pointStatus==2}
+    >  <Button type="primary" disabled={pointStatus==2}>删除</Button></Popconfirm>
     </div>}</>
   );
 };

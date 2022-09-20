@@ -142,8 +142,8 @@ const Index = (props) => {
          </Form.Item>
          <Form.Item  name="Status">
          <Select placeholder='完成状态' allowClear>
-            <Option value={1}>已完成</Option>
-            <Option value={2}>进行中</Option>
+            <Option value={1}>进行中</Option>
+            <Option value={2}>已完成</Option>
          </Select>
          </Form.Item>
          <Form.Item  name="EntName">
