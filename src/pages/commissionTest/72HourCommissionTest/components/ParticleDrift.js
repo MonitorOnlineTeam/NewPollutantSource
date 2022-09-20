@@ -97,8 +97,6 @@ const Index = (props) => {
 
                     form.setFieldsValue({
                         ...res.MainTable,
-                        // MinRange: res.MainTable.Range ? res.MainTable.Range.split('-')[0] : null,
-                        // MaxRange: res.MainTable.Range ? res.MainTable.Range.split('-')[1] : null,
                     })
 
                     if (res.ChildTable) {
@@ -170,7 +168,7 @@ const Index = (props) => {
 
     }
 
-    const zeroReadBlur = (index, type) => {
+    const zeroReadBlur = (index, type, positionType) => {
         let value1, value2;
         if (type == 1) { //零点漂移绝对误差	
             value1 = form.getFieldValue(`ZeroBegin${index}`), value2 = form.getFieldValue(`ZeroEnd${index}`)
@@ -179,6 +177,9 @@ const Index = (props) => {
             }else{
                 form.setFieldsValue({ [`ZeroChange${index}`]: undefined })
             }
+            if(positionType && form.getFieldValue(`ZeroCalibration${index}`) ==2 ){ //下一列起始值 赋值
+                form.setFieldsValue({ [`ZeroBegin${index+1}`]: form.getFieldValue(`ZeroEnd${index}`) })
+            }
         } else {
             value1 = form.getFieldValue(`CalibrationBegin${index}`), value2 = form.getFieldValue(`CalibrationEnd${index}`)
             if ((value1 || value1 == 0) && (value2 || value2 == 0)) {
@@ -186,7 +187,11 @@ const Index = (props) => {
             }else{
                 form.setFieldsValue({ [`DriftAbsolute${index}`]: undefined })
             }
+            if(positionType && form.getFieldValue(`AdjustSpan${index}`) ==2 ){ //下一列起始值 赋值
+                form.setFieldsValue({ [`CalibrationBegin${index+1}`]: form.getFieldValue(`CalibrationEnd${index}`) })
+            }
         }
+
     }
 
     const adjustChang = (name,name2,name3,index) =>{
@@ -258,7 +263,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`ZeroEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'   onBlur={() => zeroReadBlur(index, 1,'end')} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -308,7 +313,7 @@ const Index = (props) => {
                             align: 'center',
                             width: 100,
                             render: (text, record, index) => {
-                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2)} placeholder='请输入' /></Form.Item>;
+                                return <Form.Item name={`CalibrationEnd${index}`} rules={[{ required: isReg, message: '' }]}><InputNumber step='0.01'     onBlur={() => zeroReadBlur(index, 2,'end')} placeholder='请输入' /></Form.Item>;
                             }
                         },
                     ]
@@ -469,13 +474,12 @@ const Index = (props) => {
                     AddType: type,
                     MainTable: {
                         ...mainValue,
-                        // Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''}-${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
                         PointId: pointId,
-                        ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
-                        SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
-                        ZeroValue: form.getFieldValue('ZeroValue'),
-                        SpanValue: form.getFieldValue('SpanValue'),
-                        EvaluationBasis: form.getFieldValue('EvaluationBasis'),
+                        // ZeroErrorMaximum: form.getFieldValue('ZeroErrorMaximum'),
+                        // SpanErrorMaximum: form.getFieldValue('SpanErrorMaximum'),
+                        // ZeroValue: form.getFieldValue('ZeroValue'),
+                        // SpanValue: form.getFieldValue('SpanValue'),
+                        // EvaluationBasis: form.getFieldValue('EvaluationBasis'),
 
                     },
                     ChildTable: [],

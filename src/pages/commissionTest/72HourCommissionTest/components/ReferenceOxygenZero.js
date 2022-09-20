@@ -525,15 +525,16 @@ const Index = (props) => {
                     AddType: type,
                     MainTable: {
                         ...mainValue,
-                        ReferenceAvg: form.getFieldValue('ReferenceAvg'),
-                        MeasuredAvg: form.getFieldValue('MeasuredAvg'),
-                        AlignmentAvg: form.getFieldValue('AlignmentAvg'),
-                        RelativeError: form.getFieldValue('RelativeError'),
-                        RelativeAccuracy: form.getFieldValue('RelativeAccuracy'),
-                        Evaluation: form.getFieldValue('Evaluation'),
-                        RelativeCollection: form.getFieldValue('RelativeCollection'),
                         PointId: pointId,
                         PollutantCode: pollutantCode,
+                        // ReferenceAvg: form.getFieldValue('ReferenceAvg'),
+                        // MeasuredAvg: form.getFieldValue('MeasuredAvg'),
+                        // AlignmentAvg: form.getFieldValue('AlignmentAvg'),
+                        // RelativeError: form.getFieldValue('RelativeError'),
+                        // RelativeAccuracy: form.getFieldValue('RelativeAccuracy'),
+                        // Evaluation: form.getFieldValue('Evaluation'),
+                        //
+
                     },
                     ChildTable: [],
                 }
@@ -870,6 +871,15 @@ const Index = (props) => {
             return;
         }
         addForm.validateFields().then((values) => {
+
+
+            if(values.RecordDate && dateOptions && dateOptions[0] ){
+             let sameDate =  dateOptions.filter(item=>item.label == values.RecordDate.format('YYYY-MM-DD'))
+              if(sameDate[0]){
+                 message.warning('添加日期不能重复')
+                 return;
+             }
+          }
             setAddLoading(true)
             props.addGasReferenceMethodAccuracyInfo({
                 ...values,

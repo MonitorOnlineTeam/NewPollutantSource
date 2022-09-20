@@ -69,8 +69,9 @@ const Index = (props) => {
   const [drawerVisible, setDrawerVisible] = useState(true)
 
 
+
   const [pointId, setPointId] = useState()
-  const selectedPoint = (key) => {
+  const selectedPoint = (key,status) => {
     setPointId(key)
     props.get72TestRecordType({
       PointCode: key,
@@ -79,10 +80,13 @@ const Index = (props) => {
       Flag: ""
     })
   }
+  
+
+
   const tabContet = (key) => {
     switch (key) {
       case "1":
-        return <ParticleDrift {...props} pointId={pointId} /> //颗粒物CEMS零点和量程漂移检测
+        return <ParticleDrift {...props} pointId={pointId}  /> //颗粒物CEMS零点和量程漂移检测
       case "2":
         return <ParticleMatterRefer {...props} pointId={pointId} /> //参比方法校准颗粒物CEMS
       case "3":
@@ -94,11 +98,11 @@ const Index = (props) => {
       case "6":
         return <Speed {...props} pointId={pointId} /> //速度场系数检测
       case "7":
-       return <Temperature {...props} pointId={pointId} /> //温度CMS准确度检测
+        return <Temperature {...props} pointId={pointId} /> //温度CMS准确度检测
       case "8":
         return <Humidity {...props} pointId={pointId} /> //湿度CMS准确度检测
       case "9":
-          return <TestPeport  pointId={pointId} /> //检测报告
+        return <TestPeport pointId={pointId} /> //检测报告
       default:
         return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     }
@@ -106,7 +110,7 @@ const Index = (props) => {
   const { tabLoading, testRecordType, } = props;
   return (
     <div className={styles.hourCommissionTestSty} style={{ marginLeft: drawerVisible ? 320 : 0 }}>
-      <EntTree selectedPoint={selectedPoint} arrowClick={() => { setDrawerVisible(!drawerVisible) }} drawerVisible={drawerVisible} onClose={() => { setDrawerVisible(false) }} />
+      <EntTree selectedPoint={selectedPoint}  arrowClick={() => { setDrawerVisible(!drawerVisible) }} drawerVisible={drawerVisible} onClose={() => { setDrawerVisible(false) }} />
       <BreadcrumbWrapper>
         <Card>
 
@@ -118,8 +122,8 @@ const Index = (props) => {
             })}
 
             <TabPane tab={'检测报告'} key={'9'} >
-                {tabContet('9')}
-              </TabPane>
+              {tabContet('9')}
+            </TabPane>
 
           </Tabs>}</>
 

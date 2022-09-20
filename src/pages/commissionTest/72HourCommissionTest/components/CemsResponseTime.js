@@ -319,10 +319,10 @@ const Index = (props) => {
                     return { props: { colSpan: 0 }, };
                 }
                 if(index == 4 || index == 5){
-                    //   return <Form.Item name={`LabelGas80${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
+                    //   return <Form.Item name={`LabelGas80${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled    /></Form.Item>
                       return <span>{!isClears&&form.getFieldValue(`LabelGas80${index}`)}</span>
                     }else{
-                        return <Form.Item name={`LabelGas80${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} /></Form.Item>;   
+                        return <Form.Item name={`LabelGas80${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(80, 100, `LabelGas80${index}`, index) }} placeholder='请输入'/></Form.Item>;   
                  }
             }
 
@@ -336,10 +336,10 @@ const Index = (props) => {
                     return { props: { colSpan: 0 }, };
                 }
                 if(index == 4 || index == 5){
-                //   return <Form.Item name={`LabelGas50${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
+                //   return <Form.Item name={`LabelGas50${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   /></Form.Item>
                   return <span>{!isClears&&form.getFieldValue(`LabelGas50${index}`)}</span>
                 }else{
-                    return <Form.Item name={`LabelGas50${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }} /></Form.Item>;   
+                    return <Form.Item name={`LabelGas50${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(50, 60, `LabelGas50${index}`, index) }}  placeholder='请输入'/></Form.Item>;   
                 }
 
             }
@@ -355,7 +355,7 @@ const Index = (props) => {
                     //   return <Form.Item name={`LabelGas20${index}`} rules={[{ required:  isReg, message: '' }]}><InputNumber step='0.01' disabled   placeholder='请输入' /></Form.Item>
                       return <span>{!isClears&&form.getFieldValue(`LabelGas20${index}`)}</span>
                     }else{
-                        return <Form.Item name={`LabelGas20${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} /></Form.Item>;   
+                        return <Form.Item name={`LabelGas20${index}`} rules={[{ required: false, message: '' }]}><InputNumber step='0.01'    onBlur={() => { labelGasBlur(20, 30, `LabelGas20${index}`, index) }} placeholder='请输入'/></Form.Item>;   
                     }
 
             }
@@ -476,6 +476,17 @@ const Index = (props) => {
         }
         setTimeout(() => {
             form.validateFields().then((values) => {
+
+                if (type == 2) {   // 提交时判断日期不能一样
+                    const date1 = form.getFieldValue('CreateTime0').format('YYYY-MM-DD')
+                    const date2 = form.getFieldValue(`CreateTime1`).format('YYYY-MM-DD')
+                    const date3 = form.getFieldValue(`CreateTime2`).format('YYYY-MM-DD')
+                    if (date1 == date2 || date1 == date3 || date2 == date3) {
+                        message.warning('日期不能相同，请修改日期')
+                        return
+                    }
+                }
+
                 type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
 
                 let mainValue = { ...values }
@@ -489,11 +500,10 @@ const Index = (props) => {
                     MainTable: {
                         ...mainValue,
                         Range: `${form.getFieldValue('MinRange') ? form.getFieldValue('MinRange') : ''},${form.getFieldValue('MaxRange') ? form.getFieldValue('MaxRange') : ''}`,
-                        ID: form.getFieldValue('ID'),
                         PointId: pointId,
                         PollutantCode: pollutantCode,
-                        EvaluationBasis: form.getFieldValue('EvaluationBasis'),
-                        EvaluationBasis1: form.getFieldValue('EvaluationBasis1'),
+                        // EvaluationBasis: form.getFieldValue('EvaluationBasis'),
+                        // EvaluationBasis1: form.getFieldValue('EvaluationBasis1'),
                     },
                     ChildTable: [],
                 }
@@ -515,7 +525,7 @@ const Index = (props) => {
                         Sort: index,
                         PollutantCode: pollutantCode,
                         CreateTime: values[`CreateTime${index}`] && values[`CreateTime${index}`].format('YYYY-MM-DD 00:00:00'),
-                        NominalValue: values[`NominalValue`],
+                        NominalValue: form.getFieldValue('NominalValue'),
                         TimeT1: values[`TimeT1${index}`],
                         TimeT2: values[`TimeT2${index}`],
                         ResponseTime: values[`ResponseTime${index}`],
@@ -540,8 +550,8 @@ const Index = (props) => {
     const [isClears,setIsClears] = useState(false)
     const clears = () => {
         const value = form.getFieldsValue()
-        Object.keys(value).map((item, index) => { //清除表格表单数据
-            if(/\d/g.test(item) || /NominalValue/g.test(item) || /AVG/g.test(item)){
+        Object.keys(value).map((item, index) => { //清除表格表单数据 两个表单表单
+            if(/\d/g.test(item) || /AVG/g.test(item)){
                form.setFieldsValue({[item]:undefined})
             }
         })

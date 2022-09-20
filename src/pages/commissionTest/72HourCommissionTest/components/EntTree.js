@@ -63,8 +63,11 @@ const Index = (props) => {
   useEffect(() => {
    props.getTestEntTree({},(res)=>{
      const dafaultPoint =  res[0]&&res[0].ChildList&&res[0].ChildList[0].PointId;
+     const dafaultStatus =  res[0]&&res[0].ChildList&&res[0].ChildList[0].Status;
+
       setDefaultPointId(dafaultPoint)
       props.selectedPoint(dafaultPoint)
+      props.updateState({pointStatus:dafaultStatus})
    })
   },[]);
   // 根绝污染物类型获取icon
@@ -85,6 +88,7 @@ const Index = (props) => {
         const key = level==1? undefined : item.PointId;
 
         return {
+          ...item,
           title:<div style={{display:'inline-block'}}> { level==1? item.EntName : item.PointName }</div>,
           key,
           icon: level==1? <EntIcon  style={{color:'#1890ff',fontSize:16,}}/> : getPollutantIcon('2',16),
@@ -101,9 +105,10 @@ const Index = (props) => {
   }
 
 
-  const onSelect = (selectedKeys) =>{
+  const onSelect = (selectedKeys,row) =>{
    if(selectedKeys&&selectedKeys[0]){
      props.selectedPoint(selectedKeys[0])
+     props.updateState({pointStatus:row.node.Status})
    }
   }
  

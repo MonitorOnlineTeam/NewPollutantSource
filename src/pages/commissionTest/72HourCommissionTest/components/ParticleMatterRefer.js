@@ -95,7 +95,7 @@ const Index = (props) => {
             PointCode: pointId,
             PollutantCode: 502,
             RecordDate: "",
-            Flag: ""
+            Flag: "",
         }, (res) => {
             if (res) {
                 setRecordName(res.RecordName)
@@ -386,6 +386,17 @@ const Index = (props) => {
 
         setTimeout(() => {
                 form.validateFields().then((values) => {
+                    
+                    if (type == 2) {   // 提交时判断日期不能一样
+                        const date1 = form.getFieldValue('CreateDate0').format('YYYY-MM-DD')
+                        const date2 = form.getFieldValue(`CreateDate5`).format('YYYY-MM-DD')
+                        const date3 = form.getFieldValue(`CreateDate10`).format('YYYY-MM-DD')
+                        if (date1 == date2 || date1 == date3 || date2 == date3) {
+                            message.warning('日期不能相同，请修改日期')
+                            return
+                        }
+                    }
+
                     type == 1 ? setSaveLoading1(true) : setSaveLoading2(true)
 
                     let mainValue = {...values}
