@@ -53,23 +53,29 @@ const  dvaDispatch = (dispatch) => {
 }
 const Index = (props) => {
 
-    const [form] = Form.useForm();
+  const [form] = Form.useForm();
 
-
+  const isQuery = props&&props.match&&props.match.path === '/commissionTest/72HourCommissionTestQuery'
 
   const  { treeList,treeLoading,} = props; 
  
   const [defaultPointId,setDefaultPointId] = useState();
   useEffect(() => {
-   props.getTestEntTree({},(res)=>{
-     const dafaultPoint =  res[0]&&res[0].ChildList&&res[0].ChildList[0].PointId;
-     const dafaultStatus =  res[0]&&res[0].ChildList&&res[0].ChildList[0].Status;
-
-      setDefaultPointId(dafaultPoint)
-      props.selectedPoint(dafaultPoint)
-      props.updateState({pointStatus:dafaultStatus})
-   })
+    initData();
   },[]);
+
+  const initData = () =>{
+
+    const values = form.getFieldsValue();
+    props.getTestEntTree({...values},(res)=>{
+      const dafaultPoint =  res[0]&&res[0].ChildList&&res[0].ChildList[0].PointId;
+      const dafaultStatus =  res[0]&&res[0].ChildList&&res[0].ChildList[0].Status;
+ 
+       setDefaultPointId(dafaultPoint)
+       props.selectedPoint(dafaultPoint)
+       props.updateState({pointStatus:dafaultStatus})
+    })
+  }
   // 根绝污染物类型获取icon
   const getPollutantIcon = (type, size) => {
     switch (type) {
@@ -100,8 +106,7 @@ const Index = (props) => {
  }
   const treeDatas = treeLoop(treeList);
   const onValuesChange = (hangedValues, allValues) => {
-      const values = form.getFieldsValue();
-      props.getTestEntTree({...values})
+    initData();
   }
 
 
@@ -132,7 +137,9 @@ const Index = (props) => {
                 <Form
             form={form}
             name="advanced_search"
-            initialValues={{}}
+            initialValues={{
+              Status:isQuery? 2 :1,
+            }}
             className={styles["ant-advanced-search-form"]}
             onValuesChange={onValuesChange}
 
@@ -142,7 +149,7 @@ const Index = (props) => {
          </Form.Item>
          <Form.Item  name="Status">
          <Select placeholder='完成状态' allowClear>
-            <Option value={1}>进行中</Option>
+            <Option value={1}>检测中</Option>
             <Option value={2}>已完成</Option>
          </Select>
          </Form.Item>

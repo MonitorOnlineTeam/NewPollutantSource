@@ -32,7 +32,7 @@ const dvaPropsData = ({ loading, hourCommissionTest, commissionTest, }) => ({
     pollutantLoading: loading.effects[`${namespace}/get72TestRecordPollutant`],
     timeLoading: loading.effects[`${namespace}/getTimesListByPollutant`],
     delLoading: loading.effects[`${namespace}/deleteGasReferenceMethodAccuracyRecord`],
-
+    pointStatus:hourCommissionTest.pointStatus,
 
 })
 
@@ -99,7 +99,7 @@ const Index = (props) => {
 
 
 
-    const { pointId, pollutantLoading, timeLoading, } = props;
+    const { pointId, pollutantLoading, timeLoading, pointStatus,} = props;
 
 
     const [recordName, setRecordName] = useState()
@@ -922,7 +922,7 @@ const Index = (props) => {
                         visible={addVisible}
                         overlayClassName={styles.popSty2}
                         onVisibleChange={(newVisible) => { addForm.resetFields(); setAddVisible(newVisible) }}
-                    >  <Button style={{ margin: '0 0 10px 10px' }}>添加</Button></Popover>
+                    >  <Button style={{ margin: '0 0 10px 10px' }} disabled={pointStatus==2}>添加</Button></Popover>
                     <Spin spinning={formLoading}>
                         {dateOptions[0] ? <Form
                             form={form}

@@ -1389,7 +1389,7 @@ class DepartIndex extends Component {
                       {getFieldDecorator('ParentId', {
                         rules: [{ required: true, message: '请选择父节点' }],
                         initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : '',
+                          this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : undefined,
                       })(
                         <TreeSelect
                           type="ParentId"

@@ -261,6 +261,18 @@ const Index = (props) => {
     //   key:'regionName',
     //   align:'center',
     // },
+    // {
+    //   title: '创建时间',
+    //   dataIndex: 'createTime',
+    //   key: 'createTime',
+    //   align: 'center',
+    // },
+    // {
+    //   title: '创建人',
+    //   dataIndex: 'createUserName',
+    //   key: 'createUserName',
+    //   align: 'center',
+    // },
     {
       title: '巡检类型',
       dataIndex: 'inspectionTypeName',
@@ -410,6 +422,11 @@ const Index = (props) => {
     setChoiceData(value)
   }
   const del = (record) => {
+
+  //   if(!record.deleteFlag){
+  //     message.warning('没有操作权限，请联系管理员')
+  //     return;
+  //  }
     props.deleteOperationPoint({ ID: record.ID }, () => {
       onFinish()
     })
@@ -475,10 +492,15 @@ const Index = (props) => {
     try {
       const values = await form2.validateFields();
       console.log(values)
+      // if(!values.deleteFlag){
+      //     message.warning('没有操作权限，请联系管理员')
+      //     return;
+      // }
       props.updateOrAddProjectRelation(
         {
           ...values,
-          BeginTime: values.BeginTime.format('YYYY-MM-DD 00:00:00'), EndTime: values.EndTime.format('YYYY-MM-DD 23:59:59'),
+          BeginTime: values.BeginTime&&values.BeginTime.format('YYYY-MM-DD 00:00:00'), EndTime: values.EndTime&&values.EndTime.format('YYYY-MM-DD 23:59:59'),
+          createTime: values.createTime&&values.createTime.format('YYYY-MM-DD 00:00:00'), 
           DGIMN: type === 'edit' ? [values.DGIMN] : values.DGIMN,
         }, () => {
           setFromVisible(false);
@@ -725,7 +747,17 @@ const Index = (props) => {
        <RegionList     levelNum={1} selectType = '1,是' style={{width:'100%'}}/>
       </Form.Item>
       </Col> */}
-
+            {/*<Col span={12}>
+              <Form.Item label="创建时间" name="createUserName" rules={[{ required: true, message: '请选择创建时间!', },]} >
+                <DatePicker  />
+              </Form.Item>
+            </Col> 
+             <Col span={12}>
+              <Form.Item label="创建人" name="createTime" rules={[{ required: true, message: '请输入创建人！', },]} >
+                <Input d placeholder="请输入创建人"/>
+              </Form.Item>
+            </Col>
+            */}
             <Col span={12}>
               <Form.Item label="巡检类型" name="inspectionType" rules={[{ required: true, message: '请选择巡检类型!', },]} >
                 <Select placeholder="请选择巡检类型" >
@@ -802,7 +834,12 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="ID" name="ID" hidden>
+              <Form.Item name="ID" hidden>
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item  name="deleteFlag" hidden>
                 <Input />
               </Form.Item>
             </Col>

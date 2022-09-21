@@ -293,7 +293,6 @@ const Index = (props) => {
           bordered
           dataSource={tableDatas}
           columns={columns}
-          scroll={{ y: clientHeight - 500 }}
           pagination={{
             total: tableTotal,
             pageSize: pageSize,
@@ -332,7 +331,7 @@ const Index = (props) => {
           </Col>
           <Col span={24}>
             <Form.Item label="点位类别" name="PollutantType" rules={[{ required: true, message: '请选择点位类型' }]} >
-              <Select placeholder='请选择'>
+              <Select placeholder='请选择' disabled={title=='编辑'}>
                 <Option value={2}>废气</Option>
                 <Option value={1}>废水</Option>
               </Select>
@@ -341,7 +340,7 @@ const Index = (props) => {
           <Col span={24}>
             <Spin spinning={inspectorTypeloading} size='small' style={{ top: -8, left: 20 }}>
             <Form.Item label='督查类别' name='InspectorType' rules={[{ required: true, message: '请选择督查类别' }]}>
-              <Select placeholder='请选择' showSearch optionFilterProp="children">
+              <Select placeholder='请选择' showSearch optionFilterProp="children" disabled={title=='编辑'}>
                  {
                   inspectorTypeList[0] && inspectorTypeList.map(item => {
                      return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>
@@ -359,7 +358,7 @@ const Index = (props) => {
           <Col span={24}>
           <Spin spinning={inspectorTypeloading} size='small' style={{ top: -8, left: 20 }}>
             <Form.Item label='考核方式' name='AssessmentMethod' rules={[{ required: true, message: '请选择考核方式' }]}>
-              <Select placeholder='请选择' showSearch optionFilterProp="children" onChange={assessMethodChange}>
+              <Select placeholder='请选择' showSearch optionFilterProp="children" onChange={assessMethodChange} disabled={title=='编辑'}>
                  {
                   assessmentMethodList[0] && assessmentMethodList.map(item => {
                      return <Option key={item.ChildID} value={item.ChildID} >{item.Name}</Option>

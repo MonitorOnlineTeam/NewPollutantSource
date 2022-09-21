@@ -110,7 +110,7 @@ const Index = (props) => {
   const { tabLoading, testRecordType, } = props;
   return (
     <div className={styles.hourCommissionTestSty} style={{ marginLeft: drawerVisible ? 320 : 0 }}>
-      <EntTree selectedPoint={selectedPoint}  arrowClick={() => { setDrawerVisible(!drawerVisible) }} drawerVisible={drawerVisible} onClose={() => { setDrawerVisible(false) }} />
+      <EntTree {...props} selectedPoint={selectedPoint}  arrowClick={() => { setDrawerVisible(!drawerVisible) }} drawerVisible={drawerVisible} onClose={() => { setDrawerVisible(false) }} />
       <BreadcrumbWrapper>
         <Card>
 

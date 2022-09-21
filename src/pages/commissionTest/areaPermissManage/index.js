@@ -1,7 +1,7 @@
 /*
- * @Author: jab
+ * @Author: 
  * @Date: 2022.08.08
- * @LastEditors: jab
+ * @LastEditors: 
  * @Description: 检测调试 权限区域管理
  */
 import React, { Component, Fragment } from 'react';
@@ -88,7 +88,7 @@ const rowSource = {
   beginDrag(props) {
     dragingIndex = props['data-row-key']
     return {
-      'data-row-key':props['data-row-key']
+      'data-row-key': props['data-row-key']
     };
   },
 };
@@ -115,7 +115,7 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
 );
 
 // Customize Table Transfer
-const TableTransfer = ({ leftColumns, rightColumns,pagination, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns, pagination, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -150,15 +150,15 @@ const TableTransfer = ({ leftColumns, rightColumns,pagination, ...restProps }) =
           columns={columns}
           dataSource={filteredItems}
           size="small"
-          style={{ pointerEvents: listDisabled ? 'none' : null,paddingBottom:10 }}
-          scroll={{y:'calc(100vh - 550px)'}}
+          style={{ pointerEvents: listDisabled ? 'none' : null, paddingBottom: 10 }}
+          scroll={{ y: 'calc(100vh - 550px)' }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) return;
               onItemSelect(key, !listSelectedKeys.includes(key));
             },
           })}
-          pagination={{...pagination}}
+          pagination={{ ...pagination }}
         />
       );
     }}
@@ -200,53 +200,33 @@ const rightTableColumns = [
     ellipsis: true,
   },
 ];
-@connect(({ areaPermissManage, autoForm,loading, global, common }) => ({
-  // GetRegionInfoByTree: loading.effects['areaPermissManage/getregioninfobytree'],
-  GetRegionInfoByTree: loading.effects['autoForm/getregioninfobytree'],
-  GetRegionByDepID: loading.effects['areaPermissManage/getregionbydepid'],
-  GetUserByDepID: loading.effects['areaPermissManage/getuserbydepid'],
-  GetAllUser: loading.effects['areaPermissManage/getalluser'],
-  GetDepartInfoByTree: loading.effects['areaPermissManage/getdepartinfobytree'],
-  DepartInfoOneLoading: loading.effects['areaPermissManage/getdepartinfobyid'],
-  CheckPointLoading: loading.effects['areaPermissManage/getpointbydepid'],
-  getentandpointLoading: loading.effects['areaPermissManage/getentandpoint'],
-  updateOperationAreaLoading: loading.effects['areaPermissManage/updateOperationArea'],
-  DepartInfoTree: areaPermissManage.DepartInfoTree,
-  DepartInfoOne: areaPermissManage.DepartInfoOne,
-  DepartTree: areaPermissManage.DepartTree,
-  AllUser: areaPermissManage.AllUser,
-  UserByDepID: areaPermissManage.UserByDepID,
-  RegionByDepID: areaPermissManage.RegionByDepID,
-  // RegionInfoTree: areaPermissManage.RegionInfoTree,
-  RegionInfoTree: autoForm.regionList,
-  EntAndPoint: areaPermissManage.EntAndPoint,
-  CheckPoint: areaPermissManage.CheckPoint,
-  ConfigInfo: global.configInfo,
-  pollutantType: common.defaultPollutantCode,
-  showGroupRegionFilter: areaPermissManage.showGroupRegionFilter,
-  btnloading: loading.effects['areaPermissManage/insertdepartinfo'],
-  btnloading1: loading.effects['areaPermissManage/upddepartinfo'],
-  insertregionbyuserLoading: loading.effects['areaPermissManage/insertregionbyuser'],
-  userDepApproveInfoList: areaPermissManage.userDepApproveInfoList,
-  getUserDepApproveInfoLoading: loading.effects['areaPermissManage/getUserDepApproveInfo'],
-  addOrUpdateUserDepApproveLoading: loading.effects['areaPermissManage/addOrUpdateUserDepApprove'],
-  userList:areaPermissManage.userList,
-  deleteUserDepApproveLoading: loading.effects['areaPermissManage/deleteUserDepApprove'],
-  insertdepartbyuserLoading :loading.effects['areaPermissManage/insertdepartbyuser'] || false,
+@connect(({ areaPermissManage, autoForm, loading, global, common }) => ({
+  getTestGroupListLoading: loading.effects['areaPermissManage/getTestGroupList'],
+  addOrUpdTestGroupLoading: loading.effects['areaPermissManage/addOrUpdTestGroup'],
+  deleteTestGroupLoading: loading.effects['areaPermissManage/deleteTestGroup'],
+  getTestMonitorUserListLoading:loading.effects['areaPermissManage/getTestMonitorUserList'],
+  addTestMonitorUserLoading: loading.effects['areaPermissManage/addTestMonitorUser'],
+  allUser:areaPermissManage.allUser,
+  regionInfoTree:areaPermissManage.regionInfoTree,
+
 }))
 @Form.create()
 class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      departInfoTree: [],
+      sortTitle: '开启排序',
+      depVisible: false,
+      depTitle: '添加部门',
+      visibleUser: false,
+
       newEntAndPoint: [],
       visibleAlarm: false,
-      visible: false,
-      visibleUser: false,
+     
       value: undefined,
       IsEdit: false,
       FormDatas: [],
-      Tittle: '添加部门',
       selectedRowKeys: [],
       autoExpandParent: true,
       expandedKeys: [],
@@ -266,34 +246,34 @@ class Index extends Component {
       visibleData: false,
       pollutantType: '',
       DataTreeValue: [],
-      rolesID:'',
-      alarmPushData:'',
-      postCheckedKeys:'',
-      updateOperationVal:'1',
+      rolesID: '',
+      alarmPushData: '',
+      postCheckedKeys: '',
+      updateOperationVal: '1',
       columns: [
         {
           title: '部门名称',
-          dataIndex: 'UserGroup_Name',
-          key: 'UserGroup_Name',
+          dataIndex: 'GroupName',
+          key: 'GroupName',
           width: 'auto',
         },
         {
           title: '部门描述',
-          dataIndex: 'UserGroup_Remark',
-          key: 'UserGroup_Remark',
+          dataIndex: 'Remark',
+          key: 'Remark',
           width: 'auto',
         },
         {
           title: '创建人',
-          dataIndex: 'CreateUserName',
+          dataIndex: 'CreateUser',
           width: 'auto',
-          key: 'CreateUserName',
+          key: 'CreateUser',
         },
         {
           title: '创建时间',
-          dataIndex: 'CreateDate',
+          dataIndex: 'CreateTime',
           width: 'auto',
-          key: 'CreateDate',
+          key: 'CreateTime',
         },
         {
           title: '操作',
@@ -301,18 +281,11 @@ class Index extends Component {
           key: 'x',
           align: 'left',
           width: '180px',
-          render: (text, record,index) => (
+          render: (text, record, index) => (
             <span>
               <Tooltip title="编辑">
-                <a
-                  onClick={() => {
-                    this.props.dispatch({
-                      type: 'areaPermissManage/getdepartinfobyid',
-                      payload: {
-                        UserGroup_ID: record.UserGroup_ID,
-                      },
-                    });
-                    this.showModalEdit();
+                <a  onClick={() => {
+                    this.showModalEdit(record);                   
                   }}
                 >
                   <EditOutlined style={{ fontSize: 16 }} />
@@ -324,26 +297,24 @@ class Index extends Component {
                   title="确认要删除吗?"
                   onConfirm={() => {
                     this.props.dispatch({
-                      type: 'areaPermissManage/deldepartinfo',
+                      type: 'areaPermissManage/deleteTestGroup',
                       payload: {
-                        UserGroup_ID: record.UserGroup_ID,
-                        callback: res => {
-                          if (res.IsSuccess) {
-                            message.success('删除成功');
-                            this.props.dispatch({
-                              type: 'areaPermissManage/getdepartinfobytree',
-                              payload: {},
-                              callback:(res)=>{
-                                let data = this.handleData(res,0)
-                                this.setState({
-                                  departInfoTree:data
-                                })
-                              }
-                            });
-                          } else {
-                            message.error(res.Message);
-                          }
-                        },
+                        ID: record.ID,
+                      },
+                      callback: res => {
+                        if (res.IsSuccess) {
+                          message.success('删除成功');
+                          this.props.dispatch({
+                            type: 'areaPermissManage/getTestGroupList',
+                            payload: {},
+                            callback: (res) => {
+                              let data = this.handleData(res, 0)
+                              this.setState({ departInfoTree: data})
+                            }
+                          });
+                        } else {
+                          message.error(res.Message);
+                        }
                       },
                     });
                   }}
@@ -374,47 +345,38 @@ class Index extends Component {
                 </a>
               </Tooltip>
               <Divider type="vertical" />
-              {// 控制显示隐藏区域过滤
-              this.props.showGroupRegionFilter && (
-                <>
-                  <Tooltip title="区域过滤">
-                    <a
-                      onClick={() => {
-                        this.setState(
-                          {
-                            selectedRowKeys: record,
-                          },
-                          () => {
-                            this.showRegionModal();
-                          },
-                        );
-                      }}
-                    >
-                      <FilterOutlined style={{ fontSize: 16 }} />
-                    </a>
-                  </Tooltip>
-                </>
-              )}
- 
+                  <>
+                    <Tooltip title="区域过滤">
+                      <a
+                        onClick={() => {
+                          this.setState(
+                            {
+                              selectedRowKeys: record,
+                            },
+                            () => {
+                              this.showRegionModal();
+                            },
+                          );
+                        }}
+                      >
+                        <FilterOutlined style={{ fontSize: 16 }} />
+                      </a>
+                    </Tooltip>
+                  </>
+
             </span>
           ),
         },
       ],
-      departInfoTree:[],
-      sortTitle:'开启排序',
-      approvalProcessVisible:false, //审核流程
-      approvalProcessEditorAddVisible:false,
-      approvalUserID:undefined,
-      approvalNode:undefined,
-      depID:undefined,
+
     };
-    this.depApproveColumns=[
+    this.depApproveColumns = [
       {
         title: <span>序号</span>,
         dataIndex: 'x',
         key: 'x',
         align: 'center',
-        render:(text, record, index) => {
+        render: (text, record, index) => {
           return index + 1
         }
       },
@@ -433,18 +395,18 @@ class Index extends Component {
         dataIndex: '',
         key: 'x',
         align: 'center',
-        render: (text, record,index) => (
+        render: (text, record, index) => (
           <span>
             <Tooltip title="编辑">
               <a
                 onClick={() => {
-                   this.setState({ 
-                     approvalProcessEdit:false,
-                     approvalProcessEditorAddVisible:true,
-                     UserID: record.userID,
-                     Node: record.node,
-                     approvalProcessEditId:record.id
-                    })
+                  this.setState({
+                    approvalProcessEdit: false,
+                    approvalProcessEditorAddVisible: true,
+                    UserID: record.userID,
+                    Node: record.node,
+                    approvalProcessEditId: record.id
+                  })
                 }}
               >
                 <EditOutlined style={{ fontSize: 16 }} />
@@ -466,7 +428,7 @@ class Index extends Component {
                     payload: {
                       depID: record.depID,
                     },
-                  }) 
+                  })
                 }}
                 okText="是"
                 cancelText="否"
@@ -481,108 +443,34 @@ class Index extends Component {
     ]
   }
   //获取角色列表
-  getUserList=(params)=>{
+  getUserList = (params) => {
     this.props.dispatch({
-      type: 'areaPermissManage/getUserList',
-      payload: params? params : { roleListID:'', groupListID:'', userName:'',	userAccount:''}
+      type: 'areaPermissManage/getTestMonitorUserList',
+      payload: params ? params : { roleListID: '', groupListID: '', userName: '', userAccount: '' }
     });
   }
-  approvalProcessClick = (row) =>{ //审核流程
-    this.setState({
-      approvalProcessVisible:true,
-      depID:row.key,
+  userChange = nextTargetKeys => {
+    this.props.dispatch({
+        type: 'areaPermissManage/addTestMonitorUser',
+        payload: {
+            UserID: nextTargetKeys,
+            Roles_ID: this.state.selectedRowKeys.key,
+        },
     })
-    this.props.dispatch({
-      type: 'areaPermissManage/getUserDepApproveInfo',
-      payload: {
-        depID: row.key,
-      },
-    })                     ;
-  }
-  updateOperation=()=>{
-    return <Form>
-        <Row>
-        <Select
-       placeholder="更新类型"
-       onChange={this.updateChange}
-       value={this.state.updateOperationVal}
-       style={{ width: '100%'}}
-       allowClear
-     >
-       <Option value="1">一级</Option>
-       <Option value="2">二级</Option>
-       <Option value="3">其他</Option>
-     </Select>
-        </Row>
-         <Row style={{paddingTop:10}} justify='end'>
-         <Button type="primary"  loading={this.props.updateOperationAreaLoading} onClick={this.updateOperationSubmit}>
-           确定
-         </Button>  
-         <Button style={{marginLeft:5}} onClick={() => {this.setState({operatioVisible:false,updateOperationGroupId:''})}}>
-         取消
-         </Button>  
-         </Row>
-      </Form>
-  }
-
-  updateChange=(value)=>{
-    this.setState({
-      updateOperationVal:value
-    })
-  }
-  handleUpdateOperationData=(data,id,i)=>{
-    if(data&&data.length>0){
-       i++;
-
-       return  data.map(item=>{
-         return {...item,leve:item.UserGroup_ID===id? this.state.updateOperationVal : item.leve ,children:item.children.length>0 ? this.handleUpdateOperationData(item.children,id,i) : []}
-      })
-    }
-
-  }
-  updateOperationSubmit=()=>{
-    this.props.dispatch({
-      type: 'areaPermissManage/updateOperationArea',
-      payload: {
-        LevelType: this.state.updateOperationVal,
-        GroupId: this.state.updateOperationGroupId,
-      },
-      callback:()=>{
-        this.setState({operatioVisible:false},()=>{
-         const data =  this.handleUpdateOperationData(this.state.departInfoTree,this.state.updateOperationGroupId,0)
-         console.log(data)  
-         this.setState({
-             departInfoTree:data,
-            })
-        })
-      }
-    });
-  }
-  onChanges = nextTargetKeys => {
-    // if (nextTargetKeys.length == 0) {
-    //     message.error("请至少保留一个角色")
-    //     return
-    // }
-    console.log('nextTargetKeys.length=', nextTargetKeys.length);
-    console.log('this.props.AllUser.length=', this.props.AllUser.length);
-    this.props.dispatch({
-      type: 'areaPermissManage/insertdepartbyuser',
-      payload: {
-        User_ID: nextTargetKeys,
-        UserGroup_ID: this.state.selectedRowKeys.key,
-      },
-      callback:(isSuccess)=>{
-        if(!isSuccess){ //不成功
-          this.showUserModal()
-        }
-      }
-    });
     this.setState({ targetKeys: nextTargetKeys });
-  };
+
+  }
+
+  updateChange = (value) => {
+    this.setState({
+      updateOperationVal: value
+    })
+  }
+
+
+
 
   onExpand = expandedKeys => {
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
     this.setState({
       expandedKeys,
       autoExpandParent: false,
@@ -590,20 +478,16 @@ class Index extends Component {
   };
 
   onExpands = expandedKey => {
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
     this.setState({
       expandedKey,
       autoExpandParent: false,
     });
   };
 
-  onCheck = (checkedKey,info) => {
-    // console.log(checkedKey)
-    // console.log(info)
-    this.setState({ checkedKey});
-    let checkedKeys = [...checkedKey,...info.halfCheckedKeys]
-    this.setState({ postCheckedKeys:checkedKeys});
+  onCheck = (checkedKey, info) => {
+    this.setState({ checkedKey });
+    let checkedKeys = [...checkedKey, ...info.halfCheckedKeys]
+    this.setState({ postCheckedKeys: checkedKeys });
 
   };
 
@@ -631,65 +515,36 @@ class Index extends Component {
   onSelectData = (selectedKey, info) => {
     this.setState({ selectedKey });
   };
-  // rowSelection =()=> {
-
-  //     onSelect: (record, selected, selectedRows) => {
-
-  //     },
-  //     onSelectAll: (selected, selectedRows, changeRows) => {
-  //         console.log(selected, selectedRows, changeRows);
-  //     },
-  // };
 
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'areaPermissManage/getdepartinfobytree',
+      type: 'areaPermissManage/getTestGroupList',
       payload: {},
-      callback:(res)=>{
-        let data = this.handleData(res,0)
+      callback: (res) => {
+        let data = this.handleData(res, 0)
         this.setState({
-          departInfoTree:data
+          departInfoTree: data
         })
       }
     });
-    this.props.dispatch({
-      type: 'areaPermissManage/getGroupRegionFilter',
-      payload: {},
-    });
     this.getUserList({})
-    // this.props.dispatch({
-    //     type: 'roleinfo/getrolestreeandobj',
-    //     payload: {}
-    // })
-
-    // this.props.dispatch({
-    //     type: 'roleinfo/getdepbyuserid',
-    //     payload: {
-    //         User_ID: this.props.match.params.userid,
-    //     }
-    // })
   }
-  handleData=(data,i)=>{
-    if(data&&data.length>0){
-       i++;
-       return  data.map(item=>{
-         return {...item,flag:i,children:item.children.length>0 ? this.handleData(item.children,i) : []}
+  handleData = (data, i) => {
+    if (data && data.length > 0) {
+      i++;
+      return data.map(item => {
+        return { ...item,title:item.GroupName, key:item.ID, value:item.ID, flag: i, children: item.Child.length > 0 ? this.handleData(item.Child, i) : [] }
       })
     }
 
   }
   showModal = () => {
-    this.props.dispatch({
-      type: 'areaPermissManage/getdeparttreeandobj',
-      payload: {
-        Type: '1',
-      },
-    });
+    this.props.form.resetFields();
     this.setState({
-      visible: true,
+      depVisible: true,
       IsEdit: false,
-      Tittle: '添加部门',
+      depTitle: '添加部门',
     });
   };
 
@@ -711,11 +566,9 @@ class Index extends Component {
         UserGroup_ID: keys.toString(),
       },
     });
-    // console.log("selectID=",this.props.UserByRoleID)
-    // console.log("filterArr=",this.props.AllUser)
     const selectId = this.props.UserByDepID.map(item => item.key);
 
-    const filterArr = this.props.AllUser.filter(item => selectId.indexOf(item.key));
+    const filterArr = this.props.allUser.filter(item => selectId.indexOf(item.key));
     console.log('filterArr=', filterArr);
     this.setState({
       visibleUser: true,
@@ -733,83 +586,33 @@ class Index extends Component {
       visibleRegion: true,
     });
     const keys = this.state.selectedRowKeys.key;
-    // this.props.dispatch({
-    //   type: 'areaPermissManage/getregioninfobytree',
-    //   payload: {},
-    // });
     this.props.dispatch({
       type: 'areaPermissManage/getregionbydepid',
       payload: {
         UserGroup_ID: keys.toString(),
       },
-      callback:res=>{
-        this.setState({checkedKey:res.userFlagList,postCheckedKeys:res.userList})
+      callback: res => {
+        this.setState({ checkedKey: res.userFlagList, postCheckedKeys: res.userList })
       }
     });
-    // this.setState({
-    //   visibleRegion: true,
-    //   checkedKey: this.props.RegionByDepID,
-    // });
   };
 
-  showDataModal = () => {
-    // console.log('this.state.pollutantType=', this.state.pollutantType);
-    // if (this.state.selectedRowKeys.length == 0) {
-    //   message.error('请选中一行');
-    //   return;
-    // }
-    // const keys = this.state.selectedRowKeys.key;
-    // this.props.dispatch({
-    //   type: 'areaPermissManage/getregioninfobytree',
-    //   payload: {},
-    // });
-    // this.setState({
-    //   visibleData: true,
-    //   DataTreeValue: [],
-    //   checkedKey: this.props.RegionByDepID,
-    // });
-    // this.props.dispatch({
-    //   type: 'areaPermissManage/getentandpoint',
-    //   payload: {
-    //     PollutantType: this.state.pollutantType,
-    //     RegionCode: '',
-    //   },
-    // });
-    // this.props.dispatch({
-    //   type: 'areaPermissManage/getpointbydepid',
-    //   payload: {
-    //     UserGroup_ID: keys.toString(),
-    //     PollutantType: this.state.pollutantType,
-    //     RegionCode: [],
-    //   },
-    // });
-
-    // console.log('pollutantType=', this.state.pollutantType);
-  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.UserByDepID !== nextProps.UserByDepID) {
       const selectId = nextProps.UserByDepID.map(item => item.key);
       console.log('selectId=', selectId);
-      const filterArr = nextProps.AllUser.filter(item => selectId.indexOf(item.key));
+      const filterArr = nextProps.allUser.filter(item => selectId.indexOf(item.key));
       console.log('filterArr=', filterArr);
       this.setState({
         visibleUser: true,
         targetKeys: selectId,
-        // allKeys: filterArr
       });
     }
-    // if (this.props.RegionByDepID !== nextProps.RegionByDepID) { //用回调  这个用不上了
-    //   this.setState({
-    //     visibleRegion: true,
-    //     checkedKey: nextProps.RegionByDepID,
-    //   });
-    // }
     if (this.props.CheckPoint !== nextProps.CheckPoint) {
       this.setState({
         visibleData: true,
         checkedKeys: nextProps.CheckPoint,
-        // allKeys: filterArr
       });
     }
 
@@ -818,43 +621,28 @@ class Index extends Component {
         newEntAndPoint: [
           {
             title: '全部',
-            // key: '0-0',
             children: nextProps.EntAndPoint,
           },
         ],
       });
     }
-    // if (this.props.ConfigInfo !== nextProps.ConfigInfo) {
-    //     var list = nextProps.ConfigInfo.SystemPollutantType ? nextProps.ConfigInfo.SystemPollutantType.split(',') : []
-    //     var type = list.length > 0 ? list[0] : "";
-    //     this.setState({
-    //         pollutantType: type,
-    //     })
-    //     // this.props.dispatch({
-    //     //   type: 'navigationtree/getentandpoint',
-    //     //   payload: {
-    //     //     Status: this.state.screenList,
-    //     //     PollutantType: nextProps.ConfigInfo.SystemPollutantType,
-    //     //   }
-    //     // })
-    // }
+
   }
 
-  showModalEdit = () => {
-    this.props.dispatch({
-      type: 'areaPermissManage/getdeparttreeandobj',
-      payload: {},
-    });
+  showModalEdit = (record) => {
+    
     this.setState({
-      visible: true,
+      depVisible: true,
       IsEdit: true,
-      Tittle: '编辑部门',
+      depTitle: '编辑部门',
+    },()=>{
+      this.props.form.setFieldsValue({...record, })
     });
   };
 
   handleOk = e => {
     this.setState({
-      visible: false,
+      depVisible: false,
     });
   };
 
@@ -864,11 +652,10 @@ class Index extends Component {
 
   handleCancel = e => {
     this.setState({
-      visible: false,
+      depVisible: false,
       IsEdit: false,
       visibleUser: false,
       visibleRegion: false,
-      visibleData: false,
     });
   };
 
@@ -879,7 +666,7 @@ class Index extends Component {
       type: 'areaPermissManage/insertregionbyuser',
       payload: {
         RegionFlagCode: this.state.checkedKey,//用来回显的参数
-        RegionCode:this.state.postCheckedKeys,//真正的参数  带父节点
+        RegionCode: this.state.postCheckedKeys,//真正的参数  带父节点
         UserGroup_ID: this.state.selectedRowKeys.key,
         callback: res => {
           if (res.IsSuccess) {
@@ -893,147 +680,49 @@ class Index extends Component {
     });
   };
 
-  handleDataOK = e => {
-    // console.log('regioncode=', this.state.DataTreeValue.toString());
-    // console.log('DGIMN=', this.state.checkedKeys);
-    // console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
-    // this.props.dispatch({
-    //   type: 'areaPermissManage/insertpointfilterbydepid',
-    //   payload: {
-    //     DGIMN: this.state.postCheckedKeys,
-    //     RegionFlagCode:this.state.checkedKeys,
-    //     UserGroup_ID: this.state.selectedRowKeys.key,
-    //     Type: this.state.pollutantType,
-    //     RegionCode: this.state.DataTreeValue.toString(),
-    //     callback: res => {
-    //       if (res.IsSuccess) {
-    //         message.success('成功');
-    //         this.handleCancel();
-    //       } else {
-    //         message.error(res.Message);
-    //       }
-    //     },
-    //   },
-    // });
-  };
 
-  /** 数据过滤切换污染物 */
-  handleSizeChange = e => {
-    const keys = this.state.selectedRowKeys.key;
-    this.setState({ pollutantType: e.target.value });
-    this.props.dispatch({
-      type: 'areaPermissManage/getpointbydepid',
-      payload: {
-        UserGroup_ID: keys.toString(),
-        PollutantType: e.target.value,
-        RegionCode: this.state.DataTreeValue.toString(),
-      },
-    });
-    this.props.dispatch({
-      type: 'areaPermissManage/getentandpoint',
-      payload: {
-        RegionCode: this.state.DataTreeValue.toString(),
-        PollutantType: e.target.value,
-      },
-    });
-  };
 
-  /** 数据过滤切换行政区 */
-  onChangeTree = value => {
-    console.log('onChange================= ', value);
-    const keys = this.state.selectedRowKeys.key;
-    if (value == undefined) {
-      this.setState({
-        DataTreeValue: '',
-      });
-      this.props.dispatch({
-        type: 'areaPermissManage/getentandpoint',
-        payload: {
-          RegionCode: '',
-          PollutantType: this.state.pollutantType,
-        },
-      });
-      this.props.dispatch({
-        type: 'areaPermissManage/getpointbydepid',
-        payload: {
-          UserGroup_ID: keys.toString(),
-          PollutantType: this.state.pollutantType,
-          RegionCode: [],
-        },
-      });
-    } else {
-      this.setState({
-        DataTreeValue: value,
-      });
-      this.props.dispatch({
-        type: 'areaPermissManage/getentandpoint',
-        payload: {
-          RegionCode: value.toString(),
-          PollutantType: this.state.pollutantType,
-        },
-      });
-      this.props.dispatch({
-        type: 'areaPermissManage/getpointbydepid',
-        payload: {
-          UserGroup_ID: keys.toString(),
-          PollutantType: this.state.pollutantType,
-          RegionCode: this.state.DataTreeValue.toString(),
-        },
-      });
-    }
-  };
+
+
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const FormData = {};
-        for (const key in values) {
-          if (values[key] && values[key].fileList) {
-            FormData[key] = uid;
-          } else {
-            FormData[key] = values[key] && values[key].toString();
-          }
-        }
-        const type =
-          this.state.IsEdit == true ? 'areaPermissManage/upddepartinfo' : 'areaPermissManage/insertdepartinfo';
+        const type = 'areaPermissManage/addOrUpdTestGroup';
         const msg = this.state.IsEdit == true ? '修改成功' : '添加成功';
-
         this.props.dispatch({
           type,
-          payload: {
-            ...FormData,
-            callback: res => {
-              if (res.IsSuccess) {
-                message.success(msg);
-                this.handleCancel();
-                this.props.dispatch({
-                  type: 'areaPermissManage/getdepartinfobytree',
-                  payload: {},
-                  callback:(res)=>{
-                    let data = this.handleData(res,0)
-                    this.setState({
-                      departInfoTree:data
-                    })
-                  }
-                });
-              } else {
-                message.error(res.Message);
-              }
-            },
+          payload: {...values, },
+          callback: res => {
+            if (res.IsSuccess) {
+              message.success(msg);
+              this.handleCancel();
+              this.props.dispatch({
+                type: 'areaPermissManage/getTestGroupList',
+                payload: {},
+                callback: (res) => {
+                  let data = this.handleData(res, 0)
+                  this.setState({
+                    departInfoTree: data
+                  })
+                }
+              });
+            } else {
+              message.error(res.Message);
+            }
           },
         });
-        console.log('FormData=', FormData);
       }
     });
   };
 
   renderTreeNodes = data =>
     data.map(item => {
-      if (item.children) {
+      if (item.Child) {
         return (
           <TreeNode title={item.label} key={item.value} dataRef={item}>
-            {this.renderTreeNodes(item.children)}
+            {this.renderTreeNodes(item.Child)}
           </TreeNode>
         );
       }
@@ -1042,15 +731,15 @@ class Index extends Component {
 
   renderDataTreeNodes = data =>
     data.map(item => {
-      if (item.children) {
+      if (item.Child) {
         if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
           this.state.leafTreeDatas.push(item.key);
         }
       }
-      if (item.children) {
+      if (item.Child) {
         return (
           <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {this.renderDataTreeNodes(item.children)}
+            {this.renderDataTreeNodes(item.Child)}
           </TreeNode>
         );
       }
@@ -1067,84 +756,51 @@ class Index extends Component {
 
   moveRow = (dragIndex, hoverIndex) => { //拖拽事件
     const { departInfoTree } = this.state;
-    
-       let data = [...departInfoTree]
-       let lastData = this.recursion(data,dragIndex, hoverIndex);
-       this.setState(
-        update(this.state, {
-          departInfoTree: {
-            $splice: [[departInfoTree, lastData]],
-          },
-        }),
-      );
-  };
- recursion= (data, current,find)=>{
-      let totalData =[], currentData = null,currentIndexs=-1, findData = null,findIndexs=-1;
-      if(data&&data.length>0){
-      //  return  data.map((item,index)=>{
-          for(var index in data){
-            let item = data[index]
-           if(item.key === current) {currentData = item ; currentIndexs = index };
-           if(item.key === find){ findData = item ; findIndexs = index };
-         
-           if(currentData&&findData&&currentData.flag === findData.flag ){ //在同一个树下拖拽
-              data[currentIndexs] = data.splice(findIndexs,1,data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置  
-              console.log(findIndexs,data[findIndexs])
-              break; //拖拽完成后直接跳转循环 多次循环会导致错乱
-            }
-            totalData.push({
-              //  children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
-               ...item,
-               children: item.children&&item.children.length>0? this.recursion(item.children,current,find) : [],//必须在前面 第一次更新值
 
-           })
-          }
-        // })
-      }
-
-      return totalData;
-    }
-    updateSort=()=>{
-      const { sortTitle } = this.state;
-      sortTitle==='开启排序'? this.setState({  sortTitle:'关闭排序'   }) : this.setState({  sortTitle:'开启排序'   })
-    }
-    saveSort=()=>{
-
-    }
-    addOrUpdateUserDepApprove = () =>{ //添加修改审核流程
-      const { approvalUserID,approvalNode,depID,approvalProcessEditId,approvalProcessEdit } = this.state;
-      if(approvalUserID&&approvalNode){
-      this.props.dispatch({
-        type: 'areaPermissManage/addOrUpdateUserDepApprove',
-        payload: {
-          ID: approvalProcessEdit?'':approvalProcessEditId,
-          UserID: approvalUserID,
-          DepID: depID,
-          Node: approvalNode
+    let data = [...departInfoTree]
+    let lastData = this.recursion(data, dragIndex, hoverIndex);
+    this.setState(
+      update(this.state, {
+        departInfoTree: {
+          $splice: [[departInfoTree, lastData]],
         },
-        callback:()=>{
-         this.setState({approvalProcessEditorAddVisible:false})
-         this.props.dispatch({
-          type: 'areaPermissManage/getUserDepApproveInfo',
-          payload: {
-            depID: depID,
-          },
-        })  
+      }),
+    );
+  };
+  recursion = (data, current, find) => {
+    let totalData = [], currentData = null, currentIndexs = -1, findData = null, findIndexs = -1;
+    if (data && data.length > 0) {
+      for (var index in data) {
+        let item = data[index]
+        if (item.key === current) { currentData = item; currentIndexs = index };
+        if (item.key === find) { findData = item; findIndexs = index };
+
+        if (currentData && findData && currentData.flag === findData.flag) { //在同一个树下拖拽
+          data[currentIndexs] = data.splice(findIndexs, 1, data[currentIndexs])[0]; //先删除替换  返回的删除元素再赋值到之前的位置  
+          console.log(findIndexs, data[findIndexs])
+          break; //拖拽完成后直接跳转循环 多次循环会导致错乱
         }
-      });
-    }else{
-      message.error('审核人和审核节点名不能为空')
+        totalData.push({
+          ...item,
+          children: item.Child && item.Child.length > 0 ? this.recursion(item.Child, current, find) : [],//必须在前面 第一次更新值
+
+        })
+      }
     }
-    }
-    approvalProcessEditOk=(e)=>{
-        const { approvalProcessEditId } = this.state;
-        e.preventDefault();    
-        this.addOrUpdateUserDepApprove()
-    }
+
+    return totalData;
+  }
+  updateSort = () => {
+    const { sortTitle } = this.state;
+    sortTitle === '开启排序' ? this.setState({ sortTitle: '关闭排序' }) : this.setState({ sortTitle: '开启排序' })
+  }
+  saveSort = () => {
+
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { btnloading, btnloading1,insertregionbyuserLoading,userDepApproveInfoList } = this.props;
-    const { targetKeys, disabled, showSearch,sortTitle,selectedRowKeys } = this.state;
+    const { btnloading, btnloading1, insertregionbyuserLoading, userDepApproveInfoList } = this.props;
+    const { targetKeys, disabled, showSearch, sortTitle, selectedRowKeys } = this.state;
     const formItemLayout = {
       labelCol: {
         span: 6,
@@ -1170,66 +826,55 @@ class Index extends Component {
         overflowY: 'auto',
       },
     };
-    if (this.props.GetDepartInfoByTree) {
-      return (
-        <Spin
-          style={{
-            width: '100%',
-            height: 'calc(100vh/2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          size="large"
-        />
-      );
-    }
+
     return (
       <Fragment>
         {
           <BreadcrumbWrapper>
             <Card bordered={false}>
-              <Button type="primary" style={{marginRight:8}} onClick={this.showModal}>
+              <Button type="primary" style={{ marginRight: 8 }} onClick={this.showModal}>
                 新增
               </Button>
               {/* <Button type="primary"  style={{marginRight:8}} onClick={this.updateSort}>
                 {sortTitle}
               </Button> */}
-              {sortTitle==='关闭排序'? <Button onClick={() => { this.saveSort()}} 
-                                        style={{marginRight:8}}   loading={this.props.dragLoading}  >
-                                       保存排序
-                                       </Button>:null}
+              {sortTitle === '关闭排序' ? <Button onClick={() => { this.saveSort() }}
+                style={{ marginRight: 8 }} loading={this.props.dragLoading}  >
+                保存排序
+                                       </Button> : null}
               <DndProvider backend={HTML5Backend}>
-              <Table
-                onRow={(record, index)  => ({
-                  onClick: event => {
-                    this.setState({
-                      selectedRowKeys: record,
-                      rowKeys: [record.key],
-                    });
-                  },
-                  index,
-                  moveRow: sortTitle==='关闭排序'? this.moveRow : null,
-                })}
-                components={sortTitle==='关闭排序'? this.dragaComponents : null}
-                style={{ marginTop: '20px' }}
-                size="small"
-                columns={this.state.columns}
-                defaultExpandAllRows
-                dataSource={this.state.departInfoTree}
-              />
+                <Table
+                  onRow={(record, index) => ({
+                    onClick: event => {
+                      this.setState({
+                        selectedRowKeys: record,
+                        rowKeys: [record.key],
+                      });
+                    },
+                    index,
+                    moveRow: sortTitle === '关闭排序' ? this.moveRow : null,
+                  })}
+                  components={sortTitle === '关闭排序' ? this.dragaComponents : null}
+                  style={{ marginTop: '20px' }}
+                  size="small"
+                  columns={this.state.columns}
+                  defaultExpandAllRows
+                  dataSource={this.state.departInfoTree}
+                  loading = {this.props.getTestGroupListLoading}
+                />
               </DndProvider>
             </Card>
             <div>
               <Modal
-                title={this.state.Tittle}
-                visible={this.state.visible}
+                title={this.state.depTitle}
+                visible={this.state.depVisible}
                 confirmLoading={this.state.IsEdit === true ? btnloading1 : btnloading}
                 onOk={this.handleSubmit}
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
+                confirmLoading={this.props.addOrUpdTestGroupLoading}
               >
-                {this.props.DepartInfoOneLoading ? (
+                {this.props.getTestGroupListLoading ? (
                   <Spin
                     style={{
                       width: '100%',
@@ -1241,51 +886,36 @@ class Index extends Component {
                     size="large"
                   />
                 ) : (
-                  <Form onSubmit={this.handleSubmit} className="login-form">
-                    <Form.Item label="父节点" {...formItemLayout}>
-                      {getFieldDecorator('ParentId', {
-                        rules: [{ required: true, message: '请选择父节点' }],
-                        initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.ParentId : undefined,
-                      })(
-                        <TreeSelect
-                          type="ParentId"
-                          // showSearch
-                          style={{ width: 300 }}
-                          //value={this.state.IsEdit==true?this.props.RoleInfoOne.ParentId:null}
-                          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                          placeholder="请选择父节点"
-                          allowClear
-                          treeDefaultExpandAll
-                          onChange={this.onChange}
-                          treeData={this.props.DepartTree}
-                          style={{ width: '100%' }}
-                        ></TreeSelect>,
-                      )}
-                    </Form.Item>
-                    <Form.Item label="部门名称" {...formItemLayout}>
-                      {getFieldDecorator('UserGroup_Name', {
-                        rules: [{ required: true, message: '请输入部门名称' }],
-                        initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_Name : '',
-                      })(<Input type="UserGroup_Name" placeholder="请输入部门名称" />)}
-                    </Form.Item>
-                    <Form.Item label="部门描述" {...formItemLayout}>
-                      {getFieldDecorator('UserGroup_Remark', {
-                        initialValue:
-                          this.state.IsEdit == true
-                            ? this.props.DepartInfoOne.UserGroup_Remark
-                            : '',
-                      })(<TextArea type="UserGroup_Remark" placeholder="请输入部门描述" />)}
-                    </Form.Item>
-                    <Form.Item>
-                      {getFieldDecorator('UserGroup_ID', {
-                        initialValue:
-                          this.state.IsEdit == true ? this.props.DepartInfoOne.UserGroup_ID : '',
-                      })(<Input type="UserGroup_ID" hidden />)}
-                    </Form.Item>
-                  </Form>
-                )}
+                    <Form className="login-form">
+                      <Form.Item label="父节点" {...formItemLayout}>
+                        {getFieldDecorator('ParentCode', {
+                          rules: [{ required: true, message: '请选择父节点' }],
+                        })(
+                          <TreeSelect
+                            style={{ width: 300 }}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder="请选择父节点"
+                            allowClear
+                            treeDefaultExpandAll
+                            onChange={this.onChange}
+                            treeData={  [{title: "根节点", value: "0", key: "0" ,children: this.state.departInfoTree }, ]}
+                            style={{ width: '100%' }}
+                          ></TreeSelect>,
+                        )}
+                      </Form.Item>
+                      <Form.Item label="部门名称" {...formItemLayout}>
+                        {getFieldDecorator('GroupName', {
+                          rules: [{ required: true, message: '请输入部门名称' }],
+                         })(<Input  placeholder="请输入部门名称" />)}
+                      </Form.Item>
+                      <Form.Item label="部门描述" {...formItemLayout}>
+                        {getFieldDecorator('Remark', {})(<TextArea placeholder="请输入部门描述" />)}
+                      </Form.Item>
+                      <Form.Item>
+                        {getFieldDecorator('ID', {})(<Input type="ID" hidden />)}
+                      </Form.Item>
+                    </Form>
+                  )}
               </Modal>
               <Modal
                 title={`分配用户-${this.state.selectedRowKeys.UserGroup_Name}`}
@@ -1296,15 +926,15 @@ class Index extends Component {
                 width={'70%'}
               >
 
-                  <Spin spinning={this.props.insertdepartbyuserLoading || this.props.GetUserByDepID}>
+                <Spin spinning={this.props.getTestMonitorUserListLoading}>
                   <TableTransfer
-                    rowKey={record => record.User_ID}
+                    rowKey={record => record.UserID}
                     titles={['待分配用户', '已分配用户']}
-                    dataSource={this.props.AllUser}
+                    dataSource={this.props.allUser}
                     targetKeys={targetKeys}
                     disabled={disabled}
                     showSearch={showSearch}
-                    onChange={this.onChanges}
+                    onChange={this.userChange}
                     filterOption={(inputValue, item) =>
                       (item.User_Name && item.User_Name.indexOf(inputValue) !== -1) ||
                       (item.User_Account && item.User_Account.indexOf(inputValue) !== -1) ||
@@ -1314,8 +944,8 @@ class Index extends Component {
                     rightColumns={rightTableColumns}
                     pagination={false}
                   />
-                    </Spin>
-              
+                </Spin>
+
               </Modal>
               <Modal
                 title={`区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
@@ -1325,7 +955,7 @@ class Index extends Component {
                 onCancel={this.handleCancel}
                 width={900}
                 confirmLoading={insertregionbyuserLoading}
-                
+
               >
                 {this.props.GetRegionByDepID ? (
                   <Spin
@@ -1339,85 +969,28 @@ class Index extends Component {
                     size="large"
                   />
                 ) : (
-                  <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                    <Tree
-                      key="key"
-                      checkable
-                      onExpand={this.onExpand}
-                      onCheck={this.onCheck}
-                      checkedKeys={this.state.checkedKey}
-                      onSelect={this.onSelectRegion}
-                      selectedKeys={this.state.selectedKey}
-                      defaultExpandedKeys={['0']}
-                      defaultExpandAll={false}
-                    >
-                      {this.renderTreeNodes(this.props.RegionInfoTree)}
-                    </Tree>
-                  </div>
-                )}
-              </Modal>
-
-              <Modal
-                title={`数据过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
-                visible={this.state.visibleData}
-                onOk={this.handleDataOK}
-                destroyOnClose={true}
-                onCancel={this.handleCancel}
-                width={900}
-              >
-                {
-
-                  <div style={{ height: '600px', overflow: 'hidden' }}>
-                    <Row style={{ background: '#fff', paddingBottom: 10, zIndex: 1 }}>
-                      <SelectPollutantType
-                        showType="radio"
-                        defaultPollutantCode={this.state.pollutantType}
-                        mode="multiple"
-                        // showAll
-                        onChange={this.handleSizeChange}
-                      />
-                      <TreeSelect
-                        className={styles.placeHolderClass}
-                        {...tProps}
-                        treeCheckable={false}
-                        allowClear
-                      />
-                    </Row>
-                    {this.props.CheckPointLoading || this.props.getentandpointLoading ? (
-                      <Spin
-                        style={{
-                          width: '100%',
-                          height: 'calc(100vh/2)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        size="large"
-                      />
-                    ) : this.props.EntAndPoint&&this.props.EntAndPoint.length > 0 ? (
+                    <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
                       <Tree
                         key="key"
-                        style={{ height: '560px', overflow: 'auto' }}
                         checkable
-                        onExpand={this.onExpands}
-                        treeData={this.state.newEntAndPoint}
-                        onCheck={this.onChecks}
-                        checkedKeys={this.state.checkedKeys}
-                        onSelect={this.onSelectData}
-                        selectedKeys={this.state.selectedKeys}
-                        defaultExpandAll
+                        onExpand={this.onExpand}
+                        onCheck={this.onCheck}
+                        checkedKeys={this.state.checkedKey}
+                        onSelect={this.onSelectRegion}
+                        selectedKeys={this.state.selectedKey}
+                        defaultExpandedKeys={['0']}
+                        defaultExpandAll={false}
                       >
-                        {this.renderDataTreeNodes(this.state.newEntAndPoint)}
+                        {this.renderTreeNodes(this.props.regionInfoTree)}
                       </Tree>
-                    ) : (
-                      <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    )}
-                  </div>
-                }
+                    </div>
+                  )}
               </Modal>
 
+
+
             </div>
-           
+
           </BreadcrumbWrapper>
         }
       </Fragment>
