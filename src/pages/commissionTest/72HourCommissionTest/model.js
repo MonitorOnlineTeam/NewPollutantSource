@@ -33,10 +33,10 @@ export default Model.extend({
       yield update({ tableLoading: true })
       const result = yield call(services.Get72TestRecordType, payload);
       if (result.IsSuccess) {
-        yield update({ testRecordType: result.Datas, })
+        yield update({ testRecordType: payload.PointCode? result.Datas : [], })
       } else {
         message.error(result.Message)
-        yield update({ testRecordType: result.Datas ? result.Datas : [], })
+        yield update({ testRecordType: [], })
       }
     },
     *get72TestRecordPollutant({ payload, callback }, { call, put, update }) { //获取污染物列表
