@@ -1,7 +1,7 @@
 /*
- * @Author: 
+ * @Author: jab
  * @Date: 2022.08.08
- * @LastEditors: 
+ * @LastEditors: jab
  * @Description: 检测调试 权限区域管理
  */
 import React, { Component, Fragment } from 'react';
@@ -204,11 +204,14 @@ const rightTableColumns = [
   getTestGroupListLoading: loading.effects['areaPermissManage/getTestGroupList'],
   addOrUpdTestGroupLoading: loading.effects['areaPermissManage/addOrUpdTestGroup'],
   deleteTestGroupLoading: loading.effects['areaPermissManage/deleteTestGroup'],
-  getTestMonitorUserListLoading:loading.effects['areaPermissManage/getTestMonitorUserList'],
-  addTestMonitorUserLoading: loading.effects['areaPermissManage/addTestMonitorUser'],
-  allUser:areaPermissManage.allUser,
-  regionInfoTree:areaPermissManage.regionInfoTree,
-
+  getAllUserLoading: loading.effects['areaPermissManage/getAllUser'],
+  getTestMonitorUserListLoading: loading.effects['areaPermissManage/getTestMonitorUserList'],
+  addTestMonitorUserLoading: loading.effects['areaPermissManage/addTestMonitorUser'] || false,
+  regionInfoTreeLoading:loading.effects['autoForm/getRegions'],
+  getRegionByDepIDLoading:loading.effects['areaPermissManage/getRegionByDepID'],
+  insertRegionByUserLoading:loading.effects['areaPermissManage/insertRegionByUser'], 
+  allUser: areaPermissManage.allUser,
+  regionInfoTree:autoForm.regionList,
 }))
 @Form.create()
 class Index extends Component {
@@ -220,10 +223,15 @@ class Index extends Component {
       depVisible: false,
       depTitle: '添加部门',
       visibleUser: false,
+      selectedRowKeys: null,
+      targetUserKeys: [],
+      visibleRegion: false,
+      checkedRegKey:[],
+
+
 
       newEntAndPoint: [],
       visibleAlarm: false,
-     
       value: undefined,
       IsEdit: false,
       FormDatas: [],
@@ -231,7 +239,6 @@ class Index extends Component {
       autoExpandParent: true,
       expandedKeys: [],
       expandedKey: [],
-      targetKeys: [],
       allKeys: [],
       checkedKeys: [],
       checkedKey: [],
@@ -241,14 +248,14 @@ class Index extends Component {
       selectedKey: [],
       disabled: false,
       showSearch: true,
-      visibleRegion: false,
+     
       leafTreeDatas: [],
       visibleData: false,
       pollutantType: '',
       DataTreeValue: [],
       rolesID: '',
       alarmPushData: '',
-      postCheckedKeys: '',
+      postRegCheckedKeys: '',
       updateOperationVal: '1',
       columns: [
         {
@@ -284,9 +291,9 @@ class Index extends Component {
           render: (text, record, index) => (
             <span>
               <Tooltip title="编辑">
-                <a  onClick={() => {
-                    this.showModalEdit(record);                   
-                  }}
+                <a onClick={() => {
+                  this.showModalEdit(record);
+                }}
                 >
                   <EditOutlined style={{ fontSize: 16 }} />
                 </a>
@@ -309,7 +316,7 @@ class Index extends Component {
                             payload: {},
                             callback: (res) => {
                               let data = this.handleData(res, 0)
-                              this.setState({ departInfoTree: data})
+                              this.setState({ departInfoTree: data })
                             }
                           });
                         } else {
@@ -336,7 +343,7 @@ class Index extends Component {
                         selectedRowKeys: record,
                       },
                       () => {
-                        this.showUserModal();
+                        this.showUserModal(record);
                       },
                     );
                   }}
@@ -345,24 +352,24 @@ class Index extends Component {
                 </a>
               </Tooltip>
               <Divider type="vertical" />
-                  <>
-                    <Tooltip title="区域过滤">
-                      <a
-                        onClick={() => {
-                          this.setState(
-                            {
-                              selectedRowKeys: record,
-                            },
-                            () => {
-                              this.showRegionModal();
-                            },
-                          );
-                        }}
-                      >
-                        <FilterOutlined style={{ fontSize: 16 }} />
-                      </a>
-                    </Tooltip>
-                  </>
+              <>
+                <Tooltip title="区域过滤">
+                  <a
+                    onClick={() => {
+                      this.setState(
+                        {
+                          selectedRowKeys: record,
+                        },
+                        () => {
+                          this.showRegionModal();
+                        },
+                      );
+                    }}
+                  >
+                    <FilterOutlined style={{ fontSize: 16 }} />
+                  </a>
+                </Tooltip>
+              </>
 
             </span>
           ),
@@ -443,23 +450,13 @@ class Index extends Component {
     ]
   }
   //获取角色列表
-  getUserList = (params) => {
+  getAllUserList = () => {
     this.props.dispatch({
-      type: 'areaPermissManage/getTestMonitorUserList',
-      payload: params ? params : { roleListID: '', groupListID: '', userName: '', userAccount: '' }
+      type: 'areaPermissManage/getAllUser',
+      payload: {}
     });
   }
-  userChange = nextTargetKeys => {
-    this.props.dispatch({
-        type: 'areaPermissManage/addTestMonitorUser',
-        payload: {
-            UserID: nextTargetKeys,
-            Roles_ID: this.state.selectedRowKeys.key,
-        },
-    })
-    this.setState({ targetKeys: nextTargetKeys });
 
-  }
 
   updateChange = (value) => {
     this.setState({
@@ -470,12 +467,6 @@ class Index extends Component {
 
 
 
-  onExpand = expandedKeys => {
-    this.setState({
-      expandedKeys,
-      autoExpandParent: false,
-    });
-  };
 
   onExpands = expandedKey => {
     this.setState({
@@ -484,37 +475,18 @@ class Index extends Component {
     });
   };
 
-  onCheck = (checkedKey, info) => {
-    this.setState({ checkedKey });
-    let checkedKeys = [...checkedKey, ...info.halfCheckedKeys]
-    this.setState({ postCheckedKeys: checkedKeys });
+  onRegCheck = (checkedKeys,info) => {
+    this.setState({checkedRegKey: checkedKeys.checked,});
 
   };
 
-  onChecks = checkedKeys => {
-    console.log('select=', checkedKeys);
-    console.log('this.state.leafTreeDatas=', this.state.leafTreeDatas);
-    this.setState({ checkedKeys });
-    const leafTree = [];
-    checkedKeys.map(item => {
-      if (this.state.leafTreeDatas.indexOf(item) != -1) {
-        leafTree.push(item);
-      }
-    });
-    this.setState({ checkedKeySel: checkedKeys });
-  };
 
-  onSelect = (record, selected, selectedRows) => {
-    console.log('record=', record.key);
-  };
 
   onSelectRegion = (selectedKey, info) => {
+    console.log(selectedKey)
     this.setState({ selectedKey });
   };
 
-  onSelectData = (selectedKey, info) => {
-    this.setState({ selectedKey });
-  };
 
 
   componentDidMount() {
@@ -528,13 +500,13 @@ class Index extends Component {
         })
       }
     });
-    this.getUserList({})
+    this.getAllUserList({})
   }
   handleData = (data, i) => {
     if (data && data.length > 0) {
       i++;
       return data.map(item => {
-        return { ...item,title:item.GroupName, key:item.ID, value:item.ID, flag: i, children: item.Child.length > 0 ? this.handleData(item.Child, i) : [] }
+        return { ...item, title: item.GroupName, key: item.ID, value: item.ID, flag: i, children: item.Child.length > 0 ? this.handleData(item.Child, i) : [] }
       })
     }
 
@@ -548,36 +520,32 @@ class Index extends Component {
     });
   };
 
-  showUserModal = () => {
-    if (this.state.selectedRowKeys.length == 0) {
-      message.error('请选中一行');
+  showUserModal = (row) => {
+    if (row.length == 0) {
+      message.warning('请选中一行');
       return;
     }
-    const keys = this.state.selectedRowKeys.key;
-    this.props.dispatch({
-      type: 'areaPermissManage/getalluser',
-      payload: {},
-    });
-    console.log('111=', keys);
-
-    this.props.dispatch({
-      type: 'areaPermissManage/getuserbydepid',
-      payload: {
-        UserGroup_ID: keys.toString(),
-      },
-    });
-    const selectId = this.props.UserByDepID.map(item => item.key);
-
-    const filterArr = this.props.allUser.filter(item => selectId.indexOf(item.key));
-    console.log('filterArr=', filterArr);
     this.setState({
       visibleUser: true,
-      targetKeys: selectId,
-      allKeys: filterArr,
     });
+    const keys = row.key;
+    this.props.dispatch({
+      type: 'areaPermissManage/getTestMonitorUserList',
+      payload: {
+        groupID: keys,
+      },
+      callback: (res) => {
+        const selectId = res.map(item => item.UserID);
+        this.setState({
+          targetUserKeys: selectId,
+        });
+      }
+
+    });
+
   };
 
-  showRegionModal = () => {
+  showRegionModal = () => { 
     if (this.state.selectedRowKeys.length == 0) {
       message.error('请选中一行');
       return;
@@ -587,56 +555,30 @@ class Index extends Component {
     });
     const keys = this.state.selectedRowKeys.key;
     this.props.dispatch({
-      type: 'areaPermissManage/getregionbydepid',
+      type: 'areaPermissManage/getRegionByDepID',
       payload: {
         UserGroup_ID: keys.toString(),
       },
       callback: res => {
-        this.setState({ checkedKey: res.userFlagList, postCheckedKeys: res.userList })
+        this.setState({ checkedRegKey: res.userList, })
       }
     });
   };
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.UserByDepID !== nextProps.UserByDepID) {
-      const selectId = nextProps.UserByDepID.map(item => item.key);
-      console.log('selectId=', selectId);
-      const filterArr = nextProps.allUser.filter(item => selectId.indexOf(item.key));
-      console.log('filterArr=', filterArr);
-      this.setState({
-        visibleUser: true,
-        targetKeys: selectId,
-      });
-    }
-    if (this.props.CheckPoint !== nextProps.CheckPoint) {
-      this.setState({
-        visibleData: true,
-        checkedKeys: nextProps.CheckPoint,
-      });
-    }
 
-    if (this.props.EntAndPoint !== nextProps.EntAndPoint) {
-      this.setState({
-        newEntAndPoint: [
-          {
-            title: '全部',
-            children: nextProps.EntAndPoint,
-          },
-        ],
-      });
-    }
 
   }
 
   showModalEdit = (record) => {
-    
+
     this.setState({
       depVisible: true,
       IsEdit: true,
       depTitle: '编辑部门',
-    },()=>{
-      this.props.form.setFieldsValue({...record, })
+    }, () => {
+      this.props.form.setFieldsValue({ ...record, })
     });
   };
 
@@ -659,23 +601,38 @@ class Index extends Component {
     });
   };
 
-  handleRegionOK = e => {
-    console.log('regioncode=', this.state.checkedKey);
-    console.log('selectedRowKeys=', this.state.selectedRowKeys.key);
+  userChange = nextTargetKeys => {
+    this.setState({ targetUserKeys: nextTargetKeys });
+  }
+  handleUserOK = e => {
+
+    const { targetUserKeys } = this.state;
+    const selectList = targetUserKeys.map(item => {
+      return { UserID: item, }
+    })
     this.props.dispatch({
-      type: 'areaPermissManage/insertregionbyuser',
+      type: 'areaPermissManage/addTestMonitorUser',
       payload: {
-        RegionFlagCode: this.state.checkedKey,//用来回显的参数
-        RegionCode: this.state.postCheckedKeys,//真正的参数  带父节点
+        groupID: this.state.selectedRowKeys.key,
+        list: selectList,
+      },
+    })
+  }
+  handleRegionOK = e => {
+    this.props.dispatch({
+      type: 'areaPermissManage/insertRegionByUser',
+      payload: {
+        RegionFlagCode: this.state.checkedRegKey,
+        RegionCode: this.state.checkedRegKey,
         UserGroup_ID: this.state.selectedRowKeys.key,
-        callback: res => {
-          if (res.IsSuccess) {
-            message.success('成功');
-            this.handleCancel();
-          } else {
-            message.error(res.Message);
-          }
-        },
+      },
+      callback: res => {
+        if (res.IsSuccess) {
+          message.success(res.Message);
+          this.handleCancel();
+        } else {
+          message.error(res.Message);
+        }
       },
     });
   };
@@ -693,7 +650,7 @@ class Index extends Component {
         const msg = this.state.IsEdit == true ? '修改成功' : '添加成功';
         this.props.dispatch({
           type,
-          payload: {...values, },
+          payload: { ...values, },
           callback: res => {
             if (res.IsSuccess) {
               message.success(msg);
@@ -719,32 +676,16 @@ class Index extends Component {
 
   renderTreeNodes = data =>
     data.map(item => {
-      if (item.Child) {
+      if (item.children) {
         return (
           <TreeNode title={item.label} key={item.value} dataRef={item}>
-            {this.renderTreeNodes(item.Child)}
+            {this.renderTreeNodes(item.children)}
           </TreeNode>
         );
       }
       return <TreeNode {...item} />;
     });
 
-  renderDataTreeNodes = data =>
-    data.map(item => {
-      if (item.Child) {
-        if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
-          this.state.leafTreeDatas.push(item.key);
-        }
-      }
-      if (item.Child) {
-        return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {this.renderDataTreeNodes(item.Child)}
-          </TreeNode>
-        );
-      }
-      return <TreeNode {...item} />;
-    });
 
 
 
@@ -799,8 +740,7 @@ class Index extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { btnloading, btnloading1, insertregionbyuserLoading, userDepApproveInfoList } = this.props;
-    const { targetKeys, disabled, showSearch, sortTitle, selectedRowKeys } = this.state;
+    const { targetUserKeys, disabled, sortTitle, selectedRowKeys } = this.state;
     const formItemLayout = {
       labelCol: {
         span: 6,
@@ -860,7 +800,7 @@ class Index extends Component {
                   columns={this.state.columns}
                   defaultExpandAllRows
                   dataSource={this.state.departInfoTree}
-                  loading = {this.props.getTestGroupListLoading}
+                  loading={this.props.getTestGroupListLoading}
                 />
               </DndProvider>
             </Card>
@@ -868,24 +808,12 @@ class Index extends Component {
               <Modal
                 title={this.state.depTitle}
                 visible={this.state.depVisible}
-                confirmLoading={this.state.IsEdit === true ? btnloading1 : btnloading}
                 onOk={this.handleSubmit}
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
                 confirmLoading={this.props.addOrUpdTestGroupLoading}
               >
-                {this.props.getTestGroupListLoading ? (
-                  <Spin
-                    style={{
-                      width: '100%',
-                      height: 'calc(100vh/2)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                    size="large"
-                  />
-                ) : (
+                  <Spin spinning={this.props.getTestGroupListLoading }>
                     <Form className="login-form">
                       <Form.Item label="父节点" {...formItemLayout}>
                         {getFieldDecorator('ParentCode', {
@@ -898,7 +826,7 @@ class Index extends Component {
                             allowClear
                             treeDefaultExpandAll
                             onChange={this.onChange}
-                            treeData={  [{title: "根节点", value: "0", key: "0" ,children: this.state.departInfoTree }, ]}
+                            treeData={[{ title: "根节点", value: "0", key: "0", children: this.state.departInfoTree },]}
                             style={{ width: '100%' }}
                           ></TreeSelect>,
                         )}
@@ -906,7 +834,7 @@ class Index extends Component {
                       <Form.Item label="部门名称" {...formItemLayout}>
                         {getFieldDecorator('GroupName', {
                           rules: [{ required: true, message: '请输入部门名称' }],
-                         })(<Input  placeholder="请输入部门名称" />)}
+                        })(<Input placeholder="请输入部门名称" />)}
                       </Form.Item>
                       <Form.Item label="部门描述" {...formItemLayout}>
                         {getFieldDecorator('Remark', {})(<TextArea placeholder="请输入部门描述" />)}
@@ -915,25 +843,25 @@ class Index extends Component {
                         {getFieldDecorator('ID', {})(<Input type="ID" hidden />)}
                       </Form.Item>
                     </Form>
-                  )}
+                    </Spin>
               </Modal>
               <Modal
-                title={`分配用户-${this.state.selectedRowKeys.UserGroup_Name}`}
+                title={`分配用户-${this.state.selectedRowKeys.GroupName}`}
                 visible={this.state.visibleUser}
-                onOk={this.handleCancel}
+                onOk={this.handleUserOK}
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
+                confirmLoading={this.props.addTestMonitorUserLoading}
                 width={'70%'}
               >
 
-                <Spin spinning={this.props.getTestMonitorUserListLoading}>
+                <Spin spinning={this.props.getTestMonitorUserListLoading || this.props.getAllUserLoading || this.props.addTestMonitorUserLoading}>
                   <TableTransfer
-                    rowKey={record => record.UserID}
+                    rowKey={record => record.User_ID}
                     titles={['待分配用户', '已分配用户']}
                     dataSource={this.props.allUser}
-                    targetKeys={targetKeys}
-                    disabled={disabled}
-                    showSearch={showSearch}
+                    targetKeys={targetUserKeys}
+                    showSearch
                     onChange={this.userChange}
                     filterOption={(inputValue, item) =>
                       (item.User_Name && item.User_Name.indexOf(inputValue) !== -1) ||
@@ -948,43 +876,30 @@ class Index extends Component {
 
               </Modal>
               <Modal
-                title={`区域过滤-${this.state.selectedRowKeys.UserGroup_Name}`}
+                title={`区域过滤-${this.state.selectedRowKeys.GroupName}`}
                 visible={this.state.visibleRegion}
                 onOk={this.handleRegionOK}
                 destroyOnClose="true"
                 onCancel={this.handleCancel}
                 width={900}
-                confirmLoading={insertregionbyuserLoading}
+                confirmLoading={this.props.insertRegionByUserLoading}
 
               >
-                {this.props.GetRegionByDepID ? (
-                  <Spin
-                    style={{
-                      width: '100%',
-                      height: 'calc(100vh/2)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                    size="large"
-                  />
-                ) : (
+
+                  <Spin spinning={this.props.regionInfoTreeLoading || this.props.getRegionByDepIDLoading}>
                     <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
                       <Tree
                         key="key"
                         checkable
-                        onExpand={this.onExpand}
-                        onCheck={this.onCheck}
-                        checkedKeys={this.state.checkedKey}
-                        onSelect={this.onSelectRegion}
-                        selectedKeys={this.state.selectedKey}
-                        defaultExpandedKeys={['0']}
+                        checkStrictly
+                        onCheck={this.onRegCheck}
+                        checkedKeys={this.state.checkedRegKey}
                         defaultExpandAll={false}
                       >
                         {this.renderTreeNodes(this.props.regionInfoTree)}
                       </Tree>
                     </div>
-                  )}
+                    </Spin>
               </Modal>
 
 
