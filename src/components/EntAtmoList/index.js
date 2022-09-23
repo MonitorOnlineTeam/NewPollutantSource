@@ -49,17 +49,17 @@ export default class Index extends Component {
   return selectList;
   };
   componentDidMount() {
-    const {type,dispatch,regionCode,pollutantType,priseList,atmoStationList,} = this.props;
+    const {type,dispatch,regionCode,pollutantType,priseList,atmoStationList,noFilter} = this.props;
 
-    type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
+    type==1? dispatch({ type: noFilter? 'common/getEntNoFilterList' : 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
  
   
    }
    componentDidUpdate(props) {
-    const { type,dispatch,regionCode,pollutantType } = this.props;
+    const { type,dispatch,regionCode,pollutantType,noFilter } = this.props;
 
     if (props.regionCode !== regionCode || props.pollutantType !== pollutantType) {
-       type==1? dispatch({ type: 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
+       type==1? dispatch({ type: noFilter? 'common/getEntNoFilterList' : 'common/getEntByRegion', payload: { RegionCode: regionCode, PollutantType: pollutantType },  }) : dispatch({ type: 'defectData/getStationByRegion', payload: { RegionCode: regionCode },  });  
     }
   }
   render() {

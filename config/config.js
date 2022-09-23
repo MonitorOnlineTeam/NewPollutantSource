@@ -509,6 +509,25 @@ export default {
               ]
             },
             {
+              path: '/noticeManger', //公告管理
+              name: 'noticeManger',
+              routes: [
+                {
+                  path: '/noticeManger',
+                  redirect: '/noticeManger/problemManger', 
+                },
+                {
+                  name:'problemManger',
+                  path: '/noticeManger/problemManger', //公告管理 问题管理
+                  component: './noticeManger/problemManger', 
+                },
+                {
+                  name:'problemManger',
+                  path: '/noticeManger/problemManger/detail', //公告管理 问题管理详情
+                  component: './noticeManger/problemManger/detail', 
+                }   
+              ] },
+            {
               path: '/assetManage/customOrder', //客户订单
               routes: [
                 {

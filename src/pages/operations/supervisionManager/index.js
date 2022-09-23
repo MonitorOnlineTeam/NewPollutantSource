@@ -686,7 +686,7 @@ const Index = (props) => {
         </Spin>
         <Spin spinning={entLoading} size='small' style={{ top: -3 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
-          <EntAtmoList  style={{ width: 300}} />
+          <EntAtmoList noFilter  style={{ width: 300}} />
         </Form.Item>
         </Spin>
         <Spin spinning={pointLoading} size='small' style={{ top: -3,left:20 }}>
@@ -706,7 +706,7 @@ const Index = (props) => {
       <Row>
       <Spin  spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
         <Form.Item label="督查人员" name="Inspector"  >
-         <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
+         <UserList   style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
         </Form.Item>
         </Spin>
         <Form.Item label="督查日期" name="time" style={{ marginLeft:8,marginRight:8 }}  >
@@ -1330,7 +1330,7 @@ const Index = (props) => {
             <Col span={12}>
              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
              <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
-              <UserList allowClear={false}   data={operationInfoList&&operationInfoList.UserList}/>
+              <UserList allowClear={false}  disabled data={operationInfoList&&operationInfoList.UserList}/>
                </Form.Item>
                </Spin>
             </Col >

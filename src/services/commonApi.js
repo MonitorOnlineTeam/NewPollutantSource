@@ -35,6 +35,12 @@ export async function GetEntByRegion(params) {
 
   return result;
 }
+
+// 根据行政区获取 企业列表 未过滤
+export async function GetEntNoFilterList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntNoFilterList', params, null);
+  return result;
+}
 //关注列表
 export async function GetAttentionDegreeList(params) {
   const result = post(
@@ -124,3 +130,4 @@ export async function GetUserList(params) {
   const result = post('/api/rest/PollutantSourceApi/AuthorApi/GetUserList', params, null);
   return result;
 }
+

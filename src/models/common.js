@@ -50,6 +50,20 @@ export default Model.extend({
         yield update({ priseList: [], entLoading: false,  });
       }
     },
+    *getEntNoFilterList({ payload }, { call, put, update, select }) {
+      //企业列表 未过滤的
+      yield update({ entLoading: true, });
+      const response = yield call(services.GetEntNoFilterList, { ...payload });
+      if (response.IsSuccess) {
+        yield update({
+          priseList: response.Datas,
+          entLoading: false,
+        });
+      }else{
+        message.error(response.Message)
+        yield update({ priseList: [], entLoading: false,  });
+      }
+    },
     *getEntByRegionCallBack({ payload,callback }, { call, put, update, select }) {
       //企业列表 回调
       const response = yield call(services.GetEntByRegion, { ...payload });

@@ -74,7 +74,7 @@ const  dvaDispatch = (dispatch) => {
       },
     getPointByEntCode: (payload, callback) => { //监测点
         dispatch({
-          type: `remoteSupervision/getPointByEntCode`,
+          type: `common/getPointByEntCode`,
           payload: payload,
           callback: callback
         })
