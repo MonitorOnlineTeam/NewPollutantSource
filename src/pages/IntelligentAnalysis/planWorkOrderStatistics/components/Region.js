@@ -1436,7 +1436,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     if(dateCol&&dateCol[0]){ 
 
       col.push({
-        title: '工单分布(按工单创建日期分布)',
+        title: '工单分布(按工单完成时间、系统关闭时间分布)',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{
@@ -1492,7 +1492,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     if(dateCol&&dateCol[0]){ 
 
       col.push({
-        title: '工单分布(按工单创建日期分布)',
+        title: '工单分布(按工单完成时间、系统关闭时间分布)',
         width:200, 
         align:'center',
         children:dateCol.map((item,index)=>{
