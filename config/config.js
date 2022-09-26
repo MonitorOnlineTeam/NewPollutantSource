@@ -509,24 +509,41 @@ export default {
               ]
             },
             {
-              path: '/noticeManger', //公告管理
-              name: 'noticeManger',
+              path: '/systemManger', //系统管理
+              name: 'systemManger',
               routes: [
-                {
-                  path: '/noticeManger',
-                  redirect: '/noticeManger/problemManger', 
-                },
+              //   {
+              //     path: '/systemManger',
+              //     redirect: '/systemManger/noticeManger/problemManger', 
+              //   },
+              {
+                name:'noticeManger',
+                path: '/systemManger/noticeManger', // 公告管理
+                component: './systemManger/noticeManger', 
+              },
+              {
+                name:'noticeMangerDetail',
+                path: '/systemManger/noticeManger/detail', // 公告管理详情
+                component: './systemManger/noticeManger/detail', 
+              }, 
                 {
                   name:'problemManger',
-                  path: '/noticeManger/problemManger', //公告管理 问题管理
-                  component: './noticeManger/problemManger', 
+                  path: '/systemManger/problemManger', // 问题管理
+                  component: './systemManger/problemManger', 
                 },
                 {
-                  name:'problemManger',
-                  path: '/noticeManger/problemManger/detail', //公告管理 问题管理详情
-                  component: './noticeManger/problemManger/detail', 
-                }   
-              ] },
+                  name:'problemMangerDetail',
+                  path: '/systemManger/problemManger/detail', // 问题管理详情
+                  component: './systemManger/problemManger/detail', 
+                },
+                {
+                  name:'helpCenter',
+                  path: '/systemManger/helpCenter', // 帮助中心
+                  component: './systemManger/helpCenter', 
+                },   
+              ] 
+            
+            },
             {
               path: '/assetManage/customOrder', //客户订单
               routes: [

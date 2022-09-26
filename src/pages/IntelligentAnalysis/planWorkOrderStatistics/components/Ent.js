@@ -115,15 +115,15 @@ const Index = (props,ref) => {
 
   const plannedInspectTip =()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>通过该页面可以查看监测点派发计划工单情况。</li>
-    <li>运维状态：已结束则系统停止派发计划工单情况。</li>
+    <li>通过该页面可以查看监测点完成的计划工单情况。</li>
+    <li>运维状态：运维暂停则系统停止派发自动工单。</li>
   </ol>
   }
   const workOrderTip = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
     <li>运营周期内：在监测点的实际运营周期内。 </li>
-    <li>完成工单：当日系统派发的工单已被完成。</li>
-    <li>系统关闭工单：当日系统派发的工单被系统关闭。</li>
+    <li>完成工单：当日完成的工单。</li>
+    <li>系统关闭工单：当日系统关闭的工单。</li>
     <li>同时存在关闭和完成的工单：当日存在系统关闭工单，也存在完成工单。</li>
 
   </ol>
@@ -157,7 +157,7 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划巡检工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          title: <span>总数<Tooltip  title={'日期条件内，完成的计划巡检工单数量。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'inspectionCount',
           key: 'inspectionCount',
           width: 50,
@@ -177,7 +177,7 @@ const Index = (props,ref) => {
           title: '完成率',
           dataIndex: 'inspectionRate',
           key: 'inspectionRate',
-          width: 100,
+          width: 105,
           align:'center',
           sorter: (a, b) => a.inspectionRate - b.inspectionRate,
           render: (text, record) => {
@@ -201,7 +201,7 @@ const Index = (props,ref) => {
       width:200,
       children: [
         {
-          title: <span>总数<Tooltip  title={'日期条件内，派发的计划校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
+          title: <span>总数<Tooltip  title={'日期条件内，完成、系统关闭的计划校准工单数。'}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip></span>,
           dataIndex: 'calibrationCount',
           key: 'calibrationCount',
           width: 50,
@@ -221,7 +221,7 @@ const Index = (props,ref) => {
           title: '完成率',
           dataIndex: 'calibrationRate',
           key: 'calibrationRate',
-          width: 100,
+          width: 105,
           align:'center',
           sorter: (a, b) => a.calibrationRate - b.calibrationRate,
           render: (text, record) => {
@@ -230,7 +230,7 @@ const Index = (props,ref) => {
                 <Progress
                   percent={text=='-'? 0 : text}
                   size="small"
-                  style={{width:'85%'}}
+                  style={{width:'70%'}}
                   status='normal'
                   format={percent => <span style={{ color: 'rgba(0,0,0,.6)' }}>{text=='-'? text : text + '%'}</span>}
                 />
@@ -297,7 +297,7 @@ const Index = (props,ref) => {
           title: '完成率',
           dataIndex: 'taskRate',
           key: 'taskRate',
-          width: 100,
+          width: 105,
           align:'center',
           sorter: (a, b) => a.taskRate - b.taskRate,
           render: (text, record) => {
@@ -374,7 +374,7 @@ const Index = (props,ref) => {
           title: '完成率',
           dataIndex: 'taskRate',
           key: 'taskRate',
-          width: 100,
+          width: 105,
           align:'center',
           sorter: (a, b) => a.taskRate - b.taskRate,
           render: (text, record) => {

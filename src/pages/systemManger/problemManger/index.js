@@ -215,9 +215,9 @@ const Index = (props) => {
       console.log('Validate Failed:', errInfo);
     }
   };
-  const detail = (row) =>{
+  const detail = (data) =>{
 
-    router.push({pathname:'/Intelligentanalysis/operationWorkStatis/noAccountStatistics/ent/cityLevel',query:{row}})
+    router.push({pathname:'/systemManger/problemManger/detail',query:{data:JSON.stringify(data)}})
   }
   const del =  async (record) => {
     const values = await form.validateFields();
@@ -260,16 +260,17 @@ const Index = (props) => {
   }
   const onModalOk  = async () =>{ //添加 or 编辑弹框
 
-    setDescText({ ...validatePrimeDesc(descText), descText });
-    
-    if(JSON.stringify(descText) === '{}'){ //空对象
-      setDescText({validateStatus: 'error',  errorMsg: '问题描述不能为空', });
-    }
     try {
       const values = await form2.validateFields();//触发校验
+
+      const descVal = values.desc.replaceAll(/<p>|[</p>]/g,'').trim();
+      if((!descVal) || descVal==='br'){
+         message.warning('请输入问题描述')
+         return;
+      }
+
       type==='add'? props.addManufacturer({
        ...values,
-        desc:descText,
       },()=>{
         setFromVisible(false)
         onFinish()
@@ -300,31 +301,8 @@ const Index = (props) => {
     setPageIndex(PageIndex)
     onFinish(PageIndex,PageSize)
   }
-  const validatePrimeDesc = (text) => {
-    console.log(text)
-    if (text) {
-      return {
-        validateStatus: 'success',
-        errorMsg: null,
-      };
-    }
-  
-    return {
-      validateStatus: 'error',
-      errorMsg: '问题描述不能为空',
-    };
-  };
-  const [descText,setDescText ] = useState({})
-  const descChange = (value) =>{
-  const data = value.replaceAll(/<p>|[</p>]/g,'').trim();
-  const val = data && data!='br' ? value : undefined
-    setDescText({ ...validatePrimeDesc(val), val });
-  }
 
-  const descBlur = (e) =>{
-    
-    console.log(e)
-  }
+
   const searchComponents = () =>{
      return  <Form
     form={form}
@@ -425,8 +403,8 @@ const Index = (props) => {
       </Form.Item>
       </Col>
         <Col span={24}>
-        <Form.Item label="答案描述"   validateStatus={descText.validateStatus }     help={descText.errorMsg}>
-        <ReactQuill theme="snow"   onBlur={descBlur}  onChange={descChange}   modules={modules}  className=" ql-editor"  style={{ height:'calc(100% - 500px)' }}/>
+        <Form.Item label="答案描述"  name='desc'     rules={[  { required: true,message:'请输入答案描述' }]}>
+        <ReactQuill theme="snow"   modules={modules}  className="ql-editor"  style={{ height:'calc(100% - 500px)' }}/>
       </Form.Item>
       </Col>
       <Col span={24}>
