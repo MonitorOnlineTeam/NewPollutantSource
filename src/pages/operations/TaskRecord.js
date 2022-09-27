@@ -28,6 +28,7 @@ import {
   Col,
   Tag,
   Badge,
+  DatePicker,
 } from 'antd';
 import moment from 'moment';
 import Cookie from 'js-cookie';
@@ -41,7 +42,7 @@ import  TaskRecordDetails  from '@/pages/EmergencyTodoList/EmergencyDetailInfoLa
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
-
+const { RangePicker } = DatePicker;
 @connect(({ loading, operations, task, global }) => ({
   operationsUserList: operations.operationsUserList,
   loading: loading.effects['operations/addTask'],
@@ -601,11 +602,16 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             initialValue: gettasklistqueryparams.CreateTime,
                           })(
                             <RangePicker_
+                            isNoPanelChange
                             dateValue={ gettasklistqueryparams.CreateTime}
                             style={{ width: '100%' }}
                             allowClear={false}
                             format="YYYY-MM-DD HH:mm:ss"
-                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')}  showTime="YYYY-MM-DD HH:mm:ss" />,
+                            callback={(dates, type) => this.dateCallBack(dates, type, 'CreateTime')} 
+                            showTime={{
+                              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+                            }}
+                            />,
                           )}
                       </FormItem>
                      
@@ -702,10 +708,13 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             initialValue: gettasklistqueryparams.CompleteTime,
                           })(
                             <RangePicker_
+                            isNoPanelChange
                             style={{ width: '100%' }}
                             dateValue={ gettasklistqueryparams.CompleteTime}
                             format="YYYY-MM-DD HH:mm:ss"
-                            showTime="YYYY-MM-DD HH:mm:ss"
+                            showTime={{
+                              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+                            }}
                             callback={(dates, type) => this.dateCallBack(dates, type, 'CompleteTime')} allowClear />,
                          )}
                       </FormItem>

@@ -1188,14 +1188,15 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
     setWorkPageSize(PageSize)
     insideOrOutsideWorkGetTaskWorkOrderList({
       regionCode:regionCode,
+      entName:workRegForm.getFieldValue('entName'),
       pageIndex:PageIndex,
       pageSize:PageSize
     }) 
   }
   const workRegExports =   () =>{ //导出 工单
-
     const par = {
       ...queryPar,
+      entName:workRegForm.getFieldValue('entName'),
       taskType:outTypePar[outType],
       staticType:3,
       regionCode:regionCode,

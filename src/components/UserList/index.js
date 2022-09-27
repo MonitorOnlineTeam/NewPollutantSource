@@ -6,6 +6,7 @@ import { Select,Spin,} from 'antd'
 //用户列表 组件
 @connect(({  common,loading }) => ({
   userList : common.userList,
+  userLoading: loading.effects[`common/getUserList`],
 }))
 export default class Index extends Component {
   static defaultProps = {
@@ -28,8 +29,8 @@ export default class Index extends Component {
   }
   };
   componentDidMount() {
-      const {dispatch,userList, data} = this.props;
-      if(userList.length<=0 || !data){
+      const {dispatch,userList,} = this.props;
+      if(userList.length<=0){
         dispatch({ type: 'common/getUserList', payload: {},  })  
       }
 
@@ -39,19 +40,19 @@ export default class Index extends Component {
 
   }
   render() {
-      const {userLoading,style} = this.props
-    return (
-
+      const {userLoading,style,} = this.props
+    return (<Spin spinning={userLoading} size='small'>
         <Select
         allowClear
         showSearch
         optionFilterProp="children"
         placeholder={'请输入'}
-        style={{width:'200px'}}
+        style={{ width: '100%', ...style }}
         {...this.props}
       >
         {this.children()}
       </Select>
+      </Spin>
     );
   }
 }

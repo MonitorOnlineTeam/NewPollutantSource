@@ -24,6 +24,9 @@ export default Model.extend({
     userList: [],
     userTotal:null,
     entLoading:true,
+    inspectorUserList:[],
+    operationUserList:[],
+    noFilterRegionList:[],
   },
 
   effects: {
@@ -259,8 +262,33 @@ export default Model.extend({
         userList: result.Datas,
         userTotal:result.Total,
       });
+    }else {
+      message.error(result.Message);
     }
   },
+    // 运维人员 督查人员
+    *getInspectorUserList({ payload,callback }, { call, update }) {
+      const result = yield call(services.GetInspectorUserList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          inspectorUserList:result.Datas? result.Datas.InspectorUserList : [],
+          operationUserList:result.Datas? result.Datas.OperationUserList :[],
+        });
+      }else {
+        message.error(result.Message);
+      }
+    },
+      // 行政区 非过滤
+      *getNoFilterRegionList({ payload,callback }, { call, update }) {
+        const result = yield call(services.GetNoFilterRegionList, payload);
+        if (result.IsSuccess) {
+          yield update({
+            noFilterRegionList:result.Datas? result.Datas.list : [],
+          });
+        }else {
+          message.error(result.Message);
+        }
+      },
   },
-
+  
 });

@@ -131,3 +131,14 @@ export async function GetUserList(params) {
   return result;
 }
 
+// 运维人员  督查人员 列表
+export async function GetInspectorUserList(params) {
+  const result = post('/api/rest/PollutantSourceApi/TaskFormApi/GetInspectorUserList', params, null);
+  return result;
+}
+
+//行政区  列表
+export async function GetNoFilterRegionList(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterRegionList', params, null);
+  return result;
+}

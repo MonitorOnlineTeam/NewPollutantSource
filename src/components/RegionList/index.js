@@ -2,15 +2,19 @@
 import React, { Component } from 'react';
 import BreadcrumbWrapper from '@/components/BreadcrumbWrapper';
 import { connect } from 'dva';
-import { Select,TreeSelect} from 'antd';
+import { Select,TreeSelect,Spin,} from 'antd';
+import common from '@/models/common';
 
 const { TreeNode } = TreeSelect;
 
 // import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 
 //行政区列表组件
-@connect(({  autoForm }) => ({
+@connect(({  autoForm,common,loading, }) => ({
     regionList: autoForm.regionList,
+    noFilterRegionList:common.noFilterRegionList,
+    regLoading: loading.effects[`autoForm/getRegions`],
+    noFilteregLoading: loading.effects[`common/getNoFilterRegionList`],
 }))
 export default class Index extends Component {
   static defaultProps = { 
@@ -32,7 +36,6 @@ export default class Index extends Component {
     if (data&&data.length > 0 && i<= levelNum) {
       i++;
       return data.map(item => {
-        // i > levelNum ? item.disabled = false : item.disabled = true;  //设置父级都为禁用模式
         return <TreeNode key={item.value} value={item.value} title={item.label}>
              {this.regchildren(item.children,i)}
            </TreeNode>
@@ -40,33 +43,19 @@ export default class Index extends Component {
   }
  
 
-    // i++;
-//   return data.map(item => {
-//     if (item.children&&item.children.length>0) {
-//        item.disabled = true;  //设置父级都为禁用模式
-//        return (
-//         <TreeNode
-//           key={item.value}
-//           title={item.label}
-//           value={item.value}
-//           disabled={item.disabled}
-//         >
-//           {this.regchildren(item.children,i)}
-//         </TreeNode>
-//       );
-//     }
-//     return <TreeNode {...item} key={item.key} title={item.label} value={item.value} />;
-//   })
+
 }
   
 
   componentDidMount() {
     
     // this.props.dispatch({  type: 'autoForm/getRegions',  payload: {  PointMark: '2', RegionCode:''}, });  //获取行政区列表
-  
+     if(this.props.noFilter&&this.props.noFilterRegionList.length<=0){
+      this.props.dispatch({  type: 'common/getNoFilterRegionList',  payload: {  PointMark: '2', RegionCode:''}, });
+     }
    }
   render() {
-      const {selectType,RegionCode,changeRegion,regionList} = this.props
+      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteregLoading,regLoading} = this.props
     return (
 //       <SdlCascader
 //        style={{ width: 170 }}
@@ -75,6 +64,7 @@ export default class Index extends Component {
 //        selectType={selectType}
 //        onChange={changeRegion}
 // /> 
+     <Spin spinning={noFilter? noFilteregLoading : regLoading} size='small'>
       <TreeSelect
       virtual={false}
       showSearch
@@ -83,14 +73,15 @@ export default class Index extends Component {
       placeholder="行政区"
       autoExpandParent={false}
       value={RegionCode ? RegionCode : undefined}
-      style={{ width: 170 }}
+      style={{ width: '100%' }}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
       treeNodeFilterProp='title'
       onChange={changeRegion}
       {...this.props}
     >
-       {this.regchildren(regionList,1)}
+       {this.regchildren(noFilter?noFilterRegionList:regionList,1)}
       </TreeSelect>
+      </Spin>
     );
   }
 }

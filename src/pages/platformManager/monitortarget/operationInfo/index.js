@@ -423,10 +423,10 @@ const Index = (props) => {
   }
   const del = (record) => {
 
-  //   if(!record.deleteFlag){
-  //     message.warning('没有操作权限，请联系管理员')
-  //     return;
-  //  }
+    if(!record.deleteFlag){
+      message.warning('没有操作权限，请联系管理员')
+      return;
+   }
     props.deleteOperationPoint({ ID: record.ID }, () => {
       onFinish()
     })
@@ -491,11 +491,10 @@ const Index = (props) => {
   const onModalOk = async () => { //添加 or 编辑弹框
     try {
       const values = await form2.validateFields();
-      console.log(values)
-      // if(!values.deleteFlag){
-      //     message.warning('没有操作权限，请联系管理员')
-      //     return;
-      // }
+      if(!values.deleteFlag){
+          message.warning('没有操作权限，请联系管理员')
+          return;
+      }
       props.updateOrAddProjectRelation(
         {
           ...values,

@@ -10,13 +10,39 @@ import { downloadFile } from '@/utils/utils';
 export default Model.extend({
   namespace: 'helpCenter',
   state: {
-    tableDatas:[],
-    parametersList:[],
-    tableLoading:false,
-    tableTotal:0,
-    monitoringTypeList:[],
-    manufacturerList:[],
-    maxNum:null,
+    treeData : [
+    {
+      title: `网页端`,
+      key: '0-0',
+      children: [
+        {
+          title: `常见问题`,
+          key: '0-0-1',
+        },
+        {
+          title: `功能使用`,
+          key: '0-0-2',
+        },
+      ],
+    },
+    {
+      title: '运维APP端',
+      key: '0-1',
+      children: [
+        {
+          title: '常见问题',
+          key: '0-1-1',
+        },
+        {
+          title: '功能使用',
+          key: '0-1-2',
+        },
+      ],
+    },
+
+],
+    listData:[{content:'player支付凡是的设置文档',key:'1'}],
+    listDataTotal:0,
   },
   effects: {
     *getManufacturerList({ payload,callback }, { call, put, update }) { //列表

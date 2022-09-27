@@ -19,16 +19,17 @@ class Index extends Component {
 
 
   componentDidMount() {
-
+    
+    const { operationCompanyList } = this.props;
+    if(operationCompanyList.length<=0){
     this.props.dispatch({
       type: 'operations/getOperationCompanyList',//获取运维单位列表
       payload: { PointMark: '2', RegionCode: '' },
       callback: (data) => {
-        // const userAccount = Cookie.get('currentUser') && JSON.parse(Cookie.get('currentUser')) && JSON.parse(Cookie.get('currentUser')).UserAccount;
-        this.props.getDefaultOpration(data && data[0] && data[0].id) //默认选中第一个
+        this.props.getDefaultOpration && this.props.getDefaultOpration(data && data[0] && data[0].id) //默认选中第一个
       }
-
-      });  
+    });
+  }
 
   }
 
@@ -37,7 +38,10 @@ class Index extends Component {
     const { operationCompanyLoading, operationCompanyList, style, placeholder, } = this.props;
 
     return (<Spin spinning={operationCompanyLoading} size='small'>
-      <Select style={{ width: '100%', ...style }} placeholder={placeholder ? placeholder : '请选择'}  {...this.props} >
+      <Select 
+         allowClear
+         showSearch
+         style={{ width: '100%', ...style }} placeholder={placeholder ? placeholder : '请选择'}  {...this.props} >
         {operationCompanyList.map(item => {
           return <Option key={item.id} value={item.id}>{item.name}</Option>
         })

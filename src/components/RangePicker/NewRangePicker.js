@@ -196,7 +196,6 @@ class NewRangePicker extends Component {
     }
 
     onDateChange = (dates, dateStrings) => { 
-        
         if (dates && dates.length && dates[0] && dates[1]) {
             const dateValue = this.getFormatDate(dates[0], dates[1]);
             this.props.onChange&&this.props.onChange(dateValue, dateStrings)
@@ -224,8 +223,7 @@ class NewRangePicker extends Component {
     }
 
 
-    onPanelChange = (dates, mode) => {
-
+    onPanelChange = (dates, mode) => { 
         const dateValue = this.getFormatDate(dates[0], dates[1], null, this.props.dataQuery);
         if (dateValue) {
             this.setState({
@@ -268,7 +266,7 @@ class NewRangePicker extends Component {
                 }
                 {...this.props}
                 onChange={this.onDateChange}
-                onPanelChange={this.onPanelChange}
+                onPanelChange={(!this.props.isNoPanelChange)&&this.onPanelChange}
             />
         );
     }

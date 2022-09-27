@@ -2003,7 +2003,7 @@ const Index = (props) => {
           >
             <Row align='middle'>
               <Form.Item label='行政区' name='RegionCode' className='regSty'>
-                <RegionList levelNum={2} style={{ width: 150}}/>
+                <RegionList noFilter  levelNum={2} style={{ width: 150}}/>
               </Form.Item>
               <Form.Item label='企业' name='EntCode'>
                 <EntAtmoList noFilter pollutantType={2} style={{ width: 200}}/>

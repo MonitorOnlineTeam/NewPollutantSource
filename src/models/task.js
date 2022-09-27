@@ -81,7 +81,7 @@ export default Model.extend({
             OperationsUserId: '',
             TaskType: '',
             CompleteTime: '',
-            CreateTime:[moment(moment().add(-6, 'd').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            CreateTime:[moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
             pageIndex: 1,
             pageSize: 20,
             total: 0,

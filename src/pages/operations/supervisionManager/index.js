@@ -22,7 +22,7 @@ import PageLoading from '@/components/PageLoading'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import EntAtmoList from '@/components/EntAtmoList'
 import EntType from '@/components/EntType'
-import UserList from '@/components/UserList'
+import OperationInspectoUserList from '@/components/OperationInspectoUserList'
 import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
 import { getBase64  } from '@/utils/utils';
@@ -43,7 +43,6 @@ const dvaPropsData = ({ loading, supervisionManager, global,common,point,autoFor
   pointParamesLoading: loading.effects[`${namespace}/getPointParames`],
   infoloading: loading.effects[`${namespace}/getInspectorOperationInfoList`],
   userLoading: loading.effects[`common/getUserList`],
-  regLoading: loading.effects[`autoForm/getRegions`],
   entLoading:common.entLoading,
   clientHeight: global.clientHeight,
   monitoringTypeList: point.monitoringTypeList,
@@ -679,11 +678,9 @@ const Index = (props) => {
       onValuesChange={onValuesChange}
     >
       <Row align='middle'>
-        <Spin  size='small' spinning={props.regLoading} style={{ top: -3,left:20 }}>
         <Form.Item label='行政区' name='RegionCode' >
-          <RegionList levelNum={3} style={{ width: 150 }}/>
+          <RegionList  noFilter levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
-        </Spin>
         <Spin spinning={entLoading} size='small' style={{ top: -3 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList noFilter  style={{ width: 300}} />
@@ -706,7 +703,7 @@ const Index = (props) => {
       <Row>
       <Spin  spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
         <Form.Item label="督查人员" name="Inspector"  >
-         <UserList   style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
+         <OperationInspectoUserList   type='2'  style={{ width: 150}} />
         </Form.Item>
         </Spin>
         <Form.Item label="督查日期" name="time" style={{ marginLeft:8,marginRight:8 }}  >
@@ -717,7 +714,7 @@ const Index = (props) => {
         </Form.Item>
         <Spin spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
         <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
-        <UserList  style={{ width: 150}}  data={operationInfoList&&operationInfoList.UserList}/>
+        <OperationInspectoUserList  noFirst style={{ width: 150}} />
         </Form.Item>
         </Spin>
         <Form.Item>
@@ -1330,7 +1327,7 @@ const Index = (props) => {
             <Col span={12}>
              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
              <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
-              <UserList allowClear={false}  disabled data={operationInfoList&&operationInfoList.UserList}/>
+              <OperationInspectoUserList  type='2' allowClear={false}  disabled />
                </Form.Item>
                </Spin>
             </Col >
@@ -1342,7 +1339,7 @@ const Index = (props) => {
             <Col span={12}>
               <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}>
                <Form.Item allowClear={false} label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
-               <UserList allowClear={false} data={operationInfoList&&operationInfoList.UserList}/>
+               <OperationInspectoUserList  allowClear={false} />
                </Form.Item>
                </Spin>
             </Col>

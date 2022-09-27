@@ -21,7 +21,6 @@ import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import NumTips from '@/components/NumTips'
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
-import UserList from '@/components/UserList'
 const { TextArea } = Input;
 const { Option } = Select;
 

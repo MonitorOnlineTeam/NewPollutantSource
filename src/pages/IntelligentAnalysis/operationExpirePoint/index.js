@@ -117,6 +117,12 @@ const Index = (props) => {
       align:'center'
     },
     {
+      title: '项目签订人',
+      dataIndex: 'signName',
+      key:'signName',
+      align:'center'
+    },
+    {
       title: '监控目标',
       dataIndex: 'parentName',
       key:'parentName',
