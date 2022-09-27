@@ -602,7 +602,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                             initialValue: gettasklistqueryparams.CreateTime,
                           })(
                             <RangePicker_
-                            isNoPanelChange
+                            // isNoPanelChange
                             dateValue={ gettasklistqueryparams.CreateTime}
                             style={{ width: '100%' }}
                             allowClear={false}
