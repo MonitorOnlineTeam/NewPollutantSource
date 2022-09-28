@@ -46,7 +46,7 @@ class SdlCascader extends Component {
     //   }
     // })
     if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId ||  itemName === 'dbo.View_TestRegion.RegionName' ){
-      !data.length && this.props.dispatch({type: "common/getEnterpriseAndPoint",
+      !data.length && this.props.dispatch({type: this.props.noFilter?"common/getCascaderNoFilterRegionList" : "common/getEnterpriseAndPoint",
       // payload: {
       //   ConfigId: configId,
       //   ValueField: itemValue,
@@ -59,7 +59,7 @@ class SdlCascader extends Component {
     })
       // setTimeout(()=>{this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }),300})
     }else{
-      !data.length && this.props.dispatch({type: "common/getIndustryTree",
+      !data.length && this.props.dispatch({type:  "common/getIndustryTree",
       payload: {
         ConfigId: configId,
         ValueField: itemValue,

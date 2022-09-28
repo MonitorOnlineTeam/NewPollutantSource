@@ -286,10 +286,23 @@ export default Model.extend({
           yield update({
             noFilterRegionList:result.Datas? result.Datas.list : [],
           });
+          callback&&callback(result.Datas? result.Datas.list : [])
         }else {
           message.error(result.Message);
         }
       },
+         // 行政区 非过滤  联级选择下拉列表  防止loading重复刷新
+         *getCascaderNoFilterRegionList({ payload,callback }, { call, update }) {
+          const result = yield call(services.GetNoFilterRegionList, payload);
+          if (result.IsSuccess) {
+            yield update({
+              noFilterRegionList:result.Datas? result.Datas.list : [],
+            });
+            callback&&callback(result.Datas? result.Datas.list : [])
+          }else {
+            message.error(result.Message);
+          }
+        },   
   },
   
 });

@@ -724,7 +724,7 @@ const Index = (props) => {
           <Button onClick={() => { form.resetFields() }} style={{ marginRight: 8 }} >
             重置
      </Button>
-      {!isRecord&&<Button icon={<PlusOutlined />} type="primary" style={{ marginRight: 8 }} onClick={() => { add() }} >
+      {!isRecord&&<Button  style={{ marginRight: 8 }} onClick={() => { add() }} >
             添加
        </Button>}
         <Button  icon={<ExportOutlined />} onClick={()=>{exports()}} loading={exportLoading}>
@@ -1310,9 +1310,11 @@ const Index = (props) => {
               </Form.Item>
             </Col>}
             <Col span={12}>
+            <Spin spinning={infoloading } size='small' style={{top:-3,left:0}} >
               <Form.Item label='行政区' name='RegionCode' rules={[{ required: true, message: '请选择行政区' }]}>
-               <SdlCascader  selectType='3,是'/>
+               <SdlCascader noFilter selectType='3,是'/>
               </Form.Item>
+              </Spin> 
             </Col>
 
             <Col span={12}>

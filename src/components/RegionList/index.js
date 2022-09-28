@@ -14,7 +14,7 @@ const { TreeNode } = TreeSelect;
     regionList: autoForm.regionList,
     noFilterRegionList:common.noFilterRegionList,
     regLoading: loading.effects[`autoForm/getRegions`],
-    noFilteregLoading: loading.effects[`common/getNoFilterRegionList`],
+    noFilteRegLoading: loading.effects[`common/getNoFilterRegionList`],
 }))
 export default class Index extends Component {
   static defaultProps = { 
@@ -55,7 +55,7 @@ export default class Index extends Component {
      }
    }
   render() {
-      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteregLoading,regLoading} = this.props
+      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading} = this.props
     return (
 //       <SdlCascader
 //        style={{ width: 170 }}
@@ -64,7 +64,7 @@ export default class Index extends Component {
 //        selectType={selectType}
 //        onChange={changeRegion}
 // /> 
-     <Spin spinning={noFilter? noFilteregLoading : regLoading} size='small'>
+     <Spin spinning={noFilter? noFilteRegLoading : regLoading} size='small'>
       <TreeSelect
       virtual={false}
       showSearch
