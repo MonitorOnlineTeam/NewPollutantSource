@@ -487,18 +487,17 @@ const Index = (props,ref ) => {
       // }
     },
     {
-      title: '运维负责人',
-      dataIndex: 'operationUser',
-      key:'operationUser',
-      align:'center',
-      fixed: 'left',
-    },
-    {
       title: '监测点名称',
       dataIndex: 'pointName',
       key:'pointName',
       align:'center',
       fixed: 'left',
+    },
+    {
+      title: '运维负责人',
+      dataIndex: 'operationUser',
+      key:'operationUser',
+      align:'center',
     },
     {
       title: '巡检周期',
@@ -582,7 +581,6 @@ const Index = (props,ref ) => {
       dataIndex: 'operationUser',
       key:'operationUser',
       align:'center',
-      fixed: 'left',
     },
     {
       title: '校准周期',

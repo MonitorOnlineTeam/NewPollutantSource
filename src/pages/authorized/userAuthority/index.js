@@ -91,6 +91,7 @@ export default class UserAuthority extends Component {
       leafTreeDatas: [],
       newEntAndPoint:[],
       okLoading:false,
+      pollutantType:2,
     };
 
     this.columns = [
@@ -799,7 +800,6 @@ export default class UserAuthority extends Component {
 
                       <SelectPollutantType
                         showType="radio"
-                        defaultPollutantCode={this.state.pollutantType}
                         mode="multiple"
                         onChange={this.handleSizeChange}
                         onlyShowEnt

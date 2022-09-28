@@ -81,7 +81,7 @@ export default class Index extends Component  {
                     </ul>
 
                     <ul ref='copyDivUI' id='copyUl'> 
-                    {this.props.data && this.props.data.length>5
+                    {this.props.data && this.props.data.length>7
                             ?
                             this.props.data.map(this.tableBody)
                             : null

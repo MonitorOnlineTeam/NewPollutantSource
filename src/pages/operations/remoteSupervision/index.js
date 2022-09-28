@@ -764,7 +764,7 @@ const Index = (props) => {
             Data: { ...commonData, RangeUpload: values.files1, CouUpload: values.files2, },
             DataList: dataList,
           }, (id) => {
-            title==='添加'&&setAddId(id)
+            title==='添加'&&id&&setAddId(id)
             type==1? setSaveLoading1(false) : setSaveLoading2(false)
             onFinish(pageIndex, pageSize)
           })

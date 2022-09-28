@@ -20,8 +20,9 @@ class Index extends Component {
 
   componentDidMount() {
     
-    const { operationCompanyList } = this.props;
-    if(operationCompanyList.length<=0){
+    const { operationCompanyList,noFirst, } = this.props;
+ 
+    if(noFirst){ return }
     this.props.dispatch({
       type: 'operations/getOperationCompanyList',//获取运维单位列表
       payload: { PointMark: '2', RegionCode: '' },
@@ -29,7 +30,6 @@ class Index extends Component {
         this.props.getDefaultOpration && this.props.getDefaultOpration(data && data[0] && data[0].id) //默认选中第一个
       }
     });
-  }
 
   }
 

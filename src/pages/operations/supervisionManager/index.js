@@ -71,9 +71,9 @@ const dvaDispatch = (dispatch) => {
         callback: callback
       })
     },
-    getEntByRegionCallBack: (payload, callback) => { //企业
+    getEntNoFilterList: (payload, callback) => { //企业
       dispatch({
-        type: `common/getEntByRegionCallBack`,
+        type: `common/getEntNoFilterList`,
         payload: payload,
         callback: callback
       })
@@ -460,7 +460,7 @@ const Index = (props) => {
   const [entList,setEntList ] = useState([])
   const getEntList = (pollutantType,callback) =>{
     setEntLoading2(true)
-    props.getEntByRegionCallBack({RegionCode:'',PollutantType:pollutantType},(data)=>{
+    props.getEntNoFilterList({RegionCode:'',PollutantType:pollutantType},(data)=>{
       setEntList(data)
       setEntLoading2(false);
       callback&&callback();
@@ -1327,7 +1327,7 @@ const Index = (props) => {
             <Col span={12}>
              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
              <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
-              <OperationInspectoUserList  type='2' allowClear={false}  disabled />
+              <OperationInspectoUserList noFirst type='2' allowClear={false}  disabled />
                </Form.Item>
                </Spin>
             </Col >
@@ -1339,7 +1339,7 @@ const Index = (props) => {
             <Col span={12}>
               <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}>
                <Form.Item allowClear={false} label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
-               <OperationInspectoUserList  allowClear={false} />
+               <OperationInspectoUserList  noFirst allowClear={false} />
                </Form.Item>
                </Spin>
             </Col>

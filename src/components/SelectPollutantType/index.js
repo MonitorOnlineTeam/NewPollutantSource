@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Radio, Select } from 'antd'
 import { connect } from 'dva';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -35,7 +36,7 @@ class SelectPollutantType extends PureComponent {
         if (onlyShowAir) {
           pollutantTypelist = data.filter(item => item.pollutantTypeCode == 5);
         }
-        let defaultPollutantCode = pollutantTypelist[1] && pollutantTypelist[1]['pollutantTypeCode'];
+        let defaultPollutantCode = pollutantTypelist[0] && pollutantTypelist[0]['pollutantTypeCode'];
         this.props.initCallback && this.props.initCallback(defaultPollutantCode)
         this.setState({
           pollutantTypelist: pollutantTypelist,
@@ -47,7 +48,7 @@ class SelectPollutantType extends PureComponent {
 
 
   render() {
-    const { loading, showType, showAll } = this.props;
+    const { loading, showType, showAll, } = this.props;
     const { pollutantTypelist, defaultPollutantCode, } = this.state;
     if (!loading) {
       return (
@@ -59,7 +60,7 @@ class SelectPollutantType extends PureComponent {
                 {...this.props}
               >
                 {
-                  pollutantTypelist.reverse().map(item => {
+                  pollutantTypelist.map(item => {
                     return <Radio.Button key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</Radio.Button>
                   })
                 }
@@ -70,7 +71,7 @@ class SelectPollutantType extends PureComponent {
                 {...this.props}
               >
                 {
-                  pollutantTypelist.reverse().map(item => {
+                  pollutantTypelist.map(item => {
                     return <Option key={item.pollutantTypeCode} value={item.pollutantTypeCode}>{item.pollutantTypeName}</Option>
                   })
                 }

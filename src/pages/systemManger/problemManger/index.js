@@ -35,7 +35,7 @@ const dvaPropsData =  ({ loading,problemManger }) => ({
   pointDatas:problemManger.pointDatas,
   tableLoading:problemManger.tableLoading,
   tableTotal:problemManger.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addManufacturer`],
+  loadingAddConfirm: loading.effects[`${namespace}/addOrUpdQuestionDetial`],
   loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
 })
 
@@ -47,31 +47,23 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getManufacturerList:(payload)=>{ //列表
+    getQuestionDetialList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getManufacturerList`,
+        type: `${namespace}/getQuestionDetialList`,
         payload:payload,
       })
     },
-    addManufacturer : (payload,callback) =>{ // 添加
+    addOrUpdQuestionDetial : (payload,callback) =>{ // 添加修改
       dispatch({
-        type: `${namespace}/addManufacturer`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editManufacturer : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editManufacturer`,
+        type: `${namespace}/addOrUpdQuestionDetial`,
         payload:payload,
         callback:callback
       })
       
     },
-    delManufacturer:(payload,callback)=>{ //删除
+    deleteQuestionDetial:(payload,callback)=>{ //删除
       dispatch({
-        type: `${namespace}/delManufacturer`, 
+        type: `${namespace}/deleteQuestionDetial`, 
         payload:payload,
         callback:callback
       }) 
@@ -221,9 +213,9 @@ const Index = (props) => {
   }
   const del =  async (record) => {
     const values = await form.validateFields();
-    props.delManufacturer({ID:record.ID},()=>{  
+    props.deleteQuestionDetial({ID:record.ID},()=>{  
       setPageIndex(1)
-      props.getManufacturerList({
+      props.getQuestionDetialList({
         pageIndex:1,
         pageSize:pageSize,
         ...values,
@@ -249,7 +241,7 @@ const Index = (props) => {
       const values = await form.validateFields();
       pageIndexs&& typeof  pageIndexs === "number"? setPageIndex(pageIndexs) : setPageIndex(1); //除分页和编辑  每次查询页码重置为第一页
 
-      props.getManufacturerList({
+      props.getQuestionDetialList({
         pageIndex:pageIndexs&& typeof  pageIndexs === "number" ?pageIndexs:1,
         pageSize:pageSizes?pageSizes:pageSize,
         ...values,
@@ -268,33 +260,20 @@ const Index = (props) => {
          message.warning('请输入问题描述')
          return;
       }
-
-      type==='add'? props.addManufacturer({
+      props.addOrUpdQuestionDetial({
        ...values,
       },()=>{
         setFromVisible(false)
-        onFinish()
+        type==='add'? onFinish() :  onFinish(pageIndex)
       })
-      :
-     props.editManufacturer({
-        ...values,
-      },()=>{
-        setFromVisible(false)
-        onFinish(pageIndex)
-      })
+
       
     } catch (errInfo) {
       console.log('错误信息:', errInfo);
     }
   }
-  const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时的监测类型请求
-    if(Object.keys(hangedValues).join() == 'PollutantType'){
-      props.addEditPollutantById({id:hangedValues.PollutantType,type:1}) //监测类型
-      form2.setFieldsValue({PollutantCode:undefined})
+  const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时
 
-      props.addEditGetEquipmentName({id:hangedValues.PollutantType,type:2}) //设备名称
-      form2.setFieldsValue({EquipmentName:undefined})
-    }
   }
   const handleTableChange =   async (PageIndex,PageSize )=>{ //分页
     setPageSize(PageSize)

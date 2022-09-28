@@ -90,10 +90,10 @@ export default Model.extend({
       const result = yield call(services.AddOrUpdConsistencyCheck, { ...payload });
       if (result.IsSuccess) {
         message.success(result.Message)
-        callback(result.Datas)
       } else {
         message.error(result.Message)
       }
+      callback(result.Datas)
     },
     //添加或修改数据一致性核查
     *addOrUpdParamCheck({ payload, callback }, { call, update, select, put }) {

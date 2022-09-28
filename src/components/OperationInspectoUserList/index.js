@@ -36,12 +36,10 @@ export default class Index extends Component {
   componentDidMount() {
     const { dispatch,operationUserList,inspectorUserList,noFirst, } = this.props;
       if(noFirst){ return }
-      if(operationUserList.length<=0&&inspectorUserList.length<=0 ){
       dispatch({
         type: 'common/getInspectorUserList',
         payload: {},
       })
-    }
 
   }
   componentDidUpdate(props) {

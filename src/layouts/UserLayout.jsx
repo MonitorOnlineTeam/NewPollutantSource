@@ -109,6 +109,8 @@ const UserLayout = props => {
                   </div>
                   <div>
                     <QRCode value={getIp} size={200} />
+                  <div style={{paddingTop:6,fontSize:16,}}>企业业主使用</div>
+
                   </div>
                 </Col> 
                 <Col span={12} style={{ textAlign: 'center' }}>
@@ -121,6 +123,7 @@ const UserLayout = props => {
                     alt=""
                     src="/yunweicode.png"
                   />
+                  <div style={{position:'absolute',right:0,width:'100%',bottom:24,fontSize:16,background:'#fff'}}>运维工程师使用</div>
                   </div>
                 </Col>
               </Row>

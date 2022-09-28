@@ -1,30 +1,24 @@
 import { post, get, getNew } from '@/utils/request';
 
 /**
- * 调试检测
+ * 问题清单
  */
 
  
-//设备厂家 列表  
-export async function GetManufacturerList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetManufacturerList',params, null);
+// 列表  
+export async function GetQuestionDetialList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetQuestionDetialList',params, null);
   return result;
 }
-//设备厂家 添加
-export async function AddManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddManufacturer',params, null);
+// 添加or修改
+export async function AddOrUpdQuestionDetial(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdQuestionDetial',params, null);
   return result;
 }
 
-// 设备厂家 修改
-export async function EditManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/EditManufacturer',params, null);
-  return result;
-}
- 
-// 设备厂家  删除
-export async function DelManufacturer(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DelManufacturer',params, null);
+// 删除
+export async function DeleteQuestionDetial(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteQuestionDetial',params, null);
   return result;
 }
 

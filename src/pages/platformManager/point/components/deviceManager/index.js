@@ -318,6 +318,10 @@ const gasSyatemCancel = (record,type) =>{
       setGasSystemEditingKey('');
     }
   } catch (errInfo) {
+    if(errInfo&&errInfo.errorFields&&errInfo.errorFields[0]&&errInfo.errorFields[0].name&&errInfo.errorFields[0].name[0]=='gasManufacturerName'){
+       message.warning('请选择CEMS设备生产商')
+    }
+   
     console.log('Validate Failed:', errInfo);
   }
  }
@@ -967,7 +971,7 @@ const gasSyatemCancel = (record,type) =>{
     } else if (inputType === 'number') {
       inputNode = <InputNumber placeholder={`请输入`} />
     } else {
-      inputNode = <Input  title={formDevice.getFieldValue([dataIndex])} disabled={title==='设备名称'||title==='设备型号'? true : title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? isManual : title ==='CEMS设备规格型号'? choiceGasManufacturer :false} placeholder={  title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? `CIS同步使用` : `请输入`} />
+      inputNode = <Input  title={formDevice.getFieldValue([dataIndex])} disabled={title==='设备名称'||title==='设备型号' || title ==='CEMS设备规格型号'? true : title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? isManual  :false} placeholder={  title==='手填设备厂家'||title==='手填设备名称'||title==='手填设备型号'? `CIS同步使用` : `请输入`} />
     }
 
     const parLoading = record&&record.type&&record.type==='add'? props.loadingGetPollutantById2 : props.monitoringCategoryTypeLoading; //监测参数提示loading
@@ -1015,7 +1019,7 @@ const gasSyatemCancel = (record,type) =>{
       }
   </Select></Form.Item>}</>
  :   dataIndex ==='gasManufacturerName'?  //废气-常规CEMS  废气-Vocs
- <Form.Item  name={`gasManufacturerName`} style={{ margin: 0 }}>
+ <Form.Item  name={`gasManufacturerName`} style={{ margin: 0 }} rules={[  { required: true, message: ''  }]}>
  <Select  onClick={()=>{manufacturerPopVisibleClick()}} onChange={onManufacturerClearChoice}   allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>
  </Form.Item>
      

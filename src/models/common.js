@@ -53,7 +53,7 @@ export default Model.extend({
         yield update({ priseList: [], entLoading: false,  });
       }
     },
-    *getEntNoFilterList({ payload }, { call, put, update, select }) {
+    *getEntNoFilterList({ payload,callback }, { call, put, update, select }) {
       //企业列表 未过滤的
       yield update({ entLoading: true, });
       const response = yield call(services.GetEntNoFilterList, { ...payload });
@@ -62,6 +62,7 @@ export default Model.extend({
           priseList: response.Datas,
           entLoading: false,
         });
+        callback&&callback(response.Datas)
       }else{
         message.error(response.Message)
         yield update({ priseList: [], entLoading: false,  });

@@ -19,9 +19,9 @@ export default Model.extend({
     maxNum:null,
   },
   effects: {
-    *getManufacturerList({ payload,callback }, { call, put, update }) { //列表
+    *getQuestionDetialList({ payload,callback }, { call, put, update }) { //列表
       yield update({ tableLoading:true})
-      const result = yield call(services.GetManufacturerList, payload);
+      const result = yield call(services.GetQuestionDetialList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
@@ -34,8 +34,8 @@ export default Model.extend({
         yield update({ tableLoading:false})
       }
     },
-    *addManufacturer({ payload,callback }, { call, put, update }) { //添加
-      const result = yield call(services.AddManufacturer, payload);
+    *addOrUpdQuestionDetial({ payload,callback }, { call, put, update }) { //添加修改
+      const result = yield call(services.AddOrUpdQuestionDetial, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
@@ -43,17 +43,9 @@ export default Model.extend({
         message.error(result.Message)
       }
     }, 
-    *editManufacturer({ payload,callback }, { call, put, update }) { //修改
-      const result = yield call(services.EditManufacturer, payload);
-      if (result.IsSuccess) {
-        message.success(result.Message)
-        callback()
-      }else{
-        message.error(result.Message)
-      }
-    }, 
-    *delManufacturer({ payload,callback }, { call, put, update }) { //删除
-      const result = yield call(services.DelManufacturer, payload);
+
+    *deleteQuestionDetial({ payload,callback }, { call, put, update }) { //删除
+      const result = yield call(services.DeleteQuestionDetial, payload);
       if (result.IsSuccess) {
         message.success(result.Message)
         callback()
