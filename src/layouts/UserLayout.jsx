@@ -105,7 +105,7 @@ const UserLayout = props => {
               <Row gutter={48}>
                  <Col span={12} style={{ textAlign: 'center' }}>
                   <div style={{ marginBottom: '10px' }}>
-                    <Button type="danger" icon={<DownloadOutlined />} size="small">污染源监控下载</Button>
+                    <Button type="danger" icon={<DownloadOutlined />} size="small">企业运维版下载</Button>
                   </div>
                   <div>
                     <QRCode value={getIp} size={200} />
