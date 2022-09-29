@@ -163,7 +163,7 @@ const Index = (props) => {
   const [fromVisible, setFromVisible] = useState(false)
 
 
-  const [type, setType] = useState('add')
+  const [type, setType] = useState()
 
   const [manufacturerId, setManufacturerId] = useState(undefined)
 
@@ -350,19 +350,22 @@ const Index = (props) => {
     },(data)=>{
       
       if(!data){
+        setDetailLoading(false)
         return
       }
       const echoData = data.Info&&data.Info[0];
-
-      const pollType = echoData&&echoData.PollutantType;
+    
+      if(!echoData){
+        setDetailLoading(false)
+      }
+      if(echoData){
+      const pollType = echoData.PollutantType;
       setPollutantType(pollType)
 
-      setDefaultEvaluate(echoData&&echoData.Evaluate? echoData.Evaluate : undefined)//评价默认值
+      setDefaultEvaluate(echoData.Evaluate? echoData.Evaluate : undefined)//评价默认值
 
-      setDetailLoading(false)
-   
       setDeviceInfoList(echoData.MonitorPointEquipmentList)
-
+   
       form2.setFieldsValue({
         ...echoData,
         EntCode:undefined,
@@ -372,14 +375,10 @@ const Index = (props) => {
         InspectorDate:moment(echoData.InspectorDate),
       })
     
+      setGaschoiceData(echoData.GasManufacturerName? echoData.GasManufacturerName : undefined)
+      setPmchoiceData(echoData.PMManufacturerName? echoData.PMManufacturerName : undefined)
 
-
-      setGaschoiceData(echoData&&echoData.GasManufacturerName? echoData.GasManufacturerName : undefined)
-      setPmchoiceData(echoData&&echoData.PMManufacturerName? echoData.PMManufacturerName : undefined)
-
-
-      
-
+      setDetailLoading(false)
       getEntList(pollType,()=>{ //单独获取企业填写的值
       form2.setFieldsValue({
         EntCode:echoData.EntCode,
@@ -394,11 +393,27 @@ const Index = (props) => {
           DGIMN:echoData.DGIMN,
         })
       })
-      
+      if(echoData.Files&&echoData.Files[0]){ // 附件
+        setFilesCuid1(echoData.Files)
+        tableForm.setFieldsValue({Files:echoData.Files})
+        let fileList = echoData.FilesList.map(item=>{
+          if(!item.IsDelete){
+            return  {
+              uid: item.GUID,
+              name: item.FileName,
+              status: 'done',
+              url: `\\upload\\${item.FileName}`,
+            }
+            
+          }
+        })
+        fileList = fileList.filter(item=>item!=undefined)
+        setFileList1(fileList)
+      }
       //督查内容
       tableForm.setFieldsValue({Evaluate:echoData.Evaluate})//评价
       tableForm.setFieldsValue({ TotalScore: echoData.TotalScore}) //总分
-
+    }
       const echoPrincipleProblemList = data.PrincipleProblemList&&data.PrincipleProblemList; //原则问题
        echoPrincipleProblemList.map(item=>{
          tableForm.setFieldsValue({
@@ -421,24 +436,8 @@ const Index = (props) => {
         })
       })
 
+     
 
-      if(echoData.Files){ // 附件
-        setFilesCuid1(echoData.Files)
-        tableForm.setFieldsValue({Files:echoData.Files})
-        let fileList = echoData.FilesList.map(item=>{
-          if(!item.IsDelete){
-            return  {
-              uid: item.GUID,
-              name: item.FileName,
-              status: 'done',
-              url: `\\upload\\${item.FileName}`,
-            }
-            
-          }
-        })
-        fileList = fileList.filter(item=>item!=undefined)
-        setFileList1(fileList)
-      }
       })
   };
   const [detailVisible,setDetailVisible ] = useState(false)
@@ -641,7 +640,7 @@ const Index = (props) => {
     if (Object.keys(hangedValues).join() == 'PollutantType') {
        getEntList(hangedValues.PollutantType)
        form2.resetFields();
-       form2.setFieldsValue({PollutantType:hangedValues.PollutantType});
+       form2.setFieldsValue({PollutantType:hangedValues.PollutantType,Inspector : userCookie&&JSON.parse(userCookie).UserId});
        tableForm.resetFields();
        setPollutantType(hangedValues.PollutantType) 
        setGaschoiceData(null);//清空生产商的值 
@@ -681,12 +680,12 @@ const Index = (props) => {
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList  noFilter levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
-        <Spin spinning={entLoading} size='small' style={{ top: -3 }}>
+        <Spin spinning={entLoading} size='small' style={{ top: -3,left:39 }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList noFilter  style={{ width: 300}} />
         </Form.Item>
         </Spin>
-        <Spin spinning={pointLoading} size='small' style={{ top: -3,left:20 }}>
+        <Spin spinning={pointLoading} size='small' style={{ top: -3,left:44 }}>
           <Form.Item label='站点名称' name='DGIMN' >
 
             <Select placeholder='请选择'  showSearch optionFilterProp="children" style={{ width: 150 }}>
@@ -701,22 +700,22 @@ const Index = (props) => {
       </Row>
 
       <Row>
-      <Spin  spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
+      {/* <Spin  spinning={infoloading&&type!=='edit'&&type!=='add'} size='small' style={{top:-3,left:39}}> */}
         <Form.Item label="督查人员" name="Inspector"  >
          <OperationInspectoUserList   type='2'  style={{ width: 150}} />
         </Form.Item>
-        </Spin>
+        {/* </Spin> */}
         <Form.Item label="督查日期" name="time" style={{ marginLeft:8,marginRight:8 }}  >
             <RangePicker_
               style={{ width: 300}}
               allowClear={false}
               format="YYYY-MM-DD"/>
         </Form.Item>
-        <Spin spinning={infoloading&&type!=='edit'} size='small' style={{top:-3,left:20}}>
+        {/* <Spin spinning={infoloading&&type!=='edit'&&type!=='add'} size='small' style={{top:-3,left:39}}> */}
         <Form.Item label="运维人员" name="OperationUser" style={{ marginRight: 8 }}  >
         <OperationInspectoUserList  noFirst style={{ width: 150}} />
         </Form.Item>
-        </Spin>
+        {/* </Spin> */}
         <Form.Item>
           <Button type="primary" loading={tableLoading} htmlType='submit' style={{ marginRight: 8 }}>
             查询
@@ -1327,11 +1326,11 @@ const Index = (props) => {
               </Spin> 
             </Col>
             <Col span={12}>
-             <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} >
+             {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}} > */}
              <Form.Item label="督查人员" name="Inspector"  rules={[{ required: true, message: '请输入督查人员' }]} >
               <OperationInspectoUserList noFirst type='2' allowClear={false}  disabled />
                </Form.Item>
-               </Spin>
+               {/* </Spin> */}
             </Col >
             <Col span={12}>
               <Form.Item label="督查日期" name="InspectorDate" rules={[{ required: true, message: '请选择督查日期' }]} >
@@ -1339,11 +1338,11 @@ const Index = (props) => {
               </Form.Item>
               </Col >
             <Col span={12}>
-              <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}>
+              {/* <Spin spinning={type=='add'&&infoloading} size='small' style={{top:-3,left:0}}> */}
                <Form.Item allowClear={false} label="运维人员" name="OperationUser"  rules={[{ required: true, message: '请输入运维人员' }]}>
                <OperationInspectoUserList  noFirst allowClear={false} />
                </Form.Item>
-               </Spin>
+               {/* </Spin> */}
             </Col>
             </Row>
           </div>
@@ -1451,24 +1450,24 @@ const Index = (props) => {
               />
               :
               <>
-             <Table 
+             {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&<Table 
               bordered
               dataSource={operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList}
               columns={supervisionCol1} 
               rowClassName="editable-row"
               pagination={false}
-             />
-             <Table 
+             />}
+            {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&<Table 
               bordered
-              dataSource={operationInfoList.importanProblemList&&operationInfoList.importanProblemList}
+              dataSource={operationInfoList.importanProblemList}
               columns={supervisionCol2}
               rowClassName="editable-row"
               className="impTableSty"
               pagination={false}
-             />
-            <Table 
+             />}
+           {operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&<><Table 
               bordered
-              dataSource={operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList}
+              dataSource={operationInfoList.CommonlyProblemList}
               columns={supervisionCol3}
               rowClassName="editable-row"
               pagination={false}
@@ -1480,7 +1479,7 @@ const Index = (props) => {
               columns={supervisionCol4}
               className="summaryTableSty"
               pagination={false}
-             />
+             /></>}
            </>
            }
            

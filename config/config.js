@@ -538,7 +538,7 @@ export default {
                 },
                 {
                   name:'helpCenter',
-                  path: '/systemManger/helpCenter', // 帮助中心
+                  path: '', // 帮助中心
                   component: './systemManger/helpCenter', 
                 },   
               ] 
@@ -1206,8 +1206,7 @@ export default {
                 path: '/operations/siteInspector', //运维督查管理 现场督查
                 name: 'siteInspector',
                 component: './operations/supervisionManager',
-              }, 
-              
+              },       
               {
                 path: '/operations/supervisionRecod', //运维督查记录 远程督查
                 name: 'supervisionRecod',

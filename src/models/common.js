@@ -27,6 +27,7 @@ export default Model.extend({
     inspectorUserList:[],
     operationUserList:[],
     noFilterRegionList:[],
+    roleList:[],
   },
 
   effects: {
@@ -267,6 +268,17 @@ export default Model.extend({
       message.error(result.Message);
     }
   },
+    // 角色列表
+  *getRoleCodeList({ payload }, { call, update }) {
+      const result = yield call(services.GetRoleCodeList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          roleList: result.Datas,
+        });
+      }else {
+        message.error(result.Message);
+      }
+    },
     // 运维人员 督查人员
     *getInspectorUserList({ payload,callback }, { call, update }) {
       const result = yield call(services.GetInspectorUserList, payload);

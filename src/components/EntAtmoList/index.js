@@ -10,7 +10,7 @@ import { Select,} from 'antd'
 }))
 export default class Index extends Component {
   static defaultProps = {
-    type:'1',
+    type:1,
     regionCode:''
   };
   constructor(props) {

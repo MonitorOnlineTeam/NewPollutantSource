@@ -17,21 +17,18 @@ export default Model.extend({
     monitoringTypeList:[],
     manufacturerList:[],
     maxNum:null,
+    helpCenterList:[],
   },
   effects: {
     *getQuestionDetialList({ payload,callback }, { call, put, update }) { //列表
-      yield update({ tableLoading:true})
       const result = yield call(services.GetQuestionDetialList, payload);
       if (result.IsSuccess) {
         yield update({
           tableTotal:result.Total,
-          tableDatas:result.Datas?result.Datas.mlist : [],
-          maxNum:result.Datas.MaxNum,
-          tableLoading:false,
+          tableDatas:result.Datas?result.Datas : [],
         })
       }else{
         message.error(result.Message)
-        yield update({ tableLoading:false})
       }
     },
     *addOrUpdQuestionDetial({ payload,callback }, { call, put, update }) { //添加修改
@@ -53,6 +50,14 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-
+    *getHelpCenterList({ payload,callback }, { call, put, update }) { //问题类别
+      const result = yield call(services.GetHelpCenterList, payload);
+      if (result.IsSuccess) {
+        callback(result.Datas)
+      }else{
+        message.error(result.Message)
+      }
+    },
+    
   },
 })

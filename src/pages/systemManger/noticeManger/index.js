@@ -20,7 +20,7 @@ import styles from "./style.less"
 import Cookie from 'js-cookie';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import UserList from '@/components/UserList'
+import RoleList from '@/components/RoleList'
 import OperationCompanyList from '@/components/OperationCompanyList'
 
 const { TextArea } = Input;
@@ -57,6 +57,7 @@ const dvaPropsData = ({ loading, noticeManger }) => ({
   tableLoading: loading.effects[`${namespace}/getNoticeContentList`],
   tableTotal: noticeManger.tableTotal,
   loadingConfirm: loading.effects[`${namespace}/addOrUpdNoticeContent`],
+  delLoading: loading.effects[`${namespace}/deleteNoticeContent`],
 })
 
 const dvaDispatch = (dispatch) => {
@@ -81,9 +82,9 @@ const dvaDispatch = (dispatch) => {
       })
 
     },
-    delManufacturer: (payload, callback) => { //删除
+    deleteNoticeContent: (payload, callback) => { //删除
       dispatch({
-        type: `${namespace}/delManufacturer`,
+        type: `${namespace}/deleteNoticeContent`,
         payload: payload,
         callback: callback
       })
@@ -99,56 +100,51 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN, setDGIMN] = useState('')
-  const [expand, setExpand] = useState(false)
+
+
+
   const [fromVisible, setFromVisible] = useState(false)
-  const [tableVisible, setTableVisible] = useState(false)
 
   const [type, setType] = useState('add')
 
 
 
-  const isEditing = (record) => record.key === editingKey;
 
-  const { tableDatas, tableTotal, tableLoading, loadingConfirm, } = props;
+  const { tableDatas, tableTotal, tableLoading, loadingConfirm,delLoading, } = props;
   useEffect(() => {
-    onFinish();
-
+    onFinish();  
   }, []);
 
   const columns = [
     {
       title: '公告标题',
-      dataIndex: 'ManufacturerCode',
-      key: 'ManufacturerCode',
+      dataIndex: 'NoticeTitle',
+      key: 'NoticeTitle',
       align: 'center',
     },
     {
       title: '发布人',
-      dataIndex: 'ManufacturerName',
-      key: 'ManufacturerName',
+      dataIndex: 'CreatUserName',
+      key: 'CreatUserName',
       align: 'center',
     },
     {
       title: '发布时间',
-      dataIndex: 'Abbreviation',
-      key: 'Abbreviation',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
       align: 'center',
     },
     {
       title: '生效时间',
-      dataIndex: 'ManufacturerCode',
-      key: 'ManufacturerCode',
+      dataIndex: 'BeginTime',
+      key: 'BeginTime',
       align: 'center',
     },
     {
       title: '失效时间',
-      dataIndex: 'ManufacturerCode',
-      key: 'ManufacturerCode',
+      dataIndex: 'EndTime',
+      key: 'EndTime',
       align: 'center',
     },
     {
@@ -157,33 +153,27 @@ const Index = (props) => {
       key: 'Status',
       align: 'center',
       render: (text, record) => {
-        if (text === 1) {
+        if (text === '显示') {
           return <span><Tag color="green">显示</Tag></span>;
         }
-        if (text === 2) {
+        if (text === '不显示') {
           return <span><Tag color="red">不显示</Tag></span>;
         }
-        if (text === 3) {
+        if (text === '置顶') {
           return <span><Tag color="blue">置顶</Tag></span>;
         }
       },
     },
     {
-      title: '公告状态',
-      dataIndex: 'ManufacturerName',
-      key: 'ManufacturerName',
-      align: 'center',
-    },
-    {
       title: '查看公告单位',
-      dataIndex: 'ManufacturerName',
-      key: 'ManufacturerName',
+      dataIndex: 'Company',
+      key: 'Company',
       align: 'center',
     },
     {
       title: '查看公告角色',
-      dataIndex: 'ManufacturerName',
-      key: 'ManufacturerName',
+      dataIndex: 'Role',
+      key: 'Role',
       align: 'center',
     },
     {
@@ -209,38 +199,25 @@ const Index = (props) => {
   ];
 
 
-  const edit = async (record) => {
+  const edit =  (record) => {
     setFromVisible(true)
     setType('edit')
+    console.log(record)
     form2.resetFields();
-    try {
-      form2.setFieldsValue({
+    form2.setFieldsValue({
         ...record,
+        Role:record.RoleID,
+        Company:record.CompanyID,     
+        Status:record.StatusID,
+        BeginTime: record.BeginTime&&moment(record.BeginTime),
+        EndTime:record.EndTime&&moment(record.EndTime),
       })
 
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
   };
   const detail = (data) => {
 
     router.push({ pathname: '/systemManger/noticeManger/detail', query: { data: JSON.stringify(data) } })
   }
-  const del = async (record) => {
-    const values = await form.validateFields();
-    props.delManufacturer({ ID: record.ID }, () => {
-      setPageIndex(1)
-      props.getNoticeContentList({
-        pageIndex: 1,
-        pageSize: pageSize,
-        ...values,
-      })
-    })
-  };
-
-
-
-
 
   const add = () => {
     setFromVisible(true)
@@ -269,6 +246,8 @@ const Index = (props) => {
       console.log('Failed:', errorInfo);
     }
   }
+
+  
   const onModalOk = async () => { //添加 or 编辑弹框
 
 
@@ -283,7 +262,6 @@ const Index = (props) => {
 
       props.addOrUpdNoticeContent({
         ...values,
-        Content: values.Content,
       }, () => {
         setFromVisible(false)
         onFinish()
@@ -294,9 +272,29 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
+
+  const del = async (record) => {
+    const values = await form.validateFields();
+    props.deleteNoticeContent({ ID: record.ID }, () => {
+      setPageIndex(1)
+      props.getNoticeContentList({
+        pageIndex: 1,
+        pageSize: pageSize,
+        ...values,
+      })
+    })
+  };
   const onAddEditValuesChange = (hangedValues, allValues) => { //添加修改时
     
  
+  }
+  const startDisabledDate = (current) => {
+    const time = form2.getFieldValue('EndTime')
+    return time && current && current > moment(time).startOf('day');
+  }
+  const endDisabledDate = (current) => {
+    const time = form2.getFieldValue('BeginTime')
+    return time && current && current < moment(time).endOf('day');
   }
 
 
@@ -336,7 +334,7 @@ const Index = (props) => {
           <OperationCompanyList style={{ width: 200 }} />
         </Form.Item>
         <Form.Item label="查看公关角色" name="role" style={{ margin: '0 8px' }}>
-          <UserList  style={{ width: 350 }} />
+          <RoleList  style={{ width: 350 }} />
         </Form.Item>
         <Form.Item style={{ marginLeft: 30 }}>
           <Button type="primary" htmlType='submit' style={{ marginRight: 8 }}>
@@ -357,7 +355,7 @@ const Index = (props) => {
       <BreadcrumbWrapper>
         <Card title={searchComponents()}>
           <SdlTable
-            loading={tableLoading}
+            loading={tableLoading || delLoading}
             bordered
             dataSource={tableDatas}
             columns={columns}
@@ -405,7 +403,7 @@ const Index = (props) => {
             <Col span={24}>
               <Form.Item label='公告内容' name="Content" rules={[{ required: true, message: '请输入公告内容' }]}>
                 <ReactQuill theme="snow" modules={modules} className="ql-editor" style={{ height: 'calc(100% - 500px)' }} />
-              </Form.Item>
+              </Form.Item> 
             </Col>
             <Col span={24}>
               <Form.Item label="公告状态" name="Status" rules={[{ required: true, }]}>
@@ -423,17 +421,17 @@ const Index = (props) => {
             </Col>
             <Col span={24}>
               <Form.Item label="查看公告角色" name="Role" rules={[{ required: true, message: '请选择公告角色' }]}>
-                <UserList  />
+                <RoleList  />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item label="生效时间" name="BeginTime" rules={[{ required: true, message: '请选择生效时间' }]} >
-                <DatePicker allowClear />
+                <DatePicker allowClear disabledDate={startDisabledDate} />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item label="失效时间" name="EndTime" rules={[{ required: true, message: '请选择失效时间' }]}>
-                <DatePicker allowClear />
+                <DatePicker allowClear disabledDate={endDisabledDate}/>
               </Form.Item>
             </Col>
 

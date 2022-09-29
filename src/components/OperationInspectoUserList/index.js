@@ -7,6 +7,7 @@ import { Select, Spin, } from 'antd'
 @connect(({ common, loading }) => ({
   operationUserList:common.operationUserList,
   inspectorUserList:common.inspectorUserList,
+  inspectorUserLoading: loading.effects[`common/getInspectorUserList`],
 }))
 export default class Index extends Component {
   static defaultProps = {
@@ -46,9 +47,9 @@ export default class Index extends Component {
 
   }
   render() {
-    const {style } = this.props;
+    const {style,inspectorUserLoading, } = this.props;
     return (
-
+       <Spin  spinning={inspectorUserLoading} size='small'>
       <Select
         allowClear
         showSearch
@@ -59,6 +60,7 @@ export default class Index extends Component {
       >
         {this.children()}
       </Select>
+      </Spin>
     );
   }
 }

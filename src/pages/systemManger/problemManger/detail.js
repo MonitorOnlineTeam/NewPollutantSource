@@ -66,24 +66,24 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="问题名称" >
-        {data.ProjectName}
+        {data.QuestionName}
       </Form.Item>
       </Col>
       <Col span={12}>
         <Form.Item label="一级类别">
-        {data.ProjectCode}
+        {data.FirstLevel}
       </Form.Item>
       </Col>
       </Row>
       <Row>
         <Col span={12}>
         <Form.Item label="二级类别" >
-        {data.RegionName}
+        {data.SecondLevel}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="问题状态">
-      {data.SellCompanyName}
+      {data.Status}
       </Form.Item>
       </Col>
       </Row>
@@ -91,12 +91,12 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="维护人">
-        {data.IndustryCode}
+        {data.CreateUserName}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="维护时间"  >
-        {data.SingName}
+        {data.CreateTime}
       </Form.Item>
       </Col>
       </Row>

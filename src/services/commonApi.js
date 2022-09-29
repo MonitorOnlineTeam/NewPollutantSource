@@ -142,3 +142,8 @@ export async function GetNoFilterRegionList(params) {
   const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetNoFilterRegionList', params, null);
   return result;
 }
+// 角色列表
+export async function GetRoleCodeList(params) {
+  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetRoleCodeList', params, null);
+  return result;
+}

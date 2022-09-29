@@ -33,10 +33,11 @@ const namespace = 'problemManger'
 const dvaPropsData =  ({ loading,problemManger }) => ({
   tableDatas:problemManger.tableDatas,
   pointDatas:problemManger.pointDatas,
-  tableLoading:problemManger.tableLoading,
+  tableLoading:loading.effects[`${namespace}/getQuestionDetialList`],
   tableTotal:problemManger.tableTotal,
-  loadingAddConfirm: loading.effects[`${namespace}/addOrUpdQuestionDetial`],
-  loadingEditConfirm: loading.effects[`${namespace}/editManufacturer`],
+  loadingConfirm: loading.effects[`${namespace}/addOrUpdQuestionDetial`],
+  loadingFirstLevel: loading.effects[`${namespace}/getHelpCenterList`],
+  delLoading: loading.effects[`${namespace}/deleteQuestionDetial`],
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -64,6 +65,13 @@ const  dvaDispatch = (dispatch) => {
     deleteQuestionDetial:(payload,callback)=>{ //删除
       dispatch({
         type: `${namespace}/deleteQuestionDetial`, 
+        payload:payload,
+        callback:callback
+      }) 
+    },
+    getHelpCenterList:(payload,callback)=>{ //问题类别
+      dispatch({
+        type: `${namespace}/getHelpCenterList`, 
         payload:payload,
         callback:callback
       }) 
@@ -99,14 +107,9 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [data, setData] = useState([]);
 
-  const [editingKey, setEditingKey] = useState('');
-  const [count, setCount] = useState(513);
-  const [DGIMN,setDGIMN] =  useState('')
-  const [expand,setExpand] = useState(false)
   const [fromVisible,setFromVisible] = useState(false)
-  const [tableVisible,setTableVisible] = useState(false)
+
 
   const [type,setType] = useState('add')
 
@@ -114,61 +117,65 @@ const Index = (props) => {
   
   const isEditing = (record) => record.key === editingKey;
   
-  const  { tableDatas,tableTotal,tableLoading,loadingAddConfirm,loadingEditConfirm,exportLoading, } = props; 
+  const  { tableDatas,tableTotal,tableLoading,loadingConfirm,loadingFirstLevel,delLoading, } = props; 
+  
+  const [firstLevelList,setFirstLevelList ] = useState([])
+  
   useEffect(() => {
     onFinish();
+    props.getHelpCenterList({},(data)=>{
+      if(data){
+        setFirstLevelList([data.appPage,data.webPage])
+      }
+    })
   
   },[]);
 
   const columns = [
     {
       title: '编号',
-      dataIndex: 'ManufacturerCode',
-      key:'ManufacturerCode',
       align:'center',
+      render:(text,record,index)=>{
+        return index + 1;
+      }
     },
     {
       title: '问题名称',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'QuestionName',
+      key:'QuestionName',
       align:'center',
     },
     {
       title: '一级类别',
-      dataIndex: 'Abbreviation',
-      key:'Abbreviation',
+      dataIndex: 'FirstLevel',
+      key:'FirstLevel',
       align:'center',
     },
     {
       title: '二级类别',
-      dataIndex: 'ManufacturerCode',
-      key:'ManufacturerCode',
+      dataIndex: 'SecondLevel',
+      key:'SecondLevel',
       align:'center',
     },
     {
-      title: '二级类别',
+      title: '问题状态',
       dataIndex: 'Status',
       key:'Status', 
       align:'center',
       render: (text, record) => {
-        if (text === 1) {
-          return <span><Tag color="blue">启用</Tag></span>;
-        }
-        if (text === 2) {
-          return <span><Tag color="red">停用</Tag></span>;
-        }
+      return <span><Tag color={record.StatusID==1? "blue" : "red"}>{text}</Tag></span>;
       },
     }, 
     {
       title: '维护人',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'CreateUserName',
+      key:'CreateUserName',
       align:'center',
     },
     {
       title: '维护时间',
-      dataIndex: 'ManufacturerName',
-      key:'ManufacturerName',
+      dataIndex: 'CreateTime',
+      key:'CreateTime',
       align:'center',
     },  
     {
@@ -197,10 +204,17 @@ const Index = (props) => {
   const edit = async (record) => {
     setFromVisible(true)
     setType('edit')
+    const selectData = firstLevelList.filter(item=>item.type == record.FirstLevelID)
+    selectData[0]&&setSecondLevelList(selectData[0].children) //二级类别下拉列表赋值
     form2.resetFields();
     try {
       form2.setFieldsValue({
         ...record,
+        FirstLevel:record.FirstLevelID,
+        SecondLevel:record.SecondLevelID,     
+        Status:record.StatusID,
+        BeginTime: record.BeginTime&&moment(record.BeginTime),
+        EndTime:record.EndTime&&moment(record.EndTime),
       })
 
     } catch (errInfo) {
@@ -211,22 +225,7 @@ const Index = (props) => {
 
     router.push({pathname:'/systemManger/problemManger/detail',query:{data:JSON.stringify(data)}})
   }
-  const del =  async (record) => {
-    const values = await form.validateFields();
-    props.deleteQuestionDetial({ID:record.ID},()=>{  
-      setPageIndex(1)
-      props.getQuestionDetialList({
-        pageIndex:1,
-        pageSize:pageSize,
-        ...values,
-      })
-    })
-  };
 
-
-
-  
-  
   const add = () => {
     setFromVisible(true)
     setType('add')
@@ -255,8 +254,8 @@ const Index = (props) => {
     try {
       const values = await form2.validateFields();//触发校验
 
-      const descVal = values.desc.replaceAll(/<p>|[</p>]/g,'').trim();
-      if((!descVal) || descVal==='br'){
+      const contentVal = values.Content.replaceAll(/<p>|[</p>]/g,'').trim();
+      if((!contentVal) || contentVal==='br'){
          message.warning('请输入问题描述')
          return;
       }
@@ -272,8 +271,25 @@ const Index = (props) => {
       console.log('错误信息:', errInfo);
     }
   }
-  const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时
 
+  const del =  async (record) => {
+    const values = await form.validateFields();
+    props.deleteQuestionDetial({ID:record.ID},()=>{  
+      setPageIndex(1)
+      props.getQuestionDetialList({
+        pageIndex:1,
+        pageSize:pageSize,
+        ...values,
+      })
+    })
+  }
+  const [secondLevelList,setSecondLevelList ] = useState([])
+  const onAddEditValuesChange= (hangedValues, allValues)=>{ //添加修改时
+    if (Object.keys(hangedValues).join() == 'FirstLevel') { //获取二级类别
+      form2.setFieldsValue({SecondLevel:undefined})
+      const selectData = firstLevelList.filter(item=>item.type == hangedValues.FirstLevel)
+      selectData[0]&&setSecondLevelList(selectData[0].children)
+    }
   }
   const handleTableChange =   async (PageIndex,PageSize )=>{ //分页
     setPageSize(PageSize)
@@ -290,11 +306,11 @@ const Index = (props) => {
     layout='inline'
     onFinish={onFinish}
   >  
-      <Form.Item label="问题名称" name="ManufacturerName"  >
+      <Form.Item label="问题名称" name="QuestionName"  >
         <Input placeholder='请输入' allowClear style={{width:200}}/>
       </Form.Item>
       <Form.Item>
-      <Button   type="primary" htmlType='submit'  style={{marginRight:8}}>
+      <Button   type="primary" htmlType='submit'  loading={tableLoading} style={{marginRight:8}}>
           查询
      </Button>
      <Button   onClick={()=>{form.resetFields()}}  style={{marginRight:8}}>
@@ -311,7 +327,7 @@ const Index = (props) => {
     <BreadcrumbWrapper>
     <Card title={searchComponents()}>
       <SdlTable
-        loading = {tableLoading}
+        loading = {tableLoading || delLoading}
         bordered
         dataSource={tableDatas}
         columns={columns}
@@ -331,7 +347,7 @@ const Index = (props) => {
         title={type==='add'? '添加':'编辑'}
         visible={fromVisible}
         onOk={onModalOk}
-        confirmLoading={type==='add'? loadingAddConfirm:loadingEditConfirm}
+        confirmLoading={loadingConfirm}
         onCancel={()=>{setFromVisible(false)}}
         className={styles.fromModal}
         destroyOnClose
@@ -351,38 +367,37 @@ const Index = (props) => {
       </Form.Item> 
       </Col>
         <Col span={24}>
-        <Form.Item   label="问题名称" name="ManufacturerCode"  rules={[  { required: true,  }]} >
+        <Form.Item   label="问题名称" name="QuestionName"  rules={[  { required: true,  }]} >
         <TextArea showCount  maxLength={50} rows={1} placeholder='请输入'   />
       </Form.Item>
       </Col>
       <Col span={24}>
-      <Form.Item label="一级类别" name="SystemName"  rules={[  { required: true,message:'请选择一级类别' }]}>
-            <Spin size='small' spinning={false}>
+      <Spin size='small' spinning={loadingFirstLevel} style={{top:-5}}>
+      <Form.Item label="一级类别" name="FirstLevel"  rules={[  { required: true,message:'请选择一级类别' }]}>
+
               <Select placeholder='请选择' allowClear >
-              {/* {
-               systemModelNameList[0]&&systemModelNameList.map(item => {
-                 return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+               {
+               firstLevelList[0]&&firstLevelList.map(item => {
+                 return <Option key={item.type} value={item.type}>{item.title}</Option>
                })
-             }    */}
-           </Select>
-           </Spin>
+             }   
+           </Select>   
       </Form.Item>
+      </Spin>
       </Col>
       <Col span={24}>
-      <Form.Item label="二级类别" name="SystemName2"   rules={[  { required: true,message:'请选择二级类别' }]}>
-             <Spin size='small' spinning={false}>
+      <Form.Item label="二级类别" name="SecondLevel"   rules={[  { required: true,message:'请选择二级类别' }]}>
               <Select placeholder='请选择' >
-              {/* {
-               systemModelNameList[0]&&systemModelNameList.map(item => {
-                 return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+              {
+               secondLevelList[0]&&secondLevelList.map(item => {
+                 return <Option key={item.type} value={item.type}>{item.title}</Option>
                })
-             }    */}
+             }   
            </Select>
-           </Spin>
       </Form.Item>
       </Col>
         <Col span={24}>
-        <Form.Item label="答案描述"  name='desc'     rules={[  { required: true,message:'请输入答案描述' }]}>
+        <Form.Item label="答案描述"  name='Content'     rules={[  { required: true,message:'请输入答案描述' }]}>
         <ReactQuill theme="snow"   modules={modules}  className="ql-editor"  style={{ height:'calc(100% - 500px)' }}/>
       </Form.Item>
       </Col>

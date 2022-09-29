@@ -65,44 +65,44 @@ const Index = (props) => {
       <Row>
         <Col span={12}>
         <Form.Item label="公告标题" >
-        {data.ManufacturerName}
+        {data.NoticeTitle}
       </Form.Item>
       </Col>
       <Col span={12}>
         <Form.Item label="发布人">
-        {data.ProjectCode}
+        {data.CreatUserName}
       </Form.Item>
       </Col>
         <Col span={12}>
         <Form.Item label="发布时间" >
-        {data.RegionName}
+        {data.CreateTime}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="生效时间">
-      {data.SellCompanyName}
+      {data.BeginTime}
       </Form.Item>
       </Col>
 
         <Col span={12}>
         <Form.Item label="失效时间">
-        {data.IndustryCode}
+        {data.EndTime}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="公关状态"  >
-        {data.SingName}
+        {data.BeginTime}
       </Form.Item>
       </Col>
 
       <Col span={12}>
         <Form.Item label="查看公告单位">
-        {data.IndustryCode}
+        {data.Company}
       </Form.Item>
       </Col>
       <Col span={12}>
       <Form.Item label="查看公告角色"  >
-        {data.SingName}
+        {data.Role}
       </Form.Item>
       </Col>
       </Row>

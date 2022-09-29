@@ -29,10 +29,13 @@ const namespace = 'helpCenter'
 
 
 const dvaPropsData =  ({ loading,helpCenter }) => ({
-  listData:helpCenter.listData,
-  listDataTotal:helpCenter.listDataTotal,
-  listLoading: loading.effects[`${namespace}/addManufacturer`],
-  detailLoading: loading.effects[`${namespace}/addManufacturer`],
+  listData:helpCenter.questionListData,
+  listDataTotal:helpCenter.questionListTotal,
+  listLoading: loading.effects[`${namespace}/getQuestionDetialList`],
+  questionTypeTitle:helpCenter.questionTypeTitle,
+  questTypeFirstLevel:helpCenter.questTypeFirstLevel,
+  questTypeSecondLevel:helpCenter.questTypeSecondLevel,
+
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -43,34 +46,11 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getManufacturerList:(payload)=>{ //列表
+    getQuestionDetialList:(payload)=>{ //列表
       dispatch({
-        type: `${namespace}/getManufacturerList`,
+        type: `${namespace}/getQuestionDetialList`,
         payload:payload,
       })
-    },
-    addManufacturer : (payload,callback) =>{ // 添加
-      dispatch({
-        type: `${namespace}/addManufacturer`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    editManufacturer : (payload,callback) =>{ // 修改
-      dispatch({
-        type: `${namespace}/editManufacturer`,
-        payload:payload,
-        callback:callback
-      })
-      
-    },
-    delManufacturer:(payload,callback)=>{ //删除
-      dispatch({
-        type: `${namespace}/delManufacturer`, 
-        payload:payload,
-        callback:callback
-      }) 
     },
   }
 }
@@ -91,14 +71,14 @@ const Index = (props) => {
   
   
   
-  const  { listData,listDataTotal,listLoading,detailLoading, } = props; 
-  useEffect(() => {
-    onSearch();
+  const  { listData,listDataTotal,listLoading,detailLoading,questionTypeTitle,questTypeFirstLevel,questTypeSecondLevel, } = props; 
   
-  },[]);
-
-
-
+  const [searchContent,setSearchContent] = useState()
+  
+  useEffect(() => {
+    getQuestionDetialListFun(pageIndex,pageSize,searchContent);
+  
+  },[questTypeFirstLevel,questTypeSecondLevel,]);
 
 
   const detail = (data) =>{
@@ -107,31 +87,33 @@ const Index = (props) => {
   }
 
 
-  const [questionType,setQuestionType] = useState('网页端-常见问题')
-  const [questionTitle,setQuestionTitle] = useState('网页端-常见问题')
+  const [questionTitle,setQuestionTitle] = useState('问题标题')
 
-
-  
-  
-
-
-  const [pageIndex,setPageIndex] = useState(1)
-  const [pageSize,setPageSize] = useState(20)
-  const onSearch  =  (pageIndexs,pageSizes) =>{  //查询
-
-      props.getManufacturerList({
+   const getQuestionDetialListFun = (pageIndexs,pageSizes,questionName)=>{
+      props.getQuestionDetialList({
         pageIndex:pageIndexs,
         pageSize:pageSizes,
+        QuestionName:questionName,
+        firstLevel: questTypeFirstLevel,
+        secondLevel: questTypeSecondLevel,
       })
-
   }
+  
 
 
-
-  const handleListChange =    (PageIndex,PageSize )=>{ //分页
+  
+  const onChange  =  (e) =>{  //查询
+    setSearchContent(e.target.value)
+  }
+  const onSearch  =  (value) =>{  //查询
+    getQuestionDetialListFun(pageIndex,pageSize,value);
+  }
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(20)
+  const handleListChange = (PageIndex,PageSize )=>{ //分页
     setPageSize(PageSize)
     setPageIndex(PageIndex)
-    onSearch(PageIndex,PageSize)
+    getQuestionDetialListFun(PageIndex,PageSize)
   }
   
  
@@ -140,9 +122,10 @@ const Index = (props) => {
  
   return (
     <div>
-        <div>{questionType}</div>
-      <Search loading={listLoading}  style={{padding:'10px 0',width:'50%'}} placeholder="请输入" onSearch={onSearch} enterButton />
-    <Spin spinning={listLoading}>
+      <Spin spinning={listLoading}>
+        <div>{questionTypeTitle}</div>
+      <Search loading={listLoading}  value={searchContent} allowClear style={{padding:'10px 0',width:'50%'}} placeholder="请输入" onChange={onChange} onSearch={onSearch} enterButton />
+  
       <List
     itemLayout="vertical"
     size="default"
@@ -169,7 +152,7 @@ const Index = (props) => {
   />
   </Spin>
    <Modal
-        title={questionType}
+        title={questionTypeTitle}
         visible={helpVisible}
         confirmLoading={detailLoading}
         onCancel={()=>{sethelpVisible(false)}}

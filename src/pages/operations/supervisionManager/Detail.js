@@ -431,22 +431,22 @@ const Index = (props) => {
               />
               :
               <>
-             <Table 
+             {operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList[0]&&<Table 
               bordered
               dataSource={operationInfoList.PrincipleProblemList&&operationInfoList.PrincipleProblemList}
               columns={supervisionCol1} 
               rowClassName="editable-row"
               pagination={false}
-             />
-             <Table 
+             />}
+             {operationInfoList.importanProblemList&&operationInfoList.importanProblemList[0]&&<Table 
               bordered
               dataSource={operationInfoList.importanProblemList&&operationInfoList.importanProblemList}
               columns={supervisionCol2}
               rowClassName="editable-row"
               className="impTableSty"
               pagination={false}
-             />
-            <Table 
+             />}
+            {operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList[0]&&<> <Table 
               bordered
               dataSource={operationInfoList.CommonlyProblemList&&operationInfoList.CommonlyProblemList}
               columns={supervisionCol3}
@@ -460,7 +460,7 @@ const Index = (props) => {
               columns={supervisionCol4}
               className="summaryTableSty"
               pagination={false}
-             />
+             /></>}
            </>
            }
            

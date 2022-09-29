@@ -21,5 +21,9 @@ export async function DeleteQuestionDetial(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteQuestionDetial',params, null);
   return result;
 }
-
+// 问题类别
+export async function GetHelpCenterList(params) {
+  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetHelpCenterList',params, null);
+  return result;
+}
 
