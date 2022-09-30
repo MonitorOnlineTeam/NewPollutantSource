@@ -23,12 +23,17 @@ export default Model.extend({
     *getQuestionDetialList({ payload,callback }, { call, put, update }) { //问题列表
       const result = yield call(services.GetQuestionDetialList, payload);
       if (result.IsSuccess) {
+        const data = result.Datas.map(item=>{
+          return {...item,content:item.QuestionName,key:item.ID }
+        })
         yield update({
           questionListTotal:result.Total,
-          questionListData:result.Datas?result.Datas : [],
+          questionListData:data? data : [],
         })
+        callback&&callback(data)
       }else{
         message.error(result.Message)
+        callback&&callback([])
       }
     },
     *getHelpCenterList({ payload,callback }, { call, put, update }) { //问题类别

@@ -4,7 +4,7 @@
  * 创建时间：2022.09
  */
 import React, { useState,useEffect,Fragment  } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form,Tag,Spin,Empty, Typography,Tree,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
+import { Table, Input, InputNumber, Popconfirm,Skeleton, Form,Tag,Spin,Empty, Typography,Tree,Card,Button,Select, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -129,7 +129,8 @@ const Index = (props) => {
     <Card>
    
      <Row> 
-     <Spin spinning={treeLoading}>
+      <div  className={styles.treeSty}>
+     <Skeleton loading={treeLoading} active>
       <Tree
       selectedKeys={selectedKey}
       onSelect={onSelect}
@@ -137,7 +138,8 @@ const Index = (props) => {
       style={{ width: 170 }}
       defaultExpandAll
     />
-     </Spin>
+     </Skeleton>
+     </div>
        <div style={{width:'calc(100% - 170px)'}}>
         {selectedKey&&selectedKey[0]?  <QueList  /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       </div>

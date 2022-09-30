@@ -664,10 +664,10 @@ const Index = (props) => {
 
                 <Col span={8}>
                     <Row justify='space-between'>
-                        <Form.Item label="测试日期" name="RecordDate" style={{ width: '50%' }} >
+                        <Form.Item label="测试日期" name="RecordDate" style={{ width: '60%' }} >
                             <Input disabled placeholder='请选择' title={form.getFieldValue('RecordDate')} allowClear />
                         </Form.Item>
-                        <Form.Item label="污染物名称" name="PollutantName" style={{ width: '50%' }} >
+                        <Form.Item label="污染物名称" name="PollutantName" style={{ width: '40%' }} >
                             <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
                         </Form.Item>
                     </Row>

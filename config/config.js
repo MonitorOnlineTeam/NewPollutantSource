@@ -11,7 +11,7 @@ const apiHost = 'http://172.16.12.234:61002/';
 // const apiHost = 'http://172.16.12.135:50210/';
 // const apiHost = 'http://172.16.12.57:61000/';
 // const apiHost = 'http://172.16.12.57:61002/';
-import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined } from '@ant-design/icons';
 
 const defaultNavigateUrl = Cookie.get('defaultNavigateUrl');
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
@@ -40,12 +40,12 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
-        : false, 
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
+        : false,
       // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -122,6 +122,11 @@ export default {
               path: '/appoperation/appRemoteSupervisionDetail/:id',
               component: './AppOperation/AppRemoteSupervisionDetail',
             },
+            /* 督查详情 移动端 */
+            {
+              path: '/appoperation/appQuestionDetail/:id',
+              component: './systemManger/helpCenter/QueDetail',
+            },
             /* 维修记录 */
             {
               path: '/appoperation/apprepairrecord/:TaskID/:TypeID',
@@ -135,7 +140,7 @@ export default {
             /* 易耗品更换记录 */
             {
               path: '/appoperation/appconsumablesreplacerecord/:TaskID/:TypeID',
-              component: './AppOperation/AppConsumablesReplaceRecord', 
+              component: './AppOperation/AppConsumablesReplaceRecord',
             },
             /* 标气更换记录 */
             {
@@ -191,53 +196,53 @@ export default {
             {
               path: '/appoperation/appreagentreplaceRecord/:TaskID/:TypeID',
               component: './AppOperation/AppReagentReplaceRecord',
-            }, 
+            },
             /* 配合检查记录表 */
             {
               path: '/appoperation/appCooperaInspection/:TaskID/:TypeID',
               component: './AppOperation/AppCooperaInspection',
-            }, 
-            
+            },
+
             /* 数据一致性记录表 小时与日数据 */
             {
               path: '/appoperation/appDataConsistencyRealDate/:TaskID/:TypeID',
               component: './AppOperation/AppDataConsistencyRealDate',
-            }, 
+            },
             /* 数据一致性记录表 实时数据 */
             {
               path: '/appoperation/appDataConsistencyRealTime/:TaskID/:TypeID',
               component: './AppOperation/AppDataConsistencyRealTime',
-            },   
-              /* 上月委托第三方检测次数 */
-             {
-                path: '/appoperation/appThirdPartyTestingContent/:TaskID/:TypeID',
-                component: './AppOperation/AppThirdPartyTestingContent',
-            },  
+            },
+            /* 上月委托第三方检测次数 */
+            {
+              path: '/appoperation/appThirdPartyTestingContent/:TaskID/:TypeID',
+              component: './AppOperation/AppThirdPartyTestingContent',
+            },
             /* 校准记录 */
             {
               path: '/appoperation/appWaterQualityCalibrationRecord/:TaskID/:TypeID',
               component: './AppOperation/AppWaterQualityCalibrationRecord',
-            },   
+            },
             /* 标准溶液核查记录 */
             {
               path: '/appoperation/appStandardSolutionVerificationRecord/:TaskID/:TypeID',
               component: './AppOperation/AppStandardSolutionVerificationRecord',
-            },      
+            },
             /* 设备参数变动记录 废水*/
             {
               path: '/appoperation/appDeviceParameterChange/:TaskID/:TypeID',
               component: './AppOperation/AppDeviceParameterChange',
-            },  
+            },
             /* 设备参数变动记录 废气*/
             {
               path: '/appoperation/appGasDeviceParameterChange/:TaskID/:TypeID',
               component: './AppOperation/AppGasDeviceParameterChange',
-            },  
+            },
             /* 实际水样对比实验结果记录表*/
             {
               path: '/appoperation/comparisonTestResults/:TaskID/:TypeID',
               component: './AppOperation/AppComparisonTestResults',
-            }, 
+            },
             /* 手机端二维码 */
             {
               path: '/appoperation/appqrcodemain',
@@ -382,21 +387,21 @@ export default {
                 },
                 // 数据上报列表
                 {
-                    name: 'DataReporting',
-                    path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
-                    ///:monitortime/:entcode
-                    component: './platformManager/dataReport/',
+                  name: 'DataReporting',
+                  path: '/SewagePlant/DataReporting/:configId/:monitortime/:entcode',
+                  ///:monitortime/:entcode
+                  component: './platformManager/dataReport/',
                 },
                 // 数据上报添加或修改
                 {
-                    name: 'DataReportingAdd',
-                    path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
-                    component: './platformManager/dataReport/components/addDataReport',
+                  name: 'DataReportingAdd',
+                  path: '/SewagePlant/DataReportingAdd/:configId/:id/:monitortime/:entcode',
+                  component: './platformManager/dataReport/components/addDataReport',
                 },
                 //统计报表
                 {
-                  name:'statisticsReportDataList',
-                  path:'/SewagePlant/dataReportList/statisticsReportDataList',
+                  name: 'statisticsReportDataList',
+                  path: '/SewagePlant/dataReportList/statisticsReportDataList',
                   component: './report/StatisticsReportDataList',
                 }
               ]
@@ -410,28 +415,28 @@ export default {
                   redirect: '/operaAchiev/personalAchiev', // 重定向 默认为 
                 },
                 { // 个人绩效
-                  name:'personalAchiev',
-                  path:'/operaAchiev/personalAchiev',
+                  name: 'personalAchiev',
+                  path: '/operaAchiev/personalAchiev',
                   component: './operaAchiev/personalAchiev',
                 },
                 { // 绩效信息
-                  name:'achievInfo',
-                  path:'/operaAchiev/achievInfo',
+                  name: 'achievInfo',
+                  path: '/operaAchiev/achievInfo',
                   component: './operaAchiev/achievInfo',
                 },
                 { // 点位系数清单
-                  name:'pointCoefficientList',
-                  path:'/operaAchiev/pointCoefficientList',
+                  name: 'pointCoefficientList',
+                  path: '/operaAchiev/pointCoefficientList',
                   component: './operaAchiev/pointCoefficients',
                 },
                 { // 工单系数清单
-                  name:'workCoefficientList',
-                  path:'/operaAchiev/workCoefficientList',
+                  name: 'workCoefficientList',
+                  path: '/operaAchiev/workCoefficientList',
                   component: './operaAchiev/workCoefficients',
                 },
                 { // 绩效定时器
-                  name:'operaAchievTimer',
-                  path:'/operaAchiev/operaAchievTimer',
+                  name: 'operaAchievTimer',
+                  path: '/operaAchiev/operaAchievTimer',
                   component: './operaAchiev/operaAchievTimer',
                 },
               ]
@@ -442,107 +447,107 @@ export default {
               routes: [
                 {
                   path: '/commissionTest',
-                  redirect: '/commissionTest/equipmentAccount', 
+                  redirect: '/commissionTest/equipmentAccount',
                 },
                 {
-                  name:'equipmentAccount',
+                  name: 'equipmentAccount',
                   path: '/commissionTest/equipmentAccount', //调试检测 设备台账
                   routes: [
                     {
                       path: '/commissionTest/equipmentAccount',
-                      redirect: '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise', 
+                      redirect: '/commissionTest/equipmentAccount/pollutantManager/TestEnterprise',
                     },
                     {
-                      name:'pollutantManager', //调试检测 污染源管理
+                      name: 'pollutantManager', //调试检测 污染源管理
                       path: '/commissionTest/equipmentAccount/pollutantManager/:configId',
-                      component: './commissionTest/equipmentAccount/pollutantManager', 
-                    },  
+                      component: './commissionTest/equipmentAccount/pollutantManager',
+                    },
                     {
-                      name:'point', //调试检测 污染源管理 监测点
+                      name: 'point', //调试检测 污染源管理 监测点
                       path: '/commissionTest/equipmentAccount/point',
-                      component: './commissionTest/equipmentAccount/pollutantManager/point', 
-                    },   
+                      component: './commissionTest/equipmentAccount/pollutantManager/point',
+                    },
                     {
-                      name:'pollutantManager', //调试检测 污染源查询
+                      name: 'pollutantManager', //调试检测 污染源查询
                       path: '/commissionTest/equipmentAccount/pollutantQuery',
-                      component: './commissionTest/equipmentAccount/pollutantQuery', 
+                      component: './commissionTest/equipmentAccount/pollutantQuery',
                     },
                     {
-                      name:'pollutantManager', //调试检测 设备厂家名录
+                      name: 'pollutantManager', //调试检测 设备厂家名录
                       path: '/commissionTest/equipmentAccount/equipmentManufacturList',
-                      component: './commissionTest/equipmentAccount/equipmentManufacturList', 
+                      component: './commissionTest/equipmentAccount/equipmentManufacturList',
                     },
                     {
-                      name:'cemsEquipmentList', //cems设备清单
+                      name: 'cemsEquipmentList', //cems设备清单
                       path: '/commissionTest/equipmentAccount/cemsEquipmentList',
-                      component: './commissionTest/equipmentAccount/cemsEquipmentList', 
-                    }, 
+                      component: './commissionTest/equipmentAccount/cemsEquipmentList',
+                    },
                     {
-                      name:'cemsModelList', //cems型号清单
+                      name: 'cemsModelList', //cems型号清单
                       path: '/commissionTest/equipmentAccount/cemsModelList',
-                      component: './commissionTest/equipmentAccount/cemsModelList', 
-                    }, 
+                      component: './commissionTest/equipmentAccount/cemsModelList',
+                    },
                     {
-                      name:'referenceInstruList', //参比仪器清单
+                      name: 'referenceInstruList', //参比仪器清单
                       path: '/commissionTest/equipmentAccount/referenceInstruList',
-                      component: './commissionTest/equipmentAccount/referenceInstruList', 
-                    },   
+                      component: './commissionTest/equipmentAccount/referenceInstruList',
+                    },
                   ]
                 },
                 {
-                  name:'72HourCommissionTest', //72小时调试检测
+                  name: '72HourCommissionTest', //72小时调试检测
                   path: '/commissionTest/72HourCommissionTest',
-                  component: './commissionTest/72HourCommissionTest', 
+                  component: './commissionTest/72HourCommissionTest',
 
-                },   
+                },
                 {
-                  name:'72HourCommissionTestQuery', //72小时调试检测查询
+                  name: '72HourCommissionTestQuery', //72小时调试检测查询
                   path: '/commissionTest/72HourCommissionTestQuery',
-                  component: './commissionTest/72HourCommissionTest', 
-                },  
+                  component: './commissionTest/72HourCommissionTest',
+                },
                 {
-                  name:'areaPermissManage', //区域权限管理
+                  name: 'areaPermissManage', //区域权限管理
                   path: '/commissionTest/areaPermissManage',
-                  component: './commissionTest/areaPermissManage', 
-                },    
-                
+                  component: './commissionTest/areaPermissManage',
+                },
+
               ]
             },
             {
               path: '/systemManger', //系统管理
               name: 'systemManger',
               routes: [
-              //   {
-              //     path: '/systemManger',
-              //     redirect: '/systemManger/noticeManger/problemManger', 
-              //   },
-              {
-                name:'noticeManger',
-                path: '/systemManger/noticeManger', // 公告管理
-                component: './systemManger/noticeManger', 
-              },
-              {
-                name:'noticeMangerDetail',
-                path: '/systemManger/noticeManger/detail', // 公告管理详情
-                component: './systemManger/noticeManger/detail', 
-              }, 
                 {
-                  name:'problemManger',
+                  path: '/systemManger',
+                  redirect: '/systemManger/noticeManger/noticeManger',
+                },
+                {
+                  name: 'noticeManger',
+                  path: '/systemManger/noticeManger', // 公告管理
+                  component: './systemManger/noticeManger',
+                },
+                {
+                  name: 'noticeMangerDetail',
+                  path: '/systemManger/noticeManger/detail', // 公告管理详情
+                  component: './systemManger/noticeManger/detail',
+                },
+                {
+                  name: 'problemManger',
                   path: '/systemManger/problemManger', // 问题管理
-                  component: './systemManger/problemManger', 
+                  component: './systemManger/problemManger',
                 },
                 {
-                  name:'problemMangerDetail',
+                  name: 'problemMangerDetail',
                   path: '/systemManger/problemManger/detail', // 问题管理详情
-                  component: './systemManger/problemManger/detail', 
+                  component: './systemManger/problemManger/detail',
                 },
                 {
-                  name:'helpCenter',
-                  path: '', // 帮助中心
-                  component: './systemManger/helpCenter', 
-                },   
-              ] 
-            
+                  name: 'helpCenter',
+                  path: '/systemManger/helpCenter', // 帮助中心
+                  component: './systemManger/helpCenter',
+                },
+              ]
+
             },
             {
               path: '/assetManage/customOrder', //客户订单
@@ -552,23 +557,23 @@ export default {
                   redirect: '/assetManage/customOrder/custopmRenew', // 重定向 默认为 
                 },
                 { // 客户续费
-                  name:'custopmRenew',
-                  path:'/assetManage/customOrder/custopmRenew',
+                  name: 'custopmRenew',
+                  path: '/assetManage/customOrder/custopmRenew',
                   component: './platformManager/assetManage/custopmRenew',
                 },
                 { // 续费日志
-                  name:'custopmRenew',
-                  path:'/assetManage/customOrder/renewalLog',
+                  name: 'custopmRenew',
+                  path: '/assetManage/customOrder/renewalLog',
                   component: './platformManager/assetManage/renewalLog',
                 },
               ]
             },
-            
-             { //项目权限管理
-                  name:'projectManageAuthor',
-                  path:'/assetManagement/equipmentAccount/projectManageAuthor',
-                  component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',
-             },
+
+            { //项目权限管理
+              name: 'projectManageAuthor',
+              path: '/assetManagement/equipmentAccount/projectManageAuthor',
+              component: './platformManager/assetManage/equipmentAccount/projectManageAuthor',
+            },
             {
               path: '/platformconfig',
               name: 'platformconfig',
@@ -596,7 +601,7 @@ export default {
                       name: 'projectManagerDetail',
                       path: '/platformconfig/basicInfo/projectManager/detail',
                       component: './platformManager/basicInfo/projectManager/detail',
-                    },                
+                    },
                     {  //污染源管理
                       name: 'monitortarget',
                       path: '/platformconfig/basicInfo/monitortarget/:configId/:targetType/:pollutantTypes',
@@ -610,7 +615,7 @@ export default {
                     {
                       name: 'entImport', //企业导入
                       // path: '/platformconfig/monitortarget/entImport',
-                      path:'/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
+                      path: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2/entImport',
                       component: './platformManager/monitortarget/entImport',
                     },
                     {
@@ -716,9 +721,9 @@ export default {
                       component: './platformManager/assetManage/referenceMaterial',
                     },
                   ],
-    
+
                 },
-                
+
                 {
                   // 设备管理
                   name: 'equipmentManage',
@@ -857,7 +862,7 @@ export default {
                   name: 'outputstopmanage',
                   path: '/platformconfig/outputstopmanage/:configId',
                   component: './platformManager/outputstopManager/',
-                }, 
+                },
                 //年度考核企业
                 {
                   name: 'yearCheckEnt',
@@ -941,7 +946,7 @@ export default {
                   name: 'DailyReport',
                   path: '/report/wasteWater',
                   redirect: '/report/wasteWater/DailyReport',
-                },                
+                },
                 //小时平均值日报
                 {
                   name: 'DailyReport',
@@ -1068,10 +1073,10 @@ export default {
                   ],
                 },
                 {//运维资料
-                      name: 'maintenancedatabase',
-                      path: '/operations/maintenancedatabase/:configId',
-                      component: './OperationSysManager/MaintenanceDatabaseManage/',
-               },                
+                  name: 'maintenancedatabase',
+                  path: '/operations/maintenancedatabase/:configId',
+                  component: './OperationSysManager/MaintenanceDatabaseManage/',
+                },
                 {
                   name: 'sparepartsstation',//服务站信息
                   path: '/operations/sparepartsstation/:configId',
@@ -1146,82 +1151,82 @@ export default {
                   name: 'EquipmentFeedback',
                   component: './operations/equipmentFeedback/detail',
                 },
-               //企业运维管理
-               {
-                name: 'operationEntManage',
-                path:'/operations/operationEntManage',
-                routes: [
-                  {
-                    path: '/operations/operationEntManage',
-                    redirect: '/operations/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
-                  },
-                  {
-                    name:'operationUnit', //运维单位管理
-                    path: '/operations/operationEntManage/operationUnit/:configId',
-                    component: './operations/operationEntManage/operationUnit',
-                  },
-                  {
-                    name:'operationPerson', //运维人员管理
-                    path: '/operations/operationEntManage/operationPerson/:configId',
-                    component: './operations/operationEntManage/operationPerson',
-                  },
-                  {
-                    name:'operationPerson', //运维人员管理  详情
-                    path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
-                    component: './operations/operationEntManage/operationPerson/OperationPersonDetail',
-                  },
-              ]
-              }, 
-              {
-                path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
-                name: 'CommandDispatchReportDetails',
-                component: './EmergencyTodoList/EmergencyDetailInfoLayout',
-              },   
-              {
-                path: '/operations/remoteSupervision', //远程督查
-                name: 'remoteSupervision',
-                component: './operations/remoteSupervision',
-              },
-              {
-                path: '/operations/remoteSupervisionRecord', //远程督查记录
-                name: 'remoteSupervisionRecord',
-                component: './operations/remoteSupervision',
-              },
-              {
-                path: '/operations/remoteSupervision/detail/:id', //远程督查 详情
-                name: 'remoteSupervisionDetail',
-                component: './operations/remoteSupervision/detail',
-              },
-              {
-                path: '/operations/supervisionList', //督查项清单
-                name: 'supervisionList',
-                component: './operations/supervisionList',
-              }, 
-              {
-                path: '/operations/supervisionManager', //运维督查管理 远程督查
-                name: 'supervisionList',
-                component: './operations/supervisionManager',
-              }, 
-              {
-                path: '/operations/siteInspector', //运维督查管理 现场督查
-                name: 'siteInspector',
-                component: './operations/supervisionManager',
-              },       
-              {
-                path: '/operations/supervisionRecod', //运维督查记录 远程督查
-                name: 'supervisionRecod',
-                component: './operations/supervisionManager',
-              }, 
-              {
-                path: '/operations/siteSupervisionRecod', //运维督查记录 现场督查
-                name: 'siteSupervisionRecod',
-                component: './operations/supervisionManager',
-              }, 
-              {
-                path: '/operations/supervisionAnalySumm', //督查分析总结
-                name: 'supervisionAnalySumm',
-                component: './operations/supervisionAnalySumm',
-              },
+                //企业运维管理
+                {
+                  name: 'operationEntManage',
+                  path: '/operations/operationEntManage',
+                  routes: [
+                    {
+                      path: '/operations/operationEntManage',
+                      redirect: '/operations/operationEntManage/operationUnit/OperationMaintenanceEnterprise',
+                    },
+                    {
+                      name: 'operationUnit', //运维单位管理
+                      path: '/operations/operationEntManage/operationUnit/:configId',
+                      component: './operations/operationEntManage/operationUnit',
+                    },
+                    {
+                      name: 'operationPerson', //运维人员管理
+                      path: '/operations/operationEntManage/operationPerson/:configId',
+                      component: './operations/operationEntManage/operationPerson',
+                    },
+                    {
+                      name: 'operationPerson', //运维人员管理  详情
+                      path: '/operations/operationEntManage/operationPerson/detail/:configId/:personId',
+                      component: './operations/operationEntManage/operationPerson/OperationPersonDetail',
+                    },
+                  ]
+                },
+                {
+                  path: '/operations/CommandDispatchReport/details/:TaskID/:DGIMN',
+                  name: 'CommandDispatchReportDetails',
+                  component: './EmergencyTodoList/EmergencyDetailInfoLayout',
+                },
+                {
+                  path: '/operations/remoteSupervision', //远程督查
+                  name: 'remoteSupervision',
+                  component: './operations/remoteSupervision',
+                },
+                {
+                  path: '/operations/remoteSupervisionRecord', //远程督查记录
+                  name: 'remoteSupervisionRecord',
+                  component: './operations/remoteSupervision',
+                },
+                {
+                  path: '/operations/remoteSupervision/detail/:id', //远程督查 详情
+                  name: 'remoteSupervisionDetail',
+                  component: './operations/remoteSupervision/detail',
+                },
+                {
+                  path: '/operations/supervisionList', //督查项清单
+                  name: 'supervisionList',
+                  component: './operations/supervisionList',
+                },
+                {
+                  path: '/operations/supervisionManager', //运维督查管理 远程督查
+                  name: 'supervisionList',
+                  component: './operations/supervisionManager',
+                },
+                {
+                  path: '/operations/siteInspector', //运维督查管理 现场督查
+                  name: 'siteInspector',
+                  component: './operations/supervisionManager',
+                },
+                {
+                  path: '/operations/supervisionRecod', //运维督查记录 远程督查
+                  name: 'supervisionRecod',
+                  component: './operations/supervisionManager',
+                },
+                {
+                  path: '/operations/siteSupervisionRecod', //运维督查记录 现场督查
+                  name: 'siteSupervisionRecod',
+                  component: './operations/supervisionManager',
+                },
+                {
+                  path: '/operations/supervisionAnalySumm', //督查分析总结
+                  name: 'supervisionAnalySumm',
+                  component: './operations/supervisionAnalySumm',
+                },
               ],
             },
             {
@@ -1362,56 +1367,56 @@ export default {
 
 
             {//异常追忆 重定向
-              path: '/abnormaRecall', 
+              path: '/abnormaRecall',
               redirect: '/monitoring/outputstopmanage/OutputStopNew',
             },
             {
               path: '/abnormaRecall/abnormalDataManage', ///异常数据处置 重定向
               redirect: '/monitoring/outputstopmanage/OutputStopNew',
-            },  
+            },
             {
               path: '/abnormaRecall/abnormalDataAnalysis', ///异常数据分析 重定向
               redirect: '/dataSearch/exceedData',
-            },  
+            },
             {
               path: '/abnormaRecall/exceptionRule', ///异常规则 重定向
               redirect: '/platformconfig/monitoringstandard',
-            }, 
+            },
 
-           
+
             { //监督核查 重定向 
               path: '/supervisionCheck',
-              redirect: '/operations/remoteSupervision',  
+              redirect: '/operations/remoteSupervision',
             },
             {
               path: '/supervisionCheck/noScene', //非现场监督核查 重定向
               redirect: '/operations/remoteSupervision',
-            },        
+            },
             {
               path: '/supervisionCheck/scene', //现场监督核查 重定向
               redirect: '/operations/siteInspector',
-            },   
-            
+            },
+
             { //资产管理 重定向 
               path: '/assetManagement',
-              redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',  
+              redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
             },
             {
               path: '/assetManagement/equipmentAccount', //设备台账 重定向
               redirect: '/platformconfig/basicInfo/monitortarget/AEnterpriseTest/1/1,2',
-            },        
+            },
             {
               path: '/assetManagement/operationAccount', //运维台账 重定向
               redirect: '/operations/maintenancedatabase/MaintenanceDatabase',
-            },        
+            },
             {
               path: '/assetManagement/consumables', //备件耗材 重定向
               redirect: '/platformconfig/basicInfo/monitortarget/warehouse/Storehouse',
-            },     
+            },
             {
               path: '/assetManagement/authorityManage', //权限管理 重定向
               redirect: '/rolesmanager/user/newUserInfo',
-            }, 
+            },
 
             {
               path: '/monitoring',
@@ -1421,7 +1426,7 @@ export default {
                   path: '/monitoring',
                   redirect: '/monitoring/realtimedata/ent',
                 },
-                
+
                 {
                   path: '/monitoring/nuclearEmission', //碳排放核酸 重定向
                   redirect: '/monitoring/realtimedata/ent',
@@ -1447,7 +1452,7 @@ export default {
                   path: '/monitoring/missingData/exceptionrecord/cityLevel',
                   component: './monitoring/exceptionrecordNew/cityLevel',
                 },
-                
+
                 {
                   name: 'exceptionrecordDetails',
                   path: '/monitoring/missingData/exceptionrecord/details',
@@ -1503,7 +1508,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videopreview/hkvideo/index'
                       : './monitoring/videopreview/ysyvideo/index'
-                  }`,
+                    }`,
                 },
                 {
                   name: 'realtimedata',
@@ -1522,7 +1527,7 @@ export default {
                     config.VideoServer === 0
                       ? './monitoring/videoMonitor/videopreview/hkvideo'
                       : './monitoring/videoMonitor/videopreview/ysyvideo'
-                  }`,
+                    }`,
                 },
                 {
                   //视频监控 企业
@@ -1559,31 +1564,31 @@ export default {
                   path: '/monitoring/missingData/missDataSecond',
                   component: './monitoring/missingData/missDataSecond',
                 },
-                    {
-                      name: 'alarmrecord',
-                      path: '/alarmmanager/alarmrecord',
-                      component: './monitoring/alarmrecord/AlarmRecordList',
-                    },
-                    {
-                      name: 'alarmverifyrecord',
-                      path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
-                      component: './monitoring/alarmverifyrecord/index',
-                    },
-                    {
-                      name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
-                      path: '/monitoring/missingData/exceedDataAlarmRecord',
-                      component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
-                    },
-                    {
-                      name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
-                      path: '/monitoring/missingData/exceedDataDispositionRecord',
-                      component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
-                    },
-                    {
-                      name: 'originaldata',
-                      path: '/monitoring/missingData/originaldata',
-                      component: './monitoring/originaldata',
-                    },
+                {
+                  name: 'alarmrecord',
+                  path: '/alarmmanager/alarmrecord',
+                  component: './monitoring/alarmrecord/AlarmRecordList',
+                },
+                {
+                  name: 'alarmverifyrecord',
+                  path: '/alarmmanager/alarmverifyrecord/ExceptionVerify',
+                  component: './monitoring/alarmverifyrecord/index',
+                },
+                {
+                  name: 'exceedDataAlarmRecord', //超标数据报警核实记录查询
+                  path: '/monitoring/missingData/exceedDataAlarmRecord',
+                  component: './dataSearch/exceedDataAlarmRecord/exceedDataAlarm',
+                },
+                {
+                  name: 'exceedDataDispositionRecord', //超标数据报警处置记录查询
+                  path: '/monitoring/missingData/exceedDataDispositionRecord',
+                  component: './dataSearch/exceedDataDispositionRecord/exceedDataDispositionRecord',
+                },
+                {
+                  name: 'originaldata',
+                  path: '/monitoring/missingData/originaldata',
+                  component: './monitoring/originaldata',
+                },
 
               ],
             },
@@ -1847,7 +1852,7 @@ export default {
                   component: './Intelligentanalysis/newTransmissionefficiency/CityLevel',
                 },
                 //传输有效率 城市级别
-     
+
                 {
                   name: 'Intelligentanalysis',
                   path: '/Intelligentanalysis/transmissionefficiency',
@@ -1894,8 +1899,8 @@ export default {
                   ],
                 },
                 {
-                 name:'aqi',
-                 path:'/Intelligentanalysis/aqi',
+                  name: 'aqi',
+                  path: '/Intelligentanalysis/aqi',
                 },
                 {
                   name: 'effluentFee',
@@ -2194,7 +2199,7 @@ export default {
 
               ],
 
-              
+
             },
             {
               path: '/dataSearch',
@@ -2278,7 +2283,7 @@ export default {
                 //停运记录
                 {
                   name: 'StopRecord',
-                  path: '/dataSearch/StopRecord', 
+                  path: '/dataSearch/StopRecord',
                   component: './report/StopRecord/stopRecord',
                 },
                 {
@@ -2300,16 +2305,16 @@ export default {
                 //污染源信息
                 {
                   name: 'PollutantInfo',
-                  path: '/dataSearch/pollutantInfo', 
+                  path: '/dataSearch/pollutantInfo',
                   component: './dataSearch/pollutantInfo',
                 },
                 //项目信息
                 {
                   name: 'ProjectInfo',
-                  path: '/dataSearch/projectInfo', 
+                  path: '/dataSearch/projectInfo',
                   component: './dataSearch/projectInfo',
                 },
-                
+
               ],
             },
             {
