@@ -95,6 +95,7 @@ export default Model.extend({
         * GetTaskRecord({
             payload,
         }, { call, update, put, select, take }) {
+            yield update({ TaskRecordLoading:true });
             const taskInfo = yield call(GetTaskRecord, payload);
             if (taskInfo !== null && taskInfo.IsSuccess) {
                 if (taskInfo.Datas.length > 0) {
@@ -122,7 +123,11 @@ export default Model.extend({
                         TaskRecord: null,
                     });
                 }
+            }else{
+                message.error(taskInfo.Message)
+                yield update({ TaskRecordLoading:false });
             }
+
         },
 
         // 手机端运维记录详情

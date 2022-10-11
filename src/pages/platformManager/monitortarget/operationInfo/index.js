@@ -491,7 +491,7 @@ const Index = (props) => {
   const onModalOk = async () => { //添加 or 编辑弹框
     try {
       const values = await form2.validateFields();
-      if(!values.deleteFlag){
+      if(!values.deleteFlag && type === 'edit' ){
           message.warning('没有操作权限，请联系管理员')
           return;
       }

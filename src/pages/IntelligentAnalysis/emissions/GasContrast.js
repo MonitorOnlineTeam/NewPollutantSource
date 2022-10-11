@@ -642,7 +642,7 @@ class GasContrast extends PureComponent {
                   //     })
                   //   }
                   // </Select>,
-                  <RegionList changeRegion={''} RegionCode={''}/>
+                  <RegionList style={{ width: 200 }} changeRegion={''} RegionCode={''}/>
                 )}
               </FormItem>
             </Row>

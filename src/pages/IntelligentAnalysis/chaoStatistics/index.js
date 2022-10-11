@@ -361,13 +361,13 @@ class index extends PureComponent {
                         RegionCode: value,
                       },
                     });
-                  }} RegionCode={RegionCode}/>
+                  }} RegionCode={RegionCode} style={{ width: 165 }}/>
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>
                 {getFieldDecorator('AttentionCode', {
                   initialValue: undefined,
                 })(
-                  <Select allowClear style={{ width: 150 }} placeholder="请选择关注程度">
+                  <Select allowClear style={{ width: 165 }} placeholder="请选择关注程度">
                     {
                       attentionList.map(item => {
                         return <Option key={item.AttentionCode} value={item.AttentionCode}>
@@ -382,7 +382,7 @@ class index extends PureComponent {
                 {getFieldDecorator('PollutantType', {
                   initialValue: '1',
                 })(
-                  <Select style={{ width: 160 }} placeholder="请选择企业类型" onChange={(value) => {
+                  <Select style={{ width: 165 }} placeholder="请选择企业类型" onChange={(value) => {
                     this.setState({ pollutantType: value }, () => {
                     })
                   }}>

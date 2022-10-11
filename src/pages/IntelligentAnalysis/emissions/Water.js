@@ -535,7 +535,7 @@ class Water extends PureComponent {
                   //     })
                   //   }
                   // </Select>,
-                  <RegionList changeRegion={''} RegionCode={''}/>
+                  <RegionList  style={{ width: 200 }} changeRegion={''} RegionCode={''}/>
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>

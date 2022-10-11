@@ -365,7 +365,7 @@ export default class Index extends PureComponent {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList   style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
 
               </Form.Item>
              {types==='ent'? <Form.Item label='企业类型'>

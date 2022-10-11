@@ -340,7 +340,7 @@ export default class Index extends Component {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList style={{width:170}} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
               <Form.Item label='关注程度'>
                 <Select

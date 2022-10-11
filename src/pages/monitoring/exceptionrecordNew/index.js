@@ -502,7 +502,7 @@ class index extends PureComponent {
                   //     })
                   //   }
                   // </Select>
-                  <RegionList  changeRegion={''} RegionCode={''}/>
+                  <RegionList style={{ width: 200 }} changeRegion={''} RegionCode={''}/>
                 )}
               </FormItem>
             </Row>

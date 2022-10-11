@@ -375,7 +375,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '零点漂移',
+                    title: '零点漂移（%）',
                     align: 'center',
                     width: 300,
                     render: () => {
@@ -409,7 +409,7 @@ const Index = (props) => {
             align: 'center',
             children: [
                 {
-                    title: '跨度漂移',
+                    title: '跨度漂移（%）',
                     align: 'center',
                     width: 300,
                     render: (text, record, index) => {
@@ -547,40 +547,40 @@ const Index = (props) => {
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
                     <Form.Item label="测试人员" name="Tester">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS生产厂" name="CEMSPlant" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试地点" name="TestSite">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS型号、编号" name="CEMSModel" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试位置" name="TestLocation">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="量程校准气体浓度" name="RangeCalibrationValue" >
-                        <InputNumber step='0.01' placeholder='请输入' allowClear />
+                        <InputNumber disabled step='0.01' placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="CEMS原理" name="CEMSPrinciple">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled  disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
@@ -588,11 +588,11 @@ const Index = (props) => {
                     <Row>
                     <label style={{ width: 125, textAlign: 'right',lineHeight:'32px',  }}>量程<span style={{padding:'0 8px 0 2px'}}>:</span></label>
                         <Form.Item name="MinRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber step='0.01' placeholder='最小值' allowClear />
+                            <InputNumber disabled  placeholder='最小值' allowClear />
                         </Form.Item>
                         <div style={{ width: 15, paddingTop: 4, textAlign: 'center' }}>-</div>
                         <Form.Item name="MaxRange" style={{ width: 'calc(50% - 70px)' }}>
-                            <InputNumber step='0.01' placeholder='最大值' allowClear />
+                            <InputNumber disabled  placeholder='最大值' allowClear />
                         </Form.Item>
                     </Row>
                 </Col>
@@ -605,7 +605,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="计量单位" name="Unit">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Form.Item name="ID" hidden>

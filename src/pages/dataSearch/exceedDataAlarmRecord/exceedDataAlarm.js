@@ -304,7 +304,7 @@ class index extends PureComponent {
                 }}>
                 {this.children()}
             </Select> */}
-         {!regionLevel&& <><RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+         {!regionLevel&& <Row><RegionList  style={{ width: 200,  marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })
@@ -370,7 +370,7 @@ class index extends PureComponent {
                         time: dates
                     })
                 }
-            } /></>}
+            } /></Row>}
             <div style={{ marginTop: 10 }}>
             {!regionLevel&&<>   <Checkbox.Group defaultValue={pollutantCodeList.map(item=>item.PollutantCode)} value={this.state.pollutantCodeList} onChange={this.checkBoxChange}>
                 {

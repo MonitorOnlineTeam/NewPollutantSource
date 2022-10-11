@@ -333,7 +333,7 @@ const Index = (props) => {
             <Input allowClear placeholder='请输入'/>
            </Form.Item>
             <Form.Item label='行政区' name='regionCode' style={{padding:'8px 8px 0 8px'}}>
-                <RegionList levelNum={2} />
+                <RegionList levelNum={2} style={{width:165}} />
             </Form.Item>
 
             <Form.Item label = '监测点类型' name='pollutantType' >

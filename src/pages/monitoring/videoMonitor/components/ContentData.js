@@ -282,7 +282,7 @@ export default class EntTransmissionEfficiency extends Component {
               <Form layout="inline">   
               <Row>
               <Form.Item label='行政区'>
-               <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+               <RegionList   style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
               
               <Form.Item label='关注程度'>

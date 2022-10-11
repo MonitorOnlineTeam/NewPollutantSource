@@ -176,7 +176,7 @@ onChangeHandle=(PageIndex, PageSize)=>{
         }}>
         {this.children()}
       </Select> */}
-         <RegionList  style={{ width: 170, marginRight: 10 }} changeRegion={(value) => {
+         <RegionList  style={{ width: 165, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })

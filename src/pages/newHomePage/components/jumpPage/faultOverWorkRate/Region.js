@@ -381,7 +381,7 @@ export default class EntTransmissionEfficiency extends Component {
                  callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                   </Form.Item>     
              <Form.Item label='行政区'>
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList style={{width:200}} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
              </Form.Item>
              </>}
              {/* <Form.Item label='运维状态'>

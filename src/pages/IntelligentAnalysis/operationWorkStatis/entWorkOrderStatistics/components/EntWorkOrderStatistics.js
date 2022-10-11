@@ -230,7 +230,7 @@ class EntWorkOrderStatistics extends PureComponent {
                     //         </Option>)
                     //     }
                     // </Select>,
-                    <RegionList  changeRegion={''} RegionCode={''}/>
+                    <RegionList style={{ width: 200 }} changeRegion={''} RegionCode={''}/>
                     )}
                 </FormItem>
 

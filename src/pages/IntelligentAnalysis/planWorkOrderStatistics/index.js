@@ -206,7 +206,7 @@ const Index = (props) => {
          <Input placeholder='请输入企业名称'  allowClear/>
        </Form.Item>
        <Form.Item label='行政区'  name='regionCode'   style={{paddingRight:'16px'}}>
-          <RegionList />
+          <RegionList style={{ width: 165 }}/>
        </Form.Item>
        </Row>
        <Row style={{paddingTop:8}}>

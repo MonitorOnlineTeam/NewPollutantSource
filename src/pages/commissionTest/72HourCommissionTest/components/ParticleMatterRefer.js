@@ -515,18 +515,18 @@ const Index = (props) => {
             <Row gutter={36}>
                 <Col span={8}>
                     <Form.Item label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
+                        <InputNumber disabled placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber step='0.01'   placeholder='请输入' allowClear />
+                        <InputNumber disabled step='0.01'   placeholder='请输入' allowClear />
 
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="排放限值" name="EmissionLimits"  rules={[{ required: isReg, message: '' }]}>
-                        <Input placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
+                        <Input disabled placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -534,46 +534,46 @@ const Index = (props) => {
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
                     <Form.Item label="测试人员" name="Tester">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS生产厂" name="CEMSPlant" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试地点" name="TestSite">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS型号、编号" name="CEMSModel" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试位置" name="TestLocation">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="参比仪器原理" name="ReferencePrinciple" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="参比仪器生产厂" name="InstrumentPlant">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="型号、编号" name="InstrumentModel" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Form.Item  name="ID" hidden>

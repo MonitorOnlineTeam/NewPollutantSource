@@ -812,7 +812,7 @@ class index extends PureComponent {
                             //     }}>
                             //     {this.children()}
                             // </Select>
-                         <RegionList changeRegion={''} RegionCode={''}/>
+                         <RegionList changeRegion={''} RegionCode={''}  style={{ width: 200,marginRight: 20,}}/>
                             
                         )
                     }

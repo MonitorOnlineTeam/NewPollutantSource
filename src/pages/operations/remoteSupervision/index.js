@@ -721,8 +721,8 @@ const Index = (props) => {
               AnalyzerCouUnit: values[`${item.par}IndicaUnit`],
               DASCou: dasChecked ? values[`${item.par}DsData`] : undefined,
               DASCouUnit: dasChecked ? values[`${item.par}DsDataUnit`] : undefined,
-              DataCou: numChecked ? values[`${item.par}ScyData`] : undefined,
-              DataCouUnit: numChecked ? values[`${item.par}ScyDataUnit`] : undefined,
+              DataCou: numRealTimeChecked ? values[`${item.par}ScyData`] : undefined,
+              DataCouUnit: numRealTimeChecked ? values[`${item.par}ScyDataUnit`] : undefined,
               CouAutoStatus: values[`${item.par}DataUniformity`],
               CouStatus: values[`${item.par}RangCheck2`]&&values[`${item.par}RangCheck2`][0]? values[`${item.par}RangCheck2`][0] : undefined,
               CouRemrak: values[`${item.par}Remark2`],
@@ -980,10 +980,10 @@ const Index = (props) => {
   const onNumChange = (e) => { //数采仪量程
     setNumChecked(e.target.checked)
   }
-
-
-
-
+  const [numRealTimeChecked, setNumRealTimeChecked] = useState(false)
+   const onNumRealTimeChange =  (e) => { //数采仪实时数据
+    setNumRealTimeChecked(e.target.checked)
+  }
   const [filesCuid1, setFilesCuid1] = useState(cuid())
   const [filesCuid2, setFilesCuid2] = useState(cuid())
 
@@ -1201,7 +1201,7 @@ const Index = (props) => {
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
             DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
             DASStatus: dasChecked ? 1 : 2,
-            DataStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
           })
@@ -1215,7 +1215,7 @@ const Index = (props) => {
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
             DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
             DASStatus: dasChecked ? 1 : 2,
-            DataStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
           })
@@ -1230,7 +1230,7 @@ const Index = (props) => {
             DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
             DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
             DASStatus: dasChecked ? 1 : 2,
-            DataStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
           })
@@ -1250,8 +1250,10 @@ const Index = (props) => {
         break;
       case 3: // 参数一致性核查表 自动判断
         const setVal = form3.getFieldValue(`${row.par}SetVal`),
-          traceVal = form3.getFieldValue(`${row.par}TraceVal`);
-        if (setVal||setVal==0 && traceVal||traceVal==0) {
+          traceVal = form3.getFieldValue(`${row.par}TraceVal`),
+          isEnableVal = form3.getFieldValue(`${row.par}IsEnable`);
+
+        if ((setVal||setVal==0) && (traceVal||traceVal==0) && (isEnableVal&&isEnableVal[0]&&isEnableVal[0]==1)) {
           if (setVal == traceVal) {
             form3.setFieldsValue({ [`${row.par}Uniform`]: 1 })
           } else {
@@ -1260,6 +1262,8 @@ const Index = (props) => {
           //  props.judgeParamCheck({ PollutantCode:row.ChildID,   SetValue: setVal,   TraceabilityValue: traceVal, },(data)=>{
           //   form3.setFieldsValue({[`${row.par}Uniform`] :data })
           //  })
+        }else if((!setVal) && (!traceVal)){
+          form3.setFieldsValue({ [`${row.par}Uniform`]: undefined })
         }
 
         break;
@@ -1637,7 +1641,8 @@ const Index = (props) => {
         form3.setFieldsValue({[`484IsEnable`]:[1] })
         return
       }
-      setTraceValReq({...traceValReq,[`${name}TraceValFlag`]: true})
+      isJudge({par:name},3)
+      // setTraceValReq({...traceValReq,[`${name}TraceValFlag`]: true})
 
     }else{
       if(name==484){
@@ -1648,7 +1653,8 @@ const Index = (props) => {
         form3.setFieldsValue({[`484IsEnable`]:[] })
         return
       }
-      setTraceValReq({...traceValReq,[`${name}TraceValFlag`]: false})
+      // setTraceValReq({...traceValReq,[`${name}TraceValFlag`]: false})
+      form3.setFieldsValue({[`${name}Uniform`]:undefined })
     }
     
   }
@@ -1743,7 +1749,7 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={numChecked} onChange={onNumChange}>数采仪实时数据</Checkbox></Row>,
+          title: <Row align='middle' justify='center'><Checkbox checked={numRealTimeChecked} onChange={onNumRealTimeChange}>数采仪实时数据</Checkbox></Row>,
           align: 'center',
           dataIndex: 'par',
           key: 'par',
@@ -1753,13 +1759,13 @@ const Index = (props) => {
               return '—'
             }
             return <Row justify='center' align='middle'>
-              {/* <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请输入' }]}> */}
+              {/* <Form.Item name={[`${record.par}ScyData`]} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请输入' }]}> */}
               <Form.Item name={[`${record.par}ScyData`]}>       
-                <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numChecked} onBlur={() => { isJudge(record, 2) }} />
+                <InputNumber placeholder='请输入' style={{ minWidth: 85 }} disabled={!numRealTimeChecked} onBlur={() => { isJudge(record, 2) }} />
               </Form.Item>
-              {/* <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numChecked, message: '请选择' }]}> */}
+              {/* <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }} rules={[{ required: numRealTimeChecked ? indicaValReq[`${record.par}IndicaValFlag`] : numRealTimeChecked, message: '请选择' }]}> */}
               <Form.Item name={[`${record.par}ScyDataUnit`]} style={{ marginLeft: 5 }}> 
-               <Select  allowClear placeholder='单位列表' disabled={!numChecked} onChange={() => { isJudge(record, 2) }}>
+               <Select  allowClear placeholder='单位列表' disabled={!numRealTimeChecked} onChange={() => { isJudge(record, 2) }}>
                   {unitFormat(record)}
                 </Select>
               </Form.Item>

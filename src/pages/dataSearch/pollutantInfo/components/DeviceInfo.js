@@ -265,7 +265,7 @@ const Index = (props) => {
              <Input allowClear placeholder='请输入'/>
             </Form.Item>
             <Form.Item label='行政区' name='RegionCode' style={{margin:'0 8px'}}>
-                <RegionList levelNum={2} />
+                <RegionList levelNum={2} style={{width:165}} />
             </Form.Item>
             <Spin spinning={pollutantByIdLoading} size='small' style={{ top: 0, left: 20 }}>
             <Form.Item label = '监测点类型' name='PollutantType' >

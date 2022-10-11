@@ -418,9 +418,9 @@ export default class EntTransmissionEfficiency extends Component {
           <>
             <Form layout="inline">
             { entVisible ?  <Ent  entVisible={entVisible}  entCancel={()=>{this.setState({entVisible:false})}} /> :  null}
-            <Row>
+            <Row style={{paddingBottom:5}}>
             <Form.Item label='异常开始时间'>
-             <RangePicker_   style={{minWidth: '200px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
+             <RangePicker_   style={{width: '368px', marginRight: '10px'}} dateValue={[moment(ExceptionBBtime),moment(ExceptionBEtime)]} 
             callback={(dates, dataType)=>this.dateChange(dates, dataType)}
             onRef={(ref) => {
               this.child = ref;
@@ -428,7 +428,7 @@ export default class EntTransmissionEfficiency extends Component {
             />
               </Form.Item>
               <Form.Item label='异常截止时间'>
-             <RangePicker_    style={{minWidth: '200px', marginRight: '10px'}} dateValue={['','']} 
+             <RangePicker_    style={{width: '368px', marginRight: '10px'}} dateValue={['','']} 
             callback={(dates, dataType)=>this.dateChange2(dates, dataType)}
             onRef={(ref) => {
               this.child2 = ref;
@@ -437,7 +437,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Form.Item>
               </Row>
           <Form.Item label='行政区'>
-             <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+             <RegionList  style={{ width: 165  }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
             </Form.Item>
               <Form.Item label='企业列表'>
                <EntAtmoList changeEnt={this.changeEnt} EntCode={EntCode} style={{width:185}}/>

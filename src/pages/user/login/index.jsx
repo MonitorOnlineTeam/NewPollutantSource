@@ -240,9 +240,9 @@ class Login extends Component {
                阅读并接受<Button type='link'  style={{padding:0}} onClick={()=>{this.setState({agreementVisible:true})}}>《用户监测数据许可协议》</Button>
             </Checkbox>
             
-             <Checkbox className={styles.autoLoginSty}  checked={autoLogin} onChange={this.changeAutoLogin}>
+             {/* <Checkbox className={styles.autoLoginSty}  checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
-            </Checkbox> 
+            </Checkbox>  */}
             </Row> 
         </LoginComponents>
         <Modal

@@ -322,7 +322,7 @@ const Index = (props) => {
                     <Input placeholder="请输入" allowClear/>
                 </Form.Item>
                 <Form.Item label='行政区' name='regionCode' style={{ margin: '0 8px', }}>
-                    <RegionList levelNum={2} />
+                    <RegionList levelNum={2} style={{width:165}} />
                 </Form.Item>
 
                 <Form.Item label='合同运营日期' name='OperatTime'>

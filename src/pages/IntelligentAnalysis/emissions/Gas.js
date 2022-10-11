@@ -502,7 +502,7 @@ class Gas extends PureComponent {
                   //     })
                   //   }
                   // </Select>,
-                  <RegionList changeRegion={''} RegionCode={''}/>
+                  <RegionList changeRegion={''} RegionCode={''} style={{ width: 200 }}/>
                 )}
               </FormItem>
               <FormItem label={<span style={{ ..._style }}>关注程度</span>}>

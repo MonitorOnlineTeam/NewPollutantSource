@@ -242,7 +242,7 @@ class index extends PureComponent {
                     this.setState({
                         regionValue: value
                     })
-                }} RegionCode={regionValue}/>
+                }} RegionCode={regionValue} style={{ width: 200, }}/>
             <Select
                 allowClear
                 style={{ width: 200, marginLeft: 10, marginRight: 10 }}

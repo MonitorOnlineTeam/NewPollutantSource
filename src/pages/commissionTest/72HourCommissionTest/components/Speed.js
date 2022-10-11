@@ -625,62 +625,62 @@ const Index = (props) => {
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
                     <Form.Item label="测试人员" name="Tester">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS生产厂" name="CEMSPlant" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试地点" name="TestSite">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS型号、编号" name="CEMSModel" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试位置" name="TestLocation">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS原理" name="CEMSPrinciple" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="参比仪器厂商" name="InstrumentPlant">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="型号、编号" name="InstrumentModel" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="参比方法计量单位" name="PMUnit">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS计量单位" name="Unit" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={20}>
                     <Form.Item label="参比方法原理" name="ReferencePrinciple" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Form.Item name="ID" hidden>

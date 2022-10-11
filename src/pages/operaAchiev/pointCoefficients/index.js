@@ -330,11 +330,9 @@ const Index = (props) => {
     layout='inline'
     onValuesChange={onValuesChange}
   >
-        <Spin  size='small' spinning={props.regLoading} style={{top:5, left:20 }}>
         <Form.Item label='行政区' name='RegionCode' >
           <RegionList levelNum={3} style={{ width: 150 }}/>
         </Form.Item>
-        </Spin>
         <Spin spinning={props.entLoading} size='small' style={{top:5, }}>
         <Form.Item label='企业' name='EntCode' style={{ marginLeft:8,marginRight:8 }}>
           <EntAtmoList  style={{ width: 200}} />

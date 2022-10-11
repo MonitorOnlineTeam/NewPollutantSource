@@ -501,7 +501,7 @@ export default class OverVerifyLst extends Component {
                     <Option value="">全部</Option>
                     {this.regchildren()}
                   </Select> */}
-                  <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                  <RegionList style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 <Form.Item label="企业类型">
                   <Select

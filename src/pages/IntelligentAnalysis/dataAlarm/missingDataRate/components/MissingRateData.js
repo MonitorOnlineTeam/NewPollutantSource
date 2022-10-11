@@ -352,7 +352,7 @@ export default class EntTransmissionEfficiency extends Component {
               </Select>
               </Form.Item>  */}
               <Form.Item label='行政区'>
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList style={{ width: 165 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
               </Form.Item>
              {type==='ent'? <Form.Item label='企业类型'>
                 <Select

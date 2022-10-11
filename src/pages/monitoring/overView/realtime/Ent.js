@@ -560,7 +560,7 @@ class index extends Component {
                     this.getEntByRegion(val);
                     this.getRealTimeDataView()
                   })
-                }} RegionCode={regionCode}/>
+                }} RegionCode={regionCode}   style={{ width: 165}}/>
 
                 <Select
                   style={{ width: 200, marginLeft: 10 }}

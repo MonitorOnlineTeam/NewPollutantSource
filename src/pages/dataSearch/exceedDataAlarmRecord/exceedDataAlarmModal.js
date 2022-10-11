@@ -308,7 +308,7 @@ class exceedDataAlarmModal extends PureComponent {
                 }}>
                 {this.children()}
             </Select> */}
-          {!regionLevel&&<>  <RegionList   style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
+          {!regionLevel&&<>  <RegionList   style={{ width: 200, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })

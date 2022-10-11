@@ -2212,12 +2212,12 @@ export default {
                 },
                 {
                   path: '/dataSearch',
-                  redirect: '/dataquery/defectData',
+                  redirect: '/dataSearch/defectData/ent',
                 },
                 {
                   name: 'defectData',
                   //数据缺失
-                  path: '/dataSearch/defectData',
+                  path: '/dataSearch/defectData/ent',
                   routes: [
                     {
                       name: 'defectDatEnt',

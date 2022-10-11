@@ -407,7 +407,7 @@ export default class EntTransmissionEfficiency extends Component {
                   callback={(dates, dataType)=>this.dateChange(dates, dataType)}/>
                 </Form.Item>
                 <Form.Item label='行政区'>
-              <RegionList changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+              <RegionList style={{width:165}} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
                 </Form.Item>
                 {Atmosphere?
                   <Form.Item label='大气站列表'>
@@ -418,7 +418,7 @@ export default class EntTransmissionEfficiency extends Component {
               placeholder="大气站列表"
               onChange={this.changeEnt}
               value={EntCode ? EntCode : undefined}
-              style={{ width: 200  }}
+              style={{ width: 165  }}
             >
               {this.children()}
             </Select>
@@ -430,7 +430,7 @@ export default class EntTransmissionEfficiency extends Component {
                     placeholder="关注程度"
                     onChange={this.changeAttent}
                     value={AttentionCode?AttentionCode:undefined} 
-                    style={{ width: 150 }}
+                    style={{ width: 165 }}
                   >
                     {this.attentchildren()}
                   </Select>

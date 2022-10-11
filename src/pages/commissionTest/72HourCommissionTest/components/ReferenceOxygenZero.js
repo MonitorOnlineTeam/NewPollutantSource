@@ -258,7 +258,7 @@ const Index = (props) => {
                             textata = '相对误差'
                             break;
                         case tableDatas.length + 3:
-                            textata = '相对准确值'
+                            textata = '相对准确度'
                             break;
                         case tableDatas.length + 4:
                             textata = '评价依据'
@@ -618,56 +618,56 @@ const Index = (props) => {
             <Row justify='center' className={styles['advanced_search_sty']}>
                 <Col span={8}>
                     <Form.Item label="测试人员" name="Tester">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS生产厂" name="CEMSPlant" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试地点" name="TestSite">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS型号、编号" name="CEMSModel" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="测试位置" name="TestLocation">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="CEMS原理" name="CEMSPrinciple" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="参比仪器生产厂" name="InstrumentPlant">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Col span={4}></Col>
 
                 <Col span={8}>
                     <Form.Item label="型号、编号" name="InstrumentModel">
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
 
                 <Col span={8}>
-                    <Row justify='space-between'>
+                    <Row justify='space-between' className={styles.referenceOxygenTestDataSty}>
                         <Form.Item label="测试日期" name="RecordDate" style={{ width: '60%' }} >
                             <Input disabled placeholder='请选择' title={form.getFieldValue('RecordDate')} allowClear />
                         </Form.Item>
-                        <Form.Item label="污染物名称" name="PollutantName" style={{ width: '40%' }} >
+                        <Form.Item label="污染物名称" name="PollutantName" style={{ width: '40%' }}  >
                             <Input disabled placeholder='请选择' allowClear title={form.getFieldValue('PollutantName')} />
                         </Form.Item>
                     </Row>
@@ -675,7 +675,7 @@ const Index = (props) => {
                 <Col span={4}></Col>
                 <Col span={8}>
                     <Form.Item label="计量单位" name="Unit" >
-                        <Input placeholder='请输入' allowClear />
+                        <Input disabled placeholder='请输入' allowClear />
                     </Form.Item>
                 </Col>
                 <Form.Item name="ID" hidden>
@@ -935,7 +935,7 @@ const Index = (props) => {
                             <Table
                                 size="small"
                                 bordered
-                                dataSource={[...tableDatas, ...['平均值', '绝对误差', '相对误差', '相对准确值', '评价依据']]}
+                                dataSource={[...tableDatas, ...['平均值', '绝对误差', '相对误差', '相对准确度', '评价依据']]}
                                 columns={columns}
                                 pagination={false}
                                 className={'tableSty'}
