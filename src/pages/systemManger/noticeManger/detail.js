@@ -90,7 +90,7 @@ const Index = (props) => {
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="公关状态"  >
+      <Form.Item label="公告状态"  >
         {data.BeginTime}
       </Form.Item>
       </Col>

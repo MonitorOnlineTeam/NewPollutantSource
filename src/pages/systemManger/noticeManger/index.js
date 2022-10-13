@@ -28,6 +28,11 @@ const { Option } = Select;
 
 const namespace = 'noticeManger'
 
+
+// 自定义文字大小
+let fontSize = ['12px', '14px', '16px', '18px','20px', '24px', '36px']
+Quill.imports['attributors/style/size'].whitelist = fontSize;
+Quill.register(Quill.imports['attributors/style/size']);
 const modules = {
   toolbar: [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -40,7 +45,8 @@ const modules = {
     [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
     [{ 'direction': 'rtl' }],                         // text direction
 
-    // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+    // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown 默认字体
+    [{ 'size': fontSize }], // 文字大小自定义
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
@@ -124,18 +130,6 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '发布人',
-      dataIndex: 'CreatUserName',
-      key: 'CreatUserName',
-      align: 'center',
-    },
-    {
-      title: '发布时间',
-      dataIndex: 'CreateTime',
-      key: 'CreateTime',
-      align: 'center',
-    },
-    {
       title: '生效时间',
       dataIndex: 'BeginTime',
       key: 'BeginTime',
@@ -148,7 +142,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '公关状态',
+      title: '公告状态',
       dataIndex: 'Status',
       key: 'Status',
       align: 'center',
@@ -174,6 +168,18 @@ const Index = (props) => {
       title: '查看公告角色',
       dataIndex: 'Role',
       key: 'Role',
+      align: 'center',
+    },
+    {
+      title: '发布人',
+      dataIndex: 'CreatUserName',
+      key: 'CreatUserName',
+      align: 'center',
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'CreateTime',
+      key: 'CreateTime',
       align: 'center',
     },
     {
@@ -233,7 +239,6 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
       pageIndexs && typeof pageIndexs === "number" ? setPageIndex(pageIndexs) : setPageIndex(1); //除分页和编辑  每次查询页码重置为第一页
-      console.log(values)
       props.getNoticeContentList({
         ...values,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : 1,
@@ -261,6 +266,8 @@ const Index = (props) => {
 
       props.addOrUpdNoticeContent({
         ...values,
+        BeginTime: values.BeginTime && moment(values.BeginTime).format('YYYY-MM-DD HH:mm:ss'),
+        EndTime: values.EndTime && moment(values.EndTime).format('YYYY-MM-DD HH:mm:ss'),
       }, () => {
         setFromVisible(false)
         onFinish()
@@ -312,7 +319,7 @@ const Index = (props) => {
       onFinish={onFinish}
     >
       <Row>
-        <Form.Item label="问题名称" name="title"  >
+        <Form.Item label="公告标题" name="title"  >
           <Input placeholder='请输入' allowClear style={{ width: 200 }} />
         </Form.Item>
         <Form.Item label="发布时间" name="time" style={{ margin: '0 8px' }}>
@@ -332,7 +339,7 @@ const Index = (props) => {
         <Form.Item label="查看公告单位" name="company"  >
           <OperationCompanyList style={{ width: 200 }} />
         </Form.Item>
-        <Form.Item label="查看公关角色" name="role" style={{ margin: '0 8px' }}>
+        <Form.Item label="查看公告角色" name="role" style={{ margin: '0 8px' }}>
           <RoleList  style={{ width: 350 }} />
         </Form.Item>
         <Form.Item style={{ marginLeft: 30 }}>
