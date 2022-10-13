@@ -546,7 +546,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         result.Datas && window.open(result.Datas);
       } else {
-        message.error(result.Datas);
+        message.error(result.Message);
       }
     },
 
@@ -556,7 +556,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         message.success("删除成功！")
       } else {
-        message.error(result.Datas);
+        message.error(result.Message);
       }
     },
     // 校验重复

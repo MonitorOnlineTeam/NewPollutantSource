@@ -47,7 +47,7 @@ const  dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-    const {match:{params:{id}},tableLoading,type,clientHeight }= props;
+    const {id,tableLoading,type,clientHeight }= props;
    
     const [rangeUpload,setRangeUpload] = useState()
     const [couUpload,setCouUpload] = useState()
@@ -57,6 +57,8 @@ const Index = (props) => {
    
     const [dasRangStatus,setDasRangStatus] = useState(false)
     const [dataRangStatus,setDataRangStatus] = useState(false)
+    const [dataRealTimeRangStatus,setDataRealTimeRangStatus] = useState(false) //数采仪实时数据
+
   useEffect(() => {
     props.getConsistencyCheckInfo({ID:id},(data)=>{ //DAS量程
       setRangeUpload(data.rangeUploadFormat)
@@ -65,7 +67,8 @@ const Index = (props) => {
       
       if(data.consistencyCheckList&&data.consistencyCheckList[0]){//获取das量程和数采仪量程是否被选中
         setDasRangStatus(data.consistencyCheckList[0].DataList.DASStatus==1? true :  false)
-        setDataRangStatus(data.consistencyCheckList[0].DataList.DataStatus==1? true :  false)
+        setDataRangStatus(data.consistencyCheckList[0].DataList.DataRangeStatus==1? true :  false)
+        setDataRealTimeRangStatus(data.consistencyCheckList[0].DataList.DataStatus==1? true :  false)
       }
 
 
@@ -144,6 +147,7 @@ const Index = (props) => {
       dataIndex: 'PollutantName',
       key: 'PollutantName',
       align: 'center',
+      width: 100,
       render: (text, record, index) => {
         const obj = {
           children: text,
@@ -213,7 +217,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMax==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMax}（${record.DataList.AnalyzerUnit}）` : null;
+              return record.DataList.AnalyzerMin||record.DataList.AnalyzerMin==0 || record.DataList.AnalyzerMax||record.DataList.AnalyzerMax==0? `${record.DataList.AnalyzerMin}-${record.DataList.AnalyzerMax}（${record.DataList.AnalyzerUnit}）` : null;
             }
           }
         },
@@ -227,7 +231,7 @@ const Index = (props) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
             } else {
-               return record.DataList.DASMin||record.DataList.DASMin==0? `${record.DataList.DASMin}-${record.DataList.DASMax}（${record.DataList.DASUnit}）` : null;
+               return record.DataList.DASMin||record.DataList.DASMin==0 || record.DataList.DASMax||record.DataList.DASMax==0? `${record.DataList.DASMin}-${record.DataList.DASMax}（${record.DataList.DASUnit}）` : null;
             }
           }
         },
@@ -236,7 +240,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
-          width:120,
+          width:150,
           render: (text, record) => {
             if (record.PollutantName === 'NOx' || record.PollutantName === '标干流量') {
               return '—'
@@ -355,7 +359,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
-          width: 120,
+          width: 200,
           render: (text, record) => {
             return record.DataList.CouType == 1 ? '原始浓度' :  record.DataList.CouType == 2 ? '标杆浓度'  : '—'
 
@@ -375,7 +379,7 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={false} ></Checkbox> <span style={{paddingLeft:5}}>DAS示值</span></Row>,
+          title: <Row align='middle' justify='center'><Checkbox checked={dasRangStatus} ></Checkbox> <span style={{paddingLeft:5}}>DAS示值</span></Row>,
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
@@ -385,7 +389,7 @@ const Index = (props) => {
           }
         },
         {
-          title: <Row align='middle' justify='center'><Checkbox checked={false} ></Checkbox><span style={{paddingLeft:5}}>数采仪实时数据</span></Row>,
+          title: <Row align='middle' justify='center'><Checkbox checked={dataRealTimeRangStatus} ></Checkbox><span style={{paddingLeft:5}}>数采仪实时数据</span></Row>,
           align: 'center',
           dataIndex: 'PollutantName',
           key: 'PollutantName',
@@ -573,13 +577,16 @@ const Index = (props) => {
 
   return (
     <div className={styles.remoteSupervisionDetailSty} >
-    <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb}>
-    <Card  style={{paddingBottom:10}} title={ type!='mobile'&&<Row justify='space-between'>
-        <span>详情</span>
-        <Button onClick={() => {props.history.go(-1);   }} ><RollbackOutlined />返回</Button>
-     </Row>
-    }>
-        <Spin spinning={tableLoading}>
+    <BreadcrumbWrapper hideBreadcrumb={true}>
+    <Card  style={{paddingBottom:10}}
+    //  title={
+    //    type!='mobile'&&<Row justify='space-between'>
+    //     <span>详情</span>
+    //     <Button onClick={() => {props.history.go(-1);   }} ><RollbackOutlined />返回</Button>
+    //  </Row>
+    // }
+    >
+  <Spin spinning={tableLoading}>
     <Form
       name="detail"
     >
@@ -594,15 +601,11 @@ const Index = (props) => {
         {consistencyCheckDetail.pointName }
       </Form.Item>
       </Col>
-
       <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查结果" >
         {consistencyCheckDetail.resultCheck === '不合格' ? <span style={{ color: '#f5222d' }}>{consistencyCheckDetail.resultCheck}</span> : <span>{consistencyCheckDetail.resultCheck}</span>}
       </Form.Item>
       </Col>
-      </Row>
-
-      <Row>
         <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查人">
         {consistencyCheckDetail.userName }
@@ -610,7 +613,7 @@ const Index = (props) => {
       </Col>
       <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="核查日期" >
-        {moment(consistencyCheckDetail.dateTime).format("YYYY-MM-DD")}
+        {consistencyCheckDetail.dateTime&&moment(consistencyCheckDetail.dateTime).format("YYYY-MM-DD")}
       </Form.Item>
       </Col>
       <Col span={8} style={{paddingRight:5}}>
@@ -618,6 +621,26 @@ const Index = (props) => {
         {consistencyCheckDetail.operationUserName  }
       </Form.Item>
       </Col>
+      <Col span={8} style={{paddingRight:5}}>
+        <Form.Item label="创建人">
+        {consistencyCheckDetail.userName }
+      </Form.Item>
+      </Col>
+      <Col span={8} style={{paddingRight:5}}>
+        <Form.Item label="创建时间" >
+        {consistencyCheckDetail.createTime&&moment(consistencyCheckDetail.createTime).format("YYYY-MM-DD")}
+      </Form.Item>
+      </Col>
+      <Col span={8} style={{paddingRight:5}}>
+      <Form.Item label="更新人"  >
+        {consistencyCheckDetail.updName  }
+      </Form.Item>
+      </Col>    
+      <Col span={8} style={{paddingRight:5}}>
+        <Form.Item label="更新时间" >
+        { consistencyCheckDetail.updTime&&moment(consistencyCheckDetail.updTime).format("YYYY-MM-DD")}
+      </Form.Item>
+      </Col> 
       </Row>
     </Form>
     <Tabs>

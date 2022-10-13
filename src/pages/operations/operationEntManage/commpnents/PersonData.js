@@ -754,8 +754,7 @@ export default class PersonData extends Component {
               this.props.dispatch({
                 type: "autoForm/deleteAttach",
                 payload: {
-                  FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
-                  Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+                  Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
                 }
               })
             }
@@ -819,8 +818,7 @@ export default class PersonData extends Component {
                   this.props.dispatch({
                     type: "autoForm/deleteAttach",
                     payload: {
-                      FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
-                      Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+                      Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
                     }
                   })
                 }
@@ -889,8 +887,7 @@ export default class PersonData extends Component {
                 this.props.dispatch({
                   type: "autoForm/deleteAttach",
                   payload: {
-                    FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
-                    Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+                    Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
                   }
                 })
               }

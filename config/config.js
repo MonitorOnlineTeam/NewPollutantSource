@@ -685,6 +685,11 @@ export default {
                       path: '/platformconfig/configurationInfo/pointMatching/pointMatchingSet',
                       component: './platformManager/configurationInfo/pointMatchingSet',
                     },
+                    {
+                      name: 'pointMatchingSet',//台账填报设置
+                      path: '/platformconfig/configurationInfo/accountFilling/accountFillingSet',
+                      component: './platformManager/configurationInfo/accountFillingSet',
+                    },
                   ]
                 },
                 { //资产管理

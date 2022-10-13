@@ -238,7 +238,6 @@ const Index = (props) => {
         ...values,
         pageIndex: pageIndexs && typeof pageIndexs === "number" ? pageIndexs : 1,
         pageSize: pageSizes ? pageSizes : pageSize,
-        title: undefined,
         beginTime: values.time && moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss'),
         endTime: values.time && moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss'),
       })

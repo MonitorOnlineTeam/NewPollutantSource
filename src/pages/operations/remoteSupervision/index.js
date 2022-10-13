@@ -4,7 +4,7 @@
  * 创建时间：2021.3.16
  */
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Card, Checkbox, Upload, Button, Select, Tabs, Progress, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio, Spin, Timeline } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, UploadOutlined, ExportOutlined, QuestionCircleOutlined, ProfileOutlined, EditOutlined, IssuesCloseOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { connect } from "dva";
@@ -21,7 +21,10 @@ import Cookie from 'js-cookie';
 import AttachmentView from '@/components/AttachmentView'
 import { getAttachmentDataSource } from '@/pages/AutoFormManager/utils'
 import NumTips from '@/components/NumTips'
+import Detail from "./detail";
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
+import Lightbox from "react-image-lightbox-rotate";
+import "react-image-lightbox/style.css";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -77,8 +80,7 @@ const dvaDispatch = (dispatch) => {
       dispatch({
         type: "autoForm/deleteAttach",
         payload: {
-          FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
-          Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+          Guid: file.response && file.response.Datas ? file.response.Datas : file.uid,
         }
       })
     },
@@ -372,6 +374,30 @@ const Index = (props) => {
       align: 'center',
     },
     {
+      title: '创建人',
+      dataIndex: 'userName',
+      key: 'userName',
+      align: 'center',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      align: 'center',
+    },
+    {
+      title: '更新人',
+      dataIndex: 'updName',
+      key: 'updName',
+      align: 'center',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updTime',
+      key: 'updTime',
+      align: 'center',
+    },
+    {
       title: '操作',
       align: 'center',
       width:150,
@@ -382,7 +408,7 @@ const Index = (props) => {
          
       let detail =  <Tooltip title="详情">
       <a onClick={() => {
-        router.push({ pathname: `/operations/remoteSupervision/detail/${record.id}` })
+        details(record) 
       }}>
         <ProfileOutlined style={{ fontSize: 16 }} />
       </a>
@@ -463,7 +489,6 @@ const Index = (props) => {
     setEchoLoading(true)
     resetData();
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
-      console.log(data.dateTime)
       //共同的字段
      commonForm.setFieldsValue({
        OperationUserID:data.operationUserID,
@@ -477,149 +502,169 @@ const Index = (props) => {
        commonForm.setFieldsValue({
         DGIMN: data.DGIMN,   
       })
-      
-      getPointConsistencyParam(data.DGIMN,()=>{
-        let echoData = []
-        data.consistencyCheckList.map(item=>{ //数据一致性核查表
-         let val = item.DataList;
-         let code = item.DataList.PollutantCode
-
-         if(item.PollutantName=='颗粒物'){
-           if(val.Special){ 
-             if(val.Special==1){ //有显示屏
-               echoForamt(code,val)
-               setIsDisPlayCheck1(true)
-               isDisplayChange({target:{checked:true}},'isDisplay1')
-               onManualChange(val.RangeStatus&&[val.RangeStatus], item, `${code}`, 1)
-             }
-             if(val.Special==2){ //无显示屏
-              echoForamt(`${code}a`,val)
-              isDisplayChange({target:{checked:true}},'isDisplay2')
-              onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}a`}, `${code}RangCheck`, 1)
-
-             }
-           }
-            if(val.CouType){ 
-            
-               if(val.CouType==1){ //原始浓度
-                echoForamt(`${code}c`,val)
-                onManualChange(val.CouStatus&&[val.CouStatus], {...val, par:`${code}c`}, `${code}RangCheck2`, 2)
-               }
-               if(val.CouType==2){ //标杆浓度
-                echoForamt(`${code}d`,val)
-                onManualChange(val.CouStatus&&[val.CouStatus], {...val, par:`${code}d`}, `${code}RangCheck2`, 2)
-               }
-
-            }
-         }else if(item.PollutantName==='流速'){
-          form2.setFieldsValue({  //实时数据
-            [`${code}DsData`]:val.DASCou,
-            [`${code}DsDataUnit`]:val.DASCouUnit,
-            [`${code}ScyData`]:val.DataCou,
-            [`${code}ScyDataUnit`]:val.DataCouUnit,
-            [`${code}DataUniformity`]:val.CouAutoStatus,
-            [`${code}RangCheck2`]:val.CouStatus ? [val.CouStatus] : [],
-            [`${code}Remark2`]:val.CouRemrak,
-      
-          })
-             onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}`}, `${code}RangCheck2`, 2)
-
-            if(val.Special==1){ //差压法
-              echoForamt(code,val)
-              isDisplayChange2({target:{checked:true}},'isDisplay3')
-              onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}`}, `${code}RangCheck`, 1)
-            }else if(val.Special==2){ //直测流速法
-              echoForamt(`${code}b`,val)
-              isDisplayChange2({target:{checked:true}},'isDisplay4')
-              onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}b`}, `${code}RangCheck`, 1)
-
-            }
-
-         }else{
-           echoForamt(code,val)
-           onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}`}, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
-           onManualChange(val.CouStatus&&[val.CouStatus], {...val, par:`${code}`}, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
-         }
-        setNumChecked(val.DataStatus==1?true : false )
-        setDasChecked(val.DASStatus==1?true : false)
-     
-
-        })
-
-        if(data.rangeUpload&&data.rangeUpload[0]){  //量程一致性核查表 附件
-          form2.setFieldsValue({files1:data.rangeUpload[0].FileUuid})
-          setFilesCuid1(data.rangeUpload[0].FileUuid)
-           const fileList = data.rangeUpload.map(item=>{
-            if(!item.IsDelete){
-              return  {
-                uid: item.GUID,
-                name: item.FileName,
-                status: 'done',
-                url: `\\upload\\${item.FileName}`,
-              }
-              
-            }
-          })
-          setFileList1(fileList)
-        }
-    
-        if(data.couUpload&&data.couUpload[0]){ //实时数据一致性核查表 附件
-          form2.setFieldsValue({files2:data.couUpload[0].FileUuid})
-          setFilesCuid2(data.couUpload[0].FileUuid)
-          let fileList = data.couUpload.map(item=>{
-            if(!item.IsDelete){
-              return  {
-                uid: item.GUID,
-                name: item.FileName,
-                status: 'done',
-                url: `\\upload\\${item.FileName}`,
-              }
-              
-            }
-          })
-          fileList = fileList.filter(item=>item!=undefined)
-          setFileList2(fileList)
-        }
-      
-        setEchoLoading(false)
-
-        // let uploadList = {}
-        // data.consistentParametersCheckList.map(item=>{ //参数一致性核查表
-        //   let code = item.CheckItem 
-        //   form3.setFieldsValue({
-        //     [`${code}IsEnable`]: item.Status? [item.Status] : [],
-        //     [`${code}SetVal`]:item.SetValue,
-        //     [`${code}TraceVal`]:item.TraceabilityValue,
-        //     [`${code}Uniform`]:item.AutoUniformity,
-        //     [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
-        //     [`${code}Remark3`]:item.Remark,
-        //     [`${code}ParFiles`]:item.Upload,
-        //   })
-        //   uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
-        //     if(!item.IsDelete){
-        //     return {
-        //       uid: item.GUID,
-        //       name: item.FileName,
-        //       status: 'done',
-        //       url: `\\upload\\${item.FileName}`,
-        //     }
-        //   }
-        //    })
-
-        //  })
-        //  setFilesList3({ ...uploadList })
-
-
-         })
-
-  
-        
-
+       dgimnEchoDataFun(data.DGIMN,data)
      })
 
 
     })
   }
+
+  const dgimnEchoDataFun = (mn,data) =>{ //通过监测点获取回显数据
+    getPointConsistencyParamFun(mn,()=>{
+      let echoData = []
+      data.consistencyCheckList.map(item=>{ //数据一致性核查表
+       let val = item.DataList;
+       let code = item.DataList.PollutantCode
+
+       if(item.PollutantName=='颗粒物'){
+         if(val.Special){ 
+           if(val.Special==1){ //有显示屏
+             echoForamt(code,val)
+             setIsDisPlayCheck1(true)
+             isDisplayChange({target:{checked:true}},'isDisplay1')
+             onManualChange(val.RangeStatus&&[val.RangeStatus], item, `${code}`, 1)
+           }
+           if(val.Special==2){ //无显示屏
+            echoForamt(`${code}a`,val)
+            isDisplayChange({target:{checked:true}},'isDisplay2')
+            onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}a`}, `${code}RangCheck`, 1)
+
+           }
+         }
+          if(val.CouType){ 
+          
+             if(val.CouType==1){ //原始浓度
+              echoForamt(`${code}c`,val)
+              onManualChange(val.CouStatus&&[val.CouStatus], {...val, par:`${code}c`}, `${code}RangCheck2`, 2)
+             }
+             if(val.CouType==2){ //标杆浓度
+              echoForamt(`${code}d`,val)
+              onManualChange(val.CouStatus&&[val.CouStatus], {...val, par:`${code}d`}, `${code}RangCheck2`, 2)
+             }
+
+          }
+       }else if(item.PollutantName==='流速'){
+        form2.setFieldsValue({  //实时数据
+          [`${code}DsData`]:val.DASCou,
+          [`${code}DsDataUnit`]:val.DASCouUnit,
+          [`${code}ScyData`]:val.DataCou,
+          [`${code}ScyDataUnit`]:val.DataCouUnit,
+          [`${code}DataUniformity`]:val.CouAutoStatus,
+          [`${code}RangCheck2`]:val.CouStatus ? [val.CouStatus] : [],
+          [`${code}Remark2`]:val.CouRemrak,
+    
+        })
+           onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}`}, `${code}RangCheck2`, 2)
+
+          if(val.Special==1){ //差压法
+            echoForamt(code,val)
+            isDisplayChange2({target:{checked:true}},'isDisplay3')
+            onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}`}, `${code}RangCheck`, 1)
+          }else if(val.Special==2){ //直测流速法
+            echoForamt(`${code}b`,val)
+            isDisplayChange2({target:{checked:true}},'isDisplay4')
+            onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}b`}, `${code}RangCheck`, 1)
+
+          }
+
+       }else{
+         echoForamt(code,val)
+         onManualChange(val.RangeStatus&&[val.RangeStatus], {...val, par:`${code}`}, `${code}RangCheck`, 1) //编辑 手工修正结果 量程一致性
+         onManualChange(val.CouStatus&&[val.CouStatus], {...val, par:`${code}`}, `${code}RangCheck2`, 2)//编辑 手工修正结果 实时数据
+       }
+      setNumChecked(val.DataRangeStatus==1?true : false )
+      setNumRealTimeChecked(val.DataStatus==1?true : false)
+      setDasChecked(val.DASStatus==1?true : false)
+   
+
+      })
+
+
+      if(data.rangeUpload&&data.rangeUpload[0]){  //量程一致性核查表 附件
+        form2.setFieldsValue({files1:data.rangeUpload[0].FileUuid})
+        setFilesCuid1(data.rangeUpload[0].FileUuid)
+         const fileList =[]
+          data.rangeUpload.map(item=>{
+          if(!item.IsDelete){
+            fileList.push( {
+              uid: item.GUID,
+              name: item.FileName,
+              status: 'done',
+              url: `/upload/${item.FileName}`,
+            })
+          }
+        })
+        setFileList1(fileList)
+      }
+  
+      if(data.couUpload&&data.couUpload[0]){ //实时数据一致性核查表 附件
+        form2.setFieldsValue({files2:data.couUpload[0].FileUuid})
+        setFilesCuid2(data.couUpload[0].FileUuid)
+        const fileList =[]
+        data.couUpload.map(item=>{
+          if(!item.IsDelete){
+            fileList.push({
+              uid: item.GUID,
+              name: item.FileName,
+              status: 'done',
+              url: `/upload/${item.FileName}`,
+            })
+            
+          }
+        })
+        setFileList2(fileList)
+      }
+      setEchoLoading(false)
+
+      /***参数一致性核查表***/
+      let uploadList = {}
+      data.consistentParametersCheckList.map(item=>{ 
+        let code = item.CheckItem 
+        form3.setFieldsValue({
+          [`${code}IsEnable`]: item.Status? [item.Status] : [],
+          [`${code}SetVal`]:item.SetValue,
+          [`${code}TraceVal`]:item.TraceabilityValue,
+          [`${code}Uniform`]:item.AutoUniformity,
+          [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
+          [`${code}Remark3`]:item.Remark,
+          [`${code}ParFiles`]:item.Upload,
+        })
+        uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(item=>{
+          if(!item.IsDelete){
+          return {
+            uid: item.GUID,
+            name: item.FileName,
+            status: 'done',
+            url: `\\upload\\${item.FileName}`,
+          }
+        }
+         })
+
+       })
+       setFilesList3({ ...uploadList })
+    })
+  }
+
+  const getPointConsistencyParamFun = (mn,callback)=>{// 添加或编辑参数列表
+    props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList,operationName) => {
+      // resetData(true)//防止提交完之后 切换tab栏 提交下一个 数据清空的情况
+      commonForm.setFieldsValue({OperationUserID:operationName})
+      echoUnit(pollutantList) //默认显示单位默认值
+      echoUnit(addRealTimeList)
+     if (paramList && paramList[0]&&title==='添加') { //附件 cuid
+       let filesCuidObj = {}, filesListObj = {};
+       paramList.map((item, index) => {
+         filesCuidObj[`${item.par}ParFiles`] = cuid();
+         filesListObj[`${item.par}ParFiles`] = [];
+       })
+       setFilesCuidList(filesCuidObj)
+       setFilesList3(filesListObj)
+     }
+     callback&&callback()
+   })
+  }
+
+
   const del = (record) => { //删除
     props.deleteRemoteInspector({ ID: record.id }, () => {
       onFinish(1, 20)
@@ -711,7 +756,8 @@ const Index = (props) => {
               RangeRemark: values[`${item.par}Remark`],
               Special: item.isDisplay == 1&&isDisPlayCheck1 || item.isDisplay == 3 &&isDisPlayCheck3 ? 1 : item.isDisplay == 2&&isDisPlayCheck2 || item.isDisplay == 4 &&isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
               DASStatus: dasChecked ? 1 : 2,
-              DataStatus: numChecked ? 1 : 2,
+              DataRangeStatus: numChecked ? 1 : 2, //数采仪量程
+              DataStatus: numRealTimeChecked ? 1 : 2, //数采仪实时数据
             }
           })
           const dataList2 = addRealTimeData.map(item => {
@@ -873,24 +919,7 @@ const Index = (props) => {
 
 
 
-  const getPointConsistencyParam = (mn,callback)=>{// 添加或编辑参数列表
-    props.getPointConsistencyParam({ DGIMN: mn }, (pollutantList, addRealTimeList, paramList,operationName) => {
-      // resetData(true)//防止提交完之后 切换tab栏 提交下一个 数据清空的情况
-      commonForm.setFieldsValue({OperationUserID:operationName})
-      echoUnit(pollutantList) //默认显示单位默认值
-      echoUnit(addRealTimeList)
-     if (paramList && paramList[0]&&title==='添加') { //附件 cuid
-       let filesCuidObj = {}, filesListObj = {};
-       paramList.map((item, index) => {
-         filesCuidObj[`${item.par}ParFiles`] = cuid();
-         filesListObj[`${item.par}ParFiles`] = [];
-       })
-       setFilesCuidList(filesCuidObj)
-       setFilesList3(filesListObj)
-     }
-     callback&&callback()
-   })
-  }
+
  
 
   const [pointList2, setPointList2] = useState([])
@@ -910,9 +939,12 @@ const Index = (props) => {
       commonForm.setFieldsValue({ DGIMN: undefined })
 
     }
-    if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //监测点
+    if (Object.keys(hangedValues).join() == 'DGIMN' && hangedValues.DGIMN) { //切换监测点
       setTimeout(()=>{
-        getPointConsistencyParam(hangedValues.DGIMN)
+        getPointConsistencyParamFun(hangedValues.DGIMN)
+        // props.getConsistencyCheckInfo({ ID: title=='添加'? addId : editId }, (data) => {
+        //   dgimnEchoDataFun(hangedValues.DGIMN,data)
+        // })
       },180)
     }
   }
@@ -932,42 +964,44 @@ const Index = (props) => {
   const tabsChange = (key) => {
     setTabType(key)
 
-    if(key==2){
-      let uploadList = {}
+    // if(key==2){
+    //   let uploadList = {}
 
-      let filesCuidObj = {}, filesListObj = {};
-      consistencyCheckDetail.consistentParametersCheckList&&consistencyCheckDetail.consistentParametersCheckList.map(item=>{ //参数一致性核查表
-            let code = item.CheckItem;
-            form3.setFieldsValue({
-              [`${code}IsEnable`]: item.Status? [item.Status] : [],
-              [`${code}SetVal`]:item.SetValue,
-              [`${code}TraceVal`]:item.TraceabilityValue,
-              [`${code}Uniform`]:item.AutoUniformity,
-              [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
-              [`${code}Remark3`]:item.Remark,
-              [`${code}ParFiles`]:item.Upload,
-            })
-            uploadList[`${code}ParFiles`] = item.UploadList&&item.UploadList[0]&&item.UploadList.map(items=>{
-              if(!items.IsDelete){
-              return {
-                uid: items.GUID,
-                name: items.FileName,
-                status: 'done',
-                url: `\\upload\\${items.FileName}`,
-              }
-            }
-             })
+    //   let filesCuidObj = {}, filesListObj = {};
+    //   consistencyCheckDetail.consistentParametersCheckList&&consistencyCheckDetail.consistentParametersCheckList.map(item=>{ //参数一致性核查表
+    //         let code = item.CheckItem;
+    //         form3.setFieldsValue({
+    //           [`${code}IsEnable`]: item.Status? [item.Status] : [],
+    //           [`${code}SetVal`]:item.SetValue,
+    //           [`${code}TraceVal`]:item.TraceabilityValue,
+    //           [`${code}Uniform`]:item.AutoUniformity,
+    //           [`${code}RangCheck3`]:item.Uniformity? [item.Uniformity] : [],//手工修正结果
+    //           [`${code}Remark3`]:item.Remark,
+    //           [`${code}ParFiles`]:item.Upload,
+    //         })
+    //         const fileList = [];
+    //         item.UploadList&&item.UploadList[0]&&item.UploadList.map(items=>{
+    //           if(!items.IsDelete){
+    //             fileList.push({
+    //             uid: items.GUID,
+    //             name: items.FileName,
+    //             status: 'done',
+    //             url: `/upload/${items.FileName}`,
+    //           })
+    //         }
+    //          })
+    //        uploadList[`${code}ParFiles`] = fileList
 
-           filesCuidObj[`${code}ParFiles`] = item.Upload;
-            setTimeout(()=>{
-            onManualChange(item.Uniformity&&[item.Uniformity], {...item, par:`${code}`}, `${code}RangCheck3`, 3)//编辑 手工修正结果 参数
+    //        filesCuidObj[`${code}ParFiles`] = item.Upload;
+    //         setTimeout(()=>{
+    //         onManualChange(item.Uniformity&&[item.Uniformity], {...item, par:`${code}`}, `${code}RangCheck3`, 3)//编辑 手工修正结果 参数
 
-           })
-       })
+    //        })
+    //    })
 
-       setFilesCuidList(filesCuidObj)
-       setFilesList3({ ...uploadList })
-    }
+    //    setFilesCuidList(filesCuidObj)
+    //    setFilesList3({ ...uploadList })
+    // }
   }
 
   const { entList, entLoading } = props;
@@ -994,9 +1028,10 @@ const Index = (props) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewTitle, setPreviewTitle] = useState()
   const [previewImage, setPreviewImage] = useState()
-
   const [fileType, setFileType] = useState(1)
 
+  const [ photoIndex,setPhotoIndex] = useState(0); //预览附件Index
+  const [imgUrlList,setImgUrlList ]= useState([]);//预览附件列表
 
   const filesCuid3 = () => {
     for (var key in filesCuidList) {
@@ -1014,12 +1049,22 @@ const Index = (props) => {
     },
     listType: "picture-card",
     onChange(info) {
-      if (fileType == 1) { setFileList1(info.fileList) } else if (fileType == 2) {
-        setFileList2(info.fileList)
+      const fileList = info.fileList.map(item=>{
+        if(item.response&&item.response.IsSuccess){ //刚上传的
+          console.log(item)
+          return {...item,url: `/upload/${item.response.Datas}`,}
+        }else{
+          return {...item}
+        }
+      })
+      if (fileType == 1) {
+         setFileList1(fileList) 
+        } else if (fileType == 2) {
+        setFileList2(fileList)
       } else {
         setFilesList3({
           ...filesList3,
-          [filePar]: info.fileList
+          [filePar]: fileList
         })
       }
       if (info.file.status === 'done') {
@@ -1046,7 +1091,26 @@ const Index = (props) => {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
-      setPreviewImage(file.url || file.preview)
+
+      const imageList = fileType == 1 ? fileList1 : fileType == 2 ? fileList2 : fileType == 3? filesList3[filePar] : []  
+  
+      let imageListIndex = 0;
+      imageList.map((item, index) => {
+        if (item.uid === file.uid) {
+          imageListIndex = index;
+        }
+      });
+      if (imageList&&imageList[0]) {
+        //拼接放大的图片地址列表
+        const imgData  =[];
+        imageList.map((item, key) => {
+          imgData.push(item.url)
+        })
+        setImgUrlList(imgData)
+      }
+      console.log(imageListIndex)
+      setPhotoIndex(imageListIndex)
+      // setPreviewImage(file.url || file.preview)
       setPreviewVisible(true)
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
     },
@@ -1125,7 +1189,8 @@ const Index = (props) => {
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit,
             DASStatus: dasChecked ? 1 : 2,
-            DataStatus: numChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2, 
 
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
@@ -1138,7 +1203,8 @@ const Index = (props) => {
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
             DASStatus: dasChecked ? 1 : 2,
-            DataStatus: numChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
@@ -1150,7 +1216,8 @@ const Index = (props) => {
             AnalyzerMin: analyzerRang1, AnalyzerMax: analyzerRang2, AnalyzerUnit: analyzerUnit,
             DASMin: dsRang1, DASMax: dsRang2, DASUnit: dsUnit, DataMin: scyRang1, DataMax: scyRang2, DataUnit: scyUnit,
             DASStatus: dasChecked ? 1 : 2,
-            DataStatus: numChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
+            DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}RangUniformity`]: data })
           })
@@ -1201,6 +1268,7 @@ const Index = (props) => {
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
             DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
             DASStatus: dasChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
             DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
@@ -1215,6 +1283,7 @@ const Index = (props) => {
             AnalyzerCou: indicaVal, AnalyzerCouUnit: indicaUnit,//分析仪示值和单位
             DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
             DASStatus: dasChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
             DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
@@ -1230,6 +1299,7 @@ const Index = (props) => {
             DASCou: dsData, DASCouUnit: dsDataUnit, //DAS示值和单位
             DataCou: scyData, DataCouUnit: scyDataUnit, //数采仪
             DASStatus: dasChecked ? 1 : 2,
+            DataRangeStatus: numChecked ? 1 : 2,
             DataStatus: numRealTimeChecked ? 1 : 2,
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
@@ -1697,7 +1767,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'concentrationType',
           key: 'concentrationType',
-          width: 130,
+          width: 145,
           render: (text, record) => {
             return text ? text : '—'
 
@@ -1708,7 +1778,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 300,
+          width: 320,
           render: (text, record) => {
             if (record.Name === 'NOx' || record.Name === '标干流量' || record.Name === '流速' || record.Name === '颗粒物' && record.concentrationType === '标杆浓度') {
               return '—'
@@ -1732,7 +1802,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 300,
+          width: 320,
           render: (text, record) => {
             return <Row justify='center' align='middle'>
               {/* <Form.Item name={[`${record.par}DsData`]} rules={[{ required: dasChecked ? indicaValReq[`${record.par}IndicaValFlag`] : dasChecked, message: '请输入' }]} > */}
@@ -1753,7 +1823,7 @@ const Index = (props) => {
           align: 'center',
           dataIndex: 'par',
           key: 'par',
-          width: 300,
+          width: 320,
           render: (text, record) => {
             if (record.Name === 'NO' || record.Name === 'NO2') {
               return '—'
@@ -1985,12 +2055,22 @@ const Index = (props) => {
   const ModalCommonContent = () => {
 
   }
-
+  const [id,setId] = useState()
+  const [detailVisible,setDetailVisible] = useState(false)
+  const [detailTitle,setDetailTitle] = useState()
+  const details = (record) =>{
+    setDetailTitle(`${record.entName} - ${record.pointName}`)
+    setDetailVisible(true)
+    setId(record.id)
+  }
   const { addParconsistencyData } = props;
 
   const [fileVisible, setFileVisible] = useState(false)
 
   const userlist = tableInfo&&tableInfo['View_UserOperation']&&tableInfo['View_UserOperation'].dataSource || [];
+  
+
+
   
   return (
     <div className={styles.remoteSupervisionSty}>
@@ -2075,7 +2155,6 @@ const Index = (props) => {
         onOk={save}
         destroyOnClose
         onCancel={() => { setVisible(false);  }}
-        width='98%'
         wrapClassName={styles.modalSty}
         okText='保存'
         getContainer={false}
@@ -2083,10 +2162,10 @@ const Index = (props) => {
           <Button  onClick={() => { setVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ? saveLoading1 || echoLoading || parLoading ||  false: saveLoading11 || echoLoading || parLoading ||false}>
+          <Button  type="primary" onClick={()=>{save(2)}}  loading={tabType == 1 ? saveLoading1 || echoLoading || parLoading ||  false: saveLoading11 || echoLoading || parLoading ||false}>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading2 || echoLoading || parLoading || false : saveLoading22 || echoLoading|| parLoading ||false} >
+          <Button type="primary" onClick={()=>save(1)}  loading={tabType == 1 ? saveLoading2 || echoLoading || parLoading || false : saveLoading22 || echoLoading|| parLoading ||false} >
             提交
           </Button>,
         ]}
@@ -2234,15 +2313,32 @@ const Index = (props) => {
           </div>
         </Upload>
       </Modal>
-      <Modal //预览上传附件
-        visible={previewVisible}
-        title={previewTitle}
-        footer={null}
-        onCancel={() => { setPreviewVisible(false) }}
+          {previewVisible&&<Lightbox
+              mainSrc={imgUrlList[photoIndex]}
+              nextSrc={imgUrlList[(photoIndex + 1) % imgUrlList.length]}
+              prevSrc={imgUrlList[(photoIndex + imgUrlList.length - 1) % imgUrlList.length]}
+              onCloseRequest={() => setPreviewVisible(false)}
+              onPreMovePrevRequest={() =>
+                setPhotoIndex((photoIndex + imgUrlList.length - 1) % imgUrlList.length)
+              }
+              onPreMoveNextRequest={() =>
+                setPhotoIndex((photoIndex + 1) % imgUrlList.length)
+              }
+            />}
 
+
+      <Modal
+        title={detailTitle}
+        visible={detailVisible}
+        onOk={save}
+        destroyOnClose
+        onCancel={() => { setDetailVisible(false);  }}
+        wrapClassName={styles.modalSty}
+        getContainer={false}
+        footer={null}
       >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
-      </Modal>
+        <Detail id={id} />
+        </Modal>
     </div>
 
   );
