@@ -181,20 +181,22 @@ const Index = (props) => {
   const [form3] = Form.useForm(); //添加编辑表单   参数一致性核查表
   const [commonForm] = Form.useForm();
 
-  const [showType, setShowType] = useState('1')
   const [dates, setDates] = useState([]);
   const { tableDatas, tableLoading, clientHeight, tableTotal, addDataConsistencyData, addRealTimeData, consistencyCheckDetail, parLoading,editLoading,tableInfo } = props;
 
- 
+  const [tabType, setTabType] = useState('1')
 
   
 
 
   const isRecord =  props.match.path ==='/operations/remoteSupervisionRecord'? true : false;
   
+
+
   const [filePar, setFilePar] = useState() //参数一致性核查表 上传附件 点击字段
   const [filesCuidList, setFilesCuidList] = useState({}) //参数一致性核查表 上传附件
   const [filesList3, setFilesList3] = useState({}) //参数一致性核查表 参数附件列表
+
 
   useEffect(() => {
 
@@ -488,6 +490,7 @@ const Index = (props) => {
     setEditId(record.id)
     setEchoLoading(true)
     resetData();
+    setTabType("1")
     props.getConsistencyCheckInfo({ ID: record.id }, (data) => {
       //共同的字段
      commonForm.setFieldsValue({
@@ -734,7 +737,7 @@ const Index = (props) => {
         month: undefined,
         DateTime: commonValues.month ? moment(commonValues.month).format("YYYY-MM-DD 00:00:00") : undefined,
       }
-      if (tabType == 1) {
+      if (tabType == 1) { //数据一致性核查表
         
          type==1? setSaveLoading1(true) : setSaveLoading2(true);
         
@@ -843,9 +846,9 @@ const Index = (props) => {
           })
           props.addOrUpdParamCheck({
             AddType:type,
-            Data: commonData,
-            ParamDataList: paramDataList,
-          }, (id) => {
+            Data: { ...commonData,RangeUpload: form2.getFieldValue('files1'), CouUpload: form2.getFieldValue('files2') },
+            ParamDataList:paramDataList, 
+          }, (id) => { 
             title==='添加'&&setAddId(id)
             onFinish(pageIndex, pageSize)
             type==1? setSaveLoading11(false) : setSaveLoading22(false)
@@ -960,7 +963,7 @@ const Index = (props) => {
     onFinish(PageIndex, PageSize)
   }
 
-  const [tabType, setTabType] = useState(1)
+
   const tabsChange = (key) => {
     setTabType(key)
 
@@ -1075,7 +1078,7 @@ const Index = (props) => {
         } else {
           form3.setFieldsValue({ [filePar]: filesCuid3() })
         }
-
+        message.success('上传成功！')
       }
       if (info.file.status === 'error') {
         message.error('上传文件失败！')
@@ -1128,10 +1131,10 @@ const Index = (props) => {
     if(!ele){return}
     for (var i = 0; i < ele.childNodes.length; i++) {
       if (val.toString() != i + 1) {
-        ele.childNodes[i].getElementsByTagName('input')[0].setAttribute("disabled", true)
+        ele.childNodes&&ele.childNodes[i].getElementsByTagName('input')[0].setAttribute("disabled", true)
       }
       if (!val[0]) {
-        ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
+        ele.childNodes&&ele.childNodes[i].getElementsByTagName('input')[0].removeAttribute("disabled")
       }
     }
    
@@ -1273,8 +1276,7 @@ const Index = (props) => {
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
           })
-        }
-        if (analyzerFlag && indicaValFlag && scyDataFlag && !(dsData||dsData==0)) {
+        }else if (analyzerFlag && indicaValFlag && scyDataFlag && !(dsData||dsData==0)) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
             Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
@@ -1288,8 +1290,7 @@ const Index = (props) => {
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
           })
-        }
-        if (analyzerFlag && indicaValFlag && dsDataFlag && scyDataFlag) {
+        }else if (analyzerFlag && indicaValFlag && dsDataFlag && scyDataFlag) {
           props.judgeConsistencyCouCheck({
             PollutantCode: row.ChildID,
             Special: isDisPlayCheck1 || isDisPlayCheck3 ? 1 : isDisPlayCheck2 || isDisPlayCheck4 ? 2 : undefined,//颗粒物有无显示屏 流速差压法和直测流速法
@@ -1304,6 +1305,8 @@ const Index = (props) => {
           }, (data) => {
             form2.setFieldsValue({ [`${row.par}DataUniformity`]: data })
           })
+        }else{
+          form2.setFieldsValue({ [`${row.par}DataUniformity`]: undefined }) 
         }
 
         if (row.Name === 'NO') {
@@ -1347,17 +1350,17 @@ const Index = (props) => {
     const displayEle2 = document.getElementById(`advanced_search_isDisplay2`);
     if (name === 'isDisplay1') {
       setIsDisPlayCheck1(e.target.checked||true)
-      displayEle2.setAttribute("disabled", true)
+      displayEle2&&displayEle2.setAttribute("disabled", true)
     }
     if (name === 'isDisplay2') {
       setIsDisPlayCheck2(e.target.checked)
-      displayEle1.setAttribute("disabled", true)
+      displayEle1&&displayEle1.setAttribute("disabled", true)
     }
     if (!e.target.checked) { //取消选中状态
       setIsDisPlayCheck1(e.target.checked)
       setIsDisPlayCheck2(e.target.checked)
-      displayEle1.removeAttribute("disabled")
-      displayEle2.removeAttribute("disabled")
+      displayEle1&&displayEle1.removeAttribute("disabled")
+      displayEle2&&displayEle2.removeAttribute("disabled")
     }
   }
 
@@ -1681,7 +1684,7 @@ const Index = (props) => {
             const obj = {
               children: <div>
                 <Form.Item name='files1' >
-                  <a onClick={() => { setFileType(1); setFileVisible(true) }}>上传附件</a>
+            <a onClick={() => { setFileType(1); setFileVisible(true) }}>{fileList1[0]? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </div>,
               props: {},
@@ -1896,7 +1899,7 @@ const Index = (props) => {
             const obj = {
               children: <div>
                 <Form.Item name='files2' >
-                  <a onClick={() => { setFileType(2); setFileVisible(true) }}>上传附件</a>
+                  <a onClick={() => { setFileType(2); setFileVisible(true) }}>{fileList2[0]? '查看附件' : '上传附件'}</a>
                 </Form.Item>
               </div>,
               props: {},
@@ -2035,7 +2038,7 @@ const Index = (props) => {
       render: (text, record, index) => {
         return <div>
           <Form.Item name={`${record.par}ParFiles`} >
-            <a style={{ paddingRight: 8 }} onClick={() => { setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true); }}>上传附件</a>
+            <a style={{ paddingRight: 8 }} onClick={() => { setFileType(3); setFilePar(`${record.par}ParFiles`); setFileVisible(true);}}>{ filesList3[`${record.par}ParFiles`]&&filesList3[`${record.par}ParFiles`][0]? '查看附件' : '上传附件'}</a>
           </Form.Item>
         </div>;
 
@@ -2162,10 +2165,10 @@ const Index = (props) => {
           <Button  onClick={() => { setVisible(false)}}>
             取消
           </Button>,
-          <Button  type="primary" onClick={()=>{save(2)}}  loading={tabType == 1 ?  saveLoading2|| echoLoading || parLoading ||  false: saveLoading22 || echoLoading || parLoading ||false}>
+          <Button  type="primary" onClick={()=>{save(1)}}  loading={tabType == 1 ?  saveLoading1 || echoLoading || parLoading ||  false: saveLoading11 || echoLoading || parLoading ||false}>
             保存
           </Button>,
-          <Button type="primary" onClick={()=>save(1)}  loading={tabType == 1 ? saveLoading1 || echoLoading || parLoading || false : saveLoading11 || echoLoading|| parLoading ||false} >
+          <Button type="primary" onClick={()=>save(2)}  loading={tabType == 1 ? saveLoading2 || echoLoading || parLoading || false : saveLoading22 || echoLoading|| parLoading ||false} >
             提交
           </Button>,
         ]}
@@ -2217,13 +2220,13 @@ const Index = (props) => {
 
 
           <Tabs
-            defaultActiveKey="1"
+            activeKey={tabType}
             onChange={key => {
               tabsChange(key);
             }}
             className={styles.tabSty}
           >
-            <TabPane tab="数据一致性核查表" key="1">
+            <TabPane tab="数据一致性核查表" key='1'>
               <Form
                 form={form2}
                 name={"advanced_search"}
@@ -2266,7 +2269,7 @@ const Index = (props) => {
                 </Row>
               </Form>
             </TabPane>
-            <TabPane tab="参数一致性核查表" key="2">
+            <TabPane tab="参数一致性核查表" key='2'>
               <Form
                 form={form3}
                 name={"advanced_search"}

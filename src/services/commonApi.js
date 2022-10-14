@@ -107,7 +107,7 @@ export async function getPointByEntCode2(params) {
   return result;
 }
 /**
- * 基本信息-更新监测点的运营开始结束时间
+ * 基本信息-更新监测点的运维开始结束时间
  * @param {传递参数} 传递参数
  * @param {操作} 操作项
  */

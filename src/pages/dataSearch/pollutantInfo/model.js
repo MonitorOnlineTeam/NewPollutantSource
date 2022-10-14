@@ -116,7 +116,7 @@ export default Model.extend({
         message.warning(result.Message)
        }
     },
-    *getEntProjectRelationList ({ payload, callback }, { call, put, update }) { //运营信息
+    *getEntProjectRelationList ({ payload, callback }, { call, put, update }) { //运维信息
       !payload.EntID?   yield update({ projectRelationLoading:true }) : yield update({ historyProjectRelationLoading:true })
       const result = yield call(services.GetEntProjectRelationList, payload);
       if (result.IsSuccess) {
@@ -126,7 +126,7 @@ export default Model.extend({
             operationInfoTableDatas: result.Datas,
             operationInfoTableTotal: result.Total,
           })
-        }else{ //历史运营信息
+        }else{ //历史运维信息
           yield update({ historyProjectRelationLoading:false })
           yield update({
             historyOperationInfo: result.Datas,
@@ -138,7 +138,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *exportEntProjectRelationList({ payload }, { call, put, update, select }) { //导出 运营信息
+    *exportEntProjectRelationList({ payload }, { call, put, update, select }) { //导出 运维信息
       const result = yield call(services.ExportEntProjectRelationList, { ...payload });
       if (result.IsSuccess) {
         message.success('下载成功');

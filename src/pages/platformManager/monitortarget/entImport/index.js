@@ -280,14 +280,14 @@ export default class EntImport extends Component {
         width:120,
       },
       {
-        title: <span>实际运营开始日期</span>,
+        title: <span>实际运维开始日期</span>,
         dataIndex: 'Btime',
         key: 'Btime',
         align: 'center',
         width:150,
       },
       {
-        title: <span>实际运营截止日期</span>,
+        title: <span>实际运维截止日期</span>,
         dataIndex: 'Etime',
         key: 'Etime',
         align: 'center',

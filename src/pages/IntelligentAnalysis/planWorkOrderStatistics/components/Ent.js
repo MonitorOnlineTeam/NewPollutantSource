@@ -121,7 +121,7 @@ const Index = (props,ref) => {
   }
   const workOrderTip = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>运营周期内：在监测点的实际运营周期内。 </li>
+    <li>运维周期内：在监测点的实际运维周期内。 </li>
     <li>完成工单：当日完成的工单。</li>
     <li>系统关闭工单：当日系统关闭的工单。</li>
     <li>同时存在关闭和完成的工单：当日存在系统关闭工单，也存在完成工单。</li>
@@ -603,7 +603,7 @@ const exports = () => { //导出
      <Row align='middle'>
        <div style={{marginRight:8}}>
      <div style={{display:'inline-block', background:'#bae7ff',width:24,height:12,marginRight:5}}></div>
-       <span>运营周期内</span>
+       <span>运维周期内</span>
        </div>
        <div  style={{ marginRight:8}}>
      <div style={{ display:'inline-block',background:'#1890ff',width:24,height:12,marginRight:5}}></div>
@@ -669,7 +669,7 @@ const exports = () => { //导出
                              <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                            </Row>
                              }
-                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
+                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
                                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                        
                                       </Row>
@@ -725,7 +725,7 @@ const exports = () => { //导出
                              <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                            </Row>
                              }
-                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
+                             if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
                                return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                        
                                       </Row>

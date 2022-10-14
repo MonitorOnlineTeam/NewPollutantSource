@@ -73,13 +73,13 @@ class EntWorkOrderStatistics extends PureComponent {
         width: 180,
       },
          {
-              title: '运营企业数',
+              title: '运维企业数',
               dataIndex: '00_Opsenters',
               key: '00_Opsenters',
               sorter: (a, b) => a['00_Opsenters'] - b['00_Opsenters'],
       },
          {
-            title: '运营监测点数',
+            title: '运维监测点数',
             dataIndex: '00_Opspoints',
             key: '00_Opspoints',
             width: 120,

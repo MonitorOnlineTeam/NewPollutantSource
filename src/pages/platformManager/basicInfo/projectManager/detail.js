@@ -110,12 +110,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营起始日期"  >
+        <Form.Item label="运维起始日期"  >
         {data.BeginTime}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营结束日期" >
+      <Form.Item label="运维结束日期" >
       {data.EndTime}
       </Form.Item>
       </Col>
@@ -124,12 +124,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营套数" >
+        <Form.Item label="运维套数" >
         {data.OperationCount}
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营月数"  >
+      <Form.Item label="运维月数"  >
       {data.OperationMonth}
       </Form.Item>
       </Col>

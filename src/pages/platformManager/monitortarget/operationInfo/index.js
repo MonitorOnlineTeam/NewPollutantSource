@@ -40,6 +40,12 @@ const dvaPropsData = ({ loading, operationInfo, autoForm }) => ({
 
 const dvaDispatch = (dispatch) => {
   return {
+    updateState: (payload) => { 
+      dispatch({
+        type: `${namespace}/updateState`,
+        payload: payload,
+      })
+    },
     getEntProjectRelationList: (payload) => { //监测运维列表
       dispatch({
         type: `${namespace}/getEntProjectRelationList`,
@@ -97,6 +103,7 @@ const dvaDispatch = (dispatch) => {
         payload: payload
       })
     },
+ 
     cycle: (payload, callback) => { //总频次
       dispatch({
         type: 'autoForm/getAutoFormData',
@@ -213,6 +220,7 @@ const Index = (props) => {
     onFinish();
     props.operationList();//运维列表
     props.getEntPointList({ EntID: props.location.query.p });//企业运维列表
+
     props.cycle({}, (data) => { //总频次
       if (data && data[0]) {
         const list = data.filter(item => item['dbo.T_Cod_OperationCycle.Status'] == 1)  //启用状态
@@ -233,6 +241,7 @@ const Index = (props) => {
       }
     });
   }
+
 
 
   const columns = [
@@ -260,18 +269,18 @@ const Index = (props) => {
     //   key:'regionName',
     //   align:'center',
     // },
-    // {
-    //   title: '创建时间',
-    //   dataIndex: 'createTime',
-    //   key: 'createTime',
-    //   align: 'center',
-    // },
-    // {
-    //   title: '创建人',
-    //   dataIndex: 'createUserName',
-    //   key: 'createUserName',
-    //   align: 'center',
-    // },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      align: 'center',
+    },
+    {
+      title: '创建人',
+      dataIndex: 'createUserName',
+      key: 'createUserName',
+      align: 'center',
+    },
     {
       title: '巡检类型',
       dataIndex: 'inspectionTypeName',
@@ -298,7 +307,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: '运营合同起始日期',
+      title: '运维合同起始日期',
       dataIndex: 'operationBeginTime',
       key: 'operationBeginTime',
       align: 'center',
@@ -306,7 +315,7 @@ const Index = (props) => {
       sorter: (a, b) => moment(a.operationBeginTime).valueOf() - moment(b.operationBeginTime).valueOf()
     },
     {
-      title: '运营合同结束日期',
+      title: '运维合同结束日期',
       dataIndex: 'operationEndTime',
       key: 'operationEndTime',
       align: 'center',
@@ -385,14 +394,14 @@ const Index = (props) => {
       ellipsis: true,
     },
     {
-      title: '运营起始日期',
+      title: '运维起始日期',
       dataIndex: 'BeginTime',
       key: 'BeginTime',
       align: 'center',
       ellipsis: true,
     },
     {
-      title: '运营结束日期',
+      title: '运维结束日期',
       dataIndex: 'EndTime',
       key: 'EndTime',
       align: 'center',
@@ -466,7 +475,7 @@ const Index = (props) => {
       Remark: record.remark,
       PorjectID: record.projectID, OperationCompany: record.companyID,
       InspectionCycel: record.inspectionCycel, CalibrationCycle: record.calibrationCycle, ParameterCheck: record.parameterCheck,
-      RegionCode: record.regionCode, BeginTime: record.actualBeginTime ? moment(record.actualBeginTime) : undefined, EndTime: record.actualEndTime ? moment(record.actualEndTime) : undefined
+      RegionCode: record.regionCode, BeginTime: record.actualBeginTime ? moment(record.actualBeginTime) : undefined, EndTime: record.actualEndTime ? moment(record.actualEndTime) : undefined,
     });
     setChoiceData(record.projectCode)
     setType("edit")
@@ -498,7 +507,6 @@ const Index = (props) => {
         {
           ...values,
           BeginTime: values.BeginTime&&values.BeginTime.format('YYYY-MM-DD 00:00:00'), EndTime: values.EndTime&&values.EndTime.format('YYYY-MM-DD 23:59:59'),
-          createTime: values.createTime&&values.createTime.format('YYYY-MM-DD 00:00:00'), 
           DGIMN: type === 'edit' ? [values.DGIMN] : values.DGIMN,
         }, () => {
           setFromVisible(false);
@@ -744,18 +752,7 @@ const Index = (props) => {
       <Form.Item label="省份名称" name="RegionCode" rules={[  { required: true, message: '请选择省份名称!',  },]} >
        <RegionList     levelNum={1} selectType = '1,是' style={{width:'100%'}}/>
       </Form.Item>
-      </Col> */}
-            {/*<Col span={12}>
-              <Form.Item label="创建时间" name="createUserName" rules={[{ required: true, message: '请选择创建时间!', },]} >
-                <DatePicker  />
-              </Form.Item>
-            </Col> 
-             <Col span={12}>
-              <Form.Item label="创建人" name="createTime" rules={[{ required: true, message: '请输入创建人！', },]} >
-                <Input d placeholder="请输入创建人"/>
-              </Form.Item>
-            </Col>
-            */}
+      </Col> */}            
             <Col span={12}>
               <Form.Item label="巡检类型" name="inspectionType" rules={[{ required: true, message: '请选择巡检类型!', },]} >
                 <Select placeholder="请选择巡检类型" >
@@ -781,7 +778,7 @@ const Index = (props) => {
             {/* <Row> */}
 
             <Col span={12}>
-              <Form.Item label="校准派单频次" name="CalibrationCycle" rules={[{ required: false, message: '请选择校准频次!', },]} >
+              <Form.Item label="校准派单频次" name="CalibrationCycle" rules={[{ required: true, message: '请选择校准频次!', },]} >
                 <Select placeholder="请选择校准派单频次" allowClear>
                   {calibrationCycleList[0] && calibrationCycleList.map(item => {
                     return <Option value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>

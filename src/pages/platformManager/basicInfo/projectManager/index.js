@@ -152,7 +152,7 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: '运营合同起始日期',
+      title: '运维合同起始日期',
       dataIndex: 'BeginTime',
       key:'BeginTime',
       align:'center',
@@ -160,7 +160,7 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: '运营合同结束日期',
+      title: '运维合同结束日期',
       dataIndex: 'EndTime',
       key:'EndTime',
       align:'center',
@@ -169,7 +169,7 @@ const Index = (props) => {
       
     },
     {
-      title: '运营套数',
+      title: '运维套数',
       dataIndex: 'OperationCount',
       key:'OperationCount',
       align:'center',
@@ -250,14 +250,14 @@ const Index = (props) => {
       ellipsis:true,
     },
     {
-      title: '实际运营开始日期',
+      title: '实际运维开始日期',
       dataIndex: 'beginTime',
       key:'beginTime',
       align:'center',
       ellipsis:true,
     },
     {
-      title: '实际运营结束日期',
+      title: '实际运维结束日期',
       dataIndex: 'endTime',
       key:'endTime',
       align:'center',
@@ -411,7 +411,7 @@ const Index = (props) => {
   //         </Form.Item>
   //       </Col>
   //       {expand&& <><Col span={8}>
-  //         <Form.Item name='BegTime' label='运营合同起始日期' >
+  //         <Form.Item name='BegTime' label='运维合同起始日期' >
   //         <RangePicker style={{width:'100%'}}
   //           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
   //           />
@@ -429,7 +429,7 @@ const Index = (props) => {
   //         </Form.Item>
   //       </Col>
   //       <Col span={8}>
-  //         <Form.Item name='EndTime' label='运营合同结束日期' format='YYYY-MM-DD 23:59:59'>
+  //         <Form.Item name='EndTime' label='运维合同结束日期' format='YYYY-MM-DD 23:59:59'>
   //         <RangePicker style={{width:'100%'}} 
   //          showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
   //         </Form.Item>
@@ -487,7 +487,7 @@ const Index = (props) => {
          </Form.Item>
        </Col>
        {expand&& <>  <Col span={8}>
-         <Form.Item name='BegTime' label='运营日期' >
+         <Form.Item name='BegTime' label='运维日期' >
          <RangePicker style={{width:'100%'}}
            showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
@@ -615,12 +615,12 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营合同起始日期" name="BeginTime" rules={[  { required: true, message: '请输入运营合同起始日期!',  },]} >
+        <Form.Item label="运维合同起始日期" name="BeginTime" rules={[  { required: true, message: '请输入运维合同起始日期!',  },]} >
         <DatePicker  disabledDate={startDisabledDate} />
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营合同结束日期" name="EndTime" rules={[  { required: true, message: '请输入运营合同结束日期!',  },]} >
+      <Form.Item label="运维合同结束日期" name="EndTime" rules={[  { required: true, message: '请输入运维合同结束日期!',  },]} >
         <DatePicker disabledDate={endDisabledDate}/>
       </Form.Item>
       </Col>
@@ -629,13 +629,13 @@ const Index = (props) => {
 
       <Row>
         <Col span={12}>
-        <Form.Item label="运营套数" name="OperationCount" rules={[  { required: true, message: '请输入运营套数!',  },]} >
-        <InputNumber placeholder='请输入运营套数'/>
+        <Form.Item label="运维套数" name="OperationCount" rules={[  { required: true, message: '请输入运维套数!',  },]} >
+        <InputNumber placeholder='请输入运维套数'/>
       </Form.Item>
       </Col>
       <Col span={12}>
-      <Form.Item label="运营月数" name="OperationMonth" rules={[  { required: true, message: '请输入运营月数!',  },]} >
-        <InputNumber placeholder='请输入运营月数'/>
+      <Form.Item label="运维月数" name="OperationMonth" rules={[  { required: true, message: '请输入运维月数!',  },]} >
+        <InputNumber placeholder='请输入运维月数'/>
       </Form.Item>
       </Col>
       </Row>

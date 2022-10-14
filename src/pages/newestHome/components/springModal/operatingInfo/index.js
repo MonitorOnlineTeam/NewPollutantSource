@@ -53,7 +53,7 @@ const Index = (props) => {
   const { type, pollutantType,operatingStatus } = props;
   return (
     <Modal
-    title={type=='ent'? "运营企业" : "运营企业监测点"}
+    title={type=='ent'? "运维企业" : "运维企业监测点"}
     wrapClassName='spreadOverModal'
     visible={props.visible}
     footer={false}

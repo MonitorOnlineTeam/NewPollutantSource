@@ -141,14 +141,14 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '运营合同起始日期',
+      title: '运维合同起始日期',
       dataIndex: 'beginTime',
       key:'beginTime',
       align:'center',
       sorter: (a, b) => moment(a.beginTime).valueOf() - moment(b.beginTime).valueOf()
     },
     {
-      title: '运营合同结束日期',
+      title: '运维合同结束日期',
       dataIndex: 'endTime',
       key:'endTime',
       align:'center',
@@ -287,7 +287,7 @@ const Index = (props) => {
       </Row>  
       <Row>
         <span style={{color:'#f5222d'}}>
-        运维监测点到期后，系统将停止自动派发工单，关闭手工申请工单功能。对于续签项目请及时续签,然后将运营信息维护至平台。
+        运维监测点到期后，系统将停止自动派发工单，关闭手工申请工单功能。对于续签项目请及时续签,然后将运维信息维护至平台。
         </span>
          </Row>  
      </Form>

@@ -118,14 +118,14 @@ const Index = (props) => {
     }
   },
   {
-    title: '运营企业数',
+    title: '运维企业数',
     dataIndex: 'entCount',
     key:'entCount',
     align:'center',
     sorter: (a, b) => a.entCount - b.entCount,
   },
   {
-    title: '运营监测点数',
+    title: '运维监测点数',
     dataIndex: 'pointCount',
     key:'pointCount',
     align:'center',

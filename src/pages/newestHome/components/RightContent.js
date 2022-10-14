@@ -77,7 +77,7 @@ const  dvaDispatch = (dispatch) => {
         callback:callback
       })
     },
-    GetOperationExpirePointList : (payload,callback) =>{ //运营到期点位
+    GetOperationExpirePointList : (payload,callback) =>{ //运维到期点位
       dispatch({
         type: `operationExpirePoint/getOperationExpirePointList`,
         payload:payload,
@@ -176,7 +176,7 @@ const Index = (props) => {
      })
     }
 
-  const  getOperationExpirePointList = () =>{ //运营到期点位
+  const  getOperationExpirePointList = () =>{ //运维到期点位
     props.GetOperationExpirePointList({ 
       PollutantType: pollutantType,
     },()=>{})
@@ -487,7 +487,7 @@ const operationExpiraOption = { //点位到期统计
   const {effectiveTransmissionLoading } = props;  //有效传输率
   const {dataAlarmResLoading} = props; //数据报警响应
   const { networkingLoading } = props; //实时联网率
-  const { operationExpireLoading } = props; //运营到期点位
+  const { operationExpireLoading } = props; //运维到期点位
   const [missingRateVisible,setMissingRateVisible] = useState(false)
   const [abnormalAlarmRateVisible,setAbnormalAlarmRateVisible] = useState(false)
   const [operationalExpiraVisible,setOperationalExpiraVisible] = useState(false)
@@ -560,8 +560,8 @@ const operationExpiraOption = { //点位到期统计
      </Spin>
   
      <Spin spinning={operationExpireLoading}>
-     <div className={styles.operationExpira}>{/**运营到期点位 */}
-    <CardHeader btnClick={dataAlarmResClick}   title='运营到期点位' />
+     <div className={styles.operationExpira}>{/**运维到期点位 */}
+    <CardHeader btnClick={dataAlarmResClick}   title='运维到期点位' />
      <div style={{height:'100%',padding:'30px 17px 30px 0' }}>
          <ReactEcharts
             option={operationExpiraOption}

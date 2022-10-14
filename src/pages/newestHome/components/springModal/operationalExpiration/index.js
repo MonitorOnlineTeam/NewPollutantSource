@@ -3,7 +3,7 @@
  * @Date: 2021.12.22
  * @Last Modified by: 
  * @Last Modified time: 
- * @Description: 运营到期点位统计弹框
+ * @Description: 运维到期点位统计弹框
  */
 import React, { PureComponent } from 'react';
 import { Modal } from "antd"
@@ -40,7 +40,7 @@ class Index extends PureComponent {
     const { visible,type } = this.props
     return (
       <Modal
-        title="运营到期点位统计"
+        title="运维到期点位统计"
         wrapClassName='spreadOverModal'
         visible={visible}
         footer={false}

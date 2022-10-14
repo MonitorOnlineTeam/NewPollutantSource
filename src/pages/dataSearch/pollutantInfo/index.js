@@ -75,7 +75,7 @@ const Index = (props) => {
           <TabPane tab="监测点信息" key="2">
           <PointInfo props filteredHandle={filteredHandle}/>
           </TabPane>
-          <TabPane tab="运营信息" key="3">
+          <TabPane tab="运维信息" key="3">
           <OperationInfo props/>
           </TabPane>
           <TabPane tab="系统信息" key="4">

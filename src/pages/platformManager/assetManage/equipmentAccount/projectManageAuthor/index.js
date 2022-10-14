@@ -139,13 +139,13 @@ const Index = (props) => {
       align:'center',
     },
     {
-      title: '运营起始日期',
+      title: '运维起始日期',
       dataIndex: 'beginTime',
       key:'beginTime',
       align:'center',
     },
     {
-      title: '运营结束日期',
+      title: '运维结束日期',
       dataIndex: 'endTime',
       key:'endTime',
       align:'center',

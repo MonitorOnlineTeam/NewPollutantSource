@@ -57,6 +57,9 @@ export default class AutoFormIndex extends Component {
         this.reloadPage(nextProps.match.params.configId);
     }
   }
+  componentWillUnmount(){
+    this.props.dispatch({ type: 'autoForm/updateState', payload: { searchForm: {}, }, }); //清空 企业运维信息
+  }
 
   reloadPage = (configId) => {
     const { dispatch } = this.props;

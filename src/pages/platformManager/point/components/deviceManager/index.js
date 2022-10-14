@@ -266,7 +266,7 @@ const gasSyatemCancel = (record,type) =>{
 
 
   const save = async (record) => {
-    
+        
       try {
         const row = await formDevice.validateFields();
         const newData = [...data];
@@ -293,6 +293,11 @@ const gasSyatemCancel = (record,type) =>{
         }
       } catch (errInfo) {
         console.log('Validate Failed:', errInfo);
+        if(errInfo.errorFields&&errInfo.errorFields[0]&&errInfo.errorFields[0].name){
+          if(errInfo.errorFields[0].name[0] === "EquipmentManufacturer" ){
+           message.error('请选择设备厂家')
+         }
+        }
       }
   };
  const gasSystemSave =  async (record) =>{
@@ -410,24 +415,24 @@ const gasSyatemCancel = (record,type) =>{
     },
   ];
   if(pollutantType==1){    
-    columns.splice(4,0,{
-      title: '手填设备厂家',
-      dataIndex: 'ManualEquipmentManufacturer',
-      align: 'center',
-      editable: true,
-   })
-    columns.splice(5,0,{
-        title: '手填设备名称',
-        dataIndex: 'ManualEquipmentName',
-        align: 'center',
-        editable: true,
-    })
-    columns.splice(6,0,{
-        title: '手填设备型号',
-        dataIndex: 'ManualEquipmentModel',
-        align: 'center',
-        editable: true,
-  })
+  //   columns.splice(4,0,{
+  //     title: '手填设备厂家',
+  //     dataIndex: 'ManualEquipmentManufacturer',
+  //     align: 'center',
+  //     editable: true,
+  //  })
+  //   columns.splice(5,0,{
+  //       title: '手填设备名称',
+  //       dataIndex: 'ManualEquipmentName',
+  //       align: 'center',
+  //       editable: true,
+  //   })
+  //   columns.splice(6,0,{
+  //       title: '手填设备型号',
+  //       dataIndex: 'ManualEquipmentModel',
+  //       align: 'center',
+  //       editable: true,
+  // })
 
     columns = columns.filter(item=>{
       return item.dataIndex !='Equipment'
@@ -961,7 +966,7 @@ const gasSyatemCancel = (record,type) =>{
     ...restProps
   }) => {
     let inputNode = '';
-    if (dataIndex ==='EquipmentManufacturer') {
+    if (dataIndex ==='EquipmentManufacturer') { //监测参数 设备厂家
       inputNode = <Select onClick={()=>{popVisibleClick()}} onChange={onParClearChoice} allowClear showSearch={false}  dropdownClassName={styles.popSelectSty} placeholder="请选择"> </Select>;
     }else if(dataIndex ==='systemName'){
       inputNode = <Select placeholder='请选择' onChange={cemsChange} disabled={choiceGasManufacturer}>
@@ -1028,7 +1033,7 @@ const gasSyatemCancel = (record,type) =>{
             <Form.Item
               name={`${dataIndex}`}
               style={{ margin: 0 }}
-            //  rules={[ {   required: dataIndex==="EquipmentParametersCode"&&true,  message: ``  } ]}
+              rules={[ {   required: dataIndex==="EquipmentManufacturer",  message: ``  } ]}
             >
               {inputNode}
             </Form.Item>

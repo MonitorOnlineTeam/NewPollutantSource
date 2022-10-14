@@ -42,12 +42,12 @@ export async function ExportPointInfoList(params) {
   return result;
 }
 
-//运营信息
+//运维信息
 export async function GetEntProjectRelationList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntProjectRelationList', params, null);
   return result;
 }
-//运营信息 导出
+//运维信息 导出
 export async function ExportEntProjectRelationList(params) {
   const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/ExportEntProjectRelationList', params, null);
   return result;

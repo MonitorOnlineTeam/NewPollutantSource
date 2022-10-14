@@ -54,7 +54,7 @@ const  dvaDispatch = (dispatch) => {
         payload:{...payload},
       }) 
     },
-    GetOperatePointList:(payload)=>{ //运营信息总览
+    GetOperatePointList:(payload)=>{ //运维信息总览
       dispatch({
         type: `${namespace}/GetOperatePointList`, 
         payload:{...payload},
@@ -101,7 +101,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
   },[]);
   const pollutantType = pollType[props.type]
   const  initData = () =>{
-    props.GetOperatePointList({ //运营监测点信息
+    props.GetOperatePointList({ //运维监测点信息
       pollutantType: pollutantType,
     })
     props.GetOperationTaskList({ //运维工单统计
@@ -137,7 +137,7 @@ const { operaOrderData,latelyDays30,pollType,subjectFontSize } = props;
       width:61,
     },
     {
-      title: '运营企业',
+      title: '运维企业',
       dataIndex: 'entCount',
       key: 'entCount',
       align:'center',
@@ -418,7 +418,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
         return <span style={{cursor:'pointer'}} onClick={()=>{operatingInfo('point',record)}}>{text}</span>
       }
   })
-  const  { operationLoading,operationDataSource } = props; {/**运营信息总览 */}
+  const  { operationLoading,operationDataSource } = props; {/**运维信息总览 */}
   const  { operationTaskLoading } = props; {/**近30日运维工单 */}
   const  { operationPlanTaskLoading } = props; {/**近30日运维情况 */}
   const  { planCompleteList,planCompleteListLoading } = props;{/**计划完成率 */}
@@ -431,7 +431,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
     <div>
       <Spin spinning={operationLoading}>
          <div className={styles.pointSty}> 
-           <CardHeader  title='运营信息总览'/>  
+           <CardHeader  title='运维信息总览'/>  
           <Table  style={{padding:'16px 15px 0 0'}}  columns={operationColumns} dataSource={operationDataSource} pagination={false}/>
          </div>
          </Spin>
@@ -495,7 +495,7 @@ const planOperaEcharts = useMemo(()=>{ //监听变量，第一个参数是函数
               }}
             pollutantTypeCode={pollutantType}
           />
-         <OperatingInfo  //运营信息总览
+         <OperatingInfo  //运维信息总览
              visible={operatingInfoVisible}
              type={pollutantType}
              onCancel={()=>{setOperatingInfoVisible(false)}}

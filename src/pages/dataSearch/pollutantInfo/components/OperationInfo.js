@@ -1,5 +1,5 @@
 /**
- * 功  能：污染源信息 运营信息
+ * 功  能：污染源信息 运维信息
  * 创建人：贾安波
  * 创建时间：2022.04.02
  */
@@ -124,7 +124,7 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '运营合同起始日期',
+            title: '运维合同起始日期',
             dataIndex: 'operationBeginTime',
             key: 'operationBeginTime',
             align: 'center',
@@ -132,7 +132,7 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '运营合同结束日期',
+            title: '运维合同结束日期',
             dataIndex: 'operationEndTime',
             key: 'operationEndTime',
             align: 'center',
@@ -201,7 +201,7 @@ const Index = (props) => {
             render: (text, record) => {
                 return <span>
                     <Fragment>
-                        <Tooltip title="历史运营详情">
+                        <Tooltip title="历史运维详情">
                             <a  onClick={()=>{historyDetail(record)}}>  <ProfileOutlined style={{ fontSize: 16 }} /></a>
                         </Tooltip>
                     </Fragment>
@@ -229,7 +229,7 @@ const Index = (props) => {
             ellipsis:true,
         },
         {
-            title: '运营合同起始日期',
+            title: '运维合同起始日期',
             dataIndex: 'operationBeginTime',
             key: 'operationBeginTime',
             align: 'center',
@@ -237,7 +237,7 @@ const Index = (props) => {
             sorter: (a, b) => moment(a.operationBeginTime).valueOf() - moment(b.operationBeginTime).valueOf()
         },
         {
-            title: '运营合同结束日期',
+            title: '运维合同结束日期',
             dataIndex: 'operationEndTime',
             key: 'operationEndTime',
             align: 'center',
@@ -325,14 +325,14 @@ const Index = (props) => {
                     <RegionList levelNum={2} style={{width:165}} />
                 </Form.Item>
 
-                <Form.Item label='合同运营日期' name='OperatTime'>
+                <Form.Item label='合同运维日期' name='OperatTime'>
                     <RangePicker_
                         format="YYYY-MM-DD HH:mm:ss"
                         showTime="YYYY-MM-DD HH:mm:ss"
                         style={{minWidth:350}}
                         allowClear />
                 </Form.Item>
-                <Form.Item label='实际运营日期' name='ActualTime' style={{ marginLeft: 8, }}>
+                <Form.Item label='实际运维日期' name='ActualTime' style={{ marginLeft: 8, }}>
                     <RangePicker_
                         format="YYYY-MM-DD HH:mm:ss"
                         showTime="YYYY-MM-DD HH:mm:ss"

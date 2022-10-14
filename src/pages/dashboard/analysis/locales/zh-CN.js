@@ -11,7 +11,7 @@ export default {
   'dashboard-analysis.analysis.day': '日同比',
   'dashboard-analysis.analysis.payments': '支付笔数',
   'dashboard-analysis.analysis.conversion-rate': '转化率',
-  'dashboard-analysis.analysis.operational-effect': '运营活动效果',
+  'dashboard-analysis.analysis.operational-effect': '运维活动效果',
   'dashboard-analysis.analysis.sales-trend': '销售趋势',
   'dashboard-analysis.analysis.sales-ranking': '门店销售额排名',
   'dashboard-analysis.analysis.all-year': '全年',

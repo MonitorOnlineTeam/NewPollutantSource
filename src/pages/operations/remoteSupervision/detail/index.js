@@ -61,8 +61,8 @@ const Index = (props) => {
 
   useEffect(() => {
     props.getConsistencyCheckInfo({ID:id},(data)=>{ //DAS量程
-      setRangeUpload(data.rangeUploadFormat)
-      setCouUpload(data.couUploadFormat)
+      setRangeUpload(data.rangeUpload)
+      setCouUpload(data.couUpload)
       setConsistencyCheckDetail(data)
       
       if(data.consistencyCheckList&&data.consistencyCheckList[0]){//获取das量程和数采仪量程是否被选中
@@ -121,14 +121,15 @@ const Index = (props) => {
   
   },[]);
   
-  const getAttachmentDataSource = (value)=> {
-    const fileInfo = value ? value.split(',') : [];
-    let fileList =  fileInfo.map(item => {
-      return {
-        name: item,
-        attach: item
-      }
+  const getAttachmentDataSource = (fileInfo)=> {
+    const  fileList =[];
+      if(fileInfo&&fileInfo[0]){
+      fileInfo.map(item => {
+        if(!item.IsDelete){
+            fileList.push({ name: item.FileName,   attach: item.FileName })
+       }
     })
+  }
    return fileList;
   }
 
@@ -304,7 +305,7 @@ const Index = (props) => {
             const attachmentDataSource = getAttachmentDataSource(rangeUpload);
             const obj = {
               children: <div>
-                <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} /> 
+                {rangeUpload&&rangeUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
               </div>,
               props: {},
             };
@@ -445,7 +446,7 @@ const Index = (props) => {
             const attachmentDataSource = getAttachmentDataSource(couUpload);
             const obj = {
               children: <div>
-                    <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} /> 
+                   {couUpload&&couUpload[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />}
               </div>,
               props: {},
             };
@@ -539,22 +540,22 @@ const Index = (props) => {
     {
       title: '备注',
       align: 'center',
-      dataIndex: 'Remrak',
-      key: 'Remrak',
+      dataIndex: 'Remark',
+      key: 'Remark',
       width: 100,
       width: 150,
     },
     {
       title: '附件',
       align: 'center',
-      dataIndex: 'UploadFormat',
-      key: 'UploadFormat',
+      dataIndex: 'UploadList',
+      key: 'UploadList',
       width: 120,
       render: (text, record, index) => {
         const attachmentDataSource = getAttachmentDataSource(text);
 
         return <div>
-         <AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} /> 
+         {text&&text[0]&&<AttachmentView style={{ marginTop: 10 }} dataSource={attachmentDataSource} />} 
         </div>;
 
       }
@@ -620,26 +621,6 @@ const Index = (props) => {
       <Form.Item label="点位运维负责人"  >
         {consistencyCheckDetail.operationUserName  }
       </Form.Item>
-      </Col>
-      <Col span={8} style={{paddingRight:5}}>
-        <Form.Item label="创建人">
-        {consistencyCheckDetail.userName }
-      </Form.Item>
-      </Col>
-      <Col span={8} style={{paddingRight:5}}>
-        <Form.Item label="创建时间" >
-        {consistencyCheckDetail.createTime&&moment(consistencyCheckDetail.createTime).format("YYYY-MM-DD")}
-      </Form.Item>
-      </Col>
-      <Col span={8} style={{paddingRight:5}}>
-      <Form.Item label="更新人"  >
-        {consistencyCheckDetail.updName  }
-      </Form.Item>
-      </Col>    
-      <Col span={8} style={{paddingRight:5}}>
-        <Form.Item label="更新时间" >
-        { consistencyCheckDetail.updTime&&moment(consistencyCheckDetail.updTime).format("YYYY-MM-DD")}
-      </Form.Item>
       </Col> 
       </Row>
     </Form>
@@ -649,7 +630,7 @@ const Index = (props) => {
                 columns={columns1}
                 dataSource={tableData1}
                 pagination={false}
-                scroll={{ y: clientHeight - 480}}
+                scroll={{ y: 'auto'}}
               />
                <SdlTable
                 columns={columns2}

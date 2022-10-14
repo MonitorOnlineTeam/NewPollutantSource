@@ -71,7 +71,7 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    *regPointGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区 省级 运营监测点
+    *regPointGetTaskWorkOrderList({ payload,callback }, { call, put, update }) { //行政区 省级 运维监测点
       const result = yield call(services.regPointGetTaskWorkOrderList, payload);
       if (result.IsSuccess) {
         yield update({

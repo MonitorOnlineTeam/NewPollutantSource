@@ -191,7 +191,7 @@ export default class Index extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'abnormalStandard/exportExceptionStandValue',
-      payload: { ...queryPar,PageIndex:1,PageSize:100000, },
+      payload: { ...queryPar,PageIndex:undefined,PageSize:undefined, },
       callback: data => {
           downloadFile(`/upload${data}`);
         },

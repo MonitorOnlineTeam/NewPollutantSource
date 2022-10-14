@@ -202,7 +202,7 @@ const Index = (props) => {
         ellipsis:true,
       },
       {
-        title: '巡检频次',
+        title: '巡检类型',
         dataIndex: 'OprationFrequency',
         key: 'OprationFrequency',
         align: 'center',

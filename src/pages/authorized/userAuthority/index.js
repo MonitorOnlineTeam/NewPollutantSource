@@ -523,7 +523,7 @@ export default class UserAuthority extends Component {
     const keys = this.state.selectedRow.ID;
     if (value == undefined) {
       this.setState({
-        DataTreeValue: '',
+        DataTreeValue: [],
       });
       this.props.dispatch({
         type: 'newuserinfo/getentandpoint',
@@ -625,6 +625,14 @@ export default class UserAuthority extends Component {
         maxHeight: '700px',
         overflowY: 'auto',
       },
+      showSearch:true,
+      filterOption:(input, option) => {
+        if (option && option.props && option.props.title) {
+            return option.props.title === input || option.props.title.indexOf(input) !== -1
+        } else {
+            return true
+        }
+      }
     };
     return (
       <BreadcrumbWrapper title="用户管理">

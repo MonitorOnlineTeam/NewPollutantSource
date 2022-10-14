@@ -122,7 +122,7 @@ export default {
               path: '/appoperation/appRemoteSupervisionDetail/:id',
               component: './AppOperation/AppRemoteSupervisionDetail',
             },
-            /* 督查详情 移动端 */
+            /* 帮助中心详情 移动端 */
             {
               path: '/appoperation/appQuestionDetail/:id',
               component: './systemManger/helpCenter/QueDetail',

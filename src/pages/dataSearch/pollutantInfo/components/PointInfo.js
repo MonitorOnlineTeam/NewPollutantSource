@@ -356,7 +356,7 @@ const Index = (props) => {
                     导出
          </Button>
          <span style={{ color: '#f5222d', fontSize: 14,margin: '0 8px' }}>
-            下面列表只展示当前在运营的监测点，运营到期的监测点将不再显示。
+            下面列表只展示当前在运维的监测点，运维到期的监测点将不再显示。
            </span>
             </Form.Item>
             </Row>

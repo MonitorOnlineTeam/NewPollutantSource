@@ -80,7 +80,7 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    regPointGetTaskWorkOrderList:(payload)=>{ // 计划工单统计 运营监测点
+    regPointGetTaskWorkOrderList:(payload)=>{ // 计划工单统计 运维监测点
       dispatch({
         type: `${namespace}/regPointGetTaskWorkOrderList`,
         payload:payload,
@@ -194,7 +194,7 @@ const Index = (props,ref ) => {
   }
   const workOrderTip = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
-    <li>运营周期内：在监测点的实际运营周期内。 </li>
+    <li>运维周期内：在监测点的实际运维周期内。 </li>
     <li>完成工单：当日完成的工单。</li>
     <li>系统关闭工单：当日系统关闭的工单。</li>
     <li>同时存在关闭和完成的工单：当日存在系统关闭工单，也存在完成工单。</li>
@@ -227,14 +227,14 @@ const Index = (props,ref ) => {
       }
     },
     {
-      title: '运营企业数',
+      title: '运维企业数',
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
       width: 100,
     },
     {
-    title: <span>运营监测点数{!isActualCalibrationModal&&!isPlanCalibrationModal&&<Tooltip title={`点击运营监测点数，可以查看运营监测点在条件日期内完成的计划巡检工单、计划校准工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip>}</span>,
+    title: <span>运维监测点数{!isActualCalibrationModal&&!isPlanCalibrationModal&&<Tooltip title={`点击运维监测点数，可以查看运维监测点在条件日期内完成的计划巡检工单、计划校准工单情况。`}><QuestionCircleOutlined style={{paddingLeft:5}}/></Tooltip>}</span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
@@ -365,14 +365,14 @@ const Index = (props,ref ) => {
       }
     },
     {
-      title: '运营企业数',
+      title: '运维企业数',
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
       width: 100,
     },
     {
-      title: <span>运营监测点数</span>,
+      title: <span>运维监测点数</span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
@@ -740,14 +740,14 @@ const Index = (props,ref ) => {
       }
     },
     {
-      title: '运营企业数',
+      title: '运维企业数',
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
       width: 100,
     },
     {
-      title: <span>运营监测点数</span>,
+      title: <span>运维监测点数</span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
@@ -791,14 +791,14 @@ const Index = (props,ref ) => {
       }
     },
     {
-      title: '运营企业数',
+      title: '运维企业数',
       dataIndex: 'entCount',
       key:'entCount',
       align:'center',
       width: 100,
     },
     {
-      title: <span>运营监测点数</span>,
+      title: <span>运维监测点数</span>,
       dataIndex: 'pointCount',
       key:'pointCount',
       align:'center',
@@ -1241,7 +1241,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      <Row align='middle'>
        <div style={{marginRight:8}}>
      <div style={{display:'inline-block', background:'#bae7ff',width:24,height:12,marginRight:5}}></div>
-       <span>运营周期内</span>
+       <span>运维周期内</span>
        </div>
        <div  style={{ marginRight:8}}>
      <div style={{ display:'inline-block',background:'#1890ff',width:24,height:12,marginRight:5}}></div>
@@ -1300,7 +1300,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
      <Row align='middle'>
        <div style={{marginRight:8}}>
      <div style={{display:'inline-block', background:'#bae7ff',width:24,height:12,marginRight:5}}></div>
-       <span>运营周期内</span>
+       <span>运维周期内</span>
        </div>
        <div  style={{ marginRight:8}}>
      <div style={{ display:'inline-block',background:'#1890ff',width:24,height:12,marginRight:5}}></div>
@@ -1357,7 +1357,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
         operationStatus:operationStatus,
       })
     }
-   const insideOperaPointClick=(record)=>{ //行政区 计划内 运营监测点弹框 
+   const insideOperaPointClick=(record)=>{ //行政区 计划内 运维监测点弹框 
     setInsideOperaPointVisible(true)
     setRegName(record.regionName)
     setRegionCode(record.regionCode)
@@ -1372,7 +1372,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
    const [operaPointForm] = Form.useForm()
 
    const [operationStatus,setOperationStatus] = useState();
-   const operaPointClick  = (e) =>{  //查询  运营监测点
+   const operaPointClick  = (e) =>{  //查询  运维监测点
     setRegPointPageIndex(1)
     setRegPointPageSize(10)
     setOperationStatus(e.target.value)
@@ -1381,7 +1381,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
       operationStatus:e.target.value
     })
   }
-  const operaPointExports = async () => { //导出  运营监测点
+  const operaPointExports = async () => { //导出  运维监测点
 
     const values = await operaPointForm.validateFields()
     props.operaPointExportTaskWorkList({
@@ -1467,7 +1467,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                           </Row>
                             }
-                            if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
+                            if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                       
                                      </Row>
@@ -1523,7 +1523,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                             <span style={{color:'#fff'}}>{dateItem.taskCompleteCount}</span>
                           </Row>
                             }
-                            if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
+                            if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
                               return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                       
                                      </Row>
@@ -1593,7 +1593,7 @@ const cityDetailExports =  ()=>{ // 导出 计划外 市详情
                           //     }
 
                           // }
-                        if(dateItem.operationStatus&&dateItem.date == item.date){ //运营周期内
+                        if(dateItem.operationStatus&&dateItem.date == item.date){ //运维周期内
                           return  <Row align='middle' justify='center' style={{ background:'#bae7ff',width:'100%',height:'100%',position:'absolute',top:0,left:0}}>
                                   
                                  </Row>
@@ -1799,7 +1799,7 @@ useImperativeHandle(refInstance,() => {
    </Card>
  
       </Modal> 
-  {/**计划内 运营监测点数弹框 */}
+  {/**计划内 运维监测点数弹框 */}
       
       <Modal
         title={`${regName}-统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}

@@ -41,7 +41,7 @@ const  dvaDispatch = (dispatch) => {
         payload:payload,
       })
     },
-    getPageConfig1:(payload)=>{ //设备运营接手资料
+    getPageConfig1:(payload)=>{ //设备运维接手资料
       dispatch({
         type: 'autoForm/getPageConfig',
         payload:{configId:'EquipmentHandoverData1'}
@@ -166,7 +166,7 @@ const Index = (props) => {
   }
 
   const [filesCuid,setFilesCuid]= useState()
-  const onFinish1  = async () =>{  //添加 设备运营接手资料
+  const onFinish1  = async () =>{  //添加 设备运维接手资料
     form1.setFieldsValue({ "Files":filesCuid} )
     try {
       const values = await form1.validateFields();
@@ -202,7 +202,7 @@ const Index = (props) => {
 
 
   const [fileList,setFileList] = useState([])
-  const uploadProps = { // 设备运营接手资料  资料附件上传 
+  const uploadProps = { // 设备运维接手资料  资料附件上传 
     action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
     data:{
       FileUuid: filesCuid,
@@ -330,7 +330,7 @@ const {saveLoading } = props;
                   // this.tabsChange(key);
                 }}
               >
-                <TabPane tab="设备运营接手资料" key="1">
+                <TabPane tab="设备运维接手资料" key="1">
                 <AutoFormTable 
                             style={{ marginTop: 10 }}
                             // loading={}
@@ -394,7 +394,7 @@ const {saveLoading } = props;
                 }} />
    </BreadcrumbWrapper>
    <Modal
-        title={`设备运营接手资料 - ${typeName}`}
+        title={`设备运维接手资料 - ${typeName}`}
         visible={visible1}
         onCancel={() => {
           setVisible1(false)
