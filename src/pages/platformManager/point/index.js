@@ -317,7 +317,7 @@ export default class MonitorPoint extends Component {
           if (this.state.isEdit) {
             FormData.PointCode = this.state.selectedPointCode;
           }
-          FormData['DGIMN'] = FormData['DGIMN'].toLowerCase();
+          FormData['DGIMN'] = FormData['DGIMN']&&FormData['DGIMN'].toLowerCase();
           const payload = {
             BaseType: match.params.targetType,
             TargetId: match.params.targetId,

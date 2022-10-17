@@ -238,16 +238,11 @@ class SdlForm extends PureComponent {
       let stationPlaceStr = '命名规则：空气站所在地级市名称+空气站、直辖市名+空气站，例如郑州市空气站、北京市空气站'
        
       // 判断类型
-    
       switch (item.type) {
         case '文本框':
           validator = `${inputPlaceholder}`;   
           if( item.labelText==='大气站名称'){
             placeholder = stationPlaceStr
-          }else if(item.labelText==='经度'){
-            placeholder = `${inputPlaceholder} 例如：112.236514`
-          }else if(item.labelText==='纬度'){
-            placeholder = `${inputPlaceholder} 例如：85.236589`
           }else if(item.labelText==='登录名'&& configId === 'UserInfoAdd'){ //用户管理 基本信息
              placeholder = `${inputPlaceholder}员工编号，例子：SDL0000`
           }else{
@@ -325,7 +320,8 @@ class SdlForm extends PureComponent {
           break;
         case '经度':
           validator = `${inputPlaceholder}`;
-          placeholder = placeholder || inputPlaceholder;
+          // placeholder = placeholder || inputPlaceholder;
+          placeholder = `${inputPlaceholder} 例如：112.236514`
 
           // element = <Input
           //   suffix={<Icon
@@ -348,12 +344,13 @@ class SdlForm extends PureComponent {
             latitude={getFieldValue('Latitude') || formData.Latitude}
             path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
             handleMarker
+            placeholder={placeholder}
           />
           break;
         case '纬度':
           validator = `${inputPlaceholder}`;
-          placeholder = placeholder || inputPlaceholder;
-
+          // placeholder = placeholder || inputPlaceholder;
+          placeholder = `${inputPlaceholder} 例如：85.236589`
           element = <SdlMap
             onOk={map => {
               console.log('map=', map)
@@ -363,6 +360,7 @@ class SdlForm extends PureComponent {
             latitude={getFieldValue('Latitude') || formData.Latitude}
             path={getFieldValue(`CoordinateSet`) || formData['CoordinateSet'] || corporationCode}
             handleMarker
+            placeholder={placeholder}
           />;
           break;
         case '坐标集合':

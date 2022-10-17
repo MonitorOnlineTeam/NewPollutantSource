@@ -26,6 +26,7 @@ export default Model.extend({
           tableTotal:result.Total,
           tableDatas:result.Datas?result.Datas : [],
         })
+        callback&&callback(result.Datas?result.Datas : [])
       }else{
         message.error(result.Message)
       }

@@ -360,7 +360,7 @@ const Index = (props) => {
       },
       color: type == 1 ? color1 : type == 2 ? color2 : color3,
       title: {
-        text: type == 1 ? opertionExceptionList.exceptionRate=='-'?'-': ` ${opertionExceptionList.exceptionRate}%` : type == 2 ? opertionExceptionList.exceptionRate=='-'?'-':  `${opertionExceptionList.exceptionRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
+        text: type == 1 ? opertionExceptionList.exceptionRate=='-'?'-': ` ${opertionExceptionList.exceptionRate}%` : type == 2 ? opertionExceptionList.failureRate=='-'?'-':  `${opertionExceptionList.failureRate}%` : opertionExceptionList.repairRate=='-'?'-':  `${opertionExceptionList.repairRate}%`,
         left: "center",
         top: "42%",
         textStyle: {

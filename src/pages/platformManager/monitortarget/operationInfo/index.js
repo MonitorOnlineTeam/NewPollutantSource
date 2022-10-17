@@ -778,7 +778,7 @@ const Index = (props) => {
             {/* <Row> */}
 
             <Col span={12}>
-              <Form.Item label="校准派单频次" name="CalibrationCycle" rules={[{ required: true, message: '请选择校准频次!', },]} >
+              <Form.Item label="校准派单频次" name="CalibrationCycle" rules={[{ required: false, message: '请选择校准频次!', },]} >
                 <Select placeholder="请选择校准派单频次" allowClear>
                   {calibrationCycleList[0] && calibrationCycleList.map(item => {
                     return <Option value={item['dbo.T_Cod_OperationCycle.Code'].toString()}>{item['dbo.T_Cod_OperationCycle.Frequency']}</Option>

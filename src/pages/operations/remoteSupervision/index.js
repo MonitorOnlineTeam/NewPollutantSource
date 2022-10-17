@@ -2340,7 +2340,7 @@ const Index = (props) => {
         getContainer={false}
         footer={null}
       >
-        <Detail id={id} />
+        <Detail  match={{params:{id: id}}}/>
         </Modal>
     </div>
 

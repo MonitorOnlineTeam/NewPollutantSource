@@ -282,7 +282,6 @@ class SdlMap extends PureComponent {
                 city: that.props.configInfo.AdCode == '0' ? '全国' : that.props.configInfo.AdCode,
                 input: 'tipInput',
               }
-
               const autoComplete = new window.AMap.Autocomplete(autoOptions);
               window.AMap.event.addListener(autoComplete, 'select', data => {
                 const latlng = data.poi.location;
@@ -397,7 +396,8 @@ class SdlMap extends PureComponent {
 
   render() {
     const { mapVisible } = this.state;
-    const { handleMarker, handlePolygon, mode, latitude, longitude } = this.props;
+    const { handleMarker, handlePolygon, mode, latitude, longitude,} = this.props;
+
     return (
       <Fragment>
         {
@@ -428,8 +428,8 @@ class SdlMap extends PureComponent {
                 })
               }}
               style={{ color: '#2db7f5', cursor: 'pointer' }} />}
-            allowClear
-            {...this.props}
+              allowClear
+              {...this.props}
           />
         }
         {
@@ -442,7 +442,8 @@ class SdlMap extends PureComponent {
         <Modal
           visible={mapVisible}
           title="编辑位置信息"
-          width="70%"
+          // width="70%"
+          wrapClassName='spreadOverModal'
           destroyOnClose// 清除上次数据
           onOk={() => {
             this.onOk();
@@ -482,13 +483,14 @@ class SdlMap extends PureComponent {
                   placeholder="搜索地址"
                   // defaultValue={this.state.address}
                   value={this.state.address}
-                  id="tipInput"
+                  // id="tipInput"
                   onChange={input => {
                     this.setState({
                       address: input.target.value,
                     })
                   }}
-                  onPressEnter={value => this.onSearch(value)}
+                  allowClear
+                  onPressEnter={value =>this.onSearch(value)}
                   style={{ width: 300, marginLeft: 10 }}
                 />
               }

@@ -20,7 +20,7 @@ import Cookie from 'js-cookie';
 import PageLoading from '@/components/PageLoading'
 import NumTips from '@/components/NumTips'
 import settingDrawer from '@/locales/en-US/settingDrawer';
-const { TextArea } = Input;
+const { TextArea,Search, } = Input;
 const { Option } = Select;
 
 const namespace = 'deviceInfo'
@@ -156,12 +156,7 @@ const Index = (props) => {
 
   const  { tableDatas,tableTotal,tableLoading,monitoringTypeList,manufacturerList,loadingManufacturer,pollutantTypeList,loadingAddConfirm,loadingEditConfirm,exportLoading,loadingGetPollutantById,loadingAddEditPollutantById,addEditPollutantTypeList,maxNum,equipmentNameList,loadingEquipmentName,addEditEquipmentNameList,loadingAddEditEquipmentName,} = props; 
   useEffect(() => {
-    props.getManufacturerList({pageIndex:1,pageSize:100000},(data)=>{
-      if(data[0]){
-        setManufacturerId(data[0].ID)
-        setDeveiceName(data[0].ManufacturerName)
-      }
-    })
+    getManufacturerListFun()
     props.getMonitoringTypeList({})//监测类别
   },[]);
 
@@ -173,6 +168,15 @@ const Index = (props) => {
     }
 
   },[manufacturerId])
+
+  const getManufacturerListFun = (name) =>{ //设备厂家列表
+    props.getManufacturerList({pageIndex:1,pageSize:100000,ManufacturerName:name,},(data)=>{
+      if(data[0]){
+        setManufacturerId(data[0].ID)
+        setDeveiceName(data[0].ManufacturerName)
+      }
+    })
+  }
   const columns = [
     {
       title: '编号',
@@ -370,6 +374,10 @@ const Index = (props) => {
       // form.setFieldsValue({EquipmentName:undefined})
     }
   }
+
+  const onSearch = (value) => {
+    getManufacturerListFun(value)
+  }
   const searchComponents = () =>{
     return  <Form
     form={form}
@@ -486,13 +494,13 @@ const Index = (props) => {
             marginTop: 64,
           }}
         >
-         
+           <Search placeholder="请输入厂家名称" allowClear onSearch={onSearch} enterButton loading={loadingManufacturer} style={{padding:'8px 0 12px 8px'}}/>
          {loadingManufacturer?
         <PageLoading />
          :
          <>
         {manufacturerList.length? 
-          <Tree selectedKeys={[manufacturerId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20}  defaultExpandAll />
+           <Tree selectedKeys={[manufacturerId]}  blockNode  showIcon  onSelect={onSelect}  treeData={treeDatas()} height={props.clientHeight - 64 - 20 - 52}  defaultExpandAll />
           :
         <Empty style={{ marginTop: 70 }} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </>

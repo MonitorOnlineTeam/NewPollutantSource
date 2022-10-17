@@ -26,10 +26,12 @@ export default Model.extend({
         const data = result.Datas.map(item=>{
           return {...item,content:item.QuestionName,key:item.ID }
         })
-        yield update({
+        if(payload.secondLevel){ //防止弹框刷新
+         yield update({
           questionListTotal:result.Total,
           questionListData:data? data : [],
         })
+       }
         callback&&callback(data)
       }else{
         message.error(result.Message)

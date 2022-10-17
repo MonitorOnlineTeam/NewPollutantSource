@@ -47,7 +47,7 @@ const  dvaDispatch = (dispatch) => {
   }
 }
 const Index = (props) => {
-    const {id,tableLoading,type,clientHeight }= props;
+    const {match: { params : {id:id} },tableLoading,type,clientHeight }= props;
    
     const [rangeUpload,setRangeUpload] = useState()
     const [couUpload,setCouUpload] = useState()
@@ -58,7 +58,7 @@ const Index = (props) => {
     const [dasRangStatus,setDasRangStatus] = useState(false)
     const [dataRangStatus,setDataRangStatus] = useState(false)
     const [dataRealTimeRangStatus,setDataRealTimeRangStatus] = useState(false) //数采仪实时数据
-
+    const isMobile = props.match.path &&props.match.path == '/appoperation/appRemoteSupervisionDetail/:id' ? true : false;
   useEffect(() => {
     props.getConsistencyCheckInfo({ID:id},(data)=>{ //DAS量程
       setRangeUpload(data.rangeUpload)
@@ -591,7 +591,7 @@ const Index = (props) => {
     <Form
       name="detail"
     >
-      <Row>
+      <Row style={{paddingTop: isMobile? 16 : 0}}>
       <Col span={8} style={{paddingRight:5}}>
         <Form.Item label="企业名称">
         {consistencyCheckDetail.entName }

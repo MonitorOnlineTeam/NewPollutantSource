@@ -110,7 +110,7 @@ const Index = (props) => {
       ellipsis:true,
       width:70,
       render:(row,text,index)=>{
-        return index + 1
+        return (index + 1) + ((pageIndex - 1) * pageSize)
       }
     },
     {
@@ -195,10 +195,10 @@ const Index = (props) => {
 
 
   const searchComponents = () =>{
-    return <Form
+    return <div><Form
     form={form}
     name="advanced_search"
-    onFinish={() => { onFinish(pageIndex, pageSize) }}
+    onFinish={() => {setPageIndex(1);onFinish(1, pageSize) }}
     initialValues={{
     }}
     className={styles.queryForm}
@@ -227,49 +227,9 @@ const Index = (props) => {
           导出
        </Button>
       </Form.Item>
-      <span className='red'>本页面设置污染源烟气监测点校准台账的填报方式，只针对废气监测点，VOC监测点除外。</span>
   </Form>
-  }
-
-
-const modalSearchComponents = () =>{
-   return <Form
-    form={form2}
-    name="advanced_search"
-    onFinish={() => {setPageIndex2(1); onFinish2(1, pageSize2) }}
-    layout='inline'
-    initialValues={{
-    }}
-    className={styles.queryForm}
-    onValuesChange={onDetailValuesChange}
-  >
-      <Form.Item label='企业' name='StateEntID'>      
-        <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 200}}>
-            {
-              entStateList[0] && entStateList.map(item => {
-                return <Option key={item.EntCode} value={item.EntCode} >{item.EntName}</Option>
-              })
-            }
-          </Select>
-      </Form.Item>
-      <Spin spinning={pointLoading2} size='small' style={{ top: 0, left: 20 }}>
-        <Form.Item label='监测点名称' name='StateID' >
-
-          <Select placeholder='请选择' allowClear showSearch optionFilterProp="children" style={{ width: 200}}>
-            {
-              pointList2[0] && pointList2.map(item => {
-                return <Option key={item.PointCode} value={item.PointCode} >{item.PointName}</Option>
-              })
-            }
-          </Select>
-        </Form.Item>
-      </Spin>
-        <Button type="primary" loading={tableDetailLoading} htmlType="submit">
-          查询
-       </Button>
-
-
-  </Form>
+  <span className='red' style={{fontSize:14}}>本页面设置污染源烟气监测点校准台账的填报方式，只针对废气监测点，VOC监测点除外。</span>
+  </div>
   }
 
 

@@ -127,6 +127,11 @@ export default {
               path: '/appoperation/appQuestionDetail/:id',
               component: './systemManger/helpCenter/QueDetail',
             },
+            /* 公告内容 移动端 */
+            {
+              path: '/appoperation/noticeContentDetail/:id',
+              component: './systemManger/noticeManger/NoticeContentDetail',
+            },
             /* 维修记录 */
             {
               path: '/appoperation/apprepairrecord/:TaskID/:TypeID',
