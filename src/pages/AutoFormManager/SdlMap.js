@@ -482,7 +482,7 @@ class SdlMap extends PureComponent {
                   placeholder="搜索地址"
                   // defaultValue={this.state.address}
                   value={this.state.address}
-                  // id="tipInput"
+                  id="tipInput"
                   onChange={input => {
                     this.setState({
                       address: input.target.value,
