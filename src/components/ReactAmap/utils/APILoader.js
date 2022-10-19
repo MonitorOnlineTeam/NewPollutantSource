@@ -2,7 +2,7 @@ import config from "@/config"
 const DEFAULT_CONFIG = {
   v: '1.4.0',
   hostAndPath: 'webapi.amap.com/maps',
-  key: 'f97efc35164149d0c0f299e7a8adb3d2',
+  key: '5e60171b820065e7e9a1d6ea45abaee9',
   callback: '__amap_init_callback',
   useAMapUI: false
 }

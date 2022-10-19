@@ -7,7 +7,7 @@ import $script from 'scriptjs';
 import styles from './MapContent.less';
 
 const googleMapSdk = 'https://maps.googleapis.com/maps/api/js?key=your key';
-const gaodeMapSdk = 'https://webapi.amap.com/maps?v=1.4.12&key=c5cb4ec7ca3ba4618348693dd449002d';
+const gaodeMapSdk = 'https://webapi.amap.com/maps?v=1.4.12&key=5e60171b820065e7e9a1d6ea45abaee9';
 
 
 let map = null;
@@ -61,7 +61,7 @@ class MapContent extends React.Component {
                         resizeEnable: true,
                         center: mapCenter,
                         zoom: zoomLevel,
-                        // key:"c5cb4ec7ca3ba4618348693dd449002d"
+                        // key:"5e60171b820065e7e9a1d6ea45abaee9"
                     });
 
                     // 高德设置语言    ['en', 'zh_en', 'zh_cn']

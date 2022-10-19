@@ -2,13 +2,14 @@ import React, { PureComponent, Fragment } from 'react'
 import PropTypes, { array } from 'prop-types';
 import { GlobalOutlined } from '@ant-design/icons';
 import { Input, Modal, Button, message } from 'antd';
-// import { Map, MouseTool, Marker, Polygon } from 'react-amap';
-import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
+import { Map, MouseTool, Marker, Polygon } from 'react-amap';
+// import { Map, MouseTool, Marker, Polygon } from '@/components/ReactAmap';
 import { connect } from 'dva';
 import styles from './MapContent.less';
 import config from '@/config'
+import { isInsidePolygon } from '@/utils/utils'
+import webConfig from '../../../public/webConfig'
 
-const YOUR_AMAP_KEY = 'c5cb4ec7ca3ba4618348693dd449002d';
 // import MapUI from "@/pages/monitoring/mapview/MapUI"
 
 
@@ -125,9 +126,12 @@ class SdlMap extends PureComponent {
         })
       } else if (this.props.path) {
         this.setState({
-          mapCenter: this.props.path[0][0][0],
+          mapCenter: this.props.path[0] && this.props.path[0][0] && this.props.path[0][0][0],
         })
       }
+    }
+    window._AMapSecurityConfig = {
+      securityJsCode: config.securityJsCode,
     }
   }
 
@@ -233,17 +237,26 @@ class SdlMap extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.path !== nextProps.path) {
-      nextProps.path && this.setState({
+      nextProps.path ? this.setState({
         path: nextProps.path,
         polygon: this.props.path,
-        mapCenter: nextProps.path.length>0&&nextProps.path[0]&&nextProps.path[0][0]&&nextProps.path[0][0][0]
-      }, () => {
-        // thisMap.setFitView()
+        mapCenter: nextProps.path[0] && nextProps.path[0][0] && nextProps.path[0][0][0],
+      }) : this.setState({
+        path: [],
+        polygon: [],
       })
     }
     if (this.props.handleMarker !== this.props.handleMarker) {
       this.setState({
         isChangePos: nextProps.handleMarker,
+      })
+    }
+    if ((this.props.latitude !== nextProps.latitude) || (this.props.longitude !== nextProps.longitude)) {
+      this.setState({
+        position: {
+          latitude: nextProps.latitude,
+          longitude: nextProps.longitude
+        }
       })
     }
   }
@@ -269,7 +282,7 @@ class SdlMap extends PureComponent {
         }
         // if (this.props.handlePolygon) {
         setTimeout(() => {
-          ins.setFitView()
+          ins && ins.setFitView && ins.setFitView()
         }, 1000)
 
         const timer = setInterval(() => {
@@ -282,8 +295,10 @@ class SdlMap extends PureComponent {
                 city: that.props.configInfo.AdCode == '0' ? '全国' : that.props.configInfo.AdCode,
                 input: 'tipInput',
               }
+
               const autoComplete = new window.AMap.Autocomplete(autoOptions);
               window.AMap.event.addListener(autoComplete, 'select', data => {
+                console.log(1111)
                 const latlng = data.poi.location;
                 // 设置缩放级别和中心点
                 const latlngxy = [latlng.lng, latlng.lat];
@@ -304,14 +319,68 @@ class SdlMap extends PureComponent {
       },
       click: e => {
         if (this.state.isChangePos) {
-          const position = {
-            longitude: e.lnglat.lng,
-            latitude: e.lnglat.lat,
+
+          if (this.props.path) {
+            // console.log("this.props.path=", this.props.path)
+            let path = JSON.parse(this.props.path)
+            if (path.length) {
+              // let innerArr = path[0][0];
+              // // console.log("innerArr=",)
+              // let longitudeArr = innerArr.map(item => item[0]) // 经度
+              // let latitudeArr = innerArr.map(item => item[1]) // 纬度
+              // let longMax = _.max(longitudeArr);
+              // let longMin = _.min(longitudeArr);
+
+              // let latMax = _.max(latitudeArr);
+              // let latMin = _.min(latitudeArr);
+              // let lngFlag = false;
+              // let latFlag = false;
+
+              // if (e.lnglat.lng >= longMin && e.lnglat.lng <= longMax) {
+              //   lngFlag = true;
+              // } else {
+              //   lngFlag = false;
+              // }
+
+              // if (e.lnglat.lat >= latMin && e.lnglat.lat <= latMax) {
+              //   latFlag = true;
+              // } else {
+              //   latFlag = false;
+              // }
+
+              // if (lngFlag && latFlag) {
+              //   const position = {
+              //     longitude: e.lnglat.lng,
+              //     latitude: e.lnglat.lat,
+              //   }
+              //   this.setState({
+              //     position,
+              //   })
+              // } else {
+              //   message.error("设置点不在厂界范围内！")
+              // }
+              let _isInsidePolygon = isInsidePolygon(e.lnglat.lng, e.lnglat.lat, path[0][0])
+              if (_isInsidePolygon) {
+                const position = {
+                  longitude: e.lnglat.lng,
+                  latitude: e.lnglat.lat,
+                }
+                this.setState({
+                  position,
+                })
+              } else {
+                message.error("设置点不在厂界范围内！")
+              }
+            }
+          } else {
+            const position = {
+              longitude: e.lnglat.lng,
+              latitude: e.lnglat.lat,
+            }
+            this.setState({
+              position,
+            })
           }
-          this.setState({
-            position,
-          })
-          const that = this;
         }
       },
     }
@@ -320,13 +389,18 @@ class SdlMap extends PureComponent {
 
     let mapStaticAttribute = {};
     // 离线地图设置做大缩放级别
-    if (config.offlineMapUrl.domain) {
-      mapStaticAttribute.zooms = [3, 14]
+    // if (config.offlineMapUrl.domain) {
+    //   mapStaticAttribute.zooms = [3, 14]
+    // }
+
+    if (webConfig.theme === 'dark') {
+      mapStaticAttribute = { mapStyle: "amap://styles/darkblue" }
     }
 
     return <Map
-      amapkey={YOUR_AMAP_KEY}
+      amapkey={config.amapKey}
       // zoom={this.props.zoom}
+      // mapStyle="amap://styles/darkblue"
       {...props}
       events={events}
       {...mapStaticAttribute}
@@ -396,13 +470,14 @@ class SdlMap extends PureComponent {
 
   render() {
     const { mapVisible } = this.state;
-    const { handleMarker, handlePolygon, mode, latitude, longitude,} = this.props;
-
+    const { handleMarker, handlePolygon, mode, latitude, longitude } = this.props;
     return (
       <Fragment>
         {
           mode === 'modal' &&
           <Input
+            // style={{paddingRight: 40}}
+            className="mapInput"
             suffix={<GlobalOutlined
               onClick={() => {
                 if (latitude && longitude) {
@@ -428,8 +503,9 @@ class SdlMap extends PureComponent {
                 })
               }}
               style={{ color: '#2db7f5', cursor: 'pointer' }} />}
-              allowClear
-              {...this.props}
+            allowClear
+            {...this.props}
+            onChange={(e) => { this.props.onChange && this.props.onChange(e) }}
           />
         }
         {
@@ -457,17 +533,39 @@ class SdlMap extends PureComponent {
             {this.renderMapContent()}
             <div className={styles.mouseTool}>
               <Button className={styles.ClearButton} onClick={() => {
-                this.setState({
-                  position: {
-                    latitude: undefined,
-                    longitude: undefined,
-                  },
-                  address: undefined,
-                  polygon: [],
-                  path: undefined,
-                })
-                thisMap.clearMap()
-              }}>清除全部</Button>
+                if (handlePolygon) {
+                  this.setState({
+                    address: undefined,
+                    polygon: [],
+                    path: undefined,
+                    position: {
+                      latitude: undefined,
+                      longitude: undefined,
+                    },
+                  }, () => {
+                    thisMap.clearMap();
+                  })
+                  setTimeout(() => {
+                    this.setState({
+                      position: {
+                        latitude: this.props.latitude,
+                        longitude: this.props.longitude
+                      },
+                    })
+                  }, 0)
+
+                } else {
+                  this.setState({
+                    position: {
+                      latitude: undefined,
+                      longitude: undefined,
+                    },
+                    address: undefined,
+                  })
+                }
+              }}>{
+                  handlePolygon ? '清除厂界' : "清除坐标"
+                }</Button>
 
               {handleMarker && <Button style={{ marginLeft: 10 }} onClick={() => {
                 this.setState({
@@ -483,15 +581,15 @@ class SdlMap extends PureComponent {
                   placeholder="搜索地址"
                   // defaultValue={this.state.address}
                   value={this.state.address}
-                  // id="tipInput"
+                  id="tipInput"
                   onChange={input => {
                     this.setState({
                       address: input.target.value,
                     })
                   }}
-                  allowClear
-                  onPressEnter={value =>this.onSearch(value)}
+                  onPressEnter={value => this.onSearch(value)}
                   style={{ width: 300, marginLeft: 10 }}
+                  allowClear
                 />
               }
             </div>

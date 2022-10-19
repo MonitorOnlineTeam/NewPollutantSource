@@ -43,7 +43,7 @@ module.exports = {
   // logindesc: 'SDL 您身边的环境污染分析专家',
   prefix: 'monitorEnterprise',
   // footerText: '污染源智能分析平台   2018 sdl',
-  amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
+  amapKey: '5e60171b820065e7e9a1d6ea45abaee9',
   apiHost,
   uploadHost,
   XinJiang,
@@ -64,7 +64,7 @@ module.exports = {
   centerlongitude: '118.510962',
   centerlatitude: '38.976271', // (在线图标库：//at.alicdn.com/t/font_1298443_z8x4fq2rhf.js)
   zoom: 12,
-  iconFontUrl: '/iconFont/iconfont.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
+  iconFontUrl: '//at.alicdn.com/t/font_1298443_z8x4fq2rhf.js', // 局域网部署需要1.更换路径：  /iconFont/iconfont.js  2.下载最新iconfont图标替换到public文件夹下
   logo: '/sdlicon.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',

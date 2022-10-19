@@ -236,7 +236,6 @@ class SdlForm extends PureComponent {
         }
       };
       let stationPlaceStr = '命名规则：空气站所在地级市名称+空气站、直辖市名+空气站，例如郑州市空气站、北京市空气站'
-       
       // 判断类型
       switch (item.type) {
         case '文本框':
@@ -375,6 +374,7 @@ class SdlForm extends PureComponent {
             path={getFieldValue(`${fieldName}`) || formData[fieldName] || corporationCode}
             showMarker={true}
             handlePolygon
+            placeholder={placeholder}
           />;
           break;
         // case "上传":
