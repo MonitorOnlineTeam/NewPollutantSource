@@ -39,6 +39,8 @@ import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable'
 import  TaskRecordDetails  from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout' 
+import EntAtmoList from '@/components/EntAtmoList'
+
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -66,7 +68,9 @@ class TaskRecord extends Component {
     //  EntCode:null,
       taskRecordDetailVisible:false,
       TaskID:null,
-      DGIMN:null
+      DGIMN:null,
+      pointList:[],
+      pointLoading:false,
     };
     this._SELF_ = {
       configId: 'TaskRecord',
@@ -394,6 +398,28 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
     DGIMN:DGIMN
   })
 }
+entChange = (value) => {
+  if (!value) { //清空时 不走请求
+    this.props.form.setFieldsValue({ DGIMN: [] })
+    this.setState({
+      pointList:[],
+    })
+    return;
+  }
+  this.setState({pointLoading:true,})
+  this.props.dispatch({
+    type: `common/getPointByEntCode`,
+    payload:{ EntCode : value },
+    callback: (res)=>{
+      this.setState({
+        pointList:res,
+        pointLoading:false,
+      })
+    }
+  })
+  this.props.form.setFieldsValue({ DGIMN: undefined })
+
+}
   render() {
     const { form: { getFieldDecorator }, operationsUserList, loading, LoadingData, gettasklistqueryparams,isHomeModal } = this.props;
     const { formLayout } = this._SELF_;
@@ -582,20 +608,41 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
     //   />);
     // }
 
+    const { pointList,pointLoading,} = this.state;
     return (
       <BreadcrumbWrapper hideBreadcrumb={this.props.hideBreadcrumb}>
         <Card className="contentContainer">
           <Form layout=""  className='searchForm' style={{ marginBottom: '10' }}>
               <Row>
-               {!isHomeModal&&<Col md={8} sm={24}>
+               {!isHomeModal&&<>
+               <Col md={8} sm={24}>
+               <FormItem {...formLayout} label="企业" style={{ width: '100%' }}>
+                   {getFieldDecorator('EntCode', {
+                     initialValue:  undefined,
+                   })(
+                    <EntAtmoList  pollutantType={2}  style={{ width: '100%' }} onChange={this.entChange}/>
+                   )}
+               </FormItem>
+           </Col>
+               <Col md={8} sm={24}>
+                    <Spin spinning={pointLoading} size='small' style={{top:-3,left:'10%',}}>
                       <FormItem {...formLayout} label="监测点" style={{ width: '100%' }}>
                           {getFieldDecorator('DGIMN', {
                             initialValue: gettasklistqueryparams.DGIMN ? gettasklistqueryparams.DGIMN.split(',') : undefined,
                           })(
-                            <CascaderMultiple {...this.props} style={{ width: '100%' }}/>,
+                            
+                            <Select mode='multiple' placeholder='请选择' allowClear showSearch optionFilterProp="children"  style={{ width: '100%' }}>
+                            {
+                              pointList[0] && pointList.map(item => {
+                                return <Option key={item.DGIMN} value={item.DGIMN} >{item.PointName}</Option>
+                              })
+                            }
+                          </Select>
+                      
                           )}
                       </FormItem>
-                  </Col>}
+                      </Spin>
+                  </Col></>}
                   <Col md={8} sm={24}>
                       <FormItem {...formLayout} label="创建时间" style={{ width: '100%' }}>
                           {getFieldDecorator('CreateTime', {
@@ -761,7 +808,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
                           )}
                       </FormItem>
                   </Col>
-                  <div style={{ marginTop: 4, ...style }}>
+                  <div style={{ marginTop: 4, ...style, marginBottom:!this.state.expand&&12  }}>
                     <Button
                           style={{ marginLeft: 8 }}
                           onClick={() => {

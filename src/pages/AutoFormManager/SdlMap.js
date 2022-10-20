@@ -21,9 +21,11 @@ const styleC = {
   width: '200px',
   textAlign: 'center',
   position: 'absolute',
-  top: '-27px',
+  // top: '-27px',
   left: '-85px',
+  bottom:'30px',
   color: '#000',
+
 }
 
 @connect(({ loading, global }) => ({
@@ -131,7 +133,7 @@ class SdlMap extends PureComponent {
       }
     }
     window._AMapSecurityConfig = {
-      securityJsCode: config.securityJsCode,
+      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
     }
   }
 
@@ -210,7 +212,7 @@ class SdlMap extends PureComponent {
 
   // 地址搜索
   onSearch = obj => {
-    if (window.AMap) {
+    if (window.AMap&& obj.keyCode == 13) { //回车事件
       window.AMap.service('AMap.Geocoder', () => { // 回调函数
         // 实例化Geocoder
         const geocoder = new window.AMap.Geocoder();
@@ -297,8 +299,10 @@ class SdlMap extends PureComponent {
               }
 
               const autoComplete = new window.AMap.Autocomplete(autoOptions);
+
+
               window.AMap.event.addListener(autoComplete, 'select', data => {
-                console.log(1111)
+                if(data.poi.location){
                 const latlng = data.poi.location;
                 // 设置缩放级别和中心点
                 const latlngxy = [latlng.lng, latlng.lat];
@@ -310,7 +314,9 @@ class SdlMap extends PureComponent {
                     longitude: latlng.lng,
                   },
                   searchAddress: data.poi.district + data.poi.address + data.poi.name,
+                  address: data.poi.name,
                 })
+              }
               })
             })
             clearInterval(timer)
@@ -420,7 +426,7 @@ class SdlMap extends PureComponent {
       {
         this.state.searchPosition && <Marker events={markerEvents} position={this.state.searchPosition} style={{ position: 'relative' }}>
           <div>
-            <img src="/marker.png" alt="" />
+            <img src="/marker.png" alt=""/>
             <div style={styleC}>{this.state.searchAddress}</div>
           </div>
         </Marker>
@@ -583,13 +589,14 @@ class SdlMap extends PureComponent {
                   value={this.state.address}
                   id="tipInput"
                   onChange={input => {
+                    console.log(222)
                     this.setState({
                       address: input.target.value,
                     })
                   }}
-                  onPressEnter={value => this.onSearch(value)}
+                  // onPressEnter={value => this.onSearch(value)}
+                  onKeyUp={value => this.onSearch(value)} //使用原生事件
                   style={{ width: 300, marginLeft: 10 }}
-                  allowClear
                 />
               }
             </div>

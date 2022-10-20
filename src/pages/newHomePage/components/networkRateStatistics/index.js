@@ -512,7 +512,7 @@ export default class EntTransmissionEfficiency extends Component {
         }
       >
         <div>
-          {this.props.loading? <Spin style={{width:'100%',padding:'60px 0', textAlign: 'center'}} size="large" />: this.loadChart()}
+          {this.props.loading? <Spin style={{width:'100%',padding:'60px 0', textAlign: 'center'}}/>: this.loadChart()}
           <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={this.props.loading}

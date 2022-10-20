@@ -83,7 +83,7 @@ class BasicLayout extends Component {
       contentElement.style.margin = '8px'
     }
 
-    this.props.dispatch({ 
+    this.props.dispatch({  
       type: 'autoForm/getRegions', 
       payload: {  PointMark: '2', RegionCode: ''} }); //获取行政区列表
   }

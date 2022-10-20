@@ -77,7 +77,7 @@ export async function ExportNetworkingRateForPoint(params) {
  // 首页联网率
  export async function GetHomePageNetworkingRate(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/MonitorPointApi/GetHomePageNetworkingRate',
+    '/api/rest/PollutantSourceApi/OperationHomeApi/GetHomePageNetworkingRate',
     params,
     null,
   );

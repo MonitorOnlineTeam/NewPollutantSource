@@ -180,7 +180,8 @@ a:hover {
 /*滚动条轨道颜色*/
 @scrollbar-track-color: #ececec;
 /*滚动条颜色*/
-@scrollbar-thumb-color: #d6d4d4;
+@scrollbar-thumb-color: rgba(214, 212, 212,.8);
+
 /*滚动条大小*/
 @scrollbar-width: 6px;
 
@@ -194,6 +195,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track-piece {
+  border-radius: 0;
   -webkit-border-radius: 0;
 }
 
@@ -201,7 +203,6 @@ a:hover {
   width: @scrollbar-width;
   height: @scrollbar-width;
 }
-
 ::-webkit-scrollbar-track {
   border-radius: 10px;
   background-color: @scrollbar-track-color;
@@ -210,15 +211,14 @@ a:hover {
 ::-webkit-scrollbar-thumb {
   height: 50px;
   background-color: @scrollbar-thumb-color;
+  border-radius: 4px; 
   -webkit-border-radius: 4px;
   outline-offset: -2px;
-  border: 2px solid @scrollbar-thumb-color;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   height: 50px;
-  background-color: @scrollbar-thumb-color;
-  -webkit-border-radius: 4px;
+  background-color: rgba(214, 212, 212);
 }
 
 .light {

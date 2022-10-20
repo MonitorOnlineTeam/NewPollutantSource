@@ -46,7 +46,18 @@ class SdlCascader extends Component {
     //   }
     // })
     if(itemName === 'dbo.T_Cod_Region.RegionName' || !configId ||  itemName === 'dbo.View_TestRegion.RegionName' ){
-      !data.length && this.props.dispatch({type: this.props.noFilter?"common/getCascaderNoFilterRegionList" : "common/getEnterpriseAndPoint",
+    //   !data.length && this.props.dispatch({type: this.props.noFilter?"common/getCascaderNoFilterRegionList" : "common/getEnterpriseAndPoint",
+    //   // payload: {
+    //   //   ConfigId: configId,
+    //   //   ValueField: itemValue,
+    //   //   TextField: itemName
+    //   // },
+    //   payload: { PointMark: '2'},
+    //   callback: (res) => {
+    //     this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
+    //   }
+    // })
+      !data.length &&this.props.noFilter&& this.props.dispatch({type: "common/getCascaderNoFilterRegionList",
       // payload: {
       //   ConfigId: configId,
       //   ValueField: itemValue,
@@ -57,7 +68,7 @@ class SdlCascader extends Component {
         this.setState({ industryTreeList: this.industryTreeListFormat(res,1) })
       }
     })
-      // setTimeout(()=>{this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }),300})
+      setTimeout(()=>{this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }),300})
     }else{
       !data.length && this.props.dispatch({type:  "common/getIndustryTree",
       payload: {

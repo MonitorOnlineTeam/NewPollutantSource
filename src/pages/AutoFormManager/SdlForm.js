@@ -66,6 +66,7 @@ const FormItem = Form.Item;
   formItemLayout: autoForm.formLayout,
   fileList: autoForm.fileList,
   fileLoading: loading.effects['autoForm/getFormData'],
+  regionList:autoForm.regionList,
 }))
 
 class SdlForm extends PureComponent {

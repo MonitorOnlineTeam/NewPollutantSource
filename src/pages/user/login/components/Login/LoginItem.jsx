@@ -120,7 +120,7 @@ class WrapFormItem extends Component {
         <FormItem>
           <Row gutter={8}>
             <Col span={16}>
-              {getFieldDecorator(name, options)(<Input {...customProps} {...inputProps} />)}
+              {getFieldDecorator(name, options)(<Input {...customProps} {...inputProps}  />)}
             </Col>
             <Col span={8}>
               <Button
@@ -141,7 +141,7 @@ class WrapFormItem extends Component {
       <Row gutter={8} className={styles.verificaCodeSty}>
         <Col span={16}>
            <FormItem>
-              {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)}
+              {getFieldDecorator(name, options)(<Input  {...customProps} {...otherProps} />)}
               </FormItem>
             </Col>
             <Col span={8}>
@@ -150,7 +150,7 @@ class WrapFormItem extends Component {
     </Row>
     :
       <FormItem>
-        {getFieldDecorator(name, options)(<Input {...customProps} {...otherProps} />)}
+        {getFieldDecorator(name, options)(name=='password'? <Input.Password  {...customProps} {...otherProps} /> :  <Input {...customProps} {...otherProps} />)}
       </FormItem>
     );
   }

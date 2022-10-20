@@ -361,7 +361,7 @@ const Index = (props) => {
       align: 'center',
     },
     {
-      title: <span style={{ position: 'relative' }}>下发状态 <NumTips content={issueTipContent} style={{ top: 2, }} /></span>,
+      title: <span style={{ position: 'relative' }}>下发状态 <NumTips content={issueTipContent} style={{ top: 2,zIndex:1, }} /></span>,
       dataIndex: 'issue',
       key: 'issue',
       align: 'center',
@@ -402,6 +402,7 @@ const Index = (props) => {
     {
       title: '操作',
       align: 'center',
+      fixed:'right',
       width:150,
       render: (text, record) => {
          const updateflag = record.updateflag;

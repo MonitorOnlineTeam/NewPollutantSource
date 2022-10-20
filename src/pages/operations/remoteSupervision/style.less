@@ -19,6 +19,14 @@
         }
 
      }
+     :global{
+     ::-webkit-scrollbar {
+        height: 12px;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 40px;
+      }
+    }
  }
  .modalSty {
     :global{
@@ -33,6 +41,9 @@
         }
         .ant-modal-content{
          height: 100vh;
+        }
+        .ant-table-sticky-scroll-bar{
+            display: none;
         }
        }
 
@@ -53,7 +64,7 @@
         .ant-form-item{
             margin: 0;
      }  
-      .ant-form-item-explain, .ant-form-item-extra{
+    .ant-form-item-explain, .ant-form-item-extra{
           font-size: 12px;
           position: absolute;
           top: 30px;
@@ -67,14 +78,20 @@
      .ant-tabs-content{
         height: calc(100vh - 350px);
         // height: calc(100wh - 50px);
-        overflow: auto;
+        overflow-y: auto;
     }
     .ant-table-body{
-        overflow-y: hidden !important;
-        // overflow-x: visible;
+        // overflow: hidden !important;
+        overflow: visible !important;
     }
-    .ant-table-header{
-        // overflow-x: visible;
+    .ant-table-sticky-header{
+      overflow: visible !important;
+    }
+    .ant-table .ant-table-container::after{
+        display: none;
+    }
+    .ant-table-cell-scrollbar{
+      display: none;
     }
     .light{
         background-color: #fff;

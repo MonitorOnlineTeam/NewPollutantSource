@@ -160,13 +160,13 @@ const Index = (props) => {
 
   }
 
-  const [networking,setNetworking] = useState({networkingRate:'0.00%',networkingCount:0,offLineCount:0})
+  const [networking,setNetworking] = useState({networkingRate:'0.00',networkingCount:0,offLineCount:0})
   const getHomePageNetworkingRate = () =>{ //实时联网率
     props.GetHomePageNetworkingRate({ 
       PollutantType: pollutantType,
     },(res)=>{
-      if(res.length>0){
-        let data = res[0];
+      if(res){
+        let data = res;
         setNetworking({
           networkingRate: data.NetworkingRate,
           networkingCount: data.NetworkingCount,
@@ -205,7 +205,7 @@ const Index = (props) => {
       },
       color: ["#298CFB", "#FCA522"],
       title: {
-        text: networking.networkingRate=='-'? "-" : networking.networkingRate,
+        text: networking.networkingRate=='-'? "-" : networking.networkingRate + '%',
         left: "center",
         top: "38%",
         textStyle: {
@@ -223,8 +223,8 @@ const Index = (props) => {
           avoidLabelOverlap: false,
           label: { normal: { show: false, position: 'center' }, },
           data: [
-            { value:  networking.networkingRate.replace("%","") , name: '已完成' },
-            { value:  networking.networkingRate=='-'? 0 : 100 - networking.networkingRate.replace("%",""), name: '未完成' },
+            { value:  networking.networkingRate , name: '已完成' },
+            { value:  networking.networkingRate=='-'? 0 : 100 - networking.networkingRate, name: '未完成' },
           ],
           startAngle:330, //起始角度
           hoverAnimation: false, //悬浮效果

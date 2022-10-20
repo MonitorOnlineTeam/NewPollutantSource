@@ -27,7 +27,6 @@ import SdlCascader from '@/pages/AutoFormManager/SdlCascader'
 import cuid from 'cuid';
 import { getBase64  } from '@/utils/utils';
 import Detail from './Detail';
-
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -295,8 +294,7 @@ const Index = (props) => {
     },
     {
       title: <span>操作</span>,
-      dataIndex: 'x',
-      key: 'x',
+      fixed:'right',
       align: 'center',
       width: 180,
       render: (text, record) => {
