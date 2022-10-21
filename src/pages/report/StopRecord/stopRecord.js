@@ -224,13 +224,13 @@ class index extends PureComponent {
                     })
                 }
             } /> */}
-            {!isHomeModal&&<>
+            {!isHomeModal&&<div  className={style.regSpinSty}>
             <label>行政区:</label>
                <RegionList  style={{ width: 200, marginLeft: 10, marginRight: 10 }} changeRegion={(value) => {
                     this.setState({
                         regionValue: value
                     })
-                }} RegionCode={this.state.regionValue}/></>}
+                }} RegionCode={this.state.regionValue}/></div>}
 
         {isHomeModal&&<><Button type="primary" style={{ marginRight: 10,marginTop:10 }} onClick={this.getChartAndTableData}>查询</Button>
                 <Button style={{ marginRight: 10,marginTop:10  }} loading={exportLoading} onClick={this.exportReport}><ExportOutlined />导出</Button></>}

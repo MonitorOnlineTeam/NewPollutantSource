@@ -37,6 +37,10 @@ class Login extends Component {
  componentWillUnmount(){
   clearInterval(this.timer)
  }
+ verificaCodeChange=(code)=>{  
+  console.log('验证码----------------------',code)
+  this.setState({verificaCode:code})
+}
   handleSubmit = (err, values) => {
     const { type,verificaCode, } = this.state;
     const { isAgree } = this.props;
@@ -44,12 +48,12 @@ class Login extends Component {
 
     if (!err) {
       const { dispatch } = this.props;
-      if( verificaCode != values.verificaCode.toLowerCase() && verificaCode != values.verificaCode.toUpperCase()){
+      if( values.verificaCode.toLowerCase() != verificaCode){
         message.error('请输入正确的验证码')
         this.child.current.click(); //刷新验证码
         return;
       }
-      if(!isAgree){
+      if(!isAgree){ 
         message.error('请勾选阅读并接受用户监测数据许可协议');
         return;
       }
@@ -97,10 +101,6 @@ class Login extends Component {
       showIcon
     />
   );
-  verificaCodeChange=(code)=>{  
-    // console.log('验证码----------------------',code)
-    this.setState({verificaCode:code})
-  }
   render() {
     const { userLogin, submitting,isAgree, } = this.props;
     const { status, type: loginType, message } = userLogin;

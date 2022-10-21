@@ -188,6 +188,7 @@ const Index = (props) => {
       title: '序号',
       align: 'center',
       width:80,
+      ellipsis:true,
       render:(text,record,index)=>{
         return index+1
       }
@@ -197,24 +198,28 @@ const Index = (props) => {
       dataIndex: 'RegionName',
       key: 'RegionName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: `企业名称`,
       dataIndex: 'EntName',
       key: 'EntName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '站点名称',
       dataIndex: 'PointName',
       key: 'PointName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '督查类别',
       dataIndex: 'InspectorTypeName',
       key: 'InspectorTypeName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '监测因子',
@@ -229,12 +234,14 @@ const Index = (props) => {
       dataIndex: 'InspectorName',
       key: 'InspectorName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '督查日期',
       dataIndex: 'InspectorDate',
       key: 'InspectorDate',
       align: 'center',
+      ellipsis:true,
       render:(text,record,index)=>{
         return text? moment(text).format("YYYY-MM-DD") : null;
       }
@@ -244,24 +251,28 @@ const Index = (props) => {
       dataIndex: 'OperationUserName',
       key: 'OperationUserName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '原则问题数量',
       dataIndex: 'PrincipleProblemNum',
       key: 'PrincipleProblemNum',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '重点问题数量',
       dataIndex: 'importanProblemNum',
       key: 'importanProblemNum',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '一般问题数量',
       dataIndex: 'CommonlyProblemNum',
       key: 'CommonlyProblemNum',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: `原则问题`,
@@ -269,6 +280,7 @@ const Index = (props) => {
       key: 'PrincipleProblem',
       align: 'center',
       width:200,
+      ellipsis:true,
     },
     {
       title: '重点问题',
@@ -284,6 +296,7 @@ const Index = (props) => {
       key: 'CommonlyProblem',
       align: 'center',
       width:200,
+      ellipsis:true,
     },
 
     {
@@ -291,12 +304,14 @@ const Index = (props) => {
       dataIndex: 'TotalScore',
       key: 'TotalScore',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: <span>操作</span>,
       fixed:'right',
       align: 'center',
       width: 180,
+      ellipsis:true,
       render: (text, record) => {
         if(isRecord){
           return  <Tooltip title='详情'> <a  onClick={() => { detail(record) }} ><DetailIcon /></a> </Tooltip>

@@ -6,7 +6,7 @@
  * @desc: 运维日历页面
  */
 import React, { PureComponent } from 'react';
-import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal } from 'antd';
+import { Calendar, Badge, Card, Divider, Tag, Empty, message, List, Modal,Spin,  } from 'antd';
 import { connect } from 'dva';
 import { router } from 'umi';
 import moment from 'moment';
@@ -502,6 +502,7 @@ class CalendarPage extends PureComponent {
           <div style={{ display: "flex" }}>
             <div style={{ flex: 5, marginRight: 10 }}>
               <Card className="contentContainer">
+                <Spin spinning={loading} style={{top:'25%'}}>
                 <Calendar
                   dateCellRender={this.cellRender}
                   monthCellRender={this.cellRender}
@@ -527,6 +528,7 @@ class CalendarPage extends PureComponent {
                     })
                   }}
                 />
+                </Spin>
               </Card>
             </div>
             <div style={{ flex: 3 }}>

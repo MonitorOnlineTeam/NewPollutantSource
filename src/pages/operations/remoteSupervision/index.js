@@ -281,24 +281,28 @@ const Index = (props) => {
       dataIndex: 'regionName',
       key: 'regionName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '企业名称',
       dataIndex: 'entName',
       key: 'entName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '监测点名称',
       dataIndex: 'pointName',
       key: 'pointName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '核查结果',
       dataIndex: 'resultCheck',
       key: 'resultCheck',
       align: 'center',
+      ellipsis:true,
       render: (text, record) => {
         return text === '不合格' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
       }
@@ -308,18 +312,21 @@ const Index = (props) => {
       dataIndex: 'rangeStatus',
       key: 'rangeStatus',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '数据是否一致',
       dataIndex: 'couStatus',
       key: 'couStatus',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '参数是否一致',
       dataIndex: 'paramStatus',
       key: 'paramStatus',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '量程一致性问题数量',
@@ -327,6 +334,7 @@ const Index = (props) => {
       key: 'rangeErrCount',
       align: 'center',
       width:180,
+      ellipsis:true,
     },
     {
       title: '数据一致性问题数量',
@@ -334,6 +342,7 @@ const Index = (props) => {
       key: 'couErrCount',
       align: 'center',
       width:180,
+      ellipsis:true,
     },
     {
       title: '参数一致性问题数量',
@@ -341,30 +350,35 @@ const Index = (props) => {
       key: 'paramErrCount',
       align: 'center',
       width:180,
+      ellipsis:true,
     },
     {
       title: '核查人',
       dataIndex: 'userName',
       key: 'userName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '核查日期',
       dataIndex: 'dateTime',
       key: 'dateTime',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '点位运维负责人',
       dataIndex: 'operationUserName',
       key: 'operationUserName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: <span style={{ position: 'relative' }}>下发状态 <NumTips content={issueTipContent} style={{ top: 2,zIndex:1, }} /></span>,
       dataIndex: 'issue',
       key: 'issue',
       align: 'center',
+      ellipsis:true,
       render: (text, record) => {
         return text === '待下发' ? <span style={{ color: '#f5222d' }}>{text}</span> : <span>{text}</span>
       }
@@ -374,36 +388,42 @@ const Index = (props) => {
       dataIndex: 'issueTime',
       key: 'issueTime',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '创建人',
       dataIndex: 'userName',
       key: 'userName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '更新人',
       dataIndex: 'updName',
       key: 'updName',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '更新时间',
       dataIndex: 'updTime',
       key: 'updTime',
       align: 'center',
+      ellipsis:true,
     },
     {
       title: '操作',
       align: 'center',
       fixed:'right',
       width:150,
+      ellipsis:true,
       render: (text, record) => {
          const updateflag = record.updateflag;
          const flag = record.flag;
