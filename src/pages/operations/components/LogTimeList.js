@@ -23,6 +23,7 @@ import NavigationTree from '@/components/NavigationTree';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import styles from '../index.less';
 import config from '@/config';
+import Detail from '@/pages/operations/recordForm'
 
 const { Option } = Select;
 
@@ -60,6 +61,9 @@ class LogTimeList extends Component {
       DGIMN: props.DGIMN,
       mainSelectValue: props.mainSelectValue,
       mainSelectDate: props.mainSelectDate,
+      detailVisible:false,
+      typeID:'',
+      taskID:'',
     };
   }
 
@@ -219,7 +223,8 @@ class LogTimeList extends Component {
                     if(node.TypeID==67 || node.TypeID ==10 || node.TypeID == 5 ||  node.TypeID == 75){
                       this.getOperationImageList(node);
                     }else{
-                      router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
+                      // router.push(`/operations/log/recordForm/${node.TypeID}/${node.TaskID}`);
+                      this.setState({ detailVisible:true,typeID:node.TypeID,taskID:node.TaskID, })
                     }
                   }}
                 >
@@ -448,6 +453,16 @@ class LogTimeList extends Component {
         </div>
         {/* </Card>  */}
         {this.props.imageListVisible && <ViewImagesModal />}
+        <Modal
+        title={'详情'}
+        visible={this.state.detailVisible}
+        destroyOnClose
+        onCancel={() => { this.setState({detailVisible:false}) }}
+        wrapClassName='spreadOverModal'
+        footer={null}
+      >
+        <Detail hideBreadcrumb isHomeModal  match={{params:{typeID: this.state.typeID,taskID:this.state.taskID}}}  />
+        </Modal>
       </>
     );
   }

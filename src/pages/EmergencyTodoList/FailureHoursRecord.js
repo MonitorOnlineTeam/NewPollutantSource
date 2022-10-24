@@ -29,6 +29,7 @@ class FailureHoursRecord extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.TaskID)
         this.props.dispatch({
             type: 'task/GetFailureHoursRecord',
             payload: {

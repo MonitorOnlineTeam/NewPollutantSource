@@ -552,7 +552,7 @@ if (getPointExceptionLoading) {
         <div>
           
           <Row style={{whiteSpace:"nowrap",padding:'0 5px',background:'#fff',
-             marginBottom:5,marginLeft: `calc(-4 * ${entAbnormalList.pointName&&entAbnormalList.pointName.length}px)` }}>
+             marginBottom:5,marginLeft: entAbnormalList.pointName&&entAbnormalList.pointName.length<=2? 0 : `calc(-7 * ${entAbnormalList.pointName&&entAbnormalList.pointName.length}px)` }}>
             {entAbnormalList.pointName}
           </Row>
                  {entAbnormalList.pollutantType ==1 ?getWaterIcon(1) : getGasIcon(1)}

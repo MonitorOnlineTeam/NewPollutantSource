@@ -55,7 +55,7 @@ export default class Index extends Component {
      }
    }
   render() {
-      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading} = this.props
+      const {selectType,RegionCode,changeRegion,regionList,noFilter,noFilterRegionList,noFilteRegLoading,regLoading,spinSty,} = this.props
     return (
 //       <SdlCascader
 //        style={{ width: 170 }}
@@ -64,7 +64,8 @@ export default class Index extends Component {
 //        selectType={selectType}
 //        onChange={changeRegion}
 // /> 
-     <Spin spinning={noFilter? noFilteRegLoading : regLoading} size='small'>
+// spinning={noFilter? noFilteRegLoading : regLoading} 
+     <Spin spinning={noFilter? noFilteRegLoading : regLoading} size='small' style={{...spinSty}}>
       <TreeSelect
       virtual={false}
       showSearch

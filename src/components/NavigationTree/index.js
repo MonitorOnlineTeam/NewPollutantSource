@@ -982,7 +982,7 @@ class NavigationTree extends Component {
             </Row>
           </div>
          {/* {  this.props.type!='air' ?   <RegionList placeholder="请选择行政区" style={{ width: '100%', marginBottom: 10  }} changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/> : null} */}
-         <RegionList style={{ width: '100%', marginBottom: 10  }}  changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/>
+         <RegionList style={{ width: '100%', marginBottom: 10  }} spinSty={{top:-4}}  changeRegion={this.changeRegion} RegionCode={this.state.RegionCode}/>
          {!this.props.polShow ? <SelectPollutantType
             // mode="multiple"
             {...SelectPollutantProps}

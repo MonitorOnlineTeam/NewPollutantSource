@@ -18,6 +18,7 @@ import {
     Steps,
     Tooltip,
     Popover,
+    Empty,
 } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -38,7 +39,7 @@ import ViewImagesListModal from '../../components/ImgView';
 import 'react-image-lightbox/style.css';
 import config from '@/config';
 import { EnumPropellingAlarmSourceType, EnumDYParameterException, EnumDataException, EnumDataLogicErr, EnumDYStatusException } from '@/utils/enum';
-import RecordForm  from '@/pages/operations/recordForm' 
+import RecordForm from '@/pages/operations/recordForm'
 import SdlTable from '@/components/SdlTable';
 
 const { Description } = DescriptionList;
@@ -74,11 +75,10 @@ class EmergencyDetailInfo extends Component {
             visibleImg: false,
             ImgListvisible: false,
             FileUuid: '',
-            processRecordVisible:false,
-            recordType:null,
-            taskID:null
+            processRecordVisible: false,
+
         };
-        this.column =  [
+        this.column = [
             {
                 title: '审批编号',
                 dataIndex: 'examNumber',
@@ -108,7 +108,7 @@ class EmergencyDetailInfo extends Component {
                 dataIndex: 'examTime',
                 key: 'examTime',
                 align: 'center',
-            },            
+            },
         ]
     }
 
@@ -164,18 +164,17 @@ class EmergencyDetailInfo extends Component {
         console.log('data111=', data)
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                console.log(item.ID)
                 // 新疆兵团只要任务图片 故障小时数记录表不使用图片
-                if ((types === '2' && !config.XinJiang)|| item.ID === 58 || item.ID === 59 || item.ID === 60 
-                     || item.ID === 15 || item.ID === 61 ||  item.ID === 62 || item.ID === 63 || item.ID === 18 ||  item.ID === 66 || item.ID === 74 || item.ID === 73 || item.ID === 65  || item.ID === 16
-                     || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 || item.ID === 75) {
+                if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60
+                    || item.ID === 15 || item.ID === 61 || item.ID === 62 || item.ID === 63 || item.ID === 18 || item.ID === 66 || item.ID === 74 || item.ID === 73 || item.ID === 65 || item.ID === 16
+                    || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 || item.ID === 75) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.RepairWater:
-                                this.GoToForm(taskID, item.CnName, '12', rtnVal, key, item.FormMainID);
-                                break;                            
+                            this.GoToForm(taskID, item.CnName, '12', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.StopMachine:
                             this.GoToForm(taskID, item.CnName, '2', rtnVal, key, item.FormMainID);
                             break;
@@ -184,7 +183,7 @@ class EmergencyDetailInfo extends Component {
                             break;
                         case EnumPsOperationForm.YhpReplaceWaterWater: //易耗品更换记录 废水
                             this.GoToForm(taskID, item.CnName, '14', rtnVal, key, item.FormMainID);
-                            break;                            
+                            break;
                         case EnumPsOperationForm.StandardGasReplace:
                             this.GoToForm(taskID, item.CnName, '4', rtnVal, key, item.FormMainID);
                             break;
@@ -197,7 +196,7 @@ class EmergencyDetailInfo extends Component {
                         case EnumPsOperationForm.ClfPatrol:
                             this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID);
                             break;
-                        case EnumPsOperationForm.CheckRecord: 
+                        case EnumPsOperationForm.CheckRecord:
                             this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.TestRecord:
@@ -213,8 +212,8 @@ class EmergencyDetailInfo extends Component {
                             this.GoToForm(taskID, item.CnName, '28', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.SparePartReplaceWater://备品备件更换记录表 废水
-                                this.GoToForm(taskID, item.CnName, '20', rtnVal, key, item.FormMainID);
-                            break;                            
+                            this.GoToForm(taskID, item.CnName, '20', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.Fault:
                             this.GoToForm(taskID, item.CnName, '58', rtnVal, key, item.FormMainID);
                             break;
@@ -228,50 +227,50 @@ class EmergencyDetailInfo extends Component {
                             this.GoToForm(taskID, item.CnName, '15', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.cooperaInspectionWater:
-                                this.GoToForm(taskID, item.CnName, '61', rtnVal, key, item.FormMainID);
-                            break;    
+                            this.GoToForm(taskID, item.CnName, '61', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.cooperaInspection:
                             this.GoToForm(taskID, item.CnName, '62', rtnVal, key, item.FormMainID);
-                             break;   
+                            break;
                         case EnumPsOperationForm.dataConsistencyRealTime: //数据一致性  实时
-                                this.GoToForm(taskID, item.CnName, '63', rtnVal, key, item.FormMainID);
-                             break;   
+                            this.GoToForm(taskID, item.CnName, '63', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.dataConsistencyRealTimeWater: //数据一致性  实时 废水
-                                this.GoToForm(taskID, item.CnName, '18', rtnVal, key, item.FormMainID);
-                             break;   
-                             case EnumPsOperationForm.dataConsistencyDate: //数据一致性  小时与日数据 废气
-                             this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID);
-                          break;                          
+                            this.GoToForm(taskID, item.CnName, '18', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.dataConsistencyDate: //数据一致性  小时与日数据 废气
+                            this.GoToForm(taskID, item.CnName, '66', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.dataConsistencyDateWater: //数据一致性  小时与日数据 废水
-                             this.GoToForm(taskID, item.CnName, '74', rtnVal, key, item.FormMainID);
-                          break;                                
+                            this.GoToForm(taskID, item.CnName, '74', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.ThirdPartyTestingData: //上月委托第三方检测次数
-                             this.GoToForm(taskID, item.CnName, '73', rtnVal, key, item.FormMainID);
-                          break;      
+                            this.GoToForm(taskID, item.CnName, '73', rtnVal, key, item.FormMainID);
+                            break;
                         case EnumPsOperationForm.ThirdPartyTestingDataWater: //上月委托第三方检测次数 废水
-                           this.GoToForm(taskID, item.CnName, '65', rtnVal, key, item.FormMainID);
-                         break;                            
-                         case EnumPsOperationForm.WaterQualityCalibrationRecord: //水质校准记录表
-                         this.GoToForm(taskID, item.CnName, '16', rtnVal, key, item.FormMainID);
-                         break;  
-                         case EnumPsOperationForm.StandardSolutionVerificationRecord: //准溶液核查记录表
-                         this.GoToForm(taskID, item.CnName, '70', rtnVal, key, item.FormMainID);
-                         break;      
-                         case EnumPsOperationForm.DeviceParameterChangeRecord: //设备参数变动记录表 废水
-                         this.GoToForm(taskID, item.CnName, '72', rtnVal, key, item.FormMainID);
-                         break; 
-                         case EnumPsOperationForm.GasDeviceParameterChangeRecord: //设备参数变动记录表 废气
-                         this.GoToForm(taskID, item.CnName, '64', rtnVal, key, item.FormMainID);
-                         break; 
-                         case EnumPsOperationForm.ComparisonTestResultsRecord: //实际水样比对试验结果记录表
-                         this.GoToForm(taskID, item.CnName, '19', rtnVal, key, item.FormMainID);
-                         break;
-                         case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
-                         this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
-                         break; 
-                         case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
-                         this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
-                         break;                         
+                            this.GoToForm(taskID, item.CnName, '65', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.WaterQualityCalibrationRecord: //水质校准记录表
+                            this.GoToForm(taskID, item.CnName, '16', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.StandardSolutionVerificationRecord: //准溶液核查记录表
+                            this.GoToForm(taskID, item.CnName, '70', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.DeviceParameterChangeRecord: //设备参数变动记录表 废水
+                            this.GoToForm(taskID, item.CnName, '72', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.GasDeviceParameterChangeRecord: //设备参数变动记录表 废气
+                            this.GoToForm(taskID, item.CnName, '64', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.ComparisonTestResultsRecord: //实际水样比对试验结果记录表
+                            this.GoToForm(taskID, item.CnName, '19', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.EquipmentNameplate: //设备铭牌
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            break;
+                        case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
+                            break;
                         default:
                             break;
                     }
@@ -292,13 +291,6 @@ class EmergencyDetailInfo extends Component {
             style={{ marginBottom: '5px' }}
             icon={<CheckCircleOutlined />}
             onClick={() => {
-                if( this.props.isHomeModal){
-                    this.setState({
-                        processRecordVisible:true,
-                        recordType:recordType,
-                        taskID:taskID
-                    })
-                }
                 if (recordType == '-1') {
                     // 获取详情图片
                     this.props.dispatch({
@@ -314,13 +306,20 @@ class EmergencyDetailInfo extends Component {
                         },
                     })
                 } else {
-                    router.push(`/operations/recordForm/${recordType}/${taskID}`)
+                    // if( this.props.isHomeModal){
+                    this.setState({
+                        processRecordVisible: true,
+                        recordType: recordType,
+                        taskID: taskID
+                    })
+                    // }
+                    // router.push(`/operations/recordForm/${recordType}/${taskID}`)
                 }
                 // this.props.dispatch(routerRedux.push(`/PatrolForm/${recordType}/${this.props.DGIMN}/${this.props.viewtype}/${taskfrom}/nop/${taskID}`));
 
-            //    router.push(`/operations/recordForm/${recordType}/${taskID}`) 
+                //    router.push(`/operations/recordForm/${recordType}/${taskID}`) 
             }}
-        >{cnName}  
+        >{cnName}
         </Button>
         </p>);
     }
@@ -366,7 +365,6 @@ class EmergencyDetailInfo extends Component {
 
     // 步骤条
     TaskLogList = TaskLogList => {
-        console.log('TaskLogList', TaskLogList);
         const returnStepList = [];
         TaskLogList.map(item => {
             returnStepList.push(
@@ -534,7 +532,7 @@ class EmergencyDetailInfo extends Component {
         });
     }
 
-    GetHelpersPeople=data => {
+    GetHelpersPeople = data => {
         const PeopleArr = [];
 
         data.length > 0 && data.map(item => {
@@ -546,7 +544,7 @@ class EmergencyDetailInfo extends Component {
     }
 
     render() {
-        const { photoIndex,recordType,taskID } = this.state;
+        const { photoIndex, recordType, taskID } = this.state;
         const { getFieldDecorator } = this.props.form;
         const { isHomeModal } = this.props;
         const formItemLayout = {
@@ -586,7 +584,7 @@ class EmergencyDetailInfo extends Component {
             TaskLogList = this.props.taskInfo.Datas[0].TaskLogList;
             RecordTypeInfo = this.props.taskInfo.Datas[0].TaskFormList;
 
-            if (this.props.taskInfo.Datas[0].AlarmList&&this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+            if (this.props.taskInfo.Datas[0].AlarmList && this.props.taskInfo.Datas[0].AlarmList.length > 0) {
                 this.props.taskInfo.Datas[0].AlarmList.map(item => {
                     if (item !== null) {
                         let AlarmType = '';
@@ -785,7 +783,7 @@ class EmergencyDetailInfo extends Component {
             width: 200,
             key: 'AlarmMsg',
         }];
-        if (this.props.taskInfo.Datas[0].AlarmList&&this.props.taskInfo.Datas[0].AlarmList.length > 0) {
+        if (this.props.taskInfo.Datas[0].AlarmList && this.props.taskInfo.Datas[0].AlarmList.length > 0) {
             // 超标列
             if (this.props.taskInfo.Datas[0].AlarmList[0].AlarmType === '2') {
                 columns = columns.concat({
@@ -834,13 +832,13 @@ class EmergencyDetailInfo extends Component {
         return (
             <div>
                 <Card
-                    title={!isHomeModal&&<span style={{ fontWeight: '900' }}>任务详情</span>}
+                    title={!isHomeModal && <span style={{ fontWeight: '900' }}>任务详情</span>}
                     extra={
-                        !isHomeModal&&<div>
-                           <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
+                        !isHomeModal && <div>
+                            <span style={{ marginRight: 20 }}>{this.getCancelOrderButton(isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null, isExistTask ? this.props.taskInfo.Datas[0].TaskStatus : null)}</span>
                             {this.getGoBack()}
                         </div>
-                        }
+                    }
                 >
 
                     <div style={{ height: SCREEN_HEIGHT }} className={styles.ExceptionDetailDiv}>
@@ -851,18 +849,18 @@ class EmergencyDetailInfo extends Component {
                                 <Description term="监测点名称">{isExistTask ? this.props.taskInfo.Datas[0].PointName : null}</Description>
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
-                               {/* <Description term="运维单位">{isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}</Description> */}  
+                                {/* <Description term="运维单位">{isExistTask ? this.props.taskInfo.Datas[0].OperationEnt : null}</Description> */}
                                 <Description term="任务来源">{isExistTask ? this.props.taskInfo.Datas[0].TaskFromText : null}</Description>
                                 {/* <Description term="紧急程度"><div style={{ color: 'red' }}>{isExistTask ? this.props.taskInfo.Datas[0].EmergencyStatusText : null}</div></Description> */}
                                 <Description term="任务状态"> <div style={{ color: '#32CD32' }}>{isExistTask ? this.props.taskInfo.Datas[0].TaskStatusText : null}</div></Description>
                                 <Description term="任务类型">{isExistTask ? this.props.taskInfo.Datas[0].TaskTypeText : null}</Description>
-                           
+
                             </DescriptionList>
                             <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                                 <Description term="创建人">{isExistTask ? this.props.taskInfo.Datas[0].CreateUserName : null}{this.getUserIcon(this.props.taskInfo.Datas[0].PeopleCertificateInfos)}</Description>
                                 <Description term="创建时间">{isExistTask ? this.props.taskInfo.Datas[0].CreateTime : null}</Description>
                                 <Description term="审批状态">{isExistTask ? this.props.taskInfo.Datas[0].AuditStatusName : null}</Description>
-                            
+
                             </DescriptionList>
                             {/* <DescriptionList style={{ marginTop: 20 }} className={styles.headerList} size="large" col="3">
                             </DescriptionList> */}
@@ -879,17 +877,18 @@ class EmergencyDetailInfo extends Component {
                         <Card title={<span style={{ fontWeight: '900' }}>处理说明</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
                                 <Description>
-                                    <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} />
+                                    {/* <TextArea rows={8} style={{ width: '600px' }} value={isExistTask ? this.props.taskInfo.Datas[0].TaskDescription : null} /> */}
+                                    <div>{isExistTask && this.props.taskInfo.Datas[0].TaskDescription ? this.props.taskInfo.Datas[0].TaskDescription : '没有处理说明'} </div>
                                 </Description>
                             </DescriptionList>
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>审批记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
-                                <Table
-                                    bordered
-                                    columns={this.column}
-                                    dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}
-                                    pagination={false}
-                                 />
+                            <Table
+                                bordered
+                                columns={this.column}
+                                dataSource={isExistTask ? this.props.taskInfo.Datas[0].appList : []}
+                                pagination={false}
+                            />
                         </Card>
                         <Card title={<span style={{ fontWeight: '900' }}>处理记录</span>} style={{ marginTop: 20, paddingBottom: '1.5%' }}>
                             <DescriptionList className={styles.headerList} size="large" col="1">
@@ -999,23 +998,23 @@ class EmergencyDetailInfo extends Component {
                 {/* <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancels}>
                     <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
                 </Modal> */}
-        <Modal  
-          title="处理记录" //首页弹框 处理详情
-          visible={this.state.processRecordVisible}
-          destroyOnClose
-          wrapClassName='spreadOverModal'
-          footer={null}
-          onCancel={() => {
-            this.setState({ processRecordVisible: false })
-          }}
-          
-        >
-          <RecordForm
-           match={{params:{typeID: recordType, taskID: taskID}}}
-           isHomeModal
-           hideBreadcrumb
-          />
-        </Modal>
+                <Modal
+                    title="处理记录" //首页弹框 处理详情
+                    visible={this.state.processRecordVisible}
+                    destroyOnClose
+                    wrapClassName='spreadOverModal'
+                    footer={null}
+                    onCancel={() => {
+                        this.setState({ processRecordVisible: false })
+                    }}
+
+                >
+                     <RecordForm
+                        match={{ params: { typeID: recordType, taskID: taskID } }}
+                        isHomeModal
+                        hideBreadcrumb
+                    /> 
+                </Modal>
             </div>
         );
     }

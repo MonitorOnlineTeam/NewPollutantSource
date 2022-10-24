@@ -38,7 +38,7 @@ import CascaderMultiple from '@/components/CascaderMultiple'
 import SearchSelect from '@/pages/AutoFormManager/SearchSelect';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker'
 import SdlTable from '@/components/SdlTable'
-import  TaskRecordDetails  from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout' 
+import TaskRecordDetails  from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'  
 import EntAtmoList from '@/components/EntAtmoList'
 
 const FormItem = Form.Item;
@@ -193,6 +193,17 @@ class TaskRecord extends Component {
         payload: {
           gettasklistqueryparams:{
             ...gettasklistqueryparams,
+            TaskCode: '',
+            ExceptionType: '',
+            TaskFrom: '',
+            TaskStatus: '',
+            OperationsUserId: '',
+            TaskType: '',
+            CompleteTime: '',
+            CreateTime:[moment(moment().add(-6, 'day').format('YYYY-MM-DD 00:00:00')), moment(moment().format('YYYY-MM-DD 23:59:59'))],
+            pageIndex: 1,
+            pageSize: 20,
+            total: 0,
             DGIMN:isHomeModal?DGIMN:''
           },
         },
@@ -395,7 +406,7 @@ taskRecordDetails=(TaskID,DGIMN)=>{ //首页详情弹框
   this.setState({
     taskRecordDetailVisible:true,
     TaskID:TaskID,
-    DGIMN:DGIMN
+    DGIMN:DGIMN,
   })
 }
 entChange = (value) => {
@@ -430,17 +441,22 @@ entChange = (value) => {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        align:'center'
+        align:'center',
+        ellipsis:true,
       },
       {
       title: '企业名称',
       dataIndex: 'EntName',
       key: 'EntName',
+      align:'center',
+      ellipsis:true,
       },
       {
         title: '监测点名称',
         dataIndex: 'PointName',
         key: 'PointName',
+        align:'center',
+        ellipsis:true,
       },
       // {
       //   title: '运维单位',
@@ -451,11 +467,15 @@ entChange = (value) => {
         title: '任务单号',
         dataIndex: 'TaskCode',
         key: 'TaskCode',
+        align:'center',
+        ellipsis:true,
       },
       {
         title: '运维状态',
         dataIndex: 'ExceptionType',
         key: 'ExceptionType',
+        align:'center',
+        ellipsis:true,
         render: (text, record) => {
           if (text === '1') {
             return <span>打卡异常</span>;
@@ -472,6 +492,8 @@ entChange = (value) => {
         title: '任务来源',
         dataIndex: 'TaskFrom',
         key: 'TaskFrom',
+        align:'center',
+        ellipsis:true,
         render: (text, record) => {
           if (text === 1) {
             return <span><Tag color="purple">手动创建</Tag></span>;
@@ -491,6 +513,8 @@ entChange = (value) => {
         title: '任务状态',
         dataIndex: 'TaskStatus',
         key: 'TaskStatus',
+        align:'center',
+        ellipsis:true,
         render: (text, record) => {
           if (text === 11) {
             return <span><Badge status="warning" text="待领取" /></span>;
@@ -514,39 +538,50 @@ entChange = (value) => {
         title: '审批状态',
         dataIndex: 'auditStatusName',
         key: 'auditStatusName',
+        align:'center',
+        ellipsis:true,
       },
       {
         title: '运维人',
         dataIndex: 'OperationsUserName',
         key: 'OperationsUserName',
+        align:'center',
+        ellipsis:true,
       },
       {
         title: '完成时间/系统关闭时间',
         dataIndex: 'CompleteTime',
         key: 'CompleteTime',
         width:170,
+        align:'center',
+        ellipsis:true,
       },
       {
         title: '创建人',
         dataIndex: 'CreateUserName',
         key: 'CreateUserName',
-
+        align:'center',
+        ellipsis:true,
       },
       {
         title: '创建时间',
         dataIndex: 'CreateTime',
         key: 'CreateTime',
-
+        align:'center',
+        ellipsis:true,
       },
       {
         title: '任务类型',
         dataIndex: 'RecordName',
         key: 'RecordName',
-
+        align:'center',
+        ellipsis:true,
       },
       {
           title: '操作',
           key: 'action',
+          align:'center',
+          ellipsis:true,
           render: (text, record, index) => {
             {
               const time = record.CompleteTime;
@@ -556,8 +591,11 @@ entChange = (value) => {
               reslist.push(
                 <Tooltip title="详情">
                 <a><ProfileOutlined
-                  onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))} /></a>
-                   </Tooltip>,
+                  // onClick={() =>isHomeModal?this.taskRecordDetails(TaskID,DGIMN) : this.props.dispatch(routerRedux.push(`/operations/taskRecord/details/${TaskID}/${DGIMN}`))}
+                   onClick={() =>this.taskRecordDetails(TaskID,DGIMN) }
+                  
+                  /></a>
+                 </Tooltip>,
               )
               if (time) {
                 // console.log('timetimetimetimetimetime', moment().diff(time, 'days'));
@@ -843,6 +881,7 @@ entChange = (value) => {
               </Row> */}
           </Form>
           <SdlTable
+              resizable
               loading={LoadingData}
               dataSource={this.props.datatable}
               pagination={{

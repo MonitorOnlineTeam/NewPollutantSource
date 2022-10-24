@@ -13,6 +13,7 @@ import moment from 'moment';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SdlTable from '@/components/SdlTable'
 import styles from './index.less'
+import  TaskRecordDetails  from '@/pages/EmergencyTodoList/EmergencyDetailInfoLayout'  
 
 
 @connect(({ loading, operations }) => ({
@@ -36,7 +37,10 @@ class CalendarPage extends PureComponent {
       visible: false,
       columns: [],
       modalTableCurrent: 1,
-      currentClickTagParams: {}
+      currentClickTagParams: {},
+      taskRecordDetailVisible:false,
+      TaskID:null,
+      DGIMN:null,
       // pageInfo: {
       //   pageIndex: 1,
       //   pageSize: 10
@@ -53,14 +57,16 @@ class CalendarPage extends PureComponent {
     if (this.props.abnormalDetailList !== nextProps.abnormalDetailList) {
       const listData = nextProps.abnormalDetailList.map(item => {
         return {
-          href: `/operations/calendar/details/${item.TaskID}/${item.DGIMN}`,
-          title: <div>
-            <span style={{ marginRight: 8 }}>{item.EnterpriseName}</span>
+          // href: `/operations/calendar/details/${item.TaskID}/${item.TaskID}`,
+          title: <div onClick={()=>{
+            this.setState({  taskRecordDetailVisible:true,   TaskID:item.TaskID,  DGIMN:item.TaskID,   })
+              }}>
+            <span style={{ marginRight: 8, }}>{item.EnterpriseName}</span>
             {
               item.ExceptionTypeText && item.ExceptionTypeText.split(",").map(itm => {
                 // 报警响应异常,打卡异常,工作超时
                 let color = itm === "报警响应异常" ? "#f50" : (itm === "打卡异常" ? "#108ee9" : "#2db7f5")
-                return <Tag color={color}>{itm}</Tag>
+                return <Tag  style={{ cursor:'pointer', }} color={color}>{itm}</Tag>
               })
             }
           </div>,
@@ -601,6 +607,23 @@ class CalendarPage extends PureComponent {
               }}
             />
           </Modal>
+          <Modal
+          title="任务详情"
+          visible={this.state.taskRecordDetailVisible}
+          destroyOnClose
+          wrapClassName='spreadOverModal'
+          footer={null}
+          onCancel={() => {
+            this.setState({ taskRecordDetailVisible: false })
+          }}
+          
+        >
+          <TaskRecordDetails
+           match={{params:{TaskID: this.state.TaskID, DGIMN: this.state.DGIMN}}}
+           isHomeModal
+           hideBreadcrumb
+          />
+        </Modal>
         </div>
       </BreadcrumbWrapper>
     );

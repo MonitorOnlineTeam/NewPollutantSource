@@ -28,7 +28,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-import { blue,red } from '@ant-design/colors';
+import { blue, red } from '@ant-design/colors';
 import RegionList from '@/components/RegionList'
 
 const { Search } = Input;
@@ -41,20 +41,20 @@ const pageUrl = {
   updateState: 'standardData/updateState',
   getData: 'standardData/getDischargeStandValue',
 };
-@connect(({ loading, standardData,autoForm }) => ({
+@connect(({ loading, standardData, autoForm }) => ({
   priseList: standardData.priseList,
-  exloading:standardData.exloading,
+  exloading: standardData.exloading,
   loading: standardData.loading,
   total: standardData.total,
   disTableDatas: standardData.disTableDatas,
   queryPar: standardData.queryPar,
   regionList: autoForm.regionList,
-  attentionList:standardData.attentionList,
-  pointName:standardData.pointName,
-  chartExport:standardData.chartExport,
-  chartImport:standardData.chartImport,
-  chartTime:standardData.chartTime,
-  disColumn:standardData.disColumn,
+  attentionList: standardData.attentionList,
+  pointName: standardData.pointName,
+  chartExport: standardData.chartExport,
+  chartImport: standardData.chartImport,
+  chartTime: standardData.chartTime,
+  disColumn: standardData.disColumn,
 }))
 @Form.create()
 export default class EntTransmissionEfficiency extends Component {
@@ -62,64 +62,66 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
+      columns : [
+        {
+          title: '行政区',
+          dataIndex: 'regionName',
+          key: 'regionName',
+          align: 'center',
+          width: 100,
+        },
+        {
+          title: '企业名称',
+          dataIndex: 'entName',
+          key: 'entName',
+          align: 'center',
+          width: 200,
+          render: (text, record) => {
+            return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+          },
+        },
+        {
+          title: '监测点名称',
+          dataIndex: 'pointName',
+          key: 'pointName',
+          align: 'center',
+          width: 150,
+          render: (text, record) => {
+            return <div style={{ textAlign: 'left', width: '100%' }}>{text}</div>
+          },
+        },
+        {
+          title: '污染物排放标准',
+          width: 480,
+          children: [],
+        },
+      ]
     };
-    
-    this.columns = [
-      {
-        title: '行政区',
-        dataIndex: 'regionName',
-        key: 'regionName',
-        align: 'center',
-        width:100,
-      },
-      {
-        title: '企业名称',
-        dataIndex: 'entName',
-        key: 'entName',
-        align: 'center',
-        width:200,
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
-      },
-      {
-        title: '监测点名称',
-        dataIndex: 'pointName',
-        key: 'pointName',
-        align: 'center',
-        width:150,
-        render: (text, record) => {     
-          return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
-       },
-      },
-      {
-        title: '污染物排放标准',
-        width:480,
-        children: [],
-      },
-    ]
+
   }
 
   componentDidMount() {
     this.initData();
   }
+  
+
   initData = () => {
     const { dispatch, location } = this.props;
-    
+
 
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
- 
-     dispatch({ type: 'standardData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
 
-     dispatch({   type: 'standardData/getEntByRegion',payload: { RegionCode: '' },  });//获取企业列表
+    dispatch({ type: 'standardData/getAttentionDegreeList', payload: { RegionCode: '' }, });//获取关注列表
 
-     this.updateQueryState({
+    dispatch({ type: 'standardData/getEntByRegion', payload: { RegionCode: '' }, });//获取企业列表
+
+    this.updateQueryState({
       AttentionCode: '',
       EntCode: '',
       RegionCode: '',
-      PollutantCode:'',
-      PollutantType:'1',
+      PollutantCode: '',
+      PollutantType: '1',
     });
     setTimeout(() => {
       this.getTableData();
@@ -137,10 +139,26 @@ export default class EntTransmissionEfficiency extends Component {
 
   getTableData = () => {
     const { dispatch, queryPar } = this.props;
-    dispatch({
-      type: pageUrl.getData,
-      payload: { ...queryPar },
-    });
+    const col = this.state.columns;
+    if(queryPar.PollutantType==2){
+       col.splice(3,0,{
+          title: '排口类型',
+          dataIndex: 'outputType',
+          key: 'outputType',
+          align: 'center',
+          width:120,
+        })
+      }else{
+        const waterCol =  col.filter(item=>item.title!='排口类型')
+        this.setState({columns:waterCol})
+    }
+    setTimeout(()=>{
+      dispatch({
+        type: pageUrl.getData,
+        payload: { ...queryPar },
+      });
+    })
+
   };
 
 
@@ -168,22 +186,22 @@ export default class EntTransmissionEfficiency extends Component {
   };
 
   changeRegion = (value) => { //行政区事件
-    
+
     this.updateQueryState({
       RegionCode: value,
     });
   };
-  changeAttent=(value)=>{
+  changeAttent = (value) => {
     this.updateQueryState({
       AttentionCode: value,
     });
   }
-  changeEnt=(value,data)=>{ //企业事件
+  changeEnt = (value, data) => { //企业事件
     this.updateQueryState({
       EntCode: value,
     });
   }
-  changePoll=(value,data)=>{ //污染物改变事件
+  changePoll = (value, data) => { //污染物改变事件
     this.updateQueryState({
       PollutantType: value,
     });
@@ -198,20 +216,18 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'standardData/exportDischargeStandValue',
       payload: { ...queryPar },
       callback: data => {
-          downloadFile(`/upload${data}`);
-        },
+        downloadFile(`/upload${data}`);
+      },
     });
   };
   //查询事件
   queryClick = () => {
     this.getTableData();
 
-    const {  queryPar:{ PollutantType } } = this.props;
-     PollutantType ==1 ? this.columns[3].width = 480 : this.columns[3].width = 1120;
   };
 
 
-  regchildren=()=>{
+  regchildren = () => {
     const { regionList } = this.props;
     const selectList = [];
     if (regionList.length > 0) {
@@ -225,11 +241,11 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-  attentchildren=()=>{
+  attentchildren = () => {
     const { attentionList } = this.props;
     const selectList = [];
     if (attentionList.length > 0) {
-       attentionList.map(item => {
+      attentionList.map(item => {
         selectList.push(
           <Option key={item.AttentionCode} value={item.AttentionCode}>
             {item.AttentionName}
@@ -239,63 +255,67 @@ export default class EntTransmissionEfficiency extends Component {
       return selectList;
     }
   }
-  
-      /** 数据类型切换 */
- _handleDateTypeChange = value => {
-   
-    if( value === 'HourData'){
+
+  /** 数据类型切换 */
+  _handleDateTypeChange = value => {
+
+    if (value === 'HourData') {
       this.updateQueryState({
         dataType: value,
         beginTime: moment().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
         endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-       
-        });
-      }else{
-        this.updateQueryState({
-          dataType: value,
-          beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
-          endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          
-          });
-      }
-    }
-  dateChange=(date)=>{
+
+      });
+    } else {
       this.updateQueryState({
-        beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
-        endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+        dataType: value,
+        beginTime: moment().subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+
       });
     }
-    dateOk=()=>{ 
+  }
+  dateChange = (date) => {
+    this.updateQueryState({
+      beginTime: date[0].format('YYYY-MM-DD HH:mm:ss'),
+      endTime: date[1].format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+  dateOk = () => {
 
-   }
+  }
 
 
   render() {
     const {
       exloading,
       loading,
-      queryPar: {  beginTime, endTime,EntCode, RegionCode,AttentionCode,PollutantType },
+      queryPar: { beginTime, endTime, EntCode, RegionCode, AttentionCode, PollutantType },
       disColumn
     } = this.props;
     const { TabPane } = Tabs;
-    let columns = this.columns;
-    if(disColumn.length>0){
-     columns[3].children=[];
-      disColumn.map(item=>{
-       columns[3].children.push( 
-        {
-        title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,dataIndex: `${item.PollutantCode}`,key: `${item.PollutantCode}`,
-         width:80, align:'center'},
-     )
-    })
-  }
+    let columns = this.state.columns;
+    if (disColumn.length > 0) { //数据请求完成
+      const num = PollutantType == 1 ? 3 : 4;
+      if(columns[num] && columns[num].title == '污染物排放标准' ){
+         columns[num].children = [];
+        disColumn.map(item => {
+         columns[num].children.push(
+           {
+            title: `${item.PollutantName}${item.Unit ? `(${item.Unit})` : ''}`, dataIndex: `${item.PollutantCode}`, key: `${item.PollutantCode}`,
+            width: 80, align: 'center'
+          },
+        )
+      })
+    }
+    }
     return (
       <Card
         bordered={false}
         title={
           <>
             <Form layout="inline">
-             <Form.Item label='行政区'>
+              <Form.Item label='行政区'>
                 {/* <Select
                   allowClear
                   placeholder="行政区"
@@ -305,7 +325,7 @@ export default class EntTransmissionEfficiency extends Component {
                 >
                   {this.regchildren()}
                 </Select> */}
-              <RegionList  style={{ width: 170 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                <RegionList style={{ width: 170 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
 
               </Form.Item>
               <Form.Item label='关注程度'>
@@ -313,7 +333,7 @@ export default class EntTransmissionEfficiency extends Component {
                   allowClear
                   placeholder="关注程度"
                   onChange={this.changeAttent}
-                  value={AttentionCode?AttentionCode:undefined} 
+                  value={AttentionCode ? AttentionCode : undefined}
                   style={{ width: 170 }}
                 >
                   {this.attentchildren()}
@@ -338,8 +358,8 @@ export default class EntTransmissionEfficiency extends Component {
                   optionFilterProp="children"
                   placeholder="企业名称"
                   onChange={this.changeEnt}
-                  value={EntCode? EntCode : undefined }
-                  style={{ width: 170  }}
+                  value={EntCode ? EntCode : undefined}
+                  style={{ width: 170 }}
                 >
                   {this.children()}
                 </Select>
@@ -365,19 +385,19 @@ export default class EntTransmissionEfficiency extends Component {
       >
         <div id=''>
 
-           <SdlTable
+          <SdlTable
             rowKey={(record, index) => `complete${index}`}
             loading={loading}
             columns={columns}
             bordered={true}
             dataSource={this.props.disTableDatas}
-            scroll={{  y: 'calc(100vh - 360px)' }}
-            // pagination={{
-            //   showSizeChanger: true,
-            //   showQuickJumper: true,
-            //   total: this.props.total,
-              //defaultPageSize:20
-            // }}
+            scroll={{ y: 'calc(100vh - 360px)' }}
+            pagination={{
+             showSizeChanger: true,
+             showQuickJumper: true,
+             total: this.props.total,
+             defaultPageSize:20
+          }}
           />
         </div>
       </Card>
