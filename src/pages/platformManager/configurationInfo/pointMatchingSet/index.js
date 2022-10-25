@@ -398,7 +398,7 @@ const onDetailValuesChange = (hangedValues, allValues) =>{
         <RegionList levelNum={2} style={{ width: 200}}/>
       </Form.Item>
       <Form.Item label='企业' name='EntCode'>
-        <EntAtmoList pollutantType={2} style={{ width: 200}}/>
+        <EntAtmoList  style={{ width: 200}}/>
       </Form.Item>
       <Spin spinning={pointLoading} size='small' style={{ top: -8, left: 20 }}>
         <Form.Item label='监测点名称' name='DGIMN' >

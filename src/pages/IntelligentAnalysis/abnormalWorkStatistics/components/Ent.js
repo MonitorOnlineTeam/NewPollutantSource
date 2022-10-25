@@ -3,7 +3,7 @@
  * 创建人：贾安波
  * 创建时间：2021.09.27
  */
-import React, { useState,useEffect,Fragment ,useRef,useImperativeHandle,forwardRef } from 'react';
+import React, { useState,useEffect,Fragment ,useRef,useImperativeHandle,forwardRef, useMemo, } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography,Card,Button,Select,Progress, message,Row,Col,Tooltip,Divider,Modal,DatePicker,Radio,Spin   } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined,UpOutlined,DownOutlined,ExportOutlined,QuestionCircleOutlined,EnvironmentFilled } from '@ant-design/icons';
@@ -32,7 +32,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 import config from '@/config';
 import { Map, MouseTool, Marker,Markers, Polygon,Circle } from '@/components/ReactAmap';
-
+import EntAbnormalMapModal from './EntAbnormalMapModal'
 const namespace = 'abnormalWorkStatistics'
 
 
@@ -107,7 +107,7 @@ const Index = (props) => {
   const  { tableDatas,tableTotal,exportLoading ,tableLoading,abnormalTypes,refInstance,abnormalLoading,abnormalList,queryPar  } = props; 
   useEffect(() => {
 
-  
+    props.updateState({entAbnormalNumVisible:false})
     },[]);
   const abnormalNumber = ()=>{
     return <ol type='1' style={{listStyleType:'decimal'}}>
@@ -436,151 +436,28 @@ const abnormalExceptionTaskList = (entCode) =>{ //响应超时
   }
 
 
- const  getWaterIcon = status => {
-    let icon = '';
-    switch (status) {
-      case 0: // 离线
-        icon = <WaterOffline />;
-        break;
-      case 1: // 正常
-        icon = <WaterNormal />;
-        break;
-      case 2: // 超标
-        icon = <WaterExceed />;
-        break;
-      case 3: // 异常
-        icon = <WaterAbnormal />;
-        break;
-    }
-    return icon;
-  };
-
-  const getGasIcon = status => {
-    let icon = '';
-    switch (status) {
-      case 0: // 离线
-        icon = <GasOffline />;
-        break;
-      case 1: // 正常
-        icon = <GasNormal />;
-        break;
-      case 2: // 超标
-        icon = <GasExceed />;
-        break;
-      case 3: // 异常
-        icon = <GasAbnormal />;
-        break;
-    }
-    return icon;
-  };
   
   // const [outOrInside,setOutOrInside] = useState()
-const [clockNumber,setClockNumber] = useState()
 const [pointName,setPointName] = useState()
 
 const abnormalNum = (row,outOrInside) =>{  //企业监测点异常打卡
 
-  setEntAbnormalNumVisible(true)
-  // setRegName(row.regionName)
+  props.updateState({entAbnormalNumVisible:true})
   setPointName(`${row.entName} - ${row.pointName}`)
-  setClockNumber(Number(row.insidePlanExceptionCount) + Number(row.outPlanExceptionCount))
-  props.getPointExceptionSignList({
-    beginTime:queryPar.beginTime,
-    endTime:queryPar.endTime,
-    outOrInside:outOrInside,
-    DGIMN:row.DGIMN,
-   })  
+  setTimeout(()=>{
+    props.getPointExceptionSignList({
+      beginTime:queryPar.beginTime,
+      endTime:queryPar.endTime,
+      outOrInside:outOrInside,
+      DGIMN:row.DGIMN,
+     })  
+  })
 
-}
-  const  { entAbnormalList,getPointExceptionLoading,taskList }  = props; 
 
-  const renderMarker = (extData) =>{
-    return <div>
-            
-  <Row style={{whiteSpace:"nowrap",padding:5,background:'#fff',marginBottom:5,marginLeft:-58}}>{extData.position.checkInTime}</Row>
-           {/* <EnvironmentFilled style={{color:'#1890ff',fontSize:24}}/> */}
-           <img src='/location.png' style={{width:24}}/>
-           </div>
-  }
-
- const entMap = () =>{
-  const styleA= {
-    position: 'absolute',
-    top: 0,
-    padding: 5,
-    color: '#fff',
-    backgroundColor: "rgba(0,0,0,.4)"
-}
-   const styleB = {
-    position: 'absolute',
-    bottom: 0,
-    padding: 5,
-    color: '#fff',
-    backgroundColor: "rgba(0,0,0,.4)"
 }
 
 
-if (getPointExceptionLoading) {
-  return (<Spin
-    style={{
-      width: '100%',
-      height: 'calc(100vh/2)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-    size="large"
-  />);
-}
-  //  <Spin spinning={getPointExceptionLoading}  style={{  display: 'flex',alignItems:'center' , justifyContent: 'center', }}>
-  return <div style={{width: '100%', height: 'calc(100vh - 200px)'}}>
-    <Map
-   amapkey={config.amapKey}
-  //  events={this.amapEvents}
-  //  mapStyle="amap://styles/normal"
-   mapStyle="amap://styles/macaron"
-   useAMapUI={!config.offlineMapUrl.domain}
-   center={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude} } //center 地图中心点坐标值
-   zoom={11}
- >
 
-           <Markers markers={taskList? taskList : []} render={taskList? renderMarker : ''}  />
-
-
-        {/*企业监测点 */}
-        <Marker position={{longitude: entAbnormalList.longitude, latitude: entAbnormalList.latitude}} >
-        <div>
-          
-          <Row style={{whiteSpace:"nowrap",padding:'0 5px',background:'#fff',
-             marginBottom:5,marginLeft: entAbnormalList.pointName&&entAbnormalList.pointName.length<=2? 0 : `calc(-7 * ${entAbnormalList.pointName&&entAbnormalList.pointName.length}px)` }}>
-            {entAbnormalList.pointName}
-          </Row>
-                 {entAbnormalList.pollutantType ==1 ?getWaterIcon(1) : getGasIcon(1)}
-          </div> 
-        </Marker>
-
-        {/*半径 */}
-        <Circle 
-            center={ { longitude:  entAbnormalList.longitude, latitude:entAbnormalList.latitude} } 
-            radius={ Number(entAbnormalList.operationRadius) }
-            style={  {fillColor:"rgba(228,228,228,.7)", strokeColor: 'rgba(228,228,228,.8)'}}
-          />
-
-      <div style={styleA}>
-        <span>{`${pointName} ,${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-             期间打卡异常数：${ entAbnormalList.exceptionCount}`}</span>
-        </div>
-           <div  style={styleB}>
-          <Row align='middle'>
-              {/* <EnvironmentFilled style={{color:'#1890ff',fontSize:18}}/> */}
-              <img src='/location.png' style={{width:18}}/>
-               <span style={{paddingLeft:5}}>打卡位置及时间</span></Row>
-        </div>
-   </Map>
-
-   </div>  
-  //  </Spin>
- }
  
   const { dateCol } = props;
   const  entColumnsPush = (col) =>{
@@ -627,33 +504,28 @@ useImperativeHandle(refInstance,() => {
         }
     }
 })
+  const table =  useMemo(()=>{
+    return <SdlTable
+    loading = {tableLoading}
+    bordered
+    dataSource={tableDatas}
+    columns={abnormalTypes ==1?columns:alarmColumns}
+    // pagination={false}
+  />
+  },[tableLoading])
   return (
       <div>
-     <SdlTable
+        {table}
+     {/* <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={abnormalTypes ==1?columns:alarmColumns}
         pagination={false}
-      />
+      /> 
    
   {/** 打卡异常  监测点 弹框 */}
-  <Modal
-        title={ '' } 
-        visible={entAbnormalNumVisible}
-        onCancel={()=>{setEntAbnormalNumVisible(false)}}
-        footer={null}
-        destroyOnClose
-        // centered
-        width='90%'
-      >
-    
-     <Card title={''} className={styles.mapContentSty}>
-       { entMap() }
-     
-   </Card>
-
-   </Modal>
+   <EntAbnormalMapModal pointName={pointName} />
  {/** 响应超时  弹框 */}
      <Modal
         title={ `${regName} - 统计${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}

@@ -658,7 +658,7 @@ entChange = (value) => {
                    {getFieldDecorator('EntCode', {
                      initialValue:  undefined,
                    })(
-                    <EntAtmoList  pollutantType={2}  style={{ width: '100%' }} onChange={this.entChange}/>
+                    <EntAtmoList   style={{ width: '100%' }} onChange={this.entChange}/>
                    )}
                </FormItem>
            </Col>

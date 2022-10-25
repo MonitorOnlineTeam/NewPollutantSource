@@ -270,18 +270,6 @@ const Index = (props) => {
     //   align:'center',
     // },
     {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
-      align: 'center',
-    },
-    {
-      title: '创建人',
-      dataIndex: 'createUserName',
-      key: 'createUserName',
-      align: 'center',
-    },
-    {
       title: '巡检类型',
       dataIndex: 'inspectionTypeName',
       key: 'inspectionTypeName',
@@ -356,6 +344,18 @@ const Index = (props) => {
       title: '备注',
       dataIndex: 'remark',
       key: 'remark',
+      align: 'center',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      align: 'center',
+    },
+    {
+      title: '创建人',
+      dataIndex: 'createUserName',
+      key: 'createUserName',
       align: 'center',
     },
     {

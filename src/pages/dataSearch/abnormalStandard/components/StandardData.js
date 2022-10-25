@@ -92,6 +92,20 @@ export default class Index extends Component {
           return  <div style={{textAlign:'left',width:'100%'}}>{text}</div>
        },
       },
+      {
+        title: '排口类型',
+        dataIndex: 'outputType',
+        key: 'outputType',
+        align: 'center',
+        width:100,
+      },
+      {
+        title: '已设置异常类型',
+        dataIndex: 'exceptionType',
+        key: 'exceptionType',
+        align: 'center',
+        width:150,
+      },
     ]
   }
 
@@ -288,16 +302,13 @@ export default class Index extends Component {
       column.map(item=>{
         addCol.push({
            title:`${item.PollutantName}${item.Unit? `(${item.Unit})` : ''  }`,
-           width:400, 
            children: [
           {
-            // width: 100, 
            title: '零值异常',
            align:'center',
            children: [{  title: '零值计数',   dataIndex: `${item.PollutantCode}_zero`,  key:`${item.PollutantCode}_zero`,  width: 100, align:'center' }]
           },
           {
-            // width: 300, 
            title: '超量程异常',
             children: [{
             title: '检出上限',
@@ -316,7 +327,13 @@ export default class Index extends Component {
          dataIndex: `${item.PollutantCode}_overrun`,
          key: `${item.PollutantCode}_overrun`,
          width: 100, align:'center' 
-        }]
+        },
+        {
+          title: '恒定值异常',
+          align:'center',
+          children: [{  title: '恒定值计数',   dataIndex: `${item.PollutantCode}_continuity`,  key:`${item.PollutantCode}_continuity`,  width: 100, align:'center' }]
+         },
+      ]
           }],
 
         })

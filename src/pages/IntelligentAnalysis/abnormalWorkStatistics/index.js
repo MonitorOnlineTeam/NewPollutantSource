@@ -71,11 +71,8 @@ const Index = (props) => {
 
 
   const showTypeChange =  (e) =>{
-
+     console.log(e.target.value)
      setShowType(e.target.value)
-     
-    
-     
   }
 
   useEffect(() => {
@@ -96,7 +93,6 @@ const Index = (props) => {
  
 
   const onFinish  = async () =>{  //查询
-     
      
     try {
       const values = await form.validateFields();
@@ -256,7 +252,7 @@ const Index = (props) => {
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
     {!responseModelDetail&&!clockAbnormalModelDetail?
     <Card title={searchComponents()}>
-      {showType==1? <Region resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent  ref={pchildref}  {...props}/>}
+      {showType==1? <Region resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent showType={showType} ref={pchildref}  {...props}/>}
    </Card>
    :
     <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail} clockAbnormalModelDetail={clockAbnormalModelDetail}  responseModelGoBack={responseModelGoBack}clockAbnormalModelGoBack={clockAbnormalModelGoBack}  location={query}/> //首页报警弹框

@@ -33,6 +33,7 @@ export default Model.extend({
     getPointExceptionLoading:true,
     exportCardExceptionLoading:false,
     exportResExceptionLoading:false,
+    entAbnormalNumVisible:false,//打卡异常地图弹框
   },
   effects: {
     *regEntExceptionTaskList({ payload,callback }, { call, put, update }) { //行政区省级 企业第一级

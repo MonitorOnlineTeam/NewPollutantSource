@@ -2116,7 +2116,7 @@ const Index = (props) => {
                 <RegionList noFilter  levelNum={2} style={{ width: 150}}/>
               </Form.Item>
               <Form.Item label='企业' name='EntCode'>
-                <EntAtmoList noFilter pollutantType={2} style={{ width: 200}}/>
+                <EntAtmoList noFilter style={{ width: 200}}/>
               </Form.Item>
               <Spin spinning={pointLoading} size='small' style={{ top: -8, left: 20 }}>
                 <Form.Item label='监测点名称' name='DGIMN' >
@@ -2207,7 +2207,7 @@ const Index = (props) => {
 
           <Row className={styles.queryPar}>
             <Form.Item label='企业' name='EntCode' rules={[{ required: true, message: '请选择企业名称' }]}>
-              <EntAtmoList noFilter pollutantType={2} allowClear={false} style={{width:200}}/>
+              <EntAtmoList noFilter allowClear={false} style={{width:200}}/>
             </Form.Item>
             <Spin spinning={pointLoading2} size='small' style={{ top: -8, left: '12.5%' }}>
               <Form.Item label='监测点名称' name='DGIMN'  style={{margin:'0 8px'}} rules={[{ required: true, message: '请选择监测点名称!' }]} >

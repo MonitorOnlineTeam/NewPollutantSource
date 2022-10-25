@@ -141,6 +141,8 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     const col = this.state.columns;
     if(queryPar.PollutantType==2){
+      const gasCol =  col.filter(item=>item.title=='排口类型')
+      if(gasCol&&gasCol.length<=0){
        col.splice(3,0,{
           title: '排口类型',
           dataIndex: 'outputType',
@@ -148,6 +150,7 @@ export default class EntTransmissionEfficiency extends Component {
           align: 'center',
           width:120,
         })
+      }
       }else{
         const waterCol =  col.filter(item=>item.title!='排口类型')
         this.setState({columns:waterCol})

@@ -95,7 +95,7 @@ const Index = (props) => {
 
         return {
           ...item,
-          title:<div style={{display:'inline-block'}}> { level==1? item.EntName : item.PointName }</div>,
+          title:<div style={{display:'inline-block'}}> { level==1? item.EntName : `${item.PointName} - ${item.TestCount}` }</div>,
           key,
           icon: level==1? <EntIcon  style={{color:'#1890ff',fontSize:16,}}/> : getPollutantIcon('2',16),
           children:treeLoop(item.ChildList,level + 1 ,),
