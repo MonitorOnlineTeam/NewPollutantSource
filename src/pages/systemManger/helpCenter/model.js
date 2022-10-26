@@ -12,7 +12,6 @@ export default Model.extend({
   state: {
     questTypeTreeData : [],
     questionListData:[],
-    // questionListData:[{content:'player支付凡是的设置文档',key:'1'}],
     questionListData:[],
     questionListTotal:0,
     questionTypeTitle:undefined,

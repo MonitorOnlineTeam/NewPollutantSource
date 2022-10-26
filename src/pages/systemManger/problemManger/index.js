@@ -78,6 +78,10 @@ const  dvaDispatch = (dispatch) => {
     },
   }
 }
+// 自定义文字大小
+let fontSize = ['12px', '14px', '16px', '18px','20px', '24px', '36px']
+Quill.imports['attributors/style/size'].whitelist = fontSize;
+Quill.register(Quill.imports['attributors/style/size']);
 const modules = {
   toolbar: [
       ['bold', 'italic', 'underline', 'strike'],        // toggled buttons

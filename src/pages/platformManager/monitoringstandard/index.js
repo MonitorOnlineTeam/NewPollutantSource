@@ -48,7 +48,7 @@ class Index extends Component {
                     }
                 }} />
                 <BreadcrumbWrapper>
-                    {dgimn && <MonitoringStandard DGIMN={dgimn} pollutantType={pollutantType}></MonitoringStandard>}
+                    {dgimn && <MonitoringStandard isPage DGIMN={dgimn} pollutantType={pollutantType}></MonitoringStandard>}
                 </BreadcrumbWrapper>
 
             </div>

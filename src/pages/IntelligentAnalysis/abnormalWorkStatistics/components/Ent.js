@@ -504,24 +504,22 @@ useImperativeHandle(refInstance,() => {
         }
     }
 })
-  const table =  useMemo(()=>{
-    return <SdlTable
-    loading = {tableLoading}
-    bordered
-    dataSource={tableDatas}
-    columns={abnormalTypes ==1?columns:alarmColumns}
-    // pagination={false}
-  />
-  },[tableLoading])
+  // const table =  useMemo(()=>{
+  //   return <SdlTable
+  //   loading = {tableLoading}
+  //   bordered
+  //   dataSource={tableDatas}
+  //   columns={abnormalTypes ==1?columns:alarmColumns}
+  // />
+  // },[tableLoading])
   return (
       <div>
-        {table}
-     {/* <SdlTable
+      <SdlTable
         loading = {tableLoading}
         bordered
         dataSource={tableDatas}
         columns={abnormalTypes ==1?columns:alarmColumns}
-        pagination={false}
+        // pagination={false}
       /> 
    
   {/** 打卡异常  监测点 弹框 */}

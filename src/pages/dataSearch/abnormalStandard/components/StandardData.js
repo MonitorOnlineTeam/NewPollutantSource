@@ -295,7 +295,7 @@ export default class Index extends Component {
       tableDatas
     } = this.props;
     const { TabPane } = Tabs;
-    let columns = this.columns;
+    let columns = [];
 
     if(column.length>0){
       let  addCol=[];
@@ -340,6 +340,8 @@ export default class Index extends Component {
     })
 
     columns = [...this.columns,...addCol]
+  }else{
+    columns = this.columns
   }
     return (
       <Card
@@ -420,6 +422,7 @@ export default class Index extends Component {
             columns={columns}
             bordered={true}
             dataSource={tableDatas}
+            scroll={{ y: column.length>0&&'calc(100vh - 450px)' }}
             pagination={{
               showSizeChanger: true,
               showQuickJumper: true,

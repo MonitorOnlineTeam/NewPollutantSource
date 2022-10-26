@@ -71,7 +71,6 @@ const Index = (props) => {
 
 
   const showTypeChange =  (e) =>{
-     console.log(e.target.value)
      setShowType(e.target.value)
   }
 

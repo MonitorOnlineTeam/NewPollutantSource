@@ -38,7 +38,6 @@ class Login extends Component {
   clearInterval(this.timer)
  }
  verificaCodeChange=(code)=>{  
-  console.log('验证码----------------------',code)
   this.setState({verificaCode:code})
 }
   handleSubmit = (err, values) => {

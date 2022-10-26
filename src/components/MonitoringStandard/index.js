@@ -385,7 +385,7 @@ class MonitoringStandard extends Component {
                     loading={this.props.effects['standardLibrary/getpollutantbydgimn']}
                     columns={columns}
                     dataSource={standardTableDatas}
-                    scroll={{ y: 'calc(100vh - 480px)' }}
+                    scroll={{ y:!this.props.isPage&&'calc(100vh - 480px)' }}
                 //  pagination={{ pageSize: 20 }}
                 />
                 <Modal

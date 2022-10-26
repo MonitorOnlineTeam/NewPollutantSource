@@ -69,7 +69,6 @@ const Index = (props) => {
   const isMobile = props.match.path &&props.match.path == '/appoperation/appQuestionDetail/:id' ? true : false;
 
   useEffect(() => {
-      console.log(props)
     props.getQuestionDetialList({},(res)=>{
         const data = res.filter(item=>item.ID == id)
         if(data&&data[0]){
@@ -88,8 +87,8 @@ const Index = (props) => {
   return (
     <div className={styles.quesDetailSty} style={{padding:isMobile? 12 : 0,height:isMobile? '100vh': '100%',backgroundColor:'#fff'}}>
          <Spin spinning={questionDetialLoading} active style={{height:isMobile? '100vh':'100%'}}>
-       <div style={{textAlign:'center',fontWeight:'bold',fontSize:15,}}>{questionDetail.QuestionName}</div>
-       <div style={{textAlign:'center',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{questionDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{questionDetail.CreateTime}</span></div>
+       <div style={{textAlign:isMobile? 'center' : 'left',fontWeight:'bold',fontSize:15,}}>{questionDetail.QuestionName}</div>
+       <div style={{textAlign:isMobile? 'center' : 'left',color:'rgb(194,194,194)',paddingTop:8}}><span>创建人：{questionDetail.CreateUserName}</span> <span style={{paddingLeft:22}}>创建时间：{questionDetail.CreateTime}</span></div>
        <div style={{paddingTop:12}} dangerouslySetInnerHTML={{__html:questionDetail.Content}}></div> 
        </Spin>
  </div>

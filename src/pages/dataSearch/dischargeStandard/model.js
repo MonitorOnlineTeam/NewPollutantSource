@@ -24,6 +24,8 @@ export default Model.extend({
       EntCode: '',
       RegionCode: '',
       PollutantType:'1',
+      PageIndex:1,
+      PageSize:20,
     },
     pointName:'',
     disTableDatas: [],

@@ -31,6 +31,11 @@ const namespace = 'helpCenter'
 const dvaPropsData =  ({ loading,helpCenter }) => ({
   questTypeTreeData:helpCenter.questTypeTreeData,
   treeLoading: loading.effects[`${namespace}/getHelpCenterList`],
+  listData:helpCenter.questionListData,
+  listDataTotal:helpCenter.questionListTotal,
+  questionTypeTitle:helpCenter.questionTypeTitle,
+  questTypeFirstLevel:helpCenter.questTypeFirstLevel,
+  questTypeSecondLevel:helpCenter.questTypeSecondLevel,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -44,6 +49,13 @@ const  dvaDispatch = (dispatch) => {
     getHelpCenterList:(payload,callback)=>{ //左侧问题数
       dispatch({
         type: `${namespace}/getHelpCenterList`,
+        payload:payload,
+        callback:callback,
+      })
+    },
+    getQuestionDetialList:(payload,callback)=>{ //列表
+      dispatch({
+        type: `${namespace}/getQuestionDetialList`,
         payload:payload,
         callback:callback,
       })
@@ -76,7 +88,7 @@ const Index = (props) => {
        const selectKey = data[0].children[0].key
        setSelectedKey([selectKey]) //默认选中第一个
        props.updateState({
-        questionTypeTitle:`${data[0].title} - ${data[0].children[0].title}`,
+        questionTypeTitle:`${data[0].children[0].title}`,
         questTypeFirstLevel:data[0].type,
         questTypeSecondLevel:data[0].children[0].type,
        })
@@ -108,40 +120,85 @@ const Index = (props) => {
   }
   
 
-
-
-
-
-
   const onSelect = (selectedKeys, info) => {
     setSelectedKey(selectedKeys)
     const data = info.node;
     props.updateState({
-      questionTypeTitle:`${data.parentTitle} - ${data.title}`,
+      questionTypeTitle:`${data.title}`,
       questTypeFirstLevel:data.parentType,
       questTypeSecondLevel:data.type,
      })
   };
 
+
+    
+  //右侧问题查询
+  const  { listData,listDataTotal,detailLoading,questionTypeTitle,questTypeFirstLevel,questTypeSecondLevel, } = props; 
+  
+  const [searchContent,setSearchContent] = useState()
+  
+  useEffect(() => {
+    if(questTypeFirstLevel&&questTypeSecondLevel){
+    getQuestionDetialListFun(pageIndex,pageSize,searchContent);
+    }
+  
+  },[questTypeFirstLevel,questTypeSecondLevel,]);
+
+  const [id,setId] = useState()
+
+  const detail = (data) =>{
+    sethelpVisible(true)
+    setId(data.ID)
+  }
+
+
+
+  const [listLoading,setListLoading] = useState(false)
+
+   const getQuestionDetialListFun = (pageIndexs,pageSizes,questionName)=>{
+      setListLoading(true)
+      props.getQuestionDetialList({
+        pageIndex:pageIndexs,
+        pageSize:pageSizes,
+        QuestionName:questionName,
+        firstLevel: questTypeFirstLevel,
+        secondLevel: questTypeSecondLevel,
+      },()=>{setListLoading(false)})
+  }
+  
+  const onChange  =  (e) =>{  //查询
+    setSearchContent(e.target.value)
+  }
+  const onSearch  =  (value,e) =>{  //查询
+    // console.log(e,e.nativeEvent )
+    getQuestionDetialListFun(pageIndex,pageSize,value);
+  }
+  const [pageIndex,setPageIndex] = useState(1)
+  const [pageSize,setPageSize] = useState(20)
+  const handleListChange = (PageIndex,PageSize )=>{ //分页
+    setPageSize(PageSize)
+    setPageIndex(PageIndex)
+    getQuestionDetialListFun(PageIndex,PageSize)
+  }
+
   return (
-    <div>
+    <div className={styles.helpCenterSty}>
     <BreadcrumbWrapper>
     <Card>
-   
      <Row> 
       <div  className={styles.treeSty}>
-     <Skeleton loading={treeLoading} active>
+     <Skeleton loading={treeLoading} active paragraph={{ rows: 4,  }}>
       <Tree
       selectedKeys={selectedKey}
       onSelect={onSelect}
       treeData={treeDatas(questTypeTreeData,0)}
-      style={{ width: 170 }}
       defaultExpandAll
     />
      </Skeleton>
      </div>
-       <div style={{width:'calc(100% - 170px)'}}>
-        {selectedKey&&selectedKey[0]?  <QueList  /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+       <div style={{width:'calc(100% - 132px)',}}>
+       <Row justify='end'><Search loading={listLoading}  value={searchContent}  onChange={onChange} onSearch={onSearch} allowClear style={{paddingBottom:14,width:'20%'}} placeholder="请输入"  enterButton /></Row>
+        {selectedKey&&selectedKey[0]?  <QueList  listLoading={listLoading} pageIndex={pageIndex} pageSize={pageSize}  handleListChange={handleListChange}/> : <Empty style={{height:192,backgroundColor:'#fff',margin:0,marginLeft:14,paddingTop:40,}} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       </div>
      
       </Row>

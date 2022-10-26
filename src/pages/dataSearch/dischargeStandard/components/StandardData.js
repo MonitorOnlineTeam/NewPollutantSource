@@ -288,7 +288,15 @@ export default class EntTransmissionEfficiency extends Component {
 
   }
 
-
+  onTableChange = (PageIndex,PageSize) =>{
+    this.updateQueryState({
+    PageIndex:PageIndex,
+    PageSize: PageSize,
+  });
+  setTimeout(()=>{
+    this.queryClick();
+  })
+ }
   render() {
     const {
       exloading,
@@ -396,11 +404,13 @@ export default class EntTransmissionEfficiency extends Component {
             dataSource={this.props.disTableDatas}
             scroll={{ y: 'calc(100vh - 360px)' }}
             pagination={{
-             showSizeChanger: true,
-             showQuickJumper: true,
-             total: this.props.total,
-             defaultPageSize:20
-          }}
+              showSizeChanger: true,
+              showQuickJumper: true,
+              total: this.props.total,
+              pageSize: this.props.PageSize,
+              current: this.props.PageIndex,
+              onChange: this.onTableChange,
+            }}
           />
         </div>
       </Card>
