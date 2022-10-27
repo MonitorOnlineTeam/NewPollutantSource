@@ -4,7 +4,7 @@
  * 创建时间：2022.09
  */
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Input, InputNumber, Popconfirm, List, Skeleton, Form, Tag, Spin, Typography, Tree, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, List, Skeleton, Form, Tag, Spin,Pagination, Typography, Tree, Card, Button, Select, message, Row, Col, Tooltip, Divider, Modal, DatePicker, Radio } from 'antd';
 import SdlTable from '@/components/SdlTable'
 import { PlusOutlined, UpOutlined, DownOutlined, ExportOutlined, RightOutlined, } from '@ant-design/icons';
 import { connect } from "dva";
@@ -82,20 +82,11 @@ const Index = (props) => {
 
   return (
     <div className={styles.questListSty}>
-      <div style={{ backgroundColor: '#fff', padding: '14px 0 0 20px',color:'#1890ff'}} >{questionTypeTitle}</div>
-      <Skeleton loading={props.listLoading} active>
+      <Row align='middle' style={{ backgroundColor: '#fff', padding: '14px 0 0 20px',color:'#1890ff'}} ><span style={{display:'inline-block',width:4,height:14,backgroundColor:'#1890ff',marginRight:6}}></span> {questionTypeTitle}</Row>
+      <Skeleton loading={props.listLoading} active >
         <List
           itemLayout="vertical"
           size="default"
-          pagination={listDataTotal && listDataTotal > 0 && {
-            total: listDataTotal,
-            pageSize: props.pageSize,
-            current: props.pageIndex,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            onChange: props.handleListChange,
-            size: 'small',
-          }}
           dataSource={listData}
           renderItem={(item) => (
             <List.Item
@@ -109,6 +100,7 @@ const Index = (props) => {
           )}
         />
       </Skeleton>
+     {listDataTotal && listDataTotal > 0 ? <Row justify='end'> <Pagination size='small'   showQuickJumper showSizeChanger current={props.pageIndex} pageSize={props.pageSize}  total={listDataTotal} onChange={props.handleListChange} /></Row> : undefined}
       <Modal
         title={questionTypeTitle}
         visible={helpVisible}

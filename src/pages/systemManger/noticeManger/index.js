@@ -33,28 +33,7 @@ const namespace = 'noticeManger'
 let fontSize = ['12px', '14px', '16px', '18px','20px', '24px', '36px']
 Quill.imports['attributors/style/size'].whitelist = fontSize;
 Quill.register(Quill.imports['attributors/style/size']);
-const modules = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
-    ['link', 'image'],
 
-    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    [{ 'direction': 'rtl' }],                         // text direction
-
-    // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown 默认字体
-    [{ 'size': fontSize }], // 文字大小自定义
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
-    [{ 'align': [] }],
-    ['clean']                                         // remove formatting button
-  ]
-}
 
 
 const dvaPropsData = ({ loading, noticeManger }) => ({
@@ -101,7 +80,28 @@ const dvaDispatch = (dispatch) => {
 
 const Index = (props) => {
 
-
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+      ['link', 'image'],
+  
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+      [{ 'direction': 'rtl' }],                         // text direction
+  
+      // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown 默认字体
+      [{ 'size': fontSize }], // 文字大小自定义
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+  
+      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+      ['clean']                                         // remove formatting button
+    ]
+  }
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -408,7 +408,7 @@ const Index = (props) => {
 
             <Col span={24}>
               <Form.Item label='公告内容' name="Content" rules={[{ required: true, message: '请输入公告内容' }]}>
-                <ReactQuill theme="snow" modules={modules} className="ql-editor" style={{ height: 'calc(100% - 500px)' }} />
+                <ReactQuill theme="snow" modules={modules} style={{ height: 'calc(100% - 500px)' }} />
               </Form.Item> 
             </Col>
             <Col span={24}>

@@ -1,37 +1,74 @@
 
 
+ @font-color:#7d7d7d;
 .helpCenterModal  :global {
   .ant-modal-body {
-    padding: 1% 2%;
-    height: calc(100vh - 280px);
-    overflow-y: auto;   
+      padding: 1% 2%;
+      height: calc(100vh - 280px);
+      overflow-y: auto; 
     }
     .ant-spin-nested-loading{
       height: 100%;
+    }
+   .ant-modal-title{
+     color: @font-color;
    }
-   img{
-    max-width: 100%;
-  }
-  }      
+    img{
+     max-width: 100%;
+    }
+   }      
  
   .treeSty  :global {
-    width: 132px;
-    padding-top: 44px;
-    .ant-tree-list,.ant-skeleton{
-      padding:12px 16px;
-    }
+     width: 122px;
+     .ant-tree{
+      background-color: #f5f5f5;
+     }
     .ant-skeleton{
-      height: 192px;
+      height: 222px;
     }
      .ant-tree-switcher{
       display: none;
     }
+    .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected{
+      background-color: transparent;
+      .ant-tree-title{
+        color: #1890ff;
+        padding-bottom: 2px;
+      }
+      .dotSty{
+        background-color: #1890ff;
+      }
+    }
+    .ant-tree-node-content-wrapper-normal{
+      .dotSty{
+        background-color: @font-color;
+      } 
+    } 
+    .ant-tree-treenode{
+      width: 100%;
+      padding: 0 !important;
+    }
+    .ant-tree-node-content-wrapper{
+      width: 100%;
+      padding:0 !important;
+     }
+     .ant-tree-list{
+       border: 1px solid #f0f0e0;
+     }
+     .ant-tree-title:last-child{
+      padding-bottom: 0;
+     }
   }
   .questListSty  :global {
      padding-left: 20px;
     .ant-list {
-      height: calc(100vh - 230px);
-      overflow-y: auto;
+      .ant-list-items>.ant-list-item:last-child{
+            border-bottom: 0 !important;
+            padding-bottom: 0;
+      }
+    }
+    .ant-skeleton{
+       height: 188px;
     }
   }
   .quesDetailSty :global {
@@ -40,15 +77,27 @@
     }
   }
 .helpCenterSty  :global {
+  .ant-tree-title, .ant-list-item-main{
+    color: @font-color;
+  }
   .ant-pro-page-header-wrap-children-content,.ant-card{
     background-color:#f0f2f5 !important;
   }
   .ant-pro-page-header-wrap-children-content{
     margin: 14px;
     margin-top: 0;
+    overflow: hidden !important;
   }
   .ant-card{
     margin-top:14px;
+    .ant-input-search-icon::before{
+      border-left:0;
+    }
+    .ant-input-search-icon{
+      font-size: 18px;
+      padding: 0 9px 0 2px;
+      margin-left: 0;
+    }
   }
   .ant-card,.ant-card-body{
     padding-top: 0 !important;
@@ -63,14 +112,17 @@
     padding-top: 0;
   }
   .ant-spin-container{
-    padding: 0 20px 12px 20px;
+    padding: 0 20px 14px 20px;
   }
   .ant-list-pagination{
     margin-top: 14px;
   }
-  .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected{
-    background-color: #fff;
-    color: #1890ff;
+  .ant-pagination{
+    margin-top: 14px;
+    .ant-pagination-options-size-changer.ant-select{
+      margin-right: 0;
+    }
   }
+
 }
   
