@@ -515,18 +515,18 @@ const Index = (props) => {
             <Row gutter={36}>
                 <Col span={8}>
                     <Form.Item label="当前大气压" name="Atmos" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber disabled placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
+                        <InputNumber  placeholder='请输入' allowClear suffix="Pa" onBlur={operatingCalculaTotal} onKeyUp={(e) => { numCheck(e, 'Atmos') }} />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="空气过剩系数" name="AirCoefficient" rules={[{ required: isReg, message: '' }]}>
-                        <InputNumber disabled step='0.01'   placeholder='请输入' allowClear />
+                        <InputNumber  step='0.01'   placeholder='请输入' allowClear />
 
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item label="排放限值" name="EmissionLimits"  rules={[{ required: isReg, message: '' }]}>
-                        <Input disabled placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
+                        <Input  placeholder='请输入' allowClear suffix="mg/m3" onKeyup={(e) => { numCheck(e, 'EmissionLimits') }} />
                     </Form.Item>
                 </Col>
             </Row>

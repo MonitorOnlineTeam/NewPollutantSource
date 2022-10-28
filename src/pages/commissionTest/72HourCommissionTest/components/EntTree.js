@@ -95,7 +95,7 @@ const Index = (props) => {
 
         return {
           ...item,
-          title:<div style={{display:'inline-block'}}> { level==1? item.EntName : `${item.PointName} - ${item.TestCount}` }</div>,
+          title:<div style={{display:'inline-block',verticalAlign:'middle',width:level==1?'240px' : '210px'}} className='textOverflow' title={level==1? `${item.EntName}` : `${item.PointName}${item.TestCount? ` - ${item.TestCount}`: '' }` }> { level==1? `${item.EntName}`  : `${item.PointName}${item.TestCount? ` - ${item.TestCount}`: '' }` }</div>,
           key,
           icon: level==1? <EntIcon  style={{color:'#1890ff',fontSize:16,}}/> : getPollutantIcon('2',16),
           children:treeLoop(item.ChildList,level + 1 ,),

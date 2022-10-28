@@ -25,6 +25,7 @@ import {
   Tooltip,
   Spin,
   Tag,
+  Pagination,
 } from 'antd';
 import { connect } from 'dva';
 import $ from 'jquery'
@@ -937,7 +938,9 @@ class NavigationTree extends Component {
           rowClassName={this.setRowClassName}/>
     }
 
-
+    pageChange = (pageIndex,pageSize) =>{
+     console.log(pageIndex,pageSize)
+    }
   // ></Table>
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
@@ -1042,7 +1045,7 @@ class NavigationTree extends Component {
                   justifyContent: 'center',
                 }}
                 size="large"
-              /> : <div>{this.state.EntAndPoint.length ? <Tree
+              /> : <div>{this.state.EntAndPoint.length ? <div><Tree
                 data-id="mytree"
                 selectable={!this.props.choice}
                 checkable={this.props.choice}
@@ -1050,13 +1053,16 @@ class NavigationTree extends Component {
                 checkedKeys={this.state.checkedKeys}
                 onSelect={this.onSelect}
                 selectedKeys={this.state.selectedKeys}
-                style={{ marginTop: '5%', maxHeight: this.props.type=='ent'?'calc(100vh - 330px)': 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
+                // style={{maxHeight: this.props.type=='ent'?'calc(100vh - 320px)': 'calc(100vh - 290px)', overflow: 'hidden', overflowY: 'auto', width: '100%' }}
+                style={{ overflow: 'hidden', overflowY: 'auto', width: '100%' }}
                 onExpand={this.onExpand}
                 // expandedKeys={expandedKeys}
-                height={this.props.clientHeight - 330} 
+                height={this.props.clientHeight - 350} //虚拟滚动 解决打开卡顿
                 treeData={this.loop(this.state.EntAndPoint)}
                 {..._props}
               />
+                <Pagination  onChange={this.pageChange}  showLessItems className={styles.navTreePaginationSty} size="small" showSizeChanger={false} total={this.state.EntAndPoint.length} showTotal={(total)=>{ return `共${total}条`}} />
+              </div>
                  /* {this.loop(this.state.EntAndPoint)}
                  </Tree> */
                : 

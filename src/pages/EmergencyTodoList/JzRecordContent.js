@@ -26,6 +26,7 @@ class JzRecordContent extends Component {
     }
 
     componentDidMount() {
+        console.log(111)
         this.props.dispatch({
             type: 'task/GetJzRecord',
             payload: {

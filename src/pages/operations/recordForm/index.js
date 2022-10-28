@@ -59,99 +59,131 @@ class Index extends Component {
         var key = this.props.match.params.typeID
         switch (key) {
             case "1"://维修记录表
+            case  1:
                 form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "12"://维修记录表 废水
+            case  12:
                 form = <RepairRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                
             case "2"://停机记录表
+            case  2:
                 form = <StopCemsRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "3"://易耗品更换记录表
+            case  3:
                 form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "14"://易耗品更换记录表 废水
+            case  14:
                 form = <ConsumablesReplaceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                
             case "4"://标准气体更换记录表
+            case  4:
                 form = <StandardGasRepalceRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "5"://完全抽取法CEMS日常巡检记录表
+            case  5:
                 form = <CompleteExtractionRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "6"://稀释采样法CEMS日常巡检记录表
+            case  6:
                 form = <DilutionSamplingRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "7"://直接测量法CEMS日常巡检记录表
+            case  7:
                 form = <DirectMeasurementRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "8"://CEMS零点量程漂移与校准记录表
+            case  8:
                 form = <JzRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "9"://CEMS校验测试记录
+            case  9:
                 form = <BdTestRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "10"://CEMS设备数据异常记录表
+            case  10:
                 form = <DeviceExceptionRecordContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "27"://保养项更换记录表
+            case  27:
                 form = <MaintainRepalceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "28"://备品更换记录表
+            case 28:
                 form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "20"://备品更换记录表 废水
+            case  20:
                 form = <SparePartReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                
             case "58":
+            case  58:
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID} />
                 break; 
             case "59":
+            case  59:
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
                 break;
             case "60":
+            case  60:
                 form = <FailureHoursRecord TaskID={this.props.match.params.taskID}  TypeID={this.props.match.params.typeID}/>
                 break;
             case "15":  //试剂更换表单
+            case  15:
                 form = <ReagentReplaceRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "61":  //配合检查表单 废水
+            case  61:
                 form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;
             case "62":  //配合检查表单
+            case  62:
                 form = <CooperaInspection TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    
             case "63":  //数据一致性实时表单
+            case  63:
                 form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;   
             case "18":  //数据一致性实时表单 废水
+            case  18:
                 form = <DataConsistencyRealTime TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break; 
             case "66":  //数据一致性小时与日数据表单
+            case  66:
                 form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    
             case "74":  //数据一致性小时与日数据表单 废水
+            case  74:
                 form = <DataConsistencyRealDate TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                
             case "73":  //上月委托第三方检测次数表单
+            case  73:
                 form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;    
             case "65":  //上月委托第三方检测次数表单 废水
+            case  65:
                 form = <ThirdPartyTestingContent TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;   
             case "16":  //水质校准记录表
+            case  16:
                 form = <WaterQualityCalibrationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                   
             case "70":  //标准溶液核查记录表
+            case  70:
                 form = <StandardSolutionVerificationRecord TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break; 
             case "72":  //设备参数记录表
+            case  72:
                 form = <DeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;   
             case "64":  //设备参数记录表 废气
+            case  64:
                 form = <GasDeviceParameterChange TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;       
             case "19":  //实际水样比对试验结果记录表
+            case  19:
                 form = <ComparisonTestResults TaskID={this.props.match.params.taskID} TypeID={this.props.match.params.typeID}/>
                 break;                                                
                                      

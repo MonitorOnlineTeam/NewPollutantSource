@@ -441,7 +441,7 @@ class OperationRecord extends Component {
                 }}
               >
                 <Radio.Button value="log">运维日志</Radio.Button>
-                <Radio.Button value="operationrecord">运维记录</Radio.Button>
+                {/* <Radio.Button value="operationrecord">运维记录</Radio.Button> */}
               </Radio.Group>
             </>
           }
