@@ -519,6 +519,7 @@ useImperativeHandle(refInstance,() => {
         bordered
         dataSource={tableDatas}
         columns={abnormalTypes ==1?columns:alarmColumns}
+        pagination={{...props.pagination}}
         // pagination={false}
       /> 
    

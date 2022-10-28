@@ -72,6 +72,7 @@ const Index = (props) => {
 
   const showTypeChange =  (e) =>{
      setShowType(e.target.value)
+     setPageSize(20)
   }
 
   useEffect(() => {
@@ -91,7 +92,7 @@ const Index = (props) => {
 
  
 
-  const onFinish  = async () =>{  //查询
+  const onFinish  = async (pageIndexs,pageSizes) =>{  //查询
      
     try {
       const values = await form.validateFields();
@@ -99,6 +100,8 @@ const Index = (props) => {
       
        const exceptionType = isResponseModal? 2 : isClockAbnormalModal? 1: values.exceptionType;
        pchildref.current._childFn(exceptionType);
+       
+       !pageIndex&&setPageIndex(1)
        props.regEntExceptionTaskList({
           ...values,
           time:undefined,
@@ -107,6 +110,8 @@ const Index = (props) => {
           endTime:moment(values.time[1]).format("YYYY-MM-DD HH:mm:ss"),
           regionLevel: showType==1? 1 :undefined,
           exceptionType:exceptionType,
+          pageIndex: pageIndexs? pageIndexs : 1,
+          pageSize: pageSizes? pageSizes : pageSize,
         })
 
 
@@ -144,11 +149,20 @@ const Index = (props) => {
   const clockAbnormalModelGoBack = (query) =>{ //首页打卡异常详情弹框返回
     setClockAbnormalModelDetail(false)
   }
+
+  
+ const [pageIndex,setPageIndex] = useState(1)
+ const [pageSize,setPageSize] = useState(20)
+ const handleTableChange =   (PageIndex, PageSize )=>{ //分页
+  setPageIndex(PageIndex)
+  setPageSize(PageSize)
+  onFinish(PageIndex,PageSize)
+}
   const searchComponents = () =>{
      return <Form
     form={form}
     name="advanced_search"
-    onFinish={onFinish}
+    onFinish={()=>{onFinish()}}
     initialValues={{
       exceptionType:1,
       pollutantType:isResponseModal||isClockAbnormalModal? props.pollutantTypes : undefined,
@@ -246,12 +260,21 @@ const Index = (props) => {
   const [clockAbnormalModelDetail, setClockAbnormalModelDetail] = useState(false)
 
   const [query, setQuery] = useState({})
+  const pagination = {
+    showSizeChanger: true,
+    showQuickJumper: true,
+    total:pageSize,
+    pageSize:pageSize,
+    current:pageIndex,
+    onChange: handleTableChange,
+}
   return (
     <div  className={styles.abnormalWorkStatisticsSty}>
     <BreadcrumbWrapper hideBreadcrumb={props.hideBreadcrumb} >
     {!responseModelDetail&&!clockAbnormalModelDetail?
     <Card title={searchComponents()}>
-      {showType==1? <Region resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent showType={showType} ref={pchildref}  {...props}/>}
+      {showType==1?
+       <Region pagination={pagination} resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent showType={showType} ref={pchildref}  pagination={pagination} {...props}/>}
    </Card>
    :
     <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail} clockAbnormalModelDetail={clockAbnormalModelDetail}  responseModelGoBack={responseModelGoBack}clockAbnormalModelGoBack={clockAbnormalModelGoBack}  location={query}/> //首页报警弹框

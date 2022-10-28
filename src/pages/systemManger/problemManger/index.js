@@ -262,6 +262,8 @@ const Index = (props) => {
       const values = await form2.validateFields();//触发校验
 
       const contentVal = values.Content.replaceAll(/<p>|[</p>]/g, '').trim();
+
+      console.log(values)
       if ((!contentVal) || contentVal === 'br') {
         message.warning('请输入问题描述')
         return;
@@ -304,15 +306,7 @@ const Index = (props) => {
     onFinish(PageIndex, PageSize)
   }
   const handleResize =  (e, { size }) => {
-    console.log(size)
-    // this.setState(({ columns }) => {
-    //   const nextColumns = [...columns];
-    //   nextColumns[index] = {
-    //     ...nextColumns[index],
-    //     width: size.width || defaultWidth,
-    //   };
-    //   return { columns: nextColumns };
-    // });
+    // console.log(size)
   };
 
   const searchComponents = () => {
@@ -414,18 +408,17 @@ const Index = (props) => {
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item label="答案描述" name='Content' rules={[{ required: true, message: '请输入答案描述' }]}>
-                <ResizableBox 
-                  height={200} 
-                  onResize={handleResize}
+              <ResizableBox 
+                  height={260}     
                   axis = {'y'}
+                  minConstraints={['100%', 120]}
+                  onResize={handleResize}
                   className={'resizable_quill_sty'}
                 > 
-                <div style={{height:'100%'}}>
-                <ReactQuill  style={{height:'100%'}} theme="snow" modules={modules}  />
-                </div>
-                </ResizableBox >
-              </Form.Item>
+              <Form.Item label="答案描述" name='Content' rules={[{ required: true, message: '请输入答案描述' }]}>
+                <ReactQuill  theme="snow" modules={modules}  />
+               </Form.Item>
+              </ResizableBox >
             </Col>
             <Col span={24}>
               <Form.Item label="问题状态" name="Status" >

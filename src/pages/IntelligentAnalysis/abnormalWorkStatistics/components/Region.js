@@ -91,7 +91,7 @@ const Index = (props,ref) => {
 
 
   
-  const  { tableDatas,tableLoading,tableTotal,abnormalTypes,refInstance,abnormalList,abnormalListTotal,abnormalLoading,queryPar,dateCol} = props; 
+  const  { tableDatas,tableLoading,abnormalTypes,refInstance,abnormalList,abnormalListTotal,abnormalLoading,queryPar,dateCol} = props; 
   
 
   const { exportCardExceptionLoading, exportResExceptionLoading,isResponseModal,isClockAbnormalModal,clientHeight} = props;
@@ -540,6 +540,8 @@ useImperativeHandle(refInstance,() => {
         }
     }
 })
+
+
   return (
       <div style={{height:"100%"}}>
       <SdlTable
@@ -547,8 +549,9 @@ useImperativeHandle(refInstance,() => {
         bordered
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns :alarmColumns }
-        // pagination={false} 
         scroll={{ y:props.hideBreadcrumb?clientHeight - 420: clientHeight - 370}}
+        pagination={{...props.pagination}}
+        // pagination={false}
       />
       {/*打卡异常 响应超时 弹框*/}
       <Modal

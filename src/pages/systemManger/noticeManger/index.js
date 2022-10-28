@@ -18,6 +18,7 @@ import RegionList from '@/components/RegionList'
 import NumTips from '@/components/NumTips'
 import styles from "./style.less"
 import Cookie from 'js-cookie';
+import { Resizable,ResizableBox } from 'react-resizable';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import RoleList from '@/components/RoleList'
@@ -407,9 +408,16 @@ const Index = (props) => {
             </Col>
 
             <Col span={24}>
+            <ResizableBox 
+                  height={260} 
+                  axis = {'y'}
+                  minConstraints={['100%', 120]}
+                  className={'resizable_quill_sty'}
+                > 
               <Form.Item label='公告内容' name="Content" rules={[{ required: true, message: '请输入公告内容' }]}>
-                <ReactQuill theme="snow" modules={modules} style={{ height: 'calc(100% - 500px)' }} />
+                <ReactQuill theme="snow" modules={modules}  />
               </Form.Item> 
+              </ResizableBox>
             </Col>
             <Col span={24}>
               <Form.Item label="公告状态" name="Status" rules={[{ required: true, }]}>

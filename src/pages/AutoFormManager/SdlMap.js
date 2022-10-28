@@ -588,8 +588,7 @@ class SdlMap extends PureComponent {
                   // defaultValue={this.state.address}
                   value={this.state.address}
                   id="tipInput"
-                  onChange={input => {
-                    console.log(222)
+                  onChange={input => {               
                     this.setState({
                       address: input.target.value,
                     })
