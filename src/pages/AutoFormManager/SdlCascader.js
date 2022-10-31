@@ -85,11 +85,10 @@ class SdlCascader extends Component {
   }
   componentDidUpdate(props){
     const { regionList,configId, itemName,data } = this.props;
-    if (props.regionList !== regionList && (itemName === 'dbo.T_Cod_Region.RegionName' || !configId || itemName === 'dbo.View_Region.RegionName' )) {
+    if (props.regionList !== regionList && (itemName === 'dbo.T_Cod_Region.RegionName' || !configId || itemName === 'dbo.View_TestRegion.RegionName' )) {
       this.setState({ industryTreeList: this.industryTreeListFormat(this.props.regionList,1) }) 
-
    }
-    
+   
   }
   industryTreeListFormat = (data,i)=>{
     const { selectType } = this.props;

@@ -76,6 +76,7 @@ class AutoFormTable extends PureComponent {
   };
 
   componentDidMount() {
+    
     this.loadDataSource(); 
     if (this.props.getPageConfig) {
       this.props.dispatch({
@@ -87,6 +88,7 @@ class AutoFormTable extends PureComponent {
     }
   }
   loadDataSource(params) {
+    console.log(111)
     if(this.props.configId=="TestPoint"&&!this.props.searchParams){return} //调试检测 污染源管理监测点特殊处理
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',

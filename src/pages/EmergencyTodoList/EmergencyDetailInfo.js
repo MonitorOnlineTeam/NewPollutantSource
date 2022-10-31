@@ -162,12 +162,12 @@ class EmergencyDetailInfo extends Component {
     renderItem = (data, taskID, types) => {
         const rtnVal = [];
         console.log('data111=', data)
+        //types 污染物类型
         data.map((item, key) => {
             if (item.FormMainID !== null) {
-                // 新疆兵团只要任务图片 故障小时数记录表不使用图片
                 if ((types === '2' && !config.XinJiang) || item.ID === 58 || item.ID === 59 || item.ID === 60
                     || item.ID === 15 || item.ID === 61 || item.ID === 62 || item.ID === 63 || item.ID === 18 || item.ID === 66 || item.ID === 74 || item.ID === 73 || item.ID === 65 || item.ID === 16
-                    || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 || item.ID === 75) {
+                    || item.ID === 70 || item.ID === 72 || item.ID === 64 || item.ID === 19 || item.ID === 67 || item.ID === 12 || item.ID === 14 || item.ID === 20 || item.ID === 75 || item.ID === 76) {
                     switch (item.ID) {
                         case EnumPsOperationForm.Repair:
                             this.GoToForm(taskID, item.CnName, '1', rtnVal, key, item.FormMainID);
@@ -191,10 +191,10 @@ class EmergencyDetailInfo extends Component {
                             this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CyfPatrol:
-                            this.GoToForm(taskID, item.CnName, '6', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.ClfPatrol:
-                            this.GoToForm(taskID, item.CnName, '7', rtnVal, key, item.FormMainID);
+                            this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CheckRecord:
                             this.GoToForm(taskID, item.CnName, '8', rtnVal, key, item.FormMainID);
@@ -269,6 +269,7 @@ class EmergencyDetailInfo extends Component {
                             this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         case EnumPsOperationForm.CheckRecordImg: //CEMS零点量程漂移与校准记录表 图片弹框类型
+                        case EnumPsOperationForm.CheckRecordImg2: //CEMS零点量程漂移与校准记录表 废气 图片弹框类型 
                             this.GoToForm(taskID, item.CnName, '-1', rtnVal, key, item.FormMainID);
                             break;
                         default:

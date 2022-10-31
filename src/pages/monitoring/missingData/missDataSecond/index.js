@@ -32,7 +32,7 @@ import { router } from 'umi';
 import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import { downloadFile } from '@/utils/utils';
 import ButtonGroup_ from '@/components/ButtonGroup'
-import EmergencyDetailInfo from '../../../../pages/EmergencyTodoList/TaskDetailModel';
+import EmergencyDetailInfo from '@/pages/EmergencyTodoList/EmergencyDetailInfo';
 const { Search } = Input;
 const { MonthPicker } = DatePicker;
 const { Option } = Select;

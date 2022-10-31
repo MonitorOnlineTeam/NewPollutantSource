@@ -173,6 +173,7 @@ export const EnumPsOperationForm={
   ComparisonTestResultsRecord:19,//实际水样比对试验结果记录表
   EquipmentNameplate:67,//设备铭牌
   CheckRecordImg:75,//CEMS零点量程漂移与校准记录表 图片弹框类型
+  CheckRecordImg2:76,///CEMS零点量程漂移与校准记录表 废气 图片弹框类型
 };
 //污染源运维单枚举项
 export const EnumOperationEnum={
