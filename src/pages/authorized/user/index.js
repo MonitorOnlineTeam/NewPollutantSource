@@ -39,9 +39,12 @@ import ColumnGroup from 'antd/lib/table/ColumnGroup';
 import styles from './style.less';
 const { confirm } = Modal;
 
-@connect(({ loading, autoForm }) => ({
+const CONFIGID = 'UserInfo';
+
+@connect(({ loading, autoForm, global }) => ({
   loading: loading.effects['autoForm/getPageConfig'],
   autoForm,
+  configInfo: global.configInfo,
   searchConfigItems: autoForm.searchConfigItems,
   // columns: autoForm.columns,
   tableInfo: autoForm.tableInfo,
@@ -61,23 +64,23 @@ export default class UserInfoIndex extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname != this.props.location.pathname) {
-      if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
-    }
+    // if (nextProps.location.pathname != this.props.location.pathname) {
+    //   if (nextProps.match.params.configId !== this.props.routerConfig) { this.reloadPage(nextProps.match.params.configId); }
+    // }
   }
 
-  reloadPage = configId => {
+  reloadPage = () => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'autoForm/updateState',
-      payload: {
-        routerConfig: configId,
-      },
-    });
+    // dispatch({
+    //   type: 'autoForm/updateState',
+    //   payload: {
+    //     routerConfig: configId,
+    //   },
+    // });
     dispatch({
       type: 'autoForm/getPageConfig',
       payload: {
-        configId,
+        configId: CONFIGID,
       },
     });
   };
@@ -101,7 +104,7 @@ export default class UserInfoIndex extends Component {
     confirm({
       title: <div>
         确认是否重置密码?
-        <span className={styles.resetPwd}><ExclamationCircleOutlined style={{ marginRight: 4 }} />初始密码为：123456</span>
+        <span className={styles.resetPwd}><ExclamationCircleOutlined style={{ marginRight: 4 }} />初始密码为：{this.props.configInfo.DefaultPWD}</span>
       </div>,
       content: '',
       okText: '确认',
@@ -137,22 +140,22 @@ export default class UserInfoIndex extends Component {
       },
       dispatch,
     } = this.props;
-    const searchConditions = searchConfigItems[configId] || [];
-    const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
-    if (this.props.loading) {
-      return (
-        <Spin
-          style={{
-            width: '100%',
-            height: 'calc(100vh/2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          size="large"
-        />
-      );
-    }
+    // const searchConditions = searchConfigItems[CONFIGID] || [];
+    // const columns = tableInfo[CONFIGID] ? tableInfo[CONFIGID].columns : [];
+    // if (this.props.loading) {
+    //   return (
+    //     <Spin
+    //       style={{
+    //         width: '100%',
+    //         height: 'calc(100vh/2)',
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         justifyContent: 'center',
+    //       }}
+    //       size="large"
+    //     />
+    //   );
+    // }
     return (
       <BreadcrumbWrapper>
         {/* <div className={styles.cardTitle}> */}
@@ -163,7 +166,7 @@ export default class UserInfoIndex extends Component {
             // searchFormState={{
             // }}
             onSubmitForm={form => this.loadReportList(form)}
-            configId={configId}
+            configId={CONFIGID}
           // loadDataSourceParams={[
           //   {
           //     Key: "test",
@@ -173,8 +176,9 @@ export default class UserInfoIndex extends Component {
           // ]}
           ></SearchWrapper>
           <AutoFormTable
+            noload
             style={{ marginTop: 10 }}
-            configId={configId}
+            configId={CONFIGID}
             onAdd={() => {
               dispatch(routerRedux.push('/rolesmanager/user/userinfoadd?tabName=用户管理 - 添加'));
             }}
@@ -194,7 +198,7 @@ export default class UserInfoIndex extends Component {
                   style={{ marginRight: 8 }}
                 >
                   重置密码
-                    </Button>
+                </Button>
               </Fragment>
             )}
             appendHandleRows={row => (

@@ -43,7 +43,7 @@ class index extends PureComponent {
           dataIndex: 'Pic',
           render: (text, record) => {
             return <a onClick={() => {
-              window.open(`/upload/${text}`)
+              window.open(`/${text}`)
             }}>查看</a>
           }
         },

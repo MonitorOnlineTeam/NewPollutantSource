@@ -12,7 +12,7 @@ import Model from '@/utils/model';
 import { message } from 'antd';
 
 export default Model.extend({
-  namespace: 'home',
+  namespace: 'oneEntAndPoint',
   state: {
     allEntAndPointList: [],
     currentEntInfo: {},
@@ -83,7 +83,8 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
-    homePage: "1",
+    // homePage: "1",
+    homePage: null,
     alarmTotalData: '',
     entDetailData: {},
     alarmTotalDataHour: '',
@@ -104,6 +105,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         let entCode = sessionStorage.getItem('oneEntCode')
         let data = result.Datas.filter((item) => item.key === entCode)
+        console.log('data=',data);
         yield update({
           // allEntAndPointList: data,
           // currentEntInfo: result.Datas[0],
@@ -128,7 +130,7 @@ export default Model.extend({
 
     // 获取智能质控数据 - 运行分析
     *getRateStatisticsByEnt({ payload }, { call, select, update }) {
-      const rateStatisticsData = yield select(state => state.home.rateStatisticsByEnt);
+      const rateStatisticsData = yield select(state => state.oneEntAndPoint.rateStatisticsByEnt);
       const postData = {
         ...rateStatisticsData,
         ...payload
@@ -157,7 +159,7 @@ export default Model.extend({
 
     // 获取报警信息
     *getWarningInfo({ payload }, { call, update, select }) {
-      const warningInfoParams = yield select(state => state.home.warningInfoParams);
+      const warningInfoParams = yield select(state => state.oneEntAndPoint.warningInfoParams);
       const postData = {
         ...warningInfoParams,
         ...payload
@@ -175,7 +177,7 @@ export default Model.extend({
 
     // 获取运维数据
     *getTaskCount({ payload }, { call, put, select, update }) {
-      const taskCountParams = yield select(state => state.home.taskCountParams);
+      const taskCountParams = yield select(state => state.oneEntAndPoint.taskCountParams);
       const postData = {
         ...taskCountParams,
         ...payload
@@ -190,7 +192,7 @@ export default Model.extend({
 
     // 获取智能预警数据
     *getExceptionProcessing({ payload }, { call, put, update, select }) {
-      const operationsWarningParams = yield select(state => state.home.operationsWarningParams);
+      const operationsWarningParams = yield select(state => state.oneEntAndPoint.operationsWarningParams);
       const postData = {
         ...operationsWarningParams,
         ...payload
@@ -205,7 +207,7 @@ export default Model.extend({
 
     // 获取运维 - 异常报警及相应情况
     *getAlarmAnalysis({ payload }, { call, update, select }) {
-      const alarmAnalysisParams = yield select(state => state.home.alarmAnalysisParams);
+      const alarmAnalysisParams = yield select(state => state.oneEntAndPoint.alarmAnalysisParams);
       const postData = {
         ...alarmAnalysisParams,
         ...payload
@@ -227,7 +229,7 @@ export default Model.extend({
     }) {
       const {
         AllMonthEmissionsByPollutant
-      } = yield select(state => state.home);
+      } = yield select(state => state.oneEntAndPoint);
       let body = {
         beginTime: AllMonthEmissionsByPollutant.beginTime,
         endTime: AllMonthEmissionsByPollutant.endTime,
@@ -276,7 +278,7 @@ export default Model.extend({
     },
     // 获取超标汇总
     *getMounthOverData({ payload }, { call, update, select }) {
-      const mounthOverDataParams = yield select(state => state.home.mounthOverDataParams);
+      const mounthOverDataParams = yield select(state => state.oneEntAndPoint.mounthOverDataParams);
       const postData = {
         ...mounthOverDataParams,
         ...payload

@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 企业异常记录 列表
@@ -6,7 +7,7 @@ import { post } from '@/utils/request';
  */
 export async function GetExceptionReportedList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedList',
+    API.MonitorDataApi.GetExceptionReportedList,
     params,
     null,
   );
@@ -16,7 +17,7 @@ export async function GetExceptionReportedList(params) {
 //异常记录详情
 export async function GetExceptionReportedView(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedView',
+    API.StatisticAnalysisApi.GetExceptionReportedView,
     params,
     null,
   );
@@ -26,7 +27,7 @@ export async function GetExceptionReportedView(params) {
 // 参数列表
 export async function GetEmissionsEntPointPollutant(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/EmissionsApi/GetEmissionsEntPointPollutant',
+    API.StatisticAnalysisApi.GetEmissionsEntPointPollutant,
     params,
     null,
   );
@@ -35,12 +36,7 @@ export async function GetEmissionsEntPointPollutant(params) {
 }
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
-  );
-
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 
@@ -48,7 +44,7 @@ export async function GetAttentionDegreeList(params) {
 
 export async function ExportExceptionReported(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionReported',
+    API.ExportApi.ExportExceptionReported,
     params,
     null,
   );
@@ -60,12 +56,6 @@ export async function ExportExceptionReported(params) {
 //根据行政区获取 污水处理厂
 
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
+  const result = post(API.RegionApi.GetEntByRegion, params);
   return result;
 }

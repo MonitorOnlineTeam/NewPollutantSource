@@ -82,7 +82,7 @@ class CompositeRangeReport extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           children: [
             {
               title: '数值',
@@ -145,7 +145,7 @@ class CompositeRangeReport extends Component {
           ]
         },
         {
-          title: 'PM10',
+          title: 'PM₁₀',
           children: [
             {
               title: '数值',
@@ -166,7 +166,7 @@ class CompositeRangeReport extends Component {
           ]
         },
         {
-          title: 'PM2.5',
+          title: 'PM₂.₅',
           children: [
             {
               title: '数值',

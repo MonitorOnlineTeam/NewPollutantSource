@@ -34,6 +34,47 @@ export default Model.extend({
     airDayRank: [],
     addUpAirDayRank: [],
     compareWaterTableData: [],
+
+    // 电力
+    // 功率数据
+    powerData: {
+      // 峰值功率
+      peakPower: {
+        peakPowerN: {
+          value: '0',
+          time: '-'
+        },
+        peakPowerY: {
+          value: '0',
+          time: '-'
+        }
+      },
+      // 功率图表数据
+      chartData: {
+        timeList: [],
+        nlist: [],
+        ylist: [],
+      },
+      // 用电量峰值
+      peakYDL: {
+        PeackUseElectricityN: {
+          value: '0',
+          time: '-'
+        },
+        PeackUseElectricityY: {
+          value: '0',
+          time: '-'
+        }
+      },
+    },
+    // 电能环比数据
+    electricChainData: {
+      Day: { trend: [] },
+      Month: { trend: [] },
+      Year: { trend: [] },
+    },
+    // 电能趋势
+    electricTrendData: {}
   },
 
   effects: {
@@ -290,7 +331,7 @@ export default Model.extend({
       const result = yield call(services.excellentDaysExportReport, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open('/upload' + result.Datas)
+        window.open(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -311,7 +352,7 @@ export default Model.extend({
       const result = yield call(services.exportAirDayRank, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open('/upload' + result.Datas)
+        window.open(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -332,7 +373,7 @@ export default Model.extend({
       const result = yield call(services.exportAddUpAirRank, payload);
       if (result.IsSuccess) {
         message.success("导出成功")
-        window.open('/upload' + result.Datas)
+        window.open(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -343,6 +384,43 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           compareWaterTableData: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取监测同比分析数据 - 功率相关
+    *GetPowerWork({ payload }, { call, put, update }) {
+      const result = yield call(services.GetPowerWork, payload);
+      if (result.IsSuccess) {
+        yield update({
+          powerData: {
+            peakPower: result.Datas.peakPower, // 峰值功率
+            chartData: result.Datas.PowerCurve, // 功率图表数据
+            peakYDL: result.Datas.PeackUseElectricity, // 用电量峰值
+          },
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取电能环比
+    *GetPowerCompare({ payload }, { call, put, update }) {
+      const result = yield call(services.GetPowerCompare, payload);
+      if (result.IsSuccess) {
+        yield update({
+          electricChainData: result.Datas.ESequential
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取电能趋势
+    *GetPowerTrend({ payload }, { call, put, update }) {
+      const result = yield call(services.GetPowerTrend, payload);
+      if (result.IsSuccess) {
+        yield update({
+          electricTrendData: result.Datas
         })
       } else {
         message.error(result.Message)

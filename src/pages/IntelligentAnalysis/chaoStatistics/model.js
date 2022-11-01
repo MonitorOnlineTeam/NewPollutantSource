@@ -35,7 +35,7 @@ export default Model.extend({
     *exportData({ payload }, { call, put, update, select }) {
       const response = yield call(services.exportData, { ...payload });
       if (response.IsSuccess) {
-        window.open("/upload" + response.Datas)
+        window.open(response.Datas)
       } else {
         message.error(response.Message)
       }

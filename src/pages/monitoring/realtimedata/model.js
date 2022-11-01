@@ -818,8 +818,8 @@ export default Model.extend({
             ];
             //如果原生数据和推送数据都不为空并且MN号一致则更新
 
-            if (realtimedata && paramsInfo) {
-
+            if (realtimedata.length && paramsInfo) {
+                console.log('state=',state);
                 if (realtimedata[0].DGIMN === state.historyparams.DGIMN) {
                     paramsInfo.map((item, index) => {
                         let firstOrDefault = realtimedata.find(n => n.PollutantCode == item.pollutantCode);
@@ -954,7 +954,7 @@ export default Model.extend({
             let realtimedata = action.payload.data;
             //原始数据
             let chartdata = state.chartdata;
-
+            console.log('updateRealTimeCharts-realtimedata=', realtimedata);
             //根据污染物查询出最新数据
             let newDataByPollutant = realtimedata.filter(n => n.PollutantCode == state.historyparams.pollutantCodes);
             //纵坐标显示单位

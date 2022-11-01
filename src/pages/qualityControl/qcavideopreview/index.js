@@ -16,7 +16,7 @@ class Index extends Component {
         };
     }
 
-    changeDgimn=VideoNo => {
+    changeDgimn = VideoNo => {
         this.setState({
             VideoNo,
         })
@@ -25,13 +25,13 @@ class Index extends Component {
     render() {
         return (
             <div id="ysyvideo">
-                 <NavigationTreeQCA   domId="#ysyvideo" choice={false} onItemClick={value => {
-                            if (value.length > 0 && !value[0].IsEnt&&value[0].QCAType=="2") {
-                            this.changeDgimn(value[0].VideoNo)
-                            }
-                        }} />
+                <NavigationTreeQCA domId="#ysyvideo" choice={false} onItemClick={value => {
+                    if (value.length > 0 && !value[0].IsEnt && value[0].QCAType == "2") {
+                        this.changeDgimn(value[0].VideoNo)
+                    }
+                }} />
                 <BreadcrumbWrapper>
-                {this.state.VideoNo&&<YsyShowVideo VideoNo={this.state.VideoNo} />}
+                    {this.state.VideoNo && <YsyShowVideo VideoNo={this.state.VideoNo} />}
                 </BreadcrumbWrapper>
 
             </div>

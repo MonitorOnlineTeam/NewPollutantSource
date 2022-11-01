@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:04:51
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-07-15 13:55:55
+ * @Last Modified time: 2022-09-23 14:31:33
  * @desc: 主页model
  */
 import moment from 'moment';
@@ -86,8 +86,10 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
-    homePage: "1",
+    homePage: null,
     GHGandEmissionContrastData: { allSumDis: 0, disSum: 0 },
+    // 视频列表
+    homeVideoList: []
   },
   effects: {
     *getHomePage({ payload }, { call, update, take }) {
@@ -197,7 +199,7 @@ export default Model.extend({
             let time = '';
             if (paramsData.length && paramsData[0]) {
               let times = paramsData[0].split('至');
-              time = moment(times[0]).format('YYYY-MM-DD HH') + '时 至 ' +  moment(times[1]).format('YYYY-MM-DD HH') + '时'
+              time = moment(times[0]).format('YYYY-MM-DD HH') + '时 至 ' + moment(times[1]).format('YYYY-MM-DD HH') + '时'
             }
             return {
               "desc": <div>
@@ -505,6 +507,15 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           GHGandEmissionContrastData: result.Datas
+        })
+      }
+    },
+    // 获取首页视频列表
+    *getHomePageVideo({ payload }, { call, update, select }) {
+      const result = yield call(services.getHomePageVideo, {});
+      if (result.IsSuccess) {
+        yield update({
+          homeVideoList: result.Datas
         })
       }
     },

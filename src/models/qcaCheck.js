@@ -1,6 +1,6 @@
 
 import * as services from '@/services/qcaCheckApi';
-import { getPollutantListByDgimn } from "@/services/commonApi"
+import { getQCAPollutantByDGIMN } from "@/services/commonApi"
 import Model from '@/utils/model';
 import { message } from 'antd';
 
@@ -9,6 +9,7 @@ export default Model.extend({
   namespace: 'qcaCheck',
   state: {
     // 公共
+    pollutantCode: [],
     keyParameterList: [], //关键参数
     qcaLogDataList: [], //质控日志
     valueList: [], // 测量东都
@@ -55,10 +56,14 @@ export default Model.extend({
       }
     },
     // 获取污染物类型
-    *getPollutantListByDgimn({ payload, }, { call, update, put, take, select }) {
-      const result = yield call(getPollutantListByDgimn, { ...payload, dataType: "qca" });
+    *getPollutantListByDgimn({ payload, callback }, { call, update, put, take, select }) {
+      const result = yield call(getQCAPollutantByDGIMN, { ...payload, dataType: "qca" });
       if (result.IsSuccess) {
-        yield update({ pollutantList: result.Datas })
+        const pollutantCode = result.Datas.map((item, index) => {
+          return item.PollutantCode
+        })
+        yield update({ pollutantList: result.Datas, pollutantCode: pollutantCode })
+        callback && callback(result.Datas)
       } else {
         message.error(result.Message)
       }
@@ -91,12 +96,23 @@ export default Model.extend({
         message.error(result.Message)
       }
     },
-    // 获取质控日志和质控过程
-    *getqcaLogAndProcess({ payload, }, { call, update, put, take, select }) {
-      const result = yield call(services.getqcaLogAndProcess, payload);
+    // 获取质控日志
+    *getQCLog({ payload, }, { call, update, put, take, select }) {
+      const result = yield call(services.getQCLog, payload);
       if (result.IsSuccess) {
         yield update({
           qcaLogDataList: result.Datas.recordList,
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取质控过程
+    *getQCProcessData({ payload, }, { call, update, put, take, select }) {
+      const result = yield call(services.getQCProcessData, payload);
+      if (result.IsSuccess) {
+        yield update({
+          // qcaLogDataList: result.Datas.recordList,
           valueList: result.Datas.concent,
           standValList: result.Datas.ratio,
           timeList: result.Datas.timeList,
@@ -154,7 +170,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           errorValueCheckTableData: result.Datas.rtnData,
-          errorValueCheckChartAllData:result.Datas.codeList,
+          errorValueCheckChartAllData: result.Datas.codeList,
           errorValueChartData: result.Datas.codeList[0] ? result.Datas.codeList[0] : {
             PollutantCode: "",
             dataList: [],

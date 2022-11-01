@@ -614,7 +614,7 @@ class Identify extends PureComponent {
                 getDutyOneLoading ? <Spin></Spin> :
                   <Form
                     {...layout}
-                    hideRequiredMark
+                    // hideRequiredMark
                     ref={this.formRef}
                     onFinish={this.onSubmit}
                     initialValues={{
@@ -654,8 +654,9 @@ class Identify extends PureComponent {
                     <Form.Item
                       name="ScreenPerson"
                       label="甄别人"
+                      rules={[{ required: true, message: '请填写甄别人' }]}
                     >
-                      <Input style={{ width: 200 }} placeholder="请填写事件名称" />
+                      <Input style={{ width: 200 }} placeholder="请填写甄别人" />
                     </Form.Item>
                     <Divider dashed style={dividerStyle} />
                     <Form.Item

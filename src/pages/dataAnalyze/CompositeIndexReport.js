@@ -121,7 +121,7 @@ class CompositeIndexReport extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           width: 220,
           children: [
             {
@@ -211,7 +211,7 @@ class CompositeIndexReport extends Component {
           ]
         },
         {
-          title: 'PM10',
+          title: 'PM₁₀',
           width: 220,
           children: [
             {
@@ -320,7 +320,7 @@ class CompositeIndexReport extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           children: [
             {
               title: '数值',
@@ -383,7 +383,7 @@ class CompositeIndexReport extends Component {
           ]
         },
         {
-          title: 'PM10',
+          title: 'PM₁₀',
           children: [
             {
               title: '数值',
@@ -404,7 +404,7 @@ class CompositeIndexReport extends Component {
           ]
         },
         {
-          title: 'PM2.5',
+          title: 'PM₂.₅',
           children: [
             {
               title: '数值',

@@ -6,6 +6,7 @@
  * @desc: 主页接口api
  */
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取所有企业及排口信息
 export async function getHomePage(params) {
@@ -17,7 +18,7 @@ export async function getHomePage(params) {
 
 // 获取所有企业及排口信息
 export async function getAllEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post(API.commonApi.GetEntAndPoint, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -25,7 +26,7 @@ export async function getAllEntAndPoint(params) {
 
 // 获取排污许可情况数据
 export async function GetAllMonthEmissionsByPollutant(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetAllMonthPDPermitByPollutant', params, null);
+  const result = post(API.HomeApi.GetAllMonthPDPermitByPollutant, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -33,7 +34,7 @@ export async function GetAllMonthEmissionsByPollutant(params) {
 
 // 获取智能质控数据 - 运行分析 获取企业or监测点信息
 export async function getRateStatisticsByEnt(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetRateStatisticsByEntOrPoint', params, null);
+  const result = post(API.HomeApi.GetRateStatisticsByEntOrPoint, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -41,7 +42,7 @@ export async function getRateStatisticsByEnt(params) {
 
 // 智能监控
 export async function getStatisticsPointStatus(params) {
-  const result = post('/api/rest/PollutantSourceApi/PWorkbench/GetStatisticsPointStatus?authorCode=48f3889c-af8d-401f-ada2-c383031af92d', params, null);
+  const result = post(`${API.HomeApi.GetStatisticsPointStatus}?authorCode=48f3889c-af8d-401f-ada2-c383031af92d&entCode=null`, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -49,7 +50,7 @@ export async function getStatisticsPointStatus(params) {
 
 // 报警信息
 export async function getWarningInfo(params) {
-  const result = post("/api/rest/PollutantSourceApi/HomePageApi/GetOverAndWarningData", params, null);
+  const result = post(API.HomeApi.GetOverAndWarningData, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -57,7 +58,7 @@ export async function getWarningInfo(params) {
 
 // 运维 - 任务数量统计
 export async function getTaskCount(params) {
-  const result = post("/api/rest/PollutantSourceApi/HomePageApi/GetTaskStatistics", params, null);
+  const result = post(API.HomeApi.GetTaskStatistics, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -65,7 +66,7 @@ export async function getTaskCount(params) {
 
 //运维 - 智能预警
 export async function getExceptionProcessing(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetIntelligentEarlyWarning', params, null);
+  const result = post(API.HomeApi.GetIntelligentEarlyWarning, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -73,9 +74,9 @@ export async function getExceptionProcessing(params) {
 
 // 运维 - 异常报警及响应情况
 export async function getAlarmAnalysis(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetAlarmAnalysisInfo', params, null);
+  const result = post(API.HomeApi.GetAlarmAnalysisInfo, params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
@@ -83,7 +84,7 @@ export async function getAlarmAnalysis(params) {
 export async function getMounthOverData(params) {
   const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetMounthOverData', params, null);
   return result === null ? {
-      data: null
+    data: null
   } : result;
 }
 
@@ -107,7 +108,7 @@ export async function getPointTax(params) {
 
 // 当月超标报警统计
 export async function overStandardAlarmStatistics(params) {
-  const result = post('/api/rest/PollutantSourceApi/EntRecord/OverStandardAlarmStatistics?' + `entCode=${params.entCode}&dataType=${params.dataType}`, {}, null);
+  const result = post(`${API.HomeApi.OverStandardAlarmStatistics}?entCode=${params.entCode}&dataType=${params.dataType}`, {}, null);
   return result;
 }
 
@@ -119,6 +120,6 @@ export async function getEntDetails(params) {
 
 // 排口数量
 export async function getStatisticsPoint(params) {
-  const result = post('/api/rest/PollutantSourceApi/EntRecord/GetStatisticsPointStatus?' + `entCode=${params.entCode}`, {}, null);
+  const result = post(`${API.HomeApi.GetStatisticsPointStatus}?entCode=${params.entCode}`, {}, null);
   return result;
 }

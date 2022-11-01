@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /** 获取运维周期 */
 export async function GetMaintenanceReminder(params) {

@@ -37,7 +37,6 @@ import SdlForm from '@/pages/AutoFormManager/SdlForm';
 import AutoFormViewItems from '@/pages/AutoFormManager/AutoFormViewItems';
 import config from '@/config';
 import SelectPollutantType from '@/components/SelectPollutantType'
-import AnalyzerManage from './AnalyzerManage';
 import MonitoringStandard from '@/components/MonitoringStandard';
 import InstrumentInfo from './InstrumentInfo'
 const { TabPane } = Tabs;
@@ -203,13 +202,13 @@ export default class MonitorPoint extends Component {
         selectedPointCode: PointCode,
         tabKey: "1"
       });
-      dispatch({
-        type: 'autoForm/getFormData',
-        payload: {
-          configId: pointConfigIdEdit,
-          'dbo.T_Bas_CommonPoint.PointCode': PointCode,
-        },
-      });
+      // dispatch({
+      //   type: 'autoForm/getFormData',
+      //   payload: {
+      //     configId: pointConfigIdEdit,
+      //     'dbo.T_Bas_CommonPoint.PointCode': PointCode,
+      //   },
+      // });
     } else {
       this.setState({
         visible: true,
@@ -411,6 +410,7 @@ export default class MonitorPoint extends Component {
     const searchConditions = searchConfigItems[pointConfigId] || [];
     const columns = tableInfo[pointConfigId] ? tableInfo[pointConfigId].columns : [];
     console.log('this.state.isView=', this.state.isView)
+    console.log('pointConfigIdEdit=', pointConfigIdEdit)
     if (this.props.loading || this.props.otherloading) {
       return (
         <Spin
@@ -525,15 +525,6 @@ export default class MonitorPoint extends Component {
                           row['dbo.T_Bas_CommonPoint.DGIMN']);
                       }}><DelIcon />    </a>
                     </Tooltip>
-                    {
-                      row['dbo.T_Bas_CommonPoint.PollutantType'] === '2' ? <><Divider type="vertical" />
-                        <Tooltip title="设置CEMS参数">
-                          <a onClick={() => {
-                            this.showMaintenancereminder(row['dbo.T_Bas_CommonPoint.PointCode']);
-                          }}><ToolOutlined /></a>
-                        </Tooltip></> : ''
-                    }
-
                   </Fragment>
                 )}
               />
@@ -591,16 +582,6 @@ export default class MonitorPoint extends Component {
               )
             }
 
-          </Modal>
-          <Modal
-            title="设置CEMS参数"
-            visible={this.state.Mvisible}
-            onCancel={this.handleMCancel}
-            width="90%"
-            destroyOnClose
-            footer={false}
-          >
-            <AnalyzerManage DGIMN={this.state.DGIMN} onClose={() => { this.setState({ Mvisible: false }) }} />
           </Modal>
         </div>
         {/* </MonitorContent> */}

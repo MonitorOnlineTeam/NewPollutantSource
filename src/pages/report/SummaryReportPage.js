@@ -252,19 +252,19 @@ class SummaryReportPage extends PureComponent {
     switch (currQuarter) {
       case 1:
         BeginTime = moment(yearValue).format('YYYY-01-01 00:00:00')
-        EndTime = moment(yearValue).format('YYYY-03-31 23:59:59')
+        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
         break;
       case 2:
         BeginTime = moment(yearValue).format('YYYY-04-01 00:00:00')
-        EndTime = moment(yearValue).format('YYYY-06-31 23:59:59')
+        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
         break;
       case 3:
         BeginTime = moment(yearValue).format('YYYY-07-01 00:00:00')
-        EndTime = moment(yearValue).format('YYYY-09-31 23:59:59')
+        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
         break;
       case 4:
         BeginTime = moment(yearValue).format('YYYY-10-01 00:00:00')
-        EndTime = moment(yearValue).format('YYYY-12-31 59:59:59')
+        EndTime = moment(yearValue).endOf('months').format('YYYY-MM-DD HH:mm:ss')
         break;
     }
     return [BeginTime, EndTime];

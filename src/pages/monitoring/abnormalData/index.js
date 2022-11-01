@@ -51,7 +51,7 @@ class index extends PureComponent {
   constructor(props) {
     super(props);
     this.sysPollutantCodes = sessionStorage.getItem('sysPollutantCodes');
-    this.pollutantCodes = this.sysPollutantCodes ? this.sysPollutantCodes.split(',') : [1, 2, 5];
+    this.pollutantCodes = this.sysPollutantCodes ? this.sysPollutantCodes.split(',') : ['1', '2', '5'];
     this.newTabIndex = 0;
     this.state = {
       showTime: true,
@@ -266,6 +266,7 @@ class index extends PureComponent {
     const { formLayout, columns } = this._SELF_;
     const { format, showTime, checkedValues } = this.state;
     let _regionList = regionList.length ? regionList[0].children : [];
+    console.log('this.pollutantCodes=', this.pollutantCodes);
     return (
       <BreadcrumbWrapper>
         <Card>
@@ -342,21 +343,23 @@ class index extends PureComponent {
                       initialValue: this.state.entType
                     })(
                       <Select
-                      style={{ width: '100%' }}
+                        style={{ width: '100%' }}
                         //defaultValue={'1'}
                         placeholder="企业类型"
                         maxTagCount={2}
                         maxTagTextLength={5}
                         maxTagPlaceholder="..."
                         onChange={(value, options) => {
-                          this.props.dispatch({
-                            type: 'abnormalData/getPollutantByType',
-                            payload: {
-                              type: value
-                            }
-                          })
+                          // this.props.dispatch({
+                          //   type: 'abnormalData/getPollutantByType',
+                          //   payload: {
+                          //     type: value
+                          //   }
+                          // })
                           this.setState({
                             entType: value,
+                          }, () => {
+                            this.getPollutantByType();
                           })
 
                         }}>
@@ -364,11 +367,11 @@ class index extends PureComponent {
                           this.pollutantCodes.map(item => {
                             switch (item) {
                               case '1':
-                                return <Option value="1">废水</Option>;
+                                return <Option value={'1'}>废水</Option>;
                               case '2':
-                                return <Option value="2">废气</Option>;
+                                return <Option value={'2'}>废气</Option>;
                               case '5':
-                                return <Option value="5">空气站</Option>;
+                                return <Option value={'5'}>空气站</Option>;
                             }
                           })
                         }

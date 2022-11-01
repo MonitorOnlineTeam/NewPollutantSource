@@ -5,6 +5,7 @@
  */
 
 import {post} from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 【报警及时响应】获取报警及时响应所有月统计数据

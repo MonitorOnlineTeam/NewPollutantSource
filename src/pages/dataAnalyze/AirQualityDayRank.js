@@ -29,7 +29,7 @@ class AirQualityDayRank extends PureComponent {
           width: 60,
         },
         {
-          title: '乡镇',
+          title: '监测点',
           dataIndex: 'DGIMN',
           key: 'DGIMN',
           width: 260,

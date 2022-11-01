@@ -15,7 +15,11 @@ export default Model.extend({
   effects: {
     // 数据提取
     *sendDataExtract({ payload, callback }, { call, update, put, take, select }) {
-      const result = yield call(services.sendDataExtract, payload);
+      let serviceName = 'sendDataExtract';
+      if (payload.Type === 'mins' || payload.Type === 'hour' || payload.Type === 'day') {
+        serviceName = 'SendSupplementMsg';
+      }
+      const result = yield call(services[serviceName], payload);
       if (result.IsSuccess) {
         message.success("操作成功, 请查看提取日志")
         callback && callback()
@@ -30,6 +34,7 @@ export default Model.extend({
     updateQCLogStart(state, { payload }) {
       let QCLogsStart = state.QCLogsStart;
       console.log("start=", payload)
+      console.log("state=", state)
       if (payload.DGIMN === state.currentDGIMN) {
         QCLogsStart = payload
       }

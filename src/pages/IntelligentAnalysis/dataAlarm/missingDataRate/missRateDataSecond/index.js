@@ -216,7 +216,8 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'MissingRateData/exportDefectPointDetail',
       payload: { ...queryPar },
       callback: data => {
-         downloadFile(`/upload${data}`);
+        //  downloadFile(`/upload${data}`);
+         window.open(data)
         },
     });
   };

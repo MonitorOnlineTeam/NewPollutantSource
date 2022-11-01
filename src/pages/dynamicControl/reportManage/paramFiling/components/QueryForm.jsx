@@ -8,7 +8,6 @@ import { Card,Table,Empty,Form,Row,Col,Button,Spin} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading'
-import PollutantDownSelect from '@/components/PollutantDownSelect'
 import DropDownSelect from '@/components/DropDownSelect'
 
 

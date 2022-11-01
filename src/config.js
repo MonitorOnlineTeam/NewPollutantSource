@@ -21,11 +21,8 @@ const XinJiang = true;
 
 // const apiHost = 'http://localhost:52198/';
 // const apiHost = 'http://172.16.12.183:50059/';
-// const apiHost = 'http://172.16.12.39:5001/';
-const apiHost = 'http://172.16.12.165:7070/';
-// const apiHost = 'http://172.16.12.165:5001/'
-// const apiHost = 'http://223.84.203.227:50060/'
-
+// const apiHost = 'http://172.16.12.234:61002/';
+const apiHost = 'http://172.16.12.165:5001/';
 // 文件上传地址
 const uploadHost = apiHost;
 // 【变量已弃用，采用后台接口配置文件返回】wensocket推送地址（第一个为内网，第二个为外网）
@@ -33,11 +30,14 @@ const webSocketPush = '172.16.12.55:50083,111.53.101.207:1501';
 // GBS国标视频接口地址
 const GBSVideoApiUrl = 'http://121.40.50.44:10000/';
 module.exports = {
+  client_id: 'WryWebClient',
+  client_secret: 'Web_P@ssw0rd_!@#$%',
   // name: '污染源智能分析平台',
   // logindesc: 'SDL 您身边的环境污染分析专家',
   prefix: 'monitorEnterprise',
   // footerText: '污染源智能分析平台   2018 sdl',
-  amapKey: 'c5cb4ec7ca3ba4618348693dd449002d',
+  amapKey: '5e60171b820065e7e9a1d6ea45abaee9',
+  securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
   apiHost,
   uploadHost,
   XinJiang,
@@ -63,7 +63,7 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   onlyOneEnt: false,
   CORS: [],
-  cookieName: 'ssToken5003',
+  cookieName: 'ssToken'+window.location.port,
   openPages: ['/login'],
   enterpriceid: '51216eae-8f11-4578-ad63-5127f78f6cca',
   isMultiEnterprise: false,
@@ -88,6 +88,8 @@ module.exports = {
   templateUploadUrl: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFiles',
   // 手工自动数据上传地址
   templateUploadUrlAuto: '/api/rest/PollutantSourceApi/ManualSupplementApi/UploadFilesAuto',
+  // 文件上传地址
+  fileUploadUrl: '/api/rest/PollutantSourceApi/DataQualityApi/UploadFiles',
   // 设备运转率标准%
   RunningRate: 90,
   // 传输有效率标准%

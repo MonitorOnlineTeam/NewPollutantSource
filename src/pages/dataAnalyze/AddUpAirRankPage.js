@@ -29,7 +29,7 @@ class AddUpAirRankPage extends PureComponent {
           width: 60,
         },
         {
-          title: '乡镇',
+          title: '监测点',
           dataIndex: 'DGIMNA',
           key: 'DGIMNA',
           width: 260,
@@ -38,12 +38,6 @@ class AddUpAirRankPage extends PureComponent {
           title: '综合空气质量指数',
           dataIndex: 'ValueA',
           key: 'ValueA',
-        },
-        {
-          title: '乡镇',
-          dataIndex: 'DGIMNB',
-          key: 'DGIMNB',
-          width: 260,
         },
         {
           title: '同比变化率（%）',

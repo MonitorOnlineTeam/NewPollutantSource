@@ -1,8 +1,9 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取表格数据
 export async function getTableData(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionReportedList', params);
+  const result = await post(API.MonitorDataApi.GetExceptionReportedList, params);
   return result;
 }
 

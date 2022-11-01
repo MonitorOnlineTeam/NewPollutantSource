@@ -1,8 +1,9 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取企业列表
 export async function getEntByRegionAndAtt(params) {
-  const result = post('/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegionAndAtt', params, null)
+  const result = post(API.RegionApi.GetEntByRegionAndAtt, params, null)
   return result
 }
 

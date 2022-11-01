@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-11-05 17:18:49
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-05-30 16:24:01
+ * @Last Modified time: 2022-10-31 17:14:37
  * @desc: 上传组件
  */
 
@@ -16,6 +16,8 @@ import config from '@/config';
 import { connect } from 'dva';
 import styles from './index.less'
 import { MapInteractionCSS } from 'react-map-interaction';
+import { API } from '@config/API'
+import Cookie from 'js-cookie';
 
 @connect(({ loading, autoForm }) => ({
   // fileList: autoForm.fileList,
@@ -70,19 +72,20 @@ class SdlUpload extends Component {
     const { configId, fileList, dispatch, accept, uploadNumber } = this.props;
     const { cuid } = this._SELF_;
     console.log('fileList=', fileList)
-    let imageProps = {};
+    console.log('props=', this.props)
+    let acceptProps = {};
     if (accept) {
-      imageProps.accept = accept;
+      acceptProps.accept = accept;
     }
     const props = {
-      action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
-      //action: `/rest/PollutantSourceApi/UploadApi/PostFiles`,
-      beforeUpload:(file) =>{
-        if(accept==='image/*'){
+      // action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
+      action: API.commonApi.UploadFiles,
+      beforeUpload: (file) => {
+        if (accept === 'image/*') {
           const isImage = file.type.indexOf("image") !== -1;
           if (!isImage) {
             message.error('上传文件失败，请选择照片！');
-            return isImage; 
+            return isImage;
           }
         }
       },
@@ -93,8 +96,8 @@ class SdlUpload extends Component {
           // setFieldsValue({ cuid: cuid })
           console.log(fileList)
           this.props.uploadSuccess && this.props.uploadSuccess(cuid);
-          fileList[fileList.length - 1].url = "/upload/" + fileList[fileList.length - 1].response.Datas
-          fileList[fileList.length - 1].thumbUrl = "/upload/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].url = "/" + fileList[fileList.length - 1].response.Datas
+          fileList[fileList.length - 1].thumbUrl = "/" + fileList[fileList.length - 1].response.Datas
         } else if (info.file.status === 'error') {
           let msg = fileList[fileList.length - 1].response.Message;
           console.log("msg=", msg)
@@ -109,19 +112,28 @@ class SdlUpload extends Component {
       },
       onRemove(file) {
         if (!file.error) {
+          console.log('file=', file);
+          let fileName = file.name;
+          if (file.response && file.response.Datas) {
+            let filePath = file.response.Datas.split('/');
+            fileName = filePath[filePath.length - 1];
+          }
           dispatch({
             type: "autoForm/deleteAttach",
             payload: {
-              FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
-              Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
+              // FileName: file.response && file.response.Datas ? "/" + file.response.Datas : file.name,
+              Guid: fileName,
             }
           })
         }
       },
       // onPreview: this.handlePreview,
-      ...imageProps,
+      ...acceptProps,
       multiple: true,
       listType: "picture-card",
+      headers: {
+        Authorization: "Bearer " + Cookie.get(config.cookieName)
+      },
       data: {
         FileUuid: cuid,
         FileActualType: '0',

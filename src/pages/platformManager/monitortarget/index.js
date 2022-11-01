@@ -37,7 +37,7 @@ import { connect } from 'dva';
 import AutoFormTable from '@/pages/AutoFormManager/AutoFormTable';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import SearchWrapper from '@/pages/AutoFormManager/SearchWrapper';
-import { sdlMessage } from '@/utils/utils';
+import webConfig from '@public/webConfig';
 
 const { confirm } = Modal;
 
@@ -211,7 +211,7 @@ export default class MonitorTarget extends Component {
     };
 
     render() {
-        const { searchConfigItems, searchForm, tableInfo, match: { params: { configId } }, dispatch } = this.props;
+        const { searchConfigItems, searchForm, tableInfo, match: { params: { configId, targetType } }, dispatch } = this.props;
         //   console.log("this.props=", this.props);
         const searchConditions = searchConfigItems[configId] || []
         const columns = tableInfo[configId] ? tableInfo[configId].columns : [];
@@ -279,25 +279,36 @@ export default class MonitorTarget extends Component {
                                 }}><PointIcon />    </a>
                             </Tooltip>
 
-                            {configId == "Station" ? "" : <><Divider type="vertical" />
+                            {configId == "Station" && webConfig.entShowBtns.includes("licence") ? "" : <><Divider type="vertical" />
                                 <Tooltip title="排污许可证">
                                     <a onClick={() => {
                                         this.adddischargepermit('', row);
                                     }}><CalendarTwoTone style={{ fontSize: 16 }} /> </a>
                                 </Tooltip></>}
 
-                            <Divider type="vertical" />
-                            <Tooltip title="生成监测点二维码">
-                                <a onClick={() => {
-                                    this.CreatQRCode(row);
-                                }}><QrcodeOutlined /></a>
-                            </Tooltip>
-                            <Divider type="vertical" />
-                            <Tooltip title="机组信息">
-                                <a onClick={() => {
-                                    router.push('/platformconfig/monitortarget/AEnterpriseTest/1/unitInfoPage/' + row['dbo.T_Bas_Enterprise.EntCode'] + '/' + row['dbo.T_Bas_Enterprise.EntName'])
-                                }}><DatabaseOutlined /></a>
-                            </Tooltip>
+                            {
+                                // 只有企业显示机组
+                                targetType == 1 && webConfig.entShowBtns.includes("QR") &&
+                                <>
+                                    <Divider type="vertical" />
+                                    <Tooltip title="生成监测点二维码">
+                                        <a onClick={() => {
+                                            this.CreatQRCode(row);
+                                        }}><QrcodeOutlined /></a>
+                                    </Tooltip>
+                                </>
+                            }
+                            {
+                                // 只有企业显示机组
+                                targetType == 1 && webConfig.entShowBtns.includes("unit") && <>
+                                    <Divider type="vertical" />
+                                    <Tooltip title="机组信息">
+                                        <a onClick={() => {
+                                            router.push('/platformconfig/monitortarget/AEnterpriseTest/1/unitInfoPage/' + row['dbo.T_Bas_Enterprise.EntCode'] + '/' + row['dbo.T_Bas_Enterprise.EntName'])
+                                        }}><DatabaseOutlined /></a>
+                                    </Tooltip>
+                                </>
+                            }
                         </Fragment>}
                         parentcode="platformconfig/monitortarget"
                         {...this.props}

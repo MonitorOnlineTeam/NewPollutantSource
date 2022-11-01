@@ -94,7 +94,7 @@ class M3U8Video extends PureComponent {
       <Row style={{ height: 'calc(100% - 40px)' }}>
         {/* <Col flex="auto" style={{ padding: 20, height: 'calc(100vh - 146px)' }}> */}
         <Col flex="auto" style={{ padding: 20, }}>
-          <VideoPlayer src={'http://223.84.203.227:8088/live_hls/.m3u8'} />
+          <VideoPlayer src={'http://223.84.203.227:8088/record/cam/47568770720087/01/20220803/out.m3u8'} />
         </Col>
         <Col flex="440px" style={{ padding: 20 }}>
           <Row style={{ width: '100%' }}>

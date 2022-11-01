@@ -1,8 +1,9 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取企业及排口
 export async function getEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', {
+  const result = await post(API.commonApi.GetEntAndPoint, {
     ...params,
     PollutantTypes: sessionStorage.getItem('sysPollutantCodes') || params.PollutantTypes
   }, null);
@@ -23,13 +24,15 @@ export async function GetQCAReport(params) {
 
 // 添加质控仪
 export async function addQualityControl(params) {
-  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/AddQCAnalyzerInfoAndPoint', params, null);
+  const result = await post(API.QualityControlApi.AddQCAnalyzerAndPoint, params, null);
   return result;
 }
 
 // 获取质控仪数据
 export async function getQualityControlData(params) {
-  const result = await get(`/api/rest/PollutantSourceApi/QualityControlApi/GetQCAnalyzerInfoAndPoint/${params.ID}`, null, null);
+  const result = await get(`${API.QualityControlApi.GetQCAnalyzerAndPoint}`, {
+    ID: params.ID
+  }, null);
   return result;
 }
 
@@ -124,7 +127,7 @@ export async function GetQCAAlarmMsgList(params) {
 
 // 质控报警类型列表
 export async function getAlarmType(params) {
-  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/getAlarmType', params, null);
+  const result = await post(API.QualityControlApi.GetAlarmType, params, null);
   return result;
 }
 
@@ -197,19 +200,19 @@ export async function getQCAMNByDGIMN(params) {
 
 // 获取标气下拉框
 export async function getQCAComponent(params) {
-  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAComponent', params, null);
+  const result = await post(API.QualityControlApi.GetQCGasBottle, params, null);
   return result;
 }
 
 // 获取标气瓶子对应关系设置列表
 export async function getQCAComponentInfoList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/GetQCAComponentInfoList', params, null);
+  const result = await post(API.QualityControlApi.GetQCGasBottleList, params, null);
   return result;
 }
 
 // 编辑标气瓶子对应标气
 export async function editQCAComponentInfo(params) {
-  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/EditQCAComponentInfo', params, null);
+  const result = await post(API.QualityControlApi.EditQCGasBottle, params, null);
   return result;
 }
 
@@ -221,6 +224,30 @@ export async function getQCAQRCode(params) {
 
 // 更改质控标准要求
 export async function UpdQCAStandardRequest(params) {
-  const result = await post('/api/rest/PollutantSourceApi/QualityControlApi/UpdQCATechnology', params, null);
+  const result = await post(API.QualityControlApi.UpdQCStandard, params, null);
+  return result;
+}
+
+// 添加标气方案及详细数据
+export async function AddOrUpdGasProInfo(params) {
+  const result = await post(API.QualityControlApi.AddOrUpdGasProInfo, params, null);
+  return result;
+}
+
+// 获取标气方案列表
+export async function GetGasProList(params) {
+  const result = await get(API.QualityControlApi.GetGasProList, params, null);
+  return result;
+}
+
+// 获取标气方案详情
+export async function GetGasProInfo(params) {
+  const result = await get(API.QualityControlApi.GetGasProInfo, params, null);
+  return result;
+}
+
+// 删除标气方案
+export async function DeleteGasProOne(params) {
+  const result = await post(API.QualityControlApi.DeleteGasProOne + "?ID=" + params.ID, {});
   return result;
 }

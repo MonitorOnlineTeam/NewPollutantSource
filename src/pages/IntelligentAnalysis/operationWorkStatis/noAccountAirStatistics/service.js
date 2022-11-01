@@ -1,8 +1,9 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 // 根据企业类型查询监测因子
 export async function GetPollutantByType(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params,null);
+  const result = post(API.commonApi.GetPollutantCodeList, params, null);
   return result;
 }
 
@@ -25,7 +26,7 @@ export async function GetDefectModel(params) {
  */
 export async function GetDefectPointDetail(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmVerifyRateDetail',
+    API.AlarmApi.GetAlarmVerifyRateDetail,
     params,
     null,
   );
@@ -34,12 +35,7 @@ export async function GetDefectPointDetail(params) {
 }
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
-  );
-
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 
@@ -60,12 +56,6 @@ export async function ExportDefectDataSummary(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
+  const result = post(API.RegionApi.GetEntByRegion, params);
   return result;
 }

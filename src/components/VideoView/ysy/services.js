@@ -1,4 +1,5 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /** 萤石云视频列表 */
 export async function getysyList(params) {
@@ -8,8 +9,8 @@ export async function getysyList(params) {
   const result = post('/api/rest/PollutantSourceApi/Video/GetCameraMonitorUrl', body, null);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 /**
@@ -20,14 +21,14 @@ export async function getysyList(params) {
  */
 export async function querypollutantlist(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn',
+    API.commonApi.GetPollutantListByDgimn,
     params,
     null,
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result.Datas;
 }
 /**
@@ -40,8 +41,8 @@ export async function queryhistorydatalistbyrealtime(params) {
   const result = await post('/api/rest/PollutantSourceApi/PRealTime/GetRealTimeData', params, null);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 /**
@@ -52,14 +53,14 @@ export async function queryhistorydatalistbyrealtime(params) {
  */
 export async function queryhistorydatalist(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/MonDataApi/GetAllTypeDataList',
+    API.MonitorDataApi.GetAllTypeDataList,
     params,
     null,
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 /** 添加摄像头与排口关系表 */
@@ -68,11 +69,11 @@ export async function AddCameraMonitor(params) {
     PointCode: params.PointCode,
     VedioCameraID: params.VedioCameraID,
   };
-  const result = post('/api/rest/PollutantSourceApi/VideoApi/AddCameraMonitor', body, null);
+  const result = post(API.VideoApi.AddCameraMonitor, body, null);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 /** 判断序列号是否有效 */
@@ -80,11 +81,11 @@ export async function IsTrueSerialNumber(params) {
   const body = {
     SerialNumber: params.SerialNumber,
   };
-  const result = await post('/api/rest/PollutantSourceApi/VideoApi/IsTrueSerialNumber', body, null);
+  const result = await post(API.VideoApi.IsTrueSerialNumber, body, null);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 /** 判断序列号是否有效 */
@@ -92,7 +93,7 @@ export async function DeleteCamera(params) {
   const body = {
     CameraMonitorID: params.CameraMonitorID,
   };
-  const result = await post('/api/rest/PollutantSourceApi/VideoApi/DeleteCamera', body, null);
+  const result = await post(API.VideoApi.DeleteCamera, body, null);
   return result === null ?
     {
       data: null,

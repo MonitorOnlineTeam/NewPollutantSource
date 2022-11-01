@@ -14,7 +14,7 @@ const QCStatusColor = {
   5: "#FFC1C1"
 }
 
-@connect(({ loading, qualityControl, qualityControlModel }) => ({
+@connect(({ loading, qualityControl }) => ({
   p2Pressure: qualityControl.p2Pressure,
   p1Pressure: qualityControl.p1Pressure,
   playbackPageDate: qualityControl.playbackPageDate,

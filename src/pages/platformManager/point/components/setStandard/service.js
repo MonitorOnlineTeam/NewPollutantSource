@@ -1,5 +1,6 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 标准库列表
 export async function getlist(params) {
@@ -292,11 +293,7 @@ export async function getpollutantbydgimn(params) {
   const body = {
     DGIMN: params.DGIMN,
   };
-  const result = get(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetStandardPollutantsByDgimn',
-    body,
-    null,
-  );
+  const result = get(API.commonApi.GetStandardPollutantsByDgimn, body);
   return result === null
     ? {
         data: null,
@@ -343,11 +340,7 @@ export async function isusepollutant(params) {
     PollutantCode: params.PollutantCode,
     Enalbe: params.Enalbe,
   };
-  const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/UsePollutant',
-    body,
-    null,
-  );
+  const result = post(API.BaseDataApi.UsePollutant, body);
   return result === null
     ? {
         data: null,
@@ -360,11 +353,7 @@ export async function getMonitorPointPollutantDetails(params) {
     DGIMN: params.DGIMN,
     pollutantCode: params.PollutantCode,
   };
-  const result = get(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetMonitorPointPollutantDetails',
-    body,
-    null,
-  );
+  const result = get(API.BaseDataApi.GetMonitorPointPollutantDetails, body);
   return result === null
     ? {
         data: null,
@@ -388,7 +377,7 @@ export async function editmonitorpointPollutant(params) {
     AbnormalLowerLimit: params.AbnormalLowerLimit,
   };
   const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/EditMonitorPointPollutant',
+    API.BaseDataApi.EditMonitorPointPollutant,
     body,
     null,
   );

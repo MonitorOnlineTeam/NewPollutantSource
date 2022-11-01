@@ -42,6 +42,7 @@ const LoginModel = {
     },
     *IfSpecial({ payload }, { call, put, select }) {
       const response = yield call(IfSpecial);
+      console.log('response=', response)
       yield put({
         type: 'setAppFlagInfo',
         payload: response.Datas,

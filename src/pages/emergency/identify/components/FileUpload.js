@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import config from '@/config'
 import { InboxOutlined } from "@ant-design/icons"
 import { connect } from 'dva';
+import { API } from '@config/API'
 
 const { Dragger } = Upload;
 
@@ -36,7 +37,7 @@ class FileUpload extends PureComponent {
               uid: index,
               name: item,
               status: 'done',
-              url: `/upload/${item}`,
+              url: `/${item}`,
             }
           })
         }
@@ -61,7 +62,7 @@ class FileUpload extends PureComponent {
         showRemoveIcon: true,
       },
       defaultFileList: fileList,
-      action: '/api/rest/PollutantSourceApi/UploadApi/PostFiles',
+      action: API.commonApi.UploadFiles,
       headers: {
         Authorization: "Bearer " + Cookie.get(config.cookieName)
       },
@@ -85,12 +86,20 @@ class FileUpload extends PureComponent {
       },
       onRemove(file) {
         if (!file.error) {
+          console.log('file=', file);
+
+          let fileName = file.name;
+          if (file.response && file.response.Datas) {
+            let filePath = file.response.Datas.split('/');
+            fileName = filePath[filePath.length - 1];
+          }
+
           dispatch({
             type: "autoForm/deleteAttach",
             payload: {
-              FileName: file.response && file.response.Datas ? file.response.Datas : file.name,
-              Guid: file.response && file.response.Datas ? file.response.Datas : file.name,
-              FileUuid: AlarmInfoCode
+              // FileName: fileName,
+              Guid: fileName,
+              // FileUuid: AlarmInfoCode
             }
           })
         }

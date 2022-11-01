@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-07 16:03:14
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-12 16:57:50
+ * @Last Modified time: 2022-10-27 15:26:07
  * @desc: 搜索容器组件
  * @props {string} formChangeActionType formAction
  * @props {store object} searchFormState formState对象
@@ -117,6 +117,15 @@ class SearchWrapper extends Component {
         isShowExpand: nextProps.searchConfigItems[nextProps.configId].length > 2,
         expand: nextProps.searchConfigItems[nextProps.configId].length > 2,
       })
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // 重新获取数据
+    if (this.props.reloadFlag !== prevProps.reloadFlag) {
+      console.log("this.props.reloadFlag=", this.props.reloadFlag)
+      console.log("prevProps.reloadFlag=", prevProps.reloadFlag)
+      this.onSubmitForm();
     }
   }
 

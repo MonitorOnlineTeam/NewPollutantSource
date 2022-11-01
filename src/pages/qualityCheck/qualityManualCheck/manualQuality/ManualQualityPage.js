@@ -49,8 +49,7 @@ const QCStatusList = {
   QCLogsResult: qcManual.QCLogsResult,
   currentDGIMN: qcManual.currentDGIMN,
   checkModalVisible: qcaCheck.checkModalVisible,
-  marginData: qcManual.marginData,
-  loading: loading.effects["qcManual/getStateAndRecord"],
+  loading: loading.effects["qcManual/GetQCDetailRecord"],
   sendLoading: loading.effects["qcManual/sendQCACheckCMD"]
 }))
 class ManualQualityPage extends Component {
@@ -130,8 +129,16 @@ class ManualQualityPage extends Component {
 
   // 获取状态和质控日志
   getStateAndRecord = () => {
+    // 获取质控仪状态
     this.props.dispatch({
-      type: "qcManual/getStateAndRecord",
+      type: "qcManual/getQCAStatus",
+      payload: {
+        DGIMN: this.props.DGIMN
+      }
+    })
+    // 获取质控日志
+    this.props.dispatch({
+      type: "qcManual/getQCDetailRecord",
       payload: {
         DGIMN: this.props.DGIMN
       }
@@ -165,7 +172,7 @@ class ManualQualityPage extends Component {
     //   message.warning("")
     // }
     this.updateModalState({ currentPollutantCode: PollutantCode })
-    this.setState({ QCAType: QCAType, QCLogsAnswer: {} })
+    this.setState({ QCAType: QCAType })
     this.props.dispatch({
       type: "qcManual/sendQCACheckCMD",
       payload: {
@@ -287,7 +294,7 @@ class ManualQualityPage extends Component {
   // getAnswer = (QCLogsAnswer) => {
   getAnswer = () => {
     const { QCLogsResult, pointName } = this.props;
-    const { QCLogsAnswer } = this.state;
+    const { QCLogsAnswer } = this.props;
     { console.log("QCLogsAnswer=", QCLogsAnswer) }
     let str = QCLogsAnswer.Str;
     if (str) {
@@ -383,6 +390,7 @@ class ManualQualityPage extends Component {
       return <PageLoading />
     }
     const { QCAType, currentRowData, MYMax, MYMin, modalQCAType, GasPathMode, QCLogsAnswer, MYUnit } = this.state;
+    console.log('QCStatus=', QCStatus);
     return (
       <Card>
         <Row>
@@ -508,6 +516,7 @@ class ManualQualityPage extends Component {
         <Modal
           title="盲样核查"
           visible={this.state.MYVisible}
+          destroyOnClose
           // visible={true}
           onOk={this.onMYClick}
           onCancel={() => this.setState({ MYVisible: false })}

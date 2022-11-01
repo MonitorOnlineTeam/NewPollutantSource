@@ -640,7 +640,6 @@ class Index extends React.Component {
     })
   }
   render() {
-
     const {tableLoading,total,tableDatas} = this.props;
     return (
 

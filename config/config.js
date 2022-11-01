@@ -1,11 +1,11 @@
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
-import slash from 'slash2';
+// import slash from 'slash2';
 import webpackPlugin from './plugin.config';
 import routes from './router.config.js'
 import path from 'path'
 
 
-const API_HOST = 'http://172.16.12.165:7070/';  // 碳排放
+// const API_HOST = 'http://172.16.12.165:7070/';  // 碳排放
 // const API_HOST = 'http://172.16.12.39:5005/';
 // const API_HOST = 'http://172.16.12.39:6300/';
 // const API_HOST = 'http://172.16.12.165:5001/';
@@ -14,7 +14,7 @@ const API_HOST = 'http://172.16.12.165:7070/';  // 碳排放
 // const API_HOST = 'http://218.64.81.32:50056/jsh/';  // 吉水
 
 // 新框架
-// const API_HOST = 'http://172.16.12.61:9090/';  // 测试
+const API_HOST = 'http://172.16.12.60:6001/';  // 测试
 // const API_HOST = 'http://172.16.12.209:33688/';  // 霍达
 // const API_HOST = 'http://172.16.9.3:33688/';  // 志鹏
 
@@ -127,7 +127,8 @@ export default {
 
       if (match && match[1]) {
         const antdProPath = match[1].replace('.less', '');
-        const arr = slash(antdProPath)
+        // const arr = slash(antdProPath)
+        const arr = antdProPath
           .split('/')
           .map(a => a.replace(/([A-Z])/g, '-$1'))
           .map(a => a.toLowerCase());
@@ -146,20 +147,27 @@ export default {
   },
   chainWebpack: webpackPlugin,
   proxy: {
-    '/api': {
+    '/rest': {
       target: API_HOST,
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      // pathRewrite: { '^/api': '' },
     },
-    '/upload': {
+    '/wwwroot': {
       target: API_HOST, // 接口的域名
-      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-      pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+      changeOrigin: true, //   
+      // pathRewrite: { '^/wwwroot': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
-    '/uploadplantform': {
-      target: API_HOST, // 接口的域名
+    // 乐橙云
+    '/openapi': {
+      target: 'https://openapi.lechange.cn/', // 接口的域名
       changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-      pathRewrite: { '^/upload/upload': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+      // pathRewrite: { '^/wwwroot': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
     },
+    // 视频私有云服务器
+    '/api': {
+      target: 'http://172.16.12.135:18080/', // 接口的域名
+      changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+      // pathRewrite: { '^/wwwroot': '' }, // pathRewrite 来重写地址，将前缀 '/api' 转为 '/'。
+    }
   },
 };

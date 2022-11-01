@@ -195,10 +195,10 @@ class Point extends PureComponent {
             </div>
             <div>
               监测状态：
-              <Select defaultValue={0} style={{ width: 180 }} onChange={(value) => {
+              <Select defaultValue={null} style={{ width: 180 }} onChange={(value) => {
                 this.setState({ ParamType: value })
               }}>
-                <Option value={0}>全部</Option>
+                <Option value={null}>全部</Option>
                 <Option value={1}>正常</Option>
                 <Option value={2}>终止监测</Option>
               </Select>

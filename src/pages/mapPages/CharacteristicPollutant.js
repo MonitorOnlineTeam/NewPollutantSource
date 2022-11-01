@@ -62,6 +62,7 @@ class CharacteristicPollutant extends PureComponent {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     this.state = {
       visible: true,
       showType: 2,
@@ -76,6 +77,7 @@ class CharacteristicPollutant extends PureComponent {
         }
       }],
       mode: '2D',
+      mapCenter:[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude],
       pointList: [],
       markersList: [],
       markerPosition: {},
@@ -109,7 +111,9 @@ class CharacteristicPollutant extends PureComponent {
             latitude: e.lnglat.lat,
           }
           this.formRef.current.setFieldsValue({ 'longitude': position.longitude, 'latitude': position.latitude })
+          // thisMap.setCenter([position.longitude, position.latitude])
           this.setState({
+            mapCenter: [position.longitude, position.latitude],
             markerPosition: position
           })
         }
@@ -277,7 +281,7 @@ class CharacteristicPollutant extends PureComponent {
 
   render() {
     const { entEmissionsData, loading, pointDetailsModalVisible } = this.props;
-    const { showType, radius, currentTool, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
+    const { showType, mapCenter, radius, currentTool, visible, selectedPointInfo, pointList, markersList, showMarkers, mode, dataType, markerPosition, lngLatFromMap } = this.state;
     let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     if(thisMap) {
       console.log('zoom=', thisMap.getZoom())
@@ -358,7 +362,7 @@ class CharacteristicPollutant extends PureComponent {
             events={this.amapEvents}
             // zoom={5}
             zoom={sysConfigInfo.ZoomLevel}
-            center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
+            center={mapCenter}
           >
             <MouseTool events={this.toolEvents} />
             <Markers

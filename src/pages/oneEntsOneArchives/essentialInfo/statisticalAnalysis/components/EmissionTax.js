@@ -5,8 +5,8 @@ import Marquee from '@/components/Marquee';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Statistic, Row, Col, Divider } from 'antd';
 import moment from 'moment';
-@connect(({ loading, home }) => ({
-    taxInfo: home.taxInfo,
+@connect(({ loading, oneEntAndPoint }) => ({
+    taxInfo: oneEntAndPoint.taxInfo,
   }))
 class EmissionTax extends Component {
     constructor(props) {
@@ -30,14 +30,14 @@ class EmissionTax extends Component {
     // 获取所有企业排污税
     if (!entCode && !DGIMN) {
       dispatch({
-        type: "home/getAllTax",
+        type: "oneEntAndPoint/getAllTax",
       })
     }
 
     // 获取单个企业排污税
     if (entCode && !DGIMN) {
       dispatch({
-        type: "home/getEntTax",
+        type: "oneEntAndPoint/getEntTax",
         payload: {
           targetId: entCode
         }
@@ -47,7 +47,7 @@ class EmissionTax extends Component {
     // 获取单个排口排污税
     if (entCode && DGIMN) {
       dispatch({
-        type: "home/getPointTax",
+        type: "oneEntAndPoint/getPointTax",
         payload: {
           DGIMN
         }

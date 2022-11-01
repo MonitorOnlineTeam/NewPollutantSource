@@ -1,47 +1,34 @@
 import React, { PureComponent } from 'react';
-import _ from 'lodash';
-import ReactSeamlessScroll from 'react-seamless-scroll';
-import moment from 'moment';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Card } from 'antd';
-const { Meta } = Card;
+import LocaMap from './LocaMap'
+import { Button } from 'antd'
+import ScreenDarkModal from './ScreenDarkModal'
+import EntWorkOrderStatistics from '@/pages/IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/components/EntWorkOrderStatistics'
+import LeftWrapperContent from './LeftWrapperContent'
+import RightWrapperContent from './RightWrapperContent'
+import styles from './index.less'
+
+
 class Test extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
-  componentDidMount() {
-  }
-
-
   render() {
+    const { visible } = this.state;
     return (
-      <div style={{ width: '200px', height: '100px' }}>
-        <ReactSeamlessScroll style={{ width: '100%', height: '100%' }}>
-          <Card
-            style={{
-              width: 300,
-            }}
-            cover={
-              <img
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-              />
-            }
-            actions={[
-              <SettingOutlined key="setting" />,
-              <EditOutlined key="edit" />,
-              <EllipsisOutlined key="ellipsis" />,
-            ]}
-          >
-            <Meta
-              avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-              title="Card title"
-              description="This is the description"
-            />
-          </Card>
-        </ReactSeamlessScroll>
+      <div className={styles.homeWrapper} style={{ width: '100%', height: 'calc(100vh)' }}>
+        {/* <Button onClick={() => this.setState({ visible: true })}>弹窗</Button> */}
+        <LocaMap />
+        <LeftWrapperContent />
+        <RightWrapperContent />
+        <ScreenDarkModal
+          title="详情"
+          visible={visible}
+          width="80vw"
+          onCancel={() => this.setState({ visible: false })}
+        >
+          <EntWorkOrderStatistics />
+        </ScreenDarkModal>
       </div>
     );
   }

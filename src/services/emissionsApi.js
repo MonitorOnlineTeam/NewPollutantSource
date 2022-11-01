@@ -6,6 +6,7 @@
  */
 
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 import { async } from 'q';
 
 

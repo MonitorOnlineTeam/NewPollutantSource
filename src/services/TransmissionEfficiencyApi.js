@@ -5,6 +5,7 @@
  */
 
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 【传输有效率】获取一个或多个排口传输有效率等等

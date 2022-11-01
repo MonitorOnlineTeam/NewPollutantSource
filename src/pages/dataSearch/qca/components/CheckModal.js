@@ -17,7 +17,7 @@ const workMode = { "1": "定时", "2": "远程", 3: "现场" }
   valueList: qcaCheck.valueList,
   standValList: qcaCheck.standValList,
   timeList: qcaCheck.timeList,
-  loading: loading.effects["qcaCheck/getqcaLogAndProcess"]
+  loading: loading.effects["qcaCheck/getQCProcessData"]
 }))
 class CheckModal extends PureComponent {
   state = {}
@@ -68,13 +68,14 @@ class CheckModal extends PureComponent {
 
   componentDidMount() {
     this.getKeyParameterList();
-    this.getqcaLogAndProcess();
+    this.getQCProcessData();
+    this.getQCLog();
   }
 
   // 折线图配置项
   lineOption = () => {
     const { standValList, valueList, timeList, currentRowData } = this.props;
-    let unit = currentRowData.PollutantName === '二氧化碳' ?  '%' :currentRowData.Unit
+    let unit = currentRowData.PollutantName === '二氧化碳' ? '%' : currentRowData.Unit
     let option = {
       color: ["#56f485", "#c23531"],
       legend: {
@@ -176,11 +177,27 @@ ${params[1].seriesName} ：${params[1].value} ${unit ? unit : ""}`
     return option;
   }
 
-  // 获取质控过程和质控日志
-  getqcaLogAndProcess = () => {
+  // 查询质控日志
+  getQCLog = () => {
     const { currentRowData, DGIMN, QCAType } = this.props;
     this.props.dispatch({
-      type: "qcaCheck/getqcaLogAndProcess",
+      type: "qcaCheck/getQCLog",
+      payload: {
+        QCAType: QCAType,
+        DGIMN: DGIMN,
+        MonitorTime: currentRowData.MonitorTime,
+        EndTime: currentRowData.EndTime,
+        PollutantCode: currentRowData.PollutantCode,
+      }
+      // payload: { QCAType: QCAType, "DGIMN": "62020131jhdp02", "MonitorTime": "2020-08-20 23:01:00", "PollutantCode": "a21002" }
+    })
+  }
+
+  // 获取质控过程和质控日志
+  getQCProcessData = () => {
+    const { currentRowData, DGIMN, QCAType } = this.props;
+    this.props.dispatch({
+      type: "qcaCheck/getQCProcessData",
       payload: {
         QCAType: QCAType,
         DGIMN: DGIMN,
@@ -209,7 +226,7 @@ ${params[1].seriesName} ：${params[1].value} ${unit ? unit : ""}`
   render() {
     const { currentRowData = {}, qcaLogDataList, checkModalVisible, pointName, keyParameterList, QCAType, loading } = this.props;
     const { paramsColumns, logColumns } = this._SELF_;
-    let unit = currentRowData.PollutantName === '二氧化碳' ?  '%' :currentRowData.Unit
+    let unit = currentRowData.PollutantName === '二氧化碳' ? '%' : currentRowData.Unit
     return (
       <Modal
         title={`${currentRowData.PollutantName ? currentRowData.PollutantName : ""} ${QCATypes[QCAType]} 详情【${pointName} 】`}

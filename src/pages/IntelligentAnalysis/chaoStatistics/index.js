@@ -196,9 +196,9 @@ class index extends PureComponent {
         title: `排放标准（${this.state.unit}）`,
         dataIndex: 'standValue',
         key: 'standValue',
-        render: (text, record, index) => {
-          return text ? (text * 1).toFixed(3) : text;
-        }
+        // render: (text, record, index) => {
+        //   return text ? (text * 1).toFixed(3) : text;
+        // }
       },
       {
         title: `小时均值超标浓度范围（${this.state.unit}）`,

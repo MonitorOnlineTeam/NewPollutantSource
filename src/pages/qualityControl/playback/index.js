@@ -49,7 +49,7 @@ let timer = null; // 质控定时器
 let timeout = null; // 重启、开锁定时器
 let count = 0;
 
-@connect(({ loading, qualityControl, qualityControlModel }) => ({
+@connect(({ loading, qualityControl }) => ({
   p2Pressure: qualityControl.p2Pressure,
   p1Pressure: qualityControl.p1Pressure,
   playbackPageDate: qualityControl.playbackPageDate,

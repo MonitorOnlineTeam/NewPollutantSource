@@ -1,5 +1,6 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 标准库列表
 export async function getlist(params) {
@@ -17,8 +18,8 @@ export async function getlist(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 标准库污染物列表
@@ -33,8 +34,8 @@ export async function getstandardlibrarypollutantlist(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 启用禁用标准
@@ -50,8 +51,8 @@ export async function enableordisable(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 删除标准库主表
@@ -66,8 +67,8 @@ export async function deletestandardlibrarybyid(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 删除标准库子表
@@ -82,8 +83,8 @@ export async function deletestandardlibrarypollutantbyid(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 添加标准库主表
@@ -102,8 +103,8 @@ export async function addstandardlibrary(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 添加标准库子表
@@ -123,8 +124,8 @@ export async function addstandardlibrarypollutant(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 上传附件
@@ -140,8 +141,8 @@ export async function uploadfiles(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 删除附件
@@ -156,8 +157,8 @@ export async function deletefiles(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 获取标准库主表实体
@@ -172,8 +173,8 @@ export async function getStandardlibrarybyid(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 获取标准库子表实体
@@ -188,8 +189,8 @@ export async function getStandardlibrarypollutantbyid(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 编辑标准库主表
@@ -209,8 +210,8 @@ export async function editstandardlibrary(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 添加标准库子表
@@ -231,8 +232,8 @@ export async function editstandardlibrarypollutant(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 获取所有污染物
@@ -247,8 +248,8 @@ export async function getpollutantlist(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 获取所有附件
@@ -263,8 +264,8 @@ export async function getstandardlibraryfiles(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 标准库列表(应用)
@@ -282,8 +283,8 @@ export async function getuselist(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 
@@ -292,15 +293,11 @@ export async function getpollutantbydgimn(params) {
   const body = {
     DGIMN: params.DGIMN,
   };
-  const result = get(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetStandardPollutantsByDgimn',
-    body,
-    null,
-  );
+  const result = get(API.commonApi.GetStandardPollutantsByDgimn, body);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 应用到单个排口
@@ -316,8 +313,8 @@ export async function useStandard(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 应用到所有排口
@@ -332,8 +329,8 @@ export async function useallDGIMNbyid(params) {
   );
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 是否应用当前污染物
@@ -343,15 +340,11 @@ export async function isusepollutant(params) {
     PollutantCode: params.PollutantCode,
     Enalbe: params.Enalbe,
   };
-  const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/UsePollutant',
-    body,
-    null,
-  );
+  const result = post(API.BaseDataApi.UsePollutant, body);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 根据排口和污染物编号查询实体
@@ -360,15 +353,11 @@ export async function getMonitorPointPollutantDetails(params) {
     DGIMN: params.DGIMN,
     pollutantCode: params.PollutantCode,
   };
-  const result = get(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/GetMonitorPointPollutantDetails',
-    body,
-    null,
-  );
+  const result = get(API.BaseDataApi.GetMonitorPointPollutantDetails, body);
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }
 // 编辑污染物
@@ -387,14 +376,16 @@ export async function editmonitorpointPollutant(params) {
     AbnormalUpperLimit: params.AbnormalUpperLimit,
     AbnormalLowerLimit: params.AbnormalLowerLimit,
   };
+
   const result = post(
-    '/api/rest/PollutantSourceApi/StandardLibraryApi/EditMonitorPointPollutant',
+    API.BaseDataApi.EditMonitorPointPollutant,
     body,
     null,
   );
+
   return result === null
     ? {
-        data: null,
-      }
+      data: null,
+    }
     : result;
 }

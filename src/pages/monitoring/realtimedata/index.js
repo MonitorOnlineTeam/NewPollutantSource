@@ -161,7 +161,6 @@ class Index extends Component {
         const res = [];
         if (dataInfolist && dataInfolist.length > 0) {
             dataInfolist.map((item, key) => {
-                debugger
                 let value = item.value ? item.value + item.Unit : item.value
                 res.push(
                     <Descriptions.Item className={styles.gridStyle} label={item.pollutantName}>
@@ -268,7 +267,7 @@ class Index extends Component {
                         DGIMN={dgimn}
                         pointName={pointName} entName={entName} />)
                     break;
-                case '2':
+                case '2': 
                     return (<VocChart
                         paramstatusInfo={paramstatusInfo}
                         stateInfo={stateInfo}

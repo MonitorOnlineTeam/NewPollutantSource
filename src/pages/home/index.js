@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2022-07-14 15:39:56
+ * @Last Modified time: 2022-09-23 15:19:48
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -20,19 +20,16 @@ import {
   connect
 } from 'dva';
 import CustomIcon from '@/components/CustomIcon';
-import LiveVideo from "@/components/YSYVideo-React/Live"
+// import LiveVideo from "@/components/Video/YSY/Live"
 
 // import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
 // import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
-import PageLoading from '@/components/PageLoading'
 import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
 // import { getPointStatusImg } from '@/utils/getStatusImg';
 import styles from './index.less';
 import { router } from 'umi';
-import Link from 'umi/link';
-import EntWorkOrderStatistics from '@/pages/IntelligentAnalysis/operationWorkStatis/entWorkOrderStatistics/components/EntWorkOrderStatistics'
-
+import LiveVideo from '@/components/Video/LiveVideo'
 import config from "@/config";
 import HomeCommon from '@/components/home/HomeCommon';
 
@@ -57,6 +54,7 @@ let Map, Marker, Polygon, Markers, InfoWindow;
   currentMarkersList: home.currentMarkersList,
   allEntAndPointList: home.allEntAndPointList,
   mounthOverData: home.mounthOverData,
+  homeVideoList: home.homeVideoList,
   homePage: home.homePage,
   theme: home.theme,
   configInfo: global.configInfo,
@@ -133,10 +131,10 @@ class index extends Component {
   }
   componentWillMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'home/getHomePage',
-      payload: {}
-    })
+    // dispatch({
+    //   type: 'home/getHomePage',
+    //   payload: {}
+    // })
     if (config.offlineMapUrl.domain) {
       let amap = require('@/components/ReactAmap');
       // Map, Marker, Polygon, Markers, InfoWindow;
@@ -168,7 +166,7 @@ class index extends Component {
       payload: {
       },
     });
-
+    this.getHomePageVideo();
     this.setState({
       did: true,
     })
@@ -176,6 +174,11 @@ class index extends Component {
     window._AMapSecurityConfig = {
       securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
     }
+  }
+
+  // 获取首页视频列表
+  getHomePageVideo = () => {
+    this.props.dispatch({ type: "home/getHomePageVideo" })
   }
 
 
@@ -475,6 +478,7 @@ class index extends Component {
       homePage,
       configInfo,
       theme,
+      homeVideoList,
     } = this.props;
     let pointposition = position;
     let pointvisible = visible;
@@ -500,6 +504,8 @@ class index extends Component {
         size="large"
       />
     }
+
+    console.log('homePage=', homePage);
 
     const isLeftLoading = allEntAndPointLoading || rateStatisticsByEntLoading || taskCountLoading || exceptionProcessingLoading || alarmAnalysisLoading || warningInfoLoading;
     const isRightLoading = allEntAndPointLoading || allMonthEmissionsByPollutantLoading || statisticsPointStatusLoading;
@@ -566,23 +572,23 @@ class index extends Component {
           <Col style={{ width: '27%' }}>
             <div className={styles.leftWrapper}>
               {/* 运行分析  || 智能质控*/}
-              <div style={{ display: `${homePage ? homePage.split(',')[0] : ''}` }} className={`${styles.effectiveRate} ${styles.box}`}>
+              <div className={`${styles.effectiveRate} ${styles.box}`}>
                 <i className={styles.lb}></i>
                 <i className={styles.rb}></i>
                 <HomeCommon DGIMN={DGIMN} entCode={entCode} onRef={this.onRef1}
-                  assembly={homePage ? homePage.split(',')[0] : "OperationAnalysis"} />
+                  assembly={"OperationAnalysis"} />
               </div>
               {/* 运维统计 */}
-              <div style={{ display: `${homePage ? homePage.split(',')[1] : ''}` }} className={`${styles.operationsWrapper}  ${styles.box}`}>
+              <div className={`${styles.operationsWrapper}  ${styles.box}`}>
                 <i className={styles.lb}></i>
                 <i className={styles.rb}></i>
-                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[1] : "OperationStatistics"} />
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={"OperationStatistics"} />
               </div>
               {/* 超标异常 */}
-              <div style={{ display: `${homePage ? homePage.split(',')[2] : ''}` }} className={`${styles.excessiveAbnormalWrapper}  ${styles.box}`}>
+              <div className={`${styles.excessiveAbnormalWrapper}  ${styles.box}`}>
                 <i className={styles.lb}></i>
                 <i className={styles.rb}></i>
-                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={homePage ? homePage.split(',')[2] : "AlarmMessage"} />
+                <HomeCommon DGIMN={DGIMN} entCode={entCode} assembly={"AlarmMessage"} />
               </div>
             </div>
           </Col>
@@ -654,7 +660,14 @@ class index extends Component {
                     <p>视频监控</p>
                   </div>
                   <div className={styles.videoContainer}>
-                    <LiveVideo channelNo={'E36486991'} HD={1} template="simple" />
+                    {
+                      homeVideoList[0] ? <LiveVideo videoInfo={homeVideoList[0]} id="video1" /> : <div className='notData'>
+                        <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+                        <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                      </div>
+                    }
+
+                    {/* <LiveVideo deviceSerial={'E36486991'} channelNo={1} template="simple" /> */}
                   </div>
                 </div>
               </Col>
@@ -666,7 +679,13 @@ class index extends Component {
                     <p>视频监控</p>
                   </div>
                   <div className={styles.videoContainer}>
-                    <LiveVideo channelNo={'D96390808'} HD={1} template="simple" id="video2" />
+                    {
+                      homeVideoList[0] ? <LiveVideo videoInfo={homeVideoList[1]} id="video2" /> : <div className='notData'>
+                        <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
+                        <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>
+                      </div>
+                    }
+                    {/* <LiveVideo deviceSerial={'D96390808'} channelNo={1} template="simple" id="video2" /> */}
                     {/* <div className={styles.notData}>
                       <img src="/nodata1.png" style={{ width: '120px', dispatch: 'block' }} />
                       <p style={{ color: "#d5d9e2", fontSize: 16, fontWeight: 500 }}>暂无数据</p>

@@ -23,6 +23,7 @@ export default Model.extend({
     pollutantListByDgimn: [],
     menuNameList: [],
     entList: [],
+    QCAPollutantList: [],
   },
 
   effects: {
@@ -110,7 +111,7 @@ export default Model.extend({
         callback && callback(result.Datas.list, defaultValue);
       }
     },
-    // 多选组件 - 获取企业及排口
+    // 获取企业及排口
     *getEntAndPointList({ payload, callback }, { call, update }) {
       const result = yield call(services.getEntAndPoint, payload);
       if (result.IsSuccess) {
@@ -221,6 +222,19 @@ export default Model.extend({
         yield update({
           menuNameList: result.Datas.map(item => item.replace("ReactPD", "")),
         });
+      }
+    },
+    // 获取质控污染物，参数DGIMN 可选
+    *getQCAPollutantByDGIMN({ payload, callback, errorCallback }, { call, put, update, select }) {
+      const result = yield call(services.getQCAPollutantByDGIMN, payload);
+      if (result.IsSuccess) {
+        yield update({
+          QCAPollutantList: result.Datas
+        })
+        callback && callback(result.Datas)
+      } else {
+        errorCallback && errorCallback(result.Message)
+        message.error(result.Message)
       }
     },
     /**

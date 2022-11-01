@@ -3,7 +3,7 @@
  * @Date: 2020-01-10 10:44:31
  * @Last Modified by: Jiaqi
  * @Last Modified time: 2022-07-14 16:27:30
- * @Description: 多站多参对比分析
+ * @Description: 多站多参对比分析，支持不同污染物类型，电能显示实时和分钟
  */
 import React, { PureComponent } from 'react';
 import { Button, Card, Checkbox, Row, Col, Radio, Select, DatePicker, Empty, message, Divider } from 'antd'
@@ -31,19 +31,20 @@ const COLOR = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83',
 class MultiSiteParamsPage extends PureComponent {
   constructor(props) {
     super(props);
+    const isElectric = props.match.params.type === '37';
     this.state = {
       defalutPollutantType: props.match.params.type,
+      pollutantList: [],
       pollutantValue: [],
-      time: [moment().add(-24, "hour"), moment()],
-      dataType: "Hour",
+      time: isElectric ? [moment().add(-1, "hour"), moment()] : [moment().add(-24, "hour"), moment()],
+      dataType: isElectric ? 'RealTime' : "Hour",
       DGIMNs: [],
       one: true,
-      format: "YYYY-MM-DD HH",
+      format: isElectric ? "YYYY-MM-DD HH:mm:ss" : "YYYY-MM-DD HH",
     };
   }
 
   componentDidMount() {
-    // this.getPollutantList()
   }
 
   // 获取污染物
@@ -54,8 +55,36 @@ class MultiSiteParamsPage extends PureComponent {
         // DGIMN: this.state.DGIMN,
         PollutantType: this.state.defalutPollutantType,
         Type: "1"
+      },
+      callback: (res) => {
+        this.filterPollutantList(res)
       }
     })
+  }
+
+  getDataTimeFormat = () => {
+    switch (this.state.dataType) {
+      case 'RealTime':
+      case 'Minute':
+        return "YYYY-MM-DD HH:mm:ss"
+      case 'Hour':
+        return "YYYY-MM-DD HH:00:00"
+      default:
+        return "YYYY-MM-DD 00:00:00"
+    }
+  }
+
+  // 处理图表x轴日期显示格式化
+  getChartXTimeFormat = (dataType) => {
+    switch (dataType) {
+      case 'RealTime':
+      case 'Minute':
+        return "YYYY-MM-DD HH:mm:ss"
+      case 'Hour':
+        return "YYYY-MM-DD HH"
+      default:
+        return "YYYY-MM-DD"
+    }
   }
 
   // 获取图表及表格数据
@@ -68,7 +97,9 @@ class MultiSiteParamsPage extends PureComponent {
       message.error('请在左侧勾选监测点');
       return;
     }
-    let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
+
+    let format = this.getDataTimeFormat();
+
     this.props.dispatch({
       type: "dataAnalyze/getChartAndTableData",
       payload: {
@@ -78,7 +109,7 @@ class MultiSiteParamsPage extends PureComponent {
         EndTime: moment(this.state.time[1]).format(format),
         DataType: this.state.dataType,
         Type: "1",
-        PollutantType: 5,
+        PollutantType: this.state.defalutPollutantType,
       }
     })
   }
@@ -93,7 +124,8 @@ class MultiSiteParamsPage extends PureComponent {
       message.error('请在左侧勾选监测点');
       return;
     }
-    let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
+    let format = this.getDataTimeFormat();
+    // let format = this.state.dataType === "Hour" ? "YYYY-MM-DD HH:00:00" : "YYYY-MM-DD 00:00:00"
     this.props.dispatch({
       type: "dataAnalyze/export",
       payload: {
@@ -108,36 +140,9 @@ class MultiSiteParamsPage extends PureComponent {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.defaultPollutant !== nextProps.defaultPollutant) {
-      // 赋默认值
-      this.setState({
-        pollutantValue: nextProps.defaultPollutant,
-        one: false
-      }, () => {
-        this.getChartAndTableData()
-      })
-    }
-  }
-
-  // componentWillUpdate(nextProps, nextState) {
-  //   if (this.props.defaultPollutant !== nextProps.defaultPollutant) {
-  //     // 赋默认值
-  //     this.setState({
-  //       pollutantValue: nextProps.defaultPollutant,
-  //     })
-  //   }
-
-  //   if(this.state.pollutantValue !== nextProps.pollutantValue){
-
-  //   }
-
-  // }
-
-
   getOptions = (chartList) => {
     const { multiSiteParamsData: { timeList } } = this.props;
-    const { format, dataType } = this.state;
+    const { format, dataType, defalutPollutantType } = this.state;
     const appendText = dataType === "Hour" ? "时" : "";
     let legend = [];
     let series = chartList.DataList.map(item => {
@@ -146,7 +151,7 @@ class MultiSiteParamsPage extends PureComponent {
         data: item.DataList,
         type: 'line',
         name: item.PointName,
-        barWidth : 30,
+        barWidth: 30,
         _dataType: chartList.PollutantName
       }
     })
@@ -167,7 +172,7 @@ class MultiSiteParamsPage extends PureComponent {
     return {
       title: {
         text: `${chartList.PollutantName}对比分析`,
-        subtext: `多站${chartList.PollutantName}对比分析`,
+        subtext: defalutPollutantType === '37' ? `单位（${chartList.Unit}）` : `多站${chartList.PollutantName}对比分析`,
         // left: 'center'
       },
       legend: {
@@ -175,17 +180,17 @@ class MultiSiteParamsPage extends PureComponent {
         // left: 60,
         width: "70%",
         // align: 'center',
-       // padding: [40, 40, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+        // padding: [40, 40, 0, 0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
       },
       toolbox: {
         feature: {
           dataView: {},
           saveAsImage: {},
-          magicType: {show: true, type: ['line', 'bar']},
+          magicType: { show: true, type: ['line', 'bar'] },
         }
       },
       tooltip: {
-        trigger: 'item',
+        trigger: 'axis',
         // axisPointer: {
         //   type: 'cross',
         //   animation: false,
@@ -241,9 +246,42 @@ class MultiSiteParamsPage extends PureComponent {
     };
   }
 
+  // 根据查询数据类型过滤污染物列表，
+  filterPollutantList = (pollutantList) => {
+    const { defalutPollutantType, dataType } = this.state;
+    let _pollutantList = pollutantList;
+
+    // 电力实时不显示”有功总累计电能“，其他类型只显示”有功总累计电能“
+    if (defalutPollutantType === '37') {
+      if (dataType === 'RealTime') {
+        _pollutantList = pollutantList.filter(item => item.PollutantCode !== 'e0011');
+      } else {
+        _pollutantList = pollutantList.filter(item => item.PollutantCode === 'e0011');
+      }
+    }
+
+    // 默认值查询选中的前7个污染物类型
+    let defaultValue = [];
+    if (_pollutantList.length) {
+      _pollutantList.map((item, index) => {
+        if (item && index < 7) {
+          defaultValue.push(item.PollutantCode)
+        }
+      })
+    }
+    // 赋默认值
+    this.setState({
+      pollutantList: _pollutantList,
+      pollutantValue: defaultValue,
+      one: false
+    }, () => {
+      this.getChartAndTableData()
+    })
+  }
+
   cardTitle = () => {
-    const { pollutantList, defaultPollutant, exportLoading } = this.props;
-    const { pollutantValue, time, dataType, format } = this.state;
+    const { defaultPollutant, loading, exportLoading } = this.props;
+    const { pollutantValue, time, dataType, format, pollutantList } = this.state;
     // const format = dataType === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
     return (
       <Row gutter={16}>
@@ -278,7 +316,7 @@ class MultiSiteParamsPage extends PureComponent {
           }} />
         </Col>
         <Col span={4}>
-          <Button type="primary" style={{ marginRight: 10 }} onClick={this.getChartAndTableData}>查询</Button>
+          <Button type="primary" style={{ marginRight: 10 }} loading={loading} onClick={this.getChartAndTableData}>查询</Button>
           <Button type="primary" style={{ marginRight: 10 }} loading={exportLoading} onClick={this.export}>导出</Button>
         </Col>
       </Row>
@@ -310,7 +348,7 @@ class MultiSiteParamsPage extends PureComponent {
             </>
           })
         }
-      {/* </Card.Grid> */}
+        {/* </Card.Grid> */}
       </>
     )
   }
@@ -320,7 +358,7 @@ class MultiSiteParamsPage extends PureComponent {
   }
 
   render() {
-    const { showType, columns, defalutPollutantType } = this.state;
+    const { dataType, columns, defalutPollutantType } = this.state;
     const { multiSiteParamsData: { timeList, tableList, chartList } } = this.props;
     return (
       <>
@@ -348,15 +386,22 @@ class MultiSiteParamsPage extends PureComponent {
             <Card
               title={this.cardTitle()}
               extra={
-                <Radio.Group defaultValue="Hour" style={{ marginRight: 10 }} onChange={(e) => {
+                <Radio.Group defaultValue={dataType} style={{ marginRight: 10 }} onChange={(e) => {
                   this.children.onDataTypeChange(e.target.value);
                   this.setState({
                     dataType: e.target.value,
-                    format: e.target.value === "Hour" ? "YYYY-MM-DD HH" : "YYYY-MM-DD"
+                    format: this.getChartXTimeFormat(e.target.value)
                   }, () => {
-                    this.getChartAndTableData()
+                    this.filterPollutantList(this.props.pollutantList)
                   })
                 }}>
+                  {
+                    // 电能类型显示实时、分钟
+                    defalutPollutantType == 37 && <>
+                      <Radio.Button value="RealTime">实时</Radio.Button>
+                      <Radio.Button value="Minute">分钟</Radio.Button>
+                    </>
+                  }
                   <Radio.Button value="Hour">小时</Radio.Button>
                   <Radio.Button value="Day">日均</Radio.Button>
                 </Radio.Group>

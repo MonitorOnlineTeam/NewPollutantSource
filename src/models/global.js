@@ -11,7 +11,8 @@ import { array } from 'prop-types';
 import Cookie from 'js-cookie';
 import config from '@/config';
 import { message } from 'antd';
-
+import { router } from 'umi';
+import { getSysName } from '@/utils/utils';
 
 /**
  * 功  能：报警消息和推送相关model
@@ -118,28 +119,41 @@ export default Model.extend({
         // console.log('ConfigInfo=', response.Datas);
         try {
           mywebsocket.InitWebsocket(response.Datas.WebSocketAddress);
-
           payload.listen();
         } catch (e) {
           console.log('WebSocketAddress获取失败');
         }
+
+        let configInfo = response.Datas;
+        window.configInfo = configInfo;
+        configInfo.SystemName = getSysName(configInfo.SystemName);
         localStorage.setItem('sysConfigInfo', JSON.stringify({
-          ...response.Datas,
+          // ...response.Datas,
+          ...configInfo,
           ZoomLevel: response.Datas.ZoomLevel || 10,
           //  北京市中心坐标：116.397693,39.908195
           CenterLongitude: response.Datas.CenterLongitude || 116.397693,
           CenterLatitude: response.Datas.CenterLatitude || 39.908195,
         }))
+        // 防止系统错乱，如果没有menuId，跳转中间页。
+        if (location.pathname !== '/user/login' && response.Datas.IsShowSysPage === '1') {
+          if (!sessionStorage.getItem('sysMenuId')) {
+            router.push('/sysTypeMiddlePage')
+          }
+        }
         yield put({
           type: 'setConfigInfo',
           payload: {
             GroupRegionState: 0,
-            ...response.Datas,
+            ...configInfo,
+            // ...response.Datas,
           },
         });
         yield put({
           type: 'settings/getSetting',
-          payload: response.Datas,
+          payload: {
+            ...configInfo
+          },
         });
       }
     },
@@ -156,6 +170,7 @@ export default Model.extend({
     },
     // 接收消息推送更改Model内存
     changeNotices(state, { payload }) {
+      // console.log('payload=', payload);
       try {
         // 不要用超级管理员测试，否则会出问题**********************
         const { message } = payload;
@@ -307,7 +322,7 @@ export default Model.extend({
           },
         };
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         return {
           ...state,
         };
@@ -427,7 +442,6 @@ export default Model.extend({
   },
   subscriptions: {
     socket({ dispatch }) {
-      console.log('initsocket1');
       dispatch({
         type: 'getSystemConfigInfo', payload: {
           listen: function () {
@@ -439,6 +453,7 @@ export default Model.extend({
               // console.log('real=', obj)
               switch (obj.MessageType) {
                 case 'RealTimeData':
+                  // console.log("RealTimeData=", obj.Message)
                   // 跳转到对应的effect，把实体带过去更新state达到页面刷新的目的
                   dispatch({
                     type: 'realtimeserver/updateRealTimeDatas',
@@ -462,6 +477,7 @@ export default Model.extend({
                   })
                   break;
                 case 'MinuteData':
+                  // console.log("MinuteData=", obj.Message)
                   // 实时数据一览 - 分钟
                   dispatch({
                     type: 'overview/updateRealTimeDataView',
@@ -472,6 +488,7 @@ export default Model.extend({
                   })
                   break;
                 case 'HourData':
+                  // console.log("HourData=", obj.Message)
                   // 实时数据一览 - 小时
                   // dispatch({
                   //   type: "overview/updateRealTimeDataView",
@@ -485,13 +502,14 @@ export default Model.extend({
                 // 工艺流程图动态参数数据
                 case 'DynamicControlParam':
                 case 'DynamicControlState':
-                  dispatch({
-                    type: 'realtimeserver/updateDynamicControl',
-                    payload: {
-                      data: obj,
-                    },
-                  });
-                  break;
+                // console.log("DynamicControlParam And DynamicControlState=", obj)
+                // dispatch({
+                //   type: 'realtimeserver/updateDynamicControl',
+                //   payload: {
+                //     data: obj,
+                //   },
+                // });
+                // break;
                 // 推送报警数据
                 case 'Alarm':
                   dispatch({
@@ -539,7 +557,7 @@ export default Model.extend({
                   break;
                 // 质控日志 - 开始质控命令
                 case 'QCACheckStart':
-                  // console.log("QCACheckStart=", obj.Message)
+                  // console.log("QCACheckStart-global=", obj.Message)
                   if (obj.Message.MsgType === "check") {
                     dispatch({
                       type: 'qcManual/updateQCLogStart',
@@ -555,7 +573,7 @@ export default Model.extend({
                   break;
                 // 质控日志 - 质控应答
                 case 'QCACheckAnswer':
-                  console.log("QCACheckAnswer-global=", obj.Message)
+                  // console.log("QCACheckAnswer-global=", obj.Message)
                   if (obj.Message.MsgType === "check") {
                     dispatch({
                       type: 'qcManual/updateQCLogAnswer',
@@ -584,6 +602,7 @@ export default Model.extend({
                   })
                   break;
                 case 'State':
+                  // console.log('QCAState=', obj.Message)
                   // 质控仪状态
                   dispatch({
                     type: 'qcManual/changeQCStatus',
@@ -602,7 +621,7 @@ export default Model.extend({
                   });
                   break;
                 case 'QCARtn': //下发
-                  // console.log('msg=',obj)
+                  // console.log('下发=', obj)
                   dispatch({
                     type: 'qualitySet/issueData',//同步更新数据
                     payload: obj.Message,

@@ -86,7 +86,7 @@ export default Model.extend({
     mounthOverData: [],
     // 排污税
     taxInfo: {},
-    homePage: "1",
+    homePage: null,
     GHGandEmissionContrastData: { allSumDis: 0, disSum: 0 },
   },
   effects: {

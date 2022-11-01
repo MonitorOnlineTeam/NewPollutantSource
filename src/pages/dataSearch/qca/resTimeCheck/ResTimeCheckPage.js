@@ -22,7 +22,7 @@ const workMode = {
   valueList: qcaCheck.valueList,
   standValList: qcaCheck.standValList,
   timeList: qcaCheck.timeList,
-  loading: loading.effects["qcaCheck/getqcaLogAndProcess"],
+  loading: loading.effects["qcaCheck/getQCProcessData"],
   tableLoading: loading.effects['qcaCheck/getResTimeCheckTableData'],
   exportLoading: loading.effects['qcaCheck/qcaCheckExport'],
 }))
@@ -59,7 +59,7 @@ class resTimeCheckPage extends PureComponent {
               currentRowData: record,
               visible: true
             }, () => {
-              this.getqcaLogAndProcess();
+              this.getQCProcessData();
               this.getKeyParameterList();
             })
           }}>{text == 0 ? "合格" : "不合格"}</a>
@@ -256,11 +256,11 @@ class resTimeCheckPage extends PureComponent {
   }
 
   // 获取质控过程和质控日志
-  getqcaLogAndProcess = () => {
+  getQCProcessData = () => {
     const { DGIMN } = this.props;
     const { currentRowData } = this.state;
     this.props.dispatch({
-      type: "qcaCheck/getqcaLogAndProcess",
+      type: "qcaCheck/getQCProcessData",
       payload: {
         QCAType: "3103",
         DGIMN: DGIMN,
@@ -488,7 +488,7 @@ ${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRow
                   currentRowData: record,
                   visible: true
                 }, () => {
-                  this.getqcaLogAndProcess();
+                  this.getQCProcessData();
                   this.getKeyParameterList();
                 })
               }, // 点击行

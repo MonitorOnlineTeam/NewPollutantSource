@@ -120,8 +120,7 @@ class UnitInfoPage extends PureComponent {
               CrewName: undefined,
               CrewCode: undefined,
             })
-          }
-          }
+          }}
             style={{ marginBottom: 16 }}>添加</Button>
           <List
             bordered

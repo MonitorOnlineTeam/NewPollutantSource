@@ -10,6 +10,7 @@ import Debounce from 'lodash.debounce';
 import QuestionTooltip from "@/components/QuestionTooltip"
 import moment from 'moment'
 import { INDUSTRYS, maxWait, GET_SELECT_LIST } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
+import { checkIsNumber } from '@/pages/IntelligentAnalysis/CO2Emissions/util'
 
 const industry = INDUSTRYS.steel;
 const { Option } = Select;
@@ -162,6 +163,7 @@ class index extends Component {
     // 化石燃料燃烧排放量 = 消耗量 × 低位发热量  × (单位热值含碳量  × 碳氧化率 / 100 × 44 ÷ 12)
     let values = this.formRef.current.getFieldsValue();
     let { EntCode, MonitorTime, FossilType, AnnualConsumption = 0, CO2OxidationRate = 0, LowFever = 0, UnitCarbonContent = 0 } = values;
+
     if (EntCode && MonitorTime) {
       this.props.dispatch({
         type: 'CO2Emissions/countEmissions',
@@ -391,7 +393,9 @@ class index extends Component {
                   label={<p>消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写消耗量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写消耗量" onChange={Debounce(() => this.countEmissions(), maxWait)} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写消耗量" onChange={Debounce(() => {
+                    checkIsNumber(this.formRef.current.getFieldValue('AnnualConsumption')) && this.countEmissions()
+                  }, maxWait)} />
                 </Form.Item>
               </Col>
               <Col span={12}>

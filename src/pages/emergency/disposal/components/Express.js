@@ -169,7 +169,7 @@ class Factor extends PureComponent {
         payload: {
           ExpressNews: {
             ...values,
-            NewsTime: moment(values.NewsTime)
+            // NewsTime: moment(values.NewsTime)
             // SamplingCode: this.state.editData.SamplingCode
           },
           AlarmInfoCode: this.props.AlarmInfoCode,
@@ -245,7 +245,7 @@ class Factor extends PureComponent {
               NewsTime: moment().format("YYYY-MM-DD HH:mm:ss"),
             }}
           >
-            <Row>发                              
+            <Row>                          
               <Col span={12}>
                 <Form.Item
                   name="DeathNum"

@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 无台账工单统计（企业） 列表
@@ -16,12 +17,7 @@ export async function GetTaskFormBookSta(params) {
 
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
-  );
-
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 
@@ -41,12 +37,6 @@ export async function ExportTaskFormBookSta(params) {
 //根据行政区获取 污水处理厂
 
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?IsSewage=1&RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
+  const result = post(API.RegionApi.GetEntByRegion, params);
   return result;
 }

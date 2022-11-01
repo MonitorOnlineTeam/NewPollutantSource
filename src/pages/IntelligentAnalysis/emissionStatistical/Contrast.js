@@ -45,12 +45,15 @@ const ImportantTypeList = [
   pointContrastExportLoading: emissionsStatistics.pointContrastExportLoading,
   regionContrastLoading: emissionsStatistics.regionContrastLoading,
   entContrastLoading: emissionsStatistics.entContrastLoading,
-  pointExportLoading: emissionsStatistics.pointExportLoading,
+  pointContrastLoading: emissionsStatistics.pointContrastLoading,
 }))
 @Form.create()
 class Contrast extends PureComponent {
   state = {
     DataType: "region",
+    regionFlag: true,
+    entFlag: false,
+    pointFlag: false
   }
   _SELF_ = {
     formLayout: {
@@ -110,10 +113,10 @@ class Contrast extends PureComponent {
         RegionCode: values.RegionCode,
         ImportantType: values.ImportantType,
         PollutantType: values.PollutantType,
-        beginTime: moment(values.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(values.time1[1]).format('YYYY-MM-DD HH:mm:ss'),
-        ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD HH:mm:ss'),
-        ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD HH:mm:ss'),
+        beginTime: moment(values.time1[0]).format('YYYY-MM-DD 00:00:00'),
+        endTime: moment(values.time1[1]).format('YYYY-MM-DD 00:00:00'),
+        ComparisonbeginTime: moment(values.time2[0]).format('YYYY-MM-DD 00:00:00'),
+        ComparisonendTime: moment(values.time2[1]).format('YYYY-MM-DD 00:00:00'),
         DataType: DataType,
       }
     })
@@ -149,9 +152,9 @@ class Contrast extends PureComponent {
   }
 
   render() {
-    const { form: { getFieldDecorator, getFieldValue }, pollutantCodeList, regionContrastLoading, entContrastLoading, pointExportLoading, regionContrastExportLoading, entContrastExportLoading, pointContrastExportLoading, regionList, attentionList, regionContrastTableDataSource, entContrastTableDataSource, pointContrastTableDataSource } = this.props;
-    const { DataType } = this.state;
-    let loading = regionContrastLoading || entContrastLoading || pointExportLoading;
+    const { form: { getFieldDecorator, getFieldValue }, pollutantCodeList, regionContrastLoading, entContrastLoading, pointContrastLoading, regionContrastExportLoading, entContrastExportLoading, pointContrastExportLoading, regionList, attentionList, regionContrastTableDataSource, entContrastTableDataSource, pointContrastTableDataSource } = this.props;
+    const { DataType, regionFlag, entFlag, pointFlag } = this.state;
+    let loading = regionContrastLoading || entContrastLoading || pointContrastLoading;
     let exportLoading = regionContrastExportLoading || entContrastExportLoading || pointContrastExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
     const _style = {
@@ -547,8 +550,8 @@ class Contrast extends PureComponent {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
                       this.getTableData("region");
-                      this.getTableData("ent");
-                      this.getTableData("point");
+                      // this.getTableData("ent");
+                      // this.getTableData("point");
                     }}
                   />
                 )}
@@ -612,9 +615,11 @@ class Contrast extends PureComponent {
                     message.error("请将时间填写完整");
                     return;
                   }
-                  this.getTableData("region");
-                  this.getTableData("ent");
-                  this.getTableData("point");
+                  this.getAllPollutantCode();
+                  this.getTableData(DataType);
+                  // this.getTableData("region");
+                  // this.getTableData("ent");
+                  // this.getTableData("point");
                 }}>
                   查询
                 </Button>
@@ -645,7 +650,12 @@ class Contrast extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
+          <Tabs defaultActiveKey="region" onChange={(key) => {
+            if (!regionFlag || !entFlag || !pointFlag) {
+              this.getTableData(key);
+            }
+            this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
+          }}>
             <TabPane tab="辖区排放量" key="region">
               <SdlTable loading={regionContrastLoading} pagination={false} align="center" dataSource={regionContrastTableDataSource} columns={RegionColumns} />
             </TabPane>
@@ -653,7 +663,7 @@ class Contrast extends PureComponent {
               <SdlTable loading={entContrastLoading} pagination={false} align="center" dataSource={entContrastTableDataSource} columns={EntColumns} />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointExportLoading} pagination={false} align="center" dataSource={pointContrastTableDataSource} columns={PointColumns} />
+              <SdlTable loading={pointContrastLoading} pagination={false} align="center" dataSource={pointContrastTableDataSource} columns={PointColumns} />
             </TabPane>
           </Tabs>
         </Card>

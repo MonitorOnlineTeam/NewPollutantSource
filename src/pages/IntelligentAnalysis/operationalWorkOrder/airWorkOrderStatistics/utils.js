@@ -7,7 +7,7 @@
  */
 
 export function getAttentionDegreeList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 

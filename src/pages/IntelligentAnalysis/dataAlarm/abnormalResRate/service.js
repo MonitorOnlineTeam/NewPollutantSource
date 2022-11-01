@@ -1,40 +1,39 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取关注程度
 export async function getAttentionDegreeList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 
 // 获取table数据 - 师一级
 export async function getTableDataSource(params) {
-  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionAlarmRateListForRegion`, params);
+  const result = post(API.StatisticAnalysisApi.GetExceptionAlarmRateListForRegion, params);
   return result;
 }
 
 // 导出数据 - 师一级
 export async function exportReport(params) {
-  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionAlarmRateListForRegion`, params);
+  const result = post(API.ExportApi.ExportExceptionAlarmRateListForRegion, params);
   return result;
 }
 
 // 获取table数据 - 二级页面
 export async function getSecondTableDataSource(params) {
-  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/GetExceptionAlarmRateListForPoint`, params);
+  const result = post(API.StatisticAnalysisApi.GetExceptionAlarmRateListForPoint, params);
   return result;
 }
 
 // 导出数据 - 二级页面
 export async function exportSecond(params) {
-  const result = post(`/api/rest/PollutantSourceApi/ExceptionApi/ExportExceptionAlarmRateListForPoint`, params);
+  const result = post(API.ExportApi.ExportExceptionAlarmRateListForPoint, params);
   return result;
 }
 
 // 根据行政区查询企业
 export async function getEntByRegion(params) {
-  console.log("params.RegionCode=", params.RegionCode)
-  let RegionCode = params.RegionCode || "";
-  const result = post(`/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=${RegionCode}`, {});
+  const result = post(API.RegionApi.GetEntByRegion, params);
   return result;
 }
 

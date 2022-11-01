@@ -1,4 +1,5 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /** 获取视频连接 */
 export async function hkvideourl(params) {

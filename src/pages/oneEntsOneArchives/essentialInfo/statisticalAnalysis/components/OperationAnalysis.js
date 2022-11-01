@@ -5,9 +5,9 @@ import { connect } from 'dva';
 import config from "@/config";
 const { RunningRate, TransmissionEffectiveRate } = config;
 
-@connect(({ loading, home }) => ({
-  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
-  rateStatisticsByEnt: home.rateStatisticsByEnt,
+@connect(({ loading, oneEntAndPoint }) => ({
+  rateStatisticsByEntLoading: loading.effects['oneEntAndPoint/getRateStatisticsByEnt'],
+  rateStatisticsByEnt: oneEntAndPoint.rateStatisticsByEnt,
 }))
 
 class OperationAnalysis extends Component {
@@ -28,7 +28,7 @@ class OperationAnalysis extends Component {
     const { dispatch } = this.props;
     // 获取智能质控数据
     dispatch({
-      type: "home/getRateStatisticsByEnt",
+      type: "oneEntAndPoint/getRateStatisticsByEnt",
       payload: {
         entCode,
         DGIMN

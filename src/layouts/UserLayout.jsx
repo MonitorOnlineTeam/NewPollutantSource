@@ -55,7 +55,8 @@ const UserLayout = props => {
   else {
     getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
   }
-
+  const bgImageType = configInfo.LAMImgType;
+  const bgImageUrl = bgImageType ? `/bgImage/${bgImageType}/login_bg.jpg` : 'https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg';
   return (
     <DocumentTitle
       // title={getPageTitle({
@@ -67,15 +68,28 @@ const UserLayout = props => {
       // })}
       title={title}
     >
-      <div className={styles.container}>
+      <div className={`${styles.container} ${bgImageType ? styles.container_bg : ''}`} style={{ backgroundImage: `url(${bgImageUrl})` }}>
         {
 
           <div className={styles.lang}>
-            {
+            {/* {
               configInfo && configInfo.IsShowQRcode === "true" &&
               <SelectLang />
+            } */}
+            {
+              configInfo && configInfo.IsShowQRcode === "true" &&
+              <Popover
+                content={
+                  <div>
+                    <QRCode value={getIp} size={200} />
+                  </div>
+                }
+                title="手机端下载" trigger="hover">
+                <QrcodeOutlined
+                  style={{ marginRight: "20px" }}
+                />
+              </Popover>
             }
-
           </div>
         }
 
@@ -85,7 +99,7 @@ const UserLayout = props => {
               <Link to="/">
 
                 {
-                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={configInfo.Logo ? `/api/upload/${configInfo.Logo}` : logo} />
+                  configInfo && configInfo.IsShowLogo === "true" && <img alt="logo" className={styles.logo} src={configInfo.Logo} />
                 }
 
                 {/* <span className={styles.title}>污染源智能分析平台</span> */}
@@ -98,24 +112,6 @@ const UserLayout = props => {
           {children}
         </div>
         {/* <DefaultFooter copyright={'污染源智能分析平台  2019 SDL'} links={[]} /> */}
-        {
-          configInfo && configInfo.IsShowQRcode === "true" &&
-          <Popover
-            content={
-              <div>
-                {/* <img
-                  width={272}
-                  alt="logo"
-                  src={`/api/upload/phoneQRCode.png`}
-                /> */}
-                <QRCode value={getIp} size={200} />
-              </div>
-            }
-            title="手机端下载" trigger="hover">
-            <QrcodeOutlined
-              style={{ position: "absolute", cursor: "pointer", right: "58px", top: "22px", fontSize: 16 }} />
-          </Popover>
-        }
         {
           configInfo && configInfo.IsShowFooterMessages === "true" && <DefaultFooter copyright={configInfo && configInfo.LoginFooterMessages} links={[]} />
         }

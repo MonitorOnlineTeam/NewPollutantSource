@@ -49,6 +49,9 @@ class Gas extends PureComponent {
   state = {
     time: [moment().subtract(1, 'days').startOf("day"), moment().subtract(1, 'days').endOf("day")],
     DataType: "region",
+    regionFlag: true,
+    entFlag: false,
+    pointFlag: false
   }
   _SELF_ = {
     formLayout: {
@@ -141,7 +144,7 @@ class Gas extends PureComponent {
     let loading = regionLoading || entLoading || pointLoading;
     let exportLoading = regionExportLoading || entExportLoading || pointExportLoading;
     // const { columns, RegionColumns, EntColumns } = this._SELF_;
-    const { time, DataType } = this.state;
+    const { time, DataType, regionFlag, entFlag, pointFlag } = this.state;
     let _regionList = regionList.length ? regionList[0].children : [];
     const _style = {
       width: 60,
@@ -262,7 +265,7 @@ class Gas extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        width: 150,
+        width: 200,
       },
       {
         title: '企业',
@@ -362,7 +365,7 @@ class Gas extends PureComponent {
         title: '行政区',
         dataIndex: 'RegionName',
         key: 'RegionName',
-        width: 130,
+        width: 200,
       },
       {
         title: '企业',
@@ -556,27 +559,28 @@ class Gas extends PureComponent {
                   <SelectPollutantType
                     style={{ width: 200 }}
                     showDefaultValue
+                    filterPollutantType={'1,2'}
                     placeholder="请选择污染物类型"
                     onChange={value => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
-                      this.getAllPollutantCode();
                     }}
                     initCallback={(value) => {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
                       this.getTableData("region");
-                      this.getTableData("ent");
-                      this.getTableData("point");
+                      // this.getTableData("ent");
+                      // this.getTableData("point");
                     }}
                   />
                 )}
               </FormItem>
               <div style={{ display: 'inline-block', lineHeight: "40px" }}>
                 <Button loading={loading} type="primary" style={{ marginLeft: 10 }} onClick={() => {
-                  // this.getTableData(DataType);
-                  this.getTableData("region");
-                  this.getTableData("ent");
-                  this.getTableData("point");
+                  this.getTableData(DataType);
+                  this.getAllPollutantCode();
+                  // this.getTableData("region");
+                  // this.getTableData("ent");
+                  // this.getTableData("point");
                 }}>
                   查询
                 </Button>
@@ -595,15 +599,20 @@ class Gas extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
+          <Tabs defaultActiveKey="region" onChange={(key) => {
+            if (!regionFlag || !entFlag || !pointFlag) {
+              this.getTableData(key);
+            }
+            this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
+          }}>
             <TabPane tab="辖区排放量" key="region">
-              <SdlTable loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
+              <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={regionLoading} pagination={false} align="center" dataSource={regionTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entLoading} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
+              <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={entLoading} pagination={false} align="center" dataSource={entTableDataSource} columns={EntColumns} />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointLoading} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
+              <SdlTable scroll={{ y: 'calc(100vh - 490px)' }} loading={pointLoading} pagination={false} align="center" dataSource={pointTableDataSource} columns={PointColumns} />
             </TabPane>
           </Tabs>
         </Card>

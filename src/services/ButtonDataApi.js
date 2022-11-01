@@ -5,6 +5,7 @@
  */
 
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 
 // 查询列表按钮配置
@@ -13,7 +14,7 @@ export async function GetButtonsByConfigID(params) {
         ConfigId: params.ConfigID
     }
 
-    const result = post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetButtonsByConfigID', body, null);
+    const result = post(API.autoFormApi.GetButtonsByConfigID, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -26,7 +27,7 @@ export async function GetTableExtend(params) {
         PageFlag: params.PageFlag
     }
 
-    const result = post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetTableExtend', body, null);
+    const result = post(API.autoFormApi.GetTableExtend, body, null);
     return result === null ? {
         data: null
     } : result;
@@ -38,7 +39,7 @@ export async function SaveCfgButtons(params) {
         "ConfigId": params.ConfigId,
         "ButtonList": params.ButtonList
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/SaveCfgButtons', body, null);
+    const result = await post(API.autoFormApi.SaveCfgButtons, body, null);
     return result === null ? null : result;
 }
 
@@ -51,7 +52,7 @@ export async function SaveTableExtend(params) {
         "DT_CUSTOMCSS": params.DT_CUSTOMCSS,
         "DT_PAGEFLAG": params.DT_PAGEFLAG
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/SaveTableExtend', body, null);
+    const result = await post(API.autoFormApi.SaveTableExtend, body, null);
     return result === null ? null : result;
 }
 

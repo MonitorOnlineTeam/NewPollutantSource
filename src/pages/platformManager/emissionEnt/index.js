@@ -39,6 +39,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import RegionList from '@/components/RegionList'
+import styles from './index.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -48,7 +49,7 @@ const pageUrl = {
   updateState: 'emissionEnt/updateState',
   getData: 'emissionEnt/getTransmissionEfficiencyForRegion',
 };
-const TableTransfer = ({ leftColumns, rightColumns,loading, ...restProps }) => (
+const TableTransfer = ({ leftColumns, rightColumns, loading, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -101,7 +102,7 @@ const leftTableColumns = [
     dataIndex: 'RegionName',
     title: '行政区',
     ellipsis: true,
-    width:150
+    width: 150
   },
   {
     dataIndex: 'EntName',
@@ -149,7 +150,7 @@ const rightTableColumns = [
     dataIndex: 'RegionName',
     title: '行政区',
     ellipsis: true,
-    width:150
+    width: 150
   },
   {
     dataIndex: 'EntName',
@@ -209,7 +210,7 @@ const rightTableColumns = [
   loading: loading.effects['emissionEnt/GetEmissionEntList'],
   noSelectEnt: emissionEnt.noSelectEnt,
   selectEnt: emissionEnt.selectEnt,
-  pointLoading:loading.effects['emissionEnt/GetEmissionEntAndPoint']
+  pointLoading: loading.effects['emissionEnt/GetEmissionEntAndPoint']
 }))
 @Form.create()
 class emissionEnt extends Component {
@@ -538,11 +539,11 @@ class emissionEnt extends Component {
                   {this.children()}
                 </Select> */}
                 <RegionList
-                    changeRegion={(value) => {
-                      this.changeRegion(value)
-                    }}
-                    RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
-                  />
+                  changeRegion={(value) => {
+                    this.changeRegion(value)
+                  }}
+                  RegionCode={this.props.RegionCode ? this.props.RegionCode : undefined}
+                />
               </FormItem>
               <FormItem label="监测点类型">
                 <Select
@@ -654,6 +655,7 @@ class emissionEnt extends Component {
           }}
         >
           <TableTransfer
+            className={styles.transfer}
             rowKey={record => record.key}
             titles={['待选企业监测点', '参与排放量计算的监测点']}
             dataSource={this.props.noSelectEnt}
@@ -664,7 +666,7 @@ class emissionEnt extends Component {
             filterOption={(inputValue, item) => item.EntName.indexOf(inputValue) !== -1}
             leftColumns={leftTableColumns}
             rightColumns={rightTableColumns}
-            style={{ width: '100%', height: '600px' }}
+            style={{ width: '100%', height: '600px', overflowY: 'auto' }}
             loading={this.props.pointLoading}
           />
         </Modal>

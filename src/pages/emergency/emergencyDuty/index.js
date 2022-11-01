@@ -147,7 +147,7 @@ class index extends PureComponent {
                 if (record.Status === 2 || record.Status === 4) {
                   return <Tooltip title="应急处置">
                     <a onClick={() => {
-                      if(record.IsCurrent === 0 && record.Status !== 4) {
+                      if (record.IsCurrent === 0 && record.Status !== 4) {
                         this.onSetCurrent(record.AlarmInfoCode)
                       }
                       router.push(`/emergency/disposal?code=${record.AlarmInfoCode}`)
@@ -190,6 +190,7 @@ class index extends PureComponent {
           this.setState({
             selectedRowKeys: [arr[0].AlarmInfoCode]
           })
+          localStorage.setItem("AlarmInfoCode", arr[0].AlarmInfoCode)
         }
       }
     })

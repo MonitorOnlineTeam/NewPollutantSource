@@ -4,7 +4,7 @@
  * 创建时间：2020.10.14
  */
 import Model from '@/utils/model';
-import { GetPollutantByType, GetExceedDataList,GetEntByRegion,GetExceedNum,ExportExceedDataList,ExportExceedNum } from '../services/exceedDataApi'
+import { GetPollutantByType, GetExceedDataList, GetEntByRegion, GetExceedNum, ExportExceedDataList, ExportExceedNum } from '../services/exceedDataApi'
 import moment from 'moment';
 import { message } from 'antd';
 import { downloadFile } from '@/utils/utils';
@@ -20,27 +20,27 @@ export default Model.extend({
     PageSize: 20,
     PageIndex: 1,
     total: 0,
-    ReginPageSize:0,
-    RegionPageIndex:0,
-    RegionTotal:0,
-    ModalPageSize:20,
+    ReginPageSize: 0,
+    RegionPageIndex: 0,
+    RegionTotal: 0,
+    ModalPageSize: 20,
     ModalPageIndex: 1,
     Modaltotal: 0,
-    ExceedPageSize:20,
+    ExceedPageSize: 20,
     ExceedPageIndex: 1,
     ExceedTotal: 0,
     ExceedDataList: [],
     RegionDataList: [],
     EntCountList: [],
     priseList: [],
-    ExceedNumList:[]
-    
+    ExceedNumList: []
+
   },
   subscriptions: {},
   effects: {
     *GetPollutantByType({ payload }, { call, put, update, select }) {
       const body = {
-        type: payload.type
+        PollutantType: payload.type
       }
       const result = yield call(GetPollutantByType, body, null)
       if (result.IsSuccess) {
@@ -55,7 +55,7 @@ export default Model.extend({
       }
     },
     *GetEntByRegion({ payload }, { call, put, update, select }) {
-      
+
       const result = yield call(GetEntByRegion, payload, null)
       if (result.IsSuccess) {
         yield update({
@@ -80,7 +80,7 @@ export default Model.extend({
         PollutantList: payload.PollutantList,
         PageIndex: payload.PageIndex,
         PageSize: payload.PageSize,
-        EntCode:payload.EntCode
+        EntCode: payload.EntCode
       }
       const result = yield call(GetExceedNum, body, null)
       if (result.IsSuccess) {
@@ -88,7 +88,7 @@ export default Model.extend({
           ExceedNumList: result.Datas,
           Modaltotal: result.Total,
           ModalPageIndex: payload.PageIndex || 1,
-          ModalPageSize:payload.PageSize
+          ModalPageSize: payload.PageSize
         })
       }
       else {
@@ -115,7 +115,7 @@ export default Model.extend({
       }
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
-        if (payload.TabType == '1' || payload.TabType == '2'||payload.TabType == '5') {
+        if (payload.TabType == '1' || payload.TabType == '2' || payload.TabType == '5') {
 
           yield update({
             ExceedDataList: result.Datas,
@@ -151,7 +151,7 @@ export default Model.extend({
         PollutantList: payload.PollutantList,
         PageIndex: payload.PageIndex,
         PageSize: payload.PageSize,
-        EntCode:payload.EntCode
+        EntCode: payload.EntCode
       }
       const result = yield call(GetExceedDataList, body, null)
       if (result.IsSuccess) {
@@ -159,7 +159,7 @@ export default Model.extend({
           EntCountList: result.Datas,
           ExceedTotal: result.Total,
           ExceedPageIndex: payload.PageIndex || 1,
-          ExceedPageSize:payload.PageSize
+          ExceedPageSize: payload.PageSize
         })
       }
       else {
@@ -184,12 +184,10 @@ export default Model.extend({
       }
       const result = yield call(ExportExceedDataList, body, null)
       if (result.IsSuccess) {
-        if (payload.TabType == '1' || payload.TabType == '2'||payload.TabType == '5') {
-
-          downloadFile(`/upload${result.Datas}`)
-        }
-        else {
-          downloadFile(`/upload${result.Datas}`)
+        if (payload.TabType == '1' || payload.TabType == '2' || payload.TabType == '5') {
+          downloadFile(`${result.Datas}`)
+        } else {
+          downloadFile(`${result.Datas}`)
         }
 
       }
@@ -204,7 +202,7 @@ export default Model.extend({
         EndTime: payload.EndTime,
         TabType: payload.TabType,
         PollutantList: payload.PollutantList,
-        EntCode:payload.EntCode
+        EntCode: payload.EntCode
       }
       const result = yield call(ExportExceedNum, body, null)
       if (result.IsSuccess) {

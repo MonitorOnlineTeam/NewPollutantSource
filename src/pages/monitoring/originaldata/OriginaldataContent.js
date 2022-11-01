@@ -61,9 +61,6 @@ class Index extends Component {
     this.onTableChange = this.onTableChange.bind(this);
   }
 
-
-
-
   /** 切换时间 */
   _handleDateChange = (date, dateString) => {
     if (date) {
@@ -77,11 +74,11 @@ class Index extends Component {
       this.setState({
         rangeDate: date,
       });
-      if (this.props.dgimn || this.props.DGIMN) {
-        setTimeout(() => {
-          this.reloaddatalist();
-        }, 0);
-      }
+      // if (this.props.dgimn || this.props.DGIMN) {
+      //   setTimeout(() => {
+      //     this.reloaddatalist();
+      //   }, 0);
+      // }
     }
   };
 
@@ -94,7 +91,7 @@ class Index extends Component {
     dispatch({
       type: 'originalData/getOriginalData',
       payload: {
-        dgimn: this.props.DGIMN
+        dgimn: this.props.DGIMN,
       },
     });
   }
@@ -173,7 +170,7 @@ class Index extends Component {
     ];
 
     return (<SdlTable
-      rowKey={(record, index) => `complete${index}`}
+      rowKey={(record, index) => index}
       dataSource={tableDatas}
       columns={columns}
       loading={loading}
@@ -216,12 +213,24 @@ class Index extends Component {
               <Option value="2031" disabled={disabledFourDataTypes}>日数据</Option>
               <Option value="other" disabled={disabledOthers}>其它</Option>
             </Select>
-
             <RangePicker_ style={{ marginRight: 10, marginLeft: 10 }}
               dateValue={this.state.rangeDate} format={this.state.format}
               callback={this._handleDateChange}
               //    onChange={this._handleDateChange}
               showTime={this.state.format} />
+            <Input
+              placeholder='请输入关键字'
+              style={{ width: 140 }}
+              onChange={(e) => {
+                this.props.dispatch({
+                  type: 'originalData/updateState',
+                  payload:{
+                    keyword: e.target.value
+                  }
+                })
+              }}
+            />
+            <Button type="primary" onClick={this.reloaddatalist} style={{ marginLeft: 10 }}>查询</Button>
           </div>
         }
         className="contentContainer"

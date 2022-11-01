@@ -33,6 +33,7 @@ export default Model.extend({
         if (payload.pollutantCode) {
           pointList = result.Datas.PointList.filter(item => item.PollutantType == payload.pollutantCode)
         }
+        // pointList = pointList.filter(item => item.Status === 1)
         callback && callback(pointList);
         yield update({
           allPoints: pointList,

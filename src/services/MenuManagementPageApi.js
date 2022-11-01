@@ -4,6 +4,7 @@
  * 创建时间：2019.09.19
  */
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 获取菜单管理列表
@@ -30,7 +31,7 @@ export async function AddMenuManagement(params) {
         DeleteMark: params.DeleteMark,
         AllowEdit: params.AllowEdit,//是否首页
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/AddMenuManagement', body, null);
+    const result = await post(API.autoFormApi.AddMenuManagement, body, null);
     return result === null ? null : result;
 }
 /** 
@@ -50,7 +51,7 @@ export async function UpdateMenuManagement(params) {
         ParentId: params.ParentId,
         AllowEdit: params.AllowEdit,//是否首页
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/UpdateMenuManagement', body, null);
+    const result = await post(API.autoFormApi.UpdateMenuManagement, body, null);
     return result === null ? null : result;
 }
 /**
@@ -60,7 +61,7 @@ export async function DelectMenuManagement(params) {
     const body = {
         Menu_Id: params.Menu_Id
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/DelectMenuManagement', body, null);
+    const result = await post(API.autoFormApi.DelectMenuManagement, body, null);
     return result === null ? null : result;
 }
 

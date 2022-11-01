@@ -57,7 +57,7 @@ class HandleUserModal extends Component {
             uid: '-4',
             name: 'image.png',
             status: 'done',
-            url: `/upload/${this.props.viewUserData.Pic}`,
+            url: `/${this.props.viewUserData.Pic}`,
           }
         ],
       })
@@ -72,7 +72,7 @@ class HandleUserModal extends Component {
             uid: '-4',
             name: 'image.png',
             status: 'done',
-            url: `/upload/${this.props.viewUserData.Pic}`,
+            url: `/${this.props.viewUserData.Pic}`,
           }
         ],
       })
@@ -155,7 +155,7 @@ class HandleUserModal extends Component {
           uid: '-4',
           name: 'image.png',
           status: 'done',
-          url: `/upload/${info.fileList[0].response.Datas}`,
+          url: `/${info.fileList[0].response.Datas}`,
         }]
         this.formRef.current.setFieldsValue({ "OpenID": info.fileList[0].response.Datas })
       } else {
@@ -267,7 +267,7 @@ class HandleUserModal extends Component {
                 disabled={!!id}
                 fileList={fileList}
                 style={{ width: 120 }}
-                action={id ? "/api/rest/PollutantSourceApi/UploadApi/UpdOperator" : "/api/rest/PollutantSourceApi/UploadApi/AddOperator"}
+                action={id ? "/rest/PollutantSourceApi/QCAOperator/UpdateOperPhoto" : "/rest/PollutantSourceApi/QCAOperator/AddOperPhoto"}
                 headers={{
                   Authorization: "Bearer " + Cookie.get(config.cookieName)
                 }}

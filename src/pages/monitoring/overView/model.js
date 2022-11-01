@@ -20,6 +20,7 @@ import {
   querygetentdatalist,
   getRealTimeColumn,
   getRealTimeDataView,
+  getElectricRealTimeDataView
 } from './services';
 import Model from '@/utils/model';
 import { isNullOrUndefined } from 'util';
@@ -79,7 +80,16 @@ export default Model.extend({
     // 实时数据一览
     realtimeColumns: [],
     realTimeDataView: [],
+    realTimeTotal: 0,
     dataType: 'HourData',
+    // 电能实时数据一览
+    electricViewData: {
+      EntList: [],
+      OffLineCount: 0,
+      OnLineCount: 0,
+      OneLineRate: 0,
+      Total: 0,
+    },
   },
   effects: {
     *init({ payload }, { call, take, select }) {
@@ -540,6 +550,7 @@ export default Model.extend({
       if (result.IsSuccess) {
         yield update({
           realTimeDataView: result.Datas,
+          realTimeTotal: result.Total,
         })
       } else {
         message.error(result.Message)
@@ -572,6 +583,21 @@ export default Model.extend({
             ...realtimeColumns,
             ...result.Datas,
           ],
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+
+    // 获取电力实时数据一览
+    *getElectricRealTimeDataView({ payload }, { call, update, select }) {
+      const result = yield call(getElectricRealTimeDataView, payload);
+      if (result.IsSuccess) {
+        yield update({
+          electricViewData: {
+            ...result.Datas,
+            Total: result.Total
+          }
         })
       } else {
         message.error(result.Message)

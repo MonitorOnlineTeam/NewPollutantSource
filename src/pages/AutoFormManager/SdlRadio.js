@@ -17,7 +17,10 @@ class SdlRadio extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, data } = this.props;
+    const { dispatch, data, configId } = this.props;
+    if(!data.length) {
+      console.log("props=", this.props)
+    }
     !data.length && dispatch({
       type: 'autoForm/getConfigIdList',
       payload: {
@@ -34,7 +37,7 @@ class SdlRadio extends Component {
           this.props.all && <Radio key={""} value={null}>全部</Radio>
         }
         {
-          dataList.map(radio => {
+          (dataList || []).map(radio => {
             return <Radio key={radio.key} value={radio.key}>{radio.value}</Radio>
           })
         }

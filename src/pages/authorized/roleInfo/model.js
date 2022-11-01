@@ -108,7 +108,7 @@ export default Model.extend({
                 ...payload
             });
             if (result.IsSuccess) {
-                message.success("修改成功");
+                // message.success("修改成功");
                 payload.callback(result);
             }else{
                 message.error(result.Message);

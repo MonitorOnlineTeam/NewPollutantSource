@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 缺失数据
@@ -6,7 +7,7 @@ import { post } from '@/utils/request';
  */
 export async function GetDefectModel(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetDefectModel',
+    API.MonitorDataApi.GetMissDataList,
     params,
     null,
   );
@@ -16,12 +17,7 @@ export async function GetDefectModel(params) {
 
 //关注列表
 export async function GetAttentionDegreeList(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList',
-    params,
-    null,
-  );
-
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 
@@ -30,7 +26,8 @@ export async function GetAttentionDegreeList(params) {
 export async function ExportGetAlarmDataList(params) {
   const result = post(
     // '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetAlarmDataList',
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetMissDataList',
+    // '/api/rest/PollutantSourceApi/BaseDataApi/ExportGetMissDataList',
+    API.ExportApi.ExportMissDataList,
     params,
     null,
   );
@@ -42,12 +39,6 @@ export async function ExportGetAlarmDataList(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
+  const result = post(API.RegionApi.GetEntByRegion, params);
   return result;
 }

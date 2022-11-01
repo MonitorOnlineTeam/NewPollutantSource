@@ -1,0 +1,143 @@
+.pageContaniner {
+  display: flex;
+  margin: -24px;
+  height: calc(100vh - 64px);
+  position: relative;
+
+  .rankWrapper {
+    width: 400px;
+  }
+
+  .mapWrapper {
+    flex: 1;
+    position: relative;
+  }
+
+  .mapSpin {
+    position: relative;
+
+    &>div {
+      height: 100vh;
+    }
+  }
+}
+
+.sliderContainer {
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.75);
+
+  .leftIcon {
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #ccc;
+    margin-right: 10px;
+    text-align: center;
+    width: 40px;
+    justify-content: center;
+  }
+
+  .handleIcon {
+    font-size: 30px;
+    float: left;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  .content {
+    flex: 1;
+
+    .timeLine {
+      display: flex;
+      width: 100%;
+
+      &>div {
+        line-height: 30px;
+        color: #fff;
+        border-right: 1px solid #ccc;
+        text-align: center;
+        flex: 1;
+      }
+    }
+  }
+}
+
+
+.AQIBox {
+  min-width: 30px;
+  padding: 4px;
+  border-radius: 2px;
+  line-height: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.pollutantSelectContainer {
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 90px;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+
+  li {
+    text-align: center;
+    color: #fff;
+    line-height: 34px;
+    font-weight: 500;
+    border-bottom: 1px solid #787878;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #1890ff;
+    }
+
+    &.active {
+      background-color: #1890ff;
+    }
+  }
+}
+
+.timeBar {
+  font-weight: 500;
+  position: absolute;
+  right: 4px;
+  top: 76px;
+  z-index: 999999;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #3ef307;
+}
+
+.searchTime {
+  position: absolute;
+  left: 4px;
+  top: 10px;
+  z-index: 1;
+}
+
+.gifLoading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  background: rgba(0, 0, 0, .3);
+  font-weight: 500;
+  position: absolute;
+  color: #fff;
+  font-size: 30px;
+}
+
+.gifBtn {
+  position: absolute;
+  left: 100px;
+  z-index: 1;
+}

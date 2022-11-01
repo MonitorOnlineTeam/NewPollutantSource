@@ -28,7 +28,7 @@ export default Model.extend({
     effects: {
         //关注度
         *GetAttentionDegreeList({ payload }, { call, put, update, select }) {
-            const result = yield call(GetAttentionDegreeList, null, null)
+            const result = yield call(GetAttentionDegreeList, {})
             if (result.IsSuccess) {
                 yield update({
                     attention: result.Datas

@@ -113,7 +113,7 @@ export default class OverVerifyLst extends Component {
                 <Link
                   to={{
                     pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                    query: { regionCode: record.regionCode },
+                    query: { regionCode: record.regionCode, pollutantType: this.props.pollutantByType, pollutantList: this.props.overVerifyRateForm.PollutantList.toString() },
                   }}
                 >
                   {text}
@@ -268,7 +268,7 @@ export default class OverVerifyLst extends Component {
       type: 'overVerifyRate/exportDefectDataSummary',
       payload: { ...overVerifyRateForm },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        window.open(data)
       },
     });
   };
@@ -325,11 +325,14 @@ export default class OverVerifyLst extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => {
+
+
+
           return (
             <Link
               to={{
                 pathname: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                query: { regionCode: record.regionCode },
+                query: { regionCode: record.regionCode, pollutantType: this.props.pollutantByType, pollutantList: this.props.overVerifyRateForm.PollutantList.value },
               }}
             >
               {text}
@@ -485,7 +488,7 @@ export default class OverVerifyLst extends Component {
                     {this.regchildren()}
                   </Select> */}
 
-                  <RegionList  style={{ width: 100 }} changeRegion={this.changeRegion} RegionCode={RegionCode}/>
+                  <RegionList style={{ width: 100 }} changeRegion={this.changeRegion} RegionCode={RegionCode} />
 
                 </Form.Item>
                 <Form.Item label="企业类型">

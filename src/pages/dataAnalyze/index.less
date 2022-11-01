@@ -16,15 +16,81 @@
   // background: url('/home/bg.jpg');
   display: flex;
   flex-direction: column;
+  // height: calc(100vh - 108px);
+  // padding: 0;
 }
 
-.entWrapper {
+.entAndPointSelectWrapper {
   background: #2357a6;
-  line-height: 44px;
   padding: 0 29px;
-  color: #fff;
-  font-size: 18px;
+  color: #e9e9e9;
   font-weight: 500;
+  position: relative;
+
+  .before {
+    span {
+      width: 18px;
+      background: #0091ea;
+      line-height: 44px;
+      height: 18px;
+      position: absolute;
+      left: 0;
+      top: 14px;
+    }
+
+    span:last-child {
+      margin-left: 4px;
+      width: 10px;
+      left: 20px;
+    }
+  }
+
+  .selectContent {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px;
+
+    span.text {
+      line-height: 44px;
+      font-size: 15px;
+      border-bottom: 1px solid #e9e9e9;
+      padding-bottom: 4px;
+    }
+
+    &:hover {
+      ul.selectListBox {
+        display: block;
+      }
+    }
+
+    ul.selectListBox {
+      display: none;
+      position: absolute;
+      top: 45px;
+      left: 0;
+      // min-width: 100%;
+      min-width: 120%;
+      background: #3856a9;
+      margin: 0;
+      // min-height: 80px;
+      z-index: 9;
+      max-width: 170px;
+
+      li {
+        line-height: 24px;
+        padding: 6px 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+
+        &.active,
+        &:hover {
+          background: #0091ea;
+        }
+      }
+    }
+  }
 }
 
 .pageContainer {
@@ -36,8 +102,9 @@
   padding-top: 20px;
 
   .Up {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     display: flex;
+    height: 100%;
 
     .UpLeft {
       width: 25%;
@@ -139,6 +206,40 @@
       margin-left: 10px;
 
       .boxContent {
+
+        .btns {
+          text-align: center;
+          color: #fff;
+          display: flex;
+          justify-content: center;
+          margin-top: 16px;
+
+          p {
+            background: #1b2f65;
+            width: 102px;
+            display: flex;
+
+            span {
+              display: inline-block;
+              width: 50px;
+              text-align: center;
+              cursor: pointer;
+
+              &.active,
+              &:hover {
+                background: #0091ea;
+              }
+            }
+
+            i {
+              display: inline-block;
+              width: 2px;
+              height: 100%;
+              background: #0091ea;
+            }
+          }
+        }
+
         background: #1f3573;
       }
     }
@@ -147,6 +248,8 @@
   &>div {
     flex: 1;
     padding-left: 20px;
+    box-sizing: border-box;
+    padding-bottom: 20px;
   }
 
 
@@ -184,6 +287,38 @@
 
     .boxContent {
       flex: 1;
+    }
+  }
+}
+
+.titleBtns {
+  position: absolute;
+  right: 0;
+  top: 0px;
+  font-weight: normal;
+  font-size: 14px !important;
+
+  span {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #0091ea;
+    margin-right: 4px;
+
+    &.active,
+    &:hover {
+      background: #0091ea;
+    }
+  }
+}
+
+.spinWrapper {
+  // margin-bottom: 20px;
+  height: 100%;
+  :global {
+    .ant-spin-container {
+      height: 100%;
     }
   }
 }

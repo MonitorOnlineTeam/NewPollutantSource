@@ -92,7 +92,7 @@ class CompositeIndexContrast extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           width: 220,
           children: [
             {
@@ -182,7 +182,7 @@ class CompositeIndexContrast extends Component {
           ]
         },
         {
-          title: 'PM10',
+          title: 'PM₁₀',
           width: 220,
           children: [
             {
@@ -212,7 +212,7 @@ class CompositeIndexContrast extends Component {
           ]
         },
         {
-          title: 'PM2.5',
+          title: 'PM₂.₅',
           width: 220,
           children: [
             {

@@ -934,6 +934,7 @@ class NavigationTree extends Component {
 
         <Drawer
           // title="导航菜单"
+          keyboard={false}
           placement={floats == 'leftmenu' ? 'right' : 'left'}
           closable={false}
           onClose={this.onClose}

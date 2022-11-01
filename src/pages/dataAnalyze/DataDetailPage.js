@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2020-01-10 10:45:15 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-01-10 18:02:01
+ * @Last Modified time: 2022-09-20 09:16:22
  * @Description: 数据详情
  */
 import React, { PureComponent } from 'react';

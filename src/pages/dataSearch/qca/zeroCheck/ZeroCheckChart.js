@@ -207,7 +207,7 @@ class ZeroCheckChart extends PureComponent {
         </div>
         <ReactEcharts
           option={this.getOption()}
-          style={{ height: "calc(100vh - 270px)" }}
+          style={{ height: "calc(100vh - 280px)" }}
           className="echarts-for-echarts"
           theme="my_theme"
         />

@@ -4,6 +4,7 @@
  * 创建时间：2019.08.9
  */
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 上传附件
@@ -27,7 +28,7 @@ export async function GetPollutantByPoint(params) {
  * @params {"DGIMN":""}
  */
 export async function addGetPollutantByPoint(params) {
-  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAdd', params, null);
+  const result = get(API.PollutantApi.GetPollutantByDGIMN, params, null);
   return result;
 }
 

@@ -5,6 +5,7 @@
  */
 
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 获取数据源树形导航
@@ -13,7 +14,7 @@ export async function GetDBSourceTree(params) {
     const body = {
         id:params.Id,
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/GetDBSourceTree', body,null);
+    const result = await post(API.autoFormApi.GetDBSourceTree, body,null);
     return result === null ?null: result;
 }
 
@@ -24,6 +25,6 @@ export async function DeleteTreeConfig(params) {
     const body = {
         id:params.Id,
     };
-    const result = await post('/api/rest/PollutantSourceApi/AutoFormDataApi/DeleteTreeConfig', body,null);
+    const result = await post(API.autoFormApi.DeleteTreeConfig, body,null);
     return result === null ?null: result;
 }

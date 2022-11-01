@@ -19,6 +19,7 @@ class CreateAndEditAlarmModal extends PureComponent {
         title={title}
         width="60vw"
         visible={visible}
+        destroyOnClose
         onCancel={() => this.props.onCancel()}
         bodyStyle={{ padding: 0 }}
         footer={false}

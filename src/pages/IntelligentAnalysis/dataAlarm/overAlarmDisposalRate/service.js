@@ -6,23 +6,24 @@
  * @FilePath: /NewPollutantSource/src/pages/dataAnalyze/overAlarmDisposalRate/service.js
  */
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取关注程度
 export async function getAttentionDegreeList(params) {
-  const result = post('/api/rest/PollutantSourceApi/BaseDataApi/GetAttentionDegreeList', params);
+  const result = post(API.commonApi.GetAttentionDegreeList, params);
   return result;
 }
 
 // xinjiang根据企业类型查询监测因子
 export async function getPollutantCodeList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantCodeList`, params);
+  const result = post(API.commonApi.GetPollutantCodeList, params);
   return result;
 }
 
 // 根据企业类型查询监测因子
 export async function getPollutantByType(params) {
   const result = post(
-    `/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantByType?type=${params.type}`,
+    `${API.commonApi.GetPollutantByType}?type=${params.type}`,
     {},
   );
   return result;
@@ -30,20 +31,20 @@ export async function getPollutantByType(params) {
 
 // 超标报警处置率-一级
 export async function getAlarmManagementRate(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmManagementRate`, params);
+  const result = post(API.AlarmApi.GetAlarmManagementRate, params);
   return result;
 }
 
 // 超标报警处置率导出-师一级
 export async function exportAlarmManagementRate(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportAlarmManagementRate`, params);
+  const result = post(API.ExportApi.ExportAlarmManagementRate, params);
   return result;
 }
 
 // 超标报警处置率-二级
 export async function getAlarmManagementRateDetail(params) {
   const result = post(
-    `/api/rest/PollutantSourceApi/BaseDataApi/GetAlarmManagementRateDetail`,
+    API.AlarmApi.GetAlarmManagementRateDetail,
     params,
   );
   return result;
@@ -52,7 +53,7 @@ export async function getAlarmManagementRateDetail(params) {
 // 超标报警处置率导出-二级
 export async function exportAlarmManagementRateDetail(params) {
   const result = post(
-    `/api/rest/PollutantSourceApi/BaseDataApi/exportAlarmManagementRateDetail`,
+    API.ExportApi.ExportAlarmManagementRateDetail,
     params,
   );
   return result;
@@ -61,9 +62,8 @@ export async function exportAlarmManagementRateDetail(params) {
 // 根据行政区获取 企业列表
 export async function GetEntByRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
+    API.RegionApi.GetEntByRegion,
+    params,
     null,
   );
 
@@ -72,24 +72,24 @@ export async function GetEntByRegion(params) {
 
 // 异常数据查询-师一级
 export async function getExceptionList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionList`, params);
+  const result = post(API.MonitorDataApi.GetExceptionList, params);
   return result;
 }
 
 // 异常数据导出-师一级
 export async function exportExceptionList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionList`, params);
+  const result = post(API.ExportApi.ExportExceptionList, params);
   return result;
 }
 
 // 异常数据查询 - 二级页面
 export async function getExceptionPointList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/GetExceptionPointList`, params);
+  const result = post(API.MonitorDataApi.GetExceptionPointList, params);
   return result;
 }
 
 // 异常数据导出 - 二级页面
 export async function exportExceptionPointList(params) {
-  const result = post(`/api/rest/PollutantSourceApi/BaseDataApi/ExportExceptionPointList`, params);
+  const result = post(API.ExportApi.ExportExceptionPointList, params);
   return result;
 }

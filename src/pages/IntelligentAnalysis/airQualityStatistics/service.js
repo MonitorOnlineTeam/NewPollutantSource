@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 空气质量状况统计 列表
@@ -6,7 +7,7 @@ import { post } from '@/utils/request';
  */
 export async function GetCityStationAQI(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/EmissionsApi/GetCityStationAQI',
+    API.AirDataApi.GetCityStationAQI,
     params,
     null,
   );
@@ -20,7 +21,7 @@ export async function GetCityStationAQI(params) {
 
 export async function ExportCityStationAQI(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/EmissionsApi/ExportCityStationAQI',
+    API.AirDataApi.ExportCityStationAQI,
     params,
     null,
   );

@@ -7,21 +7,13 @@
  */
 import React, { Component, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
-
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-
-import { Input, Button, Card, Spin, Upload } from 'antd';
 import moment from "moment";
-import cuid from 'cuid';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
-import { checkRules } from '@/utils/validator';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 // import MonitorContent from '../../components/MonitorContent/index';
 import SdlForm from "./SdlForm"
-
-const FormItem = Form.Item;
 
 @connect(({ loading, autoForm }) => ({
   loadingConfig: loading.effects['autoForm/getPageConfig'],
@@ -45,14 +37,14 @@ class AutoFormAdd extends Component {
   onSubmitForm(formData) {
     const { dispatch, successCallback, form } = this.props;
     const { uid, configId } = this._SELF_;
-    if(formData.HazardousWasteYear){
-      formData.HazardousWasteYear=moment(formData.HazardousWasteMonth).format("YYYY")
-    }
-    if(formData.HazardousWasteMonth){
-      formData.HazardousWasteMonth=moment(formData.HazardousWasteMonth).format("MM")
-    }
+    // if (formData.HazardousWasteYear) {
+    //   formData.HazardousWasteYear = moment(formData.HazardousWasteMonth).format("YYYY")
+    // }
+    // if (formData.HazardousWasteMonth) {
+    //   formData.HazardousWasteMonth = moment(formData.HazardousWasteMonth).format("MM")
+    // }
 
-    
+
     // form.validateFields((err, values) => {
     //   if (!err) {
     //     let FormData = {};

@@ -64,6 +64,7 @@ class Details extends PureComponent {
       console.log("values=", values)
       let postData = {
         ...values,
+        IsEmergency: this.props.dutyOneData.IsEmergency,
         RegionCode: values.RegionCode.toString(),
         AlarmInfoCode: this._SELF_.AlarmInfoCode,
         ScreenBeginTime: values.time[0].format("YYYY-MM-DD 00:00:00"),

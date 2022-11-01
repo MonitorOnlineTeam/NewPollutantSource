@@ -1,5 +1,5 @@
 import { QrcodeOutlined } from '@ant-design/icons';
-import { Tooltip, Popover, Dropdown, Menu } from 'antd';
+import { Tooltip, Popover, Dropdown, Menu, Button } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -9,7 +9,7 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 import config from '@/config';
 import NoticeIconView from './NoticeIconView'
-import { UnorderedListOutlined } from '@ant-design/icons';
+import { UnorderedListOutlined, RollbackOutlined } from '@ant-design/icons';
 import webConfig from '../../../public/webConfig'
 import { router } from 'umi'
 
@@ -32,7 +32,7 @@ const GlobalHeaderRight = props => {
   else {
     getIp = "http://" + window.location.host + "/appoperation/appqrcodemain";
   }
-
+  const isShowSelectSystem = sessionStorage.getItem("isShowSelectSystem");
   const menu = (
     <Menu selectedKeys={[sessionStorage.getItem('sysMenuId')]}>
       {
@@ -63,20 +63,31 @@ const GlobalHeaderRight = props => {
       }
     </Menu>
   );
-
   return (
     <div className={className}>
       {
-        configInfo.IsShowSysPage === '1' && <Dropdown overlay={menu} trigger={['click']}>
-          <Tooltip title="切换系统">
+        configInfo.IsShowSysPage === '1' && isShowSelectSystem == 1 &&
+        <>
+          <Tooltip title="返回首页">
             <a
               rel="noopener noreferrer"
               className={styles.action}
+              onClick={() => router.push('/sysTypeMiddlePage')}
             >
-              <UnorderedListOutlined />
+              <RollbackOutlined />
             </a>
           </Tooltip>
-        </Dropdown>
+          <Dropdown overlay={menu} trigger={['click']}>
+            <Tooltip title="切换系统">
+              <a
+                rel="noopener noreferrer"
+                className={styles.action}
+              >
+                <UnorderedListOutlined />
+              </a>
+            </Tooltip>
+          </Dropdown>
+        </>
       }
       {
         configInfo && configInfo.IsShowQRcode === 'true' &&
@@ -100,9 +111,10 @@ const GlobalHeaderRight = props => {
   );
 };
 
-export default connect(({ settings, login, global }) => ({
+export default connect(({ settings, login, user, global }) => ({
   theme: settings.navTheme,
   layout: settings.layout,
   appFlag: login.appFlag,
+  menuList: user.currentMenu,
   sysPollutantTypeList: global.sysPollutantTypeList,
 }))(GlobalHeaderRight);

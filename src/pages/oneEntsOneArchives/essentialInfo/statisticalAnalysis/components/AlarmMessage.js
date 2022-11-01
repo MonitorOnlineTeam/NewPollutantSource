@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import styles from '../index.less';
 import Marquee from '@/components/Marquees'
-@connect(({ loading, home }) => ({
-  warningInfoList: home.warningInfoList,
+@connect(({ loading, oneEntAndPoint }) => ({
+  warningInfoList: oneEntAndPoint.warningInfoList,
 }))
 class AlarmMessage extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class AlarmMessage extends Component {
     const { dispatch } = this.props;
     // 获取报警信息
     dispatch({
-      type: "home/getWarningInfo",
+      type: "oneEntAndPoint/getWarningInfo",
       payload: {
         entCode: entCode || this.props.entCode,
       }

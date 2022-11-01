@@ -1,4 +1,5 @@
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 删除标准库
 export async function deleteStandardLibrary(params) {

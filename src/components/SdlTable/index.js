@@ -153,7 +153,6 @@ class SdlTable extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // if (this.state.columns !== prevState.columns) {
     if (this.state.columns !== prevState.columns || this.props.dataSource !== prevProps.dataSource) {
       const tableThead = this.sdlTableFrame.getElementsByClassName('ant-table-thead');
       const tableTheadHeight = tableThead ? tableThead[0].offsetHeight : 0;

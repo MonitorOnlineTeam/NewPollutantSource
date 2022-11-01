@@ -3,7 +3,7 @@
  * @Author: JianWei
  * @Date: 2019-5-23 10:34:29
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-04-22 10:58:40
+ * @Last Modified time: 2022-10-31 15:06:14
  */
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes, { object } from 'prop-types';
@@ -12,6 +12,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
+import { API } from '@config/API'
 
 import {
   Input,
@@ -251,7 +252,7 @@ class SdlForm extends PureComponent {
           let mode = '';
           if (item.type === '多选下拉列表') {
             mode = 'multiple';
-            initialValue = formData[configDataItemValue || fieldName] !== undefined ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
+            initialValue = formData[configDataItemValue || fieldName] ? (`${formData[configDataItemValue || fieldName]}`).split(',') : [];
           }
           element = (
             <SearchSelect
@@ -290,8 +291,10 @@ class SdlForm extends PureComponent {
           break;
         case '单选':
           if (item.value && !initialValue && !isEdit) {
-            initialValue = item.value[0].key
+            console.log('item=', item)
+            initialValue = item.value[0] ? item.value[0].key : undefined;
           }
+          console.log("item=", item)
           element = (
             <SdlRadio
               data={item.value}
@@ -363,66 +366,27 @@ class SdlForm extends PureComponent {
             handlePolygon
           />;
           break;
-        // case "上传":
-        //   const props = {
-        //     action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
-        //     // onChange: this.handleChange(fieldName),
-        //     multiple: true,
-        //     data: {
-        //       FileUuid: uid,
-        //       FileActualType: "1"
-        //     }
-        //   };
-        //   element = <Upload {...props}>
-        //     <Button>
-        //       <Icon type="upload" /> Upload
-        //     </Button>
-        //   </Upload>
-        //   break;
+        case "上传":
+          //   const props = {
+          //     action: 'http://172.16.9.52:8095/rest/PollutantSourceApi/UploadApi/PostFiles',
+          //     // onChange: this.handleChange(fieldName),
+          //     multiple: true,
+          //     data: {
+          //       FileUuid: uid,
+          //       FileActualType: "1"
+          //     }
+          //   };
+          //   element = <Upload {...props}>
+          //     <Button>
+          //       <Icon type="upload" /> Upload
+          //     </Button>
+          //   </Upload>
+          element = <SdlUpload {...this.props} accept={item.uploadType} fileList={_fileList} cuid={uid} uploadSuccess={(cuid) => {
+            setFieldsValue({ cuid: cuid })
+            setFieldsValue({ [fieldName]: uid })
+          }} />
+          break;
         default:
-          if (item.type === '上传') {
-            // let uploadElement = null;
-            const props = {
-              action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
-              onChange: (info) => {
-                if (info.file.status === 'done') {
-                  setFieldsValue({ cuid: uid })
-                  setFieldsValue({ [fieldName]: uid })
-                } else if (info.file.status === 'error') {
-                  message.error('上传文件失败！')
-                }
-                this.setState({
-                  fileList: info.fileList
-                })
-              },
-              onRemove(file) {
-                dispatch({
-                  type: "autoForm/deleteAttach",
-                  payload: {
-                    Guid: file.uid,
-                  }
-                })
-              },
-              onPreview: this.handlePreview,
-              multiple: true,
-              listType: "picture-card",
-              data: {
-                FileUuid: uid,
-                FileActualType: '0',
-              },
-            };
-            element = <SdlUpload {...this.props} fileList={_fileList} cuid={uid} uploadSuccess={(cuid) => {
-              setFieldsValue({ cuid: cuid })
-              setFieldsValue({ [fieldName]: uid })
-            }} />
-            // element = <Upload {...props} fileList={this.state.fileList}>
-            //   <div>
-            //     <Icon type="plus" />
-            //     <div className="ant-upload-text">文件上传</div>
-            //   </div>
-            // </Upload>
-            // }
-          }
           break;
       }
       // 设置默认值

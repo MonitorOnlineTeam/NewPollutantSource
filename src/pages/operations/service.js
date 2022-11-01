@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取日历信息
 export async function getCalendarInfo(params) {
@@ -87,7 +88,7 @@ export async function rejectTask(params) {
 
 // 获取运维人员
 export async function getOperationsUserList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/UserApi/GetUserRolesGroupList', params, null);
+  const result = await post(API.AuthorityApi.GetUserRolesGroupList, params, null);
   return result;
 }
 

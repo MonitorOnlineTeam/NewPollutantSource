@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import styles  from '../index.less';
 import Marquee from '@/components/Marquee'
-@connect(({ loading, home }) => ({
-    pointData: home.pointData,
+@connect(({ loading, oneEntAndPoint }) => ({
+    pointData: oneEntAndPoint.pointData,
   }))
 class MonitoringStatus extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class MonitoringStatus extends Component {
         const{dispatch}=this.props;
         // 监控现状
         dispatch({
-            type: "home/getStatisticsPoint",
+            type: "oneEntAndPoint/getStatisticsPoint",
             payload: {
               entCode:entCode
             },

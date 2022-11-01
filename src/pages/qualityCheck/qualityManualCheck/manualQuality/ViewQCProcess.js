@@ -38,24 +38,44 @@ const pollutantCodeList = {
   "a05003": { name: "氧化亚氮", unit: "mg/m³" },  // 氧化亚氮
   "065": { name: "N₂", unit: "mg/m³" },
 }
-@connect(({ loading, qcManual, qualityControlModel }) => ({
+
+const gas4 = {
+  wrapperPosition: { top: 108, left: 56 },
+  gasListStyles: [
+    { lineImgName: 'bottleLine1', flag: 'first' },
+    { lineTop: 28, pressureContentTop: -78, lineImgName: 'bottleLine2', flag: 'second', },
+    { lineTop: -12, pressureContentTop: -28, lineImgName: 'bottleLine3', flag: 'third', },
+    { lineTop: 39, pressureContentTop: -78, purgeLineTop: -131, lineImgName: 'bottleLine4', flag: 'fourth', purgeFlag: true },
+  ],
+}
+
+
+const gas2 = {
+  wrapperPosition: { top: 270, left: 56 },
+  gasListStyles: [
+    { lineImgName: 'bottleLine2', flag: 'first' },
+    { lineTop: -18, pressureContentTop: -28, purgeLineTop: -18, lineImgName: 'bottleLine3', flag: 'second', purgeFlag: true },
+  ],
+}
+
+@connect(({ loading, qcManual }) => ({
   gasData: qcManual.gasData,
   valveStatus: qcManual.valveStatus,
   CEMSOpen: qcManual.CEMSOpen,
   CEMSStatus: qcManual.CEMSStatus,
-  p2Pressure: qcManual.p2Pressure,
-  p1Pressure: qcManual.p1Pressure,
-  p3Pressure: qcManual.p3Pressure,
-  p4Pressure: qcManual.p4Pressure,
-  p1Exception: qcManual.p1Exception,
-  p2Exception: qcManual.p2Exception,
-  p3Exception: qcManual.p3Exception,
-  p4Exception: qcManual.p4Exception,
+  pressure: qcManual.pressure,
+  // p2Pressure: qcManual.p2Pressure,
+  // p1Pressure: qcManual.p1Pressure,
+  // p3Pressure: qcManual.p3Pressure,
+  // p4Pressure: qcManual.p4Pressure,
+  // p1Exception: qcManual.p1Exception,
+  // p2Exception: qcManual.p2Exception,
+  // p3Exception: qcManual.p3Exception,
+  // p4Exception: qcManual.p4Exception,
   standardValue: qcManual.standardValue,
   qualityControlName: qcManual.qualityControlName,
   standardValueUtin: qcManual.standardValueUtin,
   QCStatus: qcManual.QCStatus,
-  // currentDGIMN: qualityControlModel.currentDGIMN,
   pollutantValueListInfo: qcManual.pollutantValueListInfo,
   totalFlow: qcManual.totalFlow,
   door: qcManual.door,
@@ -65,9 +85,7 @@ const pollutantCodeList = {
   valueList: qcManual.valueList,
   standardValueList: qcManual.standardValueList,
   QCLogsResult: qcManual.QCLogsResult,
-  marginData: qcManual.marginData,
   currentPollutantCode: qcManual.currentPollutantCode,
-  // isReceiveData: qualityControlModel.isReceiveData,
 }))
 class ViewQCProcess extends PureComponent {
   constructor(props) {
@@ -76,8 +94,12 @@ class ViewQCProcess extends PureComponent {
   }
 
   pageContent = (type) => {
-    const { gasData, CEMSStatus, QCStatus, GasPathMode, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, p1Pressure, p2Pressure, p3Pressure, p4Pressure, p1Exception, p2Exception, p3Exception, p4Exception, realtimeStabilizationTime, standardValue, qualityControlName, door } = this.props;
+    const { gasData, CEMSStatus, QCStatus, GasPathMode, pollutantValueListInfo, valveStatus, totalFlow, standardValueUtin, CEMSOpen, pressure, realtimeStabilizationTime, standardValue, qualityControlName, door } = this.props;
     console.log('GasPathMode=', GasPathMode)
+    const gasLength = gasData.filter(item => item.GasCode).length;
+    console.log('gasLength=', gasLength);
+    let bottleShowData = gasLength === 2 ? gas2 : gas4;
+
     let props = {};
     if (type === "modal") {
       props = {
@@ -86,95 +108,71 @@ class ViewQCProcess extends PureComponent {
     }
     return <MapInteractionCSS style={{ position: 'relative' }} {...props}>
       <img src="/qualityControl/lct2.jpg" />
-      <div className={styles.gasWrapper}>
+      <div className={styles.gasMask}></div>
+      <div className={styles.gasWrapper} style={bottleShowData.wrapperPosition}>
         <div className={styles.title}>
-          标气单元
+          <p>标气单元</p>
         </div>
-        {/* 气瓶1 */}
-        <div className={styles.gasInfoBox}>
-          <ul>
-            <li>
-              气瓶浓度：{gasData[0].Value}{gasData[0].Unit}
-            </li>
-            <li>
-              <span>过期时间：</span>
-              <span className={styles.time} title={gasData[0].LoseDate}>{gasData[0].LoseDate ? moment(gasData[0].LoseDate).format("YYYY-MM-DD") : ''}</span>
-            </li>
-            <li>
-              <span>余量：{gasData[0].Allowance != undefined ? `${gasData[0].Allowance} L` : undefined}</span>
-            </li>
-          </ul>
-        </div>
-        <div className={styles.gasImgBox}>
-          {/* {
-            (p4Pressure.pollutantCode == "s01" && p4Pressure.isException == "1") ?
-              <img src="/qualityControl/gasException.png" alt="" /> : null
-          } */}
-          <p style={{ top: 18, lineHeight: '16px' }} dangerouslySetInnerHTML={{ __html: gasData[0].PollutantName }}></p>
-          {/* <p style={{ top: 20 }}>{gasData[0].PollutantName}</p> */}
-        </div>
-
-
-        {/* 气瓶2 */}
-        <div className={styles.gasInfoBox} style={{ top: 226 }}>
-          <ul>
-            {/* <li>
-              气瓶浓度：{gasData[1].Value}{gasData[1].Unit}
-            </li> */}
-            <li>
-              <span>过期时间：</span>
-              <span className={styles.time} title={gasData[1].LoseDate}>{gasData[1].LoseDate ? moment(gasData[1].LoseDate).format("YYYY-MM-DD") : ''}</span>
-            </li>
-            <li>
-              <span>余量：{gasData[1].Allowance != undefined ? `${gasData[1].Allowance} L` : undefined}</span>
-            </li>
-          </ul>
-        </div>
-        <div className={styles.gasImgBox} style={{ top: 248 }}>
-          <p dangerouslySetInnerHTML={{ __html: gasData[1].PollutantName }}></p>
-        </div>
-        <div className={styles.lineAndPressure}>
-          {/* 1 */}
-          {/* <img className={styles.valve} src="/qualityControl/valveClose.jpg" alt="" /> */}
-          {valveStatus.first ?
-            // {true ?
-            <>
-              <img className={styles.line} src="/qualityControl/gasbottle1.png" alt="" />
-              <img className={styles.valve} src="/qualityControl/valveOpen.jpg" alt="" />
-            </> : null
+        <div className={styles.gasContent}>
+          {/* 气瓶 */}
+          {
+            bottleShowData.gasListStyles.map((item, index) => {
+              let isShowPurge = false;
+              if (item.purgeFlag) {
+                isShowPurge = true;
+              }
+              return <div className={styles.gasInfoBox}>
+                <ul>
+                  <li>
+                    气瓶浓度：{gasData[index].Value}{gasData[index].Unit}
+                  </li>
+                  <li>
+                    <span>过期时间：</span>
+                    <span className={styles.time} title={gasData[index].LoseDate}>{gasData[index].LoseDate ? moment(gasData[index].LoseDate).format("YYYY-MM-DD") : ''}</span>
+                  </li>
+                  <li>
+                    <span>余量：{gasData[index].Allowance != undefined ? `${gasData[index].Allowance} L` : undefined}</span>
+                  </li>
+                </ul>
+                <div className={styles.gasImgBox}>
+                  <p style={{ top: 18, lineHeight: '16px' }} dangerouslySetInnerHTML={{ __html: gasData[index].bottleName }}></p>
+                </div>
+                <div className={styles.lineAndPressure} style={{ top: item.lineTop }}>
+                  {valveStatus[item.flag] ?
+                    // {true ?
+                    <>
+                      <img className={styles.line} style={{ position: 'absolute', zIndex: 1 }} src={`/qualityControl/JC/${item.lineImgName}-open.png`} alt="" />
+                    </> : <img className={styles.line} src={`/qualityControl/JC/${item.lineImgName}.png`} alt="" />
+                  }
+                  {/* 压力 */}
+                  <div className={styles.pressureContent} style={{ top: item.pressureContentTop }}>
+                    <div className={styles.pressureValue}>
+                      <p>压力</p>
+                      <span>{pressure[index].value != undefined ? `${pressure[index].value}MPa` : undefined}</span>
+                      {/* <span>{`11223MPa`}</span> */}
+                    </div>
+                    {
+                      pressure[index].exception === '1' ? <Tooltip placement="bottom" title="压力异常">
+                        <img className={styles.exceptionPressure} src={`/qualityControl/p${index + 1}Exception.png`} /></Tooltip> :
+                        <img className={styles.exceptionPressure} src={`/qualityControl/p${index + 1}.png`} />
+                      // true ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} src="/qualityControl/p1Exception.png" /></Tooltip> : null
+                    }
+                  </div>
+                </div>
+                {isShowPurge &&
+                  <div div className={styles.lineAndPressure} style={{ top: item.purgeLineTop }}>
+                    {valveStatus['purge'] ?
+                      // {true ?
+                      <img className={styles.line} src={`/qualityControl/JC/${gasLength}-purge-open.png`} alt="" />
+                      : <img className={styles.line} src={`/qualityControl/JC/${gasLength}-purge.png`} alt="" />
+                    }
+                  </div>
+                }
+              </div>
+            })
           }
-          {/* 压力p1 */}
-          <div className={styles.pressure}>
-            <p>{p1Pressure.value != undefined ? `${p1Pressure.value}MPa` : undefined}</p>
-            {/* <p>{`${p1Pressure.value}MPa`}</p> */}
-            {
-              p1Exception === '1' ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} src="/qualityControl/p1Exception.png" /></Tooltip> : null
-              // true ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} src="/qualityControl/p1Exception.png" /></Tooltip> : null
-            }
-          </div>
-
-          {/* ------------------------------------------------------------------------------------------------ */}
-          {/* 2 */}
-          {/* <img className={styles.valve} style={{ top: 482 }} src="/qualityControl/valveClose.jpg" alt="" /> */}
-          {valveStatus.second || valveStatus.purge ?
-            // {true ?
-            <>
-              <img className={styles.line} src="/qualityControl/gasbottle2.png" alt="" />
-              <img className={styles.valve} style={{ top: 260 }} src="/qualityControl/valveOpen.jpg" alt="" />
-            </> : null
-          }
-          {/* 压力p2 */}
-          <div className={styles.pressure} style={{ top: 205 }}>
-            <p>{p2Pressure.value != undefined ? `${p2Pressure.value}MPa` : undefined}</p>
-            {/* <p>{`${p2Pressure.value}MPa`}</p> */}
-            {
-              p2Exception === '1' ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 407 }} src="/qualityControl/p2Exception.png" /></Tooltip> : null
-              // true ? <Tooltip placement="bottom" title="压力异常"><img className={styles.exceptionPressure} style={{ top: 407 }} src="/qualityControl/p2Exception.png" /></Tooltip> : null
-            }
-          </div>
 
         </div>
-
       </div>
       {console.log("CEMSOpen=", CEMSOpen)}
       {/* CEMS连接状态 */}
@@ -376,7 +374,7 @@ ${params[1].seriesName} ：${params[1].value} ${standardValueUtin ? standardValu
 
   // 获取质控结果
   getQCAResult = () => {
-    if (this.props.QCLogsResult.Data && this.props.QCLogsResult.Data.Result) {
+    if (this.props.QCLogsResult.Data && this.props.QCLogsResult.Data.Result !== undefined) {
       console.log("this.props.QCLogsResult.Data.Result=", this.props.QCLogsResult.Data.Result)
       switch (this.props.QCLogsResult.Data.Result + "") {
         case "0":

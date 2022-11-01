@@ -7,6 +7,7 @@
 
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 import { async } from 'q';
 
 /**
@@ -74,14 +75,14 @@ import { async } from 'q';
  */
 export async function addPoint(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/AddPoint', params);
+    const result = await post(API.PointApi.AddPoint, params);
     return result;
 }
 
 
 export async function getEnterpriseCorporationCode(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/GetEnterpriseCorporationCode', params);
+    const result = await post(API.BaseDataApi.GetEnterpriseCorporationCode, params);
     return result;
 }
 
@@ -150,7 +151,7 @@ export async function getEnterpriseCorporationCode(params) {
  */
 export async function updatePoint(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/UpdatePoint', params);
+    const result = await post(API.PointApi.UpdatePoint, params);
     return result;
 }
 
@@ -162,7 +163,7 @@ export async function updatePoint(params) {
  */
 export async function deletePoints(params) {
     // console.log("params=",params);
-    const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/DeletePoints', params, null);
+    const result = await post(API.PointApi.DeletePoints, params, null);
     return result;
 }
 //出厂测试

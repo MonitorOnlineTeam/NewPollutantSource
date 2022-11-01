@@ -71,8 +71,10 @@ class RecordInner extends PureComponent {
                   placement="left"
                   title="确认是否删除?"
                   onConfirm={() => {
+                    let _dataSource = [...this.state.dataSource];
+                    _dataSource.splice(index, 1);
                     this.setState({
-                      dataSource: this.state.dataSource.splice(index, 1)
+                      dataSource: _dataSource
                     }, () => {
                       this.props.onOk && this.props.onOk(this.state.dataSource);
                     })

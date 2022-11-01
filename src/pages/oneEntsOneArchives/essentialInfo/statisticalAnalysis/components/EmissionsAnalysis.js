@@ -5,11 +5,11 @@ import Marquee from '@/components/Marquee';
 import ReactEcharts from 'echarts-for-react';
 import { Row, Col  } from 'antd';
 
-@connect(({ loading, home }) => ({
-    AllMonthEmissionsByPollutant: home.AllMonthEmissionsByPollutant,
-    ycTitle:home.ycTitle,
-    erhlTitle:home.erhlTitle,
-    dyTitle:home.dyTitle,
+@connect(({ loading, oneEntAndPoint }) => ({
+    AllMonthEmissionsByPollutant: oneEntAndPoint.AllMonthEmissionsByPollutant,
+    ycTitle:oneEntAndPoint.ycTitle,
+    erhlTitle:oneEntAndPoint.erhlTitle,
+    dyTitle:oneEntAndPoint.dyTitle,
   }))
 
 class MonitoringStatus extends Component {
@@ -34,7 +34,7 @@ class MonitoringStatus extends Component {
         const{dispatch}=this.props;
         // 获取排污许可情况
         dispatch({
-            type: "home/getAllMonthEmissionsByPollutant",
+            type: "oneEntAndPoint/getAllMonthEmissionsByPollutant",
             payload: {
               EntCode: entCode || undefined,
               DGIMN
@@ -78,7 +78,7 @@ class MonitoringStatus extends Component {
 
       }
       this.props.dispatch({
-        type: 'home/updateState',
+        type: 'oneEntAndPoint/updateState',
         payload: {ycTitle:title},
     })
       ycdata.map((ele) => {
@@ -108,7 +108,7 @@ class MonitoringStatus extends Component {
         title = `<p>超 <span style='color:#00dddf;font-size:30px'>${Math.abs(SurplusDisplacement)}</span>(t)</p>`;
       }
       this.props.dispatch({
-        type: 'home/updateState',
+        type: 'oneEntAndPoint/updateState',
         payload: {erhlTitle:title},
     })
       eyhldata.map((ele) => {
@@ -135,7 +135,7 @@ class MonitoringStatus extends Component {
       }
 
       this.props.dispatch({
-        type: 'home/updateState',
+        type: 'oneEntAndPoint/updateState',
         payload: {dyTitle:title},
     })
       dyhwdata.map((ele) => {

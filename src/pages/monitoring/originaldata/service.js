@@ -1,4 +1,5 @@
 import { get } from '@/utils/request';
+import { API } from '@config/API'
 /**
  * 【智能监控】获取原始数据包
  * @params {
@@ -11,7 +12,7 @@ import { get } from '@/utils/request';
     }
  */
 export async function getOriginalData(params) {
-    const result = await get('/api/rest/PollutantSourceApi/MonDataApi/GetOriginalData', params,0);
+    const result = await get(API.MonitorDataApi.GetOriginalData, params,0);
     return result;
 }
 

@@ -2,7 +2,7 @@
  * @Create: Jiaqi
  * @Date: 2019-11-07 10:53:38
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-17 16:03:16
+ * @Last Modified time: 2022-09-02 10:32:25
  * @desc: 智能质控model
  */
 
@@ -127,6 +127,8 @@ export default Model.extend({
     // 
     gasJoinListData: [],
     gasSelectList: [],
+    // 气瓶方案管理
+    gasProList: [],
   },
   effects: {
     // 获取企业及排口
@@ -719,6 +721,45 @@ export default Model.extend({
       const result = yield call(services.editQCAComponentInfo, payload);
       if (result.IsSuccess) {
         callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 添加标气方案及详细数据
+    *AddOrUpdGasProInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.AddOrUpdGasProInfo, payload);
+      if (result.IsSuccess) {
+        message.success('操作成功！');
+        callback && callback()
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取标气方案列表
+    *getGasProList({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.GetGasProList, payload);
+      if (result.IsSuccess) {
+        yield update({
+          gasProList: result.Datas
+        })
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 获取标气方案详情
+    *getGasProInfo({ payload, callback }, { call, put, update, select }) {
+      const result = yield call(services.GetGasProInfo, payload);
+      if (result.IsSuccess) {
+        callback && callback(result.Datas)
+      } else {
+        message.error(result.Message)
+      }
+    },
+    // 删除标气方案
+    *deleteGasProOne({ payload }, { call, put, update, select }) {
+      const result = yield call(services.DeleteGasProOne, payload);
+      if (result.IsSuccess) {
+        message.success('删除成功');
       } else {
         message.error(result.Message)
       }

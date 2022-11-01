@@ -97,7 +97,6 @@ export default Model.extend({
     },
     // 不确定性计算公式
     *calUnceratianData({ payload, callback }, { call, put, update, select }) {
-      debugger
       const response = yield call(services.calUnceratianData, payload);
       if (response.IsSuccess) {
         callback && callback(response.Datas)

@@ -2,6 +2,7 @@ import { CloseCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { Badge, Popover, message } from 'antd';
 import moment from 'moment';
 
+
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export const encryptKey =
@@ -123,8 +124,8 @@ export function formatPollutantPopover(value, additional) {
   ) : value === 0 ? (
     0
   ) : (
-        '-'
-      );
+    '-'
+  );
 }
 export function asc(a, b) {
   //数字类型
@@ -197,7 +198,7 @@ export function downloadFile(sUrl) {
   if (sUrl.indexOf('?') === -1) {
     sUrl += '?download';
   }
-  window.open(sUrl, '_self');
+  window.open('/publish' + sUrl, '_self');
   return true;
 }
 
@@ -382,7 +383,7 @@ export function isInnerIPFn() {
     // }
   }
   // return returnIP;
-   return isInnerIp
+  return isInnerIp
 }
 function getIpNum(ipAddress) { /* 获取IP数 */
   const ip = ipAddress.split('.');
@@ -396,4 +397,18 @@ function getIpNum(ipAddress) { /* 获取IP数 */
 
 function isInner(userIp, begin, end) {
   return (userIp >= begin) && (userIp <= end);
+}
+
+
+// 根据端口获取系统名称
+export function getSysName(systemName) {
+  const sysName = JSON.parse(systemName);
+  const { NODE_ENV } = process.env;
+
+  // 生产环境：根据端口匹配系统名称，开发环境：取key为-1的系统名称
+  if (NODE_ENV === 'production') {
+    const port = window.location.port;
+    return sysName[port] ? sysName[port] : sysName[-1];
+  }
+  return sysName[-1];
 }

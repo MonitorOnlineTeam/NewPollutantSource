@@ -228,7 +228,8 @@ export default class EntTransmissionEfficiency extends Component {
       type: 'defectData/exportGetAlarmDataList',
       payload: { ...queryPar },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        // downloadFile(`/${data}`);
+        window.open(data)
       },
     });
   };
@@ -425,6 +426,7 @@ export default class EntTransmissionEfficiency extends Component {
                   >
                     <Option value="1">废水</Option>
                     <Option value="2">废气</Option>
+                    <Option value="5">大气站</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item label='企业列表'>

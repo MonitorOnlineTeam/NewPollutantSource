@@ -100,7 +100,7 @@ class CompositeRangeYOYReport extends Component {
           ]
         },
         {
-          title: 'Co',
+          title: 'CO',
           width: 280,
 
           children: [
@@ -193,7 +193,7 @@ class CompositeRangeYOYReport extends Component {
           ]
         },
         {
-          title: 'PM10',
+          title: 'PM₁₀',
           width: 280,
 
           children: [
@@ -224,7 +224,7 @@ class CompositeRangeYOYReport extends Component {
           ]
         },
         {
-          title: 'PM2.5',
+          title: 'PM₂.₅',
           width: 280,
 
           children: [

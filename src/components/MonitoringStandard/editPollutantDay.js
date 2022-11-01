@@ -83,28 +83,16 @@ class EditPollutantDay extends Component {
       const that = this;
       if (this.state.PollutantCode !== null && this.state.DGIMN !== null) {
         if (values.AbnormalUpperLimit < values.AbnormalLowerLimit) {
-          message.error('错误：检出上限小于检出下限！', 3).then(() => {
-            flag = false;
-          });
-          flag = false;
-        } else {
-          flag = true;
+          message.error('错误：检出上限小于检出下限！', 3)
+          return;
         }
-        if (values.UpperLimit < values.LowerLimit) {
-          message.error('错误：小时报警上限小于小时报警下限！', 3).then(() => {
-            flag = false;
-          });
-          flag = false;
-        } else {
-          flag = true;
+        if (values.UpperLimit <= values.LowerLimit) {
+          message.error('错误：小时报警上限小于小时报警下限！', 3);
+          return;
         }
-        if (values.DayUpperLimit < values.DayLowerLimit) {
-          message.error('错误：日报警上限小于日报警下限！', 3).then(() => {
-            flag = false;
-          });
-          flag = false;
-        } else {
-          flag = true;
+        if (values.DayUpperLimit <= values.DayLowerLimit) {
+          message.error('错误：日报警上限小于日报警下限！', 3)
+          return;
         }
         console.log('limit=',values.DayUpperLimit)
         if (!err && flag === true) {

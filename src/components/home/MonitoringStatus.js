@@ -6,6 +6,7 @@ import { Row, Col } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 @connect(({ loading, home }) => ({
   pointData: home.pointData,
+  home: home,
   theme: home.theme,
 }))
 class MonitoringStatus extends Component {
@@ -18,8 +19,15 @@ class MonitoringStatus extends Component {
     this.getData();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.entCode !== nextProps.entCode) {
+      this.getData(nextProps.entCode);
+    }
+  }
+
   getOption = () => {
     const { pointData, theme } = this.props;
+    console.log('home=', this.props.home);
     let option = {
       color: ['#1bc78b', '#ffe400', '#f95d00', '#ababac',],
       // tooltip: {
@@ -69,12 +77,13 @@ class MonitoringStatus extends Component {
     return option;
   }
 
-  getData = () => {
+  getData = (entCode) => {
     const { dispatch } = this.props;
     // 监控现状
     dispatch({
       type: "home/getStatisticsPointStatus",
       payload: {
+        entCode: entCode
       },
     });
   }

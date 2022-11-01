@@ -102,6 +102,7 @@ export default Model.extend({
             // message.success(result.Message)
             callback(result.IsSuccess)
           } else {
+            yield update({ issueLoading:false })
             message.error(result.Message)
           }
         },
@@ -122,7 +123,7 @@ export default Model.extend({
   reducers: { // 以 key/value 格式定义reducer，用于处理同步操作，唯一可以修改 state 的地方，由 action 触发
          // 质控核查 质控核查设置 下发
          issueData(state, { payload }) {
-
+          console.log("issueData=", state, payload)
           const issueFlag  = state.issueFlag;
           const approveState = state.approveState;
           

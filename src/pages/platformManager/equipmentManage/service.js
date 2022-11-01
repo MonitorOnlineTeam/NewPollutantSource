@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取级联下拉数据
 export async function getEquipmentWhere(params) {

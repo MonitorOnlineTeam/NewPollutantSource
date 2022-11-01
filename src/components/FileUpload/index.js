@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Upload, Button, Carousel, message } from 'antd';
 import cuid from 'cuid';
 import { connect } from 'dva';
+import { API } from '@config/API'
 
 @connect(({ loading, autoForm }) => ({
   // fileList: autoForm.fileList,
@@ -57,7 +58,8 @@ class FileUpload extends Component {
       imageProps.accept = accept;
     }
     const props = {
-      action: `/api/rest/PollutantSourceApi/UploadApi/PostFiles`,
+      action: API.commonApi.UploadFiles,
+      accept: '.xls,.xlsx,.doc,.docx,.ppt,.pdf,.pptx,.txt,image/*',
       // beforeUpload: (file) => {
       //   if (accept === 'image/*') {
       //     const isImage = file.type.indexOf("image") !== -1;

@@ -334,7 +334,8 @@ class FlowChart extends PureComponent {
         </div>
 
         <div className={`${styles.leng} ${styles.commonSty}`}>
-          {leng !== '-' ? <span>冷凝器温度：{leng}</span> : null}
+          {/* {leng !== '-' ? <span>冷凝器温度：{leng}</span> : null} */}
+          <span>冷凝器温度：{leng}</span>
         </div>
       </>
 

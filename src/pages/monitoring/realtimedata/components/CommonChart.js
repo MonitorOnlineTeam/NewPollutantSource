@@ -191,6 +191,8 @@ class CommonChart extends Component {
 
     render() {
         const { pollutantlist, dataloading, isloading, option, paramsInfo, dataInfo, pointName, entName } = this.props;
+        console.log('pollutantlist=',pollutantlist);
+        console.log('paramsInfo=',paramsInfo);
         return (
             <div style={{ backgroundColor: '#ffffff' }}>
                 <Card
@@ -198,7 +200,7 @@ class CommonChart extends Component {
                     title={
                         <div>
                             <span>{entName ? pointName ? entName + "-" + pointName : null : null}</span>
-                            <span style={{ marginLeft: 10, fontSize: 14 }}>{pollutantlist ? pollutantlist.length !== 0 ? paramsInfo.length !== 0 ? paramsInfo[0].MonitorTime : null : null : null}</span>
+                            <span style={{ marginLeft: 10, fontSize: 14 }}>{pollutantlist ? (pollutantlist.length !== 0 ? (paramsInfo && paramsInfo.length !== 0 ? paramsInfo[0].MonitorTime : null ): null ): null}</span>
                         </div>
                     }
                 >

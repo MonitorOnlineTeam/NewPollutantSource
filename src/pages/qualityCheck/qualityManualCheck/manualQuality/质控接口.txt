@@ -1,0 +1,66 @@
+PC前端测试地址：http://172.16.12.61:9002/qualityCheck/qualityManualCheck/manualQuality
+
+1. 获取质控仪状态：/QCStatus/GetQCAStatus
+  参数：{
+    "DGIMN": "62020131hsdj761"
+  }
+  返回：{
+  "qcaState": 6
+  }
+
+2. 获取质控日志记录：/QCRecord/GetQCDetailRecord
+  参数：{
+    "DGIMN": "62020131hsdj761"
+  }
+  返回：[
+    {
+      "GasPathMode": 1
+    },
+    {
+      "User": "超级管理员",
+      "Str": "量程核查命令",
+      "DGIMN": "62020131hsdj761",
+      "Time": "2022-08-30 11:04:14",
+      "PollutantCode": "a05001"
+    },
+    {
+      "DGIMN": "62020131hsdj761",
+      "Str": "未收到应答",
+      "Time": "2022-08-30 11:04:26",
+      "MsgType": "check",
+      "Comment": "量程核查命令",
+      "PollutantCode": "a05001",
+      "Result": false
+    },
+    {
+      "Str": null,
+      "DGIMN": "62020131hsdj761",
+      "Time": "2022-09-02 08:46:07"
+    }
+  ]
+
+3. 获取气瓶污染物及核查列表：/QCAStandardGas/GetQCStandard
+  参数：{
+    "DGIMN": "62020131hsdj761",
+    "State": 1
+  }
+
+4. 获取盲样核查浓度：/QCAnalyzerManagement/GetSampleRangeFlow
+  参数：{
+    "DGIMN": "62020131hsdj761",
+    "PollutantCode": "a05001",
+    "GasPathMode": 0 // 气路模式， 0全程校验，1系统校验
+  }
+  返回：{
+    "max": 34.979,
+    "min": 4.997
+  }
+
+5. 发送质控核查命令：/QCRemote/SendQCACheckCMD
+  参数：{
+    "DGIMN": "62020131hsdj761",
+    "PollutantCode": "a05001",
+    "QCAType": "3101", // 核查类型
+    "Method": 1,
+    "GasPathMode": 0 // 气路模式
+  }

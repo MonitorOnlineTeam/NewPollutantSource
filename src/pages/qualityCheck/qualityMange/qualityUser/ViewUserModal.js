@@ -118,10 +118,10 @@ class ViewUserModal extends Component {
                 uid: '-4',
                 name: 'image.png',
                 status: 'done',
-                url: `/upload/${viewUserData.Pic}`,
+                url: `/${viewUserData.Pic}`,
               }]}
               style={{ width: 120 }}
-              action="/api/rest/PollutantSourceApi/UploadApi/AddOperator"
+              action="/api/rest/PollutantSourceApi/QCAOperator/AddOperator"
               headers={{
                 Authorization: "Bearer " + Cookie.get(config.cookieName)
               }}

@@ -2,8 +2,11 @@
 import router from 'umi/router';
 import Cookie from 'js-cookie';
 import { message } from 'antd';
-import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo } from './service';
+import { systemLogin, getFakeCaptcha, getSystemLoginConfigInfo, getToken } from './service';
 import { getPageQuery, setAuthority } from './utils/utils';
+import configToken from '@/config';
+import moment from 'moment';
+
 const Model = {
   namespace: 'userLogin',
   state: {
@@ -11,12 +14,11 @@ const Model = {
     configInfo: null
   },
   effects: {
-    *login({ payload }, { call, put, select }) {
+    *login({ payload }, { call, put, select, take }) {
       const configInfo = yield select(state => state.global.configInfo)
       const response = yield call(systemLogin, {
         ...payload,
         MenuId: configInfo.IsShowSysPage === '1' ? '' : '99dbc722-033f-481a-932a-3c6436e17245', //子系统ID 固定  污染源在线监控
-        // MenuId: '99dbc722-033f-481a-932a-3c6436e17245', //子系统ID 固定  污染源在线监控
       });
       yield put({
         type: 'changeLoginStatus',
@@ -24,6 +26,15 @@ const Model = {
       });
 
       if (response.IsSuccess) {
+        yield put({
+          type: 'getToken',
+          payload: {
+            grant_type: 'password',
+            username: payload.userName,
+            password: payload.password
+          }
+        })
+        yield take('userLogin/getToken/@@end');
         response.Datas.User_ID = response.Datas.UserId;
         let defaultNavigateUrl = '/user/login';
         let systemNavigateUrl = '';
@@ -46,7 +57,7 @@ const Model = {
         Cookie.set('systemNavigateUrl', systemNavigateUrl);
         try {
           const { ws } = window;
-          ws.send(response.Datas.UserAccount);
+          ws.send(response.Datas.userAccount);
         } catch (error) {
 
         }
@@ -64,8 +75,20 @@ const Model = {
         }
       }
     },
-    *getCaptcha({ payload }, { call }) {
-      yield call(getFakeCaptcha, payload);
+    *getToken({ payload }, { call, put, select }) {
+      const result = yield call(getToken, payload);
+      if (result) {
+        // Cookie.set(configToken.cookieName, result.access_token);
+        // window.localStorage.setItem('tokenTime', JSON.stringify({ expires_in: result.expires_in, time: new Date().getTime() }))
+      }
+    },
+    *getCaptcha({ payload }, { call, put }) {
+      console.log('payload=', payload);
+      let response = yield call(getFakeCaptcha, payload);
+      yield put({
+        type: 'changeLoginStatus',
+        payload: { status: response.IsSuccess ? 'ok' : 'error', type: 'account', mobileMessage: response.Message },
+      });
     },
   },
   reducers: {

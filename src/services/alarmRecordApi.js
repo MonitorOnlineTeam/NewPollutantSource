@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 
 /** 获取单排口报警数据
@@ -12,7 +13,7 @@ import { post } from '@/utils/request';
     }
  *  */
 export async function queryoverdatalist(params) {
-    const result = await post('/api/rest/PollutantSourceApi/AlarmDataApi/GetLocalMemoryExceptionProcessing', params, null);
+    const result = await post(API.AlarmApi.GetLocalMemoryExceptionProcessing, params, null);
     return result;
 }
 /** 更新报警记录表
@@ -31,13 +32,13 @@ export async function UpdateExceptionProcessing(params) {
     }
  *  */
 export async function GetAlarmRecordDetails(params) {
-  const result = await post('/api/rest/PollutantSourceApi/ExceptionApi/GetAlarmRecordDetails', params, null);
+  const result = await post(API.AlarmApi.GetAlarmRecordDetails, params, null);
   return result;
 }
 
 
 export async function AlarmVerifyAdd(params)
 {
-  const result = await post('/api/rest/PollutantSourceApi/MonitorAlarmApi/AlarmVerifyAdd', params, null);
+  const result = await post(API.AlarmApi.AlarmVerifyAdd, params, null);
   return result;
 }

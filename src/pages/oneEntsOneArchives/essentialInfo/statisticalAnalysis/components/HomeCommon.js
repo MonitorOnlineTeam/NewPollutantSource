@@ -23,6 +23,9 @@ class HomeCommon extends Component {
 
     getDomRender=()=>{
         const {assembly,entCode,DGIMN}=this.props;
+        console.log('====================================');
+        console.log('assembly=',assembly);
+        console.log('====================================');
         const {currentMonth}=this.state;
         let res;
         switch(assembly)

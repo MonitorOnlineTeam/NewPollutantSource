@@ -54,6 +54,7 @@ export default Model.extend({
     *setCurrent({ payload }, { call, update, put, take, select }) {
       const result = yield call(services.setCurrent, payload);
       if (result.IsSuccess) {
+        localStorage.setItem("AlarmInfoCode", payload.AlarmInfoCode)
         // message.success("操作成功")
       } else {
         message.error(result.Message)
@@ -151,13 +152,13 @@ export default Model.extend({
       if (result.IsSuccess) {
         callback && callback(result.Datas)
         message.success("删除成功！");
-        // yield put({
-        //   type: "getSaveEntAndMingan",
-        //   payload: {
-        //     AlarmInfoCode: payload.AlarmInfoCode,
-        //     Type: payload.Type,
-        //   }
-        // })
+        yield put({
+          type: "getSaveEntAndMingan",
+          payload: {
+            AlarmInfoCode: payload.AlarmInfoCode,
+            Type: payload.Type,
+          }
+        })
       } else {
         message.error(result.Message)
       }

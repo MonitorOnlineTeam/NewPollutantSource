@@ -8,6 +8,7 @@
 
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取表单类型根据mn号
 export async function getrecordtypebymn(params) {

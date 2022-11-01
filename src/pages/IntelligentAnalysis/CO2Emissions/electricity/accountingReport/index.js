@@ -84,7 +84,7 @@ class index extends PureComponent {
                       style={{ border: '1px solid #f0f0f0' }}
                       actions={[
                         <Tooltip title="下载">
-                          <a href={item.FilePath} download onClick={(e) => {
+                          <a href={'/publish'+item.FilePath} download onClick={(e) => {
                             e.stopPropagation()
                           }}>
                             <DownloadOutlined style={{ fontSize: 20 }} />

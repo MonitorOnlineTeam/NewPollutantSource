@@ -88,7 +88,7 @@ class EditorAddMode extends React.Component {
       style={{width:"100%"}}
       className='qualityProg'
       fileType={type}
-      filePath={`/upload/${seeEchoData.ProgrammeFileName}`}
+      filePath={`${seeEchoData.ProgrammeFileName}`}
       onError={this.onError}/>
     }
     onError=()=>{

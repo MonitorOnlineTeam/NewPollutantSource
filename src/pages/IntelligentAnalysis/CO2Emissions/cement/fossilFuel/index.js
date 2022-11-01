@@ -12,6 +12,7 @@ import moment from 'moment'
 import { INDUSTRYS, maxWait, GET_SELECT_LIST, SUMTYPE, SELECT_TYPE } from '@/pages/IntelligentAnalysis/CO2Emissions/CONST'
 import ConsumptionModal from '@/pages/IntelligentAnalysis/CO2Emissions/components/ConsumptionModal';
 import ImportData from '@/pages/IntelligentAnalysis/CO2Emissions/components/ImportData'
+import { checkIsNumber } from '@/pages/IntelligentAnalysis/CO2Emissions/util'
 
 const industry = INDUSTRYS.cement;
 const SumType = SUMTYPE.cement["化石燃料燃烧"]
@@ -397,7 +398,9 @@ class index extends Component {
                   label={<p>消耗量{typeUnit ? <span>({typeUnit})</span> : ''}</p>}
                   rules={[{ required: true, message: '请填写消耗量!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} placeholder="请填写消耗量" onChange={Debounce(() => this.countEmissions(), maxWait)} />
+                  <InputNumber style={{ width: '100%' }} placeholder="请填写消耗量" onChange={Debounce(() => {
+                    checkIsNumber(this.formRef.current.getFieldValue('AnnualConsumption')) && this.countEmissions()
+                  }, maxWait)} />
                 </Form.Item>
               </Col>
               <Col span={12}>

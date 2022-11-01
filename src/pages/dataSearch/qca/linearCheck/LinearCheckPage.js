@@ -22,7 +22,7 @@ const workMode = { "1": "定时", "2": "远程", 3: "现场" }
   standValList: qcaCheck.standValList,
   timeList: qcaCheck.timeList,
   linearCheckChartData: qcaCheck.linearCheckChartData,
-  loading: loading.effects["qcaCheck/getqcaLogAndProcess"],
+  loading: loading.effects["qcaCheck/getQCProcessData"],
   tableLoading: loading.effects['qcaCheck/getLinearDataList'],
   exportLoading: loading.effects['qcaCheck/qcaCheckExport'],
 }))
@@ -55,13 +55,14 @@ class LinearCheckPage extends PureComponent {
             </Tooltip>
           }
           return <a style={{ color: text == 0 ? "#87d068" : "#f5222d" }} onClick={(e) => {
-            this.setState({
-              currentRowData: record,
-              visible: true
-            }, () => {
-              this.getqcaLogAndProcess();
-              this.getKeyParameterList();
-            })
+            // this.setState({
+            //   currentRowData: record,
+            //   visible: true
+            // }, () => {
+            //   this.getQCProcessData();
+            //   this.getKeyParameterList();
+            //   this.getQCLog();
+            // })
           }}>{text == 0 ? "合格" : "不合格"}</a>
         }
       },
@@ -204,7 +205,7 @@ class LinearCheckPage extends PureComponent {
       {
         title: <span>
           示值误差（%）
-        <QuestionTooltip content="按照
+          <QuestionTooltip content="按照
 零气、低浓度(20%的满量程值)标准气体；低浓度(40%的满量程值)标准气体；中浓度(60%的
 满量程值)标准气体；中浓度(80%的
 满量程值)标准气体的顺序 通入标准气体的顺序 通入标准气体。" />
@@ -215,7 +216,7 @@ class LinearCheckPage extends PureComponent {
       {
         title: <span>
           线性系数
-        <QuestionTooltip overlayStyle={{ maxWidth: 350 }} content={<>
+          <QuestionTooltip overlayStyle={{ maxWidth: 350 }} content={<>
             <img style={{ width: '100%' }} src="/linearCheck.png" alt="" />
           </>} />
         </span>,
@@ -300,12 +301,12 @@ class LinearCheckPage extends PureComponent {
     }
   }
 
-  // 获取质控过程和质控日志
-  getqcaLogAndProcess = () => {
+  // 获取质控过程
+  getQCProcessData = () => {
     const { DGIMN } = this.props;
     const { currentRowData } = this.state;
     this.props.dispatch({
-      type: "qcaCheck/getqcaLogAndProcess",
+      type: "qcaCheck/getQCProcessData",
       payload: {
         QCAType: "3104",
         DGIMN: DGIMN,
@@ -314,6 +315,23 @@ class LinearCheckPage extends PureComponent {
         PollutantCode: currentRowData.PollutantCode,
       }
       // payload: { QCAType: 4, "DGIMN": "62020131jhdp02", "MonitorTime": "2020-08-20 23:01:00", "PollutantCode": "a21002" }
+    })
+  }
+
+  // 查询质控日志
+  getQCLog = () => {
+    const { currentRowData } = this.state;
+    const { DGIMN, QCAType } = this.props;
+    this.props.dispatch({
+      type: "qcaCheck/getQCLog",
+      payload: {
+        QCAType: QCAType,
+        DGIMN: DGIMN,
+        MonitorTime: currentRowData.MonitorTime,
+        EndTime: currentRowData.EndTime,
+        PollutantCode: currentRowData.PollutantCode,
+      }
+      // payload: { QCAType: QCAType, "DGIMN": "62020131jhdp02", "MonitorTime": "2020-08-20 23:01:00", "PollutantCode": "a21002" }
     })
   }
 
@@ -614,8 +632,9 @@ ${params[1].seriesName} ：${params[1].value} ${currentRowData.Unit ? currentRow
                   currentRowData: record,
                   visible: true
                 }, () => {
-                  this.getqcaLogAndProcess();
+                  this.getQCProcessData();
                   this.getKeyParameterList();
+                  this.getQCLog();
                 })
               }
             }

@@ -5,17 +5,8 @@
  * 创建时间：2019.04.29
  */
 
-import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
-import { async } from 'q';
-import configToken from '@/config';
-// import { JSEncrypt } from 'encryptlong';
-// import Base64 from 'crypto-js/enc-base64';
-// import Utf8 from 'crypto-js/enc-utf8';
-import { encryptKey } from '@/utils/utils';
-import ContentList from '@/pages/platformManager/manualupload/components/ContentList';
-
-const configinfopage = '/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemConfigInfo';
+import { API } from '@config/API'
 
 /**
  * 【AutoForm】获取页面配置信息
@@ -24,22 +15,15 @@ const configinfopage = '/api/rest/PollutantSourceApi/SystemSettingApi/GetSystemC
 export async function getPageConfigInfo(payload) {
   const param = {
     configId: 'TestCommonPoint',
-    // ...payload.params,
     ...payload,
   };
   const defaults = {
-    PageIndex: 1,
-    PageSize: 200,
+    // PageIndex: 1,
+    // PageSize: 200,
   };
   const body = Object.assign(defaults, param);
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   body.configId = encrypt.encrypt(body.configId);
-  // }
   const result = await get(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/GetPageConfigInfo',
+    API.autoFormApi.GetPageConfigInfo,
     body,
     null,
   );
@@ -51,20 +35,9 @@ export async function getPageConfigInfo(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getListPager(payload) {
-  // let params = payload.params;
   let params = payload;
-
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   params.configId = Base64.stringify(Utf8.parse(params.configId));
-  //   if (params.ConditionWhere == undefined) {
-  //     params.ConditionWhere = null;
-  //   } else {
-  //     params.ConditionWhere = Base64.stringify(Utf8.parse(params.ConditionWhere));
-  //   }
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/GetListPager',
+    API.autoFormApi.GetListPager,
     params,
     null,
   );
@@ -77,27 +50,13 @@ export async function getListPager(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function getFormData(payload) {
-  // let params = payload.params;
   let params = payload;
 
   const defaults = {
     configId: 'TestCommonPoint',
   };
-  const body = {
-    ...params,
-    ...defaults,
-  };
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   params.configId = encrypt.encrypt(params.configId);
-  //   // var aa=params.configId
-  //   // console.log(params.configId)
-  //   // params.configId= aa.Replace("+", "%2B");
-  // }
   const result = await get(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/GetFormData',
+    API.autoFormApi.GetFormData,
     params,
     null,
   );
@@ -109,24 +68,9 @@ export async function getFormData(payload) {
  * @params {"configId": "TestCommonPoint"}
  */
 export async function postAutoFromDataDelete(payload) {
-  // let params = payload.params;
   let params = payload;
-
-  const postData = {
-    configId: 'TestCommonPoint',
-    ...params,
-  };
-  // // const defaults = {};
-  // // const body=Object.assign(defaults,params);
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   body.configId = encrypt.encrypt(params.configId);
-  //   body.FormData = encrypt.encrypt(params.FormData);
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/PostAutoFromDataDelete',
+    API.autoFormApi.PostAutoFromDataDelete,
     params,
     null,
   );
@@ -137,18 +81,9 @@ export async function postAutoFromDataDelete(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataAdd(payload) {
-  console.log('payload=', payload)
-  // let params = payload.params;
   let params = payload;
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   params.configId = encrypt.encrypt(params.configId);
-  //   params.FormData = encrypt.encrypt(params.FormData);
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/PostAutoFromDataAdd',
+    API.autoFormApi.PostAutoFromDataAdd,
     params,
     null,
   );
@@ -160,18 +95,9 @@ export async function postAutoFromDataAdd(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function postAutoFromDataUpdate(payload) {
-  // let params = payload.params;
   let params = payload;
-
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   params.configId = encrypt.encrypt(params.configId);
-  //   params.FormData = encrypt.encrypt(params.FormData);
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/PostAutoFromDataUpdate',
+    API.autoFormApi.PostAutoFromDataUpdate,
     params,
     null,
   );
@@ -183,7 +109,7 @@ export async function postAutoFromDataUpdate(payload) {
  * @params {"configId": "TestCommonPoint",FormData:'{name:1,code:"123"}'}
  */
 export async function getRegions(params) {
-  const result = await get('/api/rest/PollutantSourceApi/AuthorApi/GetRegions', params, null);
+  const result = await get(API.RegionApi.GetRegions, params, null);
   return result;
 }
 
@@ -193,7 +119,7 @@ export async function getRegions(params) {
  */
 export async function getAttachmentList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/UploadApi/GetAttachmentList',
+    API.commonApi.GetAttachmentList,
     params,
     null,
   );
@@ -205,18 +131,9 @@ export async function getAttachmentList(params) {
  * @params {"configId": "String"}
  */
 export async function exportDataExcel(payload) {
-  // let params = payload.params;
-  let params = payload;
-
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   params.configId = encrypt.encrypt(params.configId);
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/ExportDataExcel',
-    params,
+    API.autoFormApi.ExportDataExcel,
+    payload,
     null,
   );
   return result;
@@ -227,19 +144,9 @@ export async function exportDataExcel(payload) {
  * @params {"configId": "String"}
  */
 export async function exportTemplet(payload) {
-  // let params = payload.params;
-  let params = payload;
-
-  const results = await get(configinfopage);
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   params.configId = encrypt.encrypt(params.configId);
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/ExportTemplet',
-    params,
+    API.autoFormApi.ExportTemplet,
+    payload,
     null,
   );
   return result;
@@ -256,27 +163,14 @@ export async function fileUpload(params) {
 
 // 删除文件
 export async function deleteAttach(params) {
-  const result = await post('/api/rest/PollutantSourceApi/UploadApi/DeleteAttach', params, null);
+  const result = await post(API.UploadApi.DeleteAttach, params, null);
   return result;
 }
-// rest/PollutantSourceApi/AutoFormDataApi/VerificationData
 // 校验重复
 export async function checkRepeat(payload) {
-  // let params = payload.params;
-  let params = payload;
-
-  // //判断配置是否开启明文传输0开启 1关闭
-  // if (payload.sysConfig.ClearTransmission == 0) {
-  //   var encrypt = new window.JSEncrypt();
-  //   encrypt.setPublicKey(encryptKey);
-  //   params.DT_Name = encrypt.encrypt(params.DT_Name);
-  //   params.DF_Name = encrypt.encrypt(params.DF_Name);
-  //   params.DF_Value = encrypt.encrypt(params.DF_Value);
-  //   params.DT_ConfigID = encrypt.encrypt(params.DT_ConfigID);
-  // }
   const result = await post(
-    '/api/rest/PollutantSourceApi/AutoFormDataApi/VerificationData',
-    params,
+    API.autoFormApi.VerificationData,
+    payload,
     null,
   );
   return result;

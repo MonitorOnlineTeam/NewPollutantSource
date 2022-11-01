@@ -10,7 +10,6 @@ import config from '@/config'
 import { isInsidePolygon } from '@/utils/utils'
 import webConfig from '../../../public/webConfig'
 
-const YOUR_AMAP_KEY = 'c5cb4ec7ca3ba4618348693dd449002d';
 // import MapUI from "@/pages/monitoring/mapview/MapUI"
 
 
@@ -130,6 +129,9 @@ class SdlMap extends PureComponent {
           mapCenter: this.props.path[0] && this.props.path[0][0] && this.props.path[0][0][0],
         })
       }
+    }
+    window._AMapSecurityConfig = {
+      securityJsCode: config.securityJsCode,
     }
   }
 
@@ -395,7 +397,7 @@ class SdlMap extends PureComponent {
     }
 
     return <Map
-      amapkey={YOUR_AMAP_KEY}
+      amapkey={config.amapKey}
       // zoom={this.props.zoom}
       // mapStyle="amap://styles/darkblue"
       {...props}

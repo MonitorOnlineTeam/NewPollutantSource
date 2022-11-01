@@ -47,7 +47,7 @@ class index extends PureComponent {
       type: 'airQualityAnalysis/getYearAndChain',
       payload: {
         MonitorTime: moment(MonitorTime).format('YYYY-MM-01 00:00:00'),
-        PollutantCode: pollutantValue,
+        PollutantCode: pollutantValue.toString(),
         PollutantType: 5
       }
     })

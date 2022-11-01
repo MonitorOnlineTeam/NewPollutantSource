@@ -39,6 +39,7 @@ import RangePicker_ from '@/components/RangePicker/NewRangePicker';
 import SdlTable from '@/components/SdlTable';
 import YearPicker from '@/components/YearPicker';
 import RegionList from '@/components/RegionList'
+import styles from '@/pages/platformManager/emissionEnt/index.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -640,6 +641,7 @@ class yearCheckEnt extends Component {
           }}
         >
           <TableTransfer
+            className={styles.transfer}
             rowKey={record => record.key}
             titles={['待选企业监测点', '参与考核企业监测点']}
             dataSource={this.props.noSelectEnt}

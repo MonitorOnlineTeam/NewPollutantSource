@@ -408,8 +408,6 @@ class RoleIndex extends Component {
             payload: {
             },
         })
-
-
         // this.props.dispatch({
         //     type: 'roleinfo/getrolestreeandobj',
         //     payload: {}

@@ -4,6 +4,7 @@
  * 创建时间：2020.05.21
  */
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 
 /**

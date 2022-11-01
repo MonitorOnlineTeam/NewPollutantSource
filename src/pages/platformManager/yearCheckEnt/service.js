@@ -1,4 +1,5 @@
 import { post } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 传输有效率 行政区下
@@ -6,7 +7,7 @@ import { post } from '@/utils/request';
  */
 export async function GetTransmissionEfficiencyForRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForRegion',
+    API.StatisticAnalysisApi.GetTransmissionEfficiencyForRegion,
     params,
     null,
   );
@@ -18,7 +19,7 @@ export async function GetTransmissionEfficiencyForRegion(params) {
 
 export async function GetTransmissionEfficiencyForPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForPoint',
+    API.StatisticAnalysisApi.GetTransmissionEfficiencyForPoint,
     params,
     null,
   );
@@ -29,7 +30,7 @@ export async function GetTransmissionEfficiencyForPoint(params) {
 
 export async function GetTransmissionEfficiencyForEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetTransmissionEfficiencyForEnt',
+    API.StatisticAnalysisApi.GetTransmissionEfficiencyForEnt,
     params,
     null,
   );
@@ -40,13 +41,7 @@ export async function GetTransmissionEfficiencyForEnt(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
-  const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
-      params.RegionCode,
-    null,
-    null,
-  );
-
+  const result = post(API.RegionApi.GetEntByRegion, params);
   return result;
 }
 
@@ -54,7 +49,7 @@ export async function GetEntByRegion(params) {
 
 export async function ExportTransmissionEfficiencyForRegion(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForRegion',
+    API.ExportApi.ExportTransmissionEfficiencyForRegion,
     params,
     null,
   );
@@ -66,7 +61,7 @@ export async function ExportTransmissionEfficiencyForRegion(params) {
 
 export async function ExportTransmissionEfficiencyForEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/ExportTransmissionEfficiencyForEnt',
+    API.ExportApi.ExportTransmissionEfficiencyForEnt,
     params,
     null,
   );
@@ -78,9 +73,8 @@ export async function ExportTransmissionEfficiencyForEnt(params) {
 
 export async function GetAnnualAssessmentEntList(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAnnualAssessmentEntList',
+    API.BaseDataApi.GetAnnualAssessmentEntList,
     params,
-    null,
   );
 
   return result;
@@ -90,7 +84,7 @@ export async function GetAnnualAssessmentEntList(params) {
 
 export async function ExportAnnualAssessmentEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/ExportAnnualAssessmentEnt',
+    API.ExportApi.ExportAnnualAssessmentEnt,
     params,
     null,
   );
@@ -99,10 +93,9 @@ export async function ExportAnnualAssessmentEnt(params) {
 }
 
 //删除年度考核企业列表
-
 export async function DeleteAnnualAssessmentEntByID(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/DeleteAnnualAssessmentEntByID',
+    API.BaseDataApi.DeleteAnnualAssessmentEntByID,
     params,
     null,
   );
@@ -114,7 +107,7 @@ export async function DeleteAnnualAssessmentEntByID(params) {
 
 export async function AddAnnualAssessmentEnt(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/AddAnnualAssessmentEnt',
+    API.BaseDataApi.AddAnnualAssessmentEnt,
     params,
     null,
   );
@@ -126,7 +119,7 @@ export async function AddAnnualAssessmentEnt(params) {
 
 export async function GetAnnualAssessmentEntAndPoint(params) {
   const result = post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetAnnualAssessmentEntAndPoint',
+    API.BaseDataApi.GetAnnualAssessmentEntAndPoint,
     params,
     null,
   );

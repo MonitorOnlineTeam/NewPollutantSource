@@ -33,7 +33,7 @@ const mapIconStyle = {
   fontSize: 22,
   borderRadius: "50%",
   background: "#fff",
-  boxShadow: "rgb(255 255 255) 0px 0px 3px 2px"
+  boxShadow: "rgb(255 255 255) 0px 0px 3px 2px",
 }
 const RadioButton = Radio.Button;
 const { RunningRate, TransmissionEffectiveRate, amapKey } = config;
@@ -51,7 +51,9 @@ let ruler;
 class ThematicMap extends PureComponent {
   constructor(props) {
     super(props);
+    let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     this.state = {
+      mapCenter: [sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude],
       pointsList: [],
       activePollutant: '0',
       searchInputVal: undefined,
@@ -94,6 +96,10 @@ class ThematicMap extends PureComponent {
         setTimeout(() => {
           m.setFitView();
         }, 1000)
+      },
+      zoomchange: value => {
+        const zoom = _thismap.getZoom();
+        console.log('zoom=', zoom);
       },
       complete: () => {
         //_thismap.setZoomAndCenter(13, [centerlongitude, centerlatitude]);
@@ -187,7 +193,7 @@ class ThematicMap extends PureComponent {
           break;
       }
     }
-    const style = { color: this.getColor(status), ...mapIconStyle }
+    const style = { color: this.getColor(status), zIndex: status === 1 ? 9 : 1, ...mapIconStyle }
     if (pollutantType == 10) {
       icon = <VocIcon style={style} />
     }
@@ -202,6 +208,10 @@ class ThematicMap extends PureComponent {
     if (pollutantType == 6) {
       icon = <CustomIcon type="icon-richangshenghuo-shuizhan" style={{ ...style }} />
     }
+    if (pollutantType == 37) {
+      icon = <CustomIcon type="icon-dian2" style={{ ...style }} />
+    }
+
     return <Tooltip overlayClassName={styles.tooltip} color={"#fff"} title={<span style={{ color: "#000" }}>{extData.title !== '排口0' ? extData.Abbreviation + ' - ' + extData.title : extData.Abbreviation}</span>}>
       <div onClick={() => this.onMapItemClick(extData)}>
         {icon}
@@ -242,6 +252,7 @@ class ThematicMap extends PureComponent {
           longitude: item.PointLongitude,
           latitude: item.PointLatitude,
         },
+        zIndex: item.Status === 1 ? 101 : 100,
         DGIMN: item.DGIMN,
         title: item.PointName,
         status: item.Status,
@@ -279,6 +290,7 @@ class ThematicMap extends PureComponent {
       selectedPointInfo: extData,
       infoWindowVisible: true,
       infoWindowPos: [extData.position.longitude, extData.position.latitude],
+      // mapCenter: [extData.position.longitude, extData.position.latitude],
     }, () => {
       this.getInfoWindowData();
     })
@@ -307,7 +319,9 @@ class ThematicMap extends PureComponent {
       return;
     }
     let newPoints = allPoints.filter(item => item.PollutantType == activePollutant);
-    console.log('newPoints=', newPoints)
+    // console.log('newPoints1=', newPoints)
+    // newPoints = newPoints.slice(330, 340);
+    // console.log('newPoints2=', newPoints)
     this.setState({
       pointsList: newPoints
     })
@@ -430,6 +444,15 @@ class ThematicMap extends PureComponent {
             }}
           />
         </>
+      case 37:
+        return <>
+          <CustomIcon type="icon-dian2" style={{
+            color: '#999',
+            marginRight: 8,
+            ...mapIconStyle,
+            fontSize: 17,
+          }} />
+        </>
     }
   }
 
@@ -443,8 +466,8 @@ class ThematicMap extends PureComponent {
 
   render() {
     const { pollutantTypeCountList, curPointData, tableList, chartData, pointDetailsModalVisible } = this.props;
-    const { activePollutant, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
-    console.log('activePollutant=', activePollutant)
+    const { activePollutant, mapCenter, searchInputVal, infoWindowVisible, infoWindowPos, selectedPointInfo, markersList, currentTool } = this.state;
+    console.log('markersList=', markersList)
     let sysConfigInfo = JSON.parse(localStorage.getItem('sysConfigInfo'));
     let flag = this.props.match.params.pollutantCode;
     return (
@@ -587,7 +610,8 @@ class ThematicMap extends PureComponent {
             features={['bg', 'building', 'point', 'road']}
             events={this.mapEvents}
             zoom={sysConfigInfo.ZoomLevel}
-            center={[sysConfigInfo.CenterLongitude, sysConfigInfo.CenterLatitude]}
+            center={mapCenter}
+            // zooms={[5, 14]}
             // mapStyle="amap://styles/macaron"
             // center={webConfig.mapCenter}
             // mapStyle="amap://styles/darkblue"
@@ -609,7 +633,7 @@ class ThematicMap extends PureComponent {
               showShadow
               closeWhenClickMap={false}
             >
-              {infoWindowVisible && <InfoWindowContent
+              {true && <InfoWindowContent
                 chartData={chartData}
                 tableList={tableList}
                 selectedPointInfo={selectedPointInfo}

@@ -23,7 +23,7 @@ class index extends PureComponent {
       overStatus: true
     };
     this._SELF_ = {
-      AlarmInfoCode: this.props.history.location.query.code,
+      AlarmInfoCode: this.props.history.location.query.code || localStorage.getItem("AlarmInfoCode"),
     }
   }
 
@@ -69,6 +69,8 @@ class index extends PureComponent {
 
   // 结束
   endRecord = () => {
+    // console.log('111=',this._SELF_.AlarmInfoCode);
+    // return;
     this._dispatch('emergency/endRecord', {
       AlarmInfoCode: this._SELF_.AlarmInfoCode,
       Status: this.state.overStatus ? 1 : 0

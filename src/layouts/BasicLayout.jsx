@@ -1,19 +1,15 @@
 import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
-import React, { Component, Suspense } from 'react';
+import React, { Component } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { formatMessage } from 'umi-plugin-react/locale';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import logo from '../../public/sdlicon.png';
-import config from '@/config';
-import styles from './BasicLayout.less';
 import Cookie from 'js-cookie';
-import { DownOutlined } from '@ant-design/icons';
 import { Tabs, Dropdown, Menu, message } from 'antd';
 import PageLoading from '@/components/PageLoading'
 import _ from "lodash"
-import defaultSettings from '../../config/defaultSettings.js'
 import webConfig from "../../public/webConfig"
 import SdlMenu from "@/components/SdlMenu"
 
@@ -93,9 +89,9 @@ class BasicLayout extends Component {
     const logoRender = Item => {
       if (configInfo && configInfo.IsShowLogo === "true") {
         return settings.layout === 'topmenu' ? (
-          <img style={{ height: 60 }} src={configInfo.Logo ? `/api/upload/${configInfo.Logo}` : logo} alt="logo" />
+          <img style={{ height: 60 }} src={configInfo.Logo ? `${configInfo.Logo}` : logo} alt="logo" />
         ) : (
-          <img src={`/api/upload/${configInfo.Logo}`} alt="logo" />
+          <img src={`${configInfo.Logo}`} alt="logo" />
         );
       }
       else {
@@ -113,9 +109,7 @@ class BasicLayout extends Component {
     }
     return (
       <>
-        <Suspense fallback={<PageLoading />}>
-          <SdlMenu match={this.props.match} location={this.props.location} />
-        </Suspense>
+        <SdlMenu match={this.props.match} location={this.props.location} />
         <ProLayout
           logo={logoRender}
           onCollapse={handleMenuCollapse}
@@ -129,8 +123,9 @@ class BasicLayout extends Component {
             }
             return <Link to={menuItemProps.path}>{defaultDom}</Link>;
           }}
-          breadcrumbRender={(routers = []) => [
-            {
+          breadcrumbRender={(routers = []) => {
+            console.log("routers=", routers);
+            return [{
               path: '/',
               breadcrumbName: formatMessage({
                 id: 'menu.home',
@@ -138,7 +133,9 @@ class BasicLayout extends Component {
               }),
             },
             ...routers,
-          ]}
+            ]
+          }
+          }
           footerRender={() => {
             return <div></div>;
           }}
@@ -151,19 +148,17 @@ class BasicLayout extends Component {
             (webConfig.isShowBreadcrumb ? <div id="basicLayout">{children}</div> : <div id="notBreadcrumbLayout"> {children} </div>)
           }
         </ProLayout>
-        <Suspense fallback={<PageLoading />}>
-          {process.env.NODE_ENV === "development" &&
-            <SettingDrawer
-              settings={_settings}
-              onSettingChange={config =>
-                dispatch({
-                  type: 'settings/changeSetting',
-                  payload: config,
-                })
-              }
-            />
-          }
-        </Suspense>
+        {process.env.NODE_ENV === "development" &&
+          <SettingDrawer
+            settings={_settings}
+            onSettingChange={config =>
+              dispatch({
+                type: 'settings/changeSetting',
+                payload: config,
+              })
+            }
+          />
+        }
       </>
     );
   }

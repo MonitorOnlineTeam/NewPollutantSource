@@ -1,5 +1,6 @@
 import { async } from 'q';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 // 数据上报中的企业名称跟用户名称
 export async function getDataReportUserAndEntInfo(params) {

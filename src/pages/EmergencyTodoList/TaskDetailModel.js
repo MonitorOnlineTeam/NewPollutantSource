@@ -33,6 +33,7 @@ import { EnumRequstResult, EnumPatrolTaskType, EnumPsOperationForm, EnumOperatio
 import { imgaddress } from '../../config.js';
 import MonitorContent from '../../components/MonitorContent/index';
 import { get, post, authorpost } from '@/utils/request';
+import { API } from '@config/API'
 import ViewImagesModal from '@/pages/operations/components/ViewImagesModal';
 import ViewImagesListModal from '../../components/ImgView';
 import 'react-image-lightbox/style.css';

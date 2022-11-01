@@ -51,6 +51,9 @@ const ImportantTypeList = [
 class Year extends PureComponent {
   state = {
     DataType: "region",
+    regionFlag: true,
+    entFlag: false,
+    pointFlag: false
   }
   _SELF_ = {
     formLayout: {
@@ -141,7 +144,7 @@ class Year extends PureComponent {
 
   render() {
     const { form: { getFieldDecorator, getFieldValue }, pollutantCodeList, regionYearLoading, entYearLoading, pointYearLoading, regionYearExportLoading, entYearExportLoading, pointYearExportLoading, regionList, attentionList, regionYearTableDataSource, entYearTableDataSource, pointYearTableDataSource } = this.props;
-    const { DataType } = this.state;
+    const { DataType, regionFlag, entFlag, pointFlag } = this.state;
     let loading = regionYearLoading || entYearLoading || pointYearLoading;
     let exportLoading = regionYearExportLoading || entYearExportLoading || pointYearExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
@@ -337,8 +340,8 @@ class Year extends PureComponent {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
                       this.getTableData("region");
-                      this.getTableData("ent");
-                      this.getTableData("point");
+                      // this.getTableData("ent");
+                      // this.getTableData("point");
                     }}
                   />
                 )}
@@ -373,9 +376,10 @@ class Year extends PureComponent {
                   //   message.error("请将时间填写完整");
                   //   return;
                   // }
-                  this.getTableData("region");
-                  this.getTableData("ent");
-                  this.getTableData("point");
+                  this.getAllPollutantCode();
+                  this.getTableData(DataType);
+                  // this.getTableData("ent");
+                  // this.getTableData("point");
                 }}>
                   查询
                 </Button>
@@ -384,16 +388,16 @@ class Year extends PureComponent {
                   icon={<ExportOutlined />}
                   loading={exportLoading}
                   onClick={() => {
-                    let values = this.props.form.getFieldsValue();
-                    if (values.time2.length && values.time1.length) {
-                      if (values.time2[0] <= values.time1[1]) {
-                        message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
-                        return;
-                      }
-                    } else {
-                      message.error("请将时间填写完整");
-                      return;
-                    }
+                    // let values = this.props.form.getFieldsValue();
+                    // if (values.time2.length && values.time1.length) {
+                    //   if (values.time2[0] <= values.time1[1]) {
+                    //     message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+                    //     return;
+                    //   }
+                    // } else {
+                    //   message.error("请将时间填写完整");
+                    //   return;
+                    // }
                     this.onExport()
                   }}
                 >
@@ -403,15 +407,20 @@ class Year extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
+          <Tabs defaultActiveKey="region" onChange={(key) => {
+            if (!regionFlag || !entFlag || !pointFlag) {
+              this.getTableData(key);
+            }
+            this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
+          }}>
             <TabPane tab="辖区排放量" key="region">
-              <SdlTable loading={regionYearLoading} pagination={false} align="center" dataSource={regionYearTableDataSource} columns={RegionColumns} />
+              <SdlTable  scroll={{ y: 'calc(100vh - 400px)' }} loading={regionYearLoading} pagination={false} align="center" dataSource={regionYearTableDataSource} columns={RegionColumns} />
             </TabPane>
             <TabPane tab="企业排放量" key="ent">
-              <SdlTable loading={entYearLoading} pagination={false} align="center" dataSource={entYearTableDataSource} columns={EntColumns} />
+              <SdlTable scroll={{ y: 'calc(100vh - 400px)' }} loading={entYearLoading} pagination={false} align="center" dataSource={entYearTableDataSource} columns={EntColumns} />
             </TabPane>
             <TabPane tab="监测点排放量" key="point">
-              <SdlTable loading={pointYearLoading} pagination={false} align="center" dataSource={pointYearTableDataSource} columns={PointColumns} />
+              <SdlTable scroll={{ y: 'calc(100vh - 400px)' }} loading={pointYearLoading} pagination={false} align="center" dataSource={pointYearTableDataSource} columns={PointColumns} />
             </TabPane>
           </Tabs>
         </Card>

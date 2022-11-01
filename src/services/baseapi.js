@@ -6,6 +6,7 @@
 
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 import { async } from 'q';
 
 /**
@@ -14,7 +15,7 @@ import { async } from 'q';
  */
 export async function getPollutantTypeList(params) {
   const result = await post(
-    '/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantTypeList',
+    API.commonApi.GetPollutantTypeList,
     {
       ...params,
       pollutantCodes: sessionStorage.getItem('sysPollutantCodes') || params.pollutantCodes
@@ -26,11 +27,7 @@ export async function getPollutantTypeList(params) {
 
 // 获取用户按钮权限
 export async function getBtnAuthority(params) {
-  const result = await post(
-    '/api/rest/PollutantSourceApi/AuthorApi/GetButtonByUserID',
-    params,
-    null,
-  );
+  const result = await post(API.AuthorityApi.GetButtonByUserID, params, null);
   return result === null ? { data: null } : result;
 }
 /**
@@ -40,7 +37,7 @@ export async function getBtnAuthority(params) {
     }
  */
 export async function querypollutantlist(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetPollutantListByDgimn', params, null);
+  const result = await post(API.commonApi.GetPollutantListByDgimn, params);
   return result === null ? {
     data: null,
   } : result.Datas;
@@ -54,7 +51,7 @@ export async function querypollutantlist(params) {
  */
 export async function deletePoints(params) {
   // console.log("params=",params);
-  const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/DeletePoints', params, null);
+  const result = await post(API.PointApi.DeletePoints, params, null);
   return result;
 }
 
@@ -66,6 +63,6 @@ export async function deletePoints(params) {
  */
 export async function queryPointForTarget(params) {
   console.log("params=", params);
-  const result = await post('/api/rest/PollutantSourceApi/MonitorPointApi/queryPointForTarget', params, null);
+  const result = await post(API.PointApi.queryPointForTarget, params, null);
   return result;
 }

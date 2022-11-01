@@ -82,11 +82,13 @@ export default class UserInfoAdd extends Component {
     onCheck = checkedKey => {
         this.setState({ checkedKey });
         const leafTree = [];
+        debugger
         checkedKey.map(item => {
             if (this.state.leafTreeDatas.indexOf(item) != -1) {
                 leafTree.push(item);
             }
         });
+        debugger
         this.setState({ checkedKeySel: leafTree });
     };
 
@@ -111,17 +113,21 @@ export default class UserInfoAdd extends Component {
 
     renderTreeNodes = data =>
         data.map(item => {
-            if (item.children.length == 0) {
-                if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
-                    this.state.leafTreeDatas.push(item.key);
-                }
-            }
             if (item.children) {
+                // if (item.children.length == 0) {
+                //     if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+                //         this.state.leafTreeDatas.push(item.key);
+                //     }
+                // }
                 return (
                     <TreeNode title={item.title} key={item.key} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
+            } else {
+                if (this.state.leafTreeDatas.indexOf(item.key) == -1) {
+                    this.state.leafTreeDatas.push(item.key);
+                }
             }
             return <TreeNode {...item} />;
         });
@@ -140,6 +146,7 @@ export default class UserInfoAdd extends Component {
         this.onSubmitForm();
         const { dispatch, form, RolesTreeData } = this.props;
         const { FormDatas, leafTreeDatas, checkedKeySel, checkedKeysSel } = this.state;
+        debugger
         if (checkedKeySel.length == 0) {
             message.error('角色不能为空');
             return;
@@ -203,7 +210,7 @@ export default class UserInfoAdd extends Component {
         };
         const title = this.state.selectKey === 'base' ? '基本信息' : (this.state.selectKey === 'roles' ? '角色设置' : '部门设置');
         return (
-            <BreadcrumbWrapper title={`添加 - ${  title}`}>
+            <BreadcrumbWrapper title={`添加 - ${title}`}>
                 <div className="contentContainer" style={{ width: '100%', background: '#fff' }}>
                     {
                         <Layout style={{ padding: '14px 0', background: '#fff' }}>
@@ -288,7 +295,7 @@ export default class UserInfoAdd extends Component {
                                                     })
                                                 }}
                                             >下一步
-                                        </Button>
+                                            </Button>
                                         </Divider>
                                     </SdlForm>
 

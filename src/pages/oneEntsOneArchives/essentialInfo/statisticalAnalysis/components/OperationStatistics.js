@@ -4,10 +4,10 @@ import styles  from '../index.less';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Progress, Statistic } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-@connect(({ loading, home }) => ({
-    taskCountData: home.taskCountData,
-    operationsWarningData: home.operationsWarningData,
-    alarmAnalysis: home.alarmAnalysis,
+@connect(({ loading, oneEntAndPoint }) => ({
+    taskCountData: oneEntAndPoint.taskCountData,
+    operationsWarningData: oneEntAndPoint.operationsWarningData,
+    alarmAnalysis: oneEntAndPoint.alarmAnalysis,
   }))
 class OperationStatistics extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ class OperationStatistics extends Component {
         const{dispatch}=this.props;
          // 获取运维 - 任务数量统计
          dispatch({
-            type: "home/getTaskCount",
+            type: "oneEntAndPoint/getTaskCount",
             payload: {
             entCode,
             DGIMN
@@ -39,7 +39,7 @@ class OperationStatistics extends Component {
         })
         // 获取运维 - 预警统计
         dispatch({
-            type: "home/getExceptionProcessing",
+            type: "oneEntAndPoint/getExceptionProcessing",
             payload: {
             entCode,
             DGIMN
@@ -47,7 +47,7 @@ class OperationStatistics extends Component {
         })
         // 获取运维 - 异常报警及响应情况
         dispatch({
-            type: "home/getAlarmAnalysis",
+            type: "oneEntAndPoint/getAlarmAnalysis",
             payload: {
             entCode,
             DGIMN

@@ -15,8 +15,8 @@ import {
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './index.less';
-import HistoryVideo from './YsyHisVideoData';
-import YsyRealVideoData from './YsyRealVideoData';
+import HistoryVideo from './HisVideoData';
+import YsyRealVideoData from './RealVideoData';
 import config from '@/config';
 import VideoSelect from '../VideoSelect'
 import { isInnerIPFn } from '@/utils/utils'

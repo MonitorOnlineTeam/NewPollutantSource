@@ -18,7 +18,7 @@ export default Model.extend({
     CO2LinearAnalysisData: {
       coordMax: [],
       coordMin: [],
-      data: [],
+      linearData: [],
       formula: ""
     },
     CO2ReportList: [],

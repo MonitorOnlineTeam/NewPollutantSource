@@ -205,6 +205,7 @@ class DataTagTable extends Component {
             let flag = record[item.PollutantCode + "_Flag"];
             // 判断是否显示复选框，时间在上个季度范围内时显示
             let isShowCheckBox = content !== "-" && this.isQualifiedTime(record.MonitorTime)
+            // let isShowCheckBox = true
             if (flag && flag !== "N") {
               content = (
                 <div style={_style.flagBox}>
@@ -455,7 +456,7 @@ class DataTagTable extends Component {
           onClick={() => { this.setState({ visible: true }) }}
         >
           修改数据标记
-      </Button>
+        </Button>
         <SdlTable
           columns={columns}
           {...this.props}
@@ -464,8 +465,10 @@ class DataTagTable extends Component {
         />
         <Modal
           title="修改数据状态"
+          destroyOnClose
           visible={this.state.visible}
-          loading={updateLoading}
+          // loading={updateLoading}
+          confirmLoading={updateLoading}
           onOk={this.changeStatus}
           onCancel={this.cancelModal}
         >

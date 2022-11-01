@@ -196,7 +196,7 @@ export default class PointVerifyLst extends Component {
       type: 'overVerifyRate/exportDefectPointDetail',
       payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        window.open(data)
       },
     });
   };

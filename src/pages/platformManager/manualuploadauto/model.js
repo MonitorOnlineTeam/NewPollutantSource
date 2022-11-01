@@ -195,7 +195,13 @@ export default Model.extend({
       select,
     }) {
       const { manualUploadautoParameters } = yield select(a => a.manualuploadauto);
-      const result = yield call(CalculationAQIData, { ...manualUploadautoParameters });
+      let body = {
+        DGIMN: manualUploadautoParameters.DGIMN,
+        BeginTime: manualUploadautoParameters.BeginTime,
+        EndTime: manualUploadautoParameters.EndTime,
+        Type: manualUploadautoParameters.Type,
+      }
+      const result = yield call(CalculationAQIData, { ...body });
       if (result.IsSuccess) {
         message.info(result.Message);
       }

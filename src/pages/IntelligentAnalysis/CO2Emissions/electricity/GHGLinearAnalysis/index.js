@@ -181,7 +181,7 @@ class index extends PureComponent {
           <Divider style={{ marginBottom: 0 }} />
           <Spin spinning={loading}>
             {
-              CO2LinearAnalysisData ? <ReactEcharts
+              CO2LinearAnalysisData.linearData.length ? <ReactEcharts
                 option={this.linearCheckOption()}
                 lazyUpdate
                 notMerge

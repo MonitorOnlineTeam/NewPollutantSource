@@ -7,7 +7,7 @@ import { connect } from "dva"
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import locale from 'antd/es/locale/zh_CN';
-import { gasPollutantList } from "@/utils/CONST"
+// import { gasPollutantList } from "@/utils/CONST"
 import { router } from "umi"
 
 const { confirm } = Modal;
@@ -26,40 +26,33 @@ const { Option } = Select;
   QCLogsStart: dataExtract.QCLogsStart,
   QCLogsAnswer: dataExtract.QCLogsAnswer,
   QCLogsResult: dataExtract.QCLogsResult,
-  loading: loading.effects["dataExtract/resetState"]
+  loading: loading.effects["common/getQCAPollutantByDGIMN"]
 }))
 class DataExtractPage extends PureComponent {
   constructor(props) {
     super(props);
     // 分钟：mins 小时 hour  日 day  系统参数：system 质控标气信息：qcainfo
-    this.defalutPollutantCode = gasPollutantList[0].value;
+    // this.defalutPollutantCode = gasPollutantList[0].value;
     this.state = {
+      BQXXTEXT: [], PQLLTEXT: [],
+      gasPollutantList: [],
       GasPathMode: 0,
-      currentPollutantCode: this.defalutPollutantCode,
+      currentPollutantCode: undefined,
       mins: [moment().subtract(1, "hour"), moment()],
       hour: [moment().subtract(1, "hour"), moment()],
       day: [moment().subtract(1, "days"), moment()],
       qcainfo: {
-        pollutantCode: this.defalutPollutantCode
+        pollutantCode: undefined
       }
     };
 
 
 
-    let PQLLTEXT = [], BQXXTEXT = [];
-    gasPollutantList.map(item => {
-      if (item.label !== 'N₂') {
-        PQLLTEXT.push(item.label)
-      }
-      BQXXTEXT.push(item.label)
-    });
-    this._SELF_ = {
-      PQLLTEXT: PQLLTEXT.join('、'),
-      BQXXTEXT: BQXXTEXT.join('、'),
-    }
+
   }
 
   componentDidMount() {
+    this.getQCAPollutantByDGIMN();
     this.props.dispatch({
       type: "dataExtract/updateState",
       payload: {
@@ -68,9 +61,39 @@ class DataExtractPage extends PureComponent {
     })
   }
 
+  // 获取质控污染物
+  getQCAPollutantByDGIMN = () => {
+    this.props.dispatch({
+      type: "common/getQCAPollutantByDGIMN",
+      payload: {
+        DGIMN: this.props.DGIMN
+      },
+      callback: (res) => {
+        let PQLLTEXT = [], BQXXTEXT = [];
+        let gasPollutantList = res.map(item => {
+          if (item.PollutantCode !== 'n00000') {
+            PQLLTEXT.push(item.PollutantName)
+          }
+          BQXXTEXT.push(item.PollutantName)
+          return { value: item.PollutantCode, label: item.PollutantName }
+        })
+        this.defalutPollutantCode = gasPollutantList.filter(item => item.value !== 'n00000')[0].value;
+        this.setState({
+          PQLLTEXT, BQXXTEXT,
+          gasPollutantList: gasPollutantList,
+          currentPollutantCode: this.defalutPollutantCode,
+          qcainfo: {
+            pollutantCode: this.defalutPollutantCode
+          }
+        })
+      }
+    })
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // 重置modal - state
     if (this.props.DGIMN !== prevProps.DGIMN) {
+      this.getQCAPollutantByDGIMN();
       this.props.dispatch({
         type: "dataExtract/resetModalState"
       })
@@ -201,10 +224,10 @@ class DataExtractPage extends PureComponent {
 
 
   render() {
-    const { mins, hour, day, loading, currentPollutantCode, GasPathMode } = this.state;
+    const { mins, hour, day, loading, currentPollutantCode, GasPathMode, gasPollutantList, BQXXTEXT, PQLLTEXT } = this.state;
     const { QCLogsStart, QCLogsAnswer, QCLogsResult, pointName } = this.props;
-    const { PQLLTEXT, BQXXTEXT } = this._SELF_;
     console.log('GasPathMode=', GasPathMode)
+    console.log('currentPollutantCode=', currentPollutantCode)
     return (
       <Spin spinning={!!loading}>
         <Card title="监测数据提取">
@@ -294,20 +317,24 @@ class DataExtractPage extends PureComponent {
                   // icon: <ExclamationCircleOutlined />,
                   content: <div style={{ marginTop: 20 }}>
                     污染物：
-                    <Select style={{ width: 200 }} defaultValue={this.state.currentPollutantCode} onChange={(val) => {
-                      that.setState({ currentPollutantCode: val })
-                    }}>
+                    <Select
+                      notFoundContent="暂无数据"
+                      style={{ width: 200 }} placeholder="请选择污染物" defaultValue={this.state.currentPollutantCode} onChange={(val) => {
+                        that.setState({ currentPollutantCode: val })
+                      }}>
                       {
                         gasPollutantList.map(item => {
                           if (item.value !== "n00000") {
                             return <Option key={item.value} value={item.value}>{item.label}</Option>
+                          } else {
+                            return ''
                           }
                         })
                       }
                     </Select>
                     <p style={{ marginTop: 20 }}>
                       气路模式：
-                      <Radio.Group defaultValue={0}  onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
+                      <Radio.Group defaultValue={0} onChange={(e) => this.setState({ GasPathMode: e.target.value })}>
                         <Radio value={0}>全程校验</Radio>
                         <Radio value={1}>系统校验</Radio>
                       </Radio.Group>
@@ -340,9 +367,11 @@ class DataExtractPage extends PureComponent {
                   cancelText: "取消",
                   // icon: <ExclamationCircleOutlined />,
                   content: <div>
-                    <Select style={{ width: 200 }} defaultValue={this.state.currentPollutantCode} onChange={(val) => {
-                      that.setState({ currentPollutantCode: val })
-                    }}>
+                    <Select
+                      notFoundContent="暂无数据"
+                      style={{ width: 200 }} placeholder="请选择污染物" defaultValue={this.state.currentPollutantCode} onChange={(val) => {
+                        that.setState({ currentPollutantCode: val })
+                      }}>
                       {
                         gasPollutantList.map(item => {
                           return <Option key={item.value} value={item.value}>{item.label}</Option>

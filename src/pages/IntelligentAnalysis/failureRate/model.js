@@ -291,6 +291,9 @@ export default Model.extend({
       //列表  异常率
 
       let { ModelType } = yield select(_ => _.home);
+      console.log('====================================');
+      console.log('ModelType=',ModelType);
+      console.log('====================================');
       ModelType == 'All'?  yield update({ loading: true  }):
       ModelType == 'Region'? yield update({ regionLoading: true  })
       :yield update({ pointLoading: true  });

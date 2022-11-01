@@ -4,6 +4,7 @@ import { Card, Row, Col } from 'antd'
 import styles from './index.less'
 import Cookie from 'js-cookie'
 import webConfig from '../../../public/webConfig'
+import PageLoading from '@/components/PageLoading'
 import { router } from 'umi'
 
 @connect(({ global }) => ({
@@ -13,10 +14,17 @@ import { router } from 'umi'
 class index extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: true
+    };
   }
 
   componentDidMount() {
+    let currentUser = Cookie.get('currentUser');
+    if (currentUser == 'null') {
+      router.push('/user/login');
+      return;
+    }
     this.getSysPollutantTypeList();
   }
 
@@ -24,6 +32,15 @@ class index extends PureComponent {
   getSysPollutantTypeList = () => {
     this.props.dispatch({
       type: 'global/getSysPollutantTypeList',
+    }).then(() => {
+      // 如果中间页只有一个菜单，直接进入该菜单
+      if (this.props.sysPollutantTypeList.length === 1) {
+        sessionStorage.setItem("isShowSelectSystem", 0);
+        this.onSysItemClick(this.props.sysPollutantTypeList[0])
+      } else {
+        sessionStorage.setItem("isShowSelectSystem", 1);
+        this.setState({ loading: false });
+      }
     })
   }
 
@@ -55,12 +72,19 @@ class index extends PureComponent {
   render() {
     const { sysPollutantTypeList, configInfo } = this.props;
     let currentUser = Cookie.get('currentUser');
-    let userName = JSON.parse(currentUser).UserName;
+    console.log('currentUser-', currentUser);
+    let userName = (currentUser != undefined && currentUser != 'null') ? JSON.parse(currentUser).UserName : '';
+    const bgImageType = configInfo.LAMImgType;
+    const bgImageUrl = bgImageType ? `url('/bgImage/${bgImageType}/middlePage_bg.jpg')` : `url('/middlePage/bg.jpg')`;
+    if (this.state.loading) {
+      return <PageLoading />;
+    }
+
     return (
       <div className={styles.middleContainer}>
         <header className={styles.header}>
           <div className={styles.left}>
-            <img src={`/upload/${configInfo.Logo}`} alt="" />
+            <img src={`${configInfo.Logo}`} alt="" />
             <span>{configInfo.SystemName}</span>
           </div>
           <div className={styles.right}>
@@ -69,7 +93,7 @@ class index extends PureComponent {
             <span style={{ cursor: 'pointer' }} onClick={this.onLoglout}>退出</span>
           </div>
         </header>
-        <div className={styles.pageContainer}>
+        <div className={styles.pageContainer} style={{ backgroundImage: bgImageUrl }}>
           <div className={styles.cardListContainer}>
             {/* <Row gutter={[32, 32]} style={{ width: '100%' }}> */}
             <Row gutter={[16, 16]} style={{ width: '100%' }}>

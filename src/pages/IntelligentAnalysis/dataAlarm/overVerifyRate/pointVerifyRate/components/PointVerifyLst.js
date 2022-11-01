@@ -62,13 +62,27 @@ export default class PointVerifyLst extends Component {
   }
 
   componentDidMount() {
+    console.log("props=", this.props)
     // this.updateQueryState({
     //   RegionCode: this.props.RegionCode,
     // });
-    this.initData();
+    this.getPollutantByType();
   }
 
-  initData = () => {
+  getPollutantByType = (val, cb) => {
+    const { dispatch, overVerifyRateForm } = this.props;
+    this.props.dispatch({
+      type: 'overVerifyRate/getPollutantByType',
+      payload: {
+        PollutantType: this.props.PollutantType,
+      },
+      callback: res => {
+        this.initData(res);
+      }
+    })
+  }
+
+  initData = (divisorList) => {
     const { location, dispatch } = this.props;
     dispatch({
       //获取企业列表
@@ -95,15 +109,16 @@ export default class PointVerifyLst extends Component {
         align: 'left',
       },
     ];
-    this.props.divisorList.map((item, key) => {
-       let pollutantList = this.props.overVerifyRateForm.PollutantList.value?  
-                        this.props.overVerifyRateForm.PollutantList.value : this.props.overVerifyRateForm.PollutantList;
+    divisorList.map((item, key) => {
+      let pollutantList = this.props.pollutantList.value ?
+        this.props.pollutantList.value : this.props.pollutantList.split(',');
       let index = pollutantList.findIndex((checkedItem, checkedKey) => {
-          if (item.PollutantCode == checkedItem) {
-            return true;
-          }
-        });
+        if (item.PollutantCode == checkedItem) {
+          return true;
+        }
+      });
       if (index !== -1) {
+        // if (true) {
         newColumns.push({
           title: <span>{item.PollutantName}</span>,
           dataIndex: item.PollutantCode,
@@ -193,7 +208,7 @@ export default class PointVerifyLst extends Component {
       type: 'overVerifyRate/exportDefectPointDetail',
       payload: { ...overVerifyRateForm, RegionCode: this.props.RegionCode },
       callback: data => {
-        downloadFile(`/upload${data}`);
+        window.open(data)
       },
     });
   };

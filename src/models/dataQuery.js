@@ -88,8 +88,12 @@ export default Model.extend({
       if (payload.Type == 37) {
         if (_historyparams.datatype === 'realtime') {
           pollutantlist = _pollutantlist.filter(item => item.PollutantCode !== 'e0011');
+          _historyparams.pollutantCodes = _historyparams.pollutantCodes ?
+            _historyparams.pollutantCodes.split(',').filter(item => item !== 'e0011').toString() : '';
         } else {
           pollutantlist = _pollutantlist.filter(item => item.PollutantCode === 'e0011');
+          _historyparams.pollutantCodes = _historyparams.pollutantCodes ?
+            _historyparams.pollutantCodes.split(',').filter(item => item === 'e0011').toString() : '';
         }
       }
 
@@ -114,8 +118,8 @@ export default Model.extend({
       // }
       const resultlist = yield call(queryhistorydatalist, {
         ..._historyparams,
-        DGIMNs: payload.searchDataType === 1 ? _historyparams.DGIMNs : _historyparams.DGIMNs + '_check',
-        DGIMN: payload.searchDataType === 1 ? _historyparams.DGIMNs : _historyparams.DGIMNs + '_check'
+        DGIMNs: payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs,
+        DGIMN: payload.searchDataType === 2 ? _historyparams.DGIMNs + '_check' : _historyparams.DGIMNs
       });
       const result = resultlist.Datas;
       if (result && result.length === 0) {
@@ -133,7 +137,7 @@ export default Model.extend({
         _historyparams.pollutantCodes = "IQI," + _historyparams.pollutantCodes;
         _historyparams.pollutantNames = "IQI," + _historyparams.pollutantNames;
       }
-      const arrname = pollutantlist.map(item => item.PollutantName);
+      const arrname = _historyparams.pollutantNames.split(',');
       _historyparams.pollutantCodes.split(',').map((item, key) => {
         let seriesdata = [];
         let series = {
@@ -159,8 +163,9 @@ export default Model.extend({
         }
 
         result.map((item1, key) => {
-          seriesdata = seriesdata.concat(item1[item]);
+          seriesdata = seriesdata.concat(item1[item] == 0 ? undefined : item1[item]);
         });
+        console.log('seriesdata=', seriesdata);
         series = {
           ...series,
           name: arrname[i],
@@ -361,6 +366,13 @@ export default Model.extend({
           },
           tooltip: {
             trigger: 'axis',
+            formatter: function (params) {
+              let html = params[0].name
+              params.forEach((item, index) => {
+                html += (`<br/>${item.marker + item.seriesName}: ${item.value == undefined ? 0 : item.value}`)
+              })
+              return html;
+            },
           },
           legend: {
             orient: 'vertical',
@@ -393,7 +405,7 @@ export default Model.extend({
             },
           },
           yAxis: {
-            type: 'value',
+            type: 'log',
             name: `浓度值${unit}`,
             axisLabel: {
               formatter: '{value}',

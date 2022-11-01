@@ -169,6 +169,7 @@ const rightTableColumns = [
     showGroupRegionFilter: departinfo.showGroupRegionFilter,
     btnloading: loading.effects['departinfo/insertdepartinfo'],
     btnloading1: loading.effects['departinfo/upddepartinfo'],
+    regionFilterLoading: loading.effects['departinfo/insertregionbyuser'],
 }))
 @Form.create()
 
@@ -624,6 +625,7 @@ class DepartIndex extends Component {
     handleRegionOK = e => {
         console.log('regioncode=', this.state.checkedKey)
         console.log('selectedRowKeys=', this.state.selectedRowKeys.key)
+        // return;
         this.props.dispatch({
             type: 'departinfo/insertregionbyuser',
             payload: {
@@ -808,14 +810,14 @@ class DepartIndex extends Component {
 
     showAlarmModal = record => {
         this.setState({
-          alarmPushData:record
-        },()=>{
-          this.setState({
-            visibleAlarm: true
-          });
+            alarmPushData: record
+        }, () => {
+            this.setState({
+                visibleAlarm: true
+            });
         })
-    
-      };
+
+    };
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -843,7 +845,7 @@ class DepartIndex extends Component {
         const tProps = {
             treeData: this.props.RegionInfoTree,
             value: this.state.DataTreeValue,
-            placeholder:'请选择行政区',
+            placeholder: '请选择行政区',
             onChange: this.onChangeTree,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
@@ -1036,7 +1038,7 @@ class DepartIndex extends Component {
                                 destroyOnClose="true"
                                 onCancel={this.handleCancel}
                                 width={900}
-
+                                confirmLoading={this.props.regionFilterLoading}
                             >
                                 {
                                     this.props.GetRegionByDepID ? <Spin
@@ -1109,7 +1111,7 @@ class DepartIndex extends Component {
                                                 // showAll
                                                 onChange={this.handleSizeChange}
                                             />
-                                            <TreeSelect className={styles.placeHolderClass} {...tProps} treeCheckable={false} allowClear/>
+                                            <TreeSelect className={styles.placeHolderClass} {...tProps} treeCheckable={false} allowClear />
                                         </Row>{
                                             (this.props.CheckPointLoading || this.props.getentandpointLoading) ? <Spin
                                                 style={{
@@ -1160,7 +1162,7 @@ class DepartIndex extends Component {
 
                                 <AlarmPushRel RoleIdOrDepId={this.state.selectedRowKeys.key} FlagType="Dept" cancelModal={this.cancelAlarmModal} />
                             </Modal> */}
-                          {this.state.visibleAlarm&&<NewAlarmPushRel type='Dept'  alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal}/>}
+                            {this.state.visibleAlarm && <NewAlarmPushRel type='Dept' alarmPushData={this.state.alarmPushData} visibleAlarm={this.state.visibleAlarm} cancelAlarmModal={this.cancelAlarmModal} />}
 
                         </div>
                         {/* </MonitorContent> */}

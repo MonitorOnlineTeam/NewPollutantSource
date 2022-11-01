@@ -2,7 +2,7 @@
  * @Author: Jiaqi 
  * @Date: 2019-11-05 17:18:32 
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-01-05 13:55:06
+ * @Last Modified time: 2022-09-05 14:09:12
  * @desc: 标准库管理
  */
 import React, { Component } from 'react';
@@ -94,7 +94,8 @@ class AddLibrary extends Component {
               //     return item.pollutantTypeName
               //   }
               // })
-              return this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == PollutantType)[0].pollutantTypeName
+              let filterPollutantType = this.props.pollutantTypelist.filter(item => item.pollutantTypeCode == PollutantType);
+              return filterPollutantType.length ? filterPollutantType[0].pollutantTypeName : ''
             }
             // return "";
           }
@@ -435,7 +436,7 @@ class AddLibrary extends Component {
             >
               <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                 添加
-            </Button>
+              </Button>
               <SdlTable
                 rowKey={record => record.index || record.Guid}
                 bordered

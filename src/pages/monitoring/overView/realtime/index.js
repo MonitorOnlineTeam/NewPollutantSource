@@ -42,6 +42,7 @@ const DateTypeList = ['RealTimeData', 'MinuteData', 'HourData', 'DayData']
   noticeList: global.notices,
   realtimeColumns: overview.realtimeColumns,
   realTimeDataView: overview.realTimeDataView,
+  realTimeTotal: overview.realTimeTotal,
   dataLoading: loading.effects['overview/getRealTimeDataView'],
   columnLoading: loading.effects['overview/getRealTimeColumn'],
 }))
@@ -51,6 +52,7 @@ class index extends Component {
     this.config = this.props.location.query.config ? JSON.parse(this.props.location.query.config) : undefined;
     this.state = {
       columns: [],
+      pageIndex: 1,
       fixed: false,
       currentDataType: 'HourData',
       realTimeDataView: [],
@@ -160,7 +162,8 @@ class index extends Component {
         });
       }
 
-      let { sortedInfo, filteredInfo, pollutantCode } = this.state;
+      let { sortedInfo, filteredInfo, pollutantCode, pageIndex } = this.state;
+      console.log("pageIndex=", pageIndex)
       filteredInfo = filteredInfo || {};
       const columns = [
         {
@@ -171,7 +174,7 @@ class index extends Component {
           align: 'center',
           fixed,
           show: true,
-          render: (value, record, index) => index + 1,
+          render: (value, record, index) => ((this.state.pageIndex - 1) * 50) + index + 1,
         },
         {
           title: '状态',
@@ -261,7 +264,7 @@ class index extends Component {
   getPageData = pollutantCode => {
     this.setState(
       {
-        pollutantCode,
+        pollutantCode, pageIndex: 1
       },
       () => {
         this.getColumns();
@@ -286,6 +289,8 @@ class index extends Component {
     this.props.dispatch({
       type: 'overview/getRealTimeDataView',
       payload: {
+        pageIndex: this.state.pageIndex,
+        pageSize: 50,
         pointName,
         dataType: currentDataType,
         pollutantTypes: pollutantCode,
@@ -373,6 +378,15 @@ class index extends Component {
     </>
   }
 
+  // 分页
+  onTableChange = (current, pageSize) => {
+    this.setState({
+      pageIndex: current, pageSize: pageSize
+    }, () => {
+      this.getRealTimeDataView();
+    })
+  }
+
   render() {
     const { currentDataType, columns, realTimeDataView, time, dayTime, pollutantCode } = this.state;
     // const { realTimeDataView, dataLoading, columnLoading } = this.props;
@@ -442,6 +456,7 @@ class index extends Component {
                       currentDataType: e.target.value,
                       filteredInfo: null,
                       columns: newColumns,
+                      pageIndex: 1,
                     },
                     () => {
                       this.getRealTimeDataView();
@@ -528,7 +543,7 @@ class index extends Component {
                   onChange={time => {
                     this.setState(
                       {
-                        time,
+                        time, pageIndex: 1
                       },
                       () => {
                         this.getRealTimeDataView();
@@ -544,7 +559,7 @@ class index extends Component {
                   defaultValue={dayTime}
                   style={{ width: 150, marginLeft: 20 }}
                   onChange={(date, dateString) => {
-                    this.setState({ dayTime: date }, () => {
+                    this.setState({ dayTime: date, pageIndex: 1 }, () => {
                       this.getRealTimeDataView();
                     });
                   }}
@@ -556,6 +571,7 @@ class index extends Component {
                 onChange={e => {
                   this.setState({
                     pointName: e.target.value,
+                    pageIndex: 1
                   });
                 }}
                 onSearch={val => {
@@ -586,7 +602,14 @@ class index extends Component {
             loading={dataLoading || columnLoading}
             size="middle"
             bordered
-            pagination={false}
+            pagination={this.props.realTimeTotal > 50 ? {
+              showQuickJumper: true,
+              showSizeChanger: false,
+              pageSize: 50, // this.props.pageSize,
+              current: this.state.pageIndex,
+              onChange: this.onTableChange,
+              total: this.props.realTimeTotal,
+            } : false}
             dataSource={realTimeDataView}
             columns={_columns}
             // scroll={{ x: scrollXWidth }}

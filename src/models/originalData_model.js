@@ -22,6 +22,7 @@ export default Model.extend({
         packageType: "OriginalPackage",
         dgimn: "",
         dataType: '',
+        keyword: '',
     },
     effects: {
         * getOriginalData(
@@ -35,10 +36,11 @@ export default Model.extend({
                 take,
                 select
             }) {
-            const { dgimn, beginTime, endTime, packageType, pageIndex, pageSize, dataType } = yield select(state => state.originalData);
-            console.log("dgimn=", dgimn);
+            const { dgimn, beginTime, endTime, packageType, keyword, pageIndex, pageSize, dataType } = yield select(state => state.originalData);
+            console.log("payload=", payload);
             const body = {
                 dgimn: payload.dgimn || dgimn,
+                Keyword: keyword,
                 beginTime: beginTime,
                 endTime: endTime,
                 packageType: packageType,

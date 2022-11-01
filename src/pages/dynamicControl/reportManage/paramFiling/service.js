@@ -1,4 +1,5 @@
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 
 
@@ -6,7 +7,7 @@ import { post, get, getNew } from '@/utils/request';
 
 // 动态管控 参数备案 列表
 export async function GetParameterFilingList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetParameterFilingList', params, null);
+  const result = await post(API.DymaicControlApi.GetParameterFilingList, params, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],
@@ -16,7 +17,11 @@ export async function GetParameterFilingList(params) {
 
 // 编辑 添加
 export async function AddOrUpdParameterFiling(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/AddOrUpdParameterFiling', params, null);
+  const result = await post(API.DymaicControlApi.AddOrUpdParameterFiling, {
+    "id@odata.type": "#Guid",
+    "instrumentID@odata.type": "#Guid",
+    ...params,
+  }, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],
@@ -25,7 +30,7 @@ export async function AddOrUpdParameterFiling(params) {
 
 //  删除
 export async function DeleteParameterFiling(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/DeleteParameterFiling', params, null);
+  const result = await post(API.DymaicControlApi.DeleteParameterFiling, params, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],
@@ -34,7 +39,7 @@ export async function DeleteParameterFiling(params) {
 
 //  参数码表
 export async function GetParaCodeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetParaCodeList', params, null);
+  const result = await post(API.DymaicControlApi.GetParaCodeList, params, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],
@@ -43,7 +48,7 @@ export async function GetParaCodeList(params) {
 
 // 备案
 export async function UpdateApproveState(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/UpdateApproveState', params, null);
+  const result = await post(API.DymaicControlApi.UpdateApproveState, params, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],
@@ -51,9 +56,8 @@ export async function UpdateApproveState(params) {
 }
 
 //仪器列表 
-
 export async function GetParaPollutantCodeList(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetParaPollutantCodeList', params, null);
+  const result = await post(API.DymaicControlApi.GetParaPollutantCodeList, params, null);
   return result.Datas === null ? {
     ...result,
     Datas: [],

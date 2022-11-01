@@ -9,11 +9,14 @@ export default class Index extends Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     return (
       <BreadcrumbWrapper>
-        <PointVerifyLst RegionCode={this.props.location.query.regionCode} />
+        <PointVerifyLst
+          RegionCode={this.props.location.query.regionCode}
+          PollutantType={this.props.location.query.pollutantType}
+          pollutantList={this.props.location.query.pollutantList} />
       </BreadcrumbWrapper>
     );
   }

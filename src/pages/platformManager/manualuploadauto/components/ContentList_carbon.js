@@ -77,7 +77,7 @@ export default class ContentList_carbon extends Component {
                     dataIndex: '30',
                     key: '30',
                     render: (text, record) => {
-                        return text || '-'
+                        return text !== undefined ? text : '-'
                     }
                 },
                 {
@@ -85,7 +85,8 @@ export default class ContentList_carbon extends Component {
                     dataIndex: 's02',
                     key: 's02',
                     render: (text, record) => {
-                        return text || '-'
+                        return text !== undefined ? text : '-'
+
                     }
                 },
                 {
@@ -93,7 +94,8 @@ export default class ContentList_carbon extends Component {
                     dataIndex: 's03',
                     key: 's03',
                     render: (text, record) => {
-                        return text || '-'
+                        return text !== undefined ? text : '-'
+
                     }
                 },
                 {
@@ -101,7 +103,8 @@ export default class ContentList_carbon extends Component {
                     dataIndex: 's05',
                     key: 's05',
                     render: (text, record) => {
-                        return text || '-'
+                        return text !== undefined ? text : '-'
+
                     }
                 },
             ],

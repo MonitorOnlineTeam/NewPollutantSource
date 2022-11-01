@@ -117,34 +117,34 @@ class index extends PureComponent {
         axisPointer: {
           type: 'shadow'
         },
-//         formatter: (params) => {
-//           if (params) {
-//             let params0 = "", params1 = "", params2 = "", params3 = "";
-//             if (params[0]) {
-//               params0 = `
-//               ${params[0].name}
-//               <br />
-//               ${params[0].marker}
-//               ${params[0].seriesName}：${params[0].value}（t）
-//               <br />`
-//             }
-//             if (params[1]) {
-//               params1 = `${params[1].marker}
-// ${params[1].seriesName} ：${params[1].value}（t）
-// <br />`
-//             }
-//             if (params[2]) {
-//               params2 = `${params[2].marker}
-// ${params[2].seriesName} ：${params[2].value}（t）<br />`
-//             }
+        //         formatter: (params) => {
+        //           if (params) {
+        //             let params0 = "", params1 = "", params2 = "", params3 = "";
+        //             if (params[0]) {
+        //               params0 = `
+        //               ${params[0].name}
+        //               <br />
+        //               ${params[0].marker}
+        //               ${params[0].seriesName}：${params[0].value}（t）
+        //               <br />`
+        //             }
+        //             if (params[1]) {
+        //               params1 = `${params[1].marker}
+        // ${params[1].seriesName} ：${params[1].value}（t）
+        // <br />`
+        //             }
+        //             if (params[2]) {
+        //               params2 = `${params[2].marker}
+        // ${params[2].seriesName} ：${params[2].value}（t）<br />`
+        //             }
 
-//             if (params[3]) {
-//               params3 = `${params[3].marker}
-// ${params[3].seriesName} ：${params[3].value}（t）<br />`
-//             }
-//             return params0 + params1 + params2 + params3;
-//           }
-//         }
+        //             if (params[3]) {
+        //               params3 = `${params[3].marker}
+        // ${params[3].seriesName} ：${params[3].value}（t）<br />`
+        //             }
+        //             return params0 + params1 + params2 + params3;
+        //           }
+        //         }
         // formatter: (params, ticket, callback) => {
         //   let param = params[0]
         //   let format = `${param.name}<br />${param.marker}${param.value}（t）`
@@ -280,7 +280,7 @@ class index extends PureComponent {
   }
 
   render() {
-    const { entList, GHGTableData, GHGChartData, tableLoading } = this.props;
+    const { entList, GHGTableData, GHGChartData, tableLoading, GHGEchartsData } = this.props;
     const { entCode, year, month } = this.state;
     const { columns } = this.CONST;
 
@@ -334,42 +334,46 @@ class index extends PureComponent {
                 </Space>
               </Form>
               <Divider />
-              <ReactEcharts
-                option={this.getOption()}
-                lazyUpdate
-                notMerge
-                onEvents={{ 'click': this.onChartClick }}
-                style={{ width: '100%', height: 'calc(100vh - 230px)', minHeight: '200px', marginTop: 20 }}
-              />
+              {
+                GHGEchartsData.quota.length ? <ReactEcharts
+                  option={this.getOption()}
+                  lazyUpdate
+                  notMerge
+                  onEvents={{ 'click': this.onChartClick }}
+                  style={{ width: '100%', height: 'calc(100vh - 230px)', minHeight: '200px', marginTop: 20 }}
+                /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              }
             </div>
             <div style={{ width: 440, marginTop: -28 }}>
-              <Card title={`核算消耗 - ${titleTime}`}>
-                {
-                  !GHGChartData.length && !GHGTableData.length ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : ""
-                }
-                {
-                  GHGTableData.length ? <Spin spinning={tableLoading}>
-                    <ReactEcharts
-                      option={this.getPieOption()}
-                      lazyUpdate
-                      notMerge
-                      style={{ width: '100%', minHeight: '200px', marginTop: 20 }}
-                    />
-                  </Spin>
-                    : ''
-                }
-              </Card>
-              <Card title={`直测消耗 - ${titleTime}`}>
-                {
-                  GHGTableData.length ? <SdlTable
-                    loading={tableLoading}
-                    rowKey={(record, index) => index}
-                    columns={columns}
-                    dataSource={GHGTableData}
-                    scroll={{ y: 'calc(100vh - 700px)' }}
-                  /> : ''
-                }
-              </Card>
+              {
+                (!GHGChartData.length && !GHGTableData.length) ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
+                  <>
+                    <Card title={`核算消耗 - ${titleTime}`}>
+                      {
+                        GHGChartData.length ? <Spin spinning={tableLoading}>
+                          <ReactEcharts
+                            option={this.getPieOption()}
+                            lazyUpdate
+                            notMerge
+                            style={{ width: '100%', minHeight: '200px', marginTop: 20 }}
+                          />
+                        </Spin>
+                          : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                      }
+                    </Card>
+                    <Card title={`直测消耗 - ${titleTime}`}>
+                      {
+                        GHGTableData.length ? <SdlTable
+                          loading={tableLoading}
+                          rowKey={(record, index) => index}
+                          columns={columns}
+                          dataSource={GHGTableData}
+                          scroll={{ y: 'calc(100vh - 700px)' }}
+                        /> : ''
+                      }
+                    </Card>
+                  </>
+              }
             </div>
           </div>
         </Card>

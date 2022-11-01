@@ -1,9 +1,9 @@
 
 const routes = [
   {
-    path: '/hrefLogin',
+    path: '/autoLogin',
     component: '../layouts/BlankLayout',
-    routes: [{ path: '/hrefLogin', component: './user/login/hrefLogin' }],
+    routes: [{ path: '/autoLogin', component: './user/login/AutoLogin' }],
   },
   {
     path: '/ControlCabin',
@@ -45,6 +45,7 @@ const routes = [
         path: '/summaryProject',
         component: './projectSummary/index',
       },
+
       // appoperation
       {
         path: '/appoperation',
@@ -162,6 +163,34 @@ const routes = [
         // authority: ['admin', 'user'],
         routes: [
           { path: '/', redirect: '' },
+          {
+            path: '/Demo',
+            name: 'Demo',
+            routes: [
+              {
+                name: 'DH',
+                path: '/Demo/DH',
+                component: './Demo/DH/Demo',
+              },
+              {
+                name: 'video',
+                path: '/Demo/video/live',
+                component: './Demo/Video/Live',
+              },
+            ]
+          },
+          // 克里斯金差值图
+          {
+            name: 'krigingMap',
+            path: '/krigingMap',
+            component: './krigingMap/index',
+          },
+          // 克里斯金差值图
+          {
+            name: 'emissionsKrigingMap',
+            path: '/emissionsKrigingMap',
+            component: './krigingMap/emissions/index',
+          },
           {
             name: 'realtimeLive',
             path: '/realtimeLive',
@@ -623,7 +652,7 @@ const routes = [
                 //视频管理
                 name: 'videomanager',
                 path: '/platformconfig/videomanager',
-                component: './platformManager/videomanager',
+                component: './Video/videomanager',
               },
               {
                 //运维周期
@@ -999,7 +1028,7 @@ const routes = [
                   },
                   {
                     name: 'index',
-                    path: '/rolesmanager/user/userinfoindex/:configId',
+                    path: '/rolesmanager/user/userinfoindex/UserInfo',
                     component: './authorized/user',
                   },
                   {
@@ -1113,11 +1142,13 @@ const routes = [
                 component: './monitoring/originaldata',
               },
               {
+                // 数据审核
                 name: 'dataAudit',
                 path: '/dataquerymanager/dataAudit/:type',
                 component: './monitoring/dataquery/DataAuditPage',
               },
               {
+                // 数据打标
                 name: 'dataFlag',
                 path: '/dataquerymanager/dataFlag',
                 component: './monitoring/dataquery/DataTagPage',
@@ -1213,7 +1244,7 @@ const routes = [
                 //   ? './monitoring/videopreview/hkvideo/index'
                 //   : './monitoring/videopreview/ysyvideo/VideoReact'
                 //   }`,
-                component: './monitoring/videopreview',
+                component: './Video/videoView',
               },
               {
                 name: 'realtimedata',
@@ -1226,8 +1257,8 @@ const routes = [
                 path: '/monitoring/dataquery',
                 component: './monitoring/dataquery/index',
               },
-               // 历史用电量查询
-               {
+              // 历史用电量查询
+              {
                 name: 'electricDataquery',
                 path: '/monitoring/electric/dataquery',
                 component: './monitoring/dataquery/index',
@@ -1242,7 +1273,10 @@ const routes = [
                 name: 'alarmInfo',
                 path: '/monitoring/alarmInfo',
                 routes: [
-
+                  {
+                    path: '/monitoring/alarmInfo',
+                    redirect: '/monitoring/alarmInfo/exceptionrecord',
+                  },
                   {
                     //缺失数据报警  企业
                     name: 'missingData',
@@ -1457,12 +1491,6 @@ const routes = [
                 component: './platformManager/monitoringstandard',
               },
               {
-                //视频管理
-                name: 'videomanager',
-                path: '/platformconfig/videomanager',
-                component: './platformManager/videomanager',
-              },
-              {
                 //运维周期
                 name: 'maintenancecycle',
                 path: '/platformconfig/maintenancecycle',
@@ -1638,7 +1666,7 @@ const routes = [
                   /* 缺失数据报警统计 */
                   {
                     path: '/Intelligentanalysis/dataAlarm',
-                    redirect: '/Intelligentanalysis/dataAlarm/missingDataRate/ent',
+                    redirect: '/IntelligentAnalysis/dataAlarm/missingDataRate/ent',
                   },
                   {
                     //缺失数据报警响应率 企业
@@ -1649,13 +1677,13 @@ const routes = [
                   {
                     //缺失数据报警响应率 空气站
                     path: '/Intelligentanalysis/dataAlarm/missingDataRate/air',
-                    component: './Intelligentanalysis/dataAlarm/missingDataRate/air',
+                    component: './IntelligentAnalysis/dataAlarm/missingDataRate/air',
                   },
                   {
                     //缺失数据报警响应率 二级页面
                     name: 'missRateDataSecond',
                     path: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
-                    component: './Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
+                    component: './IntelligentAnalysis/dataAlarm/missingDataRate/missRateDataSecond',
                   },
                   {
                     // 数据异常报警响应率
@@ -1675,7 +1703,7 @@ const routes = [
                   {
                     //超标数据核实率二级页面
                     path: '/Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
-                    component: './Intelligentanalysis/dataAlarm/overVerifyRate/pointVerifyRate',
+                    component: './IntelligentAnalysis/dataAlarm/overVerifyRate/pointVerifyRate',
                   },
                   {
                     //超标报警处置率
@@ -2108,6 +2136,10 @@ const routes = [
                 name: 'qca',
                 routes: [
                   {
+                    path: '/dataSearch/qca',
+                    redirect: "/dataSearch/qca/zeroCheck"
+                  },
+                  {
                     // 零点核查
                     name: 'working',
                     path: '/dataSearch/qca/zeroCheck',
@@ -2161,6 +2193,12 @@ const routes = [
                     name: 'siteInfo',
                     path: '/dataSearch/siteData/siteInfo',
                     component: './dataSearch/siteData/siteInfoPage',
+                  },
+                  {
+                    // 运行日志
+                    name: 'QCARecordManager',
+                    path: '/dataSearch/siteData/QCARecordManager',
+                    component: './dataSearch/siteData/QCARecordManager',
                   },
                 ]
               },
@@ -2230,10 +2268,18 @@ const routes = [
             name: 'qualityCheck',
             routes: [
               {
+                path: '/qualityCheck',
+                redirect: "/qualityCheck/qualityManualCheck/manualQuality"
+              },
+              {
                 // 质控管理
                 path: '/qualityCheck/qualityMange',
                 name: 'qualityMange',
                 routes: [
+                  {
+                    path: '/qualityCheck/qualityMange',
+                    redirect: "/qualityCheck/qualityMange/standardAtmosMange"
+                  },
                   {
                     // 质控运维人管理
                     name: 'user',
@@ -2259,6 +2305,10 @@ const routes = [
                 path: '/qualityCheck/qualitySetting',
                 name: 'qualitySetting',
                 routes: [
+                  {
+                    path: '/qualityCheck/qualitySetting',
+                    redirect: "/qualityCheck/qualitySetting/zeroPointSet"
+                  },
                   {
                     name: 'zeroPointSet',  //零点核查设置
                     path: '/qualityCheck/qualitySetting/zeroPointSet',
@@ -2291,6 +2341,10 @@ const routes = [
                 path: '/qualityCheck/qualityManualCheck',
                 name: 'qualityManualCheck',
                 routes: [
+                  {
+                    path: '/qualityCheck/qualityManualCheck',
+                    redirect: "/qualityCheck/qualityManualCheck/manualQuality"
+                  },
                   {
                     name: 'manualQuality',  // 手动质控
                     path: '/qualityCheck/qualityManualCheck/manualQuality',
@@ -2416,11 +2470,23 @@ const routes = [
                     path: '/qualityControl/qcaManager/instrumentManage/view/:id',
                     component: './qualityControl/instrumentManage/ViewInstrument',
                   },
-                  // 气瓶关联
+                  // 气瓶标气管理
                   {
                     name: 'instrumentView',
                     path: '/qualityControl/qcaManager/gasJoin',
                     component: './qualityControl/gasJoin',
+                  },
+                  // 气瓶标气管理 - 添加标气方案
+                  {
+                    name: 'instrumentView',
+                    path: '/qualityControl/qcaManager/gasJoin/addGas',
+                    component: './qualityControl/gasJoin/AddGas',
+                  },
+                  // 气瓶标气管理 - 编辑标气方案
+                  {
+                    name: 'instrumentView',
+                    path: '/qualityControl/qcaManager/gasJoin/editGas/:id',
+                    component: './qualityControl/gasJoin/AddGas',
                   },
                   // 工作模式 - 列表
                   {

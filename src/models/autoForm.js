@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-05-16 15:13:59
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2021-12-23 11:40:46
+ * @Last Modified time: 2022-10-31 15:05:44
  */
 import { message } from 'antd';
 import Model from '@/utils/model';
@@ -68,7 +68,10 @@ function getQueryParams(state, payload) {
               groupItem.Where = state.whereList[configId][whereKey];
             }
           }
-          group.push(groupItem);
+          console.log('groupItem=', groupItem);
+          if (groupItem.Value !== "" && groupItem.Value !== undefined) {
+            group.push(groupItem);
+          }
         }
       }
       // } else {
@@ -138,68 +141,6 @@ export default Model.extend({
     * getAutoFormData({ payload, callback }, { call, put, update, select }) {
       let state = yield select(state => state.autoForm);
       const { configId } = payload;
-      // const searchForm = state.searchForm[payload.configId]
-      // const searchForm = state.searchForm[configId] ? state.searchForm[configId] : [];
-      // console.log('searchForm=', searchForm)
-      // if (searchForm) {
-      //   for (const key in searchForm) {
-      //     let groupItem = {};
-      //     // if (searchForm[key].value && searchForm[key].value.length || Object.keys(searchForm[key].value).length) {
-      //     if (searchForm[key] && searchForm[key].value && searchForm[key].value.length) {
-      //       // 是否是moment对象
-      //       const isMoment = moment.isMoment(searchForm[key].value);
-      //       const isArrMoment = Array.isArray(searchForm[key].value) && moment.isMoment(searchForm[key].value[0]);
-      //       if (isArrMoment) {
-      //         groupItem = [{
-      //           Key: key,
-      //           Value: moment(searchForm[key].value[0]).format('YYYY-MM-DD HH:mm:ss'),
-      //           Where: "$gte"
-      //         }, {
-      //           Key: key,
-      //           Value: moment(searchForm[key].value[1]).format('YYYY-MM-DD HH:mm:ss'),
-      //           Where: "$lte"
-      //         }]
-      //         group.push(...groupItem);
-      //       } else {
-      //         groupItem = {
-      //           Key: key,
-      //           Value: isMoment ? moment(searchForm[key].value).format('YYYY-MM-DD HH:mm:ss') : searchForm[key].value.toString(),
-      //         };
-
-      //         for (const whereKey in state.whereList[configId]) {
-      //           if (key === whereKey) {
-      //             groupItem.Where = state.whereList[configId][whereKey];
-      //           }
-      //         }
-      //         group.push(groupItem);
-      //       }
-      //     }
-      //     // } else {
-      //     //   group = []
-      //     // }
-      //   }
-      // }
-      // console.log('group=', group)
-
-      // const postData = {
-      //   configId: payload.configId,
-      //   pageIndex: searchForm.current || 1,
-      //   pageSize: searchForm.pageSize || 10,
-      //   ...payload.otherParams,
-      // };
-      // const searchParams = payload.searchParams || [];
-
-      // (group.length || searchParams.length) ? postData.ConditionWhere = JSON.stringify({
-      //   // group.length? postData.ConditionWhere = JSON.stringify({
-      //   rel: '$and',
-      //   group: [{
-      //     rel: '$and',
-      //     group: [
-      //       ...group,
-      //       ...searchParams,
-      //     ],
-      //   }],
-      // }) : '';
 
       const postData = getQueryParams(state, payload);
       const sysConfig = yield select(state => state.global.configInfo);
@@ -345,6 +286,7 @@ export default Model.extend({
           dateFormat: item.DF_DATEFORMAT,
           isHide: item.DF_HIDDEN,
           defaultValue: item.DF_DEFAULTVALUE,
+          // uploadType: item.DF_UpType ? item.DF_UpType.split(',').toString() : '',
           uploadType: item.DF_UpType,
           uploadNumber: item.DF_UpNum,
         }));
@@ -412,6 +354,7 @@ export default Model.extend({
     * del({ payload, callback }, { call, update, put, select }) {
       const sysConfig = yield select(state => state.global.configInfo);
       let postData = payload;
+      let configId = payload.configId;
       const result = yield call(services.postAutoFromDataDelete, postData);
       if (result.IsSuccess) {
         message.success('删除成功！');
@@ -433,7 +376,7 @@ export default Model.extend({
         yield put({
           type: 'getAutoFormData',
           payload: {
-            configId: payload.configId,
+            configId: configId,
             searchParams: payload.searchParams,
           },
         });
@@ -567,7 +510,7 @@ export default Model.extend({
             uid: item.Guid,
             name: item.FileName,
             status: 'done',
-            url: `/upload/${item.FileName}`,
+            url: '/' + item.Url,
           }))
           callback && callback(fileList)
           yield update({

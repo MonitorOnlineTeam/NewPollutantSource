@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PageLoading from '@/components/PageLoading'
 import { connect } from 'dva'
 import { router } from 'umi'
+import Cookie from 'js-cookie';
 
 @connect()
 class SaveSessionPage extends PureComponent {
@@ -28,6 +29,20 @@ class SaveSessionPage extends PureComponent {
       },
       callback: (response) => {
         let defaultNavigateUrl = response.Datas[0].children && response.Datas[0].children.length ? response.Datas[0].children[0].NavigateUrl : response.Datas[0].NavigateUrl;
+        let systemNavigateUrl = '';
+        if (response.Datas && response.Datas.length > 1) {
+          if (response.Datas[0].name === "首页") {
+            systemNavigateUrl = response.Datas[1].NavigateUrl;
+          } else {
+            if (response.Datas[0].children.length) {
+              systemNavigateUrl = response.Datas[0].children[0].NavigateUrl;
+            } else {
+              systemNavigateUrl = response.Datas[1].NavigateUrl;
+            }
+          }
+        }
+        Cookie.set('systemNavigateUrl', systemNavigateUrl);
+
         let sysName = sessionStorage.getItem("sysName")
         // if (sysName === "一厂一档管理系统") {
         if (sysName === "一企一档管理系统") {

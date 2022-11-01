@@ -1,11 +1,12 @@
 /*
- * @Author: Jiaqi 
- * @Date: 2019-10-10 09:39:12 
+ * @Author: Jiaqi
+ * @Date: 2019-10-10 09:39:12
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2019-10-10 10:02:49
+ * @Last Modified time: 2022-09-21 10:16:28
  * @desc: 主页接口api
  */
 import { post, get, getNew } from '@/utils/request';
+import { API } from '@config/API'
 
 // 获取所有企业及排口信息
 export async function getHomePage(params) {
@@ -17,7 +18,7 @@ export async function getHomePage(params) {
 
 // 获取所有企业及排口信息
 export async function getAllEntAndPoint(params) {
-  const result = await post('/api/rest/PollutantSourceApi/BaseDataApi/GetEntAndPoint', params, null);
+  const result = await post(API.commonApi.GetEntAndPoint, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -25,7 +26,7 @@ export async function getAllEntAndPoint(params) {
 
 // 获取排污许可情况数据
 export async function GetAllMonthEmissionsByPollutant(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetAllMonthPDPermitByPollutant', params, null);
+  const result = post(API.HomeApi.GetAllMonthPDPermitByPollutant, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -33,7 +34,7 @@ export async function GetAllMonthEmissionsByPollutant(params) {
 
 // 获取智能质控数据 - 运行分析
 export async function getRateStatisticsByEnt(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetRateStatisticsByEntOrPoint', params, null);
+  const result = post(API.HomeApi.GetRateStatisticsByEntOrPoint, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -41,13 +42,15 @@ export async function getRateStatisticsByEnt(params) {
 
 // 智能监控
 export async function getStatisticsPointStatus(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetStatisticsPointStatus', params, null);
-  return result;
+  const result = post(`${API.HomeApi.GetStatisticsPointStatus}?entCode=null`, params, null);
+  return result === null ? {
+    data: null
+  } : result;
 }
 
 // 报警信息
 export async function getWarningInfo(params) {
-  const result = post("/api/rest/PollutantSourceApi/HomePageApi/GetOverAndWarningData", params, null);
+  const result = post(API.HomeApi.GetOverAndWarningData, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -55,7 +58,7 @@ export async function getWarningInfo(params) {
 
 // 运维 - 任务数量统计
 export async function getTaskCount(params) {
-  const result = post("/api/rest/PollutantSourceApi/HomePageApi/GetTaskStatistics", params, null);
+  const result = post(API.HomeApi.GetTaskStatistics, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -63,7 +66,7 @@ export async function getTaskCount(params) {
 
 //运维 - 智能预警
 export async function getExceptionProcessing(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetIntelligentEarlyWarning', params, null);
+  const result = post(API.HomeApi.GetIntelligentEarlyWarning, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -71,7 +74,7 @@ export async function getExceptionProcessing(params) {
 
 // 运维 - 异常报警及响应情况
 export async function getAlarmAnalysis(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetAlarmAnalysisInfo', params, null);
+  const result = post(API.HomeApi.GetAlarmAnalysisInfo, params, null);
   return result === null ? {
     data: null
   } : result;
@@ -103,8 +106,9 @@ export async function getPointTax(params) {
   return result;
 }
 
+
 // 年度排放量对比分析 - 碳排放
 export async function getGHGandEmissionContrast(params) {
-  const result = post('/api/rest/PollutantSourceApi/HomePageApi/GetGHGandEmissionContrast', params, null);
+  const result = post(API.HomeApi.GetGHGandEmissionContrast, params, null);
   return result;
 }

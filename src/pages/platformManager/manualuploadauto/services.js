@@ -4,6 +4,7 @@
  * 创建时间：2019.08.9
  */
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 
 /**
  * 上传附件
@@ -19,7 +20,7 @@ export async function uploadfiles(params) {
  * @params {"DGIMN":""}
  */
 export async function GetPollutantByPoint(params) {
-  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAuto', params, null);
+  const result = get(API.PollutantApi.GetMonitorRelationPollutantByDGIMN, params, null);
   return result;
 }
 /**
@@ -27,7 +28,7 @@ export async function GetPollutantByPoint(params) {
  * @params {"DGIMN":""}
  */
 export async function addGetPollutantByPoint(params) {
-  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetPollutantByDGIMNAdd', params, null);
+  const result = get(API.PollutantApi.GetPollutantByDGIMN, params, null);
   return result;
 }
 
@@ -36,7 +37,7 @@ export async function addGetPollutantByPoint(params) {
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetManualSupplementList(params) {
-  const result = await get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementListAuto', params, null);
+  const result = await post(API.MonitorDataApi.GetDataOrReferenceData, params, null);
   return result;
 }
 
@@ -45,7 +46,10 @@ export async function GetManualSupplementList(params) {
  * @params {"DGIMN":"","pollutantCode":"","beginTime":"","endTime":"","pageIndex":"","pageSize":""}
  */
 export async function GetManualSupplementListAutoReference(params) {
-  const result = await get('/api/rest/PollutantSourceApi/ManualSupplementApi/GetManualSupplementListAutoReference', params, null);
+  const result = await post(API.MonitorDataApi.GetDataOrReferenceData, {
+    ...params,
+    ReferenceOrData: 'reference'
+  }, null);
   return result;
 }
 
@@ -63,7 +67,7 @@ export async function getUploadTemplate(params) {
  * @params {"PollutantType":""}
  */
 export async function getUploadTemplateAutoReference(params) {
-  const result = get('/api/rest/PollutantSourceApi/ManualSupplementApi/UploadTemplateAutoReference', params, null);
+  const result = get(API.MonitorDataApi.UploadTemplateAutoReference, params, null);
   return result;
 }
 
@@ -90,7 +94,7 @@ export async function UpdateManualSupplementData(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function CounterSendCMDMsg(params) {
-  const result = post('/api/rest/PollutantSourceApi/ManualSupplementApi/CounterSendCMDMsg', params, null);
+  const result = post(API.MonitorDataApi.SendSupplementMsg, params, null);
   return result;
 }
 
@@ -99,6 +103,6 @@ export async function CounterSendCMDMsg(params) {
  * @params {"DGIMN":"","pollutantCode":"","monitorTime":"","avgValue":""}
  */
 export async function CalculationAQIData(params) {
-  const result = post('/api/rest/PollutantSourceApi/ReportApi/CalculationAQIData', params, null);
+  const result = post(API.AirDataApi.CalculationAQIData, params, null);
   return result;
 }

@@ -52,7 +52,7 @@ class YUAN extends PureComponent {
               dataSource = text.split(',').map(item => {
                 return {
                   name: item,
-                  attach: `/upload/${item}`
+                  attach: `${item}`
                 }
               })
             }

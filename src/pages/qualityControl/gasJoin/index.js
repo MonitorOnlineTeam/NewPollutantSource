@@ -1,126 +1,177 @@
-import React, { PureComponent } from 'react';
-import { Card, List, Modal, Button, Select, message, Badge } from 'antd';
+import React, { Component, Fragment } from 'react';
 import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
+import { Card } from 'antd';
 import { connect } from 'dva'
+import { Button, Row, Tooltip, Divider, Popconfirm } from 'antd';
+import { router } from 'umi'
+import PageLoading from "@/components/PageLoading"
+import SdlTable from '@/components/SdlTable'
+import { EditIcon, DetailIcon, DelIcon } from '@/utils/icon'
 
-const { Option } = Select;
 
-@connect(({ loading, qualityControl }) => ({
-  gasJoinListData: qualityControl.gasJoinListData,
-  gasSelectList: qualityControl.gasSelectList,
-  saveLoading: loading.effects['qualityControl/editQCAComponentInfo'],
-}))
-class index extends PureComponent {
+
+
+@connect(({ qualityControl, loading }) => {
+  return {
+    gasProList: qualityControl.gasProList,
+    loading: loading.effects['qualityControl/getGasProList'],
+  }
+})
+
+class index extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      gasSelected: [],
-      selectedRow: {},
-    };
+    this.state = {};
+    this._SELF_ = {
+      configId: "QCAGasPro",
+      columns: [
+        {
+          title: '气瓶方案名称',
+          dataIndex: 'QCGasProName',
+          key: 'QCGasProName',
+        },
+        {
+          title: '绑定气瓶',
+          dataIndex: 'ComponentList',
+          key: 'ComponentList',
+        },
+        {
+          title: '绑定气瓶数量',
+          dataIndex: 'GasBottleCount',
+          key: 'GasBottleCount',
+        },
+        {
+          title: '操作',
+          dataIndex: 'handle',
+          key: 'handle',
+          render: (text, record, index) => {
+            return <Fragment>
+              <Tooltip title="编辑">
+                <a onClick={() => {
+                  this.onEdit(record.ID);
+                }}><EditIcon /></a>
+              </Tooltip>
+              <Divider type="vertical" />
+              <Tooltip title="删除">
+                <Popconfirm
+                  placement="left"
+                  title="确认是否删除?"
+                  onConfirm={() => {
+                    this.onDeleteGas(record.ID);
+                  }}
+                  okText="是"
+                  cancelText="否">
+                  <a href="#">
+                    <DelIcon />
+                  </a>
+                </Popconfirm>
+              </Tooltip>
+            </Fragment>
+          }
+        },
+      ]
+    }
   }
 
   componentDidMount() {
-    this.getQCAComponent()
-    this.getQCAComponentInfoList()
+    this.getPageData();
   }
 
 
-  getQCAComponent = () => {
-    this.props.dispatch({
-      type: 'qualityControl/getQCAComponent',
-      payload: {}
-    })
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.gasProList !== this.props.gasProList) {
+      if (this.props.gasProList.length === 0) {
+        this.onAdd(true);
+      } else if (this.props.gasProList.length === 1) {
+        this.onEdit(this.props.gasProList[0].ID, true);
+      }
+    }
   }
 
-  getQCAComponentInfoList = () => {
+  getPageData = () => {
     this.props.dispatch({
-      type: 'qualityControl/getQCAComponentInfoList',
-      payload: {}
-    })
-  }
-
-  onBindClick = () => {
-    const { selectedRow, gasSelected } = this.state;
-    // if (!gasSelected.length) {
-    //   message.error('请选择要绑定的气瓶！');
-    //   return;
-    // }
-    this.props.dispatch({
-      type: 'qualityControl/editQCAComponentInfo',
+      type: 'qualityControl/getGasProList',
       payload: {
-        ID: selectedRow.ID,
-        Cylinder: selectedRow.Cylinder,
-        Components: gasSelected.toString(),
-      },
-      callback: () => {
-        this.getQCAComponent();
-        this.getQCAComponentInfoList();
-        this.setState({
-          visible: false,
-          gasSelected: [],
-        })
+      }
+    });
+  }
+
+  onEdit = (id, isOnly) => {
+    router.push({
+      pathname: `/qualityControl/qcaManager/gasJoin/editGas/${id}`,
+      query: {
+        isOnly,
+        tabName: '气瓶标气管理 - 编辑',
       }
     })
   }
 
+  onAdd = (isOnly) => {
+    router.push({
+      pathname: "/qualityControl/qcaManager/gasJoin/addGas",
+      query: {
+        tabName: '气瓶标气管理 - 添加',
+      }
+    })
+  }
+
+  // 删除气瓶方案
+  onDeleteGas = (id) => {
+    this.props.dispatch({
+      type: 'qualityControl/deleteGasProOne',
+      payload: {
+        ID: id
+      }
+    }).then(() => {
+      this.getPageData();
+    })
+  }
+
   render() {
-    const { gasSelected } = this.state;
-    const { gasJoinListData, gasSelectList, saveLoading } = this.props;
+    const { columns } = this._SELF_;
     return (
       <BreadcrumbWrapper>
         <Card>
-          <List
-            itemLayout="horizontal"
-            dataSource={gasJoinListData}
-            renderItem={item => (
-              <List.Item>
-                <List.Item.Meta
-                  // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                  title={<a href="https://ant.design">{item.Cylinder}</a>}
-                  description={
-                    item.Components ?
-                      <div>
-                        <Badge status="success" />
-                        <span style={{ color: '#4c4c4c', fontWeight: '500' }}>{`已绑定气瓶：${item.Components}`}</span>
-                      </div> :
-                      '未绑定气瓶'
-                  }
-                />
-                <Button type="primary" onClick={() => this.setState({ visible: true, selectedRow: item, gasSelected: item.Components ? item.Components.split(",") : [] })}>
-                  绑定气瓶
-                </Button>
-              </List.Item>
-            )}
+          <Row style={{ margin: '10px 0' }}>
+            <Button type="primary" onClick={this.onAdd}>添加</Button>
+          </Row>
+          <SdlTable
+            loading={this.props.loading}
+            columns={columns}
+            dataSource={this.props.gasProList}
           />
-        </Card>
-        <Modal
-          title="绑定气瓶"
-          destroyOnClose
-          confirmLoading={saveLoading}
-          visible={this.state.visible}
-          onOk={this.onBindClick}
-          onCancel={() => this.setState({ visible: false })}
-        >
-          <div>
-            <Select value={gasSelected} style={{ width: '300px' }} maxTagCount={2} mode="multiple" placeholder="请选择要绑定的气瓶"
-              onChange={(value) => {
-                if (value.length > 2) {
-                  message.error("最多只能绑定2个气瓶！");
-                  return;
+          {/* <AutoFormTable
+            configId={this._SELF_.configId}
+            // onDelete={(record, key) => {
+            //   this.onDelete(record, key);
+            // }}
+            onAdd={() => {
+              router.push({
+                pathname: "/qualityControl/qcaManager/gasJoin/addGas",
+                query: {
+                  tabName: '气瓶标气管理 - 添加',
                 }
-                this.setState({
-                  gasSelected: value
-                })
-              }}
-            >
-              {
-                gasSelectList.map(item => {
-                  return <Option key={item.key} value={item.key}>{item.name}</Option>
-                })
-              }
-            </Select>
-          </div>
-        </Modal>
+              })
+            }}
+            onEdit={(record, key) => {
+              const cuid = getRowCuid(record, "dbo.T_Base_StandardLibrary.AttachmentID")
+              router.push({
+                pathname: `/platformconfig/StandardLibrary/editLibrary/${key}/${cuid}`,
+                query: {
+                  tabName: '标准库管理 - 编辑',
+                }
+              })
+            }}
+            onView={(record, key) => {
+              router.push({
+                pathname: `/platformconfig/StandardLibrary/viewLibrary/${key}`,
+                query: {
+                  tabName: '标准库管理 - 详情',
+                }
+              })
+            }}
+          /> */}
+        </Card>
       </BreadcrumbWrapper>
     );
   }

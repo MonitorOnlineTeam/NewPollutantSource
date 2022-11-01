@@ -51,6 +51,9 @@ const ImportantTypeList = [
 class Chain extends PureComponent {
   state = {
     DataType: "region",
+    regionFlag: true,
+    entFlag: false,
+    pointFlag: false
   }
   _SELF_ = {
     formLayout: {
@@ -139,7 +142,7 @@ class Chain extends PureComponent {
 
   render() {
     const { form: { getFieldDecorator, getFieldValue }, pollutantCodeList, regionChainLoading, entChainLoading, pointChainLoading, regionChainExportLoading, entChainExportLoading, pointChainExportLoading, regionList, attentionList, regionChainTableDataSource, entChainTableDataSource, pointChainTableDataSource } = this.props;
-    const { DataType } = this.state;
+    const { DataType, regionFlag, entFlag, pointFlag } = this.state;
     let loading = regionChainLoading || entChainLoading || pointChainLoading;
     let exportLoading = regionChainExportLoading || entChainExportLoading || pointChainExportLoading;
     let _regionList = regionList.length ? regionList[0].children : [];
@@ -335,8 +338,8 @@ class Chain extends PureComponent {
                       this.props.form.setFieldsValue({ 'PollutantType': value })
                       this.getAllPollutantCode();
                       this.getTableData("region");
-                      this.getTableData("ent");
-                      this.getTableData("point");
+                      // this.getTableData("ent");
+                      // this.getTableData("point");
                     }}
                   />
                 )}
@@ -371,9 +374,8 @@ class Chain extends PureComponent {
                   //   message.error("请将时间填写完整");
                   //   return;
                   // }
-                  this.getTableData("region");
-                  this.getTableData("ent");
-                  this.getTableData("point");
+                  this.getAllPollutantCode();
+                  this.getTableData(DataType);
                 }}>
                   查询
                 </Button>
@@ -382,16 +384,16 @@ class Chain extends PureComponent {
                   icon={<ExportOutlined />}
                   loading={exportLoading}
                   onClick={() => {
-                    let values = this.props.form.getFieldsValue();
-                    if (values.time2.length && values.time1.length) {
-                      if (values.time2[0] <= values.time1[1]) {
-                        message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
-                        return;
-                      }
-                    } else {
-                      message.error("请将时间填写完整");
-                      return;
-                    }
+                    // let values = this.props.form.getFieldsValue();
+                    // if (values.time2.length && values.time1.length) {
+                    //   if (values.time2[0] <= values.time1[1]) {
+                    //     message.error("时间段2开始时间需大于时间段1结束时间，请重新选择时间");
+                    //     return;
+                    //   }
+                    // } else {
+                    //   message.error("请将时间填写完整");
+                    //   return;
+                    // }
                     this.onExport()
                   }}
                 >
@@ -401,7 +403,12 @@ class Chain extends PureComponent {
             </Row>
           </Form>
           {/* <Divider /> */}
-          <Tabs defaultActiveKey="region" onChange={(key) => this.setState({ DataType: key })}>
+          <Tabs defaultActiveKey="region" onChange={(key) => {
+            if (!regionFlag || !entFlag || !pointFlag) {
+              this.getTableData(key);
+            }
+            this.setState({ DataType: key, [key + 'Flag']: true, renderNum: Math.ceil(Math.random() * 10) })
+          }}>
             <TabPane tab="辖区排放量" key="region">
               <SdlTable loading={regionChainLoading} pagination={false} align="center" dataSource={regionChainTableDataSource} columns={RegionColumns} />
             </TabPane>

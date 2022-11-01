@@ -132,21 +132,21 @@ class MapView extends Component {
         }
         // this.state.zoom - ((this.state.zoom / this.state.multiple).toFixed())
         // 地图缩放，显示企业
-        if (zoom < stateZoom) {
-          // const displayType = this.state.displayType === 1
-          if (this.state.displayType === 1) {
-            // this.setState({
-            // })
-            this.setState({
-              infoWindowVisible: false,
-              // infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1 && this.state.infoWindowVisible) && false,
-              coordinateSet: [],
-              displayType: 0,
-            }, () => {
-              this.randomMarker(this.props.allEntAndPointList, false)
-            })
-          }
-        }
+        // if (zoom < stateZoom) {
+        //   // const displayType = this.state.displayType === 1
+        //   if (this.state.displayType === 1) {
+        //     // this.setState({
+        //     // })
+        //     this.setState({
+        //       infoWindowVisible: false,
+        //       // infoWindowVisible: (this.state.coordinateSet.length && this.state.displayType === 1 && this.state.infoWindowVisible) && false,
+        //       coordinateSet: [],
+        //       displayType: 0,
+        //     }, () => {
+        //       this.randomMarker(this.props.allEntAndPointList, false)
+        //     })
+        //   }
+        // }
       },
       complete: () => {
       },
@@ -626,9 +626,20 @@ class MapView extends Component {
   }
 
 
+  // 显示企业
+  showEntMarker = () => {
+    this.setState({
+      infoWindowVisible: false,
+      coordinateSet: [],
+      displayType: 0,
+    }, () => {
+      this.randomMarker(this.props.allEntAndPointList, false)
+    })
+  }
+
   render() {
     const { form: { getFieldDecorator }, menuNameList, infoWindowData, allEntAndPointList, ponitList, loading, chartData, curPointData, menuDescList } = this.props;
-    const { currentEntInfo, currentKey } = this.state;
+    const { currentEntInfo, currentKey, displayType } = this.state;
     const option = {
       title: {
         text: '24小时趋势图',
@@ -806,7 +817,7 @@ class MapView extends Component {
     if (infoWindowData.photo) {
       imgName = config.uploadHost + "upload" + imgName;
     }
-
+    console.log("displayType=", displayType)
     return (
       // QCAUse="1"
       <div className={styles.mapWrapper} style={mapWrapperStyle}>
@@ -903,8 +914,9 @@ class MapView extends Component {
           }
         }} />
         <div id="contentWrapper" style={{ height: 'calc(100vh - 64px)', marginLeft: '320px', position: 'relative' }}>
+          {displayType == 1 && <Button type="primary" onClick={this.showEntMarker} style={{ position: 'absolute', top: 10, left: 10, zIndex: 1 }}>返回企业</Button>}
           <Map
-            amapkey="c5cb4ec7ca3ba4618348693dd449002d"
+            amapkey={config.amapKey}
             plugins={plugins}
             id="mapId"
             // zoom={this.state.zoom}

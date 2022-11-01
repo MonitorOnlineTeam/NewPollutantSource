@@ -2,7 +2,7 @@
  * @Author: Jiaqi
  * @Date: 2019-10-10 10:27:00
  * @Last Modified by: Jiaqi
- * @Last Modified time: 2020-06-02 13:53:19
+ * @Last Modified time: 2022-09-05 10:40:02
  * @desc: 首页
  */
 import React, { Component } from 'react';
@@ -11,22 +11,14 @@ import {
   Radio,
   Button,
 } from 'antd';
-import ReactEcharts from 'echarts-for-react';
-import { routerRedux } from 'dva/router';
-import Cookie from 'js-cookie';
 import {
   connect
 } from 'dva';
-// import { Map, Polygon, Markers, InfoWindow } from 'react-amap';
-// import { Map, Polygon, Markers, InfoWindow } from '@/components/ReactAmap';
 import moment from 'moment';
-import PageLoading from '@/components/PageLoading'
-import { EntIcon, GasIcon, GasOffline, GasNormal, GasExceed, GasAbnormal, WaterIcon, WaterNormal, WaterExceed, WaterAbnormal, WaterOffline, VocIcon, DustIcon } from '@/utils/icon';
+import { EntIcon } from '@/utils/icon';
+import { getMapPollutantIcon } from '@/utils/MapIcon'
 // import { getPointStatusImg } from '@/utils/getStatusImg';
-import { onlyOneEnt } from '@/config';
 import styles from './index.less';
-import { router } from 'umi';
-import Link from 'umi/link';
 
 
 import config from "@/config";
@@ -38,22 +30,22 @@ let _thismap;
 let Map, Marker, Polygon, Markers, InfoWindow;
 
 
-@connect(({ loading, home }) => ({
-  allEntAndPointLoading: loading.effects['home/getAllEntAndPoint'],
-  alarmAnalysisLoading: loading.effects['home/getAlarmAnalysis'],
-  allMonthEmissionsByPollutantLoading: loading.effects['home/getAllMonthEmissionsByPollutant'],
-  rateStatisticsByEntLoading: loading.effects['home/getRateStatisticsByEnt'],
-  statisticsPointStatusLoading: loading.effects['home/getStatisticsPointStatus'],
-  warningInfoLoading: loading.effects['home/getWarningInfo'],
-  taskCountLoading: loading.effects['home/getTaskCount'],
-  exceptionProcessingLoading: loading.effects['home/getExceptionProcessing'],
-  loading: loading.effects['home/getHomePage'],
-  pollutantTypeList: home.pollutantTypeList,
-  currentEntInfo: home.currentEntInfo,
-  currentMarkersList: home.currentMarkersList,
-  allEntAndPointList: home.allEntAndPointList,
-  mounthOverData: home.mounthOverData,
-  homePage: home.homePage
+@connect(({ loading, oneEntAndPoint }) => ({
+  allEntAndPointLoading: loading.effects['oneEntAndPoint/getAllEntAndPoint'],
+  alarmAnalysisLoading: loading.effects['oneEntAndPoint/getAlarmAnalysis'],
+  allMonthEmissionsByPollutantLoading: loading.effects['oneEntAndPoint/getAllMonthEmissionsByPollutant'],
+  rateStatisticsByEntLoading: loading.effects['oneEntAndPoint/getRateStatisticsByEnt'],
+  statisticsPointStatusLoading: loading.effects['oneEntAndPoint/getStatisticsPointStatus'],
+  warningInfoLoading: loading.effects['oneEntAndPoint/getWarningInfo'],
+  taskCountLoading: loading.effects['oneEntAndPoint/getTaskCount'],
+  exceptionProcessingLoading: loading.effects['oneEntAndPoint/getExceptionProcessing'],
+  loading: loading.effects['oneEntAndPoint/getHomePage'],
+  pollutantTypeList: oneEntAndPoint.pollutantTypeList,
+  currentEntInfo: oneEntAndPoint.currentEntInfo,
+  currentMarkersList: oneEntAndPoint.currentMarkersList,
+  allEntAndPointList: oneEntAndPoint.allEntAndPointList,
+  mounthOverData: oneEntAndPoint.mounthOverData,
+  homePage: oneEntAndPoint.homePage
 }))
 class index extends Component {
   constructor(props) {
@@ -128,10 +120,10 @@ class index extends Component {
   }
   componentWillMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'home/getHomePage',
-      payload: {}
-    })
+    // dispatch({
+    //   type: 'home/getHomePage',
+    //   payload: {}
+    // })
     if (config.offlineMapUrl.domain) {
       let amap = require('@/components/ReactAmap');
       // Map, Marker, Polygon, Markers, InfoWindow;
@@ -155,11 +147,11 @@ class index extends Component {
     const { dispatch } = this.props;
     // 获取所有企业及排口信息
     dispatch({
-      type: "home/getAllEntAndPoint",
+      type: "oneEntAndPoint/getAllEntAndPoint",
     })
     // 获取污染物类型
     dispatch({
-      type: "home/getPollutantTypeList",
+      type: "oneEntAndPoint/getPollutantTypeList",
       payload: {
         // pollutantCodes: "1,2",
       },
@@ -239,7 +231,7 @@ class index extends Component {
       const val = e.target.value;
       const filterData = val ? this.props.currentEntInfo.children.filter(item => item.PollutantType == e.target.value) : this.props.currentEntInfo.children;
       this.props.dispatch({
-        type: "home/updateState",
+        type: "oneEntAndPoint/updateState",
         payload: {
           currentMarkersList: filterData
         }
@@ -293,7 +285,7 @@ class index extends Component {
     if (itemData.position.IsEnt === 1) {
       // 企业
       this.props.dispatch({
-        type: "home/updateState",
+        type: "oneEntAndPoint/updateState",
         payload: {
           currentEntInfo: itemData.position,
           currentMarkersList: itemData.position.children,
@@ -382,42 +374,7 @@ class index extends Component {
   }
 
   getPollutantIcon = (pollutantType, status) => {
-    let icon = "";
-    if (pollutantType == 1) {
-      // 废水
-      switch (status) {
-        case 0:// 离线
-          icon = <WaterOffline />
-          break;
-        case 1:// 正常
-          icon = <WaterNormal />
-          break;
-        case 2:// 超标
-          icon = <WaterExceed />
-          break;
-        case 3:// 异常
-          icon = <WaterAbnormal />
-          break;
-      }
-    }
-    if (pollutantType == 2) {
-      // 气
-      switch (status) {
-        case 0:// 离线
-          icon = <GasOffline />
-          break;
-        case 1:// 正常
-          icon = <GasNormal />
-          break;
-        case 2:// 超标
-          icon = <GasExceed />
-          break;
-        case 3:// 异常
-          icon = <GasAbnormal />
-          break;
-      }
-    }
-    return icon;
+    return getMapPollutantIcon(pollutantType, status)
   }
 
   onRef1 = (ref) => {

@@ -1,0 +1,11 @@
+一. GetStateAndRecord（获取质控仪状态、气路模式、质控日志） - 刘子煜 ✅待测试
+  接口拆成了两个:
+  1. GetQCDetailRecord - 获取质控日志及气路模式
+  2. GetQCAStatus - 获取质控仪状态
+
+二. SendGetCMD 数据提取页面（监测数据提取、现场参数信息提取） - 志鹏 ✅待测试
+  接口拆成了两个:
+  1. SendGetDataCMD - 现场参数信息提取
+  2. SendSupplementMsg - 监测数据提取（分钟、小时、日）
+
+三. 

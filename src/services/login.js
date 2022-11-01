@@ -7,6 +7,7 @@
 
 import Cookie from 'js-cookie';
 import { post, get } from '@/utils/request';
+import { API } from '@config/API'
 import { async } from 'q';
 
 
@@ -27,6 +28,6 @@ export async function getSystemLoginConfigInfo() {
  * @params {}
  */
 export async function IfSpecial() {
-  const result = await get('/api/rest/PollutantSourceApi/SystemSettingApi/IfSpecial');
+  const result = await get(API.systemApi.IfSpecial);
   return result;
 }

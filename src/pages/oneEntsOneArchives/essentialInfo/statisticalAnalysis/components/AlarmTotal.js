@@ -5,10 +5,10 @@ import Marquee from '@/components/Marquee';
 import { CaretDownOutlined, CaretUpOutlined, HomeTwoTone } from '@ant-design/icons';
 import { Statistic, Row, Col, Divider,Radio  } from 'antd';
 import moment from 'moment';
-@connect(({ loading, home }) => ({
-    taxInfo: home.taxInfo,
-    alarmTotalDataHour:home.alarmTotalDataHour,
-    alarmTotalDataDay:home.alarmTotalDataDay
+@connect(({ loading, oneEntAndPoint }) => ({
+    taxInfo: oneEntAndPoint.taxInfo,
+    alarmTotalDataHour:oneEntAndPoint.alarmTotalDataHour,
+    alarmTotalDataDay:oneEntAndPoint.alarmTotalDataDay
   }))
 class AlarmTotal extends Component {
     constructor(props) {
@@ -35,14 +35,14 @@ class AlarmTotal extends Component {
     // 获取单个企业月超标报警
     if (entCode) {
       dispatch({
-        type: "home/overStandardAlarmStatistics",
+        type: "oneEntAndPoint/overStandardAlarmStatistics",
         payload: {
           entCode: entCode,
           dataType:dataTypeHour
         }
       })
       dispatch({
-        type: "home/overStandardAlarmStatistics",
+        type: "oneEntAndPoint/overStandardAlarmStatistics",
         payload: {
           entCode: entCode,
           dataType:dataTypeDay

@@ -17,7 +17,7 @@ class Login extends Component {
   loginForm = undefined;
 
   state = {
-    type: 'account',
+    type: 'web',
     autoLogin: true,
   };
 
@@ -27,15 +27,26 @@ class Login extends Component {
     });
   };
 
+  // 登录
   handleSubmit = (err, values) => {
     const { type } = this.state;
     // ;
-    console.log('values=', values);
+    console.log('handleSubmit-values=', values);
     if (!err) {
       const { dispatch } = this.props;
+
+      let payload = {
+        ...values,
+        LoginType: type
+      };
+      if (type === 'phone') {
+        payload.userName = values.mobile;
+        payload.password = values.captcha;
+      }
+
       dispatch({
         type: 'userLogin/login',
-        payload: { ...values, type },
+        payload: payload,
       });
     }
   };
@@ -46,6 +57,7 @@ class Login extends Component {
     });
   };
 
+  // 发送验证码
   onGetCaptcha = () =>
     new Promise((resolve, reject) => {
       if (!this.loginForm) {
@@ -56,12 +68,20 @@ class Login extends Component {
         if (err) {
           reject(err);
         } else {
+          console.log('values=', values);
           const { dispatch } = this.props;
           dispatch({
             type: 'userLogin/getCaptcha',
-            payload: values.mobile,
+            payload: {
+              UserAccount: values.mobile
+            },
           })
-            .then(resolve)
+            // .then(resolve)
+            .then(() => {
+              if (this.props.userLogin.status !== 'error') {
+                resolve()
+              }
+            })
             .catch(reject);
         }
       });
@@ -79,11 +99,13 @@ class Login extends Component {
   );
 
   render() {
-    const { userLogin, submitting } = this.props;
-    const { status, type: loginType, message } = userLogin;
+    const { userLogin, submitting, configInfo } = this.props;
+    const { status, type: loginType, message, mobileMessage } = userLogin;
     const { type, autoLogin } = this.state;
+    // 是否显示手机号登录
+    let IsPhoneLogin = configInfo.IsPhoneLogin === 'true';
     return (
-      <div className={styles.main}>
+      <div className={`${styles.main} ${IsPhoneLogin && styles.phone}`}>
         <LoginComponents
           defaultActiveKey={type}
           onTabChange={this.onTabChange}
@@ -93,11 +115,12 @@ class Login extends Component {
           }}
         >
           <Tab
-            key="account"
+            key="web"
             tab="账户密码登录"
           >
             {status === 'error' &&
               loginType === 'account' &&
+              message &&
               !submitting &&
               this.renderMessage(message)}
             <UserName
@@ -124,68 +147,65 @@ class Login extends Component {
               }
             />
           </Tab>
-          {/* <Tab
-            key="mobile"
-            tab={formatMessage({
-              id: 'user-login.login.tab-login-mobile',
-            })}
-          >
-            {status === 'error' &&
-              loginType === 'mobile' &&
-              !submitting &&
-              this.renderMessage(
-                formatMessage({
-                  id: 'user-login.login.message-invalid-verification-code',
-                }),
-              )}
-            <Mobile
-              name="mobile"
-              placeholder={formatMessage({
-                id: 'user-login.phone-number.placeholder',
-              })}
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({
-                    id: 'user-login.phone-number.required',
-                  }),
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: formatMessage({
-                    id: 'user-login.phone-number.wrong-format',
-                  }),
-                },
-              ]}
-            />
-            <Captcha
-              name="captcha"
-              placeholder={formatMessage({
-                id: 'user-login.verification-code.placeholder',
-              })}
-              countDown={120}
-              onGetCaptcha={this.onGetCaptcha}
-              getCaptchaButtonText={formatMessage({
-                id: 'user-login.form.get-captcha',
-              })}
-              getCaptchaSecondText={formatMessage({
-                id: 'user-login.captcha.second',
-              })}
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({
-                    id: 'user-login.verification-code.required',
-                  }),
-                },
-              ]}
-            />
-          </Tab> */}
-          <div>
-            <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              自动登录
-            </Checkbox>
-            {/* <a
+          {
+            IsPhoneLogin &&
+            <Tab
+              key="phone"
+              tab="手机号登录"
+            >
+              {status === 'error' &&
+                loginType === 'account' &&
+                mobileMessage &&
+                !submitting &&
+                this.renderMessage(mobileMessage)}
+              <Mobile
+                name="mobile"
+                placeholder={formatMessage({
+                  id: 'user-login.phone-number.placeholder',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: formatMessage({
+                      id: 'user-login.phone-number.required',
+                    }),
+                  },
+                  {
+                    pattern: /^1\d{10}$/,
+                    message: formatMessage({
+                      id: 'user-login.phone-number.wrong-format',
+                    }),
+                  },
+                ]}
+              />
+              <Captcha
+                name="captcha"
+                placeholder={formatMessage({
+                  id: 'user-login.verification-code.placeholder',
+                })}
+                countDown={120}
+                onGetCaptcha={this.onGetCaptcha}
+                getCaptchaButtonText={"获取验证码"}
+                getCaptchaSecondText={formatMessage({
+                  id: 'user-login.captcha.second',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: formatMessage({
+                      id: 'user-login.verification-code.required',
+                    }),
+                  },
+                ]}
+              />
+            </Tab>
+          }
+          {
+            type === 'web' && <div>
+              <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
+                <span className="autoLogin">自动登录</span>
+              </Checkbox>
+              {/* <a
               style={{
                 float: 'right',
               }}
@@ -193,7 +213,8 @@ class Login extends Component {
             >
               <FormattedMessage id="user-login.login.forgot-password" />
             </a> */}
-          </div>
+            </div>
+          }
           <Submit loading={submitting}>
             登录
           </Submit>
