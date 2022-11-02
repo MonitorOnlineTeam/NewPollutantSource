@@ -27,7 +27,7 @@ class Index extends PureComponent {
 
   componentWillUnmount() {
     this.setState({
-      queryCondition: undefined,
+      regionCodeOneLevel: undefined,
       queryConditions:undefined,
       cityLevel:true
     })
@@ -40,7 +40,7 @@ class Index extends PureComponent {
 
   render() {
     const { status, stopStatus, defaultPollutantCode, time,visible } = this.props
-    const { queryCondition,queryConditions, show,cityLevel } = this.state;
+    const { regionCodeOneLevel,queryConditions, show,cityLevel } = this.state;
     return (
       <Modal
         title="异常报警响应率"
@@ -58,9 +58,9 @@ class Index extends PureComponent {
           />
         }
         {
-          time && show && <AbnormalResRate time={time} hideBreadcrumb onRegionClick={(queryCondition) => {
+          time && show && <AbnormalResRate time={time} hideBreadcrumb onRegionClick={(regionCode) => {
             this.setState({
-              queryCondition: queryCondition,
+              regionCodeOneLevel: regionCode,
               cityLevel:true,
               show: false
             })
@@ -68,7 +68,7 @@ class Index extends PureComponent {
         }
         {
           cityLevel && <CityLevel hideBreadcrumb 
-          location={{ query: { queryCondition: queryCondition } }}
+          location={{ query: {  regionCode: regionCodeOneLevel } }}
           onRegionClick={(queryCondition) => {
             this.setState({
               queryConditions: queryCondition,

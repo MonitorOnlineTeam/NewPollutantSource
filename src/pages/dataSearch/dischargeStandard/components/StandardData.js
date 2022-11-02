@@ -217,7 +217,7 @@ export default class EntTransmissionEfficiency extends Component {
     const { dispatch, queryPar } = this.props;
     dispatch({
       type: 'standardData/exportDischargeStandValue',
-      payload: { ...queryPar },
+      payload: { ...queryPar,PageIndex:undefined,PageSize:undefined, },
       callback: data => {
         downloadFile(`/upload${data}`);
       },
@@ -407,8 +407,8 @@ export default class EntTransmissionEfficiency extends Component {
               showSizeChanger: true,
               showQuickJumper: true,
               total: this.props.total,
-              pageSize: this.props.PageSize,
-              current: this.props.PageIndex,
+              pageSize: this.props.queryPar.PageSize,
+              current: this.props.queryPar.PageIndex,
               onChange: this.onTableChange,
             }}
           />

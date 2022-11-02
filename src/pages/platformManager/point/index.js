@@ -81,7 +81,7 @@ export default class MonitorPoint extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pollutantType: 0,
+      pollutantType: 2,
       visible: false,
       FormDatas: {},
       selectedPointCode: '',

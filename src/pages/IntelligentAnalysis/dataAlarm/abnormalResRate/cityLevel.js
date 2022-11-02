@@ -84,7 +84,7 @@ class Index extends PureComponent {
             queryConditions.RegionCode = record.CityCode;
             queryConditions.RegionName = record.RegionName;
             queryConditions = JSON.stringify(queryConditions)
-            this.props.onRegionClick ? this.props.onRegionClick(queryCondition) :
+            this.props.onRegionClick ? this.props.onRegionClick(queryConditions) :
               router.push(`/Intelligentanalysis/dataAlarm/abnormal/details?queryCondition=${queryConditions}`);
           }}>{text==='全部合计'? text :`${text}/${record.CityName}` }</a>
         }
@@ -200,7 +200,6 @@ class Index extends PureComponent {
     //   type: 'autoForm/getRegions',
     //   payload: { RegionCode: query&&query.regionCode, PointMark: '2', }
     // });
-
     // 获取关注列表
     this.props.dispatch({
       type: 'abnormalResRate/getAttentionDegreeList',
@@ -225,7 +224,7 @@ class Index extends PureComponent {
   getExceptionAlarmRateListForCity = (regionCode) => {
     // let values = this.props.form.getFieldsValue();
 
-    let values = this.props.searchForm;
+    let values = this.props.searchForm; //第一级别页面 查询条件参数
     let beginTime, endTime;
     values.time = this.state.exceptionTime;
     if (values.time && values.time[0]) {
@@ -234,12 +233,13 @@ class Index extends PureComponent {
     if (values.time && values.time[1]) {
       endTime = values.dataType === "HourData" ? moment(values.time[1]).format("YYYY-MM-DD HH:59:59") : moment(values.time[1]).format("YYYY-MM-DD")
     }
+    console.log(this.props.searchForm)
     this.props.dispatch({
       type: "abnormalResRate/getExceptionAlarmRateListForCity",
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: regionCode ? regionCode:'',
+        RegionCode: regionCode ? regionCode: undefined,
         dataType: values.dataType,
         beginTime: values.beginTime,
         endTime: values.endTime,
@@ -278,7 +278,7 @@ class Index extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: query.regionCode? query.regionCode:'',
+        RegionCode: query.regionCode? query.regionCode: undefined,
         dataType: values.dataType,
         beginTime: values.beginTime,
         endTime: values.endTime,
@@ -315,7 +315,7 @@ class Index extends PureComponent {
   render() {
     const { form: { getFieldDecorator, getFieldValue }, regionList, attentionList, detailsLoading, exceptionAlarmListForEntDataSource, tableDataSource, loading, exportLoading } = this.props;
     const { columns, detailsColumns } = this._SELF_;
-    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,operationpersonnel } = this.state;
+    const { format, showTime, checkedValues, RegionName, queryCondition, secondQueryCondition, exceptionTime,operationpersonnel, } = this.state;
     let _detailsColumns = detailsColumns;
     let _regionList = regionList.length ? regionList[0].children : [];
     return (

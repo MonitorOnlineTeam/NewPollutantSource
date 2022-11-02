@@ -74,10 +74,17 @@ class AutoFormTable extends PureComponent {
     const { onRef } = this.props;
     onRef && onRef(this);
   };
-
+  componentWillUnmount = () =>{
+    this.props.dispatch({
+      type: 'autoForm/updateState',
+      payload: {
+        searchForm: {},
+        tableInfo:{},
+      },
+    });
+  }
   componentDidMount() {
-    
-    this.loadDataSource(); 
+    this.loadDataSource()
     if (this.props.getPageConfig) {
       this.props.dispatch({
         type: 'autoForm/getPageConfig',
@@ -88,8 +95,16 @@ class AutoFormTable extends PureComponent {
     }
   }
   loadDataSource(params) {
-    console.log(111)
     if(this.props.configId=="TestPoint"&&!this.props.searchParams){return} //调试检测 污染源管理监测点特殊处理
+    
+    // console.log(this.props.configId,this.props.tableInfo,'-----')
+    if(this.props.configId=="GasOutputNew"){ //监测点  废气
+      if(!this.props.tableInfo['GasOutput']){return}
+    }else if(this.props.configId=="WaterOutputNew"){ //监测点  废水
+      if(!this.props.tableInfo['WaterOutput']){return}
+    } else{
+      if(!this.props.tableInfo[this.props.configId]){return}
+    }
     this.props.dispatch({
       type: 'autoForm/getAutoFormData',
       payload: {

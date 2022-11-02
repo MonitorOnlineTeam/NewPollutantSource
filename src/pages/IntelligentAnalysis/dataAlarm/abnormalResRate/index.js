@@ -91,10 +91,10 @@ class Index extends PureComponent {
         width: 120,
         render: (text, record) => {
           return <a onClick={() => {
-            let queryCondition = this.state.queryCondition;
-            queryCondition.RegionCode = record.RegionCode;
-            queryCondition.RegionName = record.RegionName;
-            queryCondition = JSON.stringify(queryCondition)
+            // let queryCondition = this.state.queryCondition;
+            // queryCondition.RegionCode = record.RegionCode;
+            // queryCondition.RegionName = record.RegionName;
+            // queryCondition = JSON.stringify(queryCondition)
             let values = this.props.form.getFieldsValue();
             let beginTime, endTime;
             values.time = this.state.exceptionTime;
@@ -110,7 +110,7 @@ class Index extends PureComponent {
                 searchForm:{
                 AttentionCode: values.AttentionCode,
                 PollutantType: values.PollutantType,
-                RegionCode: values.RegionCode ? values.RegionCode:'',
+                RegionCode: values.RegionCode ? values.RegionCode: undefined,
                 dataType: values.dataType,
                 beginTime: beginTime,
                 endTime: endTime,
@@ -118,8 +118,9 @@ class Index extends PureComponent {
               }
             }
             })
+
             if(this.props.onRegionClick){
-              this.props.onRegionClick(queryCondition) 
+              this.props.onRegionClick(record.RegionCode) 
             }else{
 
               router.push(`/Intelligentanalysis/dataAlarm/abnormal/cityLevel?regionCode=${record.RegionCode}`)
@@ -286,7 +287,7 @@ class Index extends PureComponent {
 
       this.props.form.setFieldsValue({
         PollutantType:this.props.searchForm.PollutantType,
-        RegionCode: this.props.searchForm.RegionCode,
+        RegionCode: this.props.searchForm.RegionCode? this.props.searchForm.RegionCode : undefined,
         AttentionCode: this.props.searchForm.AttentionCode,
         dataType: this.props.searchForm.dataType,
       })
@@ -301,7 +302,7 @@ class Index extends PureComponent {
       queryCondition: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode ? values.RegionCode:'',
+        RegionCode: values.RegionCode ? values.RegionCode: undefined,
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -328,7 +329,7 @@ class Index extends PureComponent {
       payload: {
         AttentionCode: values.AttentionCode,
         PollutantType: values.PollutantType,
-        RegionCode: values.RegionCode? values.RegionCode:'',
+        RegionCode: values.RegionCode? values.RegionCode: undefined,
         dataType: values.dataType,
         beginTime: beginTime,
         endTime: endTime,
@@ -427,7 +428,7 @@ class Index extends PureComponent {
                   //     })
                   //   }
                   // </Select>,
-                  <RegionList style={{ width: 180 }}changeRegion={''} RegionCode={''}/>
+                  <RegionList style={{ width: 180 }}/>
                 )}
               </FormItem>
             </Row>
