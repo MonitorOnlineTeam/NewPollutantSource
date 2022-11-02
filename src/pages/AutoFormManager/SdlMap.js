@@ -132,9 +132,6 @@ class SdlMap extends PureComponent {
         })
       }
     }
-    window._AMapSecurityConfig = {
-      securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
-    }
   }
 
 
@@ -212,7 +209,7 @@ class SdlMap extends PureComponent {
 
   // 地址搜索
   onSearch = obj => {
-    if (window.AMap&& obj.keyCode == 13) { //回车事件
+    if (window.AMap&& obj.keyCode == 13&&obj.target.value) { //回车事件
       window.AMap.service('AMap.Geocoder', () => { // 回调函数
         // 实例化Geocoder
         const geocoder = new window.AMap.Geocoder();

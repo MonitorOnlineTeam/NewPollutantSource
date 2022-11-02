@@ -86,6 +86,10 @@ class BasicLayout extends Component {
     this.props.dispatch({  
       type: 'autoForm/getRegions', 
       payload: {  PointMark: '2', RegionCode: ''} }); //获取行政区列表
+
+      window._AMapSecurityConfig = {
+        securityJsCode: 'c960e3ce0a08f155f22e676a378fc03e',
+      }
   }
 
   onWindowResize = () => {

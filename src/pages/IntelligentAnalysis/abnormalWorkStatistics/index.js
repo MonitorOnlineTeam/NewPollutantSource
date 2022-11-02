@@ -174,8 +174,7 @@ const Index = (props) => {
     {showType==1? <Row  align='middle'>
       <Form.Item name='time' label='日期'>
           <RangePicker allowClear={false}   style={{width:'100%'}} 
-                        allowClear={false}
-                        showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
+             showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}
            />
      </Form.Item>
       <Form.Item label = '监测点类型'  name='pollutantType' style={{padding:'0 8px'}} >
@@ -194,7 +193,7 @@ const Index = (props) => {
      <Button  type="primary" htmlType='submit' >
           查询
      </Button>
-     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+     <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 17px 0 8px',}} onClick={()=>{ exports()} }>
             导出
      </Button> 
      
@@ -211,6 +210,7 @@ const Index = (props) => {
       <Row  align='middle'>
       <Form.Item label='日期' name='time'  style={{paddingRight:'16px'}}>
          <RangePicker style={{width:'100%'}} 
+          allowClear={false}
           showTime={{format:'YYYY-MM-DD HH:mm:ss',defaultValue: [ moment(' 00:00:00',' HH:mm:ss' ), moment( ' 23:59:59',' HH:mm:ss' )]}}/>
     </Form.Item> 
      <Form.Item label='企业名称' name='entName' style={{paddingRight:'16px',width:350}}>
@@ -238,7 +238,7 @@ const Index = (props) => {
     <Button  type="primary" htmlType='submit' >
          查询
     </Button>
-    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 8px',}} onClick={()=>{ exports()} }>
+    <Button icon={<ExportOutlined />} loading={exportLoading} style={{  margin: '0 17px 0 8px',}} onClick={()=>{ exports()} }>
            导出
     </Button> 
     

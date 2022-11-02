@@ -130,7 +130,7 @@ export default class PersonData extends Component {
         key: 'Gender',
         align: 'center',
         render: (text, record) => {     
-          return  <div style={{width:'100%'}}>{text==1?'男':'女'}</div>
+          return text==1? '男':'女'
        },
       },
       {
@@ -171,8 +171,6 @@ export default class PersonData extends Component {
       },
       {
         title: <span>操作</span>,
-        dataIndex: 'x',
-        key: 'x',
         align: 'center',
         render: (text, record) =>{
           return  <span>
@@ -614,19 +612,18 @@ export default class PersonData extends Component {
               loading={this.props.loading}
               columns={this.columns}
               dataSource={this.props.tableDatas}
-              pagination={{
-                pageSize: this.state.pageSize,
-                total: this.props.tableDatas.length,
-                showSizeChanger: true,
-                current:this.state.pageIndex,
-                onChange: (current, size) => {
-                  this.setState({
-                    pageSize: size,
-                    pageIndex: current,
-                  })
-                },
-                pageSizeOptions: ['10', '20', '30', '40', '100'],
-              }}
+              // pagination={{
+              //   pageSize: this.state.pageSize,
+              //   total: this.props.tableDatas.length,
+              //   showSizeChanger: true,
+              //   current:this.state.pageIndex,
+              //   onChange: (current, size) => {
+              //     this.setState({
+              //       pageSize: size,
+              //       pageIndex: current,
+              //     })
+              //   },
+              // }}
             />
             
         </Card>
@@ -795,7 +792,7 @@ export default class PersonData extends Component {
      {this.state.switchGas?<> <Row>
         <Col span={12}>
          <Form.Item label="证书编号"  >
-         {getFieldDecorator('GasCertificateNumber')( <Input placeholder="请输入证书编号"/>)}
+         {getFieldDecorator('GasCertificateNumber')( <Input title={this.props.form.getFieldValue('GasCertificateNumber')} placeholder="请输入证书编号"/>)}
       </Form.Item>
       </Col>
       <Col span={12}>
