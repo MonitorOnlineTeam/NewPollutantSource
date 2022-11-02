@@ -225,7 +225,12 @@ export default class EntTransmissionEfficiency extends Component {
   };
   //查询事件
   queryClick = () => {
-    this.getTableData();
+    this.updateQueryState({
+      PageIndex:1,
+    });
+    setTimeout(()=>{
+      this.getTableData();
+    })
 
   };
 
@@ -294,7 +299,7 @@ export default class EntTransmissionEfficiency extends Component {
     PageSize: PageSize,
   });
   setTimeout(()=>{
-    this.queryClick();
+    this.getTableData();
   })
  }
   render() {
