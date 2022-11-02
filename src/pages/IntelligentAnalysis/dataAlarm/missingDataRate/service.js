@@ -61,6 +61,7 @@ export async function ExportDefectPointDetailRate(params) {
 //根据行政区获取 企业列表
 
 export async function GetEntByRegion(params) {
+  console.log(params)
   const result = post(
     '/api/rest/PollutantSourceApi/TransmissionEfficiencyApi/GetEntByRegion?RegionCode=' +
       params.RegionCode,

@@ -60,6 +60,8 @@ export default class EntTransmissionEfficiency extends Component {
     super(props);
 
     this.state = {
+      pageIndex:1,
+      pageSize:20,
     };
     
     this.columns = [
@@ -143,13 +145,13 @@ export default class EntTransmissionEfficiency extends Component {
     });
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: regionCode },  });//获取企业列表
  
-     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: regionCode},  });//获取关注列表
   
 
     setTimeout(() => {
-      this.getTableData();
+      this.getTableData(this.state.pageIndex,this.state.pageSize);
     });
   };
   updateQueryState = payload => {
@@ -161,12 +163,15 @@ export default class EntTransmissionEfficiency extends Component {
     });
   };
 
-  getTableData = () => {
+  getTableData = (pageIndex,pageSize) => {
     const { dispatch, queryPar } = this.props;
-    dispatch({
-      type: pageUrl.getData,
-      payload: { ...queryPar },
-    });
+    this.setState({pageIndex,pageSize},()=>{
+      dispatch({
+        type: pageUrl.getData,
+        payload: { ...queryPar,PageIndex:pageIndex,PageSize:pageSize,},
+      });
+    })
+
   };
 
 
@@ -222,7 +227,7 @@ export default class EntTransmissionEfficiency extends Component {
   };
   //查询事件
   queryClick = () => {
-    this.getTableData();
+    this.getTableData(1,this.state.pageSize);
   };
 
 
@@ -342,6 +347,11 @@ export default class EntTransmissionEfficiency extends Component {
   //     </Form.Item>
   //     </>
   // }
+    /** 分页 */
+
+    onChange = (pageIndex, pageSize) => {
+      this.getTableData(pageIndex,pageSize);
+    }
   btnCompents=()=>{
     const { exloading } = this.props;
    return (
@@ -475,16 +485,15 @@ export default class EntTransmissionEfficiency extends Component {
               columns={this.columns}
               // bordered={false}
               dataSource={this.props.tableDatas}
-              // pagination={{
-              //   showSizeChanger: true,
-              //   showQuickJumper: true,
-                // sorter: true,
-                // total: this.props.total,
-                //defaultPageSize:20
-                // pageSize: PageSize,
-                // current: PageIndex,
-                // pageSizeOptions: ['10', '20', '30', '40', '50'],
-              // }}
+              pagination={{
+                showSizeChanger: true,
+                showQuickJumper: true,
+                sorter: true,
+                total: this.props.total,
+                pageSize: this.state.pageSize,
+                current: this.state.pageIndex,
+                onChange: this.onChange,
+              }}
             />
           </>
         </Card>

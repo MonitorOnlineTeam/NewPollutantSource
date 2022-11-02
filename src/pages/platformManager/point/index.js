@@ -118,7 +118,7 @@ export default class MonitorPoint extends Component {
       payload: {
         TargetId: match.params.targetId,
         callback: res => {
-          this.getPageConfig(res);
+          this.getPageConfig(this.state.pollutantType);
         },
       },
     });
@@ -772,7 +772,7 @@ export default class MonitorPoint extends Component {
               </span>
             }
             // extra={<PollutantType handlePollutantTypeChange={this.getPageConfig} />}
-            extra={<SelectPollutantType
+            extra={this.state.loadFlag&&<SelectPollutantType
               style={{ marginLeft: 50, float: 'left' }}
               showType="radio"
               onChange={this.onPollutantChange}
@@ -792,8 +792,7 @@ export default class MonitorPoint extends Component {
             }
             {
 
-
-              pointConfigId && (<AutoFormTable
+                pointConfigId && (<AutoFormTable
                 dragable={sortTitle === '关闭排序' ? true : false}
                 dragData={(data) => { this.dragData(data) }}
                 noPaging={this.state.noPaging}

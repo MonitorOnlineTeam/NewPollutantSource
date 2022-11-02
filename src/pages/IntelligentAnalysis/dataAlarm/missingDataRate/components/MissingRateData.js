@@ -70,13 +70,13 @@ export default class EntTransmissionEfficiency extends Component {
         key: 'regionName',
         align: 'center',
         render: (text, record) => { 
-          if(this.props.level){
+          if(this.props.level){//二级页面
             return <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/missRateDataSecond',
              query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
                      {text}
                  </Link>    
           }else{
-            return this.props.types==='ent'?
+            return this.props.types==='ent'? //一级页面
              <Link to={{  pathname: '/Intelligentanalysis/dataAlarm/missingDataRate/ent/citylevel',
              query: {regionCode :record.regionCode,queryPar:JSON.stringify(this.props.queryPar)} }} >
                      {text}
@@ -136,11 +136,15 @@ export default class EntTransmissionEfficiency extends Component {
   }
   initData = () => {
     const { dispatch, location,Atmosphere,types } = this.props;
+
+      const query = location.query.queryPar&&JSON.parse(location.query.queryPar)
       this.updateQueryState({
         RegionCode: '',
         EntCode:'',
         OperationPersonnel:'',
         EntType: types==='ent'? "1":"2",
+        ...query,
+        RegionCode:location.query.regionCode,
       });
 
 
@@ -150,9 +154,9 @@ export default class EntTransmissionEfficiency extends Component {
 
     //  dispatch({  type: 'autoForm/getRegions',  payload: {  RegionCode: '',  PointMark: '2',  }, });  //获取行政区列表
 
-     dispatch({ type: 'MissingRateData/getEntByRegion', payload: { RegionCode: '' },  });//获取企业列表
+
  
-     dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: '' },  });//获取关注列表
+    !this.props.level&&dispatch({ type: 'MissingRateData/getAttentionDegreeList', payload: { RegionCode: location.query.regionCode },  });//获取关注列表
   
 
     setTimeout(() => {
