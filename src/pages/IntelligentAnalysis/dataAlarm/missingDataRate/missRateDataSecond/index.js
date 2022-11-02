@@ -47,7 +47,7 @@ const pageUrl = {
   priseList: MissingRateData.priseList,
   exloading:MissingRateData.exloading,
   loading: loading.effects[pageUrl.getData],
-  total: MissingRateData.total,
+  total: MissingRateData.detailTotal,
   tableDatas: MissingRateData.tableDatil,
   queryPar: MissingRateData.queryPar,
   regionList: autoForm.regionList,

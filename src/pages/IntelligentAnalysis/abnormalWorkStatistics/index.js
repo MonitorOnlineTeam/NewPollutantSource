@@ -32,6 +32,7 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   tableLoading:abnormalWorkStatistics.tableLoading,
   exportLoading: loading.effects[`${namespace}/exportExceptionTaskList`],
   queryPar:abnormalWorkStatistics.queryPar,
+  tableTotal:abnormalWorkStatistics.tableTotal,
 })
 
 const  dvaDispatch = (dispatch) => {
@@ -263,7 +264,7 @@ const Index = (props) => {
   const pagination = {
     showSizeChanger: true,
     showQuickJumper: true,
-    total:pageSize,
+    total:tableTotal,
     pageSize:pageSize,
     current:pageIndex,
     onChange: handleTableChange,
@@ -274,7 +275,7 @@ const Index = (props) => {
     {!responseModelDetail&&!clockAbnormalModelDetail?
     <Card title={searchComponents()}>
       {showType==1?
-       <Region pagination={pagination} resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent showType={showType} ref={pchildref}  pagination={pagination} {...props}/>}
+       <Region  resRegionDetailModal={resRegionDetailModal} clockAbnormalRegionDetailModal={clockAbnormalRegionDetailModal}  isResponseModal={isResponseModal} isClockAbnormalModal={isResponseModal} ref={pchildref} {...props} /> : <Ent showType={showType} ref={pchildref}  pagination={pagination} {...props}/>}
    </Card>
    :
     <RegionDetail hideBreadcrumb responseModelDetail={responseModelDetail} clockAbnormalModelDetail={clockAbnormalModelDetail}  responseModelGoBack={responseModelGoBack}clockAbnormalModelGoBack={clockAbnormalModelGoBack}  location={query}/> //首页报警弹框

@@ -151,24 +151,24 @@ export default class PersonData extends Component {
         key: 'GasCertificateNumber',
         align: 'center',
       },
-      // {
-      //   title: <span>到期日期(气)</span>,
-      //   dataIndex: 'GasEndCertificatesTime',
-      //   key: 'GasEndCertificatesTime',
-      //   align: 'center',
-      // },
+      {
+        title: <span>到期日期(气)</span>,
+        dataIndex: 'GasEndCertificatesTime',
+        key: 'GasEndCertificatesTime',
+        align: 'center',
+      },
       {
         title: <span>运维证书编号(水)</span>,
         dataIndex: 'WaterCertificateNumber',
         key: 'WaterCertificateNumber',
         align: 'center',
       },
-      // {
-      //   title: <span>到期日期(水)</span>,
-      //   dataIndex: 'WaterEndCertificatesTime',
-      //   key: 'WaterEndCertificatesTime',
-      //   align: 'center',
-      // },
+      {
+        title: <span>到期日期(水)</span>,
+        dataIndex: 'WaterEndCertificatesTime',
+        key: 'WaterEndCertificatesTime',
+        align: 'center',
+      },
       {
         title: <span>操作</span>,
         dataIndex: 'x',

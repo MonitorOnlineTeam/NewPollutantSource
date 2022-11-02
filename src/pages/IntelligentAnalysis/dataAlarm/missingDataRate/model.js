@@ -38,7 +38,8 @@ export default Model.extend({
     total: '',
     attentionList:[],
     priseList: [],
-    tableDatil:[]
+    tableDatil:[],
+    detailTotal:0,
   },
   subscriptions: {},
   effects: {
@@ -78,6 +79,7 @@ export default Model.extend({
       if (response.IsSuccess) {
         yield update({
           tableDatil: response.Datas,
+          detailTotal:response.Total,
         });
       }
     },   

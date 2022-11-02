@@ -669,7 +669,7 @@ class CalendarPage extends PureComponent {
             />
           </Modal>
           {/** 打卡异常  监测点 弹框 */}
-          <EntAbnormalMapModal pointName={pointName} />
+          <EntAbnormalMapModal isCalendar pointName={pointName} />
         </div>
       </BreadcrumbWrapper>
     );

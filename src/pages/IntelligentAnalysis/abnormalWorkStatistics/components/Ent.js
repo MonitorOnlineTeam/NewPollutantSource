@@ -42,7 +42,6 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics }) => ({
   tableDatas:abnormalWorkStatistics.tableDatas,
   pointDatas:abnormalWorkStatistics.pointDatas,
   tableLoading:abnormalWorkStatistics.tableLoading,
-  tableTotal:abnormalWorkStatistics.tableTotal,
   abnormalLoading:loading.effects[`${namespace}/abnormalExceptionTaskList`],
   abnormalTypes:abnormalWorkStatistics.abnormalTypes,
   beginTime:abnormalWorkStatistics.beginTime,
@@ -104,7 +103,7 @@ const Index = (props) => {
 
 
   
-  const  { tableDatas,tableTotal,exportLoading ,tableLoading,abnormalTypes,refInstance,abnormalLoading,abnormalList,queryPar  } = props; 
+  const  { tableDatas,exportLoading ,tableLoading,abnormalTypes,refInstance,abnormalLoading,abnormalList,queryPar  } = props; 
   useEffect(() => {
 
     props.updateState({entAbnormalNumVisible:false})

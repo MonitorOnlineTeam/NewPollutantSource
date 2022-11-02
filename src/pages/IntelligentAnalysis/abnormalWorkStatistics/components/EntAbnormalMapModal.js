@@ -189,8 +189,8 @@ if (getPointExceptionLoading) {
           />
 
       <div style={styleA}>
-        <span>{`${pointName} ,${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
-             期间打卡异常数：${ entAbnormalList.exceptionCount}`}</span>
+        <span>{`${pointName}${!props.isCalendar? `,${ queryPar&& moment(queryPar.beginTime).format('YYYY-MM-DD')} ~ ${queryPar&&moment(queryPar.endTime).format('YYYY-MM-DD')}
+             期间打卡异常数：${ entAbnormalList.exceptionCount}` : '' }`}</span>
         </div>
            <div  style={styleB}>
           <Row align='middle'>

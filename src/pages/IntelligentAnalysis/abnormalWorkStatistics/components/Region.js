@@ -31,7 +31,6 @@ const dvaPropsData =  ({ loading,abnormalWorkStatistics,global }) => ({
   tableDatas:abnormalWorkStatistics.tableDatas,
   pointDatas:abnormalWorkStatistics.pointDatas,
   tableLoading:abnormalWorkStatistics.tableLoading,
-  tableTotal:abnormalWorkStatistics.tableTotal,
   abnormalTypes:abnormalWorkStatistics.abnormalTypes,
   exportCardExceptionLoading:abnormalWorkStatistics.exportCardExceptionLoading,
   exportResExceptionLoading:abnormalWorkStatistics.exportCardResExceptionLoading,
@@ -550,8 +549,7 @@ useImperativeHandle(refInstance,() => {
         dataSource={tableDatas}
         columns={ abnormalTypes ==1? columns :alarmColumns }
         scroll={{ y:props.hideBreadcrumb?clientHeight - 420: clientHeight - 370}}
-        pagination={{...props.pagination}}
-        // pagination={false}
+        pagination={false}
       />
       {/*打卡异常 响应超时 弹框*/}
       <Modal

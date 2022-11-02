@@ -171,6 +171,7 @@ class TaskRecord extends Component {
                     CompleteTime: baseReportSearchForm.CompleteTime,
                     CreateTime: baseReportSearchForm.CreateTime,
                     OperationEntID:baseReportSearchForm.OperationEntID,
+                    EntCode:baseReportSearchForm.EntCode,
                     pageIndex: 1,
                 },
         },
@@ -268,6 +269,7 @@ onChange = (pageIndex, pageSize) => {
                   TaskType: baseReportSearchForm.TaskType != undefined ? baseReportSearchForm.TaskType : '',
                   CompleteTime: baseReportSearchForm.CompleteTime,
                   CreateTime: baseReportSearchForm.CreateTime,
+                  EntCode:baseReportSearchForm.EntCode,
                   pageIndex,
                   pageSize,
               },
@@ -891,7 +893,7 @@ entChange = (value) => {
                 current: gettasklistqueryparams.pageIndex,
                 onChange: this.onChange,
                 onShowSizeChange: this.onShowSizeChange,
-                pageSizeOptions: ['20', '30', '40', '100'],
+                // pageSizeOptions: ['20', '30', '40', '100'],
                 total: gettasklistqueryparams.total,
               }}
               columns={columns}
