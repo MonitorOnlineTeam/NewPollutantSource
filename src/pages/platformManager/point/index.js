@@ -103,6 +103,7 @@ export default class MonitorPoint extends Component {
       sortTitle: '开启排序',
       noPaging: false,
       sortLoading: false,
+      loadFlag:false,
     };
   }
 
@@ -161,7 +162,7 @@ export default class MonitorPoint extends Component {
       dispatch({
         type: 'point/getParamCodeList', //设备参数项码表
         payload: { pollutantType: type },
-        callback: () => { }
+        callback: () => { this.setState({loadFlag:true,}) }
       });
       dispatch({
         type: 'point/getMonitorPointVerificationList', //获取数据核查信息码表

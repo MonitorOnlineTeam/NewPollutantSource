@@ -53,7 +53,7 @@ export default Model.extend({
         // 获取监测点数据集合
         *getPointList({ payload }, { call, put, update, select, take }) {
             const dd1 = yield select(state => state.common);
-            // yield take('common/getPollutantTypeList/@@end');
+            yield take('common/getPollutantTypeList/@@end');
             const dd = yield select(state => state.common);
             const result = yield call(getEnterpriseCorporationCode, payload);
             yield update({

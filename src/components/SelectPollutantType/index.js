@@ -21,8 +21,8 @@ class SelectPollutantType extends PureComponent {
     };
   }
   componentDidMount() {
-    const { onlyShowEnt, onlyShowAir,noLoad, } = this.props;
-    !noLoad&&this.props.dispatch({
+    const { onlyShowEnt, onlyShowAir, } = this.props;
+      this.props.dispatch({
       type: 'common/getPollutantTypeList',
       payload: {
         filterPollutantType: this.props.filterPollutantType//自定义显示污染物类型 wjw
